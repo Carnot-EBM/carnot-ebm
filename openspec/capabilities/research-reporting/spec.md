@@ -52897,6 +52897,132 @@ and gate checks, and every required field has provenance.
 |---|---|---|
 | REQ-REPORT-6548 | Planned (`python/carnot/experiment_6548_v567_evidence_eligibility_contract.py`, terminal artifact `results/experiment_6548_v567_evidence_eligibility_contract.json`) | Planned (`tests/python/test_experiment_6548_v567_evidence_eligibility_contract.py`) |
 
+### REQ-REPORT-6561: V568 Evidence Gate Contract SHALL Freeze V567 Imports And Downstream Gates
+
+Carnot SHALL build Exp6561 as an additive evidence contract before any V568
+lane extends V567 work. The reducer SHALL read only checked-in V567 artifacts
+Exp6548 through Exp6560 by immutable path and SHA-256 hash. It SHALL run the
+current adversarial verifier and row-consistency lint for each V567 artifact.
+It SHALL record one eligibility row per artifact with stamped flags, live
+flags, verifier exit status, row-lint status, readiness field, and disposition.
+It SHALL NOT rerun V567 science, load an LLM, or issue a hardware command.
+
+The workflow SHALL keep blocked infrastructure distinct from null science.
+Exp6553 and Exp6554 SHALL be recorded as blocked infrastructure evidence.
+Exp6557 SHALL be recorded as a conductor pre-gate block, not as an independent
+scientific audit. Exp6559 SHALL preserve its zero-command receipt and SHALL NOT
+support a hardware advancement claim.
+
+The workflow SHALL validate V568 task gates and prior failures against the
+active roadmap. Every structured gate SHALL name a task in the roadmap and an
+upstream required field with identical spelling. Every prior-failure row SHALL
+include `experiment_id`, `verdict`, `addressed_by`, and
+`retire_if_same_verdict`. No `requires` or `gated_on` chain SHALL use a retired
+experiment ID.
+
+The workflow SHALL freeze the V568 model and hardware contract before outcomes
+exist. The three mandated GGUF identities SHALL be
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Actual sequential load, token, GPU sample,
+process exit, and unload receipts SHALL replace the impossible free-VRAM rule.
+Legacy smoke models SHALL NOT substitute for headline rows. ARC tasks SHALL NOT
+claim a game or level solve. Hardware tasks SHALL make no FPGA, TSU, latency,
+energy, or availability claim without new authenticated evidence.
+
+The Exp6561 artifact SHALL be written atomically to
+`results/experiment_6561_v568_evidence_gate_contract.json` with
+`inference_substrate=immutable_v567_artifact_gate_and_scope_audit_no_llm` and
+`verifier_is_oracle=true`. The artifact SHALL include, at minimum, `status`,
+`honest_verdict`, `verdict_class`, `v567_artifact_eligibility_rows`,
+`v568_gate_contract_rows`, `prior_failure_contract_rows`,
+`model_and_sequential_runtime_contract`, `hardware_claim_boundary`,
+`v568_evidence_contract_ready_score`, `production_v567_evidence_ready_score`,
+`per_unit_rows`, `aggregate_row_recomputation`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+Field principles SHALL be:
+
+- `status`: "A terminal state prevents a bootstrap record from posing as a completed evidence contract."
+- `honest_verdict`: "The verdict must state the eligible evidence boundary and use a terminal prefix."
+- `verdict_class`: "A closed class carries blocked, partial, null, and disqualified status into downstream aggregation."
+- `v567_artifact_eligibility_rows`: "One row per V567 artifact makes every import decision recheckable."
+- `v568_gate_contract_rows`: "Every downstream gate needs an in-roadmap task and an identically spelled upstream field."
+- `prior_failure_contract_rows`: "Each scope-matched failure needs experiment ID, verdict, changed method, and retirement signal."
+- `model_and_sequential_runtime_contract`: "The three mandated GGUF identities and actual-load rule must be frozen before outcomes exist."
+- `hardware_claim_boundary`: "The contract prevents unchanged GateMate commands and unauthenticated TSU claims."
+- `v568_evidence_contract_ready_score`: "One binary field gates tasks that need the complete V568 contract."
+- `production_v567_evidence_ready_score`: "The production canary needs a separate clean Exp6549-Exp6551 evidence gate."
+- `per_unit_rows`: "Artifact-level rows prevent one failed input from hiding inside an aggregate."
+- `aggregate_row_recomputation`: "Readiness fields must derive from emitted eligibility and contract rows."
+- `gate_check_summary`: "A blocked verdict must name the failed check and observed value."
+- `preconditions_checked`: "Resource and input receipts distinguish missing prerequisites from evidence failure."
+- `protected_files_unchanged`: "The task must not mutate research-roadmap.yaml or scripts/research_conductor.py."
+- `inference_substrate`: "The artifact must declare immutable evidence aggregation with no new LLM inference."
+- `verifier_is_oracle`: "Artifact validation is audit authority and not oracle-distinct science."
+- `field_provenance`: "Every headline field must identify source rows, hashes, and reducers."
+- `duration_s`: "Monotonic wall time exposes skipped verifier and contract checks."
+- `tests_run`: "Named commands and exit codes make contract validation reproducible."
+- `reproducibility_checksum`: "A final content hash detects mutation of the terminal record."
+
+`v568_evidence_contract_ready_score` SHALL equal 1.0 only when artifact input,
+gate, prior-failure, model, hardware, protected-file, field-provenance, and
+checksum checks all pass. `production_v567_evidence_ready_score` SHALL equal
+1.0 only when Exp6549, Exp6550, and Exp6551 are clean, content-addressed, and
+eligible for a production workload canary. A clean contract SHALL use
+`verdict_class=null`. A usable subset SHALL use `partial`. A missing input
+SHALL use `blocked`. False provenance SHALL use `disqualified`.
+
+#### SCENARIO-REPORT-6561-IMPORT: V567 Imports Are Immutable And Classified
+
+**Given** Exp6548 through Exp6560 artifacts exist at their expected result
+paths
+**When** Exp6561 builds eligibility rows
+**Then** each row records path, SHA-256 hash, readiness field, readiness score,
+stamped flags, live verifier flags, row-lint status, and a disposition that
+keeps blocked infrastructure separate from null science.
+
+#### SCENARIO-REPORT-6561-GATES: V568 Gates Use Exact In-Roadmap Fields
+
+**Given** the active V568 roadmap declares structured gates
+**When** Exp6561 validates gate rows
+**Then** every gate upstream exists in the active roadmap, every artifact field
+is present in the upstream task's required artifact field block, and no gate
+references a retired upstream.
+
+#### SCENARIO-REPORT-6561-PRIOR-FAILURE: Prior Failures Are Complete
+
+**Given** V568 tasks cite prior failed, blocked, null, positive, or retired
+scope
+**When** Exp6561 validates prior-failure rows
+**Then** every row includes experiment ID, verdict, changed method, and
+retirement signal, and no dependency chain uses a retired experiment ID.
+
+#### SCENARIO-REPORT-6561-MODEL-HARDWARE: Model And Hardware Boundaries Are Frozen
+
+**Given** V568 contains production, GGUF, ARC, and hardware lanes
+**When** Exp6561 builds the model and hardware contract
+**Then** the three mandated GGUF IDs, sequential actual-load rule,
+legacy-model exclusion, sample floors, ARC no-solve boundary, Exp6559
+zero-command receipt, and unauthenticated TSU boundary are recorded before
+outcomes exist.
+
+#### SCENARIO-REPORT-6561-SCHEMA: Terminal Artifact Is Atomic And Recomputable
+
+**Given** eligibility rows, gate rows, prior-failure rows, protected hashes,
+field provenance, and test receipts
+**When** Exp6561 writes its terminal artifact
+**Then** required fields and principles match exactly, readiness scores
+recompute from rows, protected files remain unchanged, the checksum matches,
+and `verifier_is_oracle=true` only for immutable artifact validation.
+
+## Implementation Status (REQ-REPORT-6561)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6561 | Planned (`python/carnot/experiment_6561_v568_evidence_gate_contract.py`, terminal artifact `results/experiment_6561_v568_evidence_gate_contract.json`) | Planned (`tests/python/test_experiment_6561_v568_evidence_gate_contract.py`) |
+
 ### REQ-REPORT-6551: Independent Production Safety-Net Audit
 
 Carnot MUST emit an always-run independent audit artifact at

@@ -785,6 +785,41 @@ def test_artifact_provenance_audit_quotes_upstream_compute_markers_without_live_
     assert "METHODOLOGY_MISSING" not in [flag["kind"] for flag in report["flags"]]
 
 
+def test_v568_evidence_contract_quotes_gguf_model_policy_without_live_floor(
+    tmp_path: Path,
+):
+    """REQ-REPORT-6561: no-LLM V568 contracts may freeze GGUF IDs by name."""
+
+    artifact = {
+        "status": "complete_v568_evidence_gate_contract_ready",
+        "honest_verdict": "complete_v568_evidence_gate_contract_ready: immutable audit",
+        "inference_substrate": "immutable_v567_artifact_gate_and_scope_audit_no_llm",
+        "duration_s": 0.01,
+        "reproducibility_checksum": "sha256:fixture",
+        "model_and_sequential_runtime_contract": {
+            "mandated_model_ids": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF",
+                "unsloth/gemma-4-31B-it-GGUF",
+                "unsloth/gemma-4-26B-A4B-it-GGUF",
+            ],
+            "sequential_load_rule": {"actual_load_required": True},
+        },
+    }
+    flags = []
+    av.check_duration_vs_claim(artifact, flags)
+    av.check_methodology_present(artifact, flags)
+    report = _report_for_payload(tmp_path, artifact)
+
+    floor = av.duration_floor_for_artifact(artifact)
+    assert floor is not None
+    assert floor["reason"] == "aggregation"
+    assert floor["min_duration_s"] <= 0.001
+    assert "DURATION_TOO_SHORT" not in _kinds(flags)
+    assert "METHODOLOGY_MISSING" not in _kinds(flags)
+    assert "DURATION_TOO_SHORT" not in [flag["kind"] for flag in report["flags"]]
+    assert "METHODOLOGY_MISSING" not in [flag["kind"] for flag in report["flags"]]
+
+
 def test_post_marker_source_scope_audit_quotes_model_routing_without_live_floor(
     tmp_path: Path,
 ):

@@ -238,6 +238,7 @@ AGGREGATION_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     "aggregation_from_exact_declared_artifacts",
     "aggregation_from_upstream_artifacts_no_llm",
     "independent_v564_artifact_row_and_receipt_synthesis_no_llm",
+    "immutable_v567_artifact_gate_and_scope_audit_no_llm",
     "aggregation_from_external_primary_sources",
     "aggregation_from_exp5603_exp5611_artifacts",
     "artifact_reconciliation_and_validation_only",
