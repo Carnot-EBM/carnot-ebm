@@ -183,7 +183,14 @@ def main(argv: list[str] | None = None) -> int:
     print("  " + "-" * 68)
     print(f"  {'run/game':28} {'lines':>6} {'fns':>4} {'br':>4}  {'goal':10} tells")
     for s in scored:
-        run = Path(s["path"]).parts[-4] if len(Path(s["path"]).parts) >= 4 else "?"
+        # An archived attempt sits one level deeper (<run>/e3/<game>/attempts/wm_*.py) than a
+        # survivor (<run>/e3/<game>/world_model.py), so the run name is one part further back.
+        # Reading it at the survivor depth labels every attempt "e3", which makes the two
+        # populations look like they came from different runs -- the exact comparison this
+        # scorer exists to support.
+        depth = 5 if s.get("population") == "attempt" else 4
+        parts = Path(s["path"]).parts
+        run = parts[-depth] if len(parts) >= depth else "?"
         label = f"{run}/{s.get('game', '?')}"[:28]
         if s.get("error"):
             print(f"  {label:28} {s['error']}")
