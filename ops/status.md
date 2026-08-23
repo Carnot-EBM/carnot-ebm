@@ -8733,3 +8733,38 @@ and the Exp6541 module/test/artifact validate together. Focused tests passed
 Coverage.py reports 100% for
 `python/carnot/experiment_6541_v566_direct_source_contract.py`, and no
 uncommitted change remains in `scripts/research_conductor.py`.
+
+## 2026-08-23 (outer loop) — Conductor self-sufficiency: the step after detection
+
+Operator directive: prevent the operator-intervention cases from recurring;
+the goal is to remove the outer loop and trust the conductor to monitor and
+fix the inner loop itself. Full case record and decisions:
+`docs/research-notes/conductor-self-sufficiency-2026-08-23.md`.
+
+What shipped (specs REQ-CONDUCTOR-AUTHORITY-1/2, REQ-CONDUCTOR-FRESHEXEC-1,
+REQ-CONDUCTOR-RESTART-1, and a 1-day amendment to REQ-OPS-AUDIT-LEDGER-1):
+
+- `scripts/run_stop_authority.py` (janitor-scheduled): reaps a provably-
+  unowned llama-server (default ON; six conjunctive conditions + two-scan
+  persistence). Stops a provably-dead-tier run ONLY when the operator arms
+  `~/.carnot/stop-authority-armed`; disarmed, it writes a yes/no packet with
+  the exact kill / arm / opt-out commands. Predicate measured before build:
+  0 fires on 18,539 results/** artifacts; exactly the two true incident row
+  files fire. Every kill writes a durable actor line.
+- Conductor fresh-source re-exec: at each loop boundary the conductor
+  re-execs itself when its COMMITTED source changed (HEAD bytes only,
+  compile gate, exec-storm guard). Ends the ran-stale-code-for-11.5h class.
+  Takes effect at the running conductor's next natural restart.
+- Janitor (tracked source of truth now `ops/systemd/orphan-cleanup.sh`,
+  deployed byte-identically): starts a dead conductor unless
+  `~/.carnot/conductor-hold` exists. TO STOP THE CONDUCTOR ON PURPOSE,
+  CREATE THAT FILE (one line of intent), remove it to resume. A hold older
+  than 48h WARNs daily.
+- Ledger findings now escalate at 1 day, not 7.
+
+What still requires a human: arming the run-stop authority (one command,
+recommended after the first correct yes/no packet); ledger dispositions;
+slow-but-valid-run judgment (the baseline25 class); prompt/scored-path
+changes — note FOUR live prompt constants still embed a literal
+`/no_think\n` the Qwen3.8 pin consumes as prompt text (locations in the
+research note); root-level kill forensics.
