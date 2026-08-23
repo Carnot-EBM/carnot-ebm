@@ -341,3 +341,128 @@ commit-result hash, rollback hash, crash-replay hash, final state hash,
 fixed-width trace hash, and Python/Rust/PyO3 return value reproduces exactly;
 rejected updates have bare zero propagation; and stale, duplicate, tampered,
 or corrupted transitions fail closed.
+
+### REQ-STORE-6521 — Transactional exact-conflict memory
+
+Carnot SHALL provide Exp6521 at
+`python/carnot/experiment_6521_transactional_refinement_conflict_memory.py`
+and write
+`results/experiment_6521_transactional_refinement_conflict_memory.json`.
+The mechanism SHALL persist exact conflict records only when the source query,
+target query, solver identity, refinement witness, and exact replay receipt all
+verify locally. The durable-write gate SHALL reject unrelated, relaxed,
+schema-mismatched, solver-mismatched, stale, malformed, duplicate-conflicting,
+and invalid-replay records before insertion or use.
+
+Each conflict record SHALL include a source query hash, clause or constraint
+payload, solver and solver-version hash, refinement witness, exact replay
+receipt, lifecycle state, use count, benefit fields, and content hash. The
+memory controller SHALL implement prepare, validate, commit, abort, load, use,
+evict, checkpoint, restart, rollback, and quarantine. Commits SHALL use the
+Exp6514 atomic shard transaction where durable writes leave the in-memory
+process. Capacity SHALL be bounded. Eviction SHALL be deterministic by lowest
+benefit, lowest use count, oldest committed version, and content hash.
+
+The supported refinement relation SHALL be local and exact. A target query is
+a safe refinement only when it preserves the source clauses, adds clauses, and
+keeps the same variable domain, schema version, and solver hash. Relaxed
+queries and unrelated queries are not refinements. Every use SHALL replay the
+stored conflict against the target query with the exact verifier before the
+conflict can prune or block work. If the memory file is missing, unreadable, or
+corrupt, the controller SHALL quarantine bad bytes when possible and fall back
+to native exact solving without using memory.
+
+The artifact SHALL report pilot-audit gate path and hash, solver capabilities,
+available refinement relations, resources, protected-file hashes, lifecycle
+rows, valid reuse rows, invalid-reuse veto rows, capacity and eviction rows,
+restart and rollback rows, corruption quarantine rows, native fallback rows,
+fixed-width CPU mapping rows, gate checks, per-unit rows, aggregate
+recomputation, tests run, and a reproducibility checksum. Fixed-width CPU
+mapping rows SHALL report logical bytes, mapped bytes, topology expansion,
+mapping time, and unsupported fields. They SHALL make no hardware execution or
+acceleration claim.
+
+Required artifact fields and principles:
+
+- `status`: Records the terminal exact-conflict memory state.
+- `honest_verdict`: States exact safety readiness without claiming routing speed or learning benefit.
+- `verdict_class`: Uses circular_positive only for exact mechanism readiness.
+- `upstream_gate_receipt`: Binds the run to the independent pilot-audit gate path and hash.
+- `conflict_record_schema`: Defines the durable conflict fields and content hash.
+- `refinement_relation_contract`: Defines the only supported local safe-reuse relation.
+- `lifecycle_rows`: Shows prepare, validate, commit, abort, load, use, checkpoint, and rollback.
+- `valid_reuse_rows`: Shows exact replay before each accepted reuse.
+- `invalid_reuse_veto_rows`: Shows unsafe candidates were rejected before write or use.
+- `capacity_and_eviction_rows`: Shows bounded capacity and deterministic eviction order.
+- `restart_rollback_rows`: Shows restart parity and rollback hash restoration.
+- `corruption_quarantine_rows`: Shows corrupt durable bytes are moved out of the active path.
+- `native_fallback_rows`: Shows exact native solving continues when memory is unavailable.
+- `fixed_width_mapping_rows`: Reports CPU mapping cost without a hardware claim.
+- `conflict_memory_controller_ready_score`: A conjunctive score opens only with zero unsafe admission and zero unsafe use.
+- `gate_check_summary`: Names each gate, expected value, observed value, and failure.
+- `per_unit_rows`: Combines lifecycle, safety, mapping, fallback, and attack rows.
+- `aggregate_row_recomputation`: Recomputes readiness from rows rather than summary text.
+- `preconditions_checked`: Records solver capability, resources, relation, and protected hashes.
+- `protected_files_unchanged`: Proves protected upstream files did not change during the run.
+- `inference_substrate`: Declares exact local memory and CPU mapping with no LLM.
+- `verifier_is_oracle`: Exact replay is authoritative only inside the declared finite domain.
+- `field_principles`: Preserves why each artifact field exists.
+- `field_provenance`: Maps each field to gates, rows, exact replay, transactions, or tests.
+- `random_seed`: Fixes the deterministic scenario order.
+- `duration_s`: Records measured wall-clock duration.
+- `tests_run`: Records validation commands and exit codes.
+- `reproducibility_checksum`: Detects later drift in rows, gates, code, or hashes.
+
+`conflict_memory_controller_ready_score` SHALL be bare `1.0` only when all
+lifecycle and safety attack rows pass with zero unsafe admission and zero unsafe
+use. `verdict_class` SHALL be `circular_positive` at most for exact safety and
+mechanism readiness, `partial` for a bounded mechanism, `blocked` for a missing
+gate or solver capability, or `disqualified` for unsafe reuse. The artifact
+SHALL set `inference_substrate` to
+`transactional_exact_conflict_memory_and_cpu_mapping_no_llm` and
+`verifier_is_oracle` to bare `true` for exact conflict validity.
+
+### SCENARIO-STORE-6521-VALID-REUSE — Refinement witness admits exact reuse
+
+Given a committed conflict record for an unsatisfiable source query,
+
+When the target query preserves all source clauses, adds only stronger clauses,
+keeps the same schema, variable domain, solver hash, and replay receipt, and
+the exact verifier confirms the conflict remains valid,
+
+Then prepare, validate, commit, load, and use succeed; the use count increases;
+the replay receipt hash reproduces; and the artifact records zero unsafe use.
+
+### SCENARIO-STORE-6521-INVALID-VETO — Unsafe records never write or use
+
+Given candidate conflict records with unrelated clauses, relaxed clauses,
+schema mismatch, solver mismatch, stale source hash, malformed content,
+duplicate conflicting payloads, or invalid exact replay,
+
+When prepare, validate, commit, load, or use evaluates those records,
+
+Then each unsafe record is rejected or quarantined before durable insertion or
+memory-assisted use, and native exact solving remains available.
+
+### SCENARIO-STORE-6521-LIFECYCLE — Transaction, restart, rollback, corruption
+
+Given a bounded exact-conflict memory with a committed checkpoint,
+
+When commits are interrupted, records exceed capacity, ties require eviction,
+the process restarts, rollback targets a prior checkpoint, or the memory file is
+corrupted,
+
+Then committed state is deterministic, interrupted writes do not publish partial
+state, restart reproduces the prior hash, rollback restores the target hash,
+corrupt bytes are quarantined, and fallback solving does not read quarantined
+memory.
+
+### SCENARIO-STORE-6521-FIXED-WIDTH-MAPPING — CPU mapping is accounting only
+
+Given committed conflict records with supported fixed-width fields,
+
+When the CPU reference mapper encodes them,
+
+Then logical bytes, mapped bytes, topology expansion, mapping time, unsupported
+fields, and mapping hashes are reported deterministically, with no hardware
+execution, speed, power, or acceleration claim.

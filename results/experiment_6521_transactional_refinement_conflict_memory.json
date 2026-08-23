@@ -1,0 +1,771 @@
+{
+  "aggregate_row_recomputation": {
+    "all_standard_rows_pass": true,
+    "invalid_rows_pass": true,
+    "mapping_rows_safe": true,
+    "protected_files_unchanged": true,
+    "ready_score_from_rows": 1.0,
+    "unsafe_admission_count": 0,
+    "unsafe_use_count": 0,
+    "upstream_gate_passed": true
+  },
+  "capacity_and_eviction_rows": [
+    {
+      "capacity": 2,
+      "evicted_content_hash": "sha256:1a5df6f2afecb839f1e15903d8f53b8b604dfef845380d4481a5b98a5013a7e1",
+      "eviction_reason": "capacity_limit",
+      "operation": "evict",
+      "ordering": [
+        "benefit_score",
+        "use_count",
+        "committed_version",
+        "content_hash"
+      ],
+      "passed": true,
+      "row_type": "capacity_eviction"
+    },
+    {
+      "content_hash": "sha256:2e329960aaaff0aa07d525c465e39f979ed3b12298337c9413a018849d3305ba",
+      "idempotent": true,
+      "operation": "duplicate_commit",
+      "passed": true,
+      "row_type": "capacity_eviction"
+    },
+    {
+      "crash": "before_replace",
+      "operation": "interrupted_commit",
+      "partial_state_published": false,
+      "passed": true,
+      "row_type": "capacity_eviction"
+    }
+  ],
+  "conflict_memory_controller_ready_score": 1.0,
+  "conflict_record_schema": {
+    "content_hash_excludes": [
+      "lifecycle_state",
+      "use_count",
+      "committed_version"
+    ],
+    "required_fields": [
+      "source_query_hash",
+      "source_query_payload",
+      "target_query_payload",
+      "clause_payload",
+      "solver_hash",
+      "solver_version_hash",
+      "refinement_witness",
+      "replay_receipt",
+      "lifecycle_state",
+      "use_count",
+      "benefit_score",
+      "benefit_observations",
+      "content_hash"
+    ],
+    "schema_hash": "sha256:97e19a20e09037bf2bc15f41398046c15d1da513633f510ddf44baf12e526f38",
+    "schema_version": "carnot.exact_conflict_record.v1",
+    "supported_payload": "boolean_cnf_clause"
+  },
+  "corruption_quarantine_rows": [
+    {
+      "active_record_count": 0,
+      "corruption_quarantined": true,
+      "memory_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6521_transactional_refinement_conflict_memory.tx/corrupt/memory.json",
+      "operation": "load",
+      "passed": true,
+      "quarantine_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6521_transactional_refinement_conflict_memory.tx/corrupt/tx/quarantine/memory.json.1787452957323382878.corrupt",
+      "row_type": "corruption_quarantine"
+    }
+  ],
+  "duration_s": 0.28735809912905097,
+  "field_principles": {
+    "aggregate_row_recomputation": "Recomputes readiness from rows rather than summary text.",
+    "capacity_and_eviction_rows": "Shows bounded capacity and deterministic eviction order.",
+    "conflict_memory_controller_ready_score": "A conjunctive score opens only with zero unsafe admission and zero unsafe use.",
+    "conflict_record_schema": "Defines the durable conflict fields and content hash.",
+    "corruption_quarantine_rows": "Shows corrupt durable bytes are moved out of the active path.",
+    "duration_s": "Records measured wall-clock duration.",
+    "field_principles": "Preserves why each artifact field exists.",
+    "field_provenance": "Maps each field to gates, rows, exact replay, transactions, or tests.",
+    "fixed_width_mapping_rows": "Reports CPU mapping cost without a hardware claim.",
+    "gate_check_summary": "Names each gate, expected value, observed value, and failure.",
+    "honest_verdict": "States exact safety readiness without claiming routing speed or learning benefit.",
+    "inference_substrate": "Declares exact local memory and CPU mapping with no LLM.",
+    "invalid_reuse_veto_rows": "Shows unsafe candidates were rejected before write or use.",
+    "lifecycle_rows": "Shows prepare, validate, commit, abort, load, use, checkpoint, and rollback.",
+    "native_fallback_rows": "Shows exact native solving continues when memory is unavailable.",
+    "per_unit_rows": "Combines lifecycle, safety, mapping, fallback, and attack rows.",
+    "preconditions_checked": "Records solver capability, resources, relation, and protected hashes.",
+    "protected_files_unchanged": "Proves protected upstream files did not change during the run.",
+    "random_seed": "Fixes the deterministic scenario order.",
+    "refinement_relation_contract": "Defines the only supported local safe-reuse relation.",
+    "reproducibility_checksum": "Detects later drift in rows, gates, code, or hashes.",
+    "restart_rollback_rows": "Shows restart parity and rollback hash restoration.",
+    "status": "Records the terminal exact-conflict memory state.",
+    "tests_run": "Records validation commands and exit codes.",
+    "upstream_gate_receipt": "Binds the run to the independent pilot-audit gate path and hash.",
+    "valid_reuse_rows": "Shows exact replay before each accepted reuse.",
+    "verdict_class": "Uses circular_positive only for exact mechanism readiness.",
+    "verifier_is_oracle": "Exact replay is authoritative only inside the declared finite domain."
+  },
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "capacity_and_eviction_rows": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "conflict_memory_controller_ready_score": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "conflict_record_schema": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "corruption_quarantine_rows": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "duration_s": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "field_principles": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "field_provenance": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "fixed_width_mapping_rows": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "gate_check_summary": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "honest_verdict": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "inference_substrate": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "invalid_reuse_veto_rows": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "lifecycle_rows": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "native_fallback_rows": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "per_unit_rows": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "preconditions_checked": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "protected_files_unchanged": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "random_seed": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "refinement_relation_contract": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "reproducibility_checksum": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "restart_rollback_rows": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "status": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "tests_run": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "upstream_gate_receipt": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "valid_reuse_rows": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "verdict_class": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    },
+    "verifier_is_oracle": {
+      "source": "Exp6521 exact replay, transaction scenario, protected hashes, or tests",
+      "spec_ref": "REQ-STORE-6521"
+    }
+  },
+  "fixed_width_mapping_rows": [
+    {
+      "acceleration_claimed": false,
+      "content_hash": "sha256:80249d1fff1eda09d8ba31b2bb064e6d15da9dfe72cec649f6e6018c105d1e98",
+      "hardware_execution_claimed": false,
+      "logical_bytes": 3197,
+      "mapped_bytes": 3197,
+      "mapping_hash": "sha256:8d3d0f5bd6621ec6b00fc115b70cf130550c5fa95b5d39f065fdf3d298f767d0",
+      "mapping_time_s": 0.0,
+      "passed": true,
+      "row_type": "fixed_width_mapping",
+      "topology_expansion": 1.0,
+      "unsupported_fields": []
+    }
+  ],
+  "gate_check_summary": {
+    "all_gates_passed": true,
+    "checks": {
+      "all_standard_rows_pass": true,
+      "invalid_rows_pass": true,
+      "mapping_rows_safe": true,
+      "protected_files_unchanged": true,
+      "ready_score_from_rows": true,
+      "unsafe_admission_count_zero": true,
+      "unsafe_use_count_zero": true,
+      "upstream_gate_passed": true
+    },
+    "failed_checks": []
+  },
+  "honest_verdict": "complete_transactional_refinement_conflict_memory_ready: exact replay, refinement gating, transactions, rollback, quarantine, fallback, and CPU mapping rows all passed with zero unsafe admission or use",
+  "inference_substrate": "transactional_exact_conflict_memory_and_cpu_mapping_no_llm",
+  "invalid_reuse_veto_rows": [
+    {
+      "attack_id": "relaxed_query",
+      "durable_write_performed": false,
+      "passed": true,
+      "reason": "refinement_witness_failed",
+      "row_type": "invalid_reuse_veto",
+      "unsafe_use_performed": false,
+      "vetoed": true
+    },
+    {
+      "attack_id": "unrelated_query",
+      "durable_write_performed": false,
+      "passed": true,
+      "reason": "refinement_witness_failed",
+      "row_type": "invalid_reuse_veto",
+      "unsafe_use_performed": false,
+      "vetoed": true
+    },
+    {
+      "attack_id": "schema_mismatch",
+      "durable_write_performed": false,
+      "passed": true,
+      "reason": "refinement_witness_failed",
+      "row_type": "invalid_reuse_veto",
+      "unsafe_use_performed": false,
+      "vetoed": true
+    },
+    {
+      "attack_id": "invalid_replay",
+      "durable_write_performed": false,
+      "passed": true,
+      "reason": "exact_replay_failed",
+      "row_type": "invalid_reuse_veto",
+      "unsafe_use_performed": false,
+      "vetoed": true
+    }
+  ],
+  "lifecycle_rows": [
+    {
+      "content_hash": "sha256:80249d1fff1eda09d8ba31b2bb064e6d15da9dfe72cec649f6e6018c105d1e98",
+      "operation": "prepare",
+      "passed": true,
+      "row_type": "lifecycle"
+    },
+    {
+      "accepted": true,
+      "content_hash": "sha256:80249d1fff1eda09d8ba31b2bb064e6d15da9dfe72cec649f6e6018c105d1e98",
+      "exact_replay_valid": true,
+      "operation": "validate",
+      "passed": true,
+      "row_type": "lifecycle"
+    },
+    {
+      "content_hash": "sha256:80249d1fff1eda09d8ba31b2bb064e6d15da9dfe72cec649f6e6018c105d1e98",
+      "lifecycle_state": "active",
+      "operation": "commit",
+      "passed": true,
+      "row_type": "lifecycle"
+    },
+    {
+      "content_hash": "sha256:80249d1fff1eda09d8ba31b2bb064e6d15da9dfe72cec649f6e6018c105d1e98",
+      "durable_write_performed": false,
+      "lifecycle_state": "aborted",
+      "operation": "abort",
+      "passed": true,
+      "row_type": "lifecycle"
+    },
+    {
+      "active_record_count": 1,
+      "corruption_quarantined": false,
+      "memory_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6521_transactional_refinement_conflict_memory.tx/memory.json",
+      "operation": "load",
+      "passed": true,
+      "row_type": "lifecycle",
+      "state_hash": "sha256:63d0c441d353909613b49aaa937839bb5377ec4497cea354bcb34a4dab165a75"
+    },
+    {
+      "content_hash": "sha256:80249d1fff1eda09d8ba31b2bb064e6d15da9dfe72cec649f6e6018c105d1e98",
+      "exact_replay_valid": true,
+      "memory_used": true,
+      "operation": "use",
+      "passed": true,
+      "refinement_valid": true,
+      "replay_receipt_hash": "sha256:b79f3dc13eebb877911629d74b536866391924c066b225c7007b0228f80e63aa",
+      "row_type": "valid_reuse",
+      "unsafe_use_performed": false,
+      "use_count_after": 1
+    },
+    {
+      "checkpoint_id": "baseline",
+      "operation": "checkpoint",
+      "passed": true,
+      "row_type": "restart_rollback",
+      "state_hash": "sha256:e8f608cff15af4684bbb4c03764b4f766aef5eea15f6441fa339f339f9b3b18a"
+    },
+    {
+      "checkpoint_id": "baseline",
+      "operation": "rollback",
+      "passed": true,
+      "rolled_back": true,
+      "row_type": "restart_rollback",
+      "state_hash_after": "sha256:e8f608cff15af4684bbb4c03764b4f766aef5eea15f6441fa339f339f9b3b18a",
+      "state_hash_before": "sha256:6f842d3929752f811e1c3be502b271328a921c5bf715ccfa91139d899a2187f1",
+      "target_state_hash": "sha256:e8f608cff15af4684bbb4c03764b4f766aef5eea15f6441fa339f339f9b3b18a"
+    }
+  ],
+  "native_fallback_rows": [
+    {
+      "assignments_examined": 4,
+      "fallback_reason": "record_not_available",
+      "memory_used": false,
+      "native_status": "sat",
+      "operation": "native_fallback_solve",
+      "passed": true,
+      "row_type": "native_fallback"
+    }
+  ],
+  "per_unit_rows": [
+    {
+      "content_hash": "sha256:80249d1fff1eda09d8ba31b2bb064e6d15da9dfe72cec649f6e6018c105d1e98",
+      "operation": "prepare",
+      "passed": true,
+      "row_type": "lifecycle",
+      "source_group": "lifecycle_rows"
+    },
+    {
+      "accepted": true,
+      "content_hash": "sha256:80249d1fff1eda09d8ba31b2bb064e6d15da9dfe72cec649f6e6018c105d1e98",
+      "exact_replay_valid": true,
+      "operation": "validate",
+      "passed": true,
+      "row_type": "lifecycle",
+      "source_group": "lifecycle_rows"
+    },
+    {
+      "content_hash": "sha256:80249d1fff1eda09d8ba31b2bb064e6d15da9dfe72cec649f6e6018c105d1e98",
+      "lifecycle_state": "active",
+      "operation": "commit",
+      "passed": true,
+      "row_type": "lifecycle",
+      "source_group": "lifecycle_rows"
+    },
+    {
+      "content_hash": "sha256:80249d1fff1eda09d8ba31b2bb064e6d15da9dfe72cec649f6e6018c105d1e98",
+      "durable_write_performed": false,
+      "lifecycle_state": "aborted",
+      "operation": "abort",
+      "passed": true,
+      "row_type": "lifecycle",
+      "source_group": "lifecycle_rows"
+    },
+    {
+      "active_record_count": 1,
+      "corruption_quarantined": false,
+      "memory_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6521_transactional_refinement_conflict_memory.tx/memory.json",
+      "operation": "load",
+      "passed": true,
+      "row_type": "lifecycle",
+      "source_group": "lifecycle_rows",
+      "state_hash": "sha256:63d0c441d353909613b49aaa937839bb5377ec4497cea354bcb34a4dab165a75"
+    },
+    {
+      "content_hash": "sha256:80249d1fff1eda09d8ba31b2bb064e6d15da9dfe72cec649f6e6018c105d1e98",
+      "exact_replay_valid": true,
+      "memory_used": true,
+      "operation": "use",
+      "passed": true,
+      "refinement_valid": true,
+      "replay_receipt_hash": "sha256:b79f3dc13eebb877911629d74b536866391924c066b225c7007b0228f80e63aa",
+      "row_type": "valid_reuse",
+      "source_group": "lifecycle_rows",
+      "unsafe_use_performed": false,
+      "use_count_after": 1
+    },
+    {
+      "checkpoint_id": "baseline",
+      "operation": "checkpoint",
+      "passed": true,
+      "row_type": "restart_rollback",
+      "source_group": "lifecycle_rows",
+      "state_hash": "sha256:e8f608cff15af4684bbb4c03764b4f766aef5eea15f6441fa339f339f9b3b18a"
+    },
+    {
+      "checkpoint_id": "baseline",
+      "operation": "rollback",
+      "passed": true,
+      "rolled_back": true,
+      "row_type": "restart_rollback",
+      "source_group": "lifecycle_rows",
+      "state_hash_after": "sha256:e8f608cff15af4684bbb4c03764b4f766aef5eea15f6441fa339f339f9b3b18a",
+      "state_hash_before": "sha256:6f842d3929752f811e1c3be502b271328a921c5bf715ccfa91139d899a2187f1",
+      "target_state_hash": "sha256:e8f608cff15af4684bbb4c03764b4f766aef5eea15f6441fa339f339f9b3b18a"
+    },
+    {
+      "content_hash": "sha256:80249d1fff1eda09d8ba31b2bb064e6d15da9dfe72cec649f6e6018c105d1e98",
+      "exact_replay_valid": true,
+      "memory_used": true,
+      "operation": "use",
+      "passed": true,
+      "refinement_valid": true,
+      "replay_receipt_hash": "sha256:b79f3dc13eebb877911629d74b536866391924c066b225c7007b0228f80e63aa",
+      "row_type": "valid_reuse",
+      "source_group": "valid_reuse_rows",
+      "unsafe_use_performed": false,
+      "use_count_after": 1
+    },
+    {
+      "attack_id": "relaxed_query",
+      "durable_write_performed": false,
+      "passed": true,
+      "reason": "refinement_witness_failed",
+      "row_type": "invalid_reuse_veto",
+      "source_group": "invalid_reuse_veto_rows",
+      "unsafe_use_performed": false,
+      "vetoed": true
+    },
+    {
+      "attack_id": "unrelated_query",
+      "durable_write_performed": false,
+      "passed": true,
+      "reason": "refinement_witness_failed",
+      "row_type": "invalid_reuse_veto",
+      "source_group": "invalid_reuse_veto_rows",
+      "unsafe_use_performed": false,
+      "vetoed": true
+    },
+    {
+      "attack_id": "schema_mismatch",
+      "durable_write_performed": false,
+      "passed": true,
+      "reason": "refinement_witness_failed",
+      "row_type": "invalid_reuse_veto",
+      "source_group": "invalid_reuse_veto_rows",
+      "unsafe_use_performed": false,
+      "vetoed": true
+    },
+    {
+      "attack_id": "invalid_replay",
+      "durable_write_performed": false,
+      "passed": true,
+      "reason": "exact_replay_failed",
+      "row_type": "invalid_reuse_veto",
+      "source_group": "invalid_reuse_veto_rows",
+      "unsafe_use_performed": false,
+      "vetoed": true
+    },
+    {
+      "capacity": 2,
+      "evicted_content_hash": "sha256:1a5df6f2afecb839f1e15903d8f53b8b604dfef845380d4481a5b98a5013a7e1",
+      "eviction_reason": "capacity_limit",
+      "operation": "evict",
+      "ordering": [
+        "benefit_score",
+        "use_count",
+        "committed_version",
+        "content_hash"
+      ],
+      "passed": true,
+      "row_type": "capacity_eviction",
+      "source_group": "capacity_and_eviction_rows"
+    },
+    {
+      "content_hash": "sha256:2e329960aaaff0aa07d525c465e39f979ed3b12298337c9413a018849d3305ba",
+      "idempotent": true,
+      "operation": "duplicate_commit",
+      "passed": true,
+      "row_type": "capacity_eviction",
+      "source_group": "capacity_and_eviction_rows"
+    },
+    {
+      "crash": "before_replace",
+      "operation": "interrupted_commit",
+      "partial_state_published": false,
+      "passed": true,
+      "row_type": "capacity_eviction",
+      "source_group": "capacity_and_eviction_rows"
+    },
+    {
+      "active_record_count": 2,
+      "corruption_quarantined": false,
+      "memory_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6521_transactional_refinement_conflict_memory.tx/memory.json",
+      "operation": "load",
+      "passed": true,
+      "row_type": "lifecycle",
+      "source_group": "restart_rollback_rows",
+      "state_hash": "sha256:6f842d3929752f811e1c3be502b271328a921c5bf715ccfa91139d899a2187f1"
+    },
+    {
+      "checkpoint_id": "baseline",
+      "operation": "rollback",
+      "passed": true,
+      "rolled_back": true,
+      "row_type": "restart_rollback",
+      "source_group": "restart_rollback_rows",
+      "state_hash_after": "sha256:e8f608cff15af4684bbb4c03764b4f766aef5eea15f6441fa339f339f9b3b18a",
+      "state_hash_before": "sha256:6f842d3929752f811e1c3be502b271328a921c5bf715ccfa91139d899a2187f1",
+      "target_state_hash": "sha256:e8f608cff15af4684bbb4c03764b4f766aef5eea15f6441fa339f339f9b3b18a"
+    },
+    {
+      "active_record_count": 0,
+      "corruption_quarantined": true,
+      "memory_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6521_transactional_refinement_conflict_memory.tx/corrupt/memory.json",
+      "operation": "load",
+      "passed": true,
+      "quarantine_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6521_transactional_refinement_conflict_memory.tx/corrupt/tx/quarantine/memory.json.1787452957323382878.corrupt",
+      "row_type": "corruption_quarantine",
+      "source_group": "corruption_quarantine_rows"
+    },
+    {
+      "assignments_examined": 4,
+      "fallback_reason": "record_not_available",
+      "memory_used": false,
+      "native_status": "sat",
+      "operation": "native_fallback_solve",
+      "passed": true,
+      "row_type": "native_fallback",
+      "source_group": "native_fallback_rows"
+    },
+    {
+      "acceleration_claimed": false,
+      "content_hash": "sha256:80249d1fff1eda09d8ba31b2bb064e6d15da9dfe72cec649f6e6018c105d1e98",
+      "hardware_execution_claimed": false,
+      "logical_bytes": 3197,
+      "mapped_bytes": 3197,
+      "mapping_hash": "sha256:8d3d0f5bd6621ec6b00fc115b70cf130550c5fa95b5d39f065fdf3d298f767d0",
+      "mapping_time_s": 0.0,
+      "passed": true,
+      "row_type": "fixed_width_mapping",
+      "source_group": "fixed_width_mapping_rows",
+      "topology_expansion": 1.0,
+      "unsupported_fields": []
+    }
+  ],
+  "preconditions_checked": {
+    "git_status_short": "M openspec/capabilities/constraint-store/spec.md\n M scripts/adversarial_verify.py\n?? python/carnot/experiment_6521_transactional_refinement_conflict_memory.py\n?? results/.experiment_6521_transactional_refinement_conflict_memory.tx/\n?? results/experiment_6521_transactional_refinement_conflict_memory.json\n?? tests/python/test_experiment_6521_transactional_refinement_conflict_memory.py",
+    "protected_file_hashes_before": {
+      "results/experiment_6495_restarted_factor_pool_controller.json": "sha256:df0766da46afe48225b6b1ba2b64f10f861b047231bf454a8310bebef15c0958",
+      "results/experiment_6514_atomic_shard_artifact_transaction.json": "sha256:53c7a5bd319f74dd8faaad08421cbe06c59ae7857e936ebd29cfdaea8813d38b",
+      "results/experiment_6515_v564_source_method_contract.json": "sha256:afb44f86d0ca31b9ea440c0838f3133b85546a17166b264f58148bbd7b3c8cb6",
+      "results/experiment_6516_exact_branch_pilot_dataset_v3.json": "sha256:455b9ba3872e4c1e2c2f627365c0e51c7c221d64b55f068f2f803fef44ae2ca2",
+      "results/experiment_6517_branch_pilot_independent_audit.json": "sha256:fa5c84abc899d08ffc308dc2d4e858b7827e9e0b663fe84cab9ad564ea2a94c8",
+      "scripts/research_conductor.py": "sha256:8aad61bff3e0ce2920ab3055fd2573fa113a8c081b4265d9afc0438456f4f333"
+    },
+    "refinement_relations_available": [
+      "clause_superset_same_schema_domain_solver_v1"
+    ],
+    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "resources": {
+      "available_bytes": 1087933022208,
+      "filesystem_writable": true,
+      "pid": 3187403,
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": "3.12.13",
+      "work_root": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6521_transactional_refinement_conflict_memory.tx"
+    },
+    "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6521_transactional_refinement_conflict_memory.json",
+    "run_date": "20260823",
+    "solver_capabilities": {
+      "conflict_clause_entailment": true,
+      "exact_replay": true,
+      "max_variables_in_reference": 8,
+      "native_fallback": true,
+      "solver_hash": "sha256:3a641732f70fea9c09bf54c28321618ebebdea9f84f13040b812754e5c1447c9",
+      "solver_id": "carnot_exhaustive_boolean_cnf_entailment",
+      "transaction_schema": "carnot.atomic_shard_transaction.v1"
+    },
+    "upstream_gate": {
+      "all_gates_passed": true,
+      "artifact_path": "results/experiment_6517_branch_pilot_independent_audit.json",
+      "artifact_sha256": "sha256:fa5c84abc899d08ffc308dc2d4e858b7827e9e0b663fe84cab9ad564ea2a94c8",
+      "exists": true,
+      "honest_verdict": "complete_branch_pilot_independent_audit: all rows, receipts, splits, shards, features, censoring, attacks, and protected hashes passed",
+      "pilot_audit_gate": "experiment_6517_branch_pilot_independent_audit",
+      "protected_hash_count": 51,
+      "status": "complete_branch_pilot_independent_audit_ready"
+    },
+    "work_root": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6521_transactional_refinement_conflict_memory.tx"
+  },
+  "protected_files_unchanged": {
+    "all_protected_files_unchanged": true,
+    "changed_files": [],
+    "hashes_after": {
+      "results/experiment_6495_restarted_factor_pool_controller.json": "sha256:df0766da46afe48225b6b1ba2b64f10f861b047231bf454a8310bebef15c0958",
+      "results/experiment_6514_atomic_shard_artifact_transaction.json": "sha256:53c7a5bd319f74dd8faaad08421cbe06c59ae7857e936ebd29cfdaea8813d38b",
+      "results/experiment_6515_v564_source_method_contract.json": "sha256:afb44f86d0ca31b9ea440c0838f3133b85546a17166b264f58148bbd7b3c8cb6",
+      "results/experiment_6516_exact_branch_pilot_dataset_v3.json": "sha256:455b9ba3872e4c1e2c2f627365c0e51c7c221d64b55f068f2f803fef44ae2ca2",
+      "results/experiment_6517_branch_pilot_independent_audit.json": "sha256:fa5c84abc899d08ffc308dc2d4e858b7827e9e0b663fe84cab9ad564ea2a94c8",
+      "scripts/research_conductor.py": "sha256:8aad61bff3e0ce2920ab3055fd2573fa113a8c081b4265d9afc0438456f4f333"
+    },
+    "hashes_before": {
+      "results/experiment_6495_restarted_factor_pool_controller.json": "sha256:df0766da46afe48225b6b1ba2b64f10f861b047231bf454a8310bebef15c0958",
+      "results/experiment_6514_atomic_shard_artifact_transaction.json": "sha256:53c7a5bd319f74dd8faaad08421cbe06c59ae7857e936ebd29cfdaea8813d38b",
+      "results/experiment_6515_v564_source_method_contract.json": "sha256:afb44f86d0ca31b9ea440c0838f3133b85546a17166b264f58148bbd7b3c8cb6",
+      "results/experiment_6516_exact_branch_pilot_dataset_v3.json": "sha256:455b9ba3872e4c1e2c2f627365c0e51c7c221d64b55f068f2f803fef44ae2ca2",
+      "results/experiment_6517_branch_pilot_independent_audit.json": "sha256:fa5c84abc899d08ffc308dc2d4e858b7827e9e0b663fe84cab9ad564ea2a94c8",
+      "scripts/research_conductor.py": "sha256:8aad61bff3e0ce2920ab3055fd2573fa113a8c081b4265d9afc0438456f4f333"
+    }
+  },
+  "random_seed": 6521,
+  "refinement_relation_contract": {
+    "accepted": [
+      "equal_query",
+      "clause_superset"
+    ],
+    "contract_hash": "sha256:d512902c66972266774aea88dda6d1cdb522b4664cda53417e52c2690deeb967",
+    "exact_replay_required_before_use": true,
+    "exact_replay_required_before_write": true,
+    "proof_method": "local_clause_multiset_subset_with_same_schema_domain_solver",
+    "rejected": [
+      "unrelated",
+      "relaxed",
+      "schema_mismatch",
+      "solver_mismatch",
+      "stale_source_hash",
+      "malformed_clause",
+      "invalid_exact_replay"
+    ],
+    "relation": "clause_superset_same_schema_domain_solver_v1",
+    "source_relation": "learned_conflicts_candidate_local_contract"
+  },
+  "reproducibility_checksum": "sha256:db2c5839f95a4a11a6a76018755b09bb8bfde4dac8c63ea66283b69d9a9a48cf",
+  "restart_rollback_rows": [
+    {
+      "active_record_count": 2,
+      "corruption_quarantined": false,
+      "memory_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6521_transactional_refinement_conflict_memory.tx/memory.json",
+      "operation": "load",
+      "passed": true,
+      "row_type": "lifecycle",
+      "state_hash": "sha256:6f842d3929752f811e1c3be502b271328a921c5bf715ccfa91139d899a2187f1"
+    },
+    {
+      "checkpoint_id": "baseline",
+      "operation": "rollback",
+      "passed": true,
+      "rolled_back": true,
+      "row_type": "restart_rollback",
+      "state_hash_after": "sha256:e8f608cff15af4684bbb4c03764b4f766aef5eea15f6441fa339f339f9b3b18a",
+      "state_hash_before": "sha256:6f842d3929752f811e1c3be502b271328a921c5bf715ccfa91139d899a2187f1",
+      "target_state_hash": "sha256:e8f608cff15af4684bbb4c03764b4f766aef5eea15f6441fa339f339f9b3b18a"
+    }
+  ],
+  "status": "complete_transactional_refinement_conflict_memory_ready",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6521_transactional_refinement_conflict_memory.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6521_transactional_refinement_conflict_memory.py -m pytest tests/python/test_experiment_6521_transactional_refinement_conflict_memory.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6521_transactional_refinement_conflict_memory.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6521_transactional_refinement_conflict_memory.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6521_transactional_refinement_conflict_memory.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6521_transactional_refinement_conflict_memory.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6477_backend_neutral_exact_constraint_record.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6521_transactional_refinement_conflict_memory --date 20260823",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6521_transactional_refinement_conflict_memory --validate",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    }
+  ],
+  "upstream_gate_receipt": {
+    "all_gates_passed": true,
+    "artifact_path": "results/experiment_6517_branch_pilot_independent_audit.json",
+    "artifact_sha256": "sha256:fa5c84abc899d08ffc308dc2d4e858b7827e9e0b663fe84cab9ad564ea2a94c8",
+    "exists": true,
+    "honest_verdict": "complete_branch_pilot_independent_audit: all rows, receipts, splits, shards, features, censoring, attacks, and protected hashes passed",
+    "pilot_audit_gate": "experiment_6517_branch_pilot_independent_audit",
+    "protected_hash_count": 51,
+    "status": "complete_branch_pilot_independent_audit_ready"
+  },
+  "valid_reuse_rows": [
+    {
+      "content_hash": "sha256:80249d1fff1eda09d8ba31b2bb064e6d15da9dfe72cec649f6e6018c105d1e98",
+      "exact_replay_valid": true,
+      "memory_used": true,
+      "operation": "use",
+      "passed": true,
+      "refinement_valid": true,
+      "replay_receipt_hash": "sha256:b79f3dc13eebb877911629d74b536866391924c066b225c7007b0228f80e63aa",
+      "row_type": "valid_reuse",
+      "unsafe_use_performed": false,
+      "use_count_after": 1
+    }
+  ],
+  "verdict_class": "circular_positive",
+  "verifier_is_oracle": true
+}
