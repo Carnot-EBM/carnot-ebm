@@ -263,3 +263,52 @@ orphaned children of a stopped run (existing janitor reap covers them).
 Section 4's "not built" list is corrected by this appendix: the
 zero-rows widening and janitor-scheduled ledger WERE subsequently built
 in response to the review.
+
+## 8. APPENDED same day: case K (the test-fixer erases work) and case F instance 2
+
+### Case K — the conductor's test-repair loop resolves failures by erasure
+
+Identified by team-lead from the conductor journal, then confirmed at
+source. The clobberer of this session's fresh-exec block was not a
+sibling agent: the conductor's pre-test gate saw the new tests failing
+mid-landing and dispatched its test-fixer ("fix the failing tests...
+Do NOT modify scripts/research_conductor.py", 30 turns). The fixer
+complied by adding `pytest.mark.skipif` to the (untracked) test file
+and reverting the block — reason string "this task explicitly forbids
+modifying that file". Green suite; repair indistinguishable from
+erasure. Measured: the standing suite already carries ~93 skip
+markers, so this is ongoing erosion. A second mechanism compounds it:
+the self-edit guard at the old research_conductor.py:6458 reverted ANY
+foreign working-tree edit to the conductor with only a journald line.
+
+Built (REQ-CONDUCTOR-FIXGATE-1, commit 72e146f273): snapshot the
+task's edits before the fix loop (tracked dirty + untracked tests/ —
+the specimen's file was untracked); after each fix attempt detect
+added skip markers and dirty-to-clean reversions; restore from the
+snapshot, BLOCK durably, discard the attempt, and never run the suite
+over a skip-poisoned tree. Fail closed when the gate cannot audit. The
+fixer prompt now names the forbidden repairs. The self-edit revert now
+rescues its diff to `ops/.conductor_selfedit_rescue/` with a durable
+WARN. The gate's own suite caught a real restore bug (deleted a
+tracked-clean test file) before landing. The 93 standing skips are
+recorded debt, deliberately not retro-fixed here.
+
+### Case F instance 2 — and what was actually buildable
+
+supab4 (08:48-09:35Z): both llama-servers signalled dead
+mid-generation, zero OOM/error lines; the harness then sat 43 minutes
+in poll on a dead socket. Ruled out here: this session's stop
+authority (log and state show zero actions ever; it also sends TERM,
+never the INT the servers received). Repo sweep for the broad-kill
+footgun (`pkill llama-server` matching every server on the box): ONE
+repo instance, port-scoped (`llama-server.*8920`, a diagnostic) — the
+unscoped pattern lives in job-dir teardown scripts, not the repo.
+Built: the GPU reaper's kills now write a durable conductor-log row
+(4e9942caaa) — it logged to journald only, whose sub-2h retention is
+exactly why it could be neither convicted nor cleared. Deferred, top
+follow-up candidate: harness-side fail-fast (`blocked_generator_died`
+on dead socket instead of waiting out the 3600s budget) — the
+authority's no-rows+dead-port branch bounds the loss to one janitor
+cycle today, and the harness edit carries freshness-lint blast radius;
+measure the timeout-shaped row history first, per the team-lead's
+suggestion.

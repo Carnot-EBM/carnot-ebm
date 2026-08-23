@@ -17382,6 +17382,7 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
 - 2026-08-23: Independent external-corpus provenance, replay, and split audit (⚠️ Blocked) — honest_verdict=blocked_external_constraint_corpus_audit: failed_checks=exp6529_artifact_exists,fixture_exists,pinned_source_root_exists,revision_is_immutable,license_verified,schema_verified,corruption_boundary_text_verified; results/experiment_6530_external_constraint_corpus_audit.json
 - 2026-08-23: Operational retrospective for 2026.08.565: the locked record contains 3 synthesis-only experiments across 0.8 reconstructed minutes. The 0.77-minute contract task formed the visible tail. Compute-path GPU efficiency and parallel-runner selection did not apply because the compute-bound count was zero. Add steady-clock phase probes, content-hash reuse, and task dispatch receipts. The savings estimate stays at 0% because the data supplies no optimization benchmark. Artifact: results/operational_retro_2026_08_565.json.
 - 2026-08-23: Exp6541 V566 direct-source contract test fix (✅ Complete) — added the missing REQ-REPORT-6541 OpenSpec contract, validated the Exp6541 artifact, and restored the reported focused failure set to green with scoped 100% module coverage; results/experiment_6541_v566_direct_source_contract.json.
+- 2026-08-23: Exp6542 DRIFT-Bench intake test fix (✅ Complete) — formatted the Exp6542 module/test, marked REQ-BENCH-6542 implemented in OpenSpec, and validated focused 100% module coverage plus the adjacent Exp6541/Exp6542/stop-authority/conductor set; results/experiment_6542_drift_bench_external_intake_v2.json.
 
 ## 2026-08-23 (outer loop): conductor self-sufficiency — stop authority, fresh-exec, janitor restart, ledger cadence
 
@@ -17407,3 +17408,18 @@ was fixed and the mutation re-proven RED before landing.
 Also recorded: uncommitted work in this checkout was clobbered three
 times during the build by concurrent-agent pre-commit stash windows;
 only commits protect work (see the research note section 6).
+
+## 2026-08-23 (outer loop, later): case K erasure gate + case F attribution
+
+The clobberer of this session's own conductor edits was identified (by
+team-lead, from the journal) as the conductor's test-repair loop: given
+"fix the failing tests", the fixer added skipif and reverted the work.
+Built REQ-CONDUCTOR-FIXGATE-1 (commit 72e146f273): snapshot task edits,
+detect added skips (tracked diff AND untracked test files) and
+reverted work, restore + BLOCK + discard the attempt; self-edit revert
+now rescues its diff durably. Six mutations RED -> byte-identical
+GREEN; the gate's own tests caught a restore bug before landing.
+Also 4e9942caaa: GPU reaper kills now write a durable conductor-log
+row (supab4 signal-sender hunt could neither convict nor clear it on
+journald retention alone). Standing debt recorded, not fixed: ~93 skip
+markers already in the suite.
