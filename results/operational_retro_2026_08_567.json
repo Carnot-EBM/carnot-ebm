@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.567",
+  "generated_at": "2026-08-23T18:53:58Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 11.4,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 7,
+  "slowest_experiments": [
+    {
+      "experiment": "SOTA constraint-saturation and bounded-intervention comparison",
+      "duration_minutes": 8.73,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Prospective SOTA chronological continuous self-learning comparison",
+      "duration_minutes": 1.6,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independent prospective continuous self-learning audit",
+      "duration_minutes": 0.68,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Proof-preserving constraint-saturation SOTA ingestion and fixture",
+      "duration_minutes": 0.15,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V567 evidence eligibility, architecture freshness, and gate contract",
+      "duration_minutes": 0.12,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Thirteen experiments completed in 11.4 minutes, including seven compute-bound experiments. The 8.73-minute SOTA constraint-saturation and bounded-intervention comparison dominated the recorded execution tail, but the bounded data has no phase breakdown and the locked record reports no GPU-idle condition on compute-bound tasks.",
+  "bottlenecks_identified": [
+    "The 8.73-minute SOTA constraint-saturation and bounded-intervention comparison dominated the 11.4-minute milestone wall time.",
+    "Disk-mtime reconstruction provides no per-phase timing, so the data does not reveal why the longest compute-bound experiment took longest.",
+    "The GPU report is not attributed to task execution windows, so it cannot establish accelerator duty cycle during the seven compute-bound experiments."
+  ],
+  "improvements_suggested": [
+    "Add monotonic per-phase timing and task-correlated GPU utilization receipts to every compute-bound run.",
+    "Declare model count at dispatch and record the selected runner; invoke DualGPURunner only when at least two models are loaded in parallel.",
+    "Add dependency-aware scheduling that can overlap synthesis-only work with compute-bound work when prerequisites permit, and record the achieved overlap."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument the 8.73-minute compute tail with phase timers and task-linked GPU samples.",
+    "Add model-count and runner-selection receipts, with conditional DualGPURunner dispatch for parallel multi-model tasks.",
+    "Measure and enable safe overlap between synthesis-only and compute-bound work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The supplied record can rank durations but cannot explain phase causality or grade task-window GPU efficiency. No data available this milestone establishes a compute-bound task with at least two models in parallel or a failure to engage DualGPURunner."
+}

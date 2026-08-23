@@ -6290,3 +6290,10 @@ The critical path for milestone .250:
 - theme: one GGUF stress-and-guard task dominated a short compute-and-synthesis run
 - key result: the longest compute task is identified, but phase causes and concurrent multi-model runner use have no data available this milestone; the locked GPU-idle-on-compute field is false
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.567
+
+- exp_range: no data available this milestone
+- theme: constraint-saturation compute formed the execution tail while task-level telemetry remained incomplete
+- key result: the longest compute task is identified, but its phase cause, task-window GPU efficiency, and any missed parallel multi-model runner dispatch have no data available this milestone
+- acceptance: no data available this milestone
