@@ -8176,6 +8176,101 @@ return `⚠️ Research Finding`, not `✅ Complete`, even when a
 |---|---|---|
 | REQ-CONDUCTOR-VERDICT-2 | Implemented (`scripts/research_conductor.py:_verdict_is_untrustworthy` enum-first branch; `scripts/in_process_doc_reconcile.py:classify_artifact` enum-first mapping) | Implemented (`tests/python/test_verdict_class_enum_first.py`; mutations: conductor enum branch removed -> RED, circular_positive mapped to Complete -> RED) |
 
+## REQ-CONDUCTOR-VERDICT-3: A Success-Shaped Verdict String SHALL NOT Declare Itself Partial
+
+Origin incident, 2026-08-23. Four artifacts wrote an `honest_verdict`
+opening with `complete_` while declaring `verdict_class: partial`:
+
+| Artifact | verdict opens with | verdict_class |
+|---|---|---|
+| experiment_6506_v561_evidence_corrigendum | `complete_v561_...` | partial |
+| experiment_6510_v563_independent_exact_root | `complete_v563_...` | partial |
+| experiment_6513_v564_terminal_handoff_contract | `complete_v564_...` | partial |
+| experiment_6526_v564_independent_capstone | `complete_partial_...` | partial |
+
+Four of the nineteen artifacts declaring `verdict_class` at the time.
+
+REQ-CONDUCTOR-VERDICT-2 made the conductor enum-first, so it believed the
+FIELD: each task was classified partial and re-run toward the 3-fail limit.
+`experiment_6513`'s task retired permanently that way. A human or tool
+reading the verdict STRING saw a completed result. The record asserted two
+different things and nothing compared them.
+
+This was misdiagnosed three times during the same session as a substring
+false positive in the conductor's token lists. It was not: stripping
+`verdict_class` from those artifacts makes the classifier return
+trustworthy, proving the token lists never ran. The enum was working
+exactly as specified; the artifacts contradicted themselves.
+
+The rule. When an artifact declares `verdict_class: partial` AND its
+`honest_verdict` begins with a terminal-success prefix, a WARN flag SHALL
+be raised naming both. The author picks one: drop the success prefix, or
+declare the class that matches.
+
+Why this check MAY read `honest_verdict` when REQ-CONDUCTOR-VERDICT-1
+forbids it. That prohibition was written against MID-STRING tokens like
+"marginal" and "retired", which drift because ordinary prose contains
+them. This match is anchored at position 0 against the same closed
+12-member prefix set the conductor already uses. An anchored prefix cannot
+drift into unrelated prose, so the reason behind the prohibition does not
+apply.
+
+WARN, not CRITICAL, on purpose. The measurement underneath may be sound;
+the label is what is wrong. Quarantining the artifact would punish a result
+for a naming mistake, and a gate that overreaches gets bypassed.
+
+Deliberately narrow. Only success-prefix versus `partial`. A `blocked_`
+prefix with `partial` is NOT flagged — a blocked run genuinely is a kind of
+partial, and `experiment_6528` is that honest shape. Further pairs are
+added when a real artifact shows one, not speculatively.
+
+#### SCENARIO-CONDUCTOR-VERDICT-5
+
+Given `verdict_class: partial` and an `honest_verdict` starting with any
+terminal-success prefix, a `VERDICT_PREFIX_CLASS_CONTRADICTION` WARN SHALL
+be raised naming the prefix.
+
+#### SCENARIO-CONDUCTOR-VERDICT-6
+
+Given `verdict_class: partial` and an `honest_verdict` starting with
+`blocked_`, no flag SHALL be raised.
+
+#### SCENARIO-CONDUCTOR-VERDICT-7
+
+Given a terminal-success prefix and any class other than `partial`, no
+contradiction flag SHALL be raised by this check.
+
+#### SCENARIO-CONDUCTOR-VERDICT-8
+
+Given a principle-wrapped `honest_verdict` (`{"value": ..., "principle":
+...}`), the check SHALL read through the wrapper rather than skipping it.
+
+## Implementation Status (REQ-CONDUCTOR-VERDICT-3)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-VERDICT-3 | Implemented (`scripts/adversarial_verify.py`: `_check_terminal_prefix_vs_partial_class` + `_TERMINAL_SUCCESS_PREFIXES` + `_verdict_text` unwrap, called from `check_verdict_class_consistency`) | Implemented (`tests/python/test_verdict_prefix_class_contradiction.py`, 37 tests with `test_verdict_class_consistency.py`; 4 mutations each RED then byte-identical GREEN: contradiction unwired, prefix-anchor loosened to substring, principle-unwrap removed, partial-only guard dropped) |
+
+**Scope note, 2026-08-23 — a sibling check was built and removed the same
+day.** `verdict_class: positive` with `verifier_is_oracle: True` is already
+CRITICAL, but only when the class is DECLARED, so omitting the field walked
+past it. A check keyed on (terminal-success prefix + `verifier_is_oracle`)
+for the undeclared case was written, tested, and mutation-proved — then
+measured against the corpus and **removed**: it fired on **221** artifacts
+against 4 for its sibling. Declaring `verdict_class` is forward-only from
+2026-08-21, so the historical corpus is being blamed for omitting a field
+that did not exist, and the two artifacts that motivated the check
+(exp6478, exp6497) carry no date field, so no date gate could separate them
+from the 221. A warn on 221 artifacts would drown the 4 real ones, and an
+overreaching gate gets bypassed.
+
+Recorded rather than quietly dropped, because the reasoning is the reusable
+part: a check that is correct in principle and 55x over-broad in practice is
+not ready, and the measurement that showed it must survive the deletion.
+Prevention for NEW artifacts is the planner emitting `verdict_class`; the
+two historical claims are dispositioned in `ops/audit-findings-ledger.md`;
+`check_circular_moat_overclaim` already covers the headline case.
+
 ## REQ-CONDUCTOR-DENYHOOK-1: Forbidden Commands SHALL Be Denied At The Harness Layer, With A WARN-Only Prompt Scan Behind Them
 
 Design: `docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md`
