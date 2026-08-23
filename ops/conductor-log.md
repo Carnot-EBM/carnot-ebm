@@ -16301,3 +16301,4 @@ code |
 | 2026-08-23 01:42 UTC | Matched exact structural-control headroom comparis | OK | 89 passed, 1 warning in 13.26s |
 | 2026-08-23 02:02 UTC | Independent certificate for held structural headro | OK | 89 passed, 1 warning in 14.46s |
 | 2026-08-23 02:25 UTC | Safety Net learned router with exact exception and | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-23 02:45 UTC | Transactional refinement-witness exact conflict me | OK | 89 passed, 1 warning in 10.78s |
