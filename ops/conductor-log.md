@@ -16361,3 +16361,6 @@ code |
 | 2026-08-23 20:54 UTC | Independent V567 constraint-saturation audit from  | OK | 87 passed, 1 warning in 12.75s |
 | 2026-08-23 21:17 UTC | Production Safety-Net canary on measured verificat | OK | 91 passed, 1 warning in 11.62s |
 | 2026-08-23 21:39 UTC | Rust/PyO3 Safety-Net batched hot-path NFR01 benchm | OK | Deliverable already exists in repo |
+| 2026-08-23 22:52 UTC | Plan milestone 2026.08.569 | OK | 6 tasks proposed |
+| 2026-08-23 22:54 UTC | Activation REFUSED: milestone 2026.08.569 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-23 22:54 UTC | Activation replan 1/2: 2026.08.569 | OK | refused roadmap quarantined to roadmap-2026.08.569-refusal1.yaml; replanning wit |

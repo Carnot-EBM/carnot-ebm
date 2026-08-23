@@ -103,11 +103,6 @@ tasks:
     max_turns: 30
     estimated_wall_time_min: 75
     model: sonnet
-    prior_failures:
-      - experiment_id: exp6528-v565-source-model-method-contract
-        verdict: "blocked_v565_source_model_method_contract: unavailable_required_channels=openreview"
-        addressed_by: "Exp6528 combined source, model, and method admission. It blocked because two required OpenReview source dates were unavailable. Exp6566 removes that dependency: it uses four pinned arXiv primary sources and tests only local proof-obligation and graph-Potts conformance fixtures."
-        retire_if_same_verdict: true
     prompt: |
       CONTEXT
       V569 introduces two new mechanisms from the dated source refresh: source-span-bound proof obligations and graph-structured online difficulty estimation with a Potts prior. The design must be frozen before model output or comparative outcomes exist. Exact executable checks remain release authority. Work at {project_root}. The planning date is {date}.
