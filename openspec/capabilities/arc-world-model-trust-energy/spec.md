@@ -27236,8 +27236,24 @@ Given a `run_cell` whose cell archived N attempts, then the row carries
 `induction_archive.added == N` with their sha256_16 values, and a cell that
 archived nothing carries `added == 0` without error.
 
+#### SCENARIO-ARC-WMTE-6690-7 (the manifest names the model that actually loaded)
+
+Given a proposer whose `model_path` override supersedes its declared
+`repo_substr`, then each archived attempt records the OVERRIDING weights, not
+the declared pin. Given no override, the declared pin IS the effective label
+and is recorded.
+
+Added 2026-08-23 from a live tu93 retention run: the manifest recorded
+`"model": "Qwen3.5-9B-MTP"` (the harness's frozen pin) while the run had
+loaded `Qwen3.8-27B-Q4_K_M.gguf`. Both archive sites passed
+`str(self.repo_substr)` instead of the existing `_effective_model_label()`.
+The manifest is the durable provenance record for retained attempts, so the
+wrong label misattributes every archived model to a model that never ran --
+the same mislabel REQ-ARC-WMTE-6670 exists to prevent.
+
 ## Implementation Status (REQ-ARC-WMTE-6690)
 
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6690 | `python/carnot/agentic/arc_executable_world_model.py` (`attempt_archive_enabled`, `_archive_engine_attempt`, `_archive_codex_engine`; archive calls in `_gen_to_file`, `_write_world_model`, `CodexProposer.induce/refactor`). `scripts/arc_scored_path_lever_harness.py` (`_attempt_manifest_path`, `_attempt_archive_delta`, `_manifest_line_count`; `run_cell` snapshots the manifest and emits `induction_archive`). | `tests/python/test_arc_engine_attempt_archive.py` (SCENARIO-ARC-WMTE-6690-1..6; 10 mutations M1-M10 each RED then restored byte-identical -- archive calls, dedup, kill switch, fail-open, test-guard, codex wiring, harness wiring, delta slice, snapshot count). |
+| REQ-ARC-WMTE-6690 (SCENARIO-7, added 2026-08-23) | Both archive call sites pass `self._effective_model_label()`, which prefers `model_path` over the declared `repo_substr`. | `tests/python/test_arc_engine_attempt_archive.py::test_manifest_model_is_the_effective_label_not_the_frozen_pin` + `::test_manifest_model_falls_back_to_repo_substr_without_override`. Mutation-proved: reverting both sites to `repo_substr` turns the override test RED with the live-observed `['Qwen3.5-9B-MTP', 'Qwen3.5-9B-MTP']`. |
