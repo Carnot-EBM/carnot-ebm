@@ -11,165 +11,9 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 3 |
+| CLAIM_SUPPORTED | 2 |
+| CLAIM_OVERSTATED | 2 |
 | NO_CLAIM | 4 |
-| CANNOT_DETERMINE | 1 |
-
-## experiment_6522_chronological_conflict_self_learning.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Chronological exact-conflict memory produced positive charged held-future benefit over scratch and frozen-empty controls while preserving exact answers, prefix support, and safe operation.
-
-## WHAT WOULD REFUTE IT
-Both valid-reuse arms tying or exceeding the scratch and frozen-empty held-future charged cost—making their charged benefit nonpositive—would refute the claimed benefit.
-
-## WAS THAT CHECKED
-Yes. The held-future support rows directly compare both valid-reuse arms against scratch and frozen-empty controls under matched dose; both reuse arms had substantially lower charged cost and positive benefit. Sequential access, exact equality, retention, and unsafe operations were also checked.
-
-## EVIDENCE
-`benefit_beyond_scratch_and_frozen_controls`: `true`; `matched_dose`: `true`; `valid_unbounded_reuse`; `charged_cost`: `40`; `charged_benefit_vs_scratch`: `84`; `charged_benefit_vs_frozen_empty`: `84`; `valid_bounded_reuse`; `charged_cost`: `44`; `charged_benefit_vs_scratch`: `80`; `charged_benefit_vs_frozen_empty`: `80`; `scratch`; `charged_cost`: `124`; `frozen_empty_memory`; `charged_cost`: `124`; `held_future_unread_until_boundary`: `true`; `decisions_use_only_prior_store_hash`: `true`; `verifier_is_oracle`: `false`; `exact_answer_equality`: `true`; `unsafe_use_count`: `0`; `unsafe_write_count`: `0`; `prefix_retention_within_margin`: `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6523_adaptive_validation_csl_audit.json
-
-**CANNOT_DETERMINE**
-
-> Audit-integrity guard: quoted evidence ['; under ', ', both have ', '. Nevertheless, ', ' is reported as ', ' has ', ', versus ', ', with '] does not appear in the artifact, so this verdict was downgraded and must not be acted on.
-
-## VERDICT
-CLAIM_REFUTED_BY_OWN_DATA
-
-## THE HEADLINE CLAIM
-The independent full audit supports continuous self-learning, while adaptive validation saves checks without changing the full-set decision.
-
-## WHAT WOULD REFUTE IT
-A serious comparator matching the claimed learning method’s held-future benefit and charged cost would refute added value; the restart arm does exactly that, tying valid unbounded reuse.
-
-## WAS THAT CHECKED
-Yes. The final full held-set audit evaluated every candidate, and the held-future support audit reports both the method and restart in the winner tie set. Adaptive validation itself was given a real chance to fail through decision disagreement or failure to save checks, but neither occurred.
-
-## EVIDENCE
-The `winner_tie_set` contains `valid_unbounded_reuse` and `restart`. Under `benefit_vs_scratch`, both have `84`; under `charged_cost_totals`, both have `40.0`. Nevertheless, `full_audit_winner` is reported as `valid_unbounded_reuse`. For validation cost, `variance_weighted_adaptive` has `charged_checks` of `108`, versus `132` for `fixed_subset` and `180` for `full_set`, with `decision_agreement_with_full` equal to `true`.
-
-## RECOMMENDATION
-NARROW_CLAIM
-
-## experiment_6524_arc_supervisor_redirect_generalization.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-An accepted live receipt marked outcome-bearing, with redirect or arm-outcome data, would refute the artifact’s stated reason for being blocked; a supervisor-value or generalization claim would additionally require outcome-bearing comparisons against a serious baseline.
-
-## WAS THAT CHECKED
-Yes. The accepted live receipts were individually classified, the outcome-bearing count was recomputed, and the redirect-outcome table was inspected; all three receipts were disabled and non-outcome-bearing. Thus the blocked status had a real chance to be contradicted, but no comparative supervisor claim was tested.
-
-## EVIDENCE
-`honest_verdict`: `blocked: missing outcome-bearing live trajectory-supervisor receipts`; `verdict_class`: `blocked`; `outcome_bearing_receipt_count`: `0`; `live_receipt_count`: `3`; `disabled_receipt_count`: `3`; `outcome_bearing`: `false`; `arm_outcomes_present`: `false`; `redirect_outcome_rows`: `[]`; `solve_credit_claimed`: `false`; `arc_generalization_slot_complete_score`: `0.0`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6525_gatemate_changed_state_continuity.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-No qualifying post-Exp6325 physical-state receipt existed, so no hardware command ran and Exp3866 remained excluded.
-
-## WHAT WOULD REFUTE IT
-A candidate row marked valid for a post-Exp6325 operator-authored material physical-state change, any executed hardware-command row, or evidence that Exp3866 was not excluded.
-
-## WAS THAT CHECKED
-Yes. The receipt candidates were individually evaluated, command rows and counts were recorded, and the Exp3866 exclusion state was checked.
-
-## EVIDENCE
-`"receipt_candidate_count": 24`, `"valid_receipt_count": 0`, `"new_post_exp6325_physical_receipt_found": false`, `"command_rows": []`, `"hardware_command_count": 0`, `"exp3866_clean_terminal_evidence_excluded": true`, `"verdict_class": "blocked"`, `"verifier_is_oracle": false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6526_v564_independent_capstone.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Held, oracle-distinct rows support structural headroom, learned-router, continuous-self-learning, and adaptive-validation benefits, while ARC generalization and GateMate continuity remain blocked.
-
-## WHAT WOULD REFUTE IT
-A held comparison showing the learned router tied or lost to the best structural arm after charged costs—for example, zero held-benefit units—would refute the router component of the headline claim.
-
-## WAS THAT CHECKED
-Yes. The learned-router comparison used the best structural arm and reports 28 held-benefit units, candidate preservation, exact-solver release authority, and held-contamination checks. The artifact also demonstrates that adverse outcomes could survive aggregation by retaining the ARC and GateMate lineages as blocked.
-
-## EVIDENCE
-`verdict_class`: `partial`; `authority`: `oracle_distinct_row_reduction`; `held_benefit_beyond_best_structural_units`: `28`; `charged_cost_accounting_passed`: `true`; `candidate_preservation_passed`: `true`; `held_contamination_free`: `true`; `adaptive_charged_checks`: `108`; `full_set_charged_checks`: `180`; `adaptive_decision_agreement`: `true`; `oracle_distinct_held_future_benefit`: `true`; `blocked_lineage_count`: `2`; `outcome_bearing_receipt_count`: `0`; `hardware_command_count`: `0`; `verifier_is_oracle`: `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6527_v565_evidence_eligibility_corrigendum.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable; this is a governance/eligibility receipt, not a comparative value claim. A scientific claim would require outcome rows showing the adopted method ties or loses to a serious baseline.
-
-## WAS THAT CHECKED
-No; the artifact replays eligibility, hashes, rows, and command receipts but does not test a new comparative claim.
-
-## EVIDENCE
-`complete_v565_evidence_root_eligible`, `verdict_class`, `null`, `verifier_is_oracle`, `true`, `immutable_v564_row_replay_and_live_validation_no_llm`, `verifier_is_oracle is only for hash, row, and command receipts`, `verdict_class_null_governance_root`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6528_v565_source_model_method_contract.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative or value claim to falsify. Treating the blocked status as an operational assertion, verification of every required primary source—including the OpenReview sources with matching dates—would refute it.
-
-## WAS THAT CHECKED
-Yes. `gate_check_summary` checks required primary-source verification and records the two OpenReview failures; no experimental method comparison was run.
-
-## EVIDENCE
-`blocked_v565_source_model_method_contract`, `partial`, `required_primary_sources_verified`, `false`, `all_gates_passed`, `false`, `v565_method_contract_ready_score`, `0.0`, `model_loaded_or_run`, `false`, `low_concurrency_primary_source_and_cache_preflight_no_experimental_llm`, `No upstream aggregate or run database result transfers.`
-
-## RECOMMENDATION
-KEEP
 
 ## experiment_6530_external_constraint_corpus_audit.json
 
@@ -182,13 +26,167 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative or value claim to falsify; treating the blocked status as an operational claim, it would be refuted if the required corpus inputs existed and all audit gates passed.
+There is no comparative or value claim to falsify. Treating the blocked status as an operational claim, it would be refuted if the intake artifact, fixture, and pinned source existed; the revision, license, schema, and corruption boundary were verified; and all gates passed.
 
 ## WAS THAT CHECKED
-Yes. The existence receipts, gate summary, empty audit rows, and recomputed readiness explicitly check those conditions and report failure rather than success.
+Yes. The existence receipts, revision-and-license receipt, and gate summary explicitly checked those preconditions and recorded their failures. No corpus performance or verifier-added-value claim was tested.
 
 ## EVIDENCE
-`status` `blocked_external_constraint_corpus_audit` `verdict_class` `blocked` `all_gates_passed` `false` `fixture_row_count` `0` `blocked_preconditions` `true` `external_constraint_corpus_audited_ready_score` `0.0` `verifier_is_oracle` `true`
+`status`, `blocked_external_constraint_corpus_audit`, `verdict_class`, `blocked`, `all_gates_passed`, `false`, `fixture_row_count`, `0`, `blocked_preconditions`, `true`, `external_constraint_corpus_audited_ready_score`, `0.0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6541_v566_direct_source_contract.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+This is a readiness receipt, not a method-value claim. Its operational conclusion would be refuted by any required source, replay, cache, split, field, or dependency check failing.
+
+## WAS THAT CHECKED
+Yes. The artifact reports per-requirement rows, aggregate recomputation, and a failed-check summary; no model or comparative outcome was evaluated.
+
+## EVIDENCE
+`complete_v566_direct_source_contract_ready: direct DRIFT source, local replay, model cache, split, field, and dependency contracts are implementable`; `States direct-source readiness without declaring a scientific result.`; `direct_primary_source_cache_and_dependency_preflight_no_llm`; `model_loaded_or_run`; `false`; `all_gates_passed`; `true`; `failed_checks`; `[]`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6542_drift_bench_external_intake_v2.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+For the artifact’s operational readiness assertion, a source-hash mismatch, cross-split family overlap, missing or censored replay row, rejected assignment, corrupt shard accepted, failed leakage attack, or fixture round-trip mismatch would refute completion. None would refute a scientific value claim because none is made.
+
+## WAS THAT CHECKED
+Yes. Those failure modes were checked in the source comparisons, replay rows, split commitment, shard corruption probe, leakage attack matrix, terminal-unit accounting, fixture round-trip, and aggregate recomputation. The oracle-defined Z3 results establish execution receipts only; no added-value claim is advanced.
+
+## EVIDENCE
+`"positive_scientific_class_declared"`: `false`; `"verdict_class"`: `null`; `"inference_substrate"`: `"content_pinned_drift_intake_and_local_z3_replay_no_llm"`; `"verifier_is_oracle"`: `true`; `"all_gates_passed"`: `true`; `"failed_checks"`: `[]`; `"base_problem_overlap_count"`: `0`; `"censored_count"`: `0`; `"corrupt_resume_rejected"`: `true`; `"roundtrip_matches_expected"`: `true`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6543_external_corpus_independent_audit_v2.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no scientific or comparative claim to falsify; the narrower audit-readiness receipt would fail if any source, chronology, split, replay, transaction, aggregate, or attack check failed.
+
+## WAS THAT CHECKED
+Yes, for audit readiness: per-row checks, aggregate recomputation, and gate checks could record failures. No value or comparative claim was made or tested.
+
+## EVIDENCE
+`"verdict_class": null`, `"Names audit readiness without declaring a scientific result."`, `"True only for audit checks; the artifact makes no positive scientific class."`, `"all_gates_passed": true`, `"failed_checks": []`, `"all_audit_rows_passed": true`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6544_external_structural_headroom.json
+
+**CLAIM_OVERSTATED**
+
+## VERDICT
+CLAIM_OVERSTATED
+
+## THE HEADLINE CLAIM
+Analytical ordering provides positive charged-work value over native and random ordering on held data across three families.
+
+## WHAT WOULD REFUTE IT
+Analytical ordering tying or costing more than a serious deterministic baseline that simply checks the deepest/current-turn full-state prefix first under identical overhead accounting would refute added analytical value; totals at or above native or random would also refute the stated comparison.
+
+## WAS THAT CHECKED
+No, not in a genuinely falsifiable way. The candidate set always includes the current target prefix, analytical ordering selects the largest prefix first, and evaluation stops upon reaching that full target state. Native chronological and random ordering therefore cannot seriously challenge the method. The nominally closest arm, one-shot enumeration, was not an identical deepest-first comparator with identical overhead accounting.
+
+## EVIDENCE
+`primary_metric`: `held_total_charged_work_units_beyond_native_and_random`; `candidate_set_definition`: `all cumulative prefix states from turn zero through the current target turn`; `analytical`: `Largest structural prefix first, using constraint and assertion counts.`; `stop_rule`: `stop_after_full_target_state_or_native_fallback`; `native_exact_fallback_required`: `true`; `one_shot_enumeration`: `Enumerate the structurally largest prefix first, then descending prefixes.`; `held_total_charged_work_by_arm`: `native`: `2532`, `random`: `2532`, `analytical`: `1986`; `headroom_pair_count`: `54`; `no_headroom_pair_count`: `0`; `verifier_is_oracle`: `false`; `held_rows_used_for_calibration`: `false`; `learned_parameters`: `false`
+
+## RECOMMENDATION
+ADD_MISSING_CONTROL
+
+## experiment_6545_external_safety_net_router.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The frozen selected safety-net router lowers held charged cost versus the certified structural control while preserving exact equality, calibrated abstention, immutable train-only exceptions, and reachable exact fallback.
+
+## WHAT WOULD REFUTE IT
+A held charged cost at least as high as the certified structural control, a nonpositive paired effect, any exact-result mismatch, held-data leakage, mutable held exceptions, or unavailable fallback would falsify the claim.
+
+## WAS THAT CHECKED
+Yes. The comparison rule was frozen before held evaluation; held rows were excluded from fitting, calibration, and model selection; costs were recomputed from per-unit rows; and equality, fallback, exception-table, shortcut, and rollback gates were checked. The certified structural control is a serious safety-equivalent baseline. Cheaper plain-router arms are marked ineligible for the claimed safety-net package and therefore do not refute this specific comparison.
+
+## EVIDENCE
+`selection_rule`: `eligible_arm_must_beat_certified_structural_control_on_held_charged_cost`; `selection_rule_frozen_before_held`: `true`; `held_rows_used_for_fitting`: `false`; `held_rows_used_for_calibration`: `false`; `held_rows_used_for_model_selection`: `false`; `linear_compact_router_abstention_exception_exact_fallback`: `1965.0`; `exp6544_certified_structural_control`: `1986.0`; `held_effect_vs_certified_control_units`: `21.0`; `paired_unit_count`: `54`; `all_costs_recomputed_from_rows`: `true`; `all_exact_equal`: `true`; `mismatch_count`: `0`; `native_exact_fallback_reachable`: `true`; `verifier_is_oracle`: `false`; `linear_compact_router`: `eligible_safety_net_arm`: `false`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6546_smt_cost_guard_sota.json
+
+**CLAIM_OVERSTATED**
+
+## VERDICT
+CLAIM_OVERSTATED
+
+## THE HEADLINE CLAIM
+Guarded exact dispatch reduces held token or time cost without worse exact completion across at least two mandated model families.
+
+## WHAT WOULD REFUTE IT
+Fewer than two model families showing both a cost benefit and non-inferior exact completion—for example, guarded tokens and time both equaling or exceeding unguarded, or a negative exact-completion delta. An always-Z3 arm tying or beating guarded dispatch would also refute the guard’s added-value interpretation.
+
+## WAS THAT CHECKED
+No. Guarded versus unguarded was computed, but the success path was structurally favored: the corpus included a row above the dispatch threshold, routed exact-Z3 calls incur no model-token charge, token OR time savings sufficed, and exact Z3 replacement cannot be less correct than the model under the stated evaluation. The cheapest serious control—always dispatch to Z3—was not tested as an arm.
+
+## EVIDENCE
+`route_rule`: `z3_direct_when_conflict_count_ge_threshold`; `conflict_threshold`: `1`; `conflict_count`: `40`; `direct_tool`: `z3_checker.py exact satisfiability replay`; `token_accounting`: `embedded GGUF tokenizer or llama.cpp usage only`; `guarded_direct_tool_rows`: `2`; `unguarded_total_charged_tokens`: `4636`; `guarded_total_charged_tokens`: `3029`; `exact_completion_delta`: `0`, `1`, `1`; `z3_evaluation_authority`: `true`; `token_or_time_benefit`: `true`.
+
+## RECOMMENDATION
+ADD_MISSING_CONTROL
+
+## experiment_6547_external_transfer_independent_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Independent row-level auditing supports adopting both the router and cost-guard lanes.
+
+## WHAT WOULD REFUTE IT
+A nonpositive held router effect against the certified structural control, guarded cost equal to or worse than unguarded cost, inferior exact completion, held-data fitting or selection, or failed row recomputation would refute the claim.
+
+## WAS THAT CHECKED
+Yes. The artifact compares the selected router with a certified structural control on held rows, compares guarded with unguarded execution, checks exact-completion noninferiority, audits held-data exclusion, and recomputes costs and effects from rows. The oracle defines audit correctness, but the artifact does not claim that the verifier itself adds value.
+
+## EVIDENCE
+`selected_eligible_arm`: `linear_compact_router_abstention_exception_exact_fallback`; `held_effect_vs_certified_control_units`: `21.0`; `held_rows_used_for_fitting`: `false`; `held_rows_used_for_model_selection`: `false`; `held_rows_used_for_calibration`: `false`; `guarded_token_savings_total`: `1607`; `guarded_time_savings_total_s`: `5.569483`; `exact_completion_noninferior`: `true`; `cost_recomputation_passed`: `true`; `exact_equality_passed`: `true`; `router`: `adopted_passed`; `cost_guard`: `adopted_passed`; `verifier_is_oracle`: `true`; `True only for audit checks; the artifact makes no new positive scientific claim.`
 
 ## RECOMMENDATION
 KEEP

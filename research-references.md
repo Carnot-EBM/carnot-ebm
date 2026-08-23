@@ -36253,3 +36253,130 @@ channels remain advisory unless a task directly consumes their content.
   unchanged hardware command.
 
 <!-- V566-PLANNER-REFRESH-20260823-END -->
+
+## V567 planner refresh - 2026-08-23
+
+<!-- V567-PLANNER-REFRESH-20260823-START -->
+
+This refresh followed the terminal V566 run. Exp6542 through Exp6547 supply
+clean external-corpus, router, cost-guard, and independent-audit evidence.
+Exp6541 has a live adversarial-check inconsistency. Treat its direct-source
+contract as quarantined until an additive eligibility audit resolves the
+receipt fields. Exact executable checks remain the only release authority.
+
+### Promising findings selected for V567
+
+- **Large Language Models Can Follow Instructions, But Not Many at Once:
+  Phase Transitions in Compositional Constraint Satisfaction** -
+  arXiv:2608.12426, https://arxiv.org/abs/2608.12426; submitted 2026-08-12.
+  Constraint Saturation Evaluation varies 36 deterministic constraint types
+  from one through 12 simultaneous constraints. It reports a gradual fall in
+  per-constraint success and a much sharper fall in all-constraint success.
+  It also reports more loss for structural constraints than lexical ones.
+  Carnot hook: build proof-preserving DRIFT variants across constraint count,
+  interaction class, and surface form. Compare a flat prompt with bounded
+  decomposition and the V566 exact-tool cost guard. Score every clause and the
+  joint result with executable checkers. Do not use an LLM judge.
+- **Position: Certified Correctness in Neural Constraint Reasoning Requires
+  Symbolic Integration** - arXiv:2608.14569,
+  https://arxiv.org/abs/2608.14569; accepted at ICML 2026. The paper argues
+  that confident neural constraint solvers can violate hard constraints under
+  distribution shift. It recommends neural guidance inside a symbolic system
+  and instance-level certification. Carnot hook: move the V566 Safety-Net
+  router behind a default-off production adapter. Keep all candidates and the
+  native exact fallback. Byte-identical disabled behavior is required.
+- **Forgetting, plasticity, and co-observation: a third facet of continual
+  learning** - arXiv:2608.18803, https://arxiv.org/abs/2608.18803; submitted
+  2026-08-19. The paper separates retention and plasticity from the benefit of
+  seeing old and new data together. Replay can improve generalization through
+  co-observation even when forgetting is controlled. Carnot hook: add a
+  matched-dose co-observation arm to the reversible-memory study. Compare it
+  with frozen, current-only, transactional replay, and same-query mutation.
+  Report retained-family performance and future exact-satisfying support.
+- **Towards Reversible Forgetting: Managing Obsolete Knowledge in Continual
+  Enterprise AI Agents** - arXiv:2608.18177,
+  https://arxiv.org/abs/2608.18177. Its active, dormant, and retired states,
+  asymmetric thresholds, shadow reactivation, and gated retirement remain the
+  right controller pattern for Carnot's transactional conflict memory. V567
+  should test the pattern prospectively. Exact replay must authorize commit,
+  reactivation, rollback, and retirement.
+- **Think Again or Think Longer? Selective Verification for Budget-Aware
+  Reasoning** - arXiv:2606.19808,
+  https://huggingface.co/papers/2606.19808. SEVRA treats verification as a
+  serving allocation decision and records harmful answer flips as well as
+  gains. Carnot hook: measure harmful decomposition or routing interventions,
+  exact gain, token cost, and wall time. Compare every selective arm with a
+  longer initial-budget control before claiming efficiency.
+- **VeRA: Verified Reasoning Data Augmentation at Scale** - arXiv:2602.13217,
+  https://huggingface.co/papers/2602.13217. VeRA uses executable
+  specifications to create equivalent and hardened fresh variants. Carnot
+  hook: generate proof-preserving constraint-load variants from the pinned
+  external corpus. Freeze the generator, source hashes, split, and exact
+  checker before SOTA-model evaluation.
+
+### Controls and non-promotions
+
+- **p-Spin Glass Network Efficient Single-Batch Continual Learning** -
+  arXiv:2608.14774, https://arxiv.org/abs/2608.14774. The paper reports ternary
+  parameters, implicit gradients, and stable micro-batch-one training. It does
+  not provide a verified conflict-memory mechanism or an available Carnot
+  substrate. Keep it as a future compact online-learner control. Do not start
+  a new neural continual-training lineage in V567.
+- **An Embedded RISC-V Evaluation of Kolmogorov-Arnold Networks in
+  Hard-Constrained Recurrent Physics-Informed Models** - arXiv:2608.00737,
+  https://arxiv.org/abs/2608.00737. The reported KAN branches were slower and
+  used more energy than matched MLPs on a scalar RISC-V target. They were also
+  less robust to INT8 quantization. This is not Carnot's workload, but it is a
+  useful deployment warning. V567 does not reopen the compact-KAN sweep after
+  the V566 linear and MLP router transfer already passed.
+- **From Accuracy to Robustness: A Study of Rule- and Model-based Verifiers in
+  Mathematical Reasoning** - withdrawn ICLR 2026 submission,
+  https://openreview.net/forum?id=ZBhZT307xx. Its reported rule-verifier false
+  negatives and model-verifier reward hacking are useful controls, not
+  authority. Carnot must test exact checker conformance and must not grant a
+  learned verifier release power.
+
+### Requested secondary and product checks
+
+- **Semantic Scholar:** unauthenticated EBT (`2507.02092`) and ARM-EBM
+  (`2512.15605`) API calls returned HTTP 429 during this refresh. Keep the last
+  authenticated 2026-08-23 observations of 35 and eight citing records. Search
+  results exposed no new citation with a public matching-base checkpoint or a
+  stronger local exact-authority mechanism.
+- **OpenReview:** current 2025-2026 results continue to support solver-integrated
+  advice and exact post-checks. The verifier-robustness record above also warns
+  that learned checks can be hacked. No result reopens generated-text,
+  log-probability, hidden-state, or schema-reprompt release scoring.
+- **Hugging Face Papers:** SEVRA and VeRA are the useful current controls.
+  They support charged selective intervention and executable fresh variants.
+  LLM-as-a-Verifier remains a learned comparator and cannot replace Z3.
+- **GitHub Trending and targeted repositories:** current results again exposed
+  CCTU, solver services, and paper-specific prototypes. None supersedes the
+  pinned DRIFT corpus, Carnot's installed exact solver stack, or the shipped
+  compact router. Add no runtime dependency for novelty alone.
+- **Extropic:** the first-party August update remains
+  https://extropic.ai/writing/from-one-to-one-billion. It reports Torx, a
+  Thermalizers preview, a taped-out 269,568-pbit Z1, and planned 2027 early
+  access. Carnot has no authenticated device or API route. Schedule no TSU
+  execution, latency, energy, or availability claim.
+- **Logical Intelligence:** https://logicalintelligence.com/ still presents
+  Kona 1.0 as an EBM for critical systems and now foregrounds Aleph formal-code
+  work. It provides no public Kona weights, reproducible training recipe, or
+  documented local runner. Kona remains a product comparator only.
+
+### V567 planning impact
+
+- Audit V566 evidence eligibility first. Do not use Exp6541 as a clean gate.
+- Put the external Safety-Net behind a default-off production adapter. Audit
+  disabled-path identity, abstention, fallback, and cross-language receipts.
+- Freeze a proof-preserving constraint-saturation benchmark. Test all three
+  mandated local GGUF families with exact per-clause and joint checks. Compare
+  flat, decomposed, and cost-guarded routes under matched budgets.
+- Run reversible continuous self-learning prospectively. Freeze memory within
+  each query. Add hysteresis, co-observation, rollback, restart, retention, and
+  future-support controls.
+- Spend the ARC floor on the live supervisor redirect ledger. Claim no public
+  game or level solve. Keep GateMate work receipt-gated to changed physical
+  state and issue no unchanged hardware command.
+
+<!-- V567-PLANNER-REFRESH-20260823-END -->
