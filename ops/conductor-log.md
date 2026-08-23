@@ -16349,3 +16349,4 @@ code |
 | 2026-08-23 17:45 UTC | Independent constraint-saturation phase-curve and  | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-08-23 17:47 UTC | Independent constraint-saturation phase-curve and  | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-08-23 17:50 UTC | Independent constraint-saturation phase-curve and  | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-08-23 18:07 UTC | ARC live trajectory-supervisor redirect-ledger gen | OK | 87 passed, 1 warning in 8.76s |
