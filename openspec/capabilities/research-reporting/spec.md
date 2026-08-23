@@ -52896,3 +52896,69 @@ and gate checks, and every required field has provenance.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6548 | Planned (`python/carnot/experiment_6548_v567_evidence_eligibility_contract.py`, terminal artifact `results/experiment_6548_v567_evidence_eligibility_contract.json`) | Planned (`tests/python/test_experiment_6548_v567_evidence_eligibility_contract.py`) |
+
+### REQ-REPORT-6551: Independent Production Safety-Net Audit
+
+Carnot MUST emit an always-run independent audit artifact at
+`results/experiment_6551_production_safety_net_independent_audit.json` for the
+production Safety-Net adapter and Rust/PyO3 ABI. The audit SHALL not trust
+upstream readiness fields, selected rows, aggregate counters, or build receipts.
+It SHALL record input paths, existence, hashes, current Python and Rust build
+hashes, resource receipts, Z3 version, fixture hash, deterministic random seed,
+and protected-file hashes before drawing conclusions.
+
+Sub-requirements:
+
+- REQ-REPORT-6551-REPLAY: The audit SHALL replay native, disabled adapter,
+  Python-enabled, and Rust-enabled paths from deterministic request bytes and
+  SHALL record per-unit rows.
+- REQ-REPORT-6551-MISSING: Missing, unreadable, or empty required inputs SHALL
+  produce a terminal `blocked` disposition with diagnostics and
+  `production_safety_net_audited_ready_score=0.0`.
+- REQ-REPORT-6551-DISABLED: Disabled adapter behavior SHALL be byte-identical
+  to native behavior for serialized requests, candidate order, checker calls,
+  outputs, error types, side effects, and persistence.
+- REQ-REPORT-6551-PARITY: Python and Rust routing decisions SHALL be equal for
+  route, abstention, exception hit, fallback reason, chosen order, error type,
+  and canonical decision bytes.
+- REQ-REPORT-6551-EXACT: Enabled routing and ABI replay SHALL not change exact
+  downstream accepted outputs.
+- REQ-REPORT-6551-FALLBACK: Fallback, exception-table immutability, rollback,
+  malformed input, timeout, boundary, and stale-build paths SHALL be exercised.
+- REQ-REPORT-6551-ROWS: The audited readiness score SHALL be recomputed only
+  from independent rows and SHALL ignore upstream aggregate counters.
+- REQ-REPORT-6551-ATOMIC: The terminal artifact SHALL be written atomically and
+  SHALL include field provenance plus a reproducibility checksum.
+
+`production_safety_net_audited_ready_score` SHALL equal 1.0 only when
+independent rows prove disabled identity, enabled exact equality, Python/Rust
+binding parity, fallback reachability, exception immutability, and rollback.
+Clean integration audits SHALL use `verdict_class=null`; usable incomplete
+audits SHALL use `partial`; missing inputs or tools SHALL use `blocked`; false
+native provenance or changed exact outputs SHALL use `disqualified`.
+
+#### SCENARIO-REPORT-6551-CLEAN: Independent Replay Proves Integration Readiness
+
+**Given** Exp6548, Exp6549, and Exp6550 artifacts exist and the current PyO3
+binding can be loaded
+**When** Exp6551 draws its deterministic stratified audit sample and replays the
+adapter and ABI paths
+**Then** the audit emits per-unit rows for disabled identity, enabled routing,
+fallback, exception, malformed, timeout, boundary, and parity checks, derives
+the ready score from those rows, and writes a `verdict_class=null` terminal
+artifact.
+
+#### SCENARIO-REPORT-6551-BLOCKED: Missing Inputs Close Honestly
+
+**Given** any required upstream integration artifact, binding, or build input is
+absent, unreadable, or empty
+**When** Exp6551 runs
+**Then** it writes a terminal `blocked` artifact with missing-input diagnostics,
+zero readiness score, empty comparative rows where replay is impossible, and
+no positive integration claim.
+
+## Implementation Status (REQ-REPORT-6551)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6551 | Planned (`python/carnot/experiment_6551_production_safety_net_independent_audit.py`, terminal artifact `results/experiment_6551_production_safety_net_independent_audit.json`) | Planned (`tests/python/test_experiment_6551_production_safety_net_independent_audit.py`) |
