@@ -4580,3 +4580,187 @@ and the verdict class follows the preregistered enum.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-BENCH-6545 | Planned (`python/carnot/experiment_6545_external_safety_net_router.py`, `results/experiment_6545_external_safety_net_router.json`) | Planned (`tests/python/test_experiment_6545_external_safety_net_router.py`) |
+
+### REQ-BENCH-6546: SMT Cost Guard SHALL Separate Conflict, Surface, Model, And Exact Dispatch
+
+Carnot SHALL provide Exp6546 at
+`python/carnot/experiment_6546_smt_cost_guard_sota.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6546_smt_cost_guard_sota --date 20260823`
+SHALL write
+`results/experiment_6546_smt_cost_guard_sota.json`.
+
+Exp6546 SHALL evaluate the Exp6543 structured gate before model loading or
+held inference. It SHALL record input hashes, `cached_sota_pair(gpu_indices=(0,
+1))`, exact mandated hub IDs, GGUF paths and hashes, llama.cpp version and CUDA
+support, GPU identity and VRAM, CPU, RAM, disk, thermal state, budgets, and
+protected-file hashes. A failed gate, cache, GPU, llama.cpp, model-load, or
+runtime precondition SHALL write a terminal blocked artifact and SHALL populate
+`gate_check_summary` with the failed check and observed value.
+
+Exp6546 SHALL require `MODEL_SPECS` rows for exactly these three hub IDs:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Each row SHALL use a local `model_path`
+resolved to a GGUF file and SHALL load through llama.cpp. It SHALL NOT call a
+Transformers tokenizer or a Transformers model loader on a GGUF repository ID.
+
+Exp6546 SHALL freeze a bounded balanced held challenge from the audited V566
+fixture across domain and measured Z3 conflict strata. It SHALL create multiple
+proof-preserving surface prompts for each logical instance. It SHALL verify
+surface equivalence with unchanged constraint hashes and exact labels before
+inference. It SHALL use train and development rows only to freeze the
+conflict-dispatch threshold. Held model cost, held answers, and held parse
+outcomes SHALL NOT affect threshold selection.
+
+Exp6546 SHALL run unguarded local inference and guarded exact-tool dispatch
+under identical final-output, timeout, parsing, token, and time-accounting
+contracts. Guarded rows MAY route high-conflict prompts directly to the exact
+Z3 authority. Every unit SHALL remain terminal: successful inference, exact
+tool completion, timeout, model-load failure, parse failure, and checkpoint
+resume state are all recorded as rows.
+
+Exp6546 SHALL report conflict-cost association conditional on surface and
+model, surface effects conditional on logical instance, guarded token and time
+effects, exact completion, calibration, censoring, and failure cells from rows.
+It SHALL NOT report solver conflict count as a universal model-hardness or
+correctness score.
+
+`smt_cost_guard_ready_score` SHALL equal `1.0` only when the preregistered guard
+reduces held charged token or time cost with exact-completion non-inferiority
+across at least two mandated model families and the surface-controlled audit
+passes. Otherwise it SHALL equal `0.0`. A positive verdict SHALL require those
+same conditions. A complete run with no benefit SHALL use `verdict_class=null`.
+One-model or unstable support SHALL use `verdict_class="partial"`. A failed
+gate, cache, GPU, or runtime precondition SHALL use `verdict_class="blocked"`.
+Confounding, model substitution, held threshold tuning, or invalid accounting
+SHALL use `verdict_class="disqualified"`.
+
+The artifact SHALL include exactly these fields: `status`, `honest_verdict`,
+`verdict_class`, `upstream_gate_receipt`, `MODEL_SPECS`, `models_used`,
+`model_cache_and_load_receipts`, `frozen_challenge_contract`,
+`logical_instance_rows`, `proof_preserving_surface_receipts`,
+`solver_conflict_rows`, `frozen_dispatch_contract`, `per_unit_rows`,
+`model_and_surface_effect_rows`, `conflict_cost_association_rows`,
+`guarded_versus_unguarded_rows`, `token_and_time_recomputation`,
+`exact_completion_receipt`, `calibration_rows`,
+`censoring_and_timeout_receipts`, `confound_attack_matrix`,
+`smt_cost_guard_ready_score`, `gate_check_summary`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+`inference_substrate` SHALL be
+`authenticated_local_llama_cpp_sota_gguf_inference_plus_exact_z3_cost_guard`.
+`verifier_is_oracle` SHALL be false because the cost guard is the tested
+mechanism. Z3 SHALL remain the separate exact evaluation authority.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal Exp6546 SMT cost-guard state."
+- `honest_verdict`: "Names the guarded held cost result and exact-completion support."
+- `verdict_class`: "Separates positive, null, partial, blocked, and disqualified cost-guard outcomes."
+- `upstream_gate_receipt`: "Pins Exp6543 by path, hash, expected value, observed value, input hashes, cache, hardware, llama.cpp, budgets, and protected hashes."
+- `MODEL_SPECS`: "Records the three mandated SOTA GGUF hub IDs, local GGUF paths, hashes, quantization, and llama.cpp placement."
+- `models_used`: "Lists the exact mandated hub IDs that supplied inference rows."
+- `model_cache_and_load_receipts`: "Shows cache resolution, GGUF hashes, embedded-tokenizer checks, llama.cpp import, CUDA support, load, smoke, or blocked runtime state."
+- `frozen_challenge_contract`: "Freezes held unit count, domain strata, conflict strata, surfaces, prompt contract, timeout, token accounting, seed, and stop rules before scoring."
+- `logical_instance_rows`: "Stores one logical-instance row with split, domain, fixture identity, constraints hash, exact label, and conflict stratum."
+- `proof_preserving_surface_receipts`: "Shows each surface variant preserves the same logical constraints and exact label."
+- `solver_conflict_rows`: "Records measured Z3 conflicts, decisions, propagations, assertions, quantiles, and replay status."
+- `frozen_dispatch_contract`: "Freezes the train-development-only threshold and exact-tool dispatch rule before held scoring."
+- `per_unit_rows`: "Stores one model-surface-instance-arm row with tokens, time, timeout, parse, exact validity, dispatch, tool time, and charged totals."
+- `model_and_surface_effect_rows`: "Reports surface effects conditional on logical instance and model."
+- `conflict_cost_association_rows`: "Reports conflict-cost association conditional on surface and model without claiming universal model hardness."
+- `guarded_versus_unguarded_rows`: "Reports held guarded cost and exact-completion effects by model family."
+- `token_and_time_recomputation`: "Recomputes prompt tokens, output tokens, tool time, model time, charged time, and charged tokens from rows."
+- `exact_completion_receipt`: "Shows guarded exact completion is non-inferior to unguarded completion before any positive score opens."
+- `calibration_rows`: "Shows threshold fitting used train and development rows only and held rows were unavailable."
+- `censoring_and_timeout_receipts`: "Records timeout, parse-failure, model-failure, checkpoint, and terminal-row coverage."
+- `confound_attack_matrix`: "Attacks prompt-length confounding, surface non-equivalence, cache order, warm-up asymmetry, token mismatch, timer aliases, model substitution, held threshold tuning, tool-time omission, and cherry-picked timeouts."
+- `smt_cost_guard_ready_score`: "Opens only for preregistered held token or time savings with exact-completion non-inferiority across at least two mandated model families and no surface-controlled confound."
+- `gate_check_summary`: "Names every failed gate with expected and observed values."
+- `aggregate_row_recomputation`: "Rebuilds the verdict and ready score from gates, rows, costs, exact completion, calibration, censoring, attacks, and protected hashes."
+- `preconditions_checked`: "Records paths, hashes, cache, hardware, llama.cpp, solver, budgets, date, seeds, and protected hashes."
+- `protected_files_unchanged`: "Shows guarded inputs, specs, prior artifacts, model registry, template, and conductor files stayed byte-identical during the run."
+- `inference_substrate`: "Declares authenticated local llama.cpp SOTA GGUF inference plus exact Z3 cost guard."
+- `verifier_is_oracle`: "False because guard value is measured and Z3 is the separate evaluation authority."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each field to specs, inputs, rows, reducers, tests, and hashes."
+- `random_seed`: "Pins challenge selection, surface ordering, dispatch calibration, model seeds, and attack ordering."
+- `duration_s`: "Records measured reducer and live-inference wall time."
+- `tests_run`: "Records validation command receipts."
+- `reproducibility_checksum`: "Detects drift in gates, models, prompts, rows, costs, attacks, and verdicts."
+
+#### SCENARIO-BENCH-6546-GATE: Gate And Model Identity Are Checked First
+
+**Given** the Exp6543 independent audit artifact and local SOTA GGUF cache
+**When** Exp6546 starts
+**Then** it records the audit gate, `cached_sota_pair(gpu_indices=(0, 1))`,
+all three mandated model paths and hashes, llama.cpp/CUDA support, hardware,
+budgets, and protected hashes before any held model claim can open.
+
+#### SCENARIO-BENCH-6546-CHALLENGE: Conflict And Surface Strata Are Frozen
+
+**Given** the audited V566 fixture and pinned Z3 replay
+**When** Exp6546 builds the bounded challenge
+**Then** it selects held logical instances across domains and measured conflict
+strata, emits multiple proof-preserving surface prompts per instance, and
+verifies unchanged constraints and exact labels before inference.
+
+#### SCENARIO-BENCH-6546-DISPATCH: Train And Development Rows Freeze The Guard
+
+**Given** train, development, and held fixture rows
+**When** Exp6546 fits the conflict threshold
+**Then** threshold selection uses train and development conflicts only, held
+cost and held target answers are unavailable, and high-risk held rows may route
+directly to Z3 under the frozen rule.
+
+#### SCENARIO-BENCH-6546-RUNTIME: Unguarded And Guarded Rows Share Accounting
+
+**Given** the three mandated local llama.cpp GGUF models and exact Z3 authority
+**When** Exp6546 runs unguarded and guarded arms
+**Then** every model-surface-instance-arm row records prompt tokens, output
+tokens, wall time, first-token time when available, timeout, parse state, exact
+validity, dispatch, tool time, total charged time, and terminal status.
+
+#### SCENARIO-BENCH-6546-EFFECTS: Claims Are Row-First And Surface-Controlled
+
+**Given** terminal held rows from all surfaces and model families
+**When** Exp6546 computes effects
+**Then** it reports model-surface effects, conflict-cost associations, guarded
+versus unguarded cost, exact completion, calibration, and failure cells from
+rows without treating solver conflict as universal model hardness.
+
+#### SCENARIO-BENCH-6546-ATTACKS: Confounds And Substitution Fail Closed
+
+**Given** prompt-length confounding, surface non-equivalence, cache order,
+warm-up asymmetry, token counter mismatch, timer aliasing, model substitution,
+held threshold tuning, tool-time omission, and cherry-picked timeout attacks
+**When** Exp6546 evaluates the confound matrix
+**Then** every shortcut must fail closed before `smt_cost_guard_ready_score`
+can equal `1.0`.
+
+#### SCENARIO-BENCH-6546-CHECKPOINT: Resume Keeps Terminal Rows Stable
+
+**Given** a partial Exp6546 checkpoint
+**When** Exp6546 resumes the same frozen challenge
+**Then** completed terminal rows are reused by row hash, missing rows are run
+under the same contracts, and the checkpoint receipt is included in censoring
+and timeout coverage.
+
+#### SCENARIO-BENCH-6546-TERMINAL: Artifact Is Validated And Reproducible
+
+**Given** gates, model receipts, challenge rows, surface receipts, conflict
+rows, dispatch contract, per-unit rows, effects, recomputations, completion
+receipts, calibration rows, censoring rows, attacks, and protected hashes
+**When** Exp6546 writes its deliverable
+**Then** every required field has a principle and provenance entry, the
+inference substrate is exact, `verifier_is_oracle=false`, the checksum matches,
+and the verdict class follows the preregistered enum.
+
+## Implementation Status (REQ-BENCH-6546)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6546 | Planned (`python/carnot/experiment_6546_smt_cost_guard_sota.py`, `results/experiment_6546_smt_cost_guard_sota.json`) | Planned (`tests/python/test_experiment_6546_smt_cost_guard_sota.py`) |

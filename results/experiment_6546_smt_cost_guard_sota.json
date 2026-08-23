@@ -1,0 +1,3840 @@
+{
+  "status": "complete_smt_cost_guard_positive",
+  "honest_verdict": "complete_smt_cost_guard_positive: guarded exact dispatch reduces held charged token or time cost with exact-completion non-inferiority across at least two mandated model families",
+  "verdict_class": "positive",
+  "upstream_gate_receipt": {
+    "row_type": "upstream_gate_receipt",
+    "path": "results/experiment_6543_external_corpus_independent_audit_v2.json",
+    "absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6543_external_corpus_independent_audit_v2.json",
+    "exists": true,
+    "sha256": "sha256:baee4734c28ace01cf93d745bdd241d98a485143f7f670c9cbf2c8db0101bcf2",
+    "parse_status": "parsed",
+    "parse_error": "",
+    "field": "external_constraint_corpus_audited_ready_score",
+    "expected_value": 1.0,
+    "observed_value": 1.0,
+    "gate_passed": true,
+    "status": "complete_external_corpus_independent_audit_v2",
+    "verdict_class": null,
+    "artifact_reproducibility_checksum": "sha256:d00fe252601a31da7d23eb2ba0f0ea575755366702dd088b112b3620b055cdcb",
+    "input_hashes": {
+      "audit": "sha256:baee4734c28ace01cf93d745bdd241d98a485143f7f670c9cbf2c8db0101bcf2",
+      "fixture": "sha256:a8696e4711998c00d9398351c2f061670e01302ba5106d9ca76fed81c718a932",
+      "spec": "sha256:59fbae8fb1eae0f9a7118d277ada47213cc7af20379331247305c1c052ed62b0",
+      "model_registry": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+      "template": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac"
+    },
+    "cached_sota_pair_gpu_0_1": [
+      {
+        "name": "Qwen3.6-35B-A3B",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "gpu": 0,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+      },
+      {
+        "name": "Gemma4-26B-A4B-it",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "gpu": 1,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+      }
+    ],
+    "mandated_hub_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "hardware": {
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": "3.12.13",
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "cpu_count": 24,
+      "ram": {
+        "mem_total_bytes": 134305107968,
+        "mem_available_bytes": 118664089600,
+        "swap_total_bytes": 154618814464,
+        "swap_free_bytes": 148927045632
+      },
+      "disk": {
+        "disk_total_bytes": 3953289023488,
+        "disk_used_bytes": 2865671208960,
+        "disk_free_bytes": 1087617814528
+      },
+      "gpu": {
+        "available": true,
+        "exit_code": 0,
+        "stderr": "",
+        "devices": [
+          {
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 3090",
+            "vram_total_mb": 24576.0,
+            "vram_free_mb": 24120.0,
+            "temperature_c": 47.0,
+            "power_w": 18.81
+          },
+          {
+            "index": 1,
+            "name": "NVIDIA GeForce RTX 3090",
+            "vram_total_mb": 24576.0,
+            "vram_free_mb": 2887.0,
+            "temperature_c": 73.0,
+            "power_w": 368.56
+          }
+        ]
+      },
+      "thermal_state": {
+        "source": "nvidia-smi.temperature.gpu",
+        "gpu": [
+          {
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 3090",
+            "vram_total_mb": 24576.0,
+            "vram_free_mb": 24120.0,
+            "temperature_c": 47.0,
+            "power_w": 18.81
+          },
+          {
+            "index": 1,
+            "name": "NVIDIA GeForce RTX 3090",
+            "vram_total_mb": 24576.0,
+            "vram_free_mb": 2887.0,
+            "temperature_c": 73.0,
+            "power_w": 368.24
+          }
+        ]
+      },
+      "llama_cpp": {
+        "available": true,
+        "version": "0.3.33",
+        "system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+        "cuda_backend_available": true,
+        "gpu_offload_supported": true,
+        "error": ""
+      }
+    },
+    "budgets": {
+      "max_logical_instances": 3,
+      "surface_ids": [
+        "canonical",
+        "relabeled"
+      ],
+      "arm_ids": [
+        "unguarded",
+        "guarded"
+      ],
+      "max_new_tokens": 24,
+      "timeout_s": 45.0,
+      "n_ctx": 1024
+    },
+    "protected_file_hashes_before": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "research-references.md": "sha256:617cf14a3218e15e40ee873a0e0224d54dc257d55d050132c7dcf620c619c68f",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:382ff155d4bf37a106760f07ace94fd7491afdc6c1ac08d890a66d465f6137d5",
+      "openspec/capabilities/benchmarks/spec.md": "sha256:59fbae8fb1eae0f9a7118d277ada47213cc7af20379331247305c1c052ed62b0",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "scripts/research_conductor.py": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+      "scripts/adversarial_verify.py": "sha256:efda545fc4d584922073ea01656162bfaaebe35e293d698dc5084332fafdd2e4",
+      "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+      "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+      "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+      "results/experiment_6543_external_corpus_independent_audit_v2.json": "sha256:baee4734c28ace01cf93d745bdd241d98a485143f7f670c9cbf2c8db0101bcf2",
+      "results/fixtures/v566_drift_bench_external_slice.jsonl": "sha256:a8696e4711998c00d9398351c2f061670e01302ba5106d9ca76fed81c718a932",
+      "python/carnot/experiment_6546_smt_cost_guard_sota.py": "sha256:0c07b226f2a2ad486d60a3d78fbb2094d5a9d57a09f6ffa99f94c4fb4dab4cea",
+      "tests/python/test_experiment_6546_smt_cost_guard_sota.py": "sha256:4822a4f12c692d12e7338faaa88781f76d33984bf09fc23141b0d568247adaa8"
+    },
+    "spec_refs": [
+      "REQ-BENCH-6546",
+      "SCENARIO-BENCH-6546-GATE"
+    ]
+  },
+  "MODEL_SPECS": [
+    {
+      "name": "Qwen3.6-35B-A3B",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "moe",
+      "active_params_b": 3.0,
+      "total_params_b": 35.0,
+      "quantization": "Q4_K_M",
+      "min_vram_gb": 24,
+      "gpu": 0,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_path_exists": true,
+      "gguf_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "loader": "llama_cpp.Llama",
+      "load_ok": true,
+      "load_receipt_hash": "sha256:461cb6de10f4cfc450b5e4dee3ae71d58108cc99ef9368b21d7b8fb706920706"
+    },
+    {
+      "name": "Gemma4-31B-it",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "dense",
+      "active_params_b": 31.0,
+      "total_params_b": 31.0,
+      "quantization": "Q4_K_M",
+      "min_vram_gb": 24,
+      "gpu": 1,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_path_exists": true,
+      "gguf_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "loader": "llama_cpp.Llama",
+      "load_ok": true,
+      "load_receipt_hash": "sha256:ba73b8fb30425abdd083a57b7f60e9dc2071f81cb25617c91b9c0c10bba232e2"
+    },
+    {
+      "name": "Gemma4-26B-A4B-it",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "moe",
+      "active_params_b": 4.0,
+      "total_params_b": 26.0,
+      "quantization": "Q4_K_M",
+      "min_vram_gb": 16,
+      "gpu": 0,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_path_exists": true,
+      "gguf_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "loader": "llama_cpp.Llama",
+      "load_ok": true,
+      "load_receipt_hash": "sha256:d547e9a5dc51fbae7b9239229877a98e0629153134d4f5d00da3bdab0ee871e8"
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "model_cache_and_load_receipts": {
+    "rows": [
+      {
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "loader": "llama_cpp.Llama",
+        "load_ok": true,
+        "load_s": 0.0,
+        "smoke_ok": true,
+        "smoke_s": 0.0,
+        "embedded_tokenizer_ok": true,
+        "full_load_deferred_to_runtime": true,
+        "error": "",
+        "cache_resolved": true,
+        "gguf_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "receipt_hash": "sha256:12a916c3ec943a8240deb8c4251ca3a73b2aecbf49cd280a75e7fa76b75bf35e",
+        "spec_refs": [
+          "REQ-BENCH-6546",
+          "SCENARIO-BENCH-6546-GATE"
+        ]
+      },
+      {
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "loader": "llama_cpp.Llama",
+        "load_ok": true,
+        "load_s": 0.0,
+        "smoke_ok": true,
+        "smoke_s": 0.0,
+        "embedded_tokenizer_ok": true,
+        "full_load_deferred_to_runtime": true,
+        "error": "",
+        "cache_resolved": true,
+        "gguf_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "receipt_hash": "sha256:aecaa1fa983fffad22b24a1bc97993ac8be38fcf624b8b805cd35eeb80340b7b",
+        "spec_refs": [
+          "REQ-BENCH-6546",
+          "SCENARIO-BENCH-6546-GATE"
+        ]
+      },
+      {
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "loader": "llama_cpp.Llama",
+        "load_ok": true,
+        "load_s": 0.0,
+        "smoke_ok": true,
+        "smoke_s": 0.0,
+        "embedded_tokenizer_ok": true,
+        "full_load_deferred_to_runtime": true,
+        "error": "",
+        "cache_resolved": true,
+        "gguf_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "receipt_hash": "sha256:085fe90c20a72cdfcfc0ed7c9528dabc57c1c5dd0799f5676914e0f90f951f8c",
+        "spec_refs": [
+          "REQ-BENCH-6546",
+          "SCENARIO-BENCH-6546-GATE"
+        ]
+      }
+    ],
+    "all_mandated_models_loaded": true,
+    "no_legacy_model_substitution": true,
+    "loader": "llama_cpp.Llama"
+  },
+  "frozen_challenge_contract": {
+    "schema": "carnot.exp6546.frozen_challenge_contract.v1",
+    "planning_date": "20260823",
+    "logical_instance_count": 3,
+    "domain_counts": {
+      "logic_grid": 1,
+      "scheduling": 1,
+      "seating": 1
+    },
+    "conflict_stratum_counts": {
+      "high": 1,
+      "low": 1,
+      "medium": 1
+    },
+    "surface_ids": [
+      "canonical",
+      "relabeled"
+    ],
+    "proof_preserving_surface_count": 2,
+    "prompt_contract": "same final label options, same constraints hash, prompt-only surface changes",
+    "timeout_s": 45.0,
+    "max_new_tokens": 24,
+    "token_accounting": "embedded GGUF tokenizer or llama.cpp usage only",
+    "stop_rule": "terminal row for generation, exact tool, timeout, parse failure, or model failure",
+    "random_seed": 6546,
+    "surface_equivalence_hash": "sha256:5e5e12685918348b9370db3200be69ffe9c66873a4c5375505d479b23cf73f49",
+    "spec_refs": [
+      "REQ-BENCH-6546",
+      "SCENARIO-BENCH-6546-CHALLENGE"
+    ],
+    "contract_hash": "sha256:169e5fe6cef8cab2c7582055ed070754b2590b205837b90f53c49881d6a5a910"
+  },
+  "logical_instance_rows": [
+    {
+      "row_type": "logical_instance",
+      "logical_instance_index": 0,
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "local_unit_id": "v566_unit_002_07_babace5767635d42",
+      "split_name": "held",
+      "domain": "logic_grid",
+      "family": "logic_grid",
+      "source_problem_id": "logic_grid_109",
+      "source_turn_id": "logic_grid_109:turn:8",
+      "turn_index": 7,
+      "constraints_sha256": "sha256:0e0abbb5f1a0ad04186bd4d5830beadb15e17993a355536841acc4b48d8c57a8",
+      "source_turn_sha256": "sha256:093fa1d2ecb825ee7d466c246347ba70bbb3dc7a3257f0d6c49d0a682b8309ac",
+      "exact_label": "satisfiable",
+      "assignment_validity": true,
+      "conflict_count": 0,
+      "conflict_quantile": 0.228814,
+      "conflict_stratum": "low",
+      "fixture_row_hash": "sha256:7106675f8662030bd1aab1c98f600b44c9428d87b0eaa1bfe503687fda245ea1",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-CHALLENGE"
+      ],
+      "row_hash": "sha256:56cb5f71e0dad879d3bbb1ca8462ed0c599db2e2528f6c805d3bfb5f8a0c9eee"
+    },
+    {
+      "row_type": "logical_instance",
+      "logical_instance_index": 1,
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "local_unit_id": "v566_unit_005_03_49a37358e77f52e5",
+      "split_name": "held",
+      "domain": "scheduling",
+      "family": "scheduling",
+      "source_problem_id": "scheduling_212",
+      "source_turn_id": "scheduling_212:turn:4",
+      "turn_index": 3,
+      "constraints_sha256": "sha256:d4054e5f871d5136db5045bfe012e86fe67dee15773cf6ff26d1ff226b6d5431",
+      "source_turn_sha256": "sha256:2511bd35f2d7e2417cea76eb2d794545218995cd4bfe7f68a6a1add167180d17",
+      "exact_label": "satisfiable",
+      "assignment_validity": true,
+      "conflict_count": 0,
+      "conflict_quantile": 0.483051,
+      "conflict_stratum": "medium",
+      "fixture_row_hash": "sha256:7561348c163d32c3e9102ffd58081fdcd2987eed40037c884dfa525a8f0ac469",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-CHALLENGE"
+      ],
+      "row_hash": "sha256:8039b664c8d90eca02c6bb1d21d6f2494ba751f60e8f6a671064cd4930fea583"
+    },
+    {
+      "row_type": "logical_instance",
+      "logical_instance_index": 2,
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "local_unit_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "split_name": "held",
+      "domain": "seating",
+      "family": "seating",
+      "source_problem_id": "seating_094",
+      "source_turn_id": "seating_094:turn:6",
+      "turn_index": 5,
+      "constraints_sha256": "sha256:939cc20e4fe6461c0c487c8429296914d4f8d9751f949abf5a21f707e0eb47e3",
+      "source_turn_sha256": "sha256:5d1fc7d1cfdd82c21643058a887676a0a6d39b810559ee126c5ecd4588b19508",
+      "exact_label": "satisfiable",
+      "assignment_validity": true,
+      "conflict_count": 40,
+      "conflict_quantile": 0.974576,
+      "conflict_stratum": "high",
+      "fixture_row_hash": "sha256:a95ea82a84679e0918d57f9c9d7abfa2bd5d214a31fefb8bc8bbd216588849ac",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-CHALLENGE"
+      ],
+      "row_hash": "sha256:fb624e7502b9e57659f4a314a289cea0631060da621db74ce95f1834ba649777"
+    }
+  ],
+  "proof_preserving_surface_receipts": {
+    "all_surfaces_equivalent": true,
+    "surface_ids": [
+      "canonical",
+      "relabeled"
+    ],
+    "rows": [
+      {
+        "row_type": "surface_receipt",
+        "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+        "surface_id": "canonical",
+        "constraints_sha256": "sha256:0e0abbb5f1a0ad04186bd4d5830beadb15e17993a355536841acc4b48d8c57a8",
+        "surface_constraints_sha256": "sha256:0e0abbb5f1a0ad04186bd4d5830beadb15e17993a355536841acc4b48d8c57a8",
+        "constraints_hash_unchanged": true,
+        "exact_label": "satisfiable",
+        "surface_exact_label": "satisfiable",
+        "exact_label_unchanged": true,
+        "prompt_sha256": "sha256:b380e8bed112b50be6ba9a3322f4efa9af5b8dbee640bceacaf5bf60b078a61d",
+        "prompt_char_count": 1034,
+        "prompt_word_count": 164,
+        "row_hash": "sha256:72880da349e75d36527f184167714596a4871b0eccac6799c3b38db41c44478e"
+      },
+      {
+        "row_type": "surface_receipt",
+        "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+        "surface_id": "relabeled",
+        "constraints_sha256": "sha256:0e0abbb5f1a0ad04186bd4d5830beadb15e17993a355536841acc4b48d8c57a8",
+        "surface_constraints_sha256": "sha256:0e0abbb5f1a0ad04186bd4d5830beadb15e17993a355536841acc4b48d8c57a8",
+        "constraints_hash_unchanged": true,
+        "exact_label": "satisfiable",
+        "surface_exact_label": "satisfiable",
+        "exact_label_unchanged": true,
+        "prompt_sha256": "sha256:a42a5710a285a3c954c9e0878ae008f39d179a337cf1003785cc1f3c4d4af6ed",
+        "prompt_char_count": 1055,
+        "prompt_word_count": 164,
+        "row_hash": "sha256:74511ab75e62984730ca0f933db91bbc079f5e2d34a90485839fae760a7f83fc"
+      },
+      {
+        "row_type": "surface_receipt",
+        "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+        "surface_id": "canonical",
+        "constraints_sha256": "sha256:d4054e5f871d5136db5045bfe012e86fe67dee15773cf6ff26d1ff226b6d5431",
+        "surface_constraints_sha256": "sha256:d4054e5f871d5136db5045bfe012e86fe67dee15773cf6ff26d1ff226b6d5431",
+        "constraints_hash_unchanged": true,
+        "exact_label": "satisfiable",
+        "surface_exact_label": "satisfiable",
+        "exact_label_unchanged": true,
+        "prompt_sha256": "sha256:603935ec32444c5074a96e61e18321cf6c3273f1e6f279d1a4aff236d5f69033",
+        "prompt_char_count": 663,
+        "prompt_word_count": 104,
+        "row_hash": "sha256:e9528140296cad16c8baa61f0aab9f844272f633d1e84deb59c390943e81e517"
+      },
+      {
+        "row_type": "surface_receipt",
+        "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+        "surface_id": "relabeled",
+        "constraints_sha256": "sha256:d4054e5f871d5136db5045bfe012e86fe67dee15773cf6ff26d1ff226b6d5431",
+        "surface_constraints_sha256": "sha256:d4054e5f871d5136db5045bfe012e86fe67dee15773cf6ff26d1ff226b6d5431",
+        "constraints_hash_unchanged": true,
+        "exact_label": "satisfiable",
+        "surface_exact_label": "satisfiable",
+        "exact_label_unchanged": true,
+        "prompt_sha256": "sha256:90171ad3ada59edd0094d483b2e7a51c8999a7e95d2f450a1fa65ba47c58cf0c",
+        "prompt_char_count": 593,
+        "prompt_word_count": 104,
+        "row_hash": "sha256:932925c3b15c5b6817f6d8021c6ca3ff4909b6e7c7f07aa5dacec34f365ff065"
+      },
+      {
+        "row_type": "surface_receipt",
+        "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+        "surface_id": "canonical",
+        "constraints_sha256": "sha256:939cc20e4fe6461c0c487c8429296914d4f8d9751f949abf5a21f707e0eb47e3",
+        "surface_constraints_sha256": "sha256:939cc20e4fe6461c0c487c8429296914d4f8d9751f949abf5a21f707e0eb47e3",
+        "constraints_hash_unchanged": true,
+        "exact_label": "satisfiable",
+        "surface_exact_label": "satisfiable",
+        "exact_label_unchanged": true,
+        "prompt_sha256": "sha256:fbd432d35fcf9c1e45452b14f0c527d447d6925ebec81fe086007276a79f86fc",
+        "prompt_char_count": 810,
+        "prompt_word_count": 154,
+        "row_hash": "sha256:b434f3af3a56acaf28942e08b53521643581a5ff2106aeddce7d4395493abe34"
+      },
+      {
+        "row_type": "surface_receipt",
+        "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+        "surface_id": "relabeled",
+        "constraints_sha256": "sha256:939cc20e4fe6461c0c487c8429296914d4f8d9751f949abf5a21f707e0eb47e3",
+        "surface_constraints_sha256": "sha256:939cc20e4fe6461c0c487c8429296914d4f8d9751f949abf5a21f707e0eb47e3",
+        "constraints_hash_unchanged": true,
+        "exact_label": "satisfiable",
+        "surface_exact_label": "satisfiable",
+        "exact_label_unchanged": true,
+        "prompt_sha256": "sha256:3e8fb9ed41cd9b8fe8f200f90c6658c082b08c98c8f46396c14df54ef964a383",
+        "prompt_char_count": 763,
+        "prompt_word_count": 154,
+        "row_hash": "sha256:1b0a1efedcc04d2a9974554a77a5195e659f07782e36245e3af75408bb6f358d"
+      }
+    ],
+    "spec_refs": [
+      "REQ-BENCH-6546",
+      "SCENARIO-BENCH-6546-CHALLENGE"
+    ]
+  },
+  "solver_conflict_rows": [
+    {
+      "row_type": "solver_conflict",
+      "local_unit_id": "v566_unit_002_07_babace5767635d42",
+      "split_name": "held",
+      "domain": "logic_grid",
+      "source_turn_id": "logic_grid_109:turn:8",
+      "constraint_count": 13,
+      "solver_assertion_count": 40,
+      "conflict_count": 0,
+      "decision_count": 3,
+      "propagation_count": 26,
+      "z3_replay_status": "sat",
+      "z3_wall_time_s": 0.00581919,
+      "error": "",
+      "conflict_quantile": 0.228814,
+      "conflict_stratum": "low",
+      "conflict_count_min": 0,
+      "conflict_count_max": 45,
+      "row_hash": "sha256:dfbdb6873f8819929a4974546611243e4d1aca3293a68e6843195e3516821e6e",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-CHALLENGE"
+      ]
+    },
+    {
+      "row_type": "solver_conflict",
+      "local_unit_id": "v566_unit_005_03_49a37358e77f52e5",
+      "split_name": "held",
+      "domain": "scheduling",
+      "source_turn_id": "scheduling_212:turn:4",
+      "constraint_count": 7,
+      "solver_assertion_count": 43,
+      "conflict_count": 0,
+      "decision_count": 2,
+      "propagation_count": 4,
+      "z3_replay_status": "sat",
+      "z3_wall_time_s": 0.005007778,
+      "error": "",
+      "conflict_quantile": 0.483051,
+      "conflict_stratum": "medium",
+      "conflict_count_min": 0,
+      "conflict_count_max": 45,
+      "row_hash": "sha256:29e73aa042abfc57cb387e87be2a73799506c8079a06f84699415e3d0a11b6ae",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-CHALLENGE"
+      ]
+    },
+    {
+      "row_type": "solver_conflict",
+      "local_unit_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "split_name": "held",
+      "domain": "seating",
+      "source_turn_id": "seating_094:turn:6",
+      "constraint_count": 13,
+      "solver_assertion_count": 30,
+      "conflict_count": 40,
+      "decision_count": 107,
+      "propagation_count": 983,
+      "z3_replay_status": "sat",
+      "z3_wall_time_s": 0.010150428,
+      "error": "",
+      "conflict_quantile": 0.974576,
+      "conflict_stratum": "high",
+      "conflict_count_min": 0,
+      "conflict_count_max": 45,
+      "row_hash": "sha256:4fd11add1e8b2d0bf1b44f209f921ad21e5e5edca5e0ce86d3d99688656086b4",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-CHALLENGE"
+      ]
+    }
+  ],
+  "frozen_dispatch_contract": {
+    "schema": "carnot.exp6546.frozen_dispatch_contract.v1",
+    "planning_date": "20260823",
+    "training_splits_used": [
+      "development",
+      "train"
+    ],
+    "held_rows_used_for_threshold": false,
+    "target_answers_used_for_threshold": false,
+    "model_cost_used_for_threshold": false,
+    "route_rule": "z3_direct_when_conflict_count_ge_threshold",
+    "conflict_threshold": 1,
+    "direct_tool": "z3_checker.py exact satisfiability replay",
+    "threshold_selection": "preregistered_nonzero_conflict_threshold_confirmed_on_train_development_only",
+    "train_development_conflict_rows_seen": 41,
+    "spec_refs": [
+      "REQ-BENCH-6546",
+      "SCENARIO-BENCH-6546-DISPATCH"
+    ],
+    "contract_hash": "sha256:64bc184ad2ef95aa007629d23bc1bb5b7377a95ae5c765090953457f8018a1c7"
+  },
+  "per_unit_rows": [
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v566_unit_002_07_babace5767635d42|canonical|unguarded",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:b380e8bed112b50be6ba9a3322f4efa9af5b8dbee640bceacaf5bf60b078a61d",
+      "prompt_char_count": 1034,
+      "prompt_tokens": 243,
+      "output_tokens": 24,
+      "charged_tokens": 267,
+      "model_wall_time_s": 1.17123,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 1.17123,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "contradiction",
+      "exact_label": "satisfiable",
+      "exact_valid": false,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:3a41e4496f875ca3e8bf6527d2a09cfd4bad102d72e7d2f56a3ecf4674f65811",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:ac72a71c181099f13f12fa0d6ea8cf75e2cea2d6ec977b61392391f62014c9ce"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v566_unit_002_07_babace5767635d42|canonical|guarded",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "arm_id": "guarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:b380e8bed112b50be6ba9a3322f4efa9af5b8dbee640bceacaf5bf60b078a61d",
+      "prompt_char_count": 1034,
+      "prompt_tokens": 243,
+      "output_tokens": 24,
+      "charged_tokens": 267,
+      "model_wall_time_s": 0.519618,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.519618,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "contradiction",
+      "exact_label": "satisfiable",
+      "exact_valid": false,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:3a41e4496f875ca3e8bf6527d2a09cfd4bad102d72e7d2f56a3ecf4674f65811",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:6683e1900e81e205dcce8a9c193a24909ffcf8683033a16ccbe74692a41c1423"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v566_unit_002_07_babace5767635d42|relabeled|unguarded",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:a42a5710a285a3c954c9e0878ae008f39d179a337cf1003785cc1f3c4d4af6ed",
+      "prompt_char_count": 1055,
+      "prompt_tokens": 318,
+      "output_tokens": 24,
+      "charged_tokens": 342,
+      "model_wall_time_s": 0.556447,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.556447,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "contradiction",
+      "exact_label": "satisfiable",
+      "exact_valid": false,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:b8aecd30ce9f45c37e2deaa4acfac1e6195b3d45c9e658f13011aeaa78426c6a",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:4b6aa40363119a6438cb3c9e023803f821e709ae0d9e9f95aee8743b0403b423"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v566_unit_002_07_babace5767635d42|relabeled|guarded",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "arm_id": "guarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:a42a5710a285a3c954c9e0878ae008f39d179a337cf1003785cc1f3c4d4af6ed",
+      "prompt_char_count": 1055,
+      "prompt_tokens": 318,
+      "output_tokens": 24,
+      "charged_tokens": 342,
+      "model_wall_time_s": 0.538281,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.538281,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "contradiction",
+      "exact_label": "satisfiable",
+      "exact_valid": false,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:b8aecd30ce9f45c37e2deaa4acfac1e6195b3d45c9e658f13011aeaa78426c6a",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:1762acafe37a4476ad22c68bc0fd11349e0fd2f730361c841071071d0fb4a967"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v566_unit_005_03_49a37358e77f52e5|canonical|unguarded",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:603935ec32444c5074a96e61e18321cf6c3273f1e6f279d1a4aff236d5f69033",
+      "prompt_char_count": 663,
+      "prompt_tokens": 168,
+      "output_tokens": 24,
+      "charged_tokens": 192,
+      "model_wall_time_s": 0.479429,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.479429,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "contradiction",
+      "exact_label": "satisfiable",
+      "exact_valid": false,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:51cf16ef5f1c864d9e382602218c7a5196ed25bd486535aa90f07020c86fbb16",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:ce820865cba28c725704e5de062d7ec020eee11ac6fe44fd44e96b572534e6f5"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v566_unit_005_03_49a37358e77f52e5|canonical|guarded",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "arm_id": "guarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:603935ec32444c5074a96e61e18321cf6c3273f1e6f279d1a4aff236d5f69033",
+      "prompt_char_count": 663,
+      "prompt_tokens": 168,
+      "output_tokens": 24,
+      "charged_tokens": 192,
+      "model_wall_time_s": 0.465153,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.465153,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "contradiction",
+      "exact_label": "satisfiable",
+      "exact_valid": false,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:51cf16ef5f1c864d9e382602218c7a5196ed25bd486535aa90f07020c86fbb16",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:af2011f660bb3f3df7eabe9c7f3fcf7629544283b1f1d193d38017b5734c65c6"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v566_unit_005_03_49a37358e77f52e5|relabeled|unguarded",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:90171ad3ada59edd0094d483b2e7a51c8999a7e95d2f450a1fa65ba47c58cf0c",
+      "prompt_char_count": 593,
+      "prompt_tokens": 183,
+      "output_tokens": 24,
+      "charged_tokens": 207,
+      "model_wall_time_s": 0.487112,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.487112,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "contradiction",
+      "exact_label": "satisfiable",
+      "exact_valid": false,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:80e535ae06486cca5d8d749b0b7c97cb35f6d78744c298269e0b3b168cf15a22",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:2ccac32d463bfda815be129b31c4939b74c367fe084084aab4429da83f948967"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v566_unit_005_03_49a37358e77f52e5|relabeled|guarded",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "arm_id": "guarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:90171ad3ada59edd0094d483b2e7a51c8999a7e95d2f450a1fa65ba47c58cf0c",
+      "prompt_char_count": 593,
+      "prompt_tokens": 183,
+      "output_tokens": 24,
+      "charged_tokens": 207,
+      "model_wall_time_s": 0.481226,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.481226,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "contradiction",
+      "exact_label": "satisfiable",
+      "exact_valid": false,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:80e535ae06486cca5d8d749b0b7c97cb35f6d78744c298269e0b3b168cf15a22",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:bb5fa2c60f0b422cf123dcb7b945fa6900d881786bc93991fad596dbb1a36b62"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v566_unit_008_05_2f682e3f1a1dd027|canonical|unguarded",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "domain": "seating",
+      "conflict_count": 40,
+      "conflict_stratum": "high",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:fbd432d35fcf9c1e45452b14f0c527d447d6925ebec81fe086007276a79f86fc",
+      "prompt_char_count": 810,
+      "prompt_tokens": 231,
+      "output_tokens": 24,
+      "charged_tokens": 255,
+      "model_wall_time_s": 0.511454,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.511454,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:e70e7e818fcc61a813bf064888ccf13c01aac760df3087ee37850a0af30988ec",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:7933bf1935203aebb4cdf9965c5ce3f99316e67be7cb363a8542838dfb18bec0"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v566_unit_008_05_2f682e3f1a1dd027|canonical|guarded",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "domain": "seating",
+      "conflict_count": 40,
+      "conflict_stratum": "high",
+      "arm_id": "guarded",
+      "dispatch": "z3_direct",
+      "prompt_sha256": "sha256:fbd432d35fcf9c1e45452b14f0c527d447d6925ebec81fe086007276a79f86fc",
+      "prompt_char_count": 810,
+      "prompt_tokens": 0,
+      "output_tokens": 0,
+      "charged_tokens": 0,
+      "model_wall_time_s": 0.0,
+      "first_token_time_s": null,
+      "tool_time_s": 0.005003,
+      "charged_time_s": 0.005003,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:4755dc7d7f3d4d89a2ef63e8015ace4cfca3d244f9a179f211ae8ee9b8ca2814",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:589336512c52a0293ebaa2c2bede8fa3b627ab4b5c0e49f02535cd0ba0699411"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v566_unit_008_05_2f682e3f1a1dd027|relabeled|unguarded",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "domain": "seating",
+      "conflict_count": 40,
+      "conflict_stratum": "high",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:3e8fb9ed41cd9b8fe8f200f90c6658c082b08c98c8f46396c14df54ef964a383",
+      "prompt_char_count": 763,
+      "prompt_tokens": 260,
+      "output_tokens": 24,
+      "charged_tokens": 284,
+      "model_wall_time_s": 0.51586,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.51586,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:e70e7e818fcc61a813bf064888ccf13c01aac760df3087ee37850a0af30988ec",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:a875195399a03ba7cd09658776ce591eab6fe85e6ef940482cb2b7570bd0da65"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v566_unit_008_05_2f682e3f1a1dd027|relabeled|guarded",
+      "model_name": "Qwen3.6-35B-A3B",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "domain": "seating",
+      "conflict_count": 40,
+      "conflict_stratum": "high",
+      "arm_id": "guarded",
+      "dispatch": "z3_direct",
+      "prompt_sha256": "sha256:3e8fb9ed41cd9b8fe8f200f90c6658c082b08c98c8f46396c14df54ef964a383",
+      "prompt_char_count": 763,
+      "prompt_tokens": 0,
+      "output_tokens": 0,
+      "charged_tokens": 0,
+      "model_wall_time_s": 0.0,
+      "first_token_time_s": null,
+      "tool_time_s": 0.005003,
+      "charged_time_s": 0.005003,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:4755dc7d7f3d4d89a2ef63e8015ace4cfca3d244f9a179f211ae8ee9b8ca2814",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:6fa814c1e740891d3c48b1bf76c67f4ea1e29f542c868a619a647efdc1e1d3d8"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-31B-it-GGUF|v566_unit_002_07_babace5767635d42|canonical|unguarded",
+      "model_name": "Gemma4-31B-it",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:b380e8bed112b50be6ba9a3322f4efa9af5b8dbee640bceacaf5bf60b078a61d",
+      "prompt_char_count": 1034,
+      "prompt_tokens": 252,
+      "output_tokens": 24,
+      "charged_tokens": 276,
+      "model_wall_time_s": 1.00591,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 1.00591,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:fedbd96509afd2b17ddac91c51e9eb3753e5cb3ae919cefa8f217d8a9b80b347",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:782750cb2cd8693e10a537cff7a9d46a15c4974abb9e7622a83a42a7f73bf529"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-31B-it-GGUF|v566_unit_002_07_babace5767635d42|canonical|guarded",
+      "model_name": "Gemma4-31B-it",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "arm_id": "guarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:b380e8bed112b50be6ba9a3322f4efa9af5b8dbee640bceacaf5bf60b078a61d",
+      "prompt_char_count": 1034,
+      "prompt_tokens": 252,
+      "output_tokens": 24,
+      "charged_tokens": 276,
+      "model_wall_time_s": 0.770885,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.770885,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:fedbd96509afd2b17ddac91c51e9eb3753e5cb3ae919cefa8f217d8a9b80b347",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:4219d564ae42559568070c57f3573ec2a5da4b6066d24165c0bcbff3907bd41c"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-31B-it-GGUF|v566_unit_002_07_babace5767635d42|relabeled|unguarded",
+      "model_name": "Gemma4-31B-it",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:a42a5710a285a3c954c9e0878ae008f39d179a337cf1003785cc1f3c4d4af6ed",
+      "prompt_char_count": 1055,
+      "prompt_tokens": 343,
+      "output_tokens": 24,
+      "charged_tokens": 367,
+      "model_wall_time_s": 1.026832,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 1.026832,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:ed64ba9c3518b0b5acf9db94b8337ddd78d42f541d01c8cdbce4429be4a245dc",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:8989ce38516f1537dc1cbb59f2d0cdd57ebd70ffda2d9a10ff8e1aa8d5e999c7"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-31B-it-GGUF|v566_unit_002_07_babace5767635d42|relabeled|guarded",
+      "model_name": "Gemma4-31B-it",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "arm_id": "guarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:a42a5710a285a3c954c9e0878ae008f39d179a337cf1003785cc1f3c4d4af6ed",
+      "prompt_char_count": 1055,
+      "prompt_tokens": 343,
+      "output_tokens": 24,
+      "charged_tokens": 367,
+      "model_wall_time_s": 0.757431,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.757431,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:ed64ba9c3518b0b5acf9db94b8337ddd78d42f541d01c8cdbce4429be4a245dc",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:110fe4a2d7fd0f60cf18f7b42e8f04410a5457b916d05c56b0b906f9e80a3990"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-31B-it-GGUF|v566_unit_005_03_49a37358e77f52e5|canonical|unguarded",
+      "model_name": "Gemma4-31B-it",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:603935ec32444c5074a96e61e18321cf6c3273f1e6f279d1a4aff236d5f69033",
+      "prompt_char_count": 663,
+      "prompt_tokens": 170,
+      "output_tokens": 4,
+      "charged_tokens": 174,
+      "model_wall_time_s": 0.294755,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.294755,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:8db84ae6f480aad46ecde86d9382395d93c1381a0e985f24b0f6a18d1055333f",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:45a86d4f3511b0d1ebba21522e8a22990f0a9bdfd56570b01923af6cc06be1a8"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-31B-it-GGUF|v566_unit_005_03_49a37358e77f52e5|canonical|guarded",
+      "model_name": "Gemma4-31B-it",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "arm_id": "guarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:603935ec32444c5074a96e61e18321cf6c3273f1e6f279d1a4aff236d5f69033",
+      "prompt_char_count": 663,
+      "prompt_tokens": 170,
+      "output_tokens": 4,
+      "charged_tokens": 174,
+      "model_wall_time_s": 0.151855,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.151855,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:8db84ae6f480aad46ecde86d9382395d93c1381a0e985f24b0f6a18d1055333f",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:bda2eca07f15a159a62b470aeb71dcbf9e21415890b008936dfd4a6e5f8231d6"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-31B-it-GGUF|v566_unit_005_03_49a37358e77f52e5|relabeled|unguarded",
+      "model_name": "Gemma4-31B-it",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:90171ad3ada59edd0094d483b2e7a51c8999a7e95d2f450a1fa65ba47c58cf0c",
+      "prompt_char_count": 593,
+      "prompt_tokens": 185,
+      "output_tokens": 4,
+      "charged_tokens": 189,
+      "model_wall_time_s": 0.290737,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.290737,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:8db84ae6f480aad46ecde86d9382395d93c1381a0e985f24b0f6a18d1055333f",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:d66ed790daea6eedbce73233cd13ead3ef5ebc6f3645be42836c859e8668d2e4"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-31B-it-GGUF|v566_unit_005_03_49a37358e77f52e5|relabeled|guarded",
+      "model_name": "Gemma4-31B-it",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "arm_id": "guarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:90171ad3ada59edd0094d483b2e7a51c8999a7e95d2f450a1fa65ba47c58cf0c",
+      "prompt_char_count": 593,
+      "prompt_tokens": 185,
+      "output_tokens": 4,
+      "charged_tokens": 189,
+      "model_wall_time_s": 0.152164,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.152164,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:8db84ae6f480aad46ecde86d9382395d93c1381a0e985f24b0f6a18d1055333f",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:7ba95ca12a6c682730ca6c5478b73a18041cb56f4e5c9c347f9b2f25380f8799"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-31B-it-GGUF|v566_unit_008_05_2f682e3f1a1dd027|canonical|unguarded",
+      "model_name": "Gemma4-31B-it",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "domain": "seating",
+      "conflict_count": 40,
+      "conflict_stratum": "high",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:fbd432d35fcf9c1e45452b14f0c527d447d6925ebec81fe086007276a79f86fc",
+      "prompt_char_count": 810,
+      "prompt_tokens": 233,
+      "output_tokens": 24,
+      "charged_tokens": 257,
+      "model_wall_time_s": 0.90682,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.90682,
+      "timeout": false,
+      "parse_failure": true,
+      "parsed_label": null,
+      "exact_label": "satisfiable",
+      "exact_valid": false,
+      "terminal_status": "parse_failure",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:737ed1c140c967c6d459a5fdfb9a4a7fa323ea56a6a2d472774eb8efc3653d54",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:6270b9a3686cc2ad71853b1852c6f89e538d5a15d30b4b74399d2658c9354a85"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-31B-it-GGUF|v566_unit_008_05_2f682e3f1a1dd027|canonical|guarded",
+      "model_name": "Gemma4-31B-it",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "domain": "seating",
+      "conflict_count": 40,
+      "conflict_stratum": "high",
+      "arm_id": "guarded",
+      "dispatch": "z3_direct",
+      "prompt_sha256": "sha256:fbd432d35fcf9c1e45452b14f0c527d447d6925ebec81fe086007276a79f86fc",
+      "prompt_char_count": 810,
+      "prompt_tokens": 0,
+      "output_tokens": 0,
+      "charged_tokens": 0,
+      "model_wall_time_s": 0.0,
+      "first_token_time_s": null,
+      "tool_time_s": 0.005002,
+      "charged_time_s": 0.005002,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:4755dc7d7f3d4d89a2ef63e8015ace4cfca3d244f9a179f211ae8ee9b8ca2814",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:fb26f7136d551fd0d80d044990d583edd376ff0db24de056e5c76ee8486b6de0"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-31B-it-GGUF|v566_unit_008_05_2f682e3f1a1dd027|relabeled|unguarded",
+      "model_name": "Gemma4-31B-it",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "domain": "seating",
+      "conflict_count": 40,
+      "conflict_stratum": "high",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:3e8fb9ed41cd9b8fe8f200f90c6658c082b08c98c8f46396c14df54ef964a383",
+      "prompt_char_count": 763,
+      "prompt_tokens": 262,
+      "output_tokens": 24,
+      "charged_tokens": 286,
+      "model_wall_time_s": 0.944749,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.944749,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:95e37edcf73a78aad2845dac7485b68ccc90e898ceb0a624f4d11a7ed9f1d684",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:3c74d1e3445e4673220fa74dd6272b507a1feeccf5c8a81befe667fd465d1ede"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-31B-it-GGUF|v566_unit_008_05_2f682e3f1a1dd027|relabeled|guarded",
+      "model_name": "Gemma4-31B-it",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "domain": "seating",
+      "conflict_count": 40,
+      "conflict_stratum": "high",
+      "arm_id": "guarded",
+      "dispatch": "z3_direct",
+      "prompt_sha256": "sha256:3e8fb9ed41cd9b8fe8f200f90c6658c082b08c98c8f46396c14df54ef964a383",
+      "prompt_char_count": 763,
+      "prompt_tokens": 0,
+      "output_tokens": 0,
+      "charged_tokens": 0,
+      "model_wall_time_s": 0.0,
+      "first_token_time_s": null,
+      "tool_time_s": 0.005002,
+      "charged_time_s": 0.005002,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:4755dc7d7f3d4d89a2ef63e8015ace4cfca3d244f9a179f211ae8ee9b8ca2814",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:ef6bb3d40c43a1dcec74c8368b071b7736033cf6ab87a2a5e21898f448c7f5b2"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-26B-A4B-it-GGUF|v566_unit_002_07_babace5767635d42|canonical|unguarded",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:b380e8bed112b50be6ba9a3322f4efa9af5b8dbee640bceacaf5bf60b078a61d",
+      "prompt_char_count": 1034,
+      "prompt_tokens": 252,
+      "output_tokens": 11,
+      "charged_tokens": 263,
+      "model_wall_time_s": 0.430377,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.430377,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:1af3f721452aa46832dddf8ff2aa6946686268b6060259c40b7750514e187e7b",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:4b16c30a1e88ac5154b2c8386227ce81e0c298298f795816af90cb36aff14d83"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-26B-A4B-it-GGUF|v566_unit_002_07_babace5767635d42|canonical|guarded",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "arm_id": "guarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:b380e8bed112b50be6ba9a3322f4efa9af5b8dbee640bceacaf5bf60b078a61d",
+      "prompt_char_count": 1034,
+      "prompt_tokens": 252,
+      "output_tokens": 11,
+      "charged_tokens": 263,
+      "model_wall_time_s": 0.225055,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.225055,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:1af3f721452aa46832dddf8ff2aa6946686268b6060259c40b7750514e187e7b",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:35d4dda0856ef5792d866fc762f96832fc689d6b39b9467ada9bf1270aae43cc"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-26B-A4B-it-GGUF|v566_unit_002_07_babace5767635d42|relabeled|unguarded",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:a42a5710a285a3c954c9e0878ae008f39d179a337cf1003785cc1f3c4d4af6ed",
+      "prompt_char_count": 1055,
+      "prompt_tokens": 343,
+      "output_tokens": 24,
+      "charged_tokens": 367,
+      "model_wall_time_s": 0.622526,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.622526,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:8a9decc44464cc54e0fdbe7ab3fc455c31ec43a5e3e6f7f2b3250b91064287f1",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:9e769ce43ecbf1357a4057e7db9bf99c53a6141d9d3a1f23cf6f87d7ebb2bbd5"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-26B-A4B-it-GGUF|v566_unit_002_07_babace5767635d42|relabeled|guarded",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "arm_id": "guarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:a42a5710a285a3c954c9e0878ae008f39d179a337cf1003785cc1f3c4d4af6ed",
+      "prompt_char_count": 1055,
+      "prompt_tokens": 343,
+      "output_tokens": 24,
+      "charged_tokens": 367,
+      "model_wall_time_s": 0.494983,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.494983,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:4f10cfe0993c1ac0edd8da77590291202e61f1d1df0de210be9f3a4a255777da",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:db0126b9e38ba2c6c235eb36893b0b06b897937e72fbc83dc7dd62889775e0af"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-26B-A4B-it-GGUF|v566_unit_005_03_49a37358e77f52e5|canonical|unguarded",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:603935ec32444c5074a96e61e18321cf6c3273f1e6f279d1a4aff236d5f69033",
+      "prompt_char_count": 663,
+      "prompt_tokens": 170,
+      "output_tokens": 6,
+      "charged_tokens": 176,
+      "model_wall_time_s": 0.184765,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.184765,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:8db84ae6f480aad46ecde86d9382395d93c1381a0e985f24b0f6a18d1055333f",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:e14af33c929f65dcf5a1f50ddcf846aa3c6205cff25712d29fe959593041dea6"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-26B-A4B-it-GGUF|v566_unit_005_03_49a37358e77f52e5|canonical|guarded",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "arm_id": "guarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:603935ec32444c5074a96e61e18321cf6c3273f1e6f279d1a4aff236d5f69033",
+      "prompt_char_count": 663,
+      "prompt_tokens": 170,
+      "output_tokens": 6,
+      "charged_tokens": 176,
+      "model_wall_time_s": 0.122595,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.122595,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:8db84ae6f480aad46ecde86d9382395d93c1381a0e985f24b0f6a18d1055333f",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:17556ea8be12ef275fe6db0a1acf3a2aa3bf87bf8ac4869202088eba7d3d276d"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-26B-A4B-it-GGUF|v566_unit_005_03_49a37358e77f52e5|relabeled|unguarded",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:90171ad3ada59edd0094d483b2e7a51c8999a7e95d2f450a1fa65ba47c58cf0c",
+      "prompt_char_count": 593,
+      "prompt_tokens": 185,
+      "output_tokens": 6,
+      "charged_tokens": 191,
+      "model_wall_time_s": 0.182793,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.182793,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:8db84ae6f480aad46ecde86d9382395d93c1381a0e985f24b0f6a18d1055333f",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:c5f1815f7263bd4adfec60086b6087aec2592a6da9fa045c2675af488dc75cd4"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-26B-A4B-it-GGUF|v566_unit_005_03_49a37358e77f52e5|relabeled|guarded",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "arm_id": "guarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:90171ad3ada59edd0094d483b2e7a51c8999a7e95d2f450a1fa65ba47c58cf0c",
+      "prompt_char_count": 593,
+      "prompt_tokens": 185,
+      "output_tokens": 24,
+      "charged_tokens": 209,
+      "model_wall_time_s": 0.501375,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.501375,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "contradiction",
+      "exact_label": "satisfiable",
+      "exact_valid": false,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:5ff454ca2b799da560c909fa863d16f2d7c1fa4e6076c9d97e5c45791ab62a4c",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:471d58992857d8f2377d37111d3095c1304c7f0df4555450c4f9dc7ae0ea64d5"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-26B-A4B-it-GGUF|v566_unit_008_05_2f682e3f1a1dd027|canonical|unguarded",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "domain": "seating",
+      "conflict_count": 40,
+      "conflict_stratum": "high",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:fbd432d35fcf9c1e45452b14f0c527d447d6925ebec81fe086007276a79f86fc",
+      "prompt_char_count": 810,
+      "prompt_tokens": 233,
+      "output_tokens": 24,
+      "charged_tokens": 257,
+      "model_wall_time_s": 0.583876,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.583876,
+      "timeout": false,
+      "parse_failure": true,
+      "parsed_label": null,
+      "exact_label": "satisfiable",
+      "exact_valid": false,
+      "terminal_status": "parse_failure",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:cb71b2151f8ddf02ad48e2111810c435135ed84c694d7dad0c294c8bacbb994c",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:62805948a9cf7510f1c5ee48f9eb413e3a477e7596748f87fc23df64977ca79d"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-26B-A4B-it-GGUF|v566_unit_008_05_2f682e3f1a1dd027|canonical|guarded",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "surface_id": "canonical",
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "domain": "seating",
+      "conflict_count": 40,
+      "conflict_stratum": "high",
+      "arm_id": "guarded",
+      "dispatch": "z3_direct",
+      "prompt_sha256": "sha256:fbd432d35fcf9c1e45452b14f0c527d447d6925ebec81fe086007276a79f86fc",
+      "prompt_char_count": 810,
+      "prompt_tokens": 0,
+      "output_tokens": 0,
+      "charged_tokens": 0,
+      "model_wall_time_s": 0.0,
+      "first_token_time_s": null,
+      "tool_time_s": 0.005002,
+      "charged_time_s": 0.005002,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:4755dc7d7f3d4d89a2ef63e8015ace4cfca3d244f9a179f211ae8ee9b8ca2814",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:dc32a8616cde36cd104796a492de52357fc2f92d863e03289e480184604261d2"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-26B-A4B-it-GGUF|v566_unit_008_05_2f682e3f1a1dd027|relabeled|unguarded",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "domain": "seating",
+      "conflict_count": 40,
+      "conflict_stratum": "high",
+      "arm_id": "unguarded",
+      "dispatch": "llama_cpp",
+      "prompt_sha256": "sha256:3e8fb9ed41cd9b8fe8f200f90c6658c082b08c98c8f46396c14df54ef964a383",
+      "prompt_char_count": 763,
+      "prompt_tokens": 262,
+      "output_tokens": 24,
+      "charged_tokens": 286,
+      "model_wall_time_s": 0.584445,
+      "first_token_time_s": null,
+      "tool_time_s": 0.0,
+      "charged_time_s": 0.584445,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "contradiction",
+      "exact_label": "satisfiable",
+      "exact_valid": false,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:c29dc975682697c4eb0187ac1ccef2c653e1cad8f12c443cb18766261c603073",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:ced312d3d0ed67bc6c959317cd8dac03514305b779344d8d609f7893c9fde75c"
+    },
+    {
+      "row_type": "per_unit",
+      "unit_key": "unsloth/gemma-4-26B-A4B-it-GGUF|v566_unit_008_05_2f682e3f1a1dd027|relabeled|guarded",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "surface_id": "relabeled",
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "domain": "seating",
+      "conflict_count": 40,
+      "conflict_stratum": "high",
+      "arm_id": "guarded",
+      "dispatch": "z3_direct",
+      "prompt_sha256": "sha256:3e8fb9ed41cd9b8fe8f200f90c6658c082b08c98c8f46396c14df54ef964a383",
+      "prompt_char_count": 763,
+      "prompt_tokens": 0,
+      "output_tokens": 0,
+      "charged_tokens": 0,
+      "model_wall_time_s": 0.0,
+      "first_token_time_s": null,
+      "tool_time_s": 0.005001,
+      "charged_time_s": 0.005001,
+      "timeout": false,
+      "parse_failure": false,
+      "parsed_label": "satisfiable",
+      "exact_label": "satisfiable",
+      "exact_valid": true,
+      "terminal_status": "terminal",
+      "error": "",
+      "checkpoint_reused": false,
+      "output_text_sha256": "sha256:4755dc7d7f3d4d89a2ef63e8015ace4cfca3d244f9a179f211ae8ee9b8ca2814",
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-RUNTIME"
+      ],
+      "row_hash": "sha256:985681157ed42b142afe1a18106123185526acac774510bbba5c2483e9f3fd0c"
+    }
+  ],
+  "model_and_surface_effect_rows": [
+    {
+      "row_type": "surface_effect",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "charged_token_delta_relabeled_minus_canonical": 75,
+      "charged_time_delta_relabeled_minus_canonical_s": -0.614783,
+      "exact_valid_changed": false,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:b0af029cb254181d2c182d77f8ffc12c0fb9f53cc2be0d069d3fa84fd781ee1c"
+    },
+    {
+      "row_type": "surface_effect",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "charged_token_delta_relabeled_minus_canonical": 15,
+      "charged_time_delta_relabeled_minus_canonical_s": 0.007683,
+      "exact_valid_changed": false,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:28ea071cd8aa75992b286a271008ee0b5fc8eea9ffe11f626bc3708f10e2a8d2"
+    },
+    {
+      "row_type": "surface_effect",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "charged_token_delta_relabeled_minus_canonical": 29,
+      "charged_time_delta_relabeled_minus_canonical_s": 0.004406,
+      "exact_valid_changed": false,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:311ce9b939176d36fdf3ccbf512a711ac36ae65327152bd97b939a8f1338b9e2"
+    },
+    {
+      "row_type": "surface_effect",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "charged_token_delta_relabeled_minus_canonical": 104,
+      "charged_time_delta_relabeled_minus_canonical_s": 0.192149,
+      "exact_valid_changed": false,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:25aafde70ebe13dde829f128e6c3aabf7f6e7367601f4c088aeb7cd44714b287"
+    },
+    {
+      "row_type": "surface_effect",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "charged_token_delta_relabeled_minus_canonical": 15,
+      "charged_time_delta_relabeled_minus_canonical_s": -0.001972,
+      "exact_valid_changed": false,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:a20defb8735c87fa4ebd7334a13a6478a90c59a06eca8819cf4e4f9c9cfe8466"
+    },
+    {
+      "row_type": "surface_effect",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "charged_token_delta_relabeled_minus_canonical": 29,
+      "charged_time_delta_relabeled_minus_canonical_s": 0.000569,
+      "exact_valid_changed": false,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:6171b0f3b5878c585a9bd1090f6f05f2daa66ca6b7b5a126953c5aef76e5a4e2"
+    },
+    {
+      "row_type": "surface_effect",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "logical_instance_id": "v566_unit_002_07_babace5767635d42",
+      "charged_token_delta_relabeled_minus_canonical": 91,
+      "charged_time_delta_relabeled_minus_canonical_s": 0.020922,
+      "exact_valid_changed": false,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:05b0ff44fbf7b202344aa1b10fe34faa851e5d9f1fe07f39e6d099e0cbf319b2"
+    },
+    {
+      "row_type": "surface_effect",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "logical_instance_id": "v566_unit_005_03_49a37358e77f52e5",
+      "charged_token_delta_relabeled_minus_canonical": 15,
+      "charged_time_delta_relabeled_minus_canonical_s": -0.004018,
+      "exact_valid_changed": false,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:f66b76925ec5f8bdc66c2a438d918b038d56bb8d7a71ca5c59c68cfe1874eb3c"
+    },
+    {
+      "row_type": "surface_effect",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "logical_instance_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "charged_token_delta_relabeled_minus_canonical": 29,
+      "charged_time_delta_relabeled_minus_canonical_s": 0.037929,
+      "exact_valid_changed": true,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:23445bd340391fd08da15dd4fca5828c8bcf10b124fdf5b4bc3f89cefa27c39f"
+    }
+  ],
+  "conflict_cost_association_rows": [
+    {
+      "row_type": "conflict_cost_association",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "surface_id": "canonical",
+      "unit_count": 3,
+      "token_slope_per_conflict": 0.6375,
+      "time_slope_per_conflict_s": -0.007847,
+      "mean_conflict_count": 13.333333,
+      "mean_charged_tokens": 238.0,
+      "mean_charged_time_s": 0.720704,
+      "universal_model_hardness_claimed": false,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:688a0b4baa738a28a29627ee52f1b48cf407568e0a2019b2d22a4e396a50b9f4"
+    },
+    {
+      "row_type": "conflict_cost_association",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "surface_id": "relabeled",
+      "unit_count": 3,
+      "token_slope_per_conflict": 0.2375,
+      "time_slope_per_conflict_s": -0.000148,
+      "mean_conflict_count": 13.333333,
+      "mean_charged_tokens": 277.666667,
+      "mean_charged_time_s": 0.519806,
+      "universal_model_hardness_claimed": false,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:c1a07939510b786c9530dada6957081b350daf7521bc96bc94315585e1cd6578"
+    },
+    {
+      "row_type": "conflict_cost_association",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "surface_id": "canonical",
+      "unit_count": 3,
+      "token_slope_per_conflict": 0.9375,
+      "time_slope_per_conflict_s": 0.006908,
+      "mean_conflict_count": 13.333333,
+      "mean_charged_tokens": 232.0,
+      "mean_charged_time_s": 0.399673,
+      "universal_model_hardness_claimed": false,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:162f05bf05dfe999a3d60c063b11e7fb0755550950e5aead58bca35a7723410f"
+    },
+    {
+      "row_type": "conflict_cost_association",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "surface_id": "relabeled",
+      "unit_count": 3,
+      "token_slope_per_conflict": 0.175,
+      "time_slope_per_conflict_s": 0.004545,
+      "mean_conflict_count": 13.333333,
+      "mean_charged_tokens": 281.333333,
+      "mean_charged_time_s": 0.463255,
+      "universal_model_hardness_claimed": false,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:74e9ecfc5618fc3d83a822d7c52bcbbfe830ba4f6515cb8fcf7342834e41604f"
+    },
+    {
+      "row_type": "conflict_cost_association",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "surface_id": "canonical",
+      "unit_count": 3,
+      "token_slope_per_conflict": 0.8,
+      "time_slope_per_conflict_s": 0.006412,
+      "mean_conflict_count": 13.333333,
+      "mean_charged_tokens": 235.666667,
+      "mean_charged_time_s": 0.735828,
+      "universal_model_hardness_claimed": false,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:6d75feaffac113cb2dd49eec5b829a765f5ae0e4763482d9b7ffcaab72e9aac0"
+    },
+    {
+      "row_type": "conflict_cost_association",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "surface_id": "relabeled",
+      "unit_count": 3,
+      "token_slope_per_conflict": 0.2,
+      "time_slope_per_conflict_s": 0.007149,
+      "mean_conflict_count": 13.333333,
+      "mean_charged_tokens": 280.666667,
+      "mean_charged_time_s": 0.754106,
+      "universal_model_hardness_claimed": false,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:c8f037e2843cad4851dc5ba4d567f696e082e00f2ee4b14522b087eecfe7f894"
+    }
+  ],
+  "guarded_versus_unguarded_rows": [
+    {
+      "row_type": "guarded_versus_unguarded",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "guarded_token_savings": 539,
+      "guarded_time_savings_s": 1.707248,
+      "exact_completion_delta": 0,
+      "supports_benefit": true,
+      "guarded_direct_tool_rows": 2,
+      "unit_count": 12,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:4305540e26daae90106123bda9d1bdb1756c8cc17516b242c9fe139531755d63"
+    },
+    {
+      "row_type": "guarded_versus_unguarded",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "guarded_token_savings": 525,
+      "guarded_time_savings_s": 1.234771,
+      "exact_completion_delta": 1,
+      "supports_benefit": true,
+      "guarded_direct_tool_rows": 2,
+      "unit_count": 12,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:323916246cc3a3017487618e4c5468f8c6bcf2d3b0bfa80bed908072aea98ad7"
+    },
+    {
+      "row_type": "guarded_versus_unguarded",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "guarded_token_savings": 543,
+      "guarded_time_savings_s": 2.627464,
+      "exact_completion_delta": 1,
+      "supports_benefit": true,
+      "guarded_direct_tool_rows": 2,
+      "unit_count": 12,
+      "spec_refs": [
+        "REQ-BENCH-6546",
+        "SCENARIO-BENCH-6546-EFFECTS"
+      ],
+      "row_hash": "sha256:0493d78a535d2347b73b06934fc66e7afb574fc43120b512b35cf0c8c20e2f8e"
+    }
+  ],
+  "token_and_time_recomputation": {
+    "row_type": "token_and_time_recomputation",
+    "by_arm": {
+      "unguarded": {
+        "prompt_tokens": 4293,
+        "output_tokens": 343,
+        "charged_tokens": 4636,
+        "model_wall_time_s": 10.780117,
+        "tool_time_s": 0.0,
+        "charged_time_s": 10.780117
+      },
+      "guarded": {
+        "prompt_tokens": 2812,
+        "output_tokens": 217,
+        "charged_tokens": 3029,
+        "model_wall_time_s": 5.180621,
+        "tool_time_s": 0.030013,
+        "charged_time_s": 5.210634
+      }
+    },
+    "unguarded_total_charged_tokens": 4636,
+    "guarded_total_charged_tokens": 3029,
+    "unguarded_total_charged_time_s": 10.780117,
+    "guarded_total_charged_time_s": 5.210634,
+    "mismatch_unit_keys": [],
+    "all_token_and_time_totals_match_rows": true,
+    "spec_refs": [
+      "REQ-BENCH-6546",
+      "SCENARIO-BENCH-6546-EFFECTS"
+    ]
+  },
+  "exact_completion_receipt": {
+    "row_type": "exact_completion_receipt",
+    "guarded_exact_valid_count": 13,
+    "unguarded_exact_valid_count": 11,
+    "guarded_terminal_count": 18,
+    "unguarded_terminal_count": 18,
+    "guarded_noninferior_exact_completion": true,
+    "z3_evaluation_authority": true,
+    "verifier_is_oracle": false,
+    "spec_refs": [
+      "REQ-BENCH-6546",
+      "SCENARIO-BENCH-6546-EFFECTS"
+    ]
+  },
+  "calibration_rows": [
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_000_00_6f4545aad5f01721",
+      "split_name": "train",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_000_01_27f778f617550943",
+      "split_name": "train",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_000_02_e8158f543a784df6",
+      "split_name": "train",
+      "domain": "logic_grid",
+      "conflict_count": 2,
+      "conflict_stratum": "medium",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_000_03_e15edc692c652f58",
+      "split_name": "train",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_000_04_9abfab2962ee3503",
+      "split_name": "train",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_000_05_a93ba68c0543c724",
+      "split_name": "train",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_000_06_0ebe9845afb93ce9",
+      "split_name": "train",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_000_07_0aef030a0d429166",
+      "split_name": "train",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_000_08_bb1ec3ee7d4ba8b7",
+      "split_name": "train",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_003_00_503f1de736bf9db7",
+      "split_name": "train",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_003_01_48b2f4b0159a7fca",
+      "split_name": "train",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_003_02_1a2d1f7482ac9eaa",
+      "split_name": "train",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_003_03_4308ba90aa5db436",
+      "split_name": "train",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_003_04_e10fc078e8424e47",
+      "split_name": "train",
+      "domain": "scheduling",
+      "conflict_count": 3,
+      "conflict_stratum": "medium",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_003_05_22bcdf63518aff58",
+      "split_name": "train",
+      "domain": "scheduling",
+      "conflict_count": 3,
+      "conflict_stratum": "medium",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_006_00_6b29d327a2f698c4",
+      "split_name": "train",
+      "domain": "seating",
+      "conflict_count": 16,
+      "conflict_stratum": "high",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_006_01_a5bc476ccd61457c",
+      "split_name": "train",
+      "domain": "seating",
+      "conflict_count": 6,
+      "conflict_stratum": "high",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_006_02_1f88676c505ee294",
+      "split_name": "train",
+      "domain": "seating",
+      "conflict_count": 12,
+      "conflict_stratum": "high",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_006_03_13d5678df441292a",
+      "split_name": "train",
+      "domain": "seating",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_006_04_880a2b879801daa4",
+      "split_name": "train",
+      "domain": "seating",
+      "conflict_count": 5,
+      "conflict_stratum": "medium",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_006_05_b2cabe2c8a4f586d",
+      "split_name": "train",
+      "domain": "seating",
+      "conflict_count": 9,
+      "conflict_stratum": "high",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_001_00_314975811591a8c9",
+      "split_name": "development",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_001_01_f00981c430bbacb9",
+      "split_name": "development",
+      "domain": "logic_grid",
+      "conflict_count": 4,
+      "conflict_stratum": "medium",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_001_02_1b23eee91589f746",
+      "split_name": "development",
+      "domain": "logic_grid",
+      "conflict_count": 4,
+      "conflict_stratum": "medium",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_001_03_b0a7d30d1c77145a",
+      "split_name": "development",
+      "domain": "logic_grid",
+      "conflict_count": 6,
+      "conflict_stratum": "medium",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_001_04_2748c78c8d807c4c",
+      "split_name": "development",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_001_05_89cb516d28070fd5",
+      "split_name": "development",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_001_06_ce55b11d27d56845",
+      "split_name": "development",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_004_00_4290b4b84b130a2d",
+      "split_name": "development",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_004_01_9b7bfd95a5d8e670",
+      "split_name": "development",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_004_02_c36d7ba4f34a3cf4",
+      "split_name": "development",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_004_03_620b25d3129bef30",
+      "split_name": "development",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_004_04_d2fe7f1a7e48242c",
+      "split_name": "development",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_004_05_6b3f3a910d6aea11",
+      "split_name": "development",
+      "domain": "scheduling",
+      "conflict_count": 2,
+      "conflict_stratum": "medium",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_004_06_16eeb6f187f8c498",
+      "split_name": "development",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_004_07_ef5111118ff45439",
+      "split_name": "development",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_007_00_43a0363006129ccd",
+      "split_name": "development",
+      "domain": "seating",
+      "conflict_count": 8,
+      "conflict_stratum": "high",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_007_01_4a4439801667a67b",
+      "split_name": "development",
+      "domain": "seating",
+      "conflict_count": 38,
+      "conflict_stratum": "high",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_007_02_85c982e4e9ccfe32",
+      "split_name": "development",
+      "domain": "seating",
+      "conflict_count": 32,
+      "conflict_stratum": "high",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_007_03_0025a95668e81747",
+      "split_name": "development",
+      "domain": "seating",
+      "conflict_count": 45,
+      "conflict_stratum": "high",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_007_04_16ffc13daa2f4fe0",
+      "split_name": "development",
+      "domain": "seating",
+      "conflict_count": 30,
+      "conflict_stratum": "high",
+      "used_for_threshold": true,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_002_00_28d7c7b6e2aae718",
+      "split_name": "held",
+      "domain": "logic_grid",
+      "conflict_count": 6,
+      "conflict_stratum": "medium",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_002_01_25627352f11c3deb",
+      "split_name": "held",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_002_02_1250c70dc9fb7263",
+      "split_name": "held",
+      "domain": "logic_grid",
+      "conflict_count": 11,
+      "conflict_stratum": "high",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_002_03_3f66b19c9bfadf38",
+      "split_name": "held",
+      "domain": "logic_grid",
+      "conflict_count": 8,
+      "conflict_stratum": "high",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_002_04_71a4996fc4e751b4",
+      "split_name": "held",
+      "domain": "logic_grid",
+      "conflict_count": 6,
+      "conflict_stratum": "high",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_002_05_56b084a82b2e36c5",
+      "split_name": "held",
+      "domain": "logic_grid",
+      "conflict_count": 8,
+      "conflict_stratum": "high",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_002_06_2ad9c710db02c2dc",
+      "split_name": "held",
+      "domain": "logic_grid",
+      "conflict_count": 8,
+      "conflict_stratum": "high",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_002_07_babace5767635d42",
+      "split_name": "held",
+      "domain": "logic_grid",
+      "conflict_count": 0,
+      "conflict_stratum": "low",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_005_00_db6caba86d6cc94a",
+      "split_name": "held",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_005_01_4bd49e5c19bf944a",
+      "split_name": "held",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_005_02_f22ff5a57fa9482c",
+      "split_name": "held",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_005_03_49a37358e77f52e5",
+      "split_name": "held",
+      "domain": "scheduling",
+      "conflict_count": 0,
+      "conflict_stratum": "medium",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_008_00_8cc9c00210c3159c",
+      "split_name": "held",
+      "domain": "seating",
+      "conflict_count": 32,
+      "conflict_stratum": "high",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_008_01_2a1b2d47832fd50a",
+      "split_name": "held",
+      "domain": "seating",
+      "conflict_count": 9,
+      "conflict_stratum": "high",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_008_02_93fbe26ae0ba4e89",
+      "split_name": "held",
+      "domain": "seating",
+      "conflict_count": 39,
+      "conflict_stratum": "high",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_008_03_221a445fe2bbb8ce",
+      "split_name": "held",
+      "domain": "seating",
+      "conflict_count": 26,
+      "conflict_stratum": "high",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_008_04_5338e3a3ddc93ebb",
+      "split_name": "held",
+      "domain": "seating",
+      "conflict_count": 33,
+      "conflict_stratum": "high",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    },
+    {
+      "row_type": "calibration_conflict",
+      "local_unit_id": "v566_unit_008_05_2f682e3f1a1dd027",
+      "split_name": "held",
+      "domain": "seating",
+      "conflict_count": 40,
+      "conflict_stratum": "high",
+      "used_for_threshold": false,
+      "held_rows_unavailable": true,
+      "target_answer_used": false,
+      "model_cost_used": false
+    }
+  ],
+  "censoring_and_timeout_receipts": {
+    "row_type": "censoring_and_timeout_receipts",
+    "row_count": 36,
+    "timeout_count": 0,
+    "parse_failure_count": 2,
+    "model_failure_count": 0,
+    "nonterminal_count": 0,
+    "all_units_terminal": true,
+    "timeout_unit_keys": [],
+    "parse_failure_unit_keys": [
+      "unsloth/gemma-4-31B-it-GGUF|v566_unit_008_05_2f682e3f1a1dd027|canonical|unguarded",
+      "unsloth/gemma-4-26B-A4B-it-GGUF|v566_unit_008_05_2f682e3f1a1dd027|canonical|unguarded"
+    ],
+    "checkpoint_receipt": {
+      "checkpointing_enabled": true,
+      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6546_smt_cost_guard_sota.json",
+      "challenge_hash": "sha256:eaac198575fef6d818ee26ce52513f3f59c8ddd330c7395d540ae976465b6616",
+      "loaded_row_count": 0,
+      "reused_row_count": 0,
+      "saved_row_count": 36,
+      "schema": "carnot.exp6546.smt_cost_guard.checkpoint.v1"
+    },
+    "spec_refs": [
+      "REQ-BENCH-6546",
+      "SCENARIO-BENCH-6546-CHECKPOINT"
+    ]
+  },
+  "confound_attack_matrix": {
+    "rows": [
+      {
+        "attack_id": "prompt_length_confounding",
+        "fail_closed": true,
+        "observed_value": true,
+        "spec_refs": [
+          "REQ-BENCH-6546",
+          "SCENARIO-BENCH-6546-ATTACKS"
+        ],
+        "row_hash": "sha256:bb7f2e3c3fce6cb891a7a6ad5903f881ea4f556d9ff6067f674a64ba328fd98a"
+      },
+      {
+        "attack_id": "surface_non_equivalence",
+        "fail_closed": true,
+        "observed_value": true,
+        "spec_refs": [
+          "REQ-BENCH-6546",
+          "SCENARIO-BENCH-6546-ATTACKS"
+        ],
+        "row_hash": "sha256:1c4a27b6e8c92e3e505abf2b558c7597856f3eb8fac231d00d2239e4f55abc04"
+      },
+      {
+        "attack_id": "cache_order",
+        "fail_closed": true,
+        "observed_value": true,
+        "spec_refs": [
+          "REQ-BENCH-6546",
+          "SCENARIO-BENCH-6546-ATTACKS"
+        ],
+        "row_hash": "sha256:2f1f5045e24fb8af4e9c291e76973842b26b7a72bd02a26923b34a7f937cecb2"
+      },
+      {
+        "attack_id": "warm_up_asymmetry",
+        "fail_closed": true,
+        "observed_value": true,
+        "spec_refs": [
+          "REQ-BENCH-6546",
+          "SCENARIO-BENCH-6546-ATTACKS"
+        ],
+        "row_hash": "sha256:191c3443313f49d6a8f5a33198aafc068f108d85ed2b02089bec98bc1334b430"
+      },
+      {
+        "attack_id": "token_counter_mismatch",
+        "fail_closed": true,
+        "observed_value": true,
+        "spec_refs": [
+          "REQ-BENCH-6546",
+          "SCENARIO-BENCH-6546-ATTACKS"
+        ],
+        "row_hash": "sha256:98b050e280151a76022bfdc94b42026e1ad1fc477e70bceae75c1df4016e23db"
+      },
+      {
+        "attack_id": "timer_aliases",
+        "fail_closed": true,
+        "observed_value": true,
+        "spec_refs": [
+          "REQ-BENCH-6546",
+          "SCENARIO-BENCH-6546-ATTACKS"
+        ],
+        "row_hash": "sha256:d6d5c257ced99d218d4ee86a74e7aa12cd8e9c1cbc8f8d91cd8801c9bec6b0f9"
+      },
+      {
+        "attack_id": "model_substitution",
+        "fail_closed": true,
+        "observed_value": true,
+        "spec_refs": [
+          "REQ-BENCH-6546",
+          "SCENARIO-BENCH-6546-ATTACKS"
+        ],
+        "row_hash": "sha256:4d7daded93894b90539dd9cde5e98e5037a52ee2c4d32115ce9fabf63c416259"
+      },
+      {
+        "attack_id": "held_threshold_tuning",
+        "fail_closed": true,
+        "observed_value": true,
+        "spec_refs": [
+          "REQ-BENCH-6546",
+          "SCENARIO-BENCH-6546-ATTACKS"
+        ],
+        "row_hash": "sha256:a861b8a0de01193d87695a6ef2e359970658eb13206e82a670fc8205d1b77834"
+      },
+      {
+        "attack_id": "tool_time_omission",
+        "fail_closed": true,
+        "observed_value": true,
+        "spec_refs": [
+          "REQ-BENCH-6546",
+          "SCENARIO-BENCH-6546-ATTACKS"
+        ],
+        "row_hash": "sha256:96d51b2aabf2c21ab165669c4e36ad855524a3d112803bf73e5be6291a274794"
+      },
+      {
+        "attack_id": "cherry_picked_timeouts",
+        "fail_closed": true,
+        "observed_value": true,
+        "spec_refs": [
+          "REQ-BENCH-6546",
+          "SCENARIO-BENCH-6546-ATTACKS"
+        ],
+        "row_hash": "sha256:fe8f9036c3fad34e08fe54b672f0cb1b1f028a90cf9539777bbedb26cc56160c"
+      }
+    ],
+    "all_confounds_fail_closed": true,
+    "false_accept_count": 0
+  },
+  "smt_cost_guard_ready_score": 1.0,
+  "gate_check_summary": {
+    "all_gates_passed": true,
+    "failed_checks": [],
+    "rows": [
+      {
+        "check": "upstream_gate_passed",
+        "passed": true,
+        "expected": true,
+        "observed": true
+      },
+      {
+        "check": "all_mandated_model_paths_resolved",
+        "passed": true,
+        "expected": true,
+        "observed": true
+      },
+      {
+        "check": "live_runtime_preconditions",
+        "passed": true,
+        "expected": true,
+        "observed": true
+      },
+      {
+        "check": "all_mandated_models_loaded",
+        "passed": true,
+        "expected": true,
+        "observed": true
+      }
+    ]
+  },
+  "aggregate_row_recomputation": {
+    "row_type": "aggregate_row_recomputation",
+    "gate_passed": true,
+    "failed_preconditions": [],
+    "all_mandated_models_loaded": true,
+    "row_count": 36,
+    "supporting_model_family_count": 3,
+    "surface_controlled_audit_passed": true,
+    "exact_completion_noninferior": true,
+    "token_or_time_benefit": true,
+    "all_units_terminal": true,
+    "all_confounds_fail_closed": true,
+    "protected_files_unchanged": true,
+    "ready_score_from_rows": 1.0,
+    "verdict_class_from_rows": "positive",
+    "spec_refs": [
+      "REQ-BENCH-6546",
+      "SCENARIO-BENCH-6546-TERMINAL"
+    ]
+  },
+  "preconditions_checked": {
+    "schema": "carnot.exp6546.preconditions.v1",
+    "run_date": "20260823",
+    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6546_smt_cost_guard_sota.json",
+    "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6546_smt_cost_guard_sota.json",
+    "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/fixtures/v566_drift_bench_external_slice.jsonl",
+    "source_root": "/home/ianblenke/.cache/carnot/exp6541/drift-bench-d24cda4f59a6",
+    "source_root_exists": true,
+    "model_path_count": 3,
+    "required_model_count": 3,
+    "missing_hf_ids": [],
+    "all_mandated_model_paths_resolved": true,
+    "hardware_and_runtime": {
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": "3.12.13",
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "cpu_count": 24,
+      "ram": {
+        "mem_total_bytes": 134305107968,
+        "mem_available_bytes": 118664089600,
+        "swap_total_bytes": 154618814464,
+        "swap_free_bytes": 148927045632
+      },
+      "disk": {
+        "disk_total_bytes": 3953289023488,
+        "disk_used_bytes": 2865671208960,
+        "disk_free_bytes": 1087617814528
+      },
+      "gpu": {
+        "available": true,
+        "exit_code": 0,
+        "stderr": "",
+        "devices": [
+          {
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 3090",
+            "vram_total_mb": 24576.0,
+            "vram_free_mb": 24120.0,
+            "temperature_c": 47.0,
+            "power_w": 18.81
+          },
+          {
+            "index": 1,
+            "name": "NVIDIA GeForce RTX 3090",
+            "vram_total_mb": 24576.0,
+            "vram_free_mb": 2887.0,
+            "temperature_c": 73.0,
+            "power_w": 368.56
+          }
+        ]
+      },
+      "thermal_state": {
+        "source": "nvidia-smi.temperature.gpu",
+        "gpu": [
+          {
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 3090",
+            "vram_total_mb": 24576.0,
+            "vram_free_mb": 24120.0,
+            "temperature_c": 47.0,
+            "power_w": 18.81
+          },
+          {
+            "index": 1,
+            "name": "NVIDIA GeForce RTX 3090",
+            "vram_total_mb": 24576.0,
+            "vram_free_mb": 2887.0,
+            "temperature_c": 73.0,
+            "power_w": 368.24
+          }
+        ]
+      },
+      "llama_cpp": {
+        "available": true,
+        "version": "0.3.33",
+        "system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+        "cuda_backend_available": true,
+        "gpu_offload_supported": true,
+        "error": ""
+      }
+    },
+    "live_runtime_required": true,
+    "failed_live_runtime_preconditions": [],
+    "failed_preconditions": [],
+    "budgets": {
+      "timeout_s": 45.0,
+      "max_new_tokens": 24,
+      "n_ctx": 1024
+    },
+    "protected_paths": [
+      "AGENTS.md",
+      "CODEX.md",
+      "CLAUDE.md",
+      "research-program.md",
+      "research-references.md",
+      "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "openspec/capabilities/benchmarks/spec.md",
+      "ops/e2e-test-plan.md",
+      "ops/exclusion_manifest.yaml",
+      "scripts/research_conductor.py",
+      "scripts/adversarial_verify.py",
+      "scripts/verdict_row_consistency_lint.py",
+      "scripts/experiment_template.py",
+      "python/carnot/inference/sota_models.py",
+      "results/experiment_6543_external_corpus_independent_audit_v2.json",
+      "results/fixtures/v566_drift_bench_external_slice.jsonl",
+      "python/carnot/experiment_6546_smt_cost_guard_sota.py",
+      "tests/python/test_experiment_6546_smt_cost_guard_sota.py"
+    ]
+  },
+  "protected_files_unchanged": {
+    "all_protected_files_unchanged": true,
+    "rows": [
+      {
+        "path": "AGENTS.md",
+        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "unchanged": true
+      },
+      {
+        "path": "CLAUDE.md",
+        "before_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "after_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "unchanged": true
+      },
+      {
+        "path": "CODEX.md",
+        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "unchanged": true
+      },
+      {
+        "path": "openspec/capabilities/benchmarks/spec.md",
+        "before_sha256": "sha256:59fbae8fb1eae0f9a7118d277ada47213cc7af20379331247305c1c052ed62b0",
+        "after_sha256": "sha256:59fbae8fb1eae0f9a7118d277ada47213cc7af20379331247305c1c052ed62b0",
+        "unchanged": true
+      },
+      {
+        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "before_sha256": "sha256:382ff155d4bf37a106760f07ace94fd7491afdc6c1ac08d890a66d465f6137d5",
+        "after_sha256": "sha256:382ff155d4bf37a106760f07ace94fd7491afdc6c1ac08d890a66d465f6137d5",
+        "unchanged": true
+      },
+      {
+        "path": "ops/e2e-test-plan.md",
+        "before_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "after_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "unchanged": true
+      },
+      {
+        "path": "ops/exclusion_manifest.yaml",
+        "before_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "after_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "unchanged": true
+      },
+      {
+        "path": "python/carnot/experiment_6546_smt_cost_guard_sota.py",
+        "before_sha256": "sha256:0c07b226f2a2ad486d60a3d78fbb2094d5a9d57a09f6ffa99f94c4fb4dab4cea",
+        "after_sha256": "sha256:0c07b226f2a2ad486d60a3d78fbb2094d5a9d57a09f6ffa99f94c4fb4dab4cea",
+        "unchanged": true
+      },
+      {
+        "path": "python/carnot/inference/sota_models.py",
+        "before_sha256": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "after_sha256": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "unchanged": true
+      },
+      {
+        "path": "research-program.md",
+        "before_sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "after_sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "unchanged": true
+      },
+      {
+        "path": "research-references.md",
+        "before_sha256": "sha256:617cf14a3218e15e40ee873a0e0224d54dc257d55d050132c7dcf620c619c68f",
+        "after_sha256": "sha256:617cf14a3218e15e40ee873a0e0224d54dc257d55d050132c7dcf620c619c68f",
+        "unchanged": true
+      },
+      {
+        "path": "results/experiment_6543_external_corpus_independent_audit_v2.json",
+        "before_sha256": "sha256:baee4734c28ace01cf93d745bdd241d98a485143f7f670c9cbf2c8db0101bcf2",
+        "after_sha256": "sha256:baee4734c28ace01cf93d745bdd241d98a485143f7f670c9cbf2c8db0101bcf2",
+        "unchanged": true
+      },
+      {
+        "path": "results/fixtures/v566_drift_bench_external_slice.jsonl",
+        "before_sha256": "sha256:a8696e4711998c00d9398351c2f061670e01302ba5106d9ca76fed81c718a932",
+        "after_sha256": "sha256:a8696e4711998c00d9398351c2f061670e01302ba5106d9ca76fed81c718a932",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/adversarial_verify.py",
+        "before_sha256": "sha256:efda545fc4d584922073ea01656162bfaaebe35e293d698dc5084332fafdd2e4",
+        "after_sha256": "sha256:efda545fc4d584922073ea01656162bfaaebe35e293d698dc5084332fafdd2e4",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/experiment_template.py",
+        "before_sha256": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "after_sha256": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/research_conductor.py",
+        "before_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+        "after_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/verdict_row_consistency_lint.py",
+        "before_sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+        "after_sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+        "unchanged": true
+      },
+      {
+        "path": "tests/python/test_experiment_6546_smt_cost_guard_sota.py",
+        "before_sha256": "sha256:4822a4f12c692d12e7338faaa88781f76d33984bf09fc23141b0d568247adaa8",
+        "after_sha256": "sha256:4822a4f12c692d12e7338faaa88781f76d33984bf09fc23141b0d568247adaa8",
+        "unchanged": true
+      }
+    ]
+  },
+  "inference_substrate": "authenticated_local_llama_cpp_sota_gguf_inference_plus_exact_z3_cost_guard",
+  "verifier_is_oracle": false,
+  "field_principles": {
+    "status": "Records the terminal Exp6546 SMT cost-guard state.",
+    "honest_verdict": "Names the guarded held cost result and exact-completion support.",
+    "verdict_class": "Separates positive, null, partial, blocked, and disqualified cost-guard outcomes.",
+    "upstream_gate_receipt": "Pins Exp6543 by path, hash, expected value, observed value, input hashes, cache, hardware, llama.cpp, budgets, and protected hashes.",
+    "MODEL_SPECS": "Records the three mandated SOTA GGUF hub IDs, local GGUF paths, hashes, quantization, and llama.cpp placement.",
+    "models_used": "Lists the exact mandated hub IDs that supplied inference rows.",
+    "model_cache_and_load_receipts": "Shows cache resolution, GGUF hashes, embedded-tokenizer checks, llama.cpp import, CUDA support, load, smoke, or blocked runtime state.",
+    "frozen_challenge_contract": "Freezes held unit count, domain strata, conflict strata, surfaces, prompt contract, timeout, token accounting, seed, and stop rules before scoring.",
+    "logical_instance_rows": "Stores one logical-instance row with split, domain, fixture identity, constraints hash, exact label, and conflict stratum.",
+    "proof_preserving_surface_receipts": "Shows each surface variant preserves the same logical constraints and exact label.",
+    "solver_conflict_rows": "Records measured Z3 conflicts, decisions, propagations, assertions, quantiles, and replay status.",
+    "frozen_dispatch_contract": "Freezes the train-development-only threshold and exact-tool dispatch rule before held scoring.",
+    "per_unit_rows": "Stores one model-surface-instance-arm row with tokens, time, timeout, parse, exact validity, dispatch, tool time, and charged totals.",
+    "model_and_surface_effect_rows": "Reports surface effects conditional on logical instance and model.",
+    "conflict_cost_association_rows": "Reports conflict-cost association conditional on surface and model without claiming universal model hardness.",
+    "guarded_versus_unguarded_rows": "Reports held guarded cost and exact-completion effects by model family.",
+    "token_and_time_recomputation": "Recomputes prompt tokens, output tokens, tool time, model time, charged time, and charged tokens from rows.",
+    "exact_completion_receipt": "Shows guarded exact completion is non-inferior to unguarded completion before any positive score opens.",
+    "calibration_rows": "Shows threshold fitting used train and development rows only and held rows were unavailable.",
+    "censoring_and_timeout_receipts": "Records timeout, parse-failure, model-failure, checkpoint, and terminal-row coverage.",
+    "confound_attack_matrix": "Attacks prompt-length confounding, surface non-equivalence, cache order, warm-up asymmetry, token mismatch, timer aliases, model substitution, held threshold tuning, tool-time omission, and cherry-picked timeouts.",
+    "smt_cost_guard_ready_score": "Opens only for preregistered held token or time savings with exact-completion non-inferiority across at least two mandated model families and no surface-controlled confound.",
+    "gate_check_summary": "Names every failed gate with expected and observed values.",
+    "aggregate_row_recomputation": "Rebuilds the verdict and ready score from gates, rows, costs, exact completion, calibration, censoring, attacks, and protected hashes.",
+    "preconditions_checked": "Records paths, hashes, cache, hardware, llama.cpp, solver, budgets, date, seeds, and protected hashes.",
+    "protected_files_unchanged": "Shows guarded inputs, specs, prior artifacts, model registry, template, and conductor files stayed byte-identical during the run.",
+    "inference_substrate": "Declares authenticated local llama.cpp SOTA GGUF inference plus exact Z3 cost guard.",
+    "verifier_is_oracle": "False because guard value is measured and Z3 is the separate evaluation authority.",
+    "field_principles": "Explains why each required field exists.",
+    "field_provenance": "Maps each field to specs, inputs, rows, reducers, tests, and hashes.",
+    "random_seed": "Pins challenge selection, surface ordering, dispatch calibration, model seeds, and attack ordering.",
+    "duration_s": "Records measured reducer and live-inference wall time.",
+    "tests_run": "Records validation command receipts.",
+    "reproducibility_checksum": "Detects drift in gates, models, prompts, rows, costs, attacks, and verdicts."
+  },
+  "field_provenance": {
+    "status": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.status"
+    },
+    "honest_verdict": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.honest_verdict"
+    },
+    "verdict_class": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.verdict_class"
+    },
+    "upstream_gate_receipt": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.upstream_gate_receipt"
+    },
+    "MODEL_SPECS": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.MODEL_SPECS"
+    },
+    "models_used": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.models_used"
+    },
+    "model_cache_and_load_receipts": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.model_cache_and_load_receipts"
+    },
+    "frozen_challenge_contract": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.frozen_challenge_contract"
+    },
+    "logical_instance_rows": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.logical_instance_rows"
+    },
+    "proof_preserving_surface_receipts": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.proof_preserving_surface_receipts"
+    },
+    "solver_conflict_rows": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.solver_conflict_rows"
+    },
+    "frozen_dispatch_contract": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.frozen_dispatch_contract"
+    },
+    "per_unit_rows": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.per_unit_rows"
+    },
+    "model_and_surface_effect_rows": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.model_and_surface_effect_rows"
+    },
+    "conflict_cost_association_rows": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.conflict_cost_association_rows"
+    },
+    "guarded_versus_unguarded_rows": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.guarded_versus_unguarded_rows"
+    },
+    "token_and_time_recomputation": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.token_and_time_recomputation"
+    },
+    "exact_completion_receipt": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.exact_completion_receipt"
+    },
+    "calibration_rows": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.calibration_rows"
+    },
+    "censoring_and_timeout_receipts": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.censoring_and_timeout_receipts"
+    },
+    "confound_attack_matrix": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.confound_attack_matrix"
+    },
+    "smt_cost_guard_ready_score": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.smt_cost_guard_ready_score"
+    },
+    "gate_check_summary": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.gate_check_summary"
+    },
+    "aggregate_row_recomputation": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.aggregate_row_recomputation"
+    },
+    "preconditions_checked": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.preconditions_checked"
+    },
+    "protected_files_unchanged": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.protected_files_unchanged"
+    },
+    "inference_substrate": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.inference_substrate"
+    },
+    "verifier_is_oracle": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.verifier_is_oracle"
+    },
+    "field_principles": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.field_principles"
+    },
+    "field_provenance": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.field_provenance"
+    },
+    "random_seed": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.random_seed"
+    },
+    "duration_s": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.duration_s"
+    },
+    "tests_run": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.tests_run"
+    },
+    "reproducibility_checksum": {
+      "spec_refs": [
+        "REQ-BENCH-6546"
+      ],
+      "sources": [
+        "Exp6543 audit",
+        "V566 fixture",
+        "local GGUF cache",
+        "per-unit rows"
+      ],
+      "reducer": "experiment_6546.reproducibility_checksum"
+    }
+  },
+  "random_seed": 6546,
+  "duration_s": 331.500708,
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6546_smt_cost_guard_sota.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6546_smt_cost_guard_sota.py -m pytest tests/python/test_experiment_6546_smt_cost_guard_sota.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6546_smt_cost_guard_sota.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6546_smt_cost_guard_sota.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6546_smt_cost_guard_sota.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6546_smt_cost_guard_sota.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6546_smt_cost_guard_sota --validate",
+      "exit_code": 0
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6546_smt_cost_guard_sota --date 20260823",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    }
+  ],
+  "reproducibility_checksum": "sha256:945636778d76bdb8c16ae6c1839b29d85a82922b4e420c78f9dc735708a33320"
+}
