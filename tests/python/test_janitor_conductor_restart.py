@@ -38,8 +38,15 @@ def _stub_systemctl(tmp_path: Path, is_active_output: str = "inactive", start_rc
     return calls
 
 
-def _run_janitor(tmp_path: Path, *, heartbeat: dict | None, hold: bool = False,
-                 hold_age_min: int = 0, is_active: str = "inactive") -> tuple[str, str, str]:
+def _run_janitor(
+    tmp_path: Path,
+    *,
+    heartbeat: dict | None,
+    hold: bool = False,
+    hold_age_min: int = 0,
+    is_active: str = "inactive",
+    runs: int = 1,
+) -> tuple[str, str, str]:
     """Run the janitor; returns (janitor log, systemctl calls, conductor log)."""
     hb = tmp_path / "heartbeat.json"
     if heartbeat is not None:
@@ -59,22 +66,31 @@ def _run_janitor(tmp_path: Path, *, heartbeat: dict | None, hold: bool = False,
             "CARNOT_JANITOR_HOLD": str(hold_path),
             "CARNOT_JANITOR_SYSTEMCTL": str(tmp_path / "systemctl"),
             "CARNOT_JANITOR_CONDUCTOR_LOG": str(tmp_path / "conductor-log.md"),
+            "CARNOT_JANITOR_DEADSEEN": str(tmp_path / "dead-seen"),
             "CARNOT_JANITOR_SKIP_SWEEPS": "1",
             "CARNOT_JANITOR_SKIP_REAP": "1",
         }
     )
-    subprocess.run(["bash", str(JANITOR)], env=env, timeout=60, check=True)
+    for _ in range(runs):
+        subprocess.run(["bash", str(JANITOR)], env=env, timeout=60, check=True)
 
     def read(name: str) -> str:
         p = tmp_path / name
         return p.read_text() if p.exists() else ""
 
-    return read("janitor.log"), calls.read_text() if calls.exists() else "", read("conductor-log.md")
+    return (
+        read("janitor.log"),
+        calls.read_text() if calls.exists() else "",
+        read("conductor-log.md"),
+    )
 
 
-def test_dead_conductor_no_hold_starts_the_service(tmp_path):
-    """SCENARIO-CONDUCTOR-RESTART-1-DEAD-NO-HOLD."""
-    log, calls, clog = _run_janitor(tmp_path, heartbeat={"pid": 999999999})
+def test_dead_conductor_no_hold_starts_on_second_cycle(tmp_path):
+    """SCENARIO-CONDUCTOR-RESTART-1-DEAD-NO-HOLD, two-cycle confirmation
+    (adversarial-review K4): the first sighting only records; the second
+    consecutive dead sighting starts the service."""
+    log, calls, clog = _run_janitor(tmp_path, heartbeat={"pid": 999999999}, runs=2)
+    assert "first sighting recorded" in log
     assert "start carnot-conductor.service" in calls
     assert "started carnot-conductor.service" in log
     assert "JANITOR: conductor auto-start" in clog
@@ -100,9 +116,17 @@ def test_stale_hold_escalates_a_warn_once_per_day(tmp_path):
 
 
 def test_missing_heartbeat_counts_as_dead(tmp_path):
-    log, calls, _ = _run_janitor(tmp_path, heartbeat=None)
+    log, calls, _ = _run_janitor(tmp_path, heartbeat=None, runs=2)
     assert "no heartbeat file" in log
     assert "start carnot-conductor.service" in calls
+
+
+def test_single_dead_sighting_does_not_start(tmp_path):
+    """One torn heartbeat read or the first cycle after a manual stop must
+    not start anything (adversarial-review K4)."""
+    log, calls, _ = _run_janitor(tmp_path, heartbeat={"pid": 999999999}, runs=1)
+    assert "first sighting recorded" in log
+    assert "start carnot-conductor.service" not in calls
 
 
 def test_live_conductor_is_not_restarted(tmp_path):

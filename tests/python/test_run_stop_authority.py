@@ -535,3 +535,166 @@ def test_sentinel_source_still_has_no_kill_path():
         assert token not in sentinel_src
     authority_src = _AUTHORITY.read_text()
     assert "SIGTERM" in authority_src and "SIGKILL" in authority_src
+
+
+# ---------------------------------------------------------------------------
+# 2026-08-23 adversarial-review fixes (K1, K2, S2, S3, N2, N5, S1)
+# ---------------------------------------------------------------------------
+
+
+def test_portless_server_is_unverifiable_not_killable(tmp_path):
+    """K1: a llama-server with no --port skips NOTHING silently — it is an
+    unverifiable candidate and is never touched."""
+    proc_root = _mk_proc_root(tmp_path)
+    _mk_proc(
+        proc_root,
+        9001,
+        ["/usr/bin/llama-server", "-m", "/models/m.gguf"],  # no --port
+        environ={},
+        ppid=1,
+        cgroup="0::/user.slice/x\n",
+        start_epoch=_NOW.timestamp() - 3 * 3600,
+    )
+    _seed_persistence(tmp_path, "ORPHAN|9001|None")
+    summary, killer = _scan(tmp_path, proc_root)
+    assert summary["orphan_candidates"] == 0
+    assert killer.sent == []
+    assert any("no --port" in n for n in summary["notes"])
+
+
+def test_identity_change_between_scans_prevents_the_kill(tmp_path):
+    """K2 TOCTOU: the pid was recycled between evaluation and action — the
+    start-epoch re-verification refuses to signal the new process."""
+    proc_root = _mk_proc_root(tmp_path)
+    _mk_orphan_server(proc_root)
+    _seed_persistence(tmp_path, "ORPHAN|9001|8993")
+    killer = _KillRecorder()
+
+    A_mod = A  # evaluated normally; mutate the stat AFTER evaluation via
+    # a signaler wrapper is not possible (kill_with_grace re-reads /proc
+    # itself), so exercise the primitive directly:
+    outcome = A_mod.kill_with_grace(
+        9001,
+        signaler=killer,
+        sleeper=lambda s: None,
+        expected_start=_NOW.timestamp() - 60.0,  # evaluation saw a NEWER process
+        proc_root=proc_root,
+    )
+    assert outcome == "identity_changed"
+    assert killer.sent == []
+
+
+def test_kill_escalates_to_sigkill_when_term_ignored(tmp_path):
+    """The SIGKILL-after-grace branch, previously untested."""
+
+    class _Immortal:
+        def __init__(self):
+            self.sent = []
+
+        def __call__(self, pid, sig):
+            if sig != 0:
+                self.sent.append((pid, sig))
+            # never raises: the process ignores everything
+
+    killer = _Immortal()
+    outcome = A.kill_with_grace(4242, signaler=killer, sleeper=lambda s: None, grace_s=0.0)
+    assert outcome == "killed"
+    assert (4242, signal.SIGTERM) in killer.sent
+    assert (4242, signal.SIGKILL) in killer.sent
+
+
+def test_empty_rows_skeleton_counts_as_no_rows(tmp_path):
+    """S3: a harness that pre-writes {"rows": []} at startup must not walk
+    past the no-rows branch (the supab3 arm=on shape, one file earlier)."""
+    proc_root = _mk_proc_root(tmp_path)
+    _mk_run(tmp_path, proc_root, rows=[], out_exists=True, age_s=3600, failing_log=False)
+    summary, killer = _scan(tmp_path, proc_root)  # dead port via _ss_no_traffic
+    assert summary["run_candidates"] == 1
+    assert summary["actionable"] == 0  # first sighting: record only
+
+
+def test_env_less_run_uses_tempdir_log_fallback(tmp_path, monkeypatch):
+    """S2: a run without CARNOT_ARC_SERVER_LOG_DIR still gets its failing
+    server log found in the system temp dir — the sentinel's own fallback."""
+    proc_root = _mk_proc_root(tmp_path)
+    fake_tmp = tmp_path / "fake_tmp"
+    log_dir = fake_tmp / "carnot_llama_server_logs"
+    log_dir.mkdir(parents=True)
+    log = log_dir / "llama_server_p8995_1.log"
+    log.write_text(_INCIDENT_LOG_LINES)
+    mtime = _NOW.timestamp() - 60  # fresher than the run's start
+    os.utime(log, (mtime, mtime))
+    out = tmp_path / "rows_4242.json"
+    out.write_text(json.dumps({"rows": [_INVALID_ROW] * 3}))
+    _mk_proc(
+        proc_root,
+        4242,
+        [
+            "python",
+            "scripts/arc_scored_path_lever_harness.py",
+            "--out",
+            str(out),
+            "--port",
+            "8995",
+        ],
+        environ={},  # no CARNOT_ARC_SERVER_LOG_DIR
+        start_epoch=_NOW.timestamp() - 2 * 3600,
+    )
+    monkeypatch.setattr(A.tempfile, "gettempdir", lambda: str(fake_tmp))
+    summary, killer = _scan(tmp_path, proc_root, ss_runner=_ss_listener_and_conns)
+    assert summary["run_candidates"] == 1  # log evidence, despite live listener
+
+
+def test_disarmed_packet_lands_at_first_sighting(tmp_path):
+    """N2: the yes/no packet goes out on the FIRST scan, before persistence,
+    so an operator who arms later has seen every candidate's packet."""
+    proc_root = _mk_proc_root(tmp_path)
+    _mk_run(tmp_path, proc_root, rows=[_INVALID_ROW] * 3)
+    summary, killer = _scan(tmp_path, proc_root)  # no seeded persistence
+    assert summary["actionable"] == 0
+    assert summary["packets"] == 1
+    assert killer.sent == []
+    issues = (tmp_path / "known-issues.md").read_text()
+    assert "arming is GLOBAL" in issues
+
+
+def test_eperm_outcome_never_claims_a_reap(tmp_path):
+    """N5: an EPERM result writes an EPERM row, not a REAPED record — the
+    durable log must not state a kill that did not happen."""
+
+    class _Eperm:
+        sent = []
+
+        def __call__(self, pid, sig):
+            raise PermissionError(pid)
+
+    proc_root = _mk_proc_root(tmp_path)
+    _mk_orphan_server(proc_root)
+    _seed_persistence(tmp_path, "ORPHAN|9001|8993")
+    summary, _ = _scan(tmp_path, proc_root, signaler=_Eperm())
+    log = (tmp_path / "conductor-log.md").read_text()
+    assert "ORPHAN_REAP_EPERM" in log
+    assert "ORPHAN_SERVER_REAPED" not in log
+
+
+def test_import_failure_still_writes_the_receipt(tmp_path, monkeypatch):
+    """S1: a broken sentinel import must leave a receipt saying the
+    authority is BROKEN, never a silent absence of scan."""
+
+    def _boom():
+        raise RuntimeError("sentinel is broken")
+
+    monkeypatch.setattr(A, "load_sentinel", _boom)
+    summary = A.run_scan(
+        proc_root=tmp_path / "proc",
+        state_path=tmp_path / "state.json",
+        conductor_log=tmp_path / "log.md",
+        known_issues=tmp_path / "ki.md",
+        arm_file=tmp_path / "armed",
+        heartbeat_path=tmp_path / "hb.json",
+        now=_NOW,
+    )
+    assert summary["import_failure"] is True
+    state = json.loads((tmp_path / "state.json").read_text())
+    assert state["last_scan_utc"] == _NOW.strftime("%Y-%m-%dT%H:%M:%SZ")
+    assert any("IMPORT FAILURE" in n for n in state["last_scan_notes"])
