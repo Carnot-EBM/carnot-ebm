@@ -4239,3 +4239,169 @@ post-held repair, or outcome-based sampling
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-BENCH-6543 | Planned (`python/carnot/experiment_6543_external_corpus_independent_audit_v2.py`, `results/experiment_6543_external_corpus_independent_audit_v2.json`) | Planned (`tests/python/test_experiment_6543_external_corpus_independent_audit_v2.py`) |
+
+### REQ-BENCH-6544: External Structural Headroom SHALL Be Matched And Charged
+
+Carnot SHALL provide Exp6544 at
+`python/carnot/experiment_6544_external_structural_headroom.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6544_external_structural_headroom --date 20260823`
+SHALL write
+`results/experiment_6544_external_structural_headroom.json`.
+
+Exp6544 SHALL evaluate the Exp6543 structured gate before running any arm. It
+SHALL record the gate path, hash, expected value, observed value, input hashes,
+solver identity, resources, timeout, seeds, and protected-file hashes. A failed
+gate or missing fixture SHALL write a terminal blocked artifact with the failed
+check and observed value in `gate_check_summary`.
+
+Exp6544 SHALL freeze unit, turn, family, effort, seed, budget, tie, timeout,
+and stop contracts before arm execution. It SHALL compare exactly these
+controls: native, random, analytical, bounded-refocus, and one-shot-enumeration.
+Every arm SHALL use identical candidate sets, seed grids, proposal budgets,
+exact-check budgets, timeout limits, and terminal stop rules. Every candidate
+set SHALL be preserved. A control MAY reorder candidates only. It SHALL NOT use
+entity names, source IDs, target assignments, held outcomes, future turns,
+family labels, or row order as features.
+
+Exp6544 SHALL adapt only reusable structural features from the current turn and
+past constraints. It SHALL record the structural features used for each control.
+It SHALL keep native exact fallback available for every arm. It SHALL charge
+every proposal, exact check, control overhead, and fallback check. It SHALL
+record timeout and censoring state for every row.
+
+Exp6544 SHALL emit one row for each unit, turn, seed, and arm. Each row SHALL
+record exact answer equality, candidate order, candidate hashes, exact checks,
+solver effort, proposals, charged work, wall time, timeout, and censoring. It
+SHALL report overall and family-stratified charged effects, paired uncertainty,
+headroom rows, no-headroom rows, and Simpson-reversal checks from rows.
+
+Exp6544 SHALL attack identity leakage, row-order leakage, unequal budgets,
+deleted candidates, warm-cache asymmetry, timer aliases, cherry-picked seeds,
+and aggregate-only claims. Any shortcut failure, candidate deletion,
+correctness drift, leakage, or invalid comparison SHALL set
+`external_structural_headroom_ready_score=0.0`. Correctness drift or leakage
+SHALL use `verdict_class="disqualified"`. A failed gate or precondition SHALL
+use `verdict_class="blocked"`. A complete run with no benefit SHALL use
+`verdict_class=null`. Narrow or incomplete support SHALL use
+`verdict_class="partial"`. A complete run with charged held structural value,
+exact equality, multi-family support, and no shortcut failure SHALL use
+`verdict_class="positive"`.
+
+`external_structural_headroom_ready_score` SHALL equal `1.0` only when a
+preregistered non-learned control has positive held charged value beyond both
+native and random, exact equality, multi-family support, candidate preservation,
+matched budgets, and no shortcut failure. Otherwise it SHALL equal `0.0`.
+
+The artifact SHALL include exactly these fields: `status`, `honest_verdict`,
+`verdict_class`, `upstream_gate_receipt`, `frozen_comparison_contract`,
+`control_definitions`, `family_and_effort_census`, `per_unit_rows`,
+`paired_effect_rows`, `family_effect_rows`, `charged_cost_recomputation`,
+`exact_equality_receipt`, `candidate_preservation_receipt`,
+`censoring_and_timeout_receipts`, `shortcut_attack_matrix`,
+`external_structural_headroom_ready_score`, `gate_check_summary`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+`inference_substrate` SHALL be
+`external_drift_exact_solver_structural_controls_no_llm`.
+`verifier_is_oracle` SHALL be false because structural controls do not supply
+ground truth. The Z3 replay path SHALL be recorded separately as evaluation
+authority.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal Exp6544 external structural comparison state."
+- `honest_verdict`: "Names the charged held result and its family support."
+- `verdict_class`: "Separates positive, null, partial, blocked, and disqualified outcomes."
+- `upstream_gate_receipt`: "Pins Exp6543 by path, hash, expected value, observed value, input hashes, solvers, resources, timeouts, seeds, and protected hashes."
+- `frozen_comparison_contract`: "Freezes unit, turn, family, effort, seed, budget, tie, timeout, and stop rules before scoring."
+- `control_definitions`: "Defines native, random, analytical, bounded-refocus, and one-shot-enumeration as non-learned order-only controls."
+- `family_and_effort_census`: "Reports fixture family, split, turn, effort, and held-support counts."
+- `per_unit_rows`: "Stores one unit-turn-seed-arm row with order, checks, cost, equality, timeout, and censoring evidence."
+- `paired_effect_rows`: "Reports paired held charged effects versus native and random with uncertainty from rows."
+- `family_effect_rows`: "Reports charged effects, headroom cells, no-headroom cells, and Simpson checks by family."
+- `charged_cost_recomputation`: "Recomputes proposal, exact-check, control, fallback, and total charged work from rows."
+- `exact_equality_receipt`: "Shows each arm's exact answer matches the audited Z3 label."
+- `candidate_preservation_receipt`: "Shows every arm preserved the same candidate set for every unit and seed."
+- `censoring_and_timeout_receipts`: "Records timeout, censoring, budget, and stop-rule symmetry."
+- `shortcut_attack_matrix`: "Attacks identity leakage, row-order leakage, unequal budgets, deleted candidates, warm-cache asymmetry, timer aliases, cherry-picked seeds, and aggregate-only claims."
+- `external_structural_headroom_ready_score`: "Opens only for charged held value beyond native and random with exact equality, multi-family support, and no shortcut failure."
+- `gate_check_summary`: "Names every failed gate with expected and observed values."
+- `aggregate_row_recomputation`: "Rebuilds the verdict and score from per-unit, effect, equality, preservation, censoring, and attack rows."
+- `preconditions_checked`: "Records paths, hashes, resources, solver identity, date, seeds, budgets, timeouts, and protected hashes."
+- `protected_files_unchanged`: "Shows guarded inputs, specs, prior structural artifacts, and conductor files stayed byte-identical during the run."
+- `inference_substrate`: "Declares external DRIFT exact-solver structural controls with no LLM."
+- `verifier_is_oracle`: "False because compared controls do not certify ground truth."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each field to specs, inputs, rows, reducers, tests, and hashes."
+- `random_seed`: "Pins arm seeds, random controls, and attack ordering."
+- `duration_s`: "Records measured reducer wall time."
+- `tests_run`: "Records validation command receipts."
+- `reproducibility_checksum`: "Detects drift in gates, rows, costs, attacks, and verdicts."
+
+#### SCENARIO-BENCH-6544-GATE: Exp6543 Gate Is Evaluated First
+
+**Given** the Exp6543 independent audit artifact
+**When** Exp6544 starts
+**Then** it records the direct path, hash, expected readiness value, observed
+readiness value, input hashes, solver identity, resources, timeout, seeds, and
+protected hashes before any ready score can open.
+
+#### SCENARIO-BENCH-6544-CONTRACT: Matched Controls Preserve Candidates
+
+**Given** the audited V566 DRIFT fixture
+**When** Exp6544 freezes native, random, analytical, bounded-refocus, and
+one-shot-enumeration controls
+**Then** every arm uses identical unit, turn, seed, budget, tie, timeout, stop,
+and candidate-preservation contracts.
+
+#### SCENARIO-BENCH-6544-FAMILY-BLIND: Controls Use Only Structural Features
+
+**Given** train, development, and held fixture rows
+**When** controls order candidates
+**Then** ordering uses reusable structural features from current or past
+constraints only, and never uses entity names, source IDs, assignments, held
+outcomes, future turns, family labels, or row order.
+
+#### SCENARIO-BENCH-6544-COST-EQUALITY: Rows Charge Every Proposal And Exact Check
+
+**Given** matched unit-turn-seed-arm rows
+**When** Exp6544 computes exact equality and charged work
+**Then** every row records proposal order, exact-check count, solver effort,
+proposal cost, exact-check cost, control overhead, fallback cost, total charged
+work, timeout, and censoring.
+
+#### SCENARIO-BENCH-6544-EFFECTS: Held Benefit Needs Native And Random Baselines
+
+**Given** held rows from all frozen arms
+**When** Exp6544 computes paired effects
+**Then** a ready score of `1.0` requires a non-learned control with positive
+held charged value beyond both native and random, exact equality,
+multi-family support, and no shortcut failure.
+
+#### SCENARIO-BENCH-6544-ATTACKS: Shortcut Failures Close The Claim
+
+**Given** identity leakage, row-order leakage, unequal budgets, deleted
+candidates, warm-cache asymmetry, timer aliases, cherry-picked seeds, and
+aggregate-only claims
+**When** Exp6544 evaluates the shortcut matrix
+**Then** every shortcut must fail closed before
+`external_structural_headroom_ready_score` can equal `1.0`.
+
+#### SCENARIO-BENCH-6544-TERMINAL: Artifact Is Row-Derived And Reproducible
+
+**Given** all matched rows, effects, costs, equality receipts, preservation
+receipts, censoring receipts, shortcut checks, and protected hashes
+**When** Exp6544 writes its deliverable
+**Then** every required field has a principle and provenance entry, the exact
+inference substrate is declared, `verifier_is_oracle=false`, the checksum
+matches, and the verdict class follows the preregistered enum.
+
+## Implementation Status (REQ-BENCH-6544)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6544 | Planned (`python/carnot/experiment_6544_external_structural_headroom.py`, `results/experiment_6544_external_structural_headroom.json`) | Planned (`tests/python/test_experiment_6544_external_structural_headroom.py`) |
