@@ -254,3 +254,167 @@ assumed.
 - CLAUDE.md "Adversarial Artifact Verification + Sample-Size Rigor" -- the
   discipline this review applies
 - CLAUDE.md "Field names lie -- read the content" (memory) -- the trap here
+
+---
+
+# ADDENDUM 2026-08-23: reconciling 2% against 35% (append-only)
+
+A parallel review reported 2.0% after requiring the keyword to appear in
+EXECUTABLE CODE rather than in a docstring or comment, having found 81% of
+structural hits were prose-only. This review reported about 35% on live files
+after following local calls and widening the vocabulary. Both corrections are
+legitimate. Nobody had run them together. This addendum does.
+
+## The answer
+
+Applied together, on LIVE-run files only, DISTINCT goal predicates, n=87:
+
+**23% to 39%, best estimate about 30%.**
+
+Not 2%, and not 11%.
+
+| correction | live files (n=110) | live distinct (n=87) |
+|---|---|---|
+| A scorer as shipped | 22.7% | 20.7% |
+| B executable-code-only alone | 17.3% | 13.8% |
+| C call-following + widened vocab alone | 49.1% | 47.1% |
+| D1 BOTH, original vocabulary | 19.1% | 16.1% |
+| D2 BOTH, widened vocabulary | 42.7% | 39.1% |
+| lower bound (D1 or semantic detector) | -- | 23.0% |
+| upper bound (D2 or semantic detector) | -- | 39.1% |
+
+The same table over ALL files reproduces the other review's number exactly:
+A 11.2%, B 1.8%, D1 2.0%. So the 2.0% figure is right, and it is a
+WHOLE-CORPUS number. It is not a live rate.
+
+## Why the two numbers differed: the prose defect is a property of the retired corpus
+
+Of 116 prose-only hits, 110 are in the committed `results/` tree and 6 are in
+live runs. So the prose-only share of structural hits is 83% over the whole
+corpus and 24% over live runs. The Qwen3.5-9B models wrote long explanatory
+docstrings naming components and masks; the current generator does that far
+less. Correcting for prose on the polluted population removes almost every hit.
+Correcting for prose on the live population removes six.
+
+This means the two reviews were not disagreeing about the same population. Both
+numbers are dominated by the population defect this note already documented.
+
+## What drives the width of the range
+
+Decomposed over the 87 live distinct predicates:
+
+| driver | predicates moved |
+|---|---|
+| cost of the executable-only correction | 6 |
+| gain from call-following alone | 2 |
+| gain from the widened vocabulary | 20 |
+| gain from the semantic detector beyond both | 0 |
+
+**Vocabulary choice drives the width.** The executable-only fix and
+call-following together move 8 predicates. The vocabulary moves 20. Any future
+argument about this rate is an argument about which words count, not about
+comments or delegation.
+
+## The executable-only correction has its own false negatives
+
+It is not a clean strip of false positives. Applied alone it deletes true
+positives, because the keyword list is the shared weakness. The clearest case
+is `abpin/results/arc_e3/m0r0/world_model.py`, a textbook iterative flood-fill
+connected-component count:
+
+```python
+    visited = np.zeros(grid.shape, dtype=bool)
+    num_blocks = 0
+    for r in range(grid.shape[0]):
+        for c in range(grid.shape[1]):
+            if grid[r, c] == 10 and not visited[r, c]:
+                num_blocks += 1
+                stack = [(r, c)]
+                ...
+                while stack:
+                    curr_r, curr_c = stack.pop()
+                    for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+    ...
+    return num_blocks == 1 and p1_len >= 7 and p2_len >= 7
+```
+
+The words "connected" and "flood" appear only in its comment. The CODE uses
+`visited`, `stack`, `num_blocks`, `dr, dc`. The shipped scorer calls it
+structural for the wrong reason. Executable-only calls it flat, which is
+wrong. My widened list also misses it. All three vocabularies fail on a
+hand-rolled flood fill.
+
+## A vocabulary-free detector, as a floor
+
+To bound the range without arguing about words, I added three AST signals that
+read behaviour rather than names: a literal collection holding at least three
+of the eight unit coordinate offsets; a `while <name>:` loop with `.pop()` or
+`.append()` on that same name; and a `where`/`argwhere`/`nonzero` result that
+is then unpacked, indexed or iterated. It fires on 14.9% of live distinct
+predicates, and 7 of its hits are ones executable-only calls flat.
+
+It is a FLOOR, not a replacement. It recognises three traversal shapes and
+nothing else, so it under-counts by construction. Its value is that no keyword
+list can argue with it.
+
+## Calibration of my own widened list
+
+Sampled 17 distinct live flat-to-structural flips by hand: 9 clearly correct,
+7 arguable (a derived count anchored to hardcoded coordinates), 1 clearly wrong
+(r11l, where `_cell` is a bounds-checked accessor, not perception). That is
+about 73% precision on the increment, which is how the 39% upper bound
+discounts to about 30%.
+
+## Guards shipped (REQ-ARC-WMTE-6700)
+
+`scripts/arc_induction_quality.py` now classifies every swept path before
+scoring it, and excludes two classes by default:
+
+- `nested_repo_clone` -- any ancestor below the sweep root holds a `.git`. The
+  check uses `.exists()`, not `.is_dir()`, because a worktree or submodule has
+  `.git` as a FILE, and the two checkouts that caused the incident were exactly
+  that shape.
+- `committed_results_tree` -- any path part below the root is exactly
+  `results`. Matched as a whole path part, so `my_results_run` is not caught.
+
+Exclusions are named in the report, never silent. `--include-non-live` restores
+the old population and says the rates are not live rates. An all-excluded sweep
+exits non-zero rather than reporting on an empty population.
+
+The report now carries three population sizes: total files, distinct files,
+distinct goal predicates. A duplicated root inflates only the first.
+
+The docstring now warns that branch count is size, not quality.
+
+### Measured on the real corpus before shipping
+
+| | files | degenerate | structural | distinct files | distinct predicates |
+|---|---|---|---|---|---|
+| guarded (default) | 112 | 12 | 25 | 93 | 87 |
+| `--include-non-live` | 1251 | 346 | 139 | 637 | 504 |
+
+1139 paths excluded, all `nested_repo_clone`: 1138 committed A/B models inside
+the two clones, plus one synthetic git-worktree fixture in another agent's
+scratch directory. Zero live-run models were excluded.
+
+The `committed_results_tree` rule never fires on THIS root, because both
+committed trees sit inside clones and the clone rule is checked first. It is
+not decorative. Verified directly: sweeping with the clone itself as the root
+(`--roots .../abpin`) classifies the same file `committed_results_tree`,
+because the root's own `.git` is deliberately not treated as a nested clone.
+The two rules cover different sweep shapes.
+
+Mutation-proved: 8 mutations (drop the `.git` check; weaken it to `.is_dir()`;
+drop the `results` check; weaken it to a substring; drop the fail-closed exit;
+drop the distinct-count line; drop the exclusion reporting; drop the
+`--include-non-live` warning) each turn the suite RED. Source restored
+byte-identical. 13 tests pass. `test_suite_mutation_check` confirms the run
+rewrote no tracked file.
+
+## What this addendum still does not settle
+
+The point estimate. 23% to 39% is an honest range and the width is a genuine
+disagreement about what counts as structure, not measurement noise. Closing it
+needs a labelled ground-truth set, which does not exist. Nothing here changes
+the main finding: the rate, whatever it is, does not gate the agent's ability
+to recognise a win, because the environment supplies that signal.

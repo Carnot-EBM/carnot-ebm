@@ -27257,3 +27257,89 @@ the same mislabel REQ-ARC-WMTE-6670 exists to prevent.
 |---|---|---|
 | REQ-ARC-WMTE-6690 | `python/carnot/agentic/arc_executable_world_model.py` (`attempt_archive_enabled`, `_archive_engine_attempt`, `_archive_codex_engine`; archive calls in `_gen_to_file`, `_write_world_model`, `CodexProposer.induce/refactor`). `scripts/arc_scored_path_lever_harness.py` (`_attempt_manifest_path`, `_attempt_archive_delta`, `_manifest_line_count`; `run_cell` snapshots the manifest and emits `induction_archive`). | `tests/python/test_arc_engine_attempt_archive.py` (SCENARIO-ARC-WMTE-6690-1..6; 10 mutations M1-M10 each RED then restored byte-identical -- archive calls, dedup, kill switch, fail-open, test-guard, codex wiring, harness wiring, delta slice, snapshot count). |
 | REQ-ARC-WMTE-6690 (SCENARIO-7, added 2026-08-23) | Both archive call sites pass `self._effective_model_label()`, which prefers `model_path` over the declared `repo_substr`. | `tests/python/test_arc_engine_attempt_archive.py::test_manifest_model_is_the_effective_label_not_the_frozen_pin` + `::test_manifest_model_falls_back_to_repo_substr_without_override`. Mutation-proved: reverting both sites to `repo_substr` turns the override test RED with the live-observed `['Qwen3.5-9B-MTP', 'Qwen3.5-9B-MTP']`. |
+
+### REQ-ARC-WMTE-6700: The Induction-Quality Scorer Refuses Non-Live Populations And Reports Distinct Counts
+
+`scripts/arc_induction_quality.py` exists to answer "is the generator producing
+real work at all". Its docstring opens "Score the world models the live agent
+actually emitted". On 2026-08-23 it did not.
+
+Its `DEFAULT_ROOT` is the job scratch directory, and that directory held two
+clones of this repository. `find_models` does `root.rglob("world_model.py")`,
+so the sweep ingested the repo's own committed `results/` evidence tree, once
+per clone. Measured: 1138 of 1248 swept files (91%) were that committed tree;
+636 of 1248 files and 504 of 1248 goal predicates were distinct. The committed
+tree's `preregistration.json` records its generator as `Qwen3.5-9B-MTP GGUF`,
+retired 2026-07-28, against a live pin of Qwen3.8-27B.
+
+Two operator-facing numbers were wrong as a result. The structural-goal-
+predicate rate read 11.1% over the polluted population and 20.7% over live
+distinct predicates. The degenerate rate read 27.7% over the default root and
+13.8% over live runs. Deduplication alone does not fix either: it moved the
+degenerate rate by 1.1 points, because the retired generator dominates the
+population, not the duplication. So a guard against the clone alone would have
+left the larger defect in place, and must not be built alone.
+
+The scorer SHALL classify every swept path before scoring it, and SHALL exclude
+two provenance classes by default:
+
+- `nested_repo_clone` -- any ancestor directory strictly below the sweep root
+  contains a `.git` entry. A clone's contents are that repository's committed
+  state, not this run's output.
+- `committed_results_tree` -- any path part below the sweep root is exactly
+  `results`. `results/**` is evidence under the Test-Run Record Integrity
+  Discipline; counting evidence as live output is the defect above.
+
+Exclusion SHALL be visible, never silent: the report SHALL name each excluded
+class with its count. `--include-non-live` SHALL restore the old population for
+deliberate archaeology, and SHALL print that the resulting rates are not
+live-generator rates. When every swept path is excluded the scorer SHALL exit
+non-zero rather than report on an empty population -- fail-closed, because
+"no live models found" is a true answer and a silently archived-only rate is
+not.
+
+The report SHALL carry three population sizes, not one: total files, distinct
+files by content hash, and distinct goal predicates by predicate-source hash.
+A duplicated root inflates the first and neither of the others, so a reader
+can see the duplication in the output instead of having to suspect it.
+
+The module docstring SHALL warn that `branches` does not rank quality. The four
+highest-branch models in the corpus (cd82 at 376, vc33 at 356, ls20, sp80)
+transcribe the win grid row by row into literal comparisons, which is the worst
+memorisation present. Ranking by branch count scores it as the best work.
+
+#### SCENARIO-ARC-WMTE-6700-1 (a nested repo clone is excluded)
+GIVEN a sweep root containing `clone/.git` and `clone/e3/g/world_model.py`
+WHEN the scorer sweeps that root
+THEN the model is not scored, and the report names `nested_repo_clone: 1`.
+
+#### SCENARIO-ARC-WMTE-6700-2 (a committed results tree is excluded)
+GIVEN a sweep root containing `run/results/arc_e3/g/world_model.py`
+WHEN the scorer sweeps that root
+THEN the model is not scored, and the report names `committed_results_tree: 1`.
+
+#### SCENARIO-ARC-WMTE-6700-3 (a live run directory is kept)
+GIVEN a sweep root containing `run/e3/g/world_model.py` with no `.git` ancestor
+WHEN the scorer sweeps that root
+THEN the model is scored and no exclusion is reported.
+
+#### SCENARIO-ARC-WMTE-6700-4 (opt-in restores the old population)
+GIVEN a root whose only models are inside a clone
+WHEN the scorer runs with `--include-non-live`
+THEN the models are scored AND the report states the rates are not live rates.
+
+#### SCENARIO-ARC-WMTE-6700-5 (an all-excluded sweep fails closed)
+GIVEN a root whose every model is excluded and no `--include-non-live`
+WHEN the scorer runs
+THEN it exits non-zero and says the population was empty after exclusion.
+
+#### SCENARIO-ARC-WMTE-6700-6 (duplication is visible in the counts)
+GIVEN two live run directories holding byte-identical world models
+WHEN the scorer sweeps them
+THEN the report shows 2 files, 1 distinct file and 1 distinct goal predicate.
+
+## Implementation Status (REQ-ARC-WMTE-6700)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6700 | `scripts/arc_induction_quality.py` (`classify_path`, `find_models` returning kept + excluded, `score_model` emitting `file_sha16`/`goal_predicate_sha16`, `main` reporting three population sizes and failing closed). | `tests/python/test_arc_induction_quality_guards.py` (SCENARIO-ARC-WMTE-6700-1..6; 6 mutations M1-M6 each RED then restored byte-identical). |

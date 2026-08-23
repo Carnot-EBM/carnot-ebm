@@ -29,6 +29,27 @@ So: use this to answer "is the generator producing real work at all", which is
 cheap and answerable now. Use rows to answer "is arm A better than arm B", which
 is expensive and needs a run that survives.
 
+BRANCH COUNT DOES NOT RANK QUALITY (REQ-ARC-WMTE-6700). Read `branches` as
+"how much code is here", never as "how good is it". The four highest-branch
+models in the 2026-08 corpus (cd82 at 376, vc33 at 356, ls20, sp80) transcribe
+the win grid row by row into literal comparisons. That is the worst
+memorisation present, and ranking by branches puts it at the top.
+
+POPULATION GUARD (REQ-ARC-WMTE-6700). This scorer answers a question about the
+LIVE generator, so it must not score files that no live run produced. Two
+classes are excluded by default and named in the report: a nested repo clone
+(a `.git` under the sweep root -- that content is a repository's committed
+state) and a committed `results/` tree (evidence, per the Test-Run Record
+Integrity Discipline). Both were being swept on 2026-08-23: 91% of 1248 files
+were one committed tree, counted twice because two clones sat under the root,
+and its generator was Qwen3.5-9B, retired 2026-07-28. `--include-non-live`
+restores the old behaviour and says the rates are not live rates.
+
+COUNT DISTINCT, NOT JUST TOTAL (REQ-ARC-WMTE-6700). The report carries total
+files, distinct files, and distinct goal predicates. A duplicated root inflates
+only the first, so the duplication shows up in the output instead of having to
+be suspected.
+
 SAMPLING BIAS WARNING, and the fix (REQ-ARC-WMTE-6690). A sweep over surviving
 `world_model.py` files is a WORST-ATTEMPT sample: re-induction fires on
 stagnation, so the survivor is systematically the attempt made under the worst
@@ -46,6 +67,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import hashlib
 import os
 import re
 from pathlib import Path
@@ -90,6 +112,7 @@ def score_model(path: Path) -> dict:
         "population": "attempt" if path.parent.name == "attempts" else "survivor",
         "bytes": len(src.encode("utf-8")),
         "lines": src.count("\n") + 1,
+        "file_sha16": hashlib.sha256(src.encode("utf-8")).hexdigest()[:16],
     }
 
     try:
@@ -141,6 +164,9 @@ def score_model(path: Path) -> dict:
         hits = sorted({t for t in _STRUCTURE_TERMS if t in seg.lower()})
         out["goal_predicate"] = "structural" if hits else "flat"
         out["goal_structure_terms"] = hits
+        # Hash the predicate, not the file: two runs of the same generator often
+        # differ only in a comment, and the predicate is what the rate is about.
+        out["goal_predicate_sha16"] = hashlib.sha256(seg.encode("utf-8")).hexdigest()[:16]
         out["goal_branches"] = sum(
             1
             for n in ast.walk(goal_fn)
@@ -149,25 +175,79 @@ def score_model(path: Path) -> dict:
     return out
 
 
-def find_models(roots: list[Path]) -> list[Path]:
-    found: list[Path] = []
+def classify_path(path: Path, root: Path) -> str:
+    """REQ-ARC-WMTE-6700: is this path something a LIVE run produced?
+
+    Returns `live_run`, or the name of the class that disqualifies it. A clone
+    holds a repository's committed state, and `results/` is evidence -- neither
+    is this run's output, and counting them answered the wrong question for
+    hours on 2026-08-23.
+    """
+    try:
+        rel = path.resolve().relative_to(root.resolve())
+    except ValueError:
+        # Outside the root we cannot reason about provenance, so we do not
+        # guess: fail closed and let the caller see it named.
+        return "outside_root"
+
+    parts = rel.parts[:-1]  # directories only; the file itself is never a marker
+    for i in range(len(parts)):
+        ancestor = root.joinpath(*parts[: i + 1])
+        if (ancestor / ".git").exists():
+            return "nested_repo_clone"
+    if "results" in parts:
+        return "committed_results_tree"
+    return "live_run"
+
+
+def find_models(roots: list[Path], *, include_non_live: bool = False) -> tuple[list[Path], dict]:
+    """Return (kept paths, {exclusion class: count}).
+
+    Exclusions are returned rather than dropped so the report can name them;
+    a guard that silently filters is the state this REQ exists to leave.
+    """
+    kept: list[Path] = []
+    excluded: dict[str, int] = {}
     for root in roots:
-        if root.is_dir():
-            found.extend(sorted(root.rglob("world_model.py")))
-            # REQ-ARC-WMTE-6690 archived attempts: the unbiased per-attempt population.
-            found.extend(sorted(root.rglob("attempts/wm_*.py")))
-    return found
+        if not root.is_dir():
+            continue
+        found = sorted(root.rglob("world_model.py"))
+        # REQ-ARC-WMTE-6690 archived attempts: the unbiased per-attempt population.
+        found += sorted(root.rglob("attempts/wm_*.py"))
+        for path in found:
+            verdict = classify_path(path, root)
+            if verdict == "live_run" or include_non_live:
+                kept.append(path)
+            else:
+                excluded[verdict] = excluded.get(verdict, 0) + 1
+    return kept, excluded
 
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--roots", nargs="*", default=[str(DEFAULT_ROOT)])
     ap.add_argument("--json", action="store_true")
+    ap.add_argument(
+        "--include-non-live",
+        action="store_true",
+        help="Also score clones and committed results/ trees. Deliberate archaeology "
+        "only: the resulting rates are NOT live-generator rates.",
+    )
     args = ap.parse_args(argv)
 
-    models = find_models([Path(r) for r in args.roots])
+    models, excluded = find_models(
+        [Path(r) for r in args.roots], include_non_live=args.include_non_live
+    )
     if not models:
-        print("no world_model.py found under", args.roots)
+        if excluded:
+            # Fail closed. "Nothing live here" is a true answer; a rate computed
+            # over archived-only files silently answers a different question.
+            print("no LIVE world_model.py found under", args.roots)
+            for cls, n in sorted(excluded.items()):
+                print(f"  excluded {cls}: {n}")
+            print("  pass --include-non-live to score them anyway (not live rates).")
+        else:
+            print("no world_model.py found under", args.roots)
         return 1
 
     scored = [score_model(p) for p in models]
@@ -203,14 +283,24 @@ def main(argv: list[str] | None = None) -> int:
     n_deg = sum(1 for s in scored if s.get("degenerate"))
     n_struct = sum(1 for s in scored if s.get("goal_predicate") == "structural")
     n_att = sum(1 for s in scored if s.get("population") == "attempt")
+    # REQ-ARC-WMTE-6700: three population sizes, so a duplicated root shows up here
+    # instead of having to be suspected. Only the first inflates under duplication.
+    n_files = len({s["file_sha16"] for s in scored if s.get("file_sha16")})
+    n_preds = len({s["goal_predicate_sha16"] for s in scored if s.get("goal_predicate_sha16")})
     print("")
     print(
         f"  {len(scored)} model(s); {n_deg} degenerate; {n_struct} with a structural goal predicate"
     )
+    print(f"  distinct: {n_files} file(s) / {n_preds} goal predicate(s) of {len(scored)} scored")
     # Survivor-only rates are worst-attempt-biased (see module docstring); say which
     # population the number came from so it cannot be misread as a generator rate.
     print(f"  populations: {len(scored) - n_att} survivor / {n_att} archived attempt")
+    for cls, n in sorted(excluded.items()):
+        print(f"  EXCLUDED {cls}: {n} (not live-run output; --include-non-live to score)")
+    if args.include_non_live:
+        print("  WARNING: --include-non-live is set. These are NOT live-generator rates.")
     print("  Structure is not correctness. Held-out transition accuracy needs a run that survives.")
+    print("  Branch count is size, not quality: the highest-branch models memorise the win grid.")
     print("")
     return 0
 
