@@ -113,6 +113,34 @@ CONDUCTOR_LOG = PROJECT_ROOT / "ops" / "conductor-log.md"
 # so a stale mtime means the tool stopped running — checked via
 # _run_audit_with_receipt, never via exit codes.
 RUN_SENTINEL_STATE = PROJECT_ROOT / "ops" / ".run_sentinel_state.json"
+STOP_AUTHORITY_STATE = PROJECT_ROOT / "ops" / ".stop_authority_state.json"
+_stop_authority_warned_day: list[str] = []
+
+
+def _check_stop_authority_receipt(max_age_s: float = 2 * 3600) -> None:
+    """WARN durably when the janitor-scheduled stop authority stops running.
+
+    Missing file counts only after the grace period from first check (the
+    file is born on the authority's first janitor run after deploy) — so
+    absence is judged by the day-dedupe alone, not treated as instantly
+    stale. Fail direction: a check that cannot read the receipt WARNS; it
+    never assumes the authority is healthy.
+    """
+    today = datetime.now(UTC).strftime("%Y-%m-%d")
+    if today in _stop_authority_warned_day:
+        return
+    stale_reason = None
+    try:
+        age = time.time() - STOP_AUTHORITY_STATE.stat().st_mtime
+        if age > max_age_s:
+            stale_reason = f"receipt {int(age / 60)} min old (janitor cadence is 30)"
+    except OSError:
+        stale_reason = "receipt missing — authority has never run or cannot write"
+    if stale_reason:
+        _stop_authority_warned_day.append(today)
+        log_step("Stop-authority receipt STALE", "WARN", stale_reason)
+
+
 AUDIT_LEDGER_STATE = PROJECT_ROOT / "ops" / ".audit_findings_ledger_state.json"
 DOGFOOD_MEMORY_FILE = PROJECT_ROOT / "ops" / "dogfood-memory.json"
 AGENT_DISPLAY_BY_TYPE = {
@@ -2217,6 +2245,37 @@ def _maybe_reexec_on_fresh_source() -> None:
             "Conductor re-exec skipped: HEAD does not compile",
             "WARN",
             f"{head_sha[:12]}: {exc.msg} line {exc.lineno}",
+        )
+        return
+    # compile() is syntax-only. A commit that compiles but crashes at
+    # IMPORT (a bad import, a module-level NameError) would exec into a
+    # process that dies before main(), and systemd's Restart=on-failure
+    # would relaunch the same broken HEAD every 30s — converting a
+    # running-good process into an outage (adversarial-review finding
+    # K3, 2026-08-23). Smoke the import in a subprocess first. Any
+    # inability to verify keeps the current process (rule 4).
+    smoke_code = (
+        "import importlib.util; "
+        f"spec = importlib.util.spec_from_file_location('rc_smoke', {str(CONDUCTOR_SOURCE)!r}); "
+        "m = importlib.util.module_from_spec(spec); "
+        "spec.loader.exec_module(m)"
+    )
+    try:
+        smoke = subprocess.run(
+            [sys.executable, "-c", smoke_code],
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            timeout=300,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return
+    if smoke.returncode != 0:
+        tail = smoke.stderr.decode("utf-8", "replace").strip().splitlines()
+        log_step(
+            "Conductor re-exec skipped: HEAD does not import",
+            "WARN",
+            f"{head_sha[:12]}: {tail[-1][:60] if tail else 'no stderr'}",
         )
         return
     log_step(
@@ -5279,6 +5338,13 @@ def research_step(
             RUN_SENTINEL_STATE,
             timeout=180,
         )
+        # The stop authority (REQ-CONDUCTOR-AUTHORITY-1/2) runs from the
+        # janitor timer, not from here — but its receipt needs a READER,
+        # or a broken authority dies silently forever (adversarial-review
+        # finding S1, 2026-08-23: the receipt contract is only half real
+        # until someone checks it). 2h staleness = 4 missed janitor
+        # cycles; warned once per process-day to avoid log spam.
+        _check_stop_authority_receipt()
 
     # Read conductor log
     log_content = ""
