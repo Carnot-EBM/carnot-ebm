@@ -1,6 +1,21 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-08-21
+**Last Updated:** 2026-08-23
+
+**Operational Note:** 2026-08-23 Exp6528 V565 source/model/method contract
+test fix reconciled `REQ-REPORT-6528` by adding the missing blocked-verdict
+channel naming rule to OpenSpec, marking the implementation/test rows
+implemented, covering the new channel extraction edge cases, and regenerating
+`results/experiment_6528_v565_source_model_method_contract.json` with
+`honest_verdict=blocked_v565_source_model_method_contract:
+unavailable_required_channels=openreview`. Focused validation passes:
+`tests/python/test_experiment_6528_v565_source_model_method_contract.py` (`5
+passed`); scoped Coverage.py reports 100% for
+`python/carnot/experiment_6528_v565_source_model_method_contract.py` (`460`
+statements, `0` missing); spec coverage, artifact validation, adversarial
+verification, URL lint, duplicate-ledger lint, Ruff check/format, and
+`git diff --check` passed. No changes were made to
+`scripts/research_conductor.py`.
 
 **Operational Note:** 2026-08-21 substrate-floor/test regression fix reconciled
 `REQ-VERIFY-5933` and `REQ-LEARN-6479` by adding a generic nonzero floor for
