@@ -2,6 +2,16 @@
 
 **Last Updated:** 2026-08-23
 
+**Operational Note:** 2026-08-23 Exp6542 DRIFT-Bench intake test fix
+reconciled `REQ-BENCH-6542` by marking the OpenSpec implementation/test row
+implemented and formatting the new module/test. Focused validation passes:
+`tests/python/test_experiment_6542_drift_bench_external_intake_v2.py` (`5
+passed`), scoped Coverage.py reports 100% for the Exp6542 module (`576`
+statements, `0` missing), the adjacent Exp6541/Exp6542/stop-authority/conductor
+set passes (`96 passed`, `1 warning`), scoped spec coverage, artifact
+validation, adversarial verification, row consistency lint, and Ruff
+check/format passed. No changes were made to `scripts/research_conductor.py`.
+
 **Operational Note:** 2026-08-23 Exp6541 V566 direct-source contract test fix
 reconciled `REQ-REPORT-6541` by adding the missing OpenSpec section and
 validating `python/carnot/experiment_6541_v566_direct_source_contract.py`.
