@@ -2334,12 +2334,12 @@ def _is_web_bibliographic_search_only(d: dict[str, Any]) -> bool:
     """True when the artifact declares pure web/bibliographic search, no model load.
     See WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE for the exemplar incidents (exp5718, exp5732)."""
 
-    return _inference_substrate_matches(
-        d, WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE
-    ) or _inference_substrate_matches(
-        d, SOURCE_RECEIPTS_METHOD_PREREGISTRATION_NO_LLM_SUBSTRATE
-    ) or _inference_substrate_matches(
-        d, LOW_CONCURRENCY_PRIMARY_SOURCE_INGESTION_NO_EXPERIMENTAL_LLM_SUBSTRATE
+    return (
+        _inference_substrate_matches(d, WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE)
+        or _inference_substrate_matches(d, SOURCE_RECEIPTS_METHOD_PREREGISTRATION_NO_LLM_SUBSTRATE)
+        or _inference_substrate_matches(
+            d, LOW_CONCURRENCY_PRIMARY_SOURCE_INGESTION_NO_EXPERIMENTAL_LLM_SUBSTRATE
+        )
     )
 
 
@@ -2357,12 +2357,10 @@ def _is_local_sota_gguf_small_n(d: dict[str, Any]) -> bool:
     not full multi-hundred-token generation). See LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE for
     the exemplar incidents (exp5262, exp5263)."""
 
-    return _inference_substrate_matches(
-        d, LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE
-    ) or _inference_substrate_matches(
-        d, LOCAL_LLAMA_CPP_GGUF_ATOMIC_FACTOR_PROPOSALS_SUBSTRATE
-    ) or _inference_substrate_matches(
-        d, LOCAL_LLAMA_CPP_THREE_FAMILY_FORMAL_MUTATION_SUBSTRATE
+    return (
+        _inference_substrate_matches(d, LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE)
+        or _inference_substrate_matches(d, LOCAL_LLAMA_CPP_GGUF_ATOMIC_FACTOR_PROPOSALS_SUBSTRATE)
+        or _inference_substrate_matches(d, LOCAL_LLAMA_CPP_THREE_FAMILY_FORMAL_MUTATION_SUBSTRATE)
     )
 
 
@@ -3545,6 +3543,14 @@ def check_verdict_class_consistency(d: dict[str, Any], flags: list[Flag]) -> Non
     """
     vc = d.get("verdict_class")
     if vc is None:
+        # Absent verdict_class still draws no flag here. A sibling check keyed on
+        # (success prefix + verifier_is_oracle) was built and REMOVED on
+        # 2026-08-23: it fired on 221 artifacts, because declaring the class is
+        # forward-only from 2026-08-21 and the historical corpus predates it.
+        # The two artifacts that motivated it (exp6478, exp6497) carry no date
+        # field, so no date gate could separate them from the 221. They are
+        # dispositioned in ops/audit-findings-ledger.md instead, and
+        # check_circular_moat_overclaim already covers the headline case.
         return
     if not isinstance(vc, str) or vc not in _VERDICT_CLASSES:
         flags.append(
@@ -3593,6 +3599,88 @@ def check_verdict_class_consistency(d: dict[str, Any], flags: list[Flag]) -> Non
                     ),
                 )
             )
+    _check_terminal_prefix_vs_partial_class(d, vc, flags)
+
+
+# The closed prefix set the conductor already trusts as terminal
+# (research_conductor.py:_TERMINAL_VERDICT_PREFIXES). Duplicated rather than
+# imported because adversarial_verify must run without the conductor present.
+_TERMINAL_SUCCESS_PREFIXES = (
+    "complete:",
+    "complete ",
+    "complete_",
+    "success:",
+    "success ",
+    "success_",
+    "passed:",
+    "passed ",
+    "passed_",
+    "shipped:",
+    "shipped ",
+    "shipped_",
+)
+
+
+def _verdict_text(d: dict[str, Any]) -> str | None:
+    """honest_verdict as a string, reading through a principle wrapper."""
+    v = d.get("honest_verdict")
+    v = v.get("value") if isinstance(v, dict) else v
+    return v if isinstance(v, str) else None
+
+
+def _check_terminal_prefix_vs_partial_class(d: dict[str, Any], vc: str, flags: list[Flag]) -> None:
+    """A success-shaped verdict string that declares itself partial (REQ-CONDUCTOR-VERDICT-3).
+
+    Origin, 2026-08-23. Four artifacts wrote a verdict opening with `complete_`
+    while declaring `verdict_class: partial`. The conductor is enum-first, so it
+    believed the field, classified the task partial, and re-ran it to the 3-fail
+    limit -- exp6513's task retired permanently that way. Meanwhile any human or
+    tool reading the verdict STRING saw a completed result. The record said two
+    different things and nothing compared them.
+
+    Measured when this shipped: 4 of the 19 artifacts declaring verdict_class.
+
+    Why this is allowed to look at honest_verdict when the parent check refuses
+    to. The parent's rule -- never substring-match the verdict -- was written
+    against MID-STRING tokens like "marginal" and "retired", which drift because
+    any prose can contain them. This match is anchored at position 0 against a
+    closed 12-member set the conductor already uses for the same purpose. An
+    anchored prefix cannot drift into unrelated prose the way a free substring
+    can, so the reason for the parent's rule does not apply here.
+
+    WARN, not critical, on purpose. The measurement underneath may be perfectly
+    good; what is wrong is the label. Quarantining the artifact would punish the
+    result for a naming mistake, and a gate that overreaches gets bypassed.
+
+    Deliberately narrow: only success-prefix vs `partial`. A `blocked_` prefix
+    with `partial` is NOT flagged -- a blocked run genuinely is a kind of
+    partial, and exp6528 is that honest shape. Speculative pairs are left out
+    until a real artifact shows one.
+    """
+    if vc != "partial":
+        return
+    verdict = _verdict_text(d)
+    if verdict is None:
+        return
+    low = verdict.lower()
+    hit = next((p for p in _TERMINAL_SUCCESS_PREFIXES if low.startswith(p)), None)
+    if hit is None:
+        return
+    flags.append(
+        Flag(
+            kind="VERDICT_PREFIX_CLASS_CONTRADICTION",
+            severity="warn",
+            detail=(
+                f"honest_verdict opens with the terminal-success prefix {hit!r} but "
+                "verdict_class='partial'. The conductor is enum-first, so it believes "
+                "the FIELD: the task is classified partial and re-run toward the 3-fail "
+                "retire limit, while a reader of the verdict string sees a success. "
+                "Pick one. If the run genuinely fell short, drop the success prefix. "
+                "If it completed, declare the class that matches "
+                "(positive / circular_positive / null)."
+            ),
+        )
+    )
 
 
 # --- ARC live-agent self-solve discipline (2026-06-22, operator-directed; 2nd recurrence) ------------
