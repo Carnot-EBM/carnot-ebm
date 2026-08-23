@@ -16338,3 +16338,4 @@ code |
 | 2026-08-23 14:12 UTC | Milestone 2026.08.567 activated | OK | 13 tasks queued |
 | 2026-08-23 14:15 UTC | V567 evidence eligibility, architecture freshness, | SKIP | Pre-tests failing, self-heal failed: 5 failed, 107 passed, 1 warning in 9.99s |
 | 2026-08-23 14:33 UTC | V567 evidence eligibility, architecture freshness, | OK | 90 passed, 1 warning in 12.75s |
+| 2026-08-23 14:56 UTC | Default-off production Safety-Net adapter with exa | OK | 173 passed, 1 warning in 15.66s |
