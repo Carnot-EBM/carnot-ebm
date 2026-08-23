@@ -52897,6 +52897,161 @@ and gate checks, and every required field has provenance.
 |---|---|---|
 | REQ-REPORT-6548 | Planned (`python/carnot/experiment_6548_v567_evidence_eligibility_contract.py`, terminal artifact `results/experiment_6548_v567_evidence_eligibility_contract.json`) | Planned (`tests/python/test_experiment_6548_v567_evidence_eligibility_contract.py`) |
 
+### REQ-REPORT-6566: V569 Proof-Obligation And Graph-Potts Method Contract SHALL Preregister New Mechanisms
+
+Carnot SHALL build Exp6566 as an additive method contract for planning date
+20260823 before any V569 model output, claim stream, proof-obligation
+comparison, graph fixture, or continuous-learning outcome exists. The reducer
+SHALL record primary-source availability and hashes for arXiv:2608.17941,
+arXiv:2608.18574, arXiv:2608.20137, and arXiv:2608.13077. It SHALL record
+local compiler and solver versions, corpus paths and hashes, CPU, RAM, disk,
+protected-file hashes, and no-LLM/no-hardware status.
+
+The proof-obligation method SHALL freeze an immutable claim-stream design.
+Each claim SHALL carry source-byte offsets, source hash, typed variables, a
+whitelisted relation, compiler version, executable obligation hash, exact
+result, counterexample if present, and abstention or release action. The
+compiler SHALL own all executable obligations. The method SHALL NOT generate a
+full ConstraintIR, SHALL NOT treat schema validity as semantic validity, and
+SHALL NOT let a model certify release.
+
+The split commitment SHALL freeze family-blind train, chronological-adaptation,
+retention, and future-support slices before inference. Unit IDs SHALL derive
+from content hashes. Graph construction SHALL use only decision-time executable
+features: executable family, arity, relation type, interaction class, exact
+conflict features, and proof-obligation type. The graph SHALL exclude model
+identity, target label, source ID, entity names, and row order.
+
+The graph-Potts estimator SHALL specify its Potts prior, Beta-Binomial
+observation model, online mean-field update, convergence criterion, numerical
+clamps, cold-start rule, restart state, and rollback state. The reducer SHALL
+emit hand-checkable conformance rows that recompute the posterior state
+probabilities, Beta-Binomial posterior means, graph edges, split hashes,
+arm-dose equality, reducers, attacks, and retirement rules.
+
+The matched-dose comparison SHALL freeze frozen/no-memory, uniform verified
+replay, recent-failure, exact contextual-bandit, and graph-Potts arms. The arms
+SHALL share prompt, candidate pool, seed, memory capacity, write opportunity,
+evaluation point, and charged dose. Extraction gates SHALL require exact
+certified held coverage improvement, noninferior precision, zero unsafe
+release, and complete cost rows. Continuous self-learning gates SHALL require
+current benefit, retention, future support, exact safety, restart, rollback,
+and noninferior charged cost.
+
+The reducer SHALL attack source-offset drift, schema-valid but
+semantic-invalid output, model identity leakage, future-label leakage, graph
+disconnection, mean-field nonconvergence, unequal dose, same-query mutation,
+and post-outcome threshold changes. It SHALL set
+`source_method_contract_ready_score=1.0` only when every equation, split,
+field, reducer, attack, and retirement rule is frozen. A clean contract SHALL
+use `verdict_class=null`. A usable but incomplete contract SHALL use
+`partial`. Missing prerequisites SHALL use `blocked`. Retrospective method
+changes SHALL use `disqualified`.
+
+The Exp6566 artifact SHALL be written atomically to
+`results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json`
+with
+`inference_substrate=primary_source_method_preregistration_and_local_conformance_no_llm`
+and `verifier_is_oracle=true`. The artifact SHALL include, at minimum,
+`status`, `honest_verdict`, `verdict_class`, `source_review_receipts`,
+`proof_obligation_schema_and_compiler_contract`,
+`frozen_split_and_unit_commitment`, `graph_feature_and_leakage_contract`,
+`potts_beta_binomial_equations`, `matched_dose_arm_contract`,
+`extraction_and_csl_acceptance_gates`, `conformance_rows`,
+`source_method_contract_ready_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `gate_check_summary`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+Field principles SHALL be:
+
+- `status`: "The method contract must close terminally before outcome-bearing work."
+- `honest_verdict`: "The verdict states whether the new mechanisms are executable and preregistered."
+- `verdict_class`: "Method readiness is infrastructure evidence, not positive science."
+- `source_review_receipts`: "Primary-source IDs, dates, and hashes anchor the imported ideas."
+- `proof_obligation_schema_and_compiler_contract`: "Byte spans and compiler-owned obligations separate this method from retired full-ConstraintIR output."
+- `frozen_split_and_unit_commitment`: "Content-hashed units prevent post-outcome split changes."
+- `graph_feature_and_leakage_contract`: "Only decision-time executable features may construct the challenge graph."
+- `potts_beta_binomial_equations`: "The estimator needs explicit equations, clamps, convergence, restart, and rollback."
+- `matched_dose_arm_contract`: "All continuous-learning arms must receive equal opportunities and capacity."
+- `extraction_and_csl_acceptance_gates`: "Current gain cannot hide unsafe release, forgetting, support loss, or cost."
+- `conformance_rows`: "Hand-checkable fixtures show that equations, compiler, and reducers are executable."
+- `source_method_contract_ready_score`: "One binary field gates model admission, claim-stream, graph, and CSL work."
+- `per_unit_rows`: "Each conformance unit remains independently checkable."
+- `aggregate_row_recomputation`: "Readiness derives only from frozen conformance rows."
+- `gate_check_summary`: "A blocked contract names the missing source, equation, fixture, or field."
+- `preconditions_checked`: "Source and tool receipts distinguish method failure from missing prerequisites."
+- `protected_files_unchanged`: "The method contract preserves protected orchestration files."
+- `inference_substrate`: "This is literature-grounded local conformance work with no LLM inference."
+- `verifier_is_oracle`: "Contract conformance is audit authority and cannot create a scientific positive."
+- `field_provenance`: "Every field points to source text, equation, fixture, or reducer."
+- `duration_s`: "Monotonic time exposes a contract that skipped conformance work."
+- `tests_run`: "Named tests prove the frozen methods execute."
+- `reproducibility_checksum`: "A final hash protects the preregistration."
+
+#### SCENARIO-REPORT-6566-SOURCES: Primary Sources And Preconditions Are Receipted
+
+**Given** the V569 dated source review cites the four promoted arXiv sources
+**When** Exp6566 builds source receipts and preconditions
+**Then** each source row records arXiv ID, title, submitted or revised date,
+URL, availability, content hash, imported method hook, and claim boundary, and
+the preconditions record compiler, solver, corpus, CPU, RAM, disk,
+protected-file, no-LLM, and no-hardware receipts.
+
+#### SCENARIO-REPORT-6566-PROOF: Source-Span Proof Obligations Are Compiler-Owned
+
+**Given** a source byte string and typed atomic claims
+**When** Exp6566 compiles proof-obligation conformance rows
+**Then** each supported claim records source offsets, source hash, typed
+variables, whitelisted relation, compiler version, obligation hash, exact
+result, release action, abstention, or counterexample, and no row emits full
+ConstraintIR.
+
+#### SCENARIO-REPORT-6566-SPLITS-GRAPH: Splits And Graph Features Are Frozen Against Leakage
+
+**Given** family-blind units and decision-time executable features
+**When** Exp6566 freezes splits and graph features
+**Then** unit IDs derive from content hashes, slices are
+train/chronological-adaptation/retention/future-support, allowed graph
+features are executable family, arity, relation type, interaction class, exact
+conflict features, and proof-obligation type, and forbidden leakage features
+are absent.
+
+#### SCENARIO-REPORT-6566-POTTS: Potts And Beta-Binomial Updates Are Hand-Checkable
+
+**Given** graph edges, latent states, and exact outcome observations
+**When** Exp6566 runs its estimator fixtures
+**Then** the artifact records the Potts prior, Beta-Binomial observation
+model, online mean-field update, convergence tolerance, iteration cap,
+clamps, cold start, restart state, rollback state, and rows whose posterior
+means and state assignments recompute exactly.
+
+#### SCENARIO-REPORT-6566-MATCHED-DOSE: Continuous-Learning Arms Share Dose
+
+**Given** frozen no-memory, uniform verified replay, recent-failure, exact
+contextual-bandit, and graph-Potts arms
+**When** Exp6566 builds the matched-dose contract
+**Then** every arm has identical prompt, candidate pool, seed, memory
+capacity, write opportunity, evaluation point, and charged dose, and the
+contract defines extraction and CSL acceptance gates before outcomes exist.
+
+#### SCENARIO-REPORT-6566-ATOMIC: Readiness Recomputes From Conformance Rows
+
+**Given** source receipts, proof rows, split rows, graph rows, estimator rows,
+matched-dose rows, attack rows, retirement rows, protected hashes, and tests
+**When** Exp6566 writes its terminal artifact
+**Then** required fields and principles match exactly, readiness recomputes
+from conformance rows, attacks are closed, protected files remain unchanged,
+the checksum matches, `verifier_is_oracle=true`, and no positive science class
+is emitted.
+
+## Implementation Status (REQ-REPORT-6566)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6566 | Planned (`python/carnot/experiment_6566_proof_obligation_and_graph_potts_method_contract.py`, terminal artifact `results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json`) | Planned (`tests/python/test_experiment_6566_proof_obligation_and_graph_potts_method_contract.py`) |
+
 ### REQ-REPORT-6565: V569 Evidence And Retirement Contract SHALL Freeze V568 Imports
 
 Carnot SHALL build Exp6565 as an additive V569 evidence, gate,

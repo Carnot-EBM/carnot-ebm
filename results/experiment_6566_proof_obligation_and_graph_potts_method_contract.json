@@ -1,0 +1,1396 @@
+{
+  "aggregate_row_recomputation": {
+    "acceptance_gates_ready": true,
+    "attack_rows_ready": true,
+    "conformance_row_count": 27,
+    "graph_feature_contract_ready": true,
+    "matched_dose_ready": true,
+    "potts_equations_ready": true,
+    "proof_obligation_contract_ready": true,
+    "retirement_rules_ready": true,
+    "source_method_contract_ready_from_rows": true,
+    "source_receipts_ready": true,
+    "split_commitment_ready": true,
+    "terminal_conformance_rows_ready": true
+  },
+  "conformance_rows": [
+    {
+      "abstention": false,
+      "abstention_reason": null,
+      "compiler_name": "carnot_source_span_proof_obligation_compiler",
+      "compiler_version": "v6566.20260823",
+      "counterexample": null,
+      "exact_result": "certified_true",
+      "executable_obligation_hash": "sha256:24e30437063e71fe3233f7f136cfc0da4bb40186c7421dc778e5d42d7c8415a3",
+      "full_constraint_ir": null,
+      "relation": "greater_than",
+      "release_action": "release",
+      "row_type": "proof",
+      "source_end": 35,
+      "source_sha256": "sha256:a11e6a5842ac5e852b6b235e52a51d30c99763d01d7b4dbfd40e7b2647e6cccd",
+      "source_span_text_sha256": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+      "source_start": 0,
+      "terminal": true,
+      "typed_variables": {
+        "left": "person_age",
+        "right": "person_age"
+      },
+      "unit_id": "proof-age-01"
+    },
+    {
+      "abstention": false,
+      "abstention_reason": null,
+      "compiler_name": "carnot_source_span_proof_obligation_compiler",
+      "compiler_version": "v6566.20260823",
+      "counterexample": {
+        "left": 9,
+        "right": 12
+      },
+      "exact_result": "counterexample",
+      "executable_obligation_hash": "sha256:71654a452cfaa1caa25e3df1ba812dd9cf0c77c908e80bbc9cdafb622d37ffa1",
+      "full_constraint_ir": null,
+      "relation": "greater_than",
+      "release_action": "reject",
+      "row_type": "proof",
+      "source_end": 72,
+      "source_sha256": "sha256:a11e6a5842ac5e852b6b235e52a51d30c99763d01d7b4dbfd40e7b2647e6cccd",
+      "source_span_text_sha256": "sha256:8c79a6cf8d36f2471e8d6ab82ca4b03c1bacc862aeea191ff03ea4347b5d7e0b",
+      "source_start": 37,
+      "terminal": true,
+      "typed_variables": {
+        "left": "person_age",
+        "right": "person_age"
+      },
+      "unit_id": "proof-age-02"
+    },
+    {
+      "abstention": true,
+      "abstention_reason": "relation_not_whitelisted",
+      "compiler_name": "carnot_source_span_proof_obligation_compiler",
+      "compiler_version": "v6566.20260823",
+      "counterexample": null,
+      "exact_result": "unsupported_relation",
+      "executable_obligation_hash": "sha256:e8404b2a683ccef56a57647f99cbfbd657efdb1fb846e7b4be643cde5951690e",
+      "full_constraint_ir": null,
+      "relation": "may_prefer",
+      "release_action": "abstain",
+      "row_type": "proof",
+      "source_end": 18,
+      "source_sha256": "sha256:503d47e17c80d216b9224d025a9bf00cf9d7e1e46992cfb1da2f59642841adfc",
+      "source_span_text_sha256": "sha256:3253ee729f1d393bf67c2f035161de4f970f1155f1484fef708b449d3b89f7b6",
+      "source_start": 0,
+      "terminal": true,
+      "typed_variables": {
+        "object": "beverage",
+        "subject": "person"
+      },
+      "unit_id": "proof-age-03"
+    },
+    {
+      "content_sha256": "sha256:c7f8c051de4dc6fc2e5dce068ea7815a95e02e29a4528f750e3cdae434245727",
+      "family": "logic_grid",
+      "row_type": "split",
+      "slice": "train",
+      "terminal": true,
+      "unit_id": "sha256:c7f8c051de4dc6fc2e5dce068ea7815a95e02e29a4528f750e3cdae434245727"
+    },
+    {
+      "content_sha256": "sha256:55fee7631742ddd4607fe39843b4eef9e8422b8567db499aeae30c07bf40eb02",
+      "family": "scheduling",
+      "row_type": "split",
+      "slice": "chronological_adaptation",
+      "terminal": true,
+      "unit_id": "sha256:55fee7631742ddd4607fe39843b4eef9e8422b8567db499aeae30c07bf40eb02"
+    },
+    {
+      "content_sha256": "sha256:707b9d4ae6080227576ba6120305f7cb1e7a275706c4735c61e7e4315a8a71d9",
+      "family": "seating",
+      "row_type": "split",
+      "slice": "retention",
+      "terminal": true,
+      "unit_id": "sha256:707b9d4ae6080227576ba6120305f7cb1e7a275706c4735c61e7e4315a8a71d9"
+    },
+    {
+      "content_sha256": "sha256:13086fc42fbb3a49ffa18257d47414e0918290a913ac573d0f0c520eabcc2a00",
+      "family": "logic_grid",
+      "row_type": "split",
+      "slice": "future_support",
+      "terminal": true,
+      "unit_id": "sha256:13086fc42fbb3a49ffa18257d47414e0918290a913ac573d0f0c520eabcc2a00"
+    },
+    {
+      "feature_hash": "sha256:8f5f6ef9173eae395f2c7bbd85aadf46dd8833860f4c8e88a6430dd05858938e",
+      "feature_keys": [
+        "unit_id",
+        "executable_family",
+        "arity",
+        "relation_type",
+        "interaction_class",
+        "exact_conflict_features",
+        "proof_obligation_type"
+      ],
+      "forbidden_feature_keys": [],
+      "row_type": "graph",
+      "terminal": true,
+      "unit_id": "u1"
+    },
+    {
+      "feature_hash": "sha256:c58a863cfdcc3e8deb44b2ca827f355f8217176ab57f012a5fc04ba4d2e70add",
+      "feature_keys": [
+        "unit_id",
+        "executable_family",
+        "arity",
+        "relation_type",
+        "interaction_class",
+        "exact_conflict_features",
+        "proof_obligation_type"
+      ],
+      "forbidden_feature_keys": [],
+      "row_type": "graph",
+      "terminal": true,
+      "unit_id": "u2"
+    },
+    {
+      "feature_hash": "sha256:3933e203974539df6db056a1d60a56a42d870d8094e2a58223820130a9ec141b",
+      "feature_keys": [
+        "unit_id",
+        "executable_family",
+        "arity",
+        "relation_type",
+        "interaction_class",
+        "exact_conflict_features",
+        "proof_obligation_type"
+      ],
+      "forbidden_feature_keys": [],
+      "row_type": "graph",
+      "terminal": true,
+      "unit_id": "u3"
+    },
+    {
+      "cold_start_used": true,
+      "converged": true,
+      "hand_check": "easy=(1+2)/(1+1+2)=0.75; hard=(1+0)/(1+1+2)=0.25; q_easy=sigmoid(1.5)",
+      "iterations": 2,
+      "max_l1_delta": 0.0,
+      "observations_by_state": {
+        "easy": {
+          "alpha": 1,
+          "beta": 1,
+          "failure": 0,
+          "success": 2
+        },
+        "hard": {
+          "alpha": 1,
+          "beta": 1,
+          "failure": 2,
+          "success": 0
+        }
+      },
+      "posterior_means_by_state": {
+        "easy": 0.75,
+        "hard": 0.25
+      },
+      "restart_hash_matches": true,
+      "rollback_hash_matches": true,
+      "row_type": "potts",
+      "state_probabilities": {
+        "u1": {
+          "easy": 0.8175744761936437,
+          "hard": 0.18242552380635635
+        },
+        "u2": {
+          "easy": 0.8175744761936437,
+          "hard": 0.18242552380635635
+        }
+      },
+      "terminal": true,
+      "unit_id": "potts-beta-binomial-01"
+    },
+    {
+      "arm_name": "frozen_no_memory",
+      "dose_hash": "sha256:5d189fab0d1e1398704f9d11e424700c4bee4eaa2417a9c815406aa00ff1e68a",
+      "row_type": "matched_dose",
+      "same_query_mutation_allowed": false,
+      "terminal": true,
+      "unit_id": "dose-frozen_no_memory"
+    },
+    {
+      "arm_name": "uniform_verified_replay",
+      "dose_hash": "sha256:5d189fab0d1e1398704f9d11e424700c4bee4eaa2417a9c815406aa00ff1e68a",
+      "row_type": "matched_dose",
+      "same_query_mutation_allowed": false,
+      "terminal": true,
+      "unit_id": "dose-uniform_verified_replay"
+    },
+    {
+      "arm_name": "recent_failure",
+      "dose_hash": "sha256:5d189fab0d1e1398704f9d11e424700c4bee4eaa2417a9c815406aa00ff1e68a",
+      "row_type": "matched_dose",
+      "same_query_mutation_allowed": false,
+      "terminal": true,
+      "unit_id": "dose-recent_failure"
+    },
+    {
+      "arm_name": "exact_contextual_bandit",
+      "dose_hash": "sha256:5d189fab0d1e1398704f9d11e424700c4bee4eaa2417a9c815406aa00ff1e68a",
+      "row_type": "matched_dose",
+      "same_query_mutation_allowed": false,
+      "terminal": true,
+      "unit_id": "dose-exact_contextual_bandit"
+    },
+    {
+      "arm_name": "graph_potts",
+      "dose_hash": "sha256:5d189fab0d1e1398704f9d11e424700c4bee4eaa2417a9c815406aa00ff1e68a",
+      "row_type": "matched_dose",
+      "same_query_mutation_allowed": false,
+      "terminal": true,
+      "unit_id": "dose-graph_potts"
+    },
+    {
+      "attack_id": "source_offset_drift",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-source_offset_drift"
+    },
+    {
+      "attack_id": "schema_valid_semantic_invalid",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-schema_valid_semantic_invalid"
+    },
+    {
+      "attack_id": "model_identity_leakage",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-model_identity_leakage"
+    },
+    {
+      "attack_id": "future_label_leakage",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-future_label_leakage"
+    },
+    {
+      "attack_id": "graph_disconnection",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-graph_disconnection"
+    },
+    {
+      "attack_id": "mean_field_nonconvergence",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-mean_field_nonconvergence"
+    },
+    {
+      "attack_id": "unequal_dose",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-unequal_dose"
+    },
+    {
+      "attack_id": "same_query_mutation",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-same_query_mutation"
+    },
+    {
+      "attack_id": "post_outcome_threshold_change",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-post_outcome_threshold_change"
+    },
+    {
+      "retire_if_same_verdict": true,
+      "row_type": "retirement",
+      "same_verdict": "zero exact semantic coverage gain or unsafe release",
+      "scope": "source_span_proof_obligation_extraction",
+      "terminal": true,
+      "unit_id": "retire-proof-obligation-on-zero-exact-semantic-outcome"
+    },
+    {
+      "retire_if_same_verdict": true,
+      "row_type": "retirement",
+      "same_verdict": "no future support, forgetting, unsafe write, or unequal dose",
+      "scope": "graph_potts_continuous_learning",
+      "terminal": true,
+      "unit_id": "retire-graph-potts-on-future-support-or-dose-failure"
+    }
+  ],
+  "duration_s": 0.42241,
+  "extraction_and_csl_acceptance_gates": {
+    "csl": {
+      "current_benefit_required": true,
+      "exact_safety_required": true,
+      "future_support_required": true,
+      "noninferior_charged_cost_required": true,
+      "restart_required": true,
+      "retention_required": true,
+      "rollback_required": true,
+      "same_query_mutation_is_unsafe_diagnostic_only": true
+    },
+    "extraction": {
+      "complete_cost_rows_required": true,
+      "exact_certified_held_coverage_improvement_required": true,
+      "noninferior_precision_required": true,
+      "release_authority": "compiler_plus_exact_checker",
+      "zero_unsafe_release_required": true
+    },
+    "threshold_freeze": {
+      "post_outcome_threshold_changes_allowed": false,
+      "retirement_rules_frozen_before_outcomes": true
+    }
+  },
+  "field_principles": {
+    "aggregate_row_recomputation": "Readiness derives only from frozen conformance rows.",
+    "conformance_rows": "Hand-checkable fixtures show that equations, compiler, and reducers are executable.",
+    "duration_s": "Monotonic time exposes a contract that skipped conformance work.",
+    "extraction_and_csl_acceptance_gates": "Current gain cannot hide unsafe release, forgetting, support loss, or cost.",
+    "field_provenance": "Every field points to source text, equation, fixture, or reducer.",
+    "frozen_split_and_unit_commitment": "Content-hashed units prevent post-outcome split changes.",
+    "gate_check_summary": "A blocked contract names the missing source, equation, fixture, or field.",
+    "graph_feature_and_leakage_contract": "Only decision-time executable features may construct the challenge graph.",
+    "honest_verdict": "The verdict states whether the new mechanisms are executable and preregistered.",
+    "inference_substrate": "This is literature-grounded local conformance work with no LLM inference.",
+    "matched_dose_arm_contract": "All continuous-learning arms must receive equal opportunities and capacity.",
+    "per_unit_rows": "Each conformance unit remains independently checkable.",
+    "potts_beta_binomial_equations": "The estimator needs explicit equations, clamps, convergence, restart, and rollback.",
+    "preconditions_checked": "Source and tool receipts distinguish method failure from missing prerequisites.",
+    "proof_obligation_schema_and_compiler_contract": "Byte spans and compiler-owned obligations separate this method from retired full-ConstraintIR output.",
+    "protected_files_unchanged": "The method contract preserves protected orchestration files.",
+    "reproducibility_checksum": "A final hash protects the preregistration.",
+    "source_method_contract_ready_score": "One binary field gates model admission, claim-stream, graph, and CSL work.",
+    "source_review_receipts": "Primary-source IDs, dates, and hashes anchor the imported ideas.",
+    "status": "The method contract must close terminally before outcome-bearing work.",
+    "tests_run": "Named tests prove the frozen methods execute.",
+    "verdict_class": "Method readiness is infrastructure evidence, not positive science.",
+    "verifier_is_oracle": "Contract conformance is audit authority and cannot create a scientific positive."
+  },
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "principle": "Readiness derives only from frozen conformance rows.",
+      "source": "aggregate_row_recomputation",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "conformance_rows": {
+      "principle": "Hand-checkable fixtures show that equations, compiler, and reducers are executable.",
+      "source": "Exp6566 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "duration_s": {
+      "principle": "Monotonic time exposes a contract that skipped conformance work.",
+      "source": "Exp6566 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "extraction_and_csl_acceptance_gates": {
+      "principle": "Current gain cannot hide unsafe release, forgetting, support loss, or cost.",
+      "source": "build_acceptance_gates",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every field points to source text, equation, fixture, or reducer.",
+      "source": "Exp6566 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "frozen_split_and_unit_commitment": {
+      "principle": "Content-hashed units prevent post-outcome split changes.",
+      "source": "build_split_commitment",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "gate_check_summary": {
+      "principle": "A blocked contract names the missing source, equation, fixture, or field.",
+      "source": "gate_check_summary",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "graph_feature_and_leakage_contract": {
+      "principle": "Only decision-time executable features may construct the challenge graph.",
+      "source": "build_graph_contract",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The verdict states whether the new mechanisms are executable and preregistered.",
+      "source": "Exp6566 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "This is literature-grounded local conformance work with no LLM inference.",
+      "source": "Exp6566 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "matched_dose_arm_contract": {
+      "principle": "All continuous-learning arms must receive equal opportunities and capacity.",
+      "source": "build_matched_dose_arm_contract",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "per_unit_rows": {
+      "principle": "Each conformance unit remains independently checkable.",
+      "source": "Exp6566 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "potts_beta_binomial_equations": {
+      "principle": "The estimator needs explicit equations, clamps, convergence, restart, and rollback.",
+      "source": "build_potts_equations and potts_conformance_row",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Source and tool receipts distinguish method failure from missing prerequisites.",
+      "source": "Exp6566 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "proof_obligation_schema_and_compiler_contract": {
+      "principle": "Byte spans and compiler-owned obligations separate this method from retired full-ConstraintIR output.",
+      "source": "compile_claim and proof_conformance_rows",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "The method contract preserves protected orchestration files.",
+      "source": "protected_files_unchanged",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A final hash protects the preregistration.",
+      "source": "Exp6566 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "source_method_contract_ready_score": {
+      "principle": "One binary field gates model admission, claim-stream, graph, and CSL work.",
+      "source": "Exp6566 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "source_review_receipts": {
+      "principle": "Primary-source IDs, dates, and hashes anchor the imported ideas.",
+      "source": "SOURCE_CATALOG and build_source_review_receipts",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "status": {
+      "principle": "The method contract must close terminally before outcome-bearing work.",
+      "source": "Exp6566 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "tests_run": {
+      "principle": "Named tests prove the frozen methods execute.",
+      "source": "Exp6566 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "verdict_class": {
+      "principle": "Method readiness is infrastructure evidence, not positive science.",
+      "source": "Exp6566 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "Contract conformance is audit authority and cannot create a scientific positive.",
+      "source": "Exp6566 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6566"
+      ]
+    }
+  },
+  "frozen_split_and_unit_commitment": {
+    "family_blind": true,
+    "frozen_before_model_inference": true,
+    "slice_names": [
+      "train",
+      "chronological_adaptation",
+      "retention",
+      "future_support"
+    ],
+    "split_membership_sha256": "sha256:b14c5217842d905482666b0c62610d95da553dfa252b2890baa5552aa74984de",
+    "unit_id_rule": "sha256 canonical JSON over family, content, and frozen slice",
+    "unit_rows": [
+      {
+        "content": "age-order",
+        "content_sha256": "sha256:c7f8c051de4dc6fc2e5dce068ea7815a95e02e29a4528f750e3cdae434245727",
+        "family": "logic_grid",
+        "local_name": "u1",
+        "slice": "train",
+        "unit_id": "sha256:c7f8c051de4dc6fc2e5dce068ea7815a95e02e29a4528f750e3cdae434245727"
+      },
+      {
+        "content": "before-after",
+        "content_sha256": "sha256:55fee7631742ddd4607fe39843b4eef9e8422b8567db499aeae30c07bf40eb02",
+        "family": "scheduling",
+        "local_name": "u2",
+        "slice": "chronological_adaptation",
+        "unit_id": "sha256:55fee7631742ddd4607fe39843b4eef9e8422b8567db499aeae30c07bf40eb02"
+      },
+      {
+        "content": "not-adjacent",
+        "content_sha256": "sha256:707b9d4ae6080227576ba6120305f7cb1e7a275706c4735c61e7e4315a8a71d9",
+        "family": "seating",
+        "local_name": "u3",
+        "slice": "retention",
+        "unit_id": "sha256:707b9d4ae6080227576ba6120305f7cb1e7a275706c4735c61e7e4315a8a71d9"
+      },
+      {
+        "content": "set-membership",
+        "content_sha256": "sha256:13086fc42fbb3a49ffa18257d47414e0918290a913ac573d0f0c520eabcc2a00",
+        "family": "logic_grid",
+        "local_name": "u4",
+        "slice": "future_support",
+        "unit_id": "sha256:13086fc42fbb3a49ffa18257d47414e0918290a913ac573d0f0c520eabcc2a00"
+      }
+    ]
+  },
+  "gate_check_summary": {
+    "checks_closed": true,
+    "failed_checks": [],
+    "missing_prerequisite": false,
+    "source_method_contract_ready_from_rows": true
+  },
+  "graph_feature_and_leakage_contract": {
+    "allowed_features": [
+      "executable_family",
+      "arity",
+      "relation_type",
+      "interaction_class",
+      "exact_conflict_features",
+      "proof_obligation_type"
+    ],
+    "connected_component_count": 1,
+    "edge_rule": "connect when allowed executable feature overlap is non-empty",
+    "edges": [
+      {
+        "shared_feature": "interaction_class",
+        "source": "u1",
+        "target": "u2",
+        "weight": 1.0
+      },
+      {
+        "shared_feature": "arity",
+        "source": "u2",
+        "target": "u3",
+        "weight": 0.5
+      }
+    ],
+    "forbidden_features": [
+      "model_identity",
+      "target_label",
+      "source_id",
+      "entity_names",
+      "row_order"
+    ],
+    "forbidden_features_present": [],
+    "graph_sha256": "sha256:6d83754f655e93b9d3af877d056ec3a11d4bc605d2658a095be328388d1eaa35"
+  },
+  "honest_verdict": "complete_source_method_contract_ready: proof-obligation schema, immutable splits, graph features, Potts equations, matched-dose arms, gates, attacks, and retirement rules are frozen",
+  "inference_substrate": "primary_source_method_preregistration_and_local_conformance_no_llm",
+  "matched_dose_arm_contract": {
+    "arms": {
+      "exact_contextual_bandit": {
+        "dose": {
+          "candidate_pool_hash": "sha256:a1e968decb012ab778a4253fc9315f204a2c06ff0e11d5b33e8bba0007518ed2",
+          "charged_dose": 16,
+          "evaluation_point": "after_exact_validation",
+          "memory_capacity": 8,
+          "prompt_hash": "sha256:7940402a9caede01da9b9569b394e0a1ffc2b80c34b887f761f86efc377bce6c",
+          "seed": 6566,
+          "write_opportunities": 4
+        },
+        "same_query_mutation_allowed": false,
+        "write_rule": "commit only after exact validation"
+      },
+      "frozen_no_memory": {
+        "dose": {
+          "candidate_pool_hash": "sha256:a1e968decb012ab778a4253fc9315f204a2c06ff0e11d5b33e8bba0007518ed2",
+          "charged_dose": 16,
+          "evaluation_point": "after_exact_validation",
+          "memory_capacity": 8,
+          "prompt_hash": "sha256:7940402a9caede01da9b9569b394e0a1ffc2b80c34b887f761f86efc377bce6c",
+          "seed": 6566,
+          "write_opportunities": 4
+        },
+        "same_query_mutation_allowed": false,
+        "write_rule": "commit only after exact validation"
+      },
+      "graph_potts": {
+        "dose": {
+          "candidate_pool_hash": "sha256:a1e968decb012ab778a4253fc9315f204a2c06ff0e11d5b33e8bba0007518ed2",
+          "charged_dose": 16,
+          "evaluation_point": "after_exact_validation",
+          "memory_capacity": 8,
+          "prompt_hash": "sha256:7940402a9caede01da9b9569b394e0a1ffc2b80c34b887f761f86efc377bce6c",
+          "seed": 6566,
+          "write_opportunities": 4
+        },
+        "same_query_mutation_allowed": false,
+        "write_rule": "commit only after exact validation"
+      },
+      "recent_failure": {
+        "dose": {
+          "candidate_pool_hash": "sha256:a1e968decb012ab778a4253fc9315f204a2c06ff0e11d5b33e8bba0007518ed2",
+          "charged_dose": 16,
+          "evaluation_point": "after_exact_validation",
+          "memory_capacity": 8,
+          "prompt_hash": "sha256:7940402a9caede01da9b9569b394e0a1ffc2b80c34b887f761f86efc377bce6c",
+          "seed": 6566,
+          "write_opportunities": 4
+        },
+        "same_query_mutation_allowed": false,
+        "write_rule": "commit only after exact validation"
+      },
+      "uniform_verified_replay": {
+        "dose": {
+          "candidate_pool_hash": "sha256:a1e968decb012ab778a4253fc9315f204a2c06ff0e11d5b33e8bba0007518ed2",
+          "charged_dose": 16,
+          "evaluation_point": "after_exact_validation",
+          "memory_capacity": 8,
+          "prompt_hash": "sha256:7940402a9caede01da9b9569b394e0a1ffc2b80c34b887f761f86efc377bce6c",
+          "seed": 6566,
+          "write_opportunities": 4
+        },
+        "same_query_mutation_allowed": false,
+        "write_rule": "commit only after exact validation"
+      }
+    },
+    "matched_dimensions": [
+      "prompt_hash",
+      "candidate_pool_hash",
+      "seed",
+      "memory_capacity",
+      "write_opportunities",
+      "evaluation_point",
+      "charged_dose"
+    ],
+    "weights_frozen": true
+  },
+  "per_unit_rows": [
+    {
+      "abstention": false,
+      "abstention_reason": null,
+      "compiler_name": "carnot_source_span_proof_obligation_compiler",
+      "compiler_version": "v6566.20260823",
+      "counterexample": null,
+      "exact_result": "certified_true",
+      "executable_obligation_hash": "sha256:24e30437063e71fe3233f7f136cfc0da4bb40186c7421dc778e5d42d7c8415a3",
+      "full_constraint_ir": null,
+      "relation": "greater_than",
+      "release_action": "release",
+      "row_type": "proof",
+      "source_end": 35,
+      "source_sha256": "sha256:a11e6a5842ac5e852b6b235e52a51d30c99763d01d7b4dbfd40e7b2647e6cccd",
+      "source_span_text_sha256": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+      "source_start": 0,
+      "terminal": true,
+      "typed_variables": {
+        "left": "person_age",
+        "right": "person_age"
+      },
+      "unit_id": "proof-age-01"
+    },
+    {
+      "abstention": false,
+      "abstention_reason": null,
+      "compiler_name": "carnot_source_span_proof_obligation_compiler",
+      "compiler_version": "v6566.20260823",
+      "counterexample": {
+        "left": 9,
+        "right": 12
+      },
+      "exact_result": "counterexample",
+      "executable_obligation_hash": "sha256:71654a452cfaa1caa25e3df1ba812dd9cf0c77c908e80bbc9cdafb622d37ffa1",
+      "full_constraint_ir": null,
+      "relation": "greater_than",
+      "release_action": "reject",
+      "row_type": "proof",
+      "source_end": 72,
+      "source_sha256": "sha256:a11e6a5842ac5e852b6b235e52a51d30c99763d01d7b4dbfd40e7b2647e6cccd",
+      "source_span_text_sha256": "sha256:8c79a6cf8d36f2471e8d6ab82ca4b03c1bacc862aeea191ff03ea4347b5d7e0b",
+      "source_start": 37,
+      "terminal": true,
+      "typed_variables": {
+        "left": "person_age",
+        "right": "person_age"
+      },
+      "unit_id": "proof-age-02"
+    },
+    {
+      "abstention": true,
+      "abstention_reason": "relation_not_whitelisted",
+      "compiler_name": "carnot_source_span_proof_obligation_compiler",
+      "compiler_version": "v6566.20260823",
+      "counterexample": null,
+      "exact_result": "unsupported_relation",
+      "executable_obligation_hash": "sha256:e8404b2a683ccef56a57647f99cbfbd657efdb1fb846e7b4be643cde5951690e",
+      "full_constraint_ir": null,
+      "relation": "may_prefer",
+      "release_action": "abstain",
+      "row_type": "proof",
+      "source_end": 18,
+      "source_sha256": "sha256:503d47e17c80d216b9224d025a9bf00cf9d7e1e46992cfb1da2f59642841adfc",
+      "source_span_text_sha256": "sha256:3253ee729f1d393bf67c2f035161de4f970f1155f1484fef708b449d3b89f7b6",
+      "source_start": 0,
+      "terminal": true,
+      "typed_variables": {
+        "object": "beverage",
+        "subject": "person"
+      },
+      "unit_id": "proof-age-03"
+    },
+    {
+      "content_sha256": "sha256:c7f8c051de4dc6fc2e5dce068ea7815a95e02e29a4528f750e3cdae434245727",
+      "family": "logic_grid",
+      "row_type": "split",
+      "slice": "train",
+      "terminal": true,
+      "unit_id": "sha256:c7f8c051de4dc6fc2e5dce068ea7815a95e02e29a4528f750e3cdae434245727"
+    },
+    {
+      "content_sha256": "sha256:55fee7631742ddd4607fe39843b4eef9e8422b8567db499aeae30c07bf40eb02",
+      "family": "scheduling",
+      "row_type": "split",
+      "slice": "chronological_adaptation",
+      "terminal": true,
+      "unit_id": "sha256:55fee7631742ddd4607fe39843b4eef9e8422b8567db499aeae30c07bf40eb02"
+    },
+    {
+      "content_sha256": "sha256:707b9d4ae6080227576ba6120305f7cb1e7a275706c4735c61e7e4315a8a71d9",
+      "family": "seating",
+      "row_type": "split",
+      "slice": "retention",
+      "terminal": true,
+      "unit_id": "sha256:707b9d4ae6080227576ba6120305f7cb1e7a275706c4735c61e7e4315a8a71d9"
+    },
+    {
+      "content_sha256": "sha256:13086fc42fbb3a49ffa18257d47414e0918290a913ac573d0f0c520eabcc2a00",
+      "family": "logic_grid",
+      "row_type": "split",
+      "slice": "future_support",
+      "terminal": true,
+      "unit_id": "sha256:13086fc42fbb3a49ffa18257d47414e0918290a913ac573d0f0c520eabcc2a00"
+    },
+    {
+      "feature_hash": "sha256:8f5f6ef9173eae395f2c7bbd85aadf46dd8833860f4c8e88a6430dd05858938e",
+      "feature_keys": [
+        "unit_id",
+        "executable_family",
+        "arity",
+        "relation_type",
+        "interaction_class",
+        "exact_conflict_features",
+        "proof_obligation_type"
+      ],
+      "forbidden_feature_keys": [],
+      "row_type": "graph",
+      "terminal": true,
+      "unit_id": "u1"
+    },
+    {
+      "feature_hash": "sha256:c58a863cfdcc3e8deb44b2ca827f355f8217176ab57f012a5fc04ba4d2e70add",
+      "feature_keys": [
+        "unit_id",
+        "executable_family",
+        "arity",
+        "relation_type",
+        "interaction_class",
+        "exact_conflict_features",
+        "proof_obligation_type"
+      ],
+      "forbidden_feature_keys": [],
+      "row_type": "graph",
+      "terminal": true,
+      "unit_id": "u2"
+    },
+    {
+      "feature_hash": "sha256:3933e203974539df6db056a1d60a56a42d870d8094e2a58223820130a9ec141b",
+      "feature_keys": [
+        "unit_id",
+        "executable_family",
+        "arity",
+        "relation_type",
+        "interaction_class",
+        "exact_conflict_features",
+        "proof_obligation_type"
+      ],
+      "forbidden_feature_keys": [],
+      "row_type": "graph",
+      "terminal": true,
+      "unit_id": "u3"
+    },
+    {
+      "cold_start_used": true,
+      "converged": true,
+      "hand_check": "easy=(1+2)/(1+1+2)=0.75; hard=(1+0)/(1+1+2)=0.25; q_easy=sigmoid(1.5)",
+      "iterations": 2,
+      "max_l1_delta": 0.0,
+      "observations_by_state": {
+        "easy": {
+          "alpha": 1,
+          "beta": 1,
+          "failure": 0,
+          "success": 2
+        },
+        "hard": {
+          "alpha": 1,
+          "beta": 1,
+          "failure": 2,
+          "success": 0
+        }
+      },
+      "posterior_means_by_state": {
+        "easy": 0.75,
+        "hard": 0.25
+      },
+      "restart_hash_matches": true,
+      "rollback_hash_matches": true,
+      "row_type": "potts",
+      "state_probabilities": {
+        "u1": {
+          "easy": 0.8175744761936437,
+          "hard": 0.18242552380635635
+        },
+        "u2": {
+          "easy": 0.8175744761936437,
+          "hard": 0.18242552380635635
+        }
+      },
+      "terminal": true,
+      "unit_id": "potts-beta-binomial-01"
+    },
+    {
+      "arm_name": "frozen_no_memory",
+      "dose_hash": "sha256:5d189fab0d1e1398704f9d11e424700c4bee4eaa2417a9c815406aa00ff1e68a",
+      "row_type": "matched_dose",
+      "same_query_mutation_allowed": false,
+      "terminal": true,
+      "unit_id": "dose-frozen_no_memory"
+    },
+    {
+      "arm_name": "uniform_verified_replay",
+      "dose_hash": "sha256:5d189fab0d1e1398704f9d11e424700c4bee4eaa2417a9c815406aa00ff1e68a",
+      "row_type": "matched_dose",
+      "same_query_mutation_allowed": false,
+      "terminal": true,
+      "unit_id": "dose-uniform_verified_replay"
+    },
+    {
+      "arm_name": "recent_failure",
+      "dose_hash": "sha256:5d189fab0d1e1398704f9d11e424700c4bee4eaa2417a9c815406aa00ff1e68a",
+      "row_type": "matched_dose",
+      "same_query_mutation_allowed": false,
+      "terminal": true,
+      "unit_id": "dose-recent_failure"
+    },
+    {
+      "arm_name": "exact_contextual_bandit",
+      "dose_hash": "sha256:5d189fab0d1e1398704f9d11e424700c4bee4eaa2417a9c815406aa00ff1e68a",
+      "row_type": "matched_dose",
+      "same_query_mutation_allowed": false,
+      "terminal": true,
+      "unit_id": "dose-exact_contextual_bandit"
+    },
+    {
+      "arm_name": "graph_potts",
+      "dose_hash": "sha256:5d189fab0d1e1398704f9d11e424700c4bee4eaa2417a9c815406aa00ff1e68a",
+      "row_type": "matched_dose",
+      "same_query_mutation_allowed": false,
+      "terminal": true,
+      "unit_id": "dose-graph_potts"
+    },
+    {
+      "attack_id": "source_offset_drift",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-source_offset_drift"
+    },
+    {
+      "attack_id": "schema_valid_semantic_invalid",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-schema_valid_semantic_invalid"
+    },
+    {
+      "attack_id": "model_identity_leakage",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-model_identity_leakage"
+    },
+    {
+      "attack_id": "future_label_leakage",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-future_label_leakage"
+    },
+    {
+      "attack_id": "graph_disconnection",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-graph_disconnection"
+    },
+    {
+      "attack_id": "mean_field_nonconvergence",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-mean_field_nonconvergence"
+    },
+    {
+      "attack_id": "unequal_dose",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-unequal_dose"
+    },
+    {
+      "attack_id": "same_query_mutation",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-same_query_mutation"
+    },
+    {
+      "attack_id": "post_outcome_threshold_change",
+      "closed": true,
+      "control": "validated by frozen field, hash, reducer, or conformance row",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-post_outcome_threshold_change"
+    },
+    {
+      "retire_if_same_verdict": true,
+      "row_type": "retirement",
+      "same_verdict": "zero exact semantic coverage gain or unsafe release",
+      "scope": "source_span_proof_obligation_extraction",
+      "terminal": true,
+      "unit_id": "retire-proof-obligation-on-zero-exact-semantic-outcome"
+    },
+    {
+      "retire_if_same_verdict": true,
+      "row_type": "retirement",
+      "same_verdict": "no future support, forgetting, unsafe write, or unequal dose",
+      "scope": "graph_potts_continuous_learning",
+      "terminal": true,
+      "unit_id": "retire-graph-potts-on-future-support-or-dose-failure"
+    }
+  ],
+  "potts_beta_binomial_equations": {
+    "beta_binomial_likelihood": "p(k_s | n_s, theta_s) with theta_s integrated under Beta(alpha_s, beta_s)",
+    "beta_binomial_mean": "(alpha_s + success_s) / (alpha_s + beta_s + n_s)",
+    "clamps": {
+      "max_probability": 0.999999,
+      "min_count": 0,
+      "min_probability": 1e-06
+    },
+    "cold_start_rule": "uniform q_i over states; alpha_s=beta_s=1 before exact observations",
+    "convergence_tolerance_l1": 1e-09,
+    "iteration_cap": 25,
+    "latent_states": [
+      "easy",
+      "hard"
+    ],
+    "online_mean_field_update": "q_i(s) proportional to exp(E_q[-log likelihood_i(s)] + beta * sum_j w_ij q_j(s))",
+    "potts_prior": "P(z) proportional to exp(beta * sum_edges w_ij * 1[z_i=z_j])",
+    "restart_state": {
+      "state": {
+        "alpha_prior": {
+          "easy": 1,
+          "hard": 1
+        },
+        "beta_prior": {
+          "easy": 1,
+          "hard": 1
+        },
+        "q": {
+          "u1": {
+            "easy": 0.5,
+            "hard": 0.5
+          },
+          "u2": {
+            "easy": 0.5,
+            "hard": 0.5
+          }
+        },
+        "states": [
+          "easy",
+          "hard"
+        ]
+      },
+      "state_hash": "sha256:241ead11c80d717feb984fb4e45543bac8a2f01377d290f4bc277d5f869fb65b"
+    },
+    "rollback_state": {
+      "pre_update_hash": "sha256:241ead11c80d717feb984fb4e45543bac8a2f01377d290f4bc277d5f869fb65b",
+      "rollback_on": "nonconvergence_or_invalid_cost"
+    }
+  },
+  "preconditions_checked": {
+    "compiler": {
+      "module_sha256": "sha256:3de05eac75e75af809be15ca65787df7f8efe1ac1fe4a0457afa9a2713b5f514",
+      "name": "carnot_source_span_proof_obligation_compiler",
+      "version": "v6566.20260823"
+    },
+    "corpus": {
+      "drift_fixture": {
+        "path": "results/fixtures/v566_drift_bench_external_slice.jsonl",
+        "sha256": "sha256:a8696e4711998c00d9398351c2f061670e01302ba5106d9ca76fed81c718a932"
+      },
+      "drift_intake": {
+        "path": "results/experiment_6542_drift_bench_external_intake_v2.json",
+        "sha256": "sha256:224bc59523b282be8a7685ad8cea61fc1d2c6a15ce29b5d23c08024026d55dbd"
+      }
+    },
+    "hardware_commands_issued": 0,
+    "installed_compilers": {
+      "gcc": {
+        "command": "gcc --version",
+        "exit_code": 0,
+        "stdout_or_error_sha256": "sha256:9ac1eb1e35bd7163a8d90041af1e736c0f518c10fa432a329b055719a6dc8370",
+        "version_text": "gcc (GCC) 16.1.1 20260625"
+      },
+      "python": {
+        "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "version": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]"
+      },
+      "rustc": {
+        "command": "rustc --version",
+        "exit_code": 0,
+        "stdout_or_error_sha256": "sha256:b15886f14fb2872354429b43233bd943638070ecf99cab7e2c48aaf59df5ac6a",
+        "version_text": "rustc 1.97.1 (8bab26f4f 2026-07-14) (Arch Linux rust 1:1.97.1-1.1)"
+      }
+    },
+    "no_hardware_execution": true,
+    "no_llm_inference": true,
+    "planning_date": "20260823",
+    "protected_file_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/research-reporting/spec.md": "sha256:e2dda7314fe61434f020e698fd2c638446e4e5402fce9e0863bd62a2920d5a03",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:733f3a4285f457288bf61675fe9488f5fc7d8ded411a8e4303379c2b9557767d",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "research-references.md": "sha256:7572a63d9dc4bb2883e0c27f46a1b3655854e6d76dfebf6d8aa3f57653c53765",
+      "results/experiment_6542_drift_bench_external_intake_v2.json": "sha256:224bc59523b282be8a7685ad8cea61fc1d2c6a15ce29b5d23c08024026d55dbd",
+      "results/fixtures/v566_drift_bench_external_slice.jsonl": "sha256:a8696e4711998c00d9398351c2f061670e01302ba5106d9ca76fed81c718a932",
+      "scripts/research_conductor.py": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8"
+    },
+    "resources": {
+      "cpu": {
+        "count": 24,
+        "model": "x86_64"
+      },
+      "disk": {
+        "free_bytes": 1085528199168,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot",
+        "total_bytes": 3953289023488
+      },
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": {
+        "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "version": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]"
+      },
+      "ram": {
+        "available_kib": 111912792,
+        "total_kib": 131157332
+      }
+    },
+    "run_date": "20260823",
+    "solver": {
+      "available": true,
+      "module": "z3",
+      "version": "4.16.0.0"
+    }
+  },
+  "proof_obligation_schema_and_compiler_contract": {
+    "compiler_name": "carnot_source_span_proof_obligation_compiler",
+    "compiler_owns_executable_obligation": true,
+    "compiler_version": "v6566.20260823",
+    "counterexamples_required_for_false_claims": true,
+    "full_constraint_ir_generation_allowed": false,
+    "model_can_certify_release": false,
+    "required_claim_fields": [
+      "unit_id",
+      "source_start",
+      "source_end",
+      "source_sha256",
+      "typed_variables",
+      "relation",
+      "compiler_version",
+      "executable_obligation_hash",
+      "exact_result",
+      "counterexample",
+      "abstention",
+      "release_action"
+    ],
+    "schema_validity_is_semantic_validity": false,
+    "schema_version": "carnot.source_span_proof_obligation.v1",
+    "supported_actions": [
+      "release",
+      "reject",
+      "abstain"
+    ],
+    "whitelisted_relations": [
+      "greater_than",
+      "less_than",
+      "equals",
+      "not_equals",
+      "subset_of",
+      "disjoint_from"
+    ]
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "changed_paths": [],
+    "research_conductor_py_unchanged": true,
+    "rows": [
+      {
+        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "path": "AGENTS.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "before_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "path": "CLAUDE.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "path": "CODEX.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:e2dda7314fe61434f020e698fd2c638446e4e5402fce9e0863bd62a2920d5a03",
+        "before_sha256": "sha256:e2dda7314fe61434f020e698fd2c638446e4e5402fce9e0863bd62a2920d5a03",
+        "path": "openspec/capabilities/research-reporting/spec.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:733f3a4285f457288bf61675fe9488f5fc7d8ded411a8e4303379c2b9557767d",
+        "before_sha256": "sha256:733f3a4285f457288bf61675fe9488f5fc7d8ded411a8e4303379c2b9557767d",
+        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "before_sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "path": "research-program.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:7572a63d9dc4bb2883e0c27f46a1b3655854e6d76dfebf6d8aa3f57653c53765",
+        "before_sha256": "sha256:7572a63d9dc4bb2883e0c27f46a1b3655854e6d76dfebf6d8aa3f57653c53765",
+        "path": "research-references.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:224bc59523b282be8a7685ad8cea61fc1d2c6a15ce29b5d23c08024026d55dbd",
+        "before_sha256": "sha256:224bc59523b282be8a7685ad8cea61fc1d2c6a15ce29b5d23c08024026d55dbd",
+        "path": "results/experiment_6542_drift_bench_external_intake_v2.json",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:a8696e4711998c00d9398351c2f061670e01302ba5106d9ca76fed81c718a932",
+        "before_sha256": "sha256:a8696e4711998c00d9398351c2f061670e01302ba5106d9ca76fed81c718a932",
+        "path": "results/fixtures/v566_drift_bench_external_slice.jsonl",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8",
+        "before_sha256": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8",
+        "path": "scripts/research_conductor.py",
+        "unchanged": true
+      }
+    ]
+  },
+  "random_seed": 6566,
+  "reproducibility_checksum": "sha256:4be199707e25399216d44544c9477437532205d98df8a9d8833dd5502fc71c35",
+  "source_method_contract_ready_score": 1.0,
+  "source_review_receipts": [
+    {
+      "arxiv_id": "2608.17941",
+      "arxiv_url": "https://arxiv.org/abs/2608.17941",
+      "available": true,
+      "byte_count": 44745,
+      "checked_at_utc": "runtime",
+      "claim_boundary": "Use exact replay outcomes and executable graph features only; import no policy-training claim.",
+      "content_sha256": "sha256:da2eef399219ff4d0196714b2707186957b242cf3151088cffdd694b6b0c883d",
+      "duration_s": 0.137066,
+      "error": "",
+      "http_status": 200,
+      "imported_method_hook": "Potts prior, Beta-Binomial observations, and online mean-field difficulty updates.",
+      "submitted_or_revised": "submitted 2026-08-18",
+      "title": "Efficient RLVR Scheduling via Graph-Structured Online Difficulty Estimation",
+      "url": "https://arxiv.org/abs/2608.17941"
+    },
+    {
+      "arxiv_id": "2608.18574",
+      "arxiv_url": "https://arxiv.org/abs/2608.18574",
+      "available": true,
+      "byte_count": 42654,
+      "checked_at_utc": "runtime",
+      "claim_boundary": "Keep model weights frozen and require future-support plus retention, not current gain alone.",
+      "content_sha256": "sha256:905a73a0856cf3b1996f95d498f6bb9be00d00cda1beed7e3f338a31bf4483d5",
+      "duration_s": 0.105632,
+      "error": "",
+      "http_status": 200,
+      "imported_method_hook": "Matched-dose replay control, retention, and future-support measurement.",
+      "submitted_or_revised": "submitted 2026-08-19; revised 2026-08-20",
+      "title": "Continual Reasoning Gym: Diagnosing and Harnessing Shared Reasoning in Continual RLVR",
+      "url": "https://arxiv.org/abs/2608.18574"
+    },
+    {
+      "arxiv_id": "2608.20137",
+      "arxiv_url": "https://arxiv.org/abs/2608.20137",
+      "available": true,
+      "byte_count": 39769,
+      "checked_at_utc": "runtime",
+      "claim_boundary": "Use as method-control inspiration only; make no NFR01 or Rocq proof claim.",
+      "content_sha256": "sha256:bd7ff9aec5c0dc1e5babd1060f4b9299bb4c71ebfe74a5f4136288ee5b0ba59a",
+      "duration_s": 0.042743,
+      "error": "",
+      "http_status": 200,
+      "imported_method_hook": "Semantic-preservation, convergence, and charged-cost contract for compiler-owned work.",
+      "submitted_or_revised": "submitted 2026-08-20",
+      "title": "Formal Performance and Compile Time Guarantees for Compiler Optimization Heuristics",
+      "url": "https://arxiv.org/abs/2608.20137"
+    },
+    {
+      "arxiv_id": "2608.13077",
+      "arxiv_url": "https://arxiv.org/abs/2608.13077",
+      "available": true,
+      "byte_count": 43084,
+      "checked_at_utc": "runtime",
+      "claim_boundary": "Do not reproduce Coins and do not revive full generated ConstraintIR.",
+      "content_sha256": "sha256:3e0da58767a74f70c36431e5cbec85589295d21d5bd9f30310f0ea93b53173fa",
+      "duration_s": 0.083241,
+      "error": "",
+      "http_status": 200,
+      "imported_method_hook": "Concrete proof obligations give stronger evidence than surface-form specification validity.",
+      "submitted_or_revised": "submitted 2026-08-13",
+      "title": "How Powerful are LLMs in Generating Formal Program Specifications?",
+      "url": "https://arxiv.org/abs/2608.13077"
+    }
+  ],
+  "status": "complete_source_method_contract_ready",
+  "tests_run": [
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6566_proof_obligation_and_graph_potts_method_contract --date 20260823",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6566_proof_obligation_and_graph_potts_method_contract.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6566_proof_obligation_and_graph_potts_method_contract.py -m pytest tests/python/test_experiment_6566_proof_obligation_and_graph_potts_method_contract.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6566_proof_obligation_and_graph_potts_method_contract.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_6566_proof_obligation_and_graph_potts_method_contract.py tests/python/test_experiment_6566_proof_obligation_and_graph_potts_method_contract.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_6566_proof_obligation_and_graph_potts_method_contract.py tests/python/test_experiment_6566_proof_obligation_and_graph_potts_method_contract.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6566_proof_obligation_and_graph_potts_method_contract.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6566_proof_obligation_and_graph_potts_method_contract --validate",
+      "exit_code": 0
+    },
+    {
+      "command": "manual e2e-plan check: Exp6566 is a preregistered method contract; ops/e2e-test-plan.md has no direct Exp6566 entry",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    }
+  ],
+  "verdict_class": null,
+  "verifier_is_oracle": true
+}
