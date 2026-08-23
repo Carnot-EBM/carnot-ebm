@@ -26855,3 +26855,76 @@ Required artifact fields and principles:
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6650 | `python/carnot/experiment_6524_arc_supervisor_redirect_generalization.py` (live receipt discovery, outcome replay, support contract, blocked/no-firing closure, rollback and attack receipts, CLI writer/validator). | `tests/python/test_experiment_6524_arc_supervisor_redirect_generalization.py` (SCENARIO-6650-1..6). |
+
+### REQ-ARC-WMTE-6660: Shadow-Mode Supervisor Makes Every Run's Counterfactual Readable
+
+Origin: the 2026-08-23 offline replay
+(`docs/research-notes/supervisor-offline-replay-2026-08-23.md`). Three
+supervisor A/Bs produced no readable firing evidence — the first ON arm
+predates the REQ-ARC-WMTE-6640 receipt, and the rest recorded only OFF
+arms. The replay proved the detector would have fired in 25 of 25
+baseline games, but the ARM choice is not replayable offline: the
+per-window eligibility bits (goal bias installed, diversity active,
+transition counts) are never recorded. Shadow mode records them at the
+source, so "run it and see" becomes "read the receipt" for every
+future run, including control arms.
+
+Rules:
+
+1. The policy SHALL instantiate the trajectory supervisor on EVERY
+   run. `CARNOT_ARC_TRAJECTORY_SUPERVISOR=1` selects APPLIED mode
+   (redirects change strategy, as before). Any other value selects
+   SHADOW mode: `observe()` runs identically, and a redirect the
+   supervisor returns is RECORDED, never applied.
+2. In shadow mode no redirect SHALL mutate policy or explorer state.
+   Zero scored-path behavior change is a proven property, not an
+   assertion: a test drives the policy seam through stagnation windows
+   in shadow mode and asserts the explorer's goal bias, diversity
+   flag, and the policy's induction latch are untouched.
+3. The receipt SHALL distinguish applied from would-have unambiguously
+   BY KEY NAME, not only by a mode flag. Applied receipts keep
+   `redirects` / `arm_outcomes` and gain `mode: "applied"`. Shadow
+   receipts carry `mode: "shadow"`, `enabled: false` (nothing was
+   applied — the field keeps its historical meaning for existing
+   consumers), and `would_have_redirects` / `would_have_arm_outcomes`.
+   A reader that aggregates `redirects` therefore CANNOT ingest a
+   counterfactual as a real redirect (the field-names-lie class).
+   Within shadow rows, `resolved_by_levelup` is renamed
+   `levelup_followed_without_redirect` — in shadow it measures the
+   control outcome, not the arm's effect.
+4. Supervision SHALL be fail-open for the scored path, and say so: the
+   observe-and-apply block is wrapped so a raising supervisor cannot
+   alter action selection. The failure is not silent — the receipt
+   carries `observe_errors` with a nonzero count. Direction rationale:
+   the supervisor is diagnostics; the scored run is the deliverable; a
+   diagnostics crash must cost the diagnosis, never the run.
+
+#### SCENARIO-ARC-WMTE-6660-SHADOW-RECORDS-WITHOUT-APPLYING
+
+Given shadow mode and a 400-action stagnant window, the receipt SHALL
+carry one entry in `would_have_redirects` naming the arm, and the
+explorer's goal bias, diversity flag, and the induction latch SHALL be
+byte-for-byte untouched.
+
+#### SCENARIO-ARC-WMTE-6660-APPLIED-MODE-UNCHANGED
+
+Given `CARNOT_ARC_TRAJECTORY_SUPERVISOR=1`, behavior and receipt shape
+SHALL match REQ-ARC-WMTE-6600/6640 exactly, plus `mode: "applied"`.
+
+#### SCENARIO-ARC-WMTE-6660-KEYS-DISAMBIGUATE
+
+Given a shadow receipt, it SHALL contain no `redirects` and no
+`arm_outcomes` key; given an applied receipt, it SHALL contain no
+`would_have_*` key.
+
+#### SCENARIO-ARC-WMTE-6660-RAISING-SUPERVISOR-CANNOT-BREAK-THE-RUN
+
+Given a supervisor whose `observe()` raises on every call, the policy
+seam SHALL complete normally and the receipt SHALL report the error
+count.
+
+## Implementation Status (REQ-ARC-WMTE-6660)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6660 | `python/carnot/agentic/arc_competition_agent.py` (`_make_trajectory_supervisor` always constructs and returns (supervisor, applies); `_maybe_supervise_trajectory` fail-open wrapper + apply gate; `trajectory_supervisor_diagnostics` mode-aware receipt with the shadow key rename). Supervisor internals untouched. | `tests/python/test_arc_trajectory_supervisor.py` (SCENARIO-6660 x4 + superseded 6600-1/6640-6 pins updated; mutations: shadow gate removed -> RED with the applied goal-bias drop caught, key rename removed -> RED, fail-open removed -> RED, env-unset-returns-None restored -> RED). |

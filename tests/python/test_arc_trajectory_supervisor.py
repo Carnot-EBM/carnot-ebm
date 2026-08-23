@@ -43,19 +43,26 @@ def _redirect(arm: str) -> Redirect:
 # --- SCENARIO-ARC-WMTE-6600-1 (default off) ---
 
 
-def test_scenario_6600_1_default_off_no_supervisor(monkeypatch):
-    """SCENARIO-ARC-WMTE-6600-1: env unset -> no supervisor, disabled diagnostics."""
+def test_scenario_6600_1_default_is_shadow_nothing_applies(monkeypatch):
+    """SCENARIO-ARC-WMTE-6600-1 as superseded by REQ-ARC-WMTE-6660 rule 1:
+    the INTENT — env unset applies nothing to the scored path — is
+    unchanged; the mechanics moved from no-supervisor to a shadow instance
+    whose receipt says so unambiguously."""
 
     monkeypatch.delenv("CARNOT_ARC_TRAJECTORY_SUPERVISOR", raising=False)
     policy = E3AgentPolicy("lp85", proposer=object(), target_levels=2, value_head=None)
 
-    assert policy._trajectory_supervisor is None
-    assert policy.trajectory_supervisor_diagnostics() == {"enabled": False}
+    assert policy._trajectory_supervisor is not None
+    assert policy._trajectory_supervisor_applies is False
+    d = policy.trajectory_supervisor_diagnostics()
+    assert d["enabled"] is False
+    assert d["mode"] == "shadow"
 
 
-def test_scenario_6600_1_off_observe_path_is_inert(monkeypatch):
-    """SCENARIO-ARC-WMTE-6600-1: with the supervisor off the routed-path hook
-    is a no-op even when a frame is present."""
+def test_scenario_6600_1_shadow_observe_path_applies_nothing(monkeypatch):
+    """SCENARIO-ARC-WMTE-6600-1 / 6660: with the env unset the routed-path
+    hook OBSERVES but never mutates the policy, even when a frame is
+    present."""
 
     monkeypatch.delenv("CARNOT_ARC_TRAJECTORY_SUPERVISOR", raising=False)
     monkeypatch.setattr(agent, "_level_of", lambda frame: int(frame.levels_completed))
@@ -64,7 +71,8 @@ def test_scenario_6600_1_off_observe_path_is_inert(monkeypatch):
 
     policy._maybe_supervise_trajectory(SimpleNamespace(levels_completed=0))
 
-    assert policy.induced is True  # nothing observed, nothing redirected
+    assert policy.induced is True  # observed in shadow, nothing redirected
+    assert policy.trajectory_supervisor_diagnostics()["actions_observed"] == 1
 
 
 # --- SCENARIO-ARC-WMTE-6600-2 (window, progress resets) ---
@@ -420,12 +428,130 @@ def test_scenario_6640_4_exhausted_stagnation_counted():
 
 
 def test_scenario_6640_6_default_off_no_ledger_keys_leak(monkeypatch):
-    """SCENARIO-ARC-WMTE-6640-6: with the env unset the diagnostics stay
-    EXACTLY {"enabled": False} — the new ledger keys must not leak into the
-    off path, and no supervisor exists to carry them."""
+    """SCENARIO-ARC-WMTE-6640-6 as superseded by REQ-ARC-WMTE-6660: the
+    INTENT — applied-ledger keys must never appear on a run where nothing
+    was applied — is preserved by the shadow key rename. With the env unset
+    the receipt says enabled False, and `redirects` / `arm_outcomes` (the
+    keys REAL outcomes live under) do not exist."""
 
     monkeypatch.delenv("CARNOT_ARC_TRAJECTORY_SUPERVISOR", raising=False)
     policy = E3AgentPolicy("lp85", proposer=object(), target_levels=2, value_head=None)
 
-    assert policy._trajectory_supervisor is None
-    assert policy.trajectory_supervisor_diagnostics() == {"enabled": False}
+    d = policy.trajectory_supervisor_diagnostics()
+    assert d["enabled"] is False
+    assert "redirects" not in d
+    assert "arm_outcomes" not in d
+
+
+# --- REQ-ARC-WMTE-6660 (shadow mode: every run's counterfactual is readable) ---
+
+
+def _shadow_policy(monkeypatch, window: str = "2"):
+    monkeypatch.delenv("CARNOT_ARC_TRAJECTORY_SUPERVISOR", raising=False)
+    monkeypatch.setenv("CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW", window)
+    monkeypatch.setattr(agent, "_level_of", lambda frame: int(frame.levels_completed))
+    return E3AgentPolicy("lp85", proposer=object(), target_levels=2, value_head=None)
+
+
+def test_scenario_6660_shadow_records_without_applying(monkeypatch):
+    """SCENARIO-ARC-WMTE-6660-SHADOW-RECORDS-WITHOUT-APPLYING: a stagnant
+    window in shadow mode lands in would_have_redirects while the explorer
+    and the induction latch stay untouched."""
+
+    policy = _shadow_policy(monkeypatch)
+    policy._next_move_routed([], None)  # bootstrap constructs the explorer
+    policy.induced = True
+    explorer = policy.explorer
+    diversity_before = explorer._hybrid_diversity
+    goal_bias_before = getattr(explorer, "goal_bias", None)
+
+    frame = SimpleNamespace(levels_completed=0)
+    policy._maybe_supervise_trajectory(frame)
+    policy._maybe_supervise_trajectory(frame)  # window=2 -> would-have fire
+
+    # NOTHING applied, whichever arm was chosen: bias identity, diversity
+    # flag and the induction latch are all untouched.
+    assert explorer._hybrid_diversity is diversity_before
+    assert getattr(explorer, "goal_bias", None) is goal_bias_before
+    assert policy.induced is True
+    d = policy.trajectory_supervisor_diagnostics()
+    (row,) = d["would_have_redirects"]
+    assert row["arm"] in (ARM_DROP_GOAL_BIAS, ARM_ALLOW_REINDUCTION, ARM_FORCE_DIVERSITY)
+    assert row["levelup_followed_without_redirect"] is False
+    assert row["actions_to_levelup_without_redirect"] is None
+
+
+def test_scenario_6660_applied_mode_unchanged(monkeypatch):
+    """SCENARIO-ARC-WMTE-6660-APPLIED-MODE-UNCHANGED: env=1 keeps the
+    REQ-6600/6640 shape and behavior, plus mode: applied."""
+
+    monkeypatch.setenv("CARNOT_ARC_TRAJECTORY_SUPERVISOR", "1")
+    monkeypatch.setenv("CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW", "2")
+    monkeypatch.setattr(agent, "_level_of", lambda frame: int(frame.levels_completed))
+    policy = E3AgentPolicy("lp85", proposer=object(), target_levels=2, value_head=None)
+    policy._next_move_routed([], None)
+
+    policy.induced = True
+    frame = SimpleNamespace(levels_completed=0)
+    policy._maybe_supervise_trajectory(frame)
+    policy._maybe_supervise_trajectory(frame)
+
+    d = policy.trajectory_supervisor_diagnostics()
+    assert d["mode"] == "applied"
+    assert d["enabled"] is True
+    (row,) = d["redirects"]
+    # The redirect APPLIED — asserted by the effect of whichever arm fired.
+    if row["arm"] == ARM_DROP_GOAL_BIAS:
+        assert policy.explorer.goal_bias is None
+    elif row["arm"] == ARM_ALLOW_REINDUCTION:
+        assert policy.induced is False
+    else:
+        assert policy.explorer._hybrid_diversity is True
+
+
+def test_scenario_6660_keys_disambiguate(monkeypatch):
+    """SCENARIO-ARC-WMTE-6660-KEYS-DISAMBIGUATE: a reader summing `redirects`
+    can never ingest a shadow counterfactual, by construction."""
+
+    shadow = _shadow_policy(monkeypatch)
+    d_shadow = shadow.trajectory_supervisor_diagnostics()
+    assert "redirects" not in d_shadow
+    assert "arm_outcomes" not in d_shadow
+    assert d_shadow["mode"] == "shadow" and d_shadow["enabled"] is False
+
+    monkeypatch.setenv("CARNOT_ARC_TRAJECTORY_SUPERVISOR", "1")
+    applied = E3AgentPolicy("lp85", proposer=object(), target_levels=2, value_head=None)
+    d_applied = applied.trajectory_supervisor_diagnostics()
+    assert not any(k.startswith("would_have") for k in d_applied)
+    assert d_applied["mode"] == "applied"
+
+
+def test_scenario_6660_raising_supervisor_cannot_break_the_run(monkeypatch):
+    """SCENARIO-ARC-WMTE-6660-RAISING-SUPERVISOR-CANNOT-BREAK-THE-RUN:
+    fail-open for the scored path, visible in the receipt."""
+
+    policy = _shadow_policy(monkeypatch)
+
+    class _Poisoned:
+        window = 2
+
+        def observe(self, snapshot):
+            raise RuntimeError("diagnostics must never cost the run")
+
+        def receipt(self):
+            return {
+                "enabled": True,
+                "window": 2,
+                "actions_observed": 0,
+                "arms_used": [],
+                "redirects": [],
+                "arm_outcomes": {},
+                "stagnations_unredirected": 0,
+            }
+
+    policy._trajectory_supervisor = _Poisoned()
+    frame = SimpleNamespace(levels_completed=0)
+    policy._maybe_supervise_trajectory(frame)  # must not raise
+    policy._maybe_supervise_trajectory(frame)
+
+    assert policy.trajectory_supervisor_diagnostics()["observe_errors"] == 2
