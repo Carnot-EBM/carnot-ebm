@@ -1,0 +1,1222 @@
+{
+  "aggregate_row_recomputation": {
+    "attacks_passed": false,
+    "current_value_positive": false,
+    "dose_passed": false,
+    "duplicate_unit_count": 0,
+    "exact_replay_passed": false,
+    "expected_row_count": 756,
+    "missing_input_block": true,
+    "protected_files_passed": true,
+    "ready_score_from_rows": 0.0,
+    "receipt_authenticity_passed": false,
+    "restart_rollback_persistence_passed": false,
+    "retention_and_support_noninferior": false,
+    "row_closure": false,
+    "row_count": 0,
+    "row_type": "aggregate_row_recomputation",
+    "safe_positive_arm_id": "",
+    "safety_passed": true,
+    "scientific_disposition_from_rows": "missing_live_evidence",
+    "tests_passed": true,
+    "transition_replay_passed": false,
+    "verdict_class_from_rows": "blocked"
+  },
+  "attack_matrix": {
+    "all_attacks_fail_closed": false,
+    "row_hash": "sha256:66d0438682cc024351f438e8db6781cccbd046900eaef04bbdeb466d6e9fc775",
+    "row_type": "attack_matrix",
+    "rows": [
+      {
+        "attack_failed_closed": false,
+        "attack_id": "missing_or_duplicated_rows"
+      },
+      {
+        "attack_failed_closed": true,
+        "attack_id": "aggregate_tampering"
+      },
+      {
+        "attack_failed_closed": true,
+        "attack_id": "query_boundary_leakage"
+      },
+      {
+        "attack_failed_closed": true,
+        "attack_id": "future_access"
+      },
+      {
+        "attack_failed_closed": true,
+        "attack_id": "held_tuning"
+      },
+      {
+        "attack_failed_closed": true,
+        "attack_id": "unequal_dose"
+      },
+      {
+        "attack_failed_closed": true,
+        "attack_id": "model_aliases"
+      },
+      {
+        "attack_failed_closed": false,
+        "attack_id": "zero_headroom_wins"
+      },
+      {
+        "attack_failed_closed": true,
+        "attack_id": "all_null_cells"
+      },
+      {
+        "attack_failed_closed": true,
+        "attack_id": "circular_exact_authority"
+      }
+    ]
+  },
+  "continuous_self_learning_audited_ready_score": 0.0,
+  "dose_and_coobservation_audit": {
+    "coobservation_arm": "matched_dose_coobservation",
+    "coobservation_rows_present": false,
+    "extra_update_exposure_count": 0,
+    "matched_update_dose": true,
+    "replay_benefit_separated_from_extra_update_exposure": true,
+    "row_hash": "sha256:dc6fddb840a8ce07b9ec607802aba9f20943207f157363ba325f2e0e1e783de7",
+    "row_type": "dose_and_coobservation_audit",
+    "update_dose_by_arm": {
+      "current_only": 0,
+      "frozen": 0,
+      "hysteretic": 0,
+      "matched_dose_coobservation": 0,
+      "one_threshold": 0,
+      "same_query_mutation": 0,
+      "transactional_replay": 0
+    }
+  },
+  "duration_s": 41.04879,
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "principle": "The audit verdict must derive only from independent rows.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "attack_matrix": {
+      "principle": "Receipt, leakage, dose, row, headroom, and circularity attacks stress the full claim.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "continuous_self_learning_audited_ready_score": {
+      "principle": "A binary audit score defines whether the prospective result may enter the capstone.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "dose_and_coobservation_audit": {
+      "principle": "A replay benefit cannot be credited to more update exposure.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "duration_s": {
+      "principle": "Monotonic time exposes an audit that skipped receipt or replay work.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Each disposition field must point to immutable rows, receipts, and reducers.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "gate_check_summary": {
+      "principle": "A blocked audit must list each missing or failed check and observed value.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The verdict must state receipt, safety, retention, support, and scientific disposition with a terminal prefix.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "independent_current_effect_rows": {
+      "principle": "Immediate claims must be recomputed from matched units and charged costs.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "independent_exact_replay_rows": {
+      "principle": "Z3 replay must confirm every credited current, retained, and future outcome.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "independent_live_receipt_audit_rows": {
+      "principle": "Fresh receipt checks prevent cached or legacy execution from posing as flagship inference.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "independent_retention_and_support_rows": {
+      "principle": "The audit must expose any older-family or future-support regression.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "independent_transition_replay_rows": {
+      "principle": "Memory effects are eligible only when every state hash and witness recomputes.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "The audit replays stored receipts and exact checks; it does not claim new GGUF generation.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "input_existence_and_hash_receipts": {
+      "principle": "The audit must identify the exact artifact, raw receipts, journals, and checkpoints it used.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "missing_input_disposition": {
+      "principle": "Missing live evidence must close blocked rather than produce a scientific null.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "per_unit_rows": {
+      "principle": "Every independent comparative conclusion needs unit-level recomputation rows.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Input and replay checks distinguish a blocked audit from null science.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "The audit must not repair upstream evidence or mutate protected files.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "random_seed": {
+      "principle": "A fixed audit sample and attack order make the audit reproducible.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A final hash protects the independent determination trail.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "restart_rollback_and_persistence_audit": {
+      "principle": "Reusable learning must reproduce and recover exactly across state boundaries.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "status": {
+      "principle": "An always-run audit needs a terminal state for missing, invalid, null, and positive inputs.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "tests_run": {
+      "principle": "Named tests and E2E commands show independent checks executed.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "unsafe_write_and_use_audit": {
+      "principle": "No aggregate gain can hide one invalid memory action.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "verdict_class": {
+      "principle": "A closed class keeps audit status and scientific status structurally bounded.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "The learned memory policy is not authority; the audit uses separate exact evaluation.",
+      "reducer_code": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+      "row_sources": [
+        "independent_live_receipt_audit_rows",
+        "independent_exact_replay_rows",
+        "independent_transition_replay_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+      },
+      "sources": [
+        "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "openspec/capabilities/continuous-learning/spec.md",
+        "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json"
+      ]
+    }
+  },
+  "gate_check_summary": {
+    "all_gates_passed": false,
+    "failed_checks": [
+      "row_closure",
+      "receipt_authenticity",
+      "exact_replay",
+      "transition_replay",
+      "matched_dose",
+      "retention_support",
+      "restart_rollback",
+      "attacks",
+      "gpu_vram_contract",
+      "all_mandated_models_loaded",
+      "retention_noninferior",
+      "restart_rollback_equal"
+    ],
+    "row_type": "gate_check_summary",
+    "rows": [
+      {
+        "check": "row_closure",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "receipt_authenticity",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "exact_replay",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "transition_replay",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "matched_dose",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "safety",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "retention_support",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "restart_rollback",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "attacks",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "gpu_vram_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "all_mandated_models_loaded",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "retention_noninferior",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "restart_rollback_equal",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      }
+    ]
+  },
+  "honest_verdict": "blocked: receipt, safety, retention, support, and scientific disposition are blocked by missing live evidence: all_mandated_models_loaded,checkpoint_receipts,exp6553_memory_transition_rows,exp6553_per_unit_rows,fresh_local_inference_performed,journal_receipts,raw_model_receipts,upstream:all_mandated_models_loaded,upstream:gpu_vram_contract,upstream:restart_rollback_equal,upstream:retention_noninferior,upstream_verdict_blocked",
+  "independent_current_effect_rows": [],
+  "independent_exact_replay_rows": [],
+  "independent_live_receipt_audit_rows": [],
+  "independent_retention_and_support_rows": [],
+  "independent_transition_replay_rows": [],
+  "inference_substrate": "independent_stored_sota_receipt_and_exact_transition_replay_no_new_llm",
+  "input_existence_and_hash_receipts": {
+    "all_required_inputs_present": false,
+    "checkpoint_receipts": [],
+    "exp6552": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+      "sha256": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da"
+    },
+    "exp6553": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json",
+      "prospective_csl_ready_score": 0.0,
+      "sha256": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+      "status": "blocked_prospective_csl_preconditions",
+      "verdict_class": "blocked"
+    },
+    "expected_row_count": 756,
+    "hash_model_files": true,
+    "journal_receipts": [],
+    "model_file_hash_rows": [
+      {
+        "exists": true,
+        "hash_matches": true,
+        "hash_recomputed": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "observed_gguf_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "recorded_gguf_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+      },
+      {
+        "exists": true,
+        "hash_matches": true,
+        "hash_recomputed": true,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "observed_gguf_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "recorded_gguf_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
+      },
+      {
+        "exists": true,
+        "hash_matches": true,
+        "hash_recomputed": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "observed_gguf_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "recorded_gguf_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35"
+      }
+    ],
+    "observed_per_unit_row_count": 0,
+    "observed_transition_row_count": 0,
+    "raw_receipts": []
+  },
+  "missing_input_disposition": {
+    "blocked_not_null_reason": "missing live evidence",
+    "missing_inputs": [
+      "all_mandated_models_loaded",
+      "checkpoint_receipts",
+      "exp6553_memory_transition_rows",
+      "exp6553_per_unit_rows",
+      "fresh_local_inference_performed",
+      "journal_receipts",
+      "raw_model_receipts",
+      "upstream:all_mandated_models_loaded",
+      "upstream:gpu_vram_contract",
+      "upstream:restart_rollback_equal",
+      "upstream:retention_noninferior",
+      "upstream_verdict_blocked"
+    ],
+    "scientific_null_claim_allowed": false,
+    "terminal_disposition": "blocked"
+  },
+  "per_unit_rows": [],
+  "preconditions_checked": {
+    "checks": {
+      "checkpoint_receipts_present": false,
+      "exp6552_artifact_present": true,
+      "exp6553_artifact_present": true,
+      "journal_receipts_present": false,
+      "model_hashes_match": true,
+      "raw_receipts_present": false,
+      "stored_rows_present": false,
+      "stored_transitions_present": false,
+      "upstream_failed_preconditions_absent": false
+    },
+    "failed_preconditions": [
+      "raw_receipts_present",
+      "checkpoint_receipts_present",
+      "journal_receipts_present",
+      "stored_rows_present",
+      "stored_transitions_present",
+      "upstream_failed_preconditions_absent",
+      "upstream:gpu_vram_contract",
+      "upstream:all_mandated_models_loaded",
+      "upstream:retention_noninferior",
+      "upstream:restart_rollback_equal"
+    ],
+    "host": {
+      "cpu_count": 24,
+      "disk": {
+        "free_bytes": 1086645248000,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot",
+        "total_bytes": 3953289023488,
+        "work_root": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6554_continuous_self_learning_independent_audit",
+        "work_root_writable": true
+      },
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "python_version": "3.12.13",
+      "ram": {
+        "available": true,
+        "mem_available_bytes": 120921952256,
+        "mem_total_bytes": 134305107968
+      },
+      "z3": {
+        "available": true,
+        "version": "4.16.0"
+      }
+    },
+    "input_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json",
+    "protected_file_hashes_before": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+      "research-roadmap.yaml": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
+      "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+      "results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+      "scripts/adversarial_verify.py": "sha256:1e5bce41630003ca8df37bb2af55de196e3fecf6af91dceb6fcbdbd4ebf4ac6b",
+      "scripts/research_conductor.py": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+      "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+      "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+    },
+    "random_seed": 6554,
+    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6554_continuous_self_learning_independent_audit.json",
+    "row_type": "preconditions_checked",
+    "run_date": "20260823",
+    "upstream_failed_checks": [
+      "gpu_vram_contract",
+      "all_mandated_models_loaded",
+      "retention_noninferior",
+      "restart_rollback_equal"
+    ],
+    "work_root": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6554_continuous_self_learning_independent_audit"
+  },
+  "protected_files_unchanged": {
+    "all_protected_files_unchanged": true,
+    "hashes_after": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+      "research-roadmap.yaml": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
+      "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+      "results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+      "scripts/adversarial_verify.py": "sha256:1e5bce41630003ca8df37bb2af55de196e3fecf6af91dceb6fcbdbd4ebf4ac6b",
+      "scripts/research_conductor.py": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+      "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+      "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+    },
+    "hashes_before": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/continuous-learning/spec.md": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+      "research-roadmap.yaml": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
+      "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+      "results/experiment_6553_prospective_sota_continuous_self_learning.json": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+      "scripts/adversarial_verify.py": "sha256:1e5bce41630003ca8df37bb2af55de196e3fecf6af91dceb6fcbdbd4ebf4ac6b",
+      "scripts/research_conductor.py": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+      "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+      "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4"
+    },
+    "rows": [
+      {
+        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "path": "AGENTS.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "before_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "path": "CLAUDE.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "path": "CODEX.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "before_sha256": "sha256:31511cdf09cf375de16df1ca7c000f9c9127cd6e42dc3403b9742388ab72d07b",
+        "path": "openspec/capabilities/continuous-learning/spec.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+        "before_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "before_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "path": "ops/e2e-test-plan.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "before_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "path": "ops/exclusion_manifest.yaml",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "before_sha256": "sha256:e9c29c1a9d17c2ef6a6916234262c98b29687491841bbbc161d372382282a873",
+        "path": "python/carnot/experiment_6554_continuous_self_learning_independent_audit.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
+        "before_sha256": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
+        "path": "research-roadmap.yaml",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "before_sha256": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "path": "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "before_sha256": "sha256:0a0594a8bbd7b2c234868be3a608d105f647a601652777f951459af92d939ca4",
+        "path": "results/experiment_6553_prospective_sota_continuous_self_learning.json",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:1e5bce41630003ca8df37bb2af55de196e3fecf6af91dceb6fcbdbd4ebf4ac6b",
+        "before_sha256": "sha256:1e5bce41630003ca8df37bb2af55de196e3fecf6af91dceb6fcbdbd4ebf4ac6b",
+        "path": "scripts/adversarial_verify.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+        "before_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+        "path": "scripts/research_conductor.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+        "before_sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+        "path": "scripts/verdict_row_consistency_lint.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4",
+        "before_sha256": "sha256:27917d9ba3c86025e643babb18d3003aeb1312adcc6147170691c761ff8da7e4",
+        "path": "tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+        "unchanged": true
+      }
+    ]
+  },
+  "random_seed": 6554,
+  "reproducibility_checksum": "sha256:c1a74dfc934879a1d9768e497f43c6aded5cacd71a3da0b0f03a326c1a1a814d",
+  "restart_rollback_and_persistence_audit": {
+    "capacity_passed": false,
+    "max_reconstructed_state_records": 0,
+    "restart_rollback_passed": false,
+    "restart_rows_checked": 0,
+    "rollback_rows_checked": 0,
+    "row_hash": "sha256:324e6d8676e65e45fd261ac67dd2dd417760599c92c4d30a314dde4daac860ff",
+    "row_type": "restart_rollback_and_persistence_audit"
+  },
+  "status": "blocked_continuous_self_learning_audit_missing_inputs",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6554_continuous_self_learning_independent_audit.py -m pytest tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6554_continuous_self_learning_independent_audit.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6554_continuous_self_learning_independent_audit.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6554_continuous_self_learning_independent_audit.json",
+      "exit_code": 0
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6554_continuous_self_learning_independent_audit --date 20260823",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6554_continuous_self_learning_independent_audit --validate",
+      "exit_code": 0
+    },
+    {
+      "command": "manual e2e-plan check: ops/e2e-test-plan.md stored GGUF receipt and exact replay audit",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    }
+  ],
+  "unsafe_write_and_use_audit": {
+    "diagnostic_same_query_unsafe_use_count": 0,
+    "diagnostic_same_query_unsafe_write_count": 0,
+    "row_hash": "sha256:5e2219697fc6a46fd04d6b91d3c51075595a059261593ff0fb6c691dc5f73554",
+    "row_type": "unsafe_write_and_use_audit",
+    "safe_arm_unsafe_use_count": 0,
+    "safe_arm_unsafe_write_count": 0,
+    "safe_row_count": 0,
+    "same_query_arm_adopted": false
+  },
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}
