@@ -16308,3 +16308,4 @@ code |
 | 2026-08-23 03:58 UTC | GateMate post-receipt changed-state continuity clo | OK | 120 passed, 1 warning in 13.89s |
 | 2026-08-23 04:06 UTC | Independent V564 evidence capstone and next-state  | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-08-23 04:22 UTC | Independent V564 evidence capstone and next-state  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6526_v564_in |
+| 2026-08-23 04:29 UTC | Independent V564 evidence capstone and next-state  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6526_v564_in |
