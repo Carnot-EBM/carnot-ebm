@@ -207,6 +207,125 @@ shallow children and still pass.
   they raise or are unsatisfiable; whether the harness ever called them, and what
   it did when they raised, needs the run logs, not the source.
 
+---
+
+# APPENDED after the guards landed (commit `0c84a3a4fc`)
+
+Sections 1-5 above were written before the guard commit existed and are left
+unedited. This section reviews what shipped.
+
+## 7. Do the guards bite? Ten mutations, ten RED
+
+Each pattern was deleted or narrowed by hand, the suite re-run, and the file
+restored byte-identically (`git diff` empty after each).
+
+| # | mutation | result |
+|---|---|---|
+| M0 | none (baseline) | 13 passed |
+| M1 | delete the nested-clone rule entirely | **RED** (2 failed) |
+| M2 | `.exists()` → `.is_dir()` (worktree slips through) | **RED** |
+| M3 | delete the committed-`results` rule | **RED** (2 failed) |
+| M4 | widen `results` to a substring match | **RED** |
+| M5 | distinct FILE count → total | **RED** |
+| M6 | distinct PREDICATE count → total | **RED** |
+| M7 | fail-closed → exit 0 on an all-excluded sweep | **RED** |
+| M8 | `outside_root` → `live_run` (fail open) | **RED** |
+| M9 | exclusions silently dropped from the report | **RED** |
+| M10 | `--include-non-live` no longer warns | **RED** |
+
+No decorative patterns. This is the strongest part of the work.
+
+`.exists()` rather than `.is_dir()` for `.git` was chosen deliberately and is
+tested by name — it closes MISSED INPUT D (git worktree) before it was raised.
+
+## 8. Fire counts on the real corpus
+
+| invocation | kept | excluded | note |
+|---|---|---|---|
+| default root | 112 | 1139 `nested_repo_clone` | matches independent count (110 live + 2 attempts) |
+| `--roots .` (repo root) | **0** | **971 `committed_results_tree`** | exit 1 |
+| `--roots results/arc_e3` | 27 | 0 | the live files ARE reachable |
+
+The 971 includes the 27 `results/arc_e3/<game>/world_model.py` files. Whether
+that is a false positive depends on the question: those files are git-tracked
+committed evidence, so excluding them from a *live generator* rate is defensible,
+and the tool still scores them when pointed at them directly.
+
+**But the verdict is a property of the invocation, not of the file.** The same
+`results/arc_e3/ar25/world_model.py` is `committed_results_tree` under
+`--roots .` and `live_run` under `--roots results/arc_e3`, because the rule tests
+path parts *below the root*. A guard whose answer depends on the caller's
+argument can be stepped around without touching the guard. Worth knowing; the
+distinct-count guard has no such property.
+
+## 9. MISSED INPUT (post-commit, verified against the shipped code)
+
+**F. The sweep root itself being a clone is not detected.** The ancestor loop
+starts one level *below* the root, so the root's own `.git` is never tested:
+
+```
+find_models([tmp/rootclone])   where tmp/rootclone/.git exists
+  -> kept=1, excluded={}
+```
+
+`--roots ~/.claude/jobs/ad0c053d/tmp/abpin` is caught today only because that
+clone happens to contain a `results/` directory — double coverage by accident,
+not by design. A clone without one sweeps clean.
+
+**G. The unreadable-directory path raises rather than reporting.**
+`classify_path` on a chmod-000 ancestor raises `PermissionError` uncaught.
+In a sweep this is unreachable, because `rglob` silently skips unreadable
+directories first — so the practical failure is not contamination but a silently
+smaller N, with nothing in the output saying files were skipped.
+
+MISSED INPUT A/B from §MISSED INPUT above (`.bak` copies, no `.git`, no
+`results/`) are **caught by the distinct counts, as intended**: a probe with
+`plain/` and `plain.bak/` reports `distinct: 1 file(s) ... of 2 scored`. The
+division of labour between the two guards is right — the path rules cannot see
+this class and the counting rule can. On the real corpus the same mechanism
+surfaces the duplication independently found in §MISSED INPUT A:
+`112 model(s) ... distinct: 93 file(s) / 87 goal predicate(s)`.
+
+## 10. The new branch-count warning is right in substance, wrong in its evidence
+
+The docstring gained (correctly) a warning that branch count is not quality. Two
+problems with how it is evidenced:
+
+1. **The numbers match nothing.** It says "cd82 at 376, vc33 at 356". No model in
+   the corpus has 376 or 356 branches, under either population. The actual maxima
+   are **cd82 435** and **vc33 358**.
+2. **The claim is false for the population the tool now scores.** It says the four
+   highest-branch models transcribe the win grid and that "ranking by branches
+   puts it at the top". In the live population those four rank **21st (cd82, 98),
+   9th (vc33, 150), 64th (ls20, 34) and 8th (sp80, 161)**. The actual top model is
+   sk48 at 212 branches, whose goal predicate is genuine perception —
+   `_get_bottom_info`, `_find_head`, `_find_top_targets`, relational tests like
+   `ty == y + 1` and `E >= max_right`, no memorised grid at all. The cited
+   ranking describes the tree the same commit just excluded.
+
+**The caution itself survives** and should be kept, restated over the live
+population: 8/92 (8.7%) of live-deduplicated models have a broken goal predicate,
+and they skew high — **5 of the top 20 by branch count versus 1 of the bottom 20**.
+So branch count still must not be read as a quality ranking. It is just no longer
+true that the very top of the live ranking is the worst work.
+
+## 11. Verdict
+
+- **Guard 1 (path classification): sound, with two narrow gaps.** All four
+  mutations bite; the worktree case was anticipated and tested. Gaps: the root
+  itself is never tested (F), and the verdict is invocation-relative (§8).
+- **Guard 2 (distinct counts): sound and load-bearing.** It is the only thing that
+  catches the 16.4% duplication inside the live population, which neither path
+  rule can see.
+- **Fail direction: correct where it was designed** (all-excluded exits 1;
+  `outside_root` fails closed; exclusions always named). The undesigned edge is
+  the unreadable directory, where `rglob` shrinks N silently (G).
+- **The reconciled rate: treat any point estimate with suspicion** until the
+  vocabulary is frozen and justified term by term, and until the population is
+  stated. See §3.
+- **The branch-count docstring needs its numbers corrected** and its claim
+  re-scoped to the live population (§10).
+
 ## 6. Cross-references
 
 - `scripts/arc_induction_quality.py` — the scorer reviewed here
