@@ -3145,6 +3145,182 @@ with diagnostics and never leaves a running artifact at the final path.
 |---|---|---|
 | REQ-BENCH-6514 | Planned (`python/carnot/atomic_shard_transaction.py`, `python/carnot/experiment_6514_atomic_shard_artifact_transaction.py`, `results/experiment_6514_atomic_shard_artifact_transaction.json`) | Planned (`tests/python/test_atomic_shard_transaction.py`, `tests/python/test_experiment_6514_atomic_shard_artifact_transaction.py`) |
 
+### REQ-BENCH-6516: Exact Branch Pilot SHALL Be Sealed Before Guidance Claims
+
+Carnot SHALL provide Exp6516 at
+`python/carnot/experiment_6516_exact_branch_pilot_dataset_v3.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6516_exact_branch_pilot_dataset_v3 --date 20260823`
+SHALL write
+`results/experiment_6516_exact_branch_pilot_dataset_v3.json`.
+
+Exp6516 SHALL evaluate the two V564 gates before pilot construction. It SHALL
+read Exp6514 and Exp6515 by direct path and hash. It SHALL record expected and
+observed gate values, artifact hashes, solver versions, CPU, RAM, disk,
+output-space bounds, and protected-file hashes. Both gates SHALL equal `1.0`
+before a complete readiness score can be reported.
+
+Exp6516 SHALL read Exp6504 and Exp6510 by direct immutable path and hash. It
+SHALL not use Exp6506, Exp6507, Exp6508, Exp6509, Exp6510, or Exp6511 as a
+structured dependency. It SHALL record prior failure receipts from the direct
+input artifacts. It SHALL use Exp6510 only as a historical receipt that
+authorizes direct file reads.
+
+Exp6516 SHALL freeze a bounded pilot before replay outcomes exist. The pilot
+SHALL cover at least three procedural constraint families, two difficulty
+scales, multiple seeds, and sealed train, development, and held base lineages.
+It SHALL precommit base lineages, checkpoints, candidate values, equal exact
+budgets, cell floors, and terminal dispositions. Checkpoint and feature
+selection SHALL use only decision-time structural data. It SHALL not use unit
+ID, label, held outcome, future effort, row order, serialization length,
+family label, base label, or post-replay effort as a feature.
+
+For every checkpoint, Exp6516 SHALL enumerate every eligible Boolean value. It
+SHALL replay each value under the same exact budget. Each replay SHALL record
+conflicts, propagations, decisions, restarts, model or proof receipt, timeout,
+censoring, terminal disposition, exact answer equality across exact backends,
+and a stable row hash.
+
+Exp6516 SHALL write content-addressed row shards and a planned-unit journal
+through the Exp6514 transaction helper. Resume SHALL accept only verified
+journal records and verified shard bytes. Finalization SHALL occur only after
+every planned unit has a terminal disposition. The final artifact SHALL be
+written through the Exp6514 atomic finalizer.
+
+Exp6516 SHALL attack row order, serialization length, family labels, base
+labels, outcome-derived effort, duplicate checkpoints, split leakage,
+asymmetric budgets, corrupt resume, and omitted hard rows. A false accept in
+any attack SHALL set `branch_pilot_dataset_ready_score=0.0` and SHALL use
+`verdict_class="disqualified"`.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`upstream_gate_receipts`, `prior_failure_receipts`, `direct_input_receipts`,
+`pilot_commitment`, `checkpoint_contract`, `structural_feature_schema`,
+`branch_counterfactual_rows`, `exact_solver_receipts`, `split_commitment`,
+`shard_manifest`, `planned_and_terminal_unit_counts`,
+`censoring_and_budget_rows`, `leakage_attack_matrix`,
+`branch_pilot_dataset_ready_score`, `gate_check_summary`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. `inference_substrate` SHALL be
+`procedural_exact_branch_replay_with_transactional_shards_no_llm`.
+`verifier_is_oracle` SHALL be true only for exact labels and validity checks.
+`verdict_class` SHALL be `null` for complete data readiness, `partial` for
+bounded usable data below a claim gate, `blocked` for failed preconditions, or
+`disqualified` for leakage or false terminal accounting. It SHALL NOT be
+`positive`.
+
+`branch_pilot_dataset_ready_score` SHALL equal `1.0` only when every admitted
+row has an exact receipt, every planned unit is terminal, cell floors hold,
+splits are sealed, no leakage attack false accepts, protected files remain
+unchanged, and the final transaction verifies.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal pilot dataset state."
+- `honest_verdict`: "The verdict states whether the bounded pilot is ready without claiming learned guidance value."
+- `verdict_class`: "Null means complete data readiness. Partial, blocked, and disqualified preserve limits and failures."
+- `upstream_gate_receipts`: "The two V564 gates are checked by path, hash, expected value, and observed value."
+- `prior_failure_receipts`: "Historical bootstrap and skipped-dataset failures stay visible without reactivating retired roots."
+- `direct_input_receipts`: "Exp6504 and Exp6510 are read as direct immutable inputs with hashes."
+- `pilot_commitment`: "Families, scales, seeds, splits, budgets, floors, and candidate rules are fixed before replay."
+- `checkpoint_contract`: "Checkpoint selection is deterministic and uses only decision-time structural data."
+- `structural_feature_schema`: "Allowed features exclude identity, labels, row order, length, family labels, and future effort."
+- `branch_counterfactual_rows`: "One row per base checkpoint and eligible value records the exact replay result."
+- `exact_solver_receipts`: "Solver receipts expose model, proof, effort, timeout, censoring, and backend equality."
+- `split_commitment`: "Train, development, and held base lineages are sealed and disjoint."
+- `shard_manifest`: "Content-addressed shards, journal records, resume checks, and finalization state are auditable."
+- `planned_and_terminal_unit_counts`: "Planned and terminal counts prevent omitted or duplicate rows."
+- `censoring_and_budget_rows`: "Equal budgets and explicit timeout or censoring rows prevent asymmetric effort."
+- `leakage_attack_matrix`: "Shortcut attacks detect row order, length, family, label, effort, checkpoint, split, budget, resume, and omission leaks."
+- `branch_pilot_dataset_ready_score`: "The score opens only when rows, receipts, splits, floors, attacks, and transaction checks pass."
+- `gate_check_summary`: "Each failed gate records expected and observed values."
+- `per_unit_rows`: "Per-unit rows expose branch rows and audit rows for independent replay."
+- `aggregate_row_recomputation`: "Aggregates are recomputed from rows, not imported totals."
+- `preconditions_checked`: "Preconditions record direct files, gates, solvers, resources, output bounds, and protected hashes."
+- `protected_files_unchanged`: "Historical inputs and the conductor stay byte-identical during the run."
+- `inference_substrate`: "The declaration keeps the pilot on procedural exact replay with no LLM."
+- `verifier_is_oracle`: "Oracle authority is limited to exact labels and validity checks."
+- `field_principles`: "Principles explain why each artifact field exists."
+- `field_provenance`: "Provenance maps fields to specs, direct inputs, solvers, rows, shards, and tests."
+- `random_seed`: "Fixed seeds make pilot selection and attack order reproducible."
+- `duration_s`: "Measured duration supports authenticity checks."
+- `tests_run`: "Command receipts show which verification actually ran."
+- `reproducibility_checksum`: "A content hash detects drift in gates, rows, shards, and decisions."
+
+#### SCENARIO-BENCH-6516-DIRECT-IMMUTABLE: Inputs Are Path-And-Hash Reads
+
+**Given** checked-in Exp6504, Exp6510, Exp6514, and Exp6515 artifacts
+**When** Exp6516 evaluates gates and direct inputs
+**Then** it records each path, hash, expected value, observed value, source
+pointer, and direct-read mode without adding a retired structured dependency.
+
+#### SCENARIO-BENCH-6516-CHECKPOINTS: Checkpoints Are Deterministic
+
+**Given** selected base rows before replay outcomes exist
+**When** Exp6516 freezes checkpoints
+**Then** the selected variable and candidate values derive only from
+decision-time structural features and every feature is declared in the schema.
+
+#### SCENARIO-BENCH-6516-CANDIDATES: Every Eligible Value Is Replayed
+
+**Given** a Boolean checkpoint
+**When** Exp6516 builds branch units
+**Then** both `false` and `true` values are planned and replayed under the
+same exact budget for every selected base row.
+
+#### SCENARIO-BENCH-6516-EXACT-REPLAY: Exact Receipts Own Outcomes
+
+**Given** each forced branch formula
+**When** Exp6516 solves it
+**Then** exhaustive and Z3 backends agree on SAT or UNSAT, terminal model or
+proof receipts are valid, and timeout or censoring is explicit.
+
+#### SCENARIO-BENCH-6516-SPLIT-SEALING: Base Lineages Stay Disjoint
+
+**Given** train, development, and held pilot rows
+**When** Exp6516 recomputes split state
+**Then** no base lineage crosses splits, every planned split/family/scale cell
+meets its floor, and held rows are not repaired after held outcomes are read.
+
+#### SCENARIO-BENCH-6516-BOUNDED-SHARDS: Shards And Censoring Are Complete
+
+**Given** all planned branch units
+**When** Exp6516 writes row shards
+**Then** the shard manifest records verified resume receipts, terminal counts,
+hashes, censoring counts, and no omitted hard row.
+
+#### SCENARIO-BENCH-6516-RESUME-ATOMIC: Finalization Uses Exp6514
+
+**Given** a verified transaction resume state
+**When** Exp6516 finalizes the dataset
+**Then** the final JSON is atomically replaced only after every planned unit is
+terminal and the artifact checksum validates.
+
+#### SCENARIO-BENCH-6516-ATTACKS: Shortcut And Accounting Attacks Fail Closed
+
+**Given** row order, length, family, label, future-effort, duplicate
+checkpoint, split-leakage, asymmetric-budget, corrupt-resume, and
+omitted-hard-row attacks
+**When** Exp6516 evaluates readiness
+**Then** every attack fails closed before
+`branch_pilot_dataset_ready_score` can equal `1.0`.
+
+#### SCENARIO-BENCH-6516-READY: Readiness Is Row-Derived
+
+**Given** all rows, receipts, shards, attacks, protected hashes, and tests
+**When** Exp6516 validates the artifact
+**Then** every required field has a principle and provenance entry, the
+checksum matches, `verdict_class` is `null`, and the terminal verdict starts
+with `complete_` or `blocked_`.
+
+## Implementation Status (REQ-BENCH-6516)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6516 | Planned (`python/carnot/experiment_6516_exact_branch_pilot_dataset_v3.py`, `results/experiment_6516_exact_branch_pilot_dataset_v3.json`) | Planned (`tests/python/test_experiment_6516_exact_branch_pilot_dataset_v3.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
