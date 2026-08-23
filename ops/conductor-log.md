@@ -16295,3 +16295,4 @@ code |
 | 2026-08-22 23:45 UTC | V564 terminal evidence handoff and retired-lineage | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6513_v564_te |
 | 2026-08-22 23:52 UTC | V564 terminal evidence handoff and retired-lineage | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6513_v564_te |
 | 2026-08-23 00:21 UTC | Crash-safe shard journal and atomic artifact final | OK | 97 passed, 1 warning in 8.94s |
+| 2026-08-23 00:40 UTC | Execution-time literature delta for adaptive valid | OK | 99 passed, 1 warning in 9.52s |
