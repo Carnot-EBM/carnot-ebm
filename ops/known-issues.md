@@ -18453,3 +18453,17 @@ blunt sweeps no longer touch servers by design. If orphaned servers accumulate, 
 stop authority rather than widening the sweeps. The operator may also remove the
 2026-08-23 `50-reaper-dryrun-20260823.conf` drop-in once comfortable: the reaper it
 muzzles is now server-exempt in code.
+
+**REFINEMENT to correction 1 (same session, measured).** The two candidates CAN be
+discriminated for supab5 after all. A llama-server decoding continuously measures
+~99% cumulative cpu_time/wall_time (measured live on the identical workload: 1741s
+CPU over 1761s elapsed). The supab5 servers were decoding for ~95% of their lives
+(off arm: llm_wall 3753s of a 3782s cell), so their cumulative ratio was far above
+`gpu_monitor`'s <1% zombie criterion — `gpu_monitor.kill_zombies` could not have
+matched them. `ExperimentTemplate.kill_gpu_zombies`' min-across-GPUs gate fires
+regardless of the victim's own busyness. For supab5 specifically, the template sweep
+stands as the killer; `gpu_monitor` remains a real hazard for MOSTLY-IDLE servers
+(and is now exempt), just not the author of these two kills. One deployment note:
+the conductor is long-lived and holds pre-fix modules in memory until its next
+fresh-exec (`os.execv` at milestone boundaries); fresh experiment subprocesses pick
+the fixed code up immediately.
