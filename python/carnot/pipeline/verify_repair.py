@@ -465,6 +465,10 @@ class VerifyRepairPipeline:
         fr11_factor_cache_shadow_ledger_path: str | os.PathLike[str] | None = None,
         fr11_factor_cache_shadow_checkpoint_path: str | os.PathLike[str] | None = None,
         fr11_factor_cache_shadow_adapter: Any | None = None,
+        production_safety_net_adapter_enabled: bool = False,
+        production_safety_net_adapter_config: Any | None = None,
+        production_safety_net_adapter_ledger_path: str | os.PathLike[str] | None = None,
+        production_safety_net_adapter: Any | None = None,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -546,12 +550,21 @@ class VerifyRepairPipeline:
                 when the factor-cache shadow adapter is explicitly enabled.
             fr11_factor_cache_shadow_adapter: Optional prebuilt factor-cache adapter
                 for tests or controlled deployments.
+            production_safety_net_adapter_enabled: Explicit production Safety-Net
+                opt-in. Default False preserves native VerifyRepairPipeline behavior.
+            production_safety_net_adapter_config: Optional typed Safety-Net config.
+                Disabled configs do not create an adapter or write persistence.
+            production_safety_net_adapter_ledger_path: Optional post-exact JSONL
+                receipt path used only when the Safety-Net adapter is enabled.
+            production_safety_net_adapter: Optional prebuilt adapter for tests or
+                controlled deployments.
 
         Raises:
             ModelLoadError: If model is specified but cannot be loaded.
 
         Spec: REQ-VERIFY-001, REQ-LEARN-003, REQ-LEARN-021-2, REQ-ODAR-2243,
-              REQ-LEARN-5640, REQ-PIPELINE-6479, REQ-LEARN-6479
+              REQ-LEARN-5640, REQ-PIPELINE-6479, REQ-LEARN-6479,
+              REQ-PIPELINE-6549
         """
         self.learning_mode = learning_mode
         self.n_learning_cycles = n_learning_cycles
@@ -669,6 +682,30 @@ class VerifyRepairPipeline:
                     checkpoint_path=checkpoint_path,
                     enabled=True,
                 )
+        if production_safety_net_adapter is not None:
+            self._production_safety_net_adapter = production_safety_net_adapter
+        else:
+            self._production_safety_net_adapter = None
+            safety_net_enabled = bool(production_safety_net_adapter_enabled)
+            if production_safety_net_adapter_config is not None:
+                safety_net_enabled = bool(
+                    getattr(production_safety_net_adapter_config, "enabled", False)
+                )
+            if safety_net_enabled:
+                from carnot.pipeline.production_safety_net_adapter import (
+                    SafetyNetProductionAdapter,
+                    SafetyNetRouterConfig,
+                )
+
+                config = (
+                    production_safety_net_adapter_config
+                    if production_safety_net_adapter_config is not None
+                    else SafetyNetRouterConfig(enabled=True)
+                )
+                self._production_safety_net_adapter = SafetyNetProductionAdapter(
+                    config,
+                    ledger_path=production_safety_net_adapter_ledger_path,
+                )
         self._repair_router = None
         if self.routing_mode == "odar":
             from carnot.pipeline.odar_router import OdarRouter
@@ -761,7 +798,11 @@ class VerifyRepairPipeline:
 
         Spec: REQ-LEARN-021-3
         """
-        for adapter_name in ("_fr11_shadow_adapter", "_fr11_factor_cache_shadow_adapter"):
+        for adapter_name in (
+            "_fr11_shadow_adapter",
+            "_fr11_factor_cache_shadow_adapter",
+            "_production_safety_net_adapter",
+        ):
             adapter = getattr(self, adapter_name, None)
             close = getattr(adapter, "close", None)
             if callable(close):
@@ -1805,7 +1846,11 @@ class VerifyRepairPipeline:
         # by the Rust pipeline (arithmetic + logic). Code/NL extractors
         # remain Python-only, so if the caller needs those, we stay in Python.
         _rust_supported = {"arithmetic", "logic"}
-        _can_use_rust = _USE_RUST_PIPELINE and RustVerifyPipeline is not None
+        _can_use_rust = (
+            _USE_RUST_PIPELINE
+            and RustVerifyPipeline is not None
+            and getattr(self, "_production_safety_net_adapter", None) is None
+        )
         if _can_use_rust:
             effective_domains = {domain} if domain else set(self._domains or [])
             # Only use Rust when we have an explicit domain constraint that
@@ -1843,6 +1888,7 @@ class VerifyRepairPipeline:
                     # Fall through to Python path.
 
         deadline = self._make_deadline()
+        _production_safety_net_decision = None
         try:
             self._check_deadline(deadline)
             constraints = self.extract_constraints(response, domain)
@@ -1949,6 +1995,14 @@ class VerifyRepairPipeline:
                     )
 
             self._check_deadline(deadline)
+            constraints, _production_safety_net_decision = (
+                self._route_production_safety_net_candidates(
+                    question=question,
+                    response=response,
+                    domain=domain,
+                    constraints=constraints,
+                )
+            )
             result = self._evaluate_constraints(constraints)
         except PipelineTimeoutError:
             raise
@@ -1974,6 +2028,10 @@ class VerifyRepairPipeline:
                 question=question,
                 response=response,
                 domain=domain,
+                result=degraded_result,
+            )
+            degraded_result = self._record_production_safety_net_decision(
+                decision=_production_safety_net_decision,
                 result=degraded_result,
             )
             return _with_fst_certificate(degraded_result)
@@ -2141,6 +2199,10 @@ class VerifyRepairPipeline:
                     )
                 )
 
+        result = self._record_production_safety_net_decision(
+            decision=_production_safety_net_decision,
+            result=result,
+        )
         result = self._record_fr11_shadow_decision(
             question=question,
             response=response,
@@ -3060,6 +3122,131 @@ class VerifyRepairPipeline:
             }
         return result
 
+    def _route_production_safety_net_candidates(
+        self,
+        *,
+        question: str,
+        response: str,
+        domain: str | None,
+        constraints: list[ConstraintResult],
+    ) -> tuple[list[ConstraintResult], Any | None]:
+        """Route constraint candidates before native exact evaluation.
+
+        The disabled path never calls this method because no adapter object is
+        constructed. Enabled routing can change order, but a fallback decision
+        returns the original native order.
+
+        Spec: REQ-PIPELINE-6549, SCENARIO-PIPELINE-6549-ENABLED-FALLBACK
+        """
+
+        adapter = getattr(self, "_production_safety_net_adapter", None)
+        if adapter is None:
+            return constraints, None
+        try:
+            from carnot.pipeline.production_safety_net_adapter import (
+                SafetyNetCandidate,
+                SafetyNetRouteRequest,
+            )
+            from carnot.task_runtime_receipts import sha256_json
+
+            candidates: list[SafetyNetCandidate] = []
+            for index, constraint in enumerate(constraints):
+                raw_candidate_id = constraint.metadata.get("candidate_id")
+                candidate_id = (
+                    str(raw_candidate_id)
+                    if raw_candidate_id is not None
+                    else sha256_json(
+                        {
+                            "constraint_type": constraint.constraint_type,
+                            "description": constraint.description,
+                            "index": index,
+                        }
+                    )
+                )
+                candidates.append(
+                    SafetyNetCandidate(
+                        candidate_id=candidate_id,
+                        payload_hash=sha256_json(
+                            {
+                                "constraint_type": constraint.constraint_type,
+                                "description": constraint.description,
+                                "index": index,
+                            }
+                        ),
+                        ordinal=index,
+                    )
+                )
+            request = SafetyNetRouteRequest(
+                request_id=sha256_json(
+                    {
+                        "question": question,
+                        "response": response,
+                        "domain": domain or "auto",
+                    }
+                ),
+                candidates=tuple(candidates),
+                feature_values={
+                    "candidate_depth": len(candidates),
+                    "candidate_count": len(candidates),
+                    "constraint_count": len(constraints),
+                    "turn_index": 0,
+                    "num_entities": 0,
+                },
+                split_name="live",
+            )
+            decision = adapter.route(request)
+            if decision is None or decision.fallback_reason:
+                return constraints, decision
+            by_id = {
+                candidate.candidate_id: constraint
+                for candidate, constraint in zip(candidates, constraints, strict=True)
+            }
+            ordered = [by_id[candidate_id] for candidate_id in decision.chosen_order]
+            return ordered, decision
+        except Exception as exc:
+            logger.debug("Production Safety-Net adapter fell back: %s", exc)
+            return constraints, None
+
+    def _record_production_safety_net_decision(
+        self,
+        *,
+        decision: Any | None,
+        result: VerificationResult,
+    ) -> VerificationResult:
+        """Record enabled adapter telemetry after native exact verification."""
+
+        adapter = getattr(self, "_production_safety_net_adapter", None)
+        if adapter is None or decision is None:
+            return result
+        exact_result = {
+            "verified": bool(result.verified),
+            "energy": float(result.energy),
+            "violation_count": len(result.violations),
+            "mode": result.mode,
+            "skipped": bool(result.skipped),
+            "release_authority": "native_exact_verifier",
+        }
+        try:
+            result.certificate["production_safety_net_adapter"] = adapter.record_exact_result(
+                decision,
+                exact_result,
+            )
+        except Exception as exc:
+            result.certificate["production_safety_net_adapter"] = {
+                "adapter_api_version": "carnot.pipeline.production_safety_net_adapter.v1",
+                "mode": "enabled",
+                "release_authority": "native_exact_verifier",
+                "route": "native_exact_fallback",
+                "abstention": True,
+                "fallback_reason": f"adapter_record_error:{type(exc).__name__}",
+                "exact_result": exact_result,
+                "candidate_preservation": {
+                    "all_candidates_preserved": True,
+                    "deleted_candidate_count": 0,
+                },
+            }
+        return result
+
     def _record_fr11_factor_cache_shadow_decision(
         self,
         *,
@@ -3098,9 +3285,7 @@ class VerifyRepairPipeline:
             )
             decision = adapter.observe(receipt)
             if decision is not None:
-                result.certificate["fr11_factor_cache_shadow_adapter"] = (
-                    decision.to_certificate()
-                )
+                result.certificate["fr11_factor_cache_shadow_adapter"] = decision.to_certificate()
         except Exception as exc:
             result.certificate["fr11_factor_cache_shadow_adapter"] = {
                 "mode": "shadow",

@@ -263,6 +263,7 @@ DETERMINISTIC_VERIFIER_SUBSTRATES = (
     "cached_sota_event_energy_calibration",
     "cached_authentic_sota_rows_cpu_analysis",
     "deterministic_pipeline_integration_no_llm",
+    "production_verify_repair_compact_router_and_exact_fallback_no_llm",
     "sealed_cached_event_evaluation",
     "transactional_exact_conflict_memory_and_cpu_mapping_no_llm",
 )

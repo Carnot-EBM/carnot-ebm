@@ -208,6 +208,30 @@ def test_req_learn_6479_pipeline_integration_substrate_has_floor(
     assert "METHODOLOGY_MISSING" not in _flag_kinds(report)
 
 
+def test_req_pipeline_6549_production_safety_net_substrate_has_floor(
+    tmp_path: Path,
+) -> None:
+    """REQ-PIPELINE-6549: production Safety-Net evaluation is no-LLM verifier work."""
+
+    substrate = "production_verify_repair_compact_router_and_exact_fallback_no_llm"
+    payload = _paired_payload(substrate)
+
+    classification = av._classify_inference_substrate(payload)
+    floor = av.duration_floor_for_artifact(payload)
+    report = _report_for_payload(tmp_path, payload)
+
+    assert classification["kind"] == "no_llm"
+    assert classification["matched_value"] == substrate
+    assert floor == {
+        "substrate": substrate,
+        "min_duration_s": av.DETERMINISTIC_VERIFIER_MIN_DURATION_S,
+        "reason": "deterministic_verifier",
+    }
+    assert "SUBSTRATE_HAS_NO_DURATION_FLOOR" not in _flag_kinds(report)
+    assert "DURATION_TOO_SHORT" not in _flag_kinds(report)
+    assert "METHODOLOGY_MISSING" not in _flag_kinds(report)
+
+
 def test_req_cl_6497_factor_pool_support_stress_substrate_has_floor(
     tmp_path: Path,
 ) -> None:
