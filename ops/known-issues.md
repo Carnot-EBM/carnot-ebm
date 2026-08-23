@@ -18385,6 +18385,16 @@ training entrypoints (the 2026-06-13 incident's fix); servers had none.
 - The 2026-08-23 dry-run drop-in for `preflight_gpu_reap` (ExpandedGPUReaper) did NOT
   stop the kills — that reaper was a second, independent hazard (SIGKILL, no util gate),
   not this killer. It is now also server-exempt.
+- Honest bound on the attribution: no syscall capture ties the two supab5 timestamps to
+  a specific `kill_gpu_zombies()` invocation. The conviction rests on (a) proven
+  capability (live repro, identical signature), (b) timing (both kills inside the
+  conductor's step-end window, each ~20 s before a conductor-side generator launch),
+  and (c) elimination of every other candidate (earlyoom logged no kills; stop
+  authority disarmed with 0 actions; orphan-cleanup kills only python3/pytest by
+  SIGKILL; ExpandedGPUReaper dry-run and SIGKILL-only; run.sh teardowns time-excluded;
+  no sibling-agent activity in the windows). If a kill recurs POST-FIX with the same
+  signature, that would falsify this attribution — re-open the entry and arm an auditd
+  rule on SIGTERM (`a1=0xf`), not SIGINT.
 
 **Fix (REQ-INFRA-079, openspec/capabilities/pipeline/spec.md).** Three sweeps changed:
 1. `scripts/experiment_template.py` fallback: per-GPU utilization attribution via
