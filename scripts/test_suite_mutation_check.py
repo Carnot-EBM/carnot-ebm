@@ -302,6 +302,60 @@ def dirty_tracked() -> dict[str, str]:
     return out
 
 
+def _stash_hidden_paths(max_age_s: float = 15 * 60) -> set[str]:
+    """Repo-relative paths hidden by pre-commit's stash of unstaged changes.
+
+    THE HOLE THIS CLOSES (QA-layer SILENT_NON_FIRING finding, 2026-08-23,
+    reported input: an unresolved unstaged rewrite of
+    output/kanele_synth/post_synth.dcp). pre-commit stashes unstaged changes
+    into a patch file under its cache before running hooks and restores them
+    after. `prune_stale_markers` keys staleness to the WORKING TREE, so during
+    the hook run — the exact moment the gate executes — an unstaged rewrite a
+    marker names looks clean, the marker retires itself, the gate prints OK,
+    and pre-commit then restores the rewrite to a tree with no interlock left.
+    The gate disarmed itself on every commit.
+
+    "Hidden by the stash" is distinguished from "not there" by consulting the
+    NEWEST patch in pre-commit's cache, and only when it is fresh (default 15
+    minutes — hook runs take seconds to a few minutes; patches from restored
+    earlier runs linger in the cache for days and must not count). A path in
+    that patch exists as an unstaged change even though the tree looks clean.
+
+    Fail direction: toward KEEPING a marker (refusing the commit). The
+    residual false-refusal window — a user reverts a marker path and commits
+    within minutes of a run whose newest patch named it, with no new patch
+    created — costs one refusal with remediation text, never a lost rewrite.
+    This function only ever READS the patch; nothing here reverts or restores
+    anything.
+    """
+    home = os.environ.get("PRE_COMMIT_HOME")
+    if not home:
+        xdg = os.environ.get("XDG_CACHE_HOME")
+        base = Path(xdg) if xdg else Path.home() / ".cache"
+        home = str(base / "pre-commit")
+    try:
+        patches = sorted(Path(home).glob("patch*"), key=lambda p: p.stat().st_mtime)
+    except OSError:
+        return set()
+    if not patches:
+        return set()
+    newest = patches[-1]
+    try:
+        if time.time() - newest.stat().st_mtime > max_age_s:
+            return set()
+        text = newest.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return set()
+    hidden: set[str] = set()
+    for line in text.splitlines():
+        # Patch files are git diffs; the b-side of the header names the path.
+        if line.startswith("diff --git a/"):
+            b_side = line.split(" b/", 1)
+            if len(b_side) == 2 and b_side[1]:
+                hidden.add(b_side[1])
+    return hidden
+
+
 def _session_prefix() -> str:
     """The part of an auto run id shared by every command in one shell session.
 
@@ -780,6 +834,12 @@ def prune_stale_markers() -> list[Path]:
     remains the signal.
     """
     still_dirty = dirty_tracked()
+    # A clean-looking tree is NOT proof the damage is gone while pre-commit
+    # has unstaged changes stashed: the stash hides exactly the unstaged
+    # rewrite the marker names, and the restore happens after the hook. A
+    # stash-hidden path counts as dirty for retirement purposes
+    # (2026-08-23 SILENT_NON_FIRING fix; see _stash_hidden_paths).
+    hidden = _stash_hidden_paths()
     blocking: list[Path] = []
     for p in marker_paths():
         try:
@@ -790,7 +850,7 @@ def prune_stale_markers() -> list[Path]:
         if not isinstance(listed, list) or not listed:
             blocking.append(p)
             continue
-        if any(f in still_dirty for f in listed):
+        if any(f in still_dirty or f in hidden for f in listed):
             blocking.append(p)
             continue
         p.unlink(missing_ok=True)
@@ -1033,7 +1093,34 @@ def cmd_gate() -> int:
             "  work than test damage. Reverting those is how this guard destroyed authored work\n"
             "  three times -- check authorship before including them in any git checkout."
         )
+    hidden = _stash_hidden_paths()
+    stash_hidden = sorted(
+        {
+            f
+            for path in blocking
+            for f in _marker_listed_files(path)
+            if f in hidden and f not in dirty_tracked()
+        }
+    )
+    if stash_hidden:
+        print(
+            "\n  NOTE: these marker paths look clean ONLY because pre-commit has stashed the\n"
+            "  unstaged changes for this hook run; the rewrite is unstaged, not gone, and will\n"
+            "  be restored when the hook finishes. Do NOT git checkout them from inside this\n"
+            "  window -- resolve them after the commit attempt returns:"
+        )
+        for f in stash_hidden:
+            print(f"    [stash-hidden]   {f}")
     return 1
+
+
+def _marker_listed_files(path: Path) -> list[str]:
+    """The tracked files a marker names; [] when the marker is unreadable."""
+    try:
+        listed = json.loads(path.read_text()).get("modified_tracked_files", [])
+    except (json.JSONDecodeError, OSError, AttributeError):
+        return []
+    return listed if isinstance(listed, list) else []
 
 
 def main(argv: list[str] | None = None) -> int:

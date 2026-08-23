@@ -13,6 +13,10 @@ backstop. These tests pin the contract:
                                                     don't block)
 
 Spec coverage: CLAUDE.md "Public Documentation Discipline".
+Tests trace to REQ-ARC-WMTE-6042 (the commit-time half of the
+operator-curated defense; REQ-ARC-WMTE-6043 is the runtime guard).
+The rename-source-side tests below are the named regression for the
+2026-08-23 QA-layer SILENT_NON_FIRING finding on this lint.
 """
 
 from __future__ import annotations
@@ -28,9 +32,7 @@ import pytest
 def _load():
     repo_root = Path(__file__).resolve().parents[2]
     module_path = repo_root / "scripts" / "operator_curated_docs_lint.py"
-    spec = importlib.util.spec_from_file_location(
-        "operator_curated_docs_lint", module_path
-    )
+    spec = importlib.util.spec_from_file_location("operator_curated_docs_lint", module_path)
     assert spec is not None and spec.loader is not None
     mod = importlib.util.module_from_spec(spec)
     sys.modules["operator_curated_docs_lint"] = mod
@@ -79,9 +81,7 @@ class TestMatchesOperatorCurated:
         ],
     )
     def test_blog_glob_patterns(self, path: str) -> None:
-        assert _MOD._matches_operator_curated(path), (
-            f"{path} should match docs/blog/**/*.html glob"
-        )
+        assert _MOD._matches_operator_curated(path), f"{path} should match docs/blog/**/*.html glob"
 
     @pytest.mark.parametrize(
         "path",
@@ -163,9 +163,7 @@ class TestMainIntegration:
         assert "README.md" in captured.err
 
     def test_blocks_conductor_tutorial_edit(self, tmp_path: Path) -> None:
-        rc = self._run(
-            tmp_path, "[conductor] auto-doc-update", ["docs/tutorial.md"]
-        )
+        rc = self._run(tmp_path, "[conductor] auto-doc-update", ["docs/tutorial.md"])
         assert rc == 1
 
     def test_blocks_conductor_blog_glob(self, tmp_path: Path) -> None:
@@ -212,9 +210,7 @@ class TestMainIntegration:
     def test_fails_open_on_missing_message_file(self, tmp_path: Path) -> None:
         nonexistent = tmp_path / "does_not_exist.txt"
         with patch.object(_MOD, "_staged_files", return_value=["README.md"]):
-            with patch.object(
-                sys, "argv", ["operator_curated_docs_lint.py", str(nonexistent)]
-            ):
+            with patch.object(sys, "argv", ["operator_curated_docs_lint.py", str(nonexistent)]):
                 rc = _MOD.main()
         assert rc == 0, "missing message file must fail open, not block"
 
@@ -229,8 +225,42 @@ class TestMainIntegration:
         msg_file = tmp_path / "COMMIT_EDITMSG"
         msg_file.write_text("# Please enter the commit message\n#\n[conductor] real subject\n")
         with patch.object(_MOD, "_staged_files", return_value=["README.md"]):
-            with patch.object(
-                sys, "argv", ["operator_curated_docs_lint.py", str(msg_file)]
-            ):
+            with patch.object(sys, "argv", ["operator_curated_docs_lint.py", str(msg_file)]):
                 rc = _MOD.main()
         assert rc == 1, "must find subject past comment lines"
+
+
+# -----------------------------------------------------------------------------
+# Rename source side (QA-layer SILENT_NON_FIRING finding, 2026-08-23)
+# -----------------------------------------------------------------------------
+
+
+class TestRenameSourceSide:
+    """A rename moves a protected doc out from under the guard; the guard
+    must read the SOURCE side of an R-status entry, not only the
+    destination."""
+
+    def test_rename_of_readme_source_side_is_caught(self) -> None:
+        """Named for the reported input: the protected source path
+        `README.md` in the staged rename
+        `R100 README.md docs/archive/project-intro.md`."""
+        paths = _MOD._paths_from_name_status("R100\tREADME.md\tdocs/archive/project-intro.md\n")
+        assert "README.md" in paths
+        assert "docs/archive/project-intro.md" in paths
+        assert any(_MOD._matches_operator_curated(p) for p in paths)
+
+    def test_plain_statuses_still_parse(self) -> None:
+        text = "M\tscripts/foo.py\nA\tdocs/new.md\nD\tops/old.md\n"
+        assert _MOD._paths_from_name_status(text) == [
+            "scripts/foo.py",
+            "docs/new.md",
+            "ops/old.md",
+        ]
+
+    def test_conductor_rename_of_readme_is_blocked_end_to_end(self, tmp_path: Path) -> None:
+        msg_file = tmp_path / "COMMIT_EDITMSG"
+        msg_file.write_text("[conductor] tidy docs\n")
+        staged = _MOD._paths_from_name_status("R100\tREADME.md\tdocs/archive/project-intro.md\n")
+        with patch.object(_MOD, "_staged_files", return_value=staged):
+            with patch.object(sys, "argv", ["operator_curated_docs_lint.py", str(msg_file)]):
+                assert _MOD.main() == 1

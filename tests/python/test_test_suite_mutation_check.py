@@ -85,6 +85,11 @@ def repo(tmp_path, monkeypatch):
     # without this, concurrent workers would collide on one snapshot name and the ambiguity
     # refusal would fire inside unrelated tests.
     monkeypatch.setenv(tsm.RUN_ID_ENV, f"test-{uuid.uuid4().hex[:12]}")
+    # _stash_hidden_paths reads pre-commit's REAL cache by default; on the
+    # operator's box that cache holds fresh patches from live commits, which
+    # would leak nondeterminism into every test here. Point it at an empty
+    # sandbox; the stash-window tests below fill it deliberately.
+    monkeypatch.setenv("PRE_COMMIT_HOME", str(tmp_path / "pre-commit-cache"))
     return r, art
 
 
@@ -1031,3 +1036,76 @@ def test_prune_old_debris_fails_open_when_a_file_cannot_be_removed(tmp_path, mon
     assert n == 1, "the deletable file is still cleaned up"
     assert doomed.exists()
     assert not survivor.exists()
+
+
+# ---------------------------------------------------------------------------
+# The pre-commit stash window (QA-layer SILENT_NON_FIRING finding, 2026-08-23)
+# ---------------------------------------------------------------------------
+
+
+def _arm_marker_and_stash(repo_tuple, tmp_path, monkeypatch, *, patch_age_s=0.0):
+    """Marker names a committed path; the tree is CLEAN for it; a pre-commit
+    patch (the stash) names it. That is the hook-run window exactly."""
+    r, _ = repo_tuple
+    hidden_rel = "output/kanele_synth/post_synth.dcp"
+    target = r / hidden_rel
+    target.parent.mkdir(parents=True)
+    target.write_text("synth checkpoint v1")
+    _git(r, "add", "-A")
+    _git(r, "commit", "-q", "-m", "add synth artifact")
+    tsm.write_pending([hidden_rel], ["pytest", "tests/python"])
+    cache = tmp_path / "pre-commit-cache"
+    cache.mkdir(parents=True, exist_ok=True)
+    patch = cache / "patch1787430000-424242"
+    patch.write_text(
+        f"diff --git a/{hidden_rel} b/{hidden_rel}\n"
+        f"--- a/{hidden_rel}\n"
+        f"+++ b/{hidden_rel}\n"
+        "@@ -1 +1 @@\n"
+        "-synth checkpoint v1\n"
+        "+synth checkpoint REWRITTEN BY A TEST\n"
+    )
+    if patch_age_s:
+        import os as _os
+        import time as _time
+
+        old = _time.time() - patch_age_s
+        _os.utime(patch, (old, old))
+    return hidden_rel
+
+
+def test_unstaged_rewrite_hidden_by_precommit_stash_still_blocks(repo, tmp_path, monkeypatch):
+    """Named for the reported input: an unresolved unstaged test rewrite of
+    output/kanele_synth/post_synth.dcp temporarily hidden while pre-commit
+    runs the gate. The tree looks clean because the stash holds the rewrite;
+    the marker must NOT retire and the gate must refuse."""
+    hidden_rel = _arm_marker_and_stash(repo, tmp_path, monkeypatch)
+    assert hidden_rel not in tsm.dirty_tracked()  # the stash illusion, pinned
+    assert hidden_rel in tsm._stash_hidden_paths()
+    blocking = tsm.prune_stale_markers()
+    assert blocking, "marker must survive the stash window"
+    assert tsm.cmd_gate() == 1
+
+
+def test_stash_hidden_gate_output_warns_against_checkout(repo, tmp_path, monkeypatch, capsys):
+    """The refusal must say the rewrite is stash-hidden, not gone — a git
+    checkout from inside the window is the destroy-authored-work class."""
+    _arm_marker_and_stash(repo, tmp_path, monkeypatch)
+    assert tsm.cmd_gate() == 1
+    out = capsys.readouterr().out
+    assert "stash-hidden" in out
+    assert "output/kanele_synth/post_synth.dcp" in out
+
+
+def test_stale_patch_does_not_wedge_the_gate(repo, tmp_path, monkeypatch):
+    """A patch from a long-finished run must not keep a resolved marker
+    blocking: freshness bounds the fail-closed direction."""
+    _arm_marker_and_stash(repo, tmp_path, monkeypatch, patch_age_s=3600.0)
+    assert tsm._stash_hidden_paths() == set()
+    assert tsm.prune_stale_markers() == []
+    assert tsm.cmd_gate() == 0
+
+
+def test_no_patch_dir_means_no_hidden_paths(repo):
+    """Missing cache dir (fresh machine) is simply 'nothing stashed'."""
+    assert tsm._stash_hidden_paths() == set()

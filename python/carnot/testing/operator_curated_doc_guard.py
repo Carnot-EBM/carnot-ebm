@@ -267,6 +267,14 @@ def _violation_for(path: object, *, allow_relative: bool) -> str | None:
     false-fire. It is accepted deliberately: `dir_fd` is used almost exclusively by tree-walking
     code, whose opens are read-only (and so never reach this function), whereas the CWD-relative
     write is a bug that has actually happened in this repository.
+
+    2026-08-23 refinement (QA-layer SILENT_NON_FIRING finding): the blanket
+    `allow_relative=False` for `os.*` mutation events was itself narrower than its concept.
+    The audit events CARRY the dir_fd, and -1 (the AT_FDCWD default, measured on this build)
+    means the path is CWD-relative after all — so `os.replace(tmp, "README.md")` with
+    destination dir_fd -1 was walking through. The caller now derives `allow_relative` from
+    the event's own dir_fd: default (-1/None) resolves, a real descriptor does not. The
+    rmtree fd-relative walk keeps its protection because its descriptors are real.
     """
     if isinstance(path, bytes):
         try:
@@ -352,13 +360,23 @@ def _audit_hook(event: str, args: tuple) -> None:
     # own events or the guard has an obvious hole: write a temp file, then rename it over the
     # protected path.
     #
-    # allow_relative=False on all of these: they can be fd-relative, and CWD-resolving a bare
-    # name from `shutil.rmtree`'s fd-relative walk is what made this guard false-fire on eight
-    # correctly-sandboxed tests. See _violation_for for the full argument.
+    # allow_relative is decided by the dir_fd the audit event CARRIES, not by a blanket False
+    # (QA-layer SILENT_NON_FIRING finding, 2026-08-23: `os.replace(tmp, "README.md")` with
+    # destination dir_fd -1 — the AT_FDCWD default — is a CWD-relative atomic replacement of
+    # a protected doc, and the blanket False walked it straight through). A default dir_fd
+    # (-1, or None defensively) means the path is process-CWD-relative and MUST be resolved;
+    # a real descriptor (>= 0) means fd-relative, where CWD-resolving a bare name is exactly
+    # the rmtree false-fire documented in _violation_for. shutil.* events carry no dir_fd in
+    # their API at all, so their paths are always process-relative.
     if event in ("os.rename", "os.replace", "shutil.move", "shutil.copyfile", "shutil.copy2"):
         if len(args) < 2:
             return
-        hit = _violation_for(args[1], allow_relative=False)
+        if event.startswith("shutil."):
+            dst_is_cwd_relative = True
+        else:
+            dst_dir_fd = args[3] if len(args) > 3 else -1
+            dst_is_cwd_relative = dst_dir_fd is None or dst_dir_fd == -1
+        hit = _violation_for(args[1], allow_relative=dst_is_cwd_relative)
         if hit is not None:
             _record_and_raise(hit, event.rpartition(".")[2] + " onto")
         return
@@ -366,7 +384,14 @@ def _audit_hook(event: str, args: tuple) -> None:
     if event in ("os.remove", "os.unlink", "os.truncate"):
         if not args:
             return
-        hit = _violation_for(args[0], allow_relative=False)
+        if event == "os.truncate":
+            # No dir_fd in its API; the fd variant arrives as an int and is
+            # filtered by _violation_for's isinstance check.
+            is_cwd_relative = True
+        else:
+            dir_fd = args[1] if len(args) > 1 else -1
+            is_cwd_relative = dir_fd is None or dir_fd == -1
+        hit = _violation_for(args[0], allow_relative=is_cwd_relative)
         if hit is not None:
             _record_and_raise(hit, event.rpartition(".")[2])
 
