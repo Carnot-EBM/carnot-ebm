@@ -8734,6 +8734,18 @@ Coverage.py reports 100% for
 `python/carnot/experiment_6541_v566_direct_source_contract.py`, and no
 uncommitted change remains in `scripts/research_conductor.py`.
 
+### 2026-08-23 Exp6542 Test-Fix Reconciliation
+
+REQ-BENCH-6542 is now marked implemented in OpenSpec for the content-pinned
+DRIFT-Bench external intake. The Exp6542 module/test were formatted and
+validated with focused tests (`5 passed`), scoped Coverage.py at 100% for
+`python/carnot/experiment_6542_drift_bench_external_intake_v2.py` (`576`
+statements, `0` missing), and the adjacent Exp6541/Exp6542/stop-authority/
+conductor set (`96 passed`, `1 warning`). Scoped spec coverage, artifact
+validation, adversarial verification, row consistency lint, and Ruff
+check/format passed. This Exp6542 fix did not edit
+`scripts/research_conductor.py`.
+
 ## 2026-08-23 (outer loop) — Conductor self-sufficiency: the step after detection
 
 Operator directive: prevent the operator-intervention cases from recurring;

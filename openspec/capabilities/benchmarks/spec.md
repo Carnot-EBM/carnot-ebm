@@ -4026,3 +4026,112 @@ attacks must be named with observed values in `gate_check_summary`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-BENCH-6530 | Planned (`python/carnot/experiment_6530_external_constraint_corpus_audit.py`, `results/experiment_6530_external_constraint_corpus_audit.json`) | Planned (`tests/python/test_experiment_6530_external_constraint_corpus_audit.py`) |
+
+### REQ-BENCH-6542: Content-Pinned DRIFT-Bench External Intake V2
+
+Carnot SHALL build Exp6542 as a bounded content-pinned DRIFT-Bench fixture.
+The intake SHALL gate on Exp6541
+`v566_direct_source_ready_score == 1.0`, reuse only DRIFT-Bench commit
+`d24cda4f59a6ee06bafe886f4724899a7ec94f1c`, verify tree and required-file
+hashes before transformation, and write
+`results/experiment_6542_drift_bench_external_intake_v2.json` plus
+`results/fixtures/v566_drift_bench_external_slice.jsonl`.
+
+The fixture SHALL freeze a bounded balanced sample before any replay outcome or
+cost is inspected. It SHALL cover seating, scheduling, and logic-grid domains,
+multiple problem sizes where the source domain has multiple sizes, early and
+late turn positions, and low, medium, and high pre-replay effort strata. Source
+problem IDs SHALL remain immutable, local unit IDs SHALL be separate, and no
+turn from one base problem may cross train, development, or held splits.
+
+The intake SHALL replay each admitted cumulative constraint state through the
+local Z3 checker from the pinned source tree. Each fixture row SHALL record
+source hashes, local IDs, chronological state, exact satisfiability, assignment
+validity, conflict or MUS evidence when available, solver effort, timeout,
+censoring, code hash, and terminal status. The reducer SHALL not import
+upstream SQLite databases, paper aggregates, or cached model results.
+
+The artifact SHALL include exactly these fields: `status`, `honest_verdict`,
+`verdict_class`, `upstream_gate_receipt`,
+`source_revision_and_license_receipt`, `source_tree_and_file_hashes`,
+`upstream_corruption_boundary`, `intake_commitment`,
+`family_turn_and_effort_census`, `source_to_local_identity_rows`,
+`exact_replay_rows`, `solver_receipts`, `split_commitment`, `shard_manifest`,
+`planned_and_terminal_unit_counts`, `fixture_path_and_hash`,
+`leakage_attack_matrix`, `external_constraint_corpus_ready_score`,
+`gate_check_summary`, `per_unit_rows`, `aggregate_row_recomputation`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, and `reproducibility_checksum`.
+
+The artifact SHALL use `verdict_class=null` for a complete data contract,
+`partial` for a bounded usable corpus below the readiness floor, `blocked` for
+a failed gate or direct precondition, and `disqualified` for provenance or
+leakage failure. `honest_verdict` SHALL begin with `complete_`, `partial_`,
+`blocked_`, or `disqualified_`. `inference_substrate` SHALL be
+`content_pinned_drift_intake_and_local_z3_replay_no_llm`.
+`verifier_is_oracle` SHALL be true only for exact labels and assignment
+validity.
+
+#### SCENARIO-BENCH-6542-SOURCE: Source-To-Local Identity Is Hash Bound
+
+**Given** the pinned DRIFT-Bench source tree and Exp6541 gate receipt
+**When** Exp6542 selects fixture rows
+**Then** each row records immutable source IDs, separate local unit IDs,
+source-file hashes, source-turn hashes, and pre-transform tree hashes before
+any local replay label is accepted.
+
+#### SCENARIO-BENCH-6542-CHRONOLOGY: Base-Problem Chronology Is Preserved
+
+**Given** admitted turns from one base problem
+**When** fixture rows are emitted
+**Then** cumulative constraint states remain in source turn order, chronology
+indices increase without gaps inside each base problem, and no base-problem
+turn crosses train, development, or held splits.
+
+#### SCENARIO-BENCH-6542-EXACT: Local Z3 Replay Regenerates Receipts
+
+**Given** a selected source turn with a gold assignment
+**When** Exp6542 calls the pinned `src/z3_checker.py`
+**Then** it records satisfiability, assignment validity, solver effort,
+timeout state, conflict or MUS evidence when available, code hash, and terminal
+status without trusting paper or SQLite result aggregates.
+
+#### SCENARIO-BENCH-6542-SPLIT: Lineage Sealing Prevents Leakage
+
+**Given** train, development, and held fixture partitions
+**When** Exp6542 audits lineage
+**Then** no base problem, source problem, or family alias crosses splits, and
+entity-name or row-order leakage attacks must pass before readiness can open.
+
+#### SCENARIO-BENCH-6542-SHARDS: Planned Units Are Resumable And Atomic
+
+**Given** content-addressed terminal row shards and a transaction journal
+**When** Exp6542 finalizes the JSONL fixture
+**Then** planned and terminal unit counts match, corrupt resume state is
+rejected, all terminal rows round-trip, and the final fixture is atomically
+replaced through the shipped shard transaction helper.
+
+#### SCENARIO-BENCH-6542-CENSORING: Timeouts And Nonterminal Units Are Accounted
+
+**Given** replay rows that timeout, censor, or fail before terminal closure
+**When** Exp6542 recomputes readiness
+**Then** censored rows remain explicit, missing terminal units are named in
+`gate_check_summary`, and `external_constraint_corpus_ready_score` stays `0.0`
+until every planned unit is terminal.
+
+#### SCENARIO-BENCH-6542-ATTACKS: Tampering And Inherited Aggregates Fail Closed
+
+**Given** duplicate turns, chronology gaps, family aliases, source hash
+mismatch, solver-version drift, corrupt resume, missing terminal units, or
+inherited aggregate rows
+**When** Exp6542 evaluates its attack matrix
+**Then** every failed attack records expected and observed values, provenance or
+leakage failures are disqualified, and complete readiness requires all attacks
+to pass.
+
+## Implementation Status (REQ-BENCH-6542)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6542 | Implemented (`python/carnot/experiment_6542_drift_bench_external_intake_v2.py`, `results/experiment_6542_drift_bench_external_intake_v2.json`, `results/fixtures/v566_drift_bench_external_slice.jsonl`) | Implemented (`tests/python/test_experiment_6542_drift_bench_external_intake_v2.py`) |
