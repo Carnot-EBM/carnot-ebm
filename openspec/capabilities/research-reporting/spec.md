@@ -52577,7 +52577,9 @@ or model-cache state.
 
 Exp6528 SHALL verify the DRIFT-Bench repository URL, immutable revision,
 license, data schema, upstream SQLite corruption warning, and the rule that
-all result receipts are regenerated locally. It SHALL call
+all result receipts are regenerated locally. A repository row SHALL keep the
+human repository URL as `stable_url`; it MAY use a first-party repository API
+as `retrieval_url` when the browser page is blocked or script-rendered. It SHALL call
 `cached_sota_pair(gpu_indices=(0, 1))` only as a cache-resolution preflight.
 It SHALL record the exact mandated GGUF hub IDs, resolved quantized filenames,
 file hashes when files exist, and missing entries. It SHALL NOT load or run
