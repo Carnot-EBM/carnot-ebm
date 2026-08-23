@@ -1,0 +1,1405 @@
+{
+  "status": "complete_v567_evidence_eligibility_contract_ready",
+  "honest_verdict": "complete_v567_evidence_eligibility_contract_ready: Exp6542-Exp6547 are clean content-addressed V567 inputs; Exp6541 remains visible and not required",
+  "verdict_class": null,
+  "v566_artifact_eligibility_rows": [
+    {
+      "row_type": "v566_artifact_eligibility",
+      "exp_id": "exp6541",
+      "expected_path": "results/experiment_6541_v566_direct_source_contract.json",
+      "exists": true,
+      "bytes": 59167,
+      "sha256": "sha256:647e7c70ca0a1e6e386ac82161aac538ee9c02722190d7c97d5fb42f5b4fce3e",
+      "status": "complete_v566_direct_source_contract_ready",
+      "honest_verdict": "complete_v566_direct_source_contract_ready: direct DRIFT source, local replay, model cache, split, field, and dependency contracts are implementable",
+      "verdict_class": null,
+      "inference_substrate": "direct_primary_source_cache_and_dependency_preflight_no_llm",
+      "duration_s": 52.540091,
+      "readiness_field": "v566_direct_source_ready_score",
+      "readiness_field_present": true,
+      "readiness_score": 1.0,
+      "stamped_flags": [],
+      "stamped_flag_count": 0,
+      "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6541_v566_direct_source_contract.json",
+      "live_verifier_exit_code": 1,
+      "live_flags": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical",
+          "detail": "duration_s=52.540091 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+        },
+        {
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn",
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+        }
+      ],
+      "live_flag_count": 2,
+      "live_critical_flags": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical",
+          "detail": "duration_s=52.540091 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+        }
+      ],
+      "live_critical_flag_count": 1,
+      "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6541_v566_direct_source_contract.json",
+      "row_consistency_exit_code": 0,
+      "row_consistency_status": "ok",
+      "row_consistency_findings": [],
+      "row_consistency_blocking": false,
+      "duration_classification_open": true,
+      "model_receipt_gap_open": true,
+      "unresolved_reasons": [
+        "DURATION_TOO_SHORT",
+        "model_receipt_gap"
+      ],
+      "independent_checks_resolved": false,
+      "eligible_for_clean_import": false,
+      "disposition": "quarantined_not_imported"
+    },
+    {
+      "row_type": "v566_artifact_eligibility",
+      "exp_id": "exp6542",
+      "expected_path": "results/experiment_6542_drift_bench_external_intake_v2.json",
+      "exists": true,
+      "bytes": 300222,
+      "sha256": "sha256:224bc59523b282be8a7685ad8cea61fc1d2c6a15ce29b5d23c08024026d55dbd",
+      "status": "complete_drift_bench_external_intake_v2",
+      "honest_verdict": "complete_drift_bench_external_intake_v2: source hashes, chronological rows, local Z3 receipts, family-blind splits, shards, attacks, and fixture round-trip pass",
+      "verdict_class": null,
+      "inference_substrate": "content_pinned_drift_intake_and_local_z3_replay_no_llm",
+      "duration_s": 11.85687719238922,
+      "readiness_field": "external_constraint_corpus_ready_score",
+      "readiness_field_present": true,
+      "readiness_score": 1.0,
+      "stamped_flags": [],
+      "stamped_flag_count": 0,
+      "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6542_drift_bench_external_intake_v2.json",
+      "live_verifier_exit_code": 0,
+      "live_flags": [],
+      "live_flag_count": 0,
+      "live_critical_flags": [],
+      "live_critical_flag_count": 0,
+      "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6542_drift_bench_external_intake_v2.json",
+      "row_consistency_exit_code": 0,
+      "row_consistency_status": "ok",
+      "row_consistency_findings": [],
+      "row_consistency_blocking": false,
+      "duration_classification_open": false,
+      "model_receipt_gap_open": false,
+      "unresolved_reasons": [],
+      "independent_checks_resolved": true,
+      "eligible_for_clean_import": true,
+      "disposition": "clean_imported"
+    },
+    {
+      "row_type": "v566_artifact_eligibility",
+      "exp_id": "exp6543",
+      "expected_path": "results/experiment_6543_external_corpus_independent_audit_v2.json",
+      "exists": true,
+      "bytes": 562368,
+      "sha256": "sha256:baee4734c28ace01cf93d745bdd241d98a485143f7f670c9cbf2c8db0101bcf2",
+      "status": "complete_external_corpus_independent_audit_v2",
+      "honest_verdict": "complete_external_corpus_independent_audit_v2: source, fixture, chronology, split, replay, transaction, aggregate, and attack checks pass",
+      "verdict_class": null,
+      "inference_substrate": "independent_source_split_transaction_and_z3_replay_audit_no_llm",
+      "duration_s": 0.7328572236001492,
+      "readiness_field": "external_constraint_corpus_audited_ready_score",
+      "readiness_field_present": true,
+      "readiness_score": 1.0,
+      "stamped_flags": [],
+      "stamped_flag_count": 0,
+      "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6543_external_corpus_independent_audit_v2.json",
+      "live_verifier_exit_code": 0,
+      "live_flags": [],
+      "live_flag_count": 0,
+      "live_critical_flags": [],
+      "live_critical_flag_count": 0,
+      "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6543_external_corpus_independent_audit_v2.json",
+      "row_consistency_exit_code": 0,
+      "row_consistency_status": "ok",
+      "row_consistency_findings": [],
+      "row_consistency_blocking": false,
+      "duration_classification_open": false,
+      "model_receipt_gap_open": false,
+      "unresolved_reasons": [],
+      "independent_checks_resolved": true,
+      "eligible_for_clean_import": true,
+      "disposition": "clean_imported"
+    },
+    {
+      "row_type": "v566_artifact_eligibility",
+      "exp_id": "exp6544",
+      "expected_path": "results/experiment_6544_external_structural_headroom.json",
+      "exists": true,
+      "bytes": 2961206,
+      "sha256": "sha256:317ffcf39894dfabcf346aada8584bae86d4a2c46a10a6d4dbe7a19734f6a8b9",
+      "status": "complete_external_structural_headroom_positive",
+      "honest_verdict": "complete_external_structural_headroom_positive: charged held analytical value is positive beyond native=True and random=True; support_families=logic_grid,scheduling,seating",
+      "verdict_class": "positive",
+      "inference_substrate": "external_drift_exact_solver_structural_controls_no_llm",
+      "duration_s": 0.6532736192457378,
+      "readiness_field": "external_structural_headroom_ready_score",
+      "readiness_field_present": true,
+      "readiness_score": 1.0,
+      "stamped_flags": [],
+      "stamped_flag_count": 0,
+      "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6544_external_structural_headroom.json",
+      "live_verifier_exit_code": 1,
+      "live_flags": [
+        {
+          "kind": "SUBSTRATE_HAS_NO_DURATION_FLOOR",
+          "severity": "warn",
+          "detail": "inference_substrate='external_drift_exact_solver_structural_controls_no_llm' matches no duration-floor recognizer, so duration_s=0.6532736192457378 was NOT checked against any floor. A declaration is an affirmative claim about what ran; an unrecognized one is unverified, not verified. Add a recognizer plus floor for this substrate, or correct the declaration to an existing one."
+        }
+      ],
+      "live_flag_count": 1,
+      "live_critical_flags": [],
+      "live_critical_flag_count": 0,
+      "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6544_external_structural_headroom.json",
+      "row_consistency_exit_code": 0,
+      "row_consistency_status": "ok",
+      "row_consistency_findings": [],
+      "row_consistency_blocking": false,
+      "duration_classification_open": false,
+      "model_receipt_gap_open": false,
+      "unresolved_reasons": [],
+      "independent_checks_resolved": true,
+      "eligible_for_clean_import": true,
+      "disposition": "clean_imported"
+    },
+    {
+      "row_type": "v566_artifact_eligibility",
+      "exp_id": "exp6545",
+      "expected_path": "results/experiment_6545_external_safety_net_router.json",
+      "exists": true,
+      "bytes": 5268357,
+      "sha256": "sha256:7ddff7cccc3bd8d154c7ff33608a781840a511ef32c37d779cb6d3e01ee111c3",
+      "status": "complete_external_safety_net_router_positive",
+      "honest_verdict": "complete_external_safety_net_router_positive: selected held charged linear_compact_router_abstention_exception_exact_fallback beats certified structural control with exact equality, calibrated abstention, immutable train-only exceptions, and reachable native fallback",
+      "verdict_class": "positive",
+      "inference_substrate": "local_compact_router_train_only_exception_table_and_external_exact_fallback_no_llm",
+      "duration_s": 0.19852744787931442,
+      "readiness_field": "external_safety_net_ready_score",
+      "readiness_field_present": true,
+      "readiness_score": 1.0,
+      "stamped_flags": [],
+      "stamped_flag_count": 0,
+      "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6545_external_safety_net_router.json",
+      "live_verifier_exit_code": 0,
+      "live_flags": [],
+      "live_flag_count": 0,
+      "live_critical_flags": [],
+      "live_critical_flag_count": 0,
+      "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6545_external_safety_net_router.json",
+      "row_consistency_exit_code": 0,
+      "row_consistency_status": "ok",
+      "row_consistency_findings": [],
+      "row_consistency_blocking": false,
+      "duration_classification_open": false,
+      "model_receipt_gap_open": false,
+      "unresolved_reasons": [],
+      "independent_checks_resolved": true,
+      "eligible_for_clean_import": true,
+      "disposition": "clean_imported"
+    },
+    {
+      "row_type": "v566_artifact_eligibility",
+      "exp_id": "exp6546",
+      "expected_path": "results/experiment_6546_smt_cost_guard_sota.json",
+      "exists": true,
+      "bytes": 144704,
+      "sha256": "sha256:32fb674333fe330aa6778e4de79187a250f9bc0a11be8cb00e238ce57aba7122",
+      "status": "complete_smt_cost_guard_positive",
+      "honest_verdict": "complete_smt_cost_guard_positive: guarded exact dispatch reduces held charged token or time cost with exact-completion non-inferiority across at least two mandated model families",
+      "verdict_class": "positive",
+      "inference_substrate": "authenticated_local_llama_cpp_sota_gguf_inference_plus_exact_z3_cost_guard",
+      "duration_s": 331.500708,
+      "readiness_field": "smt_cost_guard_ready_score",
+      "readiness_field_present": true,
+      "readiness_score": 1.0,
+      "stamped_flags": [],
+      "stamped_flag_count": 0,
+      "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6546_smt_cost_guard_sota.json",
+      "live_verifier_exit_code": 0,
+      "live_flags": [],
+      "live_flag_count": 0,
+      "live_critical_flags": [],
+      "live_critical_flag_count": 0,
+      "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6546_smt_cost_guard_sota.json",
+      "row_consistency_exit_code": 0,
+      "row_consistency_status": "ok",
+      "row_consistency_findings": [],
+      "row_consistency_blocking": false,
+      "duration_classification_open": false,
+      "model_receipt_gap_open": false,
+      "unresolved_reasons": [],
+      "independent_checks_resolved": true,
+      "eligible_for_clean_import": true,
+      "disposition": "clean_imported"
+    },
+    {
+      "row_type": "v566_artifact_eligibility",
+      "exp_id": "exp6547",
+      "expected_path": "results/experiment_6547_external_transfer_independent_audit.json",
+      "exists": true,
+      "bytes": 1520799,
+      "sha256": "sha256:b1654e3327f65a082dee9a2ec6a48b08f14292d42079780385218cec5673805f",
+      "status": "complete_external_transfer_independent_audit_clean",
+      "honest_verdict": "complete_external_transfer_independent_audit_clean: router=adopted_passed; cost_guard=adopted_passed",
+      "verdict_class": null,
+      "inference_substrate": "independent_external_router_cost_and_exact_replay_audit_no_llm",
+      "duration_s": 0.203001,
+      "readiness_field": "external_transfer_audited_ready_score",
+      "readiness_field_present": true,
+      "readiness_score": 1.0,
+      "stamped_flags": [],
+      "stamped_flag_count": 0,
+      "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6547_external_transfer_independent_audit.json",
+      "live_verifier_exit_code": 0,
+      "live_flags": [],
+      "live_flag_count": 0,
+      "live_critical_flags": [],
+      "live_critical_flag_count": 0,
+      "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6547_external_transfer_independent_audit.json",
+      "row_consistency_exit_code": 0,
+      "row_consistency_status": "ok",
+      "row_consistency_findings": [],
+      "row_consistency_blocking": false,
+      "duration_classification_open": false,
+      "model_receipt_gap_open": false,
+      "unresolved_reasons": [],
+      "independent_checks_resolved": true,
+      "eligible_for_clean_import": true,
+      "disposition": "clean_imported"
+    }
+  ],
+  "exp6541_disposition": {
+    "exp_id": "exp6541",
+    "path": "results/experiment_6541_v566_direct_source_contract.json",
+    "sha256": "sha256:647e7c70ca0a1e6e386ac82161aac538ee9c02722190d7c97d5fb42f5b4fce3e",
+    "reported_readiness_score": 1.0,
+    "disposition": "quarantined_not_imported",
+    "unresolved_reasons": [
+      "DURATION_TOO_SHORT",
+      "model_receipt_gap"
+    ],
+    "live_critical_flags": [
+      {
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical",
+        "detail": "duration_s=52.540091 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+      }
+    ],
+    "model_receipt_gap_open": true,
+    "duration_classification_open": true,
+    "clean_import_dependency": false
+  },
+  "clean_v566_import_ledger": {
+    "expected_clean_exp_ids": [
+      "exp6542",
+      "exp6543",
+      "exp6544",
+      "exp6545",
+      "exp6546",
+      "exp6547"
+    ],
+    "imported_exp_ids": [
+      "exp6542",
+      "exp6543",
+      "exp6544",
+      "exp6545",
+      "exp6546",
+      "exp6547"
+    ],
+    "excluded_exp_ids": [
+      "exp6541"
+    ],
+    "imported_rows": [
+      {
+        "row_type": "v566_artifact_eligibility",
+        "exp_id": "exp6542",
+        "expected_path": "results/experiment_6542_drift_bench_external_intake_v2.json",
+        "exists": true,
+        "bytes": 300222,
+        "sha256": "sha256:224bc59523b282be8a7685ad8cea61fc1d2c6a15ce29b5d23c08024026d55dbd",
+        "status": "complete_drift_bench_external_intake_v2",
+        "honest_verdict": "complete_drift_bench_external_intake_v2: source hashes, chronological rows, local Z3 receipts, family-blind splits, shards, attacks, and fixture round-trip pass",
+        "verdict_class": null,
+        "inference_substrate": "content_pinned_drift_intake_and_local_z3_replay_no_llm",
+        "duration_s": 11.85687719238922,
+        "readiness_field": "external_constraint_corpus_ready_score",
+        "readiness_field_present": true,
+        "readiness_score": 1.0,
+        "stamped_flags": [],
+        "stamped_flag_count": 0,
+        "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6542_drift_bench_external_intake_v2.json",
+        "live_verifier_exit_code": 0,
+        "live_flags": [],
+        "live_flag_count": 0,
+        "live_critical_flags": [],
+        "live_critical_flag_count": 0,
+        "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6542_drift_bench_external_intake_v2.json",
+        "row_consistency_exit_code": 0,
+        "row_consistency_status": "ok",
+        "row_consistency_findings": [],
+        "row_consistency_blocking": false,
+        "duration_classification_open": false,
+        "model_receipt_gap_open": false,
+        "unresolved_reasons": [],
+        "independent_checks_resolved": true,
+        "eligible_for_clean_import": true,
+        "disposition": "clean_imported"
+      },
+      {
+        "row_type": "v566_artifact_eligibility",
+        "exp_id": "exp6543",
+        "expected_path": "results/experiment_6543_external_corpus_independent_audit_v2.json",
+        "exists": true,
+        "bytes": 562368,
+        "sha256": "sha256:baee4734c28ace01cf93d745bdd241d98a485143f7f670c9cbf2c8db0101bcf2",
+        "status": "complete_external_corpus_independent_audit_v2",
+        "honest_verdict": "complete_external_corpus_independent_audit_v2: source, fixture, chronology, split, replay, transaction, aggregate, and attack checks pass",
+        "verdict_class": null,
+        "inference_substrate": "independent_source_split_transaction_and_z3_replay_audit_no_llm",
+        "duration_s": 0.7328572236001492,
+        "readiness_field": "external_constraint_corpus_audited_ready_score",
+        "readiness_field_present": true,
+        "readiness_score": 1.0,
+        "stamped_flags": [],
+        "stamped_flag_count": 0,
+        "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6543_external_corpus_independent_audit_v2.json",
+        "live_verifier_exit_code": 0,
+        "live_flags": [],
+        "live_flag_count": 0,
+        "live_critical_flags": [],
+        "live_critical_flag_count": 0,
+        "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6543_external_corpus_independent_audit_v2.json",
+        "row_consistency_exit_code": 0,
+        "row_consistency_status": "ok",
+        "row_consistency_findings": [],
+        "row_consistency_blocking": false,
+        "duration_classification_open": false,
+        "model_receipt_gap_open": false,
+        "unresolved_reasons": [],
+        "independent_checks_resolved": true,
+        "eligible_for_clean_import": true,
+        "disposition": "clean_imported"
+      },
+      {
+        "row_type": "v566_artifact_eligibility",
+        "exp_id": "exp6544",
+        "expected_path": "results/experiment_6544_external_structural_headroom.json",
+        "exists": true,
+        "bytes": 2961206,
+        "sha256": "sha256:317ffcf39894dfabcf346aada8584bae86d4a2c46a10a6d4dbe7a19734f6a8b9",
+        "status": "complete_external_structural_headroom_positive",
+        "honest_verdict": "complete_external_structural_headroom_positive: charged held analytical value is positive beyond native=True and random=True; support_families=logic_grid,scheduling,seating",
+        "verdict_class": "positive",
+        "inference_substrate": "external_drift_exact_solver_structural_controls_no_llm",
+        "duration_s": 0.6532736192457378,
+        "readiness_field": "external_structural_headroom_ready_score",
+        "readiness_field_present": true,
+        "readiness_score": 1.0,
+        "stamped_flags": [],
+        "stamped_flag_count": 0,
+        "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6544_external_structural_headroom.json",
+        "live_verifier_exit_code": 1,
+        "live_flags": [
+          {
+            "kind": "SUBSTRATE_HAS_NO_DURATION_FLOOR",
+            "severity": "warn",
+            "detail": "inference_substrate='external_drift_exact_solver_structural_controls_no_llm' matches no duration-floor recognizer, so duration_s=0.6532736192457378 was NOT checked against any floor. A declaration is an affirmative claim about what ran; an unrecognized one is unverified, not verified. Add a recognizer plus floor for this substrate, or correct the declaration to an existing one."
+          }
+        ],
+        "live_flag_count": 1,
+        "live_critical_flags": [],
+        "live_critical_flag_count": 0,
+        "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6544_external_structural_headroom.json",
+        "row_consistency_exit_code": 0,
+        "row_consistency_status": "ok",
+        "row_consistency_findings": [],
+        "row_consistency_blocking": false,
+        "duration_classification_open": false,
+        "model_receipt_gap_open": false,
+        "unresolved_reasons": [],
+        "independent_checks_resolved": true,
+        "eligible_for_clean_import": true,
+        "disposition": "clean_imported"
+      },
+      {
+        "row_type": "v566_artifact_eligibility",
+        "exp_id": "exp6545",
+        "expected_path": "results/experiment_6545_external_safety_net_router.json",
+        "exists": true,
+        "bytes": 5268357,
+        "sha256": "sha256:7ddff7cccc3bd8d154c7ff33608a781840a511ef32c37d779cb6d3e01ee111c3",
+        "status": "complete_external_safety_net_router_positive",
+        "honest_verdict": "complete_external_safety_net_router_positive: selected held charged linear_compact_router_abstention_exception_exact_fallback beats certified structural control with exact equality, calibrated abstention, immutable train-only exceptions, and reachable native fallback",
+        "verdict_class": "positive",
+        "inference_substrate": "local_compact_router_train_only_exception_table_and_external_exact_fallback_no_llm",
+        "duration_s": 0.19852744787931442,
+        "readiness_field": "external_safety_net_ready_score",
+        "readiness_field_present": true,
+        "readiness_score": 1.0,
+        "stamped_flags": [],
+        "stamped_flag_count": 0,
+        "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6545_external_safety_net_router.json",
+        "live_verifier_exit_code": 0,
+        "live_flags": [],
+        "live_flag_count": 0,
+        "live_critical_flags": [],
+        "live_critical_flag_count": 0,
+        "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6545_external_safety_net_router.json",
+        "row_consistency_exit_code": 0,
+        "row_consistency_status": "ok",
+        "row_consistency_findings": [],
+        "row_consistency_blocking": false,
+        "duration_classification_open": false,
+        "model_receipt_gap_open": false,
+        "unresolved_reasons": [],
+        "independent_checks_resolved": true,
+        "eligible_for_clean_import": true,
+        "disposition": "clean_imported"
+      },
+      {
+        "row_type": "v566_artifact_eligibility",
+        "exp_id": "exp6546",
+        "expected_path": "results/experiment_6546_smt_cost_guard_sota.json",
+        "exists": true,
+        "bytes": 144704,
+        "sha256": "sha256:32fb674333fe330aa6778e4de79187a250f9bc0a11be8cb00e238ce57aba7122",
+        "status": "complete_smt_cost_guard_positive",
+        "honest_verdict": "complete_smt_cost_guard_positive: guarded exact dispatch reduces held charged token or time cost with exact-completion non-inferiority across at least two mandated model families",
+        "verdict_class": "positive",
+        "inference_substrate": "authenticated_local_llama_cpp_sota_gguf_inference_plus_exact_z3_cost_guard",
+        "duration_s": 331.500708,
+        "readiness_field": "smt_cost_guard_ready_score",
+        "readiness_field_present": true,
+        "readiness_score": 1.0,
+        "stamped_flags": [],
+        "stamped_flag_count": 0,
+        "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6546_smt_cost_guard_sota.json",
+        "live_verifier_exit_code": 0,
+        "live_flags": [],
+        "live_flag_count": 0,
+        "live_critical_flags": [],
+        "live_critical_flag_count": 0,
+        "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6546_smt_cost_guard_sota.json",
+        "row_consistency_exit_code": 0,
+        "row_consistency_status": "ok",
+        "row_consistency_findings": [],
+        "row_consistency_blocking": false,
+        "duration_classification_open": false,
+        "model_receipt_gap_open": false,
+        "unresolved_reasons": [],
+        "independent_checks_resolved": true,
+        "eligible_for_clean_import": true,
+        "disposition": "clean_imported"
+      },
+      {
+        "row_type": "v566_artifact_eligibility",
+        "exp_id": "exp6547",
+        "expected_path": "results/experiment_6547_external_transfer_independent_audit.json",
+        "exists": true,
+        "bytes": 1520799,
+        "sha256": "sha256:b1654e3327f65a082dee9a2ec6a48b08f14292d42079780385218cec5673805f",
+        "status": "complete_external_transfer_independent_audit_clean",
+        "honest_verdict": "complete_external_transfer_independent_audit_clean: router=adopted_passed; cost_guard=adopted_passed",
+        "verdict_class": null,
+        "inference_substrate": "independent_external_router_cost_and_exact_replay_audit_no_llm",
+        "duration_s": 0.203001,
+        "readiness_field": "external_transfer_audited_ready_score",
+        "readiness_field_present": true,
+        "readiness_score": 1.0,
+        "stamped_flags": [],
+        "stamped_flag_count": 0,
+        "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6547_external_transfer_independent_audit.json",
+        "live_verifier_exit_code": 0,
+        "live_flags": [],
+        "live_flag_count": 0,
+        "live_critical_flags": [],
+        "live_critical_flag_count": 0,
+        "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6547_external_transfer_independent_audit.json",
+        "row_consistency_exit_code": 0,
+        "row_consistency_status": "ok",
+        "row_consistency_findings": [],
+        "row_consistency_blocking": false,
+        "duration_classification_open": false,
+        "model_receipt_gap_open": false,
+        "unresolved_reasons": [],
+        "independent_checks_resolved": true,
+        "eligible_for_clean_import": true,
+        "disposition": "clean_imported"
+      }
+    ],
+    "all_expected_clean_imported": true,
+    "ledger_sha256": "sha256:8ee8fa476156bc0a9f7d4d8586009f0f27613f423334d3760b36b4935fc87ea2"
+  },
+  "architecture_freshness_receipt": {
+    "architecture_path": "_bmad/architecture.md",
+    "sha256": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8",
+    "last_reconciled": "2026-07-03",
+    "planning_date": "2026-08-23",
+    "age_days_at_planning": 51,
+    "freshness_threshold_days": 30,
+    "stale_by_age": true,
+    "current_code_path_rows": [
+      {
+        "path": "python/carnot/pipeline/verify_repair.py",
+        "exists": true,
+        "sha256": "sha256:88c79ad334f35d1692d8b3a30d4f2cca955e296237f62a9bde9d2014e81c3f6d"
+      },
+      {
+        "path": "python/carnot/experiment_6547_external_transfer_independent_audit.py",
+        "exists": true,
+        "sha256": "sha256:43fd9fc556a6fbef682363b08cfe270b5c483de15a79b1c4297e5c52ec24715a"
+      },
+      {
+        "path": "scripts/roadmap_schema.py",
+        "exists": true,
+        "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7"
+      },
+      {
+        "path": "research-roadmap.yaml",
+        "exists": true,
+        "sha256": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f"
+      }
+    ],
+    "checked_against_current_code": true,
+    "integration_boundary_must_reconcile_if_changed": true
+  },
+  "v567_gate_contract_rows": [
+    {
+      "row_type": "v567_gate_contract",
+      "task_id": "exp6549-production-safety-net-adapter",
+      "gate_index": 0,
+      "upstream": "exp6548-v567-evidence-eligibility-contract",
+      "artifact_field": "v567_evidence_contract_ready_score",
+      "op": "==",
+      "value": 1.0,
+      "upstream_in_v567": true,
+      "artifact_field_declared_by_upstream": true,
+      "upstream_declared_field_count": 21,
+      "retired_upstream": false,
+      "principle": "Production code may consume V566 evidence only after the additive eligibility and field contract closes."
+    },
+    {
+      "row_type": "v567_gate_contract",
+      "task_id": "exp6550-rust-pyo3-safety-net-parity",
+      "gate_index": 0,
+      "upstream": "exp6549-production-safety-net-adapter",
+      "artifact_field": "production_safety_net_adapter_ready_score",
+      "op": "==",
+      "value": 1.0,
+      "upstream_in_v567": true,
+      "artifact_field_declared_by_upstream": true,
+      "upstream_declared_field_count": 25,
+      "retired_upstream": false,
+      "principle": "A cross-language ABI should freeze only after the default-off Python production contract passes."
+    },
+    {
+      "row_type": "v567_gate_contract",
+      "task_id": "exp6552-hysteretic-reversible-conflict-memory",
+      "gate_index": 0,
+      "upstream": "exp6549-production-safety-net-adapter",
+      "artifact_field": "production_safety_net_adapter_ready_score",
+      "op": "==",
+      "value": 1.0,
+      "upstream_in_v567": true,
+      "artifact_field_declared_by_upstream": true,
+      "upstream_declared_field_count": 25,
+      "retired_upstream": false,
+      "principle": "Reversible memory must attach to a proven default-off adapter with reachable exact fallback."
+    },
+    {
+      "row_type": "v567_gate_contract",
+      "task_id": "exp6553-prospective-sota-continuous-self-learning",
+      "gate_index": 0,
+      "upstream": "exp6552-hysteretic-reversible-conflict-memory",
+      "artifact_field": "reversible_memory_controller_ready_score",
+      "op": "==",
+      "value": 1.0,
+      "upstream_in_v567": true,
+      "artifact_field_declared_by_upstream": true,
+      "upstream_declared_field_count": 26,
+      "retired_upstream": false,
+      "principle": "Prospective learning may start only after reversible state, exact admission, restart, and rollback semantics pass."
+    },
+    {
+      "row_type": "v567_gate_contract",
+      "task_id": "exp6553-prospective-sota-continuous-self-learning",
+      "gate_index": 1,
+      "upstream": "exp6548-v567-evidence-eligibility-contract",
+      "artifact_field": "v566_external_transfer_eligible_score",
+      "op": "==",
+      "value": 1.0,
+      "upstream_in_v567": true,
+      "artifact_field_declared_by_upstream": true,
+      "upstream_declared_field_count": 21,
+      "retired_upstream": false,
+      "principle": "The chronological stream must come from the independently eligible external evidence root."
+    },
+    {
+      "row_type": "v567_gate_contract",
+      "task_id": "exp6555-proof-preserving-constraint-saturation-fixture",
+      "gate_index": 0,
+      "upstream": "exp6548-v567-evidence-eligibility-contract",
+      "artifact_field": "v566_external_transfer_eligible_score",
+      "op": "==",
+      "value": 1.0,
+      "upstream_in_v567": true,
+      "artifact_field_declared_by_upstream": true,
+      "upstream_declared_field_count": 21,
+      "retired_upstream": false,
+      "principle": "Fresh constraint-load variants must derive only from the independently eligible external evidence root."
+    },
+    {
+      "row_type": "v567_gate_contract",
+      "task_id": "exp6556-sota-constraint-saturation-intervention-ab",
+      "gate_index": 0,
+      "upstream": "exp6555-proof-preserving-constraint-saturation-fixture",
+      "artifact_field": "constraint_saturation_fixture_ready_score",
+      "op": "==",
+      "value": 1.0,
+      "upstream_in_v567": true,
+      "artifact_field_declared_by_upstream": true,
+      "upstream_declared_field_count": 26,
+      "retired_upstream": false,
+      "principle": "Model evaluation may start only after proof, checker, split, and fixture closure."
+    }
+  ],
+  "v567_model_and_hardware_contract": {
+    "mandated_model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "headline_model_tasks": [
+      "exp6553-prospective-sota-continuous-self-learning",
+      "exp6556-sota-constraint-saturation-intervention-ab"
+    ],
+    "all_headline_model_tasks_present": true,
+    "gguf_loader_rule": "cached_sota_pair(gpu_indices=(0, 1)) plus llama.cpp",
+    "legacy_models_headline_excluded": true,
+    "model_specs_rule": {
+      "tasks": [
+        "exp6553-prospective-sota-continuous-self-learning",
+        "exp6556-sota-constraint-saturation-intervention-ab"
+      ],
+      "required_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "auto_tokenizer_on_gguf_repo_id_allowed": false
+    },
+    "sample_floor_rule": {
+      "exp6553_min_query_boundaries_per_model": 36,
+      "exp6556_requires_all_three_model_families": true
+    },
+    "arc_no_solve_rule": {
+      "task_id": "exp6558-arc-live-redirect-ledger",
+      "no_game_or_level_solve_claim": true
+    },
+    "gatemate_receipt_rule": {
+      "task_id": "exp6559-gatemate-changed-state-continuity",
+      "requires_receipt_newer_than_exp6525": true,
+      "zero_commands_without_new_receipt": true
+    },
+    "hardware_scope": {
+      "kv260_required": false,
+      "polarfire_required": false,
+      "extropic_or_kona_required": false,
+      "dual_rtx_3090_required_for": [
+        "exp6553-prospective-sota-continuous-self-learning",
+        "exp6556-sota-constraint-saturation-intervention-ab"
+      ]
+    },
+    "retired_scope_isolation": {
+      "retired_upstreams_in_structured_gates": [],
+      "schema_supported_constraintir_reopened": false,
+      "generated_text_verifier_scope_reopened": false
+    }
+  },
+  "v567_evidence_contract_ready_score": 1.0,
+  "v566_external_transfer_eligible_score": 1.0,
+  "per_unit_rows": [
+    {
+      "row_type": "v566_artifact_eligibility",
+      "exp_id": "exp6541",
+      "expected_path": "results/experiment_6541_v566_direct_source_contract.json",
+      "exists": true,
+      "bytes": 59167,
+      "sha256": "sha256:647e7c70ca0a1e6e386ac82161aac538ee9c02722190d7c97d5fb42f5b4fce3e",
+      "status": "complete_v566_direct_source_contract_ready",
+      "honest_verdict": "complete_v566_direct_source_contract_ready: direct DRIFT source, local replay, model cache, split, field, and dependency contracts are implementable",
+      "verdict_class": null,
+      "inference_substrate": "direct_primary_source_cache_and_dependency_preflight_no_llm",
+      "duration_s": 52.540091,
+      "readiness_field": "v566_direct_source_ready_score",
+      "readiness_field_present": true,
+      "readiness_score": 1.0,
+      "stamped_flags": [],
+      "stamped_flag_count": 0,
+      "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6541_v566_direct_source_contract.json",
+      "live_verifier_exit_code": 1,
+      "live_flags": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical",
+          "detail": "duration_s=52.540091 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+        },
+        {
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn",
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+        }
+      ],
+      "live_flag_count": 2,
+      "live_critical_flags": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical",
+          "detail": "duration_s=52.540091 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+        }
+      ],
+      "live_critical_flag_count": 1,
+      "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6541_v566_direct_source_contract.json",
+      "row_consistency_exit_code": 0,
+      "row_consistency_status": "ok",
+      "row_consistency_findings": [],
+      "row_consistency_blocking": false,
+      "duration_classification_open": true,
+      "model_receipt_gap_open": true,
+      "unresolved_reasons": [
+        "DURATION_TOO_SHORT",
+        "model_receipt_gap"
+      ],
+      "independent_checks_resolved": false,
+      "eligible_for_clean_import": false,
+      "disposition": "quarantined_not_imported"
+    },
+    {
+      "row_type": "v566_artifact_eligibility",
+      "exp_id": "exp6542",
+      "expected_path": "results/experiment_6542_drift_bench_external_intake_v2.json",
+      "exists": true,
+      "bytes": 300222,
+      "sha256": "sha256:224bc59523b282be8a7685ad8cea61fc1d2c6a15ce29b5d23c08024026d55dbd",
+      "status": "complete_drift_bench_external_intake_v2",
+      "honest_verdict": "complete_drift_bench_external_intake_v2: source hashes, chronological rows, local Z3 receipts, family-blind splits, shards, attacks, and fixture round-trip pass",
+      "verdict_class": null,
+      "inference_substrate": "content_pinned_drift_intake_and_local_z3_replay_no_llm",
+      "duration_s": 11.85687719238922,
+      "readiness_field": "external_constraint_corpus_ready_score",
+      "readiness_field_present": true,
+      "readiness_score": 1.0,
+      "stamped_flags": [],
+      "stamped_flag_count": 0,
+      "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6542_drift_bench_external_intake_v2.json",
+      "live_verifier_exit_code": 0,
+      "live_flags": [],
+      "live_flag_count": 0,
+      "live_critical_flags": [],
+      "live_critical_flag_count": 0,
+      "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6542_drift_bench_external_intake_v2.json",
+      "row_consistency_exit_code": 0,
+      "row_consistency_status": "ok",
+      "row_consistency_findings": [],
+      "row_consistency_blocking": false,
+      "duration_classification_open": false,
+      "model_receipt_gap_open": false,
+      "unresolved_reasons": [],
+      "independent_checks_resolved": true,
+      "eligible_for_clean_import": true,
+      "disposition": "clean_imported"
+    },
+    {
+      "row_type": "v566_artifact_eligibility",
+      "exp_id": "exp6543",
+      "expected_path": "results/experiment_6543_external_corpus_independent_audit_v2.json",
+      "exists": true,
+      "bytes": 562368,
+      "sha256": "sha256:baee4734c28ace01cf93d745bdd241d98a485143f7f670c9cbf2c8db0101bcf2",
+      "status": "complete_external_corpus_independent_audit_v2",
+      "honest_verdict": "complete_external_corpus_independent_audit_v2: source, fixture, chronology, split, replay, transaction, aggregate, and attack checks pass",
+      "verdict_class": null,
+      "inference_substrate": "independent_source_split_transaction_and_z3_replay_audit_no_llm",
+      "duration_s": 0.7328572236001492,
+      "readiness_field": "external_constraint_corpus_audited_ready_score",
+      "readiness_field_present": true,
+      "readiness_score": 1.0,
+      "stamped_flags": [],
+      "stamped_flag_count": 0,
+      "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6543_external_corpus_independent_audit_v2.json",
+      "live_verifier_exit_code": 0,
+      "live_flags": [],
+      "live_flag_count": 0,
+      "live_critical_flags": [],
+      "live_critical_flag_count": 0,
+      "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6543_external_corpus_independent_audit_v2.json",
+      "row_consistency_exit_code": 0,
+      "row_consistency_status": "ok",
+      "row_consistency_findings": [],
+      "row_consistency_blocking": false,
+      "duration_classification_open": false,
+      "model_receipt_gap_open": false,
+      "unresolved_reasons": [],
+      "independent_checks_resolved": true,
+      "eligible_for_clean_import": true,
+      "disposition": "clean_imported"
+    },
+    {
+      "row_type": "v566_artifact_eligibility",
+      "exp_id": "exp6544",
+      "expected_path": "results/experiment_6544_external_structural_headroom.json",
+      "exists": true,
+      "bytes": 2961206,
+      "sha256": "sha256:317ffcf39894dfabcf346aada8584bae86d4a2c46a10a6d4dbe7a19734f6a8b9",
+      "status": "complete_external_structural_headroom_positive",
+      "honest_verdict": "complete_external_structural_headroom_positive: charged held analytical value is positive beyond native=True and random=True; support_families=logic_grid,scheduling,seating",
+      "verdict_class": "positive",
+      "inference_substrate": "external_drift_exact_solver_structural_controls_no_llm",
+      "duration_s": 0.6532736192457378,
+      "readiness_field": "external_structural_headroom_ready_score",
+      "readiness_field_present": true,
+      "readiness_score": 1.0,
+      "stamped_flags": [],
+      "stamped_flag_count": 0,
+      "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6544_external_structural_headroom.json",
+      "live_verifier_exit_code": 1,
+      "live_flags": [
+        {
+          "kind": "SUBSTRATE_HAS_NO_DURATION_FLOOR",
+          "severity": "warn",
+          "detail": "inference_substrate='external_drift_exact_solver_structural_controls_no_llm' matches no duration-floor recognizer, so duration_s=0.6532736192457378 was NOT checked against any floor. A declaration is an affirmative claim about what ran; an unrecognized one is unverified, not verified. Add a recognizer plus floor for this substrate, or correct the declaration to an existing one."
+        }
+      ],
+      "live_flag_count": 1,
+      "live_critical_flags": [],
+      "live_critical_flag_count": 0,
+      "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6544_external_structural_headroom.json",
+      "row_consistency_exit_code": 0,
+      "row_consistency_status": "ok",
+      "row_consistency_findings": [],
+      "row_consistency_blocking": false,
+      "duration_classification_open": false,
+      "model_receipt_gap_open": false,
+      "unresolved_reasons": [],
+      "independent_checks_resolved": true,
+      "eligible_for_clean_import": true,
+      "disposition": "clean_imported"
+    },
+    {
+      "row_type": "v566_artifact_eligibility",
+      "exp_id": "exp6545",
+      "expected_path": "results/experiment_6545_external_safety_net_router.json",
+      "exists": true,
+      "bytes": 5268357,
+      "sha256": "sha256:7ddff7cccc3bd8d154c7ff33608a781840a511ef32c37d779cb6d3e01ee111c3",
+      "status": "complete_external_safety_net_router_positive",
+      "honest_verdict": "complete_external_safety_net_router_positive: selected held charged linear_compact_router_abstention_exception_exact_fallback beats certified structural control with exact equality, calibrated abstention, immutable train-only exceptions, and reachable native fallback",
+      "verdict_class": "positive",
+      "inference_substrate": "local_compact_router_train_only_exception_table_and_external_exact_fallback_no_llm",
+      "duration_s": 0.19852744787931442,
+      "readiness_field": "external_safety_net_ready_score",
+      "readiness_field_present": true,
+      "readiness_score": 1.0,
+      "stamped_flags": [],
+      "stamped_flag_count": 0,
+      "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6545_external_safety_net_router.json",
+      "live_verifier_exit_code": 0,
+      "live_flags": [],
+      "live_flag_count": 0,
+      "live_critical_flags": [],
+      "live_critical_flag_count": 0,
+      "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6545_external_safety_net_router.json",
+      "row_consistency_exit_code": 0,
+      "row_consistency_status": "ok",
+      "row_consistency_findings": [],
+      "row_consistency_blocking": false,
+      "duration_classification_open": false,
+      "model_receipt_gap_open": false,
+      "unresolved_reasons": [],
+      "independent_checks_resolved": true,
+      "eligible_for_clean_import": true,
+      "disposition": "clean_imported"
+    },
+    {
+      "row_type": "v566_artifact_eligibility",
+      "exp_id": "exp6546",
+      "expected_path": "results/experiment_6546_smt_cost_guard_sota.json",
+      "exists": true,
+      "bytes": 144704,
+      "sha256": "sha256:32fb674333fe330aa6778e4de79187a250f9bc0a11be8cb00e238ce57aba7122",
+      "status": "complete_smt_cost_guard_positive",
+      "honest_verdict": "complete_smt_cost_guard_positive: guarded exact dispatch reduces held charged token or time cost with exact-completion non-inferiority across at least two mandated model families",
+      "verdict_class": "positive",
+      "inference_substrate": "authenticated_local_llama_cpp_sota_gguf_inference_plus_exact_z3_cost_guard",
+      "duration_s": 331.500708,
+      "readiness_field": "smt_cost_guard_ready_score",
+      "readiness_field_present": true,
+      "readiness_score": 1.0,
+      "stamped_flags": [],
+      "stamped_flag_count": 0,
+      "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6546_smt_cost_guard_sota.json",
+      "live_verifier_exit_code": 0,
+      "live_flags": [],
+      "live_flag_count": 0,
+      "live_critical_flags": [],
+      "live_critical_flag_count": 0,
+      "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6546_smt_cost_guard_sota.json",
+      "row_consistency_exit_code": 0,
+      "row_consistency_status": "ok",
+      "row_consistency_findings": [],
+      "row_consistency_blocking": false,
+      "duration_classification_open": false,
+      "model_receipt_gap_open": false,
+      "unresolved_reasons": [],
+      "independent_checks_resolved": true,
+      "eligible_for_clean_import": true,
+      "disposition": "clean_imported"
+    },
+    {
+      "row_type": "v566_artifact_eligibility",
+      "exp_id": "exp6547",
+      "expected_path": "results/experiment_6547_external_transfer_independent_audit.json",
+      "exists": true,
+      "bytes": 1520799,
+      "sha256": "sha256:b1654e3327f65a082dee9a2ec6a48b08f14292d42079780385218cec5673805f",
+      "status": "complete_external_transfer_independent_audit_clean",
+      "honest_verdict": "complete_external_transfer_independent_audit_clean: router=adopted_passed; cost_guard=adopted_passed",
+      "verdict_class": null,
+      "inference_substrate": "independent_external_router_cost_and_exact_replay_audit_no_llm",
+      "duration_s": 0.203001,
+      "readiness_field": "external_transfer_audited_ready_score",
+      "readiness_field_present": true,
+      "readiness_score": 1.0,
+      "stamped_flags": [],
+      "stamped_flag_count": 0,
+      "live_verifier_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6547_external_transfer_independent_audit.json",
+      "live_verifier_exit_code": 0,
+      "live_flags": [],
+      "live_flag_count": 0,
+      "live_critical_flags": [],
+      "live_critical_flag_count": 0,
+      "row_consistency_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6547_external_transfer_independent_audit.json",
+      "row_consistency_exit_code": 0,
+      "row_consistency_status": "ok",
+      "row_consistency_findings": [],
+      "row_consistency_blocking": false,
+      "duration_classification_open": false,
+      "model_receipt_gap_open": false,
+      "unresolved_reasons": [],
+      "independent_checks_resolved": true,
+      "eligible_for_clean_import": true,
+      "disposition": "clean_imported"
+    }
+  ],
+  "gate_check_summary": {
+    "all_gates_passed": true,
+    "failed_checks": [],
+    "failed_check_rows": [],
+    "task_field_gate_contract_closed": true,
+    "acceptance_gates": [
+      {
+        "condition": "Exp6542-Exp6547 are clean imports; Exp6541 is not required for that score.",
+        "passed": true
+      },
+      {
+        "condition": "All V567 structured gates name in-roadmap tasks and exact upstream fields.",
+        "passed": true
+      },
+      {
+        "condition": "Architecture, model, hardware, scope, and protected-file contracts close.",
+        "passed": true
+      }
+    ]
+  },
+  "preconditions_checked": {
+    "git_state": {
+      "head_sha": "5207f87891418185efd74afc9344a7cbedcac64e",
+      "status_short": "M openspec/capabilities/research-reporting/spec.md\n?? python/carnot/experiment_6548_v567_evidence_eligibility_contract.py\n?? results/experiment_6548_v567_evidence_eligibility_contract.json\n?? tests/python/test_experiment_6548_v567_evidence_eligibility_contract.py"
+    },
+    "resources": {
+      "cpu": {
+        "count": 24,
+        "model": "AMD Ryzen AI 9 HX 370 w/ Radeon 890M"
+      },
+      "ram": {
+        "total_kib": 131157332,
+        "available_kib": 115910864
+      },
+      "disk": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot",
+        "total_bytes": 3953289023488,
+        "free_bytes": 1087664336896
+      },
+      "python": {
+        "version": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]",
+        "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
+      },
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43"
+    },
+    "network_status": {
+      "checked": true,
+      "method": "tcp_connect_1.1.1.1_53_timeout_1s",
+      "reachable": true,
+      "error": "",
+      "duration_s": 0.011759
+    },
+    "verifier_versions": {
+      "adversarial_verify.py": {
+        "path": "scripts/adversarial_verify.py",
+        "sha256": "sha256:efda545fc4d584922073ea01656162bfaaebe35e293d698dc5084332fafdd2e4"
+      },
+      "verdict_row_consistency_lint.py": {
+        "path": "scripts/verdict_row_consistency_lint.py",
+        "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+      },
+      "roadmap_schema.py": {
+        "path": "scripts/roadmap_schema.py",
+        "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7"
+      }
+    },
+    "required_artifact_receipts": [
+      {
+        "exp_id": "exp6541",
+        "path": "results/experiment_6541_v566_direct_source_contract.json",
+        "exists": true,
+        "bytes": 59167,
+        "sha256": "sha256:647e7c70ca0a1e6e386ac82161aac538ee9c02722190d7c97d5fb42f5b4fce3e",
+        "readiness_field": "v566_direct_source_ready_score"
+      },
+      {
+        "exp_id": "exp6542",
+        "path": "results/experiment_6542_drift_bench_external_intake_v2.json",
+        "exists": true,
+        "bytes": 300222,
+        "sha256": "sha256:224bc59523b282be8a7685ad8cea61fc1d2c6a15ce29b5d23c08024026d55dbd",
+        "readiness_field": "external_constraint_corpus_ready_score"
+      },
+      {
+        "exp_id": "exp6543",
+        "path": "results/experiment_6543_external_corpus_independent_audit_v2.json",
+        "exists": true,
+        "bytes": 562368,
+        "sha256": "sha256:baee4734c28ace01cf93d745bdd241d98a485143f7f670c9cbf2c8db0101bcf2",
+        "readiness_field": "external_constraint_corpus_audited_ready_score"
+      },
+      {
+        "exp_id": "exp6544",
+        "path": "results/experiment_6544_external_structural_headroom.json",
+        "exists": true,
+        "bytes": 2961206,
+        "sha256": "sha256:317ffcf39894dfabcf346aada8584bae86d4a2c46a10a6d4dbe7a19734f6a8b9",
+        "readiness_field": "external_structural_headroom_ready_score"
+      },
+      {
+        "exp_id": "exp6545",
+        "path": "results/experiment_6545_external_safety_net_router.json",
+        "exists": true,
+        "bytes": 5268357,
+        "sha256": "sha256:7ddff7cccc3bd8d154c7ff33608a781840a511ef32c37d779cb6d3e01ee111c3",
+        "readiness_field": "external_safety_net_ready_score"
+      },
+      {
+        "exp_id": "exp6546",
+        "path": "results/experiment_6546_smt_cost_guard_sota.json",
+        "exists": true,
+        "bytes": 144704,
+        "sha256": "sha256:32fb674333fe330aa6778e4de79187a250f9bc0a11be8cb00e238ce57aba7122",
+        "readiness_field": "smt_cost_guard_ready_score"
+      },
+      {
+        "exp_id": "exp6547",
+        "path": "results/experiment_6547_external_transfer_independent_audit.json",
+        "exists": true,
+        "bytes": 1520799,
+        "sha256": "sha256:b1654e3327f65a082dee9a2ec6a48b08f14292d42079780385218cec5673805f",
+        "readiness_field": "external_transfer_audited_ready_score"
+      }
+    ],
+    "architecture_freshness_date": "2026-07-03",
+    "protected_file_hashes_before": {
+      "scripts/research_conductor.py": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+      "research-roadmap.yaml": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+      "ops/conductor-log.md": "sha256:02a361c1fc56316339c7d407bfcbbd786f69977b09592391d4182fc25e1fca09",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "_bmad/architecture.md": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8"
+    },
+    "live_gguf_load_required": false,
+    "external_intake_rerun": false
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "changed_paths": [],
+    "rows": [
+      {
+        "path": "_bmad/architecture.md",
+        "before_sha256": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8",
+        "after_sha256": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8",
+        "unchanged": true
+      },
+      {
+        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "before_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+        "after_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+        "unchanged": true
+      },
+      {
+        "path": "ops/conductor-log.md",
+        "before_sha256": "sha256:02a361c1fc56316339c7d407bfcbbd786f69977b09592391d4182fc25e1fca09",
+        "after_sha256": "sha256:02a361c1fc56316339c7d407bfcbbd786f69977b09592391d4182fc25e1fca09",
+        "unchanged": true
+      },
+      {
+        "path": "ops/exclusion_manifest.yaml",
+        "before_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "after_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "unchanged": true
+      },
+      {
+        "path": "research-roadmap.yaml",
+        "before_sha256": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
+        "after_sha256": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/research_conductor.py",
+        "before_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+        "after_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+        "unchanged": true
+      }
+    ]
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts_no_llm",
+  "verifier_is_oracle": true,
+  "field_provenance": {
+    "status": {
+      "principle": "A terminal lifecycle state prevents a bootstrap artifact from posing as completed work.",
+      "source": "Exp6548 deterministic evidence reducer",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The verdict must state the evidence boundary and start with complete_, partial_, blocked_, or disqualified_.",
+      "source": "Exp6548 deterministic evidence reducer",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "verdict_class": {
+      "principle": "A closed class carries null, partial, blocked, or disqualified status into downstream aggregation.",
+      "source": "Exp6548 deterministic evidence reducer",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "v566_artifact_eligibility_rows": {
+      "principle": "One row per artifact makes each eligibility decision independently recheckable.",
+      "source": "v566_artifact_eligibility_rows",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "exp6541_disposition": {
+      "principle": "The live CRITICAL inconsistency must remain visible and cannot be washed out by a milestone summary.",
+      "source": "exp6541_disposition",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "clean_v566_import_ledger": {
+      "principle": "Only content-addressed clean evidence may become a V567 input.",
+      "source": "clean_v566_import_ledger",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "architecture_freshness_receipt": {
+      "principle": "A 51-day-old architecture document must be checked against current code before it anchors integration.",
+      "source": "architecture_freshness_receipt",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "v567_gate_contract_rows": {
+      "principle": "Every gate must name an in-roadmap task and an upstream field with identical spelling.",
+      "source": "v567_gate_contract_rows",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "v567_model_and_hardware_contract": {
+      "principle": "Headline model and physical-resource rules must be frozen before outcomes exist.",
+      "source": "v567_model_and_hardware_contract",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "v567_evidence_contract_ready_score": {
+      "principle": "A binary readiness field gives downstream production work one explicit contract gate.",
+      "source": "v567_evidence_contract_ready_score",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "v566_external_transfer_eligible_score": {
+      "principle": "Downstream science needs a clean external root that does not depend on quarantined Exp6541.",
+      "source": "v566_external_transfer_eligible_score",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "per_unit_rows": {
+      "principle": "Artifact-level rows prevent aggregate eligibility claims from hiding one failed input.",
+      "source": "per_unit_rows",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "gate_check_summary": {
+      "principle": "Any blocked verdict must name the failed check and observed value.",
+      "source": "gate_check_summary",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Resource receipts distinguish unavailable inputs from null science.",
+      "source": "preconditions_checked",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "The planning task must not mutate the active roadmap or conductor.",
+      "source": "protected_files_unchanged",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Declaring no-LLM aggregation prevents fabricated live-model provenance.",
+      "source": "Exp6548 deterministic evidence reducer",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "Hash and schema checks are audit authority, not an oracle-distinct scientific verifier.",
+      "source": "Exp6548 deterministic evidence reducer",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Each headline field must identify the source rows and recomputation path.",
+      "source": "Exp6548 deterministic evidence reducer",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "duration_s": {
+      "principle": "Monotonic wall time exposes implausible or stale execution receipts.",
+      "source": "Exp6548 deterministic evidence reducer",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "tests_run": {
+      "principle": "Named commands and exit codes make validation reproducible.",
+      "source": "Exp6548 deterministic evidence reducer",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A content hash detects later mutation of the terminal record.",
+      "source": "Exp6548 deterministic evidence reducer",
+      "spec_refs": [
+        "REQ-REPORT-6548"
+      ]
+    }
+  },
+  "duration_s": 7.156569,
+  "tests_run": [
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6548_v567_evidence_eligibility_contract --date 20260823",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6548_v567_evidence_eligibility_contract.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6548_v567_evidence_eligibility_contract.py -m pytest tests/python/test_experiment_6548_v567_evidence_eligibility_contract.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6548_v567_evidence_eligibility_contract.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6548_v567_evidence_eligibility_contract.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/roadmap_schema.py research-roadmap.yaml",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6548_v567_evidence_eligibility_contract.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6548_v567_evidence_eligibility_contract.json",
+      "exit_code": 0
+    },
+    {
+      "command": "manual e2e-plan check: ops/e2e-test-plan.md has no direct Exp6548 entry",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    }
+  ],
+  "field_principles": {
+    "status": "A terminal lifecycle state prevents a bootstrap artifact from posing as completed work.",
+    "honest_verdict": "The verdict must state the evidence boundary and start with complete_, partial_, blocked_, or disqualified_.",
+    "verdict_class": "A closed class carries null, partial, blocked, or disqualified status into downstream aggregation.",
+    "v566_artifact_eligibility_rows": "One row per artifact makes each eligibility decision independently recheckable.",
+    "exp6541_disposition": "The live CRITICAL inconsistency must remain visible and cannot be washed out by a milestone summary.",
+    "clean_v566_import_ledger": "Only content-addressed clean evidence may become a V567 input.",
+    "architecture_freshness_receipt": "A 51-day-old architecture document must be checked against current code before it anchors integration.",
+    "v567_gate_contract_rows": "Every gate must name an in-roadmap task and an upstream field with identical spelling.",
+    "v567_model_and_hardware_contract": "Headline model and physical-resource rules must be frozen before outcomes exist.",
+    "v567_evidence_contract_ready_score": "A binary readiness field gives downstream production work one explicit contract gate.",
+    "v566_external_transfer_eligible_score": "Downstream science needs a clean external root that does not depend on quarantined Exp6541.",
+    "per_unit_rows": "Artifact-level rows prevent aggregate eligibility claims from hiding one failed input.",
+    "gate_check_summary": "Any blocked verdict must name the failed check and observed value.",
+    "preconditions_checked": "Resource receipts distinguish unavailable inputs from null science.",
+    "protected_files_unchanged": "The planning task must not mutate the active roadmap or conductor.",
+    "inference_substrate": "Declaring no-LLM aggregation prevents fabricated live-model provenance.",
+    "verifier_is_oracle": "Hash and schema checks are audit authority, not an oracle-distinct scientific verifier.",
+    "field_provenance": "Each headline field must identify the source rows and recomputation path.",
+    "duration_s": "Monotonic wall time exposes implausible or stale execution receipts.",
+    "tests_run": "Named commands and exit codes make validation reproducible.",
+    "reproducibility_checksum": "A content hash detects later mutation of the terminal record."
+  },
+  "reproducibility_checksum": "sha256:a4d306290583036f8042d9bb51f2eaadad56d1e35431455bfdbd34d41d84d70d"
+}
