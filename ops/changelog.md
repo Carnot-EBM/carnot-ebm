@@ -17459,3 +17459,4 @@ Verification: 3-game live re-run (ar25,cd82,tu93, budget 2000, --no-spawn,
 Qwen3.8-27B on GPU 1) in flight at write time; result recorded in
 ops/test-results.md by the same session.
 - 2026-08-23: V567 evidence eligibility, architecture freshness, and gate contract (✅ Complete) — honest_verdict=complete_v567_evidence_eligibility_contract_ready: Exp6542-Exp6547 are clean content-addressed V567 inputs; Exp6541 remains visible and not required; results/experiment_6548_v567_evidence_eligibility_contract.json
+- 2026-08-23: Default-off production Safety-Net adapter with exact fallback (✅ Complete) — honest_verdict=complete_production_safety_net_adapter_positive: disabled identity is exact; enabled routing preserves candidates, exact outputs, fallback, and rollback with charged benefit; results/experiment_6549_production_safety_net_adapter.json
