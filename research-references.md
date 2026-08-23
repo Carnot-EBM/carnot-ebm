@@ -36380,3 +36380,96 @@ receipt fields. Exact executable checks remain the only release authority.
   state and issue no unchanged hardware command.
 
 <!-- V567-PLANNER-REFRESH-20260823-END -->
+
+## V568 planner refresh - 2026-08-23
+
+<!-- V568-PLANNER-REFRESH-20260823-START -->
+
+This refresh followed all terminal V567 artifacts. It searched the requested
+2025-2026 arXiv topics and checked OpenReview, Hugging Face Papers, Semantic
+Scholar, GitHub, Extropic, and Logical Intelligence. Exact executable checks
+remain the only release authority. The following papers were available before
+the V567 search, but the local catalog did not contain them.
+
+### Promising findings selected for V568
+
+- **SPADE: Self-Play in Adaptive Synthetic Executable Environments** -
+  arXiv:2608.19197, https://arxiv.org/abs/2608.19197; code:
+  https://github.com/spade-rl/spade. The method trains an environment designer
+  and a reasoning agent together. The designer emits executable `reset()` and
+  `step()` environments and uses hint-based regret to target the learner's
+  capability boundary. The released system uses large distributed RL jobs, so
+  V568 must not claim to reproduce its training result. Carnot hook: use the
+  adaptive-curriculum principle in a small, verifier-authored constraint
+  stream. Generate proof-preserving challenge variants, freeze them before an
+  answer, and let exact regret select the next failure family. Do not let
+  generated environment code or an LLM judge certify itself.
+- **Learning What to Fail On: Failure-Mode Contextual Bandits for Adversarial
+  Data Curation** - arXiv:2608.18681,
+  https://arxiv.org/abs/2608.18681; TMLR, August 2026. The method treats
+  failure-family selection as a contextual bandit and balances robustness,
+  forgetting, and data cost. Its reported pipeline uses an LLM judge ensemble.
+  That judge is not acceptable release authority for Carnot. Carnot hook:
+  compare uniform, recent-failure, and contextual-bandit challenge selection on
+  one chronological stream. Compute rewards from exact replay, retention,
+  future support, and charged cost. Keep model memory frozen within each query
+  and commit only after exact verification.
+
+### Relevant findings held outside the V568 execution path
+
+- **How Powerful are LLMs in Generating Formal Program Specifications?** -
+  arXiv:2608.13077, https://arxiv.org/abs/2608.13077. The Coins framework turns
+  candidate Rocq specifications and trusted test cases into concrete proof
+  obligations. It reports that specification generation remains difficult and
+  that proof complexity can hide specification quality. This reinforces the
+  PRD extraction bottleneck. V568 does not reopen the retired generated
+  ConstraintIR and schema-reprompt lanes. A later milestone can use a
+  content-pinned Coins slice only after it defines a new extraction mechanism.
+- **Artifact-centered Claim-aware Observability for Autonomous Scientific
+  Agents** - arXiv:2608.18312, https://arxiv.org/abs/2608.18312. The position
+  paper recommends explicit links from claims to evidence and verification
+  records. Carnot already requires row-level artifacts, verdict classes, gate
+  summaries, and adversarial verification. V568 applies those existing
+  contracts instead of starting a second provenance schema.
+
+### Requested secondary and product checks
+
+- **OpenReview and Hugging Face Papers:** current 2025-2026 records still
+  support exact post-checks, selective intervention, and verifier isolation.
+  The recent structured-decoding records do not reopen answer-level grammar,
+  parser, or generated-text scorer retries.
+- **Semantic Scholar:** unauthenticated API calls returned 35 citing records
+  for EBT (`2507.02092`) and eight for ARM-EBM (`2512.15605`) on 2026-08-23.
+  The most relevant records remain Memoir, Solver-Hard,
+  Distributional EBMs, and Fixed-Point Reasoners. No citation provides a
+  public matching-base checkpoint that changes the local authority boundary.
+- **GitHub:** the SPADE repository provides code, environments, and training
+  recipes. Its 30B recipe needs one eight-GPU node. V568 borrows only its
+  executable adaptive-curriculum idea. It does not add SPADE as a dependency
+  or claim to reproduce the released RL run. No new EBM, KAN, Ising, or
+  constrained-generation repository supersedes Carnot's exact solver stack.
+- **Extropic:** the first-party update at
+  https://extropic.ai/writing/from-one-to-one-billion still lists a taped-out
+  269,568-pbit Z1 and 2027 early access. The July funding announcement adds a
+  planned Z1.5 path, but it does not provide Carnot with a device or API.
+  Schedule no TSU execution, latency, power, or availability claim.
+- **Logical Intelligence:**
+  https://logicalintelligence.com/kona-ebms-energy-based-models still provides
+  no public weights, reproducible training recipe, or documented local runner.
+  Kona remains a product comparator only.
+
+### V568 planning impact
+
+- Audit the V567 constraint-saturation result before it can support a new
+  claim or production decision.
+- Repair the GPU admission contract with sequential live-load receipts before
+  the next prospective self-learning run.
+- Use a small SPADE-inspired executable challenge generator and compare exact
+  failure-family selection policies. Keep self-learning transactional,
+  reversible, chronological, and independent of an LLM judge.
+- Close the production Rust/PyO3 routing gap with matched row-level canaries,
+  a measured NFR01 benchmark, staged enablement, and rollback.
+- Keep ARC work on live-path policy evidence. Keep GateMate receipt-gated and
+  issue no command without a changed physical receipt.
+
+<!-- V568-PLANNER-REFRESH-20260823-END -->

@@ -27147,3 +27147,97 @@ with `verifier_is_oracle=false`.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6680 | `python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py` (live receipt reachability, redirect-to-next-outcome reducer, no-firing run closure, three-firing support replay, fail-closed attack matrix, CLI writer/validator). | `tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py` (SCENARIO-ARC-WMTE-6680-LIVE-REACHABILITY, NEXT-OUTCOME-LINKAGE, NO-FIRING-CLOSURE, SELECTION-SUPPORT, FAIL-CLOSED-ATTACKS, SCHEMA-AND-CLI). |
+
+### REQ-ARC-WMTE-6690: Every Induced World Model Is Archived At Write Time (Per-Attempt Retention)
+
+The live engine store (`E3_DIR/<game>/world_model.py`) is keyed by game only.
+Every re-induction overwrites the previous model in place. Measured on the
+2026-08-22/23 25-game baseline run: 40 induction attempts left 25 files; 12
+games had more than one attempt; 15 induced models were destroyed by
+last-write-wins. Corpus-wide: 355 committed store versions across 27 files
+survive only as git archaeology, and writes between conductor commits are lost
+outright. The memory `project_arc_engine_store_regression` recorded the same
+defect on 2026-07-29 (ka59 change_fidelity 1.0 -> 0.0). Two live consequences:
+seed-sensitivity is unmeasurable (a 3-seed run destroys two of its own three
+models per game), and the only generator-quality number available is a
+worst-attempt survivor sample (re-induction fires on stagnation, so the
+surviving file is systematically the attempt made under the worst conditions).
+
+REQ-ARC-WMTE-6035 retains the best round WITHIN one bounded reinduction loop.
+This REQ is the layer below it: nothing that reaches the store may be
+destroyed, whatever any selector later decides.
+
+The producer write seam (`LocalGGUFProposer._write_world_model`, which
+`_gen_to_file` delegates to) SHALL, after writing the canonical
+`world_model.py` exactly as before, archive the attempt under
+`E3_DIR/<game>/attempts/`: a `wm_<utc-stamp>__<sha256-16>.py` copy
+(content-deduplicated by hash) and an appended `manifest.jsonl` line carrying
+`ts`, `sha256_16`, `bytes`, `writer`, `model`, and `deduplicated`. The archive
+path SHALL resolve `E3_DIR` at call time so `CARNOT_ARC_E3_DIR` and the
+`e3.E3_DIR` monkeypatch redirect archives exactly like canonical writes
+(REQ-ARC-WMTE-6016), and the archive write SHALL pass the same
+`_guard_engine_write` test-guard as the canonical write.
+
+FAIL-OPEN, deliberately and narrowly: an archive failure SHALL NOT fail the
+induction (the scored agent's job is playing the game; losing one archive
+entry is strictly no worse than the shipped behaviour, which lost every
+entry). The failure SHALL be visible: recorded on the proposer as
+`last_attempt_archive` and counted. `CARNOT_ARC_ENGINE_ATTEMPT_ARCHIVE=0`
+disables archiving entirely (canonical behaviour is unchanged either way).
+
+The two store-restore sites (`_retain_engine_source_on_disk`,
+`E3AgentPolicy._restore_engine_store`) SHALL NOT archive: both write back
+content read from the store, which a producer site already archived when it
+first landed. `CodexProposer` (dev-only; the codex CLI writes the file
+out-of-band) archives post-hoc after a successful call.
+
+The lever harness (`scripts/arc_scored_path_lever_harness.py:run_cell`) SHALL
+record per row the manifest delta for its cell (`induction_archive`: entries
+added during the cell, with their hashes), so a (game, seed) row is joinable
+to the exact models it produced -- the provenance `induction_engine_sources`
+never carried for LLM-tier attempts.
+
+#### SCENARIO-ARC-WMTE-6690-1 (canonical write unchanged, attempt archived)
+
+Given a redirected store and a proposer whose `generate` returns a fixed
+engine source, when `_gen_to_file` succeeds, then `world_model.py` holds
+exactly the bytes it would have held before this REQ, the return value is
+unchanged, and `attempts/` contains one archived copy whose sha256 matches
+the canonical file, with one manifest line naming the writer.
+
+#### SCENARIO-ARC-WMTE-6690-2 (dedup by content hash)
+
+Given the same engine source written twice, then `attempts/` holds ONE
+archived `.py` and TWO manifest lines, the second marked `deduplicated: true`
+-- an attempt log, not a blob store.
+
+#### SCENARIO-ARC-WMTE-6690-3 (kill switch)
+
+Given `CARNOT_ARC_ENGINE_ATTEMPT_ARCHIVE=0`, when a write lands, then no
+`attempts/` directory is created and the canonical write and return value
+are byte-identical to the enabled case.
+
+#### SCENARIO-ARC-WMTE-6690-4 (archive failure cannot fail induction)
+
+Given an `attempts` path that cannot be created (a FILE occupies the name),
+when a write lands, then the canonical write still succeeds, the method still
+returns success, and `last_attempt_archive` records the error.
+
+#### SCENARIO-ARC-WMTE-6690-5 (multi-attempt retention, the defect's shape)
+
+Given three successive successful inductions with three different sources for
+one game, then the canonical file holds the third (last-write-wins,
+unchanged) and `attempts/` retains all three -- the 40-attempts-to-25-files
+loss shape reduced to zero loss.
+
+#### SCENARIO-ARC-WMTE-6690-6 (harness row provenance)
+
+Given a `run_cell` whose cell archived N attempts, then the row carries
+`induction_archive.added == N` with their sha256_16 values, and a cell that
+archived nothing carries `added == 0` without error.
+
+## Implementation Status (REQ-ARC-WMTE-6690)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6690 | PENDING | PENDING |
