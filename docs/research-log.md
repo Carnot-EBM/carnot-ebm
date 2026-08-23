@@ -6269,3 +6269,10 @@ The critical path for milestone .250:
 - theme: synthesis-only evidence work completed while fallback timing limited operational diagnosis
 - key result: honest operational limitation -- no compute-bound task existed for GPU or parallel-runner analysis, and the reconstructed timing did not expose task-phase costs
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.564
+
+- exp_range: no data available this milestone
+- theme: brief synthesis-only closeout exposed a timing-provenance gap without an accelerator bottleneck
+- key result: no compute-bound work ran, so idle GPUs were correct and no concurrent-model runner requirement arose
+- acceptance: no data available this milestone
