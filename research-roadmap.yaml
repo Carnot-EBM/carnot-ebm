@@ -1,11 +1,11 @@
-milestone: "2026.08.566"
-milestone_title: "External Constraint Transfer and Reversible Self-Learning"
+milestone: "2026.08.567"
+milestone_title: "Production Safety Net, Reversible Learning, and Constraint Saturation"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-  - id: exp6541-v566-direct-source-contract
-    milestone: "2026.08.566"
-    deliverable: results/experiment_6541_v566_direct_source_contract.json
-    title: "V566 direct-source, model-cache, and dependency contract"
+  - id: exp6548-v567-evidence-eligibility-contract
+    milestone: "2026.08.567"
+    deliverable: results/experiment_6548_v567_evidence_eligibility_contract.json
+    title: "V567 evidence eligibility, architecture freshness, and gate contract"
     priority: critical
     track: infrastructure-governance
     requires_gpu: false
@@ -14,107 +14,303 @@ tasks:
     estimated_wall_time_min: 90
     model: opus
     prior_failures:
-      - experiment_id: exp6528-v565-source-model-method-contract
-        verdict: "blocked_v565_source_model_method_contract: unavailable_required_channels=openreview"
-        addressed_by: "This contract makes only the primary source consumed by a downstream experiment mandatory; DRIFT commit, license, schema, Z3 replay, and GGUF cache identity are hard checks, while OpenReview and other discovery channels are advisory rows."
+      - experiment_id: exp6541-v566-direct-source-contract
+        verdict: "complete_v566_direct_source_contract_ready: direct DRIFT source, local replay, model cache, split, field, and dependency contracts are implementable"
+        addressed_by: "This task does not repeat source intake or imply live-model execution; it independently rechecks immutable V566 artifacts, quarantines Exp6541's duration and model-receipt inconsistency, and imports only clean Exp6542-Exp6547 evidence by path and hash."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      V565 stopped before external intake because Exp6528 required an unavailable OpenReview metadata channel. The DRIFT-Bench repository is independently reachable at commit d24cda4f59a6ee06bafe886f4724899a7ec94f1c, is MIT licensed, contains 1,020 problem files, and includes local Z3 replay code. V566 needs a direct source contract that cannot be blocked by an unrelated discovery service. Work at {project_root}. The planning date is {date}.
+      V566 completed Exp6541 through Exp6547. Exp6542 through Exp6547 pass live adversarial rechecks. Exp6541 reports readiness but its live recheck is CRITICAL because its duration is below an inferred live-model floor and its model receipt is incomplete. V567 must establish an additive evidence ledger before production integration. It must not rerun the external intake. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
-      - {project_root}/results/experiment_6527_v565_evidence_eligibility_corrigendum.json
-      - {project_root}/results/experiment_6528_v565_source_model_method_contract.json
-      - {project_root}/results/experiment_6530_external_constraint_corpus_audit.json
-      - {project_root}/research-references.md, {project_root}/research-complete.yaml, and {project_root}/ops/exclusion_manifest.yaml
-      - {project_root}/scripts/experiment_template.py, {project_root}/python/carnot/inference/sota_models.py, {project_root}/scripts/conductor_gates.py, and {project_root}/scripts/roadmap_schema.py
-      - relevant capability specs, {project_root}/_bmad/traceability.md, and {project_root}/ops/e2e-test-plan.md
+      - {project_root}/results/experiment_6541_v566_direct_source_contract.json through {project_root}/results/experiment_6547_external_transfer_independent_audit.json
+      - {project_root}/research-complete.yaml, {project_root}/research-references.md, {project_root}/ops/exclusion_manifest.yaml, and {project_root}/ops/conductor-log.md
+      - {project_root}/scripts/adversarial_verify.py, {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/conductor_gates.py, and {project_root}/scripts/roadmap_schema.py
+      - {project_root}/_bmad/architecture.md, relevant capability specs, {project_root}/_bmad/traceability.md, and {project_root}/ops/e2e-test-plan.md
 
       TASK
-      Build the V566 direct-source, model-cache, split, and dependency contract. Import eligible V564 evidence by immutable path and hash. Make a source channel mandatory only when a downstream task consumes its content.
+      Build the V567 evidence eligibility, architecture freshness, model, hardware, and gate contract. Preserve the V566 determination trail. Import only artifacts that pass path, hash, row, and live-verifier checks.
 
       CONCRETE STEPS
-      0. Record git status, network state, source-query timestamps, tool versions, CPU/RAM/disk, cache roots without secrets, and protected-file hashes.
-      1. Add or confirm REQ-* and SCENARIO anchors for direct-source sufficiency, advisory discovery channels, immutable revision and license checks, model-cache identity, exact field spelling, retired-ID isolation, and atomic terminal output. Write focused tests first.
-      2. Recheck the DRIFT repository URL, exact commit, commit date, MIT license, problem-file census, schema, Z3 code, and upstream corrupted-SQLite warning. Record file or tree hashes.
-      3. Verify that arXiv, OpenReview, Semantic Scholar, Hugging Face, GitHub discovery, Extropic, and Logical Intelligence are advisory unless a named V566 task consumes their data. Unavailability of an advisory row cannot set the readiness score to zero.
-      4. Resolve cached_sota_pair(gpu_indices=(0, 1)) without loading weights. Record exact hub IDs, GGUF filenames, hashes, and load plans for all three mandated models.
-      5. Freeze the external family and chronology split, structural controls, cost-guard strata, router calibration and abstention, transactional memory boundary, reversible-memory thresholds, support metrics, ARC no-firing rule, and GateMate changed-state rule before outcomes exist.
-      6. Confirm that every structured V566 gate names a task in the V566 roadmap and a field declared verbatim in that upstream task. No requires or gated_on edge may name Exp6528, Exp6529, or another retired task.
-      7. Attack unavailable advisory channels, moving branches, license ambiguity, missing source files, GGUF repo-ID tokenizer misuse, renamed readiness fields, retired-ID dependencies, and status-only success.
-      8. Set v566_direct_source_ready_score=1.0 only when the direct DRIFT source, local replay, split, model-cache, field, and dependency contracts are implementable. Do not require advisory channel availability.
-      9. Write one terminal artifact atomically. Run focused tests with full new-module coverage, lint, spec coverage, gate audit, exclusion-manifest lint, adversarial verification, applicable E2E checks, and git status.
+      0. PRECONDITIONS: record git status, CPU/RAM/disk, Python and verifier versions, required artifact existence and hashes, architecture freshness date, protected-file hashes, and network status. This task needs no live GGUF load.
+      1. Add or confirm REQ-* and SCENARIO anchors for additive evidence correction, immutable import, architecture freshness, exact gate spelling, model policy, retired-scope isolation, and atomic terminal output. Write focused tests first.
+      2. Run live adversarial verification and row-consistency checks on Exp6541 through Exp6547. Record command, version, exit status, artifact hash, stamped flags, live flags, and eligibility for each artifact.
+      3. Quarantine Exp6541 as clean evidence unless the independent checks resolve both the duration classification and model-receipt gap without editing history. Do not rerun DRIFT intake. Import Exp6542 through Exp6547 only when their checks remain clean.
+      4. Verify the V567 roadmap against current code and the 2026-07-03 architecture document. Freeze every task ID, deliverable, readiness field, structured gate, sample floor, MODEL_SPECS rule, ARC no-solve rule, and GateMate receipt rule.
+      5. Confirm that no gate names a task outside V567, no artifact field is misspelled, no task requires a retired ID, and no natural-language schema-reprompt or generated-text verifier scope is reopened.
+      6. Attack aggregate-only eligibility, hash aliases, live-versus-stamped flag disagreement, missing readiness fields, stale architecture assumptions, legacy-model headline substitution, and retired-chain dependencies.
+      7. Set v567_evidence_contract_ready_score=1.0 only when the task, field, gate, model, hardware, and scope contracts close. Set v566_external_transfer_eligible_score=1.0 only when Exp6542 through Exp6547 are independently eligible; Exp6541 is not required for that score.
+      8. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, exclusion-manifest lint, roadmap schema validation, adversarial verification, applicable E2E checks, and git status.
 
-      Required deliverable: {project_root}/results/experiment_6541_v566_direct_source_contract.json.
+      Required deliverable: {project_root}/results/experiment_6548_v567_evidence_eligibility_contract.json.
       REQUIRED ARTIFACT FIELDS:
-        status, honest_verdict, verdict_class, v565_boundary_receipts, immutable_evidence_receipts, direct_source_rows, advisory_discovery_rows, drift_revision_license_schema_contract, source_tree_hashes, upstream_corruption_boundary, model_cache_resolution_rows, gguf_load_contract, frozen_external_split_contract, frozen_structural_contract, frozen_cost_guard_contract, frozen_router_contract, frozen_reversible_memory_contract, frozen_arc_contract, hardware_stop_contract, dependency_and_gate_rows, v566_direct_source_ready_score, gate_check_summary, per_unit_rows, aggregate_row_recomputation, preconditions_checked, protected_files_unchanged, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum.
-      Use verdict_class=null for a clean governance contract, partial for a usable subset, blocked for a missing direct prerequisite, or disqualified for false provenance. honest_verdict must begin complete_, partial_, blocked_, or disqualified_. Set inference_substrate=direct_primary_source_cache_and_dependency_preflight_no_llm. Set verifier_is_oracle=true only for source, hash, schema, and dependency checks; do not declare a positive scientific class. A blocked verdict must populate gate_check_summary with the failed check and observed value.
+        status:
+          principle: "A terminal lifecycle state prevents a bootstrap artifact from posing as completed work."
+        honest_verdict:
+          principle: "The verdict must state the evidence boundary and start with complete_, partial_, blocked_, or disqualified_."
+        verdict_class:
+          principle: "A closed class carries null, partial, blocked, or disqualified status into downstream aggregation."
+        v566_artifact_eligibility_rows:
+          principle: "One row per artifact makes each eligibility decision independently recheckable."
+        exp6541_disposition:
+          principle: "The live CRITICAL inconsistency must remain visible and cannot be washed out by a milestone summary."
+        clean_v566_import_ledger:
+          principle: "Only content-addressed clean evidence may become a V567 input."
+        architecture_freshness_receipt:
+          principle: "A 51-day-old architecture document must be checked against current code before it anchors integration."
+        v567_gate_contract_rows:
+          principle: "Every gate must name an in-roadmap task and an upstream field with identical spelling."
+        v567_model_and_hardware_contract:
+          principle: "Headline model and physical-resource rules must be frozen before outcomes exist."
+        v567_evidence_contract_ready_score:
+          principle: "A binary readiness field gives downstream production work one explicit contract gate."
+        v566_external_transfer_eligible_score:
+          principle: "Downstream science needs a clean external root that does not depend on quarantined Exp6541."
+        per_unit_rows:
+          principle: "Artifact-level rows prevent aggregate eligibility claims from hiding one failed input."
+        gate_check_summary:
+          principle: "Any blocked verdict must name the failed check and observed value."
+        preconditions_checked:
+          principle: "Resource receipts distinguish unavailable inputs from null science."
+        protected_files_unchanged:
+          principle: "The planning task must not mutate the active roadmap or conductor."
+        inference_substrate:
+          principle: "Declaring no-LLM aggregation prevents fabricated live-model provenance."
+        verifier_is_oracle:
+          principle: "Hash and schema checks are audit authority, not an oracle-distinct scientific verifier."
+        field_provenance:
+          principle: "Each headline field must identify the source rows and recomputation path."
+        duration_s:
+          principle: "Monotonic wall time exposes implausible or stale execution receipts."
+        tests_run:
+          principle: "Named commands and exit codes make validation reproducible."
+        reproducibility_checksum:
+          principle: "A content hash detects later mutation of the terminal record."
+      Set inference_substrate=aggregation_from_upstream_artifacts_no_llm and verifier_is_oracle=true for hash, field, schema, and gate checks only. A clean contract uses verdict_class=null, a usable subset uses partial, a missing prerequisite uses blocked, and false provenance uses disqualified.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6541_v566_direct_source_contract --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6548_v567_evidence_eligibility_contract --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6542-drift-bench-external-intake-v2
-    milestone: "2026.08.566"
-    deliverable: results/experiment_6542_drift_bench_external_intake_v2.json
-    title: "Content-pinned DRIFT-Bench external intake v2"
+  - id: exp6549-production-safety-net-adapter
+    milestone: "2026.08.567"
+    deliverable: results/experiment_6549_production_safety_net_adapter.json
+    title: "Default-off production Safety-Net adapter with exact fallback"
     priority: critical
-    track: data-and-evidence
+    track: production-integration
     requires_gpu: false
     per_unit_rows: true
     max_turns: 50
-    estimated_wall_time_min: 150
+    estimated_wall_time_min: 120
     agent_type: codex
     model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp6545-external-safety-net-router
+        verdict: "complete_external_safety_net_router_positive: selected held charged linear_compact_router_abstention_exception_exact_fallback beats certified structural control with exact equality, calibrated abstention, immutable train-only exceptions, and reachable native fallback"
+        addressed_by: "Exp6545 evaluated an experiment-local router. This task adds a typed, default-off VerifyRepairPipeline adapter, proves byte-identical disabled behavior, preserves every candidate, and keeps native exact fallback reachable on the production path."
+        retire_if_same_verdict: true
     gated_on:
-      - upstream: exp6541-v566-direct-source-contract
-        artifact_field: v566_direct_source_ready_score
+      - upstream: exp6548-v567-evidence-eligibility-contract
+        artifact_field: v567_evidence_contract_ready_score
         op: "=="
         value: 1.0
-    prior_failures:
-      - experiment_id: exp6529-drift-bench-external-intake
-        verdict: "blocked_gate_check_failed: exp6528-v565-source-model-method-contract.v565_method_contract_ready_score was 0.0, expected 1.0; no intake artifact or fixture was produced"
-        addressed_by: "This attempt gates on the new direct-source readiness field, pins the public repository commit directly, and does not depend on the retired OpenReview-sensitive source contract."
-        retire_if_same_verdict: true
+        principle: "Production code may consume V566 evidence only after the additive eligibility and field contract closes."
     prompt: |
       CONTEXT
-      Exp6529 never executed because its V565 gate failed. Exp6541 replaces that chain with a direct DRIFT source contract. V566 needs a bounded chronological fixture whose labels and receipts are regenerated locally rather than inherited from the paper. Work at {project_root}. The planning date is {date}.
+      Exp6545 and Exp6547 support an external compact Safety-Net router with calibrated abstention, a train-only exception table, and native exact fallback. The mechanism remains experiment-local. V567 needs a typed, default-off adapter on the real VerifyRepairPipeline path. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V566 roadmap document
-      - {project_root}/results/experiment_6541_v566_direct_source_contract.json
-      - {project_root}/results/experiment_6514_atomic_shard_artifact_transaction.json and its reusable transaction code
-      - exact constraint, Z3, checkpoint, artifact, and branch-feature code under {project_root}/python/carnot/
-      - the pinned DRIFT README, data README, JSON schema, prompts, and z3_checker.py named by Exp6541
-      - relevant specs, tests, traceability, exclusions, and E2E plan
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, and the V567 roadmap document
+      - {project_root}/results/experiment_6548_v567_evidence_eligibility_contract.json
+      - {project_root}/results/experiment_6545_external_safety_net_router.json and {project_root}/results/experiment_6547_external_transfer_independent_audit.json
+      - {project_root}/python/carnot/pipeline/verify_repair.py, {project_root}/python/carnot/pipeline/factor_cache_shadow_adapter.py, and related pipeline tests
+      - {project_root}/python/carnot/experiment_6545_external_safety_net_router.py and reusable exact fallback, feature, calibration, and exception-table code
+      - relevant capability specs, traceability, exclusions, status, changelog, and E2E plan
 
       TASK
-      Create a content-pinned, bounded DRIFT-Bench fixture. Preserve base-problem chronology, regenerate every exact receipt locally, seal family-blind splits, and finalize through the shipped atomic transaction.
+      Implement and evaluate a default-off production Safety-Net adapter. Disabled behavior must be byte-identical to native VerifyRepairPipeline behavior. Enabled routing may reorder or abstain but must preserve all candidates and native exact fallback.
 
       CONCRETE STEPS
-      0. Evaluate the structured gate and record its expected and observed values, artifact hash, source commit, license, solver versions, resources, fixture bound, and protected-file hashes.
-      1. Add REQ-* and SCENARIO anchors for source-to-local identity, chronological preservation, exact replay, lineage sealing, planned-unit accounting, resumable shards, censoring, and atomic finalization. Write tests first.
-      2. Fetch or reuse only commit d24cda4f59a6ee06bafe886f4724899a7ec94f1c. Verify the tree and file hashes before transformation.
-      3. Freeze a balanced slice across seating, scheduling, and logic-grid domains, multiple sizes, turn positions, and exact effort strata. Freeze the sample before downstream labels or costs are inspected.
-      4. Preserve immutable source IDs and assign separate local unit IDs. Keep every cumulative constraint state in chronological order. No turn from a base problem may cross splits.
-      5. Replay each admitted turn with the installed Z3 path. Record assignment validity, satisfiability, conflict or MUS evidence when available, solver effort, timeout, censoring, code hash, and terminal status.
-      6. Create {project_root}/results/fixtures/v566_drift_bench_external_slice.jsonl through content-addressed shards and an atomic final replace. Do not import upstream result databases or paper aggregates.
-      7. Attack duplicate turns, chronology gaps, family aliases, entity-name and row-order leakage, source hash mismatch, solver-version drift, corrupt resume, missing terminal units, and inherited aggregates.
-      8. Set external_constraint_corpus_ready_score=1.0 only when every planned unit is terminal, all admitted rows have exact and source receipts, lineage floors hold, hashes close, and the fixture round-trips.
-      9. Run focused tests with full new-module coverage, lint, spec coverage, row lint, gate audit, adversarial verification, exact-solver E2E checks, fixture checksum verification, and git status.
+      0. PRECONDITIONS: evaluate the structured gate; record expected and observed values, upstream artifact path and hash, Python and Z3 versions, CPU/RAM/disk, fixture and router hashes, and protected-file hashes.
+      1. Ensure the relevant production-adapter capability spec has REQ-* and SCENARIO anchors for default-off identity, typed configuration, candidate preservation, abstention, exception immutability, exact fallback, rollback, and errors. Write tests first.
+      2. Add the smallest production module under python/carnot/pipeline/. Reuse the frozen V566 feature and router contract. Do not copy held rows, outcomes, or entity identifiers into policy state.
+      3. Make the adapter disabled by default. Prove byte-identical serialized requests, candidate order, checker calls, outputs, error types, side effects, and persistence behavior on a frozen regression bank.
+      4. In the enabled arm, preserve every candidate. Record route, abstention, exception lookup, fallback reason, exact result, and charged adapter overhead. Any unsupported or uncertain input must fall back.
+      5. Compare native, disabled-adapter, enabled-router, forced-abstain, forced-fallback, rollback, and malformed-input conditions on identical units and seeds.
+      6. Attack model and family IDs, source IDs, entity names, row order, held table writes, candidate deletion, fallback recursion, serialization changes, stale configuration, and disabled-path side effects.
+      7. Set production_safety_net_adapter_ready_score=1.0 only when disabled identity is exact, enabled decisions match the frozen router, all exact outputs remain equal, fallback is reachable, and every attack fails closed.
+      8. Write one terminal artifact atomically. Run focused tests with full new-module coverage, lint, spec coverage, row lint, gate audit, adversarial verification, pipeline E2E checks, and git status.
 
-      Required deliverables: {project_root}/results/experiment_6542_drift_bench_external_intake_v2.json and {project_root}/results/fixtures/v566_drift_bench_external_slice.jsonl.
+      Required deliverable: {project_root}/results/experiment_6549_production_safety_net_adapter.json.
       REQUIRED ARTIFACT FIELDS:
-        status, honest_verdict, verdict_class, upstream_gate_receipt, source_revision_and_license_receipt, source_tree_and_file_hashes, upstream_corruption_boundary, intake_commitment, family_turn_and_effort_census, source_to_local_identity_rows, exact_replay_rows, solver_receipts, split_commitment, shard_manifest, planned_and_terminal_unit_counts, fixture_path_and_hash, leakage_attack_matrix, external_constraint_corpus_ready_score, gate_check_summary, per_unit_rows, aggregate_row_recomputation, preconditions_checked, protected_files_unchanged, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum.
-      Use verdict_class=null for a complete data contract, partial for a bounded usable corpus below the readiness floor, blocked for a failed gate or direct precondition, or disqualified for provenance or leakage failure. honest_verdict must begin complete_, partial_, blocked_, or disqualified_. Set inference_substrate=content_pinned_drift_intake_and_local_z3_replay_no_llm. Set verifier_is_oracle=true for exact labels and validity only; do not declare a positive scientific class. A blocked verdict must populate gate_check_summary with the failed check and observed value.
+        status:
+          principle: "A terminal state distinguishes a shipped adapter result from setup-only output."
+        honest_verdict:
+          principle: "The verdict must name disabled identity and enabled fallback status and use a terminal prefix."
+        verdict_class:
+          principle: "The closed class prevents a partial integration from becoming a positive scientific claim."
+        upstream_gate_receipt:
+          principle: "The adapter must prove which eligible evidence contract authorized integration."
+        adapter_configuration_contract:
+          principle: "A typed default-off contract prevents accidental activation and configuration drift."
+        disabled_identity_rows:
+          principle: "Per-unit native-versus-disabled bytes expose any supposedly inert behavior change."
+        enabled_decision_rows:
+          principle: "Per-unit routes, abstentions, exceptions, and fallback outcomes make the fast path auditable."
+        exact_output_equality_receipt:
+          principle: "A learned route is eligible only when exact accepted outputs remain unchanged."
+        candidate_preservation_receipt:
+          principle: "Keeping the full candidate set preserves completeness and native fallback."
+        exception_table_immutability_receipt:
+          principle: "Held or live writes would leak outcomes into the production policy."
+        fallback_and_rollback_receipts:
+          principle: "A safe fast path must prove both escape and recovery paths."
+        shortcut_attack_matrix:
+          principle: "Identity, ordering, and serialization attacks test whether the adapter learned the intended structure."
+        production_safety_net_adapter_ready_score:
+          principle: "One binary field gives bindings and audits an exact integration gate."
+        per_unit_rows:
+          principle: "Comparative claims must be recomputable for every unit and condition."
+        aggregate_row_recomputation:
+          principle: "Headlines must derive from emitted rows, not parallel counters."
+        gate_check_summary:
+          principle: "A blocked run must name the failed upstream or runtime check and value."
+        preconditions_checked:
+          principle: "Resource and input receipts separate blocked integration from null behavior."
+        protected_files_unchanged:
+          principle: "The task must preserve the active roadmap and conductor while editing scoped production files."
+        inference_substrate:
+          principle: "The no-LLM adapter evaluation must not imply fresh model inference."
+        verifier_is_oracle:
+          principle: "The compared router is not ground truth; Z3 remains separate exact authority."
+        field_provenance:
+          principle: "Each readiness and equality field must point to rows, hashes, and code versions."
+        random_seed:
+          principle: "Fixed seeds make matched routing and fallback comparisons repeatable."
+        duration_s:
+          principle: "Charged wall time detects omitted adapter and fallback overhead."
+        tests_run:
+          principle: "Named test and E2E receipts show the production path was exercised."
+        reproducibility_checksum:
+          principle: "A final hash detects mutation after the verdict."
+      Set inference_substrate=production_verify_repair_compact_router_and_exact_fallback_no_llm and verifier_is_oracle=false. Use verdict_class=positive only for a charged enabled-path benefit with exact disabled identity and exact output equality; use null for no benefit, partial for incomplete integration, blocked for failed preconditions, or disqualified for leakage or changed accepted outputs.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6542_drift_bench_external_intake_v2 --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6549_production_safety_net_adapter --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6543-external-corpus-independent-audit-v2
-    milestone: "2026.08.566"
-    deliverable: results/experiment_6543_external_corpus_independent_audit_v2.json
-    title: "Independent DRIFT corpus provenance, chronology, and replay audit v2"
+  - id: exp6550-rust-pyo3-safety-net-parity
+    milestone: "2026.08.567"
+    deliverable: results/experiment_6550_rust_pyo3_safety_net_parity.json
+    title: "Rust/PyO3 Safety-Net request and decision parity"
+    priority: high
+    track: cross-language-core
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp5646-two-axis-tempering-rust-parity
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp5646 never reached Rust parity because its two-axis tempering quality gates were zero. This task removes that upstream chain and implements only the compact Safety-Net request and decision ABI after the in-roadmap production adapter passes."
+        retire_if_same_verdict: true
+      - experiment_id: exp6545-external-safety-net-router
+        verdict: "complete_external_safety_net_router_positive: selected held charged linear_compact_router_abstention_exception_exact_fallback beats certified structural control with exact equality, calibrated abstention, immutable train-only exceptions, and reachable native fallback"
+        addressed_by: "Exp6545 had no Rust or PyO3 deliverable. This task freezes a versioned cross-language schema and proves byte, decision, error, fallback, and rollback parity without moving model inference or exact authority into Rust."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6549-production-safety-net-adapter
+        artifact_field: production_safety_net_adapter_ready_score
+        op: "=="
+        value: 1.0
+        principle: "A cross-language ABI should freeze only after the default-off Python production contract passes."
+    prompt: |
+      CONTEXT
+      Exp6549 places the compact Safety Net on the Python production path. The PRD and architecture call for reliable Rust-core behavior through PyO3. V567 needs parity for the small routing decision contract, not a rewrite of language extraction, model inference, or Z3 authority. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/_bmad/prd.md, {project_root}/_bmad/architecture.md, and the V567 roadmap document
+      - {project_root}/results/experiment_6549_production_safety_net_adapter.json
+      - {project_root}/python/carnot/pipeline/ and the adapter module created by Exp6549
+      - {project_root}/crates/, {project_root}/Cargo.toml, existing PyO3 bindings, serialization code, and cross-language tests
+      - relevant capability specs, traceability, exclusions, status, changelog, and E2E plan
+
+      TASK
+      Define the smallest typed Rust/PyO3 ABI for Safety-Net feature requests and routing decisions. Prove Python/Rust parity for route, abstention, exception lookup, fallback reason, serialization, and errors.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: evaluate the structured gate; record upstream hash, Rust, Cargo, Python, maturin or binding tool versions, CPU/RAM/disk, build cache, fixture hash, and protected-file hashes.
+      1. Ensure the relevant cross-language capability spec has REQ-* and SCENARIO anchors for schema versioning, numeric normalization, deterministic serialization, error semantics, parity, fallback, and ABI rollback. Write Rust and Python tests first.
+      2. Freeze a minimal request type with safe structural features only. Freeze a decision type with route, abstain, uncertainty bucket, exception hit, fallback reason, and schema version.
+      3. Implement formulaic Rust and PyO3 bindings in the existing crate structure. Do not add model loading, hidden states, natural-language parsing, labels, or release authority.
+      4. Replay train-free held, boundary, malformed, null, extreme numeric, version-skew, and unknown-feature cases through Python and Rust on identical bytes.
+      5. Emit one parity row per unit and condition with input hash, both outputs, output hashes, error types, decision equality, exact downstream result, FFI time, and fallback reachability.
+      6. Attack float and integer coercion, NaN, field order, missing keys, extra keys, Unicode, stale schema versions, endianness assumptions, exception-table mutation, and nondeterministic map order.
+      7. Set cross_language_router_parity_ready_score=1.0 only when every supported row is decision- and byte-equal, unsupported rows fail closed to fallback, and the Python-only rollback remains exact.
+      8. Write one terminal artifact atomically. Run focused Python and Rust tests, clippy or scoped lint, spec coverage, row lint, gate audit, adversarial verification, binding E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6550_rust_pyo3_safety_net_parity.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal state proves the binding task progressed beyond compilation setup."
+        honest_verdict:
+          principle: "The verdict must state parity, fallback, and rollback outcomes with a terminal prefix."
+        verdict_class:
+          principle: "A closed class prevents partial ABI coverage from becoming a positive parity claim."
+        upstream_gate_receipt:
+          principle: "The ABI must identify the exact production adapter contract it implements."
+        abi_schema_and_version_contract:
+          principle: "Explicit versions prevent silent Python/Rust semantic drift."
+        build_and_binding_receipts:
+          principle: "Compiler and extension hashes prove which native code actually ran."
+        parity_rows:
+          principle: "One row per unit and condition makes every cross-language comparison recheckable."
+        serialization_equality_receipt:
+          principle: "Equal decisions with different bytes can still break caches and downstream contracts."
+        error_semantics_rows:
+          principle: "Malformed and unsupported inputs must fail closed in the same way across languages."
+        exact_downstream_equality_receipt:
+          principle: "The ABI may not change accepted exact results."
+        fallback_and_python_rollback_receipt:
+          principle: "Production safety requires a reachable native fallback and a complete binding rollback."
+        abi_attack_matrix:
+          principle: "Coercion, ordering, version, and Unicode attacks expose hidden language-boundary assumptions."
+        cross_language_router_parity_ready_score:
+          principle: "A binary parity gate gives the independent audit an unambiguous input."
+        per_unit_rows:
+          principle: "Comparative parity claims require a row for each evaluated unit."
+        aggregate_row_recomputation:
+          principle: "The parity headline must derive only from emitted rows."
+        gate_check_summary:
+          principle: "A blocked artifact must name the failed build, input, or upstream check and value."
+        preconditions_checked:
+          principle: "Toolchain receipts distinguish unavailable bindings from null parity."
+        protected_files_unchanged:
+          principle: "Scoped binding work must preserve the active roadmap and conductor."
+        inference_substrate:
+          principle: "This is a deterministic binding replay, not live model inference."
+        verifier_is_oracle:
+          principle: "Parity is checked against independent exact outputs, not treated as a learned verifier win."
+        field_provenance:
+          principle: "Each decision and readiness field must point to bytes, builds, and rows."
+        random_seed:
+          principle: "Stable case generation and order make parity failures reproducible."
+        duration_s:
+          principle: "Charged build and FFI time prevents a cost-free cross-language claim."
+        tests_run:
+          principle: "Named Python, Rust, and binding checks prove both sides executed."
+        reproducibility_checksum:
+          principle: "A content hash detects later changes to the parity record."
+      Set inference_substrate=rust_pyo3_and_python_compact_router_replay_no_llm and verifier_is_oracle=false. Use verdict_class=positive only for full supported-case parity, fail-closed unsupported cases, exact downstream equality, and rollback; use null for no production value, partial for bounded parity, blocked for toolchain or gate failure, or disqualified for false native execution or changed exact outputs.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6550_rust_pyo3_safety_net_parity --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6551-production-safety-net-independent-audit
+    milestone: "2026.08.567"
+    deliverable: results/experiment_6551_production_safety_net_independent_audit.json
+    title: "Independent production Safety-Net and cross-language audit"
     priority: critical
     track: infrastructure-audit
     requires_gpu: false
@@ -124,205 +320,649 @@ tasks:
     agent_type: codex
     model: gpt-5.5
     prior_failures:
-      - experiment_id: exp6530-external-constraint-corpus-audit
-        verdict: "blocked_external_constraint_corpus_audit: failed_checks=exp6529_artifact_exists,fixture_exists,pinned_source_root_exists,revision_is_immutable,license_verified,schema_verified,corruption_boundary_text_verified"
-        addressed_by: "This audit targets the new V566 intake artifact and fixture built from a directly pinned repository root, and it always emits the readiness field for missing, partial, corrupt, or valid states."
+      - experiment_id: exp6545-external-safety-net-router
+        verdict: "complete_external_safety_net_router_positive: selected held charged linear_compact_router_abstention_exception_exact_fallback beats certified structural control with exact equality, calibrated abstention, immutable train-only exceptions, and reachable native fallback"
+        addressed_by: "Exp6545 measured the experiment-local router and did not audit a production adapter or Rust/PyO3 boundary. This always-run task independently recomputes disabled identity, enabled decisions, cross-language parity, exact fallback, rollback, and shortcut resistance."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Exp6530 correctly found that V565 had no intake artifact, fixture, or pinned source root. Exp6543 must independently audit the new V566 intake without trusting source aggregates, intake aggregates, or source IDs as proof of split independence. It must always run. Work at {project_root}. The planning date is {date}.
+      Exp6549 and Exp6550 attempt production and cross-language integration. This audit must always run. It must not trust their readiness fields, selected rows, aggregate counters, or claimed build identities. Missing inputs are a terminal blocked result with diagnostics. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, and the V566 roadmap document
-      - {project_root}/results/experiment_6541_v566_direct_source_contract.json if present
-      - {project_root}/results/experiment_6542_drift_bench_external_intake_v2.json if present
-      - {project_root}/results/fixtures/v566_drift_bench_external_slice.jsonl if present
-      - {project_root}/results/experiment_6530_external_constraint_corpus_audit.json
-      - the pinned DRIFT source tree, independent Z3 replay path, transaction helper, specs, tests, traceability, exclusions, and E2E plan
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, and the V567 roadmap document
+      - {project_root}/results/experiment_6548_v567_evidence_eligibility_contract.json if present
+      - {project_root}/results/experiment_6549_production_safety_net_adapter.json if present
+      - {project_root}/results/experiment_6550_rust_pyo3_safety_net_parity.json if present
+      - the production adapter, Rust/PyO3 binding, native VerifyRepairPipeline, exact fallback, fixtures, specs, and tests
+      - {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/adversarial_verify.py, traceability, exclusions, and E2E plan
 
       TASK
-      Run an independent provenance, chronology, split, transaction, and exact-replay audit. Always write external_constraint_corpus_audited_ready_score with the exact spelling below.
+      Independently audit disabled-path identity, enabled routing, exact fallback, Python/Rust parity, build provenance, rollback, and shortcut resistance. Always emit production_safety_net_audited_ready_score.
 
       CONCRETE STEPS
-      0. Record artifact and fixture existence, paths and hashes, direct source availability, solver versions, resources, random sample seed, and protected-file hashes.
-      1. Add or confirm REQ-* and SCENARIO anchors for independent source hashing, row recomputation, exact replay, chronology, lineage isolation, transaction closure, missing-input disposition, and atomic output. Write tests first.
-      2. Resolve the direct source commit independently of Exp6542. Verify revision, license, schema, file census, and corruption warning.
-      3. Recompute source-to-local identity and detect duplicates, omissions, source drift, modified constraints, chronology gaps, and turn reordering.
-      4. Recompute train, development, and held lineage sets from rows. Fail readiness on any base-problem overlap or outcome-based sampling.
-      5. Replay a deterministic stratified sample and every timeout, contradiction, or unusual-effort row through an independent Z3 construction. Compare exact outcomes and receipts.
-      6. Audit planned versus terminal units, shard hashes, journal closure, resume receipts, fixture hash, and atomic finalization.
-      7. Attack missing artifacts, empty but success-labeled fixtures, null rows, duplicate IDs, aggregate tampering, solver path identity, source-row aliases, and post-held repair.
-      8. Set external_constraint_corpus_audited_ready_score=1.0 only when source, fixture, chronology, split, replay, and transaction checks all pass. Otherwise set zero and name every failed check.
-      9. Run focused tests with full new-module coverage, lint, spec coverage, row lint, adversarial verification, exact-solver E2E checks, and git status.
+      0. PRECONDITIONS: record input existence, paths and hashes, current Python and Rust build hashes, CPU/RAM/disk, Z3 version, fixture hash, random audit seed, and protected-file hashes.
+      1. Add or confirm REQ-* and SCENARIO anchors for independent replay, missing-input disposition, disabled identity, ABI parity, exact equality, fallback, rollback, row recomputation, and atomic output. Write tests first.
+      2. Rebuild or independently load the current binding. Do not accept an upstream build receipt as proof that native code ran.
+      3. Draw a deterministic stratified audit sample plus every mismatch, abstention, exception, fallback, malformed, timeout, and boundary row. Replay native, disabled, Python-enabled, and Rust-enabled paths.
+      4. Recompute byte identity, decision equality, exact downstream equality, charged time, fallback reachability, exception immutability, and rollback from raw rows.
+      5. Attack missing artifacts, empty success artifacts, duplicated rows, aggregate tampering, Python fallback posing as Rust, source or model identity shortcuts, candidate deletion, table writes, and stale builds.
+      6. Set production_safety_net_audited_ready_score=1.0 only when the independent rows prove disabled identity, enabled exact equality, binding parity, fallback, immutability, and rollback. Otherwise set zero and name every failed check.
+      7. Write one terminal artifact atomically. Run focused tests, scoped Rust checks, lint, spec coverage, row lint, adversarial verification, production E2E checks, and git status.
 
-      Required deliverable: {project_root}/results/experiment_6543_external_corpus_independent_audit_v2.json.
+      Required deliverable: {project_root}/results/experiment_6551_production_safety_net_independent_audit.json.
       REQUIRED ARTIFACT FIELDS:
-        status, honest_verdict, verdict_class, source_existence_and_hash_receipts, independent_revision_license_and_schema_receipt, source_identity_audit_rows, chronology_replay_rows, split_and_lineage_audit, independent_exact_replay_rows, shard_and_transaction_audit, missing_input_disposition, independent_aggregate_rows, leakage_attack_matrix, external_constraint_corpus_audited_ready_score, gate_check_summary, per_unit_rows, aggregate_row_recomputation, preconditions_checked, protected_files_unchanged, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum.
-      Use verdict_class=null for a clean independent audit, partial for usable but incomplete evidence, blocked for missing inputs, or disqualified for false provenance or leakage. honest_verdict must begin complete_, partial_, blocked_, or disqualified_. Set inference_substrate=independent_source_split_transaction_and_z3_replay_audit_no_llm. Set verifier_is_oracle=true for audit checks only; do not declare a positive scientific class. A blocked verdict must populate gate_check_summary with each failed check and observed value.
+        status:
+          principle: "An always-run audit needs a terminal state even when integration inputs are absent."
+        honest_verdict:
+          principle: "The verdict must state adopted, blocked, partial, null, or disqualified disposition with a terminal prefix."
+        verdict_class:
+          principle: "The closed class prevents audit circularity or missing inputs from becoming a positive claim."
+        input_existence_and_hash_receipts:
+          principle: "The audit must identify the exact artifacts and binaries it evaluated."
+        independent_build_identity_receipt:
+          principle: "A fresh native build check prevents Python fallback from posing as Rust execution."
+        independent_disabled_identity_rows:
+          principle: "Fresh native-versus-disabled rows test the central default-off promise."
+        independent_enabled_and_parity_rows:
+          principle: "Fresh route and binding rows prevent self-audit by copied upstream outcomes."
+        independent_exact_equality_receipt:
+          principle: "Production adoption requires unchanged exact accepted outputs."
+        fallback_exception_and_rollback_audit:
+          principle: "The audit must cover every safety escape and persistent-state boundary."
+        independent_cost_recomputation:
+          principle: "Adapter, FFI, and fallback overhead must be charged from raw clocks."
+        missing_input_disposition:
+          principle: "Absent or partial upstream work must close honestly instead of producing null rows."
+        shortcut_attack_matrix:
+          principle: "Independent attacks test identities, candidate preservation, mutation, and build substitution."
+        production_safety_net_audited_ready_score:
+          principle: "A binary independent score defines whether production integration may be adopted."
+        per_unit_rows:
+          principle: "Every comparative audit conclusion must be recomputable per unit."
+        aggregate_row_recomputation:
+          principle: "The adoption decision must derive from audit rows only."
+        gate_check_summary:
+          principle: "A blocked audit must list missing or failed checks and observed values."
+        preconditions_checked:
+          principle: "Input and toolchain receipts distinguish a block from a scientific null."
+        protected_files_unchanged:
+          principle: "The audit must not repair evidence or mutate protected orchestration files."
+        inference_substrate:
+          principle: "Independent deterministic replay must not be mislabeled as live GGUF inference."
+        verifier_is_oracle:
+          principle: "The audit checks integration and exact equality; the learned router is not ground truth."
+        field_provenance:
+          principle: "Every headline field must identify independent rows and recomputation code."
+        random_seed:
+          principle: "A fixed audit sample makes the disposition reproducible."
+        duration_s:
+          principle: "Monotonic duration catches audits that never ran their native checks."
+        tests_run:
+          principle: "Named commands and exits prove independent validation ran."
+        reproducibility_checksum:
+          principle: "A final hash protects the audit determination trail."
+      Set inference_substrate=independent_python_rust_production_adapter_replay_no_llm and verifier_is_oracle=false. Use verdict_class=null for a clean integration audit without a new scientific comparison, partial for usable incomplete evidence, blocked for missing inputs or tools, or disqualified for false provenance or changed exact outputs.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6543_external_corpus_independent_audit_v2 --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6551_production_safety_net_independent_audit --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6544-external-structural-headroom
-    milestone: "2026.08.566"
-    deliverable: results/experiment_6544_external_structural_headroom.json
-    title: "External exact structural-control headroom comparison"
-    priority: high
-    track: solver-guidance
+  - id: exp6552-hysteretic-reversible-conflict-memory
+    milestone: "2026.08.567"
+    deliverable: results/experiment_6552_hysteretic_reversible_conflict_memory.json
+    title: "Hysteretic active, dormant, and retired conflict memory"
+    priority: critical
+    track: continuous-self-learning
     requires_gpu: false
     per_unit_rows: true
     max_turns: 50
     estimated_wall_time_min: 120
     gated_on:
-      - upstream: exp6543-external-corpus-independent-audit-v2
-        artifact_field: external_constraint_corpus_audited_ready_score
+      - upstream: exp6549-production-safety-net-adapter
+        artifact_field: production_safety_net_adapter_ready_score
         op: "=="
         value: 1.0
+        principle: "Reversible memory must attach to a proven default-off adapter with reachable exact fallback."
     prompt: |
       CONTEXT
-      V564 found held structural branch-ordering headroom on an internal procedural corpus. Before a learned router transfers to DRIFT, V566 must show that a non-learned structural control has charged held value under a family-blind external split. Work at {project_root}. The planning date is {date}.
+      Carnot already has transactional refinement-conflict memory from Exp6521 and a production adapter from Exp6549. Reversible Forgetting proposes active, dormant, and retired states with asymmetric thresholds and shadow reactivation. V567 needs a sound controller before any prospective SOTA self-learning comparison. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V566 roadmap document
-      - {project_root}/results/experiment_6543_external_corpus_independent_audit_v2.json
-      - {project_root}/results/fixtures/v566_drift_bench_external_slice.jsonl
-      - {project_root}/results/experiment_6518_structural_control_headroom_ab_v2.json and {project_root}/results/experiment_6519_structural_headroom_certificate.json
-      - reusable exact branch, feature, control, timer, and row-reduction code under {project_root}/python/carnot/
-      - relevant specs, tests, traceability, exclusions, and E2E plan
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V567 roadmap document
+      - {project_root}/results/experiment_6549_production_safety_net_adapter.json
+      - {project_root}/results/experiment_6521_transactional_refinement_conflict_memory.json and its implementation and tests
+      - {project_root}/results/experiment_6542_drift_bench_external_intake_v2.json and {project_root}/results/fixtures/v566_drift_bench_external_slice.jsonl
+      - production adapter, checkpoint, exact replay, conflict, refinement-witness, persistence, and rollback code under {project_root}/python/carnot/
+      - relevant capability specs, traceability, exclusions, references for arXiv:2608.18177 and 2608.18803, and E2E plan
 
       TASK
-      Run a matched external structural headroom comparison across native, random, analytical, bounded-refocus, and one-shot-enumeration controls. Charge every proposal and exact check.
+      Implement and test a default-off hysteretic controller over transactional exact conflict memory. Compare no retirement, LRU, one-threshold, and active/dormant/retired control under recurring regimes and bounded capacity.
 
       CONCRETE STEPS
-      0. Evaluate the structured gate and record expected and observed values, input hashes, solver identity, resources, timeout, seeds, and protected-file hashes.
-      1. Add REQ-* and SCENARIO anchors for matched controls, family-blind calibration, full candidate preservation, charged cost, exact equality, censoring, and row-first verdicts. Write tests first.
-      2. Freeze unit, turn, family, effort, seed, budget, tie, timeout, and stop contracts before running any arm.
-      3. Adapt only reusable structural features. Do not use entity names, source IDs, target assignments, held outcomes, or future turns.
-      4. Run native, random, analytical, bounded-refocus, and one-shot-enumeration arms on identical candidate sets and budgets. Keep native exact fallback.
-      5. Emit a row for each unit, turn, seed, and arm with exact answer equality, candidate order, checks, solver effort, proposals, wall time, timeout, and censoring.
-      6. Report overall and family-stratified charged effects, paired uncertainty, headroom, no-headroom cells, and any Simpson reversal.
-      7. Attack identity leakage, row-order leakage, unequal budgets, deleted candidates, warm-cache asymmetry, timer aliases, cherry-picked seeds, and aggregate-only claims.
-      8. Set external_structural_headroom_ready_score=1.0 only when a preregistered non-learned control has positive held charged value beyond native and random with exact equality, multi-family support, and no shortcut failure.
-      9. Run focused tests with full new-module coverage, lint, spec coverage, row lint, gate audit, adversarial verification, exact-solver E2E checks, and git status.
+      0. PRECONDITIONS: evaluate the structured gate; record upstream path and hash, fixture and memory-format hashes, Python and Z3 versions, CPU/RAM/disk, persistence directory, seeds, capacity, and protected-file hashes.
+      1. Ensure the relevant continual-memory capability spec has REQ-* and SCENARIO anchors for query freeze, exact admission, refinement witnesses, state transitions, hysteresis, shadow reactivation, policy-gated retirement, capacity, restart, rollback, and fail-closed corruption. Write tests first.
+      2. Define versioned active, dormant, and retired states. Freeze asymmetric thresholds and minimum evidence counts on train and development data only.
+      3. Permit a write only after exact validation and a valid refinement relation. Freeze memory during each query. Permit dormant reactivation only after shadow exact replay. Require an explicit policy receipt before irreversible retirement.
+      4. Compare no retirement, LRU, one-threshold, and hysteretic control on identical chronological exact events with recurring regimes, supersession, contradiction, stale support, invalid witness, and bounded-capacity pressure.
+      5. Emit one row per event, seed, and arm with pre-state, evidence, action, post-state, exact receipt, memory hash, proposal and solver cost, unsafe use, churn, eviction, reactivation, and rollback data.
+      6. Restart at preregistered boundaries and require byte-identical decisions and memory hashes. Roll back injected corrupt or unsafe writes and require exact restoration.
+      7. Attack threshold oscillation, held threshold tuning, same-query writes, missing witnesses, invalid refinement reuse, authority inversion, hash collision, corrupt persistence, unbounded growth, and retirement without policy.
+      8. Set reversible_memory_controller_ready_score=1.0 when state semantics, exact authority, restart, rollback, capacity, and attacks pass. This readiness may be 1.0 even if hysteresis has no comparative benefit; record that benefit honestly in the verdict class.
+      9. Write one terminal artifact atomically. Run focused tests with full new-module coverage, lint, spec coverage, row lint, gate audit, adversarial verification, persistence and pipeline E2E checks, and git status.
 
-      Required deliverable: {project_root}/results/experiment_6544_external_structural_headroom.json.
+      Required deliverable: {project_root}/results/experiment_6552_hysteretic_reversible_conflict_memory.json.
       REQUIRED ARTIFACT FIELDS:
-        status, honest_verdict, verdict_class, upstream_gate_receipt, frozen_comparison_contract, control_definitions, family_and_effort_census, per_unit_rows, paired_effect_rows, family_effect_rows, charged_cost_recomputation, exact_equality_receipt, candidate_preservation_receipt, censoring_and_timeout_receipts, shortcut_attack_matrix, external_structural_headroom_ready_score, gate_check_summary, aggregate_row_recomputation, preconditions_checked, protected_files_unchanged, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum.
-      Use verdict_class=positive only for charged held structural value with exact equality and no shortcut; use null for no benefit, partial for narrow support, blocked for a failed gate or precondition, or disqualified for leakage or invalid comparison. honest_verdict must name the charged result and support. Set inference_substrate=external_drift_exact_solver_structural_controls_no_llm. Set verifier_is_oracle=false because the compared structural controls do not supply ground truth; Z3 is separate evaluation authority. A blocked verdict must populate gate_check_summary with the failed check and observed value.
+        status:
+          principle: "A terminal state distinguishes a working controller experiment from setup-only persistence."
+        honest_verdict:
+          principle: "The verdict must separate controller readiness from comparative benefit and use a terminal prefix."
+        verdict_class:
+          principle: "A closed class prevents safe-but-null hysteresis from being reported as positive."
+        upstream_gate_receipt:
+          principle: "The controller must identify the exact production adapter boundary it extends."
+        sample_size_and_power_contract:
+          principle: "A controller comparison needs enough events, regimes, families, and seeds to support its stated effect."
+        state_machine_and_threshold_contract:
+          principle: "Frozen versioned states and asymmetric thresholds prevent outcome-driven controller changes."
+        exact_admission_and_refinement_receipts:
+          principle: "Only exact-supported conflicts with valid refinement witnesses may enter reusable memory."
+        transition_rows:
+          principle: "Every state change must be replayable from its pre-state, evidence, action, and exact receipt."
+        controller_comparison_rows:
+          principle: "Matched no-retirement, LRU, one-threshold, and hysteretic rows support an honest comparative verdict."
+        capacity_churn_and_reactivation_rows:
+          principle: "Utility cannot hide oscillation, unbounded growth, or failed recovery of dormant knowledge."
+        restart_and_rollback_receipts:
+          principle: "Persistent self-learning must survive process boundaries and undo unsafe state exactly."
+        unsafe_write_and_use_ledger:
+          principle: "A mean speed gain cannot hide one invalid memory admission or reuse."
+        attack_matrix:
+          principle: "Adversarial state, witness, threshold, and persistence cases test the safety contract."
+        reversible_memory_controller_ready_score:
+          principle: "A binary implementation gate lets prospective CSL proceed even when comparative benefit is null."
+        per_unit_rows:
+          principle: "Comparative state-controller claims require every event, seed, and arm row."
+        aggregate_row_recomputation:
+          principle: "Benefit, churn, safety, and readiness must derive from emitted rows."
+        gate_check_summary:
+          principle: "A blocked artifact must identify the failed upstream, resource, or persistence check."
+        preconditions_checked:
+          principle: "Input, solver, and storage receipts separate an execution block from null controller value."
+        protected_files_unchanged:
+          principle: "The controller task must preserve protected orchestration files."
+        inference_substrate:
+          principle: "Exact event replay and controller evaluation must not imply fresh LLM inference."
+        verifier_is_oracle:
+          principle: "The compared memory controllers are not ground truth; Z3 remains separate authority."
+        field_provenance:
+          principle: "Each transition and readiness field must point to rows, thresholds, code, and hashes."
+        random_seed:
+          principle: "Fixed regime, tie, and event seeds make comparisons reproducible."
+        duration_s:
+          principle: "Charged wall time includes persistence, exact replay, restart, and rollback work."
+        tests_run:
+          principle: "Named unit and E2E commands prove lifecycle paths executed."
+        reproducibility_checksum:
+          principle: "A final content hash protects the memory determination trail."
+      Set inference_substrate=transactional_exact_conflict_memory_controller_replay_no_llm and verifier_is_oracle=false. Use verdict_class=positive only for preregistered comparative value with zero unsafe writes or uses and exact lifecycle checks; use null for no benefit with a sound controller, partial for narrow support, blocked for failed preconditions, or disqualified for authority or persistence failure.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6544_external_structural_headroom --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6552_hysteretic_reversible_conflict_memory --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6545-external-safety-net-router
-    milestone: "2026.08.566"
-    deliverable: results/experiment_6545_external_safety_net_router.json
-    title: "External Safety-Net learned router, abstention, and exact-fallback comparison"
+  - id: exp6553-prospective-sota-continuous-self-learning
+    milestone: "2026.08.567"
+    deliverable: results/experiment_6553_prospective_sota_continuous_self_learning.json
+    title: "Prospective SOTA chronological continuous self-learning comparison"
     priority: critical
-    track: solver-guidance
+    track: continuous-self-learning
     requires_gpu: true
     per_unit_rows: true
     max_turns: 50
-    estimated_wall_time_min: 180
+    estimated_wall_time_min: 360
+    prior_failures:
+      - experiment_id: exp6193-prospective-continuous-strategy-learning-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp6193 never executed because its seed-stream readiness score was zero. V567 uses the shipped V566 chronological external fixture and the in-roadmap reversible controller. It adds matched-dose co-observation, hysteretic retirement, all three mandated GGUF families, and future-support checks."
+        retire_if_same_verdict: true
+      - experiment_id: exp6150-frozen-qwen-continuous-self-learning-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp6150 never executed because shifted-family admission prerequisites failed. This attempt uses an independently audited external family-blind corpus, exact post-query admission, reversible memory states, and prospective retained-family and future-support rows."
+        retire_if_same_verdict: true
+      - experiment_id: exp5867-prospective-certified-continuous-learning
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp5867 was blocked because its required shadow-adapter artifact was absent. V567 names two in-roadmap gates with identically declared readiness fields and always emits the failed check and observed value if either prerequisite is unavailable."
+        retire_if_same_verdict: true
     gated_on:
-      - upstream: exp6544-external-structural-headroom
-        artifact_field: external_structural_headroom_ready_score
+      - upstream: exp6552-hysteretic-reversible-conflict-memory
+        artifact_field: reversible_memory_controller_ready_score
         op: "=="
         value: 1.0
+        principle: "Prospective learning may start only after reversible state, exact admission, restart, and rollback semantics pass."
+      - upstream: exp6548-v567-evidence-eligibility-contract
+        artifact_field: v566_external_transfer_eligible_score
+        op: "=="
+        value: 1.0
+        principle: "The chronological stream must come from the independently eligible external evidence root."
+    prompt: |
+      CONTEXT
+      Exp6552 supplies a reversible transactional controller, and V566 supplies an audited external chronological corpus. V567 now needs a prospective continuous self-learning result on current flagship local models. Memory must remain frozen inside each query and may commit only after exact verification. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V567 roadmap document
+      - {project_root}/results/experiment_6548_v567_evidence_eligibility_contract.json and {project_root}/results/experiment_6552_hysteretic_reversible_conflict_memory.json
+      - {project_root}/results/experiment_6542_drift_bench_external_intake_v2.json, {project_root}/results/experiment_6546_smt_cost_guard_sota.json, and the pinned V566 fixture
+      - {project_root}/scripts/experiment_template.py, {project_root}/python/carnot/inference/sota_models.py, llama.cpp runner and receipt code, production adapter, reversible memory, exact replay, checkpoint, and rollback code
+      - relevant capability specs, traceability, exclusions, references for Memoir, reversible forgetting, co-observation, and support reshaping, and E2E plan
+
+      TASK
+      Run a prospective chronological continuous self-learning comparison across all three mandated GGUF families. Compare frozen, current-only, transactional replay, matched-dose co-observation, one-threshold, hysteretic, and same-query-mutation arms under exact authority.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: evaluate both structured gates; resolve cached_sota_pair(gpu_indices=(0, 1)); verify both RTX 3090 devices, driver, VRAM, llama.cpp binary, all required GGUF files and hashes, writable checkpoint space, Z3, input hashes, seeds, and protected-file hashes. If a required model or GPU contract fails, write a blocked artifact. Do not substitute a legacy model for a headline row.
+      1. Ensure the relevant continuous-self-learning capability spec has REQ-* and SCENARIO anchors for prospective chronology, query freeze, post-exact commit, matched update dose, co-observation, support retention, unsafe control, restart, rollback, receipts, and fail-closed preconditions. Write tests first.
+      2. Declare MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Resolve local .gguf files through llama.cpp only. Never pass a GGUF repo ID to AutoTokenizer.
+      3. Freeze at least 36 evaluable chronological query boundaries per model, with all three domains and at least three regime transitions. Freeze split, order, arms, update dose, replay capacity, thresholds, seeds, budgets, timeouts, censoring, and support probes before held outcomes.
+      4. Run frozen, current-only, transactional replay, matched-dose co-observation, one-threshold, hysteretic, and same-query-mutation arms on identical model and query cells. The same-query arm is an unsafe diagnostic and cannot be adopted.
+      5. Freeze memory within each query. Record the model request and response hash, exact result, proposed write, witness, commit decision, post-query memory hash, route, fallback, tokens, solver calls, GPU samples, monotonic clocks, exit status, and censoring.
+      6. Measure current exact success and charged cost, retained-family exact success, future exact-satisfying support, proposal coverage, unsafe writes and uses, state churn, capacity, harmful interventions, restart equality, and rollback equality.
+      7. Run preregistered restarts and corrupt-write rollback challenges. Preserve all negative, no-headroom, timeout, and model-family cells.
+      8. Attack same-query leakage, future-turn access, held threshold tuning, unequal update dose, identity shortcuts, missing live receipts, fake CUDA, stale outputs, hidden legacy substitution, unsupported fallback, and aggregate-only headlines.
+      9. Set prospective_csl_ready_score=1.0 only when a safe arm has positive charged prospective value, zero unsafe writes and uses, exact-output equality, retained-family and future-support non-inferiority, restart and rollback equality, multi-model support, and clean receipts. Otherwise close null, partial, blocked, or disqualified.
+      10. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row lint, gate audit, adversarial verification, GGUF and pipeline E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6553_prospective_sota_continuous_self_learning.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal state distinguishes a completed prospective stream from cached setup output."
+        honest_verdict:
+          principle: "The verdict must name current, retention, future-support, safety, and receipt outcomes with a terminal prefix."
+        verdict_class:
+          principle: "A closed class prevents circular, unsafe, blocked, or partial learning from becoming positive."
+        upstream_gate_receipts:
+          principle: "Both reversible-controller and external-evidence gates must be independently recheckable."
+        MODEL_SPECS:
+          principle: "Exact mandated model identities prevent legacy smoke models from supporting headline claims."
+        live_model_and_gpu_receipts:
+          principle: "Process, model-file, GPU, timing, and output receipts prove fresh local inference occurred."
+        sample_size_and_power_contract:
+          principle: "Per-model query, domain, regime, and seed floors bound the strength of comparative claims."
+        frozen_chronology_and_arm_contract:
+          principle: "Freezing order, arms, dose, budgets, and support probes prevents outcome-driven design."
+        per_unit_rows:
+          principle: "Every model, query, seed, arm, and condition needs a row for recomputation."
+        memory_transition_rows:
+          principle: "Each proposed write and committed state change must carry its exact witness and hashes."
+        current_cost_and_success_rows:
+          principle: "Immediate benefit must charge model, solver, routing, and memory work."
+        retained_family_rows:
+          principle: "Current gains may not hide regression on earlier constraint families."
+        future_support_rows:
+          principle: "Endpoint gains are ineligible if future exact-satisfying behavior becomes less reachable."
+        coobservation_and_dose_receipt:
+          principle: "Replay benefit must be separated from extra update exposure."
+        unsafe_write_and_use_ledger:
+          principle: "One invalid admission or reuse is load-bearing safety evidence."
+        restart_and_rollback_receipts:
+          principle: "Continuous learning must persist and recover exactly across process and state failures."
+        charged_cost_recomputation:
+          principle: "All live inference, exact checks, persistence, and intervention costs must derive from raw receipts."
+        prospective_csl_ready_score:
+          principle: "A binary headline is allowed only when benefit, safety, support, and receipt gates all pass."
+        aggregate_row_recomputation:
+          principle: "Every headline must derive from per-unit and transition rows."
+        gate_check_summary:
+          principle: "A blocked run must name the failed gate or live resource and observed value."
+        preconditions_checked:
+          principle: "GPU, model, runner, solver, and storage checks distinguish blocked execution from null learning."
+        protected_files_unchanged:
+          principle: "The experiment must preserve protected orchestration files."
+        inference_substrate:
+          principle: "The artifact must declare authenticated local llama.cpp GGUF inference plus exact Z3 evaluation."
+        verifier_is_oracle:
+          principle: "The compared memory policy is not ground truth; exact Z3 outcomes remain separate authority."
+        field_provenance:
+          principle: "Each headline must identify model receipts, exact rows, transitions, and reducer code."
+        random_seed:
+          principle: "Fixed generation, order, and tie seeds make the prospective comparison repeatable."
+        duration_s:
+          principle: "Real flagship GGUF inference requires plausible monotonic wall time."
+        tests_run:
+          principle: "Named unit, lint, verifier, and E2E receipts show all paths were checked."
+        reproducibility_checksum:
+          principle: "A final hash detects mutation of the terminal prospective record."
+      Set inference_substrate=authenticated_local_llama_cpp_sota_gguf_chronological_csl_plus_exact_z3 and verifier_is_oracle=false. Use verdict_class=positive only for a safe, row-supported prospective benefit with future-support and retention non-inferiority; use null for no safe benefit, partial for narrow support or a tradeoff, blocked for failed gates or resources, or disqualified for leakage, false live receipts, unsafe reuse, or changed exact outputs.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6553_prospective_sota_continuous_self_learning --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6554-continuous-self-learning-independent-audit
+    milestone: "2026.08.567"
+    deliverable: results/experiment_6554_continuous_self_learning_independent_audit.json
+    title: "Independent prospective continuous self-learning audit"
+    priority: critical
+    track: infrastructure-audit
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 90
+    agent_type: codex
+    model: gpt-5.5
     prior_failures:
-      - experiment_id: exp6520-safety-net-branch-router-ab
-        verdict: "complete_safety_net_branch_router_ab_positive: compact routers beat certified structural headroom with exact fallback and no held table writes"
-        addressed_by: "This is an external family-blind transfer after Exp6527 corrected the prior evidence boundary; it adds held abstention calibration, model and family shortcut attacks, an immutable train-only exception table, and a separate independent audit."
+      - experiment_id: exp6193-prospective-continuous-strategy-learning-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp6193 produced no prospective rows because its upstream seed-stream gate failed. This audit is always-run, has no structured gate, validates any V567 live receipts that exist, and emits a precise missing-input disposition when they do not."
+        retire_if_same_verdict: true
+      - experiment_id: exp6150-frozen-qwen-continuous-self-learning-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp6150 supplied no executed self-learning comparison to audit. This task independently replays the new external chronology, memory transitions, exact outcomes, dose, retention, future support, restart, and rollback from immutable V567 rows."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Exp6520 found a positive Safety-Net router result on an internal bounded corpus, and Exp6527 made its corrected evidence boundary eligible. Exp6544 must first certify external structural headroom. V566 now tests whether the learned fast path transfers without losing exact fallback or learning held identities. Work at {project_root}. The planning date is {date}.
+      Exp6553 attempts a live SOTA prospective self-learning result. This audit always runs and does not repeat GGUF generation. It must independently validate live receipts, replay exact outcomes and memory transitions, and recompute current value, retention, future support, dose, restart, rollback, and safety from rows. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V566 roadmap document
-      - {project_root}/results/experiment_6544_external_structural_headroom.json
-      - {project_root}/results/experiment_6520_safety_net_branch_router_ab.json and {project_root}/results/experiment_6527_v565_evidence_eligibility_corrigendum.json
-      - {project_root}/results/fixtures/v566_drift_bench_external_slice.jsonl
-      - reusable router, branch-feature, exact fallback, exception-table, calibration, and artifact code under {project_root}/python/carnot/
-      - relevant specs, tests, traceability, exclusions, and E2E plan
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, and the V567 roadmap document
+      - {project_root}/results/experiment_6552_hysteretic_reversible_conflict_memory.json if present
+      - {project_root}/results/experiment_6553_prospective_sota_continuous_self_learning.json if present
+      - input fixtures, raw model receipt paths, checkpoints, journals, exact replay, reversible memory, reducers, specs, and tests
+      - {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/adversarial_verify.py, traceability, exclusions, and E2E plan
 
       TASK
-      Train and evaluate a compact external Safety-Net router with held calibration, abstention, an immutable train-only exception table, and complete native exact fallback.
+      Independently audit the prospective CSL claim from immutable raw receipts and per-unit rows. Always emit continuous_self_learning_audited_ready_score and a precise missing-input or scientific disposition.
 
       CONCRETE STEPS
-      0. Evaluate the structured gate and record expected and observed values, input hashes, GPU and CPU identity, seeds, budgets, timeouts, and protected-file hashes.
-      1. Add REQ-* and SCENARIO anchors for train-only fitting, held calibration, abstention, exception-table immutability, full candidate preservation, exact fallback, shortcut attacks, and rollback. Write tests first.
-      2. Freeze candidate models from the existing compact linear, MLP, and KAN router family. Do not add a broad architecture sweep. Freeze selection, calibration, and abstention rules before held outcomes.
-      3. Train only on sealed train rows. Calibrate only on development rows. Hash and freeze the exception table before any held evaluation. Held writes are forbidden.
-      4. Compare the Exp6544 certified structural control, each eligible compact router, router plus abstention, and router plus exception table and exact fallback on identical held candidate sets and budgets.
-      5. Emit per-unit rows with routing score, uncertainty, chosen order, abstention, table hit, fallback, exact equality, proposals, checks, time, timeout, and charged total cost.
-      6. Report overall, family, effort, and abstention-bin effects. Preserve every negative and no-headroom cell.
-      7. Attack family identity, source ID, entity names, row order, solver effort leakage, held table writes, deleted candidates, fallback unreachability, calibration reuse, and timer fabrication.
-      8. Set external_safety_net_ready_score=1.0 only when a frozen eligible router beats the certified structural control on held charged cost, preserves exact equality and full fallback, has calibrated abstention, and passes all shortcut attacks.
-      9. Run focused tests with full new-module coverage, lint, spec coverage, row lint, gate audit, adversarial verification, exact-solver E2E checks, and git status.
+      0. PRECONDITIONS: record input existence, paths and hashes, raw receipt and checkpoint existence, model-file hashes without loading weights, Z3 and Python versions, CPU/RAM/disk, audit seed, and protected-file hashes.
+      1. Add or confirm REQ-* and SCENARIO anchors for independent receipt validation, exact replay, transition replay, matched dose, retention, support, safety, restart, rollback, missing-input disposition, and atomic output. Write tests first.
+      2. Validate process IDs, commands, model-file hashes, output hashes, monotonic clocks, GPU samples, exit status, and durations. Reject stale output, legacy substitution, missing model identities, or impossible live timing.
+      3. Replay every memory transition and exact outcome from the prior state, witness, event, and checker. Recompute memory hashes at each boundary.
+      4. Recompute current success and cost, retained-family effects, future-support effects, co-observation dose, unsafe writes and uses, churn, capacity, restarts, rollbacks, timeouts, and censoring from rows only.
+      5. Attack missing or duplicated rows, aggregate tampering, query-boundary leakage, future access, held tuning, unequal dose, model aliases, zero-headroom wins, all-null cells, and circular exact authority.
+      6. Set continuous_self_learning_audited_ready_score=1.0 only when receipt authenticity, row closure, exact replay, transition replay, dose, safety, retention, support, restart, rollback, and verdict recomputation all pass. A clean audit may still confirm a null or partial scientific result.
+      7. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row lint, adversarial verification, replay E2E checks, and git status.
 
-      Required deliverable: {project_root}/results/experiment_6545_external_safety_net_router.json.
+      Required deliverable: {project_root}/results/experiment_6554_continuous_self_learning_independent_audit.json.
       REQUIRED ARTIFACT FIELDS:
-        status, honest_verdict, verdict_class, upstream_gate_receipt, frozen_router_contract, training_and_calibration_receipts, candidate_model_rows, exception_table_path_hash_and_freeze_receipt, abstention_calibration_rows, per_unit_rows, paired_effect_rows, family_and_effort_effect_rows, charged_cost_recomputation, exact_equality_and_fallback_receipt, shortcut_attack_matrix, rollback_receipt, external_safety_net_ready_score, gate_check_summary, aggregate_row_recomputation, preconditions_checked, protected_files_unchanged, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum.
-      Use verdict_class=positive only for external held charged value with exact equality, calibrated abstention, and reachable fallback; use null for no value, partial for narrow support, blocked for a failed gate or precondition, or disqualified for leakage, held mutation, or invalid comparison. Set inference_substrate=local_compact_router_train_only_exception_table_and_external_exact_fallback_no_llm. Set verifier_is_oracle=false because the learned router is not ground truth; Z3 is separate evaluation authority. A blocked verdict must populate gate_check_summary with the failed check and observed value.
+        status:
+          principle: "An always-run audit needs a terminal state for missing, invalid, null, and positive inputs."
+        honest_verdict:
+          principle: "The verdict must state receipt, safety, retention, support, and scientific disposition with a terminal prefix."
+        verdict_class:
+          principle: "A closed class keeps audit status and scientific status structurally bounded."
+        input_existence_and_hash_receipts:
+          principle: "The audit must identify the exact artifact, raw receipts, journals, and checkpoints it used."
+        independent_live_receipt_audit_rows:
+          principle: "Fresh receipt checks prevent cached or legacy execution from posing as flagship inference."
+        independent_exact_replay_rows:
+          principle: "Z3 replay must confirm every credited current, retained, and future outcome."
+        independent_transition_replay_rows:
+          principle: "Memory effects are eligible only when every state hash and witness recomputes."
+        independent_current_effect_rows:
+          principle: "Immediate claims must be recomputed from matched units and charged costs."
+        independent_retention_and_support_rows:
+          principle: "The audit must expose any older-family or future-support regression."
+        dose_and_coobservation_audit:
+          principle: "A replay benefit cannot be credited to more update exposure."
+        unsafe_write_and_use_audit:
+          principle: "No aggregate gain can hide one invalid memory action."
+        restart_rollback_and_persistence_audit:
+          principle: "Reusable learning must reproduce and recover exactly across state boundaries."
+        missing_input_disposition:
+          principle: "Missing live evidence must close blocked rather than produce a scientific null."
+        attack_matrix:
+          principle: "Receipt, leakage, dose, row, headroom, and circularity attacks stress the full claim."
+        continuous_self_learning_audited_ready_score:
+          principle: "A binary audit score defines whether the prospective result may enter the capstone."
+        per_unit_rows:
+          principle: "Every independent comparative conclusion needs unit-level recomputation rows."
+        aggregate_row_recomputation:
+          principle: "The audit verdict must derive only from independent rows."
+        gate_check_summary:
+          principle: "A blocked audit must list each missing or failed check and observed value."
+        preconditions_checked:
+          principle: "Input and replay checks distinguish a blocked audit from null science."
+        protected_files_unchanged:
+          principle: "The audit must not repair upstream evidence or mutate protected files."
+        inference_substrate:
+          principle: "The audit replays stored receipts and exact checks; it does not claim new GGUF generation."
+        verifier_is_oracle:
+          principle: "The learned memory policy is not authority; the audit uses separate exact evaluation."
+        field_provenance:
+          principle: "Each disposition field must point to immutable rows, receipts, and reducers."
+        random_seed:
+          principle: "A fixed audit sample and attack order make the audit reproducible."
+        duration_s:
+          principle: "Monotonic time exposes an audit that skipped receipt or replay work."
+        tests_run:
+          principle: "Named tests and E2E commands show independent checks executed."
+        reproducibility_checksum:
+          principle: "A final hash protects the independent determination trail."
+      Set inference_substrate=independent_stored_sota_receipt_and_exact_transition_replay_no_new_llm and verifier_is_oracle=false. Use verdict_class=null for a clean audit of any honest scientific disposition, partial for incomplete but usable evidence, blocked for missing inputs, or disqualified for false receipts, leakage, unsafe reuse, or non-recomputable claims.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6545_external_safety_net_router --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6554_continuous_self_learning_independent_audit --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6546-smt-cost-guard-sota
-    milestone: "2026.08.566"
-    deliverable: results/experiment_6546_smt_cost_guard_sota.json
-    title: "SMT-conflict inference-cost stress and exact-tool guard on mandated SOTA GGUFs"
+  - id: exp6555-proof-preserving-constraint-saturation-fixture
+    milestone: "2026.08.567"
+    deliverable: results/experiment_6555_proof_preserving_constraint_saturation_fixture.json
+    title: "Proof-preserving constraint-saturation SOTA ingestion and fixture"
     priority: critical
-    track: sota-local-inference
+    track: sota-ingestion-and-data
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 150
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp5913-transactional-constraint-memory-fixture
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp5913 never built its memory fixture because an exact-slot readiness gate was zero. This task uses the clean V566 external evidence gate, creates proof-preserving constraint-load variants rather than memory rows, and always records the failed check if its in-roadmap gate is unavailable."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6548-v567-evidence-eligibility-contract
+        artifact_field: v566_external_transfer_eligible_score
+        op: "=="
+        value: 1.0
+        principle: "Fresh constraint-load variants must derive only from the independently eligible external evidence root."
+    prompt: |
+      CONTEXT
+      V566 established an audited external DRIFT corpus, but it did not measure compositional constraint collapse. Recent Constraint Saturation Evaluation and VeRA work motivate proof-preserving variants across constraint count, type, interaction, and surface form. V567 needs a focused execution-time SOTA mapping and a sealed fixture before any model outcome exists. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/research-references.md section "V567 planner refresh - 2026-08-23" and {project_root}/research-studying.md
+      - {project_root}/results/experiment_6548_v567_evidence_eligibility_contract.json and its clean V566 import ledger
+      - {project_root}/results/experiment_6542_drift_bench_external_intake_v2.json, its pinned fixture, source hashes, chronology, and exact replay code
+      - exact constraint, Z3, generator, transaction, split, and artifact helpers under {project_root}/python/carnot/
+      - relevant capability specs, tests, traceability, exclusions, and E2E plan
+
+      TASK
+      Run a focused low-concurrency SOTA ingestion for compositional constraints. Then create a sealed, proof-preserving DRIFT saturation fixture with deterministic per-clause and joint checkers.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: evaluate the structured gate; record the upstream path and hash, direct arXiv availability, query timestamps, Python and Z3 versions, CPU/RAM/disk, source fixture hash, and protected-file hashes.
+      1. Use arXiv and low-concurrency primary-source checks for the strongest three to five 2025-2026 methods on compositional constraints, executable variant generation, selective verification, and symbolic certification. Write {project_root}/docs/research-notes/v567-constraint-saturation-sota-mapping.md with exact URLs, method-to-current-stack mappings, failure modes, and a bottom-line fixture contract. Update research-studying.md and research-references.md additively only for genuinely new findings.
+      2. Add or confirm REQ-* and SCENARIO anchors for source equivalence, intended hardening, clause identity, exact labels, lineage isolation, frozen splits, transaction closure, and no model-derived authority. Write focused tests first.
+      3. Freeze at least 36 base lineages across seating, scheduling, and logic-grid domains. Derive equivalent and intentionally hardened variants across simultaneous constraint counts 1 through 12, structural and lexical types, sparse and interacting graphs, cumulative turns, and at least two surface forms.
+      4. Prove each equivalent variant preserves the source solution set. Prove each hardened variant adds only its declared constraint. Emit deterministic per-clause and joint checkers with code hashes and Z3 receipts.
+      5. Freeze train, development, and held lineages before any downstream model run. No base problem, entity alias, row ordering, template family, or answer-derived feature may cross splits.
+      6. Create {project_root}/results/fixtures/v567_constraint_saturation.jsonl through content-addressed shards and atomic finalization. Preserve source IDs, local IDs, chronology, constraint graph, surface, exact labels, checker identity, timeout, and censoring.
+      7. Attack source drift, non-equivalent rewrites, undeclared hardening, missing clauses, solver disagreement, duplicate lineages, surface leakage, post-label sampling, corrupt resume, and aggregate-only success.
+      8. Set constraint_saturation_fixture_ready_score=1.0 only when the SOTA mapping is source-backed, every planned unit is terminal, equivalence or hardening proofs pass, exact checkers round-trip, split floors hold, and hashes close.
+      9. Write the terminal artifact atomically. Run focused tests with full new-module coverage, lint, spec coverage, row lint, gate audit, adversarial verification, exact-solver E2E checks, fixture checksum verification, and git status.
+
+      Required deliverables: {project_root}/results/experiment_6555_proof_preserving_constraint_saturation_fixture.json, {project_root}/results/fixtures/v567_constraint_saturation.jsonl, and {project_root}/docs/research-notes/v567-constraint-saturation-sota-mapping.md.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal state distinguishes a completed fixture from a partial download or generation pass."
+        honest_verdict:
+          principle: "The verdict must state source, proof, split, and checker closure with a terminal prefix."
+        verdict_class:
+          principle: "A closed class prevents a partial or invalid fixture from becoming positive science."
+        upstream_gate_receipt:
+          principle: "The fixture must identify the eligible V566 evidence root it extends."
+        literature_source_rows:
+          principle: "One row per primary source makes the execution-time SOTA refresh auditable."
+        sota_to_experiment_mapping:
+          principle: "Each adopted method must map to current code, a falsifiable use, and a named failure mode."
+        source_and_generator_hashes:
+          principle: "Immutable source and generator identities prevent silent benchmark drift."
+        frozen_variant_and_split_contract:
+          principle: "Constraint counts, types, interactions, surfaces, and lineage splits must be fixed before outcomes."
+        equivalence_and_hardening_proof_rows:
+          principle: "Every variant needs an exact witness for preserved or intentionally narrowed semantics."
+        exact_clause_checker_contract:
+          principle: "Deterministic per-clause and joint checks keep labels independent of model behavior."
+        sample_size_and_power_contract:
+          principle: "Lineage, domain, constraint-count, interaction, and surface floors bound later claims."
+        fixture_path_and_hash:
+          principle: "A content hash makes every downstream row traceable to the sealed fixture."
+        per_unit_rows:
+          principle: "Every source and derived unit must carry its proof, checker, split, and terminal status."
+        attack_matrix:
+          principle: "Equivalence, leakage, solver, resume, and aggregate attacks test the fixture contract."
+        constraint_saturation_fixture_ready_score:
+          principle: "One binary field gives the SOTA comparison an exact readiness gate."
+        aggregate_row_recomputation:
+          principle: "Readiness must derive from the complete unit ledger."
+        gate_check_summary:
+          principle: "A blocked result must name the failed upstream, source, solver, or storage check and value."
+        preconditions_checked:
+          principle: "Source, solver, resource, and network receipts separate blocked work from invalid science."
+        protected_files_unchanged:
+          principle: "The task must preserve the active roadmap and conductor."
+        inference_substrate:
+          principle: "Primary-source ingestion and exact variant generation perform no LLM inference."
+        verifier_is_oracle:
+          principle: "Z3 and executable clause checkers are exact fixture authority, not a learned-verifier claim."
+        field_provenance:
+          principle: "Each readiness and proof field must point to source rows, hashes, and reducer code."
+        random_seed:
+          principle: "Fixed sampling and ordering seeds make fixture construction repeatable."
+        duration_s:
+          principle: "Monotonic time exposes skipped source, solver, or transaction work."
+        tests_run:
+          principle: "Named validation commands show the source, proof, split, and transaction paths executed."
+        reproducibility_checksum:
+          principle: "A final content hash protects the sealed contract."
+      Set inference_substrate=primary_source_sota_ingestion_and_proof_preserving_z3_fixture_no_llm and verifier_is_oracle=true for variant labels only. Use verdict_class=null for a complete data contract, partial for a bounded usable subset, blocked for failed gates or prerequisites, or disqualified for false provenance, leakage, or invalid proofs.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6555_proof_preserving_constraint_saturation_fixture --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6556-sota-constraint-saturation-intervention-ab
+    milestone: "2026.08.567"
+    deliverable: results/experiment_6556_sota_constraint_saturation_intervention_ab.json
+    title: "SOTA constraint-saturation and bounded-intervention comparison"
+    priority: critical
+    track: constrained-generation
     requires_gpu: true
     per_unit_rows: true
     max_turns: 50
-    estimated_wall_time_min: 300
+    estimated_wall_time_min: 480
+    prior_failures:
+      - experiment_id: exp5708-sota-exact-constraint-canary
+        verdict: "blocked: parse_failures"
+        addressed_by: "Exp5708 depended on parsing model text into an exact-constraint canary and blocked on parse failures. V567 uses a sealed executable constraint fixture with deterministic per-clause and joint checkers, records malformed outputs as outcomes, and does not require a generated formal representation."
+        retire_if_same_verdict: true
+      - experiment_id: exp5897-sota-constraint-ir-repair-ab
+        verdict: "blocked_precondition: exp5896_gate_replayed"
+        addressed_by: "Exp5897 was a schema-supported ConstraintIR repair rerun and remained blocked on its retired predecessor gate. This comparison has no dependency on that chain and tests flat, longer-flat, bounded decomposition, and exact-tool routing against executable source constraints."
+        retire_if_same_verdict: true
     gated_on:
-      - upstream: exp6543-external-corpus-independent-audit-v2
-        artifact_field: external_constraint_corpus_audited_ready_score
+      - upstream: exp6555-proof-preserving-constraint-saturation-fixture
+        artifact_field: constraint_saturation_fixture_ready_score
         op: "=="
         value: 1.0
+        principle: "Model evaluation may start only after proof, checker, split, and fixture closure."
     prompt: |
       CONTEXT
-      SMTrap reports that SMT conflict count can identify CSP prompts that induce long reasoning traces and that tool routing reduces token use. Solver-Hard reports that solver hardness does not reliably predict LLM accuracy and that proof-preserving surfaces matter. V566 must test both claims under one frozen local protocol with current mandated models. Work at {project_root}. The planning date is {date}.
+      Exp6555 seals proof-preserving external constraint-load variants. V567 must measure the compositional phase curve on current local flagship models and test bounded interventions without replacing exact authority. Longer initial compute is a required control because selective verification can lose to a larger first-pass budget. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V566 roadmap document
-      - {project_root}/research-references.md entries for arXiv:2608.18921 and arXiv:2607.17047
-      - {project_root}/results/experiment_6543_external_corpus_independent_audit_v2.json and the V566 DRIFT fixture
-      - {project_root}/scripts/experiment_template.py and {project_root}/python/carnot/inference/sota_models.py
-      - local llama.cpp loader, exact solver, token telemetry, timeout, checkpoint, and atomic artifact code
-      - relevant specs, tests, traceability, exclusions, and E2E plan
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V567 roadmap document
+      - {project_root}/results/experiment_6555_proof_preserving_constraint_saturation_fixture.json, {project_root}/results/fixtures/v567_constraint_saturation.jsonl, and the V567 SOTA mapping note
+      - {project_root}/results/experiment_6545_external_safety_net_router.json, {project_root}/results/experiment_6546_smt_cost_guard_sota.json, and {project_root}/results/experiment_6547_external_transfer_independent_audit.json
+      - {project_root}/scripts/experiment_template.py, {project_root}/python/carnot/inference/sota_models.py, llama.cpp runner and receipt code, exact clause checkers, production adapter, cost guard, checkpoint, and transaction helpers
+      - relevant capability specs, tests, traceability, exclusions, and E2E plan
 
       TASK
-      Measure solver conflict count, proof-preserving surface form, local-model inference cost, and exact-tool guarding as separate variables across all three mandated SOTA GGUF families.
+      Run a matched comparison of flat generation, longer-flat generation, bounded decomposition, the V566 exact-tool cost guard, and a combined bounded route across all three mandated GGUF families.
 
       CONCRETE STEPS
-      0. Evaluate the gate. Record input hashes, cached_sota_pair(gpu_indices=(0, 1)) output, exact hub IDs and GGUF hashes, llama.cpp versions, GPU identity and VRAM, CPU/RAM/disk, thermal state, budgets, and protected-file hashes.
-      1. Add REQ-* and SCENARIO anchors for model identity, conflict and surface stratification, proof preservation, matched prompts, cost receipts, exact-tool dispatch, timeout, censoring, checkpointing, and row-first claims. Write tests first.
-      2. Require MODEL_SPECS rows for unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Load local model_path values through llama.cpp. Never call a Transformers tokenizer on a GGUF repo ID.
-      3. Freeze a bounded balanced challenge from the audited fixture across solver-conflict quantiles and domains. Create multiple proof-preserving surface variants per logical instance. Verify exact equivalence before inference.
-      4. Freeze a cheap dispatch rule using train and development rows only. It may route high-risk queries directly to Z3. It may not use held model cost or target answers.
-      5. Run unguarded local inference and guarded exact-tool dispatch under identical final-output, timeout, and accounting contracts. Preserve timeouts and parse failures as terminal rows.
-      6. Record prompt and output tokens, wall time, first-token time when available, timeout, surface, conflicts, exact validity, dispatch, tool time, total charged time, and model identity for every unit.
-      7. Report conflict-cost association conditional on surface and model, surface effects conditional on logical instance, guarded token and time effects, exact completion, calibration, and failure cells. Do not report solver conflict as a universal model-hardness or correctness score.
-      8. Attack prompt-length confounding, surface non-equivalence, cache order, warm-up asymmetry, token counter mismatch, timer aliases, model substitution, held threshold tuning, tool-time omission, and cherry-picked timeouts.
-      9. Set smt_cost_guard_ready_score=1.0 only when the preregistered guard reduces held charged token or time cost with exact completion non-inferiority across at least two mandated model families and survives surface-controlled audit.
-      10. Run focused tests with full new-module coverage, lint, spec coverage, row lint, gate audit, adversarial verification, local-inference E2E checks, checkpoint-resume checks, and git status.
+      0. PRECONDITIONS: evaluate the structured gate; resolve cached_sota_pair(gpu_indices=(0, 1)); verify both RTX 3090 devices, driver, VRAM, llama.cpp binary, all required GGUF files and hashes, writable checkpoint space, fixture hash, checker hashes, seeds, Z3, and protected-file hashes. A failed required model or GPU contract produces a blocked artifact. Do not substitute a legacy model for a headline row.
+      1. Add or confirm REQ-* and SCENARIO anchors for matched model arms, constraint-load strata, per-clause and joint checks, bounded decomposition, longer-flat control, charged cost, harmful intervention, abstention, exact fallback, receipts, and fail-closed preconditions. Write focused tests first.
+      2. Declare MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Resolve local .gguf files through llama.cpp only. Never pass a GGUF repository ID to AutoTokenizer.
+      3. Freeze at least 36 held base lineages per model, balanced across three domains, constraint-count bins, interaction types, and surfaces. Freeze model parameters, prompts, budgets, seeds, timeouts, censoring, decomposition limit, router thresholds, and adoption rule before held outcomes.
+      4. Run flat, longer-flat, bounded-decomposition, exact-tool-cost-guard, and combined-route arms on identical model, lineage, variant, surface, and seed cells. Bounded decomposition must preserve all clauses and include an exact final joint check.
+      5. Record request and response hashes, model file, process, GPU, token, timing, exit, clause, joint, route, abstention, decomposition, fallback, solver-call, timeout, and censoring receipts for every cell.
+      6. Measure per-clause success, all-constraint success, exact final validity, harmful interventions, recoveries, regressions, tokens, solver calls, wall time, charged cost, timeout, and support by model, k, type, interaction, and surface.
+      7. Attack missing clauses, lost context, surface or identity shortcuts, unequal budgets, hidden extra retries, stale outputs, fake CUDA, legacy substitution, unreachable exact fallback, result-dependent routing, zero-headroom wins, and aggregate-only claims.
+      8. Set constraint_saturation_intervention_ready_score=1.0 only when rows establish a phase curve and a preregistered bounded arm improves exact joint success or charged cost over both flat and longer-flat controls without increased invalid release, harmful intervention, timeout, or unsupported routing.
+      9. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row lint, gate audit, adversarial verification, GGUF and exact-checker E2E checks, receipt validation, and git status.
 
-      Required deliverable: {project_root}/results/experiment_6546_smt_cost_guard_sota.json.
+      Required deliverable: {project_root}/results/experiment_6556_sota_constraint_saturation_intervention_ab.json.
       REQUIRED ARTIFACT FIELDS:
-        status, honest_verdict, verdict_class, upstream_gate_receipt, MODEL_SPECS, models_used, model_cache_and_load_receipts, frozen_challenge_contract, logical_instance_rows, proof_preserving_surface_receipts, solver_conflict_rows, frozen_dispatch_contract, per_unit_rows, model_and_surface_effect_rows, conflict_cost_association_rows, guarded_versus_unguarded_rows, token_and_time_recomputation, exact_completion_receipt, calibration_rows, censoring_and_timeout_receipts, confound_attack_matrix, smt_cost_guard_ready_score, gate_check_summary, aggregate_row_recomputation, preconditions_checked, protected_files_unchanged, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum.
-      Use verdict_class=positive only for a charged held guarded benefit with exact completion non-inferiority and multi-model support; use null for no benefit, partial for one-model or unstable support, blocked for a failed gate, cache, GPU, or runtime precondition, or disqualified for confounding, model substitution, or invalid accounting. Set inference_substrate=authenticated_local_llama_cpp_sota_gguf_inference_plus_exact_z3_cost_guard. Set verifier_is_oracle=false because the cost guard is the tested mechanism; Z3 is separate exact evaluation authority. A blocked verdict must populate gate_check_summary with the failed check and observed value.
+        status:
+          principle: "A terminal state distinguishes a completed multi-model comparison from setup-only work."
+        honest_verdict:
+          principle: "The verdict must state phase-curve, intervention, harm, cost, and receipt outcomes with a terminal prefix."
+        verdict_class:
+          principle: "A closed class prevents blocked, unsafe, circular, or narrow evidence from becoming positive."
+        upstream_gate_receipt:
+          principle: "The comparison must identify the exact sealed fixture that authorized execution."
+        MODEL_SPECS:
+          principle: "Exact mandated model identities prevent smoke models from supporting headline claims."
+        live_model_and_gpu_receipts:
+          principle: "Process, file, GPU, timing, and output receipts prove fresh local inference."
+        frozen_arm_and_budget_contract:
+          principle: "Arms, budgets, thresholds, decomposition bounds, and adoption rules must precede held outcomes."
+        sample_size_and_power_contract:
+          principle: "Per-model lineage, domain, k, interaction, surface, and seed floors bound comparative claims."
+        per_unit_rows:
+          principle: "Every model, lineage, variant, surface, seed, arm, and condition needs a raw row."
+        per_clause_and_joint_result_rows:
+          principle: "Clause success cannot substitute for exact all-constraint success."
+        route_decomposition_and_fallback_rows:
+          principle: "Every intervention, abstention, split, and exact fallback must be visible."
+        harmful_intervention_ledger:
+          principle: "Recoveries and regressions must be counted symmetrically."
+        charged_cost_rows:
+          principle: "Tokens, solver calls, retries, persistence, and wall time must be charged to each arm."
+        constraint_load_phase_curve:
+          principle: "The claimed collapse boundary must derive from model and k-stratified rows."
+        constraint_saturation_intervention_ready_score:
+          principle: "One binary field gates adoption on benefit beyond longer-flat compute with no safety loss."
+        aggregate_row_recomputation:
+          principle: "Every headline must derive from emitted rows and the frozen reducer."
+        gate_check_summary:
+          principle: "A blocked run must name the failed fixture, model, GPU, runner, or checker and observed value."
+        preconditions_checked:
+          principle: "Resource and identity receipts separate infrastructure blocks from model nulls."
+        protected_files_unchanged:
+          principle: "The experiment must preserve protected orchestration files."
+        inference_substrate:
+          principle: "The artifact must declare authenticated local llama.cpp GGUF inference plus exact clause and joint checks."
+        verifier_is_oracle:
+          principle: "The learned route is not authority; executable clause and joint checkers remain separate release authority."
+        field_provenance:
+          principle: "Each phase, benefit, harm, and cost field must point to raw receipts and reducer code."
+        random_seed:
+          principle: "Fixed generation, routing, and ordering seeds make the comparison repeatable."
+        duration_s:
+          principle: "Flagship GGUF inference across matched arms requires plausible monotonic wall time."
+        tests_run:
+          principle: "Named unit, lint, verifier, and E2E receipts show all paths executed."
+        reproducibility_checksum:
+          principle: "A final hash detects mutation of the terminal comparison."
+      Set inference_substrate=authenticated_local_llama_cpp_sota_gguf_constraint_saturation_plus_exact_clause_joint_checks and verifier_is_oracle=false for the routing comparison. Use verdict_class=positive only for a row-supported bounded benefit beyond flat and longer-flat controls with no safety regression; use null for no benefit, partial for narrow support or tradeoffs, blocked for failed gates or resources, or disqualified for leakage, false receipts, missing clauses, or invalid release.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6546_smt_cost_guard_sota --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6556_sota_constraint_saturation_intervention_ab --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6547-external-transfer-independent-audit
-    milestone: "2026.08.566"
-    deliverable: results/experiment_6547_external_transfer_independent_audit.json
-    title: "Independent external router and SOTA cost-guard audit"
+  - id: exp6557-constraint-saturation-independent-audit
+    milestone: "2026.08.567"
+    deliverable: results/experiment_6557_constraint_saturation_independent_audit.json
+    title: "Independent constraint-saturation phase-curve and policy audit"
     priority: critical
     track: infrastructure-audit
     requires_gpu: false
@@ -333,34 +973,394 @@ tasks:
     model: gpt-5.5
     prompt: |
       CONTEXT
-      Exp6547 must always run. It audits the structural, learned-router, and SOTA cost-guard artifacts without trusting their aggregates. A blocked upstream lane must still produce a complete diagnostic row and a zero readiness score. Work at {project_root}. The planning date is {date}.
+      Exp6556 attempts a live multi-model constraint-saturation and intervention comparison. This audit always runs and performs no new generation. It must validate the model receipts, independently replay clause and joint checks, and recompute the phase curve, paired effects, harms, and charged costs from rows. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, and the V566 roadmap document
-      - {project_root}/results/experiment_6543_external_corpus_independent_audit_v2.json if present
-      - {project_root}/results/experiment_6544_external_structural_headroom.json if present
-      - {project_root}/results/experiment_6545_external_safety_net_router.json if present
-      - {project_root}/results/experiment_6546_smt_cost_guard_sota.json if present
-      - the V566 fixture, immutable exception table, exact replay code, row-consistency lint, adversarial verifier, specs, tests, exclusions, and E2E plan
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, and the V567 roadmap document
+      - {project_root}/results/experiment_6555_proof_preserving_constraint_saturation_fixture.json and its fixture if present
+      - {project_root}/results/experiment_6556_sota_constraint_saturation_intervention_ab.json and raw receipt paths if present
+      - source and derived fixtures, exact clause and joint checkers, llama.cpp receipts, reducers, transactions, specs, and tests
+      - {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/adversarial_verify.py, traceability, exclusions, and E2E plan
 
       TASK
-      Independently recompute the external router and cost-guard claims from per-unit rows. Audit shortcuts, accounting, exact equality, calibration, model identity, and terminal coverage.
+      Independently audit the constraint-load phase curve and every bounded-intervention claim from immutable rows, model receipts, fixture proofs, and exact checker replay. Always emit constraint_saturation_audited_ready_score.
 
       CONCRETE STEPS
-      0. Record input existence, paths and hashes, code hashes, solver and model receipts, resources, audit seed, and protected-file hashes.
-      1. Add or confirm REQ-* and SCENARIO anchors for always-run disposition, independent row reduction, model identity, shortcut attacks, exact equality, cost accounting, calibration, and atomic output. Write tests first.
-      2. Recompute every structural and router paired effect from rows. Verify candidate preservation, train-only fitting, development-only calibration, held table immutability, abstention, fallback reachability, and exact equality.
-      3. Recompute every SOTA cost effect from model, logical-instance, surface, and arm rows. Verify GGUF identity, conflict and surface balance, tool-time charging, token counts, timeouts, and exact completion.
-      4. Re-run a deterministic stratified exact replay and source-equivalence sample. Re-hash exception, fixture, model, and code assets.
-      5. Attack family and model identity, entity names, row order, solver-conflict leakage, prompt length, cache order, timing fabrication, duplicate units, null rows, hidden held writes, omitted tool cost, and aggregate tampering.
-      6. Preserve separate router and cost-guard dispositions. One lane cannot rescue or suppress the other.
-      7. Set external_transfer_audited_ready_score=1.0 only when at least one scientific lane has a row-supported eligible result and every adopted claim passes its independent checks. Otherwise set zero and state whether the reason is blocked, null, partial, or disqualified.
-      8. Run focused tests with full new-module coverage, lint, spec coverage, row lint, adversarial verification, exact-replay E2E checks, and git status.
+      0. PRECONDITIONS: record input existence, paths and hashes, model-file hashes without loading weights, process and GPU receipt paths, checker and fixture hashes, Python and Z3 versions, CPU/RAM/disk, audit seed, and protected-file hashes.
+      1. Add or confirm REQ-* and SCENARIO anchors for independent fixture proof, receipt validation, clause replay, joint replay, matched pairing, phase-curve recomputation, harm, charged cost, missing-input disposition, and atomic output. Write focused tests first.
+      2. Recheck a deterministic stratified sample of equivalent and hardened variants against the source solver. Recompute every unusual, disputed, timeout, or invalid-release row.
+      3. Validate process IDs, commands, model-file hashes, output hashes, GPU samples, monotonic clocks, token counts, exit status, and durations. Reject stale output, legacy substitution, missing model identities, or impossible timing.
+      4. Replay every per-clause and joint result. Confirm that each decomposition preserves all clauses and that every release passed the exact joint checker.
+      5. Recompute per-model and pooled phase curves, paired flat-versus-long-flat and intervention effects, recoveries, regressions, harmful interventions, tokens, solver calls, time, timeout, censoring, and support from rows only.
+      6. Attack missing and duplicate rows, unequal cells or budgets, hidden retries, aggregate tampering, zero-headroom wins, all-null strata, post-held thresholds, surface shortcuts, invalid release, and circular exact authority.
+      7. Set constraint_saturation_audited_ready_score=1.0 only when source proofs, model receipts, row closure, exact replay, pairing, cost, harm, and verdict recomputation all pass. A clean audit may confirm positive, null, or partial science.
+      8. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row lint, adversarial verification, exact-replay E2E checks, and git status.
 
-      Required deliverable: {project_root}/results/experiment_6547_external_transfer_independent_audit.json.
+      Required deliverable: {project_root}/results/experiment_6557_constraint_saturation_independent_audit.json.
       REQUIRED ARTIFACT FIELDS:
-        status, honest_verdict, verdict_class, input_disposition_rows, router_row_recomputation, cost_guard_row_recomputation, independent_exact_replay_rows, source_equivalence_rows, model_identity_audit_rows, exception_and_fixture_hash_receipts, candidate_and_fallback_audit, calibration_audit_rows, token_time_and_tool_cost_audit, censoring_and_terminal_coverage, shortcut_attack_matrix, lane_dispositions, external_transfer_audited_ready_score, gate_check_summary, per_unit_rows, aggregate_row_recomputation, preconditions_checked, protected_files_unchanged, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum.
-      Use verdict_class=null for a clean independent audit, partial when only one lane is auditable, blocked for missing prerequisite artifacts, or disqualified for false identity, leakage, or accounting. honest_verdict must state each lane disposition. Set inference_substrate=independent_external_router_cost_and_exact_replay_audit_no_llm. Set verifier_is_oracle=true for audit checks only; do not turn the audit into a positive scientific claim. A blocked verdict must populate gate_check_summary with each failed check and observed value.
+        status:
+          principle: "An always-run audit needs a terminal state for missing, invalid, null, partial, and positive inputs."
+        honest_verdict:
+          principle: "The verdict must state fixture, receipt, phase-curve, harm, and policy dispositions with a terminal prefix."
+        verdict_class:
+          principle: "A closed class keeps audit status and scientific status structurally bounded."
+        input_existence_and_hash_receipts:
+          principle: "The audit must identify the exact fixture, artifact, raw receipts, and checkers it used."
+        independent_fixture_proof_rows:
+          principle: "A model comparison is ineligible if equivalent or hardened variants do not replay exactly."
+        independent_live_receipt_audit_rows:
+          principle: "Fresh receipt checks prevent cached or legacy output from posing as flagship inference."
+        independent_clause_and_joint_replay_rows:
+          principle: "Every credited success and released result must pass separate executable checks."
+        independent_phase_curve_rows:
+          principle: "Constraint-load collapse must be recomputed by model, k, type, interaction, and surface."
+        independent_paired_intervention_rows:
+          principle: "Every benefit must use matched cells against flat and longer-flat controls."
+        harmful_intervention_and_release_audit:
+          principle: "No aggregate gain can hide regressions or one invalid release."
+        charged_cost_audit:
+          principle: "Tokens, retries, solver calls, persistence, and wall time must recompute from receipts."
+        bounded_adoption_policy:
+          principle: "Any recommended route must use preregistered development thresholds and abstain outside support."
+        missing_input_disposition:
+          principle: "Missing live evidence must close blocked rather than produce a scientific null."
+        attack_matrix:
+          principle: "Receipt, row, budget, headroom, shortcut, release, and circularity attacks stress the claim."
+        constraint_saturation_audited_ready_score:
+          principle: "A binary audit score defines whether the result may enter the capstone."
+        per_unit_rows:
+          principle: "Every independent conclusion needs unit-level recomputation rows."
+        aggregate_row_recomputation:
+          principle: "The audit verdict must derive only from independent rows."
+        gate_check_summary:
+          principle: "A blocked audit must list each missing or failed check and observed value."
+        preconditions_checked:
+          principle: "Input and replay checks distinguish a blocked audit from null science."
+        protected_files_unchanged:
+          principle: "The audit must not repair upstream evidence or mutate protected files."
+        inference_substrate:
+          principle: "The audit replays stored receipts and exact checks; it performs no new GGUF generation."
+        verifier_is_oracle:
+          principle: "The route is not authority; the audit uses independent executable clause and joint checks."
+        field_provenance:
+          principle: "Each disposition field must point to immutable rows, receipts, and reducers."
+        random_seed:
+          principle: "A fixed audit sample and attack order make the audit repeatable."
+        duration_s:
+          principle: "Monotonic time exposes an audit that skipped receipt or replay work."
+        tests_run:
+          principle: "Named tests and E2E commands show independent checks executed."
+        reproducibility_checksum:
+          principle: "A final hash protects the independent determination trail."
+      Set inference_substrate=independent_stored_sota_receipt_and_exact_constraint_replay_no_new_llm and verifier_is_oracle=true for independent exact replay only. Use verdict_class=null for a clean audit of any honest scientific disposition, partial for incomplete but usable evidence, blocked for missing inputs, or disqualified for false receipts, leakage, invalid variants, missing clauses, or non-recomputable claims.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6547_external_transfer_independent_audit --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6557_constraint_saturation_independent_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6558-arc-live-redirect-ledger-reachability
+    milestone: "2026.08.567"
+    deliverable: results/experiment_6558_arc_live_redirect_ledger_reachability.json
+    title: "ARC live trajectory-supervisor redirect-ledger generalization reachability"
+    priority: high
+    track: arc-agi3-generalization
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp6524-arc-supervisor-redirect-generalization
+        verdict: "blocked: missing outcome-bearing live trajectory-supervisor receipts"
+        addressed_by: "Exp6524 found zero outcome-bearing receipts and could not test selection. This task first verifies and, if needed, repairs the shared live receipt path from each redirect to its next exact outcome. It changes arm selection only after prospective rows meet the frozen support rule."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6524 correctly closed blocked because no outcome-bearing live trajectory-supervisor receipts existed. The ARC generalization floor now permits supervisor refinement from the redirect ledger. V567 must improve or verify receipt reachability on the shared live path before it considers a selection-order change. This task claims no game or level solve. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md sections on ARC live hidden-game discovery, generalization testing, AVO adoption, and live-path reachability
+      - {project_root}/results/experiment_6524_arc_supervisor_redirect_generalization.json
+      - {project_root}/python/carnot/agentic/arc_competition_agent.py, its E3AgentPolicy and make_carnot_agent entrypoints, trajectory supervisor, receipt schema, and tests
+      - {project_root}/python/carnot/agentic/arc_solver_kit.py and {project_root}/ops/arc_solve_registry.yaml for shared-method context only
+      - REQ-ARC-WMTE-6600 and REQ-ARC-WMTE-6640, relevant specs, traceability, exclusions, ARC lints, and E2E plan
+
+      TASK
+      Verify or repair the live trajectory-supervisor outcome receipt path. Then evaluate the frozen curated-arm selection rule from prospective redirect-to-next-outcome rows, or close honestly with no firings and no policy change.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record git status, live entrypoint and supervisor code hashes, receipt schema and artifact paths, current curated arm table, registry hash, Python versions, CPU/RAM/disk, and protected-file hashes. Confirm this is a no-solve, no-game-source task.
+      1. Add or confirm REQ-* and SCENARIO anchors for live-entrypoint reachability, redirect identity, next-outcome linkage, no-firing closure, curated-arm selection, fail-closed missing receipts, and no solve claim. Write focused tests first.
+      2. Trace E3AgentPolicy and make_carnot_agent to prove the shared trajectory supervisor emits redirect ID, arm, trigger state, next exact outcome, resolved_by_levelup, actions_to_levelup, fired and helped counts, and stagnations_unredirected without a per-game adapter or source read.
+      3. If the outcome linkage is unreachable or discarded, make the smallest shared live-path receipt fix. Do not add a solver, GameAdapter, game rule, offline BFS, source probe, or generated arm.
+      4. Read prospective live run artifacts created after Exp6524. Emit one row per firing and one explicit no-firing row per inspected run. Link each redirect only to the next observed exact live outcome.
+      5. Freeze a minimum support rule before selecting: an arm must have at least three prospective firings before priority can change. Never grow the curated arm table. If all arms exhaust and stagnation continues, write a future-arm specification only.
+      6. Compare current order with any supported refinement by replaying the recorded selection decisions only. Do not replay or claim game solves. Report firings, helped outcomes, unresolved outcomes, actions to progress, unredirected stagnations, and unsupported arms.
+      7. Attack missing outcomes, duplicate redirects, outcome reassignment, source or adapter access, registry duplicates, future-outcome leakage, one-row promotion, generated arms, off-path modules, and a forced-change success criterion.
+      8. Set arc_live_redirect_ledger_ready_score=1.0 when the shared live receipt path is reachable and every inspected run has a terminal firing or no-firing disposition. A selection change is optional and needs the frozen support rule. With no firings, preserve the current policy and close complete with a null scientific disposition.
+      9. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row lint, arc_orphan_solver_lint.py, arc_levelup_guarantee_lint.py, adversarial verification, live-entrypoint E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6558_arc_live_redirect_ledger_reachability.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal state lets no-firing and missing-receipt outcomes satisfy the standing ARC slot honestly."
+        honest_verdict:
+          principle: "The verdict must state live reachability, firing support, and policy disposition with a terminal prefix."
+        verdict_class:
+          principle: "A closed class prevents an unsupported or blocked refinement from becoming positive."
+        prior_failure_receipt:
+          principle: "The artifact must show how the Exp6524 missing-outcome block was tested."
+        live_entrypoint_reachability_receipt:
+          principle: "Only code reachable from E3AgentPolicy or make_carnot_agent can improve the hidden-game deliverable."
+        supervisor_receipt_schema_and_code_hashes:
+          principle: "Exact schema and implementation identities prevent a test-only receipt path from posing as live."
+        redirect_to_next_outcome_rows:
+          principle: "Each firing must link to its next exact observed outcome without reassignment."
+        no_firing_run_rows:
+          principle: "An empty ledger is a valid measured state and must not force churn."
+        curated_arm_support_rows:
+          principle: "Selection changes require prospective support for existing human-curated arms."
+        selection_policy_disposition:
+          principle: "The record must say changed, unchanged, or future-arm-specification and why."
+        no_solve_and_no_source_receipt:
+          principle: "The task must prove that it read no game source, used no per-game adapter, and claimed no level solve."
+        attack_matrix:
+          principle: "Receipt, leakage, source, adapter, support, and off-path attacks test the generalization claim."
+        arc_live_redirect_ledger_ready_score:
+          principle: "One binary field records live receipt closure without requiring a manufactured policy change."
+        per_unit_rows:
+          principle: "Every run, firing, arm, and outcome disposition must remain recheckable."
+        aggregate_row_recomputation:
+          principle: "Fired, helped, unresolved, and unredirected totals must derive from rows."
+        gate_check_summary:
+          principle: "A blocked result must name the missing live path, receipt, or input check and observed value."
+        preconditions_checked:
+          principle: "Code, schema, artifact, registry, and resource receipts separate a block from no firings."
+        protected_files_unchanged:
+          principle: "The ARC task must preserve the active roadmap and conductor."
+        inference_substrate:
+          principle: "Receipt tracing and decision replay invoke no LLM and no offline solver."
+        verifier_is_oracle:
+          principle: "Supervisor outcomes are live observations, not an oracle-distinct EBM verifier."
+        field_provenance:
+          principle: "Every reachability and selection field must point to run rows, code hashes, and reducer logic."
+        random_seed:
+          principle: "A fixed audit and replay order makes receipt analysis repeatable."
+        duration_s:
+          principle: "Monotonic time exposes a task that skipped code tracing or receipt inspection."
+        tests_run:
+          principle: "Named ARC lint, unit, and E2E receipts show the shared live path was checked."
+        reproducibility_checksum:
+          principle: "A final hash protects the generalization determination trail."
+      Set inference_substrate=live_arc_trajectory_supervisor_receipt_reachability_and_selection_replay_no_llm and verifier_is_oracle=false. Use verdict_class=positive only for a supported prospective selection improvement, null for a reachable path with no supported change, partial for narrow receipt coverage, blocked for missing live-path prerequisites, or disqualified for source access, a per-game fix, off-path work, leakage, or a solve claim.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6558_arc_live_redirect_ledger_reachability --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6559-gatemate-changed-state-continuity
+    milestone: "2026.08.567"
+    deliverable: results/experiment_6559_gatemate_changed_state_continuity.json
+    title: "GateMate changed-physical-state continuity with one-action stop"
+    priority: high
+    track: hardware
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 100
+    estimated_wall_time_min: 90
+    model: opus
+    prior_failures:
+      - experiment_id: exp6525-gatemate-changed-state-continuity
+        verdict: "blocked_missing_new_physical_receipt: no operator-authored dated GateMate physical-state receipt newer than Exp6325 exists; zero hardware commands run and Exp3866 remains excluded"
+        addressed_by: "This continuation requires a dated operator-authored physical-state receipt newer than Exp6525, not merely newer than the older Exp6325 boundary. Without that changed state it runs zero hardware commands; the same blocked verdict retires this attempt."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6525 preserved the GateMate hardware track and correctly issued zero commands because no new operator-authored physical-state receipt existed. V567 may act only if cable, port, board power, or another physical condition changed after Exp6525. This is continuity work, not a speed, energy, or availability claim. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md hardware continuity and pre-launch rules, and the V567 roadmap document
+      - {project_root}/results/experiment_6525_gatemate_changed_state_continuity.json
+      - {project_root}/ops/hardware-bringup-prep.md, {project_root}/ops/known-issues.md, {project_root}/research-hardware-wishlist.md, and operator-authored hardware receipts
+      - GateMate RTL, constraints, build files, prior detect and flash transcripts, safe target validation, and hardware tests
+      - relevant capability specs, traceability, exclusions including Exp3866, and E2E plan
+
+      TASK
+      Search for a dated operator-authored GateMate physical-state receipt newer than Exp6525. Run zero hardware commands without it. With it, run one authorized detect or flash action and stop at the first terminal result.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record git status, current UTC time, receipt search roots, Exp6525 artifact and hash, USB enumeration from existing receipts only, tool and bitstream identities without touching hardware, CPU/RAM/disk, and protected-file hashes.
+      1. Add or confirm REQ-* and SCENARIO anchors for changed-state authorization, receipt provenance, safe target validation, one-action budget, zero-command block, terminal stop, hash capture, and no performance claim. Write focused tests first.
+      2. Search only durable operator-authored records for a dated GateMate physical-state change after Exp6525. An agent-written plan, stale USB enumeration, or repeated command output is not authorization.
+      3. If no valid receipt exists, issue zero openFPGALoader, JTAG, flash, reset, USB, or board commands. Write the exact failed check, latest receipt date, and zero-command proof. Stop.
+      4. If a valid receipt exists, validate its allowed action and explicit board target. Confirm tool, cable, bitstream, expected device, and stop conditions before hardware access.
+      5. Run only one authorized action: either a bounded DirtyJTAG GM1Ax detect or a validated flash. Capture command, monotonic time, exit status, stdout and stderr hashes, detected IDCODE or flash receipt, USB identity, and board target. Stop after the first terminal result.
+      6. Preserve Exp3866 and all prior exclusion boundaries. Do not retry at multiple clock rates, change RTL, synthesize a new design, infer availability from USB enumeration, or claim latency, speedup, energy, or sampling quality.
+      7. Attack stale or agent-authored receipts, ambiguous board targets, mismatched bitstreams, multiple-command execution, status-only success, missing terminal output, and claims beyond the one receipt.
+      8. Set gatemate_changed_state_slot_complete_score=1.0 for either a compliant zero-command blocked closure or one terminal authorized action. Set gatemate_hardware_advanced_score=1.0 only for a valid new detect or flash receipt. A repeated no-receipt verdict triggers retirement through prior_failures.
+      9. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row lint, exclusion-manifest lint, adversarial verification, applicable hardware E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6559_gatemate_changed_state_continuity.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal state distinguishes a safe zero-command closure from incomplete hardware setup."
+        honest_verdict:
+          principle: "The verdict must name receipt validity, command count, and terminal result with a terminal prefix."
+        verdict_class:
+          principle: "A closed class prevents a continuity receipt from becoming a performance claim."
+        prior_failure_receipt:
+          principle: "The artifact must identify Exp6525 and the stricter newer-than boundary."
+        operator_physical_state_receipt:
+          principle: "Only a dated operator-authored physical change can authorize a new board command."
+        safe_target_validation_receipt:
+          principle: "Board, cable, tool, action, and bitstream identity must close before hardware access."
+        hardware_action_rows:
+          principle: "Zero or one action rows make the bounded command budget mechanically recheckable."
+        terminal_command_receipt:
+          principle: "A real detect or flash result needs command, timing, exit, stream hashes, and device identity."
+        zero_command_block_receipt:
+          principle: "A missing physical receipt must prove that no hardware command ran."
+        exp3866_exclusion_preserved:
+          principle: "The known retired path cannot be reopened by a continuity task."
+        claim_boundary:
+          principle: "The artifact must disclaim latency, speed, energy, quality, and general availability."
+        attack_matrix:
+          principle: "Receipt, target, command-count, output, and overclaim attacks test hardware integrity."
+        gatemate_changed_state_slot_complete_score:
+          principle: "The standing hardware slot can close safely without manufacturing activity."
+        gatemate_hardware_advanced_score:
+          principle: "Only a new valid detect or flash receipt records physical advancement."
+        per_unit_rows:
+          principle: "Every receipt candidate and any hardware action needs a separate row."
+        aggregate_row_recomputation:
+          principle: "Command count and advancement must derive from the emitted rows."
+        gate_check_summary:
+          principle: "A blocked verdict must name the missing receipt check and observed latest date."
+        preconditions_checked:
+          principle: "Receipt, tool, target, resource, and hash checks separate blocked work from board failure."
+        protected_files_unchanged:
+          principle: "The hardware task must preserve the active roadmap and conductor."
+        inference_substrate:
+          principle: "The substrate distinguishes a zero-command receipt audit from an authenticated hardware smoke."
+        verifier_is_oracle:
+          principle: "The hardware transcript is direct evidence for one action only, not a model verifier."
+        field_provenance:
+          principle: "Every continuity field must point to receipt paths, command rows, and hashes."
+        duration_s:
+          principle: "Monotonic time exposes repeated or omitted hardware actions."
+        tests_run:
+          principle: "Named unit, lint, and hardware E2E receipts show the stop authority was checked."
+        reproducibility_checksum:
+          principle: "A final hash protects the hardware determination trail."
+      Use inference_substrate=dated_hardware_receipt_audit_no_command_no_llm when no valid change exists, or inference_substrate=hardware_smoke for one authorized board action. Set verifier_is_oracle=false. Use verdict_class=blocked for the safe zero-command closure, null for one valid terminal continuity action without a performance claim, partial for incomplete authenticated output, or disqualified for unauthorized commands, target ambiguity, false provenance, or overclaim.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6559_gatemate_changed_state_continuity --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6560-v567-independent-capstone
+    milestone: "2026.08.567"
+    deliverable: results/experiment_6560_v567_independent_capstone.json
+    title: "Independent V567 capstone, adoption boundary, and V568 handoff"
+    priority: critical
+    track: infrastructure-governance
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 100
+    estimated_wall_time_min: 150
+    model: opus
+    operator_override: "2026-05-29 operator directive (standing): routine milestone transition — false-positive scope-match versus prior capstones; V567 aggregates new Exp6548-Exp6559 evidence and does not rerun a prior experiment."
+    prior_failures:
+      - experiment_id: exp6526-v564-independent-capstone
+        verdict: "complete_partial_v564_evidence_graph: row-supported structural, router, CSL, and adaptive validation claims coexist with blocked ARC and GateMate lineages"
+        addressed_by: "Exp6526 adjudicated V564 artifacts and closed partial because its ARC and GateMate lanes were blocked. This routine capstone adjudicates a new Exp6548-Exp6559 evidence graph, uses always-run V567 audits, and preserves new blocked lanes instead of repeating V564 measurements."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      V567 contains production integration, reversible continuous self-learning, constraint-saturation, ARC generalization, and GateMate continuity lanes. This capstone always runs. It must preserve missing and negative evidence, recompute every comparative headline from rows, and reconcile only changes that actually shipped. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, {project_root}/_bmad/prd.md, {project_root}/_bmad/architecture.md, and the V567 roadmap document
+      - {project_root}/results/experiment_6548_v567_evidence_eligibility_contract.json through {project_root}/results/experiment_6559_gatemate_changed_state_continuity.json if present
+      - all raw receipt, fixture, checkpoint, journal, Rust build, GGUF, exact-checker, ARC, and hardware paths cited by those artifacts
+      - {project_root}/scripts/adversarial_verify.py, {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/exclusion_manifest_lint.py, {project_root}/scripts/publication_gate.py, and relevant roadmap and ARC lints
+      - relevant capability specs, {project_root}/_bmad/traceability.md, {project_root}/ops/status.md, {project_root}/ops/changelog.md, {project_root}/ops/north-star.md, and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Produce an independent V567 claim ledger and adoption boundary. Recompute production, continuous-learning, saturation, ARC, and hardware dispositions from terminal artifacts and rows. Reconcile specs and operations documents only for work that shipped.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record git status, expected task and deliverable inventory, artifact and raw-receipt existence and hashes, verifier and lint versions, architecture freshness, CPU/RAM/disk, and protected-file hashes.
+      1. Add or confirm REQ-* and SCENARIO anchors for complete task inventory, immutable evidence import, closed verdict classes, row recomputation, circularity, claim boundaries, missing-input disposition, adoption decisions, document reconciliation, and atomic output. Write focused tests first.
+      2. Inventory Exp6548 through Exp6559. Distinguish missing artifacts, blocked prerequisites, partial implementation, null science, disqualified evidence, circular positive results, and clean positive results. Never convert missing evidence into a null.
+      3. Run live adversarial verification and row-consistency checks on every artifact. Validate protected-file, model, Rust build, exact-checker, fixture, checkpoint, ARC, and hardware receipts as applicable. Quarantine any stamped or live CRITICAL artifact.
+      4. Independently recompute disabled adapter identity, Python/Rust parity, fallback reachability, exact output equality, CSL current value, retained-family value, future support, unsafe actions, restart, rollback, constraint phase curves, intervention effects, harmful interventions, charged cost, ARC receipt reachability, and GateMate command count from rows.
+      5. Apply the closed verdict enum. A verifier_is_oracle=true comparison cannot receive positive. A failed self-reported acceptance gate cannot receive positive. A production path that changes exact accepted outputs is disqualified.
+      6. Write an adoption matrix for production adapter state, Rust/PyO3 state, reversible-memory controller, CSL policy, constraint-saturation policy, ARC supervisor selection, and GateMate hardware. State enabled, default-off, experiment-only, blocked, retired, or rejected with exact evidence.
+      7. Recompute the stable G1-G4 publication gate with scripts/publication_gate.py --json. Do not redefine the gate or imply that a V567 integration result closes the independent-reproducer requirement.
+      8. Reconcile relevant OpenSpec capability status, _bmad/traceability.md, _bmad/architecture.md, ops/status.md, and ops/changelog.md additively. Document only code and evidence that actually shipped. Do not edit research-roadmap.yaml or the conductor.
+      9. Write a V568 handoff with the three remaining largest PRD gaps, retired or excluded directions, clean reusable assets, exact blockers, and any safe next experiment. Do not pre-author or activate another roadmap.
+      10. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row lint, exclusion-manifest lint, ARC floor and orphan lints, adversarial verification, publication gate, applicable E2E checks, reconciliation validation, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6560_v567_independent_capstone.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal capstone state distinguishes complete adjudication from partial aggregation."
+        honest_verdict:
+          principle: "The verdict must state production, CSL, saturation, ARC, hardware, and publication dispositions with a terminal prefix."
+        verdict_class:
+          principle: "A closed class prevents mixed or blocked milestone evidence from becoming positive."
+        expected_and_observed_task_inventory:
+          principle: "Every planned task needs a terminal artifact or an explicit missing-input disposition."
+        artifact_eligibility_rows:
+          principle: "One row per artifact preserves hashes, flags, gates, and evidence eligibility."
+        independent_production_integration_rows:
+          principle: "Disabled identity, parity, fallback, rollback, and exact equality must be recomputed independently."
+        independent_csl_rows:
+          principle: "Current value, retention, future support, safety, dose, restart, and rollback must derive from rows."
+        independent_constraint_saturation_rows:
+          principle: "Phase curves, paired interventions, harms, releases, and costs must be independently recomputed."
+        arc_generalization_disposition:
+          principle: "ARC credit is limited to shared live receipt reachability and supported supervisor selection, not solves."
+        hardware_continuity_disposition:
+          principle: "GateMate credit is limited to zero-command compliance or one authenticated action."
+        closed_verdict_class_rows:
+          principle: "The downstream record must carry positive, circular_positive, null, blocked, disqualified, or partial without prose inference."
+        claim_and_adoption_matrix:
+          principle: "Each mechanism needs a bounded production state with exact supporting evidence."
+        publication_gate_g1_g4:
+          principle: "The stable publication gate prevents milestone-local blocker redefinition."
+        unmet_gates:
+          principle: "Open publication requirements must remain explicit."
+        document_reconciliation_receipts:
+          principle: "Specs, architecture, traceability, status, and changelog must match shipped code and evidence."
+        v568_handoff:
+          principle: "The next planner needs clean assets, retired directions, blockers, and remaining PRD gaps."
+        v567_capstone_ready_score:
+          principle: "One binary field records complete independent adjudication, not scientific positivity."
+        per_unit_rows:
+          principle: "Every artifact, lane, arm, model, and disposition used by a headline must remain recheckable."
+        aggregate_row_recomputation:
+          principle: "All milestone summaries must derive from emitted rows and cited hashes."
+        gate_check_summary:
+          principle: "A blocked capstone must name each missing or failed check and observed value."
+        preconditions_checked:
+          principle: "Artifact, receipt, verifier, resource, and document checks separate a block from science."
+        protected_files_unchanged:
+          principle: "The capstone must preserve the active roadmap and conductor."
+        cited_upstream_artifacts:
+          principle: "Every imported number needs experiment ID, field, path, and SHA256."
+        inference_substrate:
+          principle: "The capstone aggregates and replays stored evidence; it performs no new model inference."
+        verifier_is_oracle:
+          principle: "The capstone audit checks claims but does not create an oracle-distinct verifier result."
+        field_provenance:
+          principle: "Every adoption and headline field must point to rows, receipts, reducers, and source hashes."
+        duration_s:
+          principle: "Monotonic wall time exposes skipped artifact, verifier, or reconciliation work."
+        tests_run:
+          principle: "Named lint, test, gate, and E2E receipts show independent adjudication executed."
+        reproducibility_checksum:
+          principle: "A final content hash protects the milestone determination trail."
+      Set inference_substrate=aggregation_from_upstream_artifacts and verifier_is_oracle=false. Use verdict_class=null for a complete capstone that honestly adjudicates any mixture of scientific results, partial for incomplete but usable milestone evidence, blocked for missing required adjudication inputs, or disqualified for false provenance or non-recomputable claims.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6560_v567_independent_capstone --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
