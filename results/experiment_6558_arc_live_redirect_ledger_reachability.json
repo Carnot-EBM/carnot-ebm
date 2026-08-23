@@ -1,0 +1,1738 @@
+{
+  "aggregate_row_recomputation": {
+    "actions_to_progress_distribution": {
+      "count": 1,
+      "max": 371,
+      "median": 371,
+      "min": 371
+    },
+    "fired_by_arm": {
+      "allow_reinduction": 3,
+      "drop_goal_bias": 1,
+      "force_exploration_diversity": 3
+    },
+    "fired_total": 7,
+    "helped_by_arm": {
+      "drop_goal_bias": 1
+    },
+    "helped_total": 1,
+    "inspected_run_total": 6,
+    "no_firing_run_total": 3,
+    "unredirected_stagnations_total": 5,
+    "unresolved_total": 6
+  },
+  "arc_live_redirect_ledger_ready_score": 1.0,
+  "attack_matrix": {
+    "all_attacks_fail_closed": true,
+    "disqualifying_attack_observed": false,
+    "rows": [
+      {
+        "attack_id": "missing_receipts",
+        "fail_closed": true,
+        "mitigation": "blocked unless reachable live receipts exist",
+        "observed": 0
+      },
+      {
+        "attack_id": "missing_outcomes",
+        "fail_closed": true,
+        "mitigation": "malformed or absent outcome fields cannot create support",
+        "observed": 0
+      },
+      {
+        "attack_id": "duplicate_redirects",
+        "fail_closed": true,
+        "mitigation": "duplicate redirect identities are skipped and disqualify selection",
+        "observed": 0
+      },
+      {
+        "attack_id": "outcome_reassignment",
+        "fail_closed": true,
+        "mitigation": "each redirect links only to its own next receipt outcome",
+        "observed": 0
+      },
+      {
+        "attack_id": "source_or_adapter_access",
+        "fail_closed": true,
+        "mitigation": "source and adapter markers reject the artifact",
+        "observed": 0
+      },
+      {
+        "attack_id": "registry_duplicates",
+        "fail_closed": true,
+        "mitigation": "registry is hashed for context only, not used for selection",
+        "observed": 0
+      },
+      {
+        "attack_id": "future_outcome_leakage",
+        "fail_closed": true,
+        "mitigation": "negative or absent resolved distances are rejected",
+        "observed": 0
+      },
+      {
+        "attack_id": "one_row_promotion",
+        "fail_closed": true,
+        "mitigation": "minimum prospective firing support is three",
+        "observed": 0
+      },
+      {
+        "attack_id": "generated_arms",
+        "fail_closed": true,
+        "mitigation": "ARM_ORDER is never grown by this reducer",
+        "observed": 0
+      },
+      {
+        "attack_id": "off_path_modules",
+        "fail_closed": true,
+        "mitigation": "only live E3 trajectory_supervisor rows are accepted",
+        "observed": 0
+      },
+      {
+        "attack_id": "forced_change_success_criterion",
+        "fail_closed": true,
+        "mitigation": "null no-change is a terminal success class",
+        "observed": 0
+      }
+    ]
+  },
+  "curated_arm_support_rows": [
+    {
+      "actions_to_progress_distribution": {
+        "count": 1,
+        "max": 371,
+        "median": 371,
+        "min": 371
+      },
+      "actions_to_progress_values": [
+        371
+      ],
+      "arm": "drop_goal_bias",
+      "current_priority": 1,
+      "helped_outcomes": 1,
+      "minimum_prospective_firings": 3,
+      "prospective_firings": 1,
+      "recommended_action": "keep",
+      "success_rate": 1.0,
+      "support_disposition": "unsupported_fewer_than_three_firings",
+      "support_floor_met": false,
+      "tie_key": [
+        -1,
+        371,
+        1,
+        0
+      ],
+      "unresolved_outcomes": 0
+    },
+    {
+      "actions_to_progress_distribution": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null
+      },
+      "actions_to_progress_values": [],
+      "arm": "allow_reinduction",
+      "current_priority": 2,
+      "helped_outcomes": 0,
+      "minimum_prospective_firings": 3,
+      "prospective_firings": 3,
+      "recommended_action": "lower_priority",
+      "success_rate": 0.0,
+      "support_disposition": "supported_no_help_lower_candidate",
+      "support_floor_met": true,
+      "tie_key": [
+        0,
+        1000000000,
+        2,
+        1
+      ],
+      "unresolved_outcomes": 3
+    },
+    {
+      "actions_to_progress_distribution": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null
+      },
+      "actions_to_progress_values": [],
+      "arm": "force_exploration_diversity",
+      "current_priority": 3,
+      "helped_outcomes": 0,
+      "minimum_prospective_firings": 3,
+      "prospective_firings": 3,
+      "recommended_action": "lower_priority",
+      "success_rate": 0.0,
+      "support_disposition": "supported_no_help_lower_candidate",
+      "support_floor_met": true,
+      "tie_key": [
+        0,
+        1000000000,
+        3,
+        2
+      ],
+      "unresolved_outcomes": 3
+    }
+  ],
+  "duration_s": 1e-06,
+  "field_principles": {
+    "aggregate_row_recomputation": "Fired, helped, unresolved, and unredirected totals must derive from rows.",
+    "arc_live_redirect_ledger_ready_score": "One binary field records live receipt closure without requiring a manufactured policy change.",
+    "attack_matrix": "Receipt, leakage, source, adapter, support, and off-path attacks test the generalization claim.",
+    "curated_arm_support_rows": "Selection changes require prospective support for existing human-curated arms.",
+    "duration_s": "Monotonic time exposes a task that skipped code tracing or receipt inspection.",
+    "field_principles": "Field principles keep the artifact schema tied to the operator's stated audit reason.",
+    "field_provenance": "Every reachability and selection field must point to run rows, code hashes, and reducer logic.",
+    "gate_check_summary": "A blocked result must name the missing live path, receipt, or input check and observed value.",
+    "honest_verdict": "The verdict must state live reachability, firing support, and policy disposition with a terminal prefix.",
+    "inference_substrate": "Receipt tracing and decision replay invoke no LLM and no offline solver.",
+    "live_entrypoint_reachability_receipt": "Only code reachable from E3AgentPolicy or make_carnot_agent can improve the hidden-game deliverable.",
+    "no_firing_run_rows": "An empty ledger is a valid measured state and must not force churn.",
+    "no_solve_and_no_source_receipt": "The task must prove that it read no game source, used no per-game adapter, and claimed no level solve.",
+    "per_unit_rows": "Every run, firing, arm, and outcome disposition must remain recheckable.",
+    "preconditions_checked": "Code, schema, artifact, registry, and resource receipts separate a block from no firings.",
+    "prior_failure_receipt": "The artifact must show how the Exp6524 missing-outcome block was tested.",
+    "protected_files_unchanged": "The ARC task must preserve the active roadmap and conductor.",
+    "random_seed": "A fixed audit and replay order makes receipt analysis repeatable.",
+    "redirect_to_next_outcome_rows": "Each firing must link to its next exact observed outcome without reassignment.",
+    "reproducibility_checksum": "A final hash protects the generalization determination trail.",
+    "selection_policy_disposition": "The record must say changed, unchanged, or future-arm-specification and why.",
+    "status": "A terminal state lets no-firing and missing-receipt outcomes satisfy the standing ARC slot honestly.",
+    "supervisor_receipt_schema_and_code_hashes": "Exact schema and implementation identities prevent a test-only receipt path from posing as live.",
+    "tests_run": "Named ARC lint, unit, and E2E receipts show the shared live path was checked.",
+    "verdict_class": "A closed class prevents an unsupported or blocked refinement from becoming positive.",
+    "verifier_is_oracle": "Supervisor outcomes are live observations, not an oracle-distinct EBM verifier."
+  },
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "arc_live_redirect_ledger_ready_score": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "attack_matrix": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "curated_arm_support_rows": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "duration_s": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "field_principles": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "field_provenance": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "gate_check_summary": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "honest_verdict": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "inference_substrate": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "live_entrypoint_reachability_receipt": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "no_firing_run_rows": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "no_solve_and_no_source_receipt": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "per_unit_rows": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "preconditions_checked": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "prior_failure_receipt": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "protected_files_unchanged": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "random_seed": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "redirect_to_next_outcome_rows": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "reproducibility_checksum": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "selection_policy_disposition": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "status": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "supervisor_receipt_schema_and_code_hashes": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "tests_run": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "verdict_class": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    },
+    "verifier_is_oracle": {
+      "producer": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "reducer_logic": "build_artifact",
+      "row_sources": [
+        "live_entrypoint_reachability_receipt",
+        "redirect_to_next_outcome_rows",
+        "no_firing_run_rows",
+        "curated_arm_support_rows"
+      ],
+      "scenario": "SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI",
+      "spec": "REQ-ARC-WMTE-6680",
+      "test": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py"
+    }
+  },
+  "gate_check_summary": {
+    "accepted_live_run_count": 6,
+    "all_gates_passed": true,
+    "disqualifying_attack_observed": false,
+    "fired_total": 7,
+    "live_entrypoint_reachable": true,
+    "missing_receipt_count": 0,
+    "no_firing_run_total": 3,
+    "status": "complete_live_redirect_ledger_reachable_no_policy_change"
+  },
+  "honest_verdict": "complete: live receipt path reachable, firings inspected, no supported policy change",
+  "inference_substrate": "live_arc_trajectory_supervisor_receipt_reachability_and_selection_replay_no_llm",
+  "live_entrypoint_reachability_receipt": {
+    "_make_trajectory_supervisor_present": true,
+    "_maybe_supervise_trajectory_present": true,
+    "accepted_live_run_count": 6,
+    "e3_agent_policy_present": true,
+    "entrypoint": "python/carnot/agentic/arc_competition_agent.py::make_carnot_agent -> E3AgentPolicy",
+    "game_source_read": false,
+    "make_carnot_agent_present": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py",
+    "per_game_adapter_used": false,
+    "reachable": true,
+    "sha256": "sha256:c68129845de868e6540733293a8594a57830770aa728c4b2abdfb949c719215a",
+    "trajectory_supervisor_diagnostics_present": true
+  },
+  "no_firing_run_rows": [
+    {
+      "game": "ar25",
+      "mode": "shadow",
+      "provenance": {
+        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json",
+        "row_index": 0,
+        "row_sha256": "sha256:3c468bb4542821e73436b439e3ae55181d370b6ce387515129816408fd7dc457"
+      },
+      "reason": "shadow_receipt_no_applied_firing",
+      "run_receipt_id": "sha256:3c468bb4542821e73",
+      "shadow_would_have_redirect_count": 3,
+      "stagnations_unredirected": 1,
+      "terminal_disposition": true,
+      "used_as_selection_support": false
+    },
+    {
+      "game": "cd82",
+      "mode": "shadow",
+      "provenance": {
+        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json",
+        "row_index": 1,
+        "row_sha256": "sha256:8b958e9845f74f74a38d756a0fd4e4b0c4757dda956f36b96b3f92ab37a62fd7"
+      },
+      "reason": "shadow_receipt_no_applied_firing",
+      "run_receipt_id": "sha256:8b958e9845f74f74a",
+      "shadow_would_have_redirect_count": 3,
+      "stagnations_unredirected": 0,
+      "terminal_disposition": true,
+      "used_as_selection_support": false
+    },
+    {
+      "game": "tu93",
+      "mode": "shadow",
+      "provenance": {
+        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json",
+        "row_index": 2,
+        "row_sha256": "sha256:7743debe590ac09348fb7cc8c7bdb16b3133fff45310b410e2510f32a115de62"
+      },
+      "reason": "shadow_receipt_no_applied_firing",
+      "run_receipt_id": "sha256:7743debe590ac0934",
+      "shadow_would_have_redirect_count": 2,
+      "stagnations_unredirected": 1,
+      "terminal_disposition": true,
+      "used_as_selection_support": false
+    }
+  ],
+  "no_solve_and_no_source_receipt": {
+    "evidence_scope": "live trajectory_supervisor row receipts plus shared code hashes only",
+    "game_source_paths_read": [],
+    "generated_arm_used": false,
+    "llm_invoked": false,
+    "no_game_or_level_solve_claim": true,
+    "offline_bfs_used": false,
+    "per_game_adapter_used": false,
+    "source_or_adapter_access_detected": false
+  },
+  "per_unit_rows": {
+    "arm_rows": [
+      {
+        "actions_to_progress_distribution": {
+          "count": 1,
+          "max": 371,
+          "median": 371,
+          "min": 371
+        },
+        "actions_to_progress_values": [
+          371
+        ],
+        "arm": "drop_goal_bias",
+        "current_priority": 1,
+        "helped_outcomes": 1,
+        "kind": "arm_support",
+        "minimum_prospective_firings": 3,
+        "prospective_firings": 1,
+        "recommended_action": "keep",
+        "success_rate": 1.0,
+        "support_disposition": "unsupported_fewer_than_three_firings",
+        "support_floor_met": false,
+        "tie_key": [
+          -1,
+          371,
+          1,
+          0
+        ],
+        "unresolved_outcomes": 0
+      },
+      {
+        "actions_to_progress_distribution": {
+          "count": 0,
+          "max": null,
+          "median": null,
+          "min": null
+        },
+        "actions_to_progress_values": [],
+        "arm": "allow_reinduction",
+        "current_priority": 2,
+        "helped_outcomes": 0,
+        "kind": "arm_support",
+        "minimum_prospective_firings": 3,
+        "prospective_firings": 3,
+        "recommended_action": "lower_priority",
+        "success_rate": 0.0,
+        "support_disposition": "supported_no_help_lower_candidate",
+        "support_floor_met": true,
+        "tie_key": [
+          0,
+          1000000000,
+          2,
+          1
+        ],
+        "unresolved_outcomes": 3
+      },
+      {
+        "actions_to_progress_distribution": {
+          "count": 0,
+          "max": null,
+          "median": null,
+          "min": null
+        },
+        "actions_to_progress_values": [],
+        "arm": "force_exploration_diversity",
+        "current_priority": 3,
+        "helped_outcomes": 0,
+        "kind": "arm_support",
+        "minimum_prospective_firings": 3,
+        "prospective_firings": 3,
+        "recommended_action": "lower_priority",
+        "success_rate": 0.0,
+        "support_disposition": "supported_no_help_lower_candidate",
+        "support_floor_met": true,
+        "tie_key": [
+          0,
+          1000000000,
+          3,
+          2
+        ],
+        "unresolved_outcomes": 3
+      }
+    ],
+    "firing_rows": [
+      {
+        "actions_to_levelup": null,
+        "arm": "allow_reinduction",
+        "fired": true,
+        "game": "ar25",
+        "helped": false,
+        "kind": "firing",
+        "mode": "applied",
+        "next_observed_exact_live_outcome": {
+          "action_index": 1342,
+          "kind": "run_terminal",
+          "source": "receipt.actions_observed"
+        },
+        "provenance": {
+          "entrypoint": "E3AgentPolicy",
+          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+          "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
+          "row_index": 0,
+          "row_sha256": "sha256:52e51aa287895a487c23ffda16a076b974ce34b8229b9c557bfd4048b9f7886b"
+        },
+        "redirect_index": 0,
+        "redirect_receipt_id": "sha256:52e51aa287895a487:redirect:0",
+        "resolved_by_levelup": false,
+        "run_receipt_id": "sha256:52e51aa287895a487",
+        "stagnations_unredirected": 1,
+        "trigger_state": {
+          "action_index": 442,
+          "diagnosis": "induction latch set with 383 new transitions the model has never seen",
+          "level": 1,
+          "mode": "applied",
+          "window": 400
+        }
+      },
+      {
+        "actions_to_levelup": null,
+        "arm": "force_exploration_diversity",
+        "fired": true,
+        "game": "ar25",
+        "helped": false,
+        "kind": "firing",
+        "mode": "applied",
+        "next_observed_exact_live_outcome": {
+          "action_index": 1342,
+          "kind": "run_terminal",
+          "source": "receipt.actions_observed"
+        },
+        "provenance": {
+          "entrypoint": "E3AgentPolicy",
+          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+          "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
+          "row_index": 0,
+          "row_sha256": "sha256:52e51aa287895a487c23ffda16a076b974ce34b8229b9c557bfd4048b9f7886b"
+        },
+        "redirect_index": 1,
+        "redirect_receipt_id": "sha256:52e51aa287895a487:redirect:1",
+        "resolved_by_levelup": false,
+        "run_receipt_id": "sha256:52e51aa287895a487",
+        "stagnations_unredirected": 1,
+        "trigger_state": {
+          "action_index": 842,
+          "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
+          "level": 1,
+          "mode": "applied",
+          "window": 400
+        }
+      },
+      {
+        "actions_to_levelup": 371,
+        "arm": "drop_goal_bias",
+        "fired": true,
+        "game": "cd82",
+        "helped": true,
+        "kind": "firing",
+        "mode": "applied",
+        "next_observed_exact_live_outcome": {
+          "action_index": 771,
+          "kind": "levelup",
+          "source": "redirect.actions_to_levelup"
+        },
+        "provenance": {
+          "entrypoint": "E3AgentPolicy",
+          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+          "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
+          "row_index": 1,
+          "row_sha256": "sha256:bf2a8c85bf8b119e2d2ca36e3672b1149744bb11cf739501ce056626b8b42565"
+        },
+        "redirect_index": 0,
+        "redirect_receipt_id": "sha256:bf2a8c85bf8b119e2:redirect:0",
+        "resolved_by_levelup": true,
+        "run_receipt_id": "sha256:bf2a8c85bf8b119e2",
+        "stagnations_unredirected": 1,
+        "trigger_state": {
+          "action_index": 400,
+          "diagnosis": "goal bias installed through 400 stagnant actions; it is steering and not working",
+          "level": 0,
+          "mode": "applied",
+          "window": 400
+        }
+      },
+      {
+        "actions_to_levelup": null,
+        "arm": "allow_reinduction",
+        "fired": true,
+        "game": "cd82",
+        "helped": false,
+        "kind": "firing",
+        "mode": "applied",
+        "next_observed_exact_live_outcome": {
+          "action_index": 1999,
+          "kind": "run_terminal",
+          "source": "receipt.actions_observed"
+        },
+        "provenance": {
+          "entrypoint": "E3AgentPolicy",
+          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+          "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
+          "row_index": 1,
+          "row_sha256": "sha256:bf2a8c85bf8b119e2d2ca36e3672b1149744bb11cf739501ce056626b8b42565"
+        },
+        "redirect_index": 1,
+        "redirect_receipt_id": "sha256:bf2a8c85bf8b119e2:redirect:1",
+        "resolved_by_levelup": false,
+        "run_receipt_id": "sha256:bf2a8c85bf8b119e2",
+        "stagnations_unredirected": 1,
+        "trigger_state": {
+          "action_index": 1171,
+          "diagnosis": "induction latch set with 398 new transitions the model has never seen",
+          "level": 0,
+          "mode": "applied",
+          "window": 400
+        }
+      },
+      {
+        "actions_to_levelup": null,
+        "arm": "force_exploration_diversity",
+        "fired": true,
+        "game": "cd82",
+        "helped": false,
+        "kind": "firing",
+        "mode": "applied",
+        "next_observed_exact_live_outcome": {
+          "action_index": 1999,
+          "kind": "run_terminal",
+          "source": "receipt.actions_observed"
+        },
+        "provenance": {
+          "entrypoint": "E3AgentPolicy",
+          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+          "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
+          "row_index": 1,
+          "row_sha256": "sha256:bf2a8c85bf8b119e2d2ca36e3672b1149744bb11cf739501ce056626b8b42565"
+        },
+        "redirect_index": 2,
+        "redirect_receipt_id": "sha256:bf2a8c85bf8b119e2:redirect:2",
+        "resolved_by_levelup": false,
+        "run_receipt_id": "sha256:bf2a8c85bf8b119e2",
+        "stagnations_unredirected": 1,
+        "trigger_state": {
+          "action_index": 1571,
+          "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
+          "level": 1,
+          "mode": "applied",
+          "window": 400
+        }
+      },
+      {
+        "actions_to_levelup": null,
+        "arm": "allow_reinduction",
+        "fired": true,
+        "game": "tu93",
+        "helped": false,
+        "kind": "firing",
+        "mode": "applied",
+        "next_observed_exact_live_outcome": {
+          "action_index": 1768,
+          "kind": "run_terminal",
+          "source": "receipt.actions_observed"
+        },
+        "provenance": {
+          "entrypoint": "E3AgentPolicy",
+          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+          "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
+          "row_index": 2,
+          "row_sha256": "sha256:6d5be5b81273ae077af2406a94e3ddf5df4e8377e36175773470c59f92254174"
+        },
+        "redirect_index": 0,
+        "redirect_receipt_id": "sha256:6d5be5b81273ae077:redirect:0",
+        "resolved_by_levelup": false,
+        "run_receipt_id": "sha256:6d5be5b81273ae077",
+        "stagnations_unredirected": 1,
+        "trigger_state": {
+          "action_index": 868,
+          "diagnosis": "induction latch set with 377 new transitions the model has never seen",
+          "level": 2,
+          "mode": "applied",
+          "window": 400
+        }
+      },
+      {
+        "actions_to_levelup": null,
+        "arm": "force_exploration_diversity",
+        "fired": true,
+        "game": "tu93",
+        "helped": false,
+        "kind": "firing",
+        "mode": "applied",
+        "next_observed_exact_live_outcome": {
+          "action_index": 1768,
+          "kind": "run_terminal",
+          "source": "receipt.actions_observed"
+        },
+        "provenance": {
+          "entrypoint": "E3AgentPolicy",
+          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+          "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
+          "row_index": 2,
+          "row_sha256": "sha256:6d5be5b81273ae077af2406a94e3ddf5df4e8377e36175773470c59f92254174"
+        },
+        "redirect_index": 1,
+        "redirect_receipt_id": "sha256:6d5be5b81273ae077:redirect:1",
+        "resolved_by_levelup": false,
+        "run_receipt_id": "sha256:6d5be5b81273ae077",
+        "stagnations_unredirected": 1,
+        "trigger_state": {
+          "action_index": 1268,
+          "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
+          "level": 2,
+          "mode": "applied",
+          "window": 400
+        }
+      }
+    ],
+    "no_firing_rows": [
+      {
+        "game": "ar25",
+        "kind": "no_firing",
+        "mode": "shadow",
+        "provenance": {
+          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json",
+          "row_index": 0,
+          "row_sha256": "sha256:3c468bb4542821e73436b439e3ae55181d370b6ce387515129816408fd7dc457"
+        },
+        "reason": "shadow_receipt_no_applied_firing",
+        "run_receipt_id": "sha256:3c468bb4542821e73",
+        "shadow_would_have_redirect_count": 3,
+        "stagnations_unredirected": 1,
+        "terminal_disposition": true,
+        "used_as_selection_support": false
+      },
+      {
+        "game": "cd82",
+        "kind": "no_firing",
+        "mode": "shadow",
+        "provenance": {
+          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json",
+          "row_index": 1,
+          "row_sha256": "sha256:8b958e9845f74f74a38d756a0fd4e4b0c4757dda956f36b96b3f92ab37a62fd7"
+        },
+        "reason": "shadow_receipt_no_applied_firing",
+        "run_receipt_id": "sha256:8b958e9845f74f74a",
+        "shadow_would_have_redirect_count": 3,
+        "stagnations_unredirected": 0,
+        "terminal_disposition": true,
+        "used_as_selection_support": false
+      },
+      {
+        "game": "tu93",
+        "kind": "no_firing",
+        "mode": "shadow",
+        "provenance": {
+          "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json",
+          "row_index": 2,
+          "row_sha256": "sha256:7743debe590ac09348fb7cc8c7bdb16b3133fff45310b410e2510f32a115de62"
+        },
+        "reason": "shadow_receipt_no_applied_firing",
+        "run_receipt_id": "sha256:7743debe590ac0934",
+        "shadow_would_have_redirect_count": 2,
+        "stagnations_unredirected": 1,
+        "terminal_disposition": true,
+        "used_as_selection_support": false
+      }
+    ],
+    "run_rows": [
+      {
+        "applied_redirect_count": 2,
+        "game": "ar25",
+        "kind": "run",
+        "mode": "applied",
+        "run_receipt_id": "sha256:52e51aa287895a487"
+      },
+      {
+        "applied_redirect_count": 3,
+        "game": "cd82",
+        "kind": "run",
+        "mode": "applied",
+        "run_receipt_id": "sha256:bf2a8c85bf8b119e2"
+      },
+      {
+        "applied_redirect_count": 2,
+        "game": "tu93",
+        "kind": "run",
+        "mode": "applied",
+        "run_receipt_id": "sha256:6d5be5b81273ae077"
+      },
+      {
+        "applied_redirect_count": 0,
+        "game": "ar25",
+        "kind": "run",
+        "mode": "shadow",
+        "run_receipt_id": "sha256:3c468bb4542821e73"
+      },
+      {
+        "applied_redirect_count": 0,
+        "game": "cd82",
+        "kind": "run",
+        "mode": "shadow",
+        "run_receipt_id": "sha256:8b958e9845f74f74a"
+      },
+      {
+        "applied_redirect_count": 0,
+        "game": "tu93",
+        "kind": "run",
+        "mode": "shadow",
+        "run_receipt_id": "sha256:7743debe590ac0934"
+      }
+    ]
+  },
+  "preconditions_checked": {
+    "current_curated_arm_table": [
+      {
+        "arm": "drop_goal_bias",
+        "priority": 1,
+        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
+        "state": "active"
+      },
+      {
+        "arm": "allow_reinduction",
+        "priority": 2,
+        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
+        "state": "active"
+      },
+      {
+        "arm": "force_exploration_diversity",
+        "priority": 3,
+        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
+        "state": "active"
+      }
+    ],
+    "git_head": "3663ebb696b675455c879472004b95c6b0fecf15",
+    "git_status_short": "M openspec/capabilities/arc-world-model-trust-energy/spec.md\n?? python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py\n?? results/experiment_6558_arc_live_redirect_ledger_reachability.json\n?? scripts/arc_induction_quality.py\n?? tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py",
+    "live_entrypoint_and_supervisor_hashes": [
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256": "sha256:c68129845de868e6540733293a8594a57830770aa728c4b2abdfb949c719215a"
+      },
+      {
+        "path": "python/carnot/agentic/arc_trajectory_supervisor.py",
+        "sha256": "sha256:0e62f74e262bd46afcbb9e57ac4aa185f4b428df9690da5b463e044d74ce78a5"
+      },
+      {
+        "path": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+        "sha256": "sha256:cdcc7b5db9f44a609f820f8751e882c2ca61cb79cce5a338d3596e527b98509b"
+      }
+    ],
+    "no_solve_no_game_source_task": true,
+    "planning_date": "20260823",
+    "protected_file_hashes": [
+      {
+        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "path": "AGENTS.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "path": "CODEX.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "before_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "path": "CLAUDE.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:2564d4cd5829b36c33e19d5ac39e8276dd925c3f168ec82fd51ddce96ed2cdec",
+        "before_sha256": "sha256:2564d4cd5829b36c33e19d5ac39e8276dd925c3f168ec82fd51ddce96ed2cdec",
+        "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+        "before_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
+        "before_sha256": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
+        "path": "research-roadmap.yaml",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:c68129845de868e6540733293a8594a57830770aa728c4b2abdfb949c719215a",
+        "before_sha256": "sha256:c68129845de868e6540733293a8594a57830770aa728c4b2abdfb949c719215a",
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:0e62f74e262bd46afcbb9e57ac4aa185f4b428df9690da5b463e044d74ce78a5",
+        "before_sha256": "sha256:0e62f74e262bd46afcbb9e57ac4aa185f4b428df9690da5b463e044d74ce78a5",
+        "path": "python/carnot/agentic/arc_trajectory_supervisor.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26",
+        "before_sha256": "sha256:e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26",
+        "path": "python/carnot/agentic/arc_solver_kit.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "before_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "path": "ops/arc_solve_registry.yaml",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+        "before_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+        "path": "scripts/research_conductor.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:cdcc7b5db9f44a609f820f8751e882c2ca61cb79cce5a338d3596e527b98509b",
+        "before_sha256": "sha256:cdcc7b5db9f44a609f820f8751e882c2ca61cb79cce5a338d3596e527b98509b",
+        "path": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:a227f81832d73955ecb70b66ce4c8d3f6e036a3cbc1ec86a838deea09fe95d19",
+        "before_sha256": "sha256:a227f81832d73955ecb70b66ce4c8d3f6e036a3cbc1ec86a838deea09fe95d19",
+        "path": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py",
+        "unchanged": true
+      }
+    ],
+    "python_versions": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "runtime": "3.12.13"
+    },
+    "receipt_schema_and_artifact_paths": {
+      "candidate_paths": [
+        "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+        "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json"
+      ],
+      "result_path": "results/experiment_6558_arc_live_redirect_ledger_reachability.json"
+    },
+    "registry_hash": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "resources": {
+      "cpu_count": 24,
+      "disk_free_bytes": 1086620057600,
+      "disk_total_bytes": 3953289023488,
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "ram_kb": 131157332
+    }
+  },
+  "prior_failure_receipt": {
+    "exists": true,
+    "exp6524_status": "blocked_missing_outcome_bearing_live_receipts",
+    "exp6524_verdict_class": "blocked",
+    "missing_outcome_block_tested": true,
+    "outcome_bearing_receipt_count": 0,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6524_arc_supervisor_redirect_generalization.json",
+    "sha256": "sha256:9a5be26b06c816bcbff219ca60c53202e976de1802aa18c061e259a06117a65a"
+  },
+  "protected_files_unchanged": {
+    "all_protected_files_unchanged": true,
+    "rows": [
+      {
+        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "path": "AGENTS.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "path": "CODEX.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "before_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "path": "CLAUDE.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:2564d4cd5829b36c33e19d5ac39e8276dd925c3f168ec82fd51ddce96ed2cdec",
+        "before_sha256": "sha256:2564d4cd5829b36c33e19d5ac39e8276dd925c3f168ec82fd51ddce96ed2cdec",
+        "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+        "before_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
+        "before_sha256": "sha256:4adab0d14ff93d78ea9122182489dfef635c9d676ed369246ba38eab1e48a46f",
+        "path": "research-roadmap.yaml",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:c68129845de868e6540733293a8594a57830770aa728c4b2abdfb949c719215a",
+        "before_sha256": "sha256:c68129845de868e6540733293a8594a57830770aa728c4b2abdfb949c719215a",
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:0e62f74e262bd46afcbb9e57ac4aa185f4b428df9690da5b463e044d74ce78a5",
+        "before_sha256": "sha256:0e62f74e262bd46afcbb9e57ac4aa185f4b428df9690da5b463e044d74ce78a5",
+        "path": "python/carnot/agentic/arc_trajectory_supervisor.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26",
+        "before_sha256": "sha256:e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26",
+        "path": "python/carnot/agentic/arc_solver_kit.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "before_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "path": "ops/arc_solve_registry.yaml",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+        "before_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+        "path": "scripts/research_conductor.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:cdcc7b5db9f44a609f820f8751e882c2ca61cb79cce5a338d3596e527b98509b",
+        "before_sha256": "sha256:cdcc7b5db9f44a609f820f8751e882c2ca61cb79cce5a338d3596e527b98509b",
+        "path": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:a227f81832d73955ecb70b66ce4c8d3f6e036a3cbc1ec86a838deea09fe95d19",
+        "before_sha256": "sha256:a227f81832d73955ecb70b66ce4c8d3f6e036a3cbc1ec86a838deea09fe95d19",
+        "path": "tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py",
+        "unchanged": true
+      }
+    ]
+  },
+  "random_seed": 6558,
+  "redirect_to_next_outcome_rows": [
+    {
+      "actions_to_levelup": null,
+      "arm": "allow_reinduction",
+      "fired": true,
+      "game": "ar25",
+      "helped": false,
+      "mode": "applied",
+      "next_observed_exact_live_outcome": {
+        "action_index": 1342,
+        "kind": "run_terminal",
+        "source": "receipt.actions_observed"
+      },
+      "provenance": {
+        "entrypoint": "E3AgentPolicy",
+        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+        "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
+        "row_index": 0,
+        "row_sha256": "sha256:52e51aa287895a487c23ffda16a076b974ce34b8229b9c557bfd4048b9f7886b"
+      },
+      "redirect_index": 0,
+      "redirect_receipt_id": "sha256:52e51aa287895a487:redirect:0",
+      "resolved_by_levelup": false,
+      "run_receipt_id": "sha256:52e51aa287895a487",
+      "stagnations_unredirected": 1,
+      "trigger_state": {
+        "action_index": 442,
+        "diagnosis": "induction latch set with 383 new transitions the model has never seen",
+        "level": 1,
+        "mode": "applied",
+        "window": 400
+      }
+    },
+    {
+      "actions_to_levelup": null,
+      "arm": "force_exploration_diversity",
+      "fired": true,
+      "game": "ar25",
+      "helped": false,
+      "mode": "applied",
+      "next_observed_exact_live_outcome": {
+        "action_index": 1342,
+        "kind": "run_terminal",
+        "source": "receipt.actions_observed"
+      },
+      "provenance": {
+        "entrypoint": "E3AgentPolicy",
+        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+        "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
+        "row_index": 0,
+        "row_sha256": "sha256:52e51aa287895a487c23ffda16a076b974ce34b8229b9c557bfd4048b9f7886b"
+      },
+      "redirect_index": 1,
+      "redirect_receipt_id": "sha256:52e51aa287895a487:redirect:1",
+      "resolved_by_levelup": false,
+      "run_receipt_id": "sha256:52e51aa287895a487",
+      "stagnations_unredirected": 1,
+      "trigger_state": {
+        "action_index": 842,
+        "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
+        "level": 1,
+        "mode": "applied",
+        "window": 400
+      }
+    },
+    {
+      "actions_to_levelup": 371,
+      "arm": "drop_goal_bias",
+      "fired": true,
+      "game": "cd82",
+      "helped": true,
+      "mode": "applied",
+      "next_observed_exact_live_outcome": {
+        "action_index": 771,
+        "kind": "levelup",
+        "source": "redirect.actions_to_levelup"
+      },
+      "provenance": {
+        "entrypoint": "E3AgentPolicy",
+        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+        "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
+        "row_index": 1,
+        "row_sha256": "sha256:bf2a8c85bf8b119e2d2ca36e3672b1149744bb11cf739501ce056626b8b42565"
+      },
+      "redirect_index": 0,
+      "redirect_receipt_id": "sha256:bf2a8c85bf8b119e2:redirect:0",
+      "resolved_by_levelup": true,
+      "run_receipt_id": "sha256:bf2a8c85bf8b119e2",
+      "stagnations_unredirected": 1,
+      "trigger_state": {
+        "action_index": 400,
+        "diagnosis": "goal bias installed through 400 stagnant actions; it is steering and not working",
+        "level": 0,
+        "mode": "applied",
+        "window": 400
+      }
+    },
+    {
+      "actions_to_levelup": null,
+      "arm": "allow_reinduction",
+      "fired": true,
+      "game": "cd82",
+      "helped": false,
+      "mode": "applied",
+      "next_observed_exact_live_outcome": {
+        "action_index": 1999,
+        "kind": "run_terminal",
+        "source": "receipt.actions_observed"
+      },
+      "provenance": {
+        "entrypoint": "E3AgentPolicy",
+        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+        "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
+        "row_index": 1,
+        "row_sha256": "sha256:bf2a8c85bf8b119e2d2ca36e3672b1149744bb11cf739501ce056626b8b42565"
+      },
+      "redirect_index": 1,
+      "redirect_receipt_id": "sha256:bf2a8c85bf8b119e2:redirect:1",
+      "resolved_by_levelup": false,
+      "run_receipt_id": "sha256:bf2a8c85bf8b119e2",
+      "stagnations_unredirected": 1,
+      "trigger_state": {
+        "action_index": 1171,
+        "diagnosis": "induction latch set with 398 new transitions the model has never seen",
+        "level": 0,
+        "mode": "applied",
+        "window": 400
+      }
+    },
+    {
+      "actions_to_levelup": null,
+      "arm": "force_exploration_diversity",
+      "fired": true,
+      "game": "cd82",
+      "helped": false,
+      "mode": "applied",
+      "next_observed_exact_live_outcome": {
+        "action_index": 1999,
+        "kind": "run_terminal",
+        "source": "receipt.actions_observed"
+      },
+      "provenance": {
+        "entrypoint": "E3AgentPolicy",
+        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+        "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
+        "row_index": 1,
+        "row_sha256": "sha256:bf2a8c85bf8b119e2d2ca36e3672b1149744bb11cf739501ce056626b8b42565"
+      },
+      "redirect_index": 2,
+      "redirect_receipt_id": "sha256:bf2a8c85bf8b119e2:redirect:2",
+      "resolved_by_levelup": false,
+      "run_receipt_id": "sha256:bf2a8c85bf8b119e2",
+      "stagnations_unredirected": 1,
+      "trigger_state": {
+        "action_index": 1571,
+        "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
+        "level": 1,
+        "mode": "applied",
+        "window": 400
+      }
+    },
+    {
+      "actions_to_levelup": null,
+      "arm": "allow_reinduction",
+      "fired": true,
+      "game": "tu93",
+      "helped": false,
+      "mode": "applied",
+      "next_observed_exact_live_outcome": {
+        "action_index": 1768,
+        "kind": "run_terminal",
+        "source": "receipt.actions_observed"
+      },
+      "provenance": {
+        "entrypoint": "E3AgentPolicy",
+        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+        "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
+        "row_index": 2,
+        "row_sha256": "sha256:6d5be5b81273ae077af2406a94e3ddf5df4e8377e36175773470c59f92254174"
+      },
+      "redirect_index": 0,
+      "redirect_receipt_id": "sha256:6d5be5b81273ae077:redirect:0",
+      "resolved_by_levelup": false,
+      "run_receipt_id": "sha256:6d5be5b81273ae077",
+      "stagnations_unredirected": 1,
+      "trigger_state": {
+        "action_index": 868,
+        "diagnosis": "induction latch set with 377 new transitions the model has never seen",
+        "level": 2,
+        "mode": "applied",
+        "window": 400
+      }
+    },
+    {
+      "actions_to_levelup": null,
+      "arm": "force_exploration_diversity",
+      "fired": true,
+      "game": "tu93",
+      "helped": false,
+      "mode": "applied",
+      "next_observed_exact_live_outcome": {
+        "action_index": 1768,
+        "kind": "run_terminal",
+        "source": "receipt.actions_observed"
+      },
+      "provenance": {
+        "entrypoint": "E3AgentPolicy",
+        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+        "path_sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e",
+        "row_index": 2,
+        "row_sha256": "sha256:6d5be5b81273ae077af2406a94e3ddf5df4e8377e36175773470c59f92254174"
+      },
+      "redirect_index": 1,
+      "redirect_receipt_id": "sha256:6d5be5b81273ae077:redirect:1",
+      "resolved_by_levelup": false,
+      "run_receipt_id": "sha256:6d5be5b81273ae077",
+      "stagnations_unredirected": 1,
+      "trigger_state": {
+        "action_index": 1268,
+        "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
+        "level": 2,
+        "mode": "applied",
+        "window": 400
+      }
+    }
+  ],
+  "reproducibility_checksum": "sha256:6abd5a766880e7ee19520fb4b2b308b653faf99407a9111f9eb2e1903b7e42aa",
+  "selection_policy_disposition": {
+    "after_table": [
+      {
+        "arm": "drop_goal_bias",
+        "priority": 1,
+        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
+        "state": "active"
+      },
+      {
+        "arm": "allow_reinduction",
+        "priority": 2,
+        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
+        "state": "active"
+      },
+      {
+        "arm": "force_exploration_diversity",
+        "priority": 3,
+        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
+        "state": "active"
+      }
+    ],
+    "before_table": [
+      {
+        "arm": "drop_goal_bias",
+        "priority": 1,
+        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
+        "state": "active"
+      },
+      {
+        "arm": "allow_reinduction",
+        "priority": 2,
+        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
+        "state": "active"
+      },
+      {
+        "arm": "force_exploration_diversity",
+        "priority": 3,
+        "source": "python/carnot/agentic/arc_trajectory_supervisor.py::ARM_ORDER",
+        "state": "active"
+      }
+    ],
+    "current_order": [
+      "drop_goal_bias",
+      "allow_reinduction",
+      "force_exploration_diversity"
+    ],
+    "disposition": "unchanged",
+    "minimum_prospective_firings": 3,
+    "policy_changed": false,
+    "reason": "supported replay does not improve the current curated order",
+    "replayed_supported_order": [
+      "drop_goal_bias",
+      "allow_reinduction",
+      "force_exploration_diversity"
+    ]
+  },
+  "status": "complete_live_redirect_ledger_reachable_no_policy_change",
+  "supervisor_receipt_schema_and_code_hashes": {
+    "implementation_hashes": [
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256": "sha256:c68129845de868e6540733293a8594a57830770aa728c4b2abdfb949c719215a"
+      },
+      {
+        "path": "python/carnot/agentic/arc_trajectory_supervisor.py",
+        "sha256": "sha256:0e62f74e262bd46afcbb9e57ac4aa185f4b428df9690da5b463e044d74ce78a5"
+      },
+      {
+        "path": "python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py",
+        "sha256": "sha256:cdcc7b5db9f44a609f820f8751e882c2ca61cb79cce5a338d3596e527b98509b"
+      }
+    ],
+    "input_artifact_hashes": [
+      {
+        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_on.json",
+        "sha256": "sha256:368fe765baf5897cb6141fbfbc4506903d6677f992a2e3dc817829ba0721629e"
+      },
+      {
+        "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json",
+        "sha256": "sha256:74d8e7dc332feaa20cd0e049978bb93561277e2beb45fc2dc3bcbb67288f5453"
+      }
+    ],
+    "observed_receipt_schema_rows": [
+      {
+        "mode": "applied",
+        "run_receipt_id": "sha256:52e51aa287895a487",
+        "schema": {
+          "arm_outcomes": true,
+          "enabled": true,
+          "mode": true,
+          "observe_errors": true,
+          "redirects": true,
+          "stagnations_unredirected": true,
+          "would_have_arm_outcomes": false,
+          "would_have_redirects": false
+        }
+      },
+      {
+        "mode": "applied",
+        "run_receipt_id": "sha256:bf2a8c85bf8b119e2",
+        "schema": {
+          "arm_outcomes": true,
+          "enabled": true,
+          "mode": true,
+          "observe_errors": true,
+          "redirects": true,
+          "stagnations_unredirected": true,
+          "would_have_arm_outcomes": false,
+          "would_have_redirects": false
+        }
+      },
+      {
+        "mode": "applied",
+        "run_receipt_id": "sha256:6d5be5b81273ae077",
+        "schema": {
+          "arm_outcomes": true,
+          "enabled": true,
+          "mode": true,
+          "observe_errors": true,
+          "redirects": true,
+          "stagnations_unredirected": true,
+          "would_have_arm_outcomes": false,
+          "would_have_redirects": false
+        }
+      },
+      {
+        "mode": "shadow",
+        "run_receipt_id": "sha256:3c468bb4542821e73",
+        "schema": {
+          "arm_outcomes": false,
+          "enabled": true,
+          "mode": true,
+          "observe_errors": true,
+          "redirects": false,
+          "stagnations_unredirected": true,
+          "would_have_arm_outcomes": true,
+          "would_have_redirects": true
+        }
+      },
+      {
+        "mode": "shadow",
+        "run_receipt_id": "sha256:8b958e9845f74f74a",
+        "schema": {
+          "arm_outcomes": false,
+          "enabled": true,
+          "mode": true,
+          "observe_errors": true,
+          "redirects": false,
+          "stagnations_unredirected": true,
+          "would_have_arm_outcomes": true,
+          "would_have_redirects": true
+        }
+      },
+      {
+        "mode": "shadow",
+        "run_receipt_id": "sha256:7743debe590ac0934",
+        "schema": {
+          "arm_outcomes": false,
+          "enabled": true,
+          "mode": true,
+          "observe_errors": true,
+          "redirects": false,
+          "stagnations_unredirected": true,
+          "would_have_arm_outcomes": true,
+          "would_have_redirects": true
+        }
+      }
+    ],
+    "receipt_schema_keys": [
+      "enabled",
+      "mode",
+      "redirects",
+      "arm_outcomes",
+      "would_have_redirects",
+      "would_have_arm_outcomes",
+      "stagnations_unredirected",
+      "observe_errors"
+    ]
+  },
+  "tests_run": [
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6558_arc_live_redirect_ledger_reachability --date 20260823",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py -m pytest tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6558_arc_live_redirect_ledger_reachability.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/arc_orphan_solver_lint.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/arc_levelup_guarantee_lint.py openspec/change-proposals/research-roadmap-vNEXT.md",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6558_arc_live_redirect_ledger_reachability.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_arc_trajectory_supervisor.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/arc_artifact_lint.py results/experiment_6558_arc_live_redirect_ledger_reachability.json --json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6558_arc_live_redirect_ledger_reachability --validate",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    }
+  ],
+  "verdict_class": null,
+  "verifier_is_oracle": false
+}

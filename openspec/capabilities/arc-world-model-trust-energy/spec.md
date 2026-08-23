@@ -26989,3 +26989,161 @@ log path
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6670 | `python/carnot/agentic/arc_executable_world_model.py` (`_effective_model_label`, `_server_death_signature`, `_note_server_failure` hint append, both `GPU llama-server failed` sites). | `tests/python/test_arc_generator_failure_note_2026_08_23.py` (SCENARIO-ARC-WMTE-6670-1..3, each proven by deletion). |
+
+### REQ-ARC-WMTE-6680: Live Redirect-Ledger Reachability Closes Before Selection Changes
+
+Origin: Exp6558 on the 2026-08-23 planning date, after Exp6524 honestly
+blocked because no outcome-bearing live trajectory-supervisor receipts were
+available. REQ-ARC-WMTE-6660 then made the supervisor reachable on every live
+run, including shadow/control runs. Exp6558 is the bridge check: prove that the
+shared `E3AgentPolicy` / `make_carnot_agent` path emits reachable applied or
+shadow receipts, reduce only prospective post-Exp6524 rows, and change
+curated-arm selection only when the frozen support rule permits it.
+
+`python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py`
+SHALL:
+
+1. Read only prospective run artifacts created after Exp6524 that expose
+   `trajectory_supervisor` from the live `E3AgentPolicy` or `make_carnot_agent`
+   path. It SHALL reject source-reading, per-game adapter, offline BFS,
+   generated-arm, duplicate-redirect, future-outcome leakage, or unrelated
+   off-path evidence as disqualified input.
+2. Prove live-entrypoint reachability by hashing
+   `arc_competition_agent.py` and `arc_trajectory_supervisor.py`, confirming
+   `_make_trajectory_supervisor`, `E3AgentPolicy._maybe_supervise_trajectory`,
+   `E3AgentPolicy.trajectory_supervisor_diagnostics`, and `make_carnot_agent`
+   are present, and recording the receipt schema keys used by the run rows.
+3. Emit one `redirect_to_next_outcome_rows` row per applied firing. Each row
+   SHALL carry a stable redirect ID, arm, trigger state, fired=true,
+   `resolved_by_levelup`, `actions_to_levelup`, and exactly one next observed
+   live outcome: either the level-up at
+   `action_index + actions_to_levelup`, or the terminal no-level-up outcome at
+   the receipt's `actions_observed`. A later outcome SHALL NOT be reassigned to
+   an earlier unresolved redirect.
+4. Emit one `no_firing_run_rows` row for every inspected live run with no
+   applied firing disposition. Shadow `would_have_redirects` are readable
+   reachability evidence, but SHALL NOT become applied firings or selection
+   support.
+5. Freeze the selection rule before reducing rows: an existing curated arm
+   must have at least three prospective applied firings before priority can
+   change. The module SHALL never grow `ARM_ORDER`; if a run proves every
+   existing arm was exhausted and stagnation continued, it may write only a
+   future-arm specification.
+6. Replay recorded selection decisions only. It SHALL not replay a game,
+   claim a game or level solve, invoke an LLM, use an oracle-distinct verifier,
+   read game source, or call a per-game adapter.
+7. Set `arc_live_redirect_ledger_ready_score=1.0` when the shared live receipt
+   path is reachable and every inspected run has either terminal firing rows
+   or a no-firing row. `verdict_class` SHALL be `positive` only for a supported
+   prospective selection improvement, `null` for reachable receipts with no
+   supported improvement, `partial` for narrow receipt coverage, `blocked` for
+   missing live-path prerequisites, and `disqualified` for source access,
+   per-game fixes, off-path work, leakage, or solve claims.
+
+Deliverable:
+`results/experiment_6558_arc_live_redirect_ledger_reachability.json`.
+
+Required artifact fields:
+
+- `status`
+- `honest_verdict`
+- `verdict_class`
+- `prior_failure_receipt`
+- `live_entrypoint_reachability_receipt`
+- `supervisor_receipt_schema_and_code_hashes`
+- `redirect_to_next_outcome_rows`
+- `no_firing_run_rows`
+- `curated_arm_support_rows`
+- `selection_policy_disposition`
+- `no_solve_and_no_source_receipt`
+- `attack_matrix`
+- `arc_live_redirect_ledger_ready_score`
+- `per_unit_rows`
+- `aggregate_row_recomputation`
+- `gate_check_summary`
+- `preconditions_checked`
+- `protected_files_unchanged`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+
+Field principles:
+
+- `status`: A terminal state lets no-firing and missing-receipt outcomes satisfy the standing ARC slot honestly.
+- `honest_verdict`: The verdict must state live reachability, firing support, and policy disposition with a terminal prefix.
+- `verdict_class`: A closed class prevents an unsupported or blocked refinement from becoming positive.
+- `prior_failure_receipt`: The artifact must show how the Exp6524 missing-outcome block was tested.
+- `live_entrypoint_reachability_receipt`: Only code reachable from E3AgentPolicy or make_carnot_agent can improve the hidden-game deliverable.
+- `supervisor_receipt_schema_and_code_hashes`: Exact schema and implementation identities prevent a test-only receipt path from posing as live.
+- `redirect_to_next_outcome_rows`: Each firing must link to its next exact observed outcome without reassignment.
+- `no_firing_run_rows`: An empty ledger is a valid measured state and must not force churn.
+- `curated_arm_support_rows`: Selection changes require prospective support for existing human-curated arms.
+- `selection_policy_disposition`: The record must say changed, unchanged, or future-arm-specification and why.
+- `no_solve_and_no_source_receipt`: The task must prove that it read no game source, used no per-game adapter, and claimed no level solve.
+- `attack_matrix`: Receipt, leakage, source, adapter, support, and off-path attacks test the generalization claim.
+- `arc_live_redirect_ledger_ready_score`: One binary field records live receipt closure without requiring a manufactured policy change.
+- `per_unit_rows`: Every run, firing, arm, and outcome disposition must remain recheckable.
+- `aggregate_row_recomputation`: Fired, helped, unresolved, and unredirected totals must derive from rows.
+- `gate_check_summary`: A blocked result must name the missing live path, receipt, or input check and observed value.
+- `preconditions_checked`: Code, schema, artifact, registry, and resource receipts separate a block from no firings.
+- `protected_files_unchanged`: The ARC task must preserve the active roadmap and conductor.
+- `inference_substrate`: Receipt tracing and decision replay invoke no LLM and no offline solver.
+- `verifier_is_oracle`: Supervisor outcomes are live observations, not an oracle-distinct EBM verifier.
+- `field_principles`: Field principles keep the artifact schema tied to the operator's stated audit reason.
+- `field_provenance`: Every reachability and selection field must point to run rows, code hashes, and reducer logic.
+- `random_seed`: A fixed audit and replay order makes receipt analysis repeatable.
+- `duration_s`: Monotonic time exposes a task that skipped code tracing or receipt inspection.
+- `tests_run`: Named ARC lint, unit, and E2E receipts show the shared live path was checked.
+- `reproducibility_checksum`: A final hash protects the generalization determination trail.
+
+#### SCENARIO-ARC-WMTE-6680-LIVE-REACHABILITY
+
+Given a post-Exp6524 live harness artifact with `trajectory_supervisor`
+receipts from `E3AgentPolicy`, the reducer SHALL accept only the live rows,
+record code hashes and schema keys, and set reachability ready when every row
+has either applied firing rows or a no-firing disposition.
+
+#### SCENARIO-ARC-WMTE-6680-NEXT-OUTCOME-LINKAGE
+
+Given applied redirects with mixed resolved and unresolved outcomes, the
+reducer SHALL emit exactly one row per firing and link each row only to the
+next exact live outcome carried by that redirect's own receipt fields.
+
+#### SCENARIO-ARC-WMTE-6680-NO-FIRING-CLOSURE
+
+Given shadow receipts or applied receipts with zero applied redirects, the
+reducer SHALL emit explicit `no_firing_run_rows`, preserve the current policy,
+and never infer applied support from `would_have_redirects`.
+
+#### SCENARIO-ARC-WMTE-6680-SELECTION-SUPPORT
+
+Given curated-arm rows after replay, no arm SHALL change priority unless it
+has at least three prospective applied firings and the replayed order is a
+supported improvement over the current `ARM_ORDER`. Unsupported arms remain
+visible in `curated_arm_support_rows`.
+
+#### SCENARIO-ARC-WMTE-6680-FAIL-CLOSED-ATTACKS
+
+Given missing receipts, duplicate redirects, future-outcome leakage,
+source-reading markers, per-game adapter evidence, generated arms,
+off-path modules, or a solve claim, the reducer SHALL fail closed and record
+the attack in `attack_matrix`.
+
+#### SCENARIO-ARC-WMTE-6680-SCHEMA-AND-CLI
+
+Given the required run command, the module SHALL write the terminal artifact
+atomically, validate required fields and checksum, record test/lint commands,
+and expose the fixed substrate
+`live_arc_trajectory_supervisor_receipt_reachability_and_selection_replay_no_llm`
+with `verifier_is_oracle=false`.
+
+## Implementation Status (REQ-ARC-WMTE-6680)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6680 | `python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py` (live receipt reachability, redirect-to-next-outcome reducer, no-firing run closure, three-firing support replay, fail-closed attack matrix, CLI writer/validator). | `tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py` (SCENARIO-ARC-WMTE-6680-LIVE-REACHABILITY, NEXT-OUTCOME-LINKAGE, NO-FIRING-CLOSURE, SELECTION-SUPPORT, FAIL-CLOSED-ATTACKS, SCHEMA-AND-CLI). |
