@@ -620,3 +620,149 @@ When aggregate scores are recomputed,
 
 Then terminal scores and verdict class match the row-derived checks and cannot
 come only from aggregate prose.
+
+### REQ-STORE-6523 — Adaptive validation CSL audit
+
+Carnot SHALL provide Exp6523 at
+`python/carnot/experiment_6523_adaptive_validation_csl_audit.py` and write
+`results/experiment_6523_adaptive_validation_csl_audit.json`. The experiment
+SHALL independently audit Exp6522 before any FR-11 claim and compare full-set,
+fixed-subset, and variance-weighted adaptive validation on the frozen
+Exp6522 held-future tasks. Adaptive validation MAY reduce validation cost. It
+SHALL NOT control validity, exact sentinels, final full audit, exact-release
+answers, or the claim threshold.
+
+The audit SHALL evaluate the Exp6522 execution-complete gate. It SHALL record
+the gate path, artifact hash, expected value, observed value, row counts,
+resource receipt, source-method hash, and protected-file hashes. It SHALL
+recompute Exp6522 lifecycle actions, exact answers, costs, retention,
+held-future support, interference, capacity, restart, rollback, and safety
+metrics from rows. It SHALL freeze validation arms before sampling. It SHALL
+use only prior sampled outcomes to update adaptive task weights. It SHALL
+record nonzero adaptive inclusion probabilities for every eligible non-sentinel
+task. It SHALL run the same exact sentinel task set at every iteration. It
+SHALL run the full frozen held set for every candidate at the end, regardless
+of adaptive history.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`upstream_gate_receipt`, `prior_failure_receipt`,
+`independent_csl_row_recomputation`, `lifecycle_and_safety_audit`,
+`prefix_retention_audit`, `held_future_support_audit`,
+`full_fixed_adaptive_arm_contract`, `validation_selection_rows`,
+`inclusion_probability_rows`, `ipw_estimate_rows`, `exact_sentinel_rows`,
+`final_full_audit_rows`, `cost_and_decision_agreement_rows`,
+`adaptive_attack_matrix`, `adaptive_validation_ready_score`,
+`continuous_self_learning_claim_eligible_score`, `gate_check_summary`,
+`per_unit_rows`, `aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+Field principles SHALL be:
+
+- `status`: "Records whether the independent CSL and adaptive-validation audit is positive, null, partial, blocked, or disqualified."
+- `honest_verdict`: "States the measured full-audit claim result and adaptive cost boundary."
+- `verdict_class`: "Uses positive only when full audit supports CSL and adaptive validation preserves the full-set decision while saving checks."
+- `upstream_gate_receipt`: "Records Exp6522 gate path, hash, expected and observed values, row counts, resources, source-method hash, and protected hashes."
+- `prior_failure_receipt`: "Records prior CSL failures or nullable eligibility fields that this audit must not inherit as proof."
+- `independent_csl_row_recomputation`: "Recomputes Exp6522 row families and exact answers without trusting the prior summary."
+- `lifecycle_and_safety_audit`: "Audits lifecycle, exact equality, capacity, restart, rollback, interference, and invalid-reuse safety rows."
+- `prefix_retention_audit`: "Recomputes protected-prefix retention from row evidence."
+- `held_future_support_audit`: "Recomputes full held-future benefit, support, and winner from all held rows."
+- `full_fixed_adaptive_arm_contract`: "Freezes full-set, fixed-subset, adaptive, sentinel, probability, cost, and tolerance rules."
+- `validation_selection_rows`: "Shows which validation tasks each arm evaluated at each iteration."
+- `inclusion_probability_rows`: "Records adaptive inclusion probabilities for every eligible task with no zero-probability task."
+- `ipw_estimate_rows`: "Reports sampled totals, inverse-probability estimates, uncertainty, ranks, decisions, and full-truth comparison."
+- `exact_sentinel_rows`: "Proves the immutable exact sentinel set ran at every iteration."
+- `final_full_audit_rows`: "Records the final full held-set audit for every candidate."
+- `cost_and_decision_agreement_rows`: "Compares evaluation counts, cost saving, rank agreement, decision agreement, and wall time."
+- `adaptive_attack_matrix`: "Attacks zero probability, leakage, self-selection, collapse, omission, stopping, subset luck, IPW instability, hidden audits, and changed decisions."
+- `adaptive_validation_ready_score`: "Bare scalar that is one only when adaptive validation saves charged checks and preserves the full-set decision."
+- `continuous_self_learning_claim_eligible_score`: "Bare scalar set only from the independent final full audit."
+- `gate_check_summary`: "Names gate expectations, observations, failed checks, and claim or adaptive blockers."
+- `per_unit_rows`: "Flattens replay, selection, probability, estimate, sentinel, full-audit, cost, and attack rows."
+- `aggregate_row_recomputation`: "Recomputes readiness and claim scores from rows rather than prose."
+- `preconditions_checked`: "Records date, repo, resources, source paths, solver contract, and protected hashes."
+- `protected_files_unchanged`: "Proves protected upstream files stayed byte-identical."
+- `inference_substrate`: "Declares independent exact CSL replay and adaptive validation with no LLM."
+- `verifier_is_oracle`: "False because learning and validation-cost claims are not oracle claims."
+- `field_principles`: "Preserves why each required field exists."
+- `field_provenance`: "Maps each field to gate, row replay, validation arm, attack, or test evidence."
+- `random_seed`: "Pins validation selection and adaptive probability updates."
+- `duration_s`: "Records measured wall time."
+- `tests_run`: "Records validation commands and exit codes."
+- `reproducibility_checksum`: "Detects drift in gates, row replay, validation estimates, attacks, tests, or hashes."
+
+`adaptive_validation_ready_score` SHALL be bare `1.0` only when adaptive
+selection reduces charged checks and preserves the final full-set selection and
+conclusion within the frozen tolerance. `continuous_self_learning_claim_eligible_score`
+SHALL be set from the final full audit only. `verdict_class` SHALL be
+`positive` only when the independent full-set audit supports oracle-distinct
+held-future benefit and adaptive validation is ready, `null` for a valid
+no-benefit result, `partial` when adaptive cost improves but CSL does not or
+CSL passes but adaptive validation is not ready, `blocked` for gate or
+precondition failure, and `disqualified` for bias, leakage, unsafe reuse, or
+changed exact answers. The artifact SHALL set `inference_substrate` to
+`independent_exact_csl_replay_and_adaptive_validation_no_llm` and
+`verifier_is_oracle` to bare `false`.
+
+### SCENARIO-STORE-6523-REPLAY — Exp6522 is independently replayed
+
+Given the Exp6522 artifact has an execution-complete gate,
+
+When Exp6523 starts,
+
+Then it records the gate path, hash, expected value, observed value, row
+counts, resources, source-method hash, and protected-file hashes, and
+recomputes row-family metrics from Exp6522 rows.
+
+### SCENARIO-STORE-6523-ADAPTIVE-PROBABILITIES — Adaptive selection is probability-aware
+
+Given a frozen held-future task set and immutable sentinels,
+
+When adaptive validation selects tasks,
+
+Then every eligible task has a nonzero recorded inclusion probability, weights
+use only prior sampled outcomes, and inverse-probability estimates report
+sampled totals, uncertainty, ranks, and full-truth agreement.
+
+### SCENARIO-STORE-6523-SENTINEL-FULL-BACKSTOP — Sentinels and final full audit control validity
+
+Given adaptive validation evaluates only part of the held set before the final
+backstop,
+
+When each iteration and the final audit complete,
+
+Then the same exact sentinel set appears at every iteration, and the final full
+audit contains every frozen held task for every candidate.
+
+### SCENARIO-STORE-6523-COST-DECISION — Cost saving cannot change the claim
+
+Given full-set, fixed-subset, and adaptive validation rows,
+
+When costs and decisions are compared,
+
+Then adaptive validation is ready only if it uses fewer charged checks than
+full-set validation and preserves the full-set winner and conclusion within the
+frozen tolerance.
+
+### SCENARIO-STORE-6523-ATTACKS — Adaptive shortcuts fail closed
+
+Given attacks for zero-probability tasks, future leakage, self-selection,
+weight collapse, sentinel omission, favorable stopping, fixed-subset luck,
+IPW instability, hidden full audits, and cost saving that changes the winner,
+
+When Exp6523 validates the artifact,
+
+Then every critical attack fails closed and no adaptive shortcut can promote a
+claim without the final full audit.
+
+### SCENARIO-STORE-6523-SCHEMA — Artifact validates and checksums
+
+Given all replay, validation, cost, attack, field-principle, provenance, and
+test rows are assembled,
+
+When Exp6523 validates the artifact,
+
+Then the required fields match exactly, scores recompute from rows, protected
+files remain unchanged, `verifier_is_oracle=false`, and the checksum matches.
