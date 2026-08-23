@@ -4764,3 +4764,153 @@ and the verdict class follows the preregistered enum.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-BENCH-6546 | Planned (`python/carnot/experiment_6546_smt_cost_guard_sota.py`, `results/experiment_6546_smt_cost_guard_sota.json`) | Planned (`tests/python/test_experiment_6546_smt_cost_guard_sota.py`) |
+
+### REQ-BENCH-6547: External Transfer Independent Audit SHALL Always Run
+
+Carnot SHALL provide Exp6547 at
+`python/carnot/experiment_6547_external_transfer_independent_audit.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6547_external_transfer_independent_audit --date 20260823`
+SHALL write
+`results/experiment_6547_external_transfer_independent_audit.json`.
+
+Exp6547 SHALL always produce a terminal artifact. Missing, blocked, partial,
+or disqualified upstream lanes SHALL still emit diagnostic rows, gate rows, and
+a zero audited readiness score for that lane. Exp6547 SHALL not suppress one
+lane because another lane is blocked.
+
+Exp6547 SHALL independently recompute router and cost-guard claims from
+per-unit rows. It SHALL not trust upstream aggregate fields as authority. It
+SHALL recompute structural paired effects, learned-router paired effects,
+candidate preservation, exact equality, train-only fitting, development-only
+calibration, immutable held tables, abstention, fallback reachability, cost
+accounting, GGUF model identity, surface balance, token counts, tool-time
+charging, terminal coverage, and exact completion from rows.
+
+`external_transfer_audited_ready_score` SHALL equal `1.0` only when at least
+one scientific lane has a row-supported eligible result and every adopted claim
+passes the independent checks. Otherwise it SHALL equal `0.0`. A clean audit
+SHALL use `verdict_class=null`. A run with only one auditable lane SHALL use
+`verdict_class="partial"`. Missing prerequisite artifacts or blocked upstream
+lanes with no adopted row-supported claim SHALL use `verdict_class="blocked"`.
+False model identity, leakage, invalid exact equality, or invalid cost
+accounting SHALL use `verdict_class="disqualified"`.
+
+The artifact SHALL include exactly these fields: `status`, `honest_verdict`,
+`verdict_class`, `input_disposition_rows`, `router_row_recomputation`,
+`cost_guard_row_recomputation`, `independent_exact_replay_rows`,
+`source_equivalence_rows`, `model_identity_audit_rows`,
+`exception_and_fixture_hash_receipts`, `candidate_and_fallback_audit`,
+`calibration_audit_rows`, `token_time_and_tool_cost_audit`,
+`censoring_and_terminal_coverage`, `shortcut_attack_matrix`,
+`lane_dispositions`, `external_transfer_audited_ready_score`,
+`gate_check_summary`, `per_unit_rows`, `aggregate_row_recomputation`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, and `reproducibility_checksum`.
+
+`inference_substrate` SHALL be
+`independent_external_router_cost_and_exact_replay_audit_no_llm`.
+`verifier_is_oracle` SHALL be true for audit checks only. Exp6547 SHALL not
+turn an audit pass into a new positive scientific claim.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal Exp6547 independent audit state."
+- `honest_verdict`: "States each lane disposition without merging router and cost-guard evidence."
+- `verdict_class`: "Separates clean, partial, blocked, and disqualified audit outcomes."
+- `input_disposition_rows`: "Records existence, hashes, status, verdict class, and ready score for each required upstream artifact."
+- `router_row_recomputation`: "Recomputes structural and learned-router effects from rows instead of trusted aggregates."
+- `cost_guard_row_recomputation`: "Recomputes SOTA guarded versus unguarded effects from rows instead of trusted aggregates."
+- `independent_exact_replay_rows`: "Samples exact replay receipts and checks row-level equality against the audited fixture authority."
+- `source_equivalence_rows`: "Checks proof-preserving surface and source-equivalence receipts before adopting any transfer claim."
+- `model_identity_audit_rows`: "Verifies mandated GGUF IDs, local model paths, hashes, loader identity, and substitution resistance."
+- `exception_and_fixture_hash_receipts`: "Pins fixture, exception table, checkpoint, model registry, and protected inputs by hash."
+- `candidate_and_fallback_audit`: "Checks candidate preservation, abstention, fallback reachability, and exact equality across router rows."
+- `calibration_audit_rows`: "Checks train-only fitting and development-only calibration boundaries."
+- `token_time_and_tool_cost_audit`: "Recomputes prompt tokens, output tokens, model time, tool time, charged time, and charged tokens."
+- `censoring_and_terminal_coverage`: "Checks timeouts, parse failures, nonterminal rows, checkpoint coverage, and exact completion."
+- `shortcut_attack_matrix`: "Attacks identity, entity names, row order, leakage, prompt length, cache order, timing, duplicates, null rows, hidden writes, omitted tool cost, and aggregate tampering."
+- `lane_dispositions`: "Keeps router and cost-guard dispositions separate so one lane cannot rescue or suppress the other."
+- `external_transfer_audited_ready_score`: "Opens only when row-supported eligible claims pass every adopted independent check."
+- `gate_check_summary`: "Names failed checks with expected and observed values."
+- `per_unit_rows`: "Flattens independent row checks used by the aggregate reducer."
+- `aggregate_row_recomputation`: "Rebuilds the final score and verdict class from rows and lane dispositions."
+- `preconditions_checked`: "Records paths, hashes, code hashes, solver receipts, model receipts, resources, seed, and protected hashes."
+- `protected_files_unchanged`: "Shows guarded source and evidence files stayed byte-identical during the run."
+- `inference_substrate`: "Declares a deterministic external router, cost, and exact replay audit with no LLM inference."
+- `verifier_is_oracle`: "True only for audit checks; the artifact makes no new positive scientific claim."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each field to rows, upstream artifacts, checks, tests, and hashes."
+- `random_seed`: "Pins deterministic replay sampling and attack ordering."
+- `duration_s`: "Records measured reducer wall time."
+- `tests_run`: "Records validation command receipts."
+- `reproducibility_checksum`: "Detects drift in inputs, rows, lane dispositions, gates, and verdict."
+
+#### SCENARIO-BENCH-6547-ALWAYS-RUN: Missing Inputs Still Produce Rows
+
+**Given** one or more missing or blocked upstream artifacts
+**When** Exp6547 runs
+**Then** it writes a terminal artifact with input disposition rows, failed gate
+observations, lane dispositions, and
+`external_transfer_audited_ready_score=0.0` for each unavailable adopted lane.
+
+#### SCENARIO-BENCH-6547-ROW-REDUCTION: Aggregates Are Not Trusted
+
+**Given** structural, router, and cost-guard artifacts with per-unit rows
+**When** Exp6547 recomputes effects
+**Then** paired effects, support counts, exact equality, cost totals, token
+totals, and terminal coverage are derived from rows and compared with upstream
+aggregate claims.
+
+#### SCENARIO-BENCH-6547-MODEL-IDENTITY: GGUF Identity Is Audited
+
+**Given** Exp6546 model specs and model rows
+**When** Exp6547 audits model identity
+**Then** every adopted cost-guard row uses one of the mandated GGUF hub IDs,
+the local path hash matches the spec row, the loader is llama.cpp, and model
+substitution fails closed.
+
+#### SCENARIO-BENCH-6547-SHORTCUTS: Shortcut Attacks Fail Closed
+
+**Given** identity, entity-name, row-order, solver-leakage, prompt-length,
+cache-order, timing, duplicate-unit, null-row, hidden-held-write, omitted-tool
+cost, and aggregate-tampering attacks
+**When** Exp6547 evaluates the shortcut matrix
+**Then** every adopted lane must fail closed before the audited readiness score
+can equal `1.0`.
+
+#### SCENARIO-BENCH-6547-EXACT-EQUALITY: Exact Labels Remain The Authority
+
+**Given** router rows, fixture rows, and exact replay receipts
+**When** Exp6547 audits exact equality
+**Then** every adopted router row preserves exact labels and every exact replay
+sample matches the fixture authority.
+
+#### SCENARIO-BENCH-6547-COST-ACCOUNTING: Tool And Model Costs Are Charged
+
+**Given** cost-guard model, surface, arm, and tool rows
+**When** Exp6547 recomputes charged totals
+**Then** prompt tokens plus output tokens equal charged tokens, model time plus
+tool time equals charged time, and guarded savings include direct-tool cost.
+
+#### SCENARIO-BENCH-6547-CALIBRATION: Held Rows Stay Sealed
+
+**Given** train, development, and held rows from the router and cost guard
+**When** Exp6547 audits fitting, calibration, threshold, and exception rows
+**Then** train-only fitting, development-only calibration, immutable exception
+tables, and held-unavailable threshold selection are required for adoption.
+
+#### SCENARIO-BENCH-6547-ATOMIC-OUTPUT: Artifact Is Stable And Reproducible
+
+**Given** all audit rows, lane dispositions, protected hashes, and tests
+**When** Exp6547 writes the deliverable
+**Then** the artifact is written atomically, has field principles and
+provenance for every required field, has a matching checksum, and validates
+through the module CLI.
+
+## Implementation Status (REQ-BENCH-6547)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6547 | Planned (`python/carnot/experiment_6547_external_transfer_independent_audit.py`, `results/experiment_6547_external_transfer_independent_audit.json`) | Planned (`tests/python/test_experiment_6547_external_transfer_independent_audit.py`) |
