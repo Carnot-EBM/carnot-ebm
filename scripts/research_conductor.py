@@ -5084,6 +5084,16 @@ def _dogfood_verify_generated_code() -> None:
         logger.debug("DOGFOOD: Skipped due to error: %s", e)
 
 
+# REQ-CONDUCTOR-RECEIPT-2. When we hand an audit its own wall-clock budget, the
+# kill timeout below must leave room to FINISH the unit that was running when the
+# budget expired, plus write the report. The budget is checked between units, never
+# inside one, so slack smaller than one unit means the partial-report mechanism can
+# never fire. Measured cost of one QA-layer unit: 250-375s (two PARTIAL reports,
+# 2026-08-22). 600s covers the worst observed unit with margin.
+# tests/python/test_audit_run_receipts.py asserts the inequality at every call site.
+AUDIT_TIMEOUT_SLACK_S = 600
+
+
 def _run_audit_with_receipt(
     name: str,
     cmd: list[str],
@@ -5300,14 +5310,19 @@ def research_step(
                         "--limit",
                         "20",
                         "--budget-seconds",
-                        "750",
+                        "1800",
                         "--model",
                         AGENT_TYPE_AUDIT,
                         "--model-name",
                         AGENT_MODEL_AUDIT,
                     ],
                     receipt=PROJECT_ROOT / "ops" / "qa_layer_authenticity_audit_report.md",
-                    timeout=900,
+                    # 1800 + AUDIT_TIMEOUT_SLACK_S. Raised from 750/900 on
+                    # 2026-08-23: at 250-375s per unit the old pair could only
+                    # ever review 2-3 of 20 units, and a unit starting near the
+                    # 750s mark blew the 900s kill before any report landed.
+                    # Rotation had sat at offset 5 of 174 units.
+                    timeout=2400,
                 )
 
             # Artifact convention audit (2026-08-13). The four audits above review CODE and
@@ -5365,7 +5380,11 @@ def research_step(
                         AGENT_MODEL_AUDIT,
                     ],
                     receipt=PROJECT_ROOT / "ops" / "experiment_claim_audit_report.md",
-                    timeout=900,
+                    # 750 + AUDIT_TIMEOUT_SLACK_S (REQ-CONDUCTOR-RECEIPT-2). Was
+                    # 900, which left 150s for a unit that can take longer than
+                    # that -- the same too-small-slack shape that silenced the
+                    # QA-layer audit. Budget unchanged; only the slack was wrong.
+                    timeout=1350,
                 )
 
             # Audit-findings ledger (REQ-OPS-AUDIT-LEDGER-1): flagged claim-audit

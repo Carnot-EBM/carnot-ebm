@@ -341,6 +341,18 @@ repos:
         files: ^research-complete\.yaml$
         pass_filenames: true
 
+      - id: substrate-alias-evidence-lint
+        name: A new no-LLM substrate alias carries evidence (REQ-SUBSTRATE-ALIAS-1)
+        # The fabrication gate skips DURATION_TOO_SHORT for any substrate named
+        # in NO_LLM_SUBSTRATE_ALIASES. Measured 2026-08-23: 19 of 38 aliases
+        # added in two days, each in the same commit as the artifact it
+        # exempted. A new alias now needs a test naming it, or a dated line in
+        # ops/substrate_alias_acks.md. Fails closed if the diff cannot be read.
+        entry: .venv/bin/python scripts/substrate_alias_evidence_lint.py
+        language: system
+        files: ^scripts/adversarial_verify\.py$
+        pass_filenames: false
+
       - id: determination-preservation-lint
         name: Fabrication-gate determinations are not silently dropped
         # .venv/bin/python since 2026-08-21: scripts/adversarial_verify.py now
