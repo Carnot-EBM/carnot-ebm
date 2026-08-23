@@ -3455,6 +3455,162 @@ files, and a matching reproducibility checksum.
 |---|---|---|
 | REQ-BENCH-6517 | Planned (`python/carnot/experiment_6517_branch_pilot_independent_audit.py`, `results/experiment_6517_branch_pilot_independent_audit.json`) | Planned (`tests/python/test_experiment_6517_branch_pilot_independent_audit.py`) |
 
+### REQ-BENCH-6518: Structural Branch Controls SHALL Be Matched Before Learned Routing
+
+Carnot SHALL provide Exp6518 at
+`python/carnot/experiment_6518_structural_control_headroom_ab_v2.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6518_structural_control_headroom_ab_v2 --date 20260823`
+SHALL write
+`results/experiment_6518_structural_control_headroom_ab_v2.json`.
+
+Exp6518 SHALL evaluate the Exp6517 audit gate before running control arms. It
+SHALL record the gate path, hash, expected value, observed value, solver
+versions, resources, and protected-file hashes. A failed audit gate SHALL write
+a terminal blocked artifact.
+
+Exp6518 SHALL use the same Exp6516 pilot units, solver settings, seeds,
+restart budget, time limit, and terminal disposition rules for every arm. It
+SHALL freeze these arms before execution: native dynamic, shuffled dynamic,
+static analytical, partial-assignment consistency, periodic bounded refocus,
+random critical-variable enumeration, and analytical enumeration. The arm
+contract SHALL state that advice may order decisions only. It SHALL preserve
+all Boolean candidate values and SHALL keep the exact solver as the label
+authority.
+
+Exp6518 SHALL record one matched row for each pilot unit and arm. Each row
+SHALL record first changed decision, changed-decision count, candidate
+preservation, conflicts, propagations, decisions, restarts, wall time, control
+overhead, timeout, censoring, proof or model receipt, and exact answer
+equality. It SHALL report solver-only cost and total charged cost. Total cost
+SHALL charge feature computation, refocus, enumeration, and exact fallback.
+
+Exp6518 SHALL precommit the primary metric as held split total charged work
+units versus native dynamic. It SHALL report held transfer by family and seed.
+`structural_headroom_candidate_score` SHALL equal `1.0` only when a non-native
+arm has positive held charged benefit in the primary metric, exact answer
+equality, live decision influence, and support in more than one family and
+seed. Otherwise it SHALL equal `0.0`.
+
+Exp6518 SHALL attack inert advice, no-headroom units, row-order coupling,
+family identity, tuned held thresholds, omitted losses, timeout selection, and
+one-seed wins. Any correctness drift, candidate loss, leakage, or hidden cost
+SHALL set `structural_control_execution_complete_score=0.0`. Correctness drift
+or leakage SHALL use `verdict_class="disqualified"`. A failed precondition
+SHALL use `verdict_class="blocked"`. A complete run with no held benefit SHALL
+use `verdict_class=null`. An incomplete but usable run SHALL use
+`verdict_class="partial"`. A complete run with oracle-distinct held charged
+benefit SHALL use `verdict_class="positive"`.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`upstream_gate_receipt`, `prior_failure_receipts`, `preregistration`,
+`arm_contract`, `per_game_results`, `live_influence_rows`,
+`exact_answer_equality_rows`, `charged_cost_rows`, `censoring_rows`,
+`family_seed_summary`, `attack_matrix`,
+`structural_control_execution_complete_score`,
+`structural_headroom_candidate_score`, `gate_check_summary`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. `inference_substrate` SHALL be
+`procedural_exact_solver_structural_controls_no_llm`. `verifier_is_oracle`
+SHALL be false for method value. The artifact SHALL separately record
+`exact_solver_is_label_authority=true`.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal structural-control comparison state."
+- `honest_verdict`: "States the matched held result without turning the control into learned-router evidence."
+- `verdict_class`: "Closed enum separates positive, null, partial, blocked, and disqualified outcomes."
+- `upstream_gate_receipt`: "Pins the Exp6517 audit gate by path, hash, expected value, observed value, solvers, resources, and protected hashes."
+- `prior_failure_receipts`: "Keeps Exp6508 and method-boundary failures visible without making them dependencies."
+- `preregistration`: "Freezes the planning date, primary metric, splits, score rules, and stop rules before rows are scored."
+- `arm_contract`: "Freezes the seven structural arms and proves each arm may order candidates but not remove them."
+- `per_game_results`: "Stores one matched exact-solver row for each pilot unit and arm."
+- `live_influence_rows`: "Shows whether advice changed a live decision path relative to native dynamic."
+- `exact_answer_equality_rows`: "Shows exact-solver and Z3 labels match for every compared row."
+- `charged_cost_rows`: "Reports solver-only and total charged cost, including feature, refocus, enumeration, and fallback work."
+- `censoring_rows`: "Records timeout, censoring, restart, and terminal-disposition symmetry."
+- `family_seed_summary`: "Reports held transfer by family and seed before a candidate score can open."
+- `attack_matrix`: "Tests inert advice, no-headroom units, row order, family identity, held tuning, omitted losses, timeout selection, and one-seed wins."
+- `structural_control_execution_complete_score`: "Opens only when the matched rows, equality, costs, censoring, attacks, and protected hashes pass."
+- `structural_headroom_candidate_score`: "Opens only when held charged benefit is positive with equality, live influence, and family plus seed support."
+- `gate_check_summary`: "Names every failed gate with expected and observed values."
+- `per_unit_rows`: "Flattens game, influence, equality, cost, censoring, family-seed, and attack rows for recomputation."
+- `aggregate_row_recomputation`: "Recomputes execution and candidate scores from rows."
+- `preconditions_checked`: "Records paths, resources, solvers, seeds, budgets, and protected hashes."
+- `protected_files_unchanged`: "Proves the audit, pilot, method contract, prior blocked receipt, and conductor stayed byte-identical."
+- `inference_substrate`: "Declares exact procedural controls with no LLM inference."
+- `verifier_is_oracle`: "False because method value is measured, not certified by a verifier."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each field to specs, input artifacts, rows, reducers, tests, and hashes."
+- `random_seed`: "Pins arm seeds and shuffled critical-variable controls."
+- `duration_s`: "Records measured wall time."
+- `tests_run`: "Records validation commands and exit codes."
+- `reproducibility_checksum`: "Detects drift in gates, rows, costs, attacks, and verdicts."
+
+#### SCENARIO-BENCH-6518-AUDIT-GATE: Exp6517 Gate Is Evaluated First
+
+**Given** the Exp6517 audit artifact
+**When** Exp6518 starts
+**Then** it records the direct path, hash, expected readiness value,
+observed readiness value, solver versions, resources, and protected hashes
+before any complete execution score can open.
+
+#### SCENARIO-BENCH-6518-ARM-CONTRACT: Structural Arms Preserve Candidates
+
+**Given** the audited Exp6516 pilot units
+**When** Exp6518 freezes native dynamic, shuffled dynamic, static analytical,
+partial-assignment consistency, periodic bounded refocus, random
+critical-variable enumeration, and analytical enumeration
+**Then** every arm uses matched budgets, seeds, restart limits, time limits,
+terminal dispositions, and complete Boolean candidate preservation.
+
+#### SCENARIO-BENCH-6518-LIVE-INFLUENCE: Advice Changes Live Decisions
+
+**Given** native dynamic as the reference arm
+**When** each non-native structural arm solves a pilot unit
+**Then** Exp6518 records the first changed decision and the changed-decision
+count without using that decision change as a correctness label.
+
+#### SCENARIO-BENCH-6518-COST-EQUALITY: Equality And Charged Cost Are Recomputed
+
+**Given** matched exact-solver rows
+**When** Exp6518 computes solver-only and total charged work
+**Then** every row records exact answer equality, proof or model receipt,
+feature cost, refocus cost, enumeration cost, fallback cost, timeout, and
+censoring.
+
+#### SCENARIO-BENCH-6518-HELD-TRANSFER: Held Benefit Needs Family And Seed Support
+
+**Given** the held split rows
+**When** Exp6518 computes the precommitted primary metric
+**Then** a candidate score of `1.0` requires positive charged benefit,
+correctness equality, live influence, and support in more than one family and
+seed.
+
+#### SCENARIO-BENCH-6518-ATTACKS: Controls Fail Closed Under Shortcut Attacks
+
+**Given** inert advice, no-headroom units, row-order coupling, family identity,
+tuned held thresholds, omitted losses, timeout selection, and one-seed wins
+**When** Exp6518 evaluates the attack matrix
+**Then** each attack must fail closed before execution or candidate scores can
+open.
+
+#### SCENARIO-BENCH-6518-TERMINAL: Artifact Is Reproducible
+
+**Given** all matched rows, attacks, costs, equality checks, and protected
+hashes
+**When** Exp6518 validates the deliverable
+**Then** every required field has a principle and provenance entry, the
+checksum matches, and the verdict class follows the precommitted enum.
+
+## Implementation Status (REQ-BENCH-6518)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6518 | Planned (`python/carnot/experiment_6518_structural_control_headroom_ab_v2.py`, `results/experiment_6518_structural_control_headroom_ab_v2.json`) | Planned (`tests/python/test_experiment_6518_structural_control_headroom_ab_v2.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
