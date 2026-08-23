@@ -16352,3 +16352,6 @@ code |
 | 2026-08-23 18:07 UTC | ARC live trajectory-supervisor redirect-ledger gen | OK | 87 passed, 1 warning in 8.76s |
 | 2026-08-23 18:26 UTC | GateMate changed-physical-state continuity with on | OK | 88 passed, 1 warning in 13.31s |
 | 2026-08-23 18:48 UTC | Independent V567 capstone, adoption boundary, and  | OK | 86 passed, 1 warning in 14.62s |
+| 2026-08-23 20:02 UTC | Plan milestone 2026.08.568 | OK | 4 tasks proposed |
+| 2026-08-23 20:04 UTC | Activation REFUSED: milestone 2026.08.568 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-23 20:04 UTC | Activation replan 1/2: 2026.08.568 | OK | refused roadmap quarantined to roadmap-2026.08.568-refusal1.yaml; replanning wit |

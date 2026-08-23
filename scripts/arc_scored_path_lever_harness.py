@@ -551,6 +551,44 @@ def supervisor_row_field(policy) -> dict:
     return d
 
 
+def _attempt_manifest_path(game: str) -> Path:
+    """REQ-ARC-WMTE-6690: the per-game attempt-archive manifest, wherever the store lives NOW.
+
+    Resolves `e3.E3_DIR` at call time so a redirected store (CARNOT_ARC_E3_DIR, monkeypatch)
+    is honoured exactly like every other store access."""
+    from carnot.agentic import arc_executable_world_model as e3
+
+    return Path(e3.E3_DIR) / game / "attempts" / "manifest.jsonl"
+
+
+def _attempt_archive_delta(man_path: Path, lines_before: int) -> dict:
+    """REQ-ARC-WMTE-6690 (SCENARIO-6690-6): what THIS cell archived, as a row field.
+
+    The manifest is append-only, so the lines past `lines_before` are exactly the attempts
+    archived during the cell. This is the provenance `induction_engine_sources` never carried
+    for LLM-tier attempts: a (game, seed) row now names the models it produced by hash.
+    Never raises -- instrumentation must not take the row down."""
+    try:
+        lines = man_path.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        lines = []
+    new = lines[lines_before:]
+    shas: list[str] = []
+    for ln in new:
+        try:
+            shas.append(str(json.loads(ln).get("sha256_16")))
+        except Exception:
+            shas.append("unparseable")
+    return {"before": int(lines_before), "added": len(new), "sha256_16": shas[:12]}
+
+
+def _manifest_line_count(man_path: Path) -> int:
+    try:
+        return len(man_path.read_text(encoding="utf-8").splitlines())
+    except OSError:
+        return 0
+
+
 def _action_key(move: dict) -> str:
     kind = move.get("kind")
     data = move.get("data") or {}
@@ -670,6 +708,11 @@ def run_cell(
     )
     row["early_stop_grace_requested"] = early_stop_grace
     row["early_stop_grace_applied"] = bool(row["early_stop_grace"] == early_stop_grace)
+
+    # REQ-ARC-WMTE-6690: snapshot the attempt-archive manifest so the row can carry exactly
+    # what this cell archived (the delta), not whatever earlier cells left behind.
+    _man_path = _attempt_manifest_path(game)
+    _man_before = _manifest_line_count(_man_path)
 
     t1 = time.time()
     try:
@@ -796,6 +839,8 @@ def run_cell(
     row["induction_model_specs"] = dict(
         collections.Counter(str(a.get("model_specs")) for a in atts)
     )
+    # REQ-ARC-WMTE-6690 (SCENARIO-6690-6): the attempts this cell archived, by content hash.
+    row["induction_archive"] = _attempt_archive_delta(_man_path, _man_before)
 
     # ---- observe-channel witness: do graph nodes carry previous_frame? ---------------------
     nodes = list(ex.graph.values())

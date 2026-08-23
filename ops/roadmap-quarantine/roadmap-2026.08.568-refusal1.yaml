@@ -308,11 +308,6 @@ tasks:
     estimated_wall_time_min: 150
     agent_type: codex
     model: gpt-5.5
-    prior_failures:
-      - experiment_id: exp6545-external-safety-net-router
-        verdict: "complete_external_safety_net_router_positive: selected held charged linear_compact_router_abstention_exception_exact_fallback beats certified structural control with exact equality, calibrated abstention, immutable train-only exceptions, and reachable native fallback"
-        addressed_by: "Exp6545 learned and compared an experiment-local Python router. This task does not repeat router learning or that scientific comparison; it measures the later production Safety-Net ABI through scalar and batched Rust/PyO3 paths against Python and the PRD NFR01 threshold."
-        retire_if_same_verdict: true
     gated_on:
       - upstream: exp6563-production-safety-net-workload-canary
         artifact_field: production_workload_canary_ready_score
@@ -398,4 +393,3 @@ tasks:
 
       Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6564_rust_pyo3_safety_net_nfr01 --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
-
