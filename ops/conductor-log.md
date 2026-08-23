@@ -16346,3 +16346,4 @@ code |
 | 2026-08-23 16:42 UTC | Independent prospective continuous self-learning a | OK | 85 passed, 1 warning in 13.25s |
 | 2026-08-23 17:08 UTC | Proof-preserving constraint-saturation SOTA ingest | OK | 86 passed, 1 warning in 39.27s |
 | 2026-08-23 17:43 UTC | SOTA constraint-saturation and bounded-interventio | OK | 86 passed, 1 warning in 18.38s |
+| 2026-08-23 17:45 UTC | Independent constraint-saturation phase-curve and  | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
