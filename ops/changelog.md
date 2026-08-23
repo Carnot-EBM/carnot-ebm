@@ -1,5 +1,35 @@
 # Carnot — Changelog
 
+## 2026-08-23 (outer-loop, four guards widened per QA-layer SILENT_NON_FIRING findings)
+
+Operator-requested fixes for the four SILENT_NON_FIRING findings in
+`ops/qa_layer_authenticity_audit_report.md`. Each named input is now a
+test NAMED for it; each guard was widened, not rewritten (commit
+03fc2987cf; 5 mutations RED->GREEN; 134 tests across the four suites).
+
+- `substrate_alias_evidence_lint.py`: ALIAS_RE anchors on the quote
+  PAIR — the single-quoted `'local_python_no_llm'` is caught; a prose
+  apostrophe cannot open a match.
+- `test_suite_mutation_check.py`: the pre-commit stash window. Marker
+  staleness now also consults the newest FRESH patch in pre-commit's
+  cache (`_stash_hidden_paths`), so an unstaged rewrite hidden by the
+  hook-run stash keeps blocking; the refusal labels such paths
+  `[stash-hidden]` and warns against `git checkout` inside the window.
+  Read-only; nothing is reverted; a stale patch cannot wedge the gate.
+- `operator_curated_docs_lint.py`: `--name-status` with BOTH sides of
+  R/C entries — `R100 README.md -> docs/archive/project-intro.md` is
+  refused on its protected SOURCE. The test module gained its
+  REQ-ARC-WMTE-6042 trace (pre-existing spec-coverage gap surfaced by
+  the hook on first touch).
+- `operator_curated_doc_guard.py`: `allow_relative` for `os.*`
+  mutation events derives from the event's own dir_fd (-1/None =
+  AT_FDCWD = CWD-relative; a real descriptor keeps the rmtree
+  fd-relative protection). Closes `os.replace(tmp, "README.md")` with
+  destination dirfd -1, plus the unlink shape.
+
+Also: the mutation-check test fixture sandboxes PRE_COMMIT_HOME so
+tests never read the operator's live pre-commit cache.
+
 ## 2026-08-22 (outer-loop, merge-preserve: analyzer rebuilds carry hand-authored keys)
 
 Team-lead directive: close the documented defect where `scripts/
