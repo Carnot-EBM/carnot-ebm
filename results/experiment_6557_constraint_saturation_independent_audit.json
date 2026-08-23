@@ -1,0 +1,51 @@
+{
+  "experiment": 6557,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-23",
+  "started_at": "2026-08-23T17:45:49.287831+00:00",
+  "finished_at": "2026-08-23T17:45:49.287831+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Independent constraint-saturation phase-curve and policy audit",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "\u26a0\ufe0f Research Finding: complete_sota_constraint_saturation_intervention_positive: phase curve, bounded ",
+  "failed_upstream": "exp6556-sota-constraint-saturation-intervention-ab",
+  "failed_field": "rerun_discipline",
+  "failed_operator": "prior_failures_required",
+  "failed_expected": "non-empty entry naming this prior",
+  "failed_expected_type": "str",
+  "failed_observed": null,
+  "failed_observed_type": "null",
+  "failed_evidence_path": null,
+  "failed_evidence_sha256": null,
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "\u26a0\ufe0f Research Finding: complete_sota_constraint_saturation_intervention_positive: phase curve, bounded ",
+    "failed_upstream": "exp6556-sota-constraint-saturation-intervention-ab",
+    "failed_field": "rerun_discipline",
+    "failed_operator": "prior_failures_required",
+    "failed_expected": "non-empty entry naming this prior",
+    "failed_expected_type": "str",
+    "failed_observed": null,
+    "failed_observed_type": "null",
+    "failed_evidence_path": null,
+    "failed_evidence_sha256": null
+  },
+  "gate_check_summary": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6556-sota-constraint-saturation-intervention-ab",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "expected_type": "str",
+      "actual": null,
+      "actual_type": "null",
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: complete_sota_constraint_saturation_intervention_positive: phase curve, bounded ",
+      "artifact_path": null,
+      "artifact_sha256": null
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
