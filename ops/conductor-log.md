@@ -16316,3 +16316,5 @@ code |
 | 2026-08-23 06:49 UTC | Execution-time V565 source, model, and method cont | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6528_v565_so |
 | 2026-08-23 07:19 UTC | Execution-time V565 source, model, and method cont | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6528_v565_so |
 | 2026-08-23 07:21 UTC | Content-pinned DRIFT-Bench intake and exact replay | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6528-v565-source-model-method-contract) |
+| 2026-08-23 07:35 UTC | Independent external-corpus provenance, replay, an | OK | 86 passed, 1 warning in 9.80s |
+| 2026-08-23 07:37 UTC | Content-pinned DRIFT-Bench intake and exact replay | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6528-v565-source-model-method-contract) |
