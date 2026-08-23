@@ -16321,3 +16321,4 @@ code |
 | 2026-08-23 08:55 UTC | Plan milestone 2026.08.566 | OK | 7 tasks proposed |
 | 2026-08-23 08:57 UTC | Content-pinned DRIFT-Bench intake and exact replay | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6528-v565-source-model-method-contract) |
 | 2026-08-23 08:58 UTC | Milestone 2026.08.566 activated | OK | 7 tasks queued |
+| 2026-08-23 09:37 UTC | V566 direct-source, model-cache, and dependency co | OK | Deliverable already exists in repo |

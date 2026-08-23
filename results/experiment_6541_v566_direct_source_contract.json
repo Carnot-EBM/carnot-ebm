@@ -1,0 +1,1535 @@
+{
+  "advisory_discovery_rows": [
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "channel": "arxiv",
+      "content_consumed_by_v566_tasks": [],
+      "failure_can_zero_direct_source_ready": false,
+      "http_state": "http_200",
+      "mandatory_for_exp6541_ready": false,
+      "mandatory_only_when_consumed_by_named_task": true,
+      "observed_error": null,
+      "retrieval_state": "available",
+      "row_type": "advisory_discovery",
+      "source_hash": "sha256:b59f665f9e065f324ec8668c3d20ee1c92644b202fbdd2c415d27acdfcf9be0a",
+      "url": "https://arxiv.org/abs/2608.18921"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "channel": "openreview",
+      "content_consumed_by_v566_tasks": [],
+      "failure_can_zero_direct_source_ready": false,
+      "http_state": "http_200",
+      "mandatory_for_exp6541_ready": false,
+      "mandatory_only_when_consumed_by_named_task": true,
+      "observed_error": null,
+      "retrieval_state": "available",
+      "row_type": "advisory_discovery",
+      "source_hash": "sha256:dbefdde4fa66d8e170da4f10537b91c8851c12f070b93acfb50eb5ec23880910",
+      "url": "https://openreview.net/search?term=DRIFT-Bench"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "channel": "semantic_scholar",
+      "content_consumed_by_v566_tasks": [],
+      "failure_can_zero_direct_source_ready": false,
+      "http_state": "http_429",
+      "mandatory_for_exp6541_ready": false,
+      "mandatory_only_when_consumed_by_named_task": true,
+      "observed_error": "HTTP Error 429: ",
+      "retrieval_state": "rate_limited",
+      "row_type": "advisory_discovery",
+      "source_hash": "sha256:65e3797ba883f5e6c99c18424268af1f6c08dbc538181781e8fbc91a3fdadc8c",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/search?query=DRIFT-Bench"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "channel": "huggingface",
+      "content_consumed_by_v566_tasks": [],
+      "failure_can_zero_direct_source_ready": false,
+      "http_state": "http_200",
+      "mandatory_for_exp6541_ready": false,
+      "mandatory_only_when_consumed_by_named_task": true,
+      "observed_error": null,
+      "retrieval_state": "available",
+      "row_type": "advisory_discovery",
+      "source_hash": "sha256:d65e00ad1e2898e9b2a3ddaf2084cefc9c3c619791347f04b21b2bdfad7b7efe",
+      "url": "https://huggingface.co/papers?q=DRIFT-Bench"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "channel": "github_discovery",
+      "content_consumed_by_v566_tasks": [],
+      "failure_can_zero_direct_source_ready": false,
+      "http_state": "http_200",
+      "mandatory_for_exp6541_ready": false,
+      "mandatory_only_when_consumed_by_named_task": true,
+      "observed_error": null,
+      "retrieval_state": "available",
+      "row_type": "advisory_discovery",
+      "source_hash": "sha256:e51416787d36c195badd2348efc75af080709d7de85509cdbb123676be53c18d",
+      "url": "https://api.github.com/search/repositories?q=DRIFT-Bench"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "channel": "extropic",
+      "content_consumed_by_v566_tasks": [],
+      "failure_can_zero_direct_source_ready": false,
+      "http_state": "http_200",
+      "mandatory_for_exp6541_ready": false,
+      "mandatory_only_when_consumed_by_named_task": true,
+      "observed_error": null,
+      "retrieval_state": "available",
+      "row_type": "advisory_discovery",
+      "source_hash": "sha256:f38edf60921fc512716e9330b75d44730b5eea97735e6d7b7c51ab7f564c3821",
+      "url": "https://www.extropic.ai/"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "channel": "logical_intelligence",
+      "content_consumed_by_v566_tasks": [],
+      "failure_can_zero_direct_source_ready": false,
+      "http_state": "http_200",
+      "mandatory_for_exp6541_ready": false,
+      "mandatory_only_when_consumed_by_named_task": true,
+      "observed_error": null,
+      "retrieval_state": "available",
+      "row_type": "advisory_discovery",
+      "source_hash": "sha256:c5be634e19d6de34c1709dddcb44aea1355173408adc8184bba5bfd473deb0d9",
+      "url": "https://www.logicalintelligence.ai/"
+    }
+  ],
+  "aggregate_row_recomputation": {
+    "advisory_failures_ignored_for_direct_ready": true,
+    "advisory_row_count": 7,
+    "dependency_attacks_passed": true,
+    "dependency_gate_row_count": 4,
+    "direct_source_contract_ready": true,
+    "direct_source_row_count": 7,
+    "field_dependency_contract_ready": true,
+    "immutable_evidence_imported_by_path_hash": true,
+    "local_replay_contract_ready": true,
+    "model_cache_contract_ready": true,
+    "model_cache_row_count": 3,
+    "per_unit_row_count": 38,
+    "protected_files_unchanged": true,
+    "ready_score_from_rows": 1.0,
+    "split_contract_ready": true
+  },
+  "dependency_and_gate_rows": [
+    {
+      "artifact_field": "v566_direct_source_ready_score",
+      "field_declared_verbatim": true,
+      "op": "==",
+      "retired_id_dependency": false,
+      "row_type": "dependency_gate",
+      "task_id": "exp6542-drift-bench-external-intake-v2",
+      "upstream_task_exists": true,
+      "upstream_task_id": "exp6541-v566-direct-source-contract",
+      "value": 1.0
+    },
+    {
+      "artifact_field": "external_constraint_corpus_audited_ready_score",
+      "field_declared_verbatim": true,
+      "op": "==",
+      "retired_id_dependency": false,
+      "row_type": "dependency_gate",
+      "task_id": "exp6544-external-structural-headroom",
+      "upstream_task_exists": true,
+      "upstream_task_id": "exp6543-external-corpus-independent-audit-v2",
+      "value": 1.0
+    },
+    {
+      "artifact_field": "external_structural_headroom_ready_score",
+      "field_declared_verbatim": true,
+      "op": "==",
+      "retired_id_dependency": false,
+      "row_type": "dependency_gate",
+      "task_id": "exp6545-external-safety-net-router",
+      "upstream_task_exists": true,
+      "upstream_task_id": "exp6544-external-structural-headroom",
+      "value": 1.0
+    },
+    {
+      "artifact_field": "external_constraint_corpus_audited_ready_score",
+      "field_declared_verbatim": true,
+      "op": "==",
+      "retired_id_dependency": false,
+      "row_type": "dependency_gate",
+      "task_id": "exp6546-smt-cost-guard-sota",
+      "upstream_task_exists": true,
+      "upstream_task_id": "exp6543-external-corpus-independent-audit-v2",
+      "value": 1.0
+    },
+    {
+      "attack_id": "unavailable_advisory_channel",
+      "attack_passed": true,
+      "reason": "Advisory rows are excluded from direct-source readiness gates.",
+      "row_type": "attack"
+    },
+    {
+      "attack_id": "moving_branch",
+      "attack_passed": true,
+      "reason": "Readiness uses the immutable commit, not a branch name.",
+      "row_type": "attack"
+    },
+    {
+      "attack_id": "license_ambiguity",
+      "attack_passed": true,
+      "reason": "The direct contract requires an MIT license file.",
+      "row_type": "attack"
+    },
+    {
+      "attack_id": "missing_source_files",
+      "attack_passed": true,
+      "reason": "Problem count, schema, README, license, and Z3 files are hard checks.",
+      "row_type": "attack"
+    },
+    {
+      "attack_id": "gguf_repo_id_tokenizer_misuse",
+      "attack_passed": true,
+      "reason": "The load contract forbids Transformers tokenizer use on GGUF repo IDs.",
+      "row_type": "attack"
+    },
+    {
+      "attack_id": "renamed_readiness_field",
+      "attack_passed": true,
+      "reason": "V566 gates must name verbatim upstream artifact fields.",
+      "row_type": "attack"
+    },
+    {
+      "attack_id": "retired_id_dependency",
+      "attack_passed": true,
+      "reason": "No structured gate may name Exp6528 or Exp6529.",
+      "row_type": "attack"
+    },
+    {
+      "attack_id": "status_only_success",
+      "attack_passed": true,
+      "reason": "Readiness is recomputed from hard rows, not status text.",
+      "row_type": "attack"
+    }
+  ],
+  "direct_source_rows": [
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "check_passed": true,
+      "consumed_by_v566_tasks": [
+        "exp6542-drift-bench-external-intake-v2",
+        "exp6543-external-corpus-independent-audit-v2"
+      ],
+      "direct_requirement": true,
+      "expected": "d24cda4f59a6ee06bafe886f4724899a7ec94f1c",
+      "observed": "d24cda4f59a6ee06bafe886f4724899a7ec94f1c",
+      "row_type": "direct_source",
+      "source_id": "drift_repo_revision"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "check_passed": true,
+      "direct_requirement": true,
+      "expected": "2026-04-25T13:18:49-07:00",
+      "observed": "2026-04-25T13:18:49-07:00",
+      "row_type": "direct_source",
+      "source_id": "drift_commit_date"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "check_passed": true,
+      "direct_requirement": true,
+      "expected": "MIT",
+      "observed": "MIT",
+      "row_type": "direct_source",
+      "sha256": "sha256:eedd29cc7098413e061a9addbe1f4df0155b6de3a142fc4b2f0da2e272e64593",
+      "source_id": "drift_license"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "check_passed": true,
+      "direct_requirement": true,
+      "expected": "problem schema with turns and cumulative constraints",
+      "observed": "schema_text_present",
+      "row_type": "direct_source",
+      "sha256": "sha256:ed5773bae657071faaf544577c8f7b748ebcae2b7d7542fb5b4e49450b3db49c",
+      "source_id": "drift_schema"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "census": {
+        "domain_counts": {
+          "logic_grid": 340,
+          "scheduling": 340,
+          "seating": 340
+        },
+        "problem_file_count": 1020,
+        "problem_json_schema_keys_present": true,
+        "split_counts": {
+          "dev": 204,
+          "test": 816
+        },
+        "split_domain_counts": {
+          "dev:logic_grid": 68,
+          "dev:scheduling": 68,
+          "dev:seating": 68,
+          "test:logic_grid": 272,
+          "test:scheduling": 272,
+          "test:seating": 272
+        }
+      },
+      "check_passed": true,
+      "direct_requirement": true,
+      "expected": 1020,
+      "observed": 1020,
+      "row_type": "direct_source",
+      "source_id": "drift_problem_file_census"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "check_passed": true,
+      "direct_requirement": true,
+      "expected": "src/z3_checker.py imports z3",
+      "observed": "present",
+      "row_type": "direct_source",
+      "sha256": "sha256:071b9cdacf50f3b5130b3496abd2d5ead51e7a99b82c1ce85b7042da560aa147",
+      "source_id": "drift_local_z3_replay_code"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "check_passed": true,
+      "direct_requirement": true,
+      "expected": "README names corrupted SQLite databases",
+      "observed": "present",
+      "row_type": "direct_source",
+      "sha256": "sha256:ff8ec5820eb571c35121cf37f17acadba552ce648f3d0fb00a8720b99475b208",
+      "source_id": "drift_upstream_corruption_warning"
+    }
+  ],
+  "drift_revision_license_schema_contract": {
+    "accessed_at_utc": "2026-08-23T09:13:40Z",
+    "commit_date": "2026-04-25T13:18:49-07:00",
+    "commit_date_matches_expected": true,
+    "commit_subject": "public release",
+    "contract_ready": true,
+    "git_url": "https://github.com/kaons-research/drift-bench.git",
+    "immutable_revision": "d24cda4f59a6ee06bafe886f4724899a7ec94f1c",
+    "license": "MIT",
+    "license_verified": true,
+    "ls_remote_head": "d24cda4f59a6ee06bafe886f4724899a7ec94f1c",
+    "moving_branch_required_for_v566": false,
+    "problem_census": {
+      "domain_counts": {
+        "logic_grid": 340,
+        "scheduling": 340,
+        "seating": 340
+      },
+      "problem_file_count": 1020,
+      "problem_json_schema_keys_present": true,
+      "split_counts": {
+        "dev": 204,
+        "test": 816
+      },
+      "split_domain_counts": {
+        "dev:logic_grid": 68,
+        "dev:scheduling": 68,
+        "dev:seating": 68,
+        "test:logic_grid": 272,
+        "test:scheduling": 272,
+        "test:seating": 272
+      }
+    },
+    "problem_file_census_matches_expected": true,
+    "problem_file_count": 1020,
+    "repo_url": "https://github.com/kaons-research/drift-bench",
+    "revision_is_expected": true,
+    "revision_is_immutable": true,
+    "row_type": "drift_revision_license_schema_contract",
+    "schema_path": "data/problems/README.md",
+    "schema_verified": true,
+    "z3_replay_code_present": true,
+    "z3_replay_path": "src/z3_checker.py"
+  },
+  "duration_s": 52.540091,
+  "field_principles": {
+    "advisory_discovery_rows": "Records discovery outages without letting unconsumed rows gate readiness.",
+    "aggregate_row_recomputation": "Recomputes readiness from rows instead of trusting status text.",
+    "dependency_and_gate_rows": "Audits V566 gate fields, retired IDs, and adversarial dependency attacks.",
+    "direct_source_rows": "Records one hard row per consumed DRIFT source prerequisite.",
+    "drift_revision_license_schema_contract": "Freezes DRIFT commit, license, schema, census, and Z3 replay.",
+    "duration_s": "Records measured wall time for the reducer.",
+    "field_principles": "Explains why each required field exists.",
+    "field_provenance": "Maps every required field to deterministic rows, files, or receipts.",
+    "frozen_arc_contract": "Freezes the ARC no-firing rule for this milestone.",
+    "frozen_cost_guard_contract": "Freezes solver-conflict, surface, budget, and dispatch controls.",
+    "frozen_external_split_contract": "Freezes family, chronology, and field-spelling split rules.",
+    "frozen_reversible_memory_contract": "Freezes transactional and reversible-memory boundaries.",
+    "frozen_router_contract": "Freezes calibration, abstention, fallback, and candidate preservation.",
+    "frozen_structural_contract": "Freezes exact structural controls before outcome rows exist.",
+    "gate_check_summary": "Names failed hard checks with expected and observed values.",
+    "gguf_load_contract": "Freezes llama.cpp model-path loading and forbids GGUF repo-ID tokenizer misuse.",
+    "hardware_stop_contract": "Freezes GateMate and hardware changed-state stop rules.",
+    "honest_verdict": "States direct-source readiness without declaring a scientific result.",
+    "immutable_evidence_receipts": "Imports eligible V564 boundary evidence only by path and SHA-256.",
+    "inference_substrate": "Declares direct-source, cache, and dependency preflight with no LLM inference.",
+    "model_cache_resolution_rows": "Records mandated GGUF cache identity without loading model weights.",
+    "per_unit_rows": "Flattens source, advisory, cache, dependency, attack, and gate rows.",
+    "preconditions_checked": "Records environment, tools, resources, network, git, and cache roots.",
+    "protected_files_unchanged": "Proves protected files stayed byte-identical during the run.",
+    "random_seed": "Pins deterministic row and attack ordering.",
+    "reproducibility_checksum": "Detects drift in source, cache, gate, field, and receipt rows.",
+    "source_tree_hashes": "Binds the checked source tree and required files to hashes.",
+    "status": "Records the terminal V566 direct-source contract state.",
+    "tests_run": "Records validation command receipts.",
+    "upstream_corruption_boundary": "Prevents upstream corrupted SQLite databases or aggregates from transferring.",
+    "v565_boundary_receipts": "Separates V565 blocked and eligible receipts by immutable path and hash.",
+    "v566_direct_source_ready_score": "Opens only when direct source, replay, cache, field, and gate rows pass.",
+    "verdict_class": "Closed enum for clean, partial, blocked, or false-provenance contracts.",
+    "verifier_is_oracle": "True only for source, hash, schema, and dependency checks."
+  },
+  "field_provenance": {
+    "advisory_discovery_rows": {
+      "principle": "Records discovery outages without letting unconsumed rows gate readiness.",
+      "source": "collect_advisory_discovery_rows",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "aggregate_row_recomputation": {
+      "principle": "Recomputes readiness from rows instead of trusting status text.",
+      "source": "aggregate_row_recomputation",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "dependency_and_gate_rows": {
+      "principle": "Audits V566 gate fields, retired IDs, and adversarial dependency attacks.",
+      "source": "build_dependency_and_gate_rows",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "direct_source_rows": {
+      "principle": "Records one hard row per consumed DRIFT source prerequisite.",
+      "source": "build_direct_source_contract",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "drift_revision_license_schema_contract": {
+      "principle": "Freezes DRIFT commit, license, schema, census, and Z3 replay.",
+      "source": "build_direct_source_contract",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "duration_s": {
+      "principle": "Records measured wall time for the reducer.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "field_principles": {
+      "principle": "Explains why each required field exists.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Maps every required field to deterministic rows, files, or receipts.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "frozen_arc_contract": {
+      "principle": "Freezes the ARC no-firing rule for this milestone.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "frozen_cost_guard_contract": {
+      "principle": "Freezes solver-conflict, surface, budget, and dispatch controls.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "frozen_external_split_contract": {
+      "principle": "Freezes family, chronology, and field-spelling split rules.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "frozen_reversible_memory_contract": {
+      "principle": "Freezes transactional and reversible-memory boundaries.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "frozen_router_contract": {
+      "principle": "Freezes calibration, abstention, fallback, and candidate preservation.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "frozen_structural_contract": {
+      "principle": "Freezes exact structural controls before outcome rows exist.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "gate_check_summary": {
+      "principle": "Names failed hard checks with expected and observed values.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "gguf_load_contract": {
+      "principle": "Freezes llama.cpp model-path loading and forbids GGUF repo-ID tokenizer misuse.",
+      "source": "build_gguf_load_contract",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "hardware_stop_contract": {
+      "principle": "Freezes GateMate and hardware changed-state stop rules.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "States direct-source readiness without declaring a scientific result.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "immutable_evidence_receipts": {
+      "principle": "Imports eligible V564 boundary evidence only by path and SHA-256.",
+      "source": "build_immutable_evidence_receipts",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Declares direct-source, cache, and dependency preflight with no LLM inference.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "model_cache_resolution_rows": {
+      "principle": "Records mandated GGUF cache identity without loading model weights.",
+      "source": "collect_model_cache_resolution_rows",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "per_unit_rows": {
+      "principle": "Flattens source, advisory, cache, dependency, attack, and gate rows.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Records environment, tools, resources, network, git, and cache roots.",
+      "source": "build_preconditions_checked",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Proves protected files stayed byte-identical during the run.",
+      "source": "protected_files_unchanged",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "random_seed": {
+      "principle": "Pins deterministic row and attack ordering.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "Detects drift in source, cache, gate, field, and receipt rows.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "source_tree_hashes": {
+      "principle": "Binds the checked source tree and required files to hashes.",
+      "source": "build_source_tree_hashes",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "status": {
+      "principle": "Records the terminal V566 direct-source contract state.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "tests_run": {
+      "principle": "Records validation command receipts.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "upstream_corruption_boundary": {
+      "principle": "Prevents upstream corrupted SQLite databases or aggregates from transferring.",
+      "source": "build_upstream_corruption_boundary",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "v565_boundary_receipts": {
+      "principle": "Separates V565 blocked and eligible receipts by immutable path and hash.",
+      "source": "build_v565_boundary_receipts",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "v566_direct_source_ready_score": {
+      "principle": "Opens only when direct source, replay, cache, field, and gate rows pass.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "verdict_class": {
+      "principle": "Closed enum for clean, partial, blocked, or false-provenance contracts.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "True only for source, hash, schema, and dependency checks.",
+      "source": "Exp6541 deterministic direct-source reducer",
+      "spec_refs": [
+        "REQ-REPORT-6541"
+      ]
+    }
+  },
+  "frozen_arc_contract": {
+    "arc_solver_firing_allowed": false,
+    "contract_version": "v566_arc_contract_v1",
+    "downstream_field_spelling": [
+      "arc_no_firing_rule",
+      "redirect_ledger_hash",
+      "shared_supervisor_changed",
+      "outcome_row_support"
+    ],
+    "reads_live_redirect_ledger_only": true,
+    "shared_supervisor_selection_only": true
+  },
+  "frozen_cost_guard_contract": {
+    "contract_version": "v566_cost_guard_contract_v1",
+    "downstream_field_spelling": [
+      "model_hf_id",
+      "solver_conflict_count",
+      "surface_realization_id",
+      "guard_arm",
+      "tool_time_s",
+      "charged_total_time_s",
+      "exact_completion"
+    ],
+    "held_threshold_tuning_allowed": false,
+    "proof_preserving_surface_required": true,
+    "solver_conflict_is_correctness_label": false,
+    "strata": [
+      "solver_conflict_quantile",
+      "surface_realization_id",
+      "domain",
+      "model_hf_id"
+    ],
+    "tool_time_charged": true
+  },
+  "frozen_external_split_contract": {
+    "chronology_keys": [
+      "turn_index",
+      "turn_number",
+      "chronology_index"
+    ],
+    "contract_version": "v566_external_split_contract_v1",
+    "downstream_field_spelling": [
+      "split_name",
+      "base_problem_id",
+      "domain",
+      "turn_index",
+      "source_row_hash",
+      "chronology_index"
+    ],
+    "family_blind_keys": [
+      "domain",
+      "problem_id",
+      "base_problem_id"
+    ],
+    "held_outcome_forbidden_before_freeze": true,
+    "lineage_may_cross_splits": false,
+    "source_surface": "DRIFT-Bench commit d24cda4f59a6ee06bafe886f4724899a7ec94f1c",
+    "split_names": [
+      "train",
+      "development",
+      "held_family_blind"
+    ]
+  },
+  "frozen_reversible_memory_contract": {
+    "commit_after_exact_validation": true,
+    "contract_version": "v566_reversible_memory_contract_v1",
+    "dormant_before_retired": true,
+    "downstream_field_spelling": [
+      "memory_state",
+      "memory_frozen_within_query",
+      "commit_after_exact_validation",
+      "future_exact_satisfying_support",
+      "retained_family_performance",
+      "rollback_equality"
+    ],
+    "memory_frozen_within_query": true,
+    "retirement_policy_gate_required": true,
+    "same_query_mutation_negative_control": true,
+    "shadow_reactivation_required": true,
+    "states": [
+      "active",
+      "dormant",
+      "retired"
+    ],
+    "support_metrics": [
+      "future_exact_satisfying_support",
+      "retained_family_performance",
+      "unsafe_reuse_count",
+      "restart_equality",
+      "rollback_equality"
+    ]
+  },
+  "frozen_router_contract": {
+    "abstention_required": true,
+    "calibration_split": "development",
+    "contract_version": "v566_router_contract_v1",
+    "downstream_field_spelling": [
+      "router_arm",
+      "router_abstained",
+      "calibration_split",
+      "exact_fallback_used",
+      "candidate_set_preserved"
+    ],
+    "exact_fallback_required": true,
+    "learned_advice_may_certify": false,
+    "learned_advice_may_order": true,
+    "learned_advice_may_prune": false
+  },
+  "frozen_structural_contract": {
+    "candidate_set_preserved": true,
+    "charged_cost_fields": [
+      "proposal_count",
+      "exact_check_count",
+      "wall_time_s"
+    ],
+    "contract_version": "v566_structural_contract_v1",
+    "controls": [
+      "native",
+      "random",
+      "analytical",
+      "bounded_refocus",
+      "one_shot_enumeration"
+    ],
+    "downstream_field_spelling": [
+      "router_arm",
+      "candidate_set_preserved",
+      "exact_answer_equal",
+      "proposal_count",
+      "exact_check_count",
+      "charged_total_cost"
+    ],
+    "exact_fallback_required": true
+  },
+  "gate_check_summary": {
+    "all_gates_passed": true,
+    "checks": {
+      "advisory_failures_ignored_for_direct_ready": true,
+      "dependency_attacks_passed": true,
+      "direct_source_contract_ready": true,
+      "field_dependency_contract_ready": true,
+      "immutable_evidence_imported_by_path_hash": true,
+      "local_replay_contract_ready": true,
+      "model_cache_contract_ready": true,
+      "protected_files_unchanged": true,
+      "split_contract_ready": true
+    },
+    "failed_checks": []
+  },
+  "gguf_load_contract": {
+    "all_load_plans_use_model_path": true,
+    "all_required_files_cache_hit": true,
+    "all_required_hub_ids_present": true,
+    "contract_ready": true,
+    "embedded_tokenizer_preflight_helper": "gguf_tokenizer_loadable(model_path)",
+    "llama_cpp_load_entrypoint": "llama_cpp.Llama(model_path=<local_gguf_path>)",
+    "observed_hub_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "required_hub_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "row_type": "gguf_load_contract",
+    "transformers_tokenizer_on_gguf_repo_id_allowed": false,
+    "weights_loaded": false
+  },
+  "hardware_stop_contract": {
+    "contract_version": "v566_hardware_stop_contract_v1",
+    "downstream_field_spelling": [
+      "physical_state_receipt_utc",
+      "physical_state_receipt_hash",
+      "changed_state_since_previous_attempt",
+      "gatemate_command_issued"
+    ],
+    "gatemate_command_allowed_without_new_receipt": false,
+    "no_tsu_or_kona_execution_claim": true,
+    "required_receipt": "dated physical-state receipt newer than previous continuity attempt"
+  },
+  "honest_verdict": "complete_v566_direct_source_contract_ready: direct DRIFT source, local replay, model cache, split, field, and dependency contracts are implementable",
+  "immutable_evidence_receipts": [
+    {
+      "eligible_v564_boundary_imported": true,
+      "exists": true,
+      "honest_verdict": "complete_v565_evidence_root_eligible: corrected Exp6520 eligibility is separated from historical flags, and adopted structural-router plus conflict-memory rows are ready",
+      "import_scope": "corrected V564 structural-router and conflict-memory boundaries",
+      "path": "results/experiment_6527_v565_evidence_eligibility_corrigendum.json",
+      "row_type": "immutable_evidence_receipt",
+      "sha256": "sha256:f37c20e41e3a1de03ccfa620f37458ce68311a9e4e3770fad724c157e30e5b2e",
+      "status": "complete_v565_evidence_root_eligible"
+    }
+  ],
+  "inference_substrate": "direct_primary_source_cache_and_dependency_preflight_no_llm",
+  "model_cache_resolution_rows": [
+    {
+      "assigned_gpu": 0,
+      "cache_hit": true,
+      "cached_sota_pair_returned": true,
+      "gpu_indices_requested": [
+        0,
+        1
+      ],
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "load_plan": "llama_cpp.Llama(model_path=<local_gguf_path>)",
+      "missing_entry": null,
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_file_size_bytes": 22134528992,
+      "model_loaded_or_run": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "quantized_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "registry_quantization": "Q4_K_M",
+      "role": "moe",
+      "row_type": "model_cache",
+      "selected_by_cached_sota_pair": true,
+      "tokenizer_preflight": "gguf_tokenizer_loadable(model_path)",
+      "transformers_tokenizer_repo_id_used": false
+    },
+    {
+      "assigned_gpu": 1,
+      "cache_hit": true,
+      "cached_sota_pair_returned": true,
+      "gpu_indices_requested": [
+        0,
+        1
+      ],
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "load_plan": "llama_cpp.Llama(model_path=<local_gguf_path>)",
+      "missing_entry": null,
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_file_size_bytes": 16947539744,
+      "model_loaded_or_run": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "quantized_filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "registry_quantization": "Q4_K_M",
+      "role": "moe",
+      "row_type": "model_cache",
+      "selected_by_cached_sota_pair": true,
+      "tokenizer_preflight": "gguf_tokenizer_loadable(model_path)",
+      "transformers_tokenizer_repo_id_used": false
+    },
+    {
+      "assigned_gpu": null,
+      "cache_hit": true,
+      "cached_sota_pair_returned": true,
+      "gpu_indices_requested": [
+        0,
+        1
+      ],
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "load_plan": "llama_cpp.Llama(model_path=<local_gguf_path>)",
+      "missing_entry": null,
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_file_size_bytes": 18323731456,
+      "model_loaded_or_run": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "quantized_filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "registry_quantization": "Q4_K_M",
+      "role": "dense",
+      "row_type": "model_cache",
+      "selected_by_cached_sota_pair": false,
+      "tokenizer_preflight": "gguf_tokenizer_loadable(model_path)",
+      "transformers_tokenizer_repo_id_used": false
+    }
+  ],
+  "per_unit_rows": [
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "check_passed": true,
+      "consumed_by_v566_tasks": [
+        "exp6542-drift-bench-external-intake-v2",
+        "exp6543-external-corpus-independent-audit-v2"
+      ],
+      "direct_requirement": true,
+      "expected": "d24cda4f59a6ee06bafe886f4724899a7ec94f1c",
+      "observed": "d24cda4f59a6ee06bafe886f4724899a7ec94f1c",
+      "row_type": "direct_source",
+      "source_id": "drift_repo_revision"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "check_passed": true,
+      "direct_requirement": true,
+      "expected": "2026-04-25T13:18:49-07:00",
+      "observed": "2026-04-25T13:18:49-07:00",
+      "row_type": "direct_source",
+      "source_id": "drift_commit_date"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "check_passed": true,
+      "direct_requirement": true,
+      "expected": "MIT",
+      "observed": "MIT",
+      "row_type": "direct_source",
+      "sha256": "sha256:eedd29cc7098413e061a9addbe1f4df0155b6de3a142fc4b2f0da2e272e64593",
+      "source_id": "drift_license"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "check_passed": true,
+      "direct_requirement": true,
+      "expected": "problem schema with turns and cumulative constraints",
+      "observed": "schema_text_present",
+      "row_type": "direct_source",
+      "sha256": "sha256:ed5773bae657071faaf544577c8f7b748ebcae2b7d7542fb5b4e49450b3db49c",
+      "source_id": "drift_schema"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "census": {
+        "domain_counts": {
+          "logic_grid": 340,
+          "scheduling": 340,
+          "seating": 340
+        },
+        "problem_file_count": 1020,
+        "problem_json_schema_keys_present": true,
+        "split_counts": {
+          "dev": 204,
+          "test": 816
+        },
+        "split_domain_counts": {
+          "dev:logic_grid": 68,
+          "dev:scheduling": 68,
+          "dev:seating": 68,
+          "test:logic_grid": 272,
+          "test:scheduling": 272,
+          "test:seating": 272
+        }
+      },
+      "check_passed": true,
+      "direct_requirement": true,
+      "expected": 1020,
+      "observed": 1020,
+      "row_type": "direct_source",
+      "source_id": "drift_problem_file_census"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "check_passed": true,
+      "direct_requirement": true,
+      "expected": "src/z3_checker.py imports z3",
+      "observed": "present",
+      "row_type": "direct_source",
+      "sha256": "sha256:071b9cdacf50f3b5130b3496abd2d5ead51e7a99b82c1ce85b7042da560aa147",
+      "source_id": "drift_local_z3_replay_code"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "check_passed": true,
+      "direct_requirement": true,
+      "expected": "README names corrupted SQLite databases",
+      "observed": "present",
+      "row_type": "direct_source",
+      "sha256": "sha256:ff8ec5820eb571c35121cf37f17acadba552ce648f3d0fb00a8720b99475b208",
+      "source_id": "drift_upstream_corruption_warning"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "channel": "arxiv",
+      "content_consumed_by_v566_tasks": [],
+      "failure_can_zero_direct_source_ready": false,
+      "http_state": "http_200",
+      "mandatory_for_exp6541_ready": false,
+      "mandatory_only_when_consumed_by_named_task": true,
+      "observed_error": null,
+      "retrieval_state": "available",
+      "row_type": "advisory_discovery",
+      "source_hash": "sha256:b59f665f9e065f324ec8668c3d20ee1c92644b202fbdd2c415d27acdfcf9be0a",
+      "url": "https://arxiv.org/abs/2608.18921"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "channel": "openreview",
+      "content_consumed_by_v566_tasks": [],
+      "failure_can_zero_direct_source_ready": false,
+      "http_state": "http_200",
+      "mandatory_for_exp6541_ready": false,
+      "mandatory_only_when_consumed_by_named_task": true,
+      "observed_error": null,
+      "retrieval_state": "available",
+      "row_type": "advisory_discovery",
+      "source_hash": "sha256:dbefdde4fa66d8e170da4f10537b91c8851c12f070b93acfb50eb5ec23880910",
+      "url": "https://openreview.net/search?term=DRIFT-Bench"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "channel": "semantic_scholar",
+      "content_consumed_by_v566_tasks": [],
+      "failure_can_zero_direct_source_ready": false,
+      "http_state": "http_429",
+      "mandatory_for_exp6541_ready": false,
+      "mandatory_only_when_consumed_by_named_task": true,
+      "observed_error": "HTTP Error 429: ",
+      "retrieval_state": "rate_limited",
+      "row_type": "advisory_discovery",
+      "source_hash": "sha256:65e3797ba883f5e6c99c18424268af1f6c08dbc538181781e8fbc91a3fdadc8c",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/search?query=DRIFT-Bench"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "channel": "huggingface",
+      "content_consumed_by_v566_tasks": [],
+      "failure_can_zero_direct_source_ready": false,
+      "http_state": "http_200",
+      "mandatory_for_exp6541_ready": false,
+      "mandatory_only_when_consumed_by_named_task": true,
+      "observed_error": null,
+      "retrieval_state": "available",
+      "row_type": "advisory_discovery",
+      "source_hash": "sha256:d65e00ad1e2898e9b2a3ddaf2084cefc9c3c619791347f04b21b2bdfad7b7efe",
+      "url": "https://huggingface.co/papers?q=DRIFT-Bench"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "channel": "github_discovery",
+      "content_consumed_by_v566_tasks": [],
+      "failure_can_zero_direct_source_ready": false,
+      "http_state": "http_200",
+      "mandatory_for_exp6541_ready": false,
+      "mandatory_only_when_consumed_by_named_task": true,
+      "observed_error": null,
+      "retrieval_state": "available",
+      "row_type": "advisory_discovery",
+      "source_hash": "sha256:e51416787d36c195badd2348efc75af080709d7de85509cdbb123676be53c18d",
+      "url": "https://api.github.com/search/repositories?q=DRIFT-Bench"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "channel": "extropic",
+      "content_consumed_by_v566_tasks": [],
+      "failure_can_zero_direct_source_ready": false,
+      "http_state": "http_200",
+      "mandatory_for_exp6541_ready": false,
+      "mandatory_only_when_consumed_by_named_task": true,
+      "observed_error": null,
+      "retrieval_state": "available",
+      "row_type": "advisory_discovery",
+      "source_hash": "sha256:f38edf60921fc512716e9330b75d44730b5eea97735e6d7b7c51ab7f564c3821",
+      "url": "https://www.extropic.ai/"
+    },
+    {
+      "accessed_at_utc": "2026-08-23T09:13:40Z",
+      "channel": "logical_intelligence",
+      "content_consumed_by_v566_tasks": [],
+      "failure_can_zero_direct_source_ready": false,
+      "http_state": "http_200",
+      "mandatory_for_exp6541_ready": false,
+      "mandatory_only_when_consumed_by_named_task": true,
+      "observed_error": null,
+      "retrieval_state": "available",
+      "row_type": "advisory_discovery",
+      "source_hash": "sha256:c5be634e19d6de34c1709dddcb44aea1355173408adc8184bba5bfd473deb0d9",
+      "url": "https://www.logicalintelligence.ai/"
+    },
+    {
+      "assigned_gpu": 0,
+      "cache_hit": true,
+      "cached_sota_pair_returned": true,
+      "gpu_indices_requested": [
+        0,
+        1
+      ],
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "load_plan": "llama_cpp.Llama(model_path=<local_gguf_path>)",
+      "missing_entry": null,
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_file_size_bytes": 22134528992,
+      "model_loaded_or_run": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "quantized_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "registry_quantization": "Q4_K_M",
+      "role": "moe",
+      "row_type": "model_cache",
+      "selected_by_cached_sota_pair": true,
+      "tokenizer_preflight": "gguf_tokenizer_loadable(model_path)",
+      "transformers_tokenizer_repo_id_used": false
+    },
+    {
+      "assigned_gpu": 1,
+      "cache_hit": true,
+      "cached_sota_pair_returned": true,
+      "gpu_indices_requested": [
+        0,
+        1
+      ],
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "load_plan": "llama_cpp.Llama(model_path=<local_gguf_path>)",
+      "missing_entry": null,
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_file_size_bytes": 16947539744,
+      "model_loaded_or_run": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "quantized_filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "registry_quantization": "Q4_K_M",
+      "role": "moe",
+      "row_type": "model_cache",
+      "selected_by_cached_sota_pair": true,
+      "tokenizer_preflight": "gguf_tokenizer_loadable(model_path)",
+      "transformers_tokenizer_repo_id_used": false
+    },
+    {
+      "assigned_gpu": null,
+      "cache_hit": true,
+      "cached_sota_pair_returned": true,
+      "gpu_indices_requested": [
+        0,
+        1
+      ],
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "load_plan": "llama_cpp.Llama(model_path=<local_gguf_path>)",
+      "missing_entry": null,
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_file_size_bytes": 18323731456,
+      "model_loaded_or_run": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "quantized_filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "registry_quantization": "Q4_K_M",
+      "role": "dense",
+      "row_type": "model_cache",
+      "selected_by_cached_sota_pair": false,
+      "tokenizer_preflight": "gguf_tokenizer_loadable(model_path)",
+      "transformers_tokenizer_repo_id_used": false
+    },
+    {
+      "artifact_field": "v566_direct_source_ready_score",
+      "field_declared_verbatim": true,
+      "op": "==",
+      "retired_id_dependency": false,
+      "row_type": "dependency_gate",
+      "task_id": "exp6542-drift-bench-external-intake-v2",
+      "upstream_task_exists": true,
+      "upstream_task_id": "exp6541-v566-direct-source-contract",
+      "value": 1.0
+    },
+    {
+      "artifact_field": "external_constraint_corpus_audited_ready_score",
+      "field_declared_verbatim": true,
+      "op": "==",
+      "retired_id_dependency": false,
+      "row_type": "dependency_gate",
+      "task_id": "exp6544-external-structural-headroom",
+      "upstream_task_exists": true,
+      "upstream_task_id": "exp6543-external-corpus-independent-audit-v2",
+      "value": 1.0
+    },
+    {
+      "artifact_field": "external_structural_headroom_ready_score",
+      "field_declared_verbatim": true,
+      "op": "==",
+      "retired_id_dependency": false,
+      "row_type": "dependency_gate",
+      "task_id": "exp6545-external-safety-net-router",
+      "upstream_task_exists": true,
+      "upstream_task_id": "exp6544-external-structural-headroom",
+      "value": 1.0
+    },
+    {
+      "artifact_field": "external_constraint_corpus_audited_ready_score",
+      "field_declared_verbatim": true,
+      "op": "==",
+      "retired_id_dependency": false,
+      "row_type": "dependency_gate",
+      "task_id": "exp6546-smt-cost-guard-sota",
+      "upstream_task_exists": true,
+      "upstream_task_id": "exp6543-external-corpus-independent-audit-v2",
+      "value": 1.0
+    },
+    {
+      "attack_id": "unavailable_advisory_channel",
+      "attack_passed": true,
+      "reason": "Advisory rows are excluded from direct-source readiness gates.",
+      "row_type": "attack"
+    },
+    {
+      "attack_id": "moving_branch",
+      "attack_passed": true,
+      "reason": "Readiness uses the immutable commit, not a branch name.",
+      "row_type": "attack"
+    },
+    {
+      "attack_id": "license_ambiguity",
+      "attack_passed": true,
+      "reason": "The direct contract requires an MIT license file.",
+      "row_type": "attack"
+    },
+    {
+      "attack_id": "missing_source_files",
+      "attack_passed": true,
+      "reason": "Problem count, schema, README, license, and Z3 files are hard checks.",
+      "row_type": "attack"
+    },
+    {
+      "attack_id": "gguf_repo_id_tokenizer_misuse",
+      "attack_passed": true,
+      "reason": "The load contract forbids Transformers tokenizer use on GGUF repo IDs.",
+      "row_type": "attack"
+    },
+    {
+      "attack_id": "renamed_readiness_field",
+      "attack_passed": true,
+      "reason": "V566 gates must name verbatim upstream artifact fields.",
+      "row_type": "attack"
+    },
+    {
+      "attack_id": "retired_id_dependency",
+      "attack_passed": true,
+      "reason": "No structured gate may name Exp6528 or Exp6529.",
+      "row_type": "attack"
+    },
+    {
+      "attack_id": "status_only_success",
+      "attack_passed": true,
+      "reason": "Readiness is recomputed from hard rows, not status text.",
+      "row_type": "attack"
+    },
+    {
+      "check": "direct_source_contract_ready",
+      "passed": true,
+      "row_type": "gate"
+    },
+    {
+      "check": "local_replay_contract_ready",
+      "passed": true,
+      "row_type": "gate"
+    },
+    {
+      "check": "split_contract_ready",
+      "passed": true,
+      "row_type": "gate"
+    },
+    {
+      "check": "model_cache_contract_ready",
+      "passed": true,
+      "row_type": "gate"
+    },
+    {
+      "check": "field_dependency_contract_ready",
+      "passed": true,
+      "row_type": "gate"
+    },
+    {
+      "check": "advisory_failures_ignored_for_direct_ready",
+      "passed": true,
+      "row_type": "gate"
+    },
+    {
+      "check": "dependency_attacks_passed",
+      "passed": true,
+      "row_type": "gate"
+    },
+    {
+      "check": "immutable_evidence_imported_by_path_hash",
+      "passed": true,
+      "row_type": "gate"
+    },
+    {
+      "check": "protected_files_unchanged",
+      "passed": true,
+      "row_type": "gate"
+    }
+  ],
+  "preconditions_checked": {
+    "cache_roots_without_secrets": {},
+    "checked_at_utc": "2026-08-23T09:13:40Z",
+    "drift_source_cache_root": "/home/ianblenke/.cache/carnot/exp6541/drift-bench-d24cda4f59a6",
+    "git_status": "## main\n M openspec/capabilities/arc-world-model-trust-energy/spec.md\n M openspec/capabilities/research-harnesses/spec.md\n M openspec/capabilities/research-reporting/spec.md\n M python/carnot/agentic/arc_competition_agent.py\n M scripts/research_conductor.py\n M tests/python/test_arc_trajectory_supervisor.py\n?? python/carnot/experiment_6541_v566_direct_source_contract.py\n?? scripts/run_stop_authority.py\n?? tests/python/test_conductor_fresh_exec.py\n?? tests/python/test_experiment_6541_v566_direct_source_contract.py\n?? tests/python/test_run_stop_authority.py",
+    "network_state": {
+      "drift_commit_matches_expected": true,
+      "drift_ls_remote_head": "d24cda4f59a6ee06bafe886f4724899a7ec94f1c"
+    },
+    "no_model_weights_loaded": true,
+    "planning_date": "20260823",
+    "protected_paths": [
+      "AGENTS.md",
+      "CODEX.md",
+      "CLAUDE.md",
+      "research-program.md",
+      "research-roadmap.yaml",
+      "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "results/experiment_6527_v565_evidence_eligibility_corrigendum.json",
+      "results/experiment_6528_v565_source_model_method_contract.json",
+      "results/experiment_6530_external_constraint_corpus_audit.json",
+      "scripts/research_conductor.py",
+      "scripts/experiment_template.py",
+      "scripts/conductor_gates.py",
+      "scripts/roadmap_schema.py",
+      "python/carnot/inference/sota_models.py"
+    ],
+    "resources": {
+      "cpu_count": 24,
+      "disk_free_bytes": 1087877816320,
+      "disk_total_bytes": 3953289023488,
+      "ram_total_bytes": 134305107968
+    },
+    "run_date": "20260823",
+    "source_query_timestamps": {
+      "advisory_checked_at_utc": "2026-08-23T09:13:40Z",
+      "direct_source_checked_at_utc": "2026-08-23T09:13:40Z"
+    },
+    "terminal_artifact_atomic_write": true,
+    "tool_versions": {
+      "git": "git version 2.55.0",
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": "3.12.13",
+      "z3": "4.16.0"
+    }
+  },
+  "protected_files_unchanged": {
+    "all_protected_files_unchanged": true,
+    "changed_paths": [],
+    "rows": [
+      {
+        "path": "AGENTS.md",
+        "sha256_after": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "sha256_before": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "unchanged": true
+      },
+      {
+        "path": "CODEX.md",
+        "sha256_after": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "sha256_before": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "unchanged": true
+      },
+      {
+        "path": "CLAUDE.md",
+        "sha256_after": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "sha256_before": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "unchanged": true
+      },
+      {
+        "path": "research-program.md",
+        "sha256_after": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "sha256_before": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "unchanged": true
+      },
+      {
+        "path": "research-roadmap.yaml",
+        "sha256_after": "sha256:0940884c601b2966ef79608f367d3b33f5d3f7f652d5aef16fa3ff4ad117f50f",
+        "sha256_before": "sha256:0940884c601b2966ef79608f367d3b33f5d3f7f652d5aef16fa3ff4ad117f50f",
+        "unchanged": true
+      },
+      {
+        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "sha256_after": "sha256:382ff155d4bf37a106760f07ace94fd7491afdc6c1ac08d890a66d465f6137d5",
+        "sha256_before": "sha256:382ff155d4bf37a106760f07ace94fd7491afdc6c1ac08d890a66d465f6137d5",
+        "unchanged": true
+      },
+      {
+        "path": "results/experiment_6527_v565_evidence_eligibility_corrigendum.json",
+        "sha256_after": "sha256:f37c20e41e3a1de03ccfa620f37458ce68311a9e4e3770fad724c157e30e5b2e",
+        "sha256_before": "sha256:f37c20e41e3a1de03ccfa620f37458ce68311a9e4e3770fad724c157e30e5b2e",
+        "unchanged": true
+      },
+      {
+        "path": "results/experiment_6528_v565_source_model_method_contract.json",
+        "sha256_after": "sha256:d24cd8642a1efe95b3d9949ac15a60d07c5f2f8f08c92159b2ab436da7dc0778",
+        "sha256_before": "sha256:d24cd8642a1efe95b3d9949ac15a60d07c5f2f8f08c92159b2ab436da7dc0778",
+        "unchanged": true
+      },
+      {
+        "path": "results/experiment_6530_external_constraint_corpus_audit.json",
+        "sha256_after": "sha256:02e5bae9a501ddfb8a50f6fb50ad32d4d69028e149850206b05ae99af3eb6a1b",
+        "sha256_before": "sha256:02e5bae9a501ddfb8a50f6fb50ad32d4d69028e149850206b05ae99af3eb6a1b",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/research_conductor.py",
+        "sha256_after": "sha256:c9408e2e2773dde985468f01c63cc61bb1f92285916102aecdd8f5daef40d161",
+        "sha256_before": "sha256:c9408e2e2773dde985468f01c63cc61bb1f92285916102aecdd8f5daef40d161",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/experiment_template.py",
+        "sha256_after": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "sha256_before": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/conductor_gates.py",
+        "sha256_after": "sha256:7f20adf70913d4b122b855df1df485415f3e279f44cae59b29037e63efa4f9c8",
+        "sha256_before": "sha256:7f20adf70913d4b122b855df1df485415f3e279f44cae59b29037e63efa4f9c8",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/roadmap_schema.py",
+        "sha256_after": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+        "sha256_before": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+        "unchanged": true
+      },
+      {
+        "path": "python/carnot/inference/sota_models.py",
+        "sha256_after": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "sha256_before": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "unchanged": true
+      }
+    ]
+  },
+  "random_seed": 6541,
+  "reproducibility_checksum": "sha256:abdd2a109a005fa2a652c889797e1cd823460eb1e0967a012f72ec775113a319",
+  "source_tree_hashes": {
+    "checkout_path": "/home/ianblenke/.cache/carnot/exp6541/drift-bench-d24cda4f59a6",
+    "problem_file_count": 1020,
+    "problems_manifest_sha256": "sha256:5ac765beaa3abd6ae10e929fb0971a61c3c3beb27fdd74bc8af15823b3dbafff",
+    "problems_tree_git_sha": "9f83505881082b4aefd3e2b8aff563ac18cac606",
+    "repo_url": "https://github.com/kaons-research/drift-bench",
+    "required_file_sha256": {
+      "LICENSE": "sha256:eedd29cc7098413e061a9addbe1f4df0155b6de3a142fc4b2f0da2e272e64593",
+      "README.md": "sha256:3c7b8f587636cf777e8b3efc2ba7c30bceda31cd6202d1dcf1a8753f93b380f3",
+      "data/problems/README.md": "sha256:ed5773bae657071faaf544577c8f7b748ebcae2b7d7542fb5b4e49450b3db49c",
+      "src/z3_checker.py": "sha256:071b9cdacf50f3b5130b3496abd2d5ead51e7a99b82c1ce85b7042da560aa147"
+    },
+    "root_tree_git_sha": "35055da27d798c526c53af63e039bd9f095511af",
+    "tracked_manifest_sha256": "sha256:5ac765beaa3abd6ae10e929fb0971a61c3c3beb27fdd74bc8af15823b3dbafff"
+  },
+  "status": "complete_v566_direct_source_contract_ready",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6541_v566_direct_source_contract.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6541_v566_direct_source_contract.py -m pytest tests/python/test_experiment_6541_v566_direct_source_contract.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6541_v566_direct_source_contract.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6541_v566_direct_source_contract.py",
+      "exit_code": 0
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6541_v566_direct_source_contract --date 20260823",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6541_v566_direct_source_contract.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6541_v566_direct_source_contract --validate",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    }
+  ],
+  "upstream_corruption_boundary": {
+    "boundary_text_sha256": "sha256:ff8ec5820eb571c35121cf37f17acadba552ce648f3d0fb00a8720b99475b208",
+    "local_replay_required_for_v566_intake": true,
+    "paper_aggregate_claims_inherited": false,
+    "sqlite_corruption_warning_present": true,
+    "upstream_sqlite_results_inherited": false
+  },
+  "v565_boundary_receipts": {
+    "exp6527": {
+      "exists": true,
+      "honest_verdict": "complete_v565_evidence_root_eligible: corrected Exp6520 eligibility is separated from historical flags, and adopted structural-router plus conflict-memory rows are ready",
+      "imported_as_gate": false,
+      "path": "results/experiment_6527_v565_evidence_eligibility_corrigendum.json",
+      "sha256": "sha256:f37c20e41e3a1de03ccfa620f37458ce68311a9e4e3770fad724c157e30e5b2e",
+      "status": "complete_v565_evidence_root_eligible",
+      "verdict_class": null
+    },
+    "exp6528": {
+      "exists": true,
+      "honest_verdict": "blocked_v565_source_model_method_contract: unavailable_required_channels=openreview",
+      "imported_as_gate": false,
+      "path": "results/experiment_6528_v565_source_model_method_contract.json",
+      "sha256": "sha256:d24cd8642a1efe95b3d9949ac15a60d07c5f2f8f08c92159b2ab436da7dc0778",
+      "status": "blocked_v565_source_model_method_contract",
+      "verdict_class": "partial"
+    },
+    "exp6530": {
+      "exists": true,
+      "honest_verdict": "blocked_external_constraint_corpus_audit: failed_checks=exp6529_artifact_exists,fixture_exists,pinned_source_root_exists,revision_is_immutable,license_verified,schema_verified,corruption_boundary_text_verified",
+      "imported_as_gate": false,
+      "path": "results/experiment_6530_external_constraint_corpus_audit.json",
+      "sha256": "sha256:02e5bae9a501ddfb8a50f6fb50ad32d4d69028e149850206b05ae99af3eb6a1b",
+      "status": "blocked_external_constraint_corpus_audit",
+      "verdict_class": "blocked"
+    }
+  },
+  "v566_direct_source_ready_score": 1.0,
+  "verdict_class": null,
+  "verifier_is_oracle": true
+}

@@ -128,3 +128,48 @@ done, and "run it and see" becomes "read the receipt." Not built here —
 measure-first, and the agent file is under active iteration — but it is
 the recommended next mechanism for the ARC Generalization-Testing Floor's
 activity-4 slot.
+
+## Addendum, 2026-08-23 ~10:15Z: prediction for the resurrected supab4 ON arm (stated before rows land)
+
+Events since the original note. supab4 was stopped at 09:35Z (both
+llama-servers signalled to death, zero rows — VOID, evidence in the run
+dir). Its `run.sh` survived the stop and at ~10:08Z launched the ON arm as
+a FRESH process: games ar25,cd82,tu93, budget 2000, port 8994,
+`CARNOT_ARC_TRAJECTORY_SUPERVISOR=1`, induce timeout 3600, thinking ON (no
+`enable_thinking:false` kwarg in its environ). A fresh process imports the
+shadow-mode module (commit 1a4836c6a3), so this is the FIRST run whose
+supervisor carries the full mode-aware receipt. Two further facts sharpen
+the prediction: the scored path is DETERMINISTIC (three prior runs
+byte-identical on shared games), and the current build installs a goal
+bias at explorer bootstrap (observed directly by the shadow seam test,
+whose mutation RED showed a live RelationalGoalEnergy bias being dropped).
+
+Prediction, scoreable against rows_on.json when it lands:
+
+1. Every game's receipt: `mode: "applied"`, `enabled: true`, non-empty
+   `redirects`. Zero redirects on a row with >= ~450 stagnant actions
+   would indict wiring, not the detector.
+2. Expiry counts, conditioned on baseline trajectory shape: ar25 4,
+   cd82 3 (segments 741/1166/57), tu93 3 (post-L2 tail 1242).
+3. Arm ORDER, revised from the original note by the bootstrap-bias fact:
+   the FIRST redirect per level segment is `drop_goal_bias` (a bias is
+   installed and the ladder checks it first), then `allow_reinduction`
+   (evidence floor ~met one window after the stall induction), then
+   `force_exploration_diversity`. The original note predicted
+   force-diversity first; that guess predates knowing a bias is installed
+   at bootstrap. Recorded as a revision, not silently replaced.
+4. Because redirects now APPLY and the path is deterministic, the
+   trajectory SHOULD diverge from baseline after the first redirect
+   (~action 400 of each long segment). Divergence alone is not proof of
+   application — thinking ON with a 3600s timeout means inductions can
+   COMPLETE (~30 min at ~64k tokens), which also perturbs the trajectory
+   — the receipt, not the divergence, is the arbiter. That is what it
+   was built for.
+5. `arm_outcomes.helped`: base case remains 0 for ar25 (no baseline
+   level-ups to accelerate) and for the deep tails of cd82/tu93; less
+   confident than the original note because completed thinking-mode
+   inductions are a new ingredient no prior run has had.
+6. Standing risks: the unexplained signal-killer (two GPU runs dead in
+   one night; routed to the self-sufficiency program as case F) may void
+   this arm too, and wall clock — not the action budget — is the binding
+   constraint if several 30-minute inductions complete per game.
