@@ -4405,3 +4405,178 @@ matches, and the verdict class follows the preregistered enum.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-BENCH-6544 | Planned (`python/carnot/experiment_6544_external_structural_headroom.py`, `results/experiment_6544_external_structural_headroom.json`) | Planned (`tests/python/test_experiment_6544_external_structural_headroom.py`) |
+
+### REQ-BENCH-6545: External Safety-Net Router SHALL Preserve Exact Fallback
+
+Carnot SHALL provide Exp6545 at
+`python/carnot/experiment_6545_external_safety_net_router.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6545_external_safety_net_router --date 20260823`
+SHALL write
+`results/experiment_6545_external_safety_net_router.json`.
+
+Exp6545 SHALL evaluate the Exp6544 structured gate before fitting,
+calibration, exception-table freeze, or held evaluation. It SHALL record the
+gate path, hash, expected value, observed value, input hashes, CPU identity,
+GPU identity, seeds, budgets, timeouts, and protected-file hashes. A failed
+gate or missing precondition SHALL write a terminal blocked artifact and SHALL
+populate `gate_check_summary` with the failed check and observed value.
+
+Exp6545 SHALL freeze compact linear, compact MLP, and compact KAN router
+families only. It SHALL NOT run a broad architecture sweep. It SHALL freeze
+selection, calibration, abstention, exception-table, exact-fallback, budget,
+seed, timeout, and rollback rules before any held outcome is evaluated. Learned
+advice SHALL order candidates only. It SHALL preserve the full candidate set
+and keep native exact fallback reachable for every arm.
+
+Exp6545 SHALL train only on sealed train rows. It SHALL calibrate abstention
+only on development rows. It SHALL hash and freeze an immutable train-only
+exception table before held evaluation. Held rows SHALL NOT be used for fitting,
+calibration, exception-table writes, threshold selection, or model selection.
+
+Exp6545 SHALL compare the Exp6544 certified structural control, each eligible
+compact router, router plus abstention, and router plus exception table and
+exact fallback on identical held candidate sets and budgets. Each per-unit row
+SHALL record routing score, uncertainty, chosen order, abstention, table hit,
+fallback, exact equality, proposals, exact checks, wall time, timeout, and
+charged total cost. Charged cost SHALL include structural-control overhead,
+model, lookup, proposal, exact-check, fallback, and total charged work.
+
+Exp6545 SHALL report overall held effects, family effects, effort effects, and
+abstention-bin effects. It SHALL preserve every negative and no-headroom cell.
+It SHALL attack family identity, source ID, entity names, row order, solver
+effort leakage, held table writes, deleted candidates, fallback unreachability,
+calibration reuse, and timer fabrication.
+
+`external_safety_net_ready_score` SHALL equal `1.0` only when a frozen eligible
+router beats the Exp6544 certified structural control on held charged cost,
+preserves exact equality, preserves all candidates, keeps full fallback
+reachable, has calibrated abstention, uses an immutable train-only exception
+table, passes rollback checks, and passes all shortcut attacks. Otherwise it
+SHALL equal `0.0`. A positive verdict SHALL require those same conditions. A
+complete run with no value SHALL use `verdict_class=null`. Narrow support SHALL
+use `verdict_class="partial"`. A failed gate or precondition SHALL use
+`verdict_class="blocked"`. Leakage, held mutation, correctness drift, deleted
+candidates, or invalid comparison SHALL use `verdict_class="disqualified"`.
+
+The artifact SHALL include exactly these fields: `status`, `honest_verdict`,
+`verdict_class`, `upstream_gate_receipt`, `frozen_router_contract`,
+`training_and_calibration_receipts`, `candidate_model_rows`,
+`exception_table_path_hash_and_freeze_receipt`, `abstention_calibration_rows`,
+`per_unit_rows`, `paired_effect_rows`, `family_and_effort_effect_rows`,
+`charged_cost_recomputation`, `exact_equality_and_fallback_receipt`,
+`shortcut_attack_matrix`, `rollback_receipt`,
+`external_safety_net_ready_score`, `gate_check_summary`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+`inference_substrate` SHALL be
+`local_compact_router_train_only_exception_table_and_external_exact_fallback_no_llm`.
+`verifier_is_oracle` SHALL be false because the learned router is not ground
+truth. Z3 SHALL remain the separate evaluation authority.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal Exp6545 external Safety-Net router state."
+- `honest_verdict`: "Names the selected held charged result and the fallback/equality support."
+- `verdict_class`: "Separates positive, null, partial, blocked, and disqualified router outcomes."
+- `upstream_gate_receipt`: "Pins Exp6544 by path, hash, expected value, observed value, input hashes, CPU, GPU, seeds, budgets, timeouts, and protected hashes."
+- `frozen_router_contract`: "Freezes compact model families, feature schema, selection, calibration, abstention, exception, fallback, budget, seed, timeout, and rollback rules before held scoring."
+- `training_and_calibration_receipts`: "Proves fitting used sealed train rows, calibration used development rows, and held rows were unavailable."
+- `candidate_model_rows`: "Records the frozen compact linear, MLP, and KAN router parameters, costs, hashes, and eligibility."
+- `exception_table_path_hash_and_freeze_receipt`: "Hashes the train-only exception table and proves it was frozen before held evaluation with no held writes."
+- `abstention_calibration_rows`: "Reports development-only uncertainty bins, thresholds, and abstention decisions."
+- `per_unit_rows`: "Stores one unit-seed-arm row with routing score, uncertainty, order, abstention, table hit, fallback, exact equality, proposals, checks, time, timeout, and charged cost."
+- `paired_effect_rows`: "Reports held charged effects for each router arm versus the Exp6544 certified structural control."
+- `family_and_effort_effect_rows`: "Reports family, effort, abstention-bin, negative, and no-headroom cells from rows."
+- `charged_cost_recomputation`: "Recomputes model, lookup, proposal, exact-check, fallback, and total charged work from rows."
+- `exact_equality_and_fallback_receipt`: "Shows exact equality, full candidate preservation, and reachable native exact fallback."
+- `shortcut_attack_matrix`: "Attacks family identity, source ID, entity names, row order, solver effort leakage, held table writes, deleted candidates, fallback unreachability, calibration reuse, and timer fabrication."
+- `rollback_receipt`: "Declares the structural-control rollback path and proves unsafe router states close to score zero."
+- `external_safety_net_ready_score`: "Opens only for a frozen eligible router with held charged value, exact equality, calibrated abstention, train-only immutable exceptions, reachable fallback, and no shortcut failure."
+- `gate_check_summary`: "Names every failed gate with expected and observed values."
+- `aggregate_row_recomputation`: "Rebuilds the verdict and ready score from gate, row, cost, equality, fallback, calibration, exception, attack, and rollback receipts."
+- `preconditions_checked`: "Records paths, hashes, CPU, GPU, seeds, budgets, timeouts, protected hashes, and exact-solver authority."
+- `protected_files_unchanged`: "Shows guarded inputs, specs, prior artifacts, and conductor files stayed byte-identical during the run."
+- `inference_substrate`: "Declares local compact router training with train-only exceptions and external exact fallback, with no LLM."
+- `verifier_is_oracle`: "False because router value is measured and Z3 is the separate evaluation authority."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each field to specs, inputs, rows, reducers, tests, and hashes."
+- `random_seed`: "Pins model fitting, evaluation seeds, table hashing, and attack ordering."
+- `duration_s`: "Records measured reducer wall time."
+- `tests_run`: "Records validation command receipts."
+- `reproducibility_checksum`: "Detects drift in gates, models, tables, rows, costs, attacks, rollback, and verdicts."
+
+#### SCENARIO-BENCH-6545-GATE: Exp6544 Gate Is Evaluated First
+
+**Given** the Exp6544 external structural headroom artifact
+**When** Exp6545 starts
+**Then** it records the direct path, hash, expected readiness value, observed
+readiness value, input hashes, CPU identity, GPU identity, seeds, budgets,
+timeouts, and protected hashes before any held router claim can open.
+
+#### SCENARIO-BENCH-6545-TRAIN-CAL: Train And Calibration Splits Are Sealed
+
+**Given** train, development, and held V566 fixture rows
+**When** Exp6545 fits routers, selects thresholds, and freezes exceptions
+**Then** fitting uses train rows only, calibration uses development rows only,
+and held rows are unavailable to fitting, calibration, table writes, and model
+selection.
+
+#### SCENARIO-BENCH-6545-ROUTERS: Compact Families Are Frozen
+
+**Given** the compact linear, MLP, and KAN router family
+**When** Exp6545 builds candidate models
+**Then** it emits exactly those frozen model rows, with shared features,
+matched budgets, fixed costs, hashes, and no broad architecture sweep.
+
+#### SCENARIO-BENCH-6545-RUNTIME: Runtime Preserves Candidates And Fallback
+
+**Given** matched candidate sets from the Exp6544 certified structural control
+**When** Exp6545 routes each unit
+**Then** every arm preserves all candidates, records chosen order, score,
+uncertainty, abstention, table hit, fallback, exact equality, proposals, exact
+checks, timeout, time, and charged total cost.
+
+#### SCENARIO-BENCH-6545-EFFECTS: Held Value Is Charged Against Structural Control
+
+**Given** held rows for the certified structural control and all router arms
+**When** Exp6545 computes paired effects
+**Then** a ready score of `1.0` requires held charged value beyond the
+certified structural control, calibrated abstention, exact equality, reachable
+fallback, and no shortcut failure.
+
+#### SCENARIO-BENCH-6545-ATTACKS: Shortcut And Mutation Attacks Fail Closed
+
+**Given** family identity, source ID, entity names, row order, solver effort
+leakage, held table writes, deleted candidates, fallback unreachability,
+calibration reuse, and timer fabrication attacks
+**When** Exp6545 evaluates the shortcut matrix
+**Then** every shortcut must fail closed before
+`external_safety_net_ready_score` can equal `1.0`.
+
+#### SCENARIO-BENCH-6545-ROLLBACK: Unsafe Router State Rolls Back
+
+**Given** a failed gate, failed calibration, held table write, equality drift,
+candidate deletion, unreachable fallback, or shortcut failure
+**When** Exp6545 recomputes the aggregate verdict
+**Then** it closes the ready score to `0.0` and declares the Exp6544 certified
+structural control as the rollback target.
+
+#### SCENARIO-BENCH-6545-TERMINAL: Artifact Is Row-Derived And Reproducible
+
+**Given** gates, model rows, calibration rows, exception receipts, per-unit
+rows, effect rows, cost receipts, exact receipts, attack rows, rollback rows,
+and protected hashes
+**When** Exp6545 writes its deliverable
+**Then** every required field has a principle and provenance entry, the
+inference substrate is exact, `verifier_is_oracle=false`, the checksum matches,
+and the verdict class follows the preregistered enum.
+
+## Implementation Status (REQ-BENCH-6545)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6545 | Planned (`python/carnot/experiment_6545_external_safety_net_router.py`, `results/experiment_6545_external_safety_net_router.json`) | Planned (`tests/python/test_experiment_6545_external_safety_net_router.py`) |
