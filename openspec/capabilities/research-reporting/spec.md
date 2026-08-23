@@ -52439,3 +52439,119 @@ with no inference model, and the terminal verdict starts with `complete_` or
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6503 | Planned (`python/carnot/experiment_6503_v561_source_delta_method_contract.py`, `results/experiment_6503_v561_source_delta_method_contract.json`) | Planned (`tests/python/test_experiment_6503_v561_source_delta_method_contract.py`) |
+
+### REQ-REPORT-6515: V564 Source Delta And Method Contract SHALL Be Frozen Before Outcome Data
+
+Exp6515 SHALL run a low-concurrency source-delta check for the V564 method
+inputs before any V564 outcome artifact is read as evidence. It SHALL record
+network availability, query strings, timestamps, tool versions, source paths,
+git status, and protected-file hashes. It SHALL use the reliable sweep helpers
+and sequential checks for arXiv, OpenReview, Semantic Scholar, Hugging Face
+Papers, Extropic, GitHub, and Kona. It SHALL NOT use a high-concurrency
+deep-research harness.
+
+Exp6515 SHALL verify primary URLs and source dates for Task-CoEvolve
+`2608.20169`, Safety Nets `2608.20053`, learned conflicts `2603.12232`, DiBS
+`2606.06518`, nested SMC `2608.20123`, and ChainForge `2608.15961`. Each paper
+or product row SHALL record method, claimed evidence, available code or data,
+Carnot hook, non-transferable claim, exact-authority boundary, and source hash.
+If an endpoint is blocked, rate-limited, or unavailable, the artifact SHALL name
+the source channel and observed error in `gate_check_summary`. It SHALL NOT
+invent citation counts or source content.
+
+Exp6515 SHALL freeze feature, control, exact fallback, adaptive-sampling,
+exception-table, conflict-witness, mapping-cost, and stop-rule contracts for
+Exp6516 through Exp6523. It SHALL map only verified methods to implementation
+steps, negative controls, falsifiable metrics, failure controls, and explicit
+non-transfer boundaries. Learned or adaptive methods MAY order candidates,
+select validation rows, request refocus, write witnessed conflict memory, or
+abstain. They SHALL NOT prune candidates, certify answers, bypass native exact
+fallback, hide full-set audit failures, or support hardware speed, latency,
+power, TSU, Kona, or diffusion-decoder claims.
+
+The Exp6515 artifact SHALL be written to
+`results/experiment_6515_v564_source_method_contract.json` with
+`inference_substrate=low_concurrency_primary_source_ingestion_no_experimental_llm`
+and `verifier_is_oracle=false`. It SHALL include `status`, `honest_verdict`,
+`verdict_class`, `query_receipts`, `source_rows`, `primary_source_hashes`,
+`citation_count_boundaries`, `sota_to_experiment_rows`, `non_transfer_rows`,
+`frozen_method_contract`, `v564_method_contract_ready_score`,
+`gate_check_summary`, `per_unit_rows`, `aggregate_row_recomputation`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, and `reproducibility_checksum`.
+`verdict_class` SHALL be `null` or `partial`. `v564_method_contract_ready_score`
+SHALL equal `1.0` only when every adopted method has a verified primary or
+first-party source, implementable local mapping, negative control, non-transfer
+boundary, exact-authority boundary, and no failed protected-file gate.
+
+Field principles SHALL be:
+
+- `status`: "Records whether the V564 source-method contract is complete or blocked."
+- `honest_verdict`: "States the terminal source-ingestion outcome without turning sources into experimental evidence."
+- `verdict_class`: "Closed enum for this contract: null or partial."
+- `query_receipts`: "Keeps each low-concurrency source query dated, reproducible, and bounded."
+- `source_rows`: "Records one row per checked paper, product, or repository."
+- `primary_source_hashes`: "Binds verified primary and first-party pages to source hashes."
+- `citation_count_boundaries`: "Prevents rate limits or secondary indexes from becoming fabricated counts."
+- `sota_to_experiment_rows`: "Maps methods to Exp6516-Exp6523 implementation steps and metrics."
+- `non_transfer_rows`: "Names claims that do not transfer into Carnot."
+- `frozen_method_contract`: "Freezes method, control, fallback, witness, mapping, and stop-rule contracts before outcomes."
+- `v564_method_contract_ready_score`: "Gate score opens only when every adopted method has source, mapping, control, and boundary evidence."
+- `gate_check_summary`: "Names failed source, schema, protection, and readiness gates with observed errors."
+- `per_unit_rows`: "Flattens source, mapping, boundary, control, and gate rows for recomputation."
+- `aggregate_row_recomputation`: "Recomputes readiness from rows instead of trusting narrative text."
+- `preconditions_checked`: "Records network, query, tool, source-path, git, and protected-hash preconditions."
+- `protected_files_unchanged`: "Proves protected files stayed byte-identical."
+- `inference_substrate`: "Declares primary-source ingestion with no experimental LLM inference."
+- `verifier_is_oracle`: "False because source ingestion is not a correctness oracle."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each required field to receipts, source rows, or deterministic reducers."
+- `random_seed`: "Pins deterministic row ordering for this no-randomness contract."
+- `duration_s`: "Records measured wall time."
+- `tests_run`: "Records validation commands and exit codes."
+- `reproducibility_checksum`: "Detects drift in source rows, method rows, gates, and receipts."
+
+#### SCENARIO-REPORT-6515-SOURCES: Primary Sources Are Verified Or Blocked
+
+**Given** the V564 method inputs include Task-CoEvolve, Safety Nets, learned
+conflicts, DiBS, nested SMC, ChainForge, Extropic, GitHub, and Kona
+**When** Exp6515 collects source rows
+**Then** each row records URL, source date, source hash, method, claimed
+evidence, code or data status, Carnot hook, non-transferable claim, and
+exact-authority boundary, or records the unavailable channel and observed
+error without fabricated content.
+
+#### SCENARIO-REPORT-6515-METHODS: Methods Map To Local Implementable Controls
+
+**Given** verified source rows are present
+**When** Exp6515 freezes `frozen_method_contract`
+**Then** feature, control, exact fallback, adaptive validation, exception-table,
+conflict-witness, mapping-cost, and stop-rule contracts map to Exp6516 through
+Exp6523 with negative controls, falsifiable metrics, and failure controls.
+
+#### SCENARIO-REPORT-6515-AUTHORITY: Exact Solvers Stay On The Acceptance Path
+
+**Given** an adopted learned, adaptive, diffusion, product, or hardware row is
+present
+**When** Exp6515 emits authority boundaries and non-transfer rows
+**Then** advice cannot prune or certify, adaptive validation cannot control
+release, conflict memory requires a refinement witness, mapping rows carry no
+speed claim, diffusion control remains deferred, and product pages remain
+comparators without local runner authority.
+
+#### SCENARIO-REPORT-6515-SCHEMA: Artifact Is Checksummed And Non-Mutating
+
+**Given** query receipts, source rows, mappings, protected hashes, field maps,
+and command receipts are assembled
+**When** Exp6515 validates the artifact
+**Then** required fields match exactly, field principles and provenance cover
+every required field, the checksum matches, protected files remain unchanged,
+the substrate is no-experimental-LLM source ingestion, and blocked source gates
+force a partial verdict with a named channel error.
+
+## Implementation Status (REQ-REPORT-6515)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6515 | Planned (`python/carnot/experiment_6515_v564_source_method_contract.py`, `results/experiment_6515_v564_source_method_contract.json`) | Planned (`tests/python/test_experiment_6515_v564_source_method_contract.py`) |

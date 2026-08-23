@@ -383,6 +383,9 @@ WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE = "web_and_bibliographic_search_only"
 SOURCE_RECEIPTS_METHOD_PREREGISTRATION_NO_LLM_SUBSTRATE = (
     "source_receipts_and_local_method_preregistration_no_llm"
 )
+LOW_CONCURRENCY_PRIMARY_SOURCE_INGESTION_NO_EXPERIMENTAL_LLM_SUBSTRATE = (
+    "low_concurrency_primary_source_ingestion_no_experimental_llm"
+)
 WEB_BIBLIOGRAPHIC_SEARCH_ONLY_MIN_DURATION_S = 0.0001
 
 # Artifact-QA lint-test artifacts intentionally embed verifier fixture reports,
@@ -427,6 +430,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE,
     WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE,
     SOURCE_RECEIPTS_METHOD_PREREGISTRATION_NO_LLM_SUBSTRATE,
+    LOW_CONCURRENCY_PRIMARY_SOURCE_INGESTION_NO_EXPERIMENTAL_LLM_SUBSTRATE,
     ARTIFACT_QA_LINT_TESTS_SUBSTRATE,
     DETERMINISTIC_QA_REGRESSION_NO_LLM_SUBSTRATE,
     DETERMINISTIC_RUNTIME_RECEIPT_VALIDATION_NO_LLM_SUBSTRATE,
@@ -2308,7 +2312,11 @@ def _is_web_bibliographic_search_only(d: dict[str, Any]) -> bool:
 
     return _inference_substrate_matches(
         d, WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE
-    ) or _inference_substrate_matches(d, SOURCE_RECEIPTS_METHOD_PREREGISTRATION_NO_LLM_SUBSTRATE)
+    ) or _inference_substrate_matches(
+        d, SOURCE_RECEIPTS_METHOD_PREREGISTRATION_NO_LLM_SUBSTRATE
+    ) or _inference_substrate_matches(
+        d, LOW_CONCURRENCY_PRIMARY_SOURCE_INGESTION_NO_EXPERIMENTAL_LLM_SUBSTRATE
+    )
 
 
 def _is_artifact_qa_lint_tests(d: dict[str, Any]) -> bool:

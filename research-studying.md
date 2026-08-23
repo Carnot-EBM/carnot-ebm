@@ -10,6 +10,24 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP6515-V564-SOURCE-METHOD-CONTRACT-START -->
+## Exp 6515 - V564 source method contract - INGESTED
+
+- Honest verdict: `complete_v564_source_method_contract_ready`
+- Artifact: `results/experiment_6515_v564_source_method_contract.json`
+- Note: `docs/research-notes/v564-source-method-contract-2026-08-23.md`
+- Ready score: `v564_method_contract_ready_score=1.0`
+- Verified primary rows: Task-CoEvolve `2608.20169`, Safety Nets
+  `2608.20053`, learned conflicts `2603.12232`, DiBS `2606.06518`,
+  nested SMC `2608.20123`, and ChainForge `2608.15961`.
+- Frozen boundary: learned and adaptive methods can order, refocus, select
+  validation rows, or write witnessed conflict memory. They cannot prune,
+  certify, release, hide full-set audit failures, or support hardware speed,
+  latency, power, TSU, Kona, or diffusion-decoder claims.
+- Citation-count boundary: Semantic Scholar EBT and ARM-EBM routes were HTTP
+  429 at execution time, so no current counts are reported.
+<!-- EXP6515-V564-SOURCE-METHOD-CONTRACT-END -->
+
 <!-- EXP5038-VERIFIER-MOAT-LITERATURE-START -->
 ## Exp 5038 - verifier-moat literature SOTA ingestion - INGESTED
 
