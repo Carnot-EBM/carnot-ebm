@@ -1,499 +1,389 @@
-# Research Roadmap V565: External Constraint Transfer and Transactional Self-Learning
+# Research Roadmap V566: External Constraint Transfer and Reversible Self-Learning
 
-**Milestone:** `2026.08.565`  
-**Sequence:** 565  
+**Milestone:** `2026.08.566`  
+**Sequence:** 566  
 **Planning date:** 2026-08-23  
 **Execution manifest:** `research-roadmap-next.yaml`  
 **Status:** proposed  
-**Experiment range:** Exp6527-Exp6540 (14 tasks, four phases)
+**Experiment range:** Exp6541-Exp6554 (14 tasks, four phases)
 
 ## Purpose
 
-V564 established two promising exact-guidance mechanisms on a bounded internal
-procedural corpus: a Safety-Net branch router and refinement-valid conflict
-memory. V565 asks the next harder question: do those mechanisms transfer to an
-external, multi-turn constraint surface and remain safe when wired behind the
-default-off production pipeline?
+V566 restarts the external-transfer question at the smallest valid evidence
+root. V565 did not disprove external transfer. It blocked before intake because
+its source contract made unrelated OpenReview metadata mandatory. DRIFT-Bench
+itself is public, content-pinnable, MIT-licensed, and executable through local
+Z3 replay.
 
-The milestone also removes two evidence bottlenecks before they can contaminate
-that question. It corrects the still-flagged Exp6520 artifact, and it turns the
-blocked ARC supervisor result into a live-path parser and outcome-receipt
-reachability test rather than another zero-row downstream A/B.
+This milestone builds that external root, transfers Carnot's exact structural
+router, measures a solver-guided inference-cost guard on current local models,
+and turns transactional conflict memory into reversible continuous
+self-learning. It keeps exact execution as release authority. Learned energy
+may rank, route, allocate work, store verified conflicts, or abstain. It may
+not certify itself or remove exact fallback.
 
-Exact solvers and executable environments remain release authority. Learned
-signals may rank, route, allocate work, or abstain. They may not prune the full
-candidate set, certify their own outputs, or convert a development proxy into a
-headline.
+## What V565 proved
 
-## What V564 proved
-
-| Evidence | Terminal finding | V565 consequence |
+| Evidence | Terminal finding | V566 consequence |
 |---|---|---|
-| Exp6514 atomic shard transaction | Crash injection, resume, and atomic finalization passed on the local filesystem. | Reuse the transaction for external-corpus intake and row-producing experiments. Do not create another artifact framework. |
-| Exp6518 and Exp6519 structural controls | The 18-unit pilot produced 126 matched branch rows across multiple families and seeds; independent replay certified charged held structural headroom with exact answer equality. | Test transfer to a content-pinned external corpus instead of expanding the same generators. |
-| Exp6520 Safety-Net router | A compact router plus exception table and exact fallback beat the certified structural control on the bounded pilot, with zero held-table writes. The artifact still carries `flagged_adversarial=true`, `corrigendum_pending=true`, and an implausible `duration_s=0.080421`. | Correct evidence eligibility first. Replicate externally with held calibration and abstention before any broader claim. |
-| Exp6521-Exp6523 conflict memory | Refinement-witness admission, rollback, restart, invalid-reuse veto, chronological held-future benefit, exact equality, and adaptive-validation savings all passed; the independent audit marked the continuous-learning claim eligible. | Move the mechanism behind a default-off `VerifyRepairPipeline` adapter and test an external chronological stream, retention, and future support. |
-| Exp6524 ARC supervisor | Closed honestly as blocked because there were no outcome-bearing live supervisor receipts. | Repair the upstream tool-call and receipt reachability contract. Do not rerun the supervisor selection A/B yet. |
-| Exp6525 GateMate continuity | No post-Exp6325 physical-state receipt existed; zero hardware commands ran. | Perform one final changed-state continuity/retirement decision. Never repeat `--detect` without a newer operator receipt. |
-| Exp6526 capstone | Structural-router and continuous-learning evidence are row-supported, while ARC and GateMate remain blocked. | V565 can branch into external transfer and live-path reachability without claiming that V564 solved oracle-distinct verification or ARC. |
+| Exp6527 evidence eligibility | V564's structural-router and conflict-memory rows are eligible after live recheck and duration correction. | Adopt those rows by path and hash. Do not depend on a retired task ID. |
+| Exp6528 source/model/method contract | DRIFT provenance and model-cache checks were usable, but `v565_method_contract_ready_score=0.0` because OpenReview metadata was unavailable. | Replace broad discovery-channel fan-in with a direct-source contract. Make a channel mandatory only when the downstream task consumes it. |
+| Exp6529 DRIFT intake | The conductor skipped the task after the Exp6528 gate failed. No intake artifact or fixture exists. | Build a fresh V566 fixture from the immutable DRIFT repository revision. Do not reuse the retired gate chain. |
+| Exp6530 independent corpus audit | The audit ran and correctly reported the missing intake artifact, fixture, pinned source root, revision, license, and schema. | Keep the audit independent and always runnable. Use its readiness field as the external evidence root. |
+
+V565 produced no external scientific comparison, no local-model cost result,
+and no external continuous-learning result. Its blocked state is a broken
+dependency contract, not a null result for those methods.
 
 ## The three largest gaps to the PRD vision
 
-### Gap 1: the positive solver-guidance evidence is still internal and oracle-adjacent
+### Gap 1: there is no external, independently replayed constraint evidence root
 
-The router and its labels were built from Carnot's own procedural exact
-benchmark. That supports a solver-performance claim, not an oracle-distinct
-verification moat. There is no independent external transfer result, no
-family-blind external split, and no demonstration that abstention remains
-calibrated under a different constraint grammar.
+Carnot's best router and conflict-memory results still come from internal
+procedural data. The PRD asks for general constraint verification. The current
+evidence does not show transfer across a new grammar, domain, lineage split, or
+multi-turn state format.
 
-V565 uses a content-pinned slice of DRIFT-Bench (`arXiv:2605.23940`) across
-seating, scheduling, and logic-grid streams. It regenerates every receipt
-locally because the public repository warns that the original run databases
-were corrupted. The milestone first measures non-learned headroom, then tests
-the Safety-Net router, then independently audits shortcuts and calibration.
+V566 pins DRIFT-Bench commit
+`d24cda4f59a6ee06bafe886f4724899a7ec94f1c`, preserves its chronological
+problem structure, regenerates labels locally, seals base-problem lineages,
+and runs an independent source, split, and exact-replay audit before any
+learned comparison.
 
-### Gap 2: continuous self-learning is not yet production-shaped
+### Gap 2: learned energy has not shown useful behavior on current local models
 
-V564 proved exact conflict reuse on a chronological internal stream, but the
-controller remains experiment-local. The PRD requires an autonomous
-propose/verify/update loop with safety guards, persistence, and useful retained
-learning. The open questions are whether memory can operate behind
-`VerifyRepairPipeline`, whether query-local writes contaminate the same query,
-whether earlier families are retained, and whether later exact-satisfying
-support shrinks even when current cost improves.
+The PRD vision needs energy-guided reasoning that complements exact checks.
+Current positive evidence is solver-side branch ordering. It does not show how
+current flagship local models react to exact structural difficulty or whether
+a cheap exact guard can prevent inference-cost attacks.
 
-V565 ships a default-off transactional adapter and evaluates scratch, frozen,
-transactional-commit, and same-query-mutation arms on an external chronological
-stream. It treats future support, retained-family performance, restart,
-rollback, quarantine, and exact output equality as co-primary safety fields.
+V566 tests the tension between SMTrap (`2608.18921`) and Solver-Hard
+(`2607.17047`). It controls SMT conflict count and proof-preserving surface
+form separately across all three mandated GGUF families. It tests a bounded
+exact-tool route as a cost guard. Solver conflict count is never a correctness
+label, and model output is never release authority.
 
-### Gap 3: the live ARC agent cannot yet produce evidence for its own supervisor
+### Gap 3: self-learning is useful but not reversible or production-shaped
 
-The scored vLLM path accepts tool-bearing requests only when auto tool choice
-and a parser are configured. The pinned Qwen3.8-27B generator emits
-`qwen3_xml`-shaped tool calls; the Hermes parser accepted requests but lifted
-no calls. Exp6524 consequently found no valid outcome-bearing supervisor rows.
-This is an upstream reachability defect, not evidence that trajectory
-supervision is ineffective.
+V564 showed chronological benefit from exact-admitted conflict memory. The
+memory is still experiment-local. It does not distinguish temporarily obsolete
+knowledge from permanently invalid knowledge, and it has not been tested on an
+external stream behind the default-off `VerifyRepairPipeline` boundary.
 
-V565 tests parser registry/configuration, captured XML conformance, one bounded
-live Qwen3.8 tool call, a mandated Qwen3.6 GGUF format control, and propagation
-of a real outcome-bearing receipt through `E3AgentPolicy` / `make_carnot_agent`.
-It makes no game-level solve claim and performs no Kaggle submission.
+V566 adds active, dormant, and retired states with asymmetric thresholds,
+shadow reactivation, policy-gated retirement, restart, and rollback. It freezes
+memory during each query and commits only after exact replay. Current cost,
+retained-family performance, future exact-satisfying support, and unsafe reuse
+are co-primary outcomes.
 
 ## Research findings incorporated
 
-The dated source review is recorded in `research-references.md` under
-`V565 planner refresh - 2026-08-23`.
+The dated review is in `research-references.md` under `V566 planner refresh -
+2026-08-23`.
 
-- **DRIFT-Bench (`2605.23940`)** supplies the external multi-turn transfer
-  surface and separates contradiction from residual satisfiable drift.
-- **Memoir (`2607.20792`)** motivates read-only memory during a query and an
-  exact-outcome commit boundary.
-- **Verifier-Induced Support Reshaping (`2608.00220`)** makes future
-  exact-satisfying support a required continual-learning metric.
-- **Distributional EBMs (`2605.18871`)** motivates decomposed analytical and
-  learned routing, held calibration, uncertainty, and abstention, while its
-  code confound motivates identity-shortcut attacks.
-- **Solver-Hard Is Not Model-Hard (`2607.17047`)** requires separate structural
-  hardness and surface-realization strata for SOTA-model diagnostics.
-- **DC energy reasoning** and **hard linear decision-rule networks** remain
-  future optimizer/architecture controls; neither justifies a new answer-level
-  generation lineage in V565.
-- Extropic's Z1 remains taped out with 2027 early access; Kona remains
-  proprietary. Neither is an executable dependency.
+- **Reversible Forgetting (`2608.18177`)** supplies the hysteretic
+  active/dormant/retired memory design for Phase 2.
+- **SMTrap (`2608.18921`)** motivates the solver-conflict inference-cost stress
+  and exact-tool guard in Phase 1.
+- **Solver-Hard (`2607.17047`)** requires separate solver-hardness and surface
+  strata. V566 will not assume that solver-hard means model-hard.
+- **SemaPLC (`2608.18565`)** reinforces terminal executable receipts as the
+  completion rule. Static checks alone cannot support a release claim.
+- **Verification Autonomy Levels (`2608.19009`)** supplies useful vocabulary
+  for candidate validity versus completeness. It is a reporting control, not
+  scientific authority.
+- **FormalTCS (`2608.20153`)** confirms that extraction remains a major long-term
+  bottleneck. V566 does not start a separate Lean lineage before external CSP
+  transfer is established.
+- Current OpenReview, Hugging Face, Semantic Scholar, GitHub, Extropic, and Kona
+  checks found no public executable EBM verifier or available thermodynamic
+  device that should replace these experiments.
 
 ## Scientific invariants
 
-1. **External means content-pinned.** Record upstream URL, revision, license,
-   file hashes, local transformation hashes, and exact replay receipts.
-2. **Rows before aggregates.** Every comparison emits one row per turn,
-   instance, model, seed, arm, or condition. Aggregates are recomputed from
-   those rows.
-3. **Exact authority is separate.** Exact solvers validate assignments and
-   conflicts. A learned router cannot certify an answer or write an exception
-   based on held outcomes.
-4. **No candidate deletion.** Structural or learned guidance may reorder a
-   complete candidate set. Native exact fallback remains reachable.
-5. **Transactional learning.** Memory is frozen within a query. A write is
-   admitted only after exact outcome validation and a refinement witness.
-6. **Future support is co-primary.** Current cost reduction cannot hide
-   reduced retained-family performance or future exact-satisfying support.
-7. **No retired answer transport.** V565 does not retry finite-ID, grammar,
-   stop-token, or parser-only generated benchmark answers. The SOTA GGUF task
-   uses paired embeddings only. The ARC parser task is a live tool-call
-   reachability test under the standing AVO directive.
-8. **ARC live path only.** ARC credit requires reachability from
-   `E3AgentPolicy` / `make_carnot_agent`. V565 claims no level or game solve.
-9. **No unchanged hardware probe.** GateMate receives zero commands without a
-   new dated physical-state receipt. KV260 and PolarFire remain terminal.
-10. **Closed verdict classes.** Every artifact includes `verdict_class` from
-    `positive | circular_positive | null | blocked | disqualified | partial`.
+1. **Direct sources only gate their consumers.** Discovery channels are
+   advisory unless a task consumes their content.
+2. **External means content-pinned.** Record source URL, commit, license, file
+   hashes, local transformation hashes, and exact replay receipts.
+3. **Rows precede aggregates.** Each comparison emits one row per problem,
+   turn, model, surface, seed, arm, or condition.
+4. **Exact authority stays separate.** Z3 validates assignments and conflicts.
+   Learned routing, memory, and uncertainty cannot certify a result.
+5. **No candidate deletion.** Guidance may reorder a complete candidate set.
+   Native exact fallback stays reachable.
+6. **Memory is transactional.** Freeze it within a query. Admit a write only
+   after exact outcome validation and a refinement witness.
+7. **Forgetting is reversible before retirement.** Dormancy and shadow
+   reactivation precede any irreversible retirement decision.
+8. **Future support is co-primary.** A current speed or token gain cannot hide
+   reduced retained-family accuracy or future exact-satisfying support.
+9. **No ARC re-solve.** The ARC task reads the live redirect ledger and changes
+   only shared supervisor selection when outcome rows support it.
+10. **No unchanged hardware probe.** GateMate receives no command without a new
+    dated physical-state receipt newer than the previous continuity attempt.
+11. **Closed verdict classes.** Every artifact declares `verdict_class` as one
+    of `positive | circular_positive | null | blocked | disqualified | partial`.
+12. **Blocked records explain the gate.** Every blocked artifact populates
+    `gate_check_summary` with the failed check and observed value.
 
 ## Model policy
 
-Two tasks need model inference.
+Two tasks perform headline LLM inference.
 
-- **Exp6532** calls `cached_sota_pair(gpu_indices=(0, 1))`, which resolves all
-  three mandated GGUFs:
-  `unsloth/Qwen3.6-35B-A3B-GGUF`,
-  `unsloth/gemma-4-31B-it-GGUF`, and
-  `unsloth/gemma-4-26B-A4B-it-GGUF`. It collects paired embeddings only and
-  makes no generated-answer correctness claim.
-- **Exp6538** keeps `unsloth/Qwen3.8-27B-GGUF` as the live ARC generator and
-  includes `unsloth/Qwen3.6-35B-A3B-GGUF` as the mandated local format/control
-  model. Qwen3.6 cannot substitute for Qwen3.8 in the live-agent claim.
+- Exp6546 uses `cached_sota_pair(gpu_indices=(0, 1))` and requires rows from
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Exp6550 uses the same three model families on a bounded chronological DRIFT
+  slice. It may reduce unit count to preserve the preregistered timeout, but it
+  may not replace the headline models with legacy small models.
 
-If the mandated cached models are unavailable, the affected task closes as
-blocked with `gate_check_summary`. Qwen3.5-0.8B or gemma-4-E4B-it may run only a
-CPU smoke test and can never supply a headline row.
+The tasks load each `.gguf` path through llama.cpp. They do not call
+`AutoTokenizer.from_pretrained()` on a GGUF repository ID. Qwen3.5-0.8B and
+gemma-4-E4B-it may run CPU smoke tests only. Their rows cannot support a
+headline result. If the required cache or GPU contract fails, the affected task
+closes as blocked and records the exact precondition.
 
-Per the repository's standing Codex-default rule, all tasks declare
-`agent_type: codex` and `model: gpt-5.5`.
+Formulaic dataset and replay tasks use Codex with `gpt-5.5`. Synthesis and
+judgment tasks use the default Claude backend. The GateMate task and final
+multi-file capstone use Opus because they carry hardware or coordination risk.
 
-## Architecture after V565
+## Architecture after V566
 
 ```text
-                     V564 immutable evidence
-                 +-----------------------------+
-                 | structural rows | conflicts |
-                 +----------+------------+-----+
-                            |            |
-                  Exp6527 eligibility    |
-                       corrigendum        |
-                            |            |
-External DRIFT-Bench        |            |
-URL/revision/license        |            |
-        |                   |            |
-  Exp6529 intake ------> Exp6530 audit   |
-        |                   |            |
-        +--------------+----+            |
-                       |                 |
-             Exp6531 external       Exp6535 default-off
-             structural headroom    conflict-memory adapter
-                       |                 |
-               Exp6533 calibrated       |
-               Safety-Net transfer      |
-                       |            Exp6536 chronological
-               Exp6534 independent  external self-learning
-               shortcut/calibration     |
-               audit                Exp6537 retention,
-                                        support, rollback audit
+                    direct primary source contract
+                                 |
+                                 v
+                 content-pinned DRIFT intake (Z3 replay)
+                                 |
+                                 v
+                    independent external audit
+                                 |
+                 +---------------+----------------+
+                 |               |                |
+                 v               v                v
+       structural headroom   SOTA cost stress   default-off
+                 |           + exact cost guard  memory adapter
+                 v               |                |
+       Safety-Net transfer       |                v
+          + exact fallback       |       hysteretic reversible
+                 |               |          conflict memory
+                 +-------+-------+                |
+                         v                        v
+                 independent transfer      chronological CSL
+                       audit               + support/retention
+                                                   |
+                                                   v
+                                         independent CSL audit
 
-  Exp6532 mandated-SOTA paired-embedding surface diagnostic
-      (diagnostic only; never validity authority)
+      ARC redirect-ledger closure ----+
+      GateMate changed-state receipt --+--> independent V566 capstone
 
-  Captured Qwen3.8 XML + live generator + Qwen3.6 control
-                       |
-             Exp6538 qwen3_xml/tool-call reachability
-                       |
-        live E3 outcome-bearing supervisor receipts
-              (future supervisor A/B; no solve here)
-
-  Exp6539 GateMate receipt gate ----> zero commands or one bounded action
-
-  All terminal artifacts ----------> Exp6540 independent capstone
+      RELEASE AUTHORITY: exact Z3 replay and executable receipts only
 ```
 
-## Phase 0 - Evidence and external-corpus contracts
-
-### Exp6527 - V565 activation manifest and V564 evidence eligibility corrigendum
-
-**Question:** Can V565 establish a non-retired immutable root while correcting
-the unresolved Exp6520 adversarial/duration receipt?
-
-Recompute Exp6518-Exp6523 claims from rows, rerun the live adversarial verifier,
-measure a real nontrivial execution interval for Exp6520 validation, and
-separate historical artifact fields from the corrected eligibility record. Do
-not edit historical artifacts. The root opens only if the router and CSL inputs
-are content-addressed, row-consistent, and not dependent on retired task IDs.
-
-**Deliverable:**
-`results/experiment_6527_v565_evidence_eligibility_corrigendum.json`
-
-### Exp6528 - Execution-time V565 source, model, and method contract
-
-**Question:** Did any post-planning source, model-cache state, or product update
-change the method before outcomes are visible?
-
-Perform a focused low-concurrency source delta, verify DRIFT-Bench provenance,
-refresh Semantic Scholar counts without inventing rate-limited data, and freeze
-the external split, abstention, transactional-learning, support, ARC parser,
-and hardware stop rules.
-
-**Deliverable:**
-`results/experiment_6528_v565_source_model_method_contract.json`
-
-### Exp6529 - Content-pinned DRIFT-Bench intake and exact replay commitment
-
-**Question:** Can Carnot produce a local, immutable, solver-replayed external
-constraint slice without inheriting corrupt upstream run receipts?
-
-Pin revision and license, select a bounded balanced slice from seating,
-scheduling, and logic-grid streams, preserve chronological turns, regenerate
-Z3 labels, and seal train/development/held family-blind splits. Use the V564
-atomic transaction. The task produces both a terminal artifact and a hashed
-JSONL fixture.
-
-**Deliverables:**
-`results/experiment_6529_drift_bench_external_intake.json` and
-`results/fixtures/v565_drift_bench_external_slice.jsonl`
-
-### Exp6530 - Independent external-corpus and split audit
-
-**Question:** Are the external rows, exact labels, chronology, splits, and
-provenance independently reproducible?
-
-Always run. Re-download or independently inspect the pinned source, replay a
-precommitted sample and every held row, recompute hashes and aggregates, and
-attack duplicate turns, family aliases, row ordering, answer leakage, solver
-version drift, and omitted hard rows.
-
-**Deliverable:**
-`results/experiment_6530_external_constraint_corpus_audit.json`
-
-## Phase 1 - External transfer and surface diagnostics
-
-### Exp6531 - External structural-guidance headroom replication
-
-**Gate:** `Exp6530.external_constraint_corpus_audited_ready_score == 1.0`.
-
-**Question:** Do the V564 non-learned structural controls retain charged held
-benefit on the external multi-turn corpus?
-
-Compare native dynamic ordering, random ordering, analytical structural order,
-bounded refocus, and one-shot critical-variable enumeration under matched
-budgets. Report conflicts, decisions, propagations, wall time, censoring,
-answer equality, per-family effects, and chronology position. A single family
-or one uncensored win cannot open the router gate.
-
-**Deliverable:**
-`results/experiment_6531_external_structural_headroom_replication.json`
-
-### Exp6532 - Mandated-SOTA paired-embedding surface-sensitivity audit
-
-**Gates:** external corpus audited and V565 method contract ready.
-
-**Question:** How much do proof-preserving surface realizations move local SOTA
-representations independently of exact structural hardness?
-
-For all three mandated GGUFs, collect matching-base paired embeddings for
-canonical, entity-relabeled, clause-reordered, and paraphrased versions of the
-same exact rows. Stratify by solver hardness and family. Measure paired
-distance, neighbor stability, model/family identification shortcuts, cache and
-runtime receipts, and repeatability. This is a diagnostic; it does not score
-answers or train a verifier.
-
-**Deliverable:**
-`results/experiment_6532_sota_paired_embedding_surface_audit.json`
-
-### Exp6533 - Calibrated Safety-Net router external transfer
-
-**Gates:** V565 evidence root ready, external corpus audited, and external
-structural headroom candidate score equals one.
-
-**Question:** Can the V564 compact router improve charged external search cost
-while an exception table, uncertainty abstention, and native exact fallback
-preserve completeness?
-
-Freeze features and calibration before held outcomes. Compare native,
-best non-learned structural, router without abstention, and calibrated
-Safety-Net arms. No held table writes; no candidate pruning. Require exact
-answer equality, bounded storage, live influence, multi-family support, and
-positive charged benefit beyond the best structural control.
-
-**Deliverable:**
-`results/experiment_6533_external_calibrated_safety_net_router.json`
-
-### Exp6534 - Independent external-router shortcut and calibration audit
-
-**Question:** Does the external router survive independent row reduction,
-calibration replay, family/model-identity attacks, feature permutation, and
-duration/cost verification?
-
-Always run and close the eligibility field. Recompute all comparison metrics
-from rows, replay the exact fallback, inspect feature provenance, verify that
-no held writes occurred, and distinguish solver-performance evidence from an
-oracle-distinct verification claim.
-
-**Deliverable:**
-`results/experiment_6534_external_router_independent_audit.json`
-
-## Phase 2 - Production-shaped continuous self-learning
-
-### Exp6535 - Default-off transactional conflict-memory pipeline adapter
-
-**Gate:** V565 evidence root ready.
-
-**Question:** Can the V564 exact conflict-memory controller be reached safely
-from `VerifyRepairPipeline` while leaving the default path byte-for-byte and
-behaviorally unchanged?
-
-Implement the smallest adapter using the existing factor-cache shadow pattern.
-Memory is read-only during a query and commits after exact validation. Require
-versioned refinement witnesses, content-addressed persistence, restart,
-rollback, quarantine, bounded eviction, concurrent-writer refusal, and an
-unchanged default-off path.
-
-**Deliverable:**
-`results/experiment_6535_verify_repair_conflict_memory_adapter.json`
-
-### Exp6536 - Prospective external chronological conflict self-learning A/B
-
-**Gates:** default-off adapter ready and external corpus audited.
-
-**Question:** Does transactional conflict memory reduce charged future work on
-the external multi-turn stream beyond scratch and frozen controls without
-shrinking future exact-satisfying support?
-
-Compare scratch, frozen memory, transactional post-query commit, and a
-same-query-mutation contamination arm under matched admitted-event dose.
-Evaluate chronology once, with no rewind after held outcomes. Report current
-cost, held-future cost, prefix retention, future support, exact equality,
-unsafe writes/uses, restart, rollback, quarantine, and cross-family transfer.
-
-**Deliverable:**
-`results/experiment_6536_external_chronological_conflict_self_learning.json`
-
-### Exp6537 - Independent retention, support, and rollback audit
-
-**Gate:** `Exp6536.prospective_csl_execution_complete_score == 1.0`.
-
-**Question:** Is the external continuous-learning claim still eligible after
-independent chronological replay and adversarial state attacks?
-
-Recompute all rows, restore checkpoints in a fresh process, replay admitted and
-rejected conflicts, inject invalid refinement witnesses and torn writes, audit
-matched update dose, compare future support, and require no retained-family
-regression beyond the preregistered tolerance.
-
-**Deliverable:**
-`results/experiment_6537_external_csl_retention_support_audit.json`
-
-## Phase 3 - Live-path and hardware continuity, then synthesis
-
-### Exp6538 - ARC qwen3_xml tool-call and supervisor-receipt reachability
-
-**Question:** Can the live E3 path lift one real tool call from the pinned local
-generator and propagate an outcome-bearing supervisor receipt?
-
-First test the pinned vLLM parser registry and captured Qwen3.8 XML. Then run a
-bounded local live smoke with auto tool choice plus `qwen3_xml`, and a mandated
-Qwen3.6 GGUF format control. Route the lifted call through
-`E3AgentPolicy` / `make_carnot_agent`, record the executed outcome, and verify
-that `arm_outcomes` reaches the scored-harness row. Stop after the receipt
-contract is demonstrated or a named precondition fails. No public re-solve,
-game-level solve, Kaggle submission, source read, or offline BFS is allowed.
-
-**Deliverable:**
-`results/experiment_6538_arc_qwen3_xml_receipt_reachability.json`
-
-### Exp6539 - GateMate changed-state continuity and retirement decision
-
-**Question:** Is there a new operator-authored physical-state receipt after
-Exp6525 that authorizes one bounded GateMate action?
-
-If not, run zero hardware commands, close the milestone slot honestly, and
-retire the unchanged probe scope mechanically if the same verdict recurs. If a
-new receipt exists, validate exact board/cable/port/power/DirtyJTAG fields and
-perform at most one predeclared detection action before stopping.
-
-**Deliverable:**
-`results/experiment_6539_gatemate_changed_state_retirement.json`
-
-### Exp6540 - Independent V565 capstone and next-state decision
-
-**Question:** Which V565 claims survive independent row-first synthesis, and
-what is the smallest justified next milestone?
-
-Always run. Recompute every gate from artifacts and rows; preserve blocked,
-null, circular, partial, and disqualified outcomes. Separate internal solver
-performance, external transfer, production-shaped CSL, model diagnostics, ARC
-reachability, and hardware status. Recommend expansion only where breadth,
-charged benefit, exact equality, and independent eligibility all hold.
-
-**Deliverable:**
-`results/experiment_6540_v565_independent_capstone.json`
+The learned layer proposes search order, routing, abstention, and verified
+memory reuse. The exact layer checks every accepted result and remains
+reachable after every learned decision.
+
+## Phase 0: Repair the external evidence root
+
+| Exp | Task | Primary output | Gate |
+|---:|---|---|---|
+| 6541 | Direct-source contract and V565 boundary | Immutable source, cache, split, and dependency contract | none |
+| 6542 | Content-pinned DRIFT intake | Exact chronological fixture and row receipts | Exp6541 direct-source ready |
+| 6543 | Independent corpus audit | Audited external evidence root | always runs |
+
+Exp6541 directly addresses Exp6528. It makes the DRIFT repository, commit,
+license, schema, and local solver the only hard source requirements for DRIFT
+intake. OpenReview and other discovery channels remain dated advisory rows.
+The task also imports Exp6527's eligible V564 boundaries by immutable path and
+hash.
+
+Exp6542 directly addresses the skipped Exp6529 scope with a new dependency
+root. It creates a bounded balanced fixture across seating, scheduling, and
+logic-grid domains. Base-problem lineages cannot cross train, development, and
+held cells. Every admitted turn has a terminal Z3 receipt.
+
+Exp6543 directly addresses Exp6530. It always runs and always writes
+`external_constraint_corpus_audited_ready_score`. It recomputes source identity,
+chronology, solver outcomes, split isolation, and transaction closure without
+trusting intake aggregates.
+
+## Phase 1: External transfer and local-model cost guarding
+
+| Exp | Task | Primary comparison | Gate |
+|---:|---|---|---|
+| 6544 | External structural headroom | native, random, analytical, bounded refocus, one-shot enumeration | Exp6543 audited root |
+| 6545 | External Safety-Net router | certified structural control versus learned router, abstention, exception table, exact fallback | Exp6544 held headroom |
+| 6546 | SMT-cost stress and exact-tool guard | conflict strata, surface strata, three SOTA GGUFs, guarded versus unguarded cost | Exp6543 audited root |
+| 6547 | Independent transfer audit | router value, shortcut tests, cost-guard calibration, exact equality | always runs |
+
+Exp6544 must prove charged non-learned headroom before a learned router is
+trained. Exp6545 keeps the exception table train-only and allows no held write.
+It must report abstention calibration and exact fallback reachability.
+
+Exp6546 uses SMT conflict count as a stress variable, not as ground truth for
+model difficulty. Each logical instance receives proof-preserving surface
+variants. The artifact reports token count, time, timeout, exact-tool dispatch,
+and exact final validity by model and unit. The central claim is limited:
+whether a preregistered cheap guard reduces bounded inference cost without
+reducing exact completion.
+
+Exp6547 independently recomputes both transfer lanes. It attacks family and
+model identity, entity names, row order, solver-conflict leakage, exception
+table contamination, timing fabrication, and aggregate-only conclusions.
+
+## Phase 2: Reversible continuous self-learning
+
+| Exp | Task | Primary output | Gate |
+|---:|---|---|---|
+| 6548 | Default-off production adapter | Transactional conflict memory behind `VerifyRepairPipeline` | Exp6543 audited root |
+| 6549 | Hysteretic reversible memory | Active/dormant/retired controller with shadow reactivation | Exp6548 adapter ready |
+| 6550 | Prospective chronological CSL | Scratch, frozen, transactional, one-threshold, hysteretic, same-query mutation | Exp6549 controller and Exp6543 root |
+| 6551 | Independent CSL audit | Retention, future support, safety, restart, rollback, and dose audit | Exp6550 terminal comparison |
+
+Exp6548 is default-off and preserves native behavior byte-for-byte when
+disabled. Exp6549 compares no retirement, LRU, one-threshold, and hysteretic
+state control under recurring regime changes. Only exact replay can admit,
+dormant-reactivate, quarantine, or retire a conflict.
+
+Exp6550 is the milestone's continuous self-learning experiment. It runs
+chronologically. It freezes memory during each query, then commits after exact
+verification. It measures current exact success, solver work, model tokens,
+retained-family performance, future support, unsafe uses, capacity, churn,
+restart equality, rollback equality, and same-query contamination.
+
+Exp6551 independently replays every transition and recomputes the claimed
+benefit from per-unit rows. A positive class requires exact answer equality,
+zero unsafe writes and uses, positive charged benefit, retained-family floors,
+future-support non-inferiority, and successful restart and rollback.
+
+## Phase 3: Standing continuity and capstone
+
+| Exp | Task | Primary output | Gate |
+|---:|---|---|---|
+| 6552 | ARC redirect-ledger generalization closure | Supported arm-selection refinement or honest no-firing closure | none |
+| 6553 | GateMate changed-state continuity | One authorized action or zero-command blocked receipt | none |
+| 6554 | Independent V566 capstone | Claim ledger, adoption boundary, and V567 handoff | always runs |
+
+Exp6552 satisfies the ARC generalization floor through the live trajectory
+supervisor redirect ledger. It does not solve a game. It treats an empty
+post-REQ-ARC-WMTE-6640 outcome ledger as the valid result "no firings, nothing
+to refine." It changes the curated selection order only when outcome rows
+support a preregistered decision.
+
+Exp6553 satisfies the non-terminal GateMate continuity slot. It first searches
+for a dated operator-authored physical-state receipt newer than Exp6525. With no
+receipt, it runs zero hardware commands and closes blocked. With a valid
+receipt, it runs only the single authorized detect or flash action, stops after
+the first result, and makes no speed or availability claim. KV260 and PolarFire
+are terminal and need no milestone task.
+
+Exp6554 always runs. It distinguishes blocked dependencies from null science,
+recomputes every adopted headline from rows, preserves circularity and oracle
+boundaries, and writes the next-state decision without changing historical
+artifacts.
 
 ## Dependency graph
 
 ```text
-Exp6527 evidence root ------------------------+----------------------+
-                                              |                      |
-Exp6528 method contract ----+                 |                      |
-                            |                 |                      |
-Exp6529 external intake --> Exp6530 audit ----+--> Exp6531 headroom  |
-                            |                 |         |            |
-                            +--> Exp6532 SOTA |         v            |
-                                 embedding    +--> Exp6533 router    |
-                                                      |              |
-                                                      v              |
-                                                Exp6534 audit        |
-                                                                     |
-Exp6521 immutable conflict mechanism + Exp6527 --> Exp6535 adapter --+
-Exp6530 -------------------------------------------> Exp6536 CSL
-Exp6535 -------------------------------------------> Exp6536 CSL
-Exp6536 execution complete ------------------------> Exp6537 audit
+Exp6541 direct source
+   |
+   v
+Exp6542 DRIFT intake
+   |
+   v
+Exp6543 independent audit
+   |--------------------+----------------------+
+   |                    |                      |
+   v                    v                      v
+Exp6544 headroom     Exp6546 cost guard     Exp6548 adapter
+   |                    |                      |
+   v                    |                      v
+Exp6545 router          |                  Exp6549 reversible memory
+   |                    |                      |
+   +----------+---------+                      v
+              v                            Exp6550 chronological CSL
+         Exp6547 audit                         |
+                                              v
+                                         Exp6551 CSL audit
 
-Exp6538 ARC reachability       (independent live-path slot)
-Exp6539 GateMate continuity    (independent receipt-gated slot)
-
-Exp6527-Exp6539 terminal artifacts ----------------> Exp6540 capstone
+Exp6552 ARC ledger ---------------------------+
+Exp6553 GateMate continuity ------------------+--> Exp6554 capstone
+all terminal Phase 0-2 artifacts -------------+
 ```
 
-No task has a `requires:` or `gated_on:` edge to a retired experiment ID.
-Historical artifacts are read directly by path and hash only.
+Structured gates name only tasks in this roadmap. Each gated field is declared
+verbatim in its upstream task's required artifact fields. Exp6543, Exp6547,
+Exp6552, Exp6553, and Exp6554 always run so a failed chain still ends with a
+diagnostic artifact.
+
+## Prior-failure boundaries
+
+| New task | Prior scope | What changes |
+|---|---|---|
+| Exp6541 | Exp6528 | Removes unrelated discovery channels from the hard DRIFT contract. |
+| Exp6542 | Exp6529 | Uses Exp6541's direct source field instead of the retired V565 method-contract field. |
+| Exp6543 | Exp6530 | Audits a new V566 artifact, fixture, and direct pinned source root. |
+| Exp6545 | Exp6520 | Runs on an external family-blind fixture after Exp6527 corrected evidence eligibility; it adds abstention and independent audit. |
+| Exp6552 | Exp6524 | Applies the 2026-08-22 no-firing closure rule and reads only post-schema live receipts. |
+| Exp6553 | Exp6525 | Requires a receipt newer than Exp6525 and mechanically retires the unchanged attempt if the same verdict repeats. |
+
+Each corresponding YAML task includes all four required `prior_failures`
+fields and `retire_if_same_verdict: true`. No task requires a retired upstream
+ID.
 
 ## Hardware requirements
 
-| Resource | Tasks | Requirement and stop rule |
+| Resource | Tasks | Contract |
 |---|---|---|
-| CPU, RAM, local disk | Exp6527-Exp6531, Exp6533-Exp6537, Exp6540 | Exact solver replay, JSONL fixtures, transactional checkpoints, and audits. Preflight disk before external intake. Charge all preprocessing and exact fallback costs. |
-| Dual RTX 3090 | Exp6532 | Resolve the three mandated GGUFs through `cached_sota_pair(gpu_indices=(0, 1))`; run models sequentially where residency conflicts. Record cache hashes, GPU assignment, VRAM, thermals, wall time, and failures. Missing mandated cache blocks the scientific task. |
-| Local vLLM/llama.cpp and dual RTX 3090 | Exp6538 | Pinned Qwen3.8-27B is the live ARC generator; Qwen3.6-35B-A3B is the mandated format control. Use bounded prompts and one reachability smoke. No Kaggle quota or submission dependency. |
-| GateMate A1 board | Exp6539 | No command without a dated operator receipt newer than Exp6525. At most one predeclared action after a valid receipt. No unchanged `--detect` retry. |
-| KV260 and PolarFire | none | Terminal according to the hardware ledger; no repeated task. |
-| Extropic XTR-0/Z1 | none | No authenticated route. Z1 early access remains 2027; no latency, power, or execution claim. |
-| Ryzen AI/XDNA NPU | none | Deferred after repeated unchanged precondition failures; no reinstall probe. |
+| CPU, RAM, disk, Z3 | Exp6541-Exp6545, Exp6547-Exp6554 | Pin solver and package versions. Use atomic shards. Record timeouts and terminal unit counts. |
+| Dual RTX 3090 | Exp6546 and Exp6550 | Use cached GGUF paths through llama.cpp. Record GPU identity, VRAM, quantized file hashes, token counts, and wall time. No legacy model may supply headline rows. |
+| GateMate A1-EVB-2M | Exp6553 only | Zero commands without a new physical receipt. One bounded authorized command with a valid receipt. No speedup or availability claim. |
+| KV260 and PolarFire | none | Both have reached their defined terminal states. Preserve prior receipts; do not repeat smoke work. |
+| Extropic Z1 / Kona | none | No authenticated local access or public reproducible runner exists. |
 
-## Gates and stop rules
+No task requires an FPGA redesign, NPU claim, thermodynamic execution claim, or
+external paid model API.
 
-- Exp6531 cannot run without an independently audited external corpus.
-- Exp6533 cannot run unless external non-learned structural headroom is
-  positive and the Exp6520 evidence root is eligible.
-- Exp6536 cannot run unless both the external corpus and the default-off
-  pipeline adapter are ready.
-- Exp6537 cannot run unless Exp6536 writes
-  `prospective_csl_execution_complete_score=1.0` with that exact spelling.
-- A failed structured gate writes `verdict_class=blocked` and a populated
-  `gate_check_summary` naming the field and observed value.
-- A positive comparative claim requires per-unit rows, exact answer equality,
-  charged wall time, breadth beyond one family, and no contradicted aggregate.
-- Exp6532 cannot fall back to legacy tiny models for a headline result.
-- Exp6538 stops after one demonstrated live receipt or a named substrate block;
-  it does not continue into a supervisor-policy A/B or game solve.
-- Exp6539 executes zero hardware commands without a new receipt and carries
-  `retire_if_same_verdict: true` for the repeated blocked scope.
-- Exp6540 never upgrades a circular exact-oracle result into an
-  oracle-distinct verification claim.
+## Milestone acceptance
 
-## Deliverable index
+V566 is scientifically positive only if all of these conditions hold:
 
-| Exp | Primary deliverable |
-|---:|---|
-| 6527 | `results/experiment_6527_v565_evidence_eligibility_corrigendum.json` |
-| 6528 | `results/experiment_6528_v565_source_model_method_contract.json` |
-| 6529 | `results/experiment_6529_drift_bench_external_intake.json` |
-| 6530 | `results/experiment_6530_external_constraint_corpus_audit.json` |
-| 6531 | `results/experiment_6531_external_structural_headroom_replication.json` |
-| 6532 | `results/experiment_6532_sota_paired_embedding_surface_audit.json` |
-| 6533 | `results/experiment_6533_external_calibrated_safety_net_router.json` |
-| 6534 | `results/experiment_6534_external_router_independent_audit.json` |
-| 6535 | `results/experiment_6535_verify_repair_conflict_memory_adapter.json` |
-| 6536 | `results/experiment_6536_external_chronological_conflict_self_learning.json` |
-| 6537 | `results/experiment_6537_external_csl_retention_support_audit.json` |
-| 6538 | `results/experiment_6538_arc_qwen3_xml_receipt_reachability.json` |
-| 6539 | `results/experiment_6539_gatemate_changed_state_retirement.json` |
-| 6540 | `results/experiment_6540_v565_independent_capstone.json` |
+1. The external corpus audit reaches
+   `external_constraint_corpus_audited_ready_score=1.0`.
+2. At least one Phase 1 lane produces row-supported charged value with exact
+   fallback and no shortcut or authority violation.
+3. The chronological self-learning experiment and independent audit show exact
+   equality, zero unsafe memory operations, positive charged benefit,
+   retained-family floors, future-support non-inferiority, and restart and
+   rollback equality.
+4. Every headline row uses a mandated SOTA GGUF where LLM inference is needed.
+5. The capstone passes row consistency, adversarial verification, spec coverage,
+   exclusion-manifest checks, and applicable end-to-end checks.
 
+A blocked external root is an infrastructure result, not a null transfer
+result. A solver-cost correlation without a guarded benefit is a null cost-guard
+result. A current-task gain that reduces future support is partial or null, not
+positive.
+
+## Non-goals
+
+- No model-generated answer becomes verification authority.
+- No retry of retired finite-ID, grammar-only, or answer-level energy scoring.
+- No public ARC game or level solve.
+- No offline BFS or per-game ARC adapter claim.
+- No FPGA redesign, unchanged GateMate probe, or hardware speedup claim.
+- No Extropic, Kona, cloud-model, or paid API dependency.
+- No claim that external transfer creates an oracle-distinct EBM verifier.
+
+## Expected handoff
+
+The milestone should leave four reusable assets:
+
+1. a content-pinned, independently replayed external constraint fixture;
+2. an audited external structural-router and exact-cost-guard result;
+3. a default-off reversible conflict-memory controller with prospective
+   continuous-learning receipts; and
+4. a claim ledger that states which evidence can enter the PRD architecture
+   and which lanes remain blocked, null, partial, or disqualified.
