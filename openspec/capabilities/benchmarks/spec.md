@@ -3751,6 +3751,163 @@ are unchanged, and the reproducibility checksum matches.
 |---|---|---|
 | REQ-BENCH-6519 | Planned (`python/carnot/experiment_6519_structural_headroom_certificate.py`, `results/experiment_6519_structural_headroom_certificate.json`) | Planned (`tests/python/test_experiment_6519_structural_headroom_certificate.py`) |
 
+### REQ-BENCH-6520: Safety-Net Branch Routers SHALL Preserve Exact Authority
+
+Carnot SHALL provide Exp6520 at
+`python/carnot/experiment_6520_safety_net_branch_router_ab.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6520_safety_net_branch_router_ab --date 20260823`
+SHALL write
+`results/experiment_6520_safety_net_branch_router_ab.json`.
+
+Exp6520 SHALL evaluate the Exp6519 structural headroom gate before any learned
+router can be scored. It SHALL record the gate path, hash, expected value,
+observed value, CPU, GPU, RAM, disk, framework versions, and protected-file
+hashes. A failed gate or missing resource precondition SHALL write a terminal
+blocked artifact.
+
+Exp6520 SHALL freeze native dynamic, best certified static analytical, compact
+linear, matched compact MLP, and compact KAN arms before training. All learned
+families SHALL use the same Exp6516 branch pilot rows, feature schema, train and
+development rows, optimization budget, seed grid, confidence threshold, and
+bounded exact-solver budget. Learned advice SHALL order Boolean candidates only.
+It SHALL never remove a candidate. The exact solver SHALL be release authority.
+
+Exp6520 SHALL build each exception table only from train and development errors.
+It SHALL hash every exception key, value, lineage, model version, schema version,
+and table manifest. Held rows SHALL NOT enter any exception table. A schema
+mismatch, stale model and table pair, missing exception entry, checksum failure,
+model failure, exception hit, or confidence abstention SHALL route the row to
+native exact fallback.
+
+Exp6520 SHALL exhaustively replay the bounded pilot domain. Each row SHALL record
+the learned route, exception hit, abstention, fallback trigger, changed decision,
+exact answer, solver work, lookup cost, model cost, total charged cost, storage
+charge, candidate preservation, exact equality, and terminal disposition. The
+artifact SHALL report held charged benefit, exception coverage, exhaustive
+correctness, abstention, fallback, and storage trade-offs.
+
+Exp6520 SHALL attack held contamination, key collisions, stale model/table
+pairs, missing entries, exception growth, lookup omission, KAN capacity
+mismatch, GPU-only advantage, and false 100-percent coverage. A positive
+`verdict_class` SHALL require held charged benefit beyond Exp6519's best
+certified structural arm, exact answer equality, full candidate preservation, a
+bounded table size, and support in more than one model family, model seed,
+problem family, and problem seed. A valid no-benefit result SHALL use
+`verdict_class=null`. Bounded usable evidence below the positive gate SHALL use
+`verdict_class="partial"`. Failed gates or resource preconditions SHALL use
+`verdict_class="blocked"`. Leakage or correctness drift SHALL use
+`verdict_class="disqualified"`.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`upstream_gate_receipt`, `preregistration`, `model_and_arm_specs`,
+`train_dev_held_receipts`, `exception_table_manifest`, `per_game_results`,
+`exception_abstention_fallback_rows`, `candidate_preservation_rows`,
+`exact_answer_equality_rows`, `exhaustive_pilot_audit`,
+`charged_cost_and_storage_rows`, `attack_matrix`,
+`safety_net_router_ready_score`, `gate_check_summary`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. `inference_substrate` SHALL be
+`local_compact_router_plus_exact_exception_table_and_native_solver_no_llm`.
+`verifier_is_oracle` SHALL be false for router value. The artifact SHALL record
+`exact_solver_is_release_authority=true`.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal safety-net router comparison state."
+- `honest_verdict`: "States whether the router beat the certified structural gate without changing exact authority."
+- `verdict_class`: "Closed enum separates positive, null, partial, blocked, and disqualified outcomes."
+- `upstream_gate_receipt`: "Pins Exp6519 by path, hash, expected value, observed value, resources, frameworks, and protected hashes."
+- `preregistration`: "Freezes the planning date, arms, seed grid, primary metric, budgets, fallback rules, and verdict gates."
+- `model_and_arm_specs`: "Declares native, analytical, linear, MLP, and KAN arms with matched features, rows, budgets, and seeds."
+- `train_dev_held_receipts`: "Records split counts and proves held rows are excluded from training and exception writes."
+- `exception_table_manifest`: "Hashes exception keys, values, lineage, model versions, schema versions, and train-development coverage."
+- `per_game_results`: "Stores one exhaustive pilot-domain route row for each unit and arm."
+- `exception_abstention_fallback_rows`: "Shows why runtime used learned ordering or native fallback for each row."
+- `candidate_preservation_rows`: "Proves every route keeps the full Boolean candidate set."
+- `exact_answer_equality_rows`: "Shows the routed answer equals the exact branch-domain answer."
+- `exhaustive_pilot_audit`: "Recomputes bounded-domain coverage, equality, fallback, abstention, and changed-decision counts."
+- `charged_cost_and_storage_rows`: "Charges solver work, lookup, model execution, fallback, and storage."
+- `attack_matrix`: "Tests contamination, collisions, stale pairs, missing entries, growth, omitted lookup, KAN capacity, GPU-only advantage, and false coverage."
+- `safety_net_router_ready_score`: "Opens only when the gate, correctness, preservation, costs, attacks, and positive or null verdict rules agree."
+- `gate_check_summary`: "Names every failed gate with expected and observed values."
+- `per_unit_rows`: "Flattens route, fallback, preservation, equality, cost, audit, and attack rows for recomputation."
+- `aggregate_row_recomputation`: "Rebuilds verdict inputs from rows rather than imported totals."
+- `preconditions_checked`: "Records source paths, hashes, resources, frameworks, split policy, seeds, budgets, and protected hashes."
+- `protected_files_unchanged`: "Proves upstream artifacts, solver code, specs, and conductor stayed byte-identical during the run."
+- `inference_substrate`: "Declares local compact routers, exact exception tables, and native exact fallback with no LLM."
+- `verifier_is_oracle`: "False because router value is measured; exact solver authority is recorded separately."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each field to specs, inputs, rows, reducers, tests, and hashes."
+- `random_seed`: "Pins model seed grid, train order, and attack ordering."
+- `duration_s`: "Records measured wall time."
+- `tests_run`: "Records validation commands and exit codes."
+- `reproducibility_checksum`: "A content hash detects drift in gates, models, tables, rows, costs, and verdicts."
+
+#### SCENARIO-BENCH-6520-GATE: Structural Headroom Gate Is Checked First
+
+**Given** the Exp6519 certificate artifact
+**When** Exp6520 starts
+**Then** it records the direct path, hash, expected score, observed score,
+resources, framework versions, protected-file hashes, and failed preconditions
+before any router score can open.
+
+#### SCENARIO-BENCH-6520-ARMS: Compact Routers Use Matched Budgets
+
+**Given** the Exp6516 branch pilot rows
+**When** Exp6520 freezes native, static analytical, linear, MLP, and KAN arms
+**Then** every learned arm shares the same feature schema, train rows,
+development rows, optimization budget, confidence threshold, and seed grid.
+
+#### SCENARIO-BENCH-6520-EXCEPTIONS: Held Rows Never Enter Tables
+
+**Given** train, development, and held pilot rows
+**When** Exp6520 builds exception tables
+**Then** only train and development model errors produce exception entries, and
+each entry hashes its key, value, lineage, model version, and schema version.
+
+#### SCENARIO-BENCH-6520-RUNTIME: Runtime Falls Back Before Unsafe Ordering
+
+**Given** an exception hit, abstention, schema mismatch, model failure,
+checksum failure, or stale model/table pair
+**When** Exp6520 routes a pilot unit
+**Then** it uses native exact fallback, preserves every candidate, records the
+fallback trigger, and lets the exact solver own the terminal answer.
+
+#### SCENARIO-BENCH-6520-EXHAUSTIVE: Pilot Domain Is Fully Replayed
+
+**Given** every bounded pilot unit and every frozen arm
+**When** Exp6520 replays routes
+**Then** each row records learned route, exception, abstention, fallback,
+changed decision, exact answer, solver work, lookup cost, model cost, total
+cost, storage, and terminal disposition.
+
+#### SCENARIO-BENCH-6520-ATTACKS: Safety-Net Shortcuts Fail Closed
+
+**Given** held contamination, key collisions, stale pairs, missing entries,
+exception growth, lookup omission, KAN capacity mismatch, GPU-only advantage,
+and false coverage attacks
+**When** Exp6520 evaluates the attack matrix
+**Then** every attack must fail closed before
+`safety_net_router_ready_score` can equal `1.0`.
+
+#### SCENARIO-BENCH-6520-TERMINAL: Verdict Is Row-Derived
+
+**Given** all route, fallback, equality, preservation, cost, storage, audit,
+and attack rows
+**When** Exp6520 validates the deliverable
+**Then** every required field has a principle and provenance entry, the
+checksum matches, exact solver release authority is true, and the verdict class
+follows the preregistered enum.
+
+## Implementation Status (REQ-BENCH-6520)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6520 | Planned (`python/carnot/experiment_6520_safety_net_branch_router_ab.py`, `results/experiment_6520_safety_net_branch_router_ab.json`) | Planned (`tests/python/test_experiment_6520_safety_net_branch_router_ab.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
