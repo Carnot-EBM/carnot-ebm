@@ -1,0 +1,1869 @@
+{
+  "MODEL_SPECS": [
+    {
+      "active_params_b": 3.0,
+      "gguf_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "load_ok": false,
+      "load_receipt_hash": "sha256:85983b35fe69c56bd5e5f7865914bf7b2685fba130eca7692b8da764102b99b8",
+      "loader": "llama_cpp.Llama",
+      "min_vram_gb": 24,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_path_exists": true,
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "total_params_b": 35.0
+    },
+    {
+      "active_params_b": 31.0,
+      "gguf_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "load_ok": false,
+      "load_receipt_hash": "sha256:890d1399bf070e7b360365cb902785befcd36df7561686e7b2ea0f724a647042",
+      "loader": "llama_cpp.Llama",
+      "min_vram_gb": 24,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_path_exists": true,
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "role": "dense",
+      "total_params_b": 31.0
+    },
+    {
+      "active_params_b": 4.0,
+      "gguf_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "load_ok": false,
+      "load_receipt_hash": "sha256:83ed81d1bd57bc86f83fc03c20e631932f27b4d25184edaab23b24d587568967",
+      "loader": "llama_cpp.Llama",
+      "min_vram_gb": 16,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_path_exists": true,
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "total_params_b": 26.0
+    }
+  ],
+  "aggregate_row_recomputation": {
+    "clean_receipts": false,
+    "current_value_positive": false,
+    "exact_output_equality": true,
+    "expected_row_count": 756,
+    "future_support_noninferior": true,
+    "multi_model_support": false,
+    "preconditions_passed": false,
+    "ready_score_from_rows": 0.0,
+    "restart_and_rollback_equality": false,
+    "retained_family_noninferior": false,
+    "row_count": 0,
+    "row_type": "aggregate_row_recomputation",
+    "safe_arm_unsafe_zero": true,
+    "safe_positive_arm_id": ""
+  },
+  "charged_cost_recomputation": {
+    "all_costs_match_rows": true,
+    "component_total_charged_cost_units": 0,
+    "memory_time_s": 0,
+    "model_time_s": 0,
+    "routing_time_s": 0,
+    "row_count": 0,
+    "row_type": "charged_cost_recomputation",
+    "solver_time_s": 0,
+    "total_charged_cost_units": 0
+  },
+  "coobservation_and_dose_receipt": {
+    "coobservation_arm": "matched_dose_coobservation",
+    "extra_update_exposure_count": 0,
+    "matched_update_dose": true,
+    "replay_benefit_separated_from_extra_update_exposure": true,
+    "row_hash": "sha256:21f80987b9ac1a36fd36ccb8af0901e9d65b7e530a2b3f8361be981d97102b82",
+    "row_type": "coobservation_and_dose_receipt",
+    "update_dose_by_arm": {
+      "current_only": 0,
+      "frozen": 0,
+      "hysteretic": 0,
+      "matched_dose_coobservation": 0,
+      "one_threshold": 0,
+      "same_query_mutation": 0,
+      "transactional_replay": 0
+    }
+  },
+  "current_cost_and_success_rows": [
+    {
+      "arm_id": "frozen",
+      "charged_cost_units": 0,
+      "charged_value_delta": 0.0,
+      "exact_success_rate": 0.0,
+      "harmful_intervention_count": 0,
+      "row_count": 0,
+      "row_hash": "sha256:5ef5205029400fefe3237c9a02d65006bc49057b893eea1910d472e522850fa2",
+      "row_type": "current_cost_and_success"
+    },
+    {
+      "arm_id": "current_only",
+      "charged_cost_units": 0,
+      "charged_value_delta": 0,
+      "exact_success_rate": 0.0,
+      "harmful_intervention_count": 0,
+      "row_count": 0,
+      "row_hash": "sha256:dae934466b88a48c21ce242d87e1f1c558de0afc9fedada28a9bb87aaf9c2eb0",
+      "row_type": "current_cost_and_success"
+    },
+    {
+      "arm_id": "transactional_replay",
+      "charged_cost_units": 0,
+      "charged_value_delta": 0,
+      "exact_success_rate": 0.0,
+      "harmful_intervention_count": 0,
+      "row_count": 0,
+      "row_hash": "sha256:8d40a74ffe77b6d925f733f48928d97d93a09822ed56e839a94f4ba605612482",
+      "row_type": "current_cost_and_success"
+    },
+    {
+      "arm_id": "matched_dose_coobservation",
+      "charged_cost_units": 0,
+      "charged_value_delta": 0,
+      "exact_success_rate": 0.0,
+      "harmful_intervention_count": 0,
+      "row_count": 0,
+      "row_hash": "sha256:ef5e5477198c576f03c0cd4cd14563b21efd3c894c46e577f1e6d4ee722c7118",
+      "row_type": "current_cost_and_success"
+    },
+    {
+      "arm_id": "one_threshold",
+      "charged_cost_units": 0,
+      "charged_value_delta": 0,
+      "exact_success_rate": 0.0,
+      "harmful_intervention_count": 0,
+      "row_count": 0,
+      "row_hash": "sha256:fab19043419511cf1f3147f45e80c6649b3765482ef0dd74a08709c936853e57",
+      "row_type": "current_cost_and_success"
+    },
+    {
+      "arm_id": "hysteretic",
+      "charged_cost_units": 0,
+      "charged_value_delta": 0,
+      "exact_success_rate": 0.0,
+      "harmful_intervention_count": 0,
+      "row_count": 0,
+      "row_hash": "sha256:0bb975682643c7c7cd1d8ec0f24891419ea5a933c967cc1706f3d4a1026432c7",
+      "row_type": "current_cost_and_success"
+    },
+    {
+      "arm_id": "same_query_mutation",
+      "charged_cost_units": 0,
+      "charged_value_delta": 0,
+      "exact_success_rate": 0.0,
+      "harmful_intervention_count": 0,
+      "row_count": 0,
+      "row_hash": "sha256:d50758ff6c3c147e9eae4374b16f06211d8eed2bf8046e57104a4bef50fbb37a",
+      "row_type": "current_cost_and_success"
+    }
+  ],
+  "duration_s": 96.15873,
+  "field_provenance": {
+    "MODEL_SPECS": {
+      "principle": "Exact mandated model identities prevent legacy smoke models from supporting headline claims.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "aggregate_row_recomputation": {
+      "principle": "Every headline must derive from per-unit and transition rows.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "charged_cost_recomputation": {
+      "principle": "All live inference, exact checks, persistence, and intervention costs must derive from raw receipts.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "coobservation_and_dose_receipt": {
+      "principle": "Replay benefit must be separated from extra update exposure.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "current_cost_and_success_rows": {
+      "principle": "Immediate benefit must charge model, solver, routing, and memory work.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "duration_s": {
+      "principle": "Real flagship GGUF inference requires plausible monotonic wall time.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Each headline must identify model receipts, exact rows, transitions, and reducer code.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "frozen_chronology_and_arm_contract": {
+      "principle": "Freezing order, arms, dose, budgets, and support probes prevents outcome-driven design.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "future_support_rows": {
+      "principle": "Endpoint gains are ineligible if future exact-satisfying behavior becomes less reachable.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "gate_check_summary": {
+      "principle": "A blocked run must name the failed gate or live resource and observed value.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The verdict must name current, retention, future-support, safety, and receipt outcomes with a terminal prefix.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "The artifact must declare authenticated local llama.cpp GGUF inference plus exact Z3 evaluation.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "live_model_and_gpu_receipts": {
+      "principle": "Process, model-file, GPU, timing, and output receipts prove fresh local inference occurred.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "memory_transition_rows": {
+      "principle": "Each proposed write and committed state change must carry its exact witness and hashes.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "per_unit_rows": {
+      "principle": "Every model, query, seed, arm, and condition needs a row for recomputation.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "GPU, model, runner, solver, and storage checks distinguish blocked execution from null learning.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "prospective_csl_ready_score": {
+      "principle": "A binary headline is allowed only when benefit, safety, support, and receipt gates all pass.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "The experiment must preserve protected orchestration files.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "random_seed": {
+      "principle": "Fixed generation, order, and tie seeds make the prospective comparison repeatable.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A final hash detects mutation of the terminal prospective record.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "restart_and_rollback_receipts": {
+      "principle": "Continuous learning must persist and recover exactly across process and state failures.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "retained_family_rows": {
+      "principle": "Current gains may not hide regression on earlier constraint families.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "sample_size_and_power_contract": {
+      "principle": "Per-model query, domain, regime, and seed floors bound the strength of comparative claims.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "status": {
+      "principle": "A terminal state distinguishes a completed prospective stream from cached setup output.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "tests_run": {
+      "principle": "Named unit, lint, verifier, and E2E receipts show all paths were checked.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "unsafe_write_and_use_ledger": {
+      "principle": "One invalid admission or reuse is load-bearing safety evidence.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "upstream_gate_receipts": {
+      "principle": "Both reversible-controller and external-evidence gates must be independently recheckable.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "verdict_class": {
+      "principle": "A closed class prevents circular, unsafe, blocked, or partial learning from becoming positive.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "The compared memory policy is not ground truth; exact Z3 outcomes remain separate authority.",
+      "reducer_code": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+      "row_sources": [
+        "per_unit_rows",
+        "memory_transition_rows",
+        "live_model_and_gpu_receipts",
+        "aggregate_row_recomputation"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+      },
+      "sources": [
+        "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "openspec/capabilities/continuous-learning/spec.md"
+      ]
+    }
+  },
+  "frozen_chronology_and_arm_contract": {
+    "arms": [
+      "frozen",
+      "current_only",
+      "transactional_replay",
+      "matched_dose_coobservation",
+      "one_threshold",
+      "hysteretic",
+      "same_query_mutation"
+    ],
+    "budgets": {
+      "max_new_tokens": 48,
+      "timeout_s": 60.0
+    },
+    "censoring": {
+      "negative_rows_preserved": true,
+      "timeout_policy": "terminal_row_preserved"
+    },
+    "contract_hash": "sha256:3bb9b30867187b520757adf77028df0714f2bc25bf90270b75ada84e300d21ca",
+    "domain_count": 3,
+    "domains": [
+      "logic_grid",
+      "scheduling",
+      "seating"
+    ],
+    "held_outcomes_seen_before_freeze": false,
+    "planning_date": "20260823",
+    "query_boundaries_per_model": 36,
+    "regime_transition_count": 3,
+    "regimes": [
+      "stable_alpha",
+      "shift_beta",
+      "shift_gamma",
+      "return_alpha"
+    ],
+    "replay_capacity": 8,
+    "row_hash": "sha256:4b28e1676a8e17ac31e7639b5c510a68d8197cf365e92939dafc85d4a9c8b4dd",
+    "row_type": "frozen_chronology_and_arm_contract",
+    "safe_arms": [
+      "frozen",
+      "current_only",
+      "transactional_replay",
+      "matched_dose_coobservation",
+      "one_threshold",
+      "hysteretic"
+    ],
+    "same_query_arm_adoptable": false,
+    "seeds": [
+      655301,
+      655302
+    ],
+    "splits": [
+      "train",
+      "development",
+      "held"
+    ],
+    "support_probes": [
+      "support_probe_005",
+      "support_probe_006",
+      "support_probe_007",
+      "support_probe_008",
+      "support_probe_009",
+      "support_probe_010",
+      "support_probe_011",
+      "support_probe_012",
+      "support_probe_013",
+      "support_probe_014",
+      "support_probe_015",
+      "support_probe_016",
+      "support_probe_017",
+      "support_probe_018",
+      "support_probe_019",
+      "support_probe_020",
+      "support_probe_021",
+      "support_probe_022",
+      "support_probe_023",
+      "support_probe_024",
+      "support_probe_025",
+      "support_probe_026",
+      "support_probe_027",
+      "support_probe_028",
+      "support_probe_029",
+      "support_probe_030",
+      "support_probe_031",
+      "support_probe_032",
+      "support_probe_033",
+      "support_probe_034",
+      "support_probe_035",
+      "support_probe_000",
+      "support_probe_001",
+      "support_probe_002",
+      "support_probe_003",
+      "support_probe_004"
+    ],
+    "thresholds": {
+      "hysteretic_active_to_dormant_below": -1,
+      "hysteretic_reactivate_at_or_above": 2,
+      "hysteretic_retire_at_or_below": -3,
+      "one_threshold_retire_at_or_below": -1
+    },
+    "update_dose_per_learning_arm": 1
+  },
+  "future_support_rows": [
+    {
+      "arm_id": "frozen",
+      "baseline_support": 0.0,
+      "domain": "logic_grid",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:b0b9e400f5d5da50184947e2312866c73c894fcae7ea0f38504b49954c898190",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "frozen",
+      "baseline_support": 0.0,
+      "domain": "scheduling",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:9bb1e6b0314e23cf7b03c3643f2f1415bc4f749e75cb28616bad33b8f8fd935d",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "frozen",
+      "baseline_support": 0.0,
+      "domain": "seating",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:cfbaf47048d8ade39a8e349168d32ef60a257404b0fd1a4d2e19b5b94875223a",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "current_only",
+      "baseline_support": 0.0,
+      "domain": "logic_grid",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:9f180f127d9117bb5d802f2af3978b805e1a279b7cd5e90003ac6307baf80f47",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "current_only",
+      "baseline_support": 0.0,
+      "domain": "scheduling",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:411f4815b18e8fd87fd8c10133c82fc2e296c9218efea873e60f4976285f1f5f",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "current_only",
+      "baseline_support": 0.0,
+      "domain": "seating",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:94f55c443b769e8c201c7b37aee824f1e4b800277bc62d7c3b2939d0e4164af8",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "transactional_replay",
+      "baseline_support": 0.0,
+      "domain": "logic_grid",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:75d25d4c074e173be03309d6034b183889d7e3b2d720b03b5942343470fcca4d",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "transactional_replay",
+      "baseline_support": 0.0,
+      "domain": "scheduling",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:5f8b72722eedd6df11da64282284a88cb5d17c1d741fd74410d52dacdd1ff2a6",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "transactional_replay",
+      "baseline_support": 0.0,
+      "domain": "seating",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:d196a327e77c7a913941a9da173aa3ee3bb46bfa4e5d685f138987c78b8956c0",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "matched_dose_coobservation",
+      "baseline_support": 0.0,
+      "domain": "logic_grid",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:9d37a850682f00cd5734b566330c1612eb5c5407133ff051c551a485eda2970c",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "matched_dose_coobservation",
+      "baseline_support": 0.0,
+      "domain": "scheduling",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:f1e2dcecbc618982d7a67171840c8dbae0d1212ee042cda5b97ddb2e5eb0a41e",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "matched_dose_coobservation",
+      "baseline_support": 0.0,
+      "domain": "seating",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:75d3abda417028f88bc2ffe52ded6da0ebd375010393a7a5efbd728ff54adadf",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "one_threshold",
+      "baseline_support": 0.0,
+      "domain": "logic_grid",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:53beb5272e44c17da3f3c00c32090192536d710c4bb4e9d0fd401555996c602b",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "one_threshold",
+      "baseline_support": 0.0,
+      "domain": "scheduling",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:a94beabc6320c939b483114b8481ffa0a76e57cab227b5e458fd78e3917c88d2",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "one_threshold",
+      "baseline_support": 0.0,
+      "domain": "seating",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:0560f3c0e925566ad9640250f9a2adb396c87349c082ea269a54ffa9cab875ce",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "hysteretic",
+      "baseline_support": 0.0,
+      "domain": "logic_grid",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:82fbd291172392f0f2f53bfd71d198ddf6b0b690ed68637aa31d9bbe39938407",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "hysteretic",
+      "baseline_support": 0.0,
+      "domain": "scheduling",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:857007c5532f7f98a6a350d5eaf284eba99374d1863ec581c12ffd1ec952ede2",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "hysteretic",
+      "baseline_support": 0.0,
+      "domain": "seating",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:d7a7cee98e954f9050f003b76561a209f71acc3d2c51516585bdadf21bc7cf1b",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "same_query_mutation",
+      "baseline_support": 0.0,
+      "domain": "logic_grid",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:fabe79f7ddfb04987ecd5146c3176d722f3195aacadff8bb45ae0e3ff0dc5288",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "same_query_mutation",
+      "baseline_support": 0.0,
+      "domain": "scheduling",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:4b5f4f0a2adba897169f587d4fbeef50700a4765d90a0aee21c2cfd0704d8d18",
+      "row_type": "future_support"
+    },
+    {
+      "arm_id": "same_query_mutation",
+      "baseline_support": 0.0,
+      "domain": "seating",
+      "future_exact_satisfying_support": 0.0,
+      "noninferior": true,
+      "row_hash": "sha256:f4c22fa4178fe615383f8a3e0329dac6feef9a314c9134cb3b18c82a10b6eb4e",
+      "row_type": "future_support"
+    }
+  ],
+  "gate_check_summary": {
+    "all_gates_passed": false,
+    "failed_checks": [
+      "gpu_vram_contract",
+      "all_mandated_models_loaded",
+      "retention_noninferior",
+      "restart_rollback_equal"
+    ],
+    "row_type": "gate_check_summary",
+    "rows": [
+      {
+        "check": "structured_gates",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "all_required_gguf_files_resolved",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "all_required_gguf_hashes",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "gpu_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "gpu_vram_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "llama_cpp_python_cuda_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "llama_cpp_binary_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "z3_available",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "checkpoint_space_writable",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "fixture_present",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "all_mandated_models_loaded",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "safe_unsafe_zero",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "retention_noninferior",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "future_support_noninferior",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "restart_rollback_equal",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "protected_files_unchanged",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      }
+    ]
+  },
+  "honest_verdict": "blocked: current, retention, and future-support not evaluated; safety not promoted; receipts failed gpu_vram_contract",
+  "inference_substrate": "authenticated_local_llama_cpp_sota_gguf_chronological_csl_plus_exact_z3",
+  "live_model_and_gpu_receipts": {
+    "all_mandated_models_loaded": false,
+    "fresh_local_inference_performed": false,
+    "generated_token_invocation_count": 0,
+    "hidden_legacy_substitution_count": 0,
+    "loader": "llama_cpp.Llama",
+    "model_load_rows": [
+      {
+        "cache_resolved": true,
+        "embedded_tokenizer_ok": false,
+        "error": "not_loaded_before_failed_gate",
+        "gguf_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "load_ok": false,
+        "loader": "llama_cpp.Llama",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "receipt_hash": "sha256:230e8edb69724ef6a097bf219ed3cc87d5ad4be4d786002ff6ac9ea1674a67c4",
+        "smoke_ok": false
+      },
+      {
+        "cache_resolved": true,
+        "embedded_tokenizer_ok": false,
+        "error": "not_loaded_before_failed_gate",
+        "gguf_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "load_ok": false,
+        "loader": "llama_cpp.Llama",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "receipt_hash": "sha256:89eb4783ab815f16e1e893f7d380c6f5c13a482554f71fea68e97a9403018604",
+        "smoke_ok": false
+      },
+      {
+        "cache_resolved": true,
+        "embedded_tokenizer_ok": false,
+        "error": "not_loaded_before_failed_gate",
+        "gguf_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "gpu": 0,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "load_ok": false,
+        "loader": "llama_cpp.Llama",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "receipt_hash": "sha256:496701b972e8dd239cb2b1751809f9745e9e710b8036197698b4a629a6c033d2",
+        "smoke_ok": false
+      }
+    ],
+    "no_autotokenizer_on_gguf_repo_id": true,
+    "output_receipt_rows": [],
+    "row_type": "live_model_and_gpu_receipts",
+    "runtime": {
+      "disk": {
+        "checkpoint_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6553_prospective_sota_continuous_self_learning",
+        "checkpoint_dir_writable": true,
+        "disk_free_bytes": 1086649573376,
+        "disk_total_bytes": 3953289023488
+      },
+      "gpu": {
+        "available": true,
+        "devices": [
+          {
+            "driver_version": "610.43.03",
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 3090",
+            "vram_free_mb": 24120.0,
+            "vram_total_mb": 24576.0
+          },
+          {
+            "driver_version": "610.43.03",
+            "index": 1,
+            "name": "NVIDIA GeForce RTX 3090",
+            "vram_free_mb": 24120.0,
+            "vram_total_mb": 24576.0
+          }
+        ],
+        "driver_version": "610.43.03",
+        "exit_code": 0,
+        "stderr": ""
+      },
+      "llama_cpp": {
+        "available": true,
+        "cuda_backend_available": true,
+        "error": "",
+        "gpu_offload_supported": true,
+        "system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+        "version": "0.3.33"
+      },
+      "llama_cpp_binary": {
+        "error": "",
+        "executable": true,
+        "exists": true,
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+        "version": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64"
+      },
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": "3.12.13",
+      "z3": {
+        "available": true,
+        "version": "4.16.0"
+      }
+    },
+    "unsupported_fallback_count": 0
+  },
+  "memory_transition_rows": [],
+  "per_unit_rows": [],
+  "preconditions_checked": {
+    "checks": {
+      "all_required_gguf_files_resolved": true,
+      "all_required_gguf_hashes": true,
+      "checkpoint_space_writable": true,
+      "fixture_present": true,
+      "gpu_contract": true,
+      "gpu_vram_contract": false,
+      "llama_cpp_binary_contract": true,
+      "llama_cpp_python_cuda_contract": true,
+      "structured_gates": true,
+      "z3_available": true
+    },
+    "failed_preconditions": [
+      "gpu_vram_contract"
+    ],
+    "gpu_vram_rows": [
+      {
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "observed_free_vram_mb": 24120,
+        "passed": false,
+        "required_free_vram_mb": 24576
+      },
+      {
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "observed_free_vram_mb": 24120,
+        "passed": false,
+        "required_free_vram_mb": 24576
+      },
+      {
+        "gpu": 0,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "observed_free_vram_mb": 24120,
+        "passed": true,
+        "required_free_vram_mb": 16384
+      }
+    ],
+    "hardware_and_runtime": {
+      "disk": {
+        "checkpoint_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6553_prospective_sota_continuous_self_learning",
+        "checkpoint_dir_writable": true,
+        "disk_free_bytes": 1086649573376,
+        "disk_total_bytes": 3953289023488
+      },
+      "gpu": {
+        "available": true,
+        "devices": [
+          {
+            "driver_version": "610.43.03",
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 3090",
+            "vram_free_mb": 24120.0,
+            "vram_total_mb": 24576.0
+          },
+          {
+            "driver_version": "610.43.03",
+            "index": 1,
+            "name": "NVIDIA GeForce RTX 3090",
+            "vram_free_mb": 24120.0,
+            "vram_total_mb": 24576.0
+          }
+        ],
+        "driver_version": "610.43.03",
+        "exit_code": 0,
+        "stderr": ""
+      },
+      "llama_cpp": {
+        "available": true,
+        "cuda_backend_available": true,
+        "error": "",
+        "gpu_offload_supported": true,
+        "system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+        "version": "0.3.33"
+      },
+      "llama_cpp_binary": {
+        "error": "",
+        "executable": true,
+        "exists": true,
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+        "version": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64"
+      },
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": "3.12.13",
+      "z3": {
+        "available": true,
+        "version": "4.16.0"
+      }
+    },
+    "input_hashes": {
+      "exp6542": "sha256:224bc59523b282be8a7685ad8cea61fc1d2c6a15ce29b5d23c08024026d55dbd",
+      "exp6546": "sha256:32fb674333fe330aa6778e4de79187a250f9bc0a11be8cb00e238ce57aba7122",
+      "exp6548": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+      "exp6552": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+      "fixture": "sha256:a8696e4711998c00d9398351c2f061670e01302ba5106d9ca76fed81c718a932",
+      "module": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+      "spec": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+      "test": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+    },
+    "protected_file_hashes_before": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+      "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+      "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "results/experiment_6542_drift_bench_external_intake_v2.json": "sha256:224bc59523b282be8a7685ad8cea61fc1d2c6a15ce29b5d23c08024026d55dbd",
+      "results/experiment_6546_smt_cost_guard_sota.json": "sha256:32fb674333fe330aa6778e4de79187a250f9bc0a11be8cb00e238ce57aba7122",
+      "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+      "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+      "results/fixtures/v566_drift_bench_external_slice.jsonl": "sha256:a8696e4711998c00d9398351c2f061670e01302ba5106d9ca76fed81c718a932",
+      "scripts/experiment_template.py": "sha256:dae91dd5b37a1597684aea1c2a433cce62f409eb90b1d098bdb8cded063db2e0",
+      "scripts/research_conductor.py": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+      "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+    },
+    "random_seed": 6553,
+    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6553_prospective_sota_continuous_self_learning.json",
+    "row_type": "preconditions_checked",
+    "run_date": "20260823",
+    "seeds": [
+      655301,
+      655302
+    ],
+    "work_root": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6553_prospective_sota_continuous_self_learning"
+  },
+  "prospective_csl_ready_score": 0.0,
+  "protected_files_unchanged": {
+    "all_protected_files_unchanged": true,
+    "hashes_after": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+      "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+      "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "results/experiment_6542_drift_bench_external_intake_v2.json": "sha256:224bc59523b282be8a7685ad8cea61fc1d2c6a15ce29b5d23c08024026d55dbd",
+      "results/experiment_6546_smt_cost_guard_sota.json": "sha256:32fb674333fe330aa6778e4de79187a250f9bc0a11be8cb00e238ce57aba7122",
+      "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+      "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+      "results/fixtures/v566_drift_bench_external_slice.jsonl": "sha256:a8696e4711998c00d9398351c2f061670e01302ba5106d9ca76fed81c718a932",
+      "scripts/experiment_template.py": "sha256:dae91dd5b37a1597684aea1c2a433cce62f409eb90b1d098bdb8cded063db2e0",
+      "scripts/research_conductor.py": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+      "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+    },
+    "hashes_before": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/continuous-learning/spec.md": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+      "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+      "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "results/experiment_6542_drift_bench_external_intake_v2.json": "sha256:224bc59523b282be8a7685ad8cea61fc1d2c6a15ce29b5d23c08024026d55dbd",
+      "results/experiment_6546_smt_cost_guard_sota.json": "sha256:32fb674333fe330aa6778e4de79187a250f9bc0a11be8cb00e238ce57aba7122",
+      "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+      "results/experiment_6552_hysteretic_reversible_conflict_memory.json": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+      "results/fixtures/v566_drift_bench_external_slice.jsonl": "sha256:a8696e4711998c00d9398351c2f061670e01302ba5106d9ca76fed81c718a932",
+      "scripts/experiment_template.py": "sha256:dae91dd5b37a1597684aea1c2a433cce62f409eb90b1d098bdb8cded063db2e0",
+      "scripts/research_conductor.py": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+      "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609"
+    },
+    "rows": [
+      {
+        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "path": "AGENTS.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "before_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "path": "CLAUDE.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "path": "CODEX.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "before_sha256": "sha256:3aeaeab6509d0e3c813360e60906e37043c6d025416308d3dde83eaf1fd2f7b9",
+        "path": "openspec/capabilities/continuous-learning/spec.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+        "before_sha256": "sha256:4bddca28151201d2a5c8bf2c591decebaaacc3bf56c35390f59b9ea844f11c2b",
+        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "before_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "path": "ops/e2e-test-plan.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "before_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "path": "ops/exclusion_manifest.yaml",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "before_sha256": "sha256:0766d4fedef1b382b376b6cbba4ed927358f68f40d641145df7c53f3401d8bdb",
+        "path": "python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "before_sha256": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "path": "python/carnot/inference/sota_models.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "before_sha256": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "path": "python/carnot/pipeline/production_safety_net_adapter.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "before_sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "path": "research-program.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:224bc59523b282be8a7685ad8cea61fc1d2c6a15ce29b5d23c08024026d55dbd",
+        "before_sha256": "sha256:224bc59523b282be8a7685ad8cea61fc1d2c6a15ce29b5d23c08024026d55dbd",
+        "path": "results/experiment_6542_drift_bench_external_intake_v2.json",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:32fb674333fe330aa6778e4de79187a250f9bc0a11be8cb00e238ce57aba7122",
+        "before_sha256": "sha256:32fb674333fe330aa6778e4de79187a250f9bc0a11be8cb00e238ce57aba7122",
+        "path": "results/experiment_6546_smt_cost_guard_sota.json",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "before_sha256": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "path": "results/experiment_6548_v567_evidence_eligibility_contract.json",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "before_sha256": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da",
+        "path": "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:a8696e4711998c00d9398351c2f061670e01302ba5106d9ca76fed81c718a932",
+        "before_sha256": "sha256:a8696e4711998c00d9398351c2f061670e01302ba5106d9ca76fed81c718a932",
+        "path": "results/fixtures/v566_drift_bench_external_slice.jsonl",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:dae91dd5b37a1597684aea1c2a433cce62f409eb90b1d098bdb8cded063db2e0",
+        "before_sha256": "sha256:dae91dd5b37a1597684aea1c2a433cce62f409eb90b1d098bdb8cded063db2e0",
+        "path": "scripts/experiment_template.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+        "before_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+        "path": "scripts/research_conductor.py",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609",
+        "before_sha256": "sha256:f2f4a5259feba32d48e8127cb84578c76f2efebeb1a0226641e0c1e1daab8609",
+        "path": "tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+        "unchanged": true
+      }
+    ]
+  },
+  "random_seed": 6553,
+  "reproducibility_checksum": "sha256:054ca19194e058513c4b3456dd8481c260d6c42412672f60c19e9dd778a71ad9",
+  "restart_and_rollback_receipts": {
+    "all_restarts_exact_output_equal": true,
+    "all_rollbacks_restored": true,
+    "corrupt_write_challenge_fail_closed": false,
+    "restart_rows": [],
+    "rollback_rows": [],
+    "row_type": "restart_and_rollback_receipts"
+  },
+  "retained_family_rows": [
+    {
+      "arm_id": "frozen",
+      "baseline_rate": 1.0,
+      "domain": "logic_grid",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:aee1e47187370259bc98b99768c156ccbcf34e969aa9edb86c034cd35e3211e6",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "frozen",
+      "baseline_rate": 1.0,
+      "domain": "scheduling",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:d39aaeaa1f9046a42df2a9a1c8027be765dc189a6440450d670e82ca2793b8de",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "frozen",
+      "baseline_rate": 1.0,
+      "domain": "seating",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:e3a69981ed542e76ed2eb0f47693983ca4ff982cdba3e8578732d555c4d0da1f",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "current_only",
+      "baseline_rate": 1.0,
+      "domain": "logic_grid",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:7ed5ff743c51133bec728bb3404e2cd36dde95929bc8a4ac4f1c1b08ab130d8f",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "current_only",
+      "baseline_rate": 1.0,
+      "domain": "scheduling",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:62348e0f4475fc6d8f903b4e7af0ed40894b2911c12d906873d258ea3682b2f2",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "current_only",
+      "baseline_rate": 1.0,
+      "domain": "seating",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:eed6bbf61c86bdc832024fe98a04b3e296e3ba66d6f48c6f4cac2fd57f5bab49",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "transactional_replay",
+      "baseline_rate": 1.0,
+      "domain": "logic_grid",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:9c6ef95e300adae32fa26e5bbb401bd7ebec2a0703ad80d57d31051cd925a6aa",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "transactional_replay",
+      "baseline_rate": 1.0,
+      "domain": "scheduling",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:465ef8976e41fdcd03fae729a77692b0f4dd4d9676799c4be91e7ffc477a9031",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "transactional_replay",
+      "baseline_rate": 1.0,
+      "domain": "seating",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:068b64610f54477cacf9e6c47722817da7cefb1d48f81d97bd1e3cb67c34a601",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "matched_dose_coobservation",
+      "baseline_rate": 1.0,
+      "domain": "logic_grid",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:36b489d3c23074de25e5d0c26d99d57ad37bd36d01dadbae9892fdaf84855e66",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "matched_dose_coobservation",
+      "baseline_rate": 1.0,
+      "domain": "scheduling",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:0218abc75795afb00bb4c135d40ae8c42369c41eaa8d05e6f29498166bc8f17a",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "matched_dose_coobservation",
+      "baseline_rate": 1.0,
+      "domain": "seating",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:adfd89989c8186effbd2f21a5a4440c5e8af4b8ab714b4a1affb21340ee509ad",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "one_threshold",
+      "baseline_rate": 1.0,
+      "domain": "logic_grid",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:545d64d50ac16f1d34005f086ff32d333da2fc8107c0d691b352bb688487f7da",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "one_threshold",
+      "baseline_rate": 1.0,
+      "domain": "scheduling",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:a69545230653a2c9d984898e3b64fd9a6012c0629ef54346393edc869945d92c",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "one_threshold",
+      "baseline_rate": 1.0,
+      "domain": "seating",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:0bad08adb5608a75724ff4bc3581d5521f7760f1ae4085985450e01399f4eae3",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "hysteretic",
+      "baseline_rate": 1.0,
+      "domain": "logic_grid",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:1fae3058be792e482e6ded2b7bfb0a4a3d2acb740fd4e060bf843d1ed4e71e88",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "hysteretic",
+      "baseline_rate": 1.0,
+      "domain": "scheduling",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:101b00efe46df6850132c5143907218d709f0e8fc9aacb58f92ab46f6b8f4517",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "hysteretic",
+      "baseline_rate": 1.0,
+      "domain": "seating",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:e6354f172ce9b4101c25a1bb39c4b1a2c92be64d86a6bd3845b2d1090e057f18",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "same_query_mutation",
+      "baseline_rate": 1.0,
+      "domain": "logic_grid",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:70f078063e47ddc9c73d94869e1cceede7225ea6ef24393c370f89a19adc1fef",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "same_query_mutation",
+      "baseline_rate": 1.0,
+      "domain": "scheduling",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:afdd71d9d03fda5cbb9c1afc4df5d601940ab104489bc22edd5e1bbc3d4e3d10",
+      "row_type": "retained_family"
+    },
+    {
+      "arm_id": "same_query_mutation",
+      "baseline_rate": 1.0,
+      "domain": "seating",
+      "noninferior": false,
+      "retained_exact_success_rate": 0.0,
+      "row_hash": "sha256:1f4a66bcb7f7061ca6fdeeeb3d775a3be47c1c5c62e1bf28778afc388cfb1080",
+      "row_type": "retained_family"
+    }
+  ],
+  "sample_size_and_power_contract": {
+    "arm_count": 7,
+    "domain_count": 3,
+    "mandated_model_count": 3,
+    "minimum_domain_count": 3,
+    "minimum_query_boundaries_per_model": 36,
+    "minimum_regime_transition_count": 3,
+    "observed_rows": 0,
+    "per_model_row_counts": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 0,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": 0,
+      "unsloth/gemma-4-31B-it-GGUF": 0
+    },
+    "power_contract_passed": false,
+    "query_boundaries_per_model": 36,
+    "regime_count": 4,
+    "regime_transition_count": 3,
+    "row_hash": "sha256:1b8c87d0c6209aaa911e93a2ce870b81c0224e5c6b68bcf8abfc40e8830aa0ec",
+    "row_type": "sample_size_and_power_contract",
+    "seed_count": 2
+  },
+  "status": "blocked_prospective_csl_preconditions",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py -m pytest tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6553_prospective_sota_continuous_self_learning.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6553_prospective_sota_continuous_self_learning.json",
+      "exit_code": 0
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6553_prospective_sota_continuous_self_learning --date 20260823",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6553_prospective_sota_continuous_self_learning --validate",
+      "exit_code": 0
+    },
+    {
+      "command": "manual e2e-plan check: ops/e2e-test-plan.md GGUF/Z3 pipeline receipts inspected",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    }
+  ],
+  "unsafe_write_and_use_ledger": {
+    "diagnostic_same_query_unsafe_use_count": 0,
+    "diagnostic_same_query_unsafe_write_count": 0,
+    "row_type": "unsafe_write_and_use_ledger",
+    "safe_arm_unsafe_use_count": 0,
+    "safe_arm_unsafe_write_count": 0,
+    "same_query_arm_adopted": false,
+    "unsafe_rows": []
+  },
+  "upstream_gate_receipts": {
+    "all_structured_gates_passed": true,
+    "cached_sota_pair_gpu_0_1": [
+      {
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "name": "Qwen3.6-35B-A3B"
+      },
+      {
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it"
+      }
+    ],
+    "external_evidence_gate": {
+      "expected_value": 1.0,
+      "fields": {
+        "v566_external_transfer_eligible_score": 1.0,
+        "v567_evidence_contract_ready_score": 1.0
+      },
+      "gate_passed": true,
+      "path": "results/experiment_6548_v567_evidence_eligibility_contract.json",
+      "sha256": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9"
+    },
+    "reversible_controller_gate": {
+      "expected_value": 1.0,
+      "field": "reversible_memory_controller_ready_score",
+      "gate_passed": true,
+      "observed_value": 1.0,
+      "path": "results/experiment_6552_hysteretic_reversible_conflict_memory.json",
+      "sha256": "sha256:89b344ef60ea10c64e23e183d8ec6419b1663f34be42cccf7d417624ea0657da"
+    },
+    "row_type": "upstream_gate_receipts"
+  },
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}
