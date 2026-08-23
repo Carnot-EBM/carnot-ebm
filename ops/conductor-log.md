@@ -16306,3 +16306,4 @@ code |
 | 2026-08-23 03:23 UTC | Adaptive validation and independent conflict self- | OK | 87 passed, 1 warning in 11.30s |
 | 2026-08-23 03:41 UTC | ARC redirect-ledger supervisor generalization refi | OK | 127 passed, 1 warning in 10.88s |
 | 2026-08-23 03:58 UTC | GateMate post-receipt changed-state continuity clo | OK | 120 passed, 1 warning in 13.89s |
+| 2026-08-23 04:06 UTC | Independent V564 evidence capstone and next-state  | SKIP | Pre-tests failing, self-heal failed:  |
