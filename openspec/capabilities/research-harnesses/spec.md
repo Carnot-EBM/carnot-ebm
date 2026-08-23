@@ -8948,3 +8948,14 @@ the service and SHALL log the hold.
 | REQ-CONDUCTOR-AUTHORITY-2 | Implemented (same file: run-stop behind rows x server x persistence x allow-env, ARM file `~/.carnot/stop-authority-armed`, ships DISARMED, yes/no packet with exact commands; corpus sweep recorded in this REQ: 0 fires on 18,539 results/** artifacts, 2/2 true incidents) | Implemented (same file; mutations: armed gate removed -> RED, server-evidence conjunction dropped -> RED, log-freshness check removed -> RED, allow-env veto removed -> RED; real supab3-bytes replay asserts both evidence halves) |
 | REQ-CONDUCTOR-FRESHEXEC-1 | Implemented (`scripts/research_conductor.py`: `_maybe_reexec_on_fresh_source` at the loop top, committed-bytes-only via `git show HEAD:`, compile gate, exec-storm state in `ops/.conductor_reexec_state.json`; the RUNNING conductor predates this and picks it up at its next natural restart) | Implemented (`tests/python/test_conductor_fresh_exec.py`; mutations: dirty-tree guard removed -> RED, compile check removed -> RED, storm guard removed -> RED, wiring commented out -> RED after fixing the test's own trailing-comment blind spot, HEAD-read swapped to worktree read -> RED) |
 | REQ-CONDUCTOR-RESTART-1 | Pending (janitor edit in flight this session) | Pending |
+
+## AMENDMENT 2026-08-23 to REQ-OPS-AUDIT-LEDGER-1 rule 3 (append-only)
+
+Rule 3 set first escalation at 7 days. Measured against the loop's
+cadence that is wrong: the loop closes several milestones per day, and
+the three real CLAIM_OVERSTATED findings of 2026-08-22 sat OPEN until
+an operator prompt on 2026-08-23. First escalation now fires at 1 day
+(`AGING_DAYS = 1`); the weekly re-escalation bucket is unchanged. An
+OPEN finding becomes visible on the next day's closes, then weekly.
+SCENARIO-OPS-AUDIT-LEDGER-1-AGING reads accordingly; the new
+`test_one_day_old_row_escalates` pins the contract.
