@@ -1172,6 +1172,20 @@ def preflight_gpu_reap() -> dict:
             len(result.killed),
             result.total_vram_freed_mb,
         )
+        # Durable actor line (2026-08-23, case-F attribution). journald here
+        # retains under two hours, so a kill logged only there is unprovable
+        # either way once anyone investigates — the exact ambiguity that
+        # left the 2026-08-09 and 2026-08-23 signal-sender hunts open. Our
+        # own reapers must never kill without a tracked-file record.
+        log_step(
+            "GPU-REAPER: killed stale process(es)",
+            "WARN",
+            "; ".join(
+                f"pid={e.get('pid')} {e.get('used_memory_mb', 0)}MiB "
+                f"age={e.get('age_s', 0)}s {e.get('process_name', '?')}"
+                for e in result.killed
+            ),
+        )
         for entry in result.killed:
             logger.warning(
                 "  reaped pid=%s vram=%dMiB age=%ds name=%s",
