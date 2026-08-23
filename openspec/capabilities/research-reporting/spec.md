@@ -52696,3 +52696,89 @@ gates force a partial verdict with a named channel error.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6528 | Implemented (`python/carnot/experiment_6528_v565_source_model_method_contract.py`, `results/experiment_6528_v565_source_model_method_contract.json`) | Implemented (`tests/python/test_experiment_6528_v565_source_model_method_contract.py`) |
+
+### REQ-REPORT-6541: V566 Direct-Source Contract SHALL Freeze Source, Cache, And Dependency Boundaries
+
+Carnot SHALL build Exp6541 as a V566 direct-source, cache, split, and
+dependency contract for DRIFT-Bench. The reducer SHALL consume the local
+DRIFT-Bench checkout directly, pin the immutable revision, count the expected
+1,020 problem files, verify the schema and Z3 replay source, and record that
+upstream SQLite result corruption does not transfer into the local evidence
+boundary.
+
+The artifact SHALL be written to
+`results/experiment_6541_v566_direct_source_contract.json` with
+`inference_substrate=direct_primary_source_cache_and_dependency_preflight_no_llm`.
+It SHALL record advisory discovery attempts for arXiv, OpenReview, Semantic
+Scholar, Hugging Face, GitHub discovery, Extropic, and Logical Intelligence as
+non-mandatory rows. Advisory-channel unavailability SHALL NOT set that score to zero.
+
+The V566 readiness score SHALL open only when direct source, source tree
+hashes, cache identity, GGUF load contract, split contracts, structural
+contracts, dependency gates, protected-file hashes, field principles,
+provenance, and checksum validation pass. No `requires` or `gated_on` edge SHALL name Exp6528, Exp6529, or another retired task.
+
+The Exp6541 artifact SHALL include exactly these required fields: `status`,
+`honest_verdict`, `verdict_class`, `v565_boundary_receipts`,
+`immutable_evidence_receipts`, `direct_source_rows`,
+`advisory_discovery_rows`, `drift_revision_license_schema_contract`,
+`source_tree_hashes`, `upstream_corruption_boundary`,
+`model_cache_resolution_rows`, `gguf_load_contract`,
+`frozen_external_split_contract`, `frozen_structural_contract`,
+`frozen_cost_guard_contract`, `frozen_router_contract`,
+`frozen_reversible_memory_contract`, `frozen_arc_contract`,
+`hardware_stop_contract`, `dependency_and_gate_rows`,
+`v566_direct_source_ready_score`, `gate_check_summary`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6541-DIRECT: Direct DRIFT Source Gates Readiness
+
+**Given** a DRIFT-Bench checkout at the pinned revision
+**When** Exp6541 scans problem files and replay code
+**Then** the contract records the revision, license, schema, file census,
+source-tree hashes, Z3 replay source presence, corruption boundary, and direct
+ready status without inheriting upstream SQLite results.
+
+#### SCENARIO-REPORT-6541-ADVISORY: Advisory Discovery Cannot Zero Direct Readiness
+
+**Given** advisory endpoints are blocked, rate-limited, unavailable, or not
+found
+**When** Exp6541 builds advisory discovery rows
+**Then** each row records retrieval state and source identity while
+`mandatory_for_exp6541_ready` and `failure_can_zero_direct_source_ready` stay
+false.
+
+#### SCENARIO-REPORT-6541-CACHE: GGUF Cache Identity Is Resolved Without Loading
+
+**Given** the V566 SOTA policy names two cached GGUF model families
+**When** Exp6541 resolves cache paths
+**Then** it records hub IDs, model paths, quantization, hashes, and load
+contract rows without running model inference or using GGUF repository IDs as
+tokenizers.
+
+#### SCENARIO-REPORT-6541-FIELDS: Frozen Downstream Contracts Are Enumerated
+
+**Given** direct source and cache rows are present
+**When** Exp6541 freezes V566 boundaries
+**Then** external split, structural, cost guard, router, reversible memory,
+ARC, hardware stop, dependency, and protected-file rows name exact fields and
+negative controls before any outcome claim is allowed.
+
+#### SCENARIO-REPORT-6541-SCHEMA: Artifact Is Checksummed And Recomputable
+
+**Given** source rows, advisory rows, cache rows, protected hashes, field maps,
+and command receipts are assembled
+**When** Exp6541 validates the artifact
+**Then** required fields match exactly, field principles and provenance cover
+every field, aggregate rows recompute readiness, the checksum matches, and
+`verifier_is_oracle` is true only for deterministic source, hash, schema, and
+dependency checks.
+
+## Implementation Status (REQ-REPORT-6541)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6541 | Implemented (`python/carnot/experiment_6541_v566_direct_source_contract.py`, terminal artifact `results/experiment_6541_v566_direct_source_contract.json`) | Implemented (`tests/python/test_experiment_6541_v566_direct_source_contract.py`) |

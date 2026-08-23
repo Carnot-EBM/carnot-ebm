@@ -8724,3 +8724,12 @@ undiagnosed; Kaggle GPU quota exhausted, which blocks the `qwen3_xml` tool-parse
 probe and therefore blocks tool calls working on the scored path at all; the
 supervisor has a ledger but has still never produced a VALID A/B — the run that
 tried predated the induce fix and measured a substrate with no world models.
+
+### 2026-08-23 Exp6541 Test-Fix Reconciliation
+
+REQ-REPORT-6541 is now present in OpenSpec for the V566 direct-source contract,
+and the Exp6541 module/test/artifact validate together. Focused tests passed
+(`4 passed` for Exp6541; `65 passed` for the reported failure set), scoped
+Coverage.py reports 100% for
+`python/carnot/experiment_6541_v566_direct_source_contract.py`, and no
+uncommitted change remains in `scripts/research_conductor.py`.

@@ -235,6 +235,16 @@ GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
         "change; the regression lock for truthful archival (REQ-CONDUCTOR-ARCHIVE-2, "
         "2026-08-21: 57 phantom OK rows and 1,841 duplicate entries landed silently)",
     ),
+    (
+        PROJECT_ROOT / "scripts" / "run_stop_authority.py",
+        "decides whether a live measurement RUN or an orphaned llama-server dies "
+        "(REQ-CONDUCTOR-AUTHORITY-1/2). Both failure directions touch the record: "
+        "silent non-firing lets a dead-tier run write hours of invalid rows that read "
+        "as a wrong conclusion about the mechanism under test (the 2026-08-22 ar25 "
+        "levels=0 near-miss), and a false fire destroys valid evidence mid-write. Its "
+        "conjunctive predicate is exactly the pattern-list-vs-concept shape this audit "
+        "hunts, and nothing else reviews it on a cadence",
+    ),
 )
 
 # Pre-commit-wired scripts deliberately OUT of QA-layer scope, each with the reason. This

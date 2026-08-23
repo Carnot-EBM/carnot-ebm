@@ -2,6 +2,15 @@
 
 **Last Updated:** 2026-08-23
 
+**Operational Note:** 2026-08-23 Exp6541 V566 direct-source contract test fix
+reconciled `REQ-REPORT-6541` by adding the missing OpenSpec section and
+validating `python/carnot/experiment_6541_v566_direct_source_contract.py`.
+Focused validation passes: `tests/python/test_experiment_6541_v566_direct_source_contract.py`
+(`4 passed`), scoped Coverage.py reports 100% for the Exp6541 module (`374`
+statements, `0` missing), spec coverage, artifact validation, Ruff
+check/format, and mypy passed. No uncommitted changes were made to
+`scripts/research_conductor.py`.
+
 **Operational Note:** 2026-08-23 Exp6528 V565 source/model/method contract
 test fix reconciled `REQ-REPORT-6528` by adding the missing blocked-verdict
 channel naming rule to OpenSpec, marking the implementation/test rows
