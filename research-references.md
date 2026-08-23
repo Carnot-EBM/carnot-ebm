@@ -36012,3 +36012,132 @@ or gate on a retired experiment ID.
   and remapping. Make no FPGA, NPU, TSU, GPU-speedup, or power claim.
 
 <!-- V564-PLANNER-REFRESH-20260822-END -->
+
+## V565 planner refresh - 2026-08-23
+
+<!-- V565-PLANNER-REFRESH-20260823-START -->
+
+This refresh was performed after every V564 task reached a terminal artifact.
+It searched the requested 2025-2026 arXiv topics and rechecked OpenReview,
+Hugging Face Papers, the Semantic Scholar citation trails for EBT
+(`2507.02092`) and ARM-EBM (`2512.15605`), GitHub discovery, Extropic, and
+Logical Intelligence. No qualifying post-2026-08-20 paper changed the release
+authority boundary: exact executable checks remain authority; learned energy
+may rank, route, allocate work, or abstain.
+
+### Promising findings selected for the next milestone
+
+- **Residual Drift Dominates Contradiction in Multi-Turn Constraint
+  Reasoning** - arXiv:2605.23940,
+  https://arxiv.org/abs/2605.23940; public benchmark:
+  https://github.com/kaons-research/drift-bench. The repository exposes 1,020
+  Z3-validated, multi-turn problems across seating, scheduling, and logic-grid
+  domains, with separate direct, ledger, and MUS-repair methods. Carnot hook:
+  use a content-pinned external slice as the first non-Carnot transfer surface
+  for the V564 structural router and exact conflict memory. Preserve the
+  benchmark's own warning that original SQLite run databases were corrupted:
+  regenerate receipts locally, hash the source rows, and never inherit its
+  aggregate claims without per-turn replay.
+- **Memoir: Should a Model Write to Its Memory While It Thinks?** -
+  arXiv:2607.20792, https://arxiv.org/abs/2607.20792; discovered in the EBT
+  citation trail. Coupled read/write pondering learned more slowly than an
+  otherwise matched read-only arm at the fixed training budget, although both
+  later reached the ceiling. Carnot hook: freeze memory within each query,
+  verify against the exact outcome, and commit only at the query boundary.
+  Compare transactional commit with same-query mutation rather than assuming
+  online writes are harmless.
+- **Verifier-Induced Support Reshaping in On-Policy Optimization** -
+  arXiv:2608.00220, https://arxiv.org/abs/2608.00220; current Hugging Face page:
+  https://huggingface.co/papers/2608.00220. The reported current-task pass@1
+  gain coexists with a loss in later best@32 support. Carnot hook: every
+  continuous-learning result must report future exact-satisfying support,
+  retained-family performance, and rollback behavior in addition to current
+  mean cost. An endpoint speedup that narrows recoverable future support is not
+  a positive self-learning result.
+- **Distributional Energy-Based Models for Uncertainty-Aware Structured LLM
+  Reasoning** - arXiv:2605.18871,
+  https://arxiv.org/abs/2605.18871; rediscovered as a direct ARM-EBM citation.
+  Its decomposed analytical-plus-learned energy, epistemic uncertainty, and
+  regenerate-or-abstain route remain the closest published analogue to the
+  V564 Safety Net. Carnot hook: extend the V564 router with held calibration
+  and explicit abstention on an external transfer set. Audit model-identity
+  and family-identity shortcuts separately; the paper itself reports such a
+  confound on code.
+- **Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM
+  Constraint Reasoning** - arXiv:2607.17047,
+  https://arxiv.org/abs/2607.17047; current EBT citation-trail item. Solver
+  conflict hardness did not reliably predict LLM accuracy, and
+  proof-preserving surface changes caused large model-specific shifts. Carnot
+  hook: stratify any SOTA-GGUF transfer challenge by exact structural hardness
+  and surface realization independently. Do not use solver conflicts as a
+  proxy label for model difficulty.
+- **A Difference-of-Convex Functions Approach to Energy-Based Iterative
+  Reasoning** - NeurIPS 2025,
+  https://openreview.net/forum?id=QvsDTpf4yF. The method uses DC optimization
+  to accelerate energy-based iterative reasoning while retaining a local
+  convergence guarantee. Carnot hook: keep it as a future continuous-energy
+  optimizer control. V565 has a stronger immediate obligation to replicate
+  the shipped exact-router and conflict-memory mechanisms out of distribution,
+  so it does not start a new continuous answer-generator lineage.
+- **Enforcing Hard Linear Constraints in Deep Learning Models with Decision
+  Rules** - NeurIPS 2025 submission,
+  https://openreview.net/forum?id=gjiCml2CNG. A task network is paired with a
+  safe network and closed-form correction so linear feasibility is preserved
+  without iterative inference. Carnot hook: the architectural lesson supports
+  a safe exact fallback and separate learned fast path. The paper's linear
+  setting is not evidence that Carnot's discrete SAT/CSP outputs are certified
+  by a neural forward pass.
+
+### Requested secondary and product checks
+
+- **Semantic Scholar:** the public API returned 35 citing records for EBT
+  (`2507.02092`) and eight for ARM-EBM (`2512.15605`) on 2026-08-23. The most
+  relevant records remain Memoir, Solver-Hard, Fixed-Point Reasoners, and
+  Distributional EBMs. No citation supplies a public matching-base checkpoint
+  or reopens the retired answer-level generated-text energy lane.
+- **Hugging Face Papers:** current pages reinforce uncertainty-based verifier
+  routing, support-retention audits, and context isolation. In particular,
+  `2608.16003` shows that prior audit/repair context can shift an LLM verifier's
+  threshold without improving discrimination. Keep proposer history out of an
+  LLM checker context and retain exact release authority.
+- **GitHub Trending and targeted repositories:** DRIFT-Bench is the only
+  directly useful external transfer fixture found in this refresh. The public
+  `lean-ebm` repository is still an MNIST-stage prototype, and current
+  structured-output projects do not replace Carnot's exact constraint stack.
+  A current vLLM issue trail also reinforces that reasoning parsers and grammar
+  enforcement need an explicit conformance test rather than assumed wiring.
+- **Extropic:** the latest first-party full-stack update remains
+  https://extropic.ai/writing/from-one-to-one-billion. It reports a taped-out
+  269,568-pbit Z1, a Torx software layer, a Thermalizers preview, and 2027 early
+  access for sticks, cards, and clusters. Carnot still has no authenticated
+  route. V565 makes no TSU execution, latency, energy, or availability claim.
+- **Logical Intelligence:** the public Kona 1.0 material still describes a
+  non-autoregressive continuous trace energy and a proprietary Sudoku demo,
+  https://logicalintelligence.com/kona-ebms-energy-based-models. It exposes no
+  weights, reproducible training recipe, or documented local runner. Kona
+  remains a product comparator, not an experiment dependency.
+- **KAN, Ising, FPGA, and thermodynamic hardware:** no new public evidence
+  changes the local hardware boundary. KAN is not promoted into V565 because
+  V564 already found a successful compact router and the next scientific
+  question is external transfer, not another architecture sweep. Ising and
+  FPGA work continues to emphasize charged mapping and decomposition costs.
+  The GateMate board remains receipt-gated; KV260 and PolarFire remain
+  terminal.
+
+### V565 planning impact
+
+- Replicate V564's structural headroom and Safety Net on a frozen external
+  multi-turn constraint surface, with family-blind splits and explicit
+  abstention.
+- Use all three mandated SOTA GGUF families only for a hardness-versus-surface
+  challenge whose outputs are independently exact-labeled; no model-generated
+  answer may become its own authority.
+- Integrate conflict memory behind a default-off transactional adapter and
+  test chronological transfer, retention, support, restart, rollback, and
+  same-query-write contamination.
+- Spend the ARC floor on a live-path receipt-enabling contract, not a public
+  game re-solve or another downstream supervisor A/B with zero valid rows.
+- Keep GateMate to changed-state continuity and make no unchanged hardware
+  command attempt.
+
+<!-- V565-PLANNER-REFRESH-20260823-END -->

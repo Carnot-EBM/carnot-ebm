@@ -9,3 +9,4 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 |---|---|---|---|---|---|
 | 2026-08-22 | experiment_claim_audit | experiment_6478_identifiable_held_exact_energy_selection.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-08-22 | experiment_claim_audit | experiment_6497_factor_pool_support_stress.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-08-23 | experiment_claim_audit | experiment_6521_transactional_refinement_conflict_memory.json | CLAIM_OVERSTATED | OPEN | |
