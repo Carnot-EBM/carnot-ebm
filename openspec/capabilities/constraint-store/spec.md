@@ -467,6 +467,121 @@ Then logical bytes, mapped bytes, topology expansion, mapping time, unsupported
 fields, and mapping hashes are reported deterministically, with no hardware
 execution, speed, power, or acceleration claim.
 
+### REQ-STORE-6552 — Hysteretic reversible exact-conflict memory controller
+
+Carnot SHALL provide Exp6552 at
+`python/carnot/experiment_6552_hysteretic_reversible_conflict_memory.py`
+and write
+`results/experiment_6552_hysteretic_reversible_conflict_memory.json`.
+The experiment SHALL compare four default-off state-control arms over the same
+chronological exact-conflict events: no retirement, LRU, one-threshold, and
+active/dormant/retired hysteretic control. The stream SHALL include recurring
+regimes, supersession, contradiction, stale support, invalid refinement witness,
+bounded-capacity pressure, restart boundaries, corrupt persistence, and unsafe
+write attacks.
+
+The controller SHALL define versioned `active`, `dormant`, and `retired`
+states. It SHALL freeze asymmetric demotion, reactivation, and retirement
+thresholds plus minimum evidence counts from train and development events
+before any held comparison row is scored. Every query SHALL read a frozen
+pre-query memory snapshot. A write SHALL occur only after Exp6521 exact replay
+and a valid refinement witness. Dormant reactivation SHALL occur only after
+shadow exact replay. Irreversible retirement SHALL require an explicit policy
+receipt. Missing or invalid receipts SHALL keep the record dormant or evicted,
+not retired.
+
+Each event, seed, and arm row SHALL report pre-state, evidence, action,
+post-state, exact receipt, memory hash, proposal cost, solver cost, unsafe use,
+churn, eviction, reactivation, rollback, and row hash. Restart at registered
+boundaries SHALL replay byte-identical decisions and memory hashes. Injected
+corrupt or unsafe writes SHALL roll back to the exact prior state. Threshold
+oscillation, held threshold tuning, same-query writes, missing witnesses,
+invalid refinement reuse, authority inversion, hash-collision attempts, corrupt
+persistence, unbounded growth, and retirement without policy SHALL fail closed.
+
+Required artifact fields and principles:
+
+- `status`: A terminal state distinguishes a working controller experiment from setup-only persistence.
+- `honest_verdict`: The verdict must separate controller readiness from comparative benefit and use a terminal prefix.
+- `verdict_class`: A closed class prevents safe-but-null hysteresis from being reported as positive.
+- `upstream_gate_receipt`: The controller must identify the exact production adapter boundary it extends.
+- `sample_size_and_power_contract`: A controller comparison needs enough events, regimes, families, and seeds to support its stated effect.
+- `state_machine_and_threshold_contract`: Frozen versioned states and asymmetric thresholds prevent outcome-driven controller changes.
+- `exact_admission_and_refinement_receipts`: Only exact-supported conflicts with valid refinement witnesses may enter reusable memory.
+- `transition_rows`: Every state change must be replayable from its pre-state, evidence, action, and exact receipt.
+- `controller_comparison_rows`: Matched no-retirement, LRU, one-threshold, and hysteretic rows support an honest comparative verdict.
+- `capacity_churn_and_reactivation_rows`: Utility cannot hide oscillation, unbounded growth, or failed recovery of dormant knowledge.
+- `restart_and_rollback_receipts`: Persistent self-learning must survive process boundaries and undo unsafe state exactly.
+- `unsafe_write_and_use_ledger`: A mean speed gain cannot hide one invalid memory admission or reuse.
+- `attack_matrix`: Adversarial state, witness, threshold, and persistence cases test the safety contract.
+- `reversible_memory_controller_ready_score`: A binary implementation gate lets prospective CSL proceed even when comparative benefit is null.
+- `per_unit_rows`: Comparative state-controller claims require every event, seed, and arm row.
+- `aggregate_row_recomputation`: Benefit, churn, safety, and readiness must derive from emitted rows.
+- `gate_check_summary`: A blocked artifact must identify the failed upstream, resource, or persistence check.
+- `preconditions_checked`: Input, solver, and storage receipts separate an execution block from null controller value.
+- `protected_files_unchanged`: The controller task must preserve protected orchestration files.
+- `inference_substrate`: Exact event replay and controller evaluation must not imply fresh LLM inference.
+- `verifier_is_oracle`: The compared memory controllers are not ground truth; Z3 remains separate authority.
+- `field_provenance`: Each transition and readiness field must point to rows, thresholds, code, and hashes.
+- `random_seed`: Fixed regime, tie, and event seeds make comparisons reproducible.
+- `duration_s`: Charged wall time includes persistence, exact replay, restart, and rollback work.
+- `tests_run`: Named unit and E2E commands prove lifecycle paths executed.
+- `reproducibility_checksum`: A final content hash protects the memory determination trail.
+
+`reversible_memory_controller_ready_score` SHALL be bare `1.0` only when state
+semantics, exact authority, restart replay, rollback, capacity control, attack
+handling, protected-file checks, and tests pass with zero unsafe writes and
+zero unsafe uses. `verdict_class` SHALL be `positive` only for preregistered
+comparative value with zero unsafe writes or uses and exact lifecycle checks,
+`null` for no comparative benefit with a sound controller, `partial` for narrow
+support, `blocked` for failed preconditions, and `disqualified` for authority
+or persistence failure. The artifact SHALL set `inference_substrate` to
+`transactional_exact_conflict_memory_controller_replay_no_llm` and
+`verifier_is_oracle` to bare `false`.
+
+### SCENARIO-STORE-6552-QUERY-FREEZE-ADMISSION — Exact writes happen after frozen queries
+
+Given a chronological exact-conflict event with a candidate memory write,
+
+When any controller arm decides for that event,
+
+Then the decision reads only the pre-query snapshot, performs no same-query
+write, and commits only after exact replay and a valid refinement witness.
+
+### SCENARIO-STORE-6552-HYSTERESIS-REACTIVATION — Dormant records need shadow replay
+
+Given active records with low support and dormant records with recurring
+support,
+
+When the hysteretic controller evaluates asymmetric thresholds,
+
+Then low-support active records become dormant without irreversible retirement,
+dormant records reactivate only after shadow exact replay, and missing policy
+receipts block retired-state transitions.
+
+### SCENARIO-STORE-6552-CAPACITY-RESTART-ROLLBACK — Capacity and persistence are exact
+
+Given bounded capacity, registered restart boundaries, and injected unsafe or
+corrupt writes,
+
+When the four controller arms replay the same event stream,
+
+Then each arm emits matched per-event rows, capacity stays bounded, restart
+replays byte-identical decisions and memory hashes, and rollback restores the
+exact prior state hash after unsafe or corrupt writes.
+
+### SCENARIO-STORE-6552-ATTACKS — State and authority attacks fail closed
+
+Given attacks for threshold oscillation, held threshold tuning, same-query
+writes, missing witnesses, invalid refinement reuse, authority inversion, hash
+collision, corrupt persistence, unbounded growth, and retirement without
+policy,
+
+When Exp6552 evaluates the attack matrix,
+
+Then each attack fails closed with zero unsafe writes, zero unsafe uses, no
+unbounded growth, and no controller claim that replaces exact replay authority.
+
 ### REQ-STORE-6522 — Chronological exact-conflict self-learning
 
 Carnot SHALL provide Exp6522 at
