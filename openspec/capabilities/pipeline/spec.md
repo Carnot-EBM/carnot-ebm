@@ -4712,3 +4712,84 @@ serialization drift, or disabled-path side effects
 output, mutating the exception table, or deleting a candidate.
 
 **Spec traces:** REQ-PIPELINE-6549
+
+### REQ-PIPELINE-6563: Measured Production Safety-Net Workload Canary
+
+Carnot MUST provide an Exp6563 canary that runs the production
+`VerifyRepairPipeline` Safety-Net adapter on a frozen family-blind workload
+matrix. The canary SHALL run native, disabled-adapter, enabled-adapter,
+forced-abstain, forced-fallback, and rollback conditions over identical
+requests, candidate order, warm-up count, seed, and process placement.
+
+The workload matrix SHALL be frozen before execution. It SHALL use only
+checked-in fixtures and SHALL cover normal, empty, malformed, unsupported,
+fallback-heavy, exception, restart, and rollback strata. The route request
+SHALL not contain model or family identity, source IDs, entity names, row
+order, hidden outcomes, or future rows.
+
+The canary SHALL record one per-unit row for every workload, seed, and adapter
+condition. Each row SHALL include request bytes, route, abstention, candidate
+set and order, exact result, checker calls, serialization bytes, persistence
+bytes, process time, monotonic wall time, fallback reason, and rollback state.
+Synthetic adapter cost units SHALL be excluded from headline work and latency
+claims. They may appear only as diagnostic data.
+
+The canary SHALL write a terminal artifact at
+`results/experiment_6563_production_safety_net_workload_canary.json` with
+`inference_substrate=production_verify_repair_workload_canary_exact_verifier_no_llm`
+and `verifier_is_oracle=false`. The artifact SHALL include the required fields
+listed by the V568 roadmap for Exp6563, field provenance, resource and fixture
+preconditions, protected-file hashes, aggregate row recomputation, and a
+reproducibility checksum.
+
+`production_workload_canary_ready_score` SHALL equal 1.0 only when disabled
+identity, exact equality, candidate preservation, fallback, restart, rollback,
+complete rows, protected files, and checksum all pass. It SHALL equal 0.0 for
+blocked, partial, disqualified, or incomplete evidence.
+`production_workload_promotion_candidate_score` SHALL equal 1.0 only when the
+enabled route improves preregistered measured checker work or measured latency
+without safety, tail-latency, exact-output, fallback, rollback, or invalid
+release regression. A safe canary with no measured enabled-path benefit SHALL
+use `verdict_class=null`.
+
+### SCENARIO-PIPELINE-6563-IDENTITY: Disabled Path Matches Native
+
+**Given** the frozen workload matrix and the default-off adapter
+**When** native and disabled-adapter conditions run
+**Then** serialized request bytes, candidate order, exact result bytes,
+checker calls, error type, side effects, and persistence SHALL match.
+
+**Spec traces:** REQ-PIPELINE-6563
+
+### SCENARIO-PIPELINE-6563-MEASURED-WORK: Enabled Rows Use Direct Receipts
+
+**Given** enabled, forced-abstain, forced-fallback, malformed, unsupported, and
+exception workload rows
+**When** the canary computes benefit and latency
+**Then** headline fields SHALL derive from checker calls, serialization bytes,
+persistence bytes, process time, and monotonic wall time in emitted rows, not
+from synthetic adapter cost units.
+
+**Spec traces:** REQ-PIPELINE-6563
+
+### SCENARIO-PIPELINE-6563-FALLBACK-ROLLBACK: Escape Paths Recover Exactly
+
+**Given** forced fallback, abstention, exception, restart, and rollback
+conditions
+**When** the canary routes each workload through the production adapter
+**Then** fallback remains reachable, ledger persistence is visible, restart
+preserves exact equality, rollback disables the adapter, and exact accepted
+outputs stay equal to native verification.
+
+**Spec traces:** REQ-PIPELINE-6563
+
+### SCENARIO-PIPELINE-6563-ATOMIC: Terminal Artifact Is Recomputable
+
+**Given** complete per-unit rows, field provenance, protected hashes, and test
+receipts
+**When** Exp6563 writes its artifact
+**Then** required fields match the roadmap contract, scores recompute from raw
+rows, blocked checks name expected and observed values, and the checksum
+detects mutation after the verdict.
+
+**Spec traces:** REQ-PIPELINE-6563
