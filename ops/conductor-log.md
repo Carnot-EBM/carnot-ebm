@@ -16359,3 +16359,4 @@ code |
 | 2026-08-23 20:12 UTC | Milestone 2026.08.568 activated | OK | 4 tasks queued |
 | 2026-08-23 20:33 UTC | V568 evidence eligibility, exclusion, model, and g | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-23 20:54 UTC | Independent V567 constraint-saturation audit from  | OK | 87 passed, 1 warning in 12.75s |
+| 2026-08-23 21:17 UTC | Production Safety-Net canary on measured verificat | OK | 91 passed, 1 warning in 11.62s |
