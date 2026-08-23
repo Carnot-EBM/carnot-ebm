@@ -8710,3 +8710,241 @@ SHALL raise and the file SHALL remain untouched.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-OPS-REBUILD-PRESERVE-1 | Implemented (`scripts/artifact_merge_preserve.py`; wired into all 10 `scripts/analyze_*.py` write sites; E2E: the real `analyze_arc_wall_rederivation_20260808.build()` rebuilt over a seeded artifact and carried both incident-class keys) | Implemented (`tests/python/test_artifact_merge_preserve.py`, 11 tests incl. regression on the REAL 2026-08-21 incident artifact's 7 rebuild_note keys + 25 acks; mutations: carry removed -> RED, ack carry removed -> RED, refuse-on-unreadable made fail-open -> RED, retired_keys ignored -> RED, one analyzer unwired -> RED) |
+
+## REQ-CONDUCTOR-AUTHORITY-1: A Stop Authority SHALL Reap A Provably-Unowned llama-server
+
+Design: `docs/research-notes/conductor-self-sufficiency-2026-08-23.md`.
+Origin incident (2026-08-22): an orphaned llama-server held 20.7 GB of
+VRAM with PPID 1 and zero connections until a human killed it. A second
+orphan cost the tr87 acceptance cell through GPU contention. The sentinel
+detects this shape (REQ-CONDUCTOR-SENTINEL-2) and never kills. The
+janitor kills only `python3`/`pytest` comm names. So the class was
+detectable and unactionable by any machine path.
+
+The stop authority (`scripts/run_stop_authority.py`) is the ACTION half.
+The sentinel stays kill-free; the janitor invokes the authority on its
+30-minute timer. Division of labor: the sentinel reads, the authority
+acts, the janitor schedules.
+
+Rules:
+
+1. The authority MAY SIGTERM (then SIGKILL after a grace wait) a
+   llama-server only when ALL of these hold:
+   a. PPID is 1 and the cgroup names no `/system.slice/` service.
+   b. No other live process references its port on cmdline or environ
+      (the sentinel's own check, imported — never a second copy).
+   c. No established TCP connection exists to its port (via `ss`).
+   d. The process is older than 2 hours (from `/proc/<pid>/stat`).
+   e. Its environ does not carry `CARNOT_STOP_AUTHORITY_ALLOW=1`.
+   f. The same candidate was observed on a PRIOR authority scan at
+      least 25 minutes earlier (persistence across scans).
+2. Every reap SHALL write a durable actor line through the
+   REQ-CONDUCTOR-SENTINEL-3 escalation writer: who killed what, when,
+   and the full condition evidence. An unexplained dead process was its
+   own incident class (2026-08-09, exit-143 sender never identified);
+   this project's own reapers must never add to it.
+3. Fail direction, per check: `ss` unavailable -> assume a connection
+   exists (do NOT kill); environ unreadable -> assume the opt-out is
+   set (do NOT kill); `/proc` race -> skip the pid. Every inability to
+   verify a condition fails toward NOT killing, and the skip is noted
+   in the state file.
+4. The authority SHALL NOT touch any process that is not a discovered
+   llama-server or a discovered ARC harness run (REQ-CONDUCTOR-
+   AUTHORITY-2), and SHALL never signal the conductor's own PID.
+
+#### SCENARIO-CONDUCTOR-AUTHORITY-1-ORPHAN-REAP
+
+Given a llama-server with PPID 1, a user-session cgroup, an
+unreferenced port, no established connections, age over 2 hours, and a
+prior-scan observation at least 25 minutes old, the authority SHALL
+SIGTERM it and write a durable actor line naming the pid and evidence.
+
+#### SCENARIO-CONDUCTOR-AUTHORITY-1-REFERENCED-PORT
+
+Given the same server but one live process holding its port in an
+environ value, the authority SHALL NOT signal it.
+
+#### SCENARIO-CONDUCTOR-AUTHORITY-1-SS-UNAVAILABLE
+
+Given `ss` cannot run, the authority SHALL NOT signal any server and
+SHALL note the unverifiable condition in its state file.
+
+#### SCENARIO-CONDUCTOR-AUTHORITY-1-FIRST-SIGHTING
+
+Given a candidate meeting every static condition but seen for the first
+time this scan, the authority SHALL only record it and act no earlier
+than the next scan.
+
+## REQ-CONDUCTOR-AUTHORITY-2: The Stop Authority SHALL Stop A Provably-Dead-Tier Run Only When Armed, And SHALL Otherwise Emit A Yes/No Packet
+
+Origin incidents (2026-08-22): four GPU runs burned 2h38m-4h28m each on
+rows every one of which was `llm_on_row_valid: false`, and only a human
+stopped them. The sentinel escalated correctly at 22:39Z and the run
+continued 1h33m more, then a sibling arm launched into the same broken
+GPU and OOMed for another 1h08m. Detection was machine; action was
+human-only.
+
+Measured predicate breadth (2026-08-23 sweep, recorded before build):
+across 18,539 `results/**` artifacts (413 carrying LLM-on rows), the
+row half of the predicate below fires on ZERO legitimate artifacts, and
+on exactly the two true incident row files (supab2 3/3, supab3 3/3).
+
+Rules:
+
+1. A run-stop candidate requires ALL of:
+   a. A live ARC harness run discovered per REQ-CONDUCTOR-SENTINEL-1.
+   b. Row evidence: the sentinel's own row evaluator reports the
+      CRITICAL all-invalid shape (every LLM-on row invalid, at least
+      2 rows) — OR the run is older than 30 minutes with no parseable
+      rows at all (the supab3 arm=on shape: 1h08m, zero rows written).
+   c. Server evidence: an unambiguous failure line in the run's
+      port-matched server log whose mtime is not older than the run's
+      own start, OR the run declares a `--port` with no listener on it.
+      Row evidence alone SHALL NOT stop a run: a run whose rows are
+      invalid while its server is healthy is a semantic question, and
+      the 2026-08-23 baseline25 case (invalid rows, generator alive,
+      thinking misconfigured) is the measured example of a run whose
+      stop/keep call was judgment, not validity. Validity is machine;
+      efficiency stays human.
+   d. Persistence: the same candidate observed on a prior scan at
+      least 25 minutes earlier.
+   e. No `CARNOT_STOP_AUTHORITY_ALLOW=1` in the run's environ (the
+      opt-out for diagnostics DESIGNED to observe dead servers).
+2. Armed state: the run-stop action requires the operator-created
+   marker file `~/.carnot/stop-authority-armed`. Arming is a one-time
+   operator decision, taken against this REQ's recorded evidence. The
+   authority ships DISARMED.
+3. When DISARMED and a candidate qualifies, the authority SHALL write
+   a yes/no packet through the escalation writer: the complete
+   evidence, the exact command to stop the run by hand, the exact
+   command to arm the authority, and the exact opt-out for the run.
+   The human decision becomes yes/no, never an investigation.
+4. When ARMED and a candidate qualifies, the authority SHALL SIGTERM
+   the harness process (SIGKILL after a grace wait) and its
+   port-matched llama-server, and SHALL write the same packet as a
+   durable actor record. Rows already written are preserved by the
+   harness's incremental whole-file rewrites; the loss bound is the
+   in-flight cell.
+5. Any new stop predicate, or any widening of this one, SHALL record a
+   corpus sweep over `results/**` row documents demonstrating its
+   false-positive rate BEFORE it is committed. The outer loop's own
+   error record (a check that fired on 221 artifacts, caught only by a
+   pre-commit sweep) is the origin of this rule.
+
+#### SCENARIO-CONDUCTOR-AUTHORITY-2-INCIDENT-REPLAY
+
+Given a live run whose rows are the real supab3 all-invalid bytes and
+whose server log holds the real allocation-failure lines, observed on
+two scans 25 minutes apart, with the arm file present, the authority
+SHALL SIGTERM the harness and its server and write the actor packet.
+
+#### SCENARIO-CONDUCTOR-AUTHORITY-2-DISARMED-PACKET
+
+Given the same evidence without the arm file, the authority SHALL
+signal nothing and SHALL write a packet containing the arm command and
+the manual kill command.
+
+#### SCENARIO-CONDUCTOR-AUTHORITY-2-ROWS-ONLY
+
+Given all-invalid rows and a healthy server (no failure lines, live
+listener), the authority SHALL NOT emit a candidate. (The baseline25
+shape: killing it was a human efficiency call, not a validity call.)
+
+#### SCENARIO-CONDUCTOR-AUTHORITY-2-ALLOW-ENV
+
+Given a qualifying run whose environ carries
+`CARNOT_STOP_AUTHORITY_ALLOW=1`, the authority SHALL NOT emit a
+candidate for it.
+
+## REQ-CONDUCTOR-FRESHEXEC-1: The Conductor SHALL Re-exec Itself At A Loop Boundary When Its Committed Source Has Changed
+
+Origin incident (2026-08-22): the conductor process predated fixes in
+HEAD for up to ~11.5 hours. Three commits changed
+`scripts/research_conductor.py` (12:35, 16:21, 23:52 EDT) while a
+process started near noon kept running the old code; the sentinel
+wiring landed at 16:21 and first executed at the 00:06 restart. A
+human noticed by comparing the process start time to commit
+timestamps. `ops/known-issues.md` documented this staleness class and
+nothing automated it.
+
+Rules:
+
+1. At the top of each `--loop` iteration after the first, the
+   conductor SHALL compare the SHA-256 of its own source captured at
+   startup against the committed copy (`git show
+   HEAD:scripts/research_conductor.py`). Committed bytes only: a
+   concurrent agent's half-finished working-tree edit MUST NOT
+   trigger a re-exec into broken code.
+2. A re-exec requires ALL of: the HEAD hash differs from the startup
+   hash; the on-disk file hash equals the HEAD hash (no dirty edit in
+   flight); the on-disk file compiles; and the same HEAD hash has not
+   already been attempted (exec-storm guard).
+3. On satisfying rule 2, the conductor SHALL write a durable log line
+   naming both hashes, then `os.execv` itself with its original
+   argv. The loop boundary is the safe point: no task subprocess is
+   in flight there, and execv preserves the PID, cgroup, and systemd
+   supervision.
+4. Fail direction: any git failure, hash mismatch against disk, or
+   compile failure SHALL keep the current process running (stale-but-
+   good code beats fresh-but-unverified code) and, for a compile
+   failure of committed source, SHALL escalate a durable WARN.
+
+#### SCENARIO-CONDUCTOR-FRESHEXEC-1-FRESH-COMMIT
+
+Given a committed change to the conductor's own source while the loop
+sleeps, the next iteration SHALL log the hash transition and re-exec.
+
+#### SCENARIO-CONDUCTOR-FRESHEXEC-1-DIRTY-TREE
+
+Given a working-tree edit to the conductor source not yet committed,
+the conductor SHALL NOT re-exec.
+
+#### SCENARIO-CONDUCTOR-FRESHEXEC-1-BROKEN-COMMIT
+
+Given a committed conductor source that does not compile, the
+conductor SHALL NOT re-exec and SHALL escalate.
+
+## REQ-CONDUCTOR-RESTART-1: The Janitor SHALL Start A Dead Conductor Unless A Hold Marker Exists
+
+Origin incident (2026-08-22): no conductor ran for at least 4h39m
+(the janitor logged "conductor PID 1513566 not alive — skipping"
+every 31 minutes and did nothing else). The stop was deliberate — but
+the intent lived in `ops/status.md` prose, which no machine reads.
+Separately, the only automated restart path
+(`carnot-outer-loop.timer`) had been silently dead since 2026-08-19.
+
+Rules:
+
+1. When the janitor finds the conductor heartbeat PID dead AND the
+   systemd unit not active, it SHALL `systemctl --user start
+   carnot-conductor.service` and log the action durably — UNLESS the
+   hold marker `~/.carnot/conductor-hold` exists.
+2. The hold marker is the machine-readable form of "stopped on
+   purpose". Whoever deliberately stops the conductor SHALL create
+   it (one line of intent inside), and remove it to resume.
+3. A hold marker older than 48 hours SHALL escalate a WARN through
+   the sentinel writer: a forgotten hold is a silent outage.
+4. Fail direction: if systemd state cannot be read, do nothing this
+   cycle and log the inability (a wrong start is recoverable, but a
+   start DURING an operator intervention is exactly what the hold
+   protocol exists to prevent — absence of information is not
+   permission).
+
+#### SCENARIO-CONDUCTOR-RESTART-1-DEAD-NO-HOLD
+
+Given a dead conductor and no hold marker, the janitor SHALL start
+the service and log the start.
+
+#### SCENARIO-CONDUCTOR-RESTART-1-HOLD-RESPECTED
+
+Given a dead conductor and a hold marker, the janitor SHALL NOT start
+the service and SHALL log the hold.
+
+## Implementation Status (REQ-CONDUCTOR-AUTHORITY-1/2, REQ-CONDUCTOR-FRESHEXEC-1, REQ-CONDUCTOR-RESTART-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-AUTHORITY-1 | Implemented (`scripts/run_stop_authority.py`: orphan reap behind six conjunctive conditions, actor lines through the sentinel's writers, own state-file receipt; scheduled from the janitor per REQ-CONDUCTOR-RESTART-1's janitor block) | Implemented (`tests/python/test_run_stop_authority.py`; mutations: port-reference check removed -> RED, ss fail-safe inverted -> RED, age floor removed -> RED, persistence dropped -> RED, protected-pid check removed -> RED; each restored byte-identical, GREEN) |
+| REQ-CONDUCTOR-AUTHORITY-2 | Implemented (same file: run-stop behind rows x server x persistence x allow-env, ARM file `~/.carnot/stop-authority-armed`, ships DISARMED, yes/no packet with exact commands; corpus sweep recorded in this REQ: 0 fires on 18,539 results/** artifacts, 2/2 true incidents) | Implemented (same file; mutations: armed gate removed -> RED, server-evidence conjunction dropped -> RED, log-freshness check removed -> RED, allow-env veto removed -> RED; real supab3-bytes replay asserts both evidence halves) |
+| REQ-CONDUCTOR-FRESHEXEC-1 | Implemented (`scripts/research_conductor.py`: `_maybe_reexec_on_fresh_source` at the loop top, committed-bytes-only via `git show HEAD:`, compile gate, exec-storm state in `ops/.conductor_reexec_state.json`; the RUNNING conductor predates this and picks it up at its next natural restart) | Implemented (`tests/python/test_conductor_fresh_exec.py`; mutations: dirty-tree guard removed -> RED, compile check removed -> RED, storm guard removed -> RED, wiring commented out -> RED after fixing the test's own trailing-comment blind spot, HEAD-read swapped to worktree read -> RED) |
+| REQ-CONDUCTOR-RESTART-1 | Pending (janitor edit in flight this session) | Pending |
