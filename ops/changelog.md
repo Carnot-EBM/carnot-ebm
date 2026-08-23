@@ -17424,3 +17424,4 @@ row (supab4 signal-sender hunt could neither convict nor clear it on
 journald retention alone). Standing debt recorded, not fixed: ~93 skip
 markers already in the suite.
 - 2026-08-23: Content-pinned DRIFT-Bench external intake v2 (✅ Complete) — honest_verdict=complete_drift_bench_external_intake_v2: source hashes, chronological rows, local Z3 receipts, family-blind splits, shards, attacks, and fixture round-trip pass; results/experiment_6542_drift_bench_external_intake_v2.json
+- 2026-08-23: Independent DRIFT corpus provenance, chronology, and replay audit v2 (✅ Complete) — honest_verdict=complete_external_corpus_independent_audit_v2: source, fixture, chronology, split, replay, transaction, aggregate, and attack checks pass; results/experiment_6543_external_corpus_independent_audit_v2.json
