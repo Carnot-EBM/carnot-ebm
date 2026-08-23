@@ -876,6 +876,176 @@ without same-run flash evidence, or a hardware speedup claim,
 
 ---
 
+### REQ-HW-6559
+
+**Title:** Exp6559 GateMate changed-state continuity MUST use Exp6525 as the no-repeat boundary and stop after zero or one hardware action
+
+**Description:**
+Experiment 6559 SHALL produce
+`results/experiment_6559_gatemate_changed_state_continuity.json` as the V567
+GateMate continuity record for planning date 20260823. The experiment SHALL use
+Exp6525 as the prior failed attempt and SHALL require a dated operator-authored
+GateMate physical-state receipt newer than Exp6525 before any board command can
+run. A physical-state receipt MUST name a concrete cable, port, board power,
+board, or DirtyJTAG change. Planner text, agent-written plans, stale repeated
+USB enumeration, command transcripts with no new physical change, and ambiguous
+board targets SHALL NOT authorize hardware access.
+
+Before authorization, Exp6559 SHALL record git status, current UTC time, exact
+receipt search roots, Exp6525 artifact path and hash, USB enumeration only from
+existing durable receipts, tool and bitstream identities without touching
+hardware, CPU/RAM/disk receipts, protected-file hashes, and the Exp3866
+exclusion state. If no valid newer physical receipt exists, Exp6559 MUST run
+zero `openFPGALoader`, JTAG, flash, reset, USB, board, synthesis, place, route,
+pack, timing, current, power, or SSH commands. It SHALL emit a terminal blocked
+artifact with the failed check, the latest receipt date it observed, and
+mechanical zero-command proof.
+
+If and only if a valid newer receipt exists and safe target validation closes,
+Exp6559 MAY run exactly one authorized GateMate action: either bounded
+DirtyJTAG GM1Ax detect or a validated flash. The artifact SHALL capture command,
+monotonic timing, exit status, stdout and stderr hashes, detected IDCODE or
+flash receipt, USB identity from the receipt trail, and the board target. The
+experiment MUST stop after the first terminal result. It MUST NOT retry at
+multiple clock rates, change RTL, synthesize a design, infer availability from
+USB enumeration, reopen Exp3866, or claim latency, speed, energy, sampling
+quality, or general availability.
+
+Required artifact fields:
+
+- `status`
+- `honest_verdict`
+- `verdict_class`
+- `prior_failure_receipt`
+- `operator_physical_state_receipt`
+- `safe_target_validation_receipt`
+- `hardware_action_rows`
+- `terminal_command_receipt`
+- `zero_command_block_receipt`
+- `exp3866_exclusion_preserved`
+- `claim_boundary`
+- `attack_matrix`
+- `gatemate_changed_state_slot_complete_score`
+- `gatemate_hardware_advanced_score`
+- `per_unit_rows`
+- `aggregate_row_recomputation`
+- `gate_check_summary`
+- `preconditions_checked`
+- `protected_files_unchanged`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_provenance`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+
+Required field principles:
+
+- `prior_failure_receipt`: principle "The artifact must identify Exp6525 and the stricter newer-than boundary."
+- `operator_physical_state_receipt`: principle "Only a dated operator-authored physical change can authorize a new board command."
+- `safe_target_validation_receipt`: principle "Board, cable, tool, action, and bitstream identity must close before hardware access."
+- `hardware_action_rows`: principle "Zero or one action rows make the bounded command budget mechanically recheckable."
+- `terminal_command_receipt`: principle "A real detect or flash result needs command, timing, exit, stream hashes, and device identity."
+- `zero_command_block_receipt`: principle "A missing physical receipt must prove that no hardware command ran."
+- `claim_boundary`: principle "The artifact must disclaim latency, speed, energy, quality, and general availability."
+- `aggregate_row_recomputation`: principle "Command count and advancement must derive from the emitted rows."
+- `gate_check_summary`: principle "A blocked verdict must name the missing receipt check and observed latest date."
+- `inference_substrate`: principle "Use dated_hardware_receipt_audit_no_command_no_llm when no valid change exists, or hardware_smoke for one authorized board action."
+- `verifier_is_oracle`: principle "Always false; the transcript is evidence for one action only, not a model verifier."
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_6559_gatemate_changed_state_continuity --date 20260823`
+  writes `results/experiment_6559_gatemate_changed_state_continuity.json`.
+- The artifact includes `spec_refs` containing `REQ-HW-6559` and the
+  applicable `SCENARIO-HW-6559-*`, `random_seed=6559`, and a final checksum.
+- Missing, stale, planner-created, agent-created, undated, USB-only, or
+  ambiguous receipt candidates produce `status=blocked_missing_new_physical_receipt`,
+  `verdict_class=blocked`, `hardware_action_rows=[]`,
+  `terminal_command_receipt=null`,
+  `inference_substrate=dated_hardware_receipt_audit_no_command_no_llm`,
+  `verifier_is_oracle=false`,
+  `gatemate_changed_state_slot_complete_score=1.0`, and
+  `gatemate_hardware_advanced_score=0.0`.
+- A valid post-Exp6525 material physical receipt permits exactly one safe
+  predeclared GateMate action and no retry. The command row records argv,
+  monotonic start/end, exit status, stdout/stderr hashes, device identity, USB
+  identity, board target, and terminal disposition.
+- `verdict_class=null` only for a terminal one-action detect or flash receipt
+  without a performance claim. `verdict_class=partial` marks incomplete
+  authenticated output. `verdict_class=disqualified` marks unauthorized
+  commands, target ambiguity, false provenance, or overclaim.
+- Exp3866 stays excluded from clean terminal evidence, and historical verdicts
+  are copied only as historical state receipts.
+- Protected files and `scripts/research_conductor.py` remain unchanged.
+
+**Implementation status:** Planned (Exp 6559)
+
+---
+
+### SCENARIO-HW-6559-1
+
+**Scenario:** Exp6559 closes GateMate continuity with zero commands when no post-Exp6525 physical receipt exists.
+
+**Given:** Exp6525 already closed with zero hardware commands because no
+operator-authored dated GateMate physical-state receipt existed,
+**When:** Exp6559 searches durable operator-authored receipt locations and finds
+no GateMate cable, port, power, board, or DirtyJTAG change dated after Exp6525,
+**Then:** it writes a terminal blocked artifact with zero hardware action rows,
+the failed newer-than-Exp6525 receipt check, the latest observed receipt date,
+Exp3866 preserved, no performance claim, and the changed-state slot score equal
+to `1.0`.
+
+**Implementation status:** Planned (Exp 6559)
+
+---
+
+### SCENARIO-HW-6559-2
+
+**Scenario:** Exp6559 rejects stale, planner-created, agent-created, USB-only, and ambiguous receipt candidates.
+
+**Given:** Candidate text may mention GateMate, DirtyJTAG, USB enumeration,
+operator plans, or command output,
+**When:** the candidate is not a durable dated operator-authored physical change
+newer than Exp6525, or the board target is ambiguous,
+**Then:** the candidate row is invalid, no hardware command is authorized, and
+the artifact remains a blocked no-command continuity record.
+
+**Implementation status:** Planned (Exp 6559)
+
+---
+
+### SCENARIO-HW-6559-3
+
+**Scenario:** Exp6559 permits one bounded action for a valid newer physical receipt and stops at the first terminal result.
+
+**Given:** An operator-authored receipt dated after Exp6525 names a concrete
+GateMate cable, port, power, board, or DirtyJTAG change and safe target
+validation confirms board, cable, tool, action, bitstream if applicable, and
+expected GM1Ax identity,
+**When:** the predeclared detect or flash action is executed,
+**Then:** Exp6559 records exactly one hardware action row with command, timing,
+exit, stream hashes, device identity, terminal disposition, zero retry count,
+and no performance or availability claim.
+
+**Implementation status:** Planned (Exp 6559)
+
+---
+
+### SCENARIO-HW-6559-4
+
+**Scenario:** Exp6559 validation fails closed on command budget, target, output, provenance, or claim violations.
+
+**Given:** An artifact records more than one hardware command, a command without
+receipt authorization, a non-allowlisted command, missing terminal output hashes,
+a false receipt provenance, target ambiguity, a reopened Exp3866 path, or a
+latency, speed, energy, quality, or availability claim,
+**When:** Exp6559 validates the artifact,
+**Then:** validation fails before the artifact can graduate.
+
+**Implementation status:** Planned (Exp 6559)
+
+---
+
 ### REQ-HW-5930
 
 **Title:** Exp5930 adaptive-state ABI v2 board mapping MUST produce static receipts and skip unchanged physical probes
