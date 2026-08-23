@@ -411,6 +411,125 @@ when the artifact is validated,
 then all required fields, field principles, field provenance, no-LLM substrate,
 non-oracle scientific verifier flag, deterministic seed, tests-run records, and
 reproducibility checksum are present and internally consistent.
+
+### REQ-CAPSTONE-6527: V565 Evidence Eligibility Corrigendum SHALL Replay V564 Rows
+
+Carnot SHALL provide Exp6527 at
+`python/carnot/experiment_6527_v565_evidence_eligibility_corrigendum.py` and
+write `results/experiment_6527_v565_evidence_eligibility_corrigendum.json`.
+
+Exp6527 SHALL validate the active V565 roadmap identity by direct path and
+hash. It SHALL read immutable V564 inputs Exp6518 through Exp6523 and Exp6526
+only by path and content hash. It SHALL not edit those historical artifacts.
+
+Exp6527 SHALL recompute adopted structural-router and conflict-memory claims
+from row containers. It SHALL recompute row counts, exact-equality fields,
+charged comparison fields, readiness scores, verdict classes, and gate chains.
+It SHALL not copy aggregate-only evidence into corrected eligibility.
+
+Exp6527 SHALL rerun the current adversarial verifier and row-consistency lint
+against Exp6520. It SHALL execute the Exp6520 validation command under a
+monotonic timer with a declared duration floor. The receipt SHALL record command,
+exit code, stdout digest, stderr digest, start and end timestamps, measured
+duration, source-code hash, and whether the historical validation result is a
+known no-rewrite disagreement.
+
+Exp6527 SHALL preserve Exp6520's historical `flagged_adversarial=true`,
+`corrigendum_pending`, and `duration_s=0.080421` fields as historical evidence.
+It SHALL separately state whether current verifier, row, and duration receipts
+clear the defect for bounded V565 eligibility. It SHALL name any claim that
+remains ineligible.
+
+Exp6527 SHALL verify that no V565 `gated_on` or `requires` edge names a retired
+task ID. Prior-failure text and direct historical reads SHALL not count as
+structured dependencies.
+
+Exp6527 SHALL attack aggregate tampering, row deletion, renamed readiness
+fields, stale code, implausible duration, status-only success, positive oracle
+framing, and hidden historical-file edits. It SHALL emit one terminal artifact
+through atomic final replace.
+
+Exp6527 SHALL emit the required fields: `status`, `honest_verdict`,
+`verdict_class`, `activation_manifest_receipt`, `immutable_input_receipts`,
+`v564_task_rows`, `row_recomputation`, `exp6520_historical_flag_receipt`,
+`live_adversarial_recheck_receipt`, `monotonic_duration_receipt`,
+`corrected_claim_eligibility_rows`, `retired_dependency_attack_rows`,
+`v565_evidence_root_ready_score`, `gate_check_summary`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+The Exp6527 artifact SHALL set
+`inference_substrate="immutable_v564_row_replay_and_live_validation_no_llm"`.
+It MAY set `verifier_is_oracle=true` only because the artifact checks hashes,
+rows, and command receipts. It SHALL not declare a positive scientific class.
+
+Field principles for Exp6527:
+
+- `status`: "Records the terminal V565 evidence-root eligibility state."
+- `honest_verdict`: "Starts with a terminal prefix and separates corrected eligibility from historical Exp6520 fields."
+- `verdict_class`: "Uses null for an eligible governance root, partial for a usable subset, blocked for missing prerequisites, and disqualified for false evidence."
+- `activation_manifest_receipt`: "Pins the active V565 roadmap identity, first task, deliverable, milestone, and activation conductor rows."
+- `immutable_input_receipts`: "Hashes every historical artifact and support file read without rewriting them."
+- `v564_task_rows`: "One row per adopted V564 task records path, hash, status, class, row counts, required field, and observed value."
+- `row_recomputation`: "Rebuilds structural-router and conflict-memory row counts, equality, charged comparisons, readiness scores, verdict classes, and gate chains."
+- `exp6520_historical_flag_receipt`: "Preserves Exp6520's historical adversarial flag, pending corrigendum, and short duration."
+- `live_adversarial_recheck_receipt`: "Records current adversarial verifier and row-lint command receipts against Exp6520."
+- `monotonic_duration_receipt`: "Records the timed Exp6520 validation command, clock source, floor, duration, digests, code hash, and no-rewrite interpretation."
+- `corrected_claim_eligibility_rows`: "States which V564 claims are eligible, corrected-eligible, blocked, or preserved-only after row replay and live checks."
+- `retired_dependency_attack_rows`: "Checks V565 gated_on and requires edges against retired task IDs."
+- `v565_evidence_root_ready_score`: "Bare scalar set to one only when adopted inputs are row-consistent, live verification is clean, the duration receipt is credible, and dependencies are eligible."
+- `gate_check_summary`: "Names every failed root-readiness check and observed value."
+- `per_unit_rows`: "Flattens task, claim, gate, attack, receipt, and protected-file rows for linting."
+- `aggregate_row_recomputation`: "Rebuilds root score, verdict class, and blocker counts from rows."
+- `preconditions_checked`: "Records git status, milestones, inputs, conductor rows, tool versions, resources, clocks, and protected hashes."
+- `protected_files_unchanged`: "Compares protected-file hashes before and after the corrigendum build."
+- `inference_substrate`: "Declares immutable V564 row replay and live local validation with no LLM."
+- `verifier_is_oracle`: "True only for hash, row, and command-receipt checks; no positive scientific class is declared."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps every field to specs, inputs, rows, commands, reducers, tests, or hashes."
+- `random_seed`: "Pins deterministic row ordering and checksum construction."
+- `duration_s`: "Reports measured wall time for the Exp6527 reducer."
+- `tests_run`: "Records verification commands and exit codes."
+- `reproducibility_checksum`: "Detects drift in inputs, row reductions, command receipts, decisions, and tests."
+
+### SCENARIO-CAPSTONE-6527-ACTIVATION
+
+Given the active roadmap declares milestone `2026.08.565`,
+when Exp6527 runs,
+then it hashes `research-roadmap.yaml` and the V565 roadmap document, records
+Exp6527 as the first task, and records the conductor plan and activation rows.
+
+### SCENARIO-CAPSTONE-6527-IMMUTABLE-ROWS
+
+Given V564 Exp6518 through Exp6523 and Exp6526 are present,
+when Exp6527 recomputes adopted claims,
+then it reads those files by path and hash, recomputes row counts, exact
+equality, charged comparisons, readiness scores, verdict classes, and gates
+from rows, and records aggregate-only tampering as a failed attack.
+
+### SCENARIO-CAPSTONE-6527-LIVE-RECHECK
+
+Given Exp6520 carries historical adversarial corrigendum fields,
+when Exp6527 reruns current verification,
+then the artifact records adversarial verifier, row-lint, and monotonic
+validation receipts separately from the historical fields.
+
+### SCENARIO-CAPSTONE-6527-RETIRED-DEPENDENCIES
+
+Given V565 tasks may contain `gated_on` or `requires` edges,
+when Exp6527 audits structured dependencies,
+then no edge may name a retired task ID, and direct historical path reads remain
+hash-only evidence rather than structured dependencies.
+
+### SCENARIO-CAPSTONE-6527-TERMINAL
+
+Given Exp6527 writes its terminal artifact,
+when the artifact validates,
+then all required fields, field principles, field provenance, corrected claim
+rows, atomic-write receipt, no-LLM substrate, deterministic seed, tests-run
+records, and reproducibility checksum are present and internally consistent.
 - SCENARIO-CAPSTONE-4618: The artifact `results/experiment_4618_levelup_selfplay.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `solve_provenance`, `offline_reproduced`, `reproduced_levels`, `target_game`, `verifier_checkpoint_updated`, `registry_updated`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also include `spec_refs`, `standing_loop_result_path`, `reproduction_gate`, `solution_labels`, `dead_ends_recorded`, `target_selection`, `verifier_delta`, `states_expanded`, and registry total before/after fields. A success verdict requires `offline_reproduced=true`, `reproduced_levels >= 1` for newly banked levels beyond the prior registry depth, a non-null verifier checkpoint path, a registry update, and a content-addressed replay checksum. If no next level reproduces, the artifact must report `complete: <game>_delta_identified_no_bank` and record the stalled approach without incrementing the bank count.
 - SCENARIO-CAPSTONE-4618-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged."; `solve_provenance` = "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game."; `offline_reproduced` = "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."; `reproduced_levels` = "the integer new-level count banked this task (>=1 satisfies the level-up guarantee)."; `target_game` = "the rotated game attempted -- traceable to the rotation discipline (a clean-nav game not deepened in .421-.425, not dc22/ka59)."; `verifier_checkpoint_updated` = "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."; `registry_updated` = "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "catches silent drift on replay."; `preconditions_checked` = "records resources verified; pre-empts missing-resource fabrication."
 - REQ-CAPSTONE-4607: The operator-resubmit package refresh workflow SHALL rebuild the ARC-AGI-3 live-submit package from the current `ops/arc_solve_registry.yaml`, using `results/experiment_4595_refresh_submission_package.json` and `results/experiment_4595_submission_package_operator_resubmit.json` as the .424 A4 baseline, and SHALL fold in this sprint's newly offline-reproduced banks from Exp4606 plus any Exp4604/Exp4605 newly reproduced level or variant solve only when the claimed game depth is present in the registry and has a replayable trajectory or env-adaptive resolver. The workflow SHALL verify offline arcade and registry-load preconditions before packaging, SHALL record claimed-vs-offline caps for every game, SHALL extend env-adaptive recovery through the persisted `primitive_env_adaptive_resolve_operator` pattern for any newly version-drifted game, SHALL keep submission operator-only with no online submit, SHALL not modify `scripts/research_conductor.py`, and SHALL write `results/experiment_4607_refresh_submission_package.json`.
