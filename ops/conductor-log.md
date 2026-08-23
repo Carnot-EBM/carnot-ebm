@@ -16348,3 +16348,4 @@ code |
 | 2026-08-23 17:43 UTC | SOTA constraint-saturation and bounded-interventio | OK | 86 passed, 1 warning in 18.38s |
 | 2026-08-23 17:45 UTC | Independent constraint-saturation phase-curve and  | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-08-23 17:47 UTC | Independent constraint-saturation phase-curve and  | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-08-23 17:50 UTC | Independent constraint-saturation phase-curve and  | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
