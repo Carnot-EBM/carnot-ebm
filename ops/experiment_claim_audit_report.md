@@ -11,11 +11,39 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 5 |
-| CLAIM_OVERSTATED | 2 |
+| CLAIM_SUPPORTED | 3 |
+| CLAIM_OVERSTATED | 1 |
 | NO_CLAIM | 2 |
+| CANNOT_DETERMINE | 1 |
+| SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_6478_identifiable_held_exact_energy_selection.json
+## experiment_6519_structural_headroom_certificate.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Independent row recomputation certifies real structural-control headroom: static analytical control reduces charged work while preserving correctness, live influence, breadth, and replay validity.
+
+## WHAT WOULD REFUTE IT
+The static analytical arm tying or exceeding native dynamic—or the serious analytical-enumeration baseline—in held charged work, losing correctness, showing no live decision influence, or depending on censored/invalid rows would refute the claim.
+
+## WAS THAT CHECKED
+Yes. The held charged-cost comparison includes native dynamic and analytical enumeration; the certificate also gates correctness, exact replay, live influence, breadth, censoring, and row recomputation. Static analytical wins rather than ties, including against the serious analytical-enumeration baseline.
+
+## EVIDENCE
+`best_arm`: `static_analytical`; `best_arm_held_charged_benefit_units`: `667`; `held_total_charged_work_units_by_arm`; `static_analytical`: `3313`; `analytical_enumeration`: `3366`; `native_dynamic`: `3980`; `correctness_discrepancy_count`: `0`; `live_influence_passed`: `true`; `exact_replay_passed`: `true`; `uncensored_held_rows`: `42`; `worst_case_missing_rows`: `0`; `censored_count`: `0`; `timeout_count`: `0`; `best_arm_support_family_count`: `3`; `best_arm_support_seed_count`: `3`; `certification_conditions_met`: `true`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6520_safety_net_branch_router_ab.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_6521_transactional_refinement_conflict_memory.json
 
 **CLAIM_OVERSTATED**
 
@@ -23,26 +51,67 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 CLAIM_OVERSTATED
 
 ## THE HEADLINE CLAIM
-Exact-energy selection improves held exact success over the first-candidate and shuffled controls, so it is a positive result (verdict token `complete_positive`).
+The transactional exact-conflict memory is ready because refinement gating and exact replay produced zero unsafe admissions or uses while all lifecycle and recovery checks passed.
 
 ## WHAT WOULD REFUTE IT
-A weight-free trivial comparator — just counting violated constraints, no energy weights at all — matching exact-energy's held success. If unweighted violation-count does as well, then the weighted "energy" selection adds nothing, and a `complete_positive` value result is unsupported. The only serious rival here is the `violation_count` arm; the other three beaten arms (`first_candidate`, `shuffled_energy`, `deterministic_random`) are sanity-check arms (arbitrary-first / shuffled / random).
+An independent correctness oracle finding that a verifier-accepted record was unsafe—especially one admitted or used after passing exact replay—would refute the readiness claim.
 
 ## WAS THAT CHECKED
-Yes — the artifact ran the `violation_count` arm and it ties `exact_energy` exactly: same 1.0 held success, paired gain 0.0, 24 ties / 0 wins / 0 losses, CI includes zero. The two formulas differ only by whether the same violated-constraint set is weighted or counted. So by the artifact's own data the weighting buys nothing; exact-energy wins only over sanity-check arms. The headline sentence is scoped to name only first/shuffled and dodge the tie, but the consumed verdict token is `complete_positive`, which reads as an added-value win. Compounding: `verifier_is_oracle` is true — the selector is derived from the same exact record that defines correctness, so the value claim is also circular, and beating `first_candidate` (rank-0 is always a perturbed/broken candidate) is near true-by-construction.
+No. Invalid-reuse and failure-path rows were exercised, but correctness was defined by the same exact-replay verifier that gates acceptance; no independent oracle could disagree with it.
 
 ## EVIDENCE
-- `"complete_positive: exact-energy selection improves held exact success over first and shuffled controls; exact backend remains the oracle"`
-- `"arm": "violation_count"` with `"exact_success_rate": 1.0`
-- `"arm": "exact_energy"` with `"exact_success_rate": 1.0`
-- `"left_arm": "exact_energy"`, `"right_arm": "violation_count"`, `"paired_gain": 0.0`, `"tie_count": 24`, `"win_count": 0`, `"interval_excludes_zero": false`
-- `"exact_energy_formula": "sum(weight_i for each violated Exp6477 source constraint)"`
-- `"unweighted_violation_count_formula": "count(violated Exp6477 source constraints)"`
+`verifier_is_oracle` `true` `verdict_class` `circular_positive` `exact_replay_required_before_use` `true` `exact_replay_required_before_write` `true` `unsafe_admission_count` `0` `unsafe_use_count` `0` `complete_transactional_refinement_conflict_memory_ready`
+
+## RECOMMENDATION
+ADD_MISSING_CONTROL
+
+## experiment_6522_chronological_conflict_self_learning.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Chronological exact-conflict self-learning reduces charged held-future cost versus scratch and frozen-empty controls while preserving exact answers, prefix support, and safe operation.
+
+## WHAT WOULD REFUTE IT
+A valid reuse arm tying or exceeding the controls’ held-future charged cost—making its charged benefit zero or negative—or any exact-answer mismatch, unsafe reuse/write, or prefix-retention failure would falsify the claim.
+
+## WAS THAT CHECKED
+Yes. Matched-dose scratch and frozen-empty arms provide direct cost comparators; held-future rows measure both unbounded and bounded reuse against them. Separate rows check exact answers, unsafe activity, prefix retention, chronology, and terminal completeness.
+
+## EVIDENCE
+`valid_unbounded_reuse` has `charged_cost` `40` and `charged_benefit_vs_scratch` `84`; `valid_bounded_reuse` has `charged_cost` `44` and `charged_benefit_vs_scratch` `80`. Both `scratch` and `frozen_empty_memory` have `charged_cost` `124`. The artifact records `matched_dose` as `true`, `held_future_unread_until_boundary` as `true`, `thresholds_frozen_before_execution` as `true`, `uses_future_outcomes_for_stream` as `false`, `exact_answer_equality` as `true`, `unsafe_use_count` as `0`, `unsafe_write_count` as `0`, `prefix_retention_within_margin` as `true`, and `all_planned_rows_terminal` as `true`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6523_adaptive_validation_csl_audit.json
+
+**CANNOT_DETERMINE**
+
+> Audit-integrity guard: quoted evidence ['; under ', ', both have ', '. Nevertheless, ', ', versus ', ', with '] does not appear in the artifact, so this verdict was downgraded and must not be acted on.
+
+## VERDICT
+CLAIM_OVERSTATED
+
+## THE HEADLINE CLAIM
+The independent full audit supports CSL, while adaptive validation reduces checks without changing the full-set decision.
+
+## WHAT WOULD REFUTE IT
+A serious comparator tying or beating the claimed CSL winner on held-future benefit and charged cost would refute the implied added-value claim; adaptive validation would be refuted by a different decision or no check savings.
+
+## WAS THAT CHECKED
+Yes. The final full audit compared all candidate arms and found that `restart` exactly tied `valid_unbounded_reuse`. The adaptive arm was separately compared with full-set validation and did save checks while agreeing, so only that narrower result survives.
+
+## EVIDENCE
+The `winner_tie_set` contains `valid_unbounded_reuse` and `restart`. Under `benefit_vs_scratch`, both have `84`; under `charged_cost_totals`, both have `40.0`. Nevertheless, `full_audit_winner` is `valid_unbounded_reuse` and `verdict_class` is `positive`. For validation cost, `variance_weighted_adaptive` has `charged_checks` of `108`, versus `180` for `full_set`, with `decision_agreement_with_full` equal to `true`.
 
 ## RECOMMENDATION
 NARROW_CLAIM
 
-## experiment_6503_v561_source_delta_method_contract.json
+## experiment_6524_arc_supervisor_redirect_generalization.json
 
 **NO_CLAIM**
 
@@ -50,87 +119,21 @@ NARROW_CLAIM
 NO_CLAIM
 
 ## THE HEADLINE CLAIM
-No comparative claim — artifact is a source-receipt + frozen-method-contract preregistration ("source receipts pinned, method contract frozen, paper/product claims remain bounded context").
+no claim
 
 ## WHAT WOULD REFUTE IT
-Nothing empirical to refute. This is scaffolding: pins 11 source receipts, freezes a `method_contract`, records a readiness gate. Only "claims" are gate booleans (`method_contract_ready_score=1.0`, `all_gates_passed`), each recomputed from its own row set — pass/fail is a real check, not a comparative result. Any method-value claim is explicitly deferred: every promoted method carries `paper_claim_is_local_evidence: false` and points at a FUTURE local test (`exp6504`, `exp6506`, `exp6507`, `exp6509`).
+Not applicable: the artifact makes no positive comparative or value claim; outcome-bearing live receipts would be required to test whether any supervisor arm improves outcomes.
 
 ## WAS THAT CHECKED
-Not applicable — no comparative claim made. `verdict_class = "null"`, `verifier_is_oracle = false`, substrate `no_llm`. Blocked source (`openreview_clause_predictions`, `http_403`) is honestly recorded as `blocked_challenge`, not silently counted as success — receipt discipline holds.
+No. All three accepted receipts were non-outcome-bearing, and there were no redirect outcome rows; the artifact correctly reports itself as blocked.
 
 ## EVIDENCE
-- `"verdict_class": "null"`
-- `"honest_verdict": "complete_v561_source_delta_method_contract: source receipts are pinned, the method contract is frozen, and paper/product claims remain bounded context"`
-- `"paper_claim_is_local_evidence": false`
-- `"hardware_claim_allowed": false`
-- `"retrieval_state": "blocked_challenge"`, `"http_state": "http_403"` (honestly flagged, not counted as win)
-- `"all_gates_passed": true` with `"failed_checks": []`
+`honest_verdict` `blocked: missing outcome-bearing live trajectory-supervisor receipts` `outcome_bearing_receipt_count` `0` `redirect_outcome_rows` `[]` `solve_credit_claimed` `false` `verdict_class` `blocked`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6502_v560_retirement_v561_lineage_lock.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-V560 learned-energy/factor/ARC-policy/hardware scopes are retired (null result), and only the fresh exact SAT/CSP structural branch may seed V561 — a governance ledger, not a positive capability claim.
-
-## WHAT WOULD REFUTE IT
-- A retired scope whose own rows show a real positive held-out effect (e.g. learned head beats every shortcut control on held data) — would refute "retire".
-- A forbidden-reuse attack that slips into V561 (`fail_closed: false`, `allowed_into_v561: true`) — would refute "locked".
-- A V561 task gated on a retired upstream experiment ID — would refute the clean-lineage claim.
-
-## WAS THAT CHECKED
-Yes.
-- Retirements derive from rows, not assertion: learned energy `trajectory_signal_ready_score_from_rows` = 0.0 because best shortcut control (`checkpoint`, 0.936975) beats best learned head (`mlp`, 0.880952) + 6 harmful flips. ARC alignment: held R² 0.004 < shuffled 0.017. These are the retirement being EARNED by rows that could have shown otherwise.
-- All 8 forbidden-reuse attacks `fail_closed: true`, `allowed_into_v561: false`.
-- `no_v561_task_depends_on_retired_upstream_experiment_id: true`.
-- `verifier_is_oracle: true` but claim is null/governance, not a verifier value claim — no circularity harm.
-
-## EVIDENCE
-- `"verdict_class": "null"`
-- `"best_learned_head_id": "mlp"`, `"best_learned_balanced_accuracy": 0.880952`, `"best_shortcut_control_id": "checkpoint"`, `"best_shortcut_balanced_accuracy": 0.936975`, `"harmful_flip_count": 6`
-- `"held_incremental_r2": 0.004101`, `"shuffled_incremental_r2": 0.016746`, `"energy_alignment_positive_from_rows": false`
-- `"all_forbidden_reuse_attacks_fail_closed": true`
-- `"no_v561_task_depends_on_retired_upstream_experiment_id": true`
-- `"every_decision_row_recomputed": true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6501_v560_capstone.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-V560 capstone classified every upstream outcome and declares all four value claims (trajectory energy, continuous learning, ARC policy, hardware) INELIGIBLE.
-
-## WHAT WOULD REFUTE IT
-Headline promotes a value claim the rows do not support — e.g. marks `trajectory_energy_claim_eligible=true` while a shortcut survived, or reads a validity-flagged/disqualified row as a win. Refutation = any eligibility flag flipped true over a row showing shortcut survival, harmful flips, closed gate, or `flagged_adversarial`.
-
-## WAS THAT CHECKED
-Yes. Every value claim resolves to `eligible: false` with named reasons drawn from the disqualifying rows. Verifier is oracle (`verifier_is_oracle: true`) — but capstone makes NO verifier value claim; it declares all such claims ineligible. Disqualified/flagged rows are honored, not laundered. This is an honest-null bookkeeping artifact, not a promotion.
-
-## EVIDENCE
-- `"honest_verdict": "complete: V560 capstone classified every upstream outcome; trajectory_energy_claim_eligible=false; continuous_learning_claim_eligible=false; arc_policy_claim_eligible=false; hardware_claim_eligible=false"`
-- `"all_shortcuts_rejected": false` with `"surviving_shortcut_ids": ["checkpoint"]`
-- `"best_shortcut_balanced_accuracy": 0.936975` > `"best_learned_balanced_accuracy": 0.880952` (shortcut beats learned head — signal disqualified, honored)
-- `"trajectory_signal_ready_score": 0.0`, `"harmful_flip_count": 6`
-- trajectory_energy `"eligible": false` reasons `["trajectory_signal_not_ready","checkpoint_shortcut","harmful_flip_count_6",...]`
-- `"headline_mismatch_count": 0`, `"all_expected_outcomes_classified": true`
-- `"missing_unexplained_experiments": []`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6500_gated_default_off_live_arc_policy_ab.json
+## experiment_6525_gatemate_changed_state_continuity.json
 
 **NO_CLAIM**
 
@@ -138,26 +141,21 @@ KEEP
 NO_CLAIM
 
 ## THE HEADLINE CLAIM
-No claim. Artifact block record. Gate failed upstream, experiment never ran.
+no claim
 
 ## WHAT WOULD REFUTE IT
-Nothing to refute. No comparative claim, no A/B result, no verifier value claim. Just receipt: upstream gate `arc_energy_alignment_ready_score == 1.0` not met (`0.0`), so live ARC policy A/B skipped.
+No comparative claim is made; operationally, a valid post-Exp6325 physical-state receipt or any executed hardware command would contradict the reported blocked status.
 
 ## WAS THAT CHECKED
-Not applicable. Design never reached measurement. Block correct, fail-closed at `conductor_pre_gate`.
+Yes. The receipt audit examined 24 candidates, found zero valid receipts, and the command rows recorded zero commands.
 
 ## EVIDENCE
-- `"honest_verdict": "blocked_gate_check_failed"`
-- `"status": "blocked"`
-- `"blocked_reason": "actual=0.0 == expected=1.0"`
-- `"duration_s": 0.0`
-- `"gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6499-arc-energy-progress-alignment.arc_energy_alignment_ready_score (actual=0.0 == expected=1.0)"`
-- `"blocked_at_layer": "conductor_pre_gate"`
+`hardware_speedup_claim`: `false`; `no_performance_or_availability_claim`: `true`; `receipt_candidate_count`: `24`; `valid_receipt_count`: `0`; `command_row_count`: `0`; `status`: `blocked_missing_new_physical_receipt`; `verdict_class`: `blocked`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6499_arc_energy_progress_alignment.json
+## experiment_6526_v564_independent_capstone.json
 
 **CLAIM_SUPPORTED**
 
@@ -165,108 +163,16 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Conservative prefix energy adds NO positive incremental alignment to live-agent progress over simple controls; energy-alignment gate NOT ready (`complete_null`).
+Four row-supported lineages are positive, while ARC generalization and GateMate continuity remain blocked.
 
 ## WHAT WOULD REFUTE IT
-Energy showing positive held incremental R² beyond controls AND stable positive direction leave-one-game-out. That would flip verdict to `complete_positive`. Null claim refutable by own rows — not true-by-construction.
+A held-row recomputation in which the best certified structural arm tied or beat the learned router would refute the router component—and therefore the composite headline.
 
 ## WAS THAT CHECKED
-Yes. Real rival present: shuffled_energy control. Shuffled energy scores HIGHER incremental R² (`0.016746`) than real energy (`0.004101`) — real signal loses to its own shuffle, strong null evidence. Energy coefficient negative (`-0.069817`), CI straddles zero. Leave-one-game-out direction never positive.
+Yes. The learned-router comparison used the best structural arm and reports 28 held units of additional benefit, with held contamination excluded. The decision process also preserved two failed lineages instead of forcing every lineage positive.
 
 ## EVIDENCE
-- `"energy_alignment_positive_from_rows": false`
-- `"held_incremental_r2": 0.004101` vs `"shuffled_incremental_r2": 0.016746`
-- `"energy_signal_coefficient": -0.069817`
-- ci95 `[-0.262655, 0.045856]` for energy_signal_coefficient (straddles 0)
-- `"failed_gates": ["energy_has_positive_incremental_alignment", "leave_one_game_out_direction_stable"]`
-- `"adequate_coverage_and_headroom": true` — headroom present, so null not a no-headroom artifact
-- `"leave_one_game_out_direction_stable_from_rows": false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6498_csl_independent_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Independent row-replay of exp6496/exp6497 reproduces every upstream aggregate with zero discrepancies, and the continuous-learning value claim is withheld (ineligible) because held-future benefit is zero.
-
-## WHAT WOULD REFUTE IT
-Two refutation paths: (1) replay-validity half — a non-empty discrepancy row, a `source_matches_reported: false`, or `csl_audit_ready_score < 1.0` would show the recompute did not match source rows; (2) the honest-null half is refuted only if the artifact quietly asserted continuous-learning worked while rows show zero benefit — i.e. if any arm's `held_future_utility > 0` yet `continuous_learning_claim_eligible` were true, or vice versa (claim asserted on zero-benefit rows).
-
-## WAS THAT CHECKED
-Yes. `discrepancy_rows` is empty; recompute scores are 1.0; every future-metric arm shows `held_future_utility: 0.0`, and the artifact sets `continuous_learning_claim_eligible: false` matching that zero. The value claim is declined, not overstated. `verifier_is_oracle: true` is correct and harmless here — the audit IS the deterministic recompute (a reproduction check), and it makes no added-value claim that circularity could inflate.
-
-## EVIDENCE
-- `"honest_verdict": "complete_independent_audit: row replay validated; continuous-learning claim remains ineligible because held_future_benefit failed"`
-- `"continuous_learning_claim_eligible": false`
-- `"discrepancy_rows": []`
-- `"held_future_benefit": false`
-- `"continuous_self_learning_ready_score_from_rows": 0.0`
-- `"csl_audit_ready_score": 1.0`
-- future_metric_rows all arms: `"held_future_utility": 0.0`, `"metric_matches_source": true` (frozen_no_update, always_update, fixed_threshold)
-- `"critical_discrepancy_count": 0`, `"false_accept_count": 0`, `"all_critical_fail_closed": true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6497_factor_pool_support_stress.json
-
-**CLAIM_OVERSTATED**
-
-## VERDICT
-CLAIM_OVERSTATED
-
-## THE HEADLINE CLAIM
-`medium bounded capacity preserved support and exact safety under stress` — verdict token `complete_positive`, recommends `medium_bounded`.
-
-## WHAT WOULD REFUTE IT
-Frozen do-nothing baseline (`zero_frozen`, zero durable writes) matching `medium_bounded` on the two properties the sentence names — support preserved AND exact safety. If the no-write baseline ties on both stated dims, medium adds nothing on what the headline actually says; the real distinguisher (held future utility) is absent from the sentence and from the consumed token.
-
-## WAS THAT CHECKED
-Checked, and refutation OCCURRED in the artifact's own rows. `zero_frozen` and `small_bounded` both tie `medium_bounded` on `support_preserved` and `exact_safety`. Every arm is exact-safe (`exact_safety_all_capacities: true`). The only field that separates medium — `total_held_future_utility` (7.0 vs 2.5 vs 0.0) — is NOT in the headline sentence. Downstream reads `complete_positive` + "preserved support and exact safety," which the frozen no-write baseline achieves equally. Also: `verifier_is_oracle` true, so "exact safety" is oracle-defined and non-discriminating.
-
-## EVIDENCE
-- `"complete_positive: medium bounded capacity preserved support and exact safety under stress"`
-- `"zero_frozen": {"exact_safety": true, "support_preserved": true, "total_held_future_utility": 0.0}`
-- `"small_bounded": {"exact_safety": true, "support_preserved": true, "total_held_future_utility": 2.5}`
-- medium: `"support_preserved": true`, `"total_held_future_utility": 7.0`
-- `"exact_safety_all_capacities": true`
-- `"reason": "No durable writes. This is the exact frozen baseline."` (zero_frozen)
-
-## RECOMMENDATION
-NARROW_CLAIM — headline + verdict token must cite the actual discriminator (`total_held_future_utility` 7.0, non-monotonic: overlarge 3.0 < medium despite bigger capacity), not "preserved support and exact safety," which the frozen no-write baseline and `small_bounded` both tie. Drop "exact safety" as load-bearing — oracle-defined and true for all arms.
-
-## experiment_6496_continuous_factor_learning.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Chronological replay ran row-complete across all 4 arms, but held-future learning readiness did not open (null).
-
-## WHAT WOULD REFUTE IT
-Any arm showing `held_future_benefit: true` / nonzero `held_future_utility` on the held_future horizon — readiness "opening." The verdict claims it did NOT open, so a single opening arm refutes it.
-
-## WAS THAT CHECKED
-Yes. All 4 arms recomputed from rows: every `future_evaluation` row `held_future_utility: 0`, `held_future_benefit: false`, readiness gate `held_future_benefit` in `readiness_failed_gates`. Refutation checked, absent. Verdict reports the null faithfully — makes no positive or comparative claim, no value claim (verifier_is_oracle true but no added-value assertion). Note: corpus is degenerate — every event `compile_reason: "empty_response"`, `durable_write_count: 0`, so no arm COULD admit a factor and all tie at 0. This makes the null true-by-construction, but the verdict does not overclaim method failure; it only claims readiness did not open, which is exactly what the rows show.
-
-## EVIDENCE
-- `"complete_null: chronological replay is row-complete, but held-future learning readiness did not open"`
-- `"held_future_benefit": false`
-- `"continuous_self_learning_ready_score": 0.0`
-- `"csl_execution_complete_score": 1.0`
-- `"durable_write_count": 0`
-- `"compile_reason": "empty_response"`
-- `"admitted_event_count": 0`
-- `"readiness_failed_gates": ["held_future_benefit"]`
-- exp6495 receipt: `"mechanism validated; no learning-benefit claim is made"`
+`held_benefit_beyond_best_structural_units`: `28`; `held_contamination_free`: `true`; `authority`: `oracle_distinct_row_reduction`; `positive_lineage_count`: `4`; `blocked_lineage_count`: `2`; `blocked_lineages`: `arc_generalization`, `hardware_continuity`; `outcome_bearing_receipt_count`: `0`; `new_post_exp6325_physical_receipt_found`: `false`; `verifier_is_oracle`: `false`
 
 ## RECOMMENDATION
 KEEP
