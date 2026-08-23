@@ -16330,3 +16330,7 @@ code |
 | 2026-08-23 11:27 UTC | OPERATOR-ATTENTION: CONSECUTIVE_INVALID_LLM_ON_ROW | BLOCK | pid 849366 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json: 2/2 L |
 | 2026-08-23 11:58 UTC | SMT-conflict inference-cost stress and exact-tool  | OK | 88 passed, 1 warning in 24.73s |
 | 2026-08-23 12:19 UTC | Independent external router and SOTA cost-guard au | OK | 89 passed, 1 warning in 11.61s |
+| 2026-08-23 13:51 UTC | Plan milestone 2026.08.567 | OK | 7 tasks proposed |
+| 2026-08-23 13:54 UTC | Activation REFUSED: milestone 2026.08.567 | BLOCK | exclusion-manifest: 5 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-23 13:54 UTC | Activation replan 1/2: 2026.08.567 | OK | refused roadmap quarantined to roadmap-2026.08.567-refusal1.yaml; replanning wit |
+| 2026-08-23 14:02 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 1645356 serves 'gemma-4-12b-it-Q4_K_M.gguf', live pin is 'Qwen3.8-27B' |

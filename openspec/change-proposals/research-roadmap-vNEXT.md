@@ -78,7 +78,8 @@ measure how flagship local models behave as simultaneous constraints grow. It
 also did not show when a flat prompt should remain intact and when bounded
 decomposition or exact-tool routing is worth its cost.
 
-V567 creates proof-preserving DRIFT variants across constraint count, type,
+V567 first runs a focused execution-time SOTA ingestion for this gap. It then
+creates proof-preserving DRIFT variants across constraint count, type,
 interaction, and surface form. It compares flat generation, a longer flat
 budget, bounded decomposition, the V566 cost guard, and a combined route. Each
 clause and the joint result receive deterministic checks. This is not a retry
@@ -269,15 +270,16 @@ null. A verifier-oracle comparison cannot receive a positive class.
 
 | Exp | Task | Primary output | Gate |
 |---:|---|---|---|
-| 6555 | Proof-preserving saturation fixture | Frozen constraint-count, type, interaction, and surface variants | Exp6548 evidence ready |
+| 6555 | Saturation SOTA ingestion and proof-preserving fixture | Source-backed method mapping plus frozen constraint-count, type, interaction, and surface variants | Exp6548 evidence ready |
 | 6556 | SOTA saturation and intervention A/B | Flat, long-flat, decomposition, cost-guard, and combined rows | Exp6555 fixture ready |
 | 6557 | Independent saturation audit | Row-recomputed phase curve and bounded adoption policy | always runs |
 
-Exp6555 derives equivalent and intentionally hardened variants from the pinned
-external fixture. It freezes constraint counts, structural and lexical types,
-interaction graphs, turn lineage, surfaces, model-independent labels, and
-exact clause checkers. It does not ask a model to extract a ConstraintIR or
-generate a label.
+Exp6555 satisfies the SOTA-ingestion cycle for the new saturation track. It
+writes a primary-source method mapping before it derives equivalent and
+intentionally hardened variants from the pinned external fixture. It freezes
+constraint counts, structural and lexical types, interaction graphs, turn
+lineage, surfaces, model-independent labels, and exact clause checkers. It
+does not ask a model to extract a ConstraintIR or generate a label.
 
 Exp6556 runs every condition on all three mandated model families under matched
 seeds and charged budgets. It measures per-clause success, all-constraint
@@ -353,13 +355,23 @@ still produces a terminal diagnostic artifact.
 | New task | Prior scope | What changes |
 |---|---|---|
 | Exp6548 | Exp6541 | Reclassifies an existing artifact by immutable receipt and live verifier result. It does not claim a live-model preflight or rerun source intake. |
+| Exp6549 | Exp6545 | Moves the clean experiment-local router behind a typed, default-off production boundary with byte-identical disabled behavior. |
+| Exp6550 | Exp5646 and Exp6545 | Drops the blocked two-axis tempering chain. It ports only the compact Safety-Net request and decision ABI after the new production adapter passes. |
+| Exp6551 | Exp6545 | Audits the production and cross-language paths independently. It does not repeat the experiment-local router comparison. |
+| Exp6553 | Exp6193, Exp6150, and Exp5867 | Replaces missing or zero-valued prerequisite chains with the shipped V566 chronology and an in-roadmap reversible controller. It adds matched-dose co-observation, all three mandated models, and future-support checks. |
+| Exp6554 | Exp6193 and Exp6150 | Always runs without a structured gate. It audits available V567 rows or emits a precise missing-input disposition. |
+| Exp6555 | Exp5913 | Replaces the blocked exact-slot memory-fixture chain with a clean external-evidence gate and a different proof-preserving saturation deliverable. |
+| Exp6556 | Exp5708 and Exp5897 | Removes generated formal-representation and retired ConstraintIR dependencies. It scores executable source constraints with deterministic clause and joint checks. |
 | Exp6558 | Exp6524 | Adds prospective outcome-bearing live supervisor receipts before it tests selection refinement. Missing receipts cannot be mistaken for a policy result. |
 | Exp6559 | Exp6525 | Requires a receipt newer than Exp6525 and mechanically retires an unchanged repeated block. |
+| Exp6560 | Exp6526 | Aggregates a new V567 evidence graph and preserves blocked lanes. It does not repeat V564 measurements. |
 
-Each corresponding YAML task contains `experiment_id`, the exact prior
-`verdict`, a concrete `addressed_by` explanation, and
-`retire_if_same_verdict: true`. No task reuses a retired experiment ID or
-requires a retired upstream task.
+Each corresponding YAML task contains one or more structured entries. Every
+entry has `experiment_id`, the exact prior `verdict`, a concrete
+`addressed_by` explanation, and `retire_if_same_verdict: true`. Exp6560 also
+uses the standing 2026-05-29 capstone override because it is routine
+aggregation, not a rerun. No task reuses a retired experiment ID or requires a
+retired upstream task.
 
 The retired schema-supported ConstraintIR sequence Exp5909, Exp5910, and
 Exp5923 is out of scope. Exp6555 and Exp6556 use executable source constraints

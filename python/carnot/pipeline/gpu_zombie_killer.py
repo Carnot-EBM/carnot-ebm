@@ -48,6 +48,28 @@ _log = logging.getLogger(__name__)
 # The CUDA driver typically drains in 1-3 seconds; 2 s is the validated sweet spot.
 _POST_KILL_WAIT_S: float = 2.0
 
+# Inference servers this sweep must NEVER kill (REQ-INFRA-079, 2026-08-23).
+# A server idling between requests is healthy, not a zombie; this SIGKILL
+# sweep leaves no log trace in the victim, which made past kills look like
+# "server unreachable for the whole window". Dead or orphaned servers are
+# scripts/run_stop_authority.py's job — it verifies ownership before acting.
+# Kept in sync with _SERVER_ENTRYPOINT_MARKERS in scripts/experiment_template.py
+# (that file is not importable from this package without path games).
+_PROTECTED_SERVER_MARKERS: tuple[str, ...] = (
+    "llama-server",
+    "vllm.entrypoints.openai.api_server",
+)
+
+
+def _pid_is_protected_server(pid: int) -> bool:
+    """True if PID's cmdline names an inference server (never a kill target)."""
+    try:
+        with open(f"/proc/{pid}/cmdline", "rb") as fh:
+            cmdline = fh.read().replace(b"\x00", b" ").decode("utf-8", "replace")
+    except OSError:
+        return False
+    return any(marker in cmdline for marker in _PROTECTED_SERVER_MARKERS)
+
 
 # ---------------------------------------------------------------------------
 # GPUZombieResult dataclass
@@ -90,6 +112,9 @@ class GPUZombieResult:
     gpu_index: int
     pids_found: list[int] = field(default_factory=list)
     pids_killed: list[int] = field(default_factory=list)
+    # PIDs spared because their cmdline names an inference server
+    # (REQ-INFRA-079). Recorded so a caller can see WHY VRAM stayed occupied.
+    pids_skipped_protected: list[int] = field(default_factory=list)
     vram_before_mb: float = 0.0
     vram_after_mb: float = 0.0
     vram_freed_mb: float = 0.0
@@ -266,8 +291,22 @@ def kill_gpu_zombies(
         result.vram_after_mb = result.vram_before_mb
         return result
 
-    # Step 3: build kill list (exclude calling process and any caller exclusions)
-    kill_targets = [pid for pid in result.pids_found if pid not in effective_excludes]
+    # Step 3: build kill list (exclude calling process and any caller exclusions).
+    # REQ-INFRA-079 / SCENARIO-INFRA-6561: inference servers are never targets.
+    kill_targets = []
+    for pid in result.pids_found:
+        if pid in effective_excludes:
+            continue
+        if _pid_is_protected_server(pid):
+            result.pids_skipped_protected.append(pid)
+            _log.info(
+                "kill_gpu_zombies: SKIP protected server PID %d (gpu=%d) — "
+                "REQ-INFRA-079; a live server is not a zombie",
+                pid,
+                gpu_index,
+            )
+            continue
+        kill_targets.append(pid)
     result.kill_attempted = bool(kill_targets)
 
     if not kill_targets:

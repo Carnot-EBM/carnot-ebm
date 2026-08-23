@@ -138,9 +138,10 @@ _T = TypeVar("_T")
 
 # Training entrypoints that the GPU-zombie reaper must NEVER kill. A model-training
 # process legitimately holds large VRAM for hours. The nvidia-smi fallback path of
-# kill_gpu_zombies() (used when pynvml is absent) gates the kill on the MINIMUM GPU
-# utilisation across ALL GPUs — so an idle GPU 0 (0%) drags the gate to 0% and the
-# reaper kills a fully-busy training run on GPU 1 (100% util, >1GB VRAM).
+# kill_gpu_zombies() (used when pynvml is absent) USED TO gate the kill on the
+# MINIMUM GPU utilisation across ALL GPUs — so an idle GPU 0 (0%) dragged the gate
+# to 0% and the reaper killed a fully-busy training run on GPU 1 (100% util, >1GB
+# VRAM). Fixed 2026-08-23 (REQ-INFRA-079): the gate is now per-GPU via gpu_uuid.
 #
 # Origin: 2026-06-13. The outer-loop's contiguous TRM Sudoku-Extreme training
 # (decision "A": training is OWNED BY THE OUTER-LOOP; the conductor stands down on TRM —
@@ -151,19 +152,43 @@ _T = TypeVar("_T")
 # because nvidia-smi reports only the bare process name.
 _TRAINING_ENTRYPOINT_MARKERS = ("train.py", "/nn/train", "src/nn/train")
 
+# Inference servers that the GPU-zombie reaper must NEVER kill (REQ-INFRA-079).
+# A serving process idles between requests by design, so "big VRAM + low
+# utilization" is its NORMAL healthy state — the zombie heuristic is
+# category-invalid for servers. This exemption exists because the sweep below
+# was the project's long-unsolved "llama-server reaper": on 2026-08-23 it was
+# live-reproduced SIGTERMing a llama-server decoding at 81 tok/s on a GPU at
+# 97% utilization (see ops/known-issues.md 2026-08-23). Dead or orphaned
+# servers are run_stop_authority.py's job — it verifies ownership before acting.
+_SERVER_ENTRYPOINT_MARKERS = ("llama-server", "vllm.entrypoints.openai.api_server")
 
-def _pid_is_protected_training_proc(pid: int) -> bool:
-    """True if PID is a model-training process that must be exempt from zombie-kill."""
+
+def _pid_cmdline(pid: int) -> str:
+    """The /proc cmdline for PID as one space-joined string; '' when unreadable."""
     try:
-        cmdline = (
+        return (
             Path(f"/proc/{pid}/cmdline")
             .read_bytes()
             .replace(b"\x00", b" ")
             .decode("utf-8", "replace")
         )
     except (FileNotFoundError, PermissionError, ProcessLookupError, OSError):
-        return False
+        return ""
+
+
+def _pid_is_protected_training_proc(pid: int) -> bool:
+    """True if PID is a model-training process that must be exempt from zombie-kill."""
+    cmdline = _pid_cmdline(pid)
     return any(marker in cmdline for marker in _TRAINING_ENTRYPOINT_MARKERS)
+
+
+def _pid_is_protected_server_proc(pid: int) -> bool:
+    """True if PID is an inference server that must be exempt from zombie-kill.
+
+    REQ-INFRA-079: llama-server / vLLM processes are never zombie-kill targets.
+    """
+    cmdline = _pid_cmdline(pid)
+    return any(marker in cmdline for marker in _SERVER_ENTRYPOINT_MARKERS)
 
 
 def _cuda_is_available() -> bool:
@@ -862,6 +887,17 @@ class ExperimentTemplate:
                             )
                             seen_pids.add(pid)
                             continue
+                        # REQ-INFRA-079: an inference server idling between
+                        # requests is healthy, not a zombie. Never kill it.
+                        if _pid_is_protected_server_proc(pid):
+                            _log.info(
+                                "kill_gpu_zombies: SKIP protected server PID %d (gpu=%d, vram_mb=%d)",
+                                pid,
+                                gpu_idx,
+                                vram_mb,
+                            )
+                            seen_pids.add(pid)
+                            continue
                         try:
                             os.kill(pid, signal.SIGTERM)
                             killed_pids.append(pid)
@@ -897,24 +933,31 @@ class ExperimentTemplate:
         nvidia-smi ships with the NVIDIA driver on every CUDA host — no extra package needed.
 
         The query uses CSV output for reliable machine parsing:
-            nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader,nounits
-        Each line: '<pid>, <vram_mb>'.
+            nvidia-smi --query-compute-apps=pid,used_memory,gpu_uuid --format=csv,noheader,nounits
+        Each line: '<pid>, <vram_mb>, <gpu_uuid>'.
 
-        Utilization is read separately because nvidia-smi does not expose per-process GPU utilization
-        directly — only device-level utilization is available. We use device utilization as a proxy,
-        same as the pynvml path.
+        REQ-INFRA-079 (2026-08-23): utilization is gated PER GPU, never as an
+        aggregate. This function used to take the MINIMUM utilization across
+        ALL GPUs "as a conservative idle signal". That was the project's
+        long-unsolved "llama-server reaper": an idle GPU 0 dragged the gate to
+        0%, and the sweep SIGTERMed a llama-server on GPU 1 that was decoding
+        at 81 tok/s with GPU 1 at 97% utilization (live-reproduced). Each
+        compute process is now joined to its own GPU via gpu_uuid, and a
+        candidate whose GPU cannot be attributed is SKIPPED — the sweep fails
+        toward not killing, never toward an aggregate gate.
 
-        Spec: REQ-INFRA-063, SCENARIO-INFRA-088, SCENARIO-INFRA-089
+        Spec: REQ-INFRA-063, REQ-INFRA-079, SCENARIO-INFRA-088,
+        SCENARIO-INFRA-089, SCENARIO-INFRA-6560, SCENARIO-INFRA-6562
         """
         killed_pids: list[int] = []
         freed_mb = 0
 
         try:
-            # Step 1: get per-process VRAM usage from nvidia-smi
+            # Step 1: per-process VRAM usage + which GPU each process runs on
             vram_result = subprocess.run(
                 [
                     "nvidia-smi",
-                    "--query-compute-apps=pid,used_memory",
+                    "--query-compute-apps=pid,used_memory,gpu_uuid",
                     "--format=csv,noheader,nounits",
                 ],
                 capture_output=True,
@@ -928,29 +971,31 @@ class ExperimentTemplate:
             _log.warning("kill_gpu_zombies: nvidia-smi subprocess error — %s", exc)
             return {"killed_pids": [], "freed_mb": 0, "error": "no_gpu_tooling"}
 
-        # Step 2: get device-level GPU utilization (proxy for per-process idle detection)
+        # Step 2: per-GPU utilization keyed by GPU uuid (REQ-INFRA-079)
+        util_by_uuid: dict[str, float] = {}
         try:
             util_result = subprocess.run(
                 [
                     "nvidia-smi",
-                    "--query-gpu=utilization.gpu",
+                    "--query-gpu=uuid,utilization.gpu",
                     "--format=csv,noheader,nounits",
                 ],
                 capture_output=True,
                 text=True,
                 timeout=30,
             )
-            # Take the minimum across all GPUs as a conservative idle signal.
-            # If ANY GPU is busy, we avoid killing processes on that machine.
-            util_lines = [l.strip() for l in util_result.stdout.strip().splitlines() if l.strip()]
-            gpu_util_pct = min(
-                (float(u) for u in util_lines if u.isdigit() or u.replace(".", "").isdigit()),
-                default=0.0,
-            )
+            for uline in util_result.stdout.strip().splitlines():
+                uparts = [p.strip() for p in uline.split(",")]
+                if len(uparts) < 2:
+                    continue
+                try:
+                    util_by_uuid[uparts[0]] = float(uparts[1])
+                except ValueError:
+                    continue
         except Exception:
-            gpu_util_pct = 0.0  # assume idle if we cannot read utilization
+            util_by_uuid = {}  # no attribution possible -> every candidate is skipped below
 
-        # Step 3: parse VRAM output and kill zombie candidates
+        # Step 3: parse VRAM output and kill zombie candidates on THEIR OWN idle GPU
         seen_pids: set[int] = set()
         for line in vram_result.stdout.strip().splitlines():
             line = line.strip()
@@ -964,12 +1009,38 @@ class ExperimentTemplate:
                 vram_mb = int(parts[1].strip())
             except ValueError:
                 continue
+            gpu_uuid = parts[2].strip() if len(parts) >= 3 else ""
             if pid in seen_pids:
                 continue
-            if vram_mb >= vram_threshold_mb and gpu_util_pct < util_threshold_pct:
+            if vram_mb < vram_threshold_mb:
+                continue
+            # SCENARIO-INFRA-6562: no per-GPU attribution -> skip, never kill
+            # under an aggregate gate. A missed zombie costs one deferred
+            # experiment; a killed live server voids hours of measurement.
+            gpu_util_pct = util_by_uuid.get(gpu_uuid)
+            if gpu_util_pct is None:
+                _log.info(
+                    "kill_gpu_zombies (nvidia-smi): SKIP PID %d — GPU attribution "
+                    "unavailable (uuid=%r); refusing aggregate-gated kill",
+                    pid,
+                    gpu_uuid,
+                )
+                seen_pids.add(pid)
+                continue
+            if gpu_util_pct < util_threshold_pct:
                 if _pid_is_protected_training_proc(pid):
                     _log.info(
                         "kill_gpu_zombies (nvidia-smi): SKIP protected training PID %d (vram_mb=%d)",
+                        pid,
+                        vram_mb,
+                    )
+                    seen_pids.add(pid)
+                    continue
+                # REQ-INFRA-079 / SCENARIO-INFRA-6561: a server idling between
+                # requests is healthy, not a zombie. Never kill it here.
+                if _pid_is_protected_server_proc(pid):
+                    _log.info(
+                        "kill_gpu_zombies (nvidia-smi): SKIP protected server PID %d (vram_mb=%d)",
                         pid,
                         vram_mb,
                     )
