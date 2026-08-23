@@ -7449,3 +7449,128 @@ diagnostic only.
 | SCENARIO-CL-6553-MATCHED-ARMS | Planned: `python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py`. | Planned: `tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py`. |
 | SCENARIO-CL-6553-SUPPORT-RETENTION | Planned: `python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py`. | Planned: `tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py`. |
 | SCENARIO-CL-6553-RESTART-ROLLBACK-SAFETY | Planned: `python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py`. | Planned: `tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py`. |
+
+## REQ-CL-6554: Independent Prospective CSL Audit
+
+Given Exp6553 attempts a prospective SOTA continuous self-learning result
+When Exp6554 runs for planning date 20260823
+Then it SHALL always write
+`results/experiment_6554_continuous_self_learning_independent_audit.json`
+as one terminal artifact.
+
+Exp6554 SHALL not run new GGUF generation. It SHALL audit stored Exp6553
+receipts, rows, journals, checkpoints, and memory transitions. It SHALL record
+input paths, hashes, raw-receipt existence, checkpoint existence, model-file
+hashes computed without loading weights, Z3 and Python versions, CPU, RAM,
+disk, audit seed, and protected-file hashes.
+
+Exp6554 SHALL validate process ids, commands, model identities, model-file
+hashes, output hashes, monotonic clocks, GPU samples, exit status, durations,
+and stale-output evidence. Missing model identity, legacy substitution,
+impossible live timing, missing rows, missing raw receipts, or non-terminal
+upstream evidence SHALL not become a scientific null.
+
+Exp6554 SHALL replay every exact outcome and memory transition from the prior
+state, witness, event, and checker. It SHALL recompute memory hashes at each
+boundary. It SHALL recompute current success and charged cost, retained-family
+effects, future-support effects, co-observation dose, unsafe writes and uses,
+churn, capacity, restarts, rollbacks, timeouts, and censoring from row data
+only.
+
+Exp6554 SHALL attack missing rows, duplicate rows, aggregate tampering,
+query-boundary leakage, future access, held tuning, unequal dose, model aliases,
+zero-headroom wins, all-null metric cells, and circular exact authority. It
+SHALL set `continuous_self_learning_audited_ready_score` to bare `1.0` only
+when receipt authenticity, row closure, exact replay, transition replay, dose,
+safety, retention, support, restart, rollback, and verdict recomputation all
+pass. It SHALL set
+`inference_substrate="independent_stored_sota_receipt_and_exact_transition_replay_no_new_llm"`
+and `verifier_is_oracle=false`.
+
+Required artifact fields and principles:
+
+- `status`: An always-run audit needs a terminal state for missing, invalid, null, and positive inputs.
+- `honest_verdict`: The verdict must state receipt, safety, retention, support, and scientific disposition with a terminal prefix.
+- `verdict_class`: A closed class keeps audit status and scientific status structurally bounded.
+- `input_existence_and_hash_receipts`: The audit must identify the exact artifact, raw receipts, journals, and checkpoints it used.
+- `independent_live_receipt_audit_rows`: Fresh receipt checks prevent cached or legacy execution from posing as flagship inference.
+- `independent_exact_replay_rows`: Z3 replay must confirm every credited current, retained, and future outcome.
+- `independent_transition_replay_rows`: Memory effects are eligible only when every state hash and witness recomputes.
+- `independent_current_effect_rows`: Immediate claims must be recomputed from matched units and charged costs.
+- `independent_retention_and_support_rows`: The audit must expose any older-family or future-support regression.
+- `dose_and_coobservation_audit`: A replay benefit cannot be credited to more update exposure.
+- `unsafe_write_and_use_audit`: No aggregate gain can hide one invalid memory action.
+- `restart_rollback_and_persistence_audit`: Reusable learning must reproduce and recover exactly across state boundaries.
+- `missing_input_disposition`: Missing live evidence must close blocked rather than produce a scientific null.
+- `attack_matrix`: Receipt, leakage, dose, row, headroom, and circularity attacks stress the full claim.
+- `continuous_self_learning_audited_ready_score`: A binary audit score defines whether the prospective result may enter the capstone.
+- `per_unit_rows`: Every independent comparative conclusion needs unit-level recomputation rows.
+- `aggregate_row_recomputation`: The audit verdict must derive only from independent rows.
+- `gate_check_summary`: A blocked audit must list each missing or failed check and observed value.
+- `preconditions_checked`: Input and replay checks distinguish a blocked audit from null science.
+- `protected_files_unchanged`: The audit must not repair upstream evidence or mutate protected files.
+- `inference_substrate`: The audit replays stored receipts and exact checks; it does not claim new GGUF generation.
+- `verifier_is_oracle`: The learned memory policy is not authority; the audit uses separate exact evaluation.
+- `field_provenance`: Each disposition field must point to immutable rows, receipts, and reducers.
+- `random_seed`: A fixed audit sample and attack order make the audit reproducible.
+- `duration_s`: Monotonic time exposes an audit that skipped receipt or replay work.
+- `tests_run`: Named tests and E2E commands show independent checks executed.
+- `reproducibility_checksum`: A final hash protects the independent determination trail.
+
+### SCENARIO-CL-6554-MISSING-INPUT: Missing Live Rows Block The Audit
+
+Given Exp6553 has no raw live receipt rows, no per-unit rows, no checkpoint, or
+no journal
+When Exp6554 audits the stored inputs
+Then `verdict_class` SHALL be `blocked`
+And `continuous_self_learning_audited_ready_score` SHALL be `0.0`
+And `missing_input_disposition` SHALL name each missing input.
+
+### SCENARIO-CL-6554-RECEIPTS: Live Receipts Are Independently Checked
+
+Given stored Exp6553 model and output receipts
+When Exp6554 validates them
+Then every credited row SHALL have a mandated model id, matching model hash,
+valid process id, terminal exit status, monotonic clock interval, GPU sample,
+and output hash.
+
+### SCENARIO-CL-6554-REPLAY: Exact And Transition Replay Close
+
+Given per-unit and memory-transition rows
+When Exp6554 replays the row stream
+Then exact result hashes, witness hashes, pre-state hashes, post-state hashes,
+and commit decisions SHALL recompute for every credited event.
+
+### SCENARIO-CL-6554-ROWS: Audit Metrics Derive From Rows
+
+Given the row stream is closed
+When Exp6554 recomputes current value, retention, support, dose, safety,
+restart, rollback, timeout, and censoring metrics
+Then aggregate readiness SHALL derive only from independent row reductions.
+
+### SCENARIO-CL-6554-ATTACKS: Shortcut Attacks Fail Closed
+
+Given duplicated rows, aggregate tampering, future access, held tuning, unequal
+dose, model aliases, zero-headroom wins, all-null cells, or circular authority
+When Exp6554 evaluates attacks
+Then no attack may leave `continuous_self_learning_audited_ready_score` at
+`1.0`.
+
+### SCENARIO-CL-6554-ATOMIC: Output Is Terminal And Atomic
+
+Given Exp6554 finishes blocked, partial, disqualified, or clean
+When it writes the artifact
+Then the output SHALL be atomically replaced, checksum-protected, and validated
+against the required field set.
+
+## Implementation Status (REQ-CL-6554)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6554 | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`; terminal artifact `results/experiment_6554_continuous_self_learning_independent_audit.json`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
+| SCENARIO-CL-6554-MISSING-INPUT | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
+| SCENARIO-CL-6554-RECEIPTS | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
+| SCENARIO-CL-6554-REPLAY | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
+| SCENARIO-CL-6554-ROWS | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
+| SCENARIO-CL-6554-ATTACKS | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
+| SCENARIO-CL-6554-ATOMIC | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
