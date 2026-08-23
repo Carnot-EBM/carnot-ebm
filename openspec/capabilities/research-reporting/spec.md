@@ -53023,6 +53023,143 @@ and `verifier_is_oracle=true` only for immutable artifact validation.
 |---|---|---|
 | REQ-REPORT-6561 | Planned (`python/carnot/experiment_6561_v568_evidence_gate_contract.py`, terminal artifact `results/experiment_6561_v568_evidence_gate_contract.json`) | Planned (`tests/python/test_experiment_6561_v568_evidence_gate_contract.py`) |
 
+### REQ-REPORT-6562: Constraint Saturation Independent Audit V2 SHALL Replay V567 Evidence Without New LLM Generation
+
+Carnot SHALL build Exp6562 as an independent audit of the V567 constraint
+saturation evidence for planning date 20260823. The audit SHALL read the
+checked-in Exp6555 fixture artifact, the V567 fixture JSONL, the Exp6556
+intervention artifact, and the Exp6556 checkpoint. It SHALL perform no new LLM
+generation and SHALL not load model weights. It SHALL hash input artifacts,
+checkpoints, raw-response locations, model files, checkers, reducer code,
+Python, Z3, CPU, RAM, disk, audit seed, and protected files before it writes a
+verdict.
+
+The audit SHALL independently replay every equivalent and hardened fixture row
+against the source exact solver. It SHALL confirm constraint count, clause
+identity, interaction class, surface, lineage, variant mode, and intended proof
+relation. A fixture whose exact checker no longer runs SHALL block or
+disqualify the downstream claim.
+
+The audit SHALL validate live provenance from checked-in receipts only. Each
+model row SHALL expose model-file hash, process command, PID, start time, end
+time, GPU sample, token count, response hash, exit status, and raw response. A
+loader smoke flag, self-reported process ID, response prefix, stale checkpoint,
+constant fake GPU sample, or impossible timing SHALL NOT prove flagship
+inference.
+
+The audit SHALL replay every clause and joint result from emitted rows. It
+SHALL confirm that each decomposition preserves every clause and that every
+released result passed the exact joint checker. It SHALL reject missing
+clauses, invalid releases, aggregate-only success, and circular exact
+authority.
+
+The audit SHALL recompute phase curves, matched flat-versus-longer-flat
+effects, decomposition and fallback effects, recoveries, regressions, harmful
+interventions, tokens, solver calls, retries, wall time, timeouts, and
+censoring from rows only. It SHALL attack missing rows, duplicate rows, unequal
+cells, hidden retries, zero-headroom wins, aggregate tampering, post-held
+thresholds, model identity shortcuts, invalid releases, and non-recomputable
+claims.
+
+The Exp6562 artifact SHALL be written atomically to
+`results/experiment_6562_constraint_saturation_independent_audit_v2.json` with
+`inference_substrate=independent_checked_in_sota_receipt_and_exact_constraint_replay_no_new_llm`
+and `verifier_is_oracle=true`. The artifact SHALL include exactly these
+required fields: `status`, `honest_verdict`, `verdict_class`,
+`input_existence_and_hash_receipts`, `independent_fixture_proof_rows`,
+`independent_live_provenance_rows`,
+`independent_clause_and_joint_replay_rows`,
+`independent_phase_curve_rows`, `independent_paired_intervention_rows`,
+`harmful_intervention_and_release_audit`, `charged_cost_audit`,
+`constraint_saturation_independent_audit_ready_score`,
+`constraint_saturation_policy_audited_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `gate_check_summary`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+Field principles SHALL be:
+
+- `status`: "An always-run audit needs a terminal state for clean, missing, invalid, and non-recomputable evidence."
+- `honest_verdict`: "The verdict must state fixture, live provenance, exact replay, harm, cost, and policy dispositions with a terminal prefix."
+- `verdict_class`: "A closed class prevents an audit record from becoming unbounded positive science."
+- `input_existence_and_hash_receipts`: "The audit must identify the exact artifacts, checkpoints, raw responses, and checkers it used."
+- `independent_fixture_proof_rows`: "The model comparison is ineligible if the proof-preserving variants do not replay."
+- `independent_live_provenance_rows`: "Commands, PIDs, GPU samples, tokens, and response hashes must prove actual flagship inference."
+- `independent_clause_and_joint_replay_rows`: "Every credited success and release needs a separate executable replay."
+- `independent_phase_curve_rows`: "Constraint-load collapse must be recomputed by model, count, type, interaction, and surface."
+- `independent_paired_intervention_rows`: "Every claimed benefit needs matched rows against flat and longer-flat controls."
+- `harmful_intervention_and_release_audit`: "No aggregate gain can hide regressions or one invalid release."
+- `charged_cost_audit`: "Tokens, retries, solver calls, and time must recompute from raw receipts."
+- `constraint_saturation_independent_audit_ready_score`: "One binary field states whether the V567 saturation evidence is independently usable."
+- `constraint_saturation_policy_audited_score`: "A separate field distinguishes clean null evidence from a confirmed promotable policy."
+- `per_unit_rows`: "Every audit conclusion needs unit-level recomputation rows."
+- `aggregate_row_recomputation`: "The audit verdict must derive only from independent rows."
+- `gate_check_summary`: "A blocked audit must name every missing or failed check and observed value."
+- `preconditions_checked`: "Input and replay receipts distinguish blocked audit work from null science."
+- `protected_files_unchanged`: "The audit must not repair upstream evidence or mutate protected orchestration files."
+- `inference_substrate`: "The audit replays stored evidence and performs no new GGUF generation."
+- `verifier_is_oracle`: "Independent executable replay is audit authority, so a clean audit uses a non-positive class."
+- `field_provenance`: "Each disposition must point to immutable rows, receipts, and reducers."
+- `random_seed`: "A fixed audit order makes attacks and samples repeatable."
+- `duration_s`: "Monotonic time exposes an audit that skipped receipt or replay work."
+- `tests_run`: "Named tests and E2E commands show independent checks executed."
+- `reproducibility_checksum`: "A final hash protects the independent determination trail."
+
+`constraint_saturation_independent_audit_ready_score` SHALL equal 1.0 only
+when fixture replay, live provenance, row closure, exact replay, pairing, harm,
+cost, protected-file, field-provenance, and checksum checks all pass.
+`constraint_saturation_policy_audited_score` SHALL equal 1.0 only when the
+independent audit also confirms the bounded policy claim. A clean audit SHALL
+use `verdict_class=null`. Incomplete but usable evidence SHALL use `partial`.
+Missing inputs SHALL use `blocked`. False provenance, invalid variants, missing
+clauses, invalid releases, or non-recomputable claims SHALL use
+`disqualified`.
+
+#### SCENARIO-REPORT-6562-FIXTURE: Fixture Proof Rows Replay
+
+**Given** the Exp6555 fixture artifact and V567 JSONL are checked in
+**When** Exp6562 audits fixture rows
+**Then** every variant replays with the source exact solver and records clause,
+interaction, surface, lineage, and proof-relation closure.
+
+#### SCENARIO-REPORT-6562-LIVE: Live Receipts Are Provenanced
+
+**Given** Exp6556 model rows claim local GGUF inference
+**When** Exp6562 audits live provenance
+**Then** each mandated model row must include a valid model hash, command, PID,
+start/end timing, GPU sample, token count, response hash, exit status, and raw
+response.
+
+#### SCENARIO-REPORT-6562-REPLAY: Clause And Joint Results Recompute
+
+**Given** Exp6556 per-unit, clause, route, and checkpoint rows
+**When** Exp6562 replays exact results
+**Then** row closure, clause identity, decomposition preservation, and released
+joint validity recompute without trusting aggregate fields.
+
+#### SCENARIO-REPORT-6562-PAIRS: Paired Effects, Harm, And Cost Recompute
+
+**Given** matched flat, longer-flat, decomposition, exact-tool, and combined
+rows
+**When** Exp6562 recomputes phase curves, paired effects, harm, and cost
+**Then** recoveries, regressions, invalid releases, tokens, solver calls,
+retries, wall time, timeouts, and censoring derive only from unit rows.
+
+#### SCENARIO-REPORT-6562-ATOMIC: Terminal Artifact Is Closed
+
+**Given** input receipts, replay rows, field provenance, and protected hashes
+are assembled
+**When** Exp6562 writes its artifact
+**Then** required fields, terminal prefix, closed verdict class, binary scores,
+protected-file hashes, `verifier_is_oracle=true`, and checksum validate.
+
+## Implementation Status (REQ-REPORT-6562)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6562 | Planned (`python/carnot/experiment_6562_constraint_saturation_independent_audit_v2.py`, terminal artifact `results/experiment_6562_constraint_saturation_independent_audit_v2.json`) | Planned (`tests/python/test_experiment_6562_constraint_saturation_independent_audit_v2.py`) |
+
 ### REQ-REPORT-6551: Independent Production Safety-Net Audit
 
 Carnot MUST emit an always-run independent audit artifact at
