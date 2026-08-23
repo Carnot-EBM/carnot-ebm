@@ -1,6 +1,19 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-08-23, later (llama-server reaper RESOLVED: the standing
+**Last Updated:** 2026-08-23, latest (per-attempt world-model retention SHIPPED,
+REQ-ARC-WMTE-6690, commit 8e2f938a0f: the live engine store no longer destroys
+its own induced models — every producer write is archived under
+`E3_DIR/<game>/attempts/` with a manifest; canonical file, returns, and read
+path proven unchanged (on/off byte-equivalence + 10 deletion mutations). Harness
+rows carry `induction_archive` provenance, so multi-seed runs stop destroying
+their own data and `arc_induction_quality.py` can score per-attempt instead of
+worst-attempt survivors. Live tu93 multi-attempt verification run in flight on
+GPU 1 (scratch store, --no-spawn, Qwen3.8-27B thinking-ON); result lands in
+ops/test-results.md. Defect 2 from `project_arc_engine_store_regression` — the
+serial goal-predicate gate that blocks planning even with perfect dynamics —
+remains OPEN and out of this change's scope.)
+
+Prior: 2026-08-23, later (llama-server reaper RESOLVED: the standing
 2026-08-09 mystery was `ExperimentTemplate.kill_gpu_zombies()` — its nvidia-smi
 fallback gated kills on MIN utilization across ALL GPUs, had no server
 exemption, and fires in every `setup()` including pytest imports, so the

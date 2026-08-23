@@ -29,6 +29,16 @@ So: use this to answer "is the generator producing real work at all", which is
 cheap and answerable now. Use rows to answer "is arm A better than arm B", which
 is expensive and needs a run that survives.
 
+SAMPLING BIAS WARNING, and the fix (REQ-ARC-WMTE-6690). A sweep over surviving
+`world_model.py` files is a WORST-ATTEMPT sample: re-induction fires on
+stagnation, so the survivor is systematically the attempt made under the worst
+conditions, and 15 of 40 attempts on the 2026-08-22 baseline run were destroyed
+before anyone could score them. Since REQ-ARC-WMTE-6690 every producer write is
+also archived under `<store>/<game>/attempts/wm_*__<sha16>.py`; this scorer
+sweeps those too, so a degenerate-rate computed over attempts/ is a
+per-attempt generator-quality rate, not a survivor rate. Rows report which
+population they came from (`population: survivor|attempt`).
+
 Read-only. Touches nothing.
 """
 
@@ -74,7 +84,10 @@ def score_model(path: Path) -> dict:
 
     out: dict = {
         "path": str(path),
-        "game": path.parent.name,
+        # Archived attempts live one level deeper (<game>/attempts/wm_*.py), so the game
+        # is the grandparent there and the parent for a canonical survivor file.
+        "game": path.parent.parent.name if path.parent.name == "attempts" else path.parent.name,
+        "population": "attempt" if path.parent.name == "attempts" else "survivor",
         "bytes": len(src.encode("utf-8")),
         "lines": src.count("\n") + 1,
     }
@@ -141,6 +154,8 @@ def find_models(roots: list[Path]) -> list[Path]:
     for root in roots:
         if root.is_dir():
             found.extend(sorted(root.rglob("world_model.py")))
+            # REQ-ARC-WMTE-6690 archived attempts: the unbiased per-attempt population.
+            found.extend(sorted(root.rglob("attempts/wm_*.py")))
     return found
 
 
@@ -180,10 +195,14 @@ def main(argv: list[str] | None = None) -> int:
         )
     n_deg = sum(1 for s in scored if s.get("degenerate"))
     n_struct = sum(1 for s in scored if s.get("goal_predicate") == "structural")
+    n_att = sum(1 for s in scored if s.get("population") == "attempt")
     print("")
     print(
         f"  {len(scored)} model(s); {n_deg} degenerate; {n_struct} with a structural goal predicate"
     )
+    # Survivor-only rates are worst-attempt-biased (see module docstring); say which
+    # population the number came from so it cannot be misread as a generator rate.
+    print(f"  populations: {len(scored) - n_att} survivor / {n_att} archived attempt")
     print("  Structure is not correctness. Held-out transition accuracy needs a run that survives.")
     print("")
     return 0
