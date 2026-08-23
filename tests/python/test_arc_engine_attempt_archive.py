@@ -247,3 +247,36 @@ def test_run_cell_wires_induction_archive_row_field():
     assert 'row["induction_archive"]' in src
     assert "_attempt_archive_delta(_man_path, _man_before)" in src
     assert "_manifest_line_count(_man_path)" in src
+
+
+# SCENARIO-ARC-WMTE-6690-7: the archived attempt names the model that ACTUALLY loaded.
+def test_manifest_model_is_the_effective_label_not_the_frozen_pin(store, monkeypatch):
+    """A CARNOT_ARC_GGUF_PATH override supersedes `repo_substr` at load time, so the
+    manifest must name the overriding weights. Recording `repo_substr` instead writes a
+    provenance record that names a model the run never loaded -- the same mislabel
+    REQ-ARC-WMTE-6670 exists to stop, which "misdirected a whole investigation".
+
+    Observed live 2026-08-23: a Qwen3.8-27B retention run archived
+    `"model": "Qwen3.5-9B-MTP"`, the harness's frozen pin.
+    """
+    prop = _proposer_with_stub(_ENGINE_A)
+    prop.model_path = "/cache/models--unsloth--Qwen3.8-27B-GGUF/Qwen3.8-27B-Q4_K_M.gguf"
+    prop.repo_substr = "Qwen3.5-9B-MTP"
+
+    prop._gen_to_file("gme", "prompt")
+    prop._write_world_model("gme", _ENGINE_B, note="split induce")
+
+    models = [ln["model"] for ln in _manifest_lines(store, "gme")]
+    assert models == ["Qwen3.8-27B-Q4_K_M.gguf"] * 2, models
+    assert "Qwen3.5-9B-MTP" not in models
+
+
+def test_manifest_model_falls_back_to_repo_substr_without_override(store):
+    """With no path override the declared repo substring IS the effective label."""
+    prop = _proposer_with_stub(_ENGINE_A)
+    prop.model_path = None
+    prop.repo_substr = "Qwen3.5-9B-MTP"
+
+    prop._gen_to_file("gme", "prompt")
+
+    assert [ln["model"] for ln in _manifest_lines(store, "gme")] == ["Qwen3.5-9B-MTP"]
