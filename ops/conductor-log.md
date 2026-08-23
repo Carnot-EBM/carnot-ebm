@@ -16334,3 +16334,5 @@ code |
 | 2026-08-23 13:54 UTC | Activation REFUSED: milestone 2026.08.567 | BLOCK | exclusion-manifest: 5 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-08-23 13:54 UTC | Activation replan 1/2: 2026.08.567 | OK | refused roadmap quarantined to roadmap-2026.08.567-refusal1.yaml; replanning wit |
 | 2026-08-23 14:02 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 1645356 serves 'gemma-4-12b-it-Q4_K_M.gguf', live pin is 'Qwen3.8-27B' |
+| 2026-08-23 14:10 UTC | Plan milestone 2026.08.567 | OK | 13 tasks proposed |
+| 2026-08-23 14:12 UTC | Milestone 2026.08.567 activated | OK | 13 tasks queued |
