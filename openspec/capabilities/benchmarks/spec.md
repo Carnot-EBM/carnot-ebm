@@ -4135,3 +4135,107 @@ to pass.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-BENCH-6542 | Implemented (`python/carnot/experiment_6542_drift_bench_external_intake_v2.py`, `results/experiment_6542_drift_bench_external_intake_v2.json`, `results/fixtures/v566_drift_bench_external_slice.jsonl`) | Implemented (`tests/python/test_experiment_6542_drift_bench_external_intake_v2.py`) |
+
+### REQ-BENCH-6543: Independent DRIFT Corpus Audit V2
+
+Carnot SHALL provide Exp6543 as an always-runnable independent audit for the
+V566 DRIFT-Bench intake. The audit SHALL write
+`results/experiment_6543_external_corpus_independent_audit_v2.json` and SHALL
+always include `external_constraint_corpus_audited_ready_score` with that exact
+spelling.
+
+The audit SHALL resolve the direct source commit independently of Exp6542. It
+SHALL verify revision, license, schema, problem-file census, corruption
+warning, source hashes, fixture hash, solver version, resource receipts,
+random sample seed, and protected-file hashes. It SHALL recompute
+source-to-local identity, source-row hashes, chronology, split lineage,
+aggregate rows, transaction closure, and exact Z3 replay from source files and
+fixture rows. It SHALL NOT trust source aggregates, intake aggregates, source
+IDs, local IDs, or source-file path declarations as proof of split
+independence.
+
+The artifact SHALL include exactly these fields: `status`, `honest_verdict`,
+`verdict_class`, `source_existence_and_hash_receipts`,
+`independent_revision_license_and_schema_receipt`,
+`source_identity_audit_rows`, `chronology_replay_rows`,
+`split_and_lineage_audit`, `independent_exact_replay_rows`,
+`shard_and_transaction_audit`, `missing_input_disposition`,
+`independent_aggregate_rows`, `leakage_attack_matrix`,
+`external_constraint_corpus_audited_ready_score`, `gate_check_summary`,
+`per_unit_rows`, `aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+The artifact SHALL use `verdict_class=null` for a clean independent audit,
+`partial` for usable but incomplete evidence, `blocked` for missing inputs, and
+`disqualified` for false provenance or leakage. `honest_verdict` SHALL begin
+with `complete_`, `partial_`, `blocked_`, or `disqualified_`.
+`inference_substrate` SHALL be
+`independent_source_split_transaction_and_z3_replay_audit_no_llm`.
+`verifier_is_oracle` SHALL be true for audit checks only and SHALL NOT declare
+a positive scientific class.
+
+#### SCENARIO-BENCH-6543-MISSING: Missing Inputs Produce A Closed Audit
+
+**Given** the Exp6542 intake artifact, V566 fixture, or pinned DRIFT source root
+is absent
+**When** Exp6543 runs
+**Then** it writes all required fields, records each missing path and observed
+value in `gate_check_summary`, sets `verdict_class="blocked"`, and sets
+`external_constraint_corpus_audited_ready_score=0.0`.
+
+#### SCENARIO-BENCH-6543-SOURCE: Source Hashes Are Independently Recomputed
+
+**Given** fixture rows that name DRIFT source files and source-turn hashes
+**When** Exp6543 audits identity
+**Then** it recomputes file, problem, turn, constraint, and source-row hashes
+from the pinned source tree and rejects duplicates, omissions, source drift, or
+modified constraints without using source IDs as proof.
+
+#### SCENARIO-BENCH-6543-CHRONOLOGY: Base-Problem Turns Remain Ordered
+
+**Given** rows from one base problem
+**When** Exp6543 rebuilds chronology
+**Then** turn indices and source turn IDs are contiguous, increasing, and free
+of duplicate event keys or reordering inside the base problem.
+
+#### SCENARIO-BENCH-6543-SPLIT: Lineage Sets Are Rebuilt From Rows
+
+**Given** train, development, and held fixture rows
+**When** Exp6543 recomputes base-problem lineage sets
+**Then** no base problem may overlap splits, no outcome-based sampling marker
+may exist, lineage floors must hold, and post-held repair rows fail readiness.
+
+#### SCENARIO-BENCH-6543-EXACT: Z3 Replay Ignores Cached Solver Receipts
+
+**Given** a deterministic stratified sample plus every timeout, contradiction,
+or unusual-effort row
+**When** Exp6543 constructs Z3 solvers from source constraints
+**Then** replayed satisfiability, assignment validity, timeout state, receipt
+hashes, and terminal status must match the fixture rows without trusting
+Exp6542 exact-replay aggregates.
+
+#### SCENARIO-BENCH-6543-TRANSACTION: Shards And Final Fixture Close Atomically
+
+**Given** Exp6542 planned units, terminal shards, journal, resume receipts,
+corrupt-resume probe, fixture hash, and final atomic write receipt
+**When** Exp6543 audits transaction closure
+**Then** planned and terminal IDs match fixture rows, every shard hash matches
+its content-addressed file, the journal hash and record count match disk, resume
+receipts are closed, and the final fixture hash matches the atomic receipt.
+
+#### SCENARIO-BENCH-6543-ATTACKS: Tampering And Leakage Fail Closed
+
+**Given** missing artifacts, success-labeled empty fixtures, null rows,
+duplicate IDs, aggregate tampering, solver path aliasing, source-row aliases,
+post-held repair, or outcome-based sampling
+**When** Exp6543 recomputes gates and attack rows
+**Then** each failed check is named with observed values and
+`external_constraint_corpus_audited_ready_score` remains `0.0`.
+
+## Implementation Status (REQ-BENCH-6543)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6543 | Planned (`python/carnot/experiment_6543_external_corpus_independent_audit_v2.py`, `results/experiment_6543_external_corpus_independent_audit_v2.json`) | Planned (`tests/python/test_experiment_6543_external_corpus_independent_audit_v2.py`) |
