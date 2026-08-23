@@ -1335,14 +1335,33 @@ MUST be `"nvidia_smi_unavailable"`.
 
 ### REQ-INFRA-079: GPU Zombie Sweeps MUST Spare Inference Servers and MUST Gate Utilization Per-GPU
 
-**Statement:** Every GPU zombie sweep in this project (`ExperimentTemplate.kill_gpu_zombies()`
-in `scripts/experiment_template.py`, both the pynvml path and the nvidia-smi fallback,
-`kill_gpu_zombies()` in `python/carnot/pipeline/gpu_zombie_killer.py`, and
-`ExpandedGPUReaper.reap()` in `python/carnot/pipeline/expanded_gpu_reaper.py`) MUST (1) skip any
-process whose cmdline identifies it as an inference server (`llama-server`, or
-`vllm.entrypoints.openai.api_server`), and (2) when a sweep gates its kill decision on GPU
-utilization, it MUST read the utilization of the GPU the candidate process is actually
-running on — never an aggregate (minimum, mean) across all GPUs.
+**Statement:** Every GPU zombie sweep in this project MUST (1) skip any process whose
+cmdline identifies it as an inference server (`llama-server`,
+`vllm.entrypoints.openai.api_server`, or `vllm serve`), and (2) when a sweep gates its
+kill decision on GPU utilization or idleness, it MUST judge the candidate on the GPU(s)
+that process actually runs on — never an aggregate (minimum, mean) across all GPUs, and,
+for a process holding memory on several GPUs, on the MAXIMUM utilization across its own
+GPUs (busy anywhere means not a zombie). The known sweep set as of 2026-08-23 — kept
+in sync by the same-day adversarial review, which found half of it missing from the
+first enumeration:
+
+1. `ExperimentTemplate.kill_gpu_zombies()` in `scripts/experiment_template.py` — both
+   the pynvml path and the nvidia-smi fallback (SIGTERM; runs in every `setup()`).
+2. `kill_gpu_zombies()` in `python/carnot/pipeline/gpu_zombie_killer.py` (SIGKILL).
+3. `ExpandedGPUReaper.reap()` in `python/carnot/pipeline/expanded_gpu_reaper.py`
+   (SIGKILL; the conductor's `preflight_gpu_reap`).
+4. `detect_zombies()`/`kill_zombies()` in `scripts/gpu_monitor.py` (SIGTERM; runs
+   LIVE with `dry_run=False` in every conductor task pre-check — its cumulative
+   cpu_time/wall_time idle proxy matches a mostly-idle server by construction).
+5. `evict_gpu_vram()`'s step-3 residual pkill sweep in
+   `python/carnot/pipeline/gemma_isolation.py` (SIGKILL — must not defeat step 2's
+   exemption ten lines below it).
+6. `evict_vram_with_loop()`'s retry loop in
+   `python/carnot/pipeline/vram_loop_eviction.py` (SIGKILL — same defeat shape).
+
+A NEW sweep (any code that discovers GPU-holding processes and signals them) joins
+this list with the same two protections, or names itself in an acknowledged-exempt
+note with a written reason.
 
 **Why this matters (origin, 2026-08-23):** the standing unsolved "llama-server reaper"
 (ops/known-issues.md, five entries dated 2026-08-09) was this code. The nvidia-smi fallback
@@ -4641,3 +4660,55 @@ The adapter interface SHALL be versioned and SHALL provide `observe`,
 non-shadow certificate fields SHALL match the baseline result
 **And** the adapter SHALL record its proposed rank or abstention only as shadow
 receipt data.
+
+### REQ-PIPELINE-6549: Default-Off Production Safety-Net Adapter
+
+`VerifyRepairPipeline` MUST expose a typed production Safety-Net adapter that
+is disabled unless a caller explicitly passes an enabled configuration. The
+disabled state SHALL preserve native serialized request bytes, candidate order,
+checker calls, return values, exception types, side effects, and persistence
+behavior.
+
+When enabled, the adapter MAY reorder candidates or abstain. It SHALL preserve
+the complete candidate set and SHALL keep the native exact fallback reachable.
+The adapter SHALL record route, abstention, exception lookup, fallback reason,
+exact result, and charged overhead after exact verification. Unsupported or
+malformed inputs SHALL fall back without changing exact accepted outputs.
+
+The adapter SHALL use the frozen V566 compact-router feature contract. It SHALL
+not put held rows, held outcomes, source IDs, entity names, or row order into
+policy state. The train-only exception table SHALL be immutable after
+configuration freeze. Rollback SHALL disable the adapter and restore native
+fallback routing.
+
+### SCENARIO-PIPELINE-6549-DEFAULT-OFF: Disabled Adapter Is Byte-Identical
+
+**Given** a native `VerifyRepairPipeline.verify()` request
+**When** the production Safety-Net adapter is absent or configured disabled
+**Then** the serialized request, candidate order, checker call count, result
+fields, error type, side effects, and persistence behavior SHALL match the
+native path byte-for-byte.
+
+**Spec traces:** REQ-PIPELINE-6549
+
+### SCENARIO-PIPELINE-6549-ENABLED-FALLBACK: Enabled Routing Preserves Candidates
+
+**Given** an enabled adapter with the frozen V566 compact-router contract
+**When** it routes, abstains, or hits a train-only exception
+**Then** every candidate remains present exactly once, native exact fallback is
+reachable, exact accepted outputs stay equal to native evaluation, and the
+certificate records route, abstention, exception, fallback, exact result, and
+charged overhead.
+
+**Spec traces:** REQ-PIPELINE-6549
+
+### SCENARIO-PIPELINE-6549-ATTACKS: Shortcuts Fail Closed
+
+**Given** malformed inputs, stale configuration, candidate deletion, row-order
+dependence, source or entity identity, held table writes, fallback recursion,
+serialization drift, or disabled-path side effects
+**When** the adapter evaluates the request
+**Then** it SHALL fall back or roll back without accepting a changed exact
+output, mutating the exception table, or deleting a candidate.
+
+**Spec traces:** REQ-PIPELINE-6549

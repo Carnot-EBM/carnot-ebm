@@ -160,7 +160,11 @@ _TRAINING_ENTRYPOINT_MARKERS = ("train.py", "/nn/train", "src/nn/train")
 # live-reproduced SIGTERMing a llama-server decoding at 81 tok/s on a GPU at
 # 97% utilization (see ops/known-issues.md 2026-08-23). Dead or orphaned
 # servers are run_stop_authority.py's job — it verifies ownership before acting.
-_SERVER_ENTRYPOINT_MARKERS = ("llama-server", "vllm.entrypoints.openai.api_server")
+_SERVER_ENTRYPOINT_MARKERS = (
+    "llama-server",
+    "vllm.entrypoints.openai.api_server",
+    "vllm serve",  # the vLLM CLI form of the same server
+)
 
 
 def _pid_cmdline(pid: int) -> str:
@@ -854,8 +858,13 @@ class ExperimentTemplate:
         try:
             pynvml.nvmlInit()
             n_gpus = pynvml.nvmlDeviceGetCount()
-            seen_pids: set[int] = set()
 
+            # Pass 1: collect (vram, that GPU's util) rows PER PID. A process can hold
+            # memory on several GPUs; deciding per (gpu, pid) visit re-opens the
+            # aggregate bug WITHIN a pid — visited via its idle GPU, a process busy on
+            # another GPU would be killed (REQ-INFRA-079, same rule as the nvidia-smi
+            # fallback below).
+            pid_rows: dict[int, list[tuple[int, float]]] = {}
             for gpu_idx in range(n_gpus):
                 handle = pynvml.nvmlDeviceGetHandleByIndex(gpu_idx)
 
@@ -873,45 +882,42 @@ class ExperimentTemplate:
                     procs = []
 
                 for proc in procs:
-                    pid = proc.pid
-                    if pid in seen_pids:
-                        continue
                     vram_mb = (proc.usedGpuMemory or 0) // (1024 * 1024)
-                    if vram_mb >= vram_threshold_mb and gpu_util_pct < util_threshold_pct:
-                        if _pid_is_protected_training_proc(pid):
-                            _log.info(
-                                "kill_gpu_zombies: SKIP protected training PID %d (gpu=%d, vram_mb=%d)",
-                                pid,
-                                gpu_idx,
-                                vram_mb,
-                            )
-                            seen_pids.add(pid)
-                            continue
-                        # REQ-INFRA-079: an inference server idling between
-                        # requests is healthy, not a zombie. Never kill it.
-                        if _pid_is_protected_server_proc(pid):
-                            _log.info(
-                                "kill_gpu_zombies: SKIP protected server PID %d (gpu=%d, vram_mb=%d)",
-                                pid,
-                                gpu_idx,
-                                vram_mb,
-                            )
-                            seen_pids.add(pid)
-                            continue
-                        try:
-                            os.kill(pid, signal.SIGTERM)
-                            killed_pids.append(pid)
-                            freed_mb += vram_mb
-                            seen_pids.add(pid)
-                            _log.warning(
-                                "kill_gpu_zombies: killed zombie PID %d (gpu=%d, vram_mb=%d, gpu_util=%.1f%%)",
-                                pid,
-                                gpu_idx,
-                                vram_mb,
-                                gpu_util_pct,
-                            )
-                        except OSError as exc:
-                            _log.warning("kill_gpu_zombies: could not kill PID %d: %s", pid, exc)
+                    pid_rows.setdefault(proc.pid, []).append((vram_mb, gpu_util_pct))
+
+            # Pass 2: decide per pid — busy on ANY of its GPUs means not a zombie.
+            for pid, rows in pid_rows.items():
+                vram_mb = max(v for v, _ in rows)
+                gpu_util_pct = max(u for _, u in rows)
+                if vram_mb >= vram_threshold_mb and gpu_util_pct < util_threshold_pct:
+                    if _pid_is_protected_training_proc(pid):
+                        _log.info(
+                            "kill_gpu_zombies: SKIP protected training PID %d (vram_mb=%d)",
+                            pid,
+                            vram_mb,
+                        )
+                        continue
+                    # REQ-INFRA-079: an inference server idling between
+                    # requests is healthy, not a zombie. Never kill it.
+                    if _pid_is_protected_server_proc(pid):
+                        _log.info(
+                            "kill_gpu_zombies: SKIP protected server PID %d (vram_mb=%d)",
+                            pid,
+                            vram_mb,
+                        )
+                        continue
+                    try:
+                        os.kill(pid, signal.SIGTERM)
+                        killed_pids.append(pid)
+                        freed_mb += vram_mb
+                        _log.warning(
+                            "kill_gpu_zombies: killed zombie PID %d (vram_mb=%d, gpu_util=%.1f%%)",
+                            pid,
+                            vram_mb,
+                            gpu_util_pct,
+                        )
+                    except OSError as exc:
+                        _log.warning("kill_gpu_zombies: could not kill PID %d: %s", pid, exc)
 
             pynvml.nvmlShutdown()
         except Exception as exc:
@@ -995,8 +1001,12 @@ class ExperimentTemplate:
         except Exception:
             util_by_uuid = {}  # no attribution possible -> every candidate is skipped below
 
-        # Step 3: parse VRAM output and kill zombie candidates on THEIR OWN idle GPU
-        seen_pids: set[int] = set()
+        # Step 3a: group compute rows PER PID. A process can hold memory on several
+        # GPUs (one CSV line per GPU); deciding line-by-line re-opens the aggregate
+        # bug WITHIN a pid — the line on the idle GPU would kill a process that is
+        # busy on another GPU. So the decision below is per pid, gated on the MAX
+        # utilization across every GPU that pid touches (SCENARIO-INFRA-6560).
+        rows_by_pid: dict[int, list[tuple[int, str]]] = {}
         for line in vram_result.stdout.strip().splitlines():
             line = line.strip()
             if not line:
@@ -1010,23 +1020,29 @@ class ExperimentTemplate:
             except ValueError:
                 continue
             gpu_uuid = parts[2].strip() if len(parts) >= 3 else ""
-            if pid in seen_pids:
-                continue
+            rows_by_pid.setdefault(pid, []).append((vram_mb, gpu_uuid))
+
+        # Step 3b: decide and kill per pid
+        for pid, rows in rows_by_pid.items():
+            # Same threshold semantics as before the multi-GPU fix: the pid must hold
+            # >= vram_threshold_mb on at least one single GPU to be a candidate.
+            vram_mb = max(v for v, _ in rows)
             if vram_mb < vram_threshold_mb:
                 continue
-            # SCENARIO-INFRA-6562: no per-GPU attribution -> skip, never kill
-            # under an aggregate gate. A missed zombie costs one deferred
-            # experiment; a killed live server voids hours of measurement.
-            gpu_util_pct = util_by_uuid.get(gpu_uuid)
-            if gpu_util_pct is None:
+            # SCENARIO-INFRA-6562: no per-GPU attribution for ANY of the pid's rows ->
+            # skip, never kill under an aggregate gate. A missed zombie costs one
+            # deferred experiment; a killed live process voids hours of measurement.
+            utils = [util_by_uuid.get(uuid) for _, uuid in rows]
+            if any(u is None for u in utils):
                 _log.info(
                     "kill_gpu_zombies (nvidia-smi): SKIP PID %d — GPU attribution "
-                    "unavailable (uuid=%r); refusing aggregate-gated kill",
+                    "unavailable (uuids=%r); refusing aggregate-gated kill",
                     pid,
-                    gpu_uuid,
+                    [uuid for _, uuid in rows],
                 )
-                seen_pids.add(pid)
                 continue
+            # MAX across the pid's own GPUs: busy anywhere means not a zombie.
+            gpu_util_pct = max(float(u) for u in utils)
             if gpu_util_pct < util_threshold_pct:
                 if _pid_is_protected_training_proc(pid):
                     _log.info(
@@ -1034,7 +1050,6 @@ class ExperimentTemplate:
                         pid,
                         vram_mb,
                     )
-                    seen_pids.add(pid)
                     continue
                 # REQ-INFRA-079 / SCENARIO-INFRA-6561: a server idling between
                 # requests is healthy, not a zombie. Never kill it here.
@@ -1044,13 +1059,11 @@ class ExperimentTemplate:
                         pid,
                         vram_mb,
                     )
-                    seen_pids.add(pid)
                     continue
                 try:
                     os.kill(pid, signal.SIGTERM)
                     killed_pids.append(pid)
                     freed_mb += vram_mb
-                    seen_pids.add(pid)
                     _log.warning(
                         "kill_gpu_zombies (nvidia-smi): killed zombie PID %d (vram_mb=%d, gpu_util=%.1f%%)",
                         pid,

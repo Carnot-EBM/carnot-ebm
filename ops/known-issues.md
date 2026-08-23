@@ -18396,6 +18396,38 @@ training entrypoints (the 2026-06-13 incident's fix); servers had none.
   signature, that would falsify this attribution — re-open the entry and arm an auditd
   rule on SIGTERM (`a1=0xf`), not SIGINT.
 
+**CORRECTIONS from the same-day adversarial review (append-only; the review was
+commissioned by the session that wrote this entry, and it found the entry overclaimed
+in three ways).**
+
+1. "Elimination of every other candidate" above was FALSE when written. A fourth live
+   SIGTERM sender existed inside the same conductor window:
+   `scripts/gpu_monitor.py:kill_zombies`, called with `dry_run=False` in every
+   conductor task pre-check (`research_conductor.py`, "GPU resource check"). Its
+   criterion — >=1 GB, >10 min, CUMULATIVE cpu_time/wall_time < 1% — matches a
+   mostly-idle llama-server by construction. It could also be the supab5 killer or the
+   supplier of the "second interrupt". Both candidates are now server-exempt; the
+   record cannot decide between them retroactively, and does not need to — the fix
+   covers the class.
+2. The live RED repro produced ONE SIGTERM and the "cleaning up before exit" line
+   only; supab5's logs also carried "Received second interrupt" (>=2 signals). One
+   sweep sends one SIGTERM per pid, so the supab5 shape requires REPEATED sweeps —
+   which both convicted candidates supply (multiple `setup()` calls per pytest
+   collection; a pre-check per conductor task) — or two different sweeps firing. The
+   repro proves the mechanism class, not the exact invocation count.
+3. The first REQ-INFRA-079 enumeration ("every sweep" naming three) was itself
+   pattern-narrower-than-concept. The review found three more:
+   `gpu_monitor.detect_zombies/kill_zombies`, `gemma_isolation.evict_gpu_vram`'s
+   step-3 residual SIGKILL sweep (which defeated the step-2 exemption ten lines below
+   it), and `vram_loop_eviction.evict_vram_with_loop`'s retry SIGKILL loop. All six
+   are now exempt + tested + deletion-proven; the spec statement now lists all six
+   and binds new sweeps to join the list. Two further review fixes landed with this:
+   the per-GPU gate is now per-PID-max across a process's own GPUs (a pid busy on one
+   GPU while holding memory on an idle one is not killable via the idle line), and
+   the death-signature hint reads the PREVIOUS server log too (after a kill+relaunch,
+   the evidence lives in the old log), with wording softened to "termination signal"
+   because llama-server prints the same lines for a self-sent SIGTERM.
+
 **Fix (REQ-INFRA-079, openspec/capabilities/pipeline/spec.md).** Three sweeps changed:
 1. `scripts/experiment_template.py` fallback: per-GPU utilization attribution via
    `gpu_uuid` join; a candidate whose GPU cannot be attributed is SKIPPED (fail toward

@@ -58,6 +58,7 @@ _POST_KILL_WAIT_S: float = 2.0
 _PROTECTED_SERVER_MARKERS: tuple[str, ...] = (
     "llama-server",
     "vllm.entrypoints.openai.api_server",
+    "vllm serve",  # the vLLM CLI form of the same server
 )
 
 

@@ -34,7 +34,7 @@ import subprocess
 import time
 from dataclasses import dataclass, field
 
-from carnot.pipeline.gpu_zombie_killer import kill_gpu_zombies
+from carnot.pipeline.gpu_zombie_killer import _pid_is_protected_server, kill_gpu_zombies
 
 _log = logging.getLogger(__name__)
 
@@ -247,6 +247,17 @@ def evict_vram_with_loop(
             if pid == my_pid:
                 continue
             if mem_mb <= _PKILL_VRAM_THRESHOLD_MB:
+                continue
+            # REQ-INFRA-079: the primary pass's server exemption must not be
+            # defeated by this retry loop. Servers are never eviction targets.
+            if _pid_is_protected_server(pid):
+                _log.info(
+                    "evict_vram_with_loop retry %d: SKIP protected server PID %d on gpu=%d "
+                    "(REQ-INFRA-079)",
+                    i + 1,
+                    pid,
+                    gpu_index,
+                )
                 continue
             try:
                 os.kill(pid, signal.SIGKILL)
