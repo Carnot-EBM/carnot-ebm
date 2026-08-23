@@ -7313,3 +7313,139 @@ gates pass.
 | SCENARIO-LEARN-6479-EXACT-ADMIT | Planned: `python/carnot/pipeline/factor_cache_shadow_adapter.py`. | Planned: `tests/python/test_factor_cache_shadow_adapter.py`. |
 | SCENARIO-LEARN-6479-RESTART | Planned: `python/carnot/pipeline/factor_cache_shadow_adapter.py`. | Planned: `tests/python/test_factor_cache_shadow_adapter.py`. |
 | SCENARIO-LEARN-6479-ARTIFACT | Planned: `python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py`. | Planned: `tests/python/test_experiment_6479_verify_repair_factor_cache_shadow_adapter.py`. |
+
+## REQ-CL-6553: Prospective SOTA Chronological Continuous Self-Learning
+
+Given Exp6552 supplies a reversible exact-conflict memory controller and
+Exp6548 supplies a clean V567 external-evidence gate
+When Exp6553 runs for planning date 20260823
+Then it SHALL write
+`results/experiment_6553_prospective_sota_continuous_self_learning.json`
+as one terminal artifact
+And it SHALL evaluate both structured gates before model runtime preconditions
+can support a completed live comparison.
+
+Exp6553 SHALL declare `MODEL_SPECS` with exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL resolve local `.gguf` files with
+llama.cpp-compatible paths only and SHALL NOT call Hugging Face
+`AutoTokenizer.from_pretrained()` on a GGUF repository id. It SHALL first
+evaluate dual RTX 3090 availability, driver and VRAM receipts, llama.cpp
+binary and CUDA support, required GGUF hashes, writable checkpoint space, Z3,
+input hashes, fixed seeds, and protected-file hashes. Failed required gates or
+resources SHALL write a `blocked` artifact with the observed failed check and
+SHALL NOT substitute legacy models for headline rows.
+
+For a qualified run, Exp6553 SHALL freeze at least 36 evaluable chronological
+query boundaries per model, all three domains, at least three regime
+transitions, split, order, arms, update dose, replay capacity, thresholds,
+seeds, budgets, timeouts, censoring rules, and support probes before held
+outcomes. It SHALL compare frozen, current-only, transactional replay,
+matched-dose co-observation, one-threshold, hysteretic, and same-query-mutation
+arms on identical model and query cells. The same-query arm is an unsafe
+diagnostic and SHALL NOT support adoption.
+
+Each query SHALL read a frozen pre-query memory hash. Proposed memory writes
+SHALL commit only after exact validation with a witness. Each row SHALL record
+request hash, response hash, exact result, proposed write, witness, commit
+decision, post-query memory hash, route, fallback, tokens, solver calls, GPU
+samples, monotonic clocks, exit status, and censoring. Current exact success
+and charged cost, retained-family exact success, future exact-satisfying
+support, proposal coverage, unsafe writes and uses, state churn, capacity,
+harmful interventions, restart equality, and rollback equality SHALL derive
+from emitted rows.
+
+Exp6553 SHALL set `prospective_csl_ready_score` to bare `1.0` only when a safe
+arm has positive charged prospective value, zero unsafe writes and uses,
+exact-output equality, retained-family and future-support non-inferiority,
+restart and rollback equality, multi-model support, clean receipts, protected
+files unchanged, and passing validation commands. Otherwise it SHALL close as
+`null`, `partial`, `blocked`, or `disqualified` according to the observed
+failure. It SHALL set
+`inference_substrate="authenticated_local_llama_cpp_sota_gguf_chronological_csl_plus_exact_z3"`
+and `verifier_is_oracle=false`.
+
+Required artifact fields and principles:
+
+- `status`: A terminal state distinguishes a completed prospective stream from cached setup output.
+- `honest_verdict`: The verdict must name current, retention, future-support, safety, and receipt outcomes with a terminal prefix.
+- `verdict_class`: A closed class prevents circular, unsafe, blocked, or partial learning from becoming positive.
+- `upstream_gate_receipts`: Both reversible-controller and external-evidence gates must be independently recheckable.
+- `MODEL_SPECS`: Exact mandated model identities prevent legacy smoke models from supporting headline claims.
+- `live_model_and_gpu_receipts`: Process, model-file, GPU, timing, and output receipts prove fresh local inference occurred.
+- `sample_size_and_power_contract`: Per-model query, domain, regime, and seed floors bound the strength of comparative claims.
+- `frozen_chronology_and_arm_contract`: Freezing order, arms, dose, budgets, and support probes prevents outcome-driven design.
+- `per_unit_rows`: Every model, query, seed, arm, and condition needs a row for recomputation.
+- `memory_transition_rows`: Each proposed write and committed state change must carry its exact witness and hashes.
+- `current_cost_and_success_rows`: Immediate benefit must charge model, solver, routing, and memory work.
+- `retained_family_rows`: Current gains may not hide regression on earlier constraint families.
+- `future_support_rows`: Endpoint gains are ineligible if future exact-satisfying behavior becomes less reachable.
+- `coobservation_and_dose_receipt`: Replay benefit must be separated from extra update exposure.
+- `unsafe_write_and_use_ledger`: One invalid admission or reuse is load-bearing safety evidence.
+- `restart_and_rollback_receipts`: Continuous learning must persist and recover exactly across process and state failures.
+- `charged_cost_recomputation`: All live inference, exact checks, persistence, and intervention costs must derive from raw receipts.
+- `prospective_csl_ready_score`: A binary headline is allowed only when benefit, safety, support, and receipt gates all pass.
+- `aggregate_row_recomputation`: Every headline must derive from per-unit and transition rows.
+- `gate_check_summary`: A blocked run must name the failed gate or live resource and observed value.
+- `preconditions_checked`: GPU, model, runner, solver, and storage checks distinguish blocked execution from null learning.
+- `protected_files_unchanged`: The experiment must preserve protected orchestration files.
+- `inference_substrate`: The artifact must declare authenticated local llama.cpp GGUF inference plus exact Z3 evaluation.
+- `verifier_is_oracle`: The compared memory policy is not ground truth; exact Z3 outcomes remain separate authority.
+- `field_provenance`: Each headline must identify model receipts, exact rows, transitions, and reducer code.
+- `random_seed`: Fixed generation, order, and tie seeds make the prospective comparison repeatable.
+- `duration_s`: Real flagship GGUF inference requires plausible monotonic wall time.
+- `tests_run`: Named unit, lint, verifier, and E2E receipts show all paths were checked.
+- `reproducibility_checksum`: A final hash detects mutation of the terminal prospective record.
+
+### SCENARIO-CL-6553-FAIL-CLOSED-PRECONDITIONS: Block Before Headline Rows
+
+Given an upstream gate, GPU, llama.cpp, GGUF path, tokenizer, solver, storage,
+seed, or protected-file precondition fails
+When Exp6553 builds its terminal artifact
+Then `verdict_class` SHALL be `blocked`
+And `gate_check_summary` SHALL name the failed check and observed value
+And no legacy model row SHALL support the headline.
+
+### SCENARIO-CL-6553-CHRONOLOGY-FREEZE: Query Memory Is Frozen
+
+Given a chronological query boundary
+When any safe arm evaluates the query
+Then it SHALL read only the pre-query memory hash, SHALL NOT see its own label
+or future turns, and SHALL commit a proposed write only after exact validation.
+
+### SCENARIO-CL-6553-MATCHED-ARMS: Dose And Query Cells Are Shared
+
+Given the mandated model and query cells
+When the seven arms run
+Then frozen, current-only, transactional replay, matched-dose co-observation,
+one-threshold, hysteretic, and same-query-mutation rows SHALL share model,
+query, seed, budget, timeout, and update-dose contracts.
+
+### SCENARIO-CL-6553-SUPPORT-RETENTION: Positive Requires No Support Loss
+
+Given a safe arm improves charged current value
+When readiness is computed
+Then retained-family exact success and future exact-satisfying support SHALL be
+non-inferior before `prospective_csl_ready_score` can be `1.0`.
+
+### SCENARIO-CL-6553-RESTART-ROLLBACK-SAFETY: Unsafe Controls Cannot Adopt
+
+Given restart, rollback, corrupt-write, same-query leakage, future-turn access,
+held-threshold tuning, unequal dose, stale-output, fake-CUDA, legacy-model,
+unsupported-fallback, or aggregate-only attacks
+When Exp6553 audits rows and receipts
+Then safe arms SHALL preserve exact output, restart equality, rollback
+equality, zero unsafe writes and uses, and the same-query arm SHALL remain
+diagnostic only.
+
+## Implementation Status (REQ-CL-6553)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6553 | Planned: `python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py`; terminal artifact `results/experiment_6553_prospective_sota_continuous_self_learning.json`. | Planned: `tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py`. |
+| SCENARIO-CL-6553-FAIL-CLOSED-PRECONDITIONS | Planned: `python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py`. | Planned: `tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py`. |
+| SCENARIO-CL-6553-CHRONOLOGY-FREEZE | Planned: `python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py`. | Planned: `tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py`. |
+| SCENARIO-CL-6553-MATCHED-ARMS | Planned: `python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py`. | Planned: `tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py`. |
+| SCENARIO-CL-6553-SUPPORT-RETENTION | Planned: `python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py`. | Planned: `tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py`. |
+| SCENARIO-CL-6553-RESTART-ROLLBACK-SAFETY | Planned: `python/carnot/experiment_6553_prospective_sota_continuous_self_learning.py`. | Planned: `tests/python/test_experiment_6553_prospective_sota_continuous_self_learning.py`. |
