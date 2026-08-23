@@ -1,0 +1,1092 @@
+{
+  "aggregate_row_recomputation": {
+    "command_count_matches_rows": true,
+    "command_row_count": 0,
+    "continuity_slot_score_recomputed": 1.0,
+    "hardware_command_count_recomputed": 0,
+    "receipt_candidate_count": 24,
+    "valid_receipt_count": 0
+  },
+  "authorization_decision": {
+    "action": null,
+    "argv": null,
+    "authorized": false,
+    "reason": "missing_new_physical_receipt",
+    "safe_target_validation": {
+      "reason": "no_selected_receipt",
+      "target_ok": false
+    },
+    "timeout_s": null
+  },
+  "changed_state_receipt": {
+    "exists": false,
+    "reason": "no dated operator-authored physical receipt newer than Exp6325",
+    "required_operator_action": "Record a new dated GateMate cable, port, power, board, or DirtyJTAG physical-state change after Exp6325 before rerunning detect or flash."
+  },
+  "command_rows": [],
+  "dated_receipt_search_rows": [
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 1,
+      "excerpt": "### 2026-07-29 (outer-loop, SURVEYED \u2014 OPERATOR DECISION PENDING): running the test suite rewrites the research record **Status:** the survey the hazard commit (`b3e31d341`) said it had NOT done is now done, and two guards shipped. **NO TEST WAS CHANGED** \u2014 the repair is an operator design call. Full report: `docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md`. **The hazard.** `pytest tests/python/test_arc_*.py tests/python/test_experiment_*.py` left 39 tracked files modifie",
+      "material_physical_fields": [
+        "port"
+      ],
+      "operator_authored": true,
+      "path": "ops/known-issues.md",
+      "raw_receipt": {
+        "source": "### 2026-07-29 (outer-loop, SURVEYED \u2014 OPERATOR DECISION PENDING): running the test suite rewrites the research record"
+      },
+      "receipt_date": "20260729",
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-001",
+      "source": "### 2026-07-29 (outer-loop, SURVEYED \u2014 OPERATOR DECISION PENDING): running the test suite rewrites the research record",
+      "target_ok": false,
+      "text_sha256": "sha256:3cfd5acc59e75b96bc895f047786d6292c14a47b87ba1861c0f93fa749284782",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 2,
+      "excerpt": "### RESOLVED 2026-07-14 (MANDATORY \u2014 outer-loop escalation after 4th recurrence, closed at operator direction): WIRE `scripts/retro_timing_fallback.py` INTO THE CONDUCTOR'S RETRO TIMING-DATA ASSEMBLY **Origin:** operational retrospectives for milestones .469, .473 (three separate generation passes), and .474 (two separate generation passes) have ALL reported a false \"no experiment commits found since activation\" TIMING DATA block, even though `git log <activate-commit>..HEAD` shows dozens of rea",
+      "material_physical_fields": [
+        "port"
+      ],
+      "operator_authored": true,
+      "path": "ops/known-issues.md",
+      "raw_receipt": {
+        "source": "### RESOLVED 2026-07-14 (MANDATORY \u2014 outer-loop escalation after 4th recurrence, closed at operator direction): WIRE `scripts/retro_timing_fallback.py` INTO THE CONDUCTOR'S RETRO TIMING-DATA ASSEMBLY"
+      },
+      "receipt_date": "20260714",
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-002",
+      "source": "### RESOLVED 2026-07-14 (MANDATORY \u2014 outer-loop escalation after 4th recurrence, closed at operator direction): WIRE `scripts/retro_timing_fallback.py` INTO THE CONDUCTOR'S RETRO TIMING-DATA ASSEMBLY",
+      "target_ok": false,
+      "text_sha256": "sha256:e30adeb5dbed742dda2897411842983c26cee7797299a53f65e9fe09752fd8f0",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 3,
+      "excerpt": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v3 build-version entry is obsolete, board continuity is handled each milestone) \u2014 was: NEW 2026-05-24 (02:50Z): GateMate n=16 Bitstream Flash + Timing Smoke v3 \u2014 Board Reattached (.279+ MANDATORY) **Origin:** 2026-05-24 operator confirmed the GateMate A1-EVB-2M is reattached after a power-cycle replug. exp2957 (`.278) had emitted `blocked_board_not_detected` because the",
+      "material_physical_fields": [
+        "board",
+        "dirtyjtag",
+        "power"
+      ],
+      "operator_authored": true,
+      "path": "ops/known-issues.md",
+      "raw_receipt": {
+        "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v3 build-version entry is obsolete, board continuity is handled each milestone) \u2014 was: NEW 2026-05-24 (02:50Z): GateMate n=16 Bitstream Flash + Timing Smoke v3 \u2014 Board Reattached (.279+ MANDATORY)"
+      },
+      "receipt_date": "20260630",
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-003",
+      "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v3 build-version entry is obsolete, board continuity is handled each milestone) \u2014 was: NEW 2026-05-24 (02:50Z): GateMate n=16 Bitstream Flash + Timing Smoke v3 \u2014 Board Reattached (.279+ MANDATORY)",
+      "target_ok": true,
+      "text_sha256": "sha256:bc68fc20b72ce2195060366c96062b66872d571cfae27b83f3e49b2ec8db804e",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 4,
+      "excerpt": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 Phase-3 FPGA corrigenda deprioritized; KV260 is POC-tier per the hardware re-scope + the paper-v6 narrowing already reframed the KV260 claims; board continuity is the per-milestone rotation) \u2014 was: NEW 2026-05-23 (13:30Z): Phase-3 Deep Think Corrigenda \u2014 Three FATAL-Rescue Experiments (.276+ MANDATORY) **Origin:** 2026-05-23 Phase-3 Empirical-Readiness Deep Think round (see `docs/research-notes/phase3-empirical-readiness-deep-think-results.md`) p",
+      "material_physical_fields": [],
+      "operator_authored": false,
+      "path": "ops/known-issues.md",
+      "raw_receipt": {
+        "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 Phase-3 FPGA corrigenda deprioritized; KV260 is POC-tier per the hardware re-scope + the paper-v6 narrowing already reframed the KV260 claims; board continuity is the per-milestone rotation) \u2014 was: NEW 2026-05-23 (13:30Z): Phase-3 Deep Think Corrigenda \u2014 Three FATAL-Rescue Experiments (.276+ MANDATORY)"
+      },
+      "receipt_date": "20260630",
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-004",
+      "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 Phase-3 FPGA corrigenda deprioritized; KV260 is POC-tier per the hardware re-scope + the paper-v6 narrowing already reframed the KV260 claims; board continuity is the per-milestone rotation) \u2014 was: NEW 2026-05-23 (13:30Z): Phase-3 Deep Think Corrigenda \u2014 Three FATAL-Rescue Experiments (.276+ MANDATORY)",
+      "target_ok": false,
+      "text_sha256": "sha256:e913f293f0612a7d92f4a50525a5904f7dfffd64035f3c4d20d4f34808ae8ebb",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 5,
+      "excerpt": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v2 build-version entry is obsolete) \u2014 was: NEW 2026-05-23 (06:15Z): GateMate A1 n=16 Ising Tile Build v2 \u2014 Corrected Toolchain Invocation (.276+ MANDATORY) **Origin:** 2026-05-23 operator directive (\"can we unblock gatemate?\") after exp2899 (`.274) emitted `blocked_gatemate_toolchain_missing`. Investigation showed the toolchain is fully present \u2014 `nextpnr-gatemate` as a",
+      "material_physical_fields": [],
+      "operator_authored": true,
+      "path": "ops/known-issues.md",
+      "raw_receipt": {
+        "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v2 build-version entry is obsolete) \u2014 was: NEW 2026-05-23 (06:15Z): GateMate A1 n=16 Ising Tile Build v2 \u2014 Corrected Toolchain Invocation (.276+ MANDATORY)"
+      },
+      "receipt_date": "20260630",
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-005",
+      "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v2 build-version entry is obsolete) \u2014 was: NEW 2026-05-23 (06:15Z): GateMate A1 n=16 Ising Tile Build v2 \u2014 Corrected Toolchain Invocation (.276+ MANDATORY)",
+      "target_ok": true,
+      "text_sha256": "sha256:8bad558b1aed45b04d2fd9b492f514a04f9f7d301ecfb716b52174d9a61d06cc",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 6,
+      "excerpt": "### NEW 2026-05-18 (24:30Z): Per-FPGA-board task slot every milestone \u2014 DURABLE (.237+ MANDATORY, until each board's terminal state) **Origin:** 2026-05-18 operator directive: \"I just don't want you to forget about the FPGAs again.\" Codified as CLAUDE.md MANDATORY rule \"Hardware-Task Continuity Discipline\" (commit b9e3ad392). **The rule (summary):** every milestone roadmap MUST include at least one task targeting EACH attached FPGA board until that board reaches its defined terminal state. The t",
+      "material_physical_fields": [],
+      "operator_authored": false,
+      "path": "ops/known-issues.md",
+      "raw_receipt": {
+        "source": "### NEW 2026-05-18 (24:30Z): Per-FPGA-board task slot every milestone \u2014 DURABLE (.237+ MANDATORY, until each board's terminal state)"
+      },
+      "receipt_date": "20260518",
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-006",
+      "source": "### NEW 2026-05-18 (24:30Z): Per-FPGA-board task slot every milestone \u2014 DURABLE (.237+ MANDATORY, until each board's terminal state)",
+      "target_ok": true,
+      "text_sha256": "sha256:8d1b3b8d6810620178e35ede81395180c7a963d6fe4f863acd5285251689599a",
+      "usb_only_evidence": true,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 7,
+      "excerpt": "### NEW 2026-05-18 (23:55Z): PolarFire SoC Smoke v3 \u2014 Precondition-Gated, Not Fabricated (.237+ MANDATORY) **Origin:** 2026-05-18 23:55Z operator request after verifying both PolarFire SoC Discovery Kit and GateMate A1-EVB-2M are physically attached to the bench and udev rules are installed. The prior smoke attempt (exp1680 PolarFire smoke v2) is the canonical fabrication exemplar cited in CLAUDE.md \"Pre-Launch Preconditions Discipline\" \u2014 it reported TPR=1.0 with `run_duration_s=0` and never act",
+      "material_physical_fields": [],
+      "operator_authored": false,
+      "path": "ops/known-issues.md",
+      "raw_receipt": {
+        "source": "### NEW 2026-05-18 (23:55Z): PolarFire SoC Smoke v3 \u2014 Precondition-Gated, Not Fabricated (.237+ MANDATORY)"
+      },
+      "receipt_date": "20260518",
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-007",
+      "source": "### NEW 2026-05-18 (23:55Z): PolarFire SoC Smoke v3 \u2014 Precondition-Gated, Not Fabricated (.237+ MANDATORY)",
+      "target_ok": true,
+      "text_sha256": "sha256:a01e1a160fb9dcc2b117056545caac2a6ba0f4be707ea87df0619c29bbd7c40e",
+      "usb_only_evidence": true,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 8,
+      "excerpt": "### NEW 2026-05-08 (21:35Z): Phase 1 Ship Track \u2014 Decoupled from Paper + Hardware (.121+ MANDATORY) **Operator directives 2026-05-08 ~21:30Z:** 1. \"I want to kick the paper and arXiv submission into the next phase as it should not block us\" 2. \"I do not want to wait on the GateMate + PolarFire Soc hardware validation for phase 1 as it should not block us\" **Effect:** Phase 1 ship gate is now purely software-operational. See CLAUDE.md \"Project Vision\" + memory entry `feedback_phase_1_ship_decoupl",
+      "material_physical_fields": [
+        "board",
+        "port"
+      ],
+      "operator_authored": false,
+      "path": "ops/known-issues.md",
+      "raw_receipt": {
+        "source": "### NEW 2026-05-08 (21:35Z): Phase 1 Ship Track \u2014 Decoupled from Paper + Hardware (.121+ MANDATORY)"
+      },
+      "receipt_date": "20260508",
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-008",
+      "source": "### NEW 2026-05-08 (21:35Z): Phase 1 Ship Track \u2014 Decoupled from Paper + Hardware (.121+ MANDATORY)",
+      "target_ok": false,
+      "text_sha256": "sha256:ee4bea61dc5d29d6c25ec269827d46ee41c34814ad1ee2f846149cbdf728111f",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 9,
+      "excerpt": "## 2026-08-11 operator physical action: ALL FPGA hardware power-cycled \u2014 GateMate changed-state gate should now unblock **Operator directive (2026-08-11T12:58:49Z UTC):** \"I have just power cycled all of the FPGA hardware.\" This is the physical state change `REQ-HW-6121` / `experiment_6121_gatemate_changed_ state_gate_v530.py` has been blocked waiting on since `.530` (2026-08-04): \"operator must change physical state and record a dated receipt.\" **Dated physical receipt (structured, for the next",
+      "material_physical_fields": [
+        "board",
+        "dirtyjtag",
+        "power"
+      ],
+      "operator_authored": true,
+      "path": "ops/known-issues.md",
+      "raw_receipt": {
+        "board": "Cologne Chip GateMate A1-EVB-2M",
+        "changes": [
+          {
+            "description": "operator power-cycled all attached FPGA boards, including GateMate",
+            "field": "power"
+          }
+        ],
+        "exists": true,
+        "power": "power-cycled 2026-08-11 per operator directive (was: cached physical power unresolved; raw all-ones TDO suggested open or unpowered target)",
+        "receipt_date": "20260811",
+        "source": "operator directive 2026-08-11T12:58:49Z: \"I have just power cycled all of the FPGA hardware\"",
+        "usb_dirtyjtag": "1209:c0ca, bus 3, path 2.3 (re-enumerated after power cycle -- device number changed from the last recorded bus 003 device 006; SAME shared hub path 2.3, confirming the physical connection was not moved, only power-cycled)",
+        "verified_read_only": "lsusb (2026-08-11T12:58:49Z): 1209:c0ca present, bus 3 device 11, path 2.3 -- no JTAG command run, no detect attempted; that single non-destructive detect is reserved for the gated script per the operator_action_packet's do_not_do list"
+      },
+      "receipt_date": "20260811",
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-009",
+      "source": "operator directive 2026-08-11T12:58:49Z: \"I have just power cycled all of the FPGA hardware\"",
+      "target_ok": true,
+      "text_sha256": "sha256:e6a2ed275f1d60984640d0b760b52a5d5a2080f55285c9e929856640164c3d73",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 10,
+      "excerpt": "### Active hardware tracks (Exp 1460 + 2026-05-22 update) | Track | Why active now | Boundary | |---|---|---| | Dual RTX 3090 CUDA local SOTA runtime repair | Exp 1442 saw two RTX 3090s and cached flagship GGUF models; the blocker is the local llama.cpp CUDA runtime. **2026-05-22 update:** exp2862 (`.270 SOTA Runtime Cache Offload Resolver v3) recorded `usable_response=true`. CUDA runtime is now operational. | No live SOTA inference claim until a smoke run records `usable_response=true`. **Close",
+      "material_physical_fields": [
+        "board",
+        "dirtyjtag",
+        "port"
+      ],
+      "operator_authored": false,
+      "path": "research-hardware-wishlist.md",
+      "raw_receipt": {
+        "source": "### Active hardware tracks (Exp 1460 + 2026-05-22 update)"
+      },
+      "receipt_date": "20260522",
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-010",
+      "source": "### Active hardware tracks (Exp 1460 + 2026-05-22 update)",
+      "target_ok": true,
+      "text_sha256": "sha256:023a199a9f5e65a19fd6f93ec36b89f53b331c9a40f96ccfab59c998a389eca6",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 11,
+      "excerpt": "### Exp 5231 hardware continuity + p-bit boundary plan (2026-07-04) - KV260 continuity remains SSH-only; no benchmark speedup is claimed. - PolarFire continuity uses SSH plus a bounded hash/correctness smoke when reachable. - GateMate preserves the v477 physical/JTAG block (`0xffffffff`) until the operator changes cable, port, or board power setup. - Future sampler plan: `docs/research-notes/experiment_5231_pbit_boundary_exchange_timing_ratio_plan.md` for `distributed_sparse_pbit_boundary_exchan",
+      "material_physical_fields": [
+        "board",
+        "cable",
+        "port",
+        "power"
+      ],
+      "operator_authored": true,
+      "path": "research-hardware-wishlist.md",
+      "raw_receipt": {
+        "source": "### Exp 5231 hardware continuity + p-bit boundary plan (2026-07-04)"
+      },
+      "receipt_date": "20260704",
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-011",
+      "source": "### Exp 5231 hardware continuity + p-bit boundary plan (2026-07-04)",
+      "target_ok": false,
+      "text_sha256": "sha256:44ba2f32889956b9822da703bbd8682f38a33dd90b52fdbe0c7cec4360bae7d1",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 12,
+      "excerpt": "# Hardware bring-up prep \u2014 GateMate A1 + PolarFire SoC Discovery Kit **Filed by:** outer-loop (Claude) 2026-05-14 16:55Z **Status:** boards physically on bench; software prep documented below **Affects experiments:** `.166 exp2105 (GateMate smoke), planned `.166/`.167 PolarFire smoke",
+      "material_physical_fields": [],
+      "operator_authored": false,
+      "path": "ops/hardware-bringup-prep.md",
+      "raw_receipt": {
+        "source": "# Hardware bring-up prep \u2014 GateMate A1 + PolarFire SoC Discovery Kit"
+      },
+      "receipt_date": "20260514",
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-012",
+      "source": "# Hardware bring-up prep \u2014 GateMate A1 + PolarFire SoC Discovery Kit",
+      "target_ok": false,
+      "text_sha256": "sha256:20788ca5731c5a54f0b21e02e9aa79209a93ff0e422ad6e4a49d45e7e021a54f",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 13,
+      "excerpt": "## What's verified working | Component | Status | Evidence | |---|---|---| | GateMate A1-EVB-2M physical | attached, **programmer is ONBOARD** | The Olimex variant ships with an integrated DirtyJTAG-firmware MCU on the PCB; programming goes over the board's own USB-C cable. Verified 2026-05-18 via `/sys/bus/usb/devices/3-2.3/` (5-interface composite: vendor JTAG + 2x CDC ACM + 2x CDC data). The earlier note about needing an external DirtyJTAG was misleading \u2014 `lsusb` was checked for FTDI VIDs, b",
+      "material_physical_fields": [],
+      "operator_authored": true,
+      "path": "ops/hardware-bringup-prep.md",
+      "raw_receipt": {
+        "source": "## What's verified working"
+      },
+      "receipt_date": "20260518",
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-013",
+      "source": "## What's verified working",
+      "target_ok": true,
+      "text_sha256": "sha256:28a190e7a212b402e032a251e526d6a8525ac3491e43dccd5e40d858a3c8b244",
+      "usb_only_evidence": true,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 14,
+      "excerpt": "## 2026-05-14 22:15Z note \u2014 THERMAL CONSTRAINTS (operator) **Neither the PolarFire SoC Discovery Kit nor the GateMate A1-EVB-2M has active cooling.** The KV260 has a small fan + heatsink; these two boards are bare / passively cooled. **Implications:** - **Sustained high-load workloads risk thermal throttling.** RISC-V cores on the MPFS095T may down-clock under sustained 100% utilization. FPGA fabric on either board may degrade or warp under extended high-toggle-rate operation. - **Benchmark resu",
+      "material_physical_fields": [],
+      "operator_authored": true,
+      "path": "ops/hardware-bringup-prep.md",
+      "raw_receipt": {
+        "source": "## 2026-05-14 22:15Z note \u2014 THERMAL CONSTRAINTS (operator)"
+      },
+      "receipt_date": "20260514",
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-014",
+      "source": "## 2026-05-14 22:15Z note \u2014 THERMAL CONSTRAINTS (operator)",
+      "target_ok": false,
+      "text_sha256": "sha256:6afe6a0608ae83f96b29d759b522d09c4928a089d13aaf28b306c7aa905a533d",
+      "usb_only_evidence": true,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 15,
+      "excerpt": "## What's NOT yet working | Component | Issue | Fix path | |---|---|---| | DirtyJTAG USB raw access | `openFPGALoader -c dirtyJtag --detect` fails with \"fails to open device\" because /dev/bus/usb/003/006 is 664 root:root | Install /tmp/99-fpga-boards.rules (sudo) \u2014 see below | | FlashPro5 USB raw access (for JTAG/flash ops, not UART) | ~~needs udev rule~~ \u2014 INSTALLED 2026-05-18 | `/etc/udev/rules.d/99-fpga-boards.rules` grants `uucp` group raw access to 1209:c0ca + 1514:2008 | | ~~GateMate JTAG ",
+      "material_physical_fields": [],
+      "operator_authored": false,
+      "path": "ops/hardware-bringup-prep.md",
+      "raw_receipt": {
+        "source": "## What's NOT yet working"
+      },
+      "receipt_date": "20260518",
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-015",
+      "source": "## What's NOT yet working",
+      "target_ok": true,
+      "text_sha256": "sha256:14b4360011cad24b996dbb0acb7363a276cc56c3bb7435e8a6859cfe21452c69",
+      "usb_only_evidence": true,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 16,
+      "excerpt": "## Pre-prepared artifacts | Artifact | Path | Purpose | |---|---|---| | Minimal n=16 GateMate Ising tile (RTL) | `rtl/gatemate_ising_n16.v` | exp2105 smoke target | | yosys synthesis script | `rtl/gatemate_ising_n16.ys` | yosys -p flow documented | | Synthesized JSON netlist | `rtl/gatemate_ising_n16.json` | verified produces 136 cells (~0.7% of A1 budget); P&R blocked on LUT mapping | | udev rule file | `/etc/udev/rules.d/99-fpga-boards.rules` | **INSTALLED 2026-05-18 19:54Z** by outer-loop; ve",
+      "material_physical_fields": [],
+      "operator_authored": false,
+      "path": "ops/hardware-bringup-prep.md",
+      "raw_receipt": {
+        "source": "## Pre-prepared artifacts"
+      },
+      "receipt_date": "20260518",
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-016",
+      "source": "## Pre-prepared artifacts",
+      "target_ok": false,
+      "text_sha256": "sha256:c0a38f71fb95db1238906eb6f1ff7e853ce276bd6cf46a49bbfae8edbbac24ec",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 17,
+      "excerpt": "# 2. DirtyJTAG access \u2014 VERIFIED 2026-05-18:",
+      "material_physical_fields": [],
+      "operator_authored": false,
+      "path": "ops/hardware-bringup-prep.md",
+      "raw_receipt": {
+        "source": "# 2. DirtyJTAG access \u2014 VERIFIED 2026-05-18:"
+      },
+      "receipt_date": "20260518",
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-017",
+      "source": "# 2. DirtyJTAG access \u2014 VERIFIED 2026-05-18:",
+      "target_ok": false,
+      "text_sha256": "sha256:6f0fa9de12820d842fe4d7b0cd739c1326634d649d9baa14585f3be0cda02c52",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 18,
+      "excerpt": "# openFPGALoader -c dirtyJtag --detect",
+      "material_physical_fields": [],
+      "operator_authored": false,
+      "path": "ops/hardware-bringup-prep.md",
+      "raw_receipt": {
+        "source": "#    openFPGALoader -c dirtyJtag --detect"
+      },
+      "receipt_date": null,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-018",
+      "source": "#    openFPGALoader -c dirtyJtag --detect",
+      "target_ok": false,
+      "text_sha256": "sha256:491b85958d83a5ea8e545e93412f9aace7a5780c9dc805cbbb13f19039237b2d",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 19,
+      "excerpt": "# uptime: 4 days 5:41 ``` **No further bench-side action required for either board** as of 2026-05-18. The only remaining technical blocker is the yosys\u2194nextpnr LUT mapping mismatch (`synth_gatemate -abc9` workaround pending), which is software not hardware.",
+      "material_physical_fields": [],
+      "operator_authored": false,
+      "path": "ops/hardware-bringup-prep.md",
+      "raw_receipt": {
+        "source": "#       uptime: 4 days 5:41"
+      },
+      "receipt_date": "20260518",
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-019",
+      "source": "#       uptime: 4 days 5:41",
+      "target_ok": false,
+      "text_sha256": "sha256:91799dbebe7dfc042b9629dd443b4ad052e38506f8145c27dbd2159145adb52e",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 20,
+      "excerpt": "### Bench-side (physical actions) 1. **GateMate JTAG wiring**: identify the GateMate A1-EVB-2M JTAG header (typically a 10-pin or 14-pin connector marked \"JTAG\" on the silkscreen). Wire from the DirtyJTAG's host pins: - DirtyJTAG TCK \u2192 GateMate JTAG TCK - DirtyJTAG TMS \u2192 GateMate JTAG TMS - DirtyJTAG TDI \u2192 GateMate JTAG TDI - DirtyJTAG TDO \u2192 GateMate JTAG TDO - DirtyJTAG GND \u2192 GateMate GND - (optionally) DirtyJTAG TRST \u2192 GateMate JTAG TRST Pinout for DirtyJTAG depends on the firmware variant; ch",
+      "material_physical_fields": [],
+      "operator_authored": false,
+      "path": "ops/hardware-bringup-prep.md",
+      "raw_receipt": {
+        "source": "### Bench-side (physical actions)"
+      },
+      "receipt_date": null,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-020",
+      "source": "### Bench-side (physical actions)",
+      "target_ok": true,
+      "text_sha256": "sha256:579a66447eacd1e1fe1be7a9672b991270259a92cafbd5862d078c4240403416",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 21,
+      "excerpt": "## Next milestone tasks - `.166 exp2105: GateMate A1 toolchain smoke (RTL synth + P&R; flash conditional on JTAG wiring complete) - `.166 exp2106 (proposed, pending operator confirmation): PolarFire SoC smoke (UART banner read + boot-mode documentation) - `.167+: real Carnot Ising sampler on GateMate (replace the minimal n=16 with the verifier-relevant sampler from rtl/ising_sampler_v3.v adapted)",
+      "material_physical_fields": [],
+      "operator_authored": true,
+      "path": "ops/hardware-bringup-prep.md",
+      "raw_receipt": {
+        "source": "## Next milestone tasks"
+      },
+      "receipt_date": null,
+      "reject_reason": "undated",
+      "row_id": "receipt-021",
+      "source": "## Next milestone tasks",
+      "target_ok": false,
+      "text_sha256": "sha256:fdb47234a27bdff7f96040112ab0645ceec305a9eb5de233ecda709544e7947b",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 22,
+      "excerpt": "## Why nothing further can be done from this session Without sudo (udev rule), the DirtyJTAG and FlashPro5 USB raw devices remain root-only. The conductor's experiments would face the same \"fails to open device\" error. Once the udev rule lands, every subsequent JTAG/flash op should work from non-root.",
+      "material_physical_fields": [],
+      "operator_authored": false,
+      "path": "ops/hardware-bringup-prep.md",
+      "raw_receipt": {
+        "source": "## Why nothing further can be done from this session"
+      },
+      "receipt_date": null,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-022",
+      "source": "## Why nothing further can be done from this session",
+      "target_ok": false,
+      "text_sha256": "sha256:1ac797c63f7743ab15a879c56103ecc5b43b3bfdaed9bee62df4dceb4a046833",
+      "usb_only_evidence": true,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 23,
+      "excerpt": "### 2026-05-20: GateMate \u2014 terminal state met, optional follow-on tasks GateMate has fully graduated from per-milestone mandatory inclusion (both terminal-state halves met: bitstream flashed + on-board sampler timing benchmark at 951 Hz sample rate, KL=1.92 from analytic Boltzmann). **Optional operator-side direction**: do you want to push KL toward tighter analytic match (which would require RNG-source improvement or larger n)? Or treat the n=16 result as sufficient for paper-v6's sovereignty s",
+      "material_physical_fields": [],
+      "operator_authored": true,
+      "path": "ops/operator-followup.md",
+      "raw_receipt": {
+        "source": "### 2026-05-20: GateMate \u2014 terminal state met, optional follow-on tasks"
+      },
+      "receipt_date": "20260520",
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-023",
+      "source": "### 2026-05-20: GateMate \u2014 terminal state met, optional follow-on tasks",
+      "target_ok": false,
+      "text_sha256": "sha256:0f2b2989e55ae2da76d71be3bb5e698c5ddc2998b3e2d42f1c5ecc684f14dcca",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 24,
+      "excerpt": "### 2026-05-19: Paper-v6 arXiv submission \u2014 operator-only per CLAUDE.md `feedback_publication_holds_until_phase4_pivot.md` (2026-05-02) + CLAUDE.md \"Operator-Only External Publication\" rule (commit `49cc90b7e` 2026-05-19) both apply. Current state: - `arxiv_ready=False` per `.243 capstone (Phase 4 v3 blocked on real IsingVerifier step-energy implementation) - exp2536 `.244 LaTeX compile success, 205-word abstract, package assembled - AUROC 0.9750 adversarially-verified, +5.14pp over HIVE peer - ",
+      "material_physical_fields": [],
+      "operator_authored": true,
+      "path": "ops/operator-followup.md",
+      "raw_receipt": {
+        "source": "### 2026-05-19: Paper-v6 arXiv submission \u2014 operator-only per CLAUDE.md"
+      },
+      "receipt_date": "20260519",
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-024",
+      "source": "### 2026-05-19: Paper-v6 arXiv submission \u2014 operator-only per CLAUDE.md",
+      "target_ok": false,
+      "text_sha256": "sha256:85d4d90659b30f5f4b530cc10ac452dfdc0e966636cf10360eca288022a55c5d",
+      "usb_only_evidence": false,
+      "valid": false
+    }
+  ],
+  "duration_s": 0.076676,
+  "experiment": "experiment_6525_gatemate_changed_state_continuity",
+  "experiment_id": "exp6525-gatemate-changed-state-continuity",
+  "field_principles": {
+    "aggregate_row_recomputation": "Aggregate booleans are recomputed from rows.",
+    "authorization_decision": "Only a post-Exp6325 material physical receipt can spend the single action budget.",
+    "changed_state_receipt": "The selected receipt, if any, is the only physical-change authority.",
+    "command_rows": "If a command runs, argv, timing, exit, hashes, device identity, and terminal disposition are recorded.",
+    "dated_receipt_search_rows": "One row per candidate proves why it did or did not authorize hardware.",
+    "duration_s": "Measured wall time is reported without padding.",
+    "field_principles": "Each required field declares why it exists.",
+    "field_provenance": "Every field traces to receipts, hashes, command output, or tests.",
+    "gate_check_summary": "A compact recomputation of the safety gates.",
+    "gatemate_bitstream_flashed": "True only for same-run authenticated flash evidence.",
+    "gatemate_continuity_slot_complete_score": "An honest closed block or one-action record completes the continuity slot.",
+    "hardware_command_count": "Bare zero or one enforces no unchanged reruns.",
+    "hardware_speedup_claim": "This continuity task makes no performance claim.",
+    "historical_state_receipts": "Historical state is preserved without re-graduating old evidence.",
+    "honest_verdict": "The verdict names the block or single-action result without inference.",
+    "inference_substrate": "Use no-command dated receipt audit unless a command actually runs.",
+    "per_unit_rows": "Rows expose candidate and command units before aggregation.",
+    "preconditions_checked": "Git status, hashes, exclusion state, time, and search locations precede authorization.",
+    "prior_failure_receipts": "Prior failures define the no-repeat baseline.",
+    "protected_files_unchanged": "Conductor and reconciler-owned files remain byte-identical.",
+    "random_seed": "The experiment identifier is recorded as a reproducibility seed.",
+    "reproducibility_checksum": "Checksum detects receipt, command, or hash drift.",
+    "status": "Terminal status for the V564 GateMate continuity record.",
+    "terminal_disposition": "The first terminal result stops the task.",
+    "tests_run": "Verification commands and expected exit codes are recorded.",
+    "verdict_class": "Blocked, partial, circular-positive, or disqualified classification is explicit.",
+    "verifier_is_oracle": "Only device and bitstream identity checks may be authoritative; positive claims are never oracle-backed."
+  },
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "principle": "Aggregate booleans are recomputed from rows.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "authorization_decision": {
+      "principle": "Only a post-Exp6325 material physical receipt can spend the single action budget.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "changed_state_receipt": {
+      "principle": "The selected receipt, if any, is the only physical-change authority.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "command_rows": {
+      "principle": "If a command runs, argv, timing, exit, hashes, device identity, and terminal disposition are recorded.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "dated_receipt_search_rows": {
+      "principle": "One row per candidate proves why it did or did not authorize hardware.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "duration_s": {
+      "principle": "Measured wall time is reported without padding.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "field_principles": {
+      "principle": "Each required field declares why it exists.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "field_provenance": {
+      "principle": "Every field traces to receipts, hashes, command output, or tests.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "gate_check_summary": {
+      "principle": "A compact recomputation of the safety gates.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "gatemate_bitstream_flashed": {
+      "principle": "True only for same-run authenticated flash evidence.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "gatemate_continuity_slot_complete_score": {
+      "principle": "An honest closed block or one-action record completes the continuity slot.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "hardware_command_count": {
+      "principle": "Bare zero or one enforces no unchanged reruns.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "hardware_speedup_claim": {
+      "principle": "This continuity task makes no performance claim.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "historical_state_receipts": {
+      "principle": "Historical state is preserved without re-graduating old evidence.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "honest_verdict": {
+      "principle": "The verdict names the block or single-action result without inference.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "inference_substrate": {
+      "principle": "Use no-command dated receipt audit unless a command actually runs.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "per_unit_rows": {
+      "principle": "Rows expose candidate and command units before aggregation.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "preconditions_checked": {
+      "principle": "Git status, hashes, exclusion state, time, and search locations precede authorization.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "prior_failure_receipts": {
+      "principle": "Prior failures define the no-repeat baseline.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "protected_files_unchanged": {
+      "principle": "Conductor and reconciler-owned files remain byte-identical.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "random_seed": {
+      "principle": "The experiment identifier is recorded as a reproducibility seed.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "reproducibility_checksum": {
+      "principle": "Checksum detects receipt, command, or hash drift.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "status": {
+      "principle": "Terminal status for the V564 GateMate continuity record.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "terminal_disposition": {
+      "principle": "The first terminal result stops the task.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "tests_run": {
+      "principle": "Verification commands and expected exit codes are recorded.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "verdict_class": {
+      "principle": "Blocked, partial, circular-positive, or disqualified classification is explicit.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    },
+    "verifier_is_oracle": {
+      "principle": "Only device and bitstream identity checks may be authoritative; positive claims are never oracle-backed.",
+      "source": "REQ-HW-6525 / SCENARIO-HW-6525-* plus local receipts, hashes, command rows, and tests"
+    }
+  },
+  "gate_check_summary": {
+    "authorization_requires_material_receipt": true,
+    "exp3866_exclusion_preserved": true,
+    "new_post_exp6325_physical_receipt_found": false,
+    "no_hardware_commands_without_new_receipt": true,
+    "no_performance_or_availability_claim": true,
+    "no_speedup_claim": true,
+    "protected_files_unchanged": true,
+    "safe_target_validation_passed": false,
+    "single_action_budget_respected": true,
+    "terminal_stop_after_first_result": true
+  },
+  "gatemate_bitstream_flashed": false,
+  "gatemate_continuity_slot_complete_score": 1.0,
+  "hardware_command_count": 0,
+  "hardware_speedup_claim": false,
+  "historical_state_receipts": [
+    {
+      "bytes": 21692,
+      "detect_command_count": null,
+      "gatemate_bitstream_flashed": null,
+      "honest_verdict": "blocked_physical_action: unchanged GateMate cable/port/power/board/DirtyJTAG state; no JTAG command run; operator must change physical state and record a dated receipt",
+      "path": "results/experiment_6121_gatemate_changed_state_gate_v530.json",
+      "present": true,
+      "run_date": "20260804",
+      "sha256": "sha256:9639a11e3f357bc74ade009cf7e8ed025ccc2bc3b8edddfa5ad90b0b732391ed",
+      "status": "blocked_physical_action"
+    },
+    {
+      "bytes": 20067,
+      "detect_command_count": null,
+      "gatemate_bitstream_flashed": null,
+      "honest_verdict": "blocked_missing_receipt: no newer dated GateMate physical receipt exists; zero hardware commands run and Exp3866 remains excluded",
+      "path": "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+      "present": true,
+      "run_date": "20260807",
+      "sha256": "sha256:30f1ee494c0e2bb9bb30536941e61d674a79420bf6999967becd7954e70b5658",
+      "status": "blocked_missing_receipt"
+    },
+    {
+      "bytes": 31947,
+      "detect_command_count": 1,
+      "gatemate_bitstream_flashed": null,
+      "honest_verdict": "blocked_detect_failed: one authorized DirtyJTAG detect returned a tool failure; stopped without retry",
+      "path": "results/experiment_6325_gatemate_dated_receipt_single_detect.json",
+      "present": true,
+      "run_date": "20260812",
+      "sha256": "sha256:ce79f9a5cdbc3cdd2e1821f559e2e6496716fabc41cb73f34cd7aeafe011785b",
+      "status": "blocked_detect_failed"
+    },
+    {
+      "bytes": 14529,
+      "detect_command_count": null,
+      "gatemate_bitstream_flashed": true,
+      "honest_verdict": "success: gatemate_ising_tile_n16_flashed_terminal_lut19_fmax139.12_timingnone_no_readback",
+      "path": "results/experiment_3866_gatemate_ising_tile_flash_v2.json",
+      "present": true,
+      "run_date": "20260605",
+      "sha256": "sha256:03a7825b2db27ac8a023d24ab27275659741f63e5d965ecf70f77db7ce9be9bb",
+      "status": null
+    }
+  ],
+  "honest_verdict": "blocked_missing_new_physical_receipt: no operator-authored dated GateMate physical-state receipt newer than Exp6325 exists; zero hardware commands run and Exp3866 remains excluded",
+  "inference_substrate": "dated_hardware_receipt_audit_no_command_no_llm",
+  "milestone": "2026.08.564",
+  "per_unit_rows": [
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-001",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-002",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-003",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-004",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-005",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-006",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-007",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-008",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-009",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-010",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-011",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-012",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-013",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-014",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-015",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-016",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-017",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-018",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-019",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-020",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "undated",
+      "row_id": "receipt-021",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "not_operator_authored",
+      "row_id": "receipt-022",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-023",
+      "row_type": "receipt_candidate",
+      "valid": false
+    },
+    {
+      "hardware_command_count": 0,
+      "reject_reason": "stale_or_not_newer_than_exp6325",
+      "row_id": "receipt-024",
+      "row_type": "receipt_candidate",
+      "valid": false
+    }
+  ],
+  "preconditions_checked": {
+    "current_time_utc": "2026-08-23T03:55:31.205346Z",
+    "exclusion_state": {
+      "basis": "Exp3866 remains historical only; Exp6199 exclusion flag and Exp6525 policy prevent clean terminal graduation.",
+      "exp3866_clean_terminal_evidence_excluded": true,
+      "exp3866_preserved": true,
+      "manifest": {
+        "bytes": 47866,
+        "path": "ops/exclusion_manifest.yaml",
+        "present": true,
+        "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      }
+    },
+    "git_status": {
+      "command": "git status --short",
+      "short": " M openspec/capabilities/hardware/spec.md\n M ops/.run_sentinel_state.json\n?? python/carnot/experiment_6525_gatemate_changed_state_continuity.py\n?? tests/python/test_experiment_6525_gatemate_changed_state_continuity.py\n"
+    },
+    "historical_artifact_paths_and_hashes": {
+      "results/experiment_3866_gatemate_ising_tile_flash_v2.json": {
+        "bytes": 14529,
+        "present": true,
+        "sha256": "sha256:03a7825b2db27ac8a023d24ab27275659741f63e5d965ecf70f77db7ce9be9bb"
+      },
+      "results/experiment_6121_gatemate_changed_state_gate_v530.json": {
+        "bytes": 21692,
+        "present": true,
+        "sha256": "sha256:9639a11e3f357bc74ade009cf7e8ed025ccc2bc3b8edddfa5ad90b0b732391ed"
+      },
+      "results/experiment_6199_gatemate_terminal_action_audit_v537.json": {
+        "bytes": 20067,
+        "present": true,
+        "sha256": "sha256:30f1ee494c0e2bb9bb30536941e61d674a79420bf6999967becd7954e70b5658"
+      },
+      "results/experiment_6325_gatemate_dated_receipt_single_detect.json": {
+        "bytes": 31947,
+        "present": true,
+        "sha256": "sha256:ce79f9a5cdbc3cdd2e1821f559e2e6496716fabc41cb73f34cd7aeafe011785b"
+      }
+    },
+    "last_known_state": {
+      "baseline_artifact": "results/experiment_6325_gatemate_dated_receipt_single_detect.json",
+      "baseline_run_date": "20260812",
+      "detect_command_count": 1,
+      "detect_exit_code": 1,
+      "detect_timeout": false,
+      "detected_chain_and_device_ids": {
+        "chain_empty": true,
+        "device_count": 0,
+        "devices": [],
+        "expected_gatemate_idcode_seen": false,
+        "expected_idcode": "0x20000001",
+        "idcodes": [],
+        "parser": "regex_idcode_and_index_blocks_from_raw_openfpgaloader_output"
+      },
+      "honest_verdict": "blocked_detect_failed: one authorized DirtyJTAG detect returned a tool failure; stopped without retry",
+      "status": "blocked_detect_failed"
+    },
+    "protected_file_hashes_before_authorization": {
+      "_bmad/traceability.md": "sha256:b20a5b8f181b87d13707926f0c0253c14130014d38f772c5d0e749c8723300b0",
+      "ops/changelog.md": "sha256:6a0ec09d3f35dc2b49ccabe35c039f4e7f4e9fe492c87a59813d94edaa521d56",
+      "ops/status.md": "sha256:de68490cc6c8661c56e5272f78bfc2f5bfe2455acfdf12f31aea65787617007d",
+      "scripts/research_conductor.py": "sha256:06b3307b91baf83966bfdc41565751d2740c82515370283a22f9a53d4888ccc1"
+    },
+    "receipt_candidate_count": 24,
+    "receipt_search_locations": [
+      "ops/known-issues.md",
+      "research-hardware-wishlist.md",
+      "ops/hardware-bringup-prep.md",
+      "ops/operator-followup.md"
+    ],
+    "safe_command_allowlist": {
+      "detect": "openFPGALoader -c dirtyJtag --detect",
+      "flash_prefix": "openFPGALoader -c dirtyJtag -b olimex_gatemateevb <bitstream.bit>",
+      "forbidden_without_new_receipt": [
+        "lsusb",
+        "openFPGALoader",
+        "yosys",
+        "nextpnr",
+        "gmpack",
+        "JTAG",
+        "flash",
+        "reset"
+      ]
+    },
+    "usb_enumeration_not_physical_change": true
+  },
+  "prior_failure_receipts": [
+    {
+      "bytes": 21692,
+      "detect_command_count": null,
+      "gatemate_bitstream_flashed": null,
+      "honest_verdict": "blocked_physical_action: unchanged GateMate cable/port/power/board/DirtyJTAG state; no JTAG command run; operator must change physical state and record a dated receipt",
+      "path": "results/experiment_6121_gatemate_changed_state_gate_v530.json",
+      "present": true,
+      "run_date": "20260804",
+      "sha256": "sha256:9639a11e3f357bc74ade009cf7e8ed025ccc2bc3b8edddfa5ad90b0b732391ed",
+      "status": "blocked_physical_action"
+    },
+    {
+      "bytes": 20067,
+      "detect_command_count": null,
+      "gatemate_bitstream_flashed": null,
+      "honest_verdict": "blocked_missing_receipt: no newer dated GateMate physical receipt exists; zero hardware commands run and Exp3866 remains excluded",
+      "path": "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+      "present": true,
+      "run_date": "20260807",
+      "sha256": "sha256:30f1ee494c0e2bb9bb30536941e61d674a79420bf6999967becd7954e70b5658",
+      "status": "blocked_missing_receipt"
+    },
+    {
+      "bytes": 31947,
+      "detect_command_count": 1,
+      "gatemate_bitstream_flashed": null,
+      "honest_verdict": "blocked_detect_failed: one authorized DirtyJTAG detect returned a tool failure; stopped without retry",
+      "path": "results/experiment_6325_gatemate_dated_receipt_single_detect.json",
+      "present": true,
+      "run_date": "20260812",
+      "sha256": "sha256:ce79f9a5cdbc3cdd2e1821f559e2e6496716fabc41cb73f34cd7aeafe011785b",
+      "status": "blocked_detect_failed"
+    }
+  ],
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "_bmad/traceability.md": "sha256:b20a5b8f181b87d13707926f0c0253c14130014d38f772c5d0e749c8723300b0",
+      "ops/changelog.md": "sha256:6a0ec09d3f35dc2b49ccabe35c039f4e7f4e9fe492c87a59813d94edaa521d56",
+      "ops/status.md": "sha256:de68490cc6c8661c56e5272f78bfc2f5bfe2455acfdf12f31aea65787617007d",
+      "scripts/research_conductor.py": "sha256:06b3307b91baf83966bfdc41565751d2740c82515370283a22f9a53d4888ccc1"
+    },
+    "all_unchanged": true,
+    "before_hashes": {
+      "_bmad/traceability.md": "sha256:b20a5b8f181b87d13707926f0c0253c14130014d38f772c5d0e749c8723300b0",
+      "ops/changelog.md": "sha256:6a0ec09d3f35dc2b49ccabe35c039f4e7f4e9fe492c87a59813d94edaa521d56",
+      "ops/status.md": "sha256:de68490cc6c8661c56e5272f78bfc2f5bfe2455acfdf12f31aea65787617007d",
+      "scripts/research_conductor.py": "sha256:06b3307b91baf83966bfdc41565751d2740c82515370283a22f9a53d4888ccc1"
+    },
+    "changed_paths": []
+  },
+  "random_seed": 6525,
+  "reproducibility_checksum": "6836185980ef187c247037dc7c1475891e34e7566ffb424082c1377af1ed6268",
+  "result_path": "results/experiment_6525_gatemate_changed_state_continuity.json",
+  "run_date": "20260823",
+  "schema": "carnot.experiment_6525.gatemate_changed_state_continuity.v564",
+  "spec_refs": [
+    "REQ-HW-6525",
+    "SCENARIO-HW-6525-1",
+    "SCENARIO-HW-6525-2",
+    "SCENARIO-HW-6525-3",
+    "SCENARIO-HW-6525-4"
+  ],
+  "status": "blocked_missing_new_physical_receipt",
+  "terminal_disposition": "blocked_missing_new_physical_receipt",
+  "tests_run": {
+    "commands": [
+      ".venv/bin/pytest tests/python/test_experiment_6525_gatemate_changed_state_continuity.py -q --no-cov -n 0",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6525_gatemate_changed_state_continuity.py -m pytest tests/python/test_experiment_6525_gatemate_changed_state_continuity.py -q --no-cov -n 0",
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6525_gatemate_changed_state_continuity.py --fail-under=100",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6525_gatemate_changed_state_continuity.py",
+      ".venv/bin/pytest tests/python -q"
+    ],
+    "exit_codes": {
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6525_gatemate_changed_state_continuity.py --fail-under=100": 0,
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6525_gatemate_changed_state_continuity.py -m pytest tests/python/test_experiment_6525_gatemate_changed_state_continuity.py -q --no-cov -n 0": 0,
+      ".venv/bin/pytest tests/python -q": 0,
+      ".venv/bin/pytest tests/python/test_experiment_6525_gatemate_changed_state_continuity.py -q --no-cov -n 0": 0,
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6525_gatemate_changed_state_continuity.py": 0
+    },
+    "new_code_coverage": "100% statement coverage for experiment_6525 module"
+  },
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}

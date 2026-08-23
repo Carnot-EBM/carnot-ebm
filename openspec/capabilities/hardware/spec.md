@@ -711,6 +711,171 @@ PolarFire count,
 
 ---
 
+### REQ-HW-6525
+
+**Title:** Exp6525 GateMate changed-state continuity MUST run zero commands without a post-Exp6325 dated physical receipt
+
+**Description:**
+Experiment 6525 SHALL produce
+`results/experiment_6525_gatemate_changed_state_continuity.json` as the V564
+GateMate continuity record for planning date 20260823. The experiment SHALL use
+Exp6325 as the last hardware-action baseline. It MUST search only
+operator-authored known issues and approved receipt locations for a dated
+physical-state receipt newer than Exp6325 that names a concrete cable, port,
+power, board, or DirtyJTAG change. Planner-created, undated, stale, malformed,
+and USB-only evidence SHALL NOT authorize hardware access.
+
+Before authorization, Exp6525 SHALL record git status, current time, historical
+artifact paths and hashes, the Exp3866 exclusion state, protected-file hashes,
+the exact receipt search locations, and the last known GateMate state. If no
+valid post-Exp6325 physical receipt exists, Exp6525 MUST run zero `lsusb`,
+`openFPGALoader`, yosys, nextpnr, gmpack, JTAG, flash, reset, SSH, timing,
+current, or power commands, and SHALL emit `blocked_missing_new_physical_receipt`
+with `hardware_command_count=0`.
+
+If and only if a valid newer receipt exists and passes safe target validation,
+Exp6525 MAY run exactly one predeclared bounded GateMate action: either the
+read-only detect `openFPGALoader -c dirtyJtag --detect` or a flash step whose
+board and bitstream identities are authenticated before execution. The
+experiment SHALL stop at the first terminal result: success, failure, timeout,
+or ambiguous target. It MUST NOT retry, MUST preserve Exp3866 exclusion and all
+historical verdicts, MUST NOT infer physical change from USB enumeration alone,
+and MUST NOT claim flash, smoke, latency, energy, speedup, availability, or
+terminal state without same-run authenticated evidence.
+
+Required artifact fields:
+
+- `status`
+- `honest_verdict`
+- `verdict_class`
+- `prior_failure_receipts`
+- `historical_state_receipts`
+- `dated_receipt_search_rows`
+- `changed_state_receipt`
+- `authorization_decision`
+- `hardware_command_count`
+- `command_rows`
+- `terminal_disposition`
+- `gatemate_continuity_slot_complete_score`
+- `gatemate_bitstream_flashed`
+- `hardware_speedup_claim`
+- `gate_check_summary`
+- `per_unit_rows`
+- `aggregate_row_recomputation`
+- `preconditions_checked`
+- `protected_files_unchanged`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+
+Required field principles:
+
+- `dated_receipt_search_rows`: principle "One row per candidate proves why it did or did not authorize hardware."
+- `authorization_decision`: principle "Only a post-Exp6325 material physical receipt can spend the single action budget."
+- `hardware_command_count`: principle "Bare zero or one enforces no unchanged reruns."
+- `command_rows`: principle "If a command runs, argv, timing, exit, hashes, device identity, and terminal disposition are recorded."
+- `terminal_disposition`: principle "The first terminal result stops the task."
+- `gatemate_continuity_slot_complete_score`: principle "An honest closed block or one-action record completes the continuity slot."
+- `gatemate_bitstream_flashed`: principle "True only for same-run authenticated flash evidence."
+- `hardware_speedup_claim`: principle "This continuity task makes no performance claim."
+- `protected_files_unchanged`: principle "Conductor and reconciler-owned files remain byte-identical."
+- `inference_substrate`: principle "Use no-command dated receipt audit unless a command actually runs."
+- `verifier_is_oracle`: principle "Only device and bitstream identity checks may be authoritative; positive claims are never oracle-backed."
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_6525_gatemate_changed_state_continuity --date 20260823`
+  writes `results/experiment_6525_gatemate_changed_state_continuity.json`.
+- The artifact includes `spec_refs` containing `REQ-HW-6525` and the
+  applicable `SCENARIO-HW-6525-*`, `random_seed=6525`, and a stable checksum.
+- Missing, stale, planner-created, undated, malformed, or USB-only receipt
+  candidates produce `status=blocked_missing_new_physical_receipt`,
+  `verdict_class=blocked`, `hardware_command_count=0`, `command_rows=[]`,
+  `inference_substrate=dated_hardware_receipt_audit_no_command_no_llm`, and
+  `gatemate_continuity_slot_complete_score=1.0`.
+- A valid post-Exp6325 material physical receipt permits exactly one safe
+  predeclared GateMate action and no retry. The command row records argv,
+  start/end UTC, exit code, stdout/stderr hashes, device identity, and terminal
+  disposition.
+- `gatemate_bitstream_flashed=true` only when the same run records an
+  authenticated flash command with matching GateMate target and bitstream
+  identity.
+- `hardware_speedup_claim=false` in every valid artifact.
+- Exp3866 stays excluded from clean terminal evidence, and historical verdicts
+  are copied only as historical state receipts.
+- Protected files and `scripts/research_conductor.py` remain unchanged.
+
+**Implementation status:** Planned (Exp 6525)
+
+---
+
+### SCENARIO-HW-6525-1
+
+**Scenario:** Exp6525 closes GateMate continuity with zero commands when no newer physical receipt exists.
+
+**Given:** Exp6325 consumed the 2026-08-11 GateMate power-cycle receipt and
+stopped on a failed single detect,
+**When:** Exp6525 searches approved receipt locations and finds no
+operator-authored dated physical receipt after Exp6325 naming cable, port,
+power, board, or DirtyJTAG change,
+**Then:** it writes the required artifact with
+`status=blocked_missing_new_physical_receipt`, `hardware_command_count=0`,
+`command_rows=[]`, `verdict_class=blocked`, no speedup or flash claim, Exp3866
+still excluded, and the continuity slot score equal to `1.0`.
+
+**Implementation status:** Planned (Exp 6525)
+
+---
+
+### SCENARIO-HW-6525-2
+
+**Scenario:** Exp6525 rejects stale, planner-created, undated, malformed, and USB-only candidates.
+
+**Given:** Receipt candidate text may mention GateMate, DirtyJTAG, USB
+enumeration, or planner next steps,
+**When:** the candidate is not operator-authored, is undated, is not newer than
+Exp6325, lacks a concrete physical change, or mentions only USB enumeration,
+**Then:** the candidate row is marked invalid, no hardware command is
+authorized, and the artifact remains a blocked no-command continuity record.
+
+**Implementation status:** Planned (Exp 6525)
+
+---
+
+### SCENARIO-HW-6525-3
+
+**Scenario:** Exp6525 permits one bounded action for a valid newer physical receipt and stops.
+
+**Given:** An operator-authored receipt dated after Exp6325 names a concrete
+GateMate cable, port, power, board, or DirtyJTAG change and passes safe target
+validation,
+**When:** the predeclared action is executed,
+**Then:** Exp6525 records exactly one command row with argv, start/end, exit
+code, stdout/stderr hashes, device identity, terminal disposition, zero retry
+count, and no performance claim.
+
+**Implementation status:** Planned (Exp 6525)
+
+---
+
+### SCENARIO-HW-6525-4
+
+**Scenario:** Exp6525 validation fails closed on command budget, target, or claim violations.
+
+**Given:** An artifact records more than one hardware command, an unauthorized
+command, non-empty command output without authorization, a positive flash bool
+without same-run flash evidence, or a hardware speedup claim,
+**When:** Exp6525 validates the artifact,
+**Then:** validation fails before the artifact can graduate.
+
+**Implementation status:** Planned (Exp 6525)
+
+---
+
 ### REQ-HW-5930
 
 **Title:** Exp5930 adaptive-state ABI v2 board mapping MUST produce static receipts and skip unchanged physical probes
