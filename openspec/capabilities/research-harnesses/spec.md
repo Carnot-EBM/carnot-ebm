@@ -9023,3 +9023,73 @@ disarmed — the packet path is the mitigation); FRESHEXEC stays silent
 while the working tree is dirty (a chronic state here; recorded as a
 known limit rather than adding a new WARN channel); orphaned children
 of a stopped run fall to the existing janitor reap.
+
+## REQ-CONDUCTOR-FIXGATE-1: A Test-Repair Attempt SHALL Not Resolve Failures By Erasure
+
+Origin incident (2026-08-23, live specimen): the conductor's pre-test
+gate saw a foreign task's new tests failing (the FRESHEXEC block was
+mid-landing), dispatched its test-fixer with "fix the failing tests...
+Do NOT modify scripts/research_conductor.py", and the fixer complied by
+adding `pytest.mark.skipif` to the (untracked) test file and reverting
+the block — reason string "this task explicitly forbids modifying that
+file". The suite went green; the repair was indistinguishable from
+erasure. CLAUDE.md already forbids skips ("skipped tests are invisible
+failures"); the standing suite carries ~93 pre-existing skip markers,
+so the erosion is real and ongoing. This gate covers NEW erasure only;
+the standing debt is recorded, not retro-fixed here.
+
+Rules:
+
+1. Before the fix loop runs, the conductor SHALL snapshot the task's
+   working-tree edits: dirty tracked files (hash, plus content up to
+   1 MB) and untracked files under `tests/` (content). The snapshot is
+   what makes erasure detectable AND reversible.
+2. After each fix attempt, the conductor SHALL detect:
+   a. skip markers ADDED to tests — both `+` lines in the tracked diff
+      AND markers appearing in untracked test files whose snapshot
+      lacked them (the live specimen's file was untracked; a
+      tracked-diff-only gate would have missed it);
+   b. files that were dirty at snapshot time and are now identical to
+      HEAD (work reverted rather than fixed).
+3. On detection the conductor SHALL restore the affected paths from
+   the snapshot, write a durable BLOCK line, and treat the attempt as
+   FAILED. It SHALL NOT run the test suite over a skip-poisoned tree
+   (the green result would be the lie the gate exists to prevent).
+4. The fix prompt SHALL state that adding skips, deleting or weakening
+   tests, and reverting files are forbidden repairs that are detected
+   and discarded.
+5. Fail direction: if the gate cannot check (git or snapshot
+   unavailable), the fix is NOT accepted. A repair that cannot be
+   audited is not a repair.
+6. Sibling hardening, same incident: the conductor's self-edit revert
+   (the guard that checkouts foreign working-tree edits to its own
+   source) SHALL preserve the reverted diff to
+   `ops/.conductor_selfedit_rescue/<ts>.patch` and write a durable
+   WARN line before reverting. Silent destruction becomes recoverable,
+   attributable action.
+
+#### SCENARIO-CONDUCTOR-FIXGATE-1-LIVE-SPECIMEN
+
+Given a snapshot holding a dirty tracked file and an untracked test
+file without skip markers, and a fix attempt that adds `skipif` to the
+untracked test file and reverts the tracked file to HEAD, the gate
+SHALL report both, restore both paths byte-identically from the
+snapshot, and the attempt SHALL count as failed.
+
+#### SCENARIO-CONDUCTOR-FIXGATE-1-CLEAN-FIX
+
+Given a fix attempt that only changes non-test source logic, the gate
+SHALL report nothing and the repaired tree SHALL proceed to the test
+run.
+
+#### SCENARIO-CONDUCTOR-FIXGATE-1-TRACKED-SKIP
+
+Given a fix attempt that adds a `pytest.mark.skip` line to a TRACKED
+test file, the gate SHALL detect it from the diff and restore the
+file.
+
+## Implementation Status (REQ-CONDUCTOR-FIXGATE-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-FIXGATE-1 | Implemented (`scripts/research_conductor.py`: `_snapshot_task_edits` / `_detect_fix_erasure` / `_restore_erased`, gate wired between each fix attempt and the test rerun, prompt lists the forbidden repairs, self-edit revert rescues its diff to `ops/.conductor_selfedit_rescue/` with a durable WARN; active at the running conductor's next restart) | Implemented (`tests/python/test_conductor_fix_erasure_gate.py`, 9 tests incl. the live-specimen replay in a throwaway git repo; the suite itself caught a restore branch that deleted a tracked-clean test file before landing) |
