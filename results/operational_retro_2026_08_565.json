@@ -1,0 +1,47 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.565",
+  "generated_at": "2026-08-23T07:41:44Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.8,
+  "experiments_completed": 3,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Execution-time V565 source, model, and method contract",
+      "duration_minutes": 0.77,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V565 activation manifest and V564 evidence eligibility corrigendum",
+      "duration_minutes": 0.03,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Independent external-corpus provenance, replay, and split audit",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The locked record contains 3 synthesis-only experiments across 0.8 minutes. Compute-path GPU efficiency and parallel-runner selection cannot be graded because the compute-bound count is zero.",
+  "bottlenecks_identified": [
+    "Compute execution contributed no delay because the locked compute-bound count is zero.",
+    "The 0.77-minute execution-time source, model, and method contract consumed most of the 0.8-minute window, but the supplied timing data does not expose phase-level causes.",
+    "Fallback file timestamps show ordering and totals, not internal phase costs; no live commit timing existed."
+  ],
+  "improvements_suggested": [
+    "Attach steady-clock timestamps to task entry, task exit, and each internal phase.",
+    "Persist content hashes for contract inputs and skip unchanged contract sections.",
+    "Write a dispatch receipt with workload class, concurrent model count, accelerator assignment, and selected runner."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add steady-clock phase probes to the execution-time contract path.",
+    "Use content hashes to reuse unchanged contract sections.",
+    "Persist one dispatch receipt for every task."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "GPU snapshots do not diagnose this milestone's work because the recorded tasks had no accelerator path. Measure the internal stages of the 0.77-minute contract task before assigning a nonzero savings estimate."
+}

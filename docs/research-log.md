@@ -6276,3 +6276,10 @@ The critical path for milestone .250:
 - theme: brief synthesis-only closeout exposed a timing-provenance gap without an accelerator bottleneck
 - key result: no compute-bound work ran, so idle GPUs were correct and no concurrent-model runner requirement arose
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.565
+
+- exp_range: no data available this milestone
+- theme: contract and provenance synthesis formed a short milestone with only file-timestamp reconstruction
+- key result: the evidence contains no compute work, so accelerator efficiency and concurrent-model dispatch have no applicable task
+- acceptance: no data available this milestone
