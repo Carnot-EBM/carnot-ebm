@@ -26928,3 +26928,64 @@ count.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6660 | `python/carnot/agentic/arc_competition_agent.py` (`_make_trajectory_supervisor` always constructs and returns (supervisor, applies); `_maybe_supervise_trajectory` fail-open wrapper + apply gate; `trajectory_supervisor_diagnostics` mode-aware receipt with the shadow key rename). Supervisor internals untouched. | `tests/python/test_arc_trajectory_supervisor.py` (SCENARIO-6660 x4 + superseded 6600-1/6640-6 pins updated; mutations: shadow gate removed -> RED with the applied goal-bias drop caught, key rename removed -> RED, fail-open removed -> RED, env-unset-returns-None restored -> RED). |
+
+### REQ-ARC-WMTE-6670: Generator Failure Notes Name The Effective Model And Carry The Server's Own Death Evidence
+
+**Statement:** every generator-failure diagnostic `LocalGGUFProposer` records
+(the `GPU llama-server failed for <model>` messages in `generate()` and
+`complete_text()`, and everything routed through `_note_server_failure`) MUST
+(1) name the EFFECTIVE model — the `model_path` basename when `model_path` is
+set, else `repo_substr` — never the bare `repo_substr` when an explicit
+`model_path` override supersedes it, and (2) append, when the launched server's
+stderr log tail shows an external-termination signature ("cleaning up before
+exit" / "Received second interrupt"), a short hint naming that signature and
+the log path.
+
+**Why this matters (origin, 2026-08-23):** the supab5 A/B rows all failed with
+`GPU llama-server failed for Qwen3.5-9B-MTP` while the server had loaded and
+served Qwen3.8-27B (the harness keeps `repo_substr` at its frozen 9B pin by
+design and passes the live model via `CARNOT_ARC_GGUF_PATH`/`model_path`, which
+wins at load). The label sent a whole investigation toward model resolution
+when the true cause — the server being SIGTERMed mid-generation by
+`ExperimentTemplate.kill_gpu_zombies()` (REQ-INFRA-079) — was sitting in the
+server's own stderr tail the whole time. `liveness_witness()` already applies
+the `model_path or repo_substr` rule for `generator_model_declared`; this
+requirement extends the same rule to the failure strings, and makes the row
+note carry the death evidence so the next reader does not re-derive it.
+
+**Acceptance criteria:**
+- With `model_path` set, the `_ensure_server`-failure message names the
+  `model_path` basename; without it, `repo_substr` (unchanged legacy shape).
+- When the instance launched a server whose stderr tail contains an
+  external-termination marker, `_note_server_failure` appends a hint naming
+  the signature and the log path; reading the tail can never raise out of the
+  note path, and an unreadable or absent log degrades to no hint.
+- The `GPU llama-server failed` message PREFIX is unchanged (callers and
+  tests match on the prefix only).
+
+### SCENARIO-ARC-WMTE-6670-1: Override Run Failure Names The Loaded Model
+
+**Given** a `LocalGGUFProposer` with `repo_substr="Qwen3.5-9B-MTP"` and
+`model_path=".../Qwen3.8-27B-Q4_K_M.gguf"`
+**When** `_ensure_server()` fails and `generate()` composes its failure message
+**Then** the message contains `Qwen3.8-27B-Q4_K_M.gguf` and not `Qwen3.5-9B-MTP`
+
+### SCENARIO-ARC-WMTE-6670-2: External-Kill Signature Reaches The Note
+
+**Given** the instance's launched-server stderr log ends with
+`Received second interrupt, terminating immediately.`
+**When** `_note_server_failure` records any diagnostic
+**Then** the stored diagnostic carries an external-termination hint naming the
+log path
+
+### SCENARIO-ARC-WMTE-6670-3: Note Path Never Raises On A Bad Log
+
+**Given** `_stderr_log_path` is unset, or points at an unreadable path
+**When** `_note_server_failure` records a diagnostic
+**Then** the diagnostic is stored without a hint and no exception escapes
+
+## Implementation Status (REQ-ARC-WMTE-6670)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6670 | `python/carnot/agentic/arc_executable_world_model.py` (`_effective_model_label`, `_server_death_signature`, `_note_server_failure` hint append, both `GPU llama-server failed` sites). | `tests/python/test_arc_generator_failure_note_2026_08_23.py` (SCENARIO-ARC-WMTE-6670-1..3, each proven by deletion). |

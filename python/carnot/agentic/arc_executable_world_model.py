@@ -6206,10 +6206,55 @@ class LocalGGUFProposer:
             return None
         return base * 1000 + int(attempt)
 
+    def _effective_model_label(self) -> str:
+        """The model this proposer is ACTUALLY configured for, for human-facing messages.
+
+        `model_path` (the CARNOT_ARC_GGUF_PATH override) supersedes `repo_substr` at load
+        time, so a failure message must name it first — same rule `liveness_witness()`
+        applies for `generator_model_declared`. REQ-ARC-WMTE-6670: the supab5 A/B failed
+        with a message naming the harness's frozen 9B pin while the 27B was what actually
+        loaded and served, and that label misdirected a whole investigation.
+        """
+        if self.model_path:
+            return Path(str(self.model_path)).name
+        return str(self.repo_substr)
+
+    # The lines llama-server prints when it receives SIGINT/SIGTERM. Their presence in
+    # the stderr tail means the server was told to stop from OUTSIDE — not a crash, not
+    # a resource fault. See ops/known-issues.md 2026-08-23 (the reaper resolution).
+    _EXTERNAL_KILL_MARKERS = ("cleaning up before exit", "Received second interrupt")
+
+    def _server_death_signature(self) -> str:
+        """One short line naming what the launched server's own log says about its death.
+
+        Returns '' when there is no launched-server log, the log is unreadable, or the
+        tail carries no external-termination marker. Never raises: this runs inside the
+        failure-note path, and a diagnostic helper that can take down the note it is
+        enriching is worse than no helper (REQ-ARC-WMTE-6670, SCENARIO-6670-3).
+        """
+        log_path = getattr(self, "_stderr_log_path", None)
+        if not log_path:
+            return ""
+        try:
+            tail = Path(log_path).read_bytes()[-2000:].decode("utf-8", "replace")
+        except OSError:
+            return ""
+        if any(marker in tail for marker in self._EXTERNAL_KILL_MARKERS):
+            return f"server log shows an external termination signal — see {log_path}"
+        return ""
+
     def _note_server_failure(self, diagnostic: str) -> None:
         """Count + KEEP a server-side failure diagnostic (bounded, so a storm cannot grow
-        without limit). This is the record the scored path never had."""
+        without limit). This is the record the scored path never had.
+
+        REQ-ARC-WMTE-6670: when the launched server's own stderr says it was terminated
+        from outside, that evidence is appended here — so the row note names the true
+        cause instead of leaving it in a log nobody reads.
+        """
         self.n_server_failures += 1
+        hint = self._server_death_signature()
+        if hint:
+            diagnostic = f"{diagnostic} [{hint}]"
         if len(self.server_failure_diagnostics) < 24:
             self.server_failure_diagnostics.append(diagnostic[:400])
 
@@ -7405,7 +7450,10 @@ class LocalGGUFProposer:
         self.n_completion_calls += 1
         if not self._ensure_server():
             msg = (
-                f"GPU llama-server failed for {self.repo_substr}; SOTA models "
+                # REQ-ARC-WMTE-6670: name the EFFECTIVE model (model_path wins over
+                # the repo pin), so this message cannot point at a retired pin while
+                # different weights are what actually loaded.
+                f"GPU llama-server failed for {self._effective_model_label()}; SOTA models "
                 "must run on GPU (no CPU fallback)"
             )
             self._note_server_failure(msg)
@@ -7744,7 +7792,10 @@ class LocalGGUFProposer:
         self.n_completion_calls += 1
         if not self._ensure_server():
             msg = (
-                f"GPU llama-server failed for {self.repo_substr}; SOTA models "
+                # REQ-ARC-WMTE-6670: name the EFFECTIVE model (model_path wins over
+                # the repo pin), so this message cannot point at a retired pin while
+                # different weights are what actually loaded.
+                f"GPU llama-server failed for {self._effective_model_label()}; SOTA models "
                 "must run on GPU (no CPU fallback)"
             )
             self._note_server_failure(msg)
