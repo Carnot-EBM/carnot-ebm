@@ -3,7 +3,10 @@
 Spec refs: REQ-RUSTPY-6550, REQ-RUSTPY-6550-SCHEMA,
 REQ-RUSTPY-6550-NUMERIC, REQ-RUSTPY-6550-SERIALIZATION,
 REQ-RUSTPY-6550-ERRORS, REQ-RUSTPY-6550-PARITY,
-REQ-RUSTPY-6550-FALLBACK, SCENARIO-RUSTPY-6550-BOUNDARY-PARITY.
+REQ-RUSTPY-6550-FALLBACK, SCENARIO-RUSTPY-6550-BOUNDARY-PARITY,
+REQ-RUSTPY-6564, REQ-RUSTPY-6564-BATCH-SCHEMA,
+REQ-RUSTPY-6564-BATCH-PARITY, REQ-RUSTPY-6564-BATCH-ERRORS,
+SCENARIO-RUSTPY-6564-BATCH-ORDERED-PARITY.
 """
 
 from __future__ import annotations
@@ -43,6 +46,21 @@ def test_req_rustpy_6550_spec_declares_router_abi_contract() -> None:
         assert marker in section
 
 
+def test_req_rustpy_6564_spec_declares_batch_router_abi_contract() -> None:
+    """REQ-RUSTPY-6564: OpenSpec owns the Safety-Net batch ABI contract."""
+
+    text = Path("openspec/capabilities/rust-python-boundary/spec.md").read_text(encoding="utf-8")
+    section = text[text.index("REQ-RUSTPY-6564") :]
+    for marker in (
+        "REQ-RUSTPY-6564-BATCH-SCHEMA",
+        "REQ-RUSTPY-6564-BATCH-PARITY",
+        "REQ-RUSTPY-6564-BATCH-ERRORS",
+        "REQ-RUSTPY-6564-NO-SCOPE-CREEP",
+        "SCENARIO-RUSTPY-6564-BATCH-ORDERED-PARITY",
+    ):
+        assert marker in section
+
+
 def test_req_rustpy_6550_supported_route_and_exception_parity() -> None:
     """REQ-RUSTPY-6550-PARITY: Python and Rust route supported rows equally."""
 
@@ -75,6 +93,64 @@ def test_req_rustpy_6550_supported_route_and_exception_parity() -> None:
     assert _rust_route(payload)["route"] == "compact_router"
     assert _rust_route(exception_payload)["exception_hit"] is True
     assert _rust_route(exception_payload)["fallback_reason"] == "exception_table_hit"
+
+
+def test_scenario_rustpy_6564_batch_route_preserves_scalar_order_and_bytes() -> None:
+    """SCENARIO-RUSTPY-6564-BATCH-ORDERED-PARITY: batch equals scalar routing."""
+
+    c1 = "sha256:" + "1" * 64
+    c2 = "sha256:" + "2" * 64
+    exception = abi.exception_key(candidate_ids=(c1, c2), split_name="train")
+    payloads = (
+        abi.request_payload(
+            request_id="batch-supported",
+            candidate_ids=(c1, c2),
+            feature_values={"candidate_count": 2.0, "constraint_count": 2},
+        ),
+        abi.request_payload(request_id="batch-abstain", candidate_ids=(c1,)),
+        abi.request_payload(
+            request_id="batch-forced",
+            candidate_ids=(c1, c2),
+            forced_fallback_reason="forced_fallback",
+        ),
+        abi.request_payload(
+            request_id="batch-exception",
+            candidate_ids=(c1, c2),
+            split_name="train",
+            exception_table={exception: "native_exact_fallback"},
+        ),
+        abi.request_payload(
+            request_id="batch-unsupported",
+            candidate_ids=(c1, c2),
+            router_contract_hash="sha256:" + "f" * 64,
+        ),
+        abi.request_payload(
+            request_id="batch-malformed",
+            candidate_ids=(c1,),
+            feature_values={"unknown": 1},
+        ),
+    )
+    request_bytes = [abi.canonical_request_bytes(payload) for payload in payloads]
+    request_bytes.append(abi.nan_attack_request_bytes())
+
+    scalar = [dict(rust.safety_net_route_bytes(item)) for item in request_bytes]
+    batch = [dict(item) for item in rust.safety_net_route_batch(request_bytes)]
+    python = [abi.route_request_bytes(item) for item in request_bytes]
+
+    assert len(batch) == len(request_bytes)
+    assert batch == scalar == python
+    assert [row["request_hash"] for row in batch] == [
+        abi.route_request_bytes(item)["request_hash"] for item in request_bytes
+    ]
+    assert [abi.canonical_decision_bytes(row) for row in batch] == [
+        abi.canonical_decision_bytes(row) for row in scalar
+    ]
+    assert any(row["route"] == "compact_router" for row in batch)
+    assert any(row["fallback_reason"] == "abstention" for row in batch)
+    assert any(row["fallback_reason"] == "forced_fallback" for row in batch)
+    assert any(row["fallback_reason"] == "exception_table_hit" for row in batch)
+    assert any(row["fallback_reason"] == "stale_configuration" for row in batch)
+    assert any(row["error_type"] == "JsonDecodeError" for row in batch)
 
 
 def test_req_rustpy_6550_typed_pyo3_request_and_decision_surface() -> None:
