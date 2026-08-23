@@ -179,3 +179,14 @@ def test_selfedit_revert_preserves_the_diff():
     source = _code_only(inspect.getsource(rc.research_step))
     assert "SELFEDIT_RESCUE_DIR" in source
     assert "Conductor self-edit reverted" in source
+
+
+def test_gpu_reaper_kill_writes_a_durable_row():
+    """Case-F attribution (2026-08-23): a reap that kills something must
+    leave a tracked-file record, not only a journald line that evaporates
+    in under two hours. Source-level: the kill branch calls log_step."""
+    source = inspect.getsource(rc)
+    idx = source.find("Pre-flight reaper killed")
+    assert idx != -1
+    window = source[idx : idx + 1200]
+    assert "GPU-REAPER: killed stale process(es)" in window
