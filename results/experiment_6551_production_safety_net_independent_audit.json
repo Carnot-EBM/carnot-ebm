@@ -1,0 +1,3680 @@
+{
+  "status": "complete_production_safety_net_independent_audit_null",
+  "honest_verdict": "complete_production_safety_net_independent_audit_null: null disposition; independent rows prove disabled identity, enabled exact equality, Python/Rust parity, fallback, immutability, and rollback",
+  "verdict_class": "null",
+  "input_existence_and_hash_receipts": {
+    "row_type": "input_existence_and_hash_receipts",
+    "artifact_rows": [
+      {
+        "row_type": "input_existence",
+        "path": "results/experiment_6548_v567_evidence_eligibility_contract.json",
+        "exists": true,
+        "sha256": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "size_bytes": 69093,
+        "json_object": true,
+        "status": "complete_v567_evidence_eligibility_contract_ready",
+        "honest_verdict": "complete_v567_evidence_eligibility_contract_ready: Exp6542-Exp6547 are clean content-addressed V567 inputs; Exp6541 remains visible and not required",
+        "verdict_class": null,
+        "observed_readiness_fields": {
+          "v567_evidence_contract_ready_score": 1.0
+        },
+        "readiness_field_trusted": false,
+        "list_field_count": 33,
+        "empty_success_artifact": false
+      },
+      {
+        "row_type": "input_existence",
+        "path": "results/experiment_6549_production_safety_net_adapter.json",
+        "exists": true,
+        "sha256": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "size_bytes": 339611,
+        "json_object": true,
+        "status": "complete_production_safety_net_adapter_positive",
+        "honest_verdict": "complete_production_safety_net_adapter_positive: disabled identity is exact; enabled routing preserves candidates, exact outputs, fallback, and rollback with charged benefit",
+        "verdict_class": "positive",
+        "observed_readiness_fields": {
+          "production_safety_net_adapter_ready_score": 1.0
+        },
+        "readiness_field_trusted": false,
+        "list_field_count": 155,
+        "empty_success_artifact": false
+      },
+      {
+        "row_type": "input_existence",
+        "path": "results/experiment_6550_rust_pyo3_safety_net_parity.json",
+        "exists": true,
+        "sha256": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809",
+        "size_bytes": 183656,
+        "json_object": true,
+        "status": "complete_rust_pyo3_safety_net_parity_positive",
+        "honest_verdict": "complete_rust_pyo3_safety_net_parity_positive: supported decisions and bytes match; unsupported rows fail closed; exact downstream and Python rollback remain equal",
+        "verdict_class": "positive",
+        "observed_readiness_fields": {
+          "cross_language_router_parity_ready_score": 1.0
+        },
+        "readiness_field_trusted": false,
+        "list_field_count": 61,
+        "empty_success_artifact": false
+      }
+    ],
+    "binary_rows": [
+      {
+        "row_type": "binary_or_source_input",
+        "path": "python/carnot/pipeline/production_safety_net_adapter.py",
+        "exists": true,
+        "sha256": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630"
+      },
+      {
+        "row_type": "binary_or_source_input",
+        "path": "python/carnot/pipeline/safety_net_abi.py",
+        "exists": true,
+        "sha256": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3"
+      },
+      {
+        "row_type": "binary_or_source_input",
+        "path": "crates/carnot-python/src/safety_net.rs",
+        "exists": true,
+        "sha256": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003"
+      },
+      {
+        "row_type": "binary_or_source_input",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/_rust.cpython-312-x86_64-linux-gnu.so",
+        "exists": true,
+        "sha256": "sha256:9798e9d0fe231516dedb09a304820bf04e0530dcdda7380b91fafd72895d7e9a"
+      }
+    ],
+    "all_required_inputs_present": true,
+    "missing_paths": [],
+    "empty_or_unreadable_paths": [],
+    "empty_success_artifact_paths": [],
+    "readiness_fields_used_for_decision": false,
+    "spec_refs": [
+      "REQ-REPORT-6551-MISSING"
+    ]
+  },
+  "independent_build_identity_receipt": {
+    "row_type": "independent_build_identity_receipt",
+    "python_version": "3.12.13",
+    "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "extension_suffix": ".cpython-312-x86_64-linux-gnu.so",
+    "rustc": {
+      "available": true,
+      "argv": [
+        "rustc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "rustc 1.97.1 (8bab26f4f 2026-07-14) (Arch Linux rust 1:1.97.1-1.1)",
+      "stderr": ""
+    },
+    "cargo": {
+      "available": true,
+      "argv": [
+        "cargo",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "cargo 1.97.1 (c980f4866 2026-06-30) (Arch Linux rust 1:1.97.1-1.1)",
+      "stderr": ""
+    },
+    "binding_importable": true,
+    "binding_file": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/_rust.cpython-312-x86_64-linux-gnu.so",
+    "binding_file_sha256": "sha256:9798e9d0fe231516dedb09a304820bf04e0530dcdda7380b91fafd72895d7e9a",
+    "target_debug_lib": "/home/ianblenke/github.com/ianblenke/carnot/target/debug/libcarnot_python.so",
+    "target_debug_lib_sha256": "sha256:9798e9d0fe231516dedb09a304820bf04e0530dcdda7380b91fafd72895d7e9a",
+    "python_adapter_sha256": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+    "python_abi_sha256": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+    "rust_abi_source_sha256": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+    "rust_lib_source_sha256": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+    "cargo_lock_sha256": "sha256:2cb8ef9c556d7ad32fa111c8ac887a0538729f51561dd153c309d10f444a3ec8",
+    "required_symbols": {
+      "RustSafetyNetFeatureRequest": true,
+      "RustSafetyNetRoutingDecision": true,
+      "RustSafetyNetRouter": true,
+      "safety_net_route_bytes": true
+    },
+    "canary_input_hash": "sha256:6d039411882c0d47ba4667c25f2b4dd599992f53beffac3d31f00da239ee874c",
+    "canary_python_output_hash": "sha256:762b69e56a8c4226e53e0a311d2b28f95bba3014f1b44d30ade77329daf0b0a5",
+    "canary_rust_output_hash": "sha256:762b69e56a8c4226e53e0a311d2b28f95bba3014f1b44d30ade77329daf0b0a5",
+    "canary_decision_equal": true,
+    "canary_exception": "",
+    "native_code_ran": true,
+    "python_fallback_posing_as_rust_detected": false,
+    "upstream_build_receipts_trusted": false,
+    "spec_refs": [
+      "REQ-REPORT-6551-PARITY"
+    ]
+  },
+  "independent_disabled_identity_rows": [
+    {
+      "row_type": "independent_disabled_identity",
+      "unit_id": "all-satisfied",
+      "row_index": 0,
+      "native_request_sha256": "sha256:4b883356fd8249d53df87d25e1781daf2f5ad51dca31f353ca24956ce6910c8d",
+      "disabled_request_sha256": "sha256:4b883356fd8249d53df87d25e1781daf2f5ad51dca31f353ca24956ce6910c8d",
+      "serialized_request_bytes_equal": true,
+      "native_candidate_order": [
+        "candidate-a",
+        "candidate-b"
+      ],
+      "disabled_candidate_order": [
+        "candidate-a",
+        "candidate-b"
+      ],
+      "candidate_order_equal": true,
+      "native_checker_calls": 1,
+      "disabled_checker_calls": 1,
+      "checker_calls_equal": true,
+      "native_output_hash": "sha256:df9faacba3c8a1e337a86272c43442e88e553a6182583fbe4584c2242c5d7b7f",
+      "disabled_output_hash": "sha256:df9faacba3c8a1e337a86272c43442e88e553a6182583fbe4584c2242c5d7b7f",
+      "outputs_equal": true,
+      "native_error_type": "",
+      "disabled_error_type": "",
+      "error_types_equal": true,
+      "side_effects_equal": true,
+      "persistence_equal": true,
+      "spec_refs": [
+        "REQ-REPORT-6551-DISABLED"
+      ],
+      "row_hash": "sha256:571c99002e1f9ea9f815b7a5f60e45a16fb05fbab019169cc43684f6183bc0b5"
+    },
+    {
+      "row_type": "independent_disabled_identity",
+      "unit_id": "one-violation",
+      "row_index": 1,
+      "native_request_sha256": "sha256:537610cd7052273f4f1192a47da0dd96e42f16019be0cbf49f7c99fab2520577",
+      "disabled_request_sha256": "sha256:537610cd7052273f4f1192a47da0dd96e42f16019be0cbf49f7c99fab2520577",
+      "serialized_request_bytes_equal": true,
+      "native_candidate_order": [
+        "candidate-a",
+        "candidate-b"
+      ],
+      "disabled_candidate_order": [
+        "candidate-a",
+        "candidate-b"
+      ],
+      "candidate_order_equal": true,
+      "native_checker_calls": 1,
+      "disabled_checker_calls": 1,
+      "checker_calls_equal": true,
+      "native_output_hash": "sha256:be75955a1c8a3a142270938f382b9ebae4e437265e262254683e3e5c0c05efa1",
+      "disabled_output_hash": "sha256:be75955a1c8a3a142270938f382b9ebae4e437265e262254683e3e5c0c05efa1",
+      "outputs_equal": true,
+      "native_error_type": "",
+      "disabled_error_type": "",
+      "error_types_equal": true,
+      "side_effects_equal": true,
+      "persistence_equal": true,
+      "spec_refs": [
+        "REQ-REPORT-6551-DISABLED"
+      ],
+      "row_hash": "sha256:1402e10286bb4106ed379af51d4c6f1aac2bcbbefd9ce1b0b2f98b0bb9f4e2b3"
+    }
+  ],
+  "independent_enabled_and_parity_rows": [
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-compact-route",
+      "condition": "compact_route",
+      "row_index": 0,
+      "supported": true,
+      "input_hash": "sha256:86b4f30a7422d13362023d045951351d6a5da41ebde454c82f89d7e2380b4eeb",
+      "input_byte_length": 582,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "compact_router",
+        "abstain": false,
+        "uncertainty_bucket": "low",
+        "exception_hit": false,
+        "fallback_reason": "",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+        ],
+        "chosen_order": [
+          "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:86b4f30a7422d13362023d045951351d6a5da41ebde454c82f89d7e2380b4eeb",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [
+          "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+        ],
+        "request_hash": "sha256:86b4f30a7422d13362023d045951351d6a5da41ebde454c82f89d7e2380b4eeb",
+        "route": "compact_router",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "low"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:ef35017acf0345e9b692f52d1e987a871f1957cf149094f7a998ad626a824f3f",
+        "route": "compact_router",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+        ],
+        "chosen_order": [
+          "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "abstention": false,
+        "exception_lookup": {
+          "key_hash": "sha256:0ce6d41ba7421fe00498d98123d12ee50e1de93716d753264c42502a688b637a",
+          "hit": false,
+          "value": "",
+          "table_mutable": false
+        },
+        "fallback_reason": "",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.25,
+        "configuration_hash": "sha256:9a1bd74a400c78185338d489cc4778946087654701b6172c7677282ffc0c89c1",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "unsupported_reason": "",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 3,
+          "chosen_count": 3,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 0
+        },
+        "decision_hash": "sha256:9a1013b2c7420ac50d895a7f02cccd4eec3c907e4cd6e50e16af57e370f26865"
+      },
+      "python_output_hash": "sha256:708d18babcfb977b390ec8deb9bf5c7408c979557e4ed6034e901d93878cb262",
+      "rust_output_hash": "sha256:708d18babcfb977b390ec8deb9bf5c7408c979557e4ed6034e901d93878cb262",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "compact_router",
+      "abstention": false,
+      "exception_hit": false,
+      "fallback_reason": "",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_after_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_immutable": true,
+      "python_route_time_s": 6.5383e-05,
+      "rust_route_time_s": 0.000452148,
+      "adapter_route_time_s": 9.6922e-05,
+      "charged_time_s": 0.000614453,
+      "charged_adapter_overhead_units": 0.25,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:c9c7773243dd2a24300913e315eb9620a50c31f8068ab9f2f351dabc80d7d5e5"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-boundary-abstention",
+      "condition": "boundary_abstention",
+      "row_index": 1,
+      "supported": true,
+      "input_hash": "sha256:82b649d132409890fd35c25106aa007284b83b04de316f88c6c945e40d5a8e5d",
+      "input_byte_length": 387,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": true,
+        "uncertainty_bucket": "high",
+        "exception_hit": false,
+        "fallback_reason": "abstention",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:82b649d132409890fd35c25106aa007284b83b04de316f88c6c945e40d5a8e5d",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": true,
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "abstention",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "request_hash": "sha256:82b649d132409890fd35c25106aa007284b83b04de316f88c6c945e40d5a8e5d",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "high"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:e4665f6b8bc23ca6c4d13ecf67ce6c70df24c66430d0e840d4776002ae6394dd",
+        "route": "native_exact_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "abstention": true,
+        "exception_lookup": {
+          "key_hash": "sha256:db41fb29f1a65696b7e684b326876730b827709f6b5c8df40521b27e68c5f8f7",
+          "hit": false,
+          "value": "",
+          "table_mutable": false
+        },
+        "fallback_reason": "abstention",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.25,
+        "configuration_hash": "sha256:9a1bd74a400c78185338d489cc4778946087654701b6172c7677282ffc0c89c1",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "unsupported_reason": "",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 1,
+          "chosen_count": 1,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 0
+        },
+        "decision_hash": "sha256:aee31734003098e9845c3c8bc75f6f22e47200c43545bebdeef835d6c4349daa"
+      },
+      "python_output_hash": "sha256:ffc610e5db88c2d3defe8dea6995cd18f509c855b5bd90b214f27db36db9403a",
+      "rust_output_hash": "sha256:ffc610e5db88c2d3defe8dea6995cd18f509c855b5bd90b214f27db36db9403a",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": true,
+      "exception_hit": false,
+      "fallback_reason": "abstention",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_after_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_immutable": true,
+      "python_route_time_s": 3.7551e-05,
+      "rust_route_time_s": 0.000178445,
+      "adapter_route_time_s": 6.3259e-05,
+      "charged_time_s": 0.000279255,
+      "charged_adapter_overhead_units": 0.25,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:4c9c52b2866fd7cf86409f71a595c4f54c78aa3aa7096acf367af55179d6b952"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-exception",
+      "condition": "exception_lookup",
+      "row_index": 2,
+      "supported": true,
+      "input_hash": "sha256:ede28147a604a2196c23c218c6957a60feceb0946f135f797660440b41633146",
+      "input_byte_length": 562,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": false,
+        "uncertainty_bucket": "medium",
+        "exception_hit": true,
+        "fallback_reason": "exception_table_hit",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:ede28147a604a2196c23c218c6957a60feceb0946f135f797660440b41633146",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "exception_hit": true,
+        "fallback_reason": "exception_table_hit",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "request_hash": "sha256:ede28147a604a2196c23c218c6957a60feceb0946f135f797660440b41633146",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "medium"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:a62d7fa4449fa0e8b64e5684c7cb31167ce90ca0a587fa24606200660b39aedb",
+        "route": "native_exact_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "abstention": false,
+        "exception_lookup": {
+          "key_hash": "sha256:2daace472b8fe262b64ee3c0a87fafd57c4986ec894709fa533927235ba60396",
+          "hit": true,
+          "value": "native_exact_fallback",
+          "table_mutable": false
+        },
+        "fallback_reason": "exception_table_hit",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 1.5,
+        "configuration_hash": "sha256:676258e05e880464ee354b96d711ddb1a9819dbfed5d42843f75af7ef0f0f6fe",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "unsupported_reason": "",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 2,
+          "chosen_count": 2,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 0
+        },
+        "decision_hash": "sha256:140f60ea3f933767af0a5e58cf31e973b0858d2d1b3d7ee185939fcfbb8fb7ce"
+      },
+      "python_output_hash": "sha256:ed74a142741a53671f2597cfc0530de6c6a8508f5cd8718e21a3b141f3897935",
+      "rust_output_hash": "sha256:ed74a142741a53671f2597cfc0530de6c6a8508f5cd8718e21a3b141f3897935",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": false,
+      "exception_hit": true,
+      "fallback_reason": "exception_table_hit",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:a1054172691ceb147ea39e2cad1d39c05fd309b181bda12b6fa777fef8d74fb6",
+      "exception_table_after_hash": "sha256:a1054172691ceb147ea39e2cad1d39c05fd309b181bda12b6fa777fef8d74fb6",
+      "exception_table_immutable": true,
+      "python_route_time_s": 3.173e-05,
+      "rust_route_time_s": 0.000225303,
+      "adapter_route_time_s": 5.2138e-05,
+      "charged_time_s": 0.000309171,
+      "charged_adapter_overhead_units": 1.5,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:658ee4209b3e868d7839369f81ebccaa7c81ed62a081478b1c3886fa699332e8"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-forced-fallback",
+      "condition": "forced_fallback",
+      "row_index": 3,
+      "supported": true,
+      "input_hash": "sha256:89d3b9c6fb89dd7426084aa2eff2cae7233698440c1c3e489f122f8e0e91e890",
+      "input_byte_length": 476,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": false,
+        "uncertainty_bucket": "medium",
+        "exception_hit": false,
+        "fallback_reason": "forced_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:89d3b9c6fb89dd7426084aa2eff2cae7233698440c1c3e489f122f8e0e91e890",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "forced_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "request_hash": "sha256:89d3b9c6fb89dd7426084aa2eff2cae7233698440c1c3e489f122f8e0e91e890",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "medium"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:7cf56e8e9b43b0c7d5bc4393d97f7e025d322a682b01cfd8f4b2754e024819e0",
+        "route": "native_exact_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "abstention": false,
+        "exception_lookup": {
+          "key_hash": "sha256:6f52a3c9c1f561935a70723d20704d77c9b9aa27f2a437bd667017e1a51438b6",
+          "hit": false,
+          "value": "",
+          "table_mutable": false
+        },
+        "fallback_reason": "forced_fallback",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.25,
+        "configuration_hash": "sha256:dedbc4ce5d016d12e02ee2ac79aff1ceb7e2b19f1eb59c2df841dd55e23587d8",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "unsupported_reason": "",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 2,
+          "chosen_count": 2,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 0
+        },
+        "decision_hash": "sha256:60a570ca72a4f3e87d8a01d816856fe6709b4a2344c860119c10d770c454195c"
+      },
+      "python_output_hash": "sha256:ba07d5d62697debd5a5acc53b0b3b520e77b237df720046c7a3772c883b62817",
+      "rust_output_hash": "sha256:ba07d5d62697debd5a5acc53b0b3b520e77b237df720046c7a3772c883b62817",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": false,
+      "exception_hit": false,
+      "fallback_reason": "forced_fallback",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_after_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_immutable": true,
+      "python_route_time_s": 2.8453e-05,
+      "rust_route_time_s": 0.000178615,
+      "adapter_route_time_s": 4.4564e-05,
+      "charged_time_s": 0.000251632,
+      "charged_adapter_overhead_units": 0.25,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:8661c66168e6d182ded0b4d188c384fa340cb89004c37082cd8298cf1651aade"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-timeout",
+      "condition": "timeout",
+      "row_index": 4,
+      "supported": true,
+      "input_hash": "sha256:96fecd6a754dd68b01dbe09448e63a6e6074f572aa85f5f9ae27a123397c73a4",
+      "input_byte_length": 469,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": false,
+        "uncertainty_bucket": "medium",
+        "exception_hit": false,
+        "fallback_reason": "timeout",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:96fecd6a754dd68b01dbe09448e63a6e6074f572aa85f5f9ae27a123397c73a4",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "timeout",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "request_hash": "sha256:96fecd6a754dd68b01dbe09448e63a6e6074f572aa85f5f9ae27a123397c73a4",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "medium"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:e934353fb056ac2b4c9902efc98a09ef3adf34471ef00a550544b71c2cd3ca9e",
+        "route": "native_exact_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "abstention": false,
+        "exception_lookup": {
+          "key_hash": "sha256:6f52a3c9c1f561935a70723d20704d77c9b9aa27f2a437bd667017e1a51438b6",
+          "hit": false,
+          "value": "",
+          "table_mutable": false
+        },
+        "fallback_reason": "timeout",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.25,
+        "configuration_hash": "sha256:1b9277a2f07a5a5e541205f75d2b6177601867632c61bcdb94ed7f773a0508d8",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "unsupported_reason": "",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 2,
+          "chosen_count": 2,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 0
+        },
+        "decision_hash": "sha256:4b61c3bbdfcace855dfe58962f346e8f549bc81c6f80c6d9d8b69116e25214a1"
+      },
+      "python_output_hash": "sha256:232432d338dc7c0d28940a40c44feddb5b0de237e3afaadf278439d796967930",
+      "rust_output_hash": "sha256:232432d338dc7c0d28940a40c44feddb5b0de237e3afaadf278439d796967930",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": false,
+      "exception_hit": false,
+      "fallback_reason": "timeout",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_after_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_immutable": true,
+      "python_route_time_s": 2.5618e-05,
+      "rust_route_time_s": 0.000178395,
+      "adapter_route_time_s": 4.4083e-05,
+      "charged_time_s": 0.000248096,
+      "charged_adapter_overhead_units": 0.25,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:c8112f62869a4deec619c248ca479067c0a34ee8ea80d68de2107527065a7655"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-duplicate",
+      "condition": "malformed_duplicate",
+      "row_index": 5,
+      "supported": false,
+      "input_hash": "sha256:1199d302fdb4a1c64b9534f715f002787998d54d9c3cf1169ab25d54ac765673",
+      "input_byte_length": 464,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": false,
+        "uncertainty_bucket": "unsupported",
+        "exception_hit": false,
+        "fallback_reason": "malformed_input:duplicate_candidate_ids",
+        "original_order": [],
+        "chosen_order": [],
+        "error_type": "SafetyNetAbiError",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:1199d302fdb4a1c64b9534f715f002787998d54d9c3cf1169ab25d54ac765673",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [],
+        "error_type": "SafetyNetAbiError",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "malformed_input:duplicate_candidate_ids",
+        "original_order": [],
+        "request_hash": "sha256:1199d302fdb4a1c64b9534f715f002787998d54d9c3cf1169ab25d54ac765673",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "unsupported"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:d68f4d9dda3896caad4bd8a9b7b372438bd9af3859a89b1b370e8a3e3b7dedf0",
+        "route": "native_exact_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "abstention": false,
+        "exception_lookup": {
+          "key_hash": "",
+          "hit": false,
+          "value": "",
+          "table_mutable": false
+        },
+        "fallback_reason": "malformed_input:duplicate_candidate_ids",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.25,
+        "configuration_hash": "sha256:9a1bd74a400c78185338d489cc4778946087654701b6172c7677282ffc0c89c1",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "unsupported_reason": "malformed_input:duplicate_candidate_ids",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 2,
+          "chosen_count": 2,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 1
+        },
+        "decision_hash": "sha256:84ec34f430183b0b456d38d2738af392841c49d35b474f7cea72940a59f30e6b"
+      },
+      "python_output_hash": "sha256:2d6254c2b8909adfc33ea7a83b73cfb6ee5cceb2493938bd3bed0f07cd2d273f",
+      "rust_output_hash": "sha256:2d6254c2b8909adfc33ea7a83b73cfb6ee5cceb2493938bd3bed0f07cd2d273f",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": false,
+      "exception_hit": false,
+      "fallback_reason": "malformed_input:duplicate_candidate_ids",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_after_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_immutable": true,
+      "python_route_time_s": 1.7373e-05,
+      "rust_route_time_s": 0.000135674,
+      "adapter_route_time_s": 3.2541e-05,
+      "charged_time_s": 0.000185588,
+      "charged_adapter_overhead_units": 0.25,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:5588e093c5675e62c6647580064b04775aa2ef5ce5a827eb4899fe9c9329120d"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-stale-configuration",
+      "condition": "stale_configuration",
+      "row_index": 6,
+      "supported": false,
+      "input_hash": "sha256:ce3b1c9408195fb7206d8c63230267b1fc466ec4d2c9518119cb64e9eb4e7d7c",
+      "input_byte_length": 460,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": false,
+        "uncertainty_bucket": "unsupported",
+        "exception_hit": false,
+        "fallback_reason": "stale_configuration",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "SchemaVersionError",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:ce3b1c9408195fb7206d8c63230267b1fc466ec4d2c9518119cb64e9eb4e7d7c",
+        "router_contract_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "SchemaVersionError",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "stale_configuration",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "request_hash": "sha256:ce3b1c9408195fb7206d8c63230267b1fc466ec4d2c9518119cb64e9eb4e7d7c",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "unsupported"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:7e5a262999f13684ebfea1238a5ac4dc60256abc232dc7d58a94ef1658b329c3",
+        "route": "native_exact_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "abstention": false,
+        "exception_lookup": {
+          "key_hash": "",
+          "hit": false,
+          "value": "",
+          "table_mutable": false
+        },
+        "fallback_reason": "stale_configuration",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.25,
+        "configuration_hash": "sha256:b4760ae7db9af76db1df81b60de047560517e41a22b213c3f0f92d3a41b13097",
+        "router_contract_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "unsupported_reason": "",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 2,
+          "chosen_count": 2,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 0
+        },
+        "decision_hash": "sha256:82cb30b65cd74d052dd1ee379094a595397f7addee40fb8cbc0add8114f6d189"
+      },
+      "python_output_hash": "sha256:da2dd93d89d96816e866bc5aee04f27c3f8e81bbb114d16eb8363e6da413e7dd",
+      "rust_output_hash": "sha256:da2dd93d89d96816e866bc5aee04f27c3f8e81bbb114d16eb8363e6da413e7dd",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": false,
+      "exception_hit": false,
+      "fallback_reason": "stale_configuration",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_after_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_immutable": true,
+      "python_route_time_s": 1.8094e-05,
+      "rust_route_time_s": 0.000138991,
+      "adapter_route_time_s": 3.198e-05,
+      "charged_time_s": 0.000189065,
+      "charged_adapter_overhead_units": 0.25,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:17a51b256c789219be8d8b6a30fb30bd5fec2b847fd35410b7de6262de3e1576"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-unknown-feature",
+      "condition": "unknown_feature",
+      "row_index": 7,
+      "supported": false,
+      "input_hash": "sha256:2f10f6c8934928b6d025ebfaa4621c1a3f724dfc77583d1b49bdb157c5afbaee",
+      "input_byte_length": 411,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": false,
+        "uncertainty_bucket": "unsupported",
+        "exception_hit": false,
+        "fallback_reason": "malformed_input:unsupported_feature",
+        "original_order": [],
+        "chosen_order": [],
+        "error_type": "SafetyNetAbiError",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:2f10f6c8934928b6d025ebfaa4621c1a3f724dfc77583d1b49bdb157c5afbaee",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [],
+        "error_type": "SafetyNetAbiError",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "malformed_input:unsupported_feature",
+        "original_order": [],
+        "request_hash": "sha256:2f10f6c8934928b6d025ebfaa4621c1a3f724dfc77583d1b49bdb157c5afbaee",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "unsupported"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:42d9d1394778e1c2d961e2122442d2dc6cce2e2718a43263d272d1288225ae46",
+        "route": "native_exact_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "abstention": false,
+        "exception_lookup": {
+          "key_hash": "",
+          "hit": false,
+          "value": "",
+          "table_mutable": false
+        },
+        "fallback_reason": "malformed_input:unsupported_feature",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.25,
+        "configuration_hash": "sha256:9a1bd74a400c78185338d489cc4778946087654701b6172c7677282ffc0c89c1",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "unsupported_reason": "malformed_input:unsupported_feature",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 1,
+          "chosen_count": 1,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 0
+        },
+        "decision_hash": "sha256:7c961cf1709150881bbc68809b3561af5f06fd1678fa1f5dd393c0f664158bac"
+      },
+      "python_output_hash": "sha256:ca8ab9930fead60ed22a947229fbb2e249011363b4d810ff0c2182645cb5181c",
+      "rust_output_hash": "sha256:ca8ab9930fead60ed22a947229fbb2e249011363b4d810ff0c2182645cb5181c",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": false,
+      "exception_hit": false,
+      "fallback_reason": "malformed_input:unsupported_feature",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_after_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_immutable": true,
+      "python_route_time_s": 1.7954e-05,
+      "rust_route_time_s": 0.000135545,
+      "adapter_route_time_s": 3.3132e-05,
+      "charged_time_s": 0.000186631,
+      "charged_adapter_overhead_units": 0.25,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:1ae3095ddc8addd6da95b4c0e92b35f9e90eb63fd59c9d6647141f41479246db"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-nan-json",
+      "condition": "nan_invalid_json",
+      "row_index": 8,
+      "supported": false,
+      "input_hash": "sha256:15ecb47393ae34f9df1e907d6921ba771fd13898acae75e083a812da562067da",
+      "input_byte_length": 405,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": false,
+        "uncertainty_bucket": "unsupported",
+        "exception_hit": false,
+        "fallback_reason": "malformed_input:invalid_json",
+        "original_order": [],
+        "chosen_order": [],
+        "error_type": "JsonDecodeError",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:15ecb47393ae34f9df1e907d6921ba771fd13898acae75e083a812da562067da",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [],
+        "error_type": "JsonDecodeError",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "malformed_input:invalid_json",
+        "original_order": [],
+        "request_hash": "sha256:15ecb47393ae34f9df1e907d6921ba771fd13898acae75e083a812da562067da",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "unsupported"
+      },
+      "adapter_output": {
+        "route": "native_exact_fallback",
+        "chosen_order": [],
+        "original_order": [],
+        "fallback_reason": "malformed_input:invalid_json",
+        "abstention": false,
+        "exception_lookup": {
+          "hit": false,
+          "table_mutable": false
+        },
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.0
+      },
+      "python_output_hash": "sha256:b5760fcf65a54ccafa01834e9e5807a04e19b156ba642551c8ae6f0de1fb5ffb",
+      "rust_output_hash": "sha256:b5760fcf65a54ccafa01834e9e5807a04e19b156ba642551c8ae6f0de1fb5ffb",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": false,
+      "exception_hit": false,
+      "fallback_reason": "malformed_input:invalid_json",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "exception_table_after_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "exception_table_immutable": true,
+      "python_route_time_s": 1.5068e-05,
+      "rust_route_time_s": 0.000110016,
+      "adapter_route_time_s": 0.0,
+      "charged_time_s": 0.000125084,
+      "charged_adapter_overhead_units": 0.0,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:abab8ad7fe7a76647d6cd75ceb64f2d34a57c2bb61b7d5e7ec5f579445162c78"
+    }
+  ],
+  "independent_exact_equality_receipt": {
+    "row_type": "independent_exact_equality_receipt",
+    "row_count": 9,
+    "disabled_identity_row_count": 2,
+    "all_exact_outputs_equal": true,
+    "changed_output_count": 0,
+    "changed_rows": [],
+    "release_authority": "native_exact_verifier",
+    "spec_refs": [
+      "REQ-REPORT-6551-EXACT"
+    ]
+  },
+  "fallback_exception_and_rollback_audit": {
+    "row_type": "fallback_exception_and_rollback_audit",
+    "fallback_reachable": true,
+    "fallback_row_count": 8,
+    "fallback_reason_counts": {
+      "abstention": 1,
+      "exception_table_hit": 1,
+      "forced_fallback": 1,
+      "malformed_input:duplicate_candidate_ids": 1,
+      "malformed_input:invalid_json": 1,
+      "malformed_input:unsupported_feature": 1,
+      "stale_configuration": 1,
+      "timeout": 1
+    },
+    "exception_row_count": 1,
+    "exception_table_immutable": true,
+    "malformed_rows_fail_closed": true,
+    "timeout_fallback_reachable": true,
+    "boundary_abstention_reachable": true,
+    "rollback_restores_disabled": true,
+    "rollback_row_hash": "sha256:1237b16180c8f49ef5614586d5a1e8eacdf9e185809a6f7637fe4d68d2f3abc1",
+    "fallback_recursion_count": 0,
+    "spec_refs": [
+      "REQ-REPORT-6551-FALLBACK"
+    ]
+  },
+  "independent_cost_recomputation": {
+    "row_type": "independent_cost_recomputation",
+    "row_count": 9,
+    "total_python_route_time_s": 0.000257224,
+    "total_rust_route_time_s": 0.001733132,
+    "total_adapter_route_time_s": 0.000398619,
+    "total_charged_time_s": 0.002388975,
+    "charged_adapter_overhead_units": 3.25,
+    "by_condition_charged_time_s": {
+      "compact_route": 0.000614453,
+      "boundary_abstention": 0.000279255,
+      "exception_lookup": 0.000309171,
+      "forced_fallback": 0.000251632,
+      "timeout": 0.000248096,
+      "malformed_duplicate": 0.000185588,
+      "stale_configuration": 0.000189065,
+      "unknown_feature": 0.000186631,
+      "nan_invalid_json": 0.000125084
+    },
+    "charged_from_raw_clocks": true,
+    "upstream_cost_counters_trusted": false,
+    "spec_refs": [
+      "REQ-REPORT-6551-ROWS"
+    ]
+  },
+  "missing_input_disposition": {
+    "row_type": "missing_input_disposition",
+    "terminal_disposition": "not_blocked",
+    "missing_paths": [],
+    "empty_or_unreadable_paths": [],
+    "missing_tools": [],
+    "diagnostic_count": 0,
+    "comparative_rows_allowed": true,
+    "readiness_fields_ignored": true,
+    "spec_refs": [
+      "REQ-REPORT-6551-MISSING"
+    ]
+  },
+  "shortcut_attack_matrix": {
+    "row_type": "shortcut_attack_matrix",
+    "rows": [
+      {
+        "row_type": "shortcut_attack",
+        "attack_id": "missing_artifacts",
+        "expected_value": true,
+        "observed_value": true,
+        "fail_closed": true,
+        "false_accept": false,
+        "spec_refs": [
+          "REQ-REPORT-6551-FALLBACK",
+          "REQ-REPORT-6551-ROWS"
+        ],
+        "row_hash": "sha256:78844c72a5e177dc46b3643861ea36257ea26bd715bfbc7be5af93b1b1199ff9"
+      },
+      {
+        "row_type": "shortcut_attack",
+        "attack_id": "empty_success_artifacts",
+        "expected_value": true,
+        "observed_value": true,
+        "fail_closed": true,
+        "false_accept": false,
+        "spec_refs": [
+          "REQ-REPORT-6551-FALLBACK",
+          "REQ-REPORT-6551-ROWS"
+        ],
+        "row_hash": "sha256:d6f9ad756816a6353bf0fbd559eea0e874596ca1326b0cba63772a1568f15a93"
+      },
+      {
+        "row_type": "shortcut_attack",
+        "attack_id": "duplicated_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "fail_closed": true,
+        "false_accept": false,
+        "spec_refs": [
+          "REQ-REPORT-6551-FALLBACK",
+          "REQ-REPORT-6551-ROWS"
+        ],
+        "row_hash": "sha256:eeebc1837b4d54c88f193d8fb65d3b3bbbf0ee1e2ff14fdb36424bf4fdbaffdd"
+      },
+      {
+        "row_type": "shortcut_attack",
+        "attack_id": "aggregate_tampering",
+        "expected_value": true,
+        "observed_value": true,
+        "fail_closed": true,
+        "false_accept": false,
+        "spec_refs": [
+          "REQ-REPORT-6551-FALLBACK",
+          "REQ-REPORT-6551-ROWS"
+        ],
+        "row_hash": "sha256:70abeb7f17a0bfdc93f18ed03de85ca94ff2c258a534faf64a0589e4f6ae8bd7"
+      },
+      {
+        "row_type": "shortcut_attack",
+        "attack_id": "python_fallback_posing_as_rust",
+        "expected_value": true,
+        "observed_value": true,
+        "fail_closed": true,
+        "false_accept": false,
+        "spec_refs": [
+          "REQ-REPORT-6551-FALLBACK",
+          "REQ-REPORT-6551-ROWS"
+        ],
+        "row_hash": "sha256:5a745bcf420a0424abc31c23aca4d7bc11eb0bb4381af46e750ed46abd6d5dd6"
+      },
+      {
+        "row_type": "shortcut_attack",
+        "attack_id": "source_or_model_identity_shortcuts",
+        "expected_value": true,
+        "observed_value": true,
+        "fail_closed": true,
+        "false_accept": false,
+        "spec_refs": [
+          "REQ-REPORT-6551-FALLBACK",
+          "REQ-REPORT-6551-ROWS"
+        ],
+        "row_hash": "sha256:b89b55a20768445615d395bac09d5adc1353ed73507e1056770e328386b90801"
+      },
+      {
+        "row_type": "shortcut_attack",
+        "attack_id": "candidate_deletion",
+        "expected_value": true,
+        "observed_value": true,
+        "fail_closed": true,
+        "false_accept": false,
+        "spec_refs": [
+          "REQ-REPORT-6551-FALLBACK",
+          "REQ-REPORT-6551-ROWS"
+        ],
+        "row_hash": "sha256:edb9b70de5758a47e8d0d08421d8d333c2a8983d9489055a136e4e9246ad8548"
+      },
+      {
+        "row_type": "shortcut_attack",
+        "attack_id": "table_writes",
+        "expected_value": true,
+        "observed_value": true,
+        "fail_closed": true,
+        "false_accept": false,
+        "spec_refs": [
+          "REQ-REPORT-6551-FALLBACK",
+          "REQ-REPORT-6551-ROWS"
+        ],
+        "row_hash": "sha256:36194333486adf6b7894c04c34305b63d1b992e0880e790f69e7822359b5a148"
+      },
+      {
+        "row_type": "shortcut_attack",
+        "attack_id": "stale_builds",
+        "expected_value": true,
+        "observed_value": true,
+        "fail_closed": true,
+        "false_accept": false,
+        "spec_refs": [
+          "REQ-REPORT-6551-FALLBACK",
+          "REQ-REPORT-6551-ROWS"
+        ],
+        "row_hash": "sha256:df10bf6d52160fa9a9eaba9eb25907cfe0d7687d3136bf94306f8dffe39333d5"
+      }
+    ],
+    "all_attacks_fail_closed": true,
+    "false_accept_count": 0,
+    "failed_attack_ids": [],
+    "spec_refs": [
+      "REQ-REPORT-6551-FALLBACK"
+    ]
+  },
+  "production_safety_net_audited_ready_score": 1.0,
+  "per_unit_rows": [
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-compact-route",
+      "condition": "compact_route",
+      "row_index": 0,
+      "supported": true,
+      "input_hash": "sha256:86b4f30a7422d13362023d045951351d6a5da41ebde454c82f89d7e2380b4eeb",
+      "input_byte_length": 582,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "compact_router",
+        "abstain": false,
+        "uncertainty_bucket": "low",
+        "exception_hit": false,
+        "fallback_reason": "",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+        ],
+        "chosen_order": [
+          "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:86b4f30a7422d13362023d045951351d6a5da41ebde454c82f89d7e2380b4eeb",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [
+          "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+        ],
+        "request_hash": "sha256:86b4f30a7422d13362023d045951351d6a5da41ebde454c82f89d7e2380b4eeb",
+        "route": "compact_router",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "low"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:ef35017acf0345e9b692f52d1e987a871f1957cf149094f7a998ad626a824f3f",
+        "route": "compact_router",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+        ],
+        "chosen_order": [
+          "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "abstention": false,
+        "exception_lookup": {
+          "key_hash": "sha256:0ce6d41ba7421fe00498d98123d12ee50e1de93716d753264c42502a688b637a",
+          "hit": false,
+          "value": "",
+          "table_mutable": false
+        },
+        "fallback_reason": "",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.25,
+        "configuration_hash": "sha256:9a1bd74a400c78185338d489cc4778946087654701b6172c7677282ffc0c89c1",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "unsupported_reason": "",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 3,
+          "chosen_count": 3,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 0
+        },
+        "decision_hash": "sha256:9a1013b2c7420ac50d895a7f02cccd4eec3c907e4cd6e50e16af57e370f26865"
+      },
+      "python_output_hash": "sha256:708d18babcfb977b390ec8deb9bf5c7408c979557e4ed6034e901d93878cb262",
+      "rust_output_hash": "sha256:708d18babcfb977b390ec8deb9bf5c7408c979557e4ed6034e901d93878cb262",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "compact_router",
+      "abstention": false,
+      "exception_hit": false,
+      "fallback_reason": "",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_after_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_immutable": true,
+      "python_route_time_s": 6.5383e-05,
+      "rust_route_time_s": 0.000452148,
+      "adapter_route_time_s": 9.6922e-05,
+      "charged_time_s": 0.000614453,
+      "charged_adapter_overhead_units": 0.25,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:c9c7773243dd2a24300913e315eb9620a50c31f8068ab9f2f351dabc80d7d5e5"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-boundary-abstention",
+      "condition": "boundary_abstention",
+      "row_index": 1,
+      "supported": true,
+      "input_hash": "sha256:82b649d132409890fd35c25106aa007284b83b04de316f88c6c945e40d5a8e5d",
+      "input_byte_length": 387,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": true,
+        "uncertainty_bucket": "high",
+        "exception_hit": false,
+        "fallback_reason": "abstention",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:82b649d132409890fd35c25106aa007284b83b04de316f88c6c945e40d5a8e5d",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": true,
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "abstention",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "request_hash": "sha256:82b649d132409890fd35c25106aa007284b83b04de316f88c6c945e40d5a8e5d",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "high"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:e4665f6b8bc23ca6c4d13ecf67ce6c70df24c66430d0e840d4776002ae6394dd",
+        "route": "native_exact_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "abstention": true,
+        "exception_lookup": {
+          "key_hash": "sha256:db41fb29f1a65696b7e684b326876730b827709f6b5c8df40521b27e68c5f8f7",
+          "hit": false,
+          "value": "",
+          "table_mutable": false
+        },
+        "fallback_reason": "abstention",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.25,
+        "configuration_hash": "sha256:9a1bd74a400c78185338d489cc4778946087654701b6172c7677282ffc0c89c1",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "unsupported_reason": "",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 1,
+          "chosen_count": 1,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 0
+        },
+        "decision_hash": "sha256:aee31734003098e9845c3c8bc75f6f22e47200c43545bebdeef835d6c4349daa"
+      },
+      "python_output_hash": "sha256:ffc610e5db88c2d3defe8dea6995cd18f509c855b5bd90b214f27db36db9403a",
+      "rust_output_hash": "sha256:ffc610e5db88c2d3defe8dea6995cd18f509c855b5bd90b214f27db36db9403a",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": true,
+      "exception_hit": false,
+      "fallback_reason": "abstention",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_after_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_immutable": true,
+      "python_route_time_s": 3.7551e-05,
+      "rust_route_time_s": 0.000178445,
+      "adapter_route_time_s": 6.3259e-05,
+      "charged_time_s": 0.000279255,
+      "charged_adapter_overhead_units": 0.25,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:4c9c52b2866fd7cf86409f71a595c4f54c78aa3aa7096acf367af55179d6b952"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-exception",
+      "condition": "exception_lookup",
+      "row_index": 2,
+      "supported": true,
+      "input_hash": "sha256:ede28147a604a2196c23c218c6957a60feceb0946f135f797660440b41633146",
+      "input_byte_length": 562,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": false,
+        "uncertainty_bucket": "medium",
+        "exception_hit": true,
+        "fallback_reason": "exception_table_hit",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:ede28147a604a2196c23c218c6957a60feceb0946f135f797660440b41633146",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "exception_hit": true,
+        "fallback_reason": "exception_table_hit",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "request_hash": "sha256:ede28147a604a2196c23c218c6957a60feceb0946f135f797660440b41633146",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "medium"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:a62d7fa4449fa0e8b64e5684c7cb31167ce90ca0a587fa24606200660b39aedb",
+        "route": "native_exact_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "abstention": false,
+        "exception_lookup": {
+          "key_hash": "sha256:2daace472b8fe262b64ee3c0a87fafd57c4986ec894709fa533927235ba60396",
+          "hit": true,
+          "value": "native_exact_fallback",
+          "table_mutable": false
+        },
+        "fallback_reason": "exception_table_hit",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 1.5,
+        "configuration_hash": "sha256:676258e05e880464ee354b96d711ddb1a9819dbfed5d42843f75af7ef0f0f6fe",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "unsupported_reason": "",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 2,
+          "chosen_count": 2,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 0
+        },
+        "decision_hash": "sha256:140f60ea3f933767af0a5e58cf31e973b0858d2d1b3d7ee185939fcfbb8fb7ce"
+      },
+      "python_output_hash": "sha256:ed74a142741a53671f2597cfc0530de6c6a8508f5cd8718e21a3b141f3897935",
+      "rust_output_hash": "sha256:ed74a142741a53671f2597cfc0530de6c6a8508f5cd8718e21a3b141f3897935",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": false,
+      "exception_hit": true,
+      "fallback_reason": "exception_table_hit",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:a1054172691ceb147ea39e2cad1d39c05fd309b181bda12b6fa777fef8d74fb6",
+      "exception_table_after_hash": "sha256:a1054172691ceb147ea39e2cad1d39c05fd309b181bda12b6fa777fef8d74fb6",
+      "exception_table_immutable": true,
+      "python_route_time_s": 3.173e-05,
+      "rust_route_time_s": 0.000225303,
+      "adapter_route_time_s": 5.2138e-05,
+      "charged_time_s": 0.000309171,
+      "charged_adapter_overhead_units": 1.5,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:658ee4209b3e868d7839369f81ebccaa7c81ed62a081478b1c3886fa699332e8"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-forced-fallback",
+      "condition": "forced_fallback",
+      "row_index": 3,
+      "supported": true,
+      "input_hash": "sha256:89d3b9c6fb89dd7426084aa2eff2cae7233698440c1c3e489f122f8e0e91e890",
+      "input_byte_length": 476,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": false,
+        "uncertainty_bucket": "medium",
+        "exception_hit": false,
+        "fallback_reason": "forced_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:89d3b9c6fb89dd7426084aa2eff2cae7233698440c1c3e489f122f8e0e91e890",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "forced_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "request_hash": "sha256:89d3b9c6fb89dd7426084aa2eff2cae7233698440c1c3e489f122f8e0e91e890",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "medium"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:7cf56e8e9b43b0c7d5bc4393d97f7e025d322a682b01cfd8f4b2754e024819e0",
+        "route": "native_exact_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "abstention": false,
+        "exception_lookup": {
+          "key_hash": "sha256:6f52a3c9c1f561935a70723d20704d77c9b9aa27f2a437bd667017e1a51438b6",
+          "hit": false,
+          "value": "",
+          "table_mutable": false
+        },
+        "fallback_reason": "forced_fallback",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.25,
+        "configuration_hash": "sha256:dedbc4ce5d016d12e02ee2ac79aff1ceb7e2b19f1eb59c2df841dd55e23587d8",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "unsupported_reason": "",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 2,
+          "chosen_count": 2,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 0
+        },
+        "decision_hash": "sha256:60a570ca72a4f3e87d8a01d816856fe6709b4a2344c860119c10d770c454195c"
+      },
+      "python_output_hash": "sha256:ba07d5d62697debd5a5acc53b0b3b520e77b237df720046c7a3772c883b62817",
+      "rust_output_hash": "sha256:ba07d5d62697debd5a5acc53b0b3b520e77b237df720046c7a3772c883b62817",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": false,
+      "exception_hit": false,
+      "fallback_reason": "forced_fallback",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_after_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_immutable": true,
+      "python_route_time_s": 2.8453e-05,
+      "rust_route_time_s": 0.000178615,
+      "adapter_route_time_s": 4.4564e-05,
+      "charged_time_s": 0.000251632,
+      "charged_adapter_overhead_units": 0.25,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:8661c66168e6d182ded0b4d188c384fa340cb89004c37082cd8298cf1651aade"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-timeout",
+      "condition": "timeout",
+      "row_index": 4,
+      "supported": true,
+      "input_hash": "sha256:96fecd6a754dd68b01dbe09448e63a6e6074f572aa85f5f9ae27a123397c73a4",
+      "input_byte_length": 469,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": false,
+        "uncertainty_bucket": "medium",
+        "exception_hit": false,
+        "fallback_reason": "timeout",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:96fecd6a754dd68b01dbe09448e63a6e6074f572aa85f5f9ae27a123397c73a4",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "timeout",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "request_hash": "sha256:96fecd6a754dd68b01dbe09448e63a6e6074f572aa85f5f9ae27a123397c73a4",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "medium"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:e934353fb056ac2b4c9902efc98a09ef3adf34471ef00a550544b71c2cd3ca9e",
+        "route": "native_exact_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "abstention": false,
+        "exception_lookup": {
+          "key_hash": "sha256:6f52a3c9c1f561935a70723d20704d77c9b9aa27f2a437bd667017e1a51438b6",
+          "hit": false,
+          "value": "",
+          "table_mutable": false
+        },
+        "fallback_reason": "timeout",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.25,
+        "configuration_hash": "sha256:1b9277a2f07a5a5e541205f75d2b6177601867632c61bcdb94ed7f773a0508d8",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "unsupported_reason": "",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 2,
+          "chosen_count": 2,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 0
+        },
+        "decision_hash": "sha256:4b61c3bbdfcace855dfe58962f346e8f549bc81c6f80c6d9d8b69116e25214a1"
+      },
+      "python_output_hash": "sha256:232432d338dc7c0d28940a40c44feddb5b0de237e3afaadf278439d796967930",
+      "rust_output_hash": "sha256:232432d338dc7c0d28940a40c44feddb5b0de237e3afaadf278439d796967930",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": false,
+      "exception_hit": false,
+      "fallback_reason": "timeout",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_after_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_immutable": true,
+      "python_route_time_s": 2.5618e-05,
+      "rust_route_time_s": 0.000178395,
+      "adapter_route_time_s": 4.4083e-05,
+      "charged_time_s": 0.000248096,
+      "charged_adapter_overhead_units": 0.25,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:c8112f62869a4deec619c248ca479067c0a34ee8ea80d68de2107527065a7655"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-duplicate",
+      "condition": "malformed_duplicate",
+      "row_index": 5,
+      "supported": false,
+      "input_hash": "sha256:1199d302fdb4a1c64b9534f715f002787998d54d9c3cf1169ab25d54ac765673",
+      "input_byte_length": 464,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": false,
+        "uncertainty_bucket": "unsupported",
+        "exception_hit": false,
+        "fallback_reason": "malformed_input:duplicate_candidate_ids",
+        "original_order": [],
+        "chosen_order": [],
+        "error_type": "SafetyNetAbiError",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:1199d302fdb4a1c64b9534f715f002787998d54d9c3cf1169ab25d54ac765673",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [],
+        "error_type": "SafetyNetAbiError",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "malformed_input:duplicate_candidate_ids",
+        "original_order": [],
+        "request_hash": "sha256:1199d302fdb4a1c64b9534f715f002787998d54d9c3cf1169ab25d54ac765673",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "unsupported"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:d68f4d9dda3896caad4bd8a9b7b372438bd9af3859a89b1b370e8a3e3b7dedf0",
+        "route": "native_exact_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "abstention": false,
+        "exception_lookup": {
+          "key_hash": "",
+          "hit": false,
+          "value": "",
+          "table_mutable": false
+        },
+        "fallback_reason": "malformed_input:duplicate_candidate_ids",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.25,
+        "configuration_hash": "sha256:9a1bd74a400c78185338d489cc4778946087654701b6172c7677282ffc0c89c1",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "unsupported_reason": "malformed_input:duplicate_candidate_ids",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 2,
+          "chosen_count": 2,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 1
+        },
+        "decision_hash": "sha256:84ec34f430183b0b456d38d2738af392841c49d35b474f7cea72940a59f30e6b"
+      },
+      "python_output_hash": "sha256:2d6254c2b8909adfc33ea7a83b73cfb6ee5cceb2493938bd3bed0f07cd2d273f",
+      "rust_output_hash": "sha256:2d6254c2b8909adfc33ea7a83b73cfb6ee5cceb2493938bd3bed0f07cd2d273f",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": false,
+      "exception_hit": false,
+      "fallback_reason": "malformed_input:duplicate_candidate_ids",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_after_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_immutable": true,
+      "python_route_time_s": 1.7373e-05,
+      "rust_route_time_s": 0.000135674,
+      "adapter_route_time_s": 3.2541e-05,
+      "charged_time_s": 0.000185588,
+      "charged_adapter_overhead_units": 0.25,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:5588e093c5675e62c6647580064b04775aa2ef5ce5a827eb4899fe9c9329120d"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-stale-configuration",
+      "condition": "stale_configuration",
+      "row_index": 6,
+      "supported": false,
+      "input_hash": "sha256:ce3b1c9408195fb7206d8c63230267b1fc466ec4d2c9518119cb64e9eb4e7d7c",
+      "input_byte_length": 460,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": false,
+        "uncertainty_bucket": "unsupported",
+        "exception_hit": false,
+        "fallback_reason": "stale_configuration",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "SchemaVersionError",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:ce3b1c9408195fb7206d8c63230267b1fc466ec4d2c9518119cb64e9eb4e7d7c",
+        "router_contract_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "error_type": "SchemaVersionError",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "stale_configuration",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "request_hash": "sha256:ce3b1c9408195fb7206d8c63230267b1fc466ec4d2c9518119cb64e9eb4e7d7c",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "unsupported"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:7e5a262999f13684ebfea1238a5ac4dc60256abc232dc7d58a94ef1658b329c3",
+        "route": "native_exact_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "abstention": false,
+        "exception_lookup": {
+          "key_hash": "",
+          "hit": false,
+          "value": "",
+          "table_mutable": false
+        },
+        "fallback_reason": "stale_configuration",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.25,
+        "configuration_hash": "sha256:b4760ae7db9af76db1df81b60de047560517e41a22b213c3f0f92d3a41b13097",
+        "router_contract_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "unsupported_reason": "",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 2,
+          "chosen_count": 2,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 0
+        },
+        "decision_hash": "sha256:82cb30b65cd74d052dd1ee379094a595397f7addee40fb8cbc0add8114f6d189"
+      },
+      "python_output_hash": "sha256:da2dd93d89d96816e866bc5aee04f27c3f8e81bbb114d16eb8363e6da413e7dd",
+      "rust_output_hash": "sha256:da2dd93d89d96816e866bc5aee04f27c3f8e81bbb114d16eb8363e6da413e7dd",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": false,
+      "exception_hit": false,
+      "fallback_reason": "stale_configuration",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": true,
+        "accepted_candidate_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "error_type": ""
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_after_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_immutable": true,
+      "python_route_time_s": 1.8094e-05,
+      "rust_route_time_s": 0.000138991,
+      "adapter_route_time_s": 3.198e-05,
+      "charged_time_s": 0.000189065,
+      "charged_adapter_overhead_units": 0.25,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:17a51b256c789219be8d8b6a30fb30bd5fec2b847fd35410b7de6262de3e1576"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-unknown-feature",
+      "condition": "unknown_feature",
+      "row_index": 7,
+      "supported": false,
+      "input_hash": "sha256:2f10f6c8934928b6d025ebfaa4621c1a3f724dfc77583d1b49bdb157c5afbaee",
+      "input_byte_length": 411,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": false,
+        "uncertainty_bucket": "unsupported",
+        "exception_hit": false,
+        "fallback_reason": "malformed_input:unsupported_feature",
+        "original_order": [],
+        "chosen_order": [],
+        "error_type": "SafetyNetAbiError",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:2f10f6c8934928b6d025ebfaa4621c1a3f724dfc77583d1b49bdb157c5afbaee",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [],
+        "error_type": "SafetyNetAbiError",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "malformed_input:unsupported_feature",
+        "original_order": [],
+        "request_hash": "sha256:2f10f6c8934928b6d025ebfaa4621c1a3f724dfc77583d1b49bdb157c5afbaee",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "unsupported"
+      },
+      "adapter_output": {
+        "request_hash": "sha256:42d9d1394778e1c2d961e2122442d2dc6cce2e2718a43263d272d1288225ae46",
+        "route": "native_exact_fallback",
+        "original_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "chosen_order": [
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "abstention": false,
+        "exception_lookup": {
+          "key_hash": "",
+          "hit": false,
+          "value": "",
+          "table_mutable": false
+        },
+        "fallback_reason": "malformed_input:unsupported_feature",
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.25,
+        "configuration_hash": "sha256:9a1bd74a400c78185338d489cc4778946087654701b6172c7677282ffc0c89c1",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "unsupported_reason": "malformed_input:unsupported_feature",
+        "candidate_preservation": {
+          "all_candidates_preserved": true,
+          "original_count": 1,
+          "chosen_count": 1,
+          "deleted_candidate_count": 0,
+          "duplicated_candidate_count": 0
+        },
+        "decision_hash": "sha256:7c961cf1709150881bbc68809b3561af5f06fd1678fa1f5dd393c0f664158bac"
+      },
+      "python_output_hash": "sha256:ca8ab9930fead60ed22a947229fbb2e249011363b4d810ff0c2182645cb5181c",
+      "rust_output_hash": "sha256:ca8ab9930fead60ed22a947229fbb2e249011363b4d810ff0c2182645cb5181c",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": false,
+      "exception_hit": false,
+      "fallback_reason": "malformed_input:unsupported_feature",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_after_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exception_table_immutable": true,
+      "python_route_time_s": 1.7954e-05,
+      "rust_route_time_s": 0.000135545,
+      "adapter_route_time_s": 3.3132e-05,
+      "charged_time_s": 0.000186631,
+      "charged_adapter_overhead_units": 0.25,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:1ae3095ddc8addd6da95b4c0e92b35f9e90eb63fd59c9d6647141f41479246db"
+    },
+    {
+      "row_type": "independent_enabled_and_parity",
+      "unit_id": "audit-nan-json",
+      "condition": "nan_invalid_json",
+      "row_index": 8,
+      "supported": false,
+      "input_hash": "sha256:15ecb47393ae34f9df1e907d6921ba771fd13898acae75e083a812da562067da",
+      "input_byte_length": 405,
+      "python_output": {
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "route": "native_exact_fallback",
+        "abstain": false,
+        "uncertainty_bucket": "unsupported",
+        "exception_hit": false,
+        "fallback_reason": "malformed_input:invalid_json",
+        "original_order": [],
+        "chosen_order": [],
+        "error_type": "JsonDecodeError",
+        "exact_fallback_reachable": true,
+        "request_hash": "sha256:15ecb47393ae34f9df1e907d6921ba771fd13898acae75e083a812da562067da",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16"
+      },
+      "rust_output": {
+        "abstain": false,
+        "chosen_order": [],
+        "error_type": "JsonDecodeError",
+        "exact_fallback_reachable": true,
+        "exception_hit": false,
+        "fallback_reason": "malformed_input:invalid_json",
+        "original_order": [],
+        "request_hash": "sha256:15ecb47393ae34f9df1e907d6921ba771fd13898acae75e083a812da562067da",
+        "route": "native_exact_fallback",
+        "router_contract_hash": "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16",
+        "schema_version": "carnot.safety_net.router_abi.v1",
+        "uncertainty_bucket": "unsupported"
+      },
+      "adapter_output": {
+        "route": "native_exact_fallback",
+        "chosen_order": [],
+        "original_order": [],
+        "fallback_reason": "malformed_input:invalid_json",
+        "abstention": false,
+        "exception_lookup": {
+          "hit": false,
+          "table_mutable": false
+        },
+        "exact_fallback_reachable": true,
+        "charged_adapter_overhead_units": 0.0
+      },
+      "python_output_hash": "sha256:b5760fcf65a54ccafa01834e9e5807a04e19b156ba642551c8ae6f0de1fb5ffb",
+      "rust_output_hash": "sha256:b5760fcf65a54ccafa01834e9e5807a04e19b156ba642551c8ae6f0de1fb5ffb",
+      "python_rust_decision_equal": true,
+      "python_rust_decision_bytes_equal": true,
+      "error_type_equal": true,
+      "route": "native_exact_fallback",
+      "abstention": false,
+      "exception_hit": false,
+      "fallback_reason": "malformed_input:invalid_json",
+      "fallback_reachable": true,
+      "candidate_preserved": true,
+      "candidate_deleted_count": 0,
+      "exact_native": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_python": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_rust": {
+        "release_authority": "native_exact_verifier",
+        "verified": false,
+        "accepted_candidate_hash": "",
+        "error_type": "NoCandidateError"
+      },
+      "exact_output_equal_to_native": true,
+      "exception_table_before_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "exception_table_after_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "exception_table_immutable": true,
+      "python_route_time_s": 1.5068e-05,
+      "rust_route_time_s": 0.000110016,
+      "adapter_route_time_s": 0.0,
+      "charged_time_s": 0.000125084,
+      "charged_adapter_overhead_units": 0.0,
+      "upstream_row_copied": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-REPLAY",
+        "REQ-REPORT-6551-PARITY"
+      ],
+      "row_hash": "sha256:abab8ad7fe7a76647d6cd75ceb64f2d34a57c2bb61b7d5e7ec5f579445162c78"
+    }
+  ],
+  "aggregate_row_recomputation": {
+    "row_type": "aggregate_row_recomputation",
+    "inputs_present": true,
+    "missing_inputs_or_tools": false,
+    "native_binding_ran": true,
+    "disabled_identity_exact": true,
+    "python_rust_parity": true,
+    "candidate_preservation_passed": true,
+    "enabled_exact_outputs_equal": true,
+    "fallback_reachable": true,
+    "exception_table_immutable": true,
+    "rollback_passed": true,
+    "shortcut_attacks_passed": true,
+    "protected_files_unchanged": true,
+    "atomic_output_writer": "carnot.experiment_artifacts.atomic_write_json",
+    "ready_score_from_rows": 1.0,
+    "verdict_class_from_rows": "null",
+    "upstream_aggregate_counters_trusted": false,
+    "spec_refs": [
+      "REQ-REPORT-6551-ROWS"
+    ]
+  },
+  "gate_check_summary": {
+    "row_type": "gate_check_summary",
+    "checks": {
+      "inputs_present": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "missing_inputs_or_tools": {
+        "expected": false,
+        "observed": false,
+        "passed": true
+      },
+      "native_binding_ran": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "disabled_identity_exact": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "python_rust_parity": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "candidate_preservation_passed": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "enabled_exact_outputs_equal": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "fallback_reachable": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "exception_table_immutable": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "rollback_passed": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "shortcut_attacks_passed": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "protected_files_unchanged": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "ready_score_is_binary": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      }
+    },
+    "failed_checks": [],
+    "all_gates_passed": true,
+    "spec_refs": [
+      "REQ-REPORT-6551-ROWS"
+    ]
+  },
+  "preconditions_checked": {
+    "planning_date": "20260823",
+    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6551_production_safety_net_independent_audit.json",
+    "input_existence_and_hash_receipts": {
+      "row_type": "input_existence_and_hash_receipts",
+      "artifact_rows": [
+        {
+          "row_type": "input_existence",
+          "path": "results/experiment_6548_v567_evidence_eligibility_contract.json",
+          "exists": true,
+          "sha256": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+          "size_bytes": 69093,
+          "json_object": true,
+          "status": "complete_v567_evidence_eligibility_contract_ready",
+          "honest_verdict": "complete_v567_evidence_eligibility_contract_ready: Exp6542-Exp6547 are clean content-addressed V567 inputs; Exp6541 remains visible and not required",
+          "verdict_class": null,
+          "observed_readiness_fields": {
+            "v567_evidence_contract_ready_score": 1.0
+          },
+          "readiness_field_trusted": false,
+          "list_field_count": 33,
+          "empty_success_artifact": false
+        },
+        {
+          "row_type": "input_existence",
+          "path": "results/experiment_6549_production_safety_net_adapter.json",
+          "exists": true,
+          "sha256": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+          "size_bytes": 339611,
+          "json_object": true,
+          "status": "complete_production_safety_net_adapter_positive",
+          "honest_verdict": "complete_production_safety_net_adapter_positive: disabled identity is exact; enabled routing preserves candidates, exact outputs, fallback, and rollback with charged benefit",
+          "verdict_class": "positive",
+          "observed_readiness_fields": {
+            "production_safety_net_adapter_ready_score": 1.0
+          },
+          "readiness_field_trusted": false,
+          "list_field_count": 155,
+          "empty_success_artifact": false
+        },
+        {
+          "row_type": "input_existence",
+          "path": "results/experiment_6550_rust_pyo3_safety_net_parity.json",
+          "exists": true,
+          "sha256": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809",
+          "size_bytes": 183656,
+          "json_object": true,
+          "status": "complete_rust_pyo3_safety_net_parity_positive",
+          "honest_verdict": "complete_rust_pyo3_safety_net_parity_positive: supported decisions and bytes match; unsupported rows fail closed; exact downstream and Python rollback remain equal",
+          "verdict_class": "positive",
+          "observed_readiness_fields": {
+            "cross_language_router_parity_ready_score": 1.0
+          },
+          "readiness_field_trusted": false,
+          "list_field_count": 61,
+          "empty_success_artifact": false
+        }
+      ],
+      "binary_rows": [
+        {
+          "row_type": "binary_or_source_input",
+          "path": "python/carnot/pipeline/production_safety_net_adapter.py",
+          "exists": true,
+          "sha256": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630"
+        },
+        {
+          "row_type": "binary_or_source_input",
+          "path": "python/carnot/pipeline/safety_net_abi.py",
+          "exists": true,
+          "sha256": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3"
+        },
+        {
+          "row_type": "binary_or_source_input",
+          "path": "crates/carnot-python/src/safety_net.rs",
+          "exists": true,
+          "sha256": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003"
+        },
+        {
+          "row_type": "binary_or_source_input",
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/_rust.cpython-312-x86_64-linux-gnu.so",
+          "exists": true,
+          "sha256": "sha256:9798e9d0fe231516dedb09a304820bf04e0530dcdda7380b91fafd72895d7e9a"
+        }
+      ],
+      "all_required_inputs_present": true,
+      "missing_paths": [],
+      "empty_or_unreadable_paths": [],
+      "empty_success_artifact_paths": [],
+      "readiness_fields_used_for_decision": false,
+      "spec_refs": [
+        "REQ-REPORT-6551-MISSING"
+      ]
+    },
+    "python_version": "3.12.13",
+    "rustc": {
+      "available": true,
+      "argv": [
+        "rustc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "rustc 1.97.1 (8bab26f4f 2026-07-14) (Arch Linux rust 1:1.97.1-1.1)",
+      "stderr": ""
+    },
+    "cargo": {
+      "available": true,
+      "argv": [
+        "cargo",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "cargo 1.97.1 (c980f4866 2026-06-30) (Arch Linux rust 1:1.97.1-1.1)",
+      "stderr": ""
+    },
+    "z3_version": "4.16.0.0",
+    "resources": {
+      "cpu": {
+        "cpu_count": 24,
+        "machine": "x86_64",
+        "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+        "processor": ""
+      },
+      "ram_total_bytes": 134305107968,
+      "disk_total_bytes": 3953289023488,
+      "disk_free_bytes": 1087080112128
+    },
+    "fixture_hash": "sha256:d2f561d0c482e2bcb93df782be682153462b9dc014aa0398be716171302377b4",
+    "random_seed": 6551,
+    "protected_file_hashes_before": {
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+      "ops/roadmap-quarantine/roadmap-2026.08.567-refusal1.yaml": "sha256:767cabccdc33766abaa1719b6f6f96cc806e74cb23981953b56b4beab9ccdeaf",
+      "scripts/research_conductor.py": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+      "_bmad/traceability.md": "sha256:d9745e34019f4753315d1077b6da2a290995c01f3e30934d666c2bbef67f4f9b",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+      "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+      "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+    },
+    "protected_file_hashes_after": {
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+      "ops/roadmap-quarantine/roadmap-2026.08.567-refusal1.yaml": "sha256:767cabccdc33766abaa1719b6f6f96cc806e74cb23981953b56b4beab9ccdeaf",
+      "scripts/research_conductor.py": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+      "_bmad/traceability.md": "sha256:d9745e34019f4753315d1077b6da2a290995c01f3e30934d666c2bbef67f4f9b",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+      "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+      "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+    },
+    "current_python_and_rust_build_hashes": {
+      "python_adapter_sha256": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+      "python_abi_sha256": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+      "rust_abi_source_sha256": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+      "binding_file_sha256": "sha256:9798e9d0fe231516dedb09a304820bf04e0530dcdda7380b91fafd72895d7e9a",
+      "target_debug_lib_sha256": "sha256:9798e9d0fe231516dedb09a304820bf04e0530dcdda7380b91fafd72895d7e9a"
+    },
+    "source_hashes": {
+      "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+      "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+      "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+      "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+      "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+      "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+      "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+      "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+      "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+      "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+      "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+      "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+      "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+    },
+    "inference_substrate": "independent_python_rust_production_adapter_replay_no_llm",
+    "spec_refs": [
+      "REQ-REPORT-6551-MISSING",
+      "REQ-REPORT-6551-ATOMIC"
+    ]
+  },
+  "protected_files_unchanged": {
+    "row_type": "protected_files_unchanged",
+    "all_protected_files_unchanged": true,
+    "rows": [
+      {
+        "path": "CLAUDE.md",
+        "before_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "after_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "unchanged": true
+      },
+      {
+        "path": "CODEX.md",
+        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "unchanged": true
+      },
+      {
+        "path": "_bmad/traceability.md",
+        "before_sha256": "sha256:d9745e34019f4753315d1077b6da2a290995c01f3e30934d666c2bbef67f4f9b",
+        "after_sha256": "sha256:d9745e34019f4753315d1077b6da2a290995c01f3e30934d666c2bbef67f4f9b",
+        "unchanged": true
+      },
+      {
+        "path": "ops/e2e-test-plan.md",
+        "before_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "after_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "unchanged": true
+      },
+      {
+        "path": "ops/exclusion_manifest.yaml",
+        "before_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "after_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "unchanged": true
+      },
+      {
+        "path": "ops/roadmap-quarantine/roadmap-2026.08.567-refusal1.yaml",
+        "before_sha256": "sha256:767cabccdc33766abaa1719b6f6f96cc806e74cb23981953b56b4beab9ccdeaf",
+        "after_sha256": "sha256:767cabccdc33766abaa1719b6f6f96cc806e74cb23981953b56b4beab9ccdeaf",
+        "unchanged": true
+      },
+      {
+        "path": "results/experiment_6548_v567_evidence_eligibility_contract.json",
+        "before_sha256": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "after_sha256": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "unchanged": true
+      },
+      {
+        "path": "results/experiment_6549_production_safety_net_adapter.json",
+        "before_sha256": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "after_sha256": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "unchanged": true
+      },
+      {
+        "path": "results/experiment_6550_rust_pyo3_safety_net_parity.json",
+        "before_sha256": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809",
+        "after_sha256": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/research_conductor.py",
+        "before_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+        "after_sha256": "sha256:45eb2efc3b30d5c45396e7e70df93aba4cbd9119d8689fc2f9b77bc675727f3a",
+        "unchanged": true
+      }
+    ],
+    "spec_refs": [
+      "REQ-REPORT-6551-ATOMIC"
+    ]
+  },
+  "inference_substrate": "independent_python_rust_production_adapter_replay_no_llm",
+  "verifier_is_oracle": false,
+  "field_provenance": {
+    "status": {
+      "principle": "An always-run audit needs a terminal state even when integration inputs are absent.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The verdict states adopted, blocked, partial, null, or disqualified disposition with a terminal prefix.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "verdict_class": {
+      "principle": "The closed class prevents audit circularity or missing inputs from becoming a positive claim.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "input_existence_and_hash_receipts": {
+      "principle": "The audit identifies the exact artifacts and binaries it evaluated.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "independent_build_identity_receipt": {
+      "principle": "A fresh native build check prevents Python fallback from posing as Rust execution.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "independent_disabled_identity_rows": {
+      "principle": "Fresh native-versus-disabled rows test the central default-off promise.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "independent_enabled_and_parity_rows": {
+      "principle": "Fresh route and binding rows prevent self-audit by copied upstream outcomes.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "independent_exact_equality_receipt": {
+      "principle": "Production adoption requires unchanged exact accepted outputs.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "fallback_exception_and_rollback_audit": {
+      "principle": "The audit covers every safety escape and persistent-state boundary.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "independent_cost_recomputation": {
+      "principle": "Adapter, FFI, and fallback overhead are charged from raw clocks.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "missing_input_disposition": {
+      "principle": "Absent or partial upstream work closes honestly instead of producing null rows.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "shortcut_attack_matrix": {
+      "principle": "Independent attacks test identities, candidate preservation, mutation, and build substitution.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "production_safety_net_audited_ready_score": {
+      "principle": "A binary independent score defines whether production integration may be adopted.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "per_unit_rows": {
+      "principle": "Every comparative audit conclusion is recomputable per unit.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "aggregate_row_recomputation": {
+      "principle": "The adoption decision derives from audit rows only.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "gate_check_summary": {
+      "principle": "A blocked audit lists missing or failed checks and observed values.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Input and toolchain receipts distinguish a block from a scientific null.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "The audit does not repair evidence or mutate protected orchestration files.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Independent deterministic replay is not mislabeled as live GGUF inference.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "The audit checks integration and exact equality; the learned router is not ground truth.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every headline field identifies independent rows and recomputation code.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "random_seed": {
+      "principle": "A fixed audit sample makes the disposition reproducible.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "duration_s": {
+      "principle": "Monotonic duration catches audits that never ran their native checks.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "tests_run": {
+      "principle": "Named commands and exits prove independent validation ran.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A final hash protects the audit determination trail.",
+      "source": "exp6551_independent_python_rust_adapter_replay_reducer",
+      "spec": "openspec/capabilities/research-reporting/spec.md",
+      "experiment_module": "python/carnot/experiment_6551_production_safety_net_independent_audit.py",
+      "tests": [
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py"
+      ],
+      "source_hashes": {
+        "openspec/capabilities/research-reporting/spec.md": "sha256:2a16715aa8943d44a8eebc1dd091b927ad85e597260ca16a44a0536dcc47c68b",
+        "openspec/capabilities/pipeline/spec.md": "sha256:9e4231d17aa815535ade6a57683ff970384666bef627a8945c51663333f847d6",
+        "openspec/capabilities/rust-python-boundary/spec.md": "sha256:910776c83258c33ad65e010903f4e56f33fcdbd4df30e3a4568c93ddb8c9d12c",
+        "python/carnot/pipeline/production_safety_net_adapter.py": "sha256:2104126ff6dfc714709498fd02db34f6a61a48a2941de1c91fa5ff44dfdd7630",
+        "python/carnot/pipeline/safety_net_abi.py": "sha256:f5b822dacf15e1c811d18274c5b1090360a9b344fc0cb3c09429b94c33edc2e3",
+        "python/carnot/pipeline/verify_repair.py": "sha256:fa138f9c43ec1170ceccabf8974e7b4e37ab1795a431bf407ce13ea2a6796abe",
+        "python/carnot/experiment_6551_production_safety_net_independent_audit.py": "sha256:b4bb55fc0f5f05ede9deb43a24700587fd577223bf481dee79f592cbf4075e3f",
+        "crates/carnot-python/src/safety_net.rs": "sha256:00326311c312c34fb96c4c33af38a3bf8d76cc18366d6c116209ed05f652f003",
+        "crates/carnot-python/src/lib.rs": "sha256:9515d8290560fa40c3355a4c3442bebfb1eafa6d03a194785f18a537edf14fbe",
+        "tests/python/test_experiment_6551_production_safety_net_independent_audit.py": "sha256:75d67d0d8abf02e3a72a7553a6c69da245a2800f37ea2c389b8e56a46bbbea14",
+        "results/experiment_6548_v567_evidence_eligibility_contract.json": "sha256:43bec8f85ee0080603bd2dcc6ca5062a03dac091b0dca0cddc6d7f881b7924d9",
+        "results/experiment_6549_production_safety_net_adapter.json": "sha256:101431c1a9bc17500560536a20ba1cc7945f1100c58a4dd23aa6f7de7a72ffae",
+        "results/experiment_6550_rust_pyo3_safety_net_parity.json": "sha256:8f3eefc3e665f991623a124853fc18cd40f899ee6645917b7684010e0ab18809"
+      },
+      "spec_refs": [
+        "REQ-REPORT-6551"
+      ]
+    }
+  },
+  "random_seed": 6551,
+  "duration_s": 0.20723641524091363,
+  "tests_run": [
+    {
+      "command": "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo test -p carnot-python safety_net --lib",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6551_production_safety_net_independent_audit.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6551_production_safety_net_independent_audit.py -m pytest tests/python/test_experiment_6551_production_safety_net_independent_audit.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6551_production_safety_net_independent_audit.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_6551_production_safety_net_independent_audit.py tests/python/test_experiment_6551_production_safety_net_independent_audit.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_6551_production_safety_net_independent_audit.py tests/python/test_experiment_6551_production_safety_net_independent_audit.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6551_production_safety_net_independent_audit.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6551_production_safety_net_independent_audit.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6551_production_safety_net_independent_audit.json",
+      "exit_code": 0
+    },
+    {
+      "command": "manual e2e-plan check: E2E-003 PyO3 binding round-trip covered by Exp6551 independent ABI replay",
+      "exit_code": 0
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6551_production_safety_net_independent_audit --date 20260823",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6551_production_safety_net_independent_audit --validate",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    }
+  ],
+  "reproducibility_checksum": "sha256:d5db6ea775782de9fea48a7234f119ce99e23f0988d43163f64652f9d1dbd2ca"
+}
