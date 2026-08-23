@@ -16322,3 +16322,5 @@ code |
 | 2026-08-23 08:57 UTC | Content-pinned DRIFT-Bench intake and exact replay | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6528-v565-source-model-method-contract) |
 | 2026-08-23 08:58 UTC | Milestone 2026.08.566 activated | OK | 7 tasks queued |
 | 2026-08-23 09:37 UTC | V566 direct-source, model-cache, and dependency co | OK | Deliverable already exists in repo |
+| 2026-08-23 10:26 UTC | Content-pinned DRIFT-Bench external intake v2 | OK | 86 passed, 1 warning in 10.98s |
+| 2026-08-23 10:28 UTC | Conductor re-exec: fresh committed source | OK | c9408e2e2773 -> 45eb2efc3b30; argv preserved |
