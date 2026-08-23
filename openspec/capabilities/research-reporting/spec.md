@@ -52782,3 +52782,117 @@ dependency checks.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6541 | Implemented (`python/carnot/experiment_6541_v566_direct_source_contract.py`, terminal artifact `results/experiment_6541_v566_direct_source_contract.json`) | Implemented (`tests/python/test_experiment_6541_v566_direct_source_contract.py`) |
+
+### REQ-REPORT-6548: V567 Evidence Eligibility Contract SHALL Preserve Additive V566 Determinations
+
+Carnot SHALL build Exp6548 as an additive evidence ledger before any V567
+production integration. The reducer SHALL read only checked-in V566 artifacts
+Exp6541 through Exp6547, SHALL record their paths and SHA-256 hashes, SHALL run
+the current adversarial verifier and row-consistency lint, and SHALL NOT rerun
+DRIFT intake or edit prior result history.
+
+The workflow SHALL quarantine Exp6541 from clean V567 imports unless independent
+checks resolve both the live-duration classification and the model-receipt gap.
+Exp6542 through Exp6547 SHALL be imported only when the artifact exists, hashes
+cleanly, exposes its required readiness field, has no critical live verifier
+flag, and has no blocking row-consistency finding. The downstream
+`v566_external_transfer_eligible_score` SHALL depend only on clean Exp6542
+through Exp6547 evidence.
+
+The workflow SHALL validate the active V567 roadmap against the current
+Pydantic roadmap schema, the V567 proposal, and the 2026-07-03 architecture
+document. It SHALL freeze each task id, deliverable, readiness field, structured
+gate, model-policy rule, sample-floor rule, ARC no-solve rule, GateMate receipt
+rule, and retired-scope exclusion. Every structured gate SHALL name a task in
+the V567 roadmap and an upstream artifact field with identical spelling.
+
+The Exp6548 artifact SHALL be written atomically to
+`results/experiment_6548_v567_evidence_eligibility_contract.json` with
+`inference_substrate=aggregation_from_upstream_artifacts_no_llm`. The artifact
+SHALL include, at minimum, `status`, `honest_verdict`, `verdict_class`,
+`v566_artifact_eligibility_rows`, `exp6541_disposition`,
+`clean_v566_import_ledger`, `architecture_freshness_receipt`,
+`v567_gate_contract_rows`, `v567_model_and_hardware_contract`,
+`v567_evidence_contract_ready_score`, `v566_external_transfer_eligible_score`,
+`per_unit_rows`, `gate_check_summary`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+Field principles SHALL be:
+
+- `status`: "A terminal lifecycle state prevents a bootstrap artifact from posing as completed work."
+- `honest_verdict`: "The verdict must state the evidence boundary and start with complete_, partial_, blocked_, or disqualified_."
+- `verdict_class`: "A closed class carries null, partial, blocked, or disqualified status into downstream aggregation."
+- `v566_artifact_eligibility_rows`: "One row per artifact makes each eligibility decision independently recheckable."
+- `exp6541_disposition`: "The live CRITICAL inconsistency must remain visible and cannot be washed out by a milestone summary."
+- `clean_v566_import_ledger`: "Only content-addressed clean evidence may become a V567 input."
+- `architecture_freshness_receipt`: "A 51-day-old architecture document must be checked against current code before it anchors integration."
+- `v567_gate_contract_rows`: "Every gate must name an in-roadmap task and an upstream field with identical spelling."
+- `v567_model_and_hardware_contract`: "Headline model and physical-resource rules must be frozen before outcomes exist."
+- `v567_evidence_contract_ready_score`: "A binary readiness field gives downstream production work one explicit contract gate."
+- `v566_external_transfer_eligible_score`: "Downstream science needs a clean external root that does not depend on quarantined Exp6541."
+- `per_unit_rows`: "Artifact-level rows prevent aggregate eligibility claims from hiding one failed input."
+- `gate_check_summary`: "Any blocked verdict must name the failed check and observed value."
+- `preconditions_checked`: "Resource receipts distinguish unavailable inputs from null science."
+- `protected_files_unchanged`: "The planning task must not mutate the active roadmap or conductor."
+- `inference_substrate`: "Declaring no-LLM aggregation prevents fabricated live-model provenance."
+- `verifier_is_oracle`: "Hash and schema checks are audit authority, not an oracle-distinct scientific verifier."
+- `field_provenance`: "Each headline field must identify the source rows and recomputation path."
+- `duration_s`: "Monotonic wall time exposes implausible or stale execution receipts."
+- `tests_run`: "Named commands and exit codes make validation reproducible."
+- `reproducibility_checksum`: "A content hash detects later mutation of the terminal record."
+
+`v567_evidence_contract_ready_score` SHALL equal 1.0 only when evidence rows,
+field spelling, gates, model policy, hardware policy, architecture freshness,
+retired-scope isolation, protected-file checks, and checksum validation pass.
+The clean contract SHALL use `verdict_class=null`; usable incomplete evidence
+SHALL use `partial`; missing prerequisites SHALL use `blocked`; and false
+provenance SHALL use `disqualified`.
+
+#### SCENARIO-REPORT-6548-ADDITIVE: Exp6541 Disposition Remains Visible
+
+**Given** Exp6541 reports readiness but carries unresolved live-duration or
+model-receipt concern
+**When** Exp6548 builds V566 eligibility rows
+**Then** Exp6541 remains present with path, hash, verifier flags, row-lint
+state, readiness field, and `quarantined_not_imported` disposition.
+
+#### SCENARIO-REPORT-6548-IMPORT: Clean V566 Imports Are Content Addressed
+
+**Given** Exp6542 through Exp6547 exist at their expected result paths
+**When** current verifier and row checks return no blocking finding
+**Then** each imported row records exact path, SHA-256 hash, readiness field,
+readiness score, command receipts, and clean eligibility before entering the
+V567 import ledger.
+
+#### SCENARIO-REPORT-6548-GATES: V567 Gates Use In-Roadmap Tasks And Exact Fields
+
+**Given** the active V567 roadmap declares structured `gated_on` entries
+**When** Exp6548 validates gate rows
+**Then** every upstream task exists in V567, every artifact field is declared by
+the upstream task contract, no gate names a retired task, and misspelled fields
+close the readiness score.
+
+#### SCENARIO-REPORT-6548-MODEL-HARDWARE: Model And Hardware Scope Is Frozen
+
+**Given** V567 contains headline SOTA, ARC, and GateMate tasks
+**When** Exp6548 builds its model and hardware contract
+**Then** the three mandated GGUF model IDs, llama.cpp GGUF loading rule,
+legacy-model exclusion, ARC no-solve boundary, GateMate newer-receipt rule, and
+no-repeat KV260 or PolarFire scope are recorded before outcomes exist.
+
+#### SCENARIO-REPORT-6548-SCHEMA: Terminal Artifact Is Atomic And Recomputable
+
+**Given** eligibility rows, precondition receipts, protected hashes, gate rows,
+field provenance, and validation receipts
+**When** Exp6548 writes its terminal artifact
+**Then** the checksum matches, protected files remain unchanged, the verdict has
+a valid terminal prefix, `verifier_is_oracle=true` only for hash, field, schema,
+and gate checks, and every required field has provenance.
+
+## Implementation Status (REQ-REPORT-6548)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6548 | Planned (`python/carnot/experiment_6548_v567_evidence_eligibility_contract.py`, terminal artifact `results/experiment_6548_v567_evidence_eligibility_contract.json`) | Planned (`tests/python/test_experiment_6548_v567_evidence_eligibility_contract.py`) |
