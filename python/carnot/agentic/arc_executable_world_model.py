@@ -126,6 +126,84 @@ def _guard_engine_write(path: Path) -> None:
         )
 
 
+# REQ-ARC-WMTE-6690: per-attempt retention. The canonical `world_model.py` is keyed by game
+# only, so every re-induction overwrites the previous model (measured: 40 attempts -> 25
+# surviving files on the 2026-08-22 baseline run). Archiving each producer write makes the
+# loss zero without changing what the canonical file holds or how anything reads it.
+_ATTEMPT_ARCHIVE_ENV = "CARNOT_ARC_ENGINE_ATTEMPT_ARCHIVE"
+
+
+def attempt_archive_enabled() -> bool:
+    """REQ-ARC-WMTE-6690: archiving is ON unless explicitly disabled."""
+    return os.environ.get(_ATTEMPT_ARCHIVE_ENV) != "0"
+
+
+def _archive_engine_attempt(
+    game: str, code: str, *, writer: str, model: str = "", note: str = ""
+) -> dict:
+    """Archive one produced engine under `E3_DIR/<game>/attempts/` (REQ-ARC-WMTE-6690).
+
+    Writes a content-hash-named copy (deduplicated: the same source twice archives one file)
+    and appends a manifest.jsonl line per attempt. `E3_DIR` is read here, at call time, so
+    redirects work exactly like canonical writes (REQ-ARC-WMTE-6016).
+
+    Failure direction, stated: the test-guard below FAILS CLOSED (a test reaching the tracked
+    store must blow up loudly, same as the canonical write). Everything after it FAILS OPEN --
+    a failed archive entry must not fail the induction, because losing one entry is strictly
+    no worse than the shipped behaviour, which lost every entry. Failures stay visible in the
+    returned dict, which callers record as `self.last_attempt_archive`.
+    """
+    info: dict = {"enabled": attempt_archive_enabled(), "archived": False, "deduplicated": False}
+    if not info["enabled"]:
+        return info
+    adir = Path(E3_DIR) / game / "attempts"
+    _guard_engine_write(adir)  # fail-closed: tests may not write the tracked store
+    try:
+        import hashlib
+        from datetime import datetime, timezone
+
+        raw = code.encode("utf-8", "replace")
+        sha = hashlib.sha256(raw).hexdigest()[:16]
+        adir.mkdir(parents=True, exist_ok=True)
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%f")
+        dedup = bool(next(iter(adir.glob(f"wm_*__{sha}.py")), None))
+        fname = f"wm_{stamp}__{sha}.py"
+        if not dedup:
+            (adir / fname).write_text(code)
+        line = {
+            "ts": stamp,
+            "sha256_16": sha,
+            "bytes": len(raw),
+            "writer": writer,
+            "model": model,
+            "note": note[:200],
+            "deduplicated": dedup,
+            "file": None if dedup else fname,
+        }
+        with (adir / "manifest.jsonl").open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(line, sort_keys=True) + "\n")
+        info.update({"archived": True, "deduplicated": dedup, "sha256_16": sha})
+    except Exception as exc:  # noqa: BLE001 - fail-open past the guard, see docstring
+        info["error"] = repr(exc)[:200]
+    return info
+
+
+def _archive_codex_engine(game: str) -> dict:
+    """Post-hoc archive for the DEV-ONLY codex path (REQ-ARC-WMTE-6690).
+
+    The codex CLI writes `world_model.py` itself, out-of-band, so the producer seam never
+    sees the content -- read it back and archive it. Same fail-open direction."""
+    try:
+        code = (Path(E3_DIR) / game / "world_model.py").read_text()
+    except OSError:
+        return {
+            "enabled": attempt_archive_enabled(),
+            "archived": False,
+            "error": "no_file_after_codex",
+        }
+    return _archive_engine_attempt(game, code, writer="codex")
+
+
 # Pristine, READ-ONLY copies of the engines as they stood at the commit that named them the
 # GAP-WM-TRUST-GATE origin incident. The mutable store above is rewritten by any induction
 # run, so a test that asserts "the new gate rejects the real degenerate engines" must read

@@ -12,32 +12,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CLAIM_SUPPORTED | 2 |
-| CLAIM_OVERSTATED | 2 |
-| NO_CLAIM | 4 |
+| NO_CLAIM | 5 |
+| CANNOT_DETERMINE | 1 |
 
-## experiment_6530_external_constraint_corpus_audit.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative or value claim to falsify. Treating the blocked status as an operational claim, it would be refuted if the intake artifact, fixture, and pinned source existed; the revision, license, schema, and corruption boundary were verified; and all gates passed.
-
-## WAS THAT CHECKED
-Yes. The existence receipts, revision-and-license receipt, and gate summary explicitly checked those preconditions and recorded their failures. No corpus performance or verifier-added-value claim was tested.
-
-## EVIDENCE
-`status`, `blocked_external_constraint_corpus_audit`, `verdict_class`, `blocked`, `all_gates_passed`, `false`, `fixture_row_count`, `0`, `blocked_preconditions`, `true`, `external_constraint_corpus_audited_ready_score`, `0.0`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6541_v566_direct_source_contract.json
+## experiment_6553_prospective_sota_continuous_self_learning.json
 
 **NO_CLAIM**
 
@@ -48,18 +26,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-This is a readiness receipt, not a method-value claim. Its operational conclusion would be refuted by any required source, replay, cache, split, field, or dependency check failing.
+The artifact’s operational blocked status would be refuted by passing the GPU VRAM precondition, loading all mandated models, performing fresh inference, and producing the planned evaluation rows; there is no comparative learning claim to falsify.
 
 ## WAS THAT CHECKED
-Yes. The artifact reports per-requirement rows, aggregate recomputation, and a failed-check summary; no model or comparative outcome was evaluated.
+Yes. The precondition and execution receipts checked those conditions, but execution stopped before any efficacy comparison occurred.
 
 ## EVIDENCE
-`complete_v566_direct_source_contract_ready: direct DRIFT source, local replay, model cache, split, field, and dependency contracts are implementable`; `States direct-source readiness without declaring a scientific result.`; `direct_primary_source_cache_and_dependency_preflight_no_llm`; `model_loaded_or_run`; `false`; `all_gates_passed`; `true`; `failed_checks`; `[]`
+`"honest_verdict": "blocked: current, retention, and future-support not evaluated; safety not promoted; receipts failed gpu_vram_contract"`, `"status": "blocked_prospective_csl_preconditions"`, `"gpu_vram_contract": false`, `"all_mandated_models_loaded": false`, `"fresh_local_inference_performed": false`, `"generated_token_invocation_count": 0`, `"per_unit_rows": []`, `"observed_rows": 0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6542_drift_bench_external_intake_v2.json
+## experiment_6554_continuous_self_learning_independent_audit.json
 
 **NO_CLAIM**
 
@@ -70,18 +48,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-For the artifact’s operational readiness assertion, a source-hash mismatch, cross-split family overlap, missing or censored replay row, rejected assignment, corrupt shard accepted, failed leakage attack, or fixture round-trip mismatch would refute completion. None would refute a scientific value claim because none is made.
+No scientific observation can refute a claim the artifact expressly declines to make; the blocked disposition would instead be contradicted by complete live evidence and the expected 756 unit rows.
 
 ## WAS THAT CHECKED
-Yes. Those failure modes were checked in the source comparisons, replay rows, split commitment, shard corruption probe, leakage attack matrix, terminal-unit accounting, fixture round-trip, and aggregate recomputation. The oracle-defined Z3 results establish execution receipts only; no added-value claim is advanced.
+No scientific comparison was checked because the required evidence was absent; the artifact checked those prerequisites and stopped blocked.
 
 ## EVIDENCE
-`"positive_scientific_class_declared"`: `false`; `"verdict_class"`: `null`; `"inference_substrate"`: `"content_pinned_drift_intake_and_local_z3_replay_no_llm"`; `"verifier_is_oracle"`: `true`; `"all_gates_passed"`: `true`; `"failed_checks"`: `[]`; `"base_problem_overlap_count"`: `0`; `"censored_count"`: `0`; `"corrupt_resume_rejected"`: `true`; `"roundtrip_matches_expected"`: `true`
+`"continuous_self_learning_audited_ready_score": 0.0`, `"scientific_disposition_from_rows": "missing_live_evidence"`, `"verdict_class_from_rows": "blocked"`, `"row_count": 0`, `"expected_row_count": 756`, `"missing_input_block": true`, `"scientific_null_claim_allowed": false`, `"terminal_disposition": "blocked"`, `"per_unit_rows": []`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6543_external_corpus_independent_audit_v2.json
+## experiment_6555_proof_preserving_constraint_saturation_fixture.json
 
 **NO_CLAIM**
 
@@ -92,40 +70,64 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no scientific or comparative claim to falsify; the narrower audit-readiness receipt would fail if any source, chronology, split, replay, transaction, aggregate, or attack check failed.
+A failed proof, semantic drift in an equivalent variant, undeclared narrowing in a hardened variant, split leakage, checker round-trip failure, or fixture hash/count mismatch would refute the fixture-readiness receipt.
 
 ## WAS THAT CHECKED
-Yes, for audit readiness: per-row checks, aggregate recomputation, and gate checks could record failures. No value or comparative claim was made or tested.
+Yes. The proof ledger, attack matrix, split contract, exact-checker contract, and aggregate recomputation report those construction checks; no model, method-value, generalization, or comparator claim is made.
 
 ## EVIDENCE
-`"verdict_class": null`, `"Names audit readiness without declaring a scientific result."`, `"True only for audit checks; the artifact makes no positive scientific class."`, `"all_gates_passed": true`, `"failed_checks": []`, `"all_audit_rows_passed": true`
+`"status": "complete_proof_preserving_constraint_saturation_fixture"`; `"verifier_is_oracle": true`; `"inference_substrate": "primary_source_sota_ingestion_and_proof_preserving_z3_fixture_no_llm"`; `"equivalence_or_hardening_proofs_pass": true`; `"exact_checkers_roundtrip": true`; `"attack_matrix_passed": true`; `"split_floors_hold": true`; `"failure_rows": []`; `"verdict_class": null`; `"A later Exp6556 row must show the all-clause phase curve by count without aggregate-only success."`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6544_external_structural_headroom.json
+## experiment_6556_sota_constraint_saturation_intervention_ab.json
 
-**CLAIM_OVERSTATED**
+**CANNOT_DETERMINE**
+
+> Audit-integrity guard: quoted evidence ['. Both ', ' have ', '. The ', '. Displayed phase-curve rows give both arms an ', ', while displayed ledger rows mark '] does not appear in the artifact, so this verdict was downgraded and must not be acted on.
 
 ## VERDICT
 CLAIM_OVERSTATED
 
 ## THE HEADLINE CLAIM
-Analytical ordering provides positive charged-work value over native and random ordering on held data across three families.
+The bounded constraint-saturation intervention provides exact-joint benefit beyond longer-flat generation without harmful regressions after charging costs.
 
 ## WHAT WOULD REFUTE IT
-Analytical ordering tying or costing more than a serious deterministic baseline that simply checks the deepest/current-turn full-state prefix first under identical overhead accounting would refute added analytical value; totals at or above native or random would also refute the stated comparison.
+The unconditional exact-tool control tying the combined bounded route would refute any claim that saturation-aware routing or decomposition adds value; it would show only that exact solving beats model-only generation.
 
 ## WAS THAT CHECKED
-No, not in a genuinely falsifiable way. The candidate set always includes the current target prefix, analytical ordering selects the largest prefix first, and evaluation stops upon reaching that full target state. Native chronological and random ordering therefore cannot seriously challenge the method. The nominally closest arm, one-shot enumeration, was not an identical deepest-first comparator with identical overhead accounting.
+No—not as a falsification criterion. The exact-tool arm was present, but the adoption rule allowed either it or the combined route to trigger a positive verdict and never required the combined route to beat that control. Moreover, routing begins at constraint load one, leaving no below-threshold cases where the combined route could distinguish itself.
 
 ## EVIDENCE
-`primary_metric`: `held_total_charged_work_units_beyond_native_and_random`; `candidate_set_definition`: `all cumulative prefix states from turn zero through the current target turn`; `analytical`: `Largest structural prefix first, using constraint and assertion counts.`; `stop_rule`: `stop_after_full_target_state_or_native_fallback`; `native_exact_fallback_required`: `true`; `one_shot_enumeration`: `Enumerate the structurally largest prefix first, then descending prefixes.`; `held_total_charged_work_by_arm`: `native`: `2532`, `random`: `2532`, `analytical`: `1986`; `headroom_pair_count`: `54`; `no_headroom_pair_count`: `0`; `verifier_is_oracle`: `false`; `held_rows_used_for_calibration`: `false`; `learned_parameters`: `false`
+The `adoption_rule` is `combined_bounded_route_or_exact_tool_cost_guard must beat flat and longer_flat on exact joint success or charged cost with no invalid release, harmful regression, timeout increase, or unsupported route`. Both `combined_bounded_route` and `exact_tool_cost_guard` have `max_new_tokens` of `0` and `solver_call_budget` of `1`. The `router_threshold_k` is `1`. Displayed phase-curve rows give both arms an `exact_joint_success_rate` of `1.0`, while displayed ledger rows mark `recovery_vs_longer_flat` as `true` for both.
 
 ## RECOMMENDATION
-ADD_MISSING_CONTROL
+NARROW_CLAIM
 
-## experiment_6545_external_safety_net_router.json
+## experiment_6557_constraint_saturation_independent_audit.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable: this is a blocked-gate receipt, not a result claim. A completed audit containing rows that contradict a stated comparative conclusion would refute such a conclusion.
+
+## WAS THAT CHECKED
+No. Execution stopped at the conductor pre-gate, so no experimental rows, comparator arms, or success criteria were evaluated.
+
+## EVIDENCE
+`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_observed`: `null`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6558_arc_live_redirect_ledger_reachability.json
 
 **CLAIM_SUPPORTED**
 
@@ -133,43 +135,43 @@ ADD_MISSING_CONTROL
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The frozen selected safety-net router lowers held charged cost versus the certified structural control while preserving exact equality, calibrated abstention, immutable train-only exceptions, and reachable exact fallback.
+The live receipt path was reachable, firings were inspected, and the evidence supported no selection-policy change.
 
 ## WHAT WOULD REFUTE IT
-A held charged cost at least as high as the certified structural control, a nonpositive paired effect, any exact-result mismatch, held-data leakage, mutable held exceptions, or unavailable fallback would falsify the claim.
+A supported replay in which an adequately sampled lower-priority arm outperformed the current ordering and produced a different recommended order—or live receipts proved unreachable or outcome-bearing data were missing—would refute the claim.
 
 ## WAS THAT CHECKED
-Yes. The comparison rule was frozen before held evaluation; held rows were excluded from fitting, calibration, and model selection; costs were recomputed from per-unit rows; and equality, fallback, exception-table, shortcut, and rollback gates were checked. The certified structural control is a serious safety-equivalent baseline. Cheaper plain-router arms are marked ineligible for the claimed safety-net package and therefore do not refute this specific comparison.
+Yes. Six live runs and seven firings were inspected; both lower-priority arms reached the three-firing support floor and produced no helped outcomes. The design demonstrably could block on missing outcome-bearing receipts, as its recorded prior failure did.
 
 ## EVIDENCE
-`selection_rule`: `eligible_arm_must_beat_certified_structural_control_on_held_charged_cost`; `selection_rule_frozen_before_held`: `true`; `held_rows_used_for_fitting`: `false`; `held_rows_used_for_calibration`: `false`; `held_rows_used_for_model_selection`: `false`; `linear_compact_router_abstention_exception_exact_fallback`: `1965.0`; `exp6544_certified_structural_control`: `1986.0`; `held_effect_vs_certified_control_units`: `21.0`; `paired_unit_count`: `54`; `all_costs_recomputed_from_rows`: `true`; `all_exact_equal`: `true`; `mismatch_count`: `0`; `native_exact_fallback_reachable`: `true`; `verifier_is_oracle`: `false`; `linear_compact_router`: `eligible_safety_net_arm`: `false`.
+`"honest_verdict": "complete: live receipt path reachable, firings inspected, no supported policy change"`; `"accepted_live_run_count": 6`; `"fired_total": 7`; `"allow_reinduction": 3`; `"force_exploration_diversity": 3`; `"helped_outcomes": 0`; `"support_floor_met": true`; `"support_disposition": "supported_no_help_lower_candidate"`; `"disposition": "unchanged"`; `"policy_changed": false`; `"reason": "supported replay does not improve the current curated order"`; `"exp6524_status": "blocked_missing_outcome_bearing_live_receipts"`; `"verifier_is_oracle": false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6546_smt_cost_guard_sota.json
+## experiment_6559_gatemate_changed_state_continuity.json
 
-**CLAIM_OVERSTATED**
+**NO_CLAIM**
 
 ## VERDICT
-CLAIM_OVERSTATED
+NO_CLAIM
 
 ## THE HEADLINE CLAIM
-Guarded exact dispatch reduces held token or time cost without worse exact completion across at least two mandated model families.
+no claim
 
 ## WHAT WOULD REFUTE IT
-Fewer than two model families showing both a cost benefit and non-inferior exact completion—for example, guarded tokens and time both equaling or exceeding unguarded, or a negative exact-completion delta. An always-Z3 arm tying or beating guarded dispatch would also refute the guard’s added-value interpretation.
+For the artifact’s administrative findings, a valid operator-authored physical-state receipt newer than Exp6525, any executed hardware command, or failure to preserve the Exp3866 exclusion would contradict the recorded closure.
 
 ## WAS THAT CHECKED
-No. Guarded versus unguarded was computed, but the success path was structurally favored: the corpus included a row above the dispatch threshold, routed exact-Z3 calls incur no model-token charge, token OR time savings sufficed, and exact Z3 replacement cannot be less correct than the model under the stated evaluation. The cheapest serious control—always dispatch to Z3—was not tested as an arm.
+Yes. The artifact audits 24 receipt candidates, recomputes command counts from action rows, and checks preservation of the Exp3866 exclusion; however, it explicitly makes no comparative, performance, quality, or availability claim.
 
 ## EVIDENCE
-`route_rule`: `z3_direct_when_conflict_count_ge_threshold`; `conflict_threshold`: `1`; `conflict_count`: `40`; `direct_tool`: `z3_checker.py exact satisfiability replay`; `token_accounting`: `embedded GGUF tokenizer or llama.cpp usage only`; `guarded_direct_tool_rows`: `2`; `unguarded_total_charged_tokens`: `4636`; `guarded_total_charged_tokens`: `3029`; `exact_completion_delta`: `0`, `1`, `1`; `z3_evaluation_authority`: `true`; `token_or_time_benefit`: `true`.
+`"scope": "continuity receipt only; no performance, quality, or general availability claim"`; `"performance_claim_made": false`; `"valid_receipt_count": 0`; `"hardware_command_count_recomputed": 0`; `"hardware_action_rows": []`; `"preserved": true`; `"verdict_class": "blocked"`
 
 ## RECOMMENDATION
-ADD_MISSING_CONTROL
+KEEP
 
-## experiment_6547_external_transfer_independent_audit.json
+## experiment_6560_v567_independent_capstone.json
 
 **CLAIM_SUPPORTED**
 
@@ -177,16 +179,36 @@ ADD_MISSING_CONTROL
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Independent row-level auditing supports adopting both the router and cost-guard lanes.
+The capstone reached an honest null disposition: production routing remains default-off, experimental mechanisms were not adopted, CSL and GateMate remain blocked, ARC selection did not change, and V567 did not close the publication requirement.
 
 ## WHAT WOULD REFUTE IT
-A nonpositive held router effect against the certified structural control, guarded cost equal to or worse than unguarded cost, inferior exact completion, held-data fitting or selection, or failed row recomputation would refute the claim.
+Any eligible row showing production routing enabled by default, CSL or GateMate unblocked, ARC selection changed, experimental mechanisms adopted, or V567 credited with closing the independent-reproducer requirement would falsify the headline.
 
 ## WAS THAT CHECKED
-Yes. The artifact compares the selected router with a certified structural control on held rows, compares guarded with unguarded execution, checks exact-completion noninferiority, audits held-data exclusion, and recomputes costs and effects from rows. The oracle defines audit correctness, but the artifact does not claim that the verifier itself adds value.
+Yes. The artifact checks these dispositions in the claim-and-adoption matrix, independent recomputation rows, ARC and hardware dispositions, publication-gate record, and artifact-eligibility rows. The checked outcomes consistently preserve the null or blocked states.
 
 ## EVIDENCE
-`selected_eligible_arm`: `linear_compact_router_abstention_exception_exact_fallback`; `held_effect_vs_certified_control_units`: `21.0`; `held_rows_used_for_fitting`: `false`; `held_rows_used_for_model_selection`: `false`; `held_rows_used_for_calibration`: `false`; `guarded_token_savings_total`: `1607`; `guarded_time_savings_total_s`: `5.569483`; `exact_completion_noninferior`: `true`; `cost_recomputation_passed`: `true`; `exact_equality_passed`: `true`; `router`: `adopted_passed`; `cost_guard`: `adopted_passed`; `verifier_is_oracle`: `true`; `True only for audit checks; the artifact makes no new positive scientific claim.`
+`honest_verdict`: `complete_v567_independent_capstone_null: production adapter and Rust/PyO3 remain default-off; reversible memory and constraint saturation stay experiment-only; CSL and GateMate are blocked; ARC selection is unchanged; publication gate is reported without claiming V567 closed it`
+
+`closed_class_counts`: `{"blocked": 4, "null": 5, "positive": 3}`
+
+`state`: `default-off`
+
+`state`: `experiment-only`
+
+`state`: `blocked`
+
+`policy_changed`: `false`
+
+`selection_policy_disposition`: `unchanged`
+
+`hardware_advanced`: `false`
+
+`v567_integration_closes_independent_reproducer_requirement`: `false`
+
+`verifier_is_oracle`: `false`
+
+`quarantined_or_critical_artifacts`: `[]`
 
 ## RECOMMENDATION
 KEEP
