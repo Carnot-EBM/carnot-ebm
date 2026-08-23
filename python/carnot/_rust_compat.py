@@ -30,9 +30,13 @@ try:
         RustOneAxisTemperingConfig,
         RustOneAxisTemperingCore,
         RustOneAxisTemperingState,
+        RustSafetyNetFeatureRequest,
+        RustSafetyNetRouter,
+        RustSafetyNetRoutingDecision,
         RustS2KANLayer,
         RustVerificationResult,
         RustVerifyPipeline,
+        safety_net_route_bytes,
     )
 
     RUST_AVAILABLE = True
@@ -52,9 +56,13 @@ except ImportError:
     RustOneAxisTemperingConfig = None  # type: ignore[assignment,misc]
     RustOneAxisTemperingCore = None  # type: ignore[assignment,misc]
     RustOneAxisTemperingState = None  # type: ignore[assignment,misc]
+    RustSafetyNetFeatureRequest = None  # type: ignore[assignment,misc]
+    RustSafetyNetRouter = None  # type: ignore[assignment,misc]
+    RustSafetyNetRoutingDecision = None  # type: ignore[assignment,misc]
     RustS2KANLayer = None  # type: ignore[assignment,misc]
     RustVerifyPipeline = None  # type: ignore[assignment,misc]
     RustVerificationResult = None  # type: ignore[assignment,misc]
+    safety_net_route_bytes = None  # type: ignore[assignment,misc]
 
 __all__ = [
     "RUST_AVAILABLE",
@@ -72,7 +80,11 @@ __all__ = [
     "RustOneAxisTemperingConfig",
     "RustOneAxisTemperingCore",
     "RustOneAxisTemperingState",
+    "RustSafetyNetFeatureRequest",
+    "RustSafetyNetRouter",
+    "RustSafetyNetRoutingDecision",
     "RustS2KANLayer",
     "RustVerificationResult",
     "RustVerifyPipeline",
+    "safety_net_route_bytes",
 ]

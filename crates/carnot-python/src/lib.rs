@@ -16,6 +16,7 @@ mod mode_jump;
 mod one_axis_tempering;
 mod pipeline;
 mod s2kan;
+mod safety_net;
 mod verification_learning;
 
 use carnot_boltzmann::{
@@ -463,6 +464,9 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     // Fixed Exp6166/Exp6180 mode-jump sampler
     mode_jump::register_mode_jump_module(m)?;
+
+    // Compact Safety-Net router ABI
+    safety_net::register_safety_net_module(m)?;
 
     Ok(())
 }

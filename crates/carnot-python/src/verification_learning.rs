@@ -1,7 +1,7 @@
 use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
 
-use carnot_core::verification_learning::{VerificationLearningProxy, VlConstraint, UnlabelledData};
+use carnot_core::verification_learning::{UnlabelledData, VerificationLearningProxy, VlConstraint};
 
 #[pyclass(name = "RustVerificationLearningProxy")]
 pub struct PyVerificationLearningProxy {
@@ -18,10 +18,12 @@ impl PyVerificationLearningProxy {
         if let Some(py_constraints) = constraints {
             for item in py_constraints.iter() {
                 if let Ok(dict) = item.downcast::<PyDict>() {
-                    let c_type = dict.get_item("type")?
+                    let c_type = dict
+                        .get_item("type")?
                         .and_then(|v| v.extract::<String>().ok());
-                    
-                    let c_value = dict.get_item("value")?
+
+                    let c_value = dict
+                        .get_item("value")?
                         .and_then(|v| v.extract::<String>().ok())
                         .unwrap_or_else(|| "".to_string());
 
@@ -35,15 +37,19 @@ impl PyVerificationLearningProxy {
         })
     }
 
-    fn score_constraint_satisfaction<'py>(&self, py: Python<'py>, unlabelled_data: &Bound<'py, PyList>) -> PyResult<Bound<'py, PyDict>> {
+    fn score_constraint_satisfaction<'py>(
+        &self,
+        py: Python<'py>,
+        unlabelled_data: &Bound<'py, PyList>,
+    ) -> PyResult<Bound<'py, PyDict>> {
         let rs_data = parse_unlabelled_data(unlabelled_data)?;
         let scores = self.inner.score_constraint_satisfaction(&rs_data);
-        
+
         let py_dict = PyDict::new(py);
         for (k, v) in scores {
             py_dict.set_item(k, v)?;
         }
-        
+
         Ok(py_dict)
     }
 
@@ -57,11 +63,13 @@ fn parse_unlabelled_data(py_list: &Bound<'_, PyList>) -> PyResult<Vec<Unlabelled
     let mut rs_data = Vec::new();
     for item in py_list.iter() {
         if let Ok(dict) = item.downcast::<PyDict>() {
-            let id = dict.get_item("id")?
+            let id = dict
+                .get_item("id")?
                 .and_then(|v| v.extract::<String>().ok())
                 .unwrap_or_else(|| "unknown".to_string());
-                
-            let text = dict.get_item("text")?
+
+            let text = dict
+                .get_item("text")?
                 .and_then(|v| v.extract::<String>().ok())
                 .unwrap_or_else(|| "".to_string());
 
