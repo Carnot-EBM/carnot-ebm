@@ -36473,3 +36473,119 @@ the V567 search, but the local catalog did not contain them.
   issue no command without a changed physical receipt.
 
 <!-- V568-PLANNER-REFRESH-20260823-END -->
+
+## V569 planner refresh - 2026-08-23
+
+<!-- V569-PLANNER-REFRESH-20260823-START -->
+
+This refresh follows the four terminal V568 artifacts. It rechecks the requested
+2025-2026 arXiv topics and the named secondary sources. Exact executable checks
+remain the only release authority. Learned methods may schedule, propose, or
+abstain. They may not certify their own output.
+
+### Promising findings selected for V569
+
+- **Efficient RLVR Scheduling via Graph-Structured Online Difficulty
+  Estimation** - arXiv:2608.17941,
+  https://arxiv.org/abs/2608.17941; submitted 2026-08-18. The method connects
+  related samples in a difficulty graph, gives latent difficulty states a
+  Potts prior, models observed outcomes with Beta-Binomial likelihoods, and
+  updates estimates online with mean-field inference. Carnot hook: build the
+  graph only from frozen executable constraint features. Compare a graph-Potts
+  selector with uniform, recent-failure, and contextual-bandit selectors on
+  one chronological stream. Exact replay supplies every outcome. Report cold
+  start, future support, retention, cost, restart, and rollback. Do not import
+  its policy-training claim or let model identity enter the graph.
+- **Continual Reasoning Gym: Diagnosing and Harnessing Shared Reasoning in
+  Continual RLVR** - arXiv:2608.18574,
+  https://arxiv.org/abs/2608.18574; submitted 2026-08-19 and revised
+  2026-08-20. The paper reports modest but persistent forgetting under
+  sequential RLVR and finds that Continual Prompt Replay approaches its
+  multitask control on average. Carnot hook: include a matched-dose replay or
+  co-observation control in the graph-Potts experiment. Keep model weights
+  frozen. Measure retained-family performance and future exact-satisfying
+  support instead of reporting current-task gain alone.
+- **Formal Performance and Compile Time Guarantees for Compiler Optimization
+  Heuristics** - arXiv:2608.20137,
+  https://arxiv.org/abs/2608.20137; submitted 2026-08-20. The work formalizes
+  semantic preservation, monotone improvement, convergence, and performance
+  bounds for a compiler heuristic in Rocq. Carnot hook: give the production
+  exact-verifier call plan an explicit semantic-preservation and charged-cost
+  contract. Use this as a design control for a fused Rust workload, not as
+  evidence that Carnot meets NFR01.
+
+### Controls and non-promotions
+
+- **Stopping and Routing LLM Judge Panels** - arXiv:2608.19802,
+  https://arxiv.org/abs/2608.19802. This source was already cataloged. Its
+  copy, complement, and slice-specialist labels remain useful for deciding
+  whether another checker adds held value. V568 found no measured production
+  routing benefit. V569 therefore uses stopping as a retirement control and
+  does not reopen an LLM-judge panel or learned release-verifier lane.
+- **Verifier-Induced Support Reshaping in On-Policy Optimization** -
+  arXiv:2608.00220, https://arxiv.org/abs/2608.00220. The current-task and
+  best-of-k divergence remains the key warning for online updates. V569 records
+  future support after every admitted memory update and keeps weights frozen.
+- **How Powerful are LLMs in Generating Formal Program Specifications?** -
+  arXiv:2608.13077, https://arxiv.org/abs/2608.13077. Coins supports executable
+  proof obligations, but V568 correctly held it outside the retired generated
+  ConstraintIR and schema-reprompt lanes. V569 uses a new source-span-bound
+  proof-obligation mechanism on the existing pinned constraint corpus. It does
+  not reproduce Coins or revive schema-only reprompting.
+
+### Requested secondary and product checks
+
+- **OpenReview:** current 2025-2026 records include a broad solver-verifier
+  interaction study across many models and tasks, and exact-feasibility work
+  such as Bisection Projection. They support held slices and hard
+  postconditions. They do not supply an oracle-distinct learned release
+  verifier for Carnot. No OpenReview result reopens external text scoring.
+- **Hugging Face Papers:** the current verification feed highlights verifier-
+  induced support reshaping, VeRA, and verifier-backed hard-problem generation.
+  The actionable controls are executable variants, independent checking, and
+  future-support measurement. An LLM-as-a-verifier remains a comparator, not
+  release authority.
+- **Semantic Scholar:** direct public API calls returned 35 citing records for
+  EBT (`2507.02092`) and eight for ARM-EBM (`2512.15605`) on 2026-08-23. The
+  newest relevant records remain the already cataloged Memoir, Solver-Hard,
+  Distributional EBMs, and Fixed-Point Reasoners. No citation provides a
+  public matching-base checkpoint or a stronger local exact-authority path.
+- **GitHub Trending and targeted repositories:** the weekly Python board and
+  targeted EBM, constraint, KAN, and verifier searches produced no stronger
+  dependency than Carnot's pinned DRIFT corpus and installed exact solver
+  stack. Do not add a repository for novelty alone.
+- **Extropic:** the first-party August update at
+  https://extropic.ai/writing/from-one-to-one-billion reports a taped-out Z1
+  with 269,568 p-bits, 16-neighbor connectivity, a sampling rate above 50 MHz,
+  and power below one watt. It targets early access in 2027. Carnot has no
+  authenticated device or API route. Schedule no TSU execution, latency,
+  power, or availability claim.
+- **Logical Intelligence:**
+  https://logicalintelligence.com/kona-ebms-energy-based-models still presents
+  Kona as a global constraint layer but exposes no weights, reproducible
+  training recipe, or documented local runner. Kona remains a product
+  comparator only.
+- **KAN, Ising, FPGA, and thermodynamic sampling:** no new public result
+  changes the local execution boundary. The next Ising-shaped experiment is
+  the graph-Potts curriculum selector on CPU/GPU software. It makes no FPGA or
+  TSU speed claim. KAN training stays closed because the current gaps are
+  evidence, extraction, and live SOTA admission rather than compact-function
+  approximation.
+
+### V569 planning impact
+
+- Repair V568's disqualified evidence chain with immutable raw rows, exact
+  replay, live model receipts, and recomputable charged costs.
+- Test a source-span-bound proof-obligation extractor instead of another
+  generated ConstraintIR or schema-reprompt attempt.
+- Admit all three mandated GGUF families sequentially before any headline LLM
+  run. A smoke model cannot satisfy admission.
+- Run graph-Potts continuous self-learning prospectively with matched-dose
+  controls, frozen within-query memory, exact commit, retention, future
+  support, restart, and rollback.
+- Give one fused Rust exact-verification workload a final NFR01 test. Retire
+  the path if the changed mechanism again has no measured benefit.
+- Keep ARC work on prospective live supervisor receipts. Keep attached boards
+  at receipt-gated continuity and issue no unchanged hardware command.
+
+<!-- V569-PLANNER-REFRESH-20260823-END -->
