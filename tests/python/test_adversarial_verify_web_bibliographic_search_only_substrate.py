@@ -49,6 +49,10 @@ class TestIsWebBibliographicSearchOnly:
         d = {"inference_substrate": "source_receipts_and_local_method_preregistration_no_llm"}
         assert av._is_web_bibliographic_search_only(d) is True
 
+    def test_recognizes_low_concurrency_primary_source_ingestion_alias(self) -> None:
+        d = {"inference_substrate": "low_concurrency_primary_source_ingestion_no_experimental_llm"}
+        assert av._is_web_bibliographic_search_only(d) is True
+
     def test_does_not_match_generic_live_llm_inference(self) -> None:
         d = {"inference_substrate": "live_llm_inference"}
         assert av._is_web_bibliographic_search_only(d) is False
@@ -72,6 +76,15 @@ class TestDurationFloorForArtifact:
         floor = av.duration_floor_for_artifact(d)
         assert floor == {
             "substrate": "source_receipts_and_local_method_preregistration_no_llm",
+            "min_duration_s": 0.0001,
+            "reason": "web_bibliographic_search_only",
+        }
+
+    def test_returns_the_near_zero_floor_for_low_concurrency_source_ingestion(self) -> None:
+        d = {"inference_substrate": "low_concurrency_primary_source_ingestion_no_experimental_llm"}
+        floor = av.duration_floor_for_artifact(d)
+        assert floor == {
+            "substrate": "low_concurrency_primary_source_ingestion_no_experimental_llm",
             "min_duration_s": 0.0001,
             "reason": "web_bibliographic_search_only",
         }
@@ -115,6 +128,27 @@ class TestExp5718Exp5732IncidentReproduction:
         assert "METHODOLOGY_MISSING" not in flags_by_kind or "model_specs" not in flags_by_kind[
             "METHODOLOGY_MISSING"
         ].get("detail", "")
+
+    def test_exp6515_low_concurrency_source_ingestion_needs_no_model_specs(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        payload = {
+            "experiment": "experiment_6515_v564_source_method_contract",
+            "honest_verdict": "complete_v564_source_method_contract_ready",
+            "inference_substrate": "low_concurrency_primary_source_ingestion_no_experimental_llm",
+            "duration_s": 9.5,
+            "source_rows": [
+                {"note": "paper-only source ingestion mentions CUDA or model names as boundaries"}
+            ],
+            "random_seed": 6515,
+            "reproducibility_checksum": "abc123",
+        }
+        report = _report_for_payload(tmp_path, payload)
+        flags = _flag_kinds(report)
+        assert "SUBSTRATE_HAS_NO_DURATION_FLOOR" not in flags
+        assert "DURATION_TOO_SHORT" not in flags
+        assert "METHODOLOGY_MISSING" not in flags
 
     def test_full_generation_claim_still_needs_the_60s_floor(self, tmp_path: Path) -> None:
         """Regression guard: declaring the new substrate must not become a loophole for
