@@ -31,7 +31,9 @@ def test_req_verify_4437_spec_declares_template_lint_and_floors() -> None:
         "aggregation_from_upstream_artifacts",
         "verifier_ensemble_against_cached_candidates",
         "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+        "live_arc_trajectory_supervisor_receipt_replay_no_llm",
         "live_llm_inference",
+        "blocked:",
         "experiment_4437_arc_artifact_discipline_template.json",
     ):
         assert marker in spec
@@ -77,6 +79,31 @@ def test_req_verify_4437_helper_accepts_arc_live_agent_no_llm_substrate() -> Non
 
     assert artifact["inference_substrate"] == discipline.ARC_LIVE_AGENT_NO_LLM_SUBSTRATE
     assert discipline.duration_floor_s(discipline.ARC_LIVE_AGENT_NO_LLM_SUBSTRATE) == 0.01
+    assert discipline.validate_arc_solve_artifact(artifact) == []
+
+    too_short = dict(artifact, duration_s=0.0)
+    assert [issue.kind for issue in discipline.validate_arc_solve_artifact(too_short)] == [
+        "DURATION_BELOW_SUBSTRATE_FLOOR"
+    ]
+
+
+def test_req_verify_4437_helper_accepts_supervisor_receipt_replay_substrate() -> None:
+    """REQ-VERIFY-4437: blocked no-solve ARC receipt replay is terminal and canonical."""
+
+    artifact = discipline.build_arc_solve_artifact(
+        experiment="experiment_6524_arc_supervisor_redirect_generalization",
+        honest_verdict="blocked: missing outcome-bearing live trajectory-supervisor receipts",
+        inference_substrate=discipline.ARC_SUPERVISOR_RECEIPT_REPLAY_SUBSTRATE,
+        duration_s=0.02,
+        artifact_kind="arc_generalization_receipt_replay",
+        result_path="results/experiment_6524_arc_supervisor_redirect_generalization.json",
+        extra_fields={"verifier_is_oracle": False, "solve_claim": False},
+    )
+
+    assert artifact["inference_substrate"] == discipline.ARC_SUPERVISOR_RECEIPT_REPLAY_SUBSTRATE
+    assert discipline.duration_floor_s(discipline.ARC_SUPERVISOR_RECEIPT_REPLAY_SUBSTRATE) == 0.01
+    assert discipline.terminal_prefixed("blocked: missing receipts") is True
+    assert discipline.terminal_prefixed("blocked_missing_receipts") is True
     assert discipline.validate_arc_solve_artifact(artifact) == []
 
     too_short = dict(artifact, duration_s=0.0)

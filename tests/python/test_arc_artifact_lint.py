@@ -127,6 +127,25 @@ def test_req_verify_4437_lint_accepts_arc_live_agent_no_llm_substrate(
     assert lint.lint_paths([artifact]) == []
 
 
+def test_req_verify_4437_lint_accepts_arc_supervisor_receipt_replay_substrate(
+    tmp_path: Path,
+) -> None:
+    """REQ-VERIFY-4437: Exp6524 blocked no-solve receipt replay passes ARC lint."""
+
+    artifact = _write_json(
+        tmp_path / "results" / "experiment_6524_arc_supervisor_redirect_generalization.json",
+        {
+            "honest_verdict": "blocked: missing outcome-bearing live trajectory-supervisor receipts",
+            "duration_s": 0.02,
+            "inference_substrate": discipline.ARC_SUPERVISOR_RECEIPT_REPLAY_SUBSTRATE,
+            "verifier_is_oracle": False,
+            "solve_claim": False,
+        },
+    )
+
+    assert lint.lint_paths([artifact]) == []
+
+
 def test_req_verify_4437_lint_accepts_principle_wrapped_arc_fields(
     tmp_path: Path,
 ) -> None:
