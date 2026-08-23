@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.566",
+  "generated_at": "2026-08-23T12:28:27Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 6.6,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "SMT-conflict inference-cost stress and exact-tool guard on mandated SOTA GGUFs",
+      "duration_minutes": 5.53,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V566 direct-source, model-cache, and dependency contract",
+      "duration_minutes": 0.88,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Content-pinned DRIFT-Bench external intake v2",
+      "duration_minutes": 0.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Independent DRIFT corpus provenance, chronology, and replay audit v2",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "External exact structural-control headroom comparison",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Seven experiments completed in 6.6 minutes, and three were compute-bound. The 5.53-minute SMT-conflict inference-cost stress and exact-tool guard was the clear timing tail; the task-conditioned GPU-idle field was false.",
+  "bottlenecks_identified": [
+    "The 5.53-minute SMT-conflict inference-cost stress and exact-tool guard occupied most of the 6.6-minute milestone window and formed the primary critical path.",
+    "The timing data has no phase-level split for model loading, cache access, inference, SMT work, or exact-tool validation, so it cannot establish why the longest compute-bound task took 5.53 minutes.",
+    "The top-five timing list contains two compute-bound rows although the locked count is three, and it has no task-window GPU or runner receipt; the third compute task and accelerator dispatch cannot be audited from the supplied data."
+  ],
+  "improvements_suggested": [
+    "Add monotonic phase timers and a warm model-cache and dependency preflight to the GGUF compute harness so setup, inference, SMT work, and exact-tool validation have separate timings.",
+    "Record GPU utilization inside each compute-bound task window and bind every sample to the task title and compute-bound marker.",
+    "Emit model-count, concurrency, and runner-selection receipts; use DualGPURunner only for parallel multi-model work."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile the 5.53-minute stress-and-guard path by phase, then reuse validated model-cache and dependency preflight receipts.",
+    "Capture task-scoped GPU duty-cycle telemetry for every compute-bound task.",
+    "Make model count and concurrency explicit at dispatch, with conditional DualGPURunner selection for parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Disk-mtime reconstruction ranks the visible tasks but cannot prove the cause of the 5.53-minute tail or whether the 0% GPU snapshot overlapped compute. The locked false GPU-idle classification remains unchanged, and no data available this milestone establishes parallel multi-model loading or a missed DualGPURunner engagement."
+}

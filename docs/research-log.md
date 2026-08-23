@@ -6283,3 +6283,10 @@ The critical path for milestone .250:
 - theme: contract and provenance synthesis formed a short milestone with only file-timestamp reconstruction
 - key result: the evidence contains no compute work, so accelerator efficiency and concurrent-model dispatch have no applicable task
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.566
+
+- exp_range: no data available this milestone
+- theme: one GGUF stress-and-guard task dominated a short compute-and-synthesis run
+- key result: the longest compute task is identified, but phase causes and concurrent multi-model runner use have no data available this milestone; the locked GPU-idle-on-compute field is false
+- acceptance: no data available this milestone
