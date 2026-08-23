@@ -241,3 +241,25 @@ an edit its own brief forbade IT from making, and adding a forbidden
 skipif to a test). Only commits protect work here — the
 commit-first discipline is not optional, and narrow pathspec commits plus
 immediate re-verification after every landing are the working method.
+
+## 7. APPENDED same day: the adversarial review and its outcomes
+
+A fresh-context hostile reviewer attacked the shipped work (the
+"gratuitous adversarial self review" the directive asked for). Full
+record: the ADVERSARIAL REVIEW 2026-08-23 section of
+`openspec/capabilities/research-harnesses/spec.md`. Ten findings were
+acted on with tests and mutation proofs (port-less-server fail-open;
+kill-path TOCTOU; import-crash exec loop; auto-start overriding
+deliberate stops — now two-cycle confirmed plus
+`scripts/conductor-stop.sh`; unread authority receipt; dropped temp-dir
+log fallback; zero-rows skeleton blind spot; retroactive global arming;
+REAPED records for kills that did not land; ledger aging dependent on
+milestone closes). Four were recorded as deliberate limits: discovery
+breadth (`python -m` / Kaggle kernel / vLLM invisible — vLLM orphans
+stay human-handled until a sweep-backed widening), remote-port false
+dead-port evidence (bounded by the rows conjunction and the disarmed
+default), fresh-exec silence under a chronically dirty tree, and
+orphaned children of a stopped run (existing janitor reap covers them).
+Section 4's "not built" list is corrected by this appendix: the
+zero-rows widening and janitor-scheduled ledger WERE subsequently built
+in response to the review.
