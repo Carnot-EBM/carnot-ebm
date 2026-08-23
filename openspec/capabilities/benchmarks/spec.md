@@ -4914,3 +4914,160 @@ through the module CLI.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-BENCH-6547 | Planned (`python/carnot/experiment_6547_external_transfer_independent_audit.py`, `results/experiment_6547_external_transfer_independent_audit.json`) | Planned (`tests/python/test_experiment_6547_external_transfer_independent_audit.py`) |
+
+### REQ-BENCH-6555: Proof-Preserving Constraint Saturation Fixture
+
+Carnot SHALL provide Exp6555 at
+`python/carnot/experiment_6555_proof_preserving_constraint_saturation_fixture.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6555_proof_preserving_constraint_saturation_fixture --date 20260823`
+SHALL write
+`results/experiment_6555_proof_preserving_constraint_saturation_fixture.json`,
+`results/fixtures/v567_constraint_saturation.jsonl`, and
+`docs/research-notes/v567-constraint-saturation-sota-mapping.md`.
+
+Exp6555 SHALL evaluate the Exp6548 structured gate before fixture generation.
+It SHALL record the upstream path and hash, direct arXiv availability, query
+timestamps, Python and Z3 versions, CPU, RAM, disk, the V566 source fixture
+hash, and protected-file hashes. It SHALL not run model inference. It SHALL not
+modify `scripts/research_conductor.py`.
+
+Exp6555 SHALL ingest three to five primary 2025-2026 sources for
+compositional constraint load, executable variant generation, selective
+verification, and symbolic certification. Each source row SHALL record exact
+URLs, arXiv availability, method mapping to current Carnot code, a falsifiable
+fixture use, and a named failure mode. The research note SHALL state the
+bottom-line fixture contract before model outcomes exist.
+
+Exp6555 SHALL freeze at least 36 base lineages across seating, scheduling, and
+logic-grid domains. It SHALL derive equivalent and intentionally hardened
+variants across simultaneous constraint counts from 1 through 12, structural
+and lexical constraint types, sparse and interacting graphs, cumulative turns,
+and at least two surface forms.
+
+Exp6555 SHALL prove every equivalent variant preserves the source solution set.
+It SHALL prove every hardened variant adds only its declared constraint. Every
+variant SHALL emit deterministic per-clause and joint checkers with code
+hashes, Z3 receipts, exact labels, source IDs, local IDs, chronology,
+constraint graph, surface, timeout, and censoring. Train, development, and
+held lineage splits SHALL be frozen before any downstream model run. No base
+problem, entity alias, row ordering, template family, or answer-derived feature
+may cross splits.
+
+Exp6555 SHALL create the fixture through content-addressed shards and atomic
+finalization. It SHALL attack source drift, non-equivalent rewrites,
+undeclared hardening, missing clauses, solver disagreement, duplicate
+lineages, surface leakage, post-label sampling, corrupt resume, and
+aggregate-only success.
+
+`constraint_saturation_fixture_ready_score` SHALL equal `1.0` only when the
+SOTA mapping is source-backed, every planned unit is terminal, equivalence or
+hardening proofs pass, exact checkers round-trip, split floors hold, and
+hashes close. A complete fixture SHALL use `verdict_class=null`; a bounded
+usable subset SHALL use `partial`; failed gates or prerequisites SHALL use
+`blocked`; false provenance, leakage, or invalid proofs SHALL use
+`disqualified`.
+
+The artifact SHALL include at least these fields: `status`, `honest_verdict`,
+`verdict_class`, `upstream_gate_receipt`, `literature_source_rows`,
+`sota_to_experiment_mapping`, `source_and_generator_hashes`,
+`frozen_variant_and_split_contract`, `equivalence_and_hardening_proof_rows`,
+`exact_clause_checker_contract`, `sample_size_and_power_contract`,
+`fixture_path_and_hash`, `per_unit_rows`, `attack_matrix`,
+`constraint_saturation_fixture_ready_score`, `aggregate_row_recomputation`,
+`gate_check_summary`, `preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`random_seed`, `duration_s`, `tests_run`, and `reproducibility_checksum`.
+
+`inference_substrate` SHALL be
+`primary_source_sota_ingestion_and_proof_preserving_z3_fixture_no_llm`.
+`verifier_is_oracle` SHALL be true for variant labels only.
+
+Field principles SHALL be:
+
+- `status`: "A terminal state distinguishes a completed fixture from a partial download or generation pass."
+- `honest_verdict`: "The verdict must state source, proof, split, and checker closure with a terminal prefix."
+- `verdict_class`: "A closed class prevents a partial or invalid fixture from becoming positive science."
+- `upstream_gate_receipt`: "The fixture must identify the eligible V566 evidence root it extends."
+- `literature_source_rows`: "One row per primary source makes the execution-time SOTA refresh auditable."
+- `sota_to_experiment_mapping`: "Each adopted method must map to current code, a falsifiable use, and a named failure mode."
+- `source_and_generator_hashes`: "Immutable source and generator identities prevent silent benchmark drift."
+- `frozen_variant_and_split_contract`: "Constraint counts, types, interactions, surfaces, and lineage splits must be fixed before outcomes."
+- `equivalence_and_hardening_proof_rows`: "Every variant needs an exact witness for preserved or intentionally narrowed semantics."
+- `exact_clause_checker_contract`: "Deterministic per-clause and joint checks keep labels independent of model behavior."
+- `sample_size_and_power_contract`: "Lineage, domain, constraint-count, interaction, and surface floors bound later claims."
+- `fixture_path_and_hash`: "A content hash makes every downstream row traceable to the sealed fixture."
+- `per_unit_rows`: "Every source and derived unit must carry its proof, checker, split, and terminal status."
+- `attack_matrix`: "Equivalence, leakage, solver, resume, and aggregate attacks test the fixture contract."
+- `constraint_saturation_fixture_ready_score`: "One binary field gives the SOTA comparison an exact readiness gate."
+- `aggregate_row_recomputation`: "Readiness must derive from the complete unit ledger."
+- `gate_check_summary`: "A blocked result must name the failed upstream, source, solver, or storage check and value."
+- `preconditions_checked`: "Source, solver, resource, and network receipts separate blocked work from invalid science."
+- `protected_files_unchanged`: "The task must preserve the active roadmap and conductor."
+- `inference_substrate`: "Primary-source ingestion and exact variant generation perform no LLM inference."
+- `verifier_is_oracle`: "Z3 and executable clause checkers are exact fixture authority, not a learned-verifier claim."
+- `field_provenance`: "Each readiness and proof field must point to source rows, hashes, and reducer code."
+- `random_seed`: "Fixed sampling and ordering seeds make fixture construction repeatable."
+- `duration_s`: "Monotonic time exposes skipped source, solver, or transaction work."
+- `tests_run`: "Named validation commands show the source, proof, split, and transaction paths executed."
+- `reproducibility_checksum`: "A final content hash protects the sealed contract."
+
+#### SCENARIO-BENCH-6555-GATE: Clean V566 Evidence Gates The Fixture
+
+**Given** the Exp6548 evidence contract and the V566 DRIFT fixture
+**When** Exp6555 starts
+**Then** it records the gate path, gate hash, source fixture hash, direct arXiv
+availability, query timestamps, solver identity, resources, and protected-file
+hashes before readiness can open.
+
+#### SCENARIO-BENCH-6555-SOTA: Primary Sources Map To Fixture Decisions
+
+**Given** current arXiv primary-source rows
+**When** Exp6555 writes the SOTA note
+**Then** each selected method has exact URLs, a Carnot stack mapping, a
+falsifiable fixture use, and a named failure mode.
+
+#### SCENARIO-BENCH-6555-VARIANTS: Constraint Load Factors Are Frozen
+
+**Given** the audited V566 DRIFT fixture
+**When** Exp6555 derives saturation rows
+**Then** at least 36 lineages span seating, scheduling, and logic-grid domains,
+constraint counts 1 through 12, structural and lexical types, sparse and
+interacting graphs, cumulative turns, and at least two surface forms.
+
+#### SCENARIO-BENCH-6555-PROOFS: Equivalence And Hardening Are Exact
+
+**Given** equivalent and hardened variants
+**When** Exp6555 checks each variant
+**Then** equivalent variants preserve the source solution set, hardened
+variants add only the declared constraint, and every row records Z3 receipts
+plus per-clause and joint checker hashes.
+
+#### SCENARIO-BENCH-6555-SPLITS: Lineage Isolation Holds
+
+**Given** train, development, and held fixture splits
+**When** Exp6555 audits lineage
+**Then** no base problem, entity alias, row ordering, template family, or
+answer-derived feature crosses splits.
+
+#### SCENARIO-BENCH-6555-ATTACKS: Invalid Fixtures Fail Closed
+
+**Given** source drift, non-equivalent rewrites, undeclared hardening, missing
+clauses, solver disagreement, duplicate lineages, surface leakage, post-label
+sampling, corrupt resume, or aggregate-only success
+**When** Exp6555 evaluates its attack matrix
+**Then** each attack records the observed value and readiness remains `0.0`
+until all attacks pass.
+
+#### SCENARIO-BENCH-6555-ATOMIC: Terminal Artifact And Fixture Are Stable
+
+**Given** terminal shards, proof rows, split rows, protected hashes, and tests
+**When** Exp6555 finalizes the fixture and JSON artifact
+**Then** both outputs are written atomically, the checksum validates, exact
+checkers round-trip, and `constraint_saturation_fixture_ready_score=1.0`.
+
+## Implementation Status (REQ-BENCH-6555)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6555 | Planned (`python/carnot/experiment_6555_proof_preserving_constraint_saturation_fixture.py`, `results/experiment_6555_proof_preserving_constraint_saturation_fixture.json`, `results/fixtures/v567_constraint_saturation.jsonl`) | Planned (`tests/python/test_experiment_6555_proof_preserving_constraint_saturation_fixture.py`) |
