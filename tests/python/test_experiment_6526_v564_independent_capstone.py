@@ -18,6 +18,7 @@ from typing import Any
 import pytest
 
 from carnot import experiment_6526_v564_independent_capstone as mod
+from scripts import adversarial_verify
 
 
 REPO = Path(__file__).resolve().parents[2]
@@ -225,3 +226,21 @@ def test_scenario_capstone_6526_cli_roundtrip(tmp_path: Path) -> None:
     payload = json.loads(result_path.read_text(encoding="utf-8"))
     assert mod.validate_artifact(payload) == []
     assert mod.main(["--validate", "--result-path", str(result_path)]) == 0
+
+
+def test_scenario_capstone_6526_adversarial_verifier_accepts_schema(tmp_path: Path) -> None:
+    """SCENARIO-CAPSTONE-6526-SCHEMA: verifier accepts terminal partial capstone."""
+
+    result_path = tmp_path / mod.RESULT_RELATIVE_PATH.name
+    mod.build_artifact(
+        repo_root=REPO,
+        result_path=result_path,
+        write=True,
+        duration_s=1.0,
+        tests_run=TESTS_RUN,
+        run_date="20260823",
+    )
+
+    report = adversarial_verify.verify_artifact(result_path)
+
+    assert report["flag_count"] == 0, report
