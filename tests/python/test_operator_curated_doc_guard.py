@@ -191,3 +191,42 @@ def test_blog_glob_entries_are_matched_inside_the_repo():
 def test_write_intent_classification(mode, flags, expected):
     """Both `open` audit-event shapes must be understood, and the unknown case must fail safe."""
     assert guard._is_write_intent(mode, flags) is expected
+
+
+def test_cwd_relative_atomic_replace_with_default_dirfd_is_refused(monkeypatch, tmp_path):
+    """Named for the QA-layer SILENT_NON_FIRING input (2026-08-23): README.md
+    as the CWD-relative destination of an atomic replacement with destination
+    directory descriptor -1 (the AT_FDCWD default, measured on this build).
+
+    Driven through the hook directly with the real audit-event shape
+    (src, dst, src_dir_fd, dst_dir_fd) rather than a real os.replace: a real
+    call would REWRITE the tracked README the moment this widening regresses,
+    and a test must never be able to mutate the record (CLAUDE.md Test-Run
+    Record Integrity). The absolute-path end-to-end wiring is covered by
+    test_rename_onto_a_protected_path_is_refused above.
+    """
+    staged = tmp_path / "staged.md"
+    staged.write_text("replacement")
+    monkeypatch.chdir(REPO_ROOT)
+    with pytest.raises(guard.OperatorCuratedDocWriteError, match="README.md"):
+        guard._audit_hook("os.replace", (str(staged), "README.md", -1, -1))
+    guard.clear_violations()
+
+
+def test_fd_relative_rename_destination_is_still_excluded(monkeypatch):
+    """The rmtree lesson survives the widening: a bare-name destination with a
+    REAL directory descriptor is fd-relative and must not be CWD-resolved."""
+    monkeypatch.chdir(REPO_ROOT)
+    guard._audit_hook("os.rename", ("a", "README.md", 7, 7))  # must not raise
+    assert guard.recorded_violations() == []
+
+
+def test_cwd_relative_unlink_with_default_dirfd_is_refused(monkeypatch):
+    """Same widening, deletion shape: os.unlink("README.md") with the default
+    dir_fd is CWD-relative; only a real descriptor exempts the bare name."""
+    monkeypatch.chdir(REPO_ROOT)
+    with pytest.raises(guard.OperatorCuratedDocWriteError, match="README.md"):
+        guard._audit_hook("os.unlink", ("README.md", -1))
+    guard.clear_violations()
+    guard._audit_hook("os.unlink", ("README.md", 7))  # fd-relative: excluded
+    assert guard.recorded_violations() == []

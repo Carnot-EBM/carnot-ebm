@@ -94,15 +94,35 @@ def _is_conductor_commit(subject: str) -> bool:
     return any(s.startswith(p) for p in CONDUCTOR_SUBJECT_PREFIXES)
 
 
+def _paths_from_name_status(text: str) -> list[str]:
+    """Every path a --name-status diff touches, BOTH sides of renames/copies.
+
+    The first ship used --name-only, which reports only the DESTINATION of a
+    rename -- so `R100 README.md docs/archive/project-intro.md` moved a
+    protected doc out from under the guard without naming it (QA-layer
+    SILENT_NON_FIRING finding, 2026-08-23). Moving a protected doc away IS an
+    edit to it; the source side must be checked too.
+    """
+    paths: list[str] = []
+    for line in text.splitlines():
+        if not line.strip():
+            continue
+        cells = line.split("\t")
+        # A/M/D entries: status + one path. R###/C### entries: status +
+        # source + destination. Everything after the status cell is a path.
+        paths.extend(c.strip() for c in cells[1:] if c.strip())
+    return paths
+
+
 def _staged_files() -> list[str]:
-    """Return the list of paths staged for the pending commit."""
+    """Return every path the pending commit touches (rename sources included)."""
     result = subprocess.run(
-        ["git", "diff", "--cached", "--name-only"],
+        ["git", "diff", "--cached", "--name-status"],
         check=True,
         capture_output=True,
         text=True,
     )
-    return [line.strip() for line in result.stdout.splitlines() if line.strip()]
+    return _paths_from_name_status(result.stdout)
 
 
 def _matches_operator_curated(path: str) -> bool:
@@ -120,14 +140,12 @@ def main() -> int:
         # everything: the operator-side intent is to catch the
         # `[conductor]` + protected-path combination, not to block
         # malformed invocations.
-        print("warning: operator_curated_docs_lint called without message path",
-              file=sys.stderr)
+        print("warning: operator_curated_docs_lint called without message path", file=sys.stderr)
         return 0
 
     msg_path = Path(sys.argv[1])
     if not msg_path.exists():
-        print(f"warning: commit message file {msg_path} not found",
-              file=sys.stderr)
+        print(f"warning: commit message file {msg_path} not found", file=sys.stderr)
         return 0
 
     subject = _read_subject(msg_path)
@@ -143,12 +161,11 @@ def main() -> int:
         return 0
 
     print("=" * 72, file=sys.stderr)
-    print("operator_curated_docs_lint: refusing [conductor] commit",
-          file=sys.stderr)
+    print("operator_curated_docs_lint: refusing [conductor] commit", file=sys.stderr)
     print("=" * 72, file=sys.stderr)
     print(file=sys.stderr)
     print(
-        "CLAUDE.md \"Public Documentation Discipline\" forbids the",
+        'CLAUDE.md "Public Documentation Discipline" forbids the',
         file=sys.stderr,
     )
     print(
@@ -156,7 +173,7 @@ def main() -> int:
         file=sys.stderr,
     )
     print(
-        f"subject (\"{subject[:60]}...\") marks this as a conductor commit,",
+        f'subject ("{subject[:60]}...") marks this as a conductor commit,',
         file=sys.stderr,
     )
     print("but it touches the following protected paths:", file=sys.stderr)

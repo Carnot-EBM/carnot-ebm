@@ -50,7 +50,18 @@ TEST_DIR = "tests/python"
 # The alias shape the gate consults. Deliberately the STRING LITERAL form: a
 # constant name (LOCAL_COMPACT_..._SUBSTRATE) can be renamed freely, but the
 # literal is what an artifact's inference_substrate field is compared against.
-ALIAS_RE = re.compile(r'"([a-z0-9_]*_no_llm)"')
+# EITHER quote style: the first ship matched double quotes only, and ruff
+# format normalises this repo to double quotes -- so a hand-edit written as
+# 'local_python_no_llm' walked straight through (QA-layer SILENT_NON_FIRING
+# finding, 2026-08-23). The backreference anchors on the quote PAIR, so an
+# apostrophe in prose cannot open a match that a later apostrophe closes
+# unless they wrap exactly an alias-shaped token.
+ALIAS_RE = re.compile(r'(["\'])([a-z0-9_]*_no_llm)\1')
+
+
+def find_alias_literals(text: str) -> list[str]:
+    """Alias literals in `text`, either quote style, in order of appearance."""
+    return [m.group(2) for m in ALIAS_RE.finditer(text)]
 
 
 class GitUnavailable(RuntimeError):
@@ -64,12 +75,12 @@ def new_aliases(diff_text: str, head_text: str) -> list[str]:
     in a real change -- once as a module constant, once inside the tuple -- and
     because reformatting can re-add a line that was never new.
     """
-    already = set(ALIAS_RE.findall(head_text))
+    already = set(find_alias_literals(head_text))
     added: list[str] = []
     for line in diff_text.splitlines():
         if not line.startswith("+") or line.startswith("+++"):
             continue
-        for alias in ALIAS_RE.findall(line):
+        for alias in find_alias_literals(line):
             if alias not in already and alias not in added:
                 added.append(alias)
     return added

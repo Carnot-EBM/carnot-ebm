@@ -192,4 +192,25 @@ class TestWiring:
 
     @pytest.mark.parametrize("alias", ["x_no_llm", "deterministic_automaton_no_llm"])
     def test_alias_regex_matches_the_real_shape(self, alias: str) -> None:
-        assert lint.ALIAS_RE.findall(f'    "{alias}",') == [alias]
+        assert lint.find_alias_literals(f'    "{alias}",') == [alias]
+
+    def test_single_quoted_local_python_no_llm_alias_is_caught(self) -> None:
+        """Named for the QA-layer SILENT_NON_FIRING input (2026-08-23): the
+        allowlist value `local_python_no_llm` written as the single-quoted
+        literal `'local_python_no_llm'`. ruff format normalises this repo to
+        double quotes, so the double-quote-only first ship passed review
+        while a hand-edit walked straight through."""
+        diff = "+    'local_python_no_llm',"
+        assert lint.new_aliases(diff, head_text="") == ["local_python_no_llm"]
+        # And the same literal already present in HEAD (either style) is not
+        # re-reported as new.
+        assert lint.new_aliases(diff, head_text='"local_python_no_llm"') == []
+
+    def test_prose_apostrophes_do_not_open_a_match(self) -> None:
+        """The quote-pair backreference must not let an apostrophe inside a
+        comment pair with a later apostrophe across prose -- a guard that
+        cries wolf on comments gets bypassed."""
+        line = "+    # the agent's local_python_no_llm note, and the reader's too"
+        assert lint.new_aliases(line, head_text="") == []
+        # Mixed quotes are not a pair either.
+        assert lint.find_alias_literals("\"local_python_no_llm'") == []
