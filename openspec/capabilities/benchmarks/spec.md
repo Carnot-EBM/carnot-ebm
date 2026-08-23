@@ -3611,6 +3611,146 @@ checksum matches, and the verdict class follows the precommitted enum.
 |---|---|---|
 | REQ-BENCH-6518 | Planned (`python/carnot/experiment_6518_structural_control_headroom_ab_v2.py`, `results/experiment_6518_structural_control_headroom_ab_v2.json`) | Planned (`tests/python/test_experiment_6518_structural_control_headroom_ab_v2.py`) |
 
+### REQ-BENCH-6519: Structural Headroom Certification SHALL Be Recomputed From Rows
+
+Carnot SHALL provide Exp6519 at
+`python/carnot/experiment_6519_structural_headroom_certificate.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6519_structural_headroom_certificate --date 20260823`
+SHALL write
+`results/experiment_6519_structural_headroom_certificate.json`.
+
+Exp6519 SHALL read Exp6518 by direct path and hash. It SHALL record source
+existence, path, hash, parse status, terminal status, verdict class, row
+counts, resources, and protected-file hashes before any claim can open. If the
+source is missing, unparsable, nonterminal, or lacks valid row evidence, the
+artifact SHALL still close terminally with
+`certified_structural_headroom_score=0.0` and `verdict_class="blocked"`.
+
+Exp6519 SHALL recompute all structural-control metrics from Exp6518
+`per_unit_rows`, not from Exp6518 aggregate fields. It SHALL rejoin every
+structural-control row to the sealed Exp6517 pilot audit by base instance hash,
+checkpoint ID, split, family, and the two Boolean candidate rows. It SHALL
+reject missing units, duplicate unit-arm rows, missing candidate values, and
+post-hoc modified source rows.
+
+Exp6519 SHALL replay a deterministic solver-receipt sample and every
+correctness discrepancy. The replay SHALL compare exact status, Z3 status,
+receipt validity, decision-trace hash, solver-only work, charged work, and
+live influence against the row evidence. Advice SHALL count as live only when
+the row shows a changed decision path relative to native dynamic.
+
+Exp6519 SHALL recompute paired effects, uncertainty, long-tail metrics,
+censoring bounds, headroom strata, family breadth, seed breadth, and total
+charged cost. It SHALL attack identity shortcuts, row order, serialization
+length, family imbalance, held tuning, cost omission, inactive hooks,
+one-win headlines, aggregate contradiction, and exact-oracle class inflation.
+
+`certified_structural_headroom_score` SHALL equal `1.0` only when causal
+influence, correctness, charged benefit, family breadth, seed breadth,
+candidate preservation, censoring, protected hashes, aggregate contradiction
+checks, and all attack rows pass independently. Otherwise it SHALL equal
+`0.0` and the artifact SHALL list failed checks and observations. A positive
+`verdict_class` SHALL be used only for independently certified
+oracle-distinct headroom. A valid no-benefit result SHALL use
+`verdict_class=null`. Missing evidence SHALL use `verdict_class="blocked"`.
+Leakage, correctness drift, or contradictory rows SHALL use
+`verdict_class="disqualified"`.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`upstream_artifact_receipt`, `independent_row_recomputation`,
+`exact_receipt_replay_rows`, `live_influence_audit`, `charged_cost_audit`,
+`paired_effect_rows`, `breadth_and_censoring_audit`, `attack_matrix`,
+`certified_structural_headroom_score`, `gate_check_summary`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. `inference_substrate` SHALL be
+`independent_structural_control_row_and_solver_receipt_replay_no_llm`.
+`verifier_is_oracle` SHALL be false for the performance claim.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal independent certificate state."
+- `honest_verdict`: "States whether row-derived evidence certified structural headroom."
+- `verdict_class`: "Closed enum separates certified positive, null, blocked, and disqualified outcomes."
+- `upstream_artifact_receipt`: "Pins Exp6518 by path, hash, terminal status, class, row counts, resources, and protected hashes."
+- `independent_row_recomputation`: "Recomputes row identity, joins, equality, influence, costs, and aggregate contradictions without trusting Exp6518 aggregates."
+- `exact_receipt_replay_rows`: "Replays deterministic solver samples and every correctness discrepancy."
+- `live_influence_audit`: "Counts live advice only when rows show a changed decision path."
+- `charged_cost_audit`: "Charges solver, feature, refocus, enumeration, and fallback work from rows."
+- `paired_effect_rows`: "Reports paired native-versus-arm held effects, uncertainty, and tail metrics."
+- `breadth_and_censoring_audit`: "Records family breadth, seed breadth, headroom strata, timeouts, censoring, and bounds."
+- `attack_matrix`: "Forces identity, order, length, family, tuning, cost, inactive-hook, one-win, aggregate, and oracle-class attacks closed."
+- `certified_structural_headroom_score`: "Opens only when all independent certificate gates pass."
+- `gate_check_summary`: "Names every failed gate with expected and observed values."
+- `per_unit_rows`: "Emits one audit row per unit-arm and attack for external row checks."
+- `aggregate_row_recomputation`: "Rebuilds the certificate score and verdict from independent rows."
+- `preconditions_checked`: "Records paths, hashes, resources, solvers, planning date, row counts, and protected hashes."
+- `protected_files_unchanged`: "Proves protected upstream and verifier files stayed byte-identical during the run."
+- `inference_substrate`: "Declares independent structural-control row and solver-receipt replay with no LLM."
+- `verifier_is_oracle`: "False because the performance claim is measured, not oracle-certified."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each field to specs, inputs, rows, reducers, solver replay, tests, and hashes."
+- `random_seed`: "Pins deterministic replay sampling and attack ordering."
+- `duration_s`: "Records measured wall time."
+- `tests_run`: "Records validation commands and exit codes."
+- `reproducibility_checksum`: "Detects drift in inputs, rows, gates, attacks, and verdicts."
+
+#### SCENARIO-BENCH-6519-MISSING-SOURCE: Missing Evidence Closes Zero
+
+**Given** the Exp6518 source path is absent
+**When** Exp6519 runs
+**Then** it writes a terminal blocked artifact with
+`certified_structural_headroom_score=0.0`, a missing source receipt, failed
+checks, and required fields.
+
+#### SCENARIO-BENCH-6519-INDEPENDENT-ROWS: Rows Own The Reduction
+
+**Given** Exp6518 per-unit structural-control rows and the sealed Exp6517
+pilot audit
+**When** Exp6519 recomputes metrics
+**Then** it uses row-type containers, rejects missing or duplicated unit-arm
+rows, verifies the two candidate values per pilot unit, and rederives
+aggregate scores without importing Exp6518 aggregate fields.
+
+#### SCENARIO-BENCH-6519-EXACT-REPLAY: Solver Receipts Are Sampled
+
+**Given** sampled structural rows and any correctness discrepancy rows
+**When** Exp6519 replays solver receipts
+**Then** exact status, Z3 status, receipt validity, trace hash, solver-only
+work, charged work, and live influence must agree with row evidence.
+
+#### SCENARIO-BENCH-6519-LIVE-COST-BREADTH: Benefit Needs Influence, Cost, And Breadth
+
+**Given** held split native and non-native rows
+**When** Exp6519 scores headroom
+**Then** certification requires changed live decisions, exact equality,
+positive charged benefit, family breadth greater than one, and seed breadth
+greater than one.
+
+#### SCENARIO-BENCH-6519-ATTACKS: Shortcut Attacks Fail Closed
+
+**Given** identity, row-order, length, family-imbalance, held-tuning, cost,
+inactive-hook, one-win, aggregate-contradiction, and exact-oracle-class attacks
+**When** Exp6519 evaluates the attack matrix
+**Then** each attack row must fail closed before
+`certified_structural_headroom_score` can equal `1.0`.
+
+#### SCENARIO-BENCH-6519-TERMINAL: Certificate Is Reproducible
+
+**Given** every independent gate passes
+**When** Exp6519 writes its deliverable
+**Then** every required field has a principle and provenance entry, the exact
+inference substrate is declared, `verifier_is_oracle=false`, protected files
+are unchanged, and the reproducibility checksum matches.
+
+## Implementation Status (REQ-BENCH-6519)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6519 | Planned (`python/carnot/experiment_6519_structural_headroom_certificate.py`, `results/experiment_6519_structural_headroom_certificate.json`) | Planned (`tests/python/test_experiment_6519_structural_headroom_certificate.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
