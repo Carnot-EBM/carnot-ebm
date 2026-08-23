@@ -155,9 +155,10 @@ class TestKillGpuZombiesNvidiaSmi:
 
         from scripts.experiment_template import ExperimentTemplate
 
-        # nvidia-smi reports one process: PID 99999, 5000 MB VRAM; GPU at 0% utilization
-        nvidia_smi_vram_output = "99999, 5000\n"
-        nvidia_smi_util_output = "0\n"
+        # nvidia-smi reports one process: PID 99999, 5000 MB VRAM, on a GPU at
+        # 0% utilization (REQ-INFRA-079: the util gate is per-GPU via gpu_uuid).
+        nvidia_smi_vram_output = "99999, 5000, GPU-abc\n"
+        nvidia_smi_util_output = "GPU-abc, 0\n"
 
         def fake_subprocess_run(cmd, **kwargs):
             result = MagicMock()
@@ -172,12 +173,18 @@ class TestKillGpuZombiesNvidiaSmi:
             with patch(
                 "scripts.experiment_template.subprocess.run", side_effect=fake_subprocess_run
             ):
-                with patch("scripts.experiment_template.os.kill") as mock_kill:
-                    result = ExperimentTemplate.kill_gpu_zombies(
-                        vram_threshold_mb=1000,
-                        util_threshold_pct=5.0,
-                    )
-                    mock_kill.assert_called_once_with(99999, signal.SIGTERM)
+                # Pin the cmdline read so the test cannot depend on whether a
+                # real PID 99999 happens to exist on the box.
+                with patch(
+                    "scripts.experiment_template._pid_cmdline",
+                    return_value="python3 some_stale_worker.py",
+                ):
+                    with patch("scripts.experiment_template.os.kill") as mock_kill:
+                        result = ExperimentTemplate.kill_gpu_zombies(
+                            vram_threshold_mb=1000,
+                            util_threshold_pct=5.0,
+                        )
+                        mock_kill.assert_called_once_with(99999, signal.SIGTERM)
 
         assert 99999 in result["killed_pids"]
         assert result["freed_mb"] == 5000
@@ -204,8 +211,8 @@ class TestKillGpuZombiesNvidiaSmi:
         from scripts.experiment_template import ExperimentTemplate
 
         # Process uses only 500 MB, threshold is 1000 MB — should NOT be killed
-        nvidia_smi_vram_output = "11111, 500\n"
-        nvidia_smi_util_output = "0\n"
+        nvidia_smi_vram_output = "11111, 500, GPU-abc\n"
+        nvidia_smi_util_output = "GPU-abc, 0\n"
 
         def fake_subprocess_run(cmd, **kwargs):
             result = MagicMock()
@@ -234,9 +241,9 @@ class TestKillGpuZombiesNvidiaSmi:
         """Does not kill processes when GPU utilization is above util_threshold_pct."""
         from scripts.experiment_template import ExperimentTemplate
 
-        # Process has 5000 MB VRAM but GPU is at 50% utilization — NOT a zombie
-        nvidia_smi_vram_output = "22222, 5000\n"
-        nvidia_smi_util_output = "50\n"  # 50% > 5% threshold
+        # Process has 5000 MB VRAM but ITS OWN GPU is at 50% utilization — NOT a zombie
+        nvidia_smi_vram_output = "22222, 5000, GPU-abc\n"
+        nvidia_smi_util_output = "GPU-abc, 50\n"  # 50% > 5% threshold
 
         def fake_subprocess_run(cmd, **kwargs):
             result = MagicMock()
