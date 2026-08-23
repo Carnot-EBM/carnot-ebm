@@ -122,14 +122,34 @@ def test_open_row_ages_and_escalates(tmp_path):
 
 
 def test_fresh_open_row_does_not_escalate(tmp_path):
+    """Same-day rows stay silent; escalation begins at AGING_DAYS = 1 (the
+    2026-08-23 amendment — a week of silence was structurally slow against
+    a loop closing several milestones per day)."""
     pre = (
         "| First seen | Audit | Artifact | Verdict | Disposition | Note |\n"
         "|---|---|---|---|---|---|\n"
-        "| 2026-08-20 | experiment_claim_audit | experiment_6478_x.json "
+        "| 2026-08-22 | experiment_claim_audit | experiment_6478_x.json "
         "| CLAIM_OVERSTATED | OPEN | |\n"
     )
     summary, _ = _run(tmp_path, report_text="# empty report\n", ledger_pre=pre)
     assert summary["escalated"] == 0
+
+
+def test_one_day_old_row_escalates(tmp_path):
+    """The amendment's contract: an OPEN finding becomes visible on the
+    NEXT day's closes, not a week later. The 2026-08-22 CLAIM_OVERSTATED
+    findings sat OPEN until an operator prompt on 2026-08-23 — under this
+    threshold they would have escalated automatically that morning."""
+    pre = (
+        "| First seen | Audit | Artifact | Verdict | Disposition | Note |\n"
+        "|---|---|---|---|---|---|\n"
+        "| 2026-08-21 | experiment_claim_audit | experiment_6478_x.json "
+        "| CLAIM_OVERSTATED | OPEN | |\n"
+    )
+    summary, _ = _run(tmp_path, report_text="# empty report\n", ledger_pre=pre)
+    assert summary["escalated"] == 1
+    log = (tmp_path / "log.md").read_text()
+    assert "OPEN 1 days" in log
 
 
 def test_human_close_silences_and_row_is_untouched(tmp_path):

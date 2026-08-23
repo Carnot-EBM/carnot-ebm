@@ -17,7 +17,9 @@ ops/audit-findings-ledger.md:
   * Existing rows are NEVER rewritten or removed (never-prune). A human
     closes a row by editing its Disposition cell to ACCEPTED, FIXED, or
     WONTFIX, plus an optional note.
-  * An OPEN row older than AGING_DAYS escalates through the run sentinel's
+  * An OPEN row older than AGING_DAYS (1 day since the 2026-08-23 spec
+    amendment -- the loop closes several milestones per day, so a week of
+    silence was structurally slow) escalates through the run sentinel's
     durable writer (REQ-CONDUCTOR-SENTINEL-3), and re-escalates on a weekly
     age bucket until the disposition changes. The question is forced; the
     ANSWER stays human — this tool cannot judge whether a verdict warrants
@@ -46,14 +48,18 @@ REPO = Path(__file__).resolve().parents[1]
 DEFAULT_REPORT = REPO / "ops" / "experiment_claim_audit_report.md"
 DEFAULT_LEDGER = REPO / "ops" / "audit-findings-ledger.md"
 AUDIT_NAME = "experiment_claim_audit"
-AGING_DAYS = 7
+# First escalation age. Was 7 days; lowered to 1 on 2026-08-23 (spec
+# AMENDMENT to REQ-OPS-AUDIT-LEDGER-1 rule 3): the loop closes several
+# milestones per day, and the three real 2026-08-22 CLAIM_OVERSTATED
+# findings sat OPEN until an operator prompt. Weekly re-bucket unchanged.
+AGING_DAYS = 1
 
 _LEDGER_HEADER = """# Audit findings ledger
 
 Flagged audit verdicts someone must answer (REQ-OPS-AUDIT-LEDGER-1).
 Rows are append-only: never rewrite or remove one. To close a finding,
 edit its Disposition cell to ACCEPTED, FIXED, or WONTFIX and add a note.
-OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
+OPEN rows older than 1 day escalate to ops/conductor-log.md, then weekly.
 
 | First seen | Audit | Artifact | Verdict | Disposition | Note |
 |---|---|---|---|---|---|
