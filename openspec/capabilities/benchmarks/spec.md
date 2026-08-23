@@ -3321,6 +3321,140 @@ with `complete_` or `blocked_`.
 |---|---|---|
 | REQ-BENCH-6516 | Planned (`python/carnot/experiment_6516_exact_branch_pilot_dataset_v3.py`, `results/experiment_6516_exact_branch_pilot_dataset_v3.json`) | Planned (`tests/python/test_experiment_6516_exact_branch_pilot_dataset_v3.py`) |
 
+### REQ-BENCH-6517: Branch Pilot Independent Audit SHALL Close Every Upstream Path
+
+Carnot SHALL provide Exp6517 at
+`python/carnot/experiment_6517_branch_pilot_independent_audit.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6517_branch_pilot_independent_audit --date 20260823`
+SHALL write
+`results/experiment_6517_branch_pilot_independent_audit.json`.
+
+Exp6517 SHALL independently audit Exp6516 from rows, immutable base rows,
+shard receipts, and transaction receipts. It SHALL never edit Exp6516, its
+shards, Exp6514, Exp6504, Exp6510, or historical inputs. It SHALL record
+source existence, path, hash, parse status, status, verdict class, branch row
+count, per-unit row count, shard counts, solver availability, resources, and
+protected-file hashes before any readiness decision. It SHALL write a terminal
+artifact even when Exp6516 is missing, corrupt, blocked, partial, incomplete,
+or otherwise invalid.
+
+Exp6517 SHALL recompute branch counts, candidate completeness, exact receipt
+validity, split lineage sets, shard accounting, feature timing, censoring,
+shortcut attacks, and readiness from per-unit evidence. It SHALL verify each
+branch exact receipt against the immutable Exp6504 base row hash and forced
+Boolean assignment. It SHALL reject row/hash drift, missing or mismatched
+receipts, split overlap, outcome-aware repair, duplicate checkpoints,
+asymmetric budgets, missing terminal dispositions, censoring removal, corrupt
+shards, aggregate tampering, and one-cell headroom.
+
+Exp6517 SHALL verify the Exp6514 transaction surface used by Exp6516. It
+SHALL compare planned IDs, terminal IDs, terminal shard hashes, journal
+counts, resume receipts, corrupt-resume detection, final atomic-write
+receipts, and the audited source checksum. It SHALL set
+`branch_pilot_audited_ready_score=1.0` only when every audit passes. Otherwise
+it SHALL set `branch_pilot_audited_ready_score=0.0`, use
+`verdict_class="blocked"` for missing or incomplete input, use
+`verdict_class="disqualified"` for leakage or false receipts, and name every
+failed check and observed value in `gate_check_summary`.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`upstream_artifact_receipt`, `prior_failure_receipt`,
+`independent_row_recomputation`, `exact_receipt_replay_rows`,
+`split_and_lineage_audit`, `transaction_and_shard_audit`,
+`feature_timing_audit`, `censoring_audit`, `shortcut_attack_matrix`,
+`branch_pilot_audited_ready_score`, `gate_check_summary`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. `inference_substrate` SHALL be
+`independent_exact_row_shard_and_receipt_replay_no_llm`.
+`verifier_is_oracle` SHALL be true only for dataset integrity checks.
+`verdict_class` SHALL be `null`, `blocked`, or `disqualified`; it SHALL NOT
+be `positive`.
+
+Field principles SHALL be:
+
+- `status`: "A terminal status proves the audit closed even when the source did not."
+- `honest_verdict`: "The verdict reports dataset readiness without claiming learned guidance value."
+- `verdict_class`: "Null means valid readiness. Blocked and disqualified preserve missing, incomplete, leakage, and false-receipt failures."
+- `upstream_artifact_receipt`: "The source receipt records existence, path, hash, parse status, verdict class, row counts, shard counts, solver state, resources, and protected hashes."
+- `prior_failure_receipt`: "Prior Exp6510 and Exp6511 failure context stays visible without becoming a dependency."
+- `independent_row_recomputation`: "Readiness is recomputed from branch rows and per-unit evidence rather than imported aggregate fields."
+- `exact_receipt_replay_rows`: "Each audit row verifies a branch receipt against the immutable base row hash and forced assignment."
+- `split_and_lineage_audit`: "Split rows prove train, development, and held lineages are sealed and disjoint."
+- `transaction_and_shard_audit`: "Shard and journal checks prove planned rows, terminal rows, hashes, resume receipts, and atomic receipts are consistent."
+- `feature_timing_audit`: "Feature rows prove checkpoint selection used decision-time structural features only."
+- `censoring_audit`: "Censoring rows prove budgets, timeouts, and terminal dispositions are symmetric and explicit."
+- `shortcut_attack_matrix`: "Attack rows close identity, order, length, label, effort, censoring, shard, aggregate, and headroom shortcuts."
+- `branch_pilot_audited_ready_score`: "The score opens only when every independent audit gate passes."
+- `gate_check_summary`: "Each failed gate records expected and observed values."
+- `per_unit_rows`: "Audit rows expose one source-unit row plus manifest, split, feature, censoring, and attack rows."
+- `aggregate_row_recomputation`: "The aggregate is rebuilt from audit rows instead of source totals."
+- `preconditions_checked`: "Preconditions record paths, resources, solvers, protected hashes, and planning date."
+- `protected_files_unchanged`: "The source, shards, historical inputs, and conductor must remain byte-identical."
+- `inference_substrate`: "The declaration keeps the audit on exact row, shard, and receipt replay with no LLM."
+- `verifier_is_oracle`: "Oracle authority is limited to dataset integrity checks."
+- `field_principles`: "Principles explain why each required field exists."
+- `field_provenance`: "Provenance maps fields to specs, inputs, rows, receipts, tests, and deterministic reducers."
+- `random_seed`: "A fixed seed makes attack ordering reproducible."
+- `duration_s`: "Measured wall time supports authenticity checks."
+- `tests_run`: "Command receipts show which validation actually ran."
+- `reproducibility_checksum`: "A content hash detects drift in inputs, rows, gates, and decisions."
+
+#### SCENARIO-BENCH-6517-MISSING-UPSTREAM: Missing Sources Close Blocked
+
+**Given** the Exp6516 source path is absent
+**When** Exp6517 runs
+**Then** it writes a terminal blocked artifact with
+`branch_pilot_audited_ready_score=0.0`, `verdict_class="blocked"`, a missing
+source receipt, and failed checks with observed missing values.
+
+#### SCENARIO-BENCH-6517-ROW-REPLAY: Exact Receipts Are Independently Replayed
+
+**Given** a valid Exp6516 branch artifact and immutable Exp6504 base rows
+**When** Exp6517 audits branch units
+**Then** every exact receipt is recomputed from the base hash, checkpoint
+variable, candidate value, and equal budget before readiness can open.
+
+#### SCENARIO-BENCH-6517-SHARDS: Shard And Journal Receipts Must Match Rows
+
+**Given** Exp6516 shard manifest rows and Exp6514 transaction receipts
+**When** Exp6517 verifies planned IDs, terminal IDs, shard hashes, journal
+counts, resume receipts, corrupt-resume evidence, and atomic receipts
+**Then** any mismatch blocks or disqualifies readiness and is named in
+`gate_check_summary`.
+
+#### SCENARIO-BENCH-6517-SPLIT-TIMING: Splits And Features Stay Pre-Outcome
+
+**Given** branch rows, checkpoint rows, and feature schema
+**When** Exp6517 rebuilds train, development, and held lineage sets
+**Then** it rejects overlap, outcome-aware repair, duplicate checkpoints,
+forbidden features, and features recorded after replay.
+
+#### SCENARIO-BENCH-6517-ATTACKS: Leakage And Tampering Fail Closed
+
+**Given** attacks for IDs, row order, serialization length, family shortcuts,
+label shortcuts, future effort, censoring removal, corrupt shards, aggregate
+tampering, and one-cell headroom
+**When** Exp6517 evaluates readiness
+**Then** each shortcut fails closed before
+`branch_pilot_audited_ready_score` can equal `1.0`.
+
+#### SCENARIO-BENCH-6517-TERMINAL: Valid Readiness Is Complete And Reproducible
+
+**Given** every independent audit gate passes
+**When** Exp6517 writes its deliverable
+**Then** the artifact has all required fields, `verdict_class=null`, the exact
+inference substrate, complete provenance and principles, unchanged protected
+files, and a matching reproducibility checksum.
+
+## Implementation Status (REQ-BENCH-6517)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6517 | Planned (`python/carnot/experiment_6517_branch_pilot_independent_audit.py`, `results/experiment_6517_branch_pilot_independent_audit.json`) | Planned (`tests/python/test_experiment_6517_branch_pilot_independent_audit.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
