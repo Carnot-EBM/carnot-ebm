@@ -27240,4 +27240,4 @@ archived nothing carries `added == 0` without error.
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-ARC-WMTE-6690 | PENDING | PENDING |
+| REQ-ARC-WMTE-6690 | `python/carnot/agentic/arc_executable_world_model.py` (`attempt_archive_enabled`, `_archive_engine_attempt`, `_archive_codex_engine`; archive calls in `_gen_to_file`, `_write_world_model`, `CodexProposer.induce/refactor`). `scripts/arc_scored_path_lever_harness.py` (`_attempt_manifest_path`, `_attempt_archive_delta`, `_manifest_line_count`; `run_cell` snapshots the manifest and emits `induction_archive`). | `tests/python/test_arc_engine_attempt_archive.py` (SCENARIO-ARC-WMTE-6690-1..6; 10 mutations M1-M10 each RED then restored byte-identical -- archive calls, dedup, kill switch, fail-open, test-guard, codex wiring, harness wiring, delta slice, snapshot count). |

@@ -160,12 +160,12 @@ def _archive_engine_attempt(
     _guard_engine_write(adir)  # fail-closed: tests may not write the tracked store
     try:
         import hashlib
-        from datetime import datetime, timezone
+        from datetime import UTC, datetime
 
         raw = code.encode("utf-8", "replace")
         sha = hashlib.sha256(raw).hexdigest()[:16]
         adir.mkdir(parents=True, exist_ok=True)
-        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%f")
+        stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S_%f")
         dedup = bool(next(iter(adir.glob(f"wm_*__{sha}.py")), None))
         fname = f"wm_{stamp}__{sha}.py"
         if not dedup:
