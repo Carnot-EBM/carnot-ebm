@@ -1,5 +1,43 @@
 # Carnot — Changelog
 
+## 2026-08-23 (outer-loop, per-attempt world-model retention: the engine store stops destroying its own work)
+
+REQ-ARC-WMTE-6690, commits 8e2f938a0f (+ bulk swept into 99fdf2797e by
+the conductor's auto-commit mid-flight). Team-lead directed; the defect
+is the one `project_arc_engine_store_regression` recorded on 2026-07-29
+and that was still shipping a month later.
+
+- The measured loss: `results/arc_e3/<game>/world_model.py` is keyed by
+  game only. The 2026-08-22 baseline run made 40 induction attempts and
+  left 25 files — 15 induced models destroyed by last-write-wins.
+  Corpus-wide, 355 committed store versions across 27 files survive only
+  as git archaeology; writes between conductor commits are gone.
+- The fix: every producer write (`_gen_to_file`, `_write_world_model`,
+  codex post-hoc) now ALSO archives to `E3_DIR/<game>/attempts/` —
+  content-hash-deduplicated copy + append-only manifest.jsonl. The
+  canonical write, return values, and read path are unchanged
+  (on/off equivalence asserted byte-for-byte). Kill switch:
+  `CARNOT_ARC_ENGINE_ATTEMPT_ARCHIVE=0`. Fail-open past the test-guard,
+  direction stated in the docstring.
+- Restore sites (REQ-6035 rollback, resample rollback) deliberately do
+  not archive: they write back content a producer already archived.
+- The lever harness rows now carry `induction_archive` (manifest delta
+  per cell, sha16 list) — the provenance `induction_engine_sources`
+  never had for LLM-tier attempts, and the join key multi-seed runs
+  need (`--seeds` no longer destroys its own data).
+- `scripts/arc_induction_quality.py` (committed alongside) sweeps
+  `attempts/` too and labels populations, so degenerate-rates can be
+  per-attempt instead of worst-attempt-survivor-biased (the 28% figure
+  from this session was a survivor sample, not a generator rate).
+- Evidence: 14 tests (SCENARIO-6690-1..6), 10 mutations each RED then
+  restored byte-identical. During mutation M6 the guard-deleted mutant
+  wrote untracked `results/arc_e3/gme/` — cleaned; the guard test now
+  aims at a stand-in tracked dir so a broken guard cannot touch real
+  evidence.
+- Pre-existing, NOT from this change (identical at 99fdf2797e~1): 8
+  failures in test_codeonly_induce_scoping.py +
+  test_induce_split_fallback.py.
+
 ## 2026-08-23 (outer-loop, shadow-mode supervisor: every run records its counterfactual)
 
 Standing-mandate work (operator: fully unattended iteration on the
