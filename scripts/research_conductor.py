@@ -33,6 +33,7 @@ import json
 import logging
 import os
 import pathlib
+import re
 import shutil
 import subprocess
 import sys
@@ -2286,6 +2287,154 @@ def _maybe_reexec_on_fresh_source() -> None:
     sys.stdout.flush()
     sys.stderr.flush()
     os.execv(sys.executable, [sys.executable, str(CONDUCTOR_SOURCE), *sys.argv[1:]])
+
+
+# --- Test-fix erasure gate (REQ-CONDUCTOR-FIXGATE-1) -------------------------
+# Origin: 2026-08-23 live specimen. The test-fixer, told "fix the failing
+# tests" + "do NOT modify scripts/research_conductor.py", complied by adding
+# pytest.mark.skipif to the failing (untracked) test file and reverting the
+# foreign block the tests covered. The suite went green; the repair was
+# erasure. These helpers make that move detectable AND reversible.
+
+_TEST_SKIP_MARKER_RE = re.compile(r"pytest\.mark\.skip|unittest\.skip|pytest\.skip\(")
+SELFEDIT_RESCUE_DIR = PROJECT_ROOT / "ops" / ".conductor_selfedit_rescue"
+
+
+def _git3(args: list[str], cwd: Path | None = None) -> tuple[int, str, str]:
+    """git wrapper with an explicit cwd so the gate is testable against a
+    throwaway repo. Any failure surfaces as a nonzero rc; callers treat
+    'could not check' as 'fix not accepted' (rule 5, fail closed)."""
+    try:
+        proc = subprocess.run(
+            ["git", *args],
+            capture_output=True,
+            text=True,
+            cwd=str(cwd or PROJECT_ROOT),
+            timeout=120,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return 1, "", "git unavailable"
+    return proc.returncode, proc.stdout, proc.stderr
+
+
+def _snapshot_task_edits(cwd: Path | None = None, max_bytes: int = 1_000_000) -> dict | None:
+    """Snapshot the task's working-tree edits before any fix attempt.
+
+    Captures dirty tracked files (sha + content up to max_bytes) and
+    untracked files under tests/ (the live specimen's skip landed in an
+    UNTRACKED test file — a tracked-only snapshot is the pattern-narrower-
+    than-concept bug). Returns None when git cannot answer (fail closed).
+    """
+    rc1, dirty_out, _ = _git3(["diff", "--name-only", "HEAD"], cwd)
+    rc2, untracked_out, _ = _git3(
+        ["ls-files", "--others", "--exclude-standard", "--", "tests/"], cwd
+    )
+    if rc1 != 0 or rc2 != 0:
+        return None
+    root = Path(cwd or PROJECT_ROOT)
+    snapshot: dict[str, dict] = {}
+    dirty = [line for line in dirty_out.splitlines() if line.strip()]
+    untracked = [line for line in untracked_out.splitlines() if line.strip()]
+    for rel in dirty + untracked:
+        path = root / rel
+        try:
+            data = path.read_bytes()
+        except OSError:
+            data = None
+        snapshot[rel] = {
+            "tracked": rel in dirty,
+            "sha": hashlib.sha256(data).hexdigest() if data is not None else None,
+            "content": data if data is not None and len(data) <= max_bytes else None,
+        }
+    return snapshot
+
+
+def _detect_fix_erasure(snapshot: dict, cwd: Path | None = None) -> dict | None:
+    """Erasure moves a fix attempt made: added test skips + reverted work.
+
+    Returns {"added_skips": [...], "skip_files": set, "reverted": [...]},
+    or None when git cannot answer (rule 5: an unauditable repair is not a
+    repair — callers must NOT accept the fix).
+    """
+    rc1, diff_out, _ = _git3(["diff", "HEAD", "--", "tests/"], cwd)
+    rc2, dirty_out, _ = _git3(["diff", "--name-only", "HEAD"], cwd)
+    rc3, untracked_out, _ = _git3(
+        ["ls-files", "--others", "--exclude-standard", "--", "tests/"], cwd
+    )
+    if rc1 != 0 or rc2 != 0 or rc3 != 0:
+        return None
+    root = Path(cwd or PROJECT_ROOT)
+    added_skips: list[str] = []
+    skip_files: set[str] = set()
+    current_file = ""
+    for line in diff_out.splitlines():
+        if line.startswith("+++ b/"):
+            current_file = line[6:]
+        elif (
+            line.startswith("+")
+            and not line.startswith("+++")
+            and _TEST_SKIP_MARKER_RE.search(line)
+        ):
+            added_skips.append(f"{current_file}: {line[1:].strip()[:80]}")
+            if current_file:
+                skip_files.add(current_file)
+    for rel in untracked_out.splitlines():
+        rel = rel.strip()
+        if not rel:
+            continue
+        try:
+            text = (root / rel).read_text(errors="replace")
+        except OSError:
+            continue
+        if _TEST_SKIP_MARKER_RE.search(text):
+            prior = snapshot.get(rel)
+            prior_content = prior.get("content") if prior else None
+            prior_text = prior_content.decode(errors="replace") if prior_content else ""
+            if not _TEST_SKIP_MARKER_RE.search(prior_text):
+                added_skips.append(f"{rel}: skip marker in untracked test file")
+                skip_files.add(rel)
+    current_dirty = {line for line in dirty_out.splitlines() if line.strip()}
+    reverted = [
+        rel for rel, entry in snapshot.items() if entry.get("tracked") and rel not in current_dirty
+    ]
+    return {"added_skips": added_skips, "skip_files": skip_files, "reverted": reverted}
+
+
+def _restore_erased(snapshot: dict, paths, cwd: Path | None = None) -> list[str]:
+    """Put erased paths back to their snapshot state. Restore beats reject-
+    only: rejecting without restoring would leave a skip-poisoned tree whose
+    next test run reports a green lie."""
+    root = Path(cwd or PROJECT_ROOT)
+    restored: list[str] = []
+    for rel in paths:
+        entry = snapshot.get(rel)
+        if entry is not None and entry.get("content") is not None:
+            target = root / rel
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(entry["content"])
+            restored.append(rel)
+        elif entry is None:
+            # Not in the snapshot: either a tracked file that was CLEAN
+            # pre-fix (HEAD is its pre-fix state — check it out), or a file
+            # the fixer created from nothing (remove it). The first version
+            # of this branch unlinked both, deleting a tracked test file —
+            # caught by this gate's own test suite before landing.
+            rc_ls, ls_out, _ = _git3(["ls-files", "--", rel], cwd)
+            if rc_ls == 0 and ls_out.strip():
+                rc_, _, _ = _git3(["checkout", "--", rel], cwd)
+                restored.append(f"{rel} ({'checked out' if rc_ == 0 else 'UNRESTORABLE'})")
+            else:
+                try:
+                    (root / rel).unlink()
+                    restored.append(f"{rel} (removed)")
+                except OSError:
+                    pass
+        else:
+            # Tracked and clean at snapshot time, or content over the cap:
+            # HEAD is the pre-fix state.
+            rc_, _, _ = _git3(["checkout", "--", rel], cwd)
+            restored.append(f"{rel} ({'checked out' if rc_ == 0 else 'UNRESTORABLE'})")
+    return restored
 
 
 def compute_adaptive_sleep_min(iter_duration_s: float, interval_min: int) -> tuple[int, str]:
@@ -6455,7 +6604,26 @@ def research_step(
         ["git", "diff", "--name-only", "--", "scripts/research_conductor.py"]
     )
     if conductor_diff.strip():
+        # Preserve before reverting (REQ-CONDUCTOR-FIXGATE-1 rule 6): this
+        # guard cannot distinguish the conductor's own agent from a foreign
+        # editor, and it destroyed a foreign in-flight block three times on
+        # 2026-08-23. The diff is rescued and the action logged durably —
+        # journald retention here is under two hours.
+        rescue_name = "UNPRESERVED (write failed)"
+        _, selfedit_patch, _ = run_cmd(["git", "diff", "--", "scripts/research_conductor.py"])
+        try:
+            SELFEDIT_RESCUE_DIR.mkdir(parents=True, exist_ok=True)
+            rescue = SELFEDIT_RESCUE_DIR / (datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ") + ".patch")
+            rescue.write_text(selfedit_patch)
+            rescue_name = rescue.name
+        except OSError:
+            pass
         logger.warning("%s modified research_conductor.py — reverting that file", AGENT_DISPLAY)
+        log_step(
+            "Conductor self-edit reverted",
+            "WARN",
+            f"working-tree edit to research_conductor.py reverted; diff at {rescue_name}",
+        )
         run_cmd(["git", "checkout", "--", "scripts/research_conductor.py"])
 
     # ── Dogfooding: use Carnot to verify generated code ──────────
@@ -6484,6 +6652,11 @@ def research_step(
     MAX_FIX_ATTEMPTS = 3 if OPUS_FIX_ENABLED else 2
     tests_ok, test_summary = run_tests(full=False)  # Use smart subset — full suite hangs serially
 
+    # Erasure-gate snapshot (REQ-CONDUCTOR-FIXGATE-1 rule 1): taken once,
+    # before any fixer touches the tree. None = git could not answer; the
+    # gate then refuses to accept ANY fix (rule 5, fail closed).
+    pre_fix_snapshot = None if tests_ok else _snapshot_task_edits()
+
     prev_fix_ok = True  # Tracks whether the *previous* fix attempt exited cleanly
     for fix_attempt in range(MAX_FIX_ATTEMPTS):
         if tests_ok:
@@ -6501,6 +6674,11 @@ def research_step(
             f"Your previous changes caused test failures:\n{test_summary}\n\n"
             f"Fix the failing tests. Do NOT revert your changes — fix the code "
             f"so all tests pass with 100% coverage.\n"
+            f"FORBIDDEN repairs — each is detected, rejected, and undone "
+            f"(REQ-CONDUCTOR-FIXGATE-1):\n"
+            f"- adding pytest.mark.skip/skipif, unittest.skip, or pytest.skip()\n"
+            f"- deleting or weakening a failing test instead of fixing the code\n"
+            f"- reverting a modified file back to its committed state\n"
             f"Do NOT modify scripts/research_conductor.py."
         )
         # Pick the model and turn budget for this attempt.  See the tier
@@ -6548,6 +6726,44 @@ def research_step(
             model_override=fix_model,
         )
         prev_fix_ok = fix_ok
+        if fix_ok:
+            # Erasure gate (REQ-CONDUCTOR-FIXGATE-1 rules 2-3): a fix that
+            # adds test skips or reverts work is discarded and undone, and
+            # the suite is NEVER run over a skip-poisoned tree — its green
+            # result would be the lie this gate exists to prevent.
+            erasure = (
+                _detect_fix_erasure(pre_fix_snapshot) if pre_fix_snapshot is not None else None
+            )
+            if erasure is None:
+                log_step(
+                    "Test-fix erasure gate",
+                    "BLOCK",
+                    "gate could not audit the fix (git/snapshot unavailable); not accepted",
+                )
+                prev_fix_ok = False
+                if fix_attempt + 1 >= MAX_FIX_ATTEMPTS:
+                    break
+                continue
+            if erasure["added_skips"] or erasure["reverted"]:
+                to_restore = sorted(set(erasure["skip_files"]) | set(erasure["reverted"]))
+                restored = _restore_erased(pre_fix_snapshot, to_restore)
+                log_step(
+                    "Test-fix erasure gate",
+                    "BLOCK",
+                    f"{len(erasure['added_skips'])} added skip(s), "
+                    f"{len(erasure['reverted'])} reverted file(s); restored {len(restored)}",
+                )
+                logger.error(
+                    "Fix attempt %d resolved failures by ERASURE, discarded: skips=%s reverted=%s restored=%s",
+                    fix_attempt + 1,
+                    erasure["added_skips"][:3],
+                    erasure["reverted"][:3],
+                    restored[:6],
+                )
+                prev_fix_ok = False
+                if fix_attempt + 1 >= MAX_FIX_ATTEMPTS:
+                    break
+                continue
         if not fix_ok:
             logger.error("%s failed to fix tests (attempt %d)", AGENT_DISPLAY, fix_attempt + 1)
             # Do NOT break here when opus escalation is enabled and we are
