@@ -7853,6 +7853,132 @@ report file.
 |---|---|---|
 | REQ-CONDUCTOR-RECEIPT-1 | Implemented (`scripts/research_conductor.py`: `_run_audit_with_receipt` over all nine milestone-close audit invocations; `scripts/qa_layer_authenticity_audit.py`: `--budget-seconds`, PARTIAL header, rotation state written only after the report, advanced by completed units) | Implemented (`tests/python/test_audit_run_receipts.py`, 8 tests; mutations: receipt check believes exit code -> RED, rotation advances by limit -> RED, state written before report -> RED) |
 
+## REQ-CONDUCTOR-RECEIPT-2: A Caller Timeout SHALL Exceed The Program's Own Budget By One Worst-Case Unit
+
+Origin incident, 2026-08-23. REQ-CONDUCTOR-RECEIPT-1 gave the QA-layer
+audit a budget it knows about, so it could write a PARTIAL report
+instead of dying. It still died. The two numbers were set
+independently and contradicted each other:
+
+| Number | Value | Where |
+|---|---|---|
+| audit's own budget | 750s | `--budget-seconds` |
+| caller's kill timeout | 900s | `timeout=` |
+| slack between them | 150s | — |
+| measured cost of ONE unit | 250-375s | two PARTIAL reports, 2026-08-22 |
+
+The budget is checked BEFORE each unit, never during one. So a unit
+that starts at 749s runs to roughly 1124s, the caller kills the
+process at 900s, and no report is written at all. The partial-report
+mechanism cannot fire when the slack is smaller than the work it is
+meant to interrupt.
+
+The measured effect: two successful PARTIAL reports in a month, of 2
+and 3 units against `--limit 20`, and a hard timeout at the
+2026-08-22T22:33Z close. Rotation sat at offset 5 of 174 units.
+
+The rule. For every audit invocation that passes the program a
+wall-clock budget, the caller's kill timeout SHALL exceed that budget
+by at least `AUDIT_TIMEOUT_SLACK_S`, the worst-case cost of a single
+unit plus the time to write the report. A test SHALL read the call
+sites and assert the inequality, so the two numbers cannot drift apart
+again silently.
+
+This is deliberately an inequality over two constants, not a smarter
+scheduler. The failure was not that the audit was slow; it was that
+nobody stated the relationship between the two numbers, so editing
+either one alone was safe-looking and wrong.
+
+#### SCENARIO-CONDUCTOR-RECEIPT-5
+
+Given any `_run_audit_with_receipt` call site that passes
+`--budget-seconds N`, the call's `timeout` SHALL be at least
+`N + AUDIT_TIMEOUT_SLACK_S`.
+
+#### SCENARIO-CONDUCTOR-RECEIPT-6
+
+Given a budget that expires mid-unit, the process SHALL still have
+time to finish that unit and write its PARTIAL receipt before the
+caller's timeout fires.
+
+## Implementation Status (REQ-CONDUCTOR-RECEIPT-2)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-RECEIPT-2 | Implemented (`scripts/research_conductor.py`: `AUDIT_TIMEOUT_SLACK_S`; QA-layer audit budget 750 -> 1800s, timeout 900 -> 2400s; claim audit and any future budgeted audit held to the same inequality) | Implemented (`tests/python/test_audit_run_receipts.py::TestBudgetTimeoutSlack`; mutation: shrink slack below one unit -> RED, restore -> GREEN) |
+
+## REQ-SUBSTRATE-ALIAS-1: A New No-LLM Substrate Alias SHALL Carry Evidence, Not Only A Name
+
+Origin incident, 2026-08-23. `adversarial_verify.py`'s
+`DURATION_TOO_SHORT` check exempts artifacts whose declared
+`inference_substrate` appears in `NO_LLM_SUBSTRATE_ALIASES`. Nothing
+governed who may add a name to that tuple. Measured on 2026-08-23: 38
+aliases, 19 of them added in two days, and every sampled addition
+landed in the SAME conductor commit as the artifact it exempted —
+for example `59c8f8602d`, which added
+`local_compact_router_plus_exact_exception_table_and_native_solver_no_llm`
+at 22:24Z and wrote `experiment_6520` at 22:25Z.
+
+So an experiment that trips the fabrication gate can clear itself by
+naming its own substrate in the gate's allowlist, in its own commit,
+with no test, no review, and no evidence that the declared substrate
+does no LLM work. This is the QA-Layer Authenticity Discipline's
+founding concern in live form: the layer that decides whether every
+other result counts is being edited by the results it judges.
+
+It is also the inverse of the pattern-list-narrower-than-its-concept
+bug this project keeps hitting. Here the list WIDENS to accommodate
+whatever it was built to catch, which reads as a growing taxonomy and
+is a shrinking gate.
+
+The rule. A commit that ADDS a name to `NO_LLM_SUBSTRATE_ALIASES`
+SHALL also carry evidence for that name, being either:
+
+1. a test under `tests/python/` that names the alias string, or
+2. an entry in `ops/substrate_alias_acks.md` naming the alias, dated,
+   with one line stating why the substrate genuinely invokes no LLM.
+
+A commit that adds an alias with neither SHALL be refused. The check
+SHALL fail closed: if it cannot read the staged diff, it SHALL refuse
+rather than pass.
+
+Adding the alias and the artifact it exempts in one commit is
+permitted WITH evidence and refused without it. The same-commit shape
+is the clearest abuse but not the only one, so the requirement is on
+the alias, not on the pairing.
+
+#### SCENARIO-SUBSTRATE-ALIAS-1
+
+Given a staged diff that adds a `*_no_llm` alias and no test naming it
+and no ack entry, the lint SHALL exit non-zero and name the alias.
+
+#### SCENARIO-SUBSTRATE-ALIAS-2
+
+Given the same diff plus a test that names the alias string, the lint
+SHALL pass.
+
+#### SCENARIO-SUBSTRATE-ALIAS-3
+
+Given the same diff plus a dated entry in `ops/substrate_alias_acks.md`
+naming the alias, the lint SHALL pass.
+
+#### SCENARIO-SUBSTRATE-ALIAS-4
+
+Given a staged diff that REMOVES an alias, or changes unrelated lines,
+the lint SHALL pass — the requirement is on widening the gate, not on
+touching the file.
+
+#### SCENARIO-SUBSTRATE-ALIAS-5
+
+Given a `git diff` invocation that fails, the lint SHALL exit non-zero
+stating it could not verify, never exit zero.
+
+## Implementation Status (REQ-SUBSTRATE-ALIAS-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-SUBSTRATE-ALIAS-1 | Implemented (`scripts/substrate_alias_evidence_lint.py`; pre-commit hook `substrate-alias-evidence-lint`; `ops/substrate_alias_acks.md` as the operator-ack channel) | Implemented (`tests/python/test_substrate_alias_evidence_lint.py`; mutations: evidence check disabled -> RED, fail-open on git error -> RED, removal treated as addition -> RED) |
+
 ## REQ-CONDUCTOR-VERDICT-1: Artifacts MAY Declare A Closed Verdict Class, Cross-Checked Structurally
 
 Design: `docs/research-notes/conductor-self-improvement-2026-08-21.md`

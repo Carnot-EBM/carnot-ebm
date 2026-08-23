@@ -168,3 +168,74 @@ class TestQaAuditBudgetAndRotation:
         with pytest.raises(IsADirectoryError):
             qla.main()
         assert not (tmp_path / "ops" / ".qa_layer_audit_rotation.json").exists()
+
+
+class TestBudgetTimeoutSlack:
+    """REQ-CONDUCTOR-RECEIPT-2: a caller timeout must outlast its own budget.
+
+    SCENARIO-CONDUCTOR-RECEIPT-5 / -6. The budget is checked BETWEEN units, so a
+    unit that starts just before the deadline still runs to completion. If the
+    caller's kill timeout does not leave room for that unit plus the report
+    write, the PARTIAL-report mechanism cannot fire and the audit dies silently
+    -- which is what happened to the QA-layer audit at 750s budget / 900s
+    timeout against units measured at 250-375s each.
+
+    This reads the REAL conductor source rather than a fixture: the defect was
+    two constants drifting apart, and only the real call sites can show that.
+    """
+
+    @staticmethod
+    def _budgeted_call_sites() -> list[tuple[str, int, int]]:
+        """(audit name, --budget-seconds, timeout=) for every budgeted call."""
+        import ast
+
+        tree = ast.parse((REPO_ROOT / "scripts" / "research_conductor.py").read_text())
+        found: list[tuple[str, int, int]] = []
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            if getattr(node.func, "id", None) != "_run_audit_with_receipt":
+                continue
+            name = None
+            if node.args and isinstance(node.args[0], ast.Constant):
+                name = node.args[0].value
+            timeout = None
+            for kw in node.keywords:
+                if kw.arg == "timeout" and isinstance(kw.value, ast.Constant):
+                    timeout = kw.value.value
+            budget = None
+            for arg in node.args:
+                if not isinstance(arg, ast.List):
+                    continue
+                parts = [e.value for e in arg.elts if isinstance(e, ast.Constant)]
+                for i, part in enumerate(parts):
+                    if part == "--budget-seconds" and i + 1 < len(parts):
+                        budget = int(parts[i + 1])
+            if budget is not None and timeout is not None:
+                found.append((str(name), budget, timeout))
+        return found
+
+    def test_slack_constant_covers_a_worst_case_unit(self) -> None:
+        # 375s was the worst measured QA-layer unit (2 units / 750s budget,
+        # 2026-08-22). The constant must cover that plus the report write.
+        assert rc.AUDIT_TIMEOUT_SLACK_S >= 375
+
+    def test_every_budgeted_audit_has_slack(self) -> None:
+        sites = self._budgeted_call_sites()
+        # Guard the guard: if the AST walk finds nothing, this test would pass
+        # vacuously and the invariant would go unchecked.
+        assert sites, "no budgeted _run_audit_with_receipt call sites found"
+        violations = [
+            f"{name}: timeout={timeout} < budget={budget} + slack={rc.AUDIT_TIMEOUT_SLACK_S}"
+            for name, budget, timeout in sites
+            if timeout < budget + rc.AUDIT_TIMEOUT_SLACK_S
+        ]
+        assert not violations, "; ".join(violations)
+
+    def test_qa_layer_budget_reviews_more_than_a_handful(self) -> None:
+        # The origin incident was not only the timeout: a 750s budget against
+        # 250-375s units could review 2-3 of 20 selected units, so rotation
+        # crawled (offset 5 of 174). Assert the budget buys a meaningful slice.
+        sites = {name: (budget, timeout) for name, budget, timeout in self._budgeted_call_sites()}
+        budget, _ = sites["qa-layer-authenticity-audit"]
+        assert budget // 375 >= 4, f"budget {budget}s reviews < 4 worst-case units"

@@ -163,6 +163,14 @@ WHOLE_FILE_TARGETS = (
 # ---------------------------------------------------------------------------------------
 GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
     (
+        PROJECT_ROOT / "scripts" / "substrate_alias_evidence_lint.py",
+        "decides whether a commit may WIDEN adversarial_verify's no-LLM allowlist, and "
+        "every name added there exempts artifacts from the fabrication gate's duration "
+        "check -- a silent non-firing here lets an experiment clear the gate by naming "
+        "its own substrate in the gate (measured 2026-08-23: 19 of 38 aliases added in "
+        "two days, each in the same commit as the artifact it exempted)",
+    ),
+    (
         PROJECT_ROOT / "scripts" / "determination_preservation_lint.py",
         "refuses commits that drop a fabrication-gate determination; the 2026-07-29 "
         "silent non-firing is this audit's second origin incident",
