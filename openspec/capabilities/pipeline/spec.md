@@ -1333,6 +1333,73 @@ MUST be `"nvidia_smi_unavailable"`.
 
 **Spec traces:** REQ-INFRA-055, REQ-INFRA-056
 
+### REQ-INFRA-079: GPU Zombie Sweeps MUST Spare Inference Servers and MUST Gate Utilization Per-GPU
+
+**Statement:** Every GPU zombie sweep in this project (`ExperimentTemplate.kill_gpu_zombies()`
+in `scripts/experiment_template.py`, both the pynvml path and the nvidia-smi fallback,
+`kill_gpu_zombies()` in `python/carnot/pipeline/gpu_zombie_killer.py`, and
+`ExpandedGPUReaper.reap()` in `python/carnot/pipeline/expanded_gpu_reaper.py`) MUST (1) skip any
+process whose cmdline identifies it as an inference server (`llama-server`, or
+`vllm.entrypoints.openai.api_server`), and (2) when a sweep gates its kill decision on GPU
+utilization, it MUST read the utilization of the GPU the candidate process is actually
+running on — never an aggregate (minimum, mean) across all GPUs.
+
+**Why this matters (origin, 2026-08-23):** the standing unsolved "llama-server reaper"
+(ops/known-issues.md, five entries dated 2026-08-09) was this code. The nvidia-smi fallback
+took the MINIMUM utilization across all GPUs as its idle signal. An idle GPU 0 dragged the
+gate to 0%, and the sweep then SIGTERMed a llama-server on GPU 1 that was decoding at
+34 tok/s with GPU 1 at 97% utilization (live-reproduced 2026-08-23; the sweep logged
+`gpu_util=0.0%` for that process). The sweep runs unconditionally in
+`ExperimentTemplate.setup()`, including at pytest import time, so every conductor
+experiment start re-fired it. This voided every scored-path live measurement in the
+2026-08-22/23 window (six of six A/B rows `llm_on_row_valid: false`). A serving process
+idles between requests by design, so "big VRAM + idle GPU" is its normal healthy state —
+the zombie heuristic is category-invalid for servers. A genuinely dead or orphaned server
+is `run_stop_authority.py`'s job, which verifies ownership before acting; a blunt sweep is
+the wrong tool. The same reasoning produced the training-process exemption on 2026-06-13
+after the same sweep repeatedly killed an outer-loop training run; this requirement
+generalizes that fix to the server class that was left out.
+
+**Acceptance criteria:**
+- A process whose cmdline contains `llama-server` or `vllm.entrypoints.openai.api_server`
+  is never signalled by any zombie sweep, and each skip is logged with the reason.
+- The nvidia-smi fallback joins each compute process to its own GPU via `gpu_uuid` and
+  gates on that GPU's utilization. When per-GPU attribution is unavailable, the sweep
+  MUST skip the kill (fail toward not killing), never fall back to an aggregate gate.
+- The training-process exemption (REQ-INFRA-074 lineage, `_TRAINING_ENTRYPOINT_MARKERS`)
+  is unchanged.
+
+**Spec traces:** REQ-INFRA-079
+
+### SCENARIO-INFRA-6560: Busy GPU-1 Server Survives a Sweep While GPU 0 Idles
+
+**Given** nvidia-smi reports a llama-server process holding 8 GB on GPU 1 at 97% utilization
+**And** GPU 0 reports 0% utilization
+**When** `ExperimentTemplate.kill_gpu_zombies()` runs via the nvidia-smi fallback
+**Then** the llama-server PID receives no signal
+**And** the result's `killed_pids` is empty
+
+**Spec traces:** REQ-INFRA-079
+
+### SCENARIO-INFRA-6561: Idle Inference Server Is Exempt by Name
+
+**Given** a llama-server process holds more than 1 GB VRAM on a GPU at 0% utilization
+**When** any project zombie sweep runs (`experiment_template` either path, or
+`gpu_zombie_killer.kill_gpu_zombies`)
+**Then** the server PID is skipped with a logged reason
+**And** a non-server `python3` process meeting the same thresholds on the same GPU is
+still killed
+
+**Spec traces:** REQ-INFRA-079
+
+### SCENARIO-INFRA-6562: Missing Per-GPU Attribution Fails Toward Not Killing
+
+**Given** nvidia-smi output lacks a parseable `gpu_uuid` for a candidate process
+**When** the nvidia-smi fallback evaluates that candidate
+**Then** the candidate is skipped, not killed under an aggregate utilization gate
+
+**Spec traces:** REQ-INFRA-079
+
 ### REQ-INFRA-057: NPU Unblock Automated Install Strategy Limit
 
 **Statement:** NPU unblock experiments MUST attempt Option A (GitHub Releases wheel) first,

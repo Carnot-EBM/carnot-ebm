@@ -60,6 +60,29 @@ __all__ = [
     "ExpandedGPUReapResult",
 ]
 
+# Inference servers this reaper must NEVER kill (REQ-INFRA-079, 2026-08-23).
+# The age+subtree rule alone is an exact description of every legitimate
+# outer-loop GPU measurement: not a conductor descendant, >=1 GiB, running for
+# hours (see the 2026-08-23 systemd drop-in 50-reaper-dryrun-20260823.conf that
+# had to disable this reaper for exactly that reason). A serving process is
+# never a zombie by virtue of being old and out-of-tree; orphaned servers are
+# scripts/run_stop_authority.py's job, which verifies ownership before acting.
+# Kept in sync with _SERVER_ENTRYPOINT_MARKERS in scripts/experiment_template.py.
+_PROTECTED_SERVER_MARKERS: tuple[str, ...] = (
+    "llama-server",
+    "vllm.entrypoints.openai.api_server",
+)
+
+
+def _pid_is_protected_server(pid: int) -> bool:
+    """True if PID's cmdline names an inference server (never a reap target)."""
+    try:
+        with open(f"/proc/{pid}/cmdline", "rb") as fh:
+            cmdline = fh.read().replace(b"\x00", b" ").decode("utf-8", "replace")
+    except OSError:
+        return False
+    return any(marker in cmdline for marker in _PROTECTED_SERVER_MARKERS)
+
 
 # ---------------------------------------------------------------------------
 # Config
@@ -114,7 +137,7 @@ class ExpandedGPUReapResult:
         reason.  Each entry: {'pid': int, 'used_memory_mb': int,
         'process_name': str, 'age_s': int, 'reason': str}.
         Reasons: 'in_our_subtree', 'below_min_vram', 'below_min_age',
-                 'kill_error', 'dry_run_candidate'.
+                 'kill_error', 'dry_run_candidate', 'protected_server'.
     total_vram_freed_mb : int
         Sum of used_memory_mb for all killed entries (0 if dry_run).
     honest_verdict : str
@@ -319,6 +342,27 @@ class ExpandedGPUReaper:
                         "age_s": age_s,
                         "reason": "in_our_subtree",
                     }
+                )
+                continue
+
+            # REQ-INFRA-079 / SCENARIO-INFRA-6561: an inference server is
+            # never a reap target, however old or out-of-tree it is.
+            if _pid_is_protected_server(pid):
+                age_s = self._process_age_s(pid)
+                skipped.append(
+                    {
+                        "pid": pid,
+                        "used_memory_mb": vram_mb,
+                        "process_name": name,
+                        "age_s": age_s,
+                        "reason": "protected_server",
+                    }
+                )
+                _log.info(
+                    "ExpandedGPUReaper: SKIP protected server pid=%d name=%r vram=%d MiB",
+                    pid,
+                    name,
+                    vram_mb,
                 )
                 continue
 
