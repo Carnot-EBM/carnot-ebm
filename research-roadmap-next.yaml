@@ -1,0 +1,626 @@
+milestone: "2026.08.569"
+milestone_title: "Proof-Carrying Extraction and Graph-Potts Self-Learning"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+  - id: exp6565-v569-evidence-and-retirement-contract
+    milestone: "2026.08.569"
+    deliverable: results/experiment_6565_v569_evidence_and_retirement_contract.json
+    title: "V569 evidence lineage, failed-scope, and retirement contract"
+    priority: critical
+    track: infrastructure-governance
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 100
+    estimated_wall_time_min: 90
+    model: opus
+    prior_failures:
+      - experiment_id: exp6561-v568-evidence-gate-contract
+        verdict: "complete_v568_evidence_gate_contract_ready: V567 artifacts are content-addressed; production Exp6549-Exp6551 are eligible; V568 gate, prior-failure, model, hardware, and protected-file contracts close"
+        addressed_by: "Exp6561's artifact was structurally ready but live adversarial verification flagged DURATION_TOO_SHORT. V569 recomputes timing, verifier flags, provenance, and every downstream gate from immutable V568 rows instead of inheriting its readiness headline."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      V568 completed Exp6561 through Exp6564. Exp6561 supplied a usable contract but received a live DURATION_TOO_SHORT flag. Exp6562 disqualified the saturation evidence. Exp6563 found no production benefit. Exp6564 found 0.764013447x Rust/PyO3 speedup against a 10x requirement. V569 needs one additive evidence and retirement root before it extends any lane. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_6561_v568_evidence_gate_contract.json through {project_root}/results/experiment_6564_rust_pyo3_safety_net_nfr01.json
+      - {project_root}/research-complete.yaml, {project_root}/research-references.md, {project_root}/ops/exclusion_manifest.yaml, and {project_root}/ops/conductor-log.md
+      - {project_root}/scripts/adversarial_verify.py, {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/conductor_gates.py, {project_root}/scripts/roadmap_schema.py, and {project_root}/scripts/exclusion_manifest_lint.py
+      - {project_root}/_bmad/prd.md, {project_root}/_bmad/architecture.md, relevant capability specs, {project_root}/_bmad/traceability.md, and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Build the additive V569 evidence, gate, failed-scope, and retirement contract. Import V568 evidence only by immutable path and hash. Freeze every task ID, deliverable, gate field, prior-failure entry, model rule, ARC boundary, hardware boundary, and terminal verdict rule.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record git status, CPU, RAM, disk, Python, Rust, PyO3, Z3, artifact paths and hashes, protected-file hashes, monotonic timer resolution, architecture freshness, and network status. Perform no LLM load and no hardware command.
+      1. Add or confirm REQ-* and SCENARIO anchors for immutable evidence import, live verifier replay, closed verdict classes, exact gate spelling, prior-failure completeness, model policy, hardware boundaries, and atomic terminal output. Write focused tests first.
+      2. Run live adversarial verification and row-consistency checks on Exp6561 through Exp6564. Record one eligibility row per artifact, including verifier version, command, exit status, stamped flags, live flags, duration, and reason.
+      3. Mark Exp6562 disqualified science, Exp6563 clean null production evidence, and Exp6564 clean null NFR01 evidence. Do not extend the Exp6556 saturation headline. Keep the production adapter default-off.
+      4. Permit Exp6574 only as a changed fused-workload mechanism. Freeze a retirement rule: a repeated no-benefit or NFR01 miss retires the Safety-Net acceleration lane.
+      5. Confirm that every structured gate names a task in this roadmap and an identically spelled REQUIRED ARTIFACT FIELD. Confirm that every scope-matched failure has all four prior-failure fields and that no requires-chain references a retired ID.
+      6. Attack missing artifacts, hash aliases, aggregate-only claims, stamped-versus-live verifier disagreement, impossible timing, field-name drift, legacy-model substitution, retired extractor reuse, and protected-file mutation.
+      7. Set v569_evidence_contract_ready_score=1.0 only when all evidence, gate, failure, model, ARC, hardware, and protected-file contracts close. Set rust_fusion_reopen_ready_score=1.0 only when the proposed fused workload is materially different from Exp6564 and the retirement rule is frozen.
+      8. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, roadmap schema validation, gate audit, exclusion-manifest lint, prior-failure validation, row lint, adversarial verification, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6565_v569_evidence_and_retirement_contract.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal state prevents a bootstrap record from posing as a closed evidence root."
+        honest_verdict:
+          principle: "The verdict must state evidence eligibility, failed scopes, and retirement boundaries with a terminal prefix."
+        verdict_class:
+          principle: "A closed enum carries null, blocked, partial, and disqualified status downstream."
+        v568_artifact_eligibility_rows:
+          principle: "One row per V568 artifact makes each import decision recheckable."
+        live_verifier_and_duration_rows:
+          principle: "Fresh commands, exits, flags, and monotonic durations resolve the Exp6561 inconsistency."
+        v569_gate_contract_rows:
+          principle: "Every downstream gate must name an in-roadmap task and exact upstream field."
+        prior_failure_and_retirement_rows:
+          principle: "Every matched failure needs a changed mechanism and a mechanical repeat-retirement rule."
+        model_arc_and_hardware_boundary:
+          principle: "The contract freezes flagship, no-ARC-solve, and zero-unchanged-command rules."
+        v569_evidence_contract_ready_score:
+          principle: "One binary field gates tasks that require the full V569 contract."
+        rust_fusion_reopen_ready_score:
+          principle: "A separate binary field permits only the changed fused workload and freezes retirement."
+        per_unit_rows:
+          principle: "Artifact-level rows prevent one bad input from hiding in an aggregate."
+        aggregate_row_recomputation:
+          principle: "Readiness fields must derive only from emitted rows."
+        gate_check_summary:
+          principle: "A blocked verdict must name the failed check and observed value."
+        preconditions_checked:
+          principle: "Resource and input receipts distinguish missing prerequisites from evidence failure."
+        protected_files_unchanged:
+          principle: "The task must not mutate research-roadmap.yaml or scripts/research_conductor.py."
+        inference_substrate:
+          principle: "This is immutable artifact audit with no new LLM inference."
+        verifier_is_oracle:
+          principle: "Artifact validation is audit authority, so a clean result cannot use a positive class."
+        field_provenance:
+          principle: "Every headline field identifies source rows, hashes, and reducer."
+        duration_s:
+          principle: "Monotonic duration exposes skipped contract work."
+        tests_run:
+          principle: "Named commands and exit codes make the contract reproducible."
+        reproducibility_checksum:
+          principle: "A final content hash detects terminal-record mutation."
+      Set inference_substrate=immutable_v568_artifact_gate_failure_and_retirement_audit_no_llm and verifier_is_oracle=true. A clean contract uses verdict_class=null, a usable subset uses partial, missing input uses blocked, and false provenance uses disqualified.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6565_v569_evidence_and_retirement_contract --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6566-proof-obligation-and-graph-potts-method-contract
+    milestone: "2026.08.569"
+    deliverable: results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json
+    title: "Proof-obligation extraction and graph-Potts preregistration"
+    priority: critical
+    track: research-method
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 75
+    model: sonnet
+    prompt: |
+      CONTEXT
+      V569 introduces two new mechanisms from the dated source refresh: source-span-bound proof obligations and graph-structured online difficulty estimation with a Potts prior. The design must be frozen before model output or comparative outcomes exist. Exact executable checks remain release authority. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, {project_root}/research-references.md, and the V569 roadmap document
+      - {project_root}/python/carnot/extraction/, {project_root}/python/carnot/constraints/, {project_root}/python/carnot/verify/, and their tests
+      - {project_root}/python/carnot/experiment_6555_proof_preserving_constraint_saturation_fixture.py and current DRIFT intake, exact replay, conflict-memory, and challenge-selection modules
+      - {project_root}/results/experiment_5909_sota_constraint_synthesis_ab.json, {project_root}/results/experiment_5910_verification_guided_constraint_repair.json, and {project_root}/results/experiment_5923_sota_schema_supported_constraintir_ab.json
+      - arXiv:2608.17941, arXiv:2608.18574, arXiv:2608.20137, and arXiv:2608.13077 primary pages
+      - relevant specs, exclusions, architecture, traceability, status, changelog, and E2E plan
+
+      TASK
+      Preregister the source-span proof-obligation method, immutable claim-stream design, graph-Potts estimator, matched-dose continuous-learning arms, frozen splits, acceptance gates, and retirement rules. Implement only conformance fixtures and contracts needed to make the method executable.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record source availability and hashes, installed compiler and solver versions, corpus paths and hashes, CPU, RAM, disk, protected-file hashes, and no-LLM/no-hardware status.
+      1. Add or confirm REQ-* and SCENARIO anchors for source-byte binding, whitelisted typed relations, compiler-owned proof obligations, abstention, counterexamples, graph construction, Potts/Beta-Binomial updates, matched dose, chronological evaluation, and atomic artifacts. Write tests first.
+      2. Freeze the proof-obligation surface. Each claim must carry source-byte offsets, source hash, typed variables, whitelisted relation, compiler version, executable obligation hash, exact result, and abstention or release action. Do not generate a full ConstraintIR.
+      3. Freeze family-blind train, chronological-adaptation, retention, and future-support slices. Freeze unit IDs by content hash before model inference.
+      4. Freeze graph features to executable family, arity, relation type, interaction class, exact conflict features, and proof-obligation type. Exclude model identity, target label, source ID, entity names, and row order.
+      5. Specify the Potts prior, Beta-Binomial observation model, online mean-field update, convergence criterion, numerical clamps, cold-start rule, restart state, and rollback state. Add hand-checkable conformance rows.
+      6. Freeze frozen/no-memory, uniform verified replay, recent-failure, exact contextual-bandit, and graph-Potts arms. Match prompt, candidate pool, seed, memory capacity, write opportunity, evaluation point, and charged dose.
+      7. Freeze extraction and CSL acceptance gates. Extraction needs exact-certified held coverage improvement, noninferior precision, zero unsafe release, and complete cost rows. CSL needs current benefit, retention, future support, exact safety, restart, rollback, and noninferior charged cost.
+      8. Attack source-offset drift, schema-valid but semantic-invalid output, model identity leakage, future-label leakage, graph disconnection, mean-field nonconvergence, unequal dose, same-query mutation, and post-outcome threshold changes.
+      9. Set source_method_contract_ready_score=1.0 only when every equation, split, field, reducer, attack, and retirement rule is frozen. Write one terminal artifact atomically and run focused tests, lint, spec coverage, row lint, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The method contract must close terminally before outcome-bearing work."
+        honest_verdict:
+          principle: "The verdict states whether the new mechanisms are executable and preregistered."
+        verdict_class:
+          principle: "Method readiness is infrastructure evidence, not positive science."
+        source_review_receipts:
+          principle: "Primary-source IDs, dates, and hashes anchor the imported ideas."
+        proof_obligation_schema_and_compiler_contract:
+          principle: "Byte spans and compiler-owned obligations separate this method from retired full-ConstraintIR output."
+        frozen_split_and_unit_commitment:
+          principle: "Content-hashed units prevent post-outcome split changes."
+        graph_feature_and_leakage_contract:
+          principle: "Only decision-time executable features may construct the challenge graph."
+        potts_beta_binomial_equations:
+          principle: "The estimator needs explicit equations, clamps, convergence, restart, and rollback."
+        matched_dose_arm_contract:
+          principle: "All continuous-learning arms must receive equal opportunities and capacity."
+        extraction_and_csl_acceptance_gates:
+          principle: "Current gain cannot hide unsafe release, forgetting, support loss, or cost."
+        conformance_rows:
+          principle: "Hand-checkable fixtures show that equations, compiler, and reducers are executable."
+        source_method_contract_ready_score:
+          principle: "One binary field gates model admission, claim-stream, graph, and CSL work."
+        per_unit_rows:
+          principle: "Each conformance unit remains independently checkable."
+        aggregate_row_recomputation:
+          principle: "Readiness derives only from frozen conformance rows."
+        gate_check_summary:
+          principle: "A blocked contract names the missing source, equation, fixture, or field."
+        preconditions_checked:
+          principle: "Source and tool receipts distinguish method failure from missing prerequisites."
+        protected_files_unchanged:
+          principle: "The method contract preserves protected orchestration files."
+        inference_substrate:
+          principle: "This is literature-grounded local conformance work with no LLM inference."
+        verifier_is_oracle:
+          principle: "Contract conformance is audit authority and cannot create a scientific positive."
+        field_provenance:
+          principle: "Every field points to source text, equation, fixture, or reducer."
+        duration_s:
+          principle: "Monotonic time exposes a contract that skipped conformance work."
+        tests_run:
+          principle: "Named tests prove the frozen methods execute."
+        reproducibility_checksum:
+          principle: "A final hash protects the preregistration."
+      Set inference_substrate=primary_source_method_preregistration_and_local_conformance_no_llm and verifier_is_oracle=true. Use verdict_class=null when ready, partial when usable but incomplete, blocked for missing prerequisites, and disqualified for retrospective method changes.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6566_proof_obligation_and_graph_potts_method_contract --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6567-sequential-flagship-gguf-admission
+    milestone: "2026.08.569"
+    deliverable: results/experiment_6567_sequential_flagship_gguf_admission.json
+    title: "Sequential flagship GGUF admission by actual execution"
+    priority: critical
+    track: model-runtime
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 100
+    estimated_wall_time_min: 180
+    model: opus
+    prior_failures:
+      - experiment_id: exp6553-prospective-sota-continuous-self-learning
+        verdict: "blocked: current, retention, and future-support not evaluated; safety not promoted; receipts failed gpu_vram_contract"
+        addressed_by: "Exp6553 predicted fit with a threshold that required free VRAM to equal device capacity and never loaded a model. Exp6567 admits each model only through an actual sequential load, token smoke, sampled GPU use, clean exit, unload, and bounded recovery."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6565-v569-evidence-and-retirement-contract
+        artifact_field: v569_evidence_contract_ready_score
+        op: "=="
+        value: 1.0
+      - upstream: exp6566-proof-obligation-and-graph-potts-method-contract
+        artifact_field: source_method_contract_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT
+      V567's prospective flagship CSL run blocked before inference because its free-VRAM rule could not pass on a 24 GB device with normal driver reservations. V569 uses actual sequential execution as the only fit authority. This is admission, not a model-quality experiment. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, scripts/experiment_template.py, and the V569 roadmap document
+      - {project_root}/results/experiment_6565_v569_evidence_and_retirement_contract.json and {project_root}/results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json
+      - {project_root}/results/experiment_6553_prospective_sota_continuous_self_learning.json and its runtime, checkpoint, and model-resolution code
+      - cached_sota_pair(), resolve_cached_gguf(), llama.cpp launch helpers, embedded-tokenizer helpers, GPU telemetry code, and their tests
+      - relevant model-ingestion specs, exclusions, architecture, traceability, status, changelog, and E2E plan
+
+      TASK
+      Admit every mandated flagship GGUF family through a real one-at-a-time llama.cpp load and unload. Emit authentic model, process, GPU, token, output, exit, unload, and recovery receipts. Do not infer fit from free-memory arithmetic.
+
+      MODEL_SPECS
+      - unsloth/Qwen3.6-35B-A3B-GGUF
+      - unsloth/gemma-4-31B-it-GGUF
+      - unsloth/gemma-4-26B-A4B-it-GGUF
+      Legacy Qwen3.5-0.8B and gemma-4-E4B-it may run CPU smoke only. They cannot satisfy admission.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: evaluate both structured gates and record expected and observed values, upstream paths and hashes, CPU, RAM, disk, CUDA, driver, llama.cpp, llama-cpp-python, Z3, cached model candidates, protected-file hashes, and initial per-GPU state.
+      1. Add or confirm REQ-* and SCENARIO anchors for cached GGUF resolution, embedded tokenizers, sequential load, telemetry authenticity, unload recovery, blocked outcomes, and atomic output. Write tests first.
+      2. Resolve each required repository to a concrete cached `.gguf` file. Record repository ID, quantization, absolute path, byte size, SHA-256, mtime, and tokenizer metadata. Do not download a replacement silently.
+      3. Freeze one short deterministic nonconstant prompt and token budget. Start one model worker at a time. Record exact command, PID, parent PID, start/end time, stdout/stderr hashes, raw output hash, token IDs or token hash, exit code, and timeout state.
+      4. Sample `nvidia-smi` before, during, and after each process. Tie samples to PID and timestamps. Reject constant fabricated samples, stale PIDs, empty output, echo-only output, and self-reported process identity.
+      5. After each process exits, prove that no worker remains and device memory returns within a frozen tolerance of the pre-load baseline before starting the next family.
+      6. Keep all three families separate. One successful family cannot stand in for another. Do not use CPU smoke rows in any readiness reducer.
+      7. Attack missing weights, wrong repository aliases, wrong tokenizer, split files, stale workers, output reuse, constant GPU samples, failed unload, hidden simultaneous residency, and protected-file mutation.
+      8. Set all_mandated_models_loaded_score=1.0 only when all three required families have authentic load, token, GPU, exit, unload, and recovery rows. Write one terminal artifact atomically and run focused tests, lint, spec coverage, gate audit, row lint, adversarial verification, model-runtime E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6567_sequential_flagship_gguf_admission.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "Admission must close terminally for ready, partial, or blocked runtime state."
+        honest_verdict:
+          principle: "The verdict names each admitted or blocked flagship family."
+        verdict_class:
+          principle: "Runtime readiness cannot be confused with positive model science."
+        upstream_gate_receipts:
+          principle: "Admission identifies the exact evidence and method contracts that authorized it."
+        MODEL_SPECS:
+          principle: "The artifact records all three mandated repository identities."
+        resolved_model_file_rows:
+          principle: "Concrete file, size, hash, quantization, and tokenizer receipts prevent alias substitution."
+        live_process_and_token_rows:
+          principle: "Commands, PIDs, outputs, tokens, exits, and timings prove actual execution."
+        gpu_telemetry_rows:
+          principle: "Timestamped PID-linked samples prove device use without impossible capacity thresholds."
+        unload_and_recovery_rows:
+          principle: "Each family must leave no worker and recover bounded device memory before the next load."
+        all_mandated_models_loaded_score:
+          principle: "One binary field gates every headline LLM experiment."
+        per_unit_rows:
+          principle: "Each model and smoke condition remains separately recheckable."
+        aggregate_row_recomputation:
+          principle: "Admission derives from required-family rows only."
+        gate_check_summary:
+          principle: "A blocked run names the failed gate, model, runtime, telemetry, or recovery check."
+        preconditions_checked:
+          principle: "Host and cache receipts distinguish absent prerequisites from runtime failure."
+        protected_files_unchanged:
+          principle: "Admission does not mutate protected orchestration files."
+        inference_substrate:
+          principle: "The artifact declares live sequential local GGUF execution."
+        verifier_is_oracle:
+          principle: "This is infrastructure admission, not verifier science."
+        field_provenance:
+          principle: "Every readiness field points to raw process, GPU, and file receipts."
+        random_seed:
+          principle: "The frozen prompt and seed make token smoke repeatable."
+        duration_s:
+          principle: "Monotonic duration covers every load and recovery interval."
+        tests_run:
+          principle: "Named tests and E2E commands show runtime checks executed."
+        reproducibility_checksum:
+          principle: "A final hash protects admission receipts."
+      Set inference_substrate=live_sequential_local_flagship_gguf_runtime_admission and verifier_is_oracle=true. Use verdict_class=null when all admission checks pass, partial when some families run, blocked for missing runtime or weights, and disqualified for false receipts.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6567_sequential_flagship_gguf_admission --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6568-immutable-source-span-claim-stream
+    milestone: "2026.08.569"
+    deliverable: results/experiment_6568_immutable_source_span_claim_stream.json
+    title: "Immutable live source-span claim stream on three flagship families"
+    priority: critical
+    track: verified-data
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 360
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp6562-constraint-saturation-independent-audit-v2
+        verdict: "disqualified_constraint_saturation_independent_audit_v2: fixture, live provenance, exact replay, release, harm, or cost evidence is non-recomputable"
+        addressed_by: "Exp6562 audited a prior aggregate lineage with missing raw provenance and cost receipts. Exp6568 creates a fresh immutable evidence root before comparison, with source bytes, raw model bytes, exact target replay, token and GPU receipts, and row-derived charged costs."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6566-proof-obligation-and-graph-potts-method-contract
+        artifact_field: source_method_contract_ready_score
+        op: "=="
+        value: 1.0
+      - upstream: exp6567-sequential-flagship-gguf-admission
+        artifact_field: all_mandated_models_loaded_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT
+      Exp6562 disqualified the prior saturation lineage because live provenance, release replay, harm, and charged cost could not be reconstructed. V569 needs a new immutable raw-response stream before it tests extraction or learning. This task creates data and provenance only. It makes no extractor-quality claim. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, scripts/experiment_template.py, and the V569 roadmap document
+      - {project_root}/results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json and {project_root}/results/experiment_6567_sequential_flagship_gguf_admission.json
+      - {project_root}/results/experiment_6542_drift_bench_external_intake_v2.json, {project_root}/results/experiment_6543_external_corpus_independent_audit_v2.json, and the pinned DRIFT files
+      - exact source loader, family-blind split, llama.cpp runtime, raw-response store, token accounting, Z3 replay, atomic shard journal, and their tests
+      - relevant data, model, exact-replay, artifact, and provenance specs plus exclusions, traceability, and E2E plan
+
+      TASK
+      Generate and freeze a family-blind chronological claim stream from all three mandated local GGUF families. Store exact source bytes, prompt bytes, raw response bytes, model and GPU receipts, exact targets, replay outcomes, and charged costs before any extractor comparison.
+
+      MODEL_SPECS
+      - unsloth/Qwen3.6-35B-A3B-GGUF
+      - unsloth/gemma-4-31B-it-GGUF
+      - unsloth/gemma-4-26B-A4B-it-GGUF
+      Legacy small models may validate plumbing only and cannot enter the immutable headline stream.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: evaluate both structured gates; record upstream paths, fields, observed values, and hashes; record corpus, split, checker, model, tokenizer, CPU, RAM, disk, GPU, runtime, timer, journal, and protected-file receipts.
+      1. Add or confirm REQ-* and SCENARIO anchors for family-blind sampling, immutable source and prompt bytes, raw output storage, authentic live receipts, exact target replay, atomic shards, charged costs, and terminal artifacts. Write tests first.
+      2. Freeze a bounded corpus slice across constraint families, arities, interaction classes, and surface forms. Commit content hashes and chronological adaptation, retention, and future-support positions before inference.
+      3. Freeze one natural-language answer task and one prompt template. Do not request full ConstraintIR or schema-constrained output. Preserve source bytes and byte-offset indexing conventions.
+      4. Load one admitted model at a time. For every unit and seed, store prompt bytes, command, PID, model hash, tokenizer receipt, GPU samples, raw response bytes, token hash and count, exit, timeout, wall time, and unload state.
+      5. Replay the corpus's exact target and source validity independently. Store target model, exact result, witness or counterexample, checker hash, and replay duration. Do not derive labels from model text.
+      6. Charge prompt and output tokens, retries, timeouts, process time, wall time, solver calls, persistence bytes, and failed units. Preserve censored rows.
+      7. Write content-addressed JSONL shards with an append-only journal and atomic final manifest. Prove restart produces no duplicate or lost unit.
+      8. Attack source mutation, duplicate IDs, model-output reuse, stale PIDs, constant GPU samples, missing failures, hidden retries, target leakage, row-order leakage, hash aliases, and cost omissions.
+      9. Set immutable_live_claim_stream_ready_score=1.0 only when all required model-family cells, raw receipts, exact targets, costs, hashes, and restart checks close. Write the terminal artifact atomically and run focused tests, lint, spec coverage, gate audit, row lint, adversarial verification, exact-replay E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6568_immutable_source_span_claim_stream.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The stream must close terminally and cannot stop at a shard bootstrap record."
+        honest_verdict:
+          principle: "The verdict states row, model, provenance, exact-target, cost, and restart completeness."
+        verdict_class:
+          principle: "Dataset readiness is not a positive extractor claim."
+        upstream_gate_receipts:
+          principle: "The stream identifies the method and actual-load evidence that authorized generation."
+        MODEL_SPECS:
+          principle: "All three mandated families are frozen in the artifact."
+        frozen_unit_and_split_commitment:
+          principle: "Content hashes fix family-blind chronological positions before inference."
+        source_prompt_and_raw_response_rows:
+          principle: "Exact bytes make span binding and later audit possible."
+        live_model_gpu_token_receipts:
+          principle: "Commands, PIDs, model hashes, GPU samples, tokens, exits, and unloads prove live inference."
+        independent_exact_target_rows:
+          principle: "Checker-owned targets prevent model text from labeling itself."
+        charged_cost_rows:
+          principle: "Tokens, retries, timeouts, solver calls, persistence, and time must recompute."
+        shard_journal_and_restart_receipts:
+          principle: "Atomic shards and restart parity prevent duplicate or lost evidence."
+        immutable_live_claim_stream_ready_score:
+          principle: "One binary field gates extractor and CSL work."
+        per_unit_rows:
+          principle: "Every model, unit, seed, and failure remains independently visible."
+        aggregate_row_recomputation:
+          principle: "Completeness derives only from immutable unit rows."
+        gate_check_summary:
+          principle: "A blocked stream names the missing gate, family, receipt, target, or shard."
+        preconditions_checked:
+          principle: "Corpus, runtime, storage, and model receipts distinguish blockers from data failure."
+        protected_files_unchanged:
+          principle: "Data generation preserves protected orchestration files."
+        inference_substrate:
+          principle: "The artifact declares live sequential local flagship GGUF generation."
+        verifier_is_oracle:
+          principle: "The task creates an exact-labeled stream but makes no comparative science claim."
+        field_provenance:
+          principle: "Every aggregate points to content-addressed raw rows and reducers."
+        random_seed:
+          principle: "Frozen seeds make generation cells reproducible."
+        duration_s:
+          principle: "Monotonic duration includes generation, replay, persistence, and restart checks."
+        tests_run:
+          principle: "Named tests and E2E commands show the full stream path ran."
+        reproducibility_checksum:
+          principle: "A final manifest hash protects the evidence root."
+      Set inference_substrate=live_sequential_three_family_gguf_raw_claim_stream_with_independent_exact_targets and verifier_is_oracle=true. Use verdict_class=null for a complete stream, partial for a usable incomplete stream, blocked for missing prerequisites, and disqualified for false or mutable provenance.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6568_immutable_source_span_claim_stream --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6569-source-span-proof-obligation-extractor
+    milestone: "2026.08.569"
+    deliverable: results/experiment_6569_source_span_proof_obligation_extractor.json
+    title: "Source-span proof-obligation extraction with exact certification"
+    priority: critical
+    track: extraction-verification
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 420
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp5909-sota-constraint-synthesis-ab
+        verdict: "complete_null: structured prompt arms did not improve exact synthesis"
+        addressed_by: "Exp5909 asked models to synthesize a complete structured constraint object. Exp6569 binds atomic relations to immutable source byte spans and lets a deterministic local compiler create each proof obligation."
+        retire_if_same_verdict: true
+      - experiment_id: exp5910-verification-guided-constraint-repair
+        verdict: "complete_null: exact diagnostics did not beat matched repair controls"
+        addressed_by: "Exp5910 repaired generated text after verifier feedback. Exp6569 performs one frozen extraction pass, exact certification, and abstention; it does not reprompt or rewrite a failed formal object."
+        retire_if_same_verdict: true
+      - experiment_id: exp5923-sota-schema-supported-constraintir-ab
+        verdict: "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates"
+        addressed_by: "Exp5923 treated schema-supported full ConstraintIR generation as the mechanism. Exp6569 forbids full generated ConstraintIR and requires source offsets, whitelisted atomic relations, compiler-owned obligations, and exact release checks."
+        retire_if_same_verdict: true
+      - experiment_id: exp6562-constraint-saturation-independent-audit-v2
+        verdict: "disqualified_constraint_saturation_independent_audit_v2: fixture, live provenance, exact replay, release, harm, or cost evidence is non-recomputable"
+        addressed_by: "Exp6569 consumes the new immutable Exp6568 raw lineage, emits all model and arm rows before aggregation, and stores exact release, harm, and charged-cost receipts."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6568-immutable-source-span-claim-stream
+        artifact_field: immutable_live_claim_stream_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT
+      Carnot's largest PRD gap is natural-language extraction. Full generated ConstraintIR, schema reprompting, and verification-guided text repair are retired. Exp6568 supplies a new immutable raw source and response stream. This task tests a different mechanism: source-span-bound atomic relations compiled locally into exact proof obligations. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V569 roadmap document
+      - {project_root}/results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json and {project_root}/results/experiment_6568_immutable_source_span_claim_stream.json
+      - immutable Exp6568 JSONL shards, raw response files, split manifest, checker receipts, and cost rows
+      - current extractor/parser/abstain code, constraint AST, compiler, Z3 bridge, witness and counterexample code, and their tests
+      - Exp5909, Exp5910, and Exp5923 implementations and artifacts only to preserve the retirement boundary
+      - relevant extraction, constraint, verifier, model, artifact, and exact-replay specs plus exclusions, traceability, and E2E plan
+
+      TASK
+      Implement and compare a source-span proof-obligation extractor against the frozen current parser-and-abstain control. Every accepted atomic claim must point to source bytes and compile deterministically into an exact check. Unsupported text must abstain.
+
+      MODEL_SPECS
+      - unsloth/Qwen3.6-35B-A3B-GGUF
+      - unsloth/gemma-4-31B-it-GGUF
+      - unsloth/gemma-4-26B-A4B-it-GGUF
+      All three families need separate held rows. Small legacy models are smoke-only.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: evaluate the structured gate; record upstream path, hash, expected and observed value; record stream, compiler, checker, model, tokenizer, GPU, CPU, RAM, disk, journal, timer, and protected-file receipts.
+      1. Add or confirm REQ-* and SCENARIO anchors for exact byte spans, typed variables, whitelisted atomic relations, deterministic compilation, abstention, exact certification, counterexamples, held comparison, and atomic output. Write tests first.
+      2. Freeze the current parser-and-abstain control from existing code. Do not improve it after held results exist. Reuse the same Exp6568 raw responses and unit order.
+      3. Implement the new extractor so a proposal contains source hash, start/end byte offsets, typed variable bindings, whitelisted relation, and optional witness reference. It must not emit a full ConstraintIR or perform schema-only reprompting.
+      4. Make the local compiler the only component that constructs executable obligations. Record compiler version, normalized obligation, hash, determinism replay, Z3 result, witness or counterexample, and release or abstain action.
+      5. Run all three models and both arms on matched units, seeds, prompts, and budgets. Store per-claim and per-unit rows before aggregates.
+      6. Measure exact-certified precision, exact-certified coverage, unsupported abstention, false accept, false reject, unsafe release, counterexample yield, tokens, retries, solver calls, wall time, and censoring by model and held family.
+      7. Attack invalid UTF-8 offsets, source mutation, overlapping spans, entity and row-order leakage, relation smuggling, schema-valid semantic errors, compiler nondeterminism, verifier self-labeling, hidden retries, zero-headroom cells, and aggregate tampering.
+      8. Set proof_carrying_extractor_execution_ready_score=1.0 when rows, provenance, compilation, and exact replay close. Set proof_carrying_extractor_candidate_score=1.0 only when the preregistered held coverage improvement, noninferior precision, zero unsafe release, and charged-cost gates all pass across required model families.
+      9. Write one terminal artifact atomically. Run focused tests with full new-module coverage, lint, spec coverage, gate audit, row consistency lint, adversarial verification, extraction-to-exact-replay E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6569_source_span_proof_obligation_extractor.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal state distinguishes a full comparison from setup-only compiler work."
+        honest_verdict:
+          principle: "The verdict states provenance, exact-certified coverage, precision, release safety, and cost."
+        verdict_class:
+          principle: "A closed class preserves null, blocked, disqualified, partial, and positive outcomes."
+        upstream_gate_receipt:
+          principle: "The comparison identifies the immutable live claim stream that authorized it."
+        MODEL_SPECS:
+          principle: "All three mandated GGUF families are explicit."
+        frozen_control_and_method_contract:
+          principle: "The control and changed mechanism are fixed before held results."
+        source_span_claim_rows:
+          principle: "Every proposal carries source hash, byte bounds, variables, relation, and action."
+        compiler_and_exact_obligation_rows:
+          principle: "Deterministic compiler and solver receipts support every accepted or rejected claim."
+        per_unit_rows:
+          principle: "Every model, arm, seed, unit, and metric remains recheckable."
+        exact_certified_precision_and_coverage:
+          principle: "Coverage cannot be promoted without precision and held-family detail."
+        unsafe_release_and_abstention_rows:
+          principle: "No aggregate gain may hide one invalid released claim."
+        charged_cost_rows:
+          principle: "Tokens, retries, solver calls, time, and censoring are part of the claim."
+        shortcut_attack_matrix:
+          principle: "Span, leakage, relation, compiler, retry, and aggregate attacks test the mechanism."
+        proof_carrying_extractor_execution_ready_score:
+          principle: "A binary field states whether the comparison executed with complete evidence."
+        proof_carrying_extractor_candidate_score:
+          principle: "A separate field requires coverage, precision, safety, and cost gates."
+        aggregate_row_recomputation:
+          principle: "All headlines derive from emitted claim and unit rows."
+        gate_check_summary:
+          principle: "A blocked verdict names the failed stream, compiler, runtime, or row check and value."
+        preconditions_checked:
+          principle: "Stream, runtime, compiler, and resource receipts distinguish block from null."
+        protected_files_unchanged:
+          principle: "The experiment preserves protected orchestration files."
+        inference_substrate:
+          principle: "The artifact declares live three-family extraction over immutable raw responses."
+        verifier_is_oracle:
+          principle: "Held exact targets are independent authority, not the learned extractor being evaluated."
+        field_provenance:
+          principle: "Every result points to source bytes, raw output, compiler row, exact row, and reducer."
+        random_seed:
+          principle: "Frozen seeds make matched inference and attack order repeatable."
+        duration_s:
+          principle: "Monotonic duration includes model, compiler, exact, and persistence work."
+        tests_run:
+          principle: "Named tests and E2E commands show the whole comparison ran."
+        reproducibility_checksum:
+          principle: "A final content hash protects the comparison."
+      Set inference_substrate=live_three_family_source_span_atomic_relation_extraction_with_compiler_owned_exact_obligations and verifier_is_oracle=false. A gate-passing result may use verdict_class=positive. Use null for a clean non-win, partial for usable incomplete evidence, blocked for missing prerequisites, and disqualified for leakage, false provenance, or unsafe release.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6569_source_span_proof_obligation_extractor --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6570-proof-obligation-independent-audit
+    milestone: "2026.08.569"
+    deliverable: results/experiment_6570_proof_obligation_independent_audit.json
+    title: "Independent source-span proof-obligation evidence audit"
+    priority: critical
+    track: independent-audit
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 180
+    model: sonnet
+    prior_failures:
+      - experiment_id: exp6562-constraint-saturation-independent-audit-v2
+        verdict: "disqualified_constraint_saturation_independent_audit_v2: fixture, live provenance, exact replay, release, harm, or cost evidence is non-recomputable"
+        addressed_by: "Exp6570 audits a new content-addressed raw lineage and independently reconstructs model provenance, source spans, compiler obligations, exact releases, harm, and costs. It never imports the disqualified saturation headline."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6568 and Exp6569 create a new raw-response and proof-obligation lineage. V568 showed why a headline is unusable when provenance, exact release replay, harm, or cost cannot be reconstructed. This audit always runs and performs no new model generation. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, and the V569 roadmap document
+      - {project_root}/results/experiment_6568_immutable_source_span_claim_stream.json and all referenced immutable shards
+      - {project_root}/results/experiment_6569_source_span_proof_obligation_extractor.json and all referenced claim, compiler, exact, attack, and cost rows
+      - source-byte indexer, compiler, Z3 checker, witness and counterexample reducers, receipt validators, and tests
+      - {project_root}/scripts/adversarial_verify.py, {project_root}/scripts/verdict_row_consistency_lint.py, relevant specs, exclusions, traceability, and E2E plan
+
+      TASK
+      Independently audit the source-span proof-obligation evidence from checked-in rows. Recompute model provenance, span validity, compiler determinism, exact outcomes, releases, abstentions, harm, costs, and promotion gates without new LLM inference.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record existence, paths, hashes, byte sizes, and mtimes for upstream artifacts, shards, raw responses, model files without loading them, compiler, checker, reducers, CPU, RAM, disk, Python, Z3, timer, audit seed, and protected files.
+      1. Add or confirm REQ-* and SCENARIO anchors for independent raw receipt validation, byte-span replay, compiler replay, exact replay, paired recomputation, harm, cost, attacks, missing input, and atomic output. Write tests first.
+      2. Validate commands, PIDs, times, GPU samples, token hashes, raw output hashes, exits, unloads, source hashes, and prompt hashes. Reject self-reported or stale receipts.
+      3. Re-read source bytes and independently validate every span boundary, UTF-8 boundary, variable binding, relation, overlap rule, and source identity.
+      4. Recompile every obligation in a clean process. Compare normalized bytes and hashes. Rerun Z3 or the executable checker and compare result, witness, counterexample, release, and abstention.
+      5. Recompute held precision, coverage, false accepts, false rejects, unsafe releases, model and family effects, paired arm deltas, tokens, retries, solver calls, wall time, and censoring from rows only.
+      6. Attack missing and duplicate cells, unequal arms, hidden retries, zero-headroom wins, model and family shortcuts, source mutation, relation smuggling, compiler nondeterminism, invalid release, and aggregate tampering.
+      7. Set proof_carrying_extractor_audit_ready_score=1.0 only when raw provenance, span replay, compiler replay, exact replay, row closure, harm, cost, and attacks all close. Set proof_carrying_extractor_promotion_score=1.0 only when the independent reducer confirms every preregistered scientific gate.
+      8. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row lint, adversarial verification, independent exact-replay E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6570_proof_obligation_independent_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "An always-run audit needs a terminal state for clean, missing, invalid, and non-recomputable evidence."
+        honest_verdict:
+          principle: "The verdict separately states provenance, spans, compiler, exact release, harm, cost, and promotion."
+        verdict_class:
+          principle: "An independent audit cannot turn its own replay into positive science."
+        input_existence_and_hash_receipts:
+          principle: "The audit identifies every artifact, shard, raw response, compiler, checker, and reducer used."
+        independent_live_provenance_rows:
+          principle: "Model, process, GPU, token, output, exit, and unload receipts are independently validated."
+        independent_source_span_rows:
+          principle: "Each byte bound and typed binding is replayed against immutable source bytes."
+        independent_compiler_and_exact_replay_rows:
+          principle: "Clean-process compilation and exact checks reproduce obligations, witnesses, counterexamples, and actions."
+        independent_paired_metric_rows:
+          principle: "Coverage, precision, releases, abstentions, and deltas are recomputed by model and family."
+        harmful_release_and_cost_audit:
+          principle: "No promotion can hide one unsafe release or unrecomputable cost."
+        shortcut_attack_matrix:
+          principle: "Independent attacks cover cells, retries, leakage, mutation, compilers, releases, and aggregates."
+        proof_carrying_extractor_audit_ready_score:
+          principle: "One binary field gates the downstream learning study on usable audited evidence."
+        proof_carrying_extractor_promotion_score:
+          principle: "A separate field carries the independently confirmed scientific disposition."
+        per_unit_rows:
+          principle: "Every audit decision has row-level evidence."
+        aggregate_row_recomputation:
+          principle: "Audit readiness and promotion derive only from independent rows."
+        gate_check_summary:
+          principle: "A blocked audit names every missing or failed check and observed value."
+        preconditions_checked:
+          principle: "Input and tool receipts distinguish blocked audit work from null science."
+        protected_files_unchanged:
+          principle: "The audit must not repair upstream evidence or mutate protected files."
+        inference_substrate:
+          principle: "The audit replays checked-in evidence and performs no new GGUF generation."
+        verifier_is_oracle:
+          principle: "Independent executable replay is audit authority, so the audit class is non-positive."
+        field_provenance:
+          principle: "Each disposition points to immutable rows, hashes, commands, and reducers."
+        random_seed:
+          principle: "A fixed audit and attack order makes the result repeatable."
+        duration_s:
+          principle: "Monotonic time exposes skipped receipt or replay work."
+        tests_run:
+          principle: "Named tests and E2E commands prove independent checks ran."
+        reproducibility_checksum:
+          principle: "A final hash protects the audit trail."
+      Set inference_substrate=independent_checked_in_raw_span_compiler_exact_release_and_cost_replay_no_new_llm and verifier_is_oracle=true. Use verdict_class=null for a clean audit, partial for incomplete but usable evidence, blocked for missing inputs, and disqualified for false provenance, invalid spans, nondeterministic compilation, or unsafe release.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6570_proof_obligation_independent_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.

@@ -1,409 +1,414 @@
-# Research Roadmap V568: Audited Promotion and Adaptive Continuous Learning
+# Research Roadmap V569: Proof-Carrying Extraction and Graph-Potts Self-Learning
 
-**Milestone:** `2026.08.568`  
-**Sequence:** 568  
+**Milestone:** `2026.08.569`  
+**Sequence:** 569  
 **Planning date:** 2026-08-23  
 **Execution manifest:** `research-roadmap-next.yaml`  
 **Status:** proposed  
-**Experiment range:** Exp6561-Exp6573 (13 tasks, four phases)
+**Experiment range:** Exp6565-Exp6577 (13 tasks, four phases)
 
 ## Purpose
 
-V567 put the external Safety Net on the production and Rust/PyO3 paths. It
-proved disabled-path identity, exact fallback, cross-language parity, and
-rollback. It also built a reversible conflict-memory controller and a
-constraint-saturation benchmark. However, the milestone did not enable the
-production route. It did not obtain a prospective continuous self-learning
-result. Its independent saturation audit did not run.
+V568 closed four narrow questions. Its evidence contract was usable, but its
+own live verifier flagged an implausibly short duration. The independent
+constraint-saturation audit then disqualified the prior headline because live
+provenance, exact release replay, harm, and charged cost were not
+recomputable. The production Safety Net remained safe but showed no measured
+benefit. The Rust/PyO3 decision batch was exact but reached only 0.764x of the
+Python baseline, far below NFR01's 10x target.
 
-V568 starts with the safe task named by the V567 capstone. It audits the
-checked-in saturation rows before it starts new model work. It then measures
-the production adapter on real workload rows and measures the Rust/PyO3 hot
-path against PRD NFR01. A staged default flip can occur only after both gates
-pass.
+V569 changes the scientific surface. It does not extend the disqualified
+saturation claim and does not rerun the cheap routing benchmark. It builds an
+immutable, source-span-bound claim stream from the three mandated local GGUF
+families. It tests a proof-obligation extractor whose claims remain tied to
+source bytes and executable checks. It then uses exact failure receipts to
+drive a graph-Potts continuous self-learning loop with matched-dose controls.
 
-The self-learning phase repairs the false V567 GPU admission rule. It uses
-sequential live loads as authority. It then applies two new research ideas: an
-executable adaptive curriculum and exact failure-family selection. The
-prospective run remains transactional and reversible. Z3 and executable
-checks remain release authority.
+The milestone gives one changed Rust mechanism a final production test: fuse
+normalization, exact-conflict feature extraction, route construction, and
+request serialization into one native batch. If this larger equivalent
+workload still misses NFR01 or has no measured production value, the Safety
+Net acceleration lane retires. Z3 and executable checkers remain release
+authority throughout.
 
-## What V567 proved
+## What V568 proved
 
-| Evidence | Terminal finding | V568 consequence |
+| Evidence | Terminal finding | V569 consequence |
 |---|---|---|
-| Exp6548 evidence contract | The external V566 chain is eligible. Gate names, model rules, and hardware rules are frozen. | Reuse the clean artifact hashes. Do not repeat source intake. |
-| Exp6549 production adapter | The default-off adapter preserved disabled bytes, candidates, exact results, fallback, and rollback. | Test it on production-shaped workload rows before any default change. |
-| Exp6550 Rust/PyO3 parity | Supported requests and decisions matched across languages. Unsupported rows failed closed. | Measure the batched hot path against NFR01. Parity alone is not a speed claim. |
-| Exp6551 independent production audit | Identity, equality, parity, immutability, fallback, and rollback passed. The scientific disposition was null. | Replace synthetic adapter costs with direct workload time and work receipts. |
-| Exp6552 reversible memory | The active, dormant, and retired controller is ready. Hysteresis had no comparative benefit on the replay fixture. | Keep the controller as infrastructure. Do not claim hysteresis as a winning policy. |
-| Exp6553 prospective CSL | The task blocked before model load. Its VRAM rule required 24,576 MB free on a 24,576 MB device and observed 24,120 MB. | Replace capacity prediction with sequential live load, token, GPU, and unload receipts. |
-| Exp6554 CSL audit | The audit blocked because Exp6553 emitted no live rows or journals. | Run a new audit only after a changed live stream exists. |
-| Exp6555 saturation fixture | Proof-preserving constraint-load variants and exact clause checks are available. | Reuse the fixture by hash. |
-| Exp6556 saturation A/B | The artifact reports a positive bounded exact-fallback intervention across all three models. | Treat the headline as provisional until an independent audit checks raw model and row provenance. |
-| Exp6557 saturation audit | The conductor blocked it before execution because its prior-failure contract was missing. | Run the audit first in V568 with explicit prior-failure entries and no structured gate. |
-| Exp6558 ARC ledger | The shared live receipt path is reachable. Seven firings produced one helped outcome. No selection change had enough support. | Accumulate only new prospective receipts. Do not force a policy change or claim a solve. |
-| Exp6559 GateMate continuity | No new operator-authored physical receipt existed. The task ran zero hardware commands. | End unchanged command polling. Write a terminal access and reopen contract. |
-| Exp6560 capstone | Production stayed default-off. CSL and GateMate stayed blocked. Saturation stayed experiment-only. | V568 closes only gates supported by new audited evidence. |
+| Exp6561 V568 evidence contract | The V567 production artifacts, gates, model policy, and protected-file contract were usable. Live adversarial verification still stamped `DURATION_TOO_SHORT`. | Import only content-addressed fields. Recompute duration and verifier receipts instead of inheriting the readiness headline. |
+| Exp6562 saturation audit v2 | The fixture replayed, but live provenance, exact clause/joint release replay, harm, and charged cost were not recomputable. The result was disqualified. | Do not extend the saturation claim. Start a new raw-response lineage with immutable receipts and row-derived cost. |
+| Exp6563 production canary | Disabled identity, exact equality, fallback, restart, and rollback passed. Enabled routing had no preregistered work or latency benefit. | Keep the adapter default-off. Test only a materially larger fused exact workload. |
+| Exp6564 Rust/PyO3 NFR01 | Exact parity passed. Median batched speedup was 0.764013447x, below 10x. | Do not optimize the same cheap decision function. Fuse enough equivalent work to amortize the boundary, then retire on a repeated null. |
 
 ## The three largest gaps to the PRD vision
 
-### Gap 1: FR11 has no prospective continuous self-learning result
+### Gap 1: natural-language extraction still lacks proof-carrying evidence
 
-Carnot has transactional memory and a reversible controller. It has not shown
-safe improvement on a fresh chronological stream with live flagship model
-receipts. V567 blocked on a capacity rule that could never pass on a device
-with normal display and driver reservations.
+The PRD requires Carnot to turn natural-language claims into explicit
+constraints. The current strongest evidence starts after a structured problem
+already exists. Earlier full-ConstraintIR synthesis, schema reprompting, and
+verification-guided text repair produced zero or null exact-semantic value and
+are retired.
 
-V568 first proves actual sequential model admission. It then runs a sealed
-chronological stream across all three mandated GGUF families. It compares
-uniform, recent-failure, and contextual-bandit challenge selection. It freezes
-memory within each query and commits only after an exact result. Current
-benefit, retention, future support, rollback, restart, and charged cost are
-co-primary.
+V569 uses a different mechanism. It binds every proposed atomic claim to
+immutable source-byte offsets, a whitelisted typed relation, and an executable
+proof obligation. A compiler, not the model, creates the checker input. The
+exact solver can certify, reject, or return a counterexample. Unsupported text
+must abstain. The experiment reports coverage and precision together; zero
+unsafe releases is mandatory.
 
-### Gap 2: FR05 and FR08 routing is safe but not enabled by default
+### Gap 2: FR11 still lacks prospective learning on live flagship outputs
 
-The Python adapter and Rust/PyO3 ABI exist. Their V567 tests show equality and
-rollback, but not a production-shaped benefit or the PRD's ten-times Rust
-throughput target. A synthetic cost unit is not an NFR01 measurement.
+Carnot has many exact-gated memory controllers, but V567's required flagship
+run blocked before any model loaded. The current gap is not another synthetic
+replay. It is a chronological, live, restartable run on all three required
+GGUF families with authentic GPU, process, token, response, and unload
+receipts.
 
-V568 runs a native-versus-adapter canary on current production workload
-fixtures. It then measures scalar Python, scalar PyO3, and batched Rust/PyO3
-paths with identical serialized decisions. A later task can change the default
-only when exact equality, workload benefit, NFR01, fallback, and rollback all
-pass.
+V569 first proves sequential model admission by execution. It then compares
+frozen, uniform verified replay, recent-failure replay, exact-reward contextual
+bandit, and graph-Potts scheduling under equal memory capacity and write dose.
+The graph uses frozen executable features only. Memory is frozen within each
+query and commits only after exact validation. Current yield, retention,
+future exact-satisfying support, cost, restart, and rollback are co-primary.
 
-### Gap 3: hardware acceleration has no authenticated available substrate
+### Gap 3: the safe production route has neither value nor NFR01 performance
 
-The dual RTX 3090 host is available for local GGUF inference. GateMate has no
-new physical receipt. KV260 and PolarFire are terminal for their current
-lanes. Extropic lists 2027 early access, and Carnot has no TSU or API.
+The default-off Safety Net is behaviorally safe. It has not reduced work or
+latency on production-shaped rows, and the Rust/PyO3 decision ABI is slower
+than Python. This falls short of FR05, FR08, and NFR01.
 
-V568 uses the GPUs only for sequential authenticated inference. It stops
-unchanged GateMate polling and records exact reopen evidence. It makes no FPGA,
-TSU, latency, energy, or availability claim.
+V569 gives the lane one mechanism change: a native fused workload that
+includes the work Python currently performs around the router. It compares
+byte-identical requests and exact outputs, charges allocation, copying,
+serialization, checker calls, and fallback, and measures cold and steady-state
+tails. A second null retires the acceleration claim instead of prompting a
+third wrapper benchmark.
 
 ## Research findings incorporated
 
-The dated review is in `research-references.md` under `V568 planner refresh -
-2026-08-23`.
+The dated source review is in `research-references.md` under `V569 planner
+refresh - 2026-08-23`.
 
-- **SPADE (`2608.19197`)** motivates the executable adaptive curriculum. V568
-  borrows the environment-design principle, not the eight-GPU RL stack.
-- **Failure-Mode Contextual Bandits (`2608.18681`)** motivates adaptive
-  failure-family selection. Carnot replaces the paper's LLM judge ensemble
-  with exact replay and charges forgetting, support, and cost.
-- **Coins (`2608.13077`)** reinforces the extraction bottleneck. V568 does not
-  reopen retired ConstraintIR or schema-reprompt work.
-- **Claim-aware observability (`2608.18312`)** supports explicit links from
-  claims to rows and verification receipts. Carnot uses its existing artifact
-  contract instead of adding a second schema.
-- OpenReview and Hugging Face findings still support exact post-checks and
-  selective intervention. They do not reopen generated-text or grammar retry
-  lanes.
-- Semantic Scholar returned 35 EBT citations and eight ARM-EBM citations on
-  the planning date. No citation supplies a public matching-base checkpoint.
-- Extropic still targets 2027 Z1 access. Logical Intelligence still provides
-  no public Kona weights or local runner.
+- **Graph-Structured Online Difficulty Estimation (`2608.17941`)** supplies
+  the Potts-prior and online mean-field curriculum mechanism. Carnot replaces
+  policy-training reward with exact replay receipts.
+- **Continual Reasoning Gym (`2608.18574`)** motivates a matched-dose replay
+  or co-observation control and makes future support and retention co-primary.
+- **Formal Performance and Compile Time Guarantees (`2608.20137`)** motivates
+  a semantic-preservation, convergence, and charged-cost contract for the
+  fused production call plan.
+- **Stopping and Routing LLM Judge Panels (`2608.19802`)** is a retirement
+  control. A checker or route must add held complementary value. V569 does not
+  reopen LLM judges or learned release authority.
+- **Coins (`2608.13077`)** confirms that executable proof obligations are more
+  informative than surface-form validity. V569 does not reproduce Coins and
+  does not revive full generated ConstraintIR.
+- OpenReview and Hugging Face sources support exact postconditions,
+  executable variants, held slices, and future-support measurement. They do
+  not replace Carnot's exact checker.
+- Semantic Scholar returned 35 EBT and eight ARM-EBM citing records. No citing
+  work supplies a public matching-base checkpoint or a stronger local exact
+  authority.
+- Extropic reports a taped-out 269,568-pbit Z1 with 2027 access. Kona remains
+  proprietary and non-runnable locally. Neither is an execution dependency.
 
 ## Scientific invariants
 
-1. **Audit before extension.** Exp6562 must inspect checked-in Exp6555 and
-   Exp6556 evidence before any new GGUF run.
-2. **Actual load beats capacity prediction.** Model admission depends on a
-   successful sequential load, token smoke, GPU sample, process exit, and
-   unload receipt. It does not require free memory to equal total memory.
-3. **No simulated inference.** Synthetic `LiveRunner` responses, constant GPU
-   samples, and self-reported process IDs cannot support a live claim.
-4. **Use mandated models.** Every LLM task includes at least one required SOTA
-   model. Headline LLM tasks use all three required families.
-5. **Exact checks hold authority.** Learned routes and memories can rank,
-   select, abstain, or propose. They cannot certify an answer.
-6. **Rows precede aggregates.** Every comparison emits the unit rows needed to
-   recompute its headline.
-7. **Memory stays transactional.** Freeze memory inside a query. Commit only
-   after exact validation. Log every proposed, rejected, and committed write.
-8. **Adaptive curricula stay executable.** The generator uses bounded
-   proof-preserving transforms. It cannot write its own verifier or label.
-9. **Future support is co-primary.** A current gain is not positive if it
-   harms retained families or future exact-satisfying support.
-10. **Production promotion is conjunctive.** Workload value, exact equality,
-    NFR01, fallback, and rollback must all pass before a default flip.
-11. **A default flip has a kill switch.** Any enabled default must support an
-    immediate typed rollback to the V567 native path.
-12. **Independent audits always run.** Exp6562 and Exp6569 have no structured
-    gates. Missing evidence closes blocked with `gate_check_summary`.
-13. **No ARC re-solve.** ARC work reads live receipts only. It does not read
-    game source, run offline BFS, add a game adapter, or claim a level solve.
-14. **No unchanged hardware command.** Exp6572 issues no GateMate command. A
-    later command requires a new operator-authored receipt.
-15. **Closed verdict classes.** Every artifact declares `positive`,
+1. **New lineage, not saturation extension.** No V569 claim inherits Exp6556
+   or Exp6562's scientific headline.
+2. **Raw evidence precedes aggregates.** Source bytes, model bytes, prompts,
+   raw responses, exact outcomes, costs, and hashes are immutable before a
+   comparative reducer runs.
+3. **Source-span binding is mandatory.** A proof obligation without source
+   offsets, typed variables, and a compiler receipt is unsupported.
+4. **No retired extractor retry.** Do not emit full generated ConstraintIR,
+   rely on schema validity as semantic evidence, or reprompt the same failed
+   repair mechanism.
+5. **Exact checks hold authority.** Learned extractors, energies, schedules,
+   and routes can propose, rank, or abstain. They cannot release a claim.
+6. **Actual load beats VRAM prediction.** Flagship admission requires a live
+   sequential load, nonconstant token output, GPU samples, clean exit, unload,
+   and bounded memory recovery.
+7. **Use all mandated families for headlines.** Qwen3.6-35B-A3B,
+   gemma-4-31B, and gemma-4-26B-A4B each receive separate rows. Legacy small
+   models are smoke-only.
+8. **Memory is transactional.** Freeze state within a query. Commit only after
+   exact validation. Log every proposal, rejection, commit, retirement,
+   restart, and rollback.
+9. **Future support is co-primary.** A current gain with lost retained-family
+   performance or lower future exact-satisfying support is not positive.
+10. **Matched dose is mandatory.** Curriculum arms share prompts, challenge
+    pools, seeds, memory capacity, write opportunities, and evaluation points.
+11. **Rows precede comparative claims.** Every model, arm, seed, event, and
+    condition emits a recheckable unit row.
+12. **Rust compares equivalent work.** The native arm cannot omit
+    normalization, copying, serialization, fallback, or downstream exact work
+    charged to Python.
+13. **A second production null retires the lane.** Exp6574 does not authorize
+    another same-shape wrapper benchmark.
+14. **Independent audits always run.** Exp6570, Exp6573, and Exp6577 have no
+    structured scientific gate. Missing input closes blocked with
+    `gate_check_summary`.
+15. **No ARC re-solve.** Exp6575 reads prospective live receipts only. It does
+    not inspect game source, run offline BFS, add a game adapter, or claim a
+    game-level solve.
+16. **No unchanged hardware command.** Exp6576 records access and reopen
+    conditions. It issues zero board commands without a newer operator receipt.
+17. **Closed verdict classes.** Every artifact declares `positive`,
     `circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
-16. **Terminal verdicts explain scope.** `honest_verdict` uses a terminal
-    prefix. A blocked artifact names the failed check and observed value.
+18. **Blocked records explain the check.** `gate_check_summary` names the
+    expected value, observed value, and failed contract.
 
 ## Model policy
 
-Exp6566 and Exp6568 perform live LLM work. Their `MODEL_SPECS` contain:
+Exp6567, Exp6568, Exp6569, and Exp6572 define this `MODEL_SPECS` set:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF`
 - `unsloth/gemma-4-31B-it-GGUF`
 - `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-Both tasks resolve cached `.gguf` paths with `cached_sota_pair()` and
-`resolve_cached_gguf()`. They use llama.cpp and the embedded tokenizer. They do
-not call `AutoTokenizer.from_pretrained()` on a GGUF repository ID.
+Each task resolves a cached `.gguf` path with the established helpers, uses
+llama.cpp plus the embedded tokenizer, and loads one model at a time. It does
+not call `AutoTokenizer.from_pretrained()` on a GGUF repository ID. The
+artifact records model-file hash, command, PID, GPU samples, prompt and token
+hashes, exit status, raw output hash, and unload receipt.
 
-The tasks load and unload one flagship model at a time. They record the model
-file hash, command, PID, GPU samples, token hashes, exit status, and monotonic
-duration. Qwen3.5-0.8B and gemma-4-E4B-it can run CPU smoke checks only. Their
-rows cannot support a headline.
+Qwen3.5-0.8B and gemma-4-E4B-it may run short CPU smoke tests. Their outputs
+cannot satisfy readiness, coverage, comparison, self-learning, or headline
+gates.
 
-Formulaic adapters, bindings, fixtures, and audits use Codex with `gpt-5.5`.
-The GPU admission task, hardware contract, and capstone use Opus with a
-100-turn budget. They contain hardware or multi-file coordination risk.
+Formulaic dataset, compiler, Potts, audit, and PyO3 work uses Codex with
+`gpt-5.5`. Evidence preflight and hardware coordination use Opus with 100
+turns. Synthesis-heavy method and capstone work keep the default Claude route.
 
-## Architecture after V568
+## Architecture after V569
 
 ```text
-                         V567 immutable artifacts
-                                   |
-                    +--------------+--------------+
-                    |                             |
-                    v                             v
-          independent saturation audit     V568 evidence contract
-                    |                             |
-                    |              +--------------+--------------+
-                    |              |                             |
-                    |              v                             v
-                    |     production workload canary     sequential GGUF admission
-                    |              |                             |
-                    |              v                             v
-                    |       Rust/PyO3 NFR01             executable adaptive curriculum
-                    |              |                             |
-                    |              v                             v
-                    |      gated default-on path       prospective adaptive CSL
-                    |                                            |
-                    |                                            v
-                    |                                  independent CSL audit
-                    |                                            |
-                    |                                            v
-                    |                                  gated memory shadow path
-                    |                                            |
-                    +---------------------+----------------------+
-                                          |
-                ARC live receipt ledger --+-- hardware reopen contract
-                                          |
-                                          v
-                                independent V568 capstone
+                    V568 terminal artifacts
+                             |
+               Exp6565 evidence/retirement root
+                  /          |             \
+                 v           v              v
+      Exp6566 method    Exp6567 live      Exp6574 fused
+         contract      GGUF admission     Rust workload
+            |               |                  |
+            +-------+-------+                  v
+                    v                      NFR01 or retire
+          Exp6568 immutable raw claim stream
+                    |
+                    v
+       Exp6569 source-span proof obligations
+                    |
+                    v
+          Exp6570 independent exact audit
+                    |
+          +---------+----------+
+          |                    |
+          v                    v
+ Exp6571 graph-Potts   frozen exact failure rows
+    difficulty graph           |
+          +---------+----------+
+                    v
+       Exp6572 prospective transactional CSL
+                    |
+                    v
+          Exp6573 independent CSL audit
+                    |
+       +------------+-------------+
+       |                          |
+       v                          v
+ Exp6575 ARC receipts     Exp6576 hardware contract
+       +------------+-------------+
+                    v
+          Exp6577 independent capstone
 
-             RELEASE AUTHORITY: Z3 and executable checks only
+       RELEASE AUTHORITY: compiler + Z3/executable checks only
 ```
 
-## Phase 0: Evidence and the missing saturation audit
+## Phase 0: Evidence, method, and executable admission
 
 | Exp | Task | Primary output | Gate |
 |---:|---|---|---|
-| 6561 | V568 evidence and gate contract | Eligible V567 import ledger and exact field contract | none |
-| 6562 | Independent saturation audit | Recomputed fixture, model, clause, joint, harm, and cost disposition | always runs |
+| 6565 | V569 evidence and retirement contract | Eligible V568 fields, exact gates, failed-scope and retirement map | none |
+| 6566 | Proof-obligation and graph-Potts method contract | Frozen source, estimator, split, reducer, and authority specification | none |
+| 6567 | Sequential flagship GGUF admission | Actual load, token, GPU, exit, unload, and recovery receipts | Exp6565 and Exp6566 |
 
-Exp6561 validates every V567 artifact, freezes all V568 fields, checks the
-exclusion manifest, and records protected-file hashes. It does not rerun V567
-science. It exposes separate readiness fields for production and self-learning
-work.
+Exp6565 replays the four V568 artifacts. It separates a usable infrastructure
+field from a scientific headline and freezes every V569 gate name. It exposes
+a Rust-fusion reopen field only because Exp6574 changes the measured workload.
 
-Exp6562 is the V567 capstone's safe next experiment. It performs no new model
-generation. It checks the Exp6555 fixture proofs and Exp6556 raw response,
-model, GPU, token, clause, joint, and cost receipts. It recomputes every
-headline from rows. False or missing live provenance closes disqualified or
-blocked. It does not turn a failed audit into null science.
+Exp6566 turns the new literature into executable preregistration. It fixes the
+source-span proof-obligation grammar, challenge-graph features, Potts and
+Beta-Binomial update equations, chronological splits, matched-dose arms,
+acceptance thresholds, and exact-authority boundary before outcomes exist.
 
-## Phase 1: Production workload and staged Rust promotion
+Exp6567 repairs the V567 admission defect through actual sequential execution.
+It does not use a free-VRAM-equals-total-VRAM threshold. Any missing model,
+fake output, missing GPU sample, failed unload, or stale process closes blocked.
 
-| Exp | Task | Primary output | Gate |
-|---:|---|---|---|
-| 6563 | Production workload canary | Native, disabled, enabled, fallback, and rollback rows | Exp6561 production evidence |
-| 6564 | Rust/PyO3 NFR01 benchmark | Scalar and batched parity, throughput, latency, and allocation rows | Exp6563 canary ready |
-| 6565 | Staged default-on activation | Default flip or preserved default-off state with kill-switch receipt | Exp6563 benefit and Exp6564 NFR01 |
-
-Exp6563 uses current production-shaped verification fixtures. It charges real
-wall time, checker calls, persistence, serialization, and fallback work. It
-does not use synthetic adapter cost units as its headline.
-
-Exp6564 freezes identical request bytes and decisions. It compares pure Python,
-scalar PyO3, and batched Rust/PyO3 across warm and cold strata. The NFR01 gate
-requires at least ten-times median steady-state throughput over scalar Python,
-exact decision parity, bounded tail latency, and no hidden batching work.
-
-Exp6565 is a deployment task, not a forced promotion. It changes the typed
-production default only if both upstream artifacts pass. It then repeats the
-full canary, malformed-input, fallback, restart, and rollback matrix. A failed
-post-flip check restores the V567 default-off state in the same run.
-
-## Phase 2: Adaptive prospective continuous self-learning
+## Phase 1: Immutable claims and proof-carrying extraction
 
 | Exp | Task | Primary output | Gate |
 |---:|---|---|---|
-| 6566 | Sequential SOTA admission corrigendum | Actual load, token, GPU, unload, and fit receipts | Exp6561 contract |
-| 6567 | Executable adaptive curriculum | Frozen proof-preserving challenge pool and selection contract | Exp6561 contract |
-| 6568 | Prospective adaptive CSL | Uniform, recent-failure, and contextual-bandit chronological rows | Exp6566 and Exp6567 ready |
-| 6569 | Independent CSL audit | Replayed receipts, transitions, retention, support, and promotion disposition | always runs |
-| 6570 | Gated memory shadow promotion | Default-off production memory sidecar or blocked receipt | Exp6568 candidate and Exp6569 audited promotion |
+| 6568 | Immutable source-span claim stream | Three-family raw responses, source bytes, exact targets, and cost receipts | Exp6566 and Exp6567 |
+| 6569 | Source-span proof-obligation extractor | Frozen baseline and proof-carrying arm rows with exact certification | Exp6568 |
+| 6570 | Independent proof-obligation audit | Replayed provenance, span, compiler, solver, release, harm, and cost disposition | always runs |
 
-Exp6566 replaces the impossible free-VRAM threshold with actual execution. It
-loads each required model alone, emits nonconstant token output from a frozen
-prompt, samples GPU use during the process, exits cleanly, and proves that
-memory returned to a bounded baseline before the next model.
+Exp6568 samples a family-blind chronological slice of the pinned external
+constraint corpus. It stores exact source bytes, prompt bytes, raw responses,
+model receipts, token receipts, target checks, costs, and content hashes. The
+stream is the new evidence root. It makes no extractor-quality claim.
 
-Exp6567 creates a small SPADE-inspired environment pool. It uses only bounded
-proof-preserving transforms of the existing exact constraint fixture. It
-freezes challenge families, difficulty, hints, exact validators, and held
-lineages. It also freezes three selectors: uniform, recent exact failure, and
-an exact-reward contextual bandit.
+Exp6569 compares the frozen current parser/abstain control with a source-span
+proof-obligation mechanism. The new arm may propose only whitelisted typed
+relations tied to byte offsets. The local compiler creates the executable
+obligation. The exact checker accepts, rejects, or returns a counterexample.
+The headline needs improved exact-certified coverage with noninferior precision
+and zero unsafe releases on held families.
 
-Exp6568 is the required continuous self-learning experiment. It loads models
-sequentially. Each model and selector receives the same candidate pool, update
-dose, seeds, and sealed evaluation checkpoints. The contextual reward combines
-exact failure reduction, retained-family performance, future support, and
-charged cost. Same-query mutation remains an unsafe diagnostic and cannot be
-adopted.
+Exp6570 independently replays every credited row from immutable files. It
+checks model provenance, span bounds, source hashes, compiler determinism,
+solver results, counterexamples, abstentions, releases, harm, and charged cost.
+A clean null can be audit-ready but not promotion-ready.
 
-Exp6569 independently replays model receipts, exact outcomes, selector state,
-memory transitions, restart, rollback, retention, future support, and costs.
-It emits a separate promotion score. A clean audit of null science can be audit
-ready but cannot be promotion ready.
-
-Exp6570 runs only after both promotion gates pass. It adds the selected policy
-as a default-off sidecar. The native path remains authority. Missing or stale
-memory, unsupported inputs, invalid writes, or uncertainty must fall back.
-
-## Phase 3: Standing continuity and capstone
+## Phase 2: Graph-Potts continuous self-learning
 
 | Exp | Task | Primary output | Gate |
 |---:|---|---|---|
-| 6571 | ARC prospective redirect evidence | New live receipt rows and supported selection change or honest retirement | none |
-| 6572 | Hardware access and reopen contract | Terminal GateMate, TSU, KV260, and PolarFire availability ledger | none |
-| 6573 | Independent V568 capstone | Claim ledger, adoption matrix, document reconciliation, and V569 handoff | always runs |
+| 6571 | Graph-Potts difficulty fixture | Frozen executable feature graph and online-estimator conformance rows | Exp6566 |
+| 6572 | Prospective graph-Potts CSL | Five-arm chronological model, memory, support, retention, and cost rows | Exp6567, Exp6570, and Exp6571 |
+| 6573 | Independent CSL audit | Replayed model receipts, schedules, writes, retention, support, restart, and rollback | always runs |
 
-Exp6571 reads receipts that are newer than Exp6558. It uses a frozen
-family-blind support rule. It can change selection only with new prospective
-support. The same no-change verdict retires this exact accumulation attempt.
+Exp6571 constructs edges from executable constraint family, arity, interaction,
+proof-obligation type, and exact conflict features. It excludes model identity,
+labels unavailable at decision time, source IDs, and row order. Synthetic
+masked-outcome tests verify the Potts prior, Beta-Binomial update, online
+mean-field convergence, cold start, and restart parity.
 
-Exp6572 issues zero hardware commands. It records the exact receipt required to
-reopen GateMate, confirms the current terminal status of KV260 and PolarFire,
-and records the first-party Extropic access boundary. It prevents another
-unchanged command-polling milestone.
+Exp6572 is the milestone's continuous self-learning experiment. Each model
+runs frozen, uniform verified replay, recent-failure replay, exact contextual
+bandit, and graph-Potts arms with equal capacity and write dose. The learned
+state chooses which certified conflict exemplars enter bounded retrieval
+memory for later queries. Exact replay authorizes each write. Same-query
+mutation is an unsafe diagnostic only. A positive result needs current benefit,
+retention, future support, exact safety, restart, rollback, and charged cost.
 
-Exp6573 recomputes every claim from eligible artifacts. It separates blocked
-infrastructure, null science, audited positive science, and production
-promotion. It updates specs and operations documents only for changes that
-actually shipped.
+Exp6573 independently reconstructs chronological state from the journal. It
+reruns exact outcomes, schedule probabilities, Potts updates, memory actions,
+evaluation checkpoints, future-support metrics, and recovery tests. It always
+runs, even when Exp6572 blocks.
+
+## Phase 3: Production, live-path continuity, and capstone
+
+| Exp | Task | Primary output | Gate |
+|---:|---|---|---|
+| 6574 | Fused Rust exact workload NFR01 | Equivalent-work parity, throughput, tails, allocation, and retirement decision | Exp6565 |
+| 6575 | ARC prospective supervisor receipts | New live receipt rows and supported no-change or selection decision | none |
+| 6576 | Hardware access and reopen contract | Terminal local-board and external-hardware access ledger | none |
+| 6577 | Independent V569 capstone | Claim ledger, adoption matrix, retirements, reconciliation, and V570 handoff | always runs |
+
+Exp6574 fuses normalization, exact-conflict feature extraction, route
+construction, fallback request assembly, and serialization in Rust/PyO3. It
+compares the full equivalent Python workload, not the previous cheap decision
+function. The task needs exact parity, no omitted work, at least 10x median
+steady-state throughput, bounded p99, and measured production value. Otherwise
+the lane stays default-off and retires.
+
+Exp6575 reads only outcome-bearing live ARC supervisor receipts newer than
+Exp6558. It applies a preregistered family-blind support rule. It can change
+selection only when new prospective support clears the rule. It makes no solve
+claim and writes no per-game adapter.
+
+Exp6576 issues zero board commands unless a newer operator-authored physical
+receipt already exists at task start. It records the exact conditions that
+would reopen GateMate, PolarFire workload dispatch, KV260 work, Extropic, and
+Kona. It makes no latency, power, availability, or speedup claim.
+
+Exp6577 recomputes the milestone's claim ledger from eligible artifacts. It
+separates blocked infrastructure, disqualified evidence, clean null science,
+audited positive science, experiment-only mechanisms, production decisions,
+and retired lanes. It reconciles specs and operations documents only with
+changes that actually shipped.
 
 ## Dependency graph
 
 ```text
-Exp6561 evidence contract
-   |----------------------+-----------------------+
-   |                      |                       |
-   v                      v                       v
-Exp6563 canary       Exp6566 admission       Exp6567 curriculum
-   |                      |                       |
-   v                      +-----------+-----------+
-Exp6564 NFR01                       v
-   |                          Exp6568 adaptive CSL
-   +----------+                     |
-              v                     v
-       Exp6565 default       Exp6569 independent audit
-                                    |
-                                    v
-                             Exp6570 shadow promotion
+Exp6565 evidence -----> Exp6567 admission ------------------+
+     |                        |                              |
+     +-----> Exp6574 Rust     +-----> Exp6568 stream        |
+                                  |                         |
+Exp6566 method -------------------+                         |
+     |                            v                         |
+     +-----> Exp6571 graph   Exp6569 extractor              |
+                 |                |                         |
+                 |                v                         |
+                 |          Exp6570 audit                   |
+                 |                |                         |
+                 +----------------+-------------------------+
+                                  v
+                           Exp6572 graph-Potts CSL
+                                  |
+                                  v
+                           Exp6573 CSL audit
 
-Exp6562 saturation audit ------------------------------+
-Exp6571 ARC evidence -----------------------------------+--> Exp6573 capstone
-Exp6572 hardware contract ------------------------------+
-all terminal Exp6561-Exp6572 artifacts -----------------+
+Exp6575 ARC ----+
+Exp6576 hardware+----> Exp6577 capstone <---- all prior artifacts
 ```
 
-All structured gates refer to a task in this roadmap. Each gate field appears
-with identical spelling in its upstream task's required artifact fields.
+Structured gates are conjunctive. Every gated field appears with the same
+spelling in its upstream task's required artifact fields. Independent audits
+and the capstone do not use structured gates, so missing evidence becomes a
+diagnosed blocked artifact rather than a skipped audit.
 
-## Prior-failure boundaries
+## Hardware requirements and boundaries
 
-- Exp6562 cites both the positive Exp6556 claim and the blocked Exp6557 audit.
-  It performs a new independent replay and no new generation.
-- Exp6563 and Exp6565 cite the null Exp6551 production audit. They use direct
-  workload receipts and conjunctive promotion gates.
-- Exp6564 cites the positive Exp6545 router comparison. It does not repeat
-  router learning. It measures the later production ABI through scalar and
-  batched Rust/PyO3 paths against Python and NFR01.
-- Exp6566 and Exp6568 cite blocked Exp6553. Actual sequential execution replaces
-  its impossible capacity threshold.
-- Exp6568 also cites retired Exp5709 and Exp5773. A clean executable stream and
-  a shipped admission prerequisite replace their parse-failed or unready
-  streams.
-- Exp6569 cites blocked Exp6554. New live rows and journals must exist before
-  audit conclusions.
-- Exp6570 cites retired Exp5775. Its upstream audit exists in this roadmap and
-  its sidecar remains default-off.
-- Exp6571 cites blocked Exp6524 and null Exp6558. It requires new prospective
-  receipts and retires on the same verdict.
-- Exp6572 cites blocked Exp6559. It changes the deliverable from another probe
-  to a zero-command terminal access contract.
-
-Every entry in `research-roadmap-next.yaml` includes all four required
-`prior_failures` fields. No task requires a retired experiment ID.
-
-## Hardware requirements
-
-| Resource | Tasks | Requirement and boundary |
+| Resource | V569 use | Claim boundary |
 |---|---|---|
-| Dual RTX 3090, 24 GB each | Exp6566, Exp6568 | Use one model per process and load models sequentially. Record actual GPU use and unload. Do not require free memory to equal total memory. |
-| Cached flagship GGUF files | Exp6566, Exp6568 | Qwen3.6-35B-A3B Q4, Gemma 4 31B Q4, and Gemma 4 26B-A4B Q4 with hashes. |
-| CPU and RAM | All tasks | Current 24-core host and about 128 GB RAM are sufficient. Record actual availability. |
-| Disk | Model and artifact tasks | At least 100 GB free for checkpoints, raw receipts, atomic writes, and rollback copies. |
-| Rust and PyO3 toolchain | Exp6564, Exp6565 | Current workspace toolchain, release builds, importable extension, and identical ABI bytes. |
-| GateMate | Exp6572 | No command. A new operator-authored physical receipt is required for any later detect or flash action. |
-| KV260 and PolarFire | Exp6572 | Status review only. Do not reopen terminal lanes without a new mechanism and operator evidence. |
-| Extropic Z1 or TSU | none | No device or authenticated API is available. Make no execution claim. |
+| Dual RTX 3090, 24 GB each | Sequential live GGUF admission and the raw/extractor/CSL runs. Only one flagship model is resident per worker. | Record `nvidia-smi` samples, PID, model hash, command, output hash, exit, unload, and recovery. No simultaneous-fit assumption. |
+| CPU, RAM, NVMe | Z3 replay, immutable artifacts, compiler, graph-Potts mean-field updates, journals, and Rust benchmarks. | Record capacity, versions, timer resolution, storage space, and process isolation. |
+| Rust/PyO3 toolchain | Fused equivalent-work production benchmark. | Exact parity and charged end-to-end work are mandatory. No microkernel-only NFR01 claim. |
+| KV260 | No new command in V569. Current architecture treats it as near-terminal continuity. | No latency or speedup claim without a new justified board workload and transcript. |
+| PolarFire | No new command in V569. Reachability is not workload validation. | Reopen only for a hash-verified end-to-end Carnot dispatch. |
+| GateMate | Zero-command receipt check only. | Reopen only after a newer operator-authored cable, port, wiring, or power-state receipt. Preserve Exp3866 exclusion. |
+| Extropic Z1 / TSU | Literature and future ABI context only. Public access targets 2027. | No device, latency, power, availability, or sampling claim without authenticated access. |
+| Logical Intelligence Kona | Product comparator only. | No execution or parity claim without public weights, a documented API, or a reproducible local runner. |
 
-## Milestone acceptance
+## Prior-failure and retirement discipline
 
-V568 is complete when all 13 tasks have terminal artifacts and the capstone
-recomputes their claims. Scientific success does not require every promotion.
-It requires honest terminal evidence.
+| V569 task | Prior evidence | Material change | Repeat disposition |
+|---|---|---|---|
+| Exp6565 | Exp6561 was live-flagged for duration | Recompute live verifier, timing, and field provenance from immutable rows | Retire this evidence-root shape if the same flag remains |
+| Exp6567 | Exp6553 blocked on an impossible VRAM threshold | Actual sequential load and unload replace capacity prediction | Retire the admission shape if models again never load |
+| Exp6568-6570 | Exp6562 disqualified the old evidence lineage | New immutable raw stream and source-span-bound proof obligations | Do not rehabilitate the old saturation claim |
+| Exp6569 | Exp5909, Exp5910, and Exp5923 were null or retired | No full ConstraintIR; byte-bound atoms plus compiler-owned obligations | Retire on the same zero exact-semantic outcome |
+| Exp6572-6573 | Exp6496 was null; Exp6553-6554 blocked | Live flagship stream plus graph-Potts verified memory and matched-dose controls | Retire this mechanism if future benefit again fails or no live rows exist |
+| Exp6574 | Exp6563 had no value; Exp6564 was 0.764x | Fuse the full equivalent exact workload across the PyO3 boundary | Retire acceleration on another null or NFR01 miss |
+| Exp6575 | Exp6524 lacked receipts; Exp6558 supported no change | Use only newer outcome-bearing prospective receipts | Retire this accumulation attempt on the same no-support verdict |
+| Exp6576 | Exp6559 had no new physical receipt | Terminal access contract with zero unchanged commands | Keep closed until operator state changes |
 
-- Exp6562 must provide the missing independent saturation disposition.
-- Production stays default-off unless Exp6563 and Exp6564 both pass and Exp6565
-  repeats exact equality and rollback after the flip.
-- Exp6566 must test all three mandated models with actual sequential execution.
-- Exp6568 must run all three mandated models or close blocked. Legacy smoke
-  models cannot replace them.
-- Exp6569 must distinguish audit readiness from promotion readiness.
-- Exp6570 must remain blocked unless the prospective result is both positive
-  and independently audited.
-- Exp6571 must claim no ARC game or level solve.
-- Exp6572 must run zero hardware commands.
-- Exp6573 must preserve publication gates G1-G4 as historical claims and must
-  not say V568 created them unless new evidence did so.
+Every matching YAML task contains all four required `prior_failures` fields,
+including `retire_if_same_verdict: true`. No `requires:` chain references a
+retired experiment.
 
-## Non-goals
+## Milestone success conditions
 
-- No new generated-text energy scorer, log-probability release scorer, hidden
-  state release scorer, or schema-reprompt retry.
-- No KAN architecture sweep. Current evidence does not justify replacing the
-  compact linear router.
-- No new continuous answer-generator or distributed RL training lineage.
-- No SPADE dependency or eight-GPU reproduction claim.
-- No model-generated verifier, label, or exact reward.
-- No ARC public-game solve, source read, offline BFS, or per-game adapter.
-- No GateMate, KV260, PolarFire, NPU, or TSU command.
-- No default flip without a same-run rollback path.
+V569 succeeds operationally when all 13 tasks emit terminal artifacts and the
+roadmap, gate, exclusion, model, row, and prior-failure contracts pass.
+Scientific outcomes can be positive, null, blocked, partial, or disqualified.
 
-## Handoff rule
+The milestone earns an extraction claim only when the independent audit
+confirms immutable live provenance, source-span correctness, compiler
+determinism, exact-certified coverage improvement, noninferior precision, zero
+unsafe releases, and recomputable cost.
 
-The V568 capstone must name one next experiment that is safe under the observed
-evidence. If prospective CSL remains blocked, the handoff must name the exact
-missing receipt or runtime contract. If it is null, the handoff must retire the
-same adaptive policy before it proposes a different mechanism. If production
-promotion fails, the default remains off.
+It earns a continuous self-learning claim only when the independent audit
+confirms authentic three-family inference, matched dose, exact write
+admission, current benefit, retention, future support, restart, rollback, and
+no same-query contamination.
+
+It earns an NFR01 production claim only when the fused native path performs
+equivalent work, preserves exact outputs, reaches at least 10x median
+steady-state throughput, respects the frozen p99 bound, and reduces a
+preregistered production cost. Otherwise the acceleration lane remains
+default-off and retires honestly.

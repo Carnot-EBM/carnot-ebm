@@ -10,72 +10,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CHECKABLE | 6 |
-| BLOCKED_WITHOUT_DIAGNOSTIC | 1 |
+| AGGREGATE_ONLY | 1 |
 | CANNOT_DETERMINE | 1 |
-
-## experiment_6553_prospective_sota_continuous_self_learning.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because the GPU VRAM contract failed, so the mandated models were not loaded and learning outcomes were not evaluated.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6554_continuous_self_learning_independent_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The audit is blocked by missing live evidence and failed preconditions, so no scientific conclusion is allowed.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6555_proof_preserving_constraint_saturation_fixture.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The 144-unit constraint-saturation fixture achieved a ready score of 1.0, with all proof, attack-matrix, and gate checks passing.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6556_sota_constraint_saturation_intervention_ab.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The bounded exact fallback beats flat and longer-flat controls while causing no harmful regressions and accounting for charged cost.
-
-## WHAT IS MISSING
-The complete `"per_unit_rows"` array: `"saved_row_count"` reports 540 rows, but the artifact is truncated mid-row and does not provide all model/unit/arm outcomes needed to check the claim.
-
-## THE CHECK A READER CANNOT DO
-Across all 540 rows, did the fallback arms broadly outperform both controls with no harmful regressions, rather than only doing so in the displayed subset?
 
 ## experiment_6557_constraint_saturation_independent_audit.json
 
@@ -85,7 +21,7 @@ Across all 540 rows, did the fallback arms broadly outperform both controls with
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The task was blocked because the required `prior_failures` entry naming `exp6556-sota-constraint-saturation-intervention-ab` was missing.
+The experiment was blocked because the required `rerun_discipline` entry naming a prior failure was absent.
 
 ## WHAT IS MISSING
 nothing
@@ -101,7 +37,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The live receipt path was reachable, seven firings were inspected across six runs, and the per-arm evidence supported no policy-order change.
+The live receipt path was reachable and seven arm firings were inspected, but the per-firing outcomes provided no supported reason to change the curated policy order.
 
 ## WHAT IS MISSING
 nothing
@@ -117,7 +53,41 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The task was blocked because no operator-authored GateMate physical-state receipt newer than Exp6525 was found, so zero hardware commands were run.
+The task was blocked because no dated, operator-authored GateMate physical-state receipt newer than Exp6525 was found, so zero hardware commands ran.
+
+## WHAT IS MISSING
+nothing; `"gate_check_summary.failed_check"`, `"gate_check_summary.observed_latest_receipt_date"`, `"operator_physical_state_receipt.candidate_rows"`, and `"per_unit_rows"` record the failed check, observed value, and candidate-level evidence.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6560_v567_independent_capstone.json
+
+**CANNOT_DETERMINE**
+
+> Audit-integrity guard: quoted field(s) ['gate_check_summary'] do not appear in the artifact, so this verdict was downgraded and must not be acted on.
+
+## VERDICT
+BLOCKED_WITHOUT_DIAGNOSTIC
+
+## WHAT THE CLAIM IS
+The artifact claims 12 tasks closed as three positive, five null, and four blocked, including a positive constraint-saturation result whose independent audit was blocked.
+
+## WHAT IS MISSING
+For `exp6557`, a `gate_check_summary` or equivalent failed-check identifier and observed value is missing; the artifact records only `"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, and `"blocked_gate_artifact": true`.
+
+## THE CHECK A READER CANNOT DO
+Which constraint-saturation audit gate failed, and what value caused it to fail?
+
+## experiment_6561_v568_evidence_gate_contract.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V567 artifacts are content-addressed, Exp6549–Exp6551 are eligible production inputs, and the V568 gate, prior-failure, model, hardware, and protected-file contracts are complete.
 
 ## WHAT IS MISSING
 nothing
@@ -125,18 +95,50 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6560_v567_independent_capstone.json
+## experiment_6562_constraint_saturation_independent_audit_v2.json
 
-**BLOCKED_WITHOUT_DIAGNOSTIC**
+**CHECKABLE**
 
 ## VERDICT
-BLOCKED_WITHOUT_DIAGNOSTIC
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims Exp6557’s independent audit was blocked because a gate check failed.
+The artifact claims a `"disqualified"` verdict because four explicitly named checks failed.
 
 ## WHAT IS MISSING
-For Exp6557, the failed check identifier and its observed value are missing; `"honest_verdict": "blocked_gate_check_failed"`, `"status": "blocked"`, and `"blocked_gate_artifact": true` are present, but no `"gate_check_summary"` or equivalent diagnostic appears.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-Which gate check failed for Exp6557, and what value did it observe?
+none
+
+## experiment_6563_production_safety_net_workload_canary.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The safety-net conditions passed, while enabled routing showed no preregistered work or latency benefit.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6564_rust_pyo3_safety_net_nfr01.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+Exact parity passed, but Rust/PyO3 batching achieved only 0.764013447× median speedup—below the 10.0× threshold—while p99 latency met the frozen bound.
+
+## WHAT IS MISSING
+Although `"per_unit_rows"` is present, every written row has `"implementation": "python_scalar"` and `"batch_size": 1`; per-unit `"rust_pyo3_batch"` timing/parity rows needed to reproduce the comparative speedup and exact-parity claims are missing.
+
+## THE CHECK A READER CANNOT DO
+Did Rust/PyO3 batching underperform Python broadly across units and batch sizes, or did a small number of slow Rust measurements drive the reported 0.764013447× median?
