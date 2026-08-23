@@ -466,3 +466,157 @@ When the CPU reference mapper encodes them,
 Then logical bytes, mapped bytes, topology expansion, mapping time, unsupported
 fields, and mapping hashes are reported deterministically, with no hardware
 execution, speed, power, or acceleration claim.
+
+### REQ-STORE-6522 — Chronological exact-conflict self-learning
+
+Carnot SHALL provide Exp6522 at
+`python/carnot/experiment_6522_chronological_conflict_self_learning.py`
+and write
+`results/experiment_6522_chronological_conflict_self_learning.json`.
+The experiment SHALL compare scratch solving, frozen empty memory, valid
+unbounded reuse, valid bounded reuse with deterministic eviction, restart,
+rollback, and invalid-reuse attack arms on one sealed chronological stream.
+The stream SHALL contain refinement chains, unrelated queries, recurrence after
+gaps, distribution shifts, corruption injections, and held-future suffixes.
+All stream rows and thresholds SHALL be committed before any held-future
+outcome is scored.
+
+Each arm SHALL receive the same solver, query order, reuse opportunity, and
+charged lookup plus mapping budget. Learning arms SHALL record propose,
+validate, commit, use, abstain, evict, rollback, quarantine, and fallback
+actions. Every event SHALL record the store hash before and after the action.
+Every accepted use SHALL re-run the Exp6521 refinement witness and exact replay
+before it can affect effort. Invalid reuse SHALL be vetoed before durable write
+or use.
+
+The artifact SHALL report controller gate path and hash, expected and observed
+gate values, solver versions, resources, stream commitment, protected-file
+hashes, prior failure receipts, per-game results, lifecycle action rows, store
+hash rows, exact answer equality rows, immediate metrics, old-prefix retention,
+held-future support, interference, capacity, restart, rollback, invalid-reuse
+attacks, sequential evidence, per-unit rows, aggregate recomputation, tests run,
+and a reproducibility checksum.
+
+Required artifact fields and principles:
+
+- `status`: Records whether the chronological conflict-learning comparison is positive, null, partial, blocked, or disqualified.
+- `honest_verdict`: States the measured learning result and the exact-safety limits.
+- `verdict_class`: Uses positive only for charged held-future benefit with exact safety.
+- `upstream_gate_receipt`: Binds the run to the Exp6521 controller gate path, hash, and expected value.
+- `prior_failure_receipts`: Records why Exp6496 and Exp6498 did not open a held-future learning claim.
+- `chronological_stream_commitment`: Freezes the stream, thresholds, and held-future boundary before scoring.
+- `arm_and_dose_contract`: Shows each arm got matched solver, query, opportunity, and charged budget.
+- `per_game_results`: Reports one row per chronological unit and arm.
+- `lifecycle_action_rows`: Records propose, validate, commit, use, abstain, evict, rollback, quarantine, and fallback.
+- `store_hash_rows`: Records before and after store hashes for every event.
+- `exact_answer_equality_rows`: Proves every arm matches the exact release solver.
+- `immediate_metric_rows`: Measures current-query utility after charged lookup and mapping cost.
+- `prefix_retention_rows`: Measures old-prefix support after the full stream.
+- `held_future_support_rows`: Measures charged held-future support and benefit by chain.
+- `interference_rows`: Measures unrelated-query abstention, safety, and extra charged cost.
+- `capacity_restart_rollback_rows`: Records eviction, restart parity, and rollback parity.
+- `invalid_reuse_attack_rows`: Shows unsafe reuse, leakage, and hidden-validation attacks were vetoed.
+- `sequential_evidence`: Proves decisions use only prior store state and sealed thresholds.
+- `csl_execution_complete_score`: Bare scalar that is one only when all planned rows are terminal.
+- `continuous_self_learning_candidate_score`: Bare scalar that is one only for exact safe positive held-future benefit.
+- `gate_check_summary`: Names expected and observed gate values plus failed checks.
+- `per_unit_rows`: Combines all event and metric rows with source groups.
+- `aggregate_row_recomputation`: Recomputes all scores from rows rather than prose.
+- `preconditions_checked`: Records solver versions, resources, stream commitment, and protected hashes.
+- `protected_files_unchanged`: Proves protected upstream files did not change.
+- `inference_substrate`: Declares chronological exact conflict memory with no LLM.
+- `verifier_is_oracle`: Bare false because the learning-benefit metric is not an oracle.
+- `exact_solver_is_release_authority`: Bare true because exact answer equality is judged by the release solver.
+- `field_principles`: Preserves why each artifact field exists.
+- `field_provenance`: Maps each field to gates, rows, exact replay, or tests.
+- `random_seed`: Fixes stream and arm order.
+- `duration_s`: Records measured wall-clock duration.
+- `tests_run`: Records validation commands and exit codes.
+- `reproducibility_checksum`: Detects later drift in rows, gates, code, or hashes.
+
+`csl_execution_complete_score` SHALL be bare `1.0` only when every planned row
+is terminal. `continuous_self_learning_candidate_score` SHALL be bare `1.0`
+only when there are zero unsafe writes, zero unsafe uses, exact answer equality,
+positive charged held-future benefit, old-prefix retention within margin,
+preserved support, and benefit beyond scratch and frozen controls.
+`verdict_class` SHALL be `positive` only for oracle-distinct charged
+held-future benefit with exact safety, `null` for a complete no-benefit result,
+`partial` for incomplete usable evidence, `blocked` for gate or precondition
+failure, or `disqualified` for unsafe reuse, leakage, or correctness drift. The
+artifact SHALL set `inference_substrate` to
+`chronological_exact_conflict_memory_self_learning_no_llm`,
+`verifier_is_oracle` to bare `false`, and SHALL record exact solver release
+authority as true.
+
+### SCENARIO-STORE-6522-SEALING — Stream and thresholds are frozen first
+
+Given a planned chronological stream with prefix and held-future rows,
+
+When Exp6522 starts,
+
+Then the stream commitment, held-future boundary, opportunity budget, and
+thresholds are hashed before scoring, and no event row reads a later outcome.
+
+### SCENARIO-STORE-6522-MATCHED-DOSE — Arms get equal opportunity and cost
+
+Given scratch, frozen, unbounded, bounded, restart, rollback, and attack arms,
+
+When the comparison runs,
+
+Then each arm uses the same query order, solver identity, opportunity count,
+lookup charge, mapping charge, and exact-release answer check.
+
+### SCENARIO-STORE-6522-LEARNING-ACTIONS — Online memory changes are visible
+
+Given a source query whose conflict is exact and a later safe refinement,
+
+When a learning arm reaches those events,
+
+Then propose, validate, commit, use, abstain, evict, rollback, quarantine, and
+fallback actions are recorded with before and after store hashes.
+
+### SCENARIO-STORE-6522-FUTURE-SUPPORT — Held future benefit is charged
+
+Given held-future refinement targets after chronological gaps,
+
+When valid conflict memory is available,
+
+Then charged held-future effort is lower than scratch and frozen controls on
+more than one chain, while exact answers remain equal.
+
+### SCENARIO-STORE-6522-PREFIX-RETENTION — Old prefix support remains
+
+Given bounded memory after the full stream,
+
+When protected prefix targets are replayed,
+
+Then support stays within the frozen margin and retained rows use exact replay.
+
+### SCENARIO-STORE-6522-SAFETY — Invalid reuse is vetoed
+
+Given relaxed, unrelated, schema-mismatched, corrupted, replay-leaky,
+future-aware-eviction, hidden-validation, unsafe-unrelated, restart-drift,
+rollback-drift, support-collapse, one-chain, and aggregate-only attacks,
+
+When the attack arm evaluates them,
+
+Then each attack fails closed with zero durable unsafe writes, zero unsafe uses,
+and native exact fallback still available.
+
+### SCENARIO-STORE-6522-RESTART-ROLLBACK-CAPACITY — State changes are deterministic
+
+Given bounded capacity, a checkpoint, a process restart, and a rollback target,
+
+When Exp6522 exceeds capacity, reloads state, and rolls back,
+
+Then eviction order is deterministic, restart state hash matches, and rollback
+restores the checkpoint hash.
+
+### SCENARIO-STORE-6522-SEQUENTIAL-EVIDENCE — Summary claims replay from rows
+
+Given lifecycle, metric, safety, support, and equality rows,
+
+When aggregate scores are recomputed,
+
+Then terminal scores and verdict class match the row-derived checks and cannot
+come only from aggregate prose.
