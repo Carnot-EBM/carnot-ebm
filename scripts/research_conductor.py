@@ -73,7 +73,11 @@ DEFAULT_MODEL_BY_TYPE = {
     "claude": "claude-opus-4-8",
     "gemini": "gemini-3.1-pro-preview",
     "opencode": "opencode/big-pickle",
-    "codex": "gpt-5.5",
+    # 2026-08-23 operator directive: "we should be using gpt-5.6-sol". Was
+    # gpt-5.5 since the 2026-06-10 Codex-Default v2 flip. Planner, retro and
+    # audit already ran gpt-5.6-sol via their own AGENT_MODEL_* env vars; only
+    # the experiment tier was left behind, so a milestone mixed both models.
+    "codex": "gpt-5.6-sol",
 }
 
 # Flexible agent configuration: AGENT_TYPE can be 'claude', 'gemini', 'opencode', or 'codex'
@@ -5031,7 +5035,7 @@ def _plan_next_milestone(push: bool = True, replan_context: str = "") -> bool:
         f"    work. Use this field to route specific task categories to their\n"
         f"    strongest backend. Multi-agent routing per\n"
         f"    openspec/change-proposals/multi-agent-routing.md.\n\n"
-        f"    Set `agent_type: codex` + `model: gpt-5.5` for FORMULAIC CODE:\n"
+        f"    Set `agent_type: codex` + `model: gpt-5.6-sol` for FORMULAIC CODE:\n"
         f"      - WOPR-games-gallery cartridges (Sudoku, Lights Out,\n"
         f"        N-Queens, Connect Four, Hex, Slitherlink, Hashi, etc.)\n"
         f"      - New verifier implementations (constraint encoding follows\n"
