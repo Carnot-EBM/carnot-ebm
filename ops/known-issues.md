@@ -18352,3 +18352,62 @@ Scope: pid 849366 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json
 2/2 LLM-on rows invalid (max streak 2; codes ['DEAD_GENERATOR', 'NO_COMPLETIONS'])
 
 Written by scripts/conductor_run_sentinel.py (REQ-CONDUCTOR-SENTINEL-3). The sentinel never kills work; triage and clear by hand.
+
+## 2026-08-23 llama-server reaper RESOLVED: ExperimentTemplate.kill_gpu_zombies() min-across-GPUs SIGTERM sweep (live-reproduced, fixed, mutation-proven)
+
+The standing unsolved reaper (five 2026-08-09 entries above, plus the 2026-08-22/23 sentinel
+escalations) is closed. The killer is this project's own code.
+
+**Mechanism.** `ExperimentTemplate.kill_gpu_zombies()` (`scripts/experiment_template.py`)
+SIGTERMs every GPU process holding >=1000 MB when its utilization gate reads below 5%.
+pynvml is not installed in either venv, so the nvidia-smi fallback always ran — and that
+fallback took the MINIMUM utilization across ALL GPUs "as a conservative idle signal."
+An idle GPU 0 dragged the gate to 0% and the sweep killed a llama-server on GPU 1 that
+was decoding at full speed. The sweep runs unconditionally in `ExperimentTemplate.setup()`
+— including at pytest IMPORT time (experiment modules with module-level `tmpl.setup()`),
+so the conductor's step-end test phase re-fired it on a schedule. The only exemption was
+training entrypoints (the 2026-06-13 incident's fix); servers had none.
+
+**Evidence.**
+- supab5 A/B (2026-08-23): both arms' servers died mid-generation at 34-35 tok/s
+  ("cleaning up before exit... Received second interrupt" in both stderr logs), at
+  11:23:47Z and 12:18:22Z — each 40-90 s before a conductor step-OK line (11:25, 12:19),
+  and each ~20 s before a conductor-side port-8919 launch attempt. All 6 rows
+  `llm_on_row_valid: false`.
+- Live RED repro: gemma-4-12B llama-server on GPU 1 at 97% utilization, decoding at
+  81 tok/s; `kill_gpu_zombies()` killed it logging `gpu_util=0.0%`. Full transcript:
+  the outer-loop job dir `tmp/reaper_repro/EVIDENCE.md` (2026-08-23 session).
+- Why the 2026-08-09 auditd trace found nothing: the rule was armed on SIGINT
+  (`a1=0x2`); this code sends SIGTERM. The "SIGINT signature" in the earlier entries was
+  an inference from llama-server's "interrupt" wording, which it prints for SIGTERM too.
+- Why the isolation tests correlated with the conductor: no conductor steps means no
+  experiment `setup()` calls and no step-end pytest imports, so no sweeps.
+- The 2026-08-23 dry-run drop-in for `preflight_gpu_reap` (ExpandedGPUReaper) did NOT
+  stop the kills — that reaper was a second, independent hazard (SIGKILL, no util gate),
+  not this killer. It is now also server-exempt.
+
+**Fix (REQ-INFRA-079, openspec/capabilities/pipeline/spec.md).** Three sweeps changed:
+1. `scripts/experiment_template.py` fallback: per-GPU utilization attribution via
+   `gpu_uuid` join; a candidate whose GPU cannot be attributed is SKIPPED (fail toward
+   not killing); llama-server/vLLM cmdlines exempt in both the pynvml and fallback paths.
+2. `python/carnot/pipeline/gpu_zombie_killer.py`: server exemption + a
+   `pids_skipped_protected` result field (this SIGKILL variant leaves no victim-side log,
+   matching the 2026-08-09 ka59 "zero-response, unreachable-all-window" signature).
+3. `python/carnot/pipeline/expanded_gpu_reaper.py`: server skip with reason
+   `protected_server`.
+Live GREEN: an idle real server on an idle GPU (the old code's instant-kill case)
+survives with `killed_pids=[]` and a logged skip. Five deletion mutations each turned
+the suite RED (tests/python/test_gpu_zombie_server_exemption_2026_08_23.py).
+
+**Sibling fix (REQ-ARC-WMTE-6670).** The failure note that misdirected this
+investigation — `GPU llama-server failed for Qwen3.5-9B-MTP` while Qwen3.8-27B was what
+had loaded (the harness's frozen repo pin is a label; `CARNOT_ARC_GGUF_PATH` wins) — now
+names the effective model, and `_note_server_failure` appends the server's own
+external-termination signature when the stderr tail shows one.
+
+**Still open.** A genuinely dead/orphaned llama-server is now cleaned only by
+`scripts/run_stop_authority.py` (ownership-checked, currently disarmed) or by hand — the
+blunt sweeps no longer touch servers by design. If orphaned servers accumulate, arm the
+stop authority rather than widening the sweeps. The operator may also remove the
+2026-08-23 `50-reaper-dryrun-20260823.conf` drop-in once comfortable: the reaper it
+muzzles is now server-exempt in code.
