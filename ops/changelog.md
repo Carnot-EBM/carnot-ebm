@@ -17430,3 +17430,31 @@ markers already in the suite.
 - 2026-08-23: SMT-conflict inference-cost stress and exact-tool guard on mandated SOTA GGUFs (✅ Complete) — honest_verdict=complete_smt_cost_guard_positive: guarded exact dispatch reduces held charged token or time cost with exact-completion non-inferiority across at least two mandated model families; results/experiment_6546_smt_cost_guard_sota.json
 - 2026-08-23: Independent external router and SOTA cost-guard audit (✅ Complete) — honest_verdict=complete_external_transfer_independent_audit_clean: router=adopted_passed; cost_guard=adopted_passed; results/experiment_6547_external_transfer_independent_audit.json
 - 2026-08-23: Operational retrospective for 2026.08.566: 7 experiments completed in 6.6 reconstructed minutes, including 3 compute-bound tasks. The 5.53-minute SMT-conflict inference-cost stress and exact-tool guard formed the critical path. The locked compute-task GPU-idle field is false; the idle monitor snapshot has no task-window attribution. No data available this milestone establishes parallel multi-model loading or a missed DualGPURunner engagement. Add phase-timed model-cache and dependency preflight, task-linked GPU samples, and model-count and runner receipts. Estimated savings: 0% because the data has no measured faster path. Artifact: results/operational_retro_2026_08_566.json.
+
+## 2026-08-23 (outer loop, split-induce-fix agent): the llama-server reaper was our own zombie sweep — found, fixed, proven
+
+Assignment: the supab5 A/B's 6/6 `llm_on_row_valid: false` rows, all noting
+"split induce: engine failed: GPU llama-server failed for Qwen3.5-9B-MTP".
+The tasked hypothesis (split-induce resolving the retired 9B pin) is REFUTED:
+split induce uses the same proposer and server as the main path, and the 27B
+override loaded and served. Two real defects found instead:
+
+1. LABEL: `generate()`/`complete_text()` failure strings named `repo_substr`
+   (the harness's deliberately frozen 9B pin) instead of the effective
+   `model_path`. Fixed (REQ-ARC-WMTE-6670): `_effective_model_label()` +
+   `_note_server_failure` now appends the server stderr tail's
+   external-termination signature, so a killed server names its killer in the
+   row note. Commit 7f7f6497dc.
+2. KILLER: `ExperimentTemplate.kill_gpu_zombies()`'s nvidia-smi fallback
+   gated kills on MIN utilization across ALL GPUs, no server exemption, runs
+   in every `setup()` including pytest imports — SIGTERMing busy llama-servers
+   whenever GPU 0 idled. This closes the standing 2026-08-09 reaper mystery
+   (see ops/known-issues.md 2026-08-23 resolution entry; live RED repro at
+   97% GPU util, live GREEN survival after fix, 5 deletion mutations RED).
+   Fixed (REQ-INFRA-079) in experiment_template.py, gpu_zombie_killer.py,
+   expanded_gpu_reaper.py; work swept into conductor commits 1dbf57eda1 /
+   78ad772f6a / 010cf5d4f2 by its checkpoint auto-commit mid-session.
+
+Verification: 3-game live re-run (ar25,cd82,tu93, budget 2000, --no-spawn,
+Qwen3.8-27B on GPU 1) in flight at write time; result recorded in
+ops/test-results.md by the same session.

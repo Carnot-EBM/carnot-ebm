@@ -1,6 +1,24 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-08-23 (Exp6528 V565 source/model/method contract test
+**Last Updated:** 2026-08-23, later (llama-server reaper RESOLVED: the standing
+2026-08-09 mystery was `ExperimentTemplate.kill_gpu_zombies()` — its nvidia-smi
+fallback gated kills on MIN utilization across ALL GPUs, had no server
+exemption, and fires in every `setup()` including pytest imports, so the
+conductor's step-end test phase SIGTERMed busy GPU-1 llama-servers whenever
+GPU 0 idled. Live-reproduced at 97% GPU util, fixed per REQ-INFRA-079
+(per-GPU gpu_uuid attribution, fail-toward-not-killing, llama-server/vLLM
+exemption in all three sweeps), live GREEN survival + 5 deletion mutations RED.
+Sibling REQ-ARC-WMTE-6670: generator failure notes now name the effective
+model — not the harness's frozen 9B label that misdirected the supab5 triage —
+and carry the server stderr tail's external-kill signature. The supab5
+"split induce retired-pin" hypothesis is refuted; rows were invalid because the
+server was killed externally. Known-issues 2026-08-23 resolution entry has the
+full evidence chain; 3-game live verification run result lands in
+ops/test-results.md. NEXT: consider arming run_stop_authority for orphaned
+servers now that blunt sweeps are server-exempt; operator may drop the
+50-reaper-dryrun-20260823.conf drop-in.)
+
+Prior: 2026-08-23 (Exp6528 V565 source/model/method contract test
 regression fixed: blocked artifacts now name unavailable required channels or
 cache contracts in `honest_verdict`; OpenSpec, traceability, tests, and
 `results/experiment_6528_v565_source_model_method_contract.json` are
