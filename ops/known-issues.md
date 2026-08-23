@@ -18344,3 +18344,11 @@ Scope: pid 1550132 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_off.jso
 2/2 LLM-on rows invalid (max streak 2; codes ['DEAD_GENERATOR', 'NO_COMPLETIONS'])
 
 Written by scripts/conductor_run_sentinel.py (REQ-CONDUCTOR-SENTINEL-3). The sentinel never kills work; triage and clear by hand.
+
+## OPERATOR-ATTENTION 2026-08-23: run sentinel CONSECUTIVE_INVALID_LLM_ON_ROWS
+
+Scope: pid 849366 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json
+
+2/2 LLM-on rows invalid (max streak 2; codes ['DEAD_GENERATOR', 'NO_COMPLETIONS'])
+
+Written by scripts/conductor_run_sentinel.py (REQ-CONDUCTOR-SENTINEL-3). The sentinel never kills work; triage and clear by hand.
