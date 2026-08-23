@@ -1,6 +1,7 @@
 //! PyO3 ABI for the compact Safety-Net router decision.
 //!
-//! Spec: REQ-RUSTPY-6550, SCENARIO-RUSTPY-6550-BOUNDARY-PARITY.
+//! Spec: REQ-RUSTPY-6550, SCENARIO-RUSTPY-6550-BOUNDARY-PARITY,
+//! REQ-RUSTPY-6564, SCENARIO-RUSTPY-6564-BATCH-ORDERED-PARITY.
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -10,6 +11,7 @@ use pyo3::types::{PyAny, PyBytes, PyDict};
 use serde_json::{json, Value};
 
 const ABI_SCHEMA_VERSION: &str = "carnot.safety_net.router_abi.v1";
+const BATCH_ABI_SCHEMA_VERSION: &str = "carnot.safety_net.router_batch_abi.v1";
 const ROUTER_CONTRACT_HASH: &str =
     "sha256:932719273db1ef84b2e6f9fa81d996e818d3ae9c1ea341ab9693ad52297b8c16";
 const DEFAULT_ABSTENTION_THRESHOLD: f64 = 0.5;
@@ -198,6 +200,18 @@ impl PySafetyNetRouter {
         let bytes = request_bytes.extract::<Vec<u8>>()?;
         decision_to_pydict(py, &route_bytes(&bytes))
     }
+
+    fn route_batch<'py>(
+        &self,
+        py: Python<'py>,
+        request_batch: &Bound<'_, PyAny>,
+    ) -> PyResult<Vec<Bound<'py, PyDict>>> {
+        let batch = request_batch.extract::<Vec<Vec<u8>>>()?;
+        batch
+            .iter()
+            .map(|bytes| decision_to_pydict(py, &route_bytes(bytes)))
+            .collect()
+    }
 }
 
 #[pyfunction(name = "safety_net_route_bytes")]
@@ -207,6 +221,18 @@ fn py_safety_net_route_bytes<'py>(
 ) -> PyResult<Bound<'py, PyDict>> {
     let bytes = request_bytes.extract::<Vec<u8>>()?;
     decision_to_pydict(py, &route_bytes(&bytes))
+}
+
+#[pyfunction(name = "safety_net_route_batch")]
+fn py_safety_net_route_batch<'py>(
+    py: Python<'py>,
+    request_batch: &Bound<'_, PyAny>,
+) -> PyResult<Vec<Bound<'py, PyDict>>> {
+    let batch = request_batch.extract::<Vec<Vec<u8>>>()?;
+    batch
+        .iter()
+        .map(|bytes| decision_to_pydict(py, &route_bytes(bytes)))
+        .collect()
 }
 
 fn route_bytes(request_bytes: &[u8]) -> SafetyNetDecision {
@@ -597,15 +623,18 @@ fn decision_to_pydict<'py>(
 pub fn register_safety_net_module(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let safety_mod = PyModule::new(parent.py(), "safety_net")?;
     safety_mod.add("__schema_version__", ABI_SCHEMA_VERSION)?;
+    safety_mod.add("__batch_schema_version__", BATCH_ABI_SCHEMA_VERSION)?;
     safety_mod.add_class::<PySafetyNetFeatureRequest>()?;
     safety_mod.add_class::<PySafetyNetRoutingDecision>()?;
     safety_mod.add_class::<PySafetyNetRouter>()?;
     safety_mod.add_function(wrap_pyfunction!(py_safety_net_route_bytes, &safety_mod)?)?;
+    safety_mod.add_function(wrap_pyfunction!(py_safety_net_route_batch, &safety_mod)?)?;
     parent.add_submodule(&safety_mod)?;
     parent.add_class::<PySafetyNetFeatureRequest>()?;
     parent.add_class::<PySafetyNetRoutingDecision>()?;
     parent.add_class::<PySafetyNetRouter>()?;
     parent.add_function(wrap_pyfunction!(py_safety_net_route_bytes, parent)?)?;
+    parent.add_function(wrap_pyfunction!(py_safety_net_route_batch, parent)?)?;
     Ok(())
 }
 
@@ -663,5 +692,33 @@ mod tests {
         let invalid_json = route_bytes(b"{\"candidate_count\":NaN}");
         assert_eq!(invalid_json.fallback_reason, "malformed_input:invalid_json");
         assert_eq!(invalid_json.error_type, "JsonDecodeError");
+    }
+
+    #[test]
+    fn scenario_rustpy_6564_batch_matches_scalar_order() {
+        let supported = base_request(&[
+            "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        ]);
+        let malformed = b"{\"candidate_count\":NaN}".to_vec();
+        let batch = [supported.clone(), malformed.clone()];
+        let scalar = [route_bytes(&supported), route_bytes(&malformed)];
+        let batch_decisions: Vec<SafetyNetDecision> =
+            batch.iter().map(|request| route_bytes(request)).collect();
+
+        assert_eq!(
+            BATCH_ABI_SCHEMA_VERSION,
+            "carnot.safety_net.router_batch_abi.v1"
+        );
+        assert_eq!(
+            batch_decisions[0].canonical_json(),
+            scalar[0].canonical_json()
+        );
+        assert_eq!(
+            batch_decisions[1].canonical_json(),
+            scalar[1].canonical_json()
+        );
+        assert_eq!(batch_decisions[0].request_hash, scalar[0].request_hash);
+        assert_eq!(batch_decisions[1].request_hash, scalar[1].request_hash);
     }
 }

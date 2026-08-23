@@ -93,3 +93,42 @@ unchanged, and Python-only rollback disables routing exactly.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-RUSTPY-6550 | Implemented (`python/carnot/pipeline/safety_net_abi.py`, `crates/carnot-python/src/safety_net.rs`, `python/carnot/experiment_6550_rust_pyo3_safety_net_parity.py`) | Implemented (`tests/python/test_safety_net_rust_pyo3_parity.py`, `tests/python/test_experiment_6550_rust_pyo3_safety_net_parity.py`) |
+
+### REQ-RUSTPY-6564: Safety-Net Batch Router ABI Throughput Contract
+
+Carnot MUST expose the Safety-Net compact router through a versioned PyO3
+batch boundary. The batch boundary SHALL accept an ordered sequence of the same
+raw request bytes used by the scalar ABI. It SHALL return one decision per
+input in the same order. It SHALL preserve the V567 scalar ABI, schema version,
+canonical decision bytes, fallback reasons, error classes, and exact downstream
+result for every request.
+
+Sub-requirements:
+- REQ-RUSTPY-6564-BATCH-SCHEMA: The batch ABI SHALL use
+  `carnot.safety_net.router_batch_abi.v1` as its batch contract and SHALL route
+  each item through the unchanged scalar `carnot.safety_net.router_abi.v1`
+  request contract.
+- REQ-RUSTPY-6564-BATCH-PARITY: Python scalar, PyO3 scalar, and PyO3 batch
+  decisions SHALL be byte-identical for supported, abstain, fallback,
+  exception, malformed, and unsupported requests.
+- REQ-RUSTPY-6564-BATCH-ERRORS: Malformed items SHALL fail closed per item
+  without dropping later items or changing order.
+- REQ-RUSTPY-6564-NO-SCOPE-CREEP: The batch boundary SHALL NOT move Z3, LLM
+  inference, exact verification, natural-language extraction, or policy
+  authority into Rust.
+
+### SCENARIO-RUSTPY-6564-BATCH-ORDERED-PARITY: Batch Routing Preserves Scalar Bytes
+
+**Given** the Exp6563 frozen production Safety-Net workload request bytes plus
+malformed and unsupported ABI requests
+**When** Python scalar, PyO3 scalar, and PyO3 batch routing process the same
+ordered bytes
+**Then** every decision, error type, fallback reason, request hash, downstream
+result, and output byte string matches exactly, and the batch result order
+matches the request order.
+
+## Implementation Status (REQ-RUSTPY-6564)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-6564 | Planned (`crates/carnot-python/src/safety_net.rs`, `python/carnot/experiment_6564_rust_pyo3_safety_net_nfr01.py`) | Planned (`tests/python/test_safety_net_rust_pyo3_parity.py`, `tests/python/test_experiment_6564_rust_pyo3_safety_net_nfr01.py`) |

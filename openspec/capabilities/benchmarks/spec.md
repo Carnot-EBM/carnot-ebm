@@ -4581,6 +4581,102 @@ and the verdict class follows the preregistered enum.
 |---|---|---|
 | REQ-BENCH-6545 | Planned (`python/carnot/experiment_6545_external_safety_net_router.py`, `results/experiment_6545_external_safety_net_router.json`) | Planned (`tests/python/test_experiment_6545_external_safety_net_router.py`) |
 
+### REQ-BENCH-6564: Rust PyO3 Safety-Net NFR01 Benchmark SHALL Charge Equal Work
+
+Carnot SHALL provide Exp6564 at
+`python/carnot/experiment_6564_rust_pyo3_safety_net_nfr01.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6564_rust_pyo3_safety_net_nfr01 --date 20260823`
+SHALL write
+`results/experiment_6564_rust_pyo3_safety_net_nfr01.json`.
+
+Exp6564 SHALL evaluate the Exp6563 production workload canary gate before
+benchmarking. It SHALL record the gate path, hash, observed readiness value,
+CPU model, CPU governor, core placement, RAM, Python version, timer
+resolution, Rust and Cargo versions, compiler flags, release extension hash,
+thermal state, protected-file hashes, and the exact workload contract hash. A
+failed gate, missing binding, missing workload, or timer precondition SHALL
+write a terminal blocked artifact and SHALL populate `gate_check_summary` with
+the failed check and observed value.
+
+Exp6564 SHALL benchmark pure Python scalar, PyO3 scalar, and PyO3 batch
+routing over identical raw request bytes. The request set SHALL be derived from
+the Exp6563 frozen workload contract and SHALL cover supported, abstain,
+fallback, exception, malformed, and unsupported conditions. Batch construction,
+serialization, copies, Python conversion, and result materialization SHALL be
+charged. The benchmark SHALL use fixed randomized condition order, warm-up,
+repeated blocks, multiple batch sizes, process and wall timers, and row-level
+allocation accounting.
+
+Exp6564 SHALL confirm byte-identical decisions, request ordering, error class,
+fallback reason, request hash, and exact downstream result for every request.
+The Rust path SHALL remain a compact decision router only. It SHALL NOT move
+Z3, LLM inference, exact verification, natural-language extraction, or release
+authority into Rust.
+
+`rust_pyo3_nfr01_ready_score` SHALL equal `1.0` only when steady-state median
+batched throughput is at least `10.0` times pure Python scalar on the
+preregistered workload, all decisions are exact, p99 latency is within the
+frozen bound, and no work is omitted. A parity-only or sub-threshold speed
+result SHALL use `verdict_class="null"`. Narrow support SHALL use
+`verdict_class="partial"`. Failed prerequisites SHALL use
+`verdict_class="blocked"`. Unequal work, omitted errors, timing fabrication, or
+correctness drift SHALL use `verdict_class="disqualified"`.
+
+The artifact SHALL include exactly these fields: `status`, `honest_verdict`,
+`verdict_class`, `upstream_gate_receipt`, `abi_schema_and_build_receipts`,
+`frozen_benchmark_contract`, `per_unit_rows`, `scalar_and_batch_parity_rows`,
+`throughput_and_latency_rows`, `allocation_and_copy_rows`,
+`exact_downstream_equality_receipt`, `benchmark_attack_matrix`,
+`rust_pyo3_nfr01_ready_score`, `aggregate_row_recomputation`,
+`gate_check_summary`, `preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`random_seed`, `duration_s`, `tests_run`, and `reproducibility_checksum`.
+
+`inference_substrate` SHALL be
+`cpu_python_scalar_vs_rust_pyo3_scalar_and_batch_exact_decisions`.
+`verifier_is_oracle` SHALL be false because the cross-language implementation
+is not release authority.
+
+#### SCENARIO-BENCH-6564-GATE: Exp6563 Workload Contract Is Pinned
+
+**Given** the Exp6563 production workload canary artifact
+**When** Exp6564 starts
+**Then** it records the canary path, hash, readiness value, workload matrix
+hash, request count, condition coverage, toolchain receipts, and protected
+hashes before timing can produce a promotion claim.
+
+#### SCENARIO-BENCH-6564-PARITY: Scalar And Batch Decisions Match
+
+**Given** identical raw Safety-Net ABI request bytes
+**When** Python scalar, PyO3 scalar, and PyO3 batch paths route them
+**Then** decisions, canonical output bytes, ordering, error types, fallback
+reasons, request hashes, and exact downstream results match for every request.
+
+#### SCENARIO-BENCH-6564-NFR01: Batched Throughput Gates NFR01
+
+**Given** warm-up, randomized blocks, multiple batch sizes, and charged batch
+assembly
+**When** Exp6564 recomputes throughput and p99 from unit rows
+**Then** `rust_pyo3_nfr01_ready_score` opens only for at least `10.0x` median
+batched throughput, exact parity, p99 within the frozen bound, and no omitted
+work.
+
+#### SCENARIO-BENCH-6564-ATTACKS: Timing Shortcuts Fail Closed
+
+**Given** compiler/debug mismatch, hidden preprocessing, unequal request
+counts, discarded errors, warm-cache bias, timer granularity, one-outlier
+medians, uncharged batch assembly, and aggregate-only speedup attacks
+**When** Exp6564 evaluates the attack matrix
+**Then** any failed attack closes the benchmark to `null`, `partial`,
+`blocked`, or `disqualified` before a positive NFR01 claim can open.
+
+## Implementation Status (REQ-BENCH-6564)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6564 | Planned (`python/carnot/experiment_6564_rust_pyo3_safety_net_nfr01.py`, `results/experiment_6564_rust_pyo3_safety_net_nfr01.json`) | Planned (`tests/python/test_experiment_6564_rust_pyo3_safety_net_nfr01.py`) |
+
 ### REQ-BENCH-6546: SMT Cost Guard SHALL Separate Conflict, Surface, Model, And Exact Dispatch
 
 Carnot SHALL provide Exp6546 at
