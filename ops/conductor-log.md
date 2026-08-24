@@ -16371,3 +16371,4 @@ code |
 | 2026-08-23 23:39 UTC | Conductor re-exec: fresh committed source | OK | 45eb2efc3b30 -> 8d5bc109260e; argv preserved |
 | 2026-08-24 00:02 UTC | Sequential flagship GGUF admission by actual execu | OK | 118 passed, 1 warning in 9.93s |
 | 2026-08-24 00:04 UTC | Immutable live source-span claim stream on three f | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6567-sequential-flagship-gguf-admission |
+| 2026-08-24 00:06 UTC | Immutable live source-span claim stream on three f | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6567-sequential-flagship-gguf-admission |
