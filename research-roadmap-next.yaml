@@ -95,6 +95,11 @@ tasks:
     requires_gpu: false
     max_turns: 30
     estimated_wall_time_min: 75
+    prior_failures:
+      - experiment_id: exp6528-v565-source-model-method-contract
+        verdict: "blocked_v565_source_model_method_contract: unavailable_required_channels=openreview"
+        addressed_by: "Exp6528 bundled source, model-cache, and method closure and blocked because two required OpenReview receipts had null source dates despite HTTP 200. Exp6580 uses direct content-hashed arXiv primary receipts, replays the shipped Exp6574 exact method fixtures, performs no model-cache qualification, and freezes only the bounded V572 source and joint-method protocol."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Exp6574 is the clean method root for source-byte nodes, hop-conditioned edges, exact release, splits, fixtures, and attacks. The V572 research refresh adds energy-based conflict routing from arXiv:2608.21044 and context-threshold controls from arXiv:2608.16003. This task freezes the source manifest and protocol before any V572 model output exists. It performs no LLM inference. Work at {project_root}. The planning date is {date}.

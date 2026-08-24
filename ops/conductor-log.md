@@ -16400,3 +16400,8 @@ code |
 | 2026-08-24 12:02 UTC | Independent immutable flagship source-stream audit | OK | 99 passed, 1 warning in 10.02s |
 | 2026-08-24 12:04 UTC | Immutable all-family source-span claim stream v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6575-v571-clean-evidence-and-flagship-qua |
 | 2026-08-24 12:04 UTC | Semantic-block joint proof extractor v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6575-v571-clean-evidence-and-flagship-qua |
+| 2026-08-24 13:23 UTC | Plan milestone 2026.08.572 | OK | 6 tasks proposed |
+| 2026-08-24 13:25 UTC | Immutable all-family source-span claim stream v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6575-v571-clean-evidence-and-flagship-qua |
+| 2026-08-24 13:25 UTC | Semantic-block joint proof extractor v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6575-v571-clean-evidence-and-flagship-qua |
+| 2026-08-24 13:25 UTC | Activation REFUSED: milestone 2026.08.572 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-24 13:25 UTC | Activation replan 1/2: 2026.08.572 | OK | refused roadmap quarantined to roadmap-2026.08.572-refusal1.yaml; replanning wit |
