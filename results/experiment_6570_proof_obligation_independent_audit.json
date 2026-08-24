@@ -1,0 +1,901 @@
+{
+  "aggregate_row_recomputation": {
+    "audit_ready_from_rows": false,
+    "checks": {
+      "attacks_closed": false,
+      "compiler_exact_replay": false,
+      "cost_recomputable": false,
+      "inputs_usable": false,
+      "live_provenance_recomputable": false,
+      "no_harmful_release": true,
+      "paired_rows_recomputable": false,
+      "protected_files_unchanged": true,
+      "required_inputs_exist": false,
+      "row_closure": false,
+      "source_spans_valid": false,
+      "upstream_terminal_evidence": false
+    },
+    "failed_checks": [
+      "required_inputs_exist",
+      "upstream_terminal_evidence",
+      "inputs_usable",
+      "live_provenance_recomputable",
+      "source_spans_valid",
+      "compiler_exact_replay",
+      "row_closure",
+      "paired_rows_recomputable",
+      "cost_recomputable",
+      "attacks_closed"
+    ],
+    "failed_promotion_checks": [
+      "audit_ready",
+      "all_mandated_models",
+      "all_model_family_pairs",
+      "held_coverage_improved",
+      "precision_noninferior",
+      "charged_cost_complete"
+    ],
+    "promotion_checks": {
+      "all_mandated_models": false,
+      "all_model_family_pairs": false,
+      "audit_ready": false,
+      "charged_cost_complete": false,
+      "held_coverage_improved": false,
+      "precision_noninferior": false,
+      "zero_unsafe_release": true
+    },
+    "promotion_from_rows": false,
+    "row_hash": "sha256:d596bcb44c33846ae04f297b4486e2b1b26a51175db2964195b69c1350e3e3bc"
+  },
+  "duration_s": 0.013692,
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "principle": "Audit readiness and promotion derive only from independent rows.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "duration_s": {
+      "principle": "Monotonic time exposes skipped receipt or replay work.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Each disposition points to immutable rows, hashes, commands, and reducers.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "gate_check_summary": {
+      "principle": "A blocked audit names every missing or failed check and observed value.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "harmful_release_and_cost_audit": {
+      "principle": "No promotion can hide one unsafe release or unrecomputable cost.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The verdict separately states provenance, spans, compiler, exact release, harm, cost, and promotion.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "independent_compiler_and_exact_replay_rows": {
+      "principle": "Clean-process compilation and exact checks reproduce obligations, witnesses, counterexamples, and actions.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "independent_live_provenance_rows": {
+      "principle": "Model, process, GPU, token, output, exit, and unload receipts are independently validated.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "independent_paired_metric_rows": {
+      "principle": "Coverage, precision, releases, abstentions, and deltas are recomputed by model and family.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "independent_source_span_rows": {
+      "principle": "Each byte bound and typed binding is replayed against immutable source bytes.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "The audit replays checked-in evidence and performs no new GGUF generation.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "input_existence_and_hash_receipts": {
+      "principle": "The audit identifies every artifact, shard, raw response, compiler, checker, and reducer used.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "per_unit_rows": {
+      "principle": "Every audit decision has row-level evidence.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Input and tool receipts distinguish blocked audit work from null science.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "proof_carrying_extractor_audit_ready_score": {
+      "principle": "One binary field gates the downstream learning study on usable audited evidence.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "proof_carrying_extractor_promotion_score": {
+      "principle": "A separate field carries the independently confirmed scientific disposition.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "The audit must not repair upstream evidence or mutate protected files.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "random_seed": {
+      "principle": "A fixed audit and attack order makes the result repeatable.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A final hash protects the audit trail.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "shortcut_attack_matrix": {
+      "principle": "Independent attacks cover cells, retries, leakage, mutation, compilers, releases, and aggregates.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "status": {
+      "principle": "An always-run audit needs a terminal state for clean, missing, invalid, and non-recomputable evidence.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "tests_run": {
+      "principle": "Named tests and E2E commands prove independent checks ran.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "verdict_class": {
+      "principle": "An independent audit cannot turn its own replay into positive science.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "Independent executable replay is audit authority, so the audit class is non-positive.",
+      "source": "Exp6570 independent reducers; Exp6568=sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8; Exp6569=missing",
+      "spec_refs": [
+        "REQ-REPORT-6570"
+      ]
+    }
+  },
+  "gate_check_summary": {
+    "all_audit_checks_passed": false,
+    "all_promotion_checks_passed": false,
+    "failed_checks": [
+      "required_inputs_exist",
+      "upstream_terminal_evidence",
+      "inputs_usable",
+      "live_provenance_recomputable",
+      "source_spans_valid",
+      "compiler_exact_replay",
+      "row_closure",
+      "paired_rows_recomputable",
+      "cost_recomputable",
+      "attacks_closed"
+    ],
+    "failed_promotion_checks": [
+      "audit_ready",
+      "all_mandated_models",
+      "all_model_family_pairs",
+      "held_coverage_improved",
+      "precision_noninferior",
+      "charged_cost_complete"
+    ],
+    "rows": [
+      {
+        "check": "required_inputs_exist",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:be5c319d1bdaba211a7b4c3255b0424d26c893d44780044c6b8e7be67d536fd4"
+      },
+      {
+        "check": "upstream_terminal_evidence",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:8a28dc1a2bb274f896165bd4469a901baf12440396cd742c0e70799d518843fb"
+      },
+      {
+        "check": "inputs_usable",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:5e66968ada68851a07f4810b072df6720a46b5f375a1bfc3a055b746d0716cab"
+      },
+      {
+        "check": "live_provenance_recomputable",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:9d9ce5118acd7f7bb1191a6336ab9100e808e0ff520ee222a19c2ace9f036ddd"
+      },
+      {
+        "check": "source_spans_valid",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:b84d6ed1f0da1ee9465928ba36ccf8bb9cccb59d25b21cac49e0c1d89865d5d6"
+      },
+      {
+        "check": "compiler_exact_replay",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:b3d4e7f0183176004eef658faf0f22da5feccc5ca89ee3109a319414843aed67"
+      },
+      {
+        "check": "row_closure",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:7547963675d6d0752bcba10d0b833194770f8d06bddb576421d0739b88cfc44c"
+      },
+      {
+        "check": "paired_rows_recomputable",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:f48ea6a2efe47f1686d1fafa59b656a7e378ff436c6cc7ab271c2cef035d592a"
+      },
+      {
+        "check": "no_harmful_release",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "row_hash": "sha256:82a5cb84b1d005c367a354dd9aba211e26f17ee60b31e0202d670e6c012b6a9b"
+      },
+      {
+        "check": "cost_recomputable",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:bbef8ef1fda3c5e8e7221af2cd3eec9180ba4ef35d12339b553fef0bcc3b7995"
+      },
+      {
+        "check": "attacks_closed",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:028c191d4ecac3c33728a96b221d8a894c74c17f75e385b5b57e9660d11bafeb"
+      },
+      {
+        "check": "protected_files_unchanged",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "row_hash": "sha256:e60c7e14c042a3199e04474f126b9efe991518962f42114b7c80e20b639ea970"
+      },
+      {
+        "check": "promotion:audit_ready",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:5ffe5d065f0ab9e13854725bf9f4a9b6534f78f4ba03fa3c04fac73492349bd6"
+      },
+      {
+        "check": "promotion:all_mandated_models",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:9cbee35229b7ac319eb3f1c37a2462b1043dda221a8826ff85081dc74ff862af"
+      },
+      {
+        "check": "promotion:all_model_family_pairs",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:7701318b6b966f6b85f8b189efa354e8c8c6c098609df03c744ae9df58a1053c"
+      },
+      {
+        "check": "promotion:held_coverage_improved",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:8ff16ba96b621e982ba2b39506aaece3fa34b1166ced04481e33a5a16b2839b1"
+      },
+      {
+        "check": "promotion:precision_noninferior",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:d6067b53b53a14c5dce5693ecee1410c039fe6b3ca76fe31602e4a4c70f57ba4"
+      },
+      {
+        "check": "promotion:zero_unsafe_release",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "row_hash": "sha256:6332772f267d1f7f9a9a6e5f1ab5bc501164df2c005ee9a99b0b37beb4e33906"
+      },
+      {
+        "check": "promotion:charged_cost_complete",
+        "expected": true,
+        "observed": false,
+        "passed": false,
+        "row_hash": "sha256:14b043e943a30921227746f302c4d4de6d0f8774686139a85e2d221990fda2df"
+      }
+    ]
+  },
+  "harmful_release_and_cost_audit": {
+    "censored_count": 0,
+    "charged_cost": 0,
+    "charged_output_tokens": 0,
+    "charged_prompt_tokens": 0,
+    "charged_retries": 0,
+    "charged_solver_calls": 0,
+    "charged_wall_time_s": 0,
+    "cost_recomputable": false,
+    "cost_row_count": 0,
+    "row_hash": "sha256:b16e9d7e58492248f9261bae879cad34a5261661c4336b75978472e9d33e43fa",
+    "unsafe_release_count": 0,
+    "unsafe_release_keys": []
+  },
+  "honest_verdict": "blocked_proof_obligation_independent_audit: provenance=not_recomputable; spans=not_replayable; compiler=not_replayable; exact_release=not_replayable; harm=not_recomputable; cost=not_recomputable; promotion=not_confirmed",
+  "independent_compiler_and_exact_replay_rows": [],
+  "independent_live_provenance_rows": [],
+  "independent_paired_metric_rows": [],
+  "independent_source_span_rows": [],
+  "inference_substrate": "independent_checked_in_raw_span_compiler_exact_release_and_cost_replay_no_new_llm",
+  "input_existence_and_hash_receipts": {
+    "all_referenced_files_exist": false,
+    "inputs_usable": false,
+    "loaded_model_weights": false,
+    "preload_upstream_artifact_receipts": {
+      "exp6568_artifact": {
+        "byte_size": 2989,
+        "exists": true,
+        "model_weights_loaded": false,
+        "mtime_ns": 1787530109051536355,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6568_immutable_source_span_claim_stream.json",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6568_immutable_source_span_claim_stream.json",
+        "role": "exp6568_artifact",
+        "sha256": "sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8"
+      },
+      "exp6569_artifact": {
+        "byte_size": null,
+        "exists": false,
+        "model_weights_loaded": false,
+        "mtime_ns": null,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6569_source_span_proof_obligation_extractor.json",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6569_source_span_proof_obligation_extractor.json",
+        "role": "exp6569_artifact",
+        "sha256": "missing"
+      }
+    },
+    "required_inputs_exist": false,
+    "rows": [
+      {
+        "byte_size": 2989,
+        "exists": true,
+        "model_weights_loaded": false,
+        "mtime_ns": 1787530109051536355,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6568_immutable_source_span_claim_stream.json",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6568_immutable_source_span_claim_stream.json",
+        "role": "exp6568_artifact",
+        "row_hash": "sha256:72bc1cdbb8f5c813101b2261083709e298f61e78cb40baa01ee6745da5caa4e4",
+        "sha256": "sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8"
+      },
+      {
+        "byte_size": null,
+        "exists": false,
+        "model_weights_loaded": false,
+        "mtime_ns": null,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6569_source_span_proof_obligation_extractor.json",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6569_source_span_proof_obligation_extractor.json",
+        "role": "exp6569_artifact",
+        "row_hash": "sha256:f21551e4ba4864517a8143852554826da0c27f9c7efce884cb3c4f31a09405e3",
+        "sha256": "missing"
+      },
+      {
+        "byte_size": 50142,
+        "exists": true,
+        "model_weights_loaded": false,
+        "mtime_ns": 1787528062953110247,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6566_proof_obligation_and_graph_potts_method_contract.py",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6566_proof_obligation_and_graph_potts_method_contract.py",
+        "role": "compiler",
+        "row_hash": "sha256:376edf06808b87750d53ba1d9c4d03f39927683f83f068fa62fa65a8c8b472c3",
+        "sha256": "sha256:3de05eac75e75af809be15ca65787df7f8efe1ac1fe4a0457afa9a2713b5f514"
+      },
+      {
+        "byte_size": 210,
+        "exists": true,
+        "model_weights_loaded": false,
+        "mtime_ns": 1781319899434803480,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/z3/__init__.py",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/z3/__init__.py",
+        "role": "z3_checker",
+        "row_hash": "sha256:200355051c9046e90d9b3d0047a17d39c9f6be6ea37a3c55e6fc7c42ff889916",
+        "sha256": "sha256:53c4529a01f38e7c0d593b7548c79e0d7398aa09f7d7cbd1773470859ee2febd"
+      },
+      {
+        "byte_size": 54825,
+        "exists": true,
+        "model_weights_loaded": false,
+        "mtime_ns": 1787531134086786652,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6570_proof_obligation_independent_audit.py",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6570_proof_obligation_independent_audit.py",
+        "role": "independent_reducer",
+        "row_hash": "sha256:4a02472494d0b7a0faddde99bf5e4d519238bf316a12ac0eee543b2b85528dd1",
+        "sha256": "sha256:6bf7ff81fb781f827ed3f843c2eea3b5c824a7f16e1317ff4d15d4b7c3cd80c8"
+      },
+      {
+        "byte_size": 273014,
+        "exists": true,
+        "model_weights_loaded": false,
+        "mtime_ns": 1787528136813377559,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "role": "adversarial_reducer",
+        "row_hash": "sha256:303f97b2c64b68bf42ce4d1e7926a67a09cf4eb1e2b601f719c32ef0a675109b",
+        "sha256": "sha256:5f6463afd7db4e2a4e57f418b306a2882bda44c15343e2fea7b0a0e7fe8c8241"
+      },
+      {
+        "byte_size": 18650,
+        "exists": true,
+        "model_weights_loaded": false,
+        "mtime_ns": 1787326723956613876,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "role": "row_lint_reducer",
+        "row_hash": "sha256:bd6058938c1ac71930f48a26c12e0e8ba93400299fa2d08aa396609fcf9320a7",
+        "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+      },
+      {
+        "byte_size": 62526,
+        "exists": true,
+        "model_weights_loaded": false,
+        "mtime_ns": 1787529571450276913,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6567_sequential_flagship_gguf_admission.json",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6567_sequential_flagship_gguf_admission.json",
+        "role": "referenced_input",
+        "row_hash": "sha256:0387092bf615c91cc5d727459bbc7955a6fdb9726da6f18e58f4dcf518ec9554",
+        "sha256": "sha256:fa903b08665c1b469da6bdc785280fe68207b67ed0d505f88fc4f711770c1ffa"
+      },
+      {
+        "byte_size": 52297,
+        "exists": true,
+        "model_weights_loaded": false,
+        "mtime_ns": 1787528094632584759,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json",
+        "role": "referenced_input",
+        "row_hash": "sha256:b9f61086d199a850b8e018cae885c0ef142c1205e0ad89795f3114d471f55222",
+        "sha256": "sha256:79e7639c75f02ceb1fed6baf30fc49d3bb8a0ccac4c2ca339128c6c5386ea729"
+      }
+    ],
+    "upstream_json_loaded_after_base_receipts": true,
+    "upstream_terminal_evidence": false
+  },
+  "per_unit_rows": [],
+  "preconditions_checked": {
+    "compiler_checker_and_reducer_receipts": [
+      {
+        "byte_size": 50142,
+        "exists": true,
+        "model_weights_loaded": false,
+        "mtime_ns": 1787528062953110247,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6566_proof_obligation_and_graph_potts_method_contract.py",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6566_proof_obligation_and_graph_potts_method_contract.py",
+        "role": "compiler",
+        "row_hash": "sha256:376edf06808b87750d53ba1d9c4d03f39927683f83f068fa62fa65a8c8b472c3",
+        "sha256": "sha256:3de05eac75e75af809be15ca65787df7f8efe1ac1fe4a0457afa9a2713b5f514"
+      },
+      {
+        "byte_size": 210,
+        "exists": true,
+        "model_weights_loaded": false,
+        "mtime_ns": 1781319899434803480,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/z3/__init__.py",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/z3/__init__.py",
+        "role": "z3_checker",
+        "row_hash": "sha256:200355051c9046e90d9b3d0047a17d39c9f6be6ea37a3c55e6fc7c42ff889916",
+        "sha256": "sha256:53c4529a01f38e7c0d593b7548c79e0d7398aa09f7d7cbd1773470859ee2febd"
+      },
+      {
+        "byte_size": 54825,
+        "exists": true,
+        "model_weights_loaded": false,
+        "mtime_ns": 1787531134086786652,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6570_proof_obligation_independent_audit.py",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6570_proof_obligation_independent_audit.py",
+        "role": "independent_reducer",
+        "row_hash": "sha256:4a02472494d0b7a0faddde99bf5e4d519238bf316a12ac0eee543b2b85528dd1",
+        "sha256": "sha256:6bf7ff81fb781f827ed3f843c2eea3b5c824a7f16e1317ff4d15d4b7c3cd80c8"
+      },
+      {
+        "byte_size": 273014,
+        "exists": true,
+        "model_weights_loaded": false,
+        "mtime_ns": 1787528136813377559,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "role": "adversarial_reducer",
+        "row_hash": "sha256:303f97b2c64b68bf42ce4d1e7926a67a09cf4eb1e2b601f719c32ef0a675109b",
+        "sha256": "sha256:5f6463afd7db4e2a4e57f418b306a2882bda44c15343e2fea7b0a0e7fe8c8241"
+      },
+      {
+        "byte_size": 18650,
+        "exists": true,
+        "model_weights_loaded": false,
+        "mtime_ns": 1787326723956613876,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "role": "row_lint_reducer",
+        "row_hash": "sha256:bd6058938c1ac71930f48a26c12e0e8ba93400299fa2d08aa396609fcf9320a7",
+        "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+      }
+    ],
+    "input_preload_receipts": {
+      "exp6568_artifact": {
+        "byte_size": 2989,
+        "exists": true,
+        "model_weights_loaded": false,
+        "mtime_ns": 1787530109051536355,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6568_immutable_source_span_claim_stream.json",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6568_immutable_source_span_claim_stream.json",
+        "role": "exp6568_artifact",
+        "sha256": "sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8"
+      },
+      "exp6569_artifact": {
+        "byte_size": null,
+        "exists": false,
+        "model_weights_loaded": false,
+        "mtime_ns": null,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6569_source_span_proof_obligation_extractor.json",
+        "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6569_source_span_proof_obligation_extractor.json",
+        "role": "exp6569_artifact",
+        "sha256": "missing"
+      }
+    },
+    "protected_file_hashes_before": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/research-reporting/spec.md": "sha256:77cd0634a7f3bc31db9febe2ad86ec505425d7c4bf8a7f8ddc513b103c09e781",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "python/carnot/experiment_6566_proof_obligation_and_graph_potts_method_contract.py": "sha256:3de05eac75e75af809be15ca65787df7f8efe1ac1fe4a0457afa9a2713b5f514",
+      "python/carnot/experiment_6570_proof_obligation_independent_audit.py": "sha256:6bf7ff81fb781f827ed3f843c2eea3b5c824a7f16e1317ff4d15d4b7c3cd80c8",
+      "research-roadmap.yaml": "sha256:4ba18d4bd2cee3f8d13c511fc09f21ed62e28ef2f2af81c3b6396945d514df0b",
+      "results/experiment_6568_immutable_source_span_claim_stream.json": "sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8",
+      "results/experiment_6569_source_span_proof_obligation_extractor.json": "missing",
+      "scripts/adversarial_verify.py": "sha256:5f6463afd7db4e2a4e57f418b306a2882bda44c15343e2fea7b0a0e7fe8c8241",
+      "scripts/research_conductor.py": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8",
+      "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+      "tests/python/test_experiment_6570_proof_obligation_independent_audit.py": "sha256:5f0eeee342d9c590a4170d72cf16854d6e2551461b187dd6c85fc313d15ca179"
+    },
+    "resources": {
+      "audit_seed": 6570,
+      "cpu": {
+        "count": 24,
+        "model": "x86_64"
+      },
+      "disk": {
+        "free_bytes": 1086594658304,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot",
+        "total_bytes": 3953289023488
+      },
+      "model_weights_loaded": false,
+      "new_llm_generation": false,
+      "python": {
+        "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "version": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]"
+      },
+      "ram": {
+        "available_kib": 106707228,
+        "total_kib": 131157332
+      },
+      "timer": {
+        "monotonic": true,
+        "name": "monotonic",
+        "resolution_s": 1e-09
+      },
+      "z3": {
+        "available": true,
+        "version": "4.16.0"
+      }
+    },
+    "run_date": "20260824"
+  },
+  "proof_carrying_extractor_audit_ready_score": 0.0,
+  "proof_carrying_extractor_promotion_score": 0.0,
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "changed_paths": [],
+    "research_conductor_py_unchanged": true,
+    "rows": [
+      {
+        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "path": "AGENTS.md",
+        "row_hash": "sha256:334cd8e9b58a8dc4e87f956affc7bc4f0c559d8abbd8316748174f2e10a0cdcb",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "before_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "path": "CLAUDE.md",
+        "row_hash": "sha256:cf8c34dbbbe2bd0160a279bf65bd3ef9a67beb2ae6834c493e919e9841d12670",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "path": "CODEX.md",
+        "row_hash": "sha256:957297c534c8e7d73eab6c07352d41df25d020a917426826bf8f1dffb4ee598a",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:77cd0634a7f3bc31db9febe2ad86ec505425d7c4bf8a7f8ddc513b103c09e781",
+        "before_sha256": "sha256:77cd0634a7f3bc31db9febe2ad86ec505425d7c4bf8a7f8ddc513b103c09e781",
+        "path": "openspec/capabilities/research-reporting/spec.md",
+        "row_hash": "sha256:965132bbbd4c8f044793027120f027794e46c7d31e3fa5f39f1174af6a5d4aba",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "before_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "path": "ops/e2e-test-plan.md",
+        "row_hash": "sha256:e1b9d16c05dcca78c58a297db057b44a1ef35c8d7ec8b234efb7a8acfc1cb492",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:3de05eac75e75af809be15ca65787df7f8efe1ac1fe4a0457afa9a2713b5f514",
+        "before_sha256": "sha256:3de05eac75e75af809be15ca65787df7f8efe1ac1fe4a0457afa9a2713b5f514",
+        "path": "python/carnot/experiment_6566_proof_obligation_and_graph_potts_method_contract.py",
+        "row_hash": "sha256:31b55e4cba04cf9b21896e8a006d759dc56ec7f6591ba923879050b5654fc0b8",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:6bf7ff81fb781f827ed3f843c2eea3b5c824a7f16e1317ff4d15d4b7c3cd80c8",
+        "before_sha256": "sha256:6bf7ff81fb781f827ed3f843c2eea3b5c824a7f16e1317ff4d15d4b7c3cd80c8",
+        "path": "python/carnot/experiment_6570_proof_obligation_independent_audit.py",
+        "row_hash": "sha256:18b39d9df1247c8f80ad2fbdbbcac94e5395d47ac956b1217f63d0e0a2f2b46a",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:4ba18d4bd2cee3f8d13c511fc09f21ed62e28ef2f2af81c3b6396945d514df0b",
+        "before_sha256": "sha256:4ba18d4bd2cee3f8d13c511fc09f21ed62e28ef2f2af81c3b6396945d514df0b",
+        "path": "research-roadmap.yaml",
+        "row_hash": "sha256:291f83f097e596c8e84a56511991101adb3463ad4defebd5d6d7ea95ad5a78e3",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8",
+        "before_sha256": "sha256:2b467a4e5f17464f3c60036ab8cc9713d92349453c01c157a7e2af3821d262a8",
+        "path": "results/experiment_6568_immutable_source_span_claim_stream.json",
+        "row_hash": "sha256:48bb7e6f55c848312ba230282911a8ab343d09f104d28073523cbf579c622578",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "missing",
+        "before_sha256": "missing",
+        "path": "results/experiment_6569_source_span_proof_obligation_extractor.json",
+        "row_hash": "sha256:10406d043e175c871b402e69177597d16cac57152676891207d25dcc2ffecdf5",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:5f6463afd7db4e2a4e57f418b306a2882bda44c15343e2fea7b0a0e7fe8c8241",
+        "before_sha256": "sha256:5f6463afd7db4e2a4e57f418b306a2882bda44c15343e2fea7b0a0e7fe8c8241",
+        "path": "scripts/adversarial_verify.py",
+        "row_hash": "sha256:d0eb97c29e56945b5c85935f59bdc5e154d860aa1061a481929bea0bde904319",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8",
+        "before_sha256": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8",
+        "path": "scripts/research_conductor.py",
+        "row_hash": "sha256:49f50b20acc3674c0204eb113074a43b0d705e7f4958f8b5527209f3f5386d6a",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+        "before_sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+        "path": "scripts/verdict_row_consistency_lint.py",
+        "row_hash": "sha256:453cc0928ae0b26e64a3ed6d40569791c78ec5d30254200775c64e528711f632",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:5f0eeee342d9c590a4170d72cf16854d6e2551461b187dd6c85fc313d15ca179",
+        "before_sha256": "sha256:5f0eeee342d9c590a4170d72cf16854d6e2551461b187dd6c85fc313d15ca179",
+        "path": "tests/python/test_experiment_6570_proof_obligation_independent_audit.py",
+        "row_hash": "sha256:c6817785f416ecc05fdc3e8bd44f328319b6e1d1f7744a891f24807aa99fb852",
+        "unchanged": true
+      }
+    ]
+  },
+  "random_seed": 6570,
+  "reproducibility_checksum": "sha256:ce1e06ae1109dd8d45b1f6c6ef29d58543be5da8f75ee4ce8e59babe5f885932",
+  "shortcut_attack_matrix": [
+    {
+      "attack": "missing_cells",
+      "observed": false,
+      "passed": false,
+      "row_hash": "sha256:2f5afdfa1af6c86b1bb7e7345024804a92047ea25883f40f5c4549101e3c3bf1"
+    },
+    {
+      "attack": "duplicate_cells",
+      "observed": true,
+      "passed": true,
+      "row_hash": "sha256:e5817db15377efb591adda644d19319fc3d1f4976824d9e413dedfb23664db98"
+    },
+    {
+      "attack": "unequal_arms",
+      "observed": false,
+      "passed": false,
+      "row_hash": "sha256:2555f2bbb65f7e591bf12852c7e86e002d555d953e9610bdcfeb44de00042303"
+    },
+    {
+      "attack": "hidden_retries",
+      "observed": true,
+      "passed": true,
+      "row_hash": "sha256:36da0154bb1cf9f3418169fe13804df01f9947a10f8f0111a88df90bae33ae9b"
+    },
+    {
+      "attack": "zero_headroom_wins",
+      "observed": true,
+      "passed": true,
+      "row_hash": "sha256:98de94202b286470c6578a4ee0e81c9085ab328fb1c4826c29651758677692a2"
+    },
+    {
+      "attack": "model_shortcut",
+      "observed": false,
+      "passed": false,
+      "row_hash": "sha256:04679b9469cd5763bcdbdbb48d5a02635950233d14f1785869b65c3136621131"
+    },
+    {
+      "attack": "family_shortcut",
+      "observed": true,
+      "passed": true,
+      "row_hash": "sha256:fd65e6c410ed279e6c92ab4711cd7af961552574d890fcacc046e47ba1a59a07"
+    },
+    {
+      "attack": "source_mutation",
+      "observed": false,
+      "passed": false,
+      "row_hash": "sha256:6f79cdba5c286ce0f6a52aec369cd788ce7126ffc59a6de0d739c80713138cec"
+    },
+    {
+      "attack": "relation_smuggling",
+      "observed": true,
+      "passed": true,
+      "row_hash": "sha256:6a5d1572a669b6b540f1dcab29737155ab9371d46ae832152bb208af5363879f"
+    },
+    {
+      "attack": "compiler_nondeterminism",
+      "observed": false,
+      "passed": false,
+      "row_hash": "sha256:e5d31aee27a2eb76121ccce74a04774d61a42f0a488a4ecb2a881277bab3d2d2"
+    },
+    {
+      "attack": "invalid_release",
+      "observed": true,
+      "passed": true,
+      "row_hash": "sha256:5315d210f6bf8ed3f40cb276b47c615ec116d2d54bc6ebce1c5e0329cefa3c94"
+    },
+    {
+      "attack": "aggregate_tampering",
+      "observed": false,
+      "passed": false,
+      "row_hash": "sha256:4554b341ae5b37545bc148776f96d9f394ce13291bfd5e61eda2a97ebb117404"
+    }
+  ],
+  "status": "blocked_proof_obligation_independent_audit_missing_inputs",
+  "tests_run": [
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6570_proof_obligation_independent_audit --date 20260824",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6570_proof_obligation_independent_audit.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6570_proof_obligation_independent_audit.py -m pytest tests/python/test_experiment_6570_proof_obligation_independent_audit.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6570_proof_obligation_independent_audit.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_6570_proof_obligation_independent_audit.py tests/python/test_experiment_6570_proof_obligation_independent_audit.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_6570_proof_obligation_independent_audit.py tests/python/test_experiment_6570_proof_obligation_independent_audit.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6570_proof_obligation_independent_audit.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6570_proof_obligation_independent_audit.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6570_proof_obligation_independent_audit.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6570_proof_obligation_independent_audit --validate",
+      "exit_code": 0
+    },
+    {
+      "command": "independent exact-replay E2E: module --validate",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}

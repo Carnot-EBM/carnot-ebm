@@ -53060,6 +53060,147 @@ leaves no partial target.
 |---|---|---|
 | REQ-REPORT-6567 | Implemented (`python/carnot/experiment_6567_sequential_flagship_gguf_admission.py`, terminal artifact `results/experiment_6567_sequential_flagship_gguf_admission.json`) | Implemented (`tests/python/test_experiment_6567_sequential_flagship_gguf_admission.py`) |
 
+### REQ-REPORT-6570: Proof-Obligation Independent Audit SHALL Replay Checked-In Evidence
+
+Carnot SHALL build Exp6570 as an always-run independent audit for planning
+date 20260824. The audit SHALL read checked-in Exp6568 and Exp6569 evidence.
+It SHALL perform no new LLM generation and SHALL not load model weights. It
+SHALL record file metadata and hashes before it loads upstream JSON.
+
+The audit SHALL validate raw model receipts. It SHALL check commands, PIDs,
+times, GPU samples, token hashes, output hashes, exits, unloads, source hashes,
+and prompt hashes. A stale or self-reported receipt SHALL fail provenance.
+
+The audit SHALL replay every source span from immutable source bytes. It SHALL
+check byte bounds, UTF-8 boundaries, source identity, typed variable bindings,
+whitelisted relations, and overlap rules. It SHALL reject source mutation and
+relation smuggling.
+
+The audit SHALL compile each obligation in a clean process. It SHALL compare
+normalized obligation bytes and hashes. It SHALL rerun Z3 or the executable
+checker. It SHALL compare the exact result, witness, counterexample, release,
+and abstention.
+
+The audit SHALL recompute held precision, coverage, false accepts, false
+rejects, unsafe releases, model effects, family effects, paired arm deltas,
+tokens, retries, solver calls, wall time, and censoring from rows only. It
+SHALL audit harmful releases and charged cost before promotion.
+
+The audit SHALL attack missing and duplicate cells, unequal arms, hidden
+retries, zero-headroom wins, model and family shortcuts, source mutation,
+relation smuggling, compiler nondeterminism, invalid releases, and aggregate
+tampering. A missing required input SHALL close with a terminal blocked
+artifact. False provenance, invalid spans, nondeterministic compilation, or an
+unsafe release SHALL disqualify the evidence.
+
+The Exp6570 artifact SHALL be written atomically to
+`results/experiment_6570_proof_obligation_independent_audit.json`. It SHALL
+set
+`inference_substrate=independent_checked_in_raw_span_compiler_exact_release_and_cost_replay_no_new_llm`
+and `verifier_is_oracle=true`. It SHALL include exactly these required fields:
+`status`, `honest_verdict`, `verdict_class`,
+`input_existence_and_hash_receipts`, `independent_live_provenance_rows`,
+`independent_source_span_rows`,
+`independent_compiler_and_exact_replay_rows`,
+`independent_paired_metric_rows`, `harmful_release_and_cost_audit`,
+`shortcut_attack_matrix`, `proof_carrying_extractor_audit_ready_score`,
+`proof_carrying_extractor_promotion_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+Field principles SHALL be:
+
+- `status`: "An always-run audit needs a terminal state for clean, missing, invalid, and non-recomputable evidence."
+- `honest_verdict`: "The verdict separately states provenance, spans, compiler, exact release, harm, cost, and promotion."
+- `verdict_class`: "An independent audit cannot turn its own replay into positive science."
+- `input_existence_and_hash_receipts`: "The audit identifies every artifact, shard, raw response, compiler, checker, and reducer used."
+- `independent_live_provenance_rows`: "Model, process, GPU, token, output, exit, and unload receipts are independently validated."
+- `independent_source_span_rows`: "Each byte bound and typed binding is replayed against immutable source bytes."
+- `independent_compiler_and_exact_replay_rows`: "Clean-process compilation and exact checks reproduce obligations, witnesses, counterexamples, and actions."
+- `independent_paired_metric_rows`: "Coverage, precision, releases, abstentions, and deltas are recomputed by model and family."
+- `harmful_release_and_cost_audit`: "No promotion can hide one unsafe release or unrecomputable cost."
+- `shortcut_attack_matrix`: "Independent attacks cover cells, retries, leakage, mutation, compilers, releases, and aggregates."
+- `proof_carrying_extractor_audit_ready_score`: "One binary field gates the downstream learning study on usable audited evidence."
+- `proof_carrying_extractor_promotion_score`: "A separate field carries the independently confirmed scientific disposition."
+- `per_unit_rows`: "Every audit decision has row-level evidence."
+- `aggregate_row_recomputation`: "Audit readiness and promotion derive only from independent rows."
+- `gate_check_summary`: "A blocked audit names every missing or failed check and observed value."
+- `preconditions_checked`: "Input and tool receipts distinguish blocked audit work from null science."
+- `protected_files_unchanged`: "The audit must not repair upstream evidence or mutate protected files."
+- `inference_substrate`: "The audit replays checked-in evidence and performs no new GGUF generation."
+- `verifier_is_oracle`: "Independent executable replay is audit authority, so the audit class is non-positive."
+- `field_provenance`: "Each disposition points to immutable rows, hashes, commands, and reducers."
+- `random_seed`: "A fixed audit and attack order makes the result repeatable."
+- `duration_s`: "Monotonic time exposes skipped receipt or replay work."
+- `tests_run`: "Named tests and E2E commands prove independent checks ran."
+- `reproducibility_checksum`: "A final hash protects the audit trail."
+
+`proof_carrying_extractor_audit_ready_score` SHALL equal 1.0 only when raw
+provenance, span replay, compiler replay, exact replay, row closure, harm,
+cost, attacks, protected files, field provenance, and checksum checks close.
+`proof_carrying_extractor_promotion_score` SHALL equal 1.0 only when the
+independent reducer confirms every preregistered scientific gate. A clean
+audit SHALL use `verdict_class=null`. Incomplete but usable evidence SHALL use
+`partial`. Missing input SHALL use `blocked`. False provenance, invalid spans,
+nondeterministic compilation, or an unsafe release SHALL use `disqualified`.
+
+#### SCENARIO-REPORT-6570-RAW: Raw Receipts Prove Live Evidence
+
+**Given** Exp6568 stores immutable model and raw-response receipts
+**When** Exp6570 validates each credited row
+**Then** commands, processes, times, GPU samples, tokens, output bytes, exits,
+unloads, source hashes, and prompt hashes close independently.
+
+#### SCENARIO-REPORT-6570-SPAN: Byte Spans Replay Against Immutable Sources
+
+**Given** Exp6569 proposes typed atomic claims with source byte offsets
+**When** Exp6570 rereads each source
+**Then** bounds, UTF-8 boundaries, source identity, bindings, relations, and
+overlap rules replay without trusting extractor aggregates.
+
+#### SCENARIO-REPORT-6570-COMPILER: Compiler And Exact Results Replay
+
+**Given** a supported source-span claim has a stored compiler and exact row
+**When** Exp6570 recompiles it in a clean process and reruns its checker
+**Then** normalized bytes, obligation hash, exact result, witness,
+counterexample, release, and abstention match.
+
+#### SCENARIO-REPORT-6570-PAIRS: Paired Metrics, Harm, And Cost Recompute
+
+**Given** matched model, family, unit, seed, and arm rows
+**When** Exp6570 reduces only those rows
+**Then** precision, coverage, errors, releases, abstentions, arm deltas,
+tokens, retries, solver calls, time, censoring, harm, and cost recompute.
+
+#### SCENARIO-REPORT-6570-ATTACKS: Shortcut Attacks Fail Closed
+
+**Given** stored claims and aggregate fields
+**When** Exp6570 runs its fixed attack matrix
+**Then** cells, retries, leakage, mutation, relation, compiler, release, and
+aggregate attacks must close before readiness or promotion can equal 1.0.
+
+#### SCENARIO-REPORT-6570-MISSING: Missing Inputs Close Blocked
+
+**Given** Exp6568 or Exp6569 is missing, empty, unreadable, or gate-blocked
+**When** Exp6570 runs
+**Then** it writes a terminal blocked artifact with zero scores and names each
+missing or unusable input in `gate_check_summary`.
+
+#### SCENARIO-REPORT-6570-ATOMIC: Terminal Artifact Is Recomputable
+
+**Given** input, replay, attack, provenance, and protected-file rows exist
+**When** Exp6570 writes its artifact
+**Then** the required field set, principles, scores, closed verdict class,
+`verifier_is_oracle=true`, row hashes, and final checksum validate.
+
+## Implementation Status (REQ-REPORT-6570)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6570 | Planned (`python/carnot/experiment_6570_proof_obligation_independent_audit.py`, terminal artifact `results/experiment_6570_proof_obligation_independent_audit.json`) | Planned (`tests/python/test_experiment_6570_proof_obligation_independent_audit.py`) |
+
 ### REQ-REPORT-6566: V569 Proof-Obligation And Graph-Potts Method Contract SHALL Preregister New Mechanisms
 
 Carnot SHALL build Exp6566 as an additive method contract for planning date
