@@ -195,3 +195,7 @@ CHECK_TIMED_OUT
 
 - Kaggle confirmed it was investigating capacity constraints affecting the RTX Pro 6000 pool and working to free additional resources. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/735147)
 
+## 2026-08-24 13:13 UTC -- NEW
+
+- Tufa Labs jumped from #3 (3.04) to #1 with 4.58. cstl is now #2 (3.57), Lord Han Solo #3 (3.36), and Tony G entered #4 at 3.17, pushing Daniel Franzen to #5. wking edewd fell from #7 to #10. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+

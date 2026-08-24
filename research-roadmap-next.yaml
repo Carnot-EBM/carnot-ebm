@@ -1,0 +1,592 @@
+milestone: "2026.08.572"
+milestone_title: "Decomposed Proof Graphs and Conflict-Routed Self-Learning"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+  - id: exp6579-v572-terminal-recovery-and-decomposition-contract
+    milestone: "2026.08.572"
+    deliverable: results/experiment_6579_v572_terminal_recovery_and_decomposition_contract.json
+    title: "V572 terminal recovery and decomposed flagship contract"
+    priority: critical
+    track: evidence-infrastructure
+    requires_gpu: false
+    max_turns: 100
+    estimated_wall_time_min: 45
+    model: opus
+    prior_failures:
+      - experiment_id: exp6575-v571-clean-evidence-and-flagship-qualification
+        verdict: "failed_hard_timeout_no_artifact"
+        addressed_by: "Exp6575 combined three model families, method replay, telemetry, and attacks and hit the 4,800-second hard cap three times. Exp6579 performs no model load. It reconstructs terminal receipts and freezes one-family task budgets and a no-monolith contract."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Milestone 2026.08.571 ended terminally without its intended science. Exp6575 hit the conductor hard timeout three times and wrote no artifact. Exp6576 and Exp6578 were pre-gate skipped because Exp6575 was retired or missing. Exp6577 ran and correctly named the missing chain. V572 must preserve those facts and replace the monolithic root with bounded one-family tasks. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/research-roadmap.yaml, {project_root}/ops/conductor-log.md, {project_root}/research-complete.yaml, {project_root}/ops/exclusion_manifest.yaml, and {project_root}/ops/known-issues.md
+      - {project_root}/results/experiment_6577_flagship_source_stream_independent_audit.json and the expected but missing Exp6575, Exp6576, and Exp6578 artifact paths
+      - conductor gate, hard-timeout, task ledger, artifact lookup, duration, process cleanup, GPU telemetry, atomic-output, and retirement helpers plus their tests
+      - {project_root}/scripts/roadmap_schema.py, {project_root}/scripts/conductor_gates.py, {project_root}/scripts/failure_ledger.py, {project_root}/scripts/exclusion_manifest_lint.py, and {project_root}/scripts/adversarial_verify.py
+      - relevant evidence and model-ingestion capability specs, {project_root}/_bmad/traceability.md, {project_root}/ops/status.md, {project_root}/ops/changelog.md, and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Create an exact terminal-recovery artifact for V571 and freeze the V572 decomposed flagship contract. Do not load an LLM. Do not invent an honest verdict for Exp6575. Preserve the conductor hard-timeout receipt as a no-artifact terminal state.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record protected-file hashes, expected V571 task and artifact paths, conductor-log hash, failure-ledger and exclusion-manifest hashes, Python and tool versions, CPU, RAM, disk, and the no-LLM substrate.
+      1. Add or confirm REQ-* and SCENARIO anchors for no-artifact terminal recovery, hard-timeout replay, gate-skip replay, independent-audit replay, decomposed family budgets, cleanup, and atomic output. Write focused tests first for changed logic.
+      2. Reconstruct one row for each Exp6575 attempt with start, end, elapsed, terminal code, hard cap, agent backend, missing artifact check, and log source hash. Reconstruct terminal rows for Exp6576, Exp6577, and Exp6578.
+      3. Confirm Exp6577's blocked verdict and gate_check_summary from its emitted rows. Do not label missing Exp6576 or Exp6578 science as null.
+      4. Freeze a V572 task contract that permits one mandated model family per model task, one fresh process and context, bounded source units, explicit timeout, periodic raw-row checkpoints, one terminal artifact, verified unload, and no cross-family aggregate inside a model task.
+      5. Freeze expected task IDs, artifact paths, family-specific readiness fields, method readiness fields, and audit readiness fields used by this roadmap. Confirm every named upstream exists in research-roadmap-next.yaml and every gate field is present in the upstream REQUIRED ARTIFACT FIELDS.
+      6. Attack invented Exp6575 artifacts, stale logs, duplicate timeout attempts, truncated elapsed time, gate rows attributed to the wrong task, one task assigned multiple families, absent cleanup budgets, and a ready score derived from incomplete terminal rows.
+      7. Set top-level v572_decomposition_contract_ready_score=1.0 only when all V571 terminal rows replay and the one-family contract, current-roadmap gate map, budgets, attacks, and protected-file checks pass.
+      8. Write one terminal artifact atomically. Run focused unit tests, lint, spec coverage, artifact convention checks, adversarial verification, applicable evidence E2E checks, and final git status.
+
+      Required deliverable: {project_root}/results/experiment_6579_v572_terminal_recovery_and_decomposition_contract.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal state prevents a recovery bootstrap from posing as a closed contract."
+        honest_verdict:
+          principle: "The verdict distinguishes hard timeout, gate skip, audit diagnosis, and contract readiness."
+        verdict_class:
+          principle: "Recovery infrastructure uses null, partial, blocked, or disqualified rather than positive science."
+        gate_check_summary:
+          principle: "Any block names the failed local receipt check and observed value."
+        v571_terminal_rows:
+          principle: "Every V571 task has one recheckable terminal or missing-artifact row."
+        exp6575_timeout_attempt_rows:
+          principle: "All three hard-timeout attempts remain distinct and source-hashed."
+        decomposition_contract:
+          principle: "One-family residency, bounded work, checkpoints, cleanup, and terminal output are frozen."
+        current_roadmap_gate_contract_rows:
+          principle: "Every downstream gate names a same-roadmap upstream field with identical spelling."
+        attack_rows:
+          principle: "False recovery and renewed monolith shapes fail closed."
+        v572_decomposition_contract_ready_score:
+          principle: "This exact binary field gates each family shard."
+        preconditions_checked:
+          principle: "Files, tools, resources, and protected hashes distinguish a block from recovery failure."
+        protected_files_unchanged:
+          principle: "The task preserves research-roadmap.yaml and scripts/research_conductor.py."
+        inference_substrate:
+          principle: "The artifact declares exact terminal-log replay with no LLM."
+        verifier_is_oracle:
+          principle: "Infrastructure replay is authority and cannot create positive science."
+        field_provenance:
+          principle: "Every field names source rows, hashes, and reducer code."
+        duration_s:
+          principle: "Monotonic duration exposes skipped recovery checks."
+        tests_run:
+          principle: "Named commands, exits, and durations make the contract reproducible."
+        reproducibility_checksum:
+          principle: "A final content hash detects terminal mutation."
+      Set inference_substrate=v571_terminal_receipt_replay_no_llm and verifier_is_oracle=true. A ready contract uses verdict_class=null, never positive.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6579_v572_terminal_recovery_and_decomposition_contract --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6580-v572-source-and-joint-method-protocol
+    milestone: "2026.08.572"
+    deliverable: results/experiment_6580_v572_source_and_joint_method_protocol.json
+    title: "V572 SOTA source and joint-proof method protocol"
+    priority: critical
+    track: sota-method-ingestion
+    requires_gpu: false
+    max_turns: 30
+    estimated_wall_time_min: 75
+    prompt: |
+      CONTEXT
+      Exp6574 is the clean method root for source-byte nodes, hop-conditioned edges, exact release, splits, fixtures, and attacks. The V572 research refresh adds energy-based conflict routing from arXiv:2608.21044 and context-threshold controls from arXiv:2608.16003. This task freezes the source manifest and protocol before any V572 model output exists. It performs no LLM inference. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, {project_root}/research-references.md, and the V572 roadmap document
+      - {project_root}/results/experiment_6574_joint_sufficiency_method_contract.json and {project_root}/results/experiment_6579_v572_terminal_recovery_and_decomposition_contract.json
+      - {project_root}/results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json and relevant V569-V571 method artifacts
+      - source-byte binding, source-unit manifests, prompt freezing, joint-sufficiency fixtures, exact compiler registry, semantic-block graph, context-control, graph-Potts, protected-core, occupancy, and artifact helpers plus tests
+      - relevant extraction, exact-verification, continual-learning, evidence, and model-ingestion specs; exclusions for generated ConstraintIR, answer transport, and external text scoring; architecture; traceability; status; changelog; and E2E plan
+
+      TASK
+      Create the V572 SOTA source and joint-method protocol. Bind primary-source receipts, replay the clean Exp6574 fixtures, and freeze the exact source units, prompts, contexts, arms, budgets, metrics, gates, attacks, and retirement rules before model inference.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record protected-file hashes, primary-source URLs and content hashes where locally cached, Exp6574 path, hash, structural eligibility, exact registry hash, corpus commit, license, CPU, RAM, disk, and the no-LLM substrate.
+      1. Add or confirm REQ-* and SCENARIO anchors for source preregistration, SOTA receipt binding, joint-method replay, fresh context, conflict routing, exact authority, matched arms, and atomic output. Write focused tests first.
+      2. Bind arXiv:2608.21044, arXiv:2608.16003, arXiv:2605.18871, arXiv:2608.19475, and arXiv:2608.20938 to method rows. State the exact Carnot hook and non-imported claim for each.
+      3. Replay Exp6574 single-hop, valid multi-hop, missing-hop, wrong-span, cycle, ownership, domination, and ambiguity fixtures with the current exact reducer. Preserve original fixtures and expected outputs.
+      4. Freeze a bounded source-unit manifest with exact source bytes, content hashes, split, inclusion rule, and enough single-hop, multi-hop, unsupported, and ambiguity cases. Select units without model outcomes.
+      5. Freeze one family-neutral prompt, seeds, token budget, stop rules, timeout, raw-before-derived write order, failure retention, fresh-process rule, and one-family task mapping for Exp6581-Exp6583.
+      6. Freeze the no-filter, atomic-support, and joint-graph arms; exact registry; semantic-block conditions; context-control subset; clean, prior-repair, and length-matched neutral contexts; prospective learning arms; metrics; uncertainty; cost; and success, null, block, disqualification, and retirement rules.
+      7. Emit the exact downstream field map. Set v572_source_method_ready_score=1.0 only when source units, prompts, budgets, contexts, and failure rules are closed. Set v572_joint_method_ready_score=1.0 only when all Exp6574 fixtures and exact-authority rules replay.
+      8. Attack post-outcome source selection, prompt drift, family-specific prompts, missing unsupported cases, self-certification, changed Exp6574 expectations, an LLM judge as release authority, and gate field spelling mismatches.
+      9. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, artifact convention checks, adversarial verification, applicable method E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6580_v572_source_and_joint_method_protocol.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The protocol closes before any V572 model outcome."
+        honest_verdict:
+          principle: "The verdict states source-method and joint-method readiness separately."
+        verdict_class:
+          principle: "Preregistration is null infrastructure, not positive science."
+        gate_check_summary:
+          principle: "Any block names the missing source, fixture, registry, or contract field."
+        primary_source_receipts:
+          principle: "Each borrowed method has an immutable source and a bounded Carnot hook."
+        non_imported_claim_rows:
+          principle: "External benchmark and hardware claims cannot enter Carnot evidence."
+        source_unit_manifest:
+          principle: "Exact bytes, hashes, split, and inclusion rules freeze the evaluation before inference."
+        prompt_seed_budget_contract:
+          principle: "All families receive the same preregistered work."
+        context_control_contract:
+          principle: "Clean, repair, and neutral contexts are byte-frozen and length accounted."
+        joint_method_replay_rows:
+          principle: "The clean Exp6574 method remains executable on positive and negative fixtures."
+        proof_arm_contract:
+          principle: "No-filter, atomic, and joint-graph arms have matched inputs and costs."
+        learning_arm_contract:
+          principle: "Frozen, uniform, graph-Potts, protected-core, and conflict-routed arms are prospective."
+        downstream_gate_field_rows:
+          principle: "Every exact field name is owned by an upstream task in this roadmap."
+        attack_rows:
+          principle: "Outcome leakage, authority substitution, and spelling drift fail closed."
+        v572_source_method_ready_score:
+          principle: "This exact binary field gates all three family shard tasks."
+        v572_joint_method_ready_score:
+          principle: "This exact binary field gates the joint-proof comparison."
+        preconditions_checked:
+          principle: "Source, fixture, registry, resource, and protected-file receipts are explicit."
+        protected_files_unchanged:
+          principle: "The protocol preserves both protected orchestration files."
+        inference_substrate:
+          principle: "The task declares primary-source and exact-fixture replay with no LLM."
+        verifier_is_oracle:
+          principle: "Exact method replay is infrastructure authority and cannot create positive science."
+        field_provenance:
+          principle: "Every protocol field names its source, rows, hashes, and reducer."
+        duration_s:
+          principle: "Monotonic duration exposes truncated source or fixture work."
+        tests_run:
+          principle: "Named commands, exits, and durations make preregistration reproducible."
+        reproducibility_checksum:
+          principle: "A final hash protects the frozen protocol."
+      Set inference_substrate=primary_source_and_joint_method_replay_no_llm and verifier_is_oracle=true. A ready protocol uses verdict_class=null.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6580_v572_source_and_joint_method_protocol --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6581-qwen36-flagship-source-shard
+    milestone: "2026.08.572"
+    deliverable: results/experiment_6581_qwen36_flagship_source_shard.json
+    title: "Qwen3.6 one-family flagship source shard"
+    priority: critical
+    track: flagship-runtime-and-source
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 100
+    estimated_wall_time_min: 120
+    model: opus
+    prior_failures:
+      - experiment_id: exp6575-v571-clean-evidence-and-flagship-qualification
+        verdict: "failed_hard_timeout_no_artifact"
+        addressed_by: "Exp6581 runs only Qwen3.6 with the bounded frozen source manifest. It writes per-unit raw rows during execution and omits cross-family qualification, method replay, and all-family attack aggregation."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6579-v572-terminal-recovery-and-decomposition-contract
+        artifact_field: v572_decomposition_contract_ready_score
+        op: "=="
+        value: 1.0
+      - upstream: exp6580-v572-source-and-joint-method-protocol
+        artifact_field: v572_source_method_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT
+      V571's all-family root timed out three times. V572 assigns one bounded model family to this task. Use the frozen Exp6580 source manifest and family-neutral prompt. Write raw rows as work completes. This task establishes Qwen runtime and immutable source evidence only. It makes no cross-family or proof-quality claim. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V572 roadmap document
+      - {project_root}/results/experiment_6579_v572_terminal_recovery_and_decomposition_contract.json and {project_root}/results/experiment_6580_v572_source_and_joint_method_protocol.json
+      - cached_sota_pair(), resolve_cached_gguf(), content-derived GGUF metadata, embedded-tokenizer llama.cpp launch, CUDA offload, fresh process, GPU telemetry, timeout, raw-row checkpoint, unload, recovery, cost, and atomic-output helpers plus tests
+      - the pinned corpus intake and source-byte helpers; relevant model-ingestion, evidence, and extraction specs; exclusions; architecture; traceability; status; changelog; and E2E plan
+
+      TASK
+      Run one bounded immutable source shard with unsloth/Qwen3.6-35B-A3B-GGUF. Preserve every source-unit outcome and produce a family-specific readiness field for the independent audit.
+
+      MODEL_SPECS
+      - unsloth/Qwen3.6-35B-A3B-GGUF
+      Legacy Qwen3.5-0.8B and gemma-4-E4B-it may smoke-test CPU plumbing only. They cannot satisfy this task.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: evaluate both structured gates and record expected and observed values, upstream paths and hashes, protected-file hashes, source manifest and prompt hashes, repository and revision, GGUF blob and metadata, embedded tokenizer, CPU, RAM, disk, CUDA llama.cpp support, per-GPU free memory and active processes, seed, budget, timeout, and expected unload. Do not kill unrelated GPU work.
+      1. Add or confirm REQ-* and SCENARIO anchors for one-family runtime, content identity, immutable source bytes, raw-before-derived writes, fresh context, failure retention, periodic checkpoints, unload, recovery, and atomic output. Write focused tests first.
+      2. Validate positive GGUF metadata and bounded negative fixtures for non-GGUF, truncation, repository mismatch, tokenizer-only content, and wrong architecture.
+      3. Start one fresh llama.cpp process with the embedded tokenizer and CUDA offload. Use only the Exp6580 source units, prompt, seeds, order, token budget, stop rules, and timeout.
+      4. For every source unit, write a raw terminal row before segmentation. Record source and prompt hashes, repository, revision, GGUF hash, command digest, PID, CUDA device, offloaded layers, repeated GPU memory and utilization samples, raw response bytes or a recoverable content-addressed path, output hash, token counts, latency, stop reason, exit, stderr hash, and charged cost.
+      5. Preserve timeout, malformed, refusal, empty, no-claim, and process-failure rows. Do not selectively retry or drop rows. Run only the frozen bounded claim-sentence segmentation and store it as derived diagnostics.
+      6. Verify unload and memory recovery. Attack legacy substitution, stale PID, zero-layer offload, reused output, prompt drift, source aliasing, hidden retry, missing raw bytes, failed-row removal, cross-family residency, and readiness with an incomplete manifest.
+      7. Set qwen36_family_source_shard_ready_score=1.0 only when every expected unit has one authentic terminal row, model identity and CUDA execution pass, at least one claim-bearing output exists, failures remain represented, costs recompute, unload recovers, attacks pass, and protected files are unchanged.
+      8. If a structured gate fails, write a terminal blocked artifact with gate_check_summary naming the exact upstream field and observed value. If the same hard-timeout/no-artifact verdict repeats, activate retirement.
+      9. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row consistency, artifact convention checks, adversarial verification, applicable live-model E2E checks, and final git status.
+
+      Required deliverable: {project_root}/results/experiment_6581_qwen36_flagship_source_shard.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The one-family task closes even on a timeout or gate block."
+        honest_verdict:
+          principle: "The verdict states runtime and source-shard completeness without a quality claim."
+        verdict_class:
+          principle: "Evidence readiness uses null, partial, blocked, or disqualified."
+        gate_check_summary:
+          principle: "A block names the exact same-roadmap field and observed value."
+        model_specs:
+          principle: "Only the mandated Qwen family can satisfy readiness."
+        model_revision_and_hash_receipt:
+          principle: "Repository, revision, GGUF bytes, architecture, quantization, and tokenizer bind the run."
+        rows:
+          principle: "Every source unit carries raw output, runtime, failure, token, timing, and cost metrics."
+        raw_response_receipts:
+          principle: "Raw response bytes precede parsing and preserve all outcomes."
+        process_and_gpu_receipts:
+          principle: "PID, command, offload, and repeated GPU samples prove live local execution."
+        checkpoint_receipts:
+          principle: "Periodic content hashes prevent another long no-artifact loss."
+        parser_diagnostic_rows:
+          principle: "Claim segmentation is diagnostic and cannot filter the source shard."
+        unload_and_recovery_rows:
+          principle: "The family releases GPU state before the task closes."
+        attack_rows:
+          principle: "Substitution, stale execution, drift, retries, and row loss fail closed."
+        qwen36_family_source_shard_ready_score:
+          principle: "This exact binary field is owned by Exp6581 and consumed by Exp6584."
+        aggregate_row_recomputation:
+          principle: "Coverage, failures, latency, tokens, and cost derive only from rows."
+        seeds:
+          principle: "Explicit seeds bind all source-unit generations."
+        preconditions_checked:
+          principle: "Gate, model, source, resource, CUDA, and protected-file receipts are explicit."
+        protected_files_unchanged:
+          principle: "The task preserves both protected orchestration files."
+        inference_substrate:
+          principle: "The live llama.cpp CUDA path selects the correct structural checks."
+        verifier_is_oracle:
+          principle: "This task creates evidence and makes no verifier-backed utility claim."
+        field_provenance:
+          principle: "Every field names its raw rows, hashes, and reducer."
+        duration_s:
+          principle: "Monotonic duration exposes truncated family work."
+        tests_run:
+          principle: "Named commands, exits, and durations make the shard reproducible."
+        reproducibility_checksum:
+          principle: "A final hash detects terminal mutation."
+      Set inference_substrate=live_llama_cpp_cuda_one_family_source_shard and verifier_is_oracle=false. A ready shard uses verdict_class=null, never positive.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6581_qwen36_flagship_source_shard --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6582-gemma4-31b-flagship-source-shard
+    milestone: "2026.08.572"
+    deliverable: results/experiment_6582_gemma4_31b_flagship_source_shard.json
+    title: "Gemma-4-31B one-family flagship source shard"
+    priority: critical
+    track: flagship-runtime-and-source
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 100
+    estimated_wall_time_min: 120
+    model: opus
+    prior_failures:
+      - experiment_id: exp6575-v571-clean-evidence-and-flagship-qualification
+        verdict: "failed_hard_timeout_no_artifact"
+        addressed_by: "Exp6582 runs only the dense Gemma family with the bounded frozen source manifest. It writes per-unit raw rows during execution and omits cross-family qualification, method replay, and all-family attack aggregation."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6579-v572-terminal-recovery-and-decomposition-contract
+        artifact_field: v572_decomposition_contract_ready_score
+        op: "=="
+        value: 1.0
+      - upstream: exp6580-v572-source-and-joint-method-protocol
+        artifact_field: v572_source_method_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT
+      V571's all-family root timed out three times. V572 assigns one bounded model family to this task. Use the frozen Exp6580 source manifest and family-neutral prompt. Write raw rows as work completes. This task establishes dense Gemma runtime and immutable source evidence only. It makes no cross-family or proof-quality claim. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V572 roadmap document
+      - {project_root}/results/experiment_6579_v572_terminal_recovery_and_decomposition_contract.json and {project_root}/results/experiment_6580_v572_source_and_joint_method_protocol.json
+      - cached_sota_pair(), resolve_cached_gguf(), content-derived GGUF metadata, embedded-tokenizer llama.cpp launch, CUDA offload, fresh process, GPU telemetry, timeout, raw-row checkpoint, unload, recovery, cost, and atomic-output helpers plus tests
+      - the pinned corpus intake and source-byte helpers; relevant model-ingestion, evidence, and extraction specs; exclusions; architecture; traceability; status; changelog; and E2E plan
+
+      TASK
+      Run one bounded immutable source shard with unsloth/gemma-4-31B-it-GGUF. Preserve every source-unit outcome and produce a family-specific readiness field for the independent audit.
+
+      MODEL_SPECS
+      - unsloth/gemma-4-31B-it-GGUF
+      Legacy Qwen3.5-0.8B and gemma-4-E4B-it may smoke-test CPU plumbing only. They cannot satisfy this task.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: evaluate both structured gates and record expected and observed values, upstream paths and hashes, protected-file hashes, source manifest and prompt hashes, repository and revision, GGUF blob and metadata, embedded tokenizer, CPU, RAM, disk, CUDA llama.cpp support, per-GPU free memory and active processes, seed, budget, timeout, and expected unload. Do not kill unrelated GPU work.
+      1. Add or confirm REQ-* and SCENARIO anchors for one-family runtime, content identity, immutable source bytes, raw-before-derived writes, fresh context, failure retention, periodic checkpoints, unload, recovery, and atomic output. Write focused tests first.
+      2. Validate positive GGUF metadata and bounded negative fixtures for non-GGUF, truncation, repository mismatch, tokenizer-only content, and wrong architecture.
+      3. Start one fresh llama.cpp process with the embedded tokenizer and CUDA offload. Use only the Exp6580 source units, prompt, seeds, order, token budget, stop rules, and timeout.
+      4. For every source unit, write a raw terminal row before segmentation. Record source and prompt hashes, repository, revision, GGUF hash, command digest, PID, CUDA device, offloaded layers, repeated GPU memory and utilization samples, raw response bytes or a recoverable content-addressed path, output hash, token counts, latency, stop reason, exit, stderr hash, and charged cost.
+      5. Preserve timeout, malformed, refusal, empty, no-claim, and process-failure rows. Do not selectively retry or drop rows. Run only the frozen bounded claim-sentence segmentation and store it as derived diagnostics.
+      6. Verify unload and memory recovery. Attack legacy substitution, stale PID, zero-layer offload, reused output, prompt drift, source aliasing, hidden retry, missing raw bytes, failed-row removal, cross-family residency, and readiness with an incomplete manifest.
+      7. Set gemma4_31b_family_source_shard_ready_score=1.0 only when every expected unit has one authentic terminal row, model identity and CUDA execution pass, at least one claim-bearing output exists, failures remain represented, costs recompute, unload recovers, attacks pass, and protected files are unchanged.
+      8. If a structured gate fails, write a terminal blocked artifact with gate_check_summary naming the exact upstream field and observed value. If the same hard-timeout/no-artifact verdict repeats, activate retirement.
+      9. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row consistency, artifact convention checks, adversarial verification, applicable live-model E2E checks, and final git status.
+
+      Required deliverable: {project_root}/results/experiment_6582_gemma4_31b_flagship_source_shard.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The one-family task closes even on a timeout or gate block."
+        honest_verdict:
+          principle: "The verdict states runtime and source-shard completeness without a quality claim."
+        verdict_class:
+          principle: "Evidence readiness uses null, partial, blocked, or disqualified."
+        gate_check_summary:
+          principle: "A block names the exact same-roadmap field and observed value."
+        model_specs:
+          principle: "Only the mandated dense Gemma family can satisfy readiness."
+        model_revision_and_hash_receipt:
+          principle: "Repository, revision, GGUF bytes, architecture, quantization, and tokenizer bind the run."
+        rows:
+          principle: "Every source unit carries raw output, runtime, failure, token, timing, and cost metrics."
+        raw_response_receipts:
+          principle: "Raw response bytes precede parsing and preserve all outcomes."
+        process_and_gpu_receipts:
+          principle: "PID, command, offload, and repeated GPU samples prove live local execution."
+        checkpoint_receipts:
+          principle: "Periodic content hashes prevent another long no-artifact loss."
+        parser_diagnostic_rows:
+          principle: "Claim segmentation is diagnostic and cannot filter the source shard."
+        unload_and_recovery_rows:
+          principle: "The family releases GPU state before the task closes."
+        attack_rows:
+          principle: "Substitution, stale execution, drift, retries, and row loss fail closed."
+        gemma4_31b_family_source_shard_ready_score:
+          principle: "This exact binary field is owned by Exp6582 and consumed by Exp6584."
+        aggregate_row_recomputation:
+          principle: "Coverage, failures, latency, tokens, and cost derive only from rows."
+        seeds:
+          principle: "Explicit seeds bind all source-unit generations."
+        preconditions_checked:
+          principle: "Gate, model, source, resource, CUDA, and protected-file receipts are explicit."
+        protected_files_unchanged:
+          principle: "The task preserves both protected orchestration files."
+        inference_substrate:
+          principle: "The live llama.cpp CUDA path selects the correct structural checks."
+        verifier_is_oracle:
+          principle: "This task creates evidence and makes no verifier-backed utility claim."
+        field_provenance:
+          principle: "Every field names its raw rows, hashes, and reducer."
+        duration_s:
+          principle: "Monotonic duration exposes truncated family work."
+        tests_run:
+          principle: "Named commands, exits, and durations make the shard reproducible."
+        reproducibility_checksum:
+          principle: "A final hash detects terminal mutation."
+      Set inference_substrate=live_llama_cpp_cuda_one_family_source_shard and verifier_is_oracle=false. A ready shard uses verdict_class=null, never positive.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6582_gemma4_31b_flagship_source_shard --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6583-gemma4-26b-a4b-flagship-source-shard
+    milestone: "2026.08.572"
+    deliverable: results/experiment_6583_gemma4_26b_a4b_flagship_source_shard.json
+    title: "Gemma-4-26B-A4B one-family flagship source shard"
+    priority: critical
+    track: flagship-runtime-and-source
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 100
+    estimated_wall_time_min: 120
+    model: opus
+    prior_failures:
+      - experiment_id: exp6575-v571-clean-evidence-and-flagship-qualification
+        verdict: "failed_hard_timeout_no_artifact"
+        addressed_by: "Exp6583 runs only the MoE Gemma family with the bounded frozen source manifest. It writes per-unit raw rows during execution and omits cross-family qualification, method replay, and all-family attack aggregation."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6579-v572-terminal-recovery-and-decomposition-contract
+        artifact_field: v572_decomposition_contract_ready_score
+        op: "=="
+        value: 1.0
+      - upstream: exp6580-v572-source-and-joint-method-protocol
+        artifact_field: v572_source_method_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT
+      V571's all-family root timed out three times. V572 assigns one bounded model family to this task. Use the frozen Exp6580 source manifest and family-neutral prompt. Write raw rows as work completes. This task establishes MoE Gemma runtime and immutable source evidence only. It makes no cross-family or proof-quality claim. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V572 roadmap document
+      - {project_root}/results/experiment_6579_v572_terminal_recovery_and_decomposition_contract.json and {project_root}/results/experiment_6580_v572_source_and_joint_method_protocol.json
+      - cached_sota_pair(), resolve_cached_gguf(), content-derived GGUF metadata, embedded-tokenizer llama.cpp launch, CUDA offload, fresh process, GPU telemetry, timeout, raw-row checkpoint, unload, recovery, cost, and atomic-output helpers plus tests
+      - the pinned corpus intake and source-byte helpers; relevant model-ingestion, evidence, and extraction specs; exclusions; architecture; traceability; status; changelog; and E2E plan
+
+      TASK
+      Run one bounded immutable source shard with unsloth/gemma-4-26B-A4B-it-GGUF. Preserve every source-unit outcome and produce a family-specific readiness field for the independent audit.
+
+      MODEL_SPECS
+      - unsloth/gemma-4-26B-A4B-it-GGUF
+      Legacy Qwen3.5-0.8B and gemma-4-E4B-it may smoke-test CPU plumbing only. They cannot satisfy this task.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: evaluate both structured gates and record expected and observed values, upstream paths and hashes, protected-file hashes, source manifest and prompt hashes, repository and revision, GGUF blob and metadata, embedded tokenizer, CPU, RAM, disk, CUDA llama.cpp support, per-GPU free memory and active processes, seed, budget, timeout, and expected unload. Do not kill unrelated GPU work.
+      1. Add or confirm REQ-* and SCENARIO anchors for one-family runtime, content identity, immutable source bytes, raw-before-derived writes, fresh context, failure retention, periodic checkpoints, unload, recovery, and atomic output. Write focused tests first.
+      2. Validate positive GGUF metadata and bounded negative fixtures for non-GGUF, truncation, repository mismatch, tokenizer-only content, and wrong architecture.
+      3. Start one fresh llama.cpp process with the embedded tokenizer and CUDA offload. Use only the Exp6580 source units, prompt, seeds, order, token budget, stop rules, and timeout.
+      4. For every source unit, write a raw terminal row before segmentation. Record source and prompt hashes, repository, revision, GGUF hash, command digest, PID, CUDA device, offloaded layers, repeated GPU memory and utilization samples, raw response bytes or a recoverable content-addressed path, output hash, token counts, latency, stop reason, exit, stderr hash, and charged cost.
+      5. Preserve timeout, malformed, refusal, empty, no-claim, and process-failure rows. Do not selectively retry or drop rows. Run only the frozen bounded claim-sentence segmentation and store it as derived diagnostics.
+      6. Verify unload and memory recovery. Attack legacy substitution, stale PID, zero-layer offload, reused output, prompt drift, source aliasing, hidden retry, missing raw bytes, failed-row removal, cross-family residency, and readiness with an incomplete manifest.
+      7. Set gemma4_26b_a4b_family_source_shard_ready_score=1.0 only when every expected unit has one authentic terminal row, model identity and CUDA execution pass, at least one claim-bearing output exists, failures remain represented, costs recompute, unload recovers, attacks pass, and protected files are unchanged.
+      8. If a structured gate fails, write a terminal blocked artifact with gate_check_summary naming the exact upstream field and observed value. If the same hard-timeout/no-artifact verdict repeats, activate retirement.
+      9. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row consistency, artifact convention checks, adversarial verification, applicable live-model E2E checks, and final git status.
+
+      Required deliverable: {project_root}/results/experiment_6583_gemma4_26b_a4b_flagship_source_shard.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The one-family task closes even on a timeout or gate block."
+        honest_verdict:
+          principle: "The verdict states runtime and source-shard completeness without a quality claim."
+        verdict_class:
+          principle: "Evidence readiness uses null, partial, blocked, or disqualified."
+        gate_check_summary:
+          principle: "A block names the exact same-roadmap field and observed value."
+        model_specs:
+          principle: "Only the mandated MoE Gemma family can satisfy readiness."
+        model_revision_and_hash_receipt:
+          principle: "Repository, revision, GGUF bytes, architecture, quantization, and tokenizer bind the run."
+        rows:
+          principle: "Every source unit carries raw output, runtime, failure, token, timing, and cost metrics."
+        raw_response_receipts:
+          principle: "Raw response bytes precede parsing and preserve all outcomes."
+        process_and_gpu_receipts:
+          principle: "PID, command, offload, and repeated GPU samples prove live local execution."
+        checkpoint_receipts:
+          principle: "Periodic content hashes prevent another long no-artifact loss."
+        parser_diagnostic_rows:
+          principle: "Claim segmentation is diagnostic and cannot filter the source shard."
+        unload_and_recovery_rows:
+          principle: "The family releases GPU state before the task closes."
+        attack_rows:
+          principle: "Substitution, stale execution, drift, retries, and row loss fail closed."
+        gemma4_26b_a4b_family_source_shard_ready_score:
+          principle: "This exact binary field is owned by Exp6583 and consumed by Exp6584."
+        aggregate_row_recomputation:
+          principle: "Coverage, failures, latency, tokens, and cost derive only from rows."
+        seeds:
+          principle: "Explicit seeds bind all source-unit generations."
+        preconditions_checked:
+          principle: "Gate, model, source, resource, CUDA, and protected-file receipts are explicit."
+        protected_files_unchanged:
+          principle: "The task preserves both protected orchestration files."
+        inference_substrate:
+          principle: "The live llama.cpp CUDA path selects the correct structural checks."
+        verifier_is_oracle:
+          principle: "This task creates evidence and makes no verifier-backed utility claim."
+        field_provenance:
+          principle: "Every field names its raw rows, hashes, and reducer."
+        duration_s:
+          principle: "Monotonic duration exposes truncated family work."
+        tests_run:
+          principle: "Named commands, exits, and durations make the shard reproducible."
+        reproducibility_checksum:
+          principle: "A final hash detects terminal mutation."
+      Set inference_substrate=live_llama_cpp_cuda_one_family_source_shard and verifier_is_oracle=false. A ready shard uses verdict_class=null, never positive.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6583_gemma4_26b_a4b_flagship_source_shard --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6584-three-family-source-receipt-audit
+    milestone: "2026.08.572"
+    deliverable: results/experiment_6584_three_family_source_receipt_audit.json
+    title: "Independent three-family source receipt audit"
+    priority: critical
+    track: independent-evidence-audit
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 75
+    agent_type: codex
+    model: gpt-5.6-sol
+    prior_failures:
+      - experiment_id: exp6577-flagship-source-stream-independent-audit
+        verdict: "blocked_flagship_source_stream_independent_audit: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json expected=file_exists observed=missing"
+        addressed_by: "Exp6584 audits three bounded same-milestone family artifacts instead of one source stream behind a retired monolithic root. It always runs and recomputes each family readiness field from raw rows."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6581, Exp6582, and Exp6583 should contain independent raw shards for the same frozen source units. This audit always runs. It must diagnose missing or blocked family artifacts without a model call and must not trust upstream aggregate or readiness fields. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, and the V572 roadmap document
+      - {project_root}/results/experiment_6579_v572_terminal_recovery_and_decomposition_contract.json through the expected {project_root}/results/experiment_6583_gemma4_26b_a4b_flagship_source_shard.json
+      - source-byte, raw-response, GGUF-lineage, process, GPU, checkpoint, unload, cost, checksum, duplicate, drift, and row-reducer audit helpers plus tests
+      - {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/adversarial_verify.py, {project_root}/scripts/artifact_convention_audit.py, relevant evidence and model-ingestion specs, exclusions, and applicable E2E checks
+
+      TASK
+      Independently replay and merge the three family source shards. Recompute every readiness, coverage, failure, timing, and cost claim from raw rows. Emit the exact all-family audit field consumed by Exp6585.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record expected paths, existence, hashes, schemas, source manifest and prompt hashes, audit-tool versions, CPU, RAM, disk, protected-file hashes, and raw content-addressed path availability. Do not synthesize missing family rows.
+      1. Add or confirm REQ-* and SCENARIO anchors for independent three-family replay, missing-family diagnosis, immutable merge, failure retention, duplicate detection, unload verification, aggregate recomputation, and atomic output. Write focused tests first.
+      2. For each expected source-family unit, recompute source and prompt hashes, repository, revision, GGUF hash, tokenizer, command, PID evidence, CUDA offload, GPU samples, raw response hash, token counts, latency, stop reason, exit, stderr, charged cost, and failure class without importing shard aggregates.
+      3. Confirm the three tasks used identical source units, prompt, seeds, order, and budgets except for the model identity. Confirm each used a fresh process and reached terminal unload or a preserved failure.
+      4. Confirm raw rows precede derived parser diagnostics where receipts permit. Preserve all timeout, malformed, refusal, empty, no-claim, and process-failure rows in denominators.
+      5. Attack missing family artifacts, legacy substitution, source aliases, prompt drift, duplicate unit IDs, copied outputs across families, selective retries, hidden row drops, null-only rows, stale PIDs, zero-layer offload, missing unload, and readiness contradicted by rows.
+      6. Emit one merged row per expected source-family unit and one attack row per invariant. Set all_family_source_audit_ready_score=1.0 only when all eligible rows replay, all families and units are present, failures remain visible, raw paths resolve, unload checks pass, costs recompute, and protected files are unchanged.
+      7. If any artifact is missing or blocked, write honest_verdict beginning blocked_ and gate_check_summary with the exact path or failed field and observed value. If the same missing-chain verdict as Exp6577 repeats, activate retirement.
+      8. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row consistency, artifact convention checks, adversarial verification, applicable evidence E2E checks, and final git status.
+
+      Required deliverable: {project_root}/results/experiment_6584_three_family_source_receipt_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The always-run audit closes even when a family is missing."
+        honest_verdict:
+          principle: "The verdict states lineage, coverage, failure retention, unload, and merge disposition."
+        verdict_class:
+          principle: "The audit uses null, partial, blocked, or disqualified."
+        gate_check_summary:
+          principle: "A block names the exact missing artifact or failed field and observed value."
+        upstream_artifact_receipts:
+          principle: "Path, hash, status, and schema bind every family object under audit."
+        rows:
+          principle: "Each expected source-family unit carries independently recomputed runtime and evidence metrics."
+        family_coverage_rows:
+          principle: "The three mandated families and every frozen source unit remain explicit."
+        failure_retention_rows:
+          principle: "Failure classes cannot vanish from a merged denominator."
+        duplicate_drift_and_substitution_rows:
+          principle: "Copied output, drift, stale execution, and legacy substitution are tested."
+        unload_and_recovery_rows:
+          principle: "One family cannot contaminate the next task's evidence."
+        all_family_source_audit_ready_score:
+          principle: "This exact binary field gates Exp6585."
+        aggregate_row_recomputation:
+          principle: "Coverage, failures, timing, tokens, and cost derive only from emitted rows."
+        preconditions_checked:
+          principle: "Input, tool, raw-path, resource, and protected-file receipts are explicit."
+        protected_files_unchanged:
+          principle: "The audit preserves both protected orchestration files."
+        inference_substrate:
+          principle: "This is immutable three-family artifact replay with no new LLM."
+        verifier_is_oracle:
+          principle: "The evidence audit is authority and cannot create positive science."
+        field_provenance:
+          principle: "Each field identifies source rows, hashes, and independent reducer code."
+        duration_s:
+          principle: "Monotonic duration exposes skipped replay or attack work."
+        tests_run:
+          principle: "Named commands, exits, and durations make the audit reproducible."
+        reproducibility_checksum:
+          principle: "A final hash detects audit mutation."
+      Set inference_substrate=immutable_three_family_source_replay_no_llm and verifier_is_oracle=true. A clean audit uses verdict_class=null, never positive.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6584_three_family_source_receipt_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
