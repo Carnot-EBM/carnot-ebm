@@ -53983,3 +53983,100 @@ matches, the protected roadmap and conductor remain byte-identical,
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6571 | Planned (`python/carnot/experiment_6571_v570_evidence_gate_and_retirement_root.py`, terminal artifact `results/experiment_6571_v570_evidence_gate_and_retirement_root.json`) | Planned (`tests/python/test_experiment_6571_v570_evidence_gate_and_retirement_root.py`) |
+
+### REQ-REPORT-6572: GGUF Identity SHALL Derive From Bounded Content And Cache Provenance
+
+Carnot SHALL build Exp6572 as a reusable GGUF metadata and admission layer for
+hash-only Hugging Face cache blobs. The layer SHALL read GGUF header bytes. It
+SHALL not infer the file type or quantization from the local filename. It SHALL
+bind content identity to repository, revision, snapshot link, shard order, and
+an existing trusted hash. Repository identity SHALL not derive from model
+metadata alone.
+
+Sub-requirements:
+
+- REQ-REPORT-6572-CONTENT: The reader SHALL validate GGUF magic and supported
+  version. It SHALL extract architecture, general file type, quantization,
+  tokenizer metadata, tensor count, shard metadata, and the minimum content
+  length needed for header sanity checks.
+- REQ-REPORT-6572-BOUNDED: The reader SHALL enforce fixed limits for header
+  bytes, metadata pairs, strings, arrays, tensor count, and tensor dimensions.
+  It SHALL record physical bytes read. It SHALL not read, copy, or hash tensor
+  payload bytes.
+- REQ-REPORT-6572-PROVENANCE: Each admitted blob SHALL bind to an exact
+  repository ID, snapshot revision, snapshot symlink target, shard filename or
+  standalone identity, and trusted existing SHA-256. A renamed copy, alias
+  outside the repository cache, repository swap, or hash mismatch SHALL fail.
+- REQ-REPORT-6572-SHARDS: Standalone files SHALL declare no incomplete split.
+  Split files SHALL have a valid shard number and count. The cache snapshot
+  SHALL contain the complete ordered shard set with consistent metadata.
+- REQ-REPORT-6572-MODEL: A model admission SHALL require nonzero tensor count,
+  a supported language-model architecture, embedded tokenizer metadata, and a
+  content-derived file type. A tokenizer-only or projector GGUF SHALL fail.
+- REQ-REPORT-6572-ATTACKS: The layer SHALL fail closed for non-GGUF input,
+  truncated headers, unsupported versions, prefix-only magic collisions, huge
+  declared lengths, malformed UTF-8, tensor-count overflow, inconsistent
+  shards, partial shards, repository swaps, and filename-only aliases.
+- REQ-REPORT-6572-ATOMIC: Exp6572 SHALL emit one atomic terminal JSON artifact.
+  It SHALL include the required task fields, one row per flagship blob and
+  negative fixture, field provenance, protected-file receipts, and a
+  reproducibility checksum.
+
+`gguf_blob_metadata_ready_score` SHALL equal bare `1.0` only when all three
+mandated flagship blobs pass content and provenance checks. Every required
+negative fixture SHALL fail closed. The aggregate SHALL derive only from
+emitted per-unit rows. Ready output SHALL use `verdict_class=null`. A usable
+subset SHALL use `partial`. Missing cache or tools SHALL use `blocked`.
+Unbounded or filename-derived evidence SHALL use `disqualified`.
+
+#### SCENARIO-REPORT-6572-HASH-BLOB: Hash-Only Blobs Admit From Content
+
+**Given** the three Exp6567 blob paths have no `.gguf` suffix
+**When** Exp6572 reads bounded GGUF headers and cache provenance
+**Then** every row reports content-derived architecture and quantization plus
+an independent repository, revision, snapshot-link, shard, and trusted-hash
+receipt.
+
+#### SCENARIO-REPORT-6572-BOUNDED: Tensor Payloads Are Not Read
+
+**Given** a GGUF file contains a bounded header followed by tensor bytes
+**When** the reader inspects it
+**Then** the receipt reports a fixed header limit, physical bytes read within
+that limit, zero tensor payload bytes read, and a sane data offset below the
+file length.
+
+#### SCENARIO-REPORT-6572-REJECT: Malformed And Non-Model Inputs Fail Closed
+
+**Given** non-GGUF, truncated, unsupported-version, tokenizer-only, malformed,
+overflow, or inconsistent-shard fixtures
+**When** the reader or admission reducer handles each fixture
+**Then** every fixture emits a specific rejection reason and none is admitted.
+
+#### SCENARIO-REPORT-6572-PROVENANCE: Repository Identity Is Independent
+
+**Given** valid GGUF bytes are renamed, linked through an outside alias, mapped
+to the wrong repository, or paired with the wrong trusted hash
+**When** provenance binding runs
+**Then** content parsing can remain valid but admission fails because repository
+provenance is absent or inconsistent.
+
+#### SCENARIO-REPORT-6572-SHARDS: Split Identity Is Complete And Ordered
+
+**Given** split metadata declares more than one shard
+**When** provenance binding checks the snapshot
+**Then** admission requires every ordered shard and consistent shard metadata.
+It rejects an invalid index, count mismatch, duplicate shard, or partial set.
+
+#### SCENARIO-REPORT-6572-ATOMIC: Terminal Readiness Recomputes From Rows
+
+**Given** three flagship rows and all negative fixture rows
+**When** Exp6572 writes its terminal artifact
+**Then** readiness recomputes only from those rows, both protected orchestration
+files remain byte-identical, `verifier_is_oracle=true`, and the checksum
+matches the artifact content.
+
+## Implementation Status (REQ-REPORT-6572)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6572 | Implemented (`python/carnot/inference/gguf_metadata.py`, `python/carnot/experiment_6572_content_derived_gguf_metadata_resolver.py`, terminal artifact `results/experiment_6572_content_derived_gguf_metadata_resolver.json`) | Implemented (`tests/python/test_gguf_metadata.py`, `tests/python/test_experiment_6572_content_derived_gguf_metadata_resolver.py`) |

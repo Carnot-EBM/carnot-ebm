@@ -16380,3 +16380,4 @@ code |
 | 2026-08-24 01:52 UTC | Source-span proof-obligation extraction with exact | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6568-immutable-source-span-claim-stream) |
 | 2026-08-24 01:52 UTC | Milestone 2026.08.570 activated | OK | 4 tasks queued |
 | 2026-08-24 02:45 UTC | V570 immutable evidence, gate, and retirement root | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-24 04:08 UTC | Content-derived GGUF metadata for hash-only cache  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: struct.pack("< |
