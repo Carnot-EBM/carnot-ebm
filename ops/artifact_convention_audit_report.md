@@ -9,8 +9,39 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 7 |
-| AGGREGATE_ONLY | 1 |
+| CHECKABLE | 8 |
+
+## experiment_3391_archive_v312_activate_v313.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Milestone `2026.05.312` was archived and `2026.05.313` was activated successfully.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_3403_archive_v313_activate_v314.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The v313 archive is complete and v314 is ready for activation.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
 
 ## experiment_3361_archive_v309_activate_v310.json
 
@@ -20,7 +51,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Milestone 2026.05.309 was archived and milestone 2026.05.310 was activated successfully.
+The archive of milestone 2026.05.309 is complete and milestone 2026.05.310 is ready for activation.
 
 ## WHAT IS MISSING
 nothing
@@ -28,21 +59,37 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6572_content_derived_gguf_metadata_resolver.json
+## experiment_3377_archive_v310_activate_v311.json
 
-**AGGREGATE_ONLY**
+**CHECKABLE**
 
 ## VERDICT
-AGGREGATE_ONLY
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-The GGUF metadata resolver achieved readiness score 1.0 because all three flagship blobs passed and all 13 negative fixtures failed closed.
+The archive of milestone 2026.05.310 is complete and milestone 2026.05.311 is ready for activation.
 
 ## WHAT IS MISSING
-The per-fixture `"negative_fixture_rows"` with each `"unit_id"`, observed result, and rejection reason; only `"negative_fixture_pass_count"`, `"passed_negative_fixture_ids"`, and read-only `"bounded_read_receipts"` are present.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-Did every negative fixture actually fail closed for its intended reason, rather than merely being counted as passing by the aggregate reducer?
+none
+
+## experiment_3392_archive_v311_activate_v312.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The v311 archive is complete and activation of v312 is ready.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
 
 ## experiment_1644_cerce_ledger.json
 
@@ -52,23 +99,7 @@ Did every negative fixture actually fail closed for its intended reason, rather 
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The CERCE ledger scaffolding was added and completed, with no policy certificates, violations, events, or policy updates evaluated.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_1767_e2e_qwen.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
+The CERCE ledger scaffolding was added and is ready, with no policy certificates, violations, FR11 events, policy updates, or blockers recorded.
 
 ## WHAT IS MISSING
 nothing
@@ -84,7 +115,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Experiment 1736 reports simulated Vivado success with a generated bitfile, while explicitly flagged as adversarial and excluded from headline aggregation.
+Experiment 1736 reports `"vivado_simulated_success"` with a generated bitfile, despite Vivado being unavailable.
 
 ## WHAT IS MISSING
 nothing
@@ -92,7 +123,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_2031.json
+## experiment_6577_flagship_source_stream_independent_audit.json
 
 **CHECKABLE**
 
@@ -100,39 +131,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment succeeded, producing `"Thus, we can see it."` as `"best_candidate"` with `"min_energy": 0.0`.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6573_sequential_flagship_gguf_admission_v2.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-All three mandated model families passed the runtime-admission gate, so downstream model science is open.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6574_joint_sufficiency_method_contract.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The joint-sufficiency method is complete, executable, and frozen, with its schemas, fixtures, attacks, gates, splits, arms, and retirement rules ready.
+The independent audit was blocked because the required experiment 6576 upstream artifact was missing.
 
 ## WHAT IS MISSING
 nothing

@@ -36797,3 +36797,102 @@ may not certify their own output.
   continuity.
 
 <!-- V571-PLANNER-REFRESH-20260824-END -->
+
+## V572 planner refresh - 2026-08-24
+
+<!-- V572-PLANNER-REFRESH-20260824-START -->
+
+This refresh follows the four terminal V571 tasks. It searched the requested
+2025-2026 arXiv topics and checked OpenReview, Hugging Face Papers, Semantic
+Scholar, GitHub, Extropic, and Logical Intelligence. Exact executable checks
+remain release authority. Learned methods may propose, route, or abstain. They
+may not certify their own output.
+
+### Promising finding selected for V572
+
+- **Socialized Division and Collaboration: Rethinking Class-Incremental
+  Learning under Optimization Conflicts** - arXiv:2608.21044,
+  https://arxiv.org/abs/2608.21044; submitted 2026-08-21. The method treats
+  destructive interference as a conflict-allocation problem. It uses an
+  energy-based session-model compatibility criterion to route incompatible
+  sessions to specialized models instead of forcing every update into one
+  parameter space. Carnot hook: extend the prospective constraint-memory
+  learner with a conflict-routed residual-state arm. Freeze trusted family
+  cores, allocate conflicting verified updates to bounded specialist states,
+  and compare this arm with ordinary graph-Potts updates, protected-core
+  updates, and no-update controls. Keep generator weights frozen. Exact replay,
+  not compatibility energy, remains commit and release authority.
+
+### Cataloged findings promoted into the V572 protocol
+
+- **Prior Audit-Repair Context Shifts LLM Verifier Thresholds Toward
+  Leniency** - arXiv:2608.16003,
+  https://arxiv.org/abs/2608.16003. The paper holds the current task fixed and
+  finds that a prior audit-repair episode changes verifier criterion rather
+  than discrimination. Carnot hook: run each flagship family in a fresh
+  process and fresh context. Add clean-context, prior-repair-context, and
+  length-matched neutral controls to the independent proof audit. A family or
+  prior repair episode must not silently change the release threshold.
+- **Distributional Energy-Based Models for Uncertainty-Aware Structured LLM
+  Reasoning** - arXiv:2605.18871,
+  https://arxiv.org/abs/2605.18871. Its decomposed learned-quality and
+  deterministic-constraint energies remain relevant. Its model-identity
+  shortcut finding is the direct reason to retain per-family rows and
+  counterfactual family-label controls. V572 does not promote a learned scorer
+  to release authority.
+
+### Requested secondary and product checks
+
+- **OpenReview:** ICLR 2026 records for automata-guided beam search,
+  rule-versus-model verifier robustness, and curvature-aware continual
+  regularization remain useful controls. They do not provide an
+  oracle-distinct learned release verifier or a reason to reopen retired
+  answer-parser and external-text-scorer lanes.
+- **Hugging Face Papers:** current verification pages surfaced
+  arXiv:2608.16003 and the already cataloged verification-horizon and
+  constraint-reasoning studies. The actionable delta is context isolation and
+  threshold-shift testing. No page changes Carnot's exact-authority boundary.
+- **Semantic Scholar:** the public API returned 35 citing records for EBT
+  (`2507.02092`) on 2026-08-24. The next ARM-EBM request was rate-limited, so
+  V572 retains the last authenticated-free receipt of eight citing records for
+  ARM-EBM (`2512.15605`) instead of inventing a new count. The EBT trail still
+  leads through already cataloged Solver-Hard, Memoir, fixed-point, and
+  distributional-energy work. No citation supplies a public matching-base
+  checkpoint.
+- **GitHub Trending and targeted repositories:** the open Enso latent EBM,
+  EBT reference code, Ising-Decoding, constrained decoders, and current KAN
+  implementations do not supersede Carnot's pinned local stack. No new
+  repository becomes a V572 dependency.
+- **Extropic:** the August first-party update at
+  https://extropic.ai/writing/from-one-to-one-billion still reports Torx, a
+  Thermalizers preview, a taped-out 269,568-pbit Z1, and planned 2027 early
+  access. The July funding announcement describes a planned Z1.5 path. Carnot
+  has no authenticated TSU route. Schedule no TSU execution, latency, power,
+  or availability claim.
+- **Logical Intelligence:**
+  https://logicalintelligence.com/kona-ebms-energy-based-models and the current
+  Kona architecture page still expose no public weights, reproducible training
+  recipe, or documented local runner. Kona remains a product comparator only.
+- **KAN, FPGA, and Ising hardware:** the current KAN work does not address the
+  binding evidence and extraction gaps. NeuroRing and current FPGA Ising work
+  remain architecture references, not compatible bitstreams for Carnot's
+  attached boards. Keep board work receipt-gated.
+
+### V572 planning impact
+
+- Split the failed V571 all-family qualification into one bounded task per
+  flagship family. Require fresh-process receipts and immutable raw shards.
+- Aggregate family shards only after an independent receipt audit. Never make
+  one monolithic all-family model task a prerequisite again.
+- Execute the frozen Exp6574 joint-sufficiency method on the audited shards.
+  Add family-label, source, rule, authority, and prior-repair-context
+  counterfactuals.
+- Run continuous self-learning prospectively with graph-Potts,
+  protected-core, bounded-occupancy, and conflict-routed specialist arms.
+  Keep weights frozen and commits transactional, reversible, chronological,
+  and exact-verified.
+- Test the open ARC goal-predicate reachability defect through the live agent
+  path without public-game solve credit. Keep attached hardware on changed
+  physical-state receipts.
+
+<!-- V572-PLANNER-REFRESH-20260824-END -->
