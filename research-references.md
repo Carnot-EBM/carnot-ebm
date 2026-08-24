@@ -36678,3 +36678,122 @@ may not certify their own output.
   receipt-gated continuity. Issue no unchanged board command.
 
 <!-- V570-PLANNER-REFRESH-20260823-END -->
+
+## V571 planner refresh - 2026-08-24
+
+<!-- V571-PLANNER-REFRESH-20260824-START -->
+
+This refresh follows the four terminal V570 tasks. It checks the requested
+2025-2026 arXiv topics and the named secondary sources. Exact executable checks
+remain release authority. Learned methods may propose, route, or abstain. They
+may not certify their own output.
+
+### Promising findings selected for V571
+
+- **AI with Authority, from Application to Silicon** - arXiv:2608.21356,
+  https://arxiv.org/abs/2608.21356; submitted 2026-08-21. The report uses a
+  small proof kernel, link-by-link verification, theorem provenance, a token
+  meter, and an append-only error ledger across an agent-built application,
+  compiler, executive, and RISC-V design. Carnot hook: repair V570 evidence
+  eligibility through immutable row receipts and explicit reducer links. A
+  downstream claim must trace through source bytes, proof nodes, exact checks,
+  and its release reducer. This is an evidence-discipline control, not proof
+  that Carnot's science or hardware claims pass.
+- **Measuring What a Specification Determines: A Formal Semantic-Block Model
+  and an Execution-Judged Benchmark** - arXiv:2608.19475,
+  https://arxiv.org/abs/2608.19475; submitted 2026-08-19. It represents a
+  specification as semantic blocks, dependency edges, block-owned rules,
+  decisions, and open questions. It checks acyclicity, single ownership,
+  constraint domination, and totality or ambiguity-stop. Carnot hook: apply
+  these four conditions to the joint proof graph. Compare no filter,
+  atomic-only support, and graph-conditioned support on one immutable flagship
+  stream. Exact execution, not implementer agreement, remains authority.
+- **No Judgment Without a Reason: Counterfactual Receipts for Versioned AI
+  Evaluators** - arXiv:2608.20938,
+  https://arxiv.org/abs/2608.20938; submitted 2026-08-21. The paper separates
+  evaluator grounds, norms, and authority and tests whether controlled source
+  replacement produces the expected verdict change. Carnot hook: add a
+  counterfactual receipt audit to the joint-proof experiment. Perturb a bound
+  source span, a governing exact rule, or the named verifier independently.
+  Require the release decision and its minimal changed-link receipt to match
+  the frozen expectation. This audits reasoning provenance without promoting
+  an LLM judge.
+- **SPARCL: Spectral Partitioned Analytic Continual Learning** -
+  arXiv:2608.21307, https://arxiv.org/abs/2608.21307; submitted 2026-08-21.
+  SPARCL attributes drift in exact recursive learners to spectral interference.
+  It freezes an old high-energy core and updates only a residual subspace.
+  Carnot hook: add a protected-core graph-Potts arm to prospective continuous
+  self-learning. Freeze trusted family statistics, update only the residual
+  difficulty state, and compare retention with the ordinary graph-Potts arm.
+  The image-classification result is not evidence that Carnot will improve.
+- **Utility Under Attack: Agent Memory Poisoning and the Limits of Content
+  Screening and Provenance Ranking** - arXiv:2608.21230,
+  https://arxiv.org/abs/2608.21230; submitted 2026-08-21. It reports that a
+  small false-memory fraction can cause large utility loss and that additive
+  provenance ranking cannot both resist query-shaped poison and retain useful
+  untrusted evidence. It proposes bounded occupancy at retrieval. Carnot hook:
+  include false-memory and source-concentration attacks in the same prospective
+  learning stream. Compare additive provenance with per-source and per-family
+  occupancy caps. Admit memory only after independent exact verification and
+  retain restart and rollback checks.
+
+### Relevant findings held outside the V571 execution path
+
+- **Nothing Changed but the Model: CellFill** - arXiv:2608.20873,
+  https://arxiv.org/abs/2608.20873; submitted 2026-08-21. CellFill keeps
+  quantized integer codes and scales fixed, learns residuals inside each
+  quantization cell, and makes updates revocable. This is a promising later
+  bridge from memory-only learning to bounded weight updates. V571 keeps the
+  three mandated GGUF generators frozen because the current llama.cpp path has
+  no reviewed CellFill training or residual-serving contract. Do not patch
+  cached GGUF files or claim weight-level self-learning in V571.
+- **SPARCL model transfer:** its claimed invariance applies to the frozen core
+  contribution of an analytic image classifier. V571 borrows only the
+  protected-core control for a small graph-Potts state estimator. It does not
+  import SPARCL's benchmark or train a vision model.
+
+### Requested secondary and product checks
+
+- **OpenReview:** current ICLR and ICML 2026 records continue to support an
+  external executor-verifier boundary, budgeted continual self-play, held
+  retention, and exact feasibility. No record supplies an oracle-distinct
+  learned release verifier that changes Carnot's authority boundary.
+- **Hugging Face Papers:** current verification pages reinforce stepwise
+  evidence grounding, deterministic bounds, selective intervention, and
+  verifier isolation. They do not justify reopening the retired external-text
+  scorer, answer-ID parser, or generated ConstraintIR lanes.
+- **Semantic Scholar:** the public API was rate-limited during this refresh.
+  The 2026-08-23 authenticated-free results remain the latest usable receipt:
+  35 citing records for EBT (`2507.02092`) and eight for ARM-EBM
+  (`2512.15605`). The relevant citations remain already cataloged methods such
+  as Memoir, Solver-Hard, Distributional EBMs, and Fixed-Point Reasoners. No
+  new public matching-base checkpoint was established.
+- **GitHub Trending and targeted repositories:** current results were dominated
+  by agent infrastructure. No new maintained EBM, constraint, Ising, KAN, or
+  constrained-generation repository should replace Carnot's pinned exact
+  solver and local GGUF stack. Add no dependency for novelty alone.
+- **Extropic:** https://extropic.ai/writing still lists the August Torx,
+  Thermalizers, and Z1 update. The reported Z1 remains a future-access device,
+  and Carnot has no authenticated TSU route. Schedule no TSU execution,
+  latency, energy, or availability claim.
+- **Logical Intelligence:**
+  https://logicalintelligence.com/kona-ebms-energy-based-models still provides
+  no public Kona weights, reproducible training recipe, or documented local
+  runner. Kona remains a product comparator only.
+
+### V571 planning impact
+
+- Repair the V570 duration-floor eligibility defect from immutable raw rows.
+  Do not rerun model admission or rewrite terminal V570 artifacts.
+- Generate one content-pinned, all-family source stream. Preserve raw bytes and
+  link every downstream decision through a kernel-like evidence chain.
+- Apply semantic-block well-formedness and counterfactual grounds, norms, and
+  authority receipts to the hop-conditioned joint proof graph.
+- Run graph-Potts continuous self-learning prospectively. Add protected-core
+  and bounded-occupancy controls, false-memory attacks, exact commits,
+  retention, future support, restart, and rollback.
+- Give the fused Rust joint-proof workload one final bounded NFR01 decision.
+  Keep ARC on prospective live receipts and hardware on changed-state receipt
+  continuity.
+
+<!-- V571-PLANNER-REFRESH-20260824-END -->

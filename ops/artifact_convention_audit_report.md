@@ -9,10 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| CANNOT_DETERMINE | 2 |
+| CHECKABLE | 7 |
+| AGGREGATE_ONLY | 1 |
 
-## experiment_6562_constraint_saturation_independent_audit_v2.json
+## experiment_3361_archive_v309_activate_v310.json
 
 **CHECKABLE**
 
@@ -20,7 +20,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact’s headline claim is that the result was disqualified because four named audit checks failed.
+Milestone 2026.05.309 was archived and milestone 2026.05.310 was activated successfully.
 
 ## WHAT IS MISSING
 nothing
@@ -28,39 +28,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6563_production_safety_net_workload_canary.json
+## experiment_6572_content_derived_gguf_metadata_resolver.json
 
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-Disabled identity, exact equality, fallback, restart, and rollback passed, while enabled routing produced no measured work or latency benefit.
-
-## WHAT IS MISSING
-The artifact is truncated inside `"per_unit_rows"` at `"row_hash"`; complete per-unit metrics are missing for the declared `"unsupported"`, `"fallback_heavy"`, `"exception"`, `"restart"`, and `"rollback"` workloads and their conditions.
-
-## THE CHECK A READER CANNOT DO
-Did enabled routing fail the work and latency thresholds on every workload—including restart and rollback—rather than only on the visible rows?
-
-## experiment_6564_rust_pyo3_safety_net_nfr01.json
-
-**CANNOT_DETERMINE**
+**AGGREGATE_ONLY**
 
 ## VERDICT
-CANNOT_DETERMINE
+AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-Exact Python/Rust parity passed, but the Rust PyO3 batch achieved only 0.764013447× median speedup—below the 10.0× gate—with p99 latency of 6.312575e-05 seconds.
+The GGUF metadata resolver achieved readiness score 1.0 because all three flagship blobs passed and all 13 negative fixtures failed closed.
 
 ## WHAT IS MISSING
-The artifact is truncated inside `"per_unit_rows"` and shows only `"implementation": "python_scalar"` rows; the corresponding per-unit `"rust_pyo3_batch"` measurements needed to check `"honest_verdict"` are not present in the supplied text.
+The per-fixture `"negative_fixture_rows"` with each `"unit_id"`, observed result, and rejection reason; only `"negative_fixture_pass_count"`, `"passed_negative_fixture_ids"`, and read-only `"bounded_read_receipts"` are present.
 
 ## THE CHECK A READER CANNOT DO
-Do paired Python and Rust per-unit timings actually reproduce the claimed 0.764013447× median batched speedup and exact parity result?
+Did every negative fixture actually fail closed for its intended reason, rather than merely being counted as passing by the aggregate reducer?
 
-## experiment_6565_v569_evidence_and_retirement_contract.json
+## experiment_1644_cerce_ledger.json
 
 **CHECKABLE**
 
@@ -68,7 +52,7 @@ Do paired Python and Rust per-unit timings actually reproduce the claimed 0.7640
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V569 evidence and retirement contract is ready: V568 artifacts are individually classified, required contracts close, and the Rust-fusion boundary may reopen.
+The CERCE ledger scaffolding was added and completed, with no policy certificates, violations, events, or policy updates evaluated.
 
 ## WHAT IS MISSING
 nothing
@@ -76,7 +60,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6566_proof_obligation_and_graph_potts_method_contract.json
+## experiment_1767_e2e_qwen.json
 
 **CHECKABLE**
 
@@ -84,7 +68,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The source method contract is complete and ready, with its proof-obligation schema, splits, graph features, Potts equations, matched-dose arms, gates, attacks, and retirement rules frozen.
+no claim
 
 ## WHAT IS MISSING
 nothing
@@ -92,7 +76,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6567_sequential_flagship_gguf_admission.json
+## experiment_1736_kanele_synth.json
 
 **CHECKABLE**
 
@@ -100,7 +84,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run was blocked because all three flagship model families failed runtime admission after the `model_identity_and_file_shape` precondition failed.
+Experiment 1736 reports simulated Vivado success with a generated bitfile, while explicitly flagged as adversarial and excluded from headline aggregation.
 
 ## WHAT IS MISSING
 nothing
@@ -108,7 +92,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6568_immutable_source_span_claim_stream.json
+## experiment_2031.json
 
 **CHECKABLE**
 
@@ -116,7 +100,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `exp6567-sequential-flagship-gguf-admission.all_mandated_models_loaded_score` was 0.0 instead of the required 1.0.
+The experiment succeeded, producing `"Thus, we can see it."` as `"best_candidate"` with `"min_energy": 0.0`.
 
 ## WHAT IS MISSING
 nothing
@@ -124,7 +108,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6570_proof_obligation_independent_audit.json
+## experiment_6573_sequential_flagship_gguf_admission_v2.json
 
 **CHECKABLE**
 
@@ -132,7 +116,23 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The independent audit was blocked because required evidence was missing or unusable, so audit readiness and promotion were not confirmed.
+All three mandated model families passed the runtime-admission gate, so downstream model science is open.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6574_joint_sufficiency_method_contract.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The joint-sufficiency method is complete, executable, and frozen, with its schemas, fixtures, attacks, gates, splits, arms, and retirement rules ready.
 
 ## WHAT IS MISSING
 nothing
