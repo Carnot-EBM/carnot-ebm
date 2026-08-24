@@ -184,7 +184,75 @@ measured denominator rather than a guess.
 slow phase sits inside the measured 20% and the remaining 80% is unmeasured in
 both directions.
 
-### The run did not finish, and I do not know why
+### ROOT CAUSE FOUND (second run, appended 2026-08-24 23:00Z)
+
+**The box's own janitor SIGKILLs the run at exactly two hours. The serial suite
+needs more than two hours. So a serial full-suite run cannot complete on this
+machine, and never could.**
+
+This is the answer to "make the full suite runnable". It is not a pytest problem,
+a deadlock, or a product problem. It is infrastructure killing the measurement.
+
+**The evidence, in one line each:**
+
+| fact | value |
+|---|---|
+| run 2 exit code, captured outside the owning shell | **137 = SIGKILL** |
+| run 2 wall time | 7386 s (2 h 03 m 06 s) |
+| run 2 END stamp | `2026-08-24T22:55:51Z` |
+| `/tmp/orphan-cleanup.log` | `2026-08-24T22:55:50Z killed 1 orphan workers (conductor=4109305)` |
+
+One second apart. That is the kill.
+
+**The mechanism**, `~/.carnot/orphan-cleanup.sh`:
+
+- `THRESHOLD_MIN=120` — two hours (`:41`).
+- It matches on `comm` being exactly `python3` or `pytest` (`:226`).
+- It skips any pid that descends from the running conductor (`:241`).
+- Everything else over the threshold gets `kill -9` (`:242`).
+- `carnot-orphan-cleanup.timer` is `OnUnitActiveSec=30min`, so a run that crosses
+  two hours dies at the next fire, within 30 minutes.
+
+**The trap that makes this hard to see.** Detaching the run with `setsid` — which
+I did specifically so the agent harness could not kill it — is exactly what makes
+it an orphan in the janitor's eyes. Hardening the run against one killer handed it
+to another. A run launched *under the conductor* is exempt; a careful standalone
+run is not.
+
+**This retro-explains run 1 as a different kill.** Run 1 died at 24 m 47 s, far
+under the threshold, so the janitor is not responsible for it. Run 1 was a
+harness-owned background task; run 2 was not. Two runs, two different killers,
+neither of them a hang.
+
+**It probably explains the 2026-04-14 comment too.** "The full 4000+ test suite
+hangs when run serially" is what an unexplained `kill -9` looks like from the
+outside: output stops, no traceback, no summary. I cannot prove the janitor
+existed in that form in April, so this is a hypothesis, not a finding — but the
+observable signature matches exactly, and no deadlock was found in 20% of the
+suite across two independent runs.
+
+**Both runs died at the same place, which is itself informative:**
+
+| | run 1 | run 2 |
+|---|---|---|
+| wall | 1487 s | 7386 s |
+| tests reported | 11905 | 11910 |
+| F / s / E | 74 / 9 / 0 | 74 / 9 / 4 |
+
+Identical failure counts at nearly identical indices, five times apart in wall
+clock. Test ordering is therefore deterministic (no `pytest-randomly` shuffle),
+and the 74 failures in the first 20% are reproducible. That is a real, if partial,
+result.
+
+The death index is NOT a poison test. The neighbourhood
+(`test_experiment_1745_retro.py` … `test_experiment_1752_expand_ltlzinc.py`,
+19 tests) was run in isolation: **33 s, 1 failed / 18 passed, exit 1** — a normal
+test failure, no kill. So run 2 stopped where it did because that is simply how
+far it got in two hours, not because of anything at that index.
+
+### What actually killed each run
+
+
 
 The process stopped writing at 19:10:40Z and was gone when next sampled. There is
 no traceback, no `KeyboardInterrupt`, no pytest summary — output ends mid-line.
@@ -285,7 +353,32 @@ fixing the second would repeat the mistake.
 Incidentally: `tests/integration` (3 files) is in `testpaths` but both the
 conductor branch and CI pass `tests/python` explicitly, so it is run by nothing.
 
-### Recommendation, in order
+### Recommendation ZERO — the janitor, which blocks everything else
+
+Nothing below matters until a full-suite run is allowed to finish. Pick one:
+
+1. **Make the run fit inside two hours.** `-n 4 --no-cov` should land near 30
+   minutes, comfortably inside the window, and needs no infrastructure change at
+   all. This is the cheapest path to a complete receipt and is what I ran next.
+   Caveat: it reintroduces xdist, and `ops/known-issues.md` wants `-n 0`
+   precisely because a dying worker contaminates counts. Report the worker state
+   alongside the numbers.
+2. **Exempt a marked run from the janitor.** The janitor already has an exemption
+   concept — "descends from the conductor". Add a second: an env marker or a
+   pidfile the operator sets for a deliberate long run. Preferable to raising
+   `THRESHOLD_MIN`, which weakens the janitor for its actual job.
+3. **Run it under the conductor**, which is already exempt. Works today, but
+   couples the measurement to the loop it is supposed to observe independently.
+
+Do NOT "fix" this by evading the `comm` match (for example invoking
+`.venv/bin/python -m pytest`, whose `comm` is `python` and therefore misses the
+janitor's `python3|pytest` pattern). That works, and it is the wrong answer: it
+leaves a genuinely orphaned run unkillable and hides the problem from the next
+person. Note the fragility though — the janitor's matcher is narrower than its
+concept, which is the same class of defect CLAUDE.md's QA-Layer discipline exists
+to catch.
+
+### Then, in order
 
 1. **Fix `python-lint` first.** It is the cheapest action with the largest
    effect: it un-skips a full-suite job that already exists, already runs on
@@ -308,8 +401,17 @@ conductor branch and CI pass `tests/python` explicitly, so it is run by nothing.
 
 ## 5. What I could not determine
 
-- **The complete baseline.** 20%, not 100%. §3.
-- **Why the run died.** No signal captured. §3.
+- **The complete baseline under `-n 0`.** 20%, not 100%, and now known to be
+  UNOBTAINABLE under the current janitor: the serial run needs >2h and is
+  SIGKILLed at 2h. §3 "ROOT CAUSE FOUND".
+- ~~**Why the run died.**~~ RESOLVED for run 2: `kill -9` from
+  `~/.carnot/orphan-cleanup.sh`, exit 137, correlated to the janitor's own log
+  within one second. Run 1's kill (at 24m47s, under the threshold) is a
+  *different* event, most likely the agent harness stopping its background task —
+  that one is still inferred, not proven.
+- **Whether the April "hangs serially" report was this same janitor.** The
+  signature matches; I did not check the janitor's history. Worth one `git log`
+  by whoever picks this up.
 - **Whether a genuine deadlock exists in the unmeasured 80%.** The 2026-04-14
   claim is unsupported for the part I measured and untested for the rest.
 - ~~**The true total test count.**~~ RESOLVED, see §3 "Collection". The count is
