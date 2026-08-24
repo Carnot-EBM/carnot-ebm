@@ -1479,3 +1479,15 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
 - artifact: results/experiment_6571_v570_evidence_gate_and_retirement_root.json
+
+## experiment_6572_content_derived_gguf_metadata_resolver.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+- artifact: results/experiment_6572_content_derived_gguf_metadata_resolver.json
+
+## experiment_6573_sequential_flagship_gguf_admission_v2.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag(s) ['NONTERMINAL_DECLARED_ARTIFACT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+- artifact: results/experiment_6573_sequential_flagship_gguf_admission_v2.json
