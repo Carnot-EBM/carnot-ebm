@@ -18545,3 +18545,43 @@ LLM-on data the project has.
 **What would close this:** more live rows, not more analysis of these. A
 characterization of per-game failure modes needs a live corpus an order of
 magnitude larger than 57 rows.
+
+#### CORRECTION 2026-08-24 (append-only) — the entry above is wrong; the scan swept two repo clones
+
+The 2.6% figure, the 2212-row corpus, and the "llm_on_row_valid overstates live
+coverage by ~19x" claim are all artifacts of a bad scan. Kept above verbatim so
+the error is visible.
+
+**What happened.** The scan globbed `$CLAUDE_JOB_DIR/tmp/**/rows*.json`. 180 of
+the 195 matched files were inside `abpin/` and `headwt/` — two byte-identical
+clones of this repository in the scratch tree. They contributed 9,250 raw rows.
+The apparent 1,131-row `early_stop_sweep_20260726` is not in the scratch tree at
+all; it lives in `results/`, and the glob reached it only through the clones.
+
+**Corrected numbers**, clone-excluded, deduplicated by (run, game, seed, arm):
+
+| Signal | Count | Share |
+|---|---|---|
+| rows | 86 | — |
+| `llm.tokens_predicted` > 0 | 47 | 54.7% |
+| `llm_on_row_valid: True` | 42 | 48.8% |
+| valid AND token-producing | 42 | 48.8% |
+| valid=True but zero/absent tokens | 0 | — |
+
+**`llm_on_row_valid` is a sound live filter.** On the real corpus it agrees
+exactly with token production; zero rows are valid-with-no-tokens. The claimed
+19x overstatement does not exist.
+
+**What still stands, and is starker.** The live corpus is about 47 rows in
+total. Live rows by run: `baseline25` 24, `seedsweep` 11, `supab` 5, `fixrun` 3,
+`supab3` 2, `supab2_VOID_oom` 1, `supab5` 1. The 2026-08-24 seed sweep
+contributed roughly a quarter of all live data the project has. Two game-specific
+patterns were claimed that day from this base and both were wrong. The
+requirement is unchanged: more live rows, not more analysis of these.
+
+**Why this correction is worth its space.** This is the same clone-duplication
+that corrupted `scripts/arc_induction_quality.py`, diagnosed and written up
+earlier the same day. The outer loop read that write-up and repeated the error
+within hours. Prose did not prevent it; the scorer's own nested-clone refusal
+(REQ-ARC-WMTE-6700) would have. Any new corpus scan over the scratch tree must
+exclude nested clones explicitly or reuse a scanner that already does.
