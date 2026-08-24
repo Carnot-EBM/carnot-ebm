@@ -16382,3 +16382,5 @@ code |
 | 2026-08-24 02:45 UTC | V570 immutable evidence, gate, and retirement root | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-24 04:08 UTC | Content-derived GGUF metadata for hash-only cache  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: struct.pack("< |
 | 2026-08-24 04:16 UTC | Content-derived GGUF metadata for hash-only cache  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-24 04:56 UTC | Sequential flagship GGUF admission v2 by actual ex | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6573_sequent |
+| 2026-08-24 04:57 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 582006 serves 'ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167 |
