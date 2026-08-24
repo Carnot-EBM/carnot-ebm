@@ -171,7 +171,7 @@
     {
       "experiment_id": 6582,
       "completed_milestone": "2026.08.572",
-      "reason": "retire_if_same_verdict: two runs (1109s then 2411s live GPU) both ended blocked_precondition_failed_without_quality_claim. CORRECTION 2026-08-24: the artifact shows gate_check_summary.all_structured_gates_passed=true and first_failure=null, with aggregate_row_recomputation.authentic_terminal_row_count=0 and preconditions_checked absent. No precondition failed. The run produced zero authentic terminal rows and honestly declined to make a quality claim. Retires only this task's repeated same-verdict scope. Exp6581 is NOT retired: it ran once and never repeated. See ops/exclusion_manifest.yaml entry exp6581_6582_one_family_flagship_source_shard_retired_v572 and its appended CORRECTION."
+      "reason": "retire_if_same_verdict: two runs, both ending blocked_precondition_failed_without_quality_claim. CORRECTION 2 (2026-08-24): a precondition DID fail. preconditions_checked is a 29-key dict with all_required_preconditions_available=false and failed_preconditions ['idle_supported_gpu','verification_commands']. Correction 1 claimed no precondition failed; that came from reading the artifact through a principle-unwrap helper that nulls any dict-valued field. No model was loaded in either run: verification_commands requires the whole test suite to exit 0 first, so the 1109s and 2411s durations are pytest, not GPU inference. The suite is genuinely red repo-wide. idle_supported_gpu likely failed because the outer loop's own seed sweep holds GPU 1. Retirement still rests only on same-verdict-twice. See ops/exclusion_manifest.yaml correction_2026_08_24_second."
     }
   ]
 }
