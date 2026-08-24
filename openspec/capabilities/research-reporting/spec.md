@@ -55253,3 +55253,130 @@ ready artifact uses a null verdict class.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6583 | Planned (`python/carnot/experiment_6583_gemma4_26b_a4b_flagship_source_shard.py`; terminal artifact `results/experiment_6583_gemma4_26b_a4b_flagship_source_shard.json`) | Planned (`tests/python/test_experiment_6583_gemma4_26b_a4b_flagship_source_shard.py`) |
+
+### REQ-REPORT-6584: Three-Family Source Receipts SHALL Replay Independently
+
+Carnot SHALL run Exp6584 even when one or more Exp6581-Exp6583 family
+artifacts are absent, blocked, or incomplete. The audit SHALL read the frozen
+Exp6580 protocol and immutable family rows. It SHALL NOT invoke an LLM. It
+SHALL NOT import a family aggregate or readiness value into its reducer.
+
+- REQ-REPORT-6584-PRECONDITIONS: The audit SHALL record every expected family
+  path, existence state, file hash, schema, status, source manifest hash,
+  prompt hash, audit-tool hash and version receipt, CPU, RAM, disk, protected
+  hashes, and every declared raw checkpoint path. A missing or blocked family
+  SHALL produce a terminal blocked diagnosis. The verdict SHALL start with
+  `blocked_`. The gate summary SHALL name the exact path or field, expected
+  value, and observed value.
+- REQ-REPORT-6584-REPLAY: For each observed immutable family row, the audit
+  SHALL recover source, request, and response bytes. It SHALL independently
+  recompute source, prompt, request, response, checkpoint, row, GGUF, command,
+  and stderr hashes. It SHALL also recompute repository and revision binding,
+  embedded-tokenizer metadata, PID evidence, CUDA device and positive layer
+  offload, GPU samples, token totals, latency, stop reason, exit status,
+  charged cost, and failure classes. Family aggregate fields SHALL not be
+  reducer inputs.
+- REQ-REPORT-6584-MERGE: The immutable merge SHALL emit only observed source
+  rows. It SHALL not synthesize a missing family response. A separate family
+  coverage row SHALL keep every expected source-family pair explicit. The
+  audit SHALL require identical frozen source units, prompt, unit order,
+  budgets, and the prescribed seed contract, except for model identity.
+  Each observed family SHALL use one distinct fresh process.
+- REQ-REPORT-6584-RAW-FIRST: Where checkpoint and monotonic receipts exist,
+  the audit SHALL verify that raw response storage precedes the derived parser
+  diagnostic. A missing ordering receipt SHALL remain visible and SHALL fail
+  readiness.
+- REQ-REPORT-6584-FAILURES: Timeout, malformed-output, refusal, empty-output,
+  no-claim, and process-failure rows SHALL remain in the merged denominator.
+  Failure counts SHALL derive from recovered raw bytes and terminal receipts.
+  A failed row SHALL not become a missing science null.
+- REQ-REPORT-6584-DUPLICATES: The audit SHALL emit one invariant row for each
+  missing or blocked family, legacy substitution, source alias, prompt drift,
+  seed drift, duplicate unit ID, copied cross-family output, selective retry,
+  hidden row drop, null-only row, stale PID, zero-layer offload, missing raw
+  path, missing unload, reused process, protected drift, and upstream readiness
+  contradiction. Each invariant SHALL fail closed from immutable rows.
+- REQ-REPORT-6584-UNLOAD: The audit SHALL independently verify each observed
+  family process exit, port closure, removal from process and GPU receipts,
+  bounded GPU memory recovery, and lack of signals to unrelated processes.
+  One family SHALL not contaminate another family's process evidence.
+- REQ-REPORT-6584-REDUCER: The exact top-level
+  `all_family_source_audit_ready_score` SHALL equal `1.0` only when all three
+  artifacts are readable and nonblocked, all twelve expected source-family
+  rows replay, every raw path resolves, failures remain visible, process and
+  unload checks pass, costs recompute, all invariants pass, and both protected
+  files remain unchanged. Coverage, failures, timing, tokens, cost, and each
+  family readiness SHALL derive only from emitted rows and audit receipts.
+  A clean audit SHALL use `verdict_class=null`, never a positive class.
+- REQ-REPORT-6584-RETIREMENT: The audit SHALL compare its missing-input chain
+  with the stored Exp6577 missing-chain verdict. It SHALL activate retirement
+  only when the same missing-chain verdict repeats. A present-but-blocked
+  Exp6581 family with absent rows is not the Exp6577 missing Exp6576 chain.
+- REQ-REPORT-6584-ATOMIC: Exp6584 SHALL preserve `research-roadmap.yaml` and
+  `scripts/research_conductor.py`. It SHALL set
+  `inference_substrate=immutable_three_family_source_replay_no_llm` and
+  `verifier_is_oracle=true`. It SHALL validate and write one terminal JSON
+  artifact by same-directory atomic replacement. The checksum SHALL exclude
+  only its self-referential checksum field.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `upstream_artifact_receipts`, `rows`,
+`family_coverage_rows`, `failure_retention_rows`,
+`duplicate_drift_and_substitution_rows`, `unload_and_recovery_rows`,
+`all_family_source_audit_ready_score`, `aggregate_row_recomputation`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6584-MISSING: A Missing Or Blocked Family Closes Without Inference
+
+**Given** one expected family artifact is absent, blocked, or has no raw rows
+**When** Exp6584 runs
+**Then** it emits a zero audit score, names the exact path or failed field and
+observed value, emits no synthetic response row, and closes with a `blocked_`
+verdict without an LLM call.
+
+#### SCENARIO-REPORT-6584-REPLAY: Raw Runtime Evidence Recomputes Per Family
+
+**Given** recoverable source, response, GGUF, process, GPU, checkpoint, unload,
+token, timing, and cost receipts
+**When** Exp6584 ignores every shard aggregate
+**Then** each observed source-family row carries independently recomputed
+metrics and exact replay failures.
+
+#### SCENARIO-REPORT-6584-MERGE: Immutable Coverage And Failures Stay Explicit
+
+**Given** the four frozen source units and three mandated families
+**When** the audit merges observed rows
+**Then** twelve coverage rows remain explicit, only observed response rows are
+emitted, and every raw failure stays in the merged denominator.
+
+#### SCENARIO-REPORT-6584-ATTACKS: Substitution Duplication Drift And Drops Fail Closed
+
+**Given** one mutation for each required invariant
+**When** the independent reducer evaluates the mutated receipts
+**Then** substitution, aliasing, prompt or seed drift, duplicate IDs, copied
+cross-family output, retries, row drops, null rows, stale execution, zero
+offload, raw-path loss, unload loss, process reuse, protected drift, and
+readiness contradiction prevent readiness.
+
+#### SCENARIO-REPORT-6584-UNLOAD: Family Processes Terminate In Isolation
+
+**Given** each observed family owns a fresh external process
+**When** Exp6584 replays terminal lifecycle receipts
+**Then** each worker exits and unloads, no PID is reused across families, and
+no family contaminates the next family's evidence.
+
+#### SCENARIO-REPORT-6584-ATOMIC: One Non-Positive Audit Artifact Recomputes
+
+**Given** replay, merge, failure, lifecycle, and invariant checks have ended
+**When** Exp6584 writes its terminal artifact
+**Then** protected files remain byte-identical, the checksum validates, the
+binary gate matches the independent reducer, and the artifact uses only a
+null, partial, blocked, or disqualified verdict class.
+
+## Implementation Status (REQ-REPORT-6584)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6584 | Planned (`python/carnot/experiment_6584_three_family_source_receipt_audit.py`; terminal artifact `results/experiment_6584_three_family_source_receipt_audit.json`) | Planned (`tests/python/test_experiment_6584_three_family_source_receipt_audit.py`) |
