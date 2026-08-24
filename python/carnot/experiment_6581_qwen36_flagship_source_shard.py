@@ -1386,7 +1386,7 @@ def _server_command(server: Path, blob: Path, port: int) -> list[str]:  # pragma
         "off",
         "--no-ui",
         "--log-verbosity",
-        "3",
+        "4",
     ]
 
 
