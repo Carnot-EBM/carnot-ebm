@@ -491,3 +491,26 @@ def test_precondition_key_normalization_is_family_specific() -> None:
     }
     assert normalized["failed_preconditions"] == ["positive_gemma4_31b_metadata"]
     assert "qwen" not in json.dumps(normalized).lower()
+
+
+def test_verification_is_bounded_without_spending_family_runtime(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """REQ-REPORT-6582-VERIFICATION-BUDGET: tests do not shorten model work."""
+
+    calls: list[tuple[str, Path, float]] = []
+
+    def fake_run(command: str, repo_root: Path, timeout_s: float) -> dict:
+        calls.append((command, repo_root, timeout_s))
+        return {"command": command, "exit_code": 0, "duration_s": 0.0}
+
+    root = Path("/bounded-exp6582-fixture")
+    monkeypatch.setattr(shared, "_run_named_test", fake_run)
+    receipts = mod._checkpoint_tests(root)
+    full_suite = [call for call in calls if call[0] == mod.FULL_PYTEST_COMMAND]
+
+    assert len(receipts) == 7
+    assert len(full_suite) == 1
+    assert full_suite[0][1] == root
+    assert full_suite[0][2] >= 4801.0
+    assert mod.family_task_deadline(_protocol(), now=1000.0) == 5200.0
