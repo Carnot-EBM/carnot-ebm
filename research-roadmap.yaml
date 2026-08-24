@@ -1,396 +1,411 @@
-milestone: "2026.08.570"
-milestone_title: "Joint Proof Graphs and Prospective Self-Learning"
+milestone: "2026.08.571"
+milestone_title: "Auditable Proof Graphs and Poison-Resistant Self-Learning"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-  - id: exp6571-v570-evidence-gate-and-retirement-root
-    milestone: "2026.08.570"
-    deliverable: results/experiment_6571_v570_evidence_gate_and_retirement_root.json
-    title: "V570 immutable evidence, gate, and retirement root"
+  - id: exp6575-v571-clean-evidence-and-flagship-qualification
+    milestone: "2026.08.571"
+    deliverable: results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json
+    title: "V571 clean evidence and flagship qualification replay"
     priority: critical
-    track: infrastructure-governance
-    requires_gpu: false
-    per_unit_rows: true
-    max_turns: 100
-    estimated_wall_time_min: 90
-    model: opus
-    prior_failures:
-      - experiment_id: exp6565-v569-evidence-and-retirement-contract
-        verdict: "complete_v569_evidence_and_retirement_contract_ready: V568 artifacts are content-addressed; Exp6562 is disqualified science; Exp6563 and Exp6564 are clean nulls; V569 gate, failure, model, ARC, hardware, Rust-fusion, and protected-file contracts close"
-        addressed_by: "Exp6565 first carried a stale DURATION_TOO_SHORT stamp even though its later live replay was clean. Exp6571 rebuilds every V570 eligibility row and gate from the terminal V569 artifacts, preserves both stamped and fresh verifier results, and records the exact GGUF admission root cause."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Milestone 2026.08.569 completed six tasks. Exp6565 and Exp6566 closed evidence and method contracts. Exp6567 resolved all three mandated model blobs, tokenizers, CUDA llama.cpp support, and sequential memory conditions, but blocked before inference because hash-only Hugging Face blob paths failed filename-derived language-model and quantization checks. Exp6568 gate-blocked, Exp6569 produced no artifact, and Exp6570 correctly blocked on missing proof rows. V570 needs one additive evidence root before any rerun. Work at {project_root}. The planning date is {date}.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
-      - {project_root}/results/experiment_6565_v569_evidence_and_retirement_contract.json through {project_root}/results/experiment_6570_proof_obligation_independent_audit.json; confirm the exact missing Exp6569 path
-      - {project_root}/research-complete.yaml, {project_root}/research-references.md, {project_root}/ops/exclusion_manifest.yaml, {project_root}/ops/conductor-log.md, and {project_root}/ops/known-issues.md
-      - {project_root}/scripts/adversarial_verify.py, {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/artifact_convention_audit.py, {project_root}/scripts/conductor_gates.py, {project_root}/scripts/roadmap_schema.py, and {project_root}/scripts/exclusion_manifest_lint.py
-      - {project_root}/_bmad/prd.md, {project_root}/_bmad/architecture.md, relevant capability specs, {project_root}/_bmad/traceability.md, and {project_root}/ops/e2e-test-plan.md
-
-      TASK
-      Build the immutable V570 evidence, gate, failed-scope, and retirement root. Import V569 evidence only by exact path and content hash. Freeze every V570 task ID, deliverable, gate field, prior-failure entry, model rule, ARC boundary, hardware boundary, and terminal verdict rule.
-
-      CONCRETE STEPS
-      0. PRECONDITIONS: record git status, CPU, RAM, disk, Python, Rust, PyO3, Z3, model-cache paths, artifact paths and hashes, protected-file hashes, monotonic timer resolution, architecture freshness, and network status. Perform no LLM load and no hardware command.
-      1. Add or confirm REQ-* and SCENARIO anchors for immutable evidence import, live verifier replay, closed verdict classes, exact gate spelling, prior-failure completeness, flagship policy, ARC provenance, hardware receipts, and atomic terminal output. Write focused tests first if implementation changes are needed.
-      2. Run fresh adversarial verification, row-consistency, and artifact-convention checks on Exp6565 through Exp6570. Emit one eligibility row per expected artifact, including missing Exp6569, with path, hash, status, verdict, verdict_class, stamped flags, fresh flags, command, exit, duration, and reason.
-      3. Record the Exp6567 root cause from rows, not prose: the three large blobs resolved; embedded tokenizers, CUDA runtime, and memory checks passed; `model_identity_and_file_shape` failed because hash-only paths produced `language_model_file=false` and `quantization_known=false`; no generation ran.
-      4. Classify Exp6568 as a gate-block with a corrected blocked class for V570 import. Classify Exp6569 as missing, not null. Classify Exp6570 as a valid blocked audit. Do not claim source extraction or graph-Potts utility ran.
-      5. Freeze every structured gate. Confirm each upstream task exists in this roadmap and each artifact field is spelled identically in that task's REQUIRED ARTIFACT FIELDS. Confirm no requires-chain references a retired experiment ID.
-      6. Freeze the changed-mechanism and repeat-retirement map. Permit GGUF rerun only through content-derived header metadata plus actual execution. Permit source extraction only through source spans and joint sufficiency. Permit Rust only as one fused end-to-end workload. Permit hardware only after a changed receipt.
-      7. Attack hash aliases, missing artifacts, aggregate-only claims, stamped-versus-live verifier disagreement, false model admission, wrong verdict classes, field drift, legacy-model substitution, retired ConstraintIR reuse, ARC solve laundering, unchanged hardware commands, and protected-file mutation.
-      8. Set v570_evidence_contract_ready_score=1.0 only when all eligibility, gate, failure, model, ARC, hardware, and protected-file contracts close. Set rust_fusion_reopen_ready_score=1.0 only when the V570 fused workload is materially different from Exps6563-6564 and the repeat-retirement rule is frozen.
-      9. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, roadmap schema validation, gate audit, exclusion-manifest lint, prior-failure validation, row lint, adversarial verification, applicable E2E checks, and final git status.
-
-      Required deliverable: {project_root}/results/experiment_6571_v570_evidence_gate_and_retirement_root.json.
-      REQUIRED ARTIFACT FIELDS:
-        status:
-          principle: "A terminal state prevents a bootstrap record from posing as the evidence root."
-        honest_verdict:
-          principle: "The verdict must state eligibility, failed scopes, and retirement boundaries with a terminal prefix."
-        verdict_class:
-          principle: "A closed enum carries null, blocked, partial, and disqualified state downstream."
-        v569_artifact_eligibility_rows:
-          principle: "One row per expected V569 artifact makes missing and unusable evidence visible."
-        live_verifier_and_duration_rows:
-          principle: "Fresh commands, exits, flags, and monotonic durations resolve stale stamped findings."
-        gguf_admission_root_cause:
-          principle: "The next mechanism must target the observed hash-only path defect, not repeat generic fit prediction."
-        v570_gate_contract_rows:
-          principle: "Every downstream gate must name an in-roadmap task and exact upstream field."
-        prior_failure_and_retirement_rows:
-          principle: "Every scope match needs a changed mechanism and repeat-retirement rule."
-        model_arc_and_hardware_boundary:
-          principle: "The root freezes flagship, live-ARC, and zero-unchanged-command rules."
-        v570_evidence_contract_ready_score:
-          principle: "One binary field gates tasks that require the full V570 evidence contract."
-        rust_fusion_reopen_ready_score:
-          principle: "A separate binary field permits only the changed fused workload and freezes retirement."
-        per_unit_rows:
-          principle: "Artifact-level rows prevent one missing or invalid input from hiding in an aggregate."
-        aggregate_row_recomputation:
-          principle: "Readiness fields must derive only from emitted rows."
-        gate_check_summary:
-          principle: "A blocked verdict must name the failed check and observed value."
-        preconditions_checked:
-          principle: "Resource and input receipts distinguish missing prerequisites from evidence failure."
-        protected_files_unchanged:
-          principle: "The task must not mutate research-roadmap.yaml or scripts/research_conductor.py."
-        inference_substrate:
-          principle: "This is immutable artifact audit with no new LLM inference."
-        verifier_is_oracle:
-          principle: "Artifact validation is audit authority, so a clean result cannot use a positive class."
-        field_provenance:
-          principle: "Every headline field identifies source rows, hashes, and reducer."
-        duration_s:
-          principle: "Monotonic duration exposes skipped contract work."
-        tests_run:
-          principle: "Named commands and exit codes make the contract reproducible."
-        reproducibility_checksum:
-          principle: "A final content hash detects terminal-record mutation."
-      Set inference_substrate=immutable_v569_artifact_gate_failure_and_retirement_audit_no_llm and verifier_is_oracle=true. A ready contract uses verdict_class=null, a usable subset uses partial, missing prerequisites use blocked, and false provenance uses disqualified.
-
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6571_v570_evidence_gate_and_retirement_root --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6572-content-derived-gguf-metadata-resolver
-    milestone: "2026.08.570"
-    deliverable: results/experiment_6572_content_derived_gguf_metadata_resolver.json
-    title: "Content-derived GGUF metadata for hash-only cache blobs"
-    priority: critical
-    track: model-runtime-infrastructure
-    requires_gpu: false
-    per_unit_rows: true
-    max_turns: 50
-    estimated_wall_time_min: 90
-    agent_type: codex
-    model: gpt-5.6-sol
-    prior_failures:
-      - experiment_id: exp6567-sequential-flagship-gguf-admission
-        verdict: "blocked: no flagship family completed authentic runtime admission; admitted=[]; blocked=[unsloth/Qwen3.6-35B-A3B-GGUF,unsloth/gemma-4-31B-it-GGUF,unsloth/gemma-4-26B-A4B-it-GGUF]"
-        addressed_by: "Exp6567 inferred language-model and quantization identity from hash-only cache paths. Exp6572 reads bounded GGUF header and llama.cpp metadata from content, verifies repository provenance separately, and fails closed on tokenizer-only, truncated, or mismatched blobs."
-        retire_if_same_verdict: true
-    gated_on:
-      - upstream: exp6571-v570-evidence-gate-and-retirement-root
-        artifact_field: v570_evidence_contract_ready_score
-        op: "=="
-        value: 1.0
-    prompt: |
-      CONTEXT
-      Exp6567 found the three mandated cached model blobs and a usable CUDA llama.cpp runtime. Admission stopped because Hugging Face stores blobs under hash-only paths. A filename and suffix check therefore misclassified real model GGUFs and could not infer quantization. V570 needs a small content-derived metadata layer before it retries inference. Work at {project_root}. The planning date is {date}.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, scripts/experiment_template.py, and the V570 roadmap document
-      - {project_root}/results/experiment_6567_sequential_flagship_gguf_admission.json and {project_root}/results/experiment_6571_v570_evidence_gate_and_retirement_root.json
-      - resolve_cached_gguf(), cached_sota_pair(), model preflight, embedded-tokenizer, llama.cpp launch, and Hugging Face cache-provenance helpers plus their tests
-      - the local GGUF reader dependency or llama.cpp metadata command already installed; do not add a large new dependency when bounded header parsing is sufficient
-      - relevant model-ingestion specs, exclusions, architecture, traceability, status, changelog, and E2E plan
-
-      TASK
-      Implement and validate content-derived GGUF identity for hash-only Hugging Face cache blobs. Preserve repository and revision provenance independently of the local filename. Produce a reusable admission record, not a one-off path exception.
-
-      CONCRETE STEPS
-      0. PRECONDITIONS: evaluate the structured gate and record expected and observed values, upstream hash, disk, RAM, Python, installed GGUF or llama.cpp metadata support, cache layout, blob sizes, trusted existing hashes, and protected-file hashes. Do not load an LLM and do not read every multi-GB tensor byte.
-      1. Add or confirm REQ-* and SCENARIO anchors for hash-only blob support, bounded header reads, repository provenance, shard identity, tokenizer-only rejection, truncation rejection, mismatch rejection, and atomic output. Write focused tests first.
-      2. Inspect the current resolver and reproduce Exp6567's false negatives on all three blobs. Preserve that reproduction as failing-before rows.
-      3. Implement one reusable reader that validates GGUF magic and version and extracts architecture, general file type or quantization metadata, tokenizer metadata, model-vs-tokenizer identity, tensor count, shard metadata when present, and content length needed for sanity checks.
-      4. Bind the local blob to repository ID, revision or snapshot, manifest or symlink target, expected shard order, and existing trusted hash. Do not infer repository identity from model metadata alone.
-      5. Add positive fixtures for the three cached flagship blobs and negative fixtures for a non-GGUF file, truncated header, tokenizer-only GGUF, wrong repository mapping, unsupported version, and inconsistent shard metadata. Read only bounded bytes for negative tests.
-      6. Confirm the resolver produces an explicit quantization/file-type value from content or a supported llama.cpp metadata surface. A filename guess cannot satisfy the gate.
-      7. Attack renamed blobs, symlink aliases, prefix-only magic collisions, huge declared metadata lengths, malformed UTF-8, tensor-count overflow, tokenizer-only false admission, repository swaps, and partial shards.
-      8. Set gguf_blob_metadata_ready_score=1.0 only when all three flagship blobs pass content and provenance checks and every negative fixture fails closed. Emit one row per blob and fixture.
-      9. Write one terminal artifact atomically. Run focused unit tests, lint, spec coverage, row consistency, adversarial verification, applicable model-ingestion E2E checks, and git status.
-
-      Required deliverable: {project_root}/results/experiment_6572_content_derived_gguf_metadata_resolver.json.
-      REQUIRED ARTIFACT FIELDS:
-        status:
-          principle: "The resolver task must end as ready, partial, blocked, or disqualified."
-        honest_verdict:
-          principle: "The verdict distinguishes fixed content identity from another blocked admission attempt."
-        verdict_class:
-          principle: "Infrastructure readiness cannot masquerade as scientific utility."
-        gate_check_summary:
-          principle: "A blocked task names the upstream gate and observed value."
-        failing_before_rows:
-          principle: "The exact Exp6567 false negatives prove the repair targets the observed defect."
-        gguf_blob_metadata_rows:
-          principle: "Each flagship blob reports content metadata and repository provenance independently."
-        negative_fixture_rows:
-          principle: "Malformed, tokenizer-only, truncated, and mismatched inputs must fail closed."
-        bounded_read_receipts:
-          principle: "Metadata inspection must not silently scan or copy all tensor bytes."
-        repository_revision_and_hash_receipts:
-          principle: "Content type alone cannot establish model provenance."
-        gguf_blob_metadata_ready_score:
-          principle: "This exact binary field gates real sequential admission."
-        per_unit_rows:
-          principle: "Every blob and fixture remains independently recheckable."
-        aggregate_row_recomputation:
-          principle: "Readiness derives only from emitted blob and fixture rows."
-        preconditions_checked:
-          principle: "Tool and cache receipts separate missing inputs from parser failure."
-        protected_files_unchanged:
-          principle: "The resolver must preserve both protected orchestration files."
-        inference_substrate:
-          principle: "This task reads bounded file metadata and invokes no model."
-        verifier_is_oracle:
-          principle: "Exact format checks are oracle authority, so readiness is classed null."
-        field_provenance:
-          principle: "Every metadata field identifies byte offsets, tool output, or cache manifest source."
-        duration_s:
-          principle: "Runtime reveals skipped fixtures or accidental full-file scans."
-        tests_run:
-          principle: "Named tests and exits prove the reusable resolver behavior."
-        reproducibility_checksum:
-          principle: "A content hash protects the terminal metadata record."
-      Set inference_substrate=bounded_gguf_header_and_cache_provenance_inspection_no_llm and verifier_is_oracle=true. Use verdict_class=null when ready, partial for a usable subset, blocked for missing cache or tools, and disqualified for unbounded or filename-derived evidence.
-
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6572_content_derived_gguf_metadata_resolver --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6573-sequential-flagship-gguf-admission-v2
-    milestone: "2026.08.570"
-    deliverable: results/experiment_6573_sequential_flagship_gguf_admission_v2.json
-    title: "Sequential flagship GGUF admission v2 by actual execution"
-    priority: critical
-    track: model-runtime
+    track: evidence-and-model-runtime
     requires_gpu: true
     per_unit_rows: true
     max_turns: 100
     estimated_wall_time_min: 240
     model: opus
     prior_failures:
-      - experiment_id: exp6567-sequential-flagship-gguf-admission
-        verdict: "blocked: no flagship family completed authentic runtime admission; admitted=[]; blocked=[unsloth/Qwen3.6-35B-A3B-GGUF,unsloth/gemma-4-31B-it-GGUF,unsloth/gemma-4-26B-A4B-it-GGUF]"
-        addressed_by: "Exp6572 replaces Exp6567's filename-derived model and quantization checks with content-derived GGUF metadata. Exp6573 then requires actual one-model-at-a-time generation, sampled GPU use, clean exit, unload, and bounded recovery for each family."
+      - experiment_id: exp6571-v570-evidence-gate-and-retirement-root
+        verdict: "complete_v570_evidence_gate_and_retirement_root_ready: V569 eligibility includes blocked and missing scopes honestly; the hash-only GGUF cause, V570 gates, changed mechanisms, retirement rules, model, ARC, hardware, Rust, attacks, and protected files close without claiming extraction or graph-Potts utility ran"
+        addressed_by: "Exp6575 does not import Exp6571 as eligible evidence. It creates fresh model, method-replay, evidence-link, duration, and live-verifier rows in one terminal V571 qualification artifact."
         retire_if_same_verdict: true
-      - experiment_id: exp6553-prospective-sota-continuous-self-learning
-        verdict: "blocked: current, retention, and future-support not evaluated; safety not promoted; receipts failed gpu_vram_contract"
-        addressed_by: "Exp6553 predicted fit from an impossible free-VRAM equality and loaded no model. Exp6573 uses execution as fit authority and keeps quality and learning claims out of the admission task."
+      - experiment_id: exp6572-content-derived-gguf-metadata-resolver
+        verdict: "complete_content_derived_gguf_metadata_ready: all three hash-only flagship blobs passed bounded content and independent cache provenance checks; every negative fixture failed closed; no LLM was loaded"
+        addressed_by: "Exp6575 reuses the shipped resolver code but executes fresh positive and negative checks inside a substantive all-family qualification workload; it does not cite the duration-flagged Exp6572 aggregate."
         retire_if_same_verdict: true
-    gated_on:
-      - upstream: exp6571-v570-evidence-gate-and-retirement-root
-        artifact_field: v570_evidence_contract_ready_score
-        op: "=="
-        value: 1.0
-      - upstream: exp6572-content-derived-gguf-metadata-resolver
-        artifact_field: gguf_blob_metadata_ready_score
-        op: "=="
-        value: 1.0
+      - experiment_id: exp6573-sequential-flagship-gguf-admission-v2
+        verdict: "complete: admitted=['unsloth/Qwen3.6-35B-A3B-GGUF', 'unsloth/gemma-4-31B-it-GGUF', 'unsloth/gemma-4-26B-A4B-it-GGUF']; blocked=[]; all three families passed runtime admission; no model-quality claim is made"
+        addressed_by: "Exp6573 ended at 52.068 seconds and was structurally flagged. Exp6575 preregisters a larger evidence workload with fresh content checks, negative fixtures, repeated live telemetry, unload recovery, method replay, link-by-link provenance, and terminal live verification."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      V569 did not invoke any flagship model. V570 now has a content-derived metadata prerequisite for hash-only cache blobs. This task admits each mandated family only through authentic sequential execution. It measures runtime availability, not model quality. Work at {project_root}. The planning date is {date}.
+      Milestone 2026.08.570 completed four tasks. Exp6572 fixed hash-only GGUF identity, Exp6573 produced actual sequential receipts for all three mandated families, and Exp6574 froze joint sufficiency. Exp6571, Exp6572, and Exp6573 later received DURATION_TOO_SHORT findings; Exp6573's declared live-inference task lasted 52.068 seconds against a 60-second floor. Flagged aggregates are not valid downstream inputs even when their honest verdict says complete. V571 needs a fresh qualifying evidence root. Do not edit or relabel any V570 artifact. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, scripts/experiment_template.py, and the V570 roadmap document
-      - {project_root}/results/experiment_6567_sequential_flagship_gguf_admission.json, {project_root}/results/experiment_6571_v570_evidence_gate_and_retirement_root.json, and {project_root}/results/experiment_6572_content_derived_gguf_metadata_resolver.json
-      - cached_sota_pair(), resolve_cached_gguf(), content-derived GGUF metadata, embedded-tokenizer, llama.cpp launch, process receipt, GPU telemetry, timeout, cleanup, and unload helpers plus their tests
-      - current model-ingestion specs, exclusions including Exp5284's CPU-only path retirement, architecture, traceability, status, changelog, and E2E plan
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_6571_v570_evidence_gate_and_retirement_root.json through {project_root}/results/experiment_6574_joint_sufficiency_method_contract.json
+      - {project_root}/ops/conductor-log.md, {project_root}/research-complete.yaml, {project_root}/ops/exclusion_manifest.yaml, {project_root}/ops/known-issues.md, and the current adversarial verifier reports
+      - cached_sota_pair(), resolve_cached_gguf(), the content-derived GGUF resolver, embedded-tokenizer launch, CUDA offload, process/GPU telemetry, unload, recovery, duration, and atomic-artifact helpers plus their tests
+      - {project_root}/scripts/adversarial_verify.py, {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/artifact_convention_audit.py, {project_root}/scripts/roadmap_schema.py, and {project_root}/scripts/exclusion_manifest_lint.py
+      - relevant capability specs, {project_root}/_bmad/architecture.md, {project_root}/_bmad/traceability.md, {project_root}/ops/status.md, {project_root}/ops/changelog.md, and {project_root}/ops/e2e-test-plan.md
 
       TASK
-      Admit every mandated flagship GGUF family through a real one-at-a-time llama.cpp load, bounded generation, clean exit, unload, and recovery check. Emit authentic model, process, GPU, token, output, timing, exit, and unload receipts. Do not infer fit from memory arithmetic.
+      Create a fresh V571 qualification artifact that establishes clean runtime evidence for all three mandated flagship GGUF families and replays the clean Exp6574 joint-sufficiency fixtures. Generate new receipts. Do not treat a structurally flagged V570 aggregate as valid evidence.
 
       MODEL_SPECS
       - unsloth/Qwen3.6-35B-A3B-GGUF
       - unsloth/gemma-4-31B-it-GGUF
       - unsloth/gemma-4-26B-A4B-it-GGUF
-      Legacy Qwen3.5-0.8B and gemma-4-E4B-it may run CPU smoke only. They cannot satisfy admission.
+      Legacy Qwen3.5-0.8B and gemma-4-E4B-it may run CPU smoke only. They cannot satisfy qualification.
 
       CONCRETE STEPS
-      0. PRECONDITIONS: evaluate both structured gates and record expected and observed values, upstream paths and hashes, CPU, RAM, disk, CUDA and llama.cpp build receipts, per-GPU free memory and utilization, active processes, model metadata rows, timeout policy, protected-file hashes, and model load order. Do not kill unrelated GPU work.
-      1. Add or confirm REQ-* and SCENARIO anchors for sequential admission, content identity, one-model residency, authentic GPU/process evidence, bounded generation, clean unload, recovery, legacy smoke exclusion, and atomic output. Write focused tests first for changed runtime logic.
-      2. Freeze model order before loading. Choose an idle supported GPU from live receipts. Record why it is eligible. Preserve any busy GPU and active process.
-      3. For each mandated family, resolve repository, revision, content-derived model metadata, embedded tokenizer, and exact blob hash. Launch exactly one model. Record PID, command digest, CUDA device, GPU memory before/during/after, sampled utilization, load time, token count, output hash, stop reason, exit code, and stderr hash.
-      4. Require a bounded nonempty generation that follows the prompt enough to prove token flow. Do not use answer accuracy, self-report, or tokenizer-only output as admission evidence.
-      5. Shut down normally. Confirm the PID is gone, the port is closed, and memory returns within a preregistered tolerance. Run a bounded recovery smoke before the next family. Never call a broad zombie reaper that can kill work on another GPU.
-      6. If a model fails, record the exact failing stage and observed value. Attempt only the frozen bounded recovery. Continue to other families when safe. Do not substitute a smoke model.
-      7. Attack stale PIDs, fake CUDA builds, zero-layer offload, tokenizer-only loads, reused output, wrong repository, split-shard omissions, process-wrapper exit confusion, unload failure, cross-GPU interference, and aggregate readiness with one missing family.
-      8. Set each family_admitted_score from its row. Set all_mandated_models_loaded_score=1.0 only when all three authentic family rows pass. A partial admission stays partial and cannot open downstream model science.
-      9. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row consistency, adversarial verification, applicable model-runtime E2E checks, and git status.
+      0. PRECONDITIONS: record protected-file hashes, V570 artifact hashes and structural findings, Exp6574 eligibility, CPU, RAM, disk, CUDA llama.cpp support, per-GPU free memory and active processes, cache provenance, exact model order, timeout policy, and the expected inference substrate. Do not kill unrelated GPU work.
+      1. Add or confirm REQ-* and SCENARIO anchors for fresh-evidence qualification, flagged-input exclusion, all-family runtime receipts, bounded GGUF inspection, embedded tokenizers, CUDA offload, one-model residency, clean unload, method replay, link provenance, terminal duration, and atomic output. Write focused tests first for changed logic.
+      2. Reproduce the three V570 structural dispositions as context rows. Mark them ineligible. Never copy their readiness fields into a V571 readiness reducer.
+      3. Run fresh bounded positive metadata checks for all three cached model blobs and fresh negative fixtures for non-GGUF, truncated, tokenizer-only, repository-mismatch, and malformed metadata cases. Bind repository, revision, local blob hash, architecture, quantization, and embedded tokenizer.
+      4. Freeze model order. Load exactly one mandated family at a time through llama.cpp. Produce a bounded nonempty generation. Record PID, command digest, model hash, CUDA device, layer offload, load and token timing, repeated GPU memory/utilization samples, raw output hash, stop reason, exit, stderr hash, and unload recovery. Preserve other GPU processes.
+      5. Replay Exp6574's single-hop, valid multi-hop, missing-hop, wrong-span, and cyclic-graph fixtures with the shipped exact reducer. Hash every fixture and result. Do not change acceptance after observing outputs.
+      6. Emit a link-by-link evidence graph from each top-level field to raw receipt hashes and its exact reducer. Attack stale PIDs, reused output, zero-layer offload, tokenizer-only loads, family substitution, symlink aliases, missing unload, aggregate readiness with one failed family, missing method fixtures, duration field spoofing, and V570 evidence laundering.
+      7. Set top-level v571_flagship_evidence_ready_score=1.0 only when every fresh family row, metadata fixture, unload check, method replay, protected-file check, evidence link, and live structural verification passes. Set top-level joint_sufficiency_method_replay_ready_score=1.0 only from fresh fixture rows.
+      8. If this new task receives the same structural disposition as the V570 evidence chain, keep readiness at 0.0, use an honest blocked or disqualified verdict, and activate the repeat-retirement rule. Do not pad time with sleep; complete the substantive preregistered work.
+      9. Write one terminal artifact atomically. Run focused unit tests, lint, spec coverage, row consistency, artifact convention audit, adversarial verification, applicable model-runtime E2E checks, and final git status.
 
-      Required deliverable: {project_root}/results/experiment_6573_sequential_flagship_gguf_admission_v2.json.
+      Required deliverable: {project_root}/results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json.
       REQUIRED ARTIFACT FIELDS:
         status:
-          principle: "Admission must close terminally even when one family fails."
+          principle: "A terminal state prevents a bootstrap artifact from posing as clean qualification."
         honest_verdict:
-          principle: "The verdict names admitted and blocked families without making a quality claim."
+          principle: "The verdict names qualified and failed families and the method-replay disposition."
         verdict_class:
-          principle: "Runtime readiness is null or partial evidence, not positive science."
+          principle: "A closed class keeps runtime readiness separate from positive science."
         gate_check_summary:
-          principle: "A gate block names both exact fields and observed values."
+          principle: "Any blocked verdict names the failed precondition and observed value."
+        v570_ineligible_context_rows:
+          principle: "Flagged prior artifacts remain visible without entering the V571 readiness reducer."
+        rows:
+          principle: "Each model, metadata fixture, method fixture, unload check, and attack remains independently recheckable."
         model_specs:
-          principle: "The artifact must list all three mandated repositories and selected blobs."
-        model_metadata_and_hash_rows:
-          principle: "Every load binds content identity to repository provenance."
-        sequential_load_generation_rows:
-          principle: "Each family reports authentic process, GPU, token, output, timing, and exit evidence."
+          principle: "The artifact identifies every mandated family and excludes smoke substitutions."
+        model_revision_and_hash_receipts:
+          principle: "Repository, revision, GGUF content, and embedded-tokenizer identity bind each runtime row."
+        process_and_gpu_receipts:
+          principle: "Live process and repeated CUDA samples prove actual model execution and isolation."
+        raw_generation_receipts:
+          principle: "New output bytes and stop receipts distinguish execution from filename prediction."
         unload_and_recovery_rows:
-          principle: "One-model-at-a-time isolation requires clean unload before the next load."
-        gpu_process_receipts:
-          principle: "Sampled telemetry and PIDs distinguish real CUDA execution from prediction."
-        family_admitted_scores:
-          principle: "Per-family scores prevent partial success from hiding."
-        all_mandated_models_loaded_score:
-          principle: "This exact binary field gates the immutable source stream."
-        per_unit_rows:
-          principle: "One row per family and stage makes admission independently checkable."
+          principle: "One family cannot contaminate the next family's admission evidence."
+        joint_sufficiency_method_replay_rows:
+          principle: "Fresh exact fixture replay keeps the clean method contract reachable."
+        evidence_link_rows:
+          principle: "Every headline field traces through raw hashes and an explicit reducer."
+        v571_flagship_evidence_ready_score:
+          principle: "This exact top-level binary field gates the immutable source stream."
+        joint_sufficiency_method_replay_ready_score:
+          principle: "This exact top-level binary field gates live joint-proof extraction."
         aggregate_row_recomputation:
-          principle: "Overall readiness is the conjunction of emitted family rows."
+          principle: "Readiness scores derive only from emitted fresh rows."
         preconditions_checked:
-          principle: "Live resource receipts separate environment blocks from model defects."
+          principle: "Resource and protected-file receipts separate environment blocks from runtime failure."
         protected_files_unchanged:
-          principle: "Admission preserves both protected orchestration files."
+          principle: "The task preserves research-roadmap.yaml and scripts/research_conductor.py."
         inference_substrate:
-          principle: "The artifact names actual llama.cpp CUDA execution and selected GGUF files."
+          principle: "The declared live llama.cpp substrate selects the correct structural checks."
         verifier_is_oracle:
-          principle: "Runtime checks are admission authority and cannot yield a scientific positive."
+          principle: "Exact runtime qualification is infrastructure authority and cannot create positive science."
         field_provenance:
-          principle: "Every field points to metadata, process, GPU, token, or reducer rows."
+          principle: "Each field names its source rows, hashes, and reducer."
         duration_s:
-          principle: "Monotonic duration exposes skipped loads and bounded recovery cost."
+          principle: "Monotonic duration supports the fresh evidence receipt and structural sanity check."
         tests_run:
-          principle: "Named tests and exits prove admission and cleanup behavior."
+          principle: "Named commands, exits, and durations make qualification reproducible."
         reproducibility_checksum:
-          principle: "A final hash protects the terminal admission record."
-      Set inference_substrate=sequential_local_llama_cpp_cuda_flagship_gguf_execution and verifier_is_oracle=true. Use verdict_class=null when all models admit, partial when a usable subset admits, blocked when no authentic model run is possible, and disqualified for predicted or fabricated receipts.
+          principle: "A final content hash detects terminal artifact mutation."
+      Set inference_substrate=live_llm_inference, verifier_is_oracle=true, and seeds explicitly. A ready qualification uses verdict_class=null; use partial, blocked, or disqualified when warranted. Never use positive for this task.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6573_sequential_flagship_gguf_admission_v2 --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6575_v571_clean_evidence_and_flagship_qualification --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6574-joint-sufficiency-method-contract
-    milestone: "2026.08.570"
-    deliverable: results/experiment_6574_joint_sufficiency_method_contract.json
-    title: "SOTA hop-conditioned joint-sufficiency method contract"
+  - id: exp6576-immutable-flagship-source-span-stream-v3
+    milestone: "2026.08.571"
+    deliverable: results/experiment_6576_immutable_flagship_source_span_stream_v3.json
+    title: "Immutable all-family source-span claim stream v3"
     priority: critical
-    track: research-method-sota-ingestion
-    requires_gpu: false
+    track: flagship-evidence-stream
+    requires_gpu: true
     per_unit_rows: true
     max_turns: 50
-    estimated_wall_time_min: 120
+    estimated_wall_time_min: 300
     prior_failures:
-      - experiment_id: exp5923-sota-schema-supported-constraintir-ab
-        verdict: "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates"
-        addressed_by: "Exp6574 does not generate or repair full ConstraintIR. It freezes source-byte-bound atomic obligations, compiler-owned exact semantics, a hop dependency graph, and joint-sufficiency abstention based on arXiv:2608.00585."
+      - experiment_id: exp6568-immutable-flagship-source-span-claim-stream
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp6568 saw all_mandated_models_loaded_score=0. V571 gates on a new clean all-family execution artifact, writes raw rows before extraction, and preserves failures instead of depending on the V569 blocked admission field."
         retire_if_same_verdict: true
     gated_on:
-      - upstream: exp6571-v570-evidence-gate-and-retirement-root
-        artifact_field: v570_evidence_contract_ready_score
+      - upstream: exp6575-v571-clean-evidence-and-flagship-qualification
+        artifact_field: v571_flagship_evidence_ready_score
         op: "=="
         value: 1.0
     prompt: |
       CONTEXT
-      Exp6566 preregistered source-span-bound proof obligations and graph-Potts learning. The V570 literature refresh adds a missing control from arXiv:2608.00585: independently supported pieces can still be insufficient for a composed multi-hop claim. V570 must freeze a hop-conditioned dependency graph and joint release rule before seeing live extraction outcomes. Work at {project_root}. The planning date is {date}.
+      Exp6575 is the only V571 authority for clean flagship runtime evidence. This task creates the immutable live source stream needed by proof extraction and continuous learning. It measures source and response provenance, not proof quality. Every family and every failure must remain visible. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, {project_root}/research-references.md, and the V570 roadmap document
-      - {project_root}/results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json and {project_root}/results/experiment_6571_v570_evidence_gate_and_retirement_root.json
-      - {project_root}/python/carnot/extraction/, {project_root}/python/carnot/constraints/, {project_root}/python/carnot/verify/, current DRIFT intake, source-binding, exact-replay, and conflict-memory modules plus tests
-      - {project_root}/results/experiment_5909_sota_constraint_synthesis_ab.json, {project_root}/results/experiment_5910_verification_guided_constraint_repair.json, and {project_root}/results/experiment_5923_sota_schema_supported_constraintir_ab.json
-      - arXiv:2608.00585 primary page and any content-pinned method notes added to research-references.md
-      - relevant specs, exclusions, architecture, traceability, status, changelog, and E2E plan
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V571 roadmap document
+      - {project_root}/results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json and the clean {project_root}/results/experiment_6574_joint_sufficiency_method_contract.json
+      - the pinned DRIFT or current exact-constraint corpus intake, source-byte binding, prompt freezing, raw-response, launch-receipt, cost, and atomic-output helpers plus their tests
+      - cached_sota_pair(), resolve_cached_gguf(), embedded-tokenizer llama.cpp launch, sequential GPU isolation, timeout, cleanup, and telemetry helpers
+      - relevant extraction, model-ingestion, artifact, and evidence specs; exclusions; architecture; traceability; status; changelog; and E2E plan
 
       TASK
-      Preregister and conformance-test source-byte-bound atomic proof obligations, hop-conditioned obligation nodes, dependency edges, joint-sufficiency release, abstention, frozen splits, comparative arms, attacks, acceptance gates, and retirement rules. Implement only bounded fixtures and contracts needed to make the method executable.
+      Generate one content-pinned all-family source-span claim stream. Freeze sources, prompts, seeds, family order, budgets, and stop rules before inference. Store raw rows before any proof extraction or quality filtering.
+
+      MODEL_SPECS
+      - unsloth/Qwen3.6-35B-A3B-GGUF
+      - unsloth/gemma-4-31B-it-GGUF
+      - unsloth/gemma-4-26B-A4B-it-GGUF
+      Legacy small models may smoke-test CPU plumbing only and cannot satisfy family coverage.
 
       CONCRETE STEPS
-      0. PRECONDITIONS: evaluate the structured gate and record source availability and hash, Exp6566 hash, compiler and solver versions, corpus paths and hashes, CPU, RAM, disk, protected-file hashes, and no-LLM/no-hardware status.
-      1. Add or confirm REQ-* and SCENARIO anchors for byte-span identity, hop-conditioned obligations, whitelisted typed relations, compiler ownership, graph acyclicity or explicit cycle handling, joint coverage, exact release, abstention, immutable splits, and atomic output. Write tests first.
-      2. Freeze the atomic node schema: node ID, composed-claim ID, hop index, sub-question, source hash, byte offsets, source bytes hash, typed variables, whitelisted relation, compiler version, executable obligation hash, exact result, counterexample, and action.
-      3. Freeze the dependency-edge schema: parent and child IDs, relation type, required or optional status, ordering rule, coverage role, and provenance. Define joint sufficiency as a deterministic reducer over required nodes and edges.
-      4. Freeze no-filter, atomic-span-only, and hop-conditioned-joint arms. Match corpus, raw responses, parser, compiler, threshold, source bytes, seed, and charged cost. Freeze content-hashed train, calibration, and held units before any live result.
-      5. Add hand-checkable conformance fixtures for valid single-hop, valid two-hop, valid branched claim, missing hop, wrong span, unsupported relation, contradictory nodes, disconnected graph, duplicate node, and cyclic dependency. Every unsafe case must abstain.
-      6. Freeze acceptance gates: exact-certified composed-claim coverage must improve over atomic-only; precision must be noninferior; unsafe release must be zero; lineage and costs must be complete. Freeze repeat-retirement if the new graph adds no held coverage or repeats zero exact semantics.
-      7. Attack schema-valid semantic-invalid nodes, source-offset drift, omitted hops, optional-edge laundering, graph cycles, duplicate support, model self-citation, post-outcome decomposition, threshold changes, source leakage, and exact-check bypass.
-      8. Set joint_sufficiency_method_ready_score=1.0 only when sources, schemas, reducers, splits, fixtures, attacks, gates, and retirement rules are frozen and all conformance rows replay.
-      9. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row consistency, adversarial verification, applicable extraction E2E checks, and git status.
+      0. PRECONDITIONS: evaluate the structured gate and record its expected and observed value, upstream path and hash, corpus commit and license, source-file hashes, split, sample count, CPU, RAM, disk, CUDA state, per-GPU processes, model receipts, seeds, budgets, and protected-file hashes. Stop closed when the gate fails.
+      1. Add or confirm REQ-* and SCENARIO anchors for immutable source intake, frozen prompts, all-family local inference, raw-before-derived writes, failure retention, model lineage, cost accounting, sequential unload, and atomic output. Write focused tests first.
+      2. Select a bounded, content-pinned corpus slice with exact source bytes and enough multi-hop and constraint-bearing examples to test joint sufficiency. Freeze inclusion before inference. Do not choose rows from model outcomes.
+      3. Freeze one prompt template and exact generation budget. For each source unit and mandated family, record source hash, prompt hash, seed, repository/revision/GGUF hash, process command digest, GPU samples, raw response bytes or byte hash plus recoverable path, token counts, latency, stop reason, exit, and stderr hash.
+      4. Write each raw row before parsing. Preserve timeouts, malformed outputs, refusal, empty output, no-claim output, and process failure. Do not retry selectively or drop an inconvenient family.
+      5. Run only bounded, preregistered segmentation needed to identify candidate claim spans. Store diagnostics as derived fields. Do not compile exact obligations, tune prompts, or release claims in this task.
+      6. Recompute charged cost and family coverage from rows. Attack source aliasing, corpus drift, prompt changes, seed changes, duplicate raw output, hidden retries, family substitution, failure filtering, output-path loss, cross-model residency, and aggregate readiness with one family absent.
+      7. Set top-level immutable_claim_stream_ready_score=1.0 only when all three families have qualified rows, raw lineage is complete, at least one claim-bearing row exists per family, failures remain represented, costs recompute, and protected files are unchanged. Poor claim quality is an honest stream result, not a readiness block.
+      8. If the structured gate fails, write a terminal blocked artifact with gate_check_summary naming v571_flagship_evidence_ready_score and the observed value. If the same upstream-evidence block as Exp6568 repeats, activate retirement.
+      9. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row consistency, artifact convention audit, adversarial verification, applicable live-model E2E checks, and git status.
 
-      Required deliverable: {project_root}/results/experiment_6574_joint_sufficiency_method_contract.json.
+      Required deliverable: {project_root}/results/experiment_6576_immutable_flagship_source_span_stream_v3.json.
       REQUIRED ARTIFACT FIELDS:
         status:
-          principle: "The preregistration must end terminally before outcome-bearing extraction."
+          principle: "The source stream closes terminally even when the gate or one family fails."
         honest_verdict:
-          principle: "The verdict states whether joint sufficiency is executable and frozen."
+          principle: "The verdict states stream completeness without claiming extraction quality."
         verdict_class:
-          principle: "Method readiness is infrastructure evidence, not positive science."
+          principle: "Stream readiness remains null, partial, blocked, or disqualified evidence."
         gate_check_summary:
-          principle: "A blocked contract names the missing upstream field or source receipt."
-        source_review_receipts:
-          principle: "Primary-source identifiers, dates, and hashes anchor the imported control."
-        atomic_obligation_node_schema:
-          principle: "Each node binds a hop-conditioned claim to source bytes and compiler-owned semantics."
-        dependency_edge_and_joint_reducer_contract:
-          principle: "Composed release needs explicit required edges and a deterministic sufficiency reducer."
-        frozen_split_and_arm_commitment:
-          principle: "Content-hashed units and matched arms prevent retrospective method changes."
-        conformance_rows:
-          principle: "Hand-checkable positive and abstention fixtures prove the method is executable."
-        extraction_acceptance_and_retirement_gates:
-          principle: "Coverage cannot hide lower precision, unsafe release, lost lineage, or repeated zero semantics."
-        joint_sufficiency_method_ready_score:
-          principle: "This exact binary field gates the flagship stream and extractor."
-        per_unit_rows:
-          principle: "Every source and conformance fixture remains independently checkable."
+          principle: "A block names the exact upstream field and observed value."
+        corpus_receipt:
+          principle: "Commit, license, split, source hashes, and inclusion rules prevent benchmark drift."
+        model_specs:
+          principle: "All three mandated families are explicit and smoke substitutions are excluded."
+        model_revision_and_hash_receipts:
+          principle: "Every response binds to repository, revision, GGUF bytes, and embedded tokenizer."
+        rows:
+          principle: "Each source-family unit carries raw, process, token, timing, cost, and failure metrics."
+        raw_response_receipts:
+          principle: "Immutable output bytes precede parsing and preserve failures."
+        process_and_gpu_receipts:
+          principle: "Actual sequential CUDA execution is recheckable per family."
+        parser_diagnostic_rows:
+          principle: "Segmentation failures remain diagnostics and cannot silently filter the stream."
+        immutable_claim_stream_ready_score:
+          principle: "This exact top-level binary field gates proof extraction."
         aggregate_row_recomputation:
-          principle: "Readiness derives only from frozen source and fixture rows."
+          principle: "Coverage, counts, latency, and cost derive only from emitted rows."
         preconditions_checked:
-          principle: "Source, tool, and corpus receipts separate prerequisite loss from method failure."
+          principle: "Gate, data, resource, and model receipts distinguish blocks from stream outcomes."
         protected_files_unchanged:
-          principle: "The SOTA contract preserves protected orchestration files."
+          principle: "The task preserves both protected orchestration files."
         inference_substrate:
-          principle: "This is literature-grounded local conformance with no model inference."
+          principle: "The live local llama.cpp path is explicit for structural verification."
         verifier_is_oracle:
-          principle: "Exact fixture checks are oracle authority and cannot create a scientific positive."
+          principle: "This task creates evidence and makes no verifier-backed utility claim."
         field_provenance:
-          principle: "Every field points to source text, schema, fixture, compiler output, or reducer."
+          principle: "Every aggregate names raw rows, hashes, and reducer code."
         duration_s:
-          principle: "Monotonic time exposes a contract that skipped source or fixture work."
+          principle: "Monotonic runtime reveals truncated model or corpus work."
         tests_run:
-          principle: "Named tests prove schemas and reducers execute."
+          principle: "Named tests, exits, and durations establish reproducibility."
         reproducibility_checksum:
-          principle: "A final hash protects the preregistration."
-      Set inference_substrate=primary_source_joint_sufficiency_preregistration_and_local_conformance_no_llm and verifier_is_oracle=true. Use verdict_class=null when ready, partial when usable but incomplete, blocked for missing prerequisites, and disqualified for retrospective method changes.
+          principle: "A final hash protects the terminal stream manifest."
+      Set inference_substrate=live_llm_inference, verifier_is_oracle=false, and explicit seeds. A complete immutable stream uses verdict_class=null; it does not use positive.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6574_joint_sufficiency_method_contract --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6576_immutable_flagship_source_span_stream_v3 --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6577-flagship-source-stream-independent-audit
+    milestone: "2026.08.571"
+    deliverable: results/experiment_6577_flagship_source_stream_independent_audit.json
+    title: "Independent immutable flagship source-stream audit"
+    priority: high
+    track: independent-audit
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 60
+    agent_type: codex
+    model: gpt-5.6-sol
+    prior_failures:
+      - experiment_id: exp6234-fresh-flagship-constraint-event-stream
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp6234 attempted gated two-family stream generation. Exp6577 performs no generation or LLM inference. It independently audits Exp6576's immutable three-family rows and emits an exact missing-input diagnosis when the stream is unavailable."
+        retire_if_same_verdict: true
+      - experiment_id: exp6568-immutable-source-span-claim-stream
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp6568 attempted the upstream live source-span stream and failed its admission gate. Exp6577 is a downstream replay audit of the new Exp6576 stream contract. It recomputes claims from raw rows and does not reuse Exp6568's blocked artifact or technique."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6576 should contain immutable source and response rows from all three mandated families. This audit always runs. It must diagnose a missing or blocked upstream artifact without consuming a model and must not trust upstream aggregate fields. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, and the V571 roadmap document
+      - {project_root}/results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json and the expected {project_root}/results/experiment_6576_immutable_flagship_source_span_stream_v3.json
+      - source-byte, raw-response, model-lineage, process-receipt, cost, checksum, duplicate, and row-reducer audit helpers plus tests
+      - {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/adversarial_verify.py, {project_root}/scripts/artifact_convention_audit.py, and relevant evidence specs and E2E checks
+
+      TASK
+      Independently replay the immutable source-stream contract. Recompute every coverage and cost claim from raw rows. Detect hidden filtering, duplicates, prompt drift, model substitution, and missing failure rows. Emit the exact top-level gate field required by Exp6578.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record expected artifact paths, existence, hashes, schema versions, disk, Python, audit-tool versions, protected-file hashes, and whether raw response bytes or recoverable content-addressed paths are present. Do not synthesize missing rows.
+      1. Add or confirm REQ-* and SCENARIO anchors for independent stream replay, missing-input diagnosis, all-family coverage, failure retention, duplicate detection, aggregate recomputation, and atomic output. Write focused tests first.
+      2. Recompute corpus commit, source hashes, prompt hashes, model repository/revision/GGUF hashes, family coverage, seeds, order, raw-response hashes, stop reasons, process exits, token totals, latency, and charged cost without importing Exp6576 aggregates.
+      3. Verify raw rows were recorded before parser-derived fields where receipts permit. Confirm every timeout, malformed output, refusal, empty output, and process failure remains in denominators.
+      4. Attack source aliases, duplicate units, copied responses across models, selective retries, hidden row drops, legacy-model substitution, inconsistent family labels, post-outcome prompt changes, null-only rows, missing content paths, and aggregate/row contradictions.
+      5. Emit one audit row per expected source-family unit and one attack row per invariant. Set top-level claim_stream_audit_ready_score=1.0 only when all eligible rows replay, all families are present, failures remain visible, and upstream readiness recomputes.
+      6. If Exp6576 is missing or blocked, write honest_verdict beginning blocked_ and gate_check_summary with the missing path or exact failed field and observed value. Do not call missing science null.
+      7. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, row consistency, artifact convention audit, adversarial verification, applicable evidence E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6577_flagship_source_stream_independent_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The independent audit terminates even when upstream evidence is absent."
+        honest_verdict:
+          principle: "The verdict states whether lineage and coverage independently replay."
+        verdict_class:
+          principle: "The audit uses only null, partial, blocked, or disqualified classes."
+        gate_check_summary:
+          principle: "A block names the exact missing artifact or failed field and observed value."
+        upstream_artifact_receipt:
+          principle: "Path, hash, status, and schema bind the object under audit."
+        rows:
+          principle: "Every expected source-family unit carries independently recomputed metrics."
+        failure_retention_rows:
+          principle: "Failure classes cannot vanish from an aggregate denominator."
+        duplicate_and_drift_attack_rows:
+          principle: "Aliases, copied output, prompt drift, and selective retries are tested explicitly."
+        claim_stream_audit_ready_score:
+          principle: "This exact top-level binary field gates semantic-block extraction."
+        aggregate_row_recomputation:
+          principle: "Every audit headline derives from emitted rows."
+        preconditions_checked:
+          principle: "Input and tool receipts distinguish a block from a failed replay."
+        protected_files_unchanged:
+          principle: "The audit preserves both protected orchestration files."
+        inference_substrate:
+          principle: "This is immutable artifact replay with no new LLM inference."
+        verifier_is_oracle:
+          principle: "The audit is evidence authority and therefore cannot create positive science."
+        field_provenance:
+          principle: "Each field identifies raw rows, hashes, and independent reducer code."
+        duration_s:
+          principle: "Monotonic duration exposes skipped replay or attack work."
+        tests_run:
+          principle: "Named commands and exits make the audit reproducible."
+        reproducibility_checksum:
+          principle: "A final hash detects audit mutation."
+      Set inference_substrate=immutable_source_stream_independent_replay_no_llm and verifier_is_oracle=true. A clean audit uses verdict_class=null, never positive.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6577_flagship_source_stream_independent_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6578-semantic-block-joint-proof-extractor-v3
+    milestone: "2026.08.571"
+    deliverable: results/experiment_6578_semantic_block_joint_proof_extractor_v3.json
+    title: "Semantic-block joint proof extractor v3"
+    priority: critical
+    track: exact-verification
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 240
+    gated_on:
+      - upstream: exp6575-v571-clean-evidence-and-flagship-qualification
+        artifact_field: joint_sufficiency_method_replay_ready_score
+        op: "=="
+        value: 1.0
+      - upstream: exp6576-immutable-flagship-source-span-stream-v3
+        artifact_field: immutable_claim_stream_ready_score
+        op: "=="
+        value: 1.0
+      - upstream: exp6577-flagship-source-stream-independent-audit
+        artifact_field: claim_stream_audit_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT
+      V570 froze source-byte obligation nodes, dependency edges, exact releases, and attacks. V571 adds four semantic-block well-formedness conditions from arXiv:2608.19475: acyclicity, single rule ownership, constraint domination, and totality or ambiguity-stop. The task compares release arms on one immutable all-family stream. Generated nodes and spans are proposals; only existing whitelisted exact checkers may release a claim. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V571 roadmap document
+      - {project_root}/results/experiment_6574_joint_sufficiency_method_contract.json through {project_root}/results/experiment_6577_flagship_source_stream_independent_audit.json
+      - source-span binding, obligation node/edge schema, exact compiler registry, joint-sufficiency reducer, abstention, cost, and attack helpers plus tests
+      - current exact verifier, Z3, constraint graph, model-launch, raw-row, artifact, and row-reducer modules
+      - relevant capability specs, exclusion entries for generated ConstraintIR and answer transport, architecture, traceability, status, changelog, and E2E plan
+
+      TASK
+      Implement and evaluate semantic-block joint proof extraction on the immutable flagship stream. Compare no filter, atomic-span-only support, and hop-conditioned joint graph support under matched rows and budgets. Enforce the four well-formedness conditions before release.
+
+      MODEL_SPECS
+      - unsloth/Qwen3.6-35B-A3B-GGUF
+      - unsloth/gemma-4-31B-it-GGUF
+      - unsloth/gemma-4-26B-A4B-it-GGUF
+      Use these local families for bounded proposal extraction on their own immutable responses. A smoke model cannot carry a result.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: evaluate all structured gates and record expected and observed values, upstream paths and hashes, compiler registry hash, frozen method hash, corpus and raw-row hashes, CPU, RAM, disk, CUDA state, model receipts, seeds, arm budgets, and protected-file hashes. Stop closed if any gate fails.
+      1. Add or confirm REQ-* and SCENARIO anchors for semantic blocks, dependency edges, source ownership, acyclicity, single rule ownership, constraint domination, totality or ambiguity-stop, exact compiler ownership, matched arms, abstention, and atomic output. Write tests first.
+      2. Freeze the three arms and split before proposal inference. Use the same source-family units and budgets. The no-filter arm releases its candidate, the atomic arm requires independently supported atomic nodes, and the graph arm additionally requires all needed hops and all four well-formedness conditions.
+      3. Produce bounded proposed blocks, source spans, edges, rules, decisions, and explicit open questions from each mandated local family. Preserve raw proposal bytes and parsing failures. Do not generate or repair full ConstraintIR.
+      4. Bind each node to immutable source bytes. Dispatch only to a frozen whitelisted exact compiler/checker. Record verifier_is_oracle, checker version, obligation hash, result, ownership, and release reducer input. Unsupported semantics abstain.
+      5. Require graph acyclicity, one owner per exact rule, a governing constraint on every released decision path, and total coverage or explicit ambiguity-stop. Missing nodes, edges, sources, rules, or checks must abstain.
+      6. Emit matched per-unit results for precision, exact-certified composed-claim coverage, unsafe release, abstention, graph validity, hop coverage, parser failure, latency, token use, and charged cost. Use paired uncertainty or exact paired counts where valid.
+      7. Attack wrong spans, missing hops, cycles, duplicate rule ownership, undominated decisions, hidden open questions, unsupported checker dispatch, source aliasing, model self-certification, family leakage, post-outcome graph edits, and aggregate claims contradicted by rows.
+      8. Set top-level joint_proof_candidate_ready_score=1.0 only if the graph arm improves preregistered exact-certified composed-claim coverage over atomic-only without lower precision, unsafe release, lineage loss, or cost-bound failure. Exact-oracle-defined success must use verdict_class=circular_positive.
+      9. If a gate fails, write a blocked artifact with gate_check_summary naming each failed check and observed value. Write one terminal artifact atomically and run focused tests, lint, spec coverage, row consistency, artifact convention audit, adversarial verification, applicable exact-verification E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6578_semantic_block_joint_proof_extractor_v3.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The comparative extractor closes terminally for success, null, block, or disqualification."
+        honest_verdict:
+          principle: "The verdict states coverage, precision, safety, lineage, and cost disposition."
+        verdict_class:
+          principle: "Oracle-defined gains travel as circular_positive rather than positive."
+        gate_check_summary:
+          principle: "A block names every failed upstream field and observed value."
+        model_specs:
+          principle: "Every proposal family is mandated and no smoke model carries the comparison."
+        model_revision_and_hash_receipts:
+          principle: "Proposal rows bind to exact local GGUF and tokenizer identity."
+        arm_contract:
+          principle: "No-filter, atomic-only, and joint-graph arms have frozen matched budgets."
+        rows:
+          principle: "Each source-family-arm unit carries release, precision, coverage, safety, graph, and cost metrics."
+        semantic_block_rows:
+          principle: "Blocks, edges, owners, constraints, decisions, and open questions remain inspectable."
+        exact_obligation_and_release_rows:
+          principle: "Every release traces through source bytes, exact checks, and the frozen reducer."
+        graph_well_formedness_rows:
+          principle: "Acyclicity, single ownership, domination, and totality are checked per graph."
+        attack_rows:
+          principle: "Missing-hop, wrong-span, cycle, ownership, domination, and authority attacks fail closed."
+        joint_proof_candidate_ready_score:
+          principle: "This top-level score records preregistered comparative success without self-certification."
+        aggregate_row_recomputation:
+          principle: "Every headline and delta derives from paired per-unit rows."
+        uncertainty_and_sample_size:
+          principle: "Paired counts, intervals, and denominators prevent one-win promotion."
+        preconditions_checked:
+          principle: "Gate, model, compiler, data, and resource receipts separate blocks from outcomes."
+        protected_files_unchanged:
+          principle: "The task preserves both protected orchestration files."
+        inference_substrate:
+          principle: "Local llama.cpp proposal inference and exact post-check are declared separately."
+        verifier_is_oracle:
+          principle: "The exact checker defines certified release and makes any gain circular."
+        field_provenance:
+          principle: "Every aggregate names source rows, graph hashes, checker receipts, and reducer."
+        duration_s:
+          principle: "Monotonic duration exposes truncated proposal or exact-check work."
+        tests_run:
+          principle: "Named commands, exits, and durations make the experiment reproducible."
+        reproducibility_checksum:
+          principle: "A final content hash protects the terminal comparison."
+      Set inference_substrate=live_llm_inference_plus_exact_joint_graph_verification, verifier_is_oracle=true, and explicit seeds. Use circular_positive for an accepted gain, null for no gain, partial for incomplete but usable evidence, blocked for missing prerequisites, and disqualified for invalid authority or provenance.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6578_semantic_block_joint_proof_extractor_v3 --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
