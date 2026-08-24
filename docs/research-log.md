@@ -6304,3 +6304,10 @@ The critical path for milestone .250:
 - theme: an independent audit concentrated a short mixed compute-and-synthesis execution window
 - key result: the compute tail is identified, but its phase cause, task-window GPU efficiency, and any missed parallel multi-model runner dispatch have no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.569
+
+- exp_range: no data available this milestone
+- theme: flagship GGUF admission occupied most of a brief mixed workload reconstructed from file timestamps
+- key result: compute-task GPU idle is classified false; for phase causality, concurrent-model launch, and runner dispatch, no data available this milestone
+- acceptance: no data available this milestone

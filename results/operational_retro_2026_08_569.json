@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.569",
+  "generated_at": "2026-08-24T00:38:16Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 1.3,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Sequential flagship GGUF admission by actual execution",
+      "duration_minutes": 1.18,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V569 evidence lineage, failed-scope, and retirement contract",
+      "duration_minutes": 0.09,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Proof-obligation extraction and graph-Potts preregistration",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Immutable live source-span claim stream on three flagship families",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independent source-span proof-obligation evidence audit",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Five experiments completed in 1.3 reconstructed minutes: three compute-bound and two synthesis-only. Sequential flagship GGUF admission by actual execution was the longest compute item at 1.18 minutes, but the available timing does not identify which phase consumed that interval. The locked classification reports no GPU idle on compute-bound work, while the snapshot cannot establish experiment-level accelerator efficiency.",
+  "bottlenecks_identified": [
+    "Sequential flagship GGUF admission by actual execution consumed the largest observed interval at 1.18 minutes, while the reconstruction provides no phase breakdown to attribute its cost.",
+    "Two compute-bound entries are recorded at 0.0-minute resolution, limiting useful comparison within the compute workload.",
+    "The GPU evidence is a point-in-time monitor snapshot without experiment-window linkage, so it cannot establish per-task accelerator efficiency."
+  ],
+  "improvements_suggested": [
+    "Record steady-clock phase durations and task-tagged GPU samples for every compute-bound experiment.",
+    "Add a configurable inference-batching benchmark, and retain batching only if milestone-local timings improve.",
+    "Emit model-count, device-assignment, and runner-selection receipts before each compute launch so DualGPURunner applicability is directly auditable.",
+    "Schedule work on both devices only when independent models can run concurrently; keep a single GGUF inference task on one GPU."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Benchmark configurable inference batches with before-and-after task timings.",
+    "Attach phase-level clocks and GPU samples to the active experiment identifier.",
+    "Capture pre-launch model-count and runner-selection receipts, enabling multi-device dispatch only for concurrent multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The record ranks all five experiments, but reconstructed timing cannot explain phase causality and the GPU snapshot is not task-window evidence. Parallel-model launch and runner-dispatch evidence: no data available this milestone; the savings estimate stays at zero because the record contains no timed alternative."
+}
