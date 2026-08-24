@@ -283,6 +283,96 @@ negative about either model — nothing was measured. But a reopen of exp6582
 also needs a free GPU, and the red suite is a bigger finding than either
 experiment.
 
+## 8. Addendum (same day): the zero-terminal-rows question
+
+A follow-up asked why a live run produces zero authentic terminal rows, on the
+premise that `preconditions_checked` is absent from the artifacts and that no
+precondition failed. **That premise is false, and it traces to the incorrect
+manifest entry named in §5.** Verified with `json.load` on both artifacts:
+
+```
+'preconditions_checked' in artifact  : True   (both; 29 keys each)
+all_required_preconditions_available : False  (both)
+failed_preconditions                 : exp6581 ['verification_commands']
+                                       exp6582 ['idle_supported_gpu','verification_commands']
+```
+
+The aggregate's own checks dict agrees: `checks.preconditions` is **False** in
+both — it reads `preconditions_checked.all_required_preconditions_available`
+(`6581:969-972`).
+
+### Q1 — what makes a row "authentic terminal"
+
+`_row_is_authentic()` at `6581:787`. Applied per expected source unit at
+`6581:868-870`, producing the `authentic` list. Two consumers:
+
+- `"authentic_terminal_rows": exact_coverage and all(authentic)` (`6581:949`)
+- `"authentic_terminal_row_count": sum(authentic)` (`6581:979`)
+
+Every field in `aggregate_row_recomputation` is derived from `rows`
+(`6581:977-991`): `terminal_row_count = len(rows)`, and the token, latency and
+`charged_cost` totals are sums over `rows`.
+
+### Q2 — none produced, not produced-then-rejected
+
+Decisive, because `terminal_row_count` and `authentic_terminal_row_count` are
+separate counters:
+
+| Counter | exp6581 | exp6582 |
+|---|---|---|
+| `expected_unit_count` | 4 | 4 |
+| `terminal_row_count` | **0** | **0** |
+| `authentic_terminal_row_count` | 0 | 0 |
+| `claim_bearing_row_count` / `failure_row_count` | 0 / 0 | 0 / 0 |
+| `prompt` / `response` / `total_token_count` | 0 / 0 / 0 | 0 / 0 / 0 |
+| `latency_s` / `charged_cost` | 0 / 0 | 0 / 0 |
+
+Produced-then-rejected would show `terminal_row_count > 0` with
+`authentic_terminal_row_count == 0`. Both are 0. Zero tokens and zero latency
+confirm no generation ever ran. `charged_cost: 0` is not a hint of rejection —
+it is a sum over an empty list.
+
+The cause is the guard in §1: `rows` is initialized empty, `_run_live_shard` is
+never called, and `model_process_started` stays `false`. **No GPU work
+occurred in either run.** The 927s / 2411s is the test suite (§2).
+
+### Q3 — the verdict is not lying
+
+"All structured gates passed" and "precondition_failed" are not in conflict.
+They are the two arms of one branch (`6581:1941-1942`, `6582:509-510`):
+
+```python
+structured_failed = any(row.get("passed") is not True for row in gates)
+reason = "structured_gate_failed" if structured_failed else "precondition_failed"
+```
+
+`gates` is only the two upstream artifact field checks (exp6579, exp6580).
+Both passed, so `structured_failed` is False, so the reason is
+`precondition_failed` — which is exactly what `failed_preconditions` records.
+The verdict string is accurate. What misleads is that `gate_check_summary`
+covers upstream gates only, while the precondition set lives in a different
+field; reading the first and not the second suggests nothing failed.
+
+**Cheap fix worth making:** have the blocked report name the failed
+preconditions in the verdict or a top-level field, so a reader does not have
+to open `preconditions_checked` to learn which of eleven checks failed.
+
+### New finding: several aggregate checks pass vacuously on zero rows
+
+`raw_receipts`, `checkpoints`, `diagnostics`, `costs_recomputed`,
+`failures_retained` are `all(...)` / `len(x) == len(rows)` over empty lists
+(`6581:912-934`). With `rows == []` they are all True. So the artifact reports
+ten to twelve passing checks for a run that did nothing. `ready_score` is still
+0.0 because the conjunction includes the checks that do fail, but the per-check
+detail reads far healthier than the run was. This is the QA-layer
+"green because there was nothing to check" pattern and is worth a guard.
+
+### Corrections carried in from the follow-up
+
+- The conductor poisoned and re-ran **twice**, both exp6582, not ten times.
+- exp6581 is **un-retired** (`aaf899eca4`); only exp6582 remains retired. This
+  note already said so in §5 and does not treat exp6581 as a dead direction.
+
 ## Cross-references
 
 - `results/experiment_6581_qwen36_flagship_source_shard.json`
