@@ -46,6 +46,7 @@ import numpy as np
 import pytest
 
 from carnot.agentic import arc_executable_world_model as e3
+from carnot.agentic import arc_llm_reinduction as reinduction
 from carnot.agentic.arc_executable_world_model import Transition, WorldModelVerifier
 from carnot.agentic.arc_llm_reinduction import execute_bounded_llm_reinduction
 from carnot.experiment_5760_cegis_refinement_induction_ab import _summarize_cell
@@ -648,6 +649,7 @@ class _ScriptedProposer:
 
 def _run_loop(monkeypatch, tmp_path: Path, sources: list[str]):
     monkeypatch.setattr(e3, "E3_DIR", tmp_path)
+    monkeypatch.setattr(reinduction, "MAX_REFINEMENT_ROUNDS", 3)
     rows, root = _corpus()
     proposer = _ScriptedProposer(tmp_path, GAME, sources)
     result = execute_bounded_llm_reinduction(

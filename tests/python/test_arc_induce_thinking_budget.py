@@ -29,6 +29,7 @@ class _CapturingProposer(LocalGGUFProposer):
         self.repo_substr = "test"
         self.port = 9
         self._seed_base = None
+        self.timeout = 1.0
 
     def sampling_seed(self, attempt: int = 0):  # type: ignore[override]
         return None
