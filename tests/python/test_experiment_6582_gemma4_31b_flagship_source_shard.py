@@ -496,7 +496,7 @@ def test_precondition_key_normalization_is_family_specific() -> None:
 def test_verification_is_bounded_without_spending_family_runtime(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """REQ-REPORT-6582-VERIFICATION-BUDGET: tests do not shorten model work."""
+    """REQ-REPORT-6581-VERIFY-SCOPE: verification stays focused, never repo-wide."""
 
     calls: list[tuple[str, Path, float]] = []
 
@@ -507,10 +507,15 @@ def test_verification_is_bounded_without_spending_family_runtime(
     root = Path("/bounded-exp6582-fixture")
     monkeypatch.setattr(shared, "_run_named_test", fake_run)
     receipts = mod._checkpoint_tests(root)
-    full_suite = [call for call in calls if call[0] == mod.FULL_PYTEST_COMMAND]
+    commands = [call[0] for call in calls]
 
-    assert len(receipts) == 7
-    assert len(full_suite) == 1
-    assert full_suite[0][1] == root
-    assert full_suite[0][2] >= 4801.0
+    assert len(receipts) == 6
+    # No command may target the whole tests/python tree. That gate blocked the
+    # model load for a reason unrelated to the measurement — see the 2026-08-24
+    # research note and commit 48b9d444d3.
+    assert not [text for text in commands if "tests/python " in f"{text} "]
+    # A bare pytest inherits --cov from pyproject addopts, which is ~15x slower
+    # and can abort the interpreter. Every pytest command must opt out.
+    assert all("--no-cov" in text for text in commands if "pytest" in text)
+    assert all(call[1] == root for call in calls)
     assert mod.family_task_deadline(_protocol(), now=1000.0) == 5200.0

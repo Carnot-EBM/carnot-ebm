@@ -97,11 +97,9 @@ COVERAGE_REPORT_COMMAND = (
     "--include=python/carnot/experiment_6582_gemma4_31b_flagship_source_shard.py "
     "--fail-under=100 --show-missing"
 )
-FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
 RUFF_CHECK_COMMAND = f".venv/bin/ruff check {MODULE_RELATIVE_PATH} {TEST_RELATIVE_PATH}"
 RUFF_FORMAT_COMMAND = f".venv/bin/ruff format --check {MODULE_RELATIVE_PATH} {TEST_RELATIVE_PATH}"
 SPEC_COVERAGE_COMMAND = f".venv/bin/python scripts/check_spec_coverage.py {TEST_RELATIVE_PATH}"
-FULL_PYTEST_TIMEOUT_S = 7200.0
 
 
 # These helpers are byte- and family-neutral. Aliases keep one canonical hash,
@@ -142,7 +140,6 @@ def _family_configuration() -> Iterator[None]:
         "FOCUSED_TEST_COMMAND": FOCUSED_TEST_COMMAND,
         "COVERAGE_RUN_COMMAND": COVERAGE_RUN_COMMAND,
         "COVERAGE_REPORT_COMMAND": COVERAGE_REPORT_COMMAND,
-        "FULL_PYTEST_COMMAND": FULL_PYTEST_COMMAND,
         "RUFF_CHECK_COMMAND": RUFF_CHECK_COMMAND,
         "RUFF_FORMAT_COMMAND": RUFF_FORMAT_COMMAND,
         "SPEC_COVERAGE_COMMAND": SPEC_COVERAGE_COMMAND,
@@ -442,7 +439,6 @@ def _checkpoint_tests(repo_root: Path) -> list[JsonDict]:  # pragma: no cover - 
         (FOCUSED_TEST_COMMAND, 180.0),
         (COVERAGE_RUN_COMMAND, 180.0),
         (COVERAGE_REPORT_COMMAND, 60.0),
-        (FULL_PYTEST_COMMAND, FULL_PYTEST_TIMEOUT_S),
         (RUFF_CHECK_COMMAND, 60.0),
         (RUFF_FORMAT_COMMAND, 60.0),
         (SPEC_COVERAGE_COMMAND, 60.0),

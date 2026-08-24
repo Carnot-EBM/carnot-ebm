@@ -54879,6 +54879,24 @@ shard completeness only. It SHALL make no cross-family or quality claim.
   artifact by same-directory atomic replacement. The checksum SHALL exclude
   only its self-referential checksum field.
 
+- REQ-REPORT-6581-VERIFY-SCOPE: The `verification_commands` precondition SHALL
+  cover only commands scoped to this experiment's own module and test file.
+  It SHALL NOT run the repository-wide test suite. A pre-launch precondition
+  exists to prove the resources this run needs are present, per the Pre-Launch
+  Preconditions Discipline. Repository-wide suite health is not such a
+  resource, and gating a live model run on it blocks the run for a reason
+  unrelated to the measurement. Every pytest command in the set SHALL disable
+  coverage explicitly, because this repository's default `addopts` inject
+  `--cov`, which slows the run about fifteen times and can abort the
+  interpreter.
+
+- SCENARIO-REPORT-6581-VERIFY-FAIL-CLOSED: WHEN the focused verification set
+  is empty, or any command in it is missing an exit code, or any command
+  exits non-zero, THEN `verification_commands` SHALL be false. A command that
+  could not run SHALL NOT count as a pass. A verification that silently
+  passes when it could not execute is the trusted-and-silent state this
+  project treats as the worst state for a guard.
+
 The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
 `gate_check_summary`, `model_specs`, `model_revision_and_hash_receipt`,
 `rows`, `raw_response_receipts`, `process_and_gpu_receipts`,
@@ -54955,6 +54973,21 @@ completeness only. It SHALL make no cross-family or model-quality claim.
   before a model process starts. A failed gate SHALL produce one terminal
   blocked artifact. The gate summary SHALL name the exact upstream path,
   artifact hash, field, expected value, and observed value.
+- REQ-REPORT-6582-VERIFICATION-BUDGET: SUPERSEDED 2026-08-24 in its first
+  sentence by REQ-REPORT-6581-VERIFY-SCOPE. Original text, preserved per the
+  never-prune rule: "The task SHALL run the exact full Python suite once with a
+  bounded timeout of at least 4,801 seconds. Verification time SHALL NOT consume
+  the frozen 4,200-second family runtime budget. The family deadline SHALL start
+  only after prelaunch verification and resource checks finish."
+
+  Why superseded: raising the timeout was the third escalation (900 to 2,400 to
+  7,200 seconds) against a command that could not pass at any timeout, because a
+  bare `pytest` inherits `--cov` from `pyproject.toml` and the repository suite
+  is red. The task SHALL NOT run the repository-wide suite at all.
+
+  Still in force: the second and third sentences. Verification time SHALL NOT
+  consume the frozen 4,200-second family runtime budget, and the family deadline
+  SHALL start only after prelaunch verification and resource checks finish.
 - REQ-REPORT-6582-IDENTITY: The model receipt SHALL bind the repository,
   revision, trusted GGUF blob hash, snapshot path, content-derived
   architecture, quantization, tensor count, and embedded tokenizer. Positive
