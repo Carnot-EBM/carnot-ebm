@@ -343,6 +343,25 @@ def test_exact_os_command_match_rejects_the_fork_exec_receipt_race() -> None:
     )
 
 
+# REQ-REPORT-6573-CUDA / SCENARIO-REPORT-6573-AUTHENTIC: a stable live
+# command must replace a transient launch receipt after the server is healthy.
+def test_stable_process_identity_replaces_transient_launch_receipt() -> None:
+    command = exp.build_server_command(Path("/bin/llama-server"), Path("/cache/blob"), 18080)
+    transient = {
+        "pid": 7100,
+        "parent_pid": 7000,
+        "process_start_ticks": 90_000,
+        "command": ["python", "-m", "carnot.experiment_6573"],
+        "verified": True,
+    }
+    stable = {**transient, "command": command}
+
+    receipt = exp.select_process_identity_receipt(transient, stable, command)
+
+    assert receipt == stable
+    assert exp.command_matches_expected(receipt["command"], command) is True
+
+
 # REQ-REPORT-6573-IDENTITY / SCENARIO-REPORT-6573-IDENTITY.
 @pytest.mark.parametrize(
     ("mutation", "failed_check"),

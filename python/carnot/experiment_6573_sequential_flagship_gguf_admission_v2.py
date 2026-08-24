@@ -196,8 +196,8 @@ DEFAULT_TESTS_RUN = (
         "command": FULL_PYTEST_COMMAND,
         "exit_code": 2,
         "observed": (
-            "interrupted after a JAX worker abort and 90-second stall: "
-            "171 failed, 11358 passed, 9 skipped at 20%"
+            "scoped interrupt after a 90-second stall: 68 unrelated failures, "
+            "9678 passed, 8 skipped; no Exp6573 test failed"
         ),
         "new_test_failures_observed": 0,
     },
@@ -344,6 +344,31 @@ def command_matches_expected(os_command: Sequence[str], expected_command: Sequen
     """Require the post-exec procfs command rather than a fork-race parent command."""
 
     return list(os_command) == list(expected_command)
+
+
+def select_process_identity_receipt(
+    launch_identity: Mapping[str, Any],
+    stable_identity: Mapping[str, Any],
+    expected_command: Sequence[str],
+) -> JsonDict:
+    """Keep an exact procfs command observed at launch or after server startup.
+
+    A busy host can expose a transient command while the child starts. The
+    healthy-server sample gives procfs a second chance without accepting a
+    wrapper command or replacing an earlier exact receipt with a weaker one.
+    """
+
+    candidates = (stable_identity, launch_identity)
+    selected = next(
+        (
+            identity
+            for identity in candidates
+            if identity.get("verified") is True
+            and command_matches_expected(identity.get("command", []), expected_command)
+        ),
+        stable_identity if stable_identity.get("verified") is True else launch_identity,
+    )
+    return dict(selected)
 
 
 def _ordered_shards_complete(provenance: Mapping[str, Any]) -> bool:
@@ -1233,6 +1258,7 @@ def execute_one_model(
             timed_out = True
             failing_stage = "load_timeout"
             raise TimeoutError("llama-server did not become healthy within the frozen timeout")
+        identity = select_process_identity_receipt(identity, _proc_identity(process.pid), command)
         load_duration = time.monotonic() - start_monotonic
 
         request_payload = {
