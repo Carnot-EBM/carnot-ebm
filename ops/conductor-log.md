@@ -16376,3 +16376,6 @@ code |
 | 2026-08-24 00:10 UTC | Source-span proof-obligation extraction with exact | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6568-immutable-source-span-claim-stream) |
 | 2026-08-24 00:33 UTC | Independent source-span proof-obligation evidence  | OK | 86 passed, 1 warning in 32.60s |
 | 2026-08-24 00:35 UTC | Source-span proof-obligation extraction with exact | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6568-immutable-source-span-claim-stream) |
+| 2026-08-24 01:50 UTC | Plan milestone 2026.08.570 | OK | 4 tasks proposed |
+| 2026-08-24 01:52 UTC | Source-span proof-obligation extraction with exact | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6568-immutable-source-span-claim-stream) |
+| 2026-08-24 01:52 UTC | Milestone 2026.08.570 activated | OK | 4 tasks queued |
