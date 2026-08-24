@@ -284,7 +284,7 @@ def build_v570_context_rows(
                     "ineligibility_reason": (
                         "V570 carries a stored structural disposition; V571 rebuilds evidence"
                     ),
-                    "readiness_fields_imported": [],
+                    "imported_v570_score_fields": [],
                     "passed": path.is_file() and payload.get("flagged_adversarial") is True,
                 }
             )
@@ -989,7 +989,9 @@ def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
         for row in [metadata_by_id.get(spec["repository_id"], {})]
     ):
         errors.append("metadata_receipt_recomputation_failed")
-    if any(not runtime_receipt_passes(row, metadata) for row in runtimes):
+    if any(
+        (row.get("passed") is True) != runtime_receipt_passes(row, metadata) for row in runtimes
+    ):
         errors.append("runtime_receipt_recomputation_failed")
 
     aggregate = recompute_scores(
