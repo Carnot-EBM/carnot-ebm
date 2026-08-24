@@ -54941,3 +54941,140 @@ a ready artifact uses a null verdict class.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6581 | Implemented (`python/carnot/experiment_6581_qwen36_flagship_source_shard.py`; terminal artifact `results/experiment_6581_qwen36_flagship_source_shard.json`) | Implemented (`tests/python/test_experiment_6581_qwen36_flagship_source_shard.py`) |
+
+### REQ-REPORT-6582: Dense Gemma One-Family Source Shard SHALL Preserve Runtime Evidence
+
+Carnot SHALL run only `unsloth/gemma-4-31B-it-GGUF` for Exp6582. The task
+SHALL replay the frozen Exp6580 source units, prompt, seed, order, token budget,
+stop rules, and timeout. The task SHALL measure runtime and source-shard
+completeness only. It SHALL make no cross-family or model-quality claim.
+
+- REQ-REPORT-6582-GATES: The task SHALL evaluate the Exp6579
+  `v572_decomposition_contract_ready_score` and the Exp6580
+  `v572_source_method_ready_score`. Each observed value SHALL equal `1.0`
+  before a model process starts. A failed gate SHALL produce one terminal
+  blocked artifact. The gate summary SHALL name the exact upstream path,
+  artifact hash, field, expected value, and observed value.
+- REQ-REPORT-6582-IDENTITY: The model receipt SHALL bind the repository,
+  revision, trusted GGUF blob hash, snapshot path, content-derived
+  architecture, quantization, tensor count, and embedded tokenizer. Positive
+  admission SHALL require the dense Gemma `gemma4` architecture. Bounded
+  negative fixtures SHALL reject non-GGUF bytes, a truncated header, a
+  repository mismatch, tokenizer-only content, and a wrong architecture.
+- REQ-REPORT-6582-SOURCE: The task SHALL replay every frozen Exp6580 source
+  unit in manifest order. Each row SHALL bind immutable source bytes, source
+  hash, manifest hash, the family-neutral prompt hash, request bytes, seed,
+  budget, stop rules, and timeout. Model output SHALL not change source
+  selection.
+- REQ-REPORT-6582-RAW-FIRST: The task SHALL atomically write one
+  content-addressed raw terminal checkpoint before claim segmentation for each
+  source unit. Raw bytes SHALL remain recoverable from the terminal row or its
+  checkpoint. Periodic row hashes SHALL expose long-run truncation or later
+  mutation.
+- REQ-REPORT-6582-FRESH-CONTEXT: The task SHALL start one fresh external
+  llama.cpp process for the dense Gemma family. It SHALL send each frozen unit
+  as an independent family-neutral request without prior response history.
+- REQ-REPORT-6582-FAILURES: The task SHALL retain timeout, malformed, refusal,
+  empty, no-claim, and process-failure outcomes. It SHALL not retry, filter, or
+  remove failed rows. Bounded claim-sentence segmentation SHALL remain a
+  derived diagnostic. It SHALL not control row inclusion or readiness.
+- REQ-REPORT-6582-PROCESS: The task SHALL use the GGUF-embedded tokenizer and
+  request CUDA offload for one selected device. Receipts SHALL bind the command
+  digest, verified PID and parent PID, GGUF path, positive offloaded layer
+  count, repeated GPU memory and utilization samples, raw process streams, and
+  one-family residency. The task SHALL not signal unrelated GPU processes.
+- REQ-REPORT-6582-UNLOAD: The task SHALL request worker shutdown after the
+  terminal source row. It SHALL verify process exit, port closure, worker
+  removal from GPU telemetry, and bounded memory recovery. A failed cleanup or
+  recovery check SHALL force readiness to `0.0`.
+- REQ-REPORT-6582-ATTACKS: The artifact SHALL fail closed against legacy-model
+  substitution, stale PID, zero-layer offload, reused output, prompt drift,
+  source aliasing, hidden retry, missing raw bytes, failed-row removal,
+  cross-family residency, and readiness from an incomplete manifest.
+- REQ-REPORT-6582-REDUCER: The
+  `gemma4_31b_family_source_shard_ready_score` SHALL equal `1.0` only when every
+  expected source unit has one authentic terminal row, model identity and CUDA
+  execution pass, at least one claim-bearing output exists, failures remain
+  represented, costs recompute, unload recovers, all attacks pass, and both
+  protected files remain unchanged. Coverage, failures, latency, tokens, and
+  cost SHALL derive only from retained rows. A ready shard SHALL use
+  `verdict_class=null`, never a positive verdict class.
+- REQ-REPORT-6582-ATOMIC: Exp6582 SHALL preserve `research-roadmap.yaml` and
+  `scripts/research_conductor.py`. It SHALL set
+  `inference_substrate=live_llama_cpp_cuda_one_family_source_shard` and
+  `verifier_is_oracle=false`. It SHALL write one validated terminal JSON
+  artifact by same-directory atomic replacement. The checksum SHALL exclude
+  only its self-referential checksum field.
+- REQ-REPORT-6582-RETIREMENT: A structured failure SHALL still produce one
+  terminal artifact. A repeated hard-timeout with no recoverable artifact SHALL
+  activate the roadmap retirement rule.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `model_specs`, `model_revision_and_hash_receipt`, `rows`,
+`raw_response_receipts`, `process_and_gpu_receipts`, `checkpoint_receipts`,
+`parser_diagnostic_rows`, `unload_and_recovery_rows`, `attack_rows`,
+`gemma4_31b_family_source_shard_ready_score`, `aggregate_row_recomputation`,
+`seeds`, `preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6582-GATE-BLOCK: A Failed Gate Closes Without Model Work
+
+**Given** an exact Exp6579 or Exp6580 readiness field is absent or not `1.0`
+**When** Exp6582 evaluates its structured preconditions
+**Then** it writes a blocked terminal artifact that names the observed field
+value and records that no model process started.
+
+#### SCENARIO-REPORT-6582-IDENTITY: Content Rejects Dense Gemma Substitution
+
+**Given** the cached dense Gemma GGUF and the five bounded negative fixtures
+**When** Exp6582 derives metadata from file content and cache provenance
+**Then** only the mandated dense Gemma language-model content can satisfy
+identity.
+
+#### SCENARIO-REPORT-6582-RAW-FIRST: Raw Bytes Precede Diagnostics
+
+**Given** one frozen source unit reaches a terminal generation outcome
+**When** Exp6582 records the outcome
+**Then** an atomic raw checkpoint with recoverable bytes and hashes exists
+before diagnostic claim segmentation begins.
+
+#### SCENARIO-REPORT-6582-FAILURES: Failed Outcomes Remain In Coverage
+
+**Given** one source unit times out or returns another retained failure class
+**When** the aggregate reducer recomputes the shard
+**Then** the unit keeps exactly one terminal row with no retry or filtering.
+
+#### SCENARIO-REPORT-6582-FRESH-CONTEXT: Frozen Units Do Not Share Responses
+
+**Given** one fresh dense Gemma worker serves the bounded family shard
+**When** each unit request is constructed
+**Then** the request contains only the frozen prompt and that unit's immutable
+source bytes, with no prior model response.
+
+#### SCENARIO-REPORT-6582-UNLOAD: Fresh CUDA Runtime Recovers
+
+**Given** one fresh dense Gemma llama.cpp process completed or failed terminally
+**When** Exp6582 closes the runtime
+**Then** the worker exits, its port closes, GPU residency clears, memory returns
+within tolerance, and unrelated processes remain untouched.
+
+#### SCENARIO-REPORT-6582-ATTACKS: Runtime And Row Mutations Fail Closed
+
+**Given** one required substitution, drift, retry, byte-loss, residency, or
+coverage mutation
+**When** Exp6582 recomputes readiness from raw evidence
+**Then** the candidate readiness score is `0.0`.
+
+#### SCENARIO-REPORT-6582-ATOMIC: One Null-Class Artifact Recomputes
+
+**Given** gates, source rows, process receipts, unload, and attacks have ended
+**When** Exp6582 atomically writes its terminal artifact
+**Then** the checksum validates, the readiness field matches the reducer, and a
+ready artifact uses a null verdict class.
+
+## Implementation Status (REQ-REPORT-6582)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6582 | Implemented (`python/carnot/experiment_6582_gemma4_31b_flagship_source_shard.py`; terminal artifact `results/experiment_6582_gemma4_31b_flagship_source_shard.json`) | Implemented (`tests/python/test_experiment_6582_gemma4_31b_flagship_source_shard.py`) |

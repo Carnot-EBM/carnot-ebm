@@ -49,6 +49,7 @@ QWEN_ARCHITECTURE = "qwen35moe"
 RANDOM_SEED = 6581
 INFERENCE_SUBSTRATE = "live_llama_cpp_cuda_one_family_source_shard"
 RESULT_RELATIVE_PATH = Path("results/experiment_6581_qwen36_flagship_source_shard.json")
+RAW_CHECKPOINT_RELATIVE_PATH = Path("results/experiment_6581_qwen36_flagship_source_shard.raw")
 PROTOCOL_RELATIVE_PATH = Path("results/experiment_6580_v572_source_and_joint_method_protocol.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/research-reporting/spec.md")
 MODULE_RELATIVE_PATH = Path("python/carnot/experiment_6581_qwen36_flagship_source_shard.py")
@@ -1581,12 +1582,7 @@ def _run_live_shard(
     command = _server_command(server, Path(model_path), port)
     env = os.environ.copy()
     env["CUDA_VISIBLE_DEVICES"] = str(selected_gpu)
-    checkpoint_dir = (
-        repo_root
-        / "results"
-        / "experiment_6581_qwen36_flagship_source_shard.raw"
-        / f"run-{time.monotonic_ns()}"
-    )
+    checkpoint_dir = repo_root / RAW_CHECKPOINT_RELATIVE_PATH / f"run-{time.monotonic_ns()}"
     before = runtime_helpers._live_gpu_sample(
         repository_id=QWEN_REPOSITORY_ID,
         worker_pid=0,
