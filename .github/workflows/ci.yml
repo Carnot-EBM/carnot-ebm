@@ -98,7 +98,24 @@ jobs:
   python-test:
     name: Python Tests (100% coverage)
     runs-on: ubuntu-latest
-    needs: python-lint
+    # DELIBERATELY NOT `needs: python-lint` (removed 2026-08-24).
+    #
+    # python-lint has been failing continuously, so this job returned SKIPPED
+    # rather than failed on every recent run. Skipped reads as "nothing to see"
+    # in the UI, so nobody noticed the suite had stopped reporting at all. A
+    # 2026-04-14 commit had already abandoned the conductor's own full-suite
+    # branch on the grounds that "Full suite runs via CI" -- which this made
+    # false. The project was left with no full-suite reporter anywhere.
+    #
+    # Lint health and test health are independent signals. A formatting
+    # violation should not hide whether 57,013 tests pass. Gating them together
+    # means the cheaper signal can silence the expensive one, which is exactly
+    # what happened.
+    #
+    # Restoring the dependency is fine ONCE lint is green. As of 2026-08-24 that
+    # is 3,953 ruff errors, 5,437 files needing reformatting, and one blocking
+    # mypy error in the vendored thrml tree -- deliberate work, not a side
+    # effect of this change. See ops/known-issues.md.
     steps:
       - uses: actions/checkout@v4
 
