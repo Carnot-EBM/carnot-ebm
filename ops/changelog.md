@@ -17530,3 +17530,4 @@ ops/test-results.md by the same session.
 - 2026-08-24: Qwen3.6 one-family flagship source shard (⚠️ Blocked) — honest_verdict=blocked_precondition_failed_without_quality_claim; results/experiment_6581_qwen36_flagship_source_shard.json
 - 2026-08-24: Gemma-4-31B one-family flagship source shard (⚠️ Blocked) — honest_verdict=blocked_precondition_failed_without_quality_claim; results/experiment_6582_gemma4_31b_flagship_source_shard.json
 - 2026-08-24: Gemma-4-31B one-family flagship source shard (⚠️ Blocked) — honest_verdict=blocked_precondition_failed_without_quality_claim; results/experiment_6582_gemma4_31b_flagship_source_shard.json
+- 2026-08-24: Gemma-4-26B-A4B one-family flagship source shard (⚠️ Research Finding) — honest_verdict=partial_gemma4_26b_a4b_runtime_or_source_shard_incomplete_without_quality_claim; results/experiment_6583_gemma4_26b_a4b_flagship_source_shard.json
