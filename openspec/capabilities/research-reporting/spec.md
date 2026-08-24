@@ -54342,3 +54342,141 @@ byte-identical, `verifier_is_oracle=true`, and the checksum matches.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6574 | Planned (`python/carnot/experiment_6574_joint_sufficiency_method_contract.py`, terminal artifact `results/experiment_6574_joint_sufficiency_method_contract.json`) | Planned (`tests/python/test_experiment_6574_joint_sufficiency_method_contract.py`) |
+
+### REQ-REPORT-6575: V571 Qualification SHALL Use Only Fresh Runtime And Method-Replay Evidence
+
+Carnot SHALL build Exp6575 as a new V571 evidence root. Exp6575 SHALL show the
+flagged Exp6571, Exp6572, and Exp6573 artifacts only as ineligible context. No
+field from those artifacts SHALL enter a V571 readiness reducer. Exp6574 MAY
+provide the frozen fixture definitions and exact reducer code because its live
+structural verification is clean, but Exp6575 SHALL execute every required
+fixture again and hash the fresh inputs and results.
+
+- REQ-REPORT-6575-FRESH: Every qualification row SHALL be created during the
+  Exp6575 run. The artifact SHALL record the exact path, file hash, stored
+  structural disposition, live structural disposition, and ineligibility
+  reason for each flagged V570 context artifact.
+- REQ-REPORT-6575-METADATA: The producer SHALL run bounded content inspection
+  for all three mandated cached GGUF families. It SHALL also run new negative
+  fixtures for non-GGUF bytes, truncated headers, tokenizer-only GGUFs, wrong
+  repository mappings, and malformed metadata. Each positive row SHALL bind
+  repository, revision, local blob content hash, architecture, quantization,
+  tensor-bearing language-model status, and embedded-tokenizer identity.
+- REQ-REPORT-6575-RUNTIME: The frozen model order SHALL be
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, then
+  `unsloth/gemma-4-26B-A4B-it-GGUF`. The producer SHALL load exactly one family
+  at a time through the native CUDA llama.cpp server and SHALL create a bounded
+  nonempty generation for every family. Legacy small models SHALL NOT satisfy
+  any qualification row.
+- REQ-REPORT-6575-RECEIPTS: Every runtime row SHALL record the external PID,
+  exact command digest, model hash, selected CUDA device, nonzero layer offload,
+  load timing, token timing, repeated GPU memory and utilization samples, raw
+  output hash, stop reason, exit code, and stderr hash. Tokenization SHALL use
+  only GGUF-embedded metadata and the native server.
+- REQ-REPORT-6575-RESIDENCY: A family SHALL qualify only when no other mandated
+  family is task-resident during its run, unrelated GPU work remains untouched,
+  the server exits normally, the port closes, task PIDs disappear, and measured
+  GPU memory recovers before the next family starts.
+- REQ-REPORT-6575-METHOD: The producer SHALL replay Exp6574's valid single-hop,
+  valid multi-hop, missing-hop, wrong-span, and cyclic-graph fixtures with the
+  shipped `joint_sufficiency_reduce` function. The fixture set and expected
+  actions SHALL be frozen before evaluation. Every fixture and result SHALL be
+  content hashed.
+- REQ-REPORT-6575-LINKS: Every headline field SHALL have an evidence-link row
+  that names its exact source-row hashes and deterministic reducer. A missing,
+  duplicate, stale, or non-fresh link SHALL fail readiness closed.
+- REQ-REPORT-6575-ATTACKS: The artifact SHALL contain passing attack rows for
+  stale PIDs, reused output, zero-layer offload, tokenizer-only loads, family
+  substitution, symlink aliases, missing unload, one failed family hidden by an
+  aggregate, missing method fixtures, duration spoofing, and V570 evidence
+  laundering.
+- REQ-REPORT-6575-DURATION: The artifact SHALL declare
+  `inference_substrate=live_llm_inference`. Its monotonic duration SHALL cover
+  the substantive metadata, hashing, runtime, unload, method, link, and live
+  structural checks. The producer SHALL NOT use sleep or a forged duration to
+  reach the live-inference floor. A duration below the current structural floor
+  SHALL set both readiness scores to `0.0` and SHALL disqualify the artifact.
+- REQ-REPORT-6575-REDUCER: `v571_flagship_evidence_ready_score` SHALL be `1.0`
+  only when every fresh positive metadata row, required negative fixture,
+  family runtime row, unload row, required method replay row, protected-file
+  row, evidence-link row, attack row, and live structural check passes.
+  `joint_sufficiency_method_replay_ready_score` SHALL derive only from fresh
+  method fixture rows. Neither reducer SHALL read a V570 readiness field.
+- REQ-REPORT-6575-ATOMIC: Exp6575 SHALL preserve `research-roadmap.yaml` and
+  `scripts/research_conductor.py`, set `verifier_is_oracle=true`, record explicit
+  seeds, and write exactly one terminal JSON artifact through same-directory
+  atomic replacement. Ready output SHALL use `verdict_class=null`; incomplete,
+  blocked, or structurally invalid output SHALL use `partial`, `blocked`, or
+  `disqualified`. The task SHALL never use `positive`.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `v570_ineligible_context_rows`, `rows`, `model_specs`,
+`model_revision_and_hash_receipts`, `process_and_gpu_receipts`,
+`raw_generation_receipts`, `unload_and_recovery_rows`,
+`joint_sufficiency_method_replay_rows`, `evidence_link_rows`,
+`v571_flagship_evidence_ready_score`,
+`joint_sufficiency_method_replay_ready_score`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6575-FLAGGED: Flagged V570 Inputs Stay Outside Readiness
+
+**Given** Exp6571, Exp6572, and Exp6573 have stored structural flags
+**When** Exp6575 builds its V570 context rows and recomputes readiness
+**Then** all three rows are ineligible and no prior readiness value is copied
+into the V571 reducer.
+
+#### SCENARIO-REPORT-6575-METADATA: Fresh Bounded Inspection Fails Closed
+
+**Given** the three content-addressed cached blobs and the required negative
+fixtures
+**When** the content-derived GGUF reader runs during Exp6575
+**Then** all real model rows bind content and repository provenance while every
+negative fixture rejects without reading tensor payload bytes.
+
+#### SCENARIO-REPORT-6575-RUNTIME: Every Mandated Family Runs Alone On CUDA
+
+**Given** the frozen family order, an idle supported GPU, and a CUDA llama.cpp
+build
+**When** Exp6575 executes each family
+**Then** each family has independent process, repeated GPU, embedded-tokenizer,
+bounded generation, normal-exit, and clean-recovery receipts before the next
+family starts.
+
+#### SCENARIO-REPORT-6575-METHOD: The Shipped Joint Reducer Replays Fresh Fixtures
+
+**Given** valid single-hop, valid multi-hop, missing-hop, wrong-span, and cycle
+fixtures
+**When** Exp6575 evaluates them with the shipped Exp6574 reducer
+**Then** the valid fixtures release, unsafe fixtures abstain, and each fresh
+fixture and result hash is present in the replay row.
+
+#### SCENARIO-REPORT-6575-LINKS: Headline Fields Trace To Fresh Row Hashes
+
+**Given** the metadata, runtime, unload, method, protected-file, and attack rows
+**When** the evidence graph is built
+**Then** every required headline field names existing fresh row hashes and the
+exact reducer that derives it.
+
+#### SCENARIO-REPORT-6575-ATTACKS: Evidence Laundering And Runtime Spoofs Fail Closed
+
+**Given** one mutation for each required attack class
+**When** the readiness reducers and validators run
+**Then** no stale, reused, substituted, zero-offload, incompletely unloaded,
+short-duration, missing-fixture, or V570-derived candidate becomes ready.
+
+#### SCENARIO-REPORT-6575-ATOMIC: One Honest Terminal Artifact Recomputes
+
+**Given** the substantive run has ended and protected hashes have been checked
+**When** Exp6575 writes its terminal result
+**Then** both readiness scores recompute only from fresh rows, the live duration
+passes its structural floor, all required fields have provenance, and the final
+checksum matches.
+
+## Implementation Status (REQ-REPORT-6575)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6575 | Planned (`python/carnot/experiment_6575_v571_clean_evidence_and_flagship_qualification.py`, terminal artifact `results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json`) | Planned (`tests/python/test_experiment_6575_v571_clean_evidence_and_flagship_qualification.py`) |

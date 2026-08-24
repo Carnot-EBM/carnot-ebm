@@ -16391,3 +16391,4 @@ code |
 | 2026-08-24 07:01 UTC | Activation replan 1/2: 2026.08.571 | OK | refused roadmap quarantined to roadmap-2026.08.571-refusal1.yaml; replanning wit |
 | 2026-08-24 07:05 UTC | Plan milestone 2026.08.571 | OK | 4 tasks proposed |
 | 2026-08-24 07:08 UTC | Milestone 2026.08.571 activated | OK | 4 tasks queued |
+| 2026-08-24 08:31 UTC | V571 clean evidence and flagship qualification rep | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ssing_required |
