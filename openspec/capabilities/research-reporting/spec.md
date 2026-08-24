@@ -54712,3 +54712,108 @@ files remain byte-identical, and the ready artifact uses a null verdict class.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6579 | Implemented (`python/carnot/experiment_6579_v572_terminal_recovery_and_decomposition_contract.py`, terminal artifact `results/experiment_6579_v572_terminal_recovery_and_decomposition_contract.json`) | Implemented (`tests/python/test_experiment_6579_v572_terminal_recovery_and_decomposition_contract.py`; 14 focused tests; 100% module statement coverage) |
+
+### REQ-REPORT-6580: V572 Source And Joint Method Protocol SHALL Preregister Before Inference
+
+Carnot SHALL build Exp6580 without loading an LLM. The protocol SHALL freeze
+the source units, prompt, budgets, contexts, arms, gates, and retirement rules
+before any V572 model outcome exists. It SHALL replay the Exp6574 exact
+joint-sufficiency fixtures with the current reducer.
+
+- REQ-REPORT-6580-PRECONDITIONS: The artifact SHALL record protected-file
+  hashes, the Exp6574 path and hash, structural eligibility, exact registry
+  hash, corpus commit, license, CPU, RAM, disk, V569-V572 method artifact
+  hashes, local source-cache state, and the no-LLM substrate.
+- REQ-REPORT-6580-SOURCES: The artifact SHALL bind arXiv:2608.21044,
+  arXiv:2608.16003, arXiv:2605.18871, arXiv:2608.19475, and
+  arXiv:2608.20938 to method rows. Each row SHALL include a stable URL,
+  local reference-section hash, local-cache hash when present, exact Carnot
+  hook, and a non-imported external claim.
+- REQ-REPORT-6580-FIXTURES: The artifact SHALL replay Exp6574 single-hop,
+  valid multi-hop, missing-hop, wrong-span, cycle, ownership, domination, and
+  ambiguity fixtures. It SHALL preserve each source fixture and expected
+  action. Positive fixtures SHALL release. Negative fixtures SHALL abstain.
+- REQ-REPORT-6580-SOURCE-UNITS: The source-unit manifest SHALL include exact
+  source bytes, byte hashes, split, inclusion rule, source kind, and fixture
+  lineage. It SHALL contain single-hop, multi-hop, unsupported, and ambiguity
+  cases. Unit selection SHALL not depend on model outcomes.
+- REQ-REPORT-6580-PROMPTS-CONTEXTS: The prompt, seeds, token budget, stop
+  rules, timeout, raw-before-derived write order, failure retention, fresh
+  process rule, and one-family task mapping SHALL be family-neutral. Clean,
+  prior-repair, and length-matched neutral contexts SHALL be byte-frozen and
+  length-accounted.
+- REQ-REPORT-6580-ARMS: The protocol SHALL freeze no-filter, atomic-support,
+  and joint-graph proof arms with matched inputs and charged costs. It SHALL
+  freeze frozen, uniform, graph-Potts, protected-core, and conflict-routed
+  learning arms as prospective only. Exact replay SHALL remain release
+  authority.
+- REQ-REPORT-6580-GATES: The downstream field map SHALL name exact field
+  owners and consumers. `v572_source_method_ready_score` SHALL equal `1.0`
+  only when source units, prompts, budgets, contexts, and failure rules are
+  closed. `v572_joint_method_ready_score` SHALL equal `1.0` only when all
+  Exp6574 fixtures and exact-authority rules replay.
+- REQ-REPORT-6580-ATTACKS: The artifact SHALL fail closed against post-outcome
+  source selection, prompt drift, family-specific prompts, missing unsupported
+  cases, self-certification, changed Exp6574 expectations, an LLM judge as
+  release authority, and gate field spelling mismatches.
+- REQ-REPORT-6580-ATOMIC: Exp6580 SHALL preserve `research-roadmap.yaml` and
+  `scripts/research_conductor.py`. It SHALL set
+  `inference_substrate=primary_source_and_joint_method_replay_no_llm` and
+  `verifier_is_oracle=true`. It SHALL write one terminal JSON artifact by
+  same-directory atomic replacement. A ready result SHALL use
+  `verdict_class=null`. The task SHALL never use a positive verdict class.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `primary_source_receipts`, `non_imported_claim_rows`,
+`source_unit_manifest`, `prompt_seed_budget_contract`,
+`context_control_contract`, `joint_method_replay_rows`,
+`proof_arm_contract`, `learning_arm_contract`,
+`downstream_gate_field_rows`, `attack_rows`,
+`v572_source_method_ready_score`, `v572_joint_method_ready_score`,
+`preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`duration_s`, `tests_run`, and `reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6580-SOURCES: Borrowed Methods Stay Bounded
+
+**Given** the V572 reference section and local source-cache scan
+**When** Exp6580 builds source receipts
+**Then** every borrowed paper has a stable URL, source hash, bounded Carnot
+hook, and non-imported external claim row.
+
+#### SCENARIO-REPORT-6580-FIXTURES: Exp6574 Replay Preserves Expectations
+
+**Given** the clean Exp6574 reducer and fixture rows
+**When** Exp6580 replays the method fixtures
+**Then** every positive and negative fixture keeps its expected action and no
+negative fixture releases.
+
+#### SCENARIO-REPORT-6580-PROTOCOL: Source Units Prompts Contexts And Arms Close
+
+**Given** no V572 model rows exist
+**When** the protocol freezes source units, prompts, contexts, and arms
+**Then** all families receive the same work and all comparable arms have
+matched inputs and costs.
+
+#### SCENARIO-REPORT-6580-ATTACKS: Leakage And Authority Substitution Fail Closed
+
+**Given** one mutation for each required protocol attack
+**When** the readiness reducer evaluates the mutated protocol
+**Then** post-outcome leakage, prompt drift, missing negatives, self-certified
+release, changed fixtures, LLM authority, and field spelling drift force a
+zero candidate readiness score.
+
+#### SCENARIO-REPORT-6580-ATOMIC: One Null-Class Protocol Artifact Recomputes
+
+**Given** source binding, fixture replay, gates, attacks, and protected checks
+have ended
+**When** Exp6580 writes its terminal artifact
+**Then** both readiness scores recompute from rows, protected files remain
+byte-identical, the checksum validates, and the ready artifact uses a null
+verdict class.
+
+## Implementation Status (REQ-REPORT-6580)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6580 | Planned (`python/carnot/experiment_6580_v572_source_and_joint_method_protocol.py`, terminal artifact `results/experiment_6580_v572_source_and_joint_method_protocol.json`) | Planned (`tests/python/test_experiment_6580_v572_source_and_joint_method_protocol.py`) |
