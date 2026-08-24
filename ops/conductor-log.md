@@ -16372,3 +16372,5 @@ code |
 | 2026-08-24 00:02 UTC | Sequential flagship GGUF admission by actual execu | OK | 118 passed, 1 warning in 9.93s |
 | 2026-08-24 00:04 UTC | Immutable live source-span claim stream on three f | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6567-sequential-flagship-gguf-admission |
 | 2026-08-24 00:06 UTC | Immutable live source-span claim stream on three f | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6567-sequential-flagship-gguf-admission |
+| 2026-08-24 00:08 UTC | Immutable live source-span claim stream on three f | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6567-sequential-flagship-gguf-admission |
+| 2026-08-24 00:10 UTC | Source-span proof-obligation extraction with exact | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6568-immutable-source-span-claim-stream) |
