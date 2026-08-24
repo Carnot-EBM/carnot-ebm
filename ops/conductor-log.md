@@ -16397,3 +16397,6 @@ code |
 | 2026-08-24 11:18 UTC | V571 clean evidence and flagship qualification rep | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: nke/carnot
  su |
 | 2026-08-24 11:20 UTC | Immutable all-family source-span claim stream v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6575-v571-clean-evidence-and-flagship-qua |
+| 2026-08-24 12:02 UTC | Independent immutable flagship source-stream audit | OK | 99 passed, 1 warning in 10.02s |
+| 2026-08-24 12:04 UTC | Immutable all-family source-span claim stream v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6575-v571-clean-evidence-and-flagship-qua |
+| 2026-08-24 12:04 UTC | Semantic-block joint proof extractor v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6575-v571-clean-evidence-and-flagship-qua |
