@@ -6311,3 +6311,10 @@ The critical path for milestone .250:
 - theme: flagship GGUF admission occupied most of a brief mixed workload reconstructed from file timestamps
 - key result: compute-task GPU idle is classified false; for phase causality, concurrent-model launch, and runner dispatch, no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.570
+
+- exp_range: no data available this milestone
+- theme: actual GGUF admission set the operational tail while file timestamps supplied the only task clock
+- key result: one accelerator was nearly saturated in the snapshot, so the evidence does not support a compute-idle defect; multi-model concurrency and runner choice have no data available this milestone
+- acceptance: no data available this milestone
