@@ -1,0 +1,787 @@
+{
+  "attack_rows": [
+    {
+      "attack_id": "invented_exp6575_artifact",
+      "candidate_ready_score": 0.0,
+      "detector_rejected": true,
+      "mutation": "set artifact_exists_after_attempt=true without a terminal artifact",
+      "passed": true,
+      "row_hash": "sha256:4e04342d0da0b30302f8a77950f9951a0c97d7d0da2b568037bd5c57d40a86df"
+    },
+    {
+      "attack_id": "stale_conductor_log",
+      "candidate_ready_score": 0.0,
+      "detector_rejected": true,
+      "mutation": "replace the conductor-log hash on one timeout row",
+      "passed": true,
+      "row_hash": "sha256:4b684ef4bf5d2cb309a73a0af3fb273e93425e3343deffd4f9c9d09266634c35"
+    },
+    {
+      "attack_id": "duplicate_timeout_attempt",
+      "candidate_ready_score": 0.0,
+      "detector_rejected": true,
+      "mutation": "duplicate attempt index 1 and remove attempt index 2",
+      "passed": true,
+      "row_hash": "sha256:107cdb46d4a4c03703a4870aaec51ae6e1ef5701aae8627ae53e415c6e254222"
+    },
+    {
+      "attack_id": "truncated_elapsed_time",
+      "candidate_ready_score": 0.0,
+      "detector_rejected": true,
+      "mutation": "truncate observed elapsed 4801 seconds to the nominal 4800-second cap",
+      "passed": true,
+      "row_hash": "sha256:494b5463351446dc1950f95e27d92e45f85509144d08ebf318a08930f8d8488a"
+    },
+    {
+      "attack_id": "gate_row_wrong_task",
+      "candidate_ready_score": 0.0,
+      "detector_rejected": true,
+      "mutation": "attribute the first readiness field to an unrelated V571 task",
+      "passed": true,
+      "row_hash": "sha256:4c3b3fedef130ba4c794d8d09dbe787df0f43f888a44c4573a02b4cd696ff087"
+    },
+    {
+      "attack_id": "multiple_families_in_one_task",
+      "candidate_ready_score": 0.0,
+      "detector_rejected": true,
+      "mutation": "assign two mandated families to one model task",
+      "passed": true,
+      "row_hash": "sha256:96772ed0a7ea607e5c4c34a13f69beb673abbc0875a9d6408edb1de315af69f3"
+    },
+    {
+      "attack_id": "absent_cleanup_budget",
+      "candidate_ready_score": 0.0,
+      "detector_rejected": true,
+      "mutation": "remove the family task cleanup budget",
+      "passed": true,
+      "row_hash": "sha256:f671e3499dcec55f84752a8b92f614e0d4d5b1ec38dce524a269837f2e8d11f4"
+    },
+    {
+      "attack_id": "ready_from_incomplete_terminal_rows",
+      "candidate_ready_score": 0.0,
+      "detector_rejected": true,
+      "mutation": "drop one V571 terminal row before claiming readiness",
+      "passed": true,
+      "row_hash": "sha256:b601c5039a853575c213a0f6c7ba5c2a7bf244b09ff42ab7a6e963dc99396bb3"
+    }
+  ],
+  "current_roadmap_gate_contract_rows": [
+    {
+      "all_named_consumers_exist": true,
+      "artifact_field": "v572_decomposition_contract_ready_score",
+      "consumer_task_ids": [
+        "exp6581-qwen36-flagship-source-shard",
+        "exp6582-gemma4-31b-flagship-source-shard",
+        "exp6583-gemma4-26b-a4b-flagship-source-shard"
+      ],
+      "explicit_structured_gate_count": 3,
+      "owner_artifact_path": "results/experiment_6579_v572_terminal_recovery_and_decomposition_contract.json",
+      "owner_field_declared": true,
+      "owner_task_exists": true,
+      "owner_task_id": "exp6579-v572-terminal-recovery-and-decomposition-contract",
+      "passed": true,
+      "resolved_roadmap_path": "research-roadmap.yaml",
+      "resolved_roadmap_sha256": "sha256:c836cc7393122510c210c912914445636a9065b06ff69684cf529cfb6e608833",
+      "roadmap_milestone": "2026.08.572",
+      "roadmap_next_exists": false,
+      "row_hash": "sha256:ed4547369f089ed37b042ac225da83a48a5c74c094e41c8e60cdea09d016d719"
+    },
+    {
+      "all_named_consumers_exist": true,
+      "artifact_field": "v572_source_method_ready_score",
+      "consumer_task_ids": [
+        "exp6581-qwen36-flagship-source-shard",
+        "exp6582-gemma4-31b-flagship-source-shard",
+        "exp6583-gemma4-26b-a4b-flagship-source-shard"
+      ],
+      "explicit_structured_gate_count": 3,
+      "owner_artifact_path": "results/experiment_6580_v572_source_and_joint_method_protocol.json",
+      "owner_field_declared": true,
+      "owner_task_exists": true,
+      "owner_task_id": "exp6580-v572-source-and-joint-method-protocol",
+      "passed": true,
+      "resolved_roadmap_path": "research-roadmap.yaml",
+      "resolved_roadmap_sha256": "sha256:c836cc7393122510c210c912914445636a9065b06ff69684cf529cfb6e608833",
+      "roadmap_milestone": "2026.08.572",
+      "roadmap_next_exists": false,
+      "row_hash": "sha256:8b2c0bde414598ebd12e449f291289756dc3183be6eef694fdcab1d0c58ecaf7"
+    },
+    {
+      "all_named_consumers_exist": true,
+      "artifact_field": "qwen36_family_source_shard_ready_score",
+      "consumer_task_ids": [
+        "exp6584-three-family-source-receipt-audit"
+      ],
+      "explicit_structured_gate_count": 0,
+      "owner_artifact_path": "results/experiment_6581_qwen36_flagship_source_shard.json",
+      "owner_field_declared": true,
+      "owner_task_exists": true,
+      "owner_task_id": "exp6581-qwen36-flagship-source-shard",
+      "passed": true,
+      "resolved_roadmap_path": "research-roadmap.yaml",
+      "resolved_roadmap_sha256": "sha256:c836cc7393122510c210c912914445636a9065b06ff69684cf529cfb6e608833",
+      "roadmap_milestone": "2026.08.572",
+      "roadmap_next_exists": false,
+      "row_hash": "sha256:4c65b811f3e0782d5e6c67675dfa8bb9ed0104a0e7739ac478a645b83f07fb32"
+    },
+    {
+      "all_named_consumers_exist": true,
+      "artifact_field": "gemma4_31b_family_source_shard_ready_score",
+      "consumer_task_ids": [
+        "exp6584-three-family-source-receipt-audit"
+      ],
+      "explicit_structured_gate_count": 0,
+      "owner_artifact_path": "results/experiment_6582_gemma4_31b_flagship_source_shard.json",
+      "owner_field_declared": true,
+      "owner_task_exists": true,
+      "owner_task_id": "exp6582-gemma4-31b-flagship-source-shard",
+      "passed": true,
+      "resolved_roadmap_path": "research-roadmap.yaml",
+      "resolved_roadmap_sha256": "sha256:c836cc7393122510c210c912914445636a9065b06ff69684cf529cfb6e608833",
+      "roadmap_milestone": "2026.08.572",
+      "roadmap_next_exists": false,
+      "row_hash": "sha256:aa2edb3583dba2146d4b34d69e58519d54ca7645c80f33fe64b46389563a0d6c"
+    },
+    {
+      "all_named_consumers_exist": true,
+      "artifact_field": "gemma4_26b_a4b_family_source_shard_ready_score",
+      "consumer_task_ids": [
+        "exp6584-three-family-source-receipt-audit"
+      ],
+      "explicit_structured_gate_count": 0,
+      "owner_artifact_path": "results/experiment_6583_gemma4_26b_a4b_flagship_source_shard.json",
+      "owner_field_declared": true,
+      "owner_task_exists": true,
+      "owner_task_id": "exp6583-gemma4-26b-a4b-flagship-source-shard",
+      "passed": true,
+      "resolved_roadmap_path": "research-roadmap.yaml",
+      "resolved_roadmap_sha256": "sha256:c836cc7393122510c210c912914445636a9065b06ff69684cf529cfb6e608833",
+      "roadmap_milestone": "2026.08.572",
+      "roadmap_next_exists": false,
+      "row_hash": "sha256:5e0d5a3e5579d6dd3e7729e279083ee1c11fcb9844da7c39560ad6ca02da216e"
+    },
+    {
+      "all_named_consumers_exist": true,
+      "artifact_field": "all_family_source_audit_ready_score",
+      "consumer_task_ids": [],
+      "explicit_structured_gate_count": 0,
+      "owner_artifact_path": "results/experiment_6584_three_family_source_receipt_audit.json",
+      "owner_field_declared": true,
+      "owner_task_exists": true,
+      "owner_task_id": "exp6584-three-family-source-receipt-audit",
+      "passed": true,
+      "resolved_roadmap_path": "research-roadmap.yaml",
+      "resolved_roadmap_sha256": "sha256:c836cc7393122510c210c912914445636a9065b06ff69684cf529cfb6e608833",
+      "roadmap_milestone": "2026.08.572",
+      "roadmap_next_exists": false,
+      "row_hash": "sha256:848879da3ba7b72ea5736036945373fd1ac869c0590fd3f194be3112d5be2edf"
+    },
+    {
+      "all_named_consumers_exist": true,
+      "artifact_field": "v572_joint_method_ready_score",
+      "consumer_task_ids": [],
+      "explicit_structured_gate_count": 0,
+      "owner_artifact_path": "results/experiment_6580_v572_source_and_joint_method_protocol.json",
+      "owner_field_declared": true,
+      "owner_task_exists": true,
+      "owner_task_id": "exp6580-v572-source-and-joint-method-protocol",
+      "passed": true,
+      "resolved_roadmap_path": "research-roadmap.yaml",
+      "resolved_roadmap_sha256": "sha256:c836cc7393122510c210c912914445636a9065b06ff69684cf529cfb6e608833",
+      "roadmap_milestone": "2026.08.572",
+      "roadmap_next_exists": false,
+      "row_hash": "sha256:9e7c1e2c44d93105cf769e38279d4b3b831fe7cd2dd5623e6d6363ecffa1e20d"
+    }
+  ],
+  "decomposition_contract": {
+    "all_family_aggregation_inside_model_task": false,
+    "all_family_aggregation_owner_task_id": "exp6584-three-family-source-receipt-audit",
+    "cleanup_policy": "normal_exit_then_pid_port_and_gpu_memory_recovery",
+    "contract_version": "v572.one_family_bounded_task.v1",
+    "family_task_count": 3,
+    "mandated_model_families": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "model_task_rows": [
+      {
+        "artifact_path": "results/experiment_6581_qwen36_flagship_source_shard.json",
+        "atomic_same_directory_replace_required": true,
+        "checkpoint_interval_s": 300,
+        "checkpoint_policy": "write_each_terminal_raw_row_before_derivation",
+        "cleanup_budget_s": 180,
+        "conductor_hard_cap_s": 4800,
+        "contingency_budget_s": 660,
+        "cross_family_aggregate_allowed": false,
+        "fresh_context_per_task": true,
+        "fresh_process_exit_required": true,
+        "fresh_process_per_task": true,
+        "mandated_model_families": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "max_source_units": 3,
+        "model_load_timeout_s": 900,
+        "per_source_unit_timeout_s": 720,
+        "roadmap_max_turns": 100,
+        "roadmap_task_exists": true,
+        "row_hash": "sha256:08851029736489efcfc8834473a6bef0cd3f3791e601aa792292a570486179eb",
+        "task_id": "exp6581-qwen36-flagship-source-shard",
+        "task_timeout_s": 4200,
+        "terminal_artifact_count": 1,
+        "terminal_output_budget_s": 300,
+        "verified_unload_required": true
+      },
+      {
+        "artifact_path": "results/experiment_6582_gemma4_31b_flagship_source_shard.json",
+        "atomic_same_directory_replace_required": true,
+        "checkpoint_interval_s": 300,
+        "checkpoint_policy": "write_each_terminal_raw_row_before_derivation",
+        "cleanup_budget_s": 180,
+        "conductor_hard_cap_s": 4800,
+        "contingency_budget_s": 660,
+        "cross_family_aggregate_allowed": false,
+        "fresh_context_per_task": true,
+        "fresh_process_exit_required": true,
+        "fresh_process_per_task": true,
+        "mandated_model_families": [
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "max_source_units": 3,
+        "model_load_timeout_s": 900,
+        "per_source_unit_timeout_s": 720,
+        "roadmap_max_turns": 100,
+        "roadmap_task_exists": true,
+        "row_hash": "sha256:8fc505461f42b04f62f5a1ae924f89c1496e512f3aaa71be8b3a04059f224121",
+        "task_id": "exp6582-gemma4-31b-flagship-source-shard",
+        "task_timeout_s": 4200,
+        "terminal_artifact_count": 1,
+        "terminal_output_budget_s": 300,
+        "verified_unload_required": true
+      },
+      {
+        "artifact_path": "results/experiment_6583_gemma4_26b_a4b_flagship_source_shard.json",
+        "atomic_same_directory_replace_required": true,
+        "checkpoint_interval_s": 300,
+        "checkpoint_policy": "write_each_terminal_raw_row_before_derivation",
+        "cleanup_budget_s": 180,
+        "conductor_hard_cap_s": 4800,
+        "contingency_budget_s": 660,
+        "cross_family_aggregate_allowed": false,
+        "fresh_context_per_task": true,
+        "fresh_process_exit_required": true,
+        "fresh_process_per_task": true,
+        "mandated_model_families": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "max_source_units": 3,
+        "model_load_timeout_s": 900,
+        "per_source_unit_timeout_s": 720,
+        "roadmap_max_turns": 100,
+        "roadmap_task_exists": true,
+        "row_hash": "sha256:1dbfaeedcddb4632a1e0cc807bbe94f0dec0eec900399787098df81265a6f403",
+        "task_id": "exp6583-gemma4-26b-a4b-flagship-source-shard",
+        "task_timeout_s": 4200,
+        "terminal_artifact_count": 1,
+        "terminal_output_budget_s": 300,
+        "verified_unload_required": true
+      }
+    ],
+    "one_family_per_model_task": true,
+    "row_hash": "sha256:3c9d04aaa89f12163674186d130189391789668d991699bb696c844d21c64007",
+    "terminal_output_policy": "one_same_directory_atomic_json_per_task"
+  },
+  "duration_s": 5.355708,
+  "exp6575_timeout_attempt_rows": [
+    {
+      "agent_backend": "codex_cli",
+      "artifact_exists_after_attempt": false,
+      "artifact_path": "results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json",
+      "attempt_index": 1,
+      "elapsed_s": 4801,
+      "end_timestamp_precision": "minute",
+      "end_utc_logged": "2026-08-24T08:31:00Z",
+      "hard_cap_s": 4800,
+      "log_line_number": 16893,
+      "log_source_line_sha256": "sha256:f719153550ee2a3803bba0265b733790b28b781b6d7299099f335af6d239a218",
+      "log_source_sha256": "sha256:63324ebef1ff05129bd24656f88846c3dad0851ffb86e90a9a128c59c18507d6",
+      "row_hash": "sha256:cf3b1316b2e1412d69e322dfd478ea7d5f6577f29d01c920da6271920b12dc90",
+      "start_derivation": "logged_end_minute_minus_exact_elapsed_s",
+      "start_utc_derived": "2026-08-24T07:10:59Z",
+      "task_id": "exp6575-v571-clean-evidence-and-flagship-qualification",
+      "terminal_code": "hard_wall_clock_cap"
+    },
+    {
+      "agent_backend": "codex_cli",
+      "artifact_exists_after_attempt": false,
+      "artifact_path": "results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json",
+      "attempt_index": 2,
+      "elapsed_s": 4803,
+      "end_timestamp_precision": "minute",
+      "end_utc_logged": "2026-08-24T09:54:00Z",
+      "hard_cap_s": 4800,
+      "log_line_number": 16894,
+      "log_source_line_sha256": "sha256:ddbe2475d66ed3d3c12f2f867ebcb1ff8fe821a0e34e0eaae57b960bff927100",
+      "log_source_sha256": "sha256:63324ebef1ff05129bd24656f88846c3dad0851ffb86e90a9a128c59c18507d6",
+      "row_hash": "sha256:b406f76dbc39c20c1a68ab2c0944cc23fc449f82c2f933c0bbe886f662c24124",
+      "start_derivation": "logged_end_minute_minus_exact_elapsed_s",
+      "start_utc_derived": "2026-08-24T08:33:57Z",
+      "task_id": "exp6575-v571-clean-evidence-and-flagship-qualification",
+      "terminal_code": "hard_wall_clock_cap"
+    },
+    {
+      "agent_backend": "codex_cli",
+      "artifact_exists_after_attempt": false,
+      "artifact_path": "results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json",
+      "attempt_index": 3,
+      "elapsed_s": 4804,
+      "end_timestamp_precision": "minute",
+      "end_utc_logged": "2026-08-24T11:18:00Z",
+      "hard_cap_s": 4800,
+      "log_line_number": 16896,
+      "log_source_line_sha256": "sha256:47b1831a30ae5d5cb2180f5a8c0bee587747dc49d64669654e757b224fe7501c",
+      "log_source_sha256": "sha256:63324ebef1ff05129bd24656f88846c3dad0851ffb86e90a9a128c59c18507d6",
+      "row_hash": "sha256:13d6682dda7f4c7b19b2d59a6b64596a34bc78e3124db2c9857b8a8fcdfd917f",
+      "start_derivation": "logged_end_minute_minus_exact_elapsed_s",
+      "start_utc_derived": "2026-08-24T09:57:56Z",
+      "task_id": "exp6575-v571-clean-evidence-and-flagship-qualification",
+      "terminal_code": "hard_wall_clock_cap"
+    }
+  ],
+  "field_provenance": {
+    "attack_rows": {
+      "principle": "False recovery and renewed monolith shapes fail closed.",
+      "reducer": "direct_content_hash_or_deterministic_replay",
+      "sources": [
+        "build_attack_rows"
+      ]
+    },
+    "current_roadmap_gate_contract_rows": {
+      "principle": "Every downstream gate names a same-roadmap upstream field with identical spelling.",
+      "reducer": "direct_content_hash_or_deterministic_replay",
+      "sources": [
+        "research-roadmap.yaml"
+      ]
+    },
+    "decomposition_contract": {
+      "principle": "One-family residency, bounded work, checkpoints, cleanup, and terminal output are frozen.",
+      "reducer": "direct_content_hash_or_deterministic_replay",
+      "sources": [
+        "research-roadmap.yaml",
+        "REQ-REPORT-6579-DECOMPOSITION"
+      ]
+    },
+    "duration_s": {
+      "principle": "Monotonic duration exposes skipped recovery checks.",
+      "reducer": "direct_content_hash_or_deterministic_replay",
+      "sources": [
+        "Exp6579 emitted rows"
+      ]
+    },
+    "exp6575_timeout_attempt_rows": {
+      "principle": "All three hard-timeout attempts remain distinct and source-hashed.",
+      "reducer": "direct_content_hash_or_deterministic_replay",
+      "sources": [
+        "ops/conductor-log.md"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every field names source rows, hashes, and reducer code.",
+      "reducer": "direct_content_hash_or_deterministic_replay",
+      "sources": [
+        "Exp6579 emitted rows"
+      ]
+    },
+    "gate_check_summary": {
+      "principle": "Any block names the failed local receipt check and observed value.",
+      "reducer": "readiness_score",
+      "sources": [
+        "Exp6579 emitted rows"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The verdict distinguishes hard timeout, gate skip, audit diagnosis, and contract readiness.",
+      "reducer": "readiness_score",
+      "sources": [
+        "Exp6579 emitted rows"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "The artifact declares exact terminal-log replay with no LLM.",
+      "reducer": "direct_content_hash_or_deterministic_replay",
+      "sources": [
+        "Exp6579 emitted rows"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Files, tools, resources, and protected hashes distinguish a block from recovery failure.",
+      "reducer": "direct_content_hash_or_deterministic_replay",
+      "sources": [
+        "local filesystem and platform receipts"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "The task preserves research-roadmap.yaml and scripts/research_conductor.py.",
+      "reducer": "direct_content_hash_or_deterministic_replay",
+      "sources": [
+        "research-roadmap.yaml",
+        "scripts/research_conductor.py"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A final content hash detects terminal mutation.",
+      "reducer": "direct_content_hash_or_deterministic_replay",
+      "sources": [
+        "Exp6579 emitted rows"
+      ]
+    },
+    "status": {
+      "principle": "A terminal state prevents a recovery bootstrap from posing as a closed contract.",
+      "reducer": "readiness_score",
+      "sources": [
+        "Exp6579 emitted rows"
+      ]
+    },
+    "tests_run": {
+      "principle": "Named commands, exits, and durations make the contract reproducible.",
+      "reducer": "direct_content_hash_or_deterministic_replay",
+      "sources": [
+        "named command receipts"
+      ]
+    },
+    "v571_terminal_rows": {
+      "principle": "Every V571 task has one recheckable terminal or missing-artifact row.",
+      "reducer": "direct_content_hash_or_deterministic_replay",
+      "sources": [
+        "research-complete.yaml",
+        "ops/conductor-log.md"
+      ]
+    },
+    "v572_decomposition_contract_ready_score": {
+      "principle": "This exact binary field gates each family shard.",
+      "reducer": "readiness_score",
+      "sources": [
+        "Exp6579 emitted rows"
+      ]
+    },
+    "verdict_class": {
+      "principle": "Recovery infrastructure uses null, partial, blocked, or disqualified rather than positive science.",
+      "reducer": "readiness_score",
+      "sources": [
+        "Exp6579 emitted rows"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "Infrastructure replay is authority and cannot create positive science.",
+      "reducer": "direct_content_hash_or_deterministic_replay",
+      "sources": [
+        "Exp6579 emitted rows"
+      ]
+    }
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "v571_terminal_rows",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "row_hash": "sha256:218ffe3c81b09c7d4f2932b4814efd13d0493b96ad1b35657bc22a15975d9f30"
+      },
+      {
+        "check": "exp6575_timeout_attempt_rows",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "row_hash": "sha256:78c212c130faa74c091c4ba89fa8a1e27d05cabe022e35eadc9cdf0a6d386495"
+      },
+      {
+        "check": "decomposition_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "row_hash": "sha256:28c2f448caa1f6a323efef8d7b45c9bd90ba95f6334e64827bf34844077fd142"
+      },
+      {
+        "check": "current_roadmap_gate_contract_rows",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "row_hash": "sha256:11b160e46fb6ca02ab5aa0502347bbd12b0b7693417c62d642355a6741ff6b5c"
+      },
+      {
+        "check": "attack_rows",
+        "expected": 8,
+        "observed": 8,
+        "passed": true,
+        "row_hash": "sha256:c306bfd3fedcd992fb68253874ea1349408bb261a9fee07165ad474570a222ad"
+      },
+      {
+        "check": "protected_files_unchanged",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "row_hash": "sha256:e60c7e14c042a3199e04474f126b9efe991518962f42114b7c80e20b639ea970"
+      }
+    ],
+    "failed_check_count": 0,
+    "first_failure": null,
+    "passed": true,
+    "row_hash": "sha256:d6030326360e573104750ff56e84987b8e3248f6f2433b133d7fe382229554cd"
+  },
+  "honest_verdict": "complete_v572_terminal_recovery_and_decomposition_contract_ready: V571 hard-timeout, gate-skip, and independent-audit receipts replay; the bounded one-family V572 contract is ready; no science verdict was created",
+  "inference_substrate": "v571_terminal_receipt_replay_no_llm",
+  "preconditions_checked": {
+    "conductor_log": {
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:63324ebef1ff05129bd24656f88846c3dad0851ffb86e90a9a128c59c18507d6"
+    },
+    "cpu": {
+      "logical_count": 24,
+      "model": "AMD Ryzen AI 9 HX 370 w/ Radeon 890M"
+    },
+    "disk": {
+      "free_bytes": 1085966794752,
+      "total_bytes": 3953289023488,
+      "used_bytes": 2867322228736
+    },
+    "exclusion_manifest": {
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+    },
+    "expected_v571_artifacts": {
+      "exp6575-v571-clean-evidence-and-flagship-qualification": {
+        "exists": false,
+        "path": "results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json",
+        "sha256": "missing"
+      },
+      "exp6576-immutable-flagship-source-span-stream-v3": {
+        "exists": false,
+        "path": "results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "sha256": "missing"
+      },
+      "exp6577-flagship-source-stream-independent-audit": {
+        "exists": true,
+        "path": "results/experiment_6577_flagship_source_stream_independent_audit.json",
+        "sha256": "sha256:ccba26e03a74c15136963b80ad8e4982da88e1bf2e7c5f1102d75b763c861e57"
+      },
+      "exp6578-semantic-block-joint-proof-extractor-v3": {
+        "exists": false,
+        "path": "results/experiment_6578_semantic_block_joint_proof_extractor_v3.json",
+        "sha256": "missing"
+      }
+    },
+    "expected_v571_tasks": [
+      "exp6575-v571-clean-evidence-and-flagship-qualification",
+      "exp6576-immutable-flagship-source-span-stream-v3",
+      "exp6577-flagship-source-stream-independent-audit",
+      "exp6578-semantic-block-joint-proof-extractor-v3"
+    ],
+    "failure_ledger": {
+      "path": "scripts/failure_ledger.py",
+      "sha256": "sha256:d18d74d27a831eba7d294f13521e5401df2f96561572466ae4f2871e9b9c1a4b"
+    },
+    "inference_substrate": "v571_terminal_receipt_replay_no_llm",
+    "llm_process_started": false,
+    "model_file_opened": false,
+    "model_inference_invoked": false,
+    "planning_date": "20260824",
+    "protected_file_hashes_before": {
+      "research-roadmap.yaml": "sha256:c836cc7393122510c210c912914445636a9065b06ff69684cf529cfb6e608833",
+      "scripts/research_conductor.py": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8"
+    },
+    "python": {
+      "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+      "implementation": "CPython",
+      "version": "3.12.13"
+    },
+    "ram": {
+      "total_bytes": 134305107968
+    },
+    "research_complete": {
+      "path": "research-complete.yaml",
+      "sha256": "sha256:ab3d115bf6c4970c9ce7e45a223f9d184ba74c11eb19e3a1d12cf48388759fce"
+    },
+    "roadmap_resolution": {
+      "reason": "active_after_next_roadmap_consumed",
+      "research_roadmap_next_exists": false,
+      "resolved_path": "research-roadmap.yaml",
+      "resolved_sha256": "sha256:c836cc7393122510c210c912914445636a9065b06ff69684cf529cfb6e608833"
+    },
+    "tool_versions": [
+      {
+        "executable": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/coverage",
+        "tool": "coverage",
+        "version": "7.14.1"
+      },
+      {
+        "executable": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/pytest",
+        "tool": "pytest",
+        "version": "9.0.3"
+      },
+      {
+        "executable": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/ruff",
+        "tool": "ruff",
+        "version": "0.15.17"
+      }
+    ]
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "research-roadmap.yaml": "sha256:c836cc7393122510c210c912914445636a9065b06ff69684cf529cfb6e608833",
+      "scripts/research_conductor.py": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8"
+    },
+    "all_unchanged": true,
+    "before": {
+      "research-roadmap.yaml": "sha256:c836cc7393122510c210c912914445636a9065b06ff69684cf529cfb6e608833",
+      "scripts/research_conductor.py": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8"
+    },
+    "row_hash": "sha256:4c0a5bad35f2737c86061fb087b5deeb77dad719a5c421a632e3836e7264ca16"
+  },
+  "reproducibility_checksum": "sha256:786c3d25ba5a6481f83e3894a07160896b9332ce5f815632075309b0734707ac",
+  "status": "complete_v572_terminal_recovery_and_decomposition_contract_ready",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6579_v572_terminal_recovery_and_decomposition_contract.py -q --no-cov -n 0",
+      "duration_s": 11.94,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest -o addopts='' tests/python/test_experiment_6579_v572_terminal_recovery_and_decomposition_contract.py -q -n0 --cov=python/carnot --cov-report= --cov-fail-under=0",
+      "duration_s": 25.62,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --include='*/experiment_6579_v572_terminal_recovery_and_decomposition_contract.py' --show-missing --fail-under=100",
+      "duration_s": 0.02,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "completed_pass_count": 7568,
+      "duration_s": 308.78,
+      "exit_code": 2,
+      "failure_count": 4,
+      "failure_tests": [
+        "test_req_arc_wmte_5901_repository_artifact_is_current",
+        "test_req_arc_fcp_4527_update_baseline_rejects_invalid_candidate",
+        "test_exp4756_required_datasets_match_what_the_kernel_actually_attaches",
+        "test_the_submitted_config_and_the_kernel_agree_on_the_model_dataset"
+      ],
+      "outcome": "interrupted_after_four_unrelated_failures",
+      "skip_count": 7,
+      "task_owned": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_6579_v572_terminal_recovery_and_decomposition_contract.py tests/python/test_experiment_6579_v572_terminal_recovery_and_decomposition_contract.py",
+      "duration_s": 0.01,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_6579_v572_terminal_recovery_and_decomposition_contract.py tests/python/test_experiment_6579_v572_terminal_recovery_and_decomposition_contract.py",
+      "duration_s": 0.01,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6579_v572_terminal_recovery_and_decomposition_contract.py",
+      "duration_s": 0.01,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6579_v572_terminal_recovery_and_decomposition_contract.json",
+      "duration_s": 0.1,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/artifact_convention_audit.py --recent 1 --dry-run",
+      "duration_s": 0.1,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6579_v572_terminal_recovery_and_decomposition_contract.json",
+      "duration_s": 0.1,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6579_v572_terminal_recovery_and_decomposition_contract --validate",
+      "duration_s": 0.1,
+      "exit_code": 0
+    }
+  ],
+  "v571_terminal_rows": [
+    {
+      "artifact_exists": false,
+      "artifact_path": "results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json",
+      "attempt_row_hashes": [
+        "sha256:cf3b1316b2e1412d69e322dfd478ea7d5f6577f29d01c920da6271920b12dc90",
+        "sha256:b406f76dbc39c20c1a68ab2c0944cc23fc449f82c2f933c0bbe886f662c24124",
+        "sha256:13d6682dda7f4c7b19b2d59a6b64596a34bc78e3124db2c9857b8a8fcdfd917f"
+      ],
+      "honest_verdict_source": "absent_no_artifact",
+      "ledger_result": "SKIPPED (3-fail)",
+      "log_source_sha256": "sha256:63324ebef1ff05129bd24656f88846c3dad0851ffb86e90a9a128c59c18507d6",
+      "row_hash": "sha256:2e15100f254b73e8c34f4fb943632bbc70c3537f8f32a4a46d7c2fca7e6fd3db",
+      "science_disposition": "not_run_to_terminal_artifact",
+      "task_id": "exp6575-v571-clean-evidence-and-flagship-qualification",
+      "terminal_class": "hard_timeout_no_artifact"
+    },
+    {
+      "artifact_exists": false,
+      "artifact_path": "results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+      "failed_upstream_task_id": "exp6575-v571-clean-evidence-and-flagship-qualification",
+      "ledger_result": "GATE_BLOCKED",
+      "log_line_number": 16898,
+      "log_source_line_sha256": "sha256:f9a790749e92816a9f04acdc83aaa89f490a39cc1542a2f5c4024bb477b739e0",
+      "log_source_sha256": "sha256:63324ebef1ff05129bd24656f88846c3dad0851ffb86e90a9a128c59c18507d6",
+      "logged_end_utc": "2026-08-24T11:20:00Z",
+      "row_hash": "sha256:3e01ed20a12d25a7181be2d3772edceff49e4f84084f84a9a5fe9958235c58e0",
+      "science_disposition": "not_run_gate_skip",
+      "task_id": "exp6576-immutable-flagship-source-span-stream-v3",
+      "terminal_class": "gate_skip",
+      "terminal_code": "preemptive_skip_upstream_retired"
+    },
+    {
+      "artifact_exists": true,
+      "artifact_path": "results/experiment_6577_flagship_source_stream_independent_audit.json",
+      "artifact_sha256": "sha256:ccba26e03a74c15136963b80ad8e4982da88e1bf2e7c5f1102d75b763c861e57",
+      "ledger_result": "OK",
+      "log_line_number": 16899,
+      "log_source_line_sha256": "sha256:c335dd817b49487b6109901fb5d344caebed210051d70fdd89c72b862c36cb5f",
+      "log_source_sha256": "sha256:63324ebef1ff05129bd24656f88846c3dad0851ffb86e90a9a128c59c18507d6",
+      "logged_end_utc": "2026-08-24T12:02:00Z",
+      "row_hash": "sha256:410216d32cb14135d083656a5aef41b57a0f8ea18d32eb78a83675dad871ae00",
+      "science_disposition": "infrastructure_diagnosis_only",
+      "stored_first_failed_check": {
+        "expected": "file_exists",
+        "field": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "observed": "missing",
+        "passed": false
+      },
+      "stored_gate_summary_row_hash": "sha256:b5f9520ae17bdf7ebd1b6a85816bb452fe0d6ed9aaba56fcf8fd20ad9d2f061e",
+      "stored_honest_verdict": "blocked_flagship_source_stream_independent_audit: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json expected=file_exists observed=missing",
+      "stored_ready_score": 0.0,
+      "stored_status": "blocked_flagship_source_stream_independent_audit",
+      "stored_verdict_class": "blocked",
+      "task_id": "exp6577-flagship-source-stream-independent-audit",
+      "terminal_class": "independent_audit_blocked_diagnosis"
+    },
+    {
+      "artifact_exists": false,
+      "artifact_path": "results/experiment_6578_semantic_block_joint_proof_extractor_v3.json",
+      "failed_upstream_task_id": "exp6575-v571-clean-evidence-and-flagship-qualification",
+      "ledger_result": "GATE_BLOCKED",
+      "log_line_number": 16901,
+      "log_source_line_sha256": "sha256:b8f22991fb02e468da0757be6edd37c9e67b46f3fda07d614a5ed587bd7ff387",
+      "log_source_sha256": "sha256:63324ebef1ff05129bd24656f88846c3dad0851ffb86e90a9a128c59c18507d6",
+      "logged_end_utc": "2026-08-24T12:04:00Z",
+      "row_hash": "sha256:666cb97d1280fb74393281d3d5341a69d0d1b49b0040d67403d0187af55153f6",
+      "science_disposition": "not_run_gate_skip",
+      "task_id": "exp6578-semantic-block-joint-proof-extractor-v3",
+      "terminal_class": "gate_skip",
+      "terminal_code": "preemptive_skip_upstream_retired"
+    }
+  ],
+  "v572_decomposition_contract_ready_score": 1.0,
+  "verdict_class": "null",
+  "verifier_is_oracle": true
+}
