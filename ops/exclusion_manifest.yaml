@@ -1123,6 +1123,38 @@ retired_extras:
     RETIREMENT STATUS IS UNCHANGED by this correction. Exp6582 stays retired on its
     own evidence: two runs, same verdict. Exp6581 stays un-retired: it ran once.
     Neither retirement rests on the mechanism claims corrected here.
+  correction_2026_08_24_third_retirement_reversed: >-
+    THIRD APPENDED CORRECTION, and this one reverses the retirement itself. All
+    prior text above is kept verbatim. Independent audit of the outer loop's own
+    findings refuted the justification, and the outer loop verified the two
+    load-bearing facts before acting on it.
+    BOTH BLOCKING PRECONDITIONS ARE ENVIRONMENTAL, not properties of the
+    experiment. verification_commands has since been demoted out of the
+    pre-launch gate (REQ-REPORT-6581-VERIFY-SCOPE). idle_supported_gpu failed
+    because the box was contended, and the contention was the outer loop's own
+    seed sweep, which held GPU 1 continuously for over 19 hours. An experiment
+    retired because its environment was broken is wrongly retired, and half that
+    broken environment was ours.
+    CLAUDE.md's Pre-Launch Preconditions Discipline states that blocked_*
+    verdicts are honest non-terminal states and should not burn the doomed-rerun
+    ledger. Retiring on a repeated blocked_* verdict applied the wrong
+    instrument.
+    THE RED-SUITE CLAIM IN THE TEXT ABOVE IS NOT SOURCED FROM THESE ARTIFACTS.
+    Verified directly: each artifact carries eighteen exit_code 0 values and a
+    single exit_code 124, a TIMEOUT. The repo-wide suite is genuinely red, but
+    that is recorded in ops/known-issues.md from separate runs. These two runs
+    timed out; they did not observe 68-470 failures.
+    This entry's own reopen condition -- a diagnosis of why the precondition
+    fails, and a statement of what changed -- is met. The diagnosis is
+    docs/research-notes (verification_commands at
+    experiment_6581_qwen36_flagship_source_shard.py:1513 required a green
+    repo-wide suite before a model could load). What changed: the check is
+    demoted and repaired.
+    exp6582 is UN-RETIRED and removed from scripts/conductor_exclusion_manifest.json.
+    NEITHER experiment is now retired. This entry is kept, not deleted, because
+    the scope_key and blocked_patterns still describe a real shape worth
+    matching if it recurs WITH a diagnosed cause -- and because three rounds of
+    wrong reasoning by one author is itself worth leaving legible.
   experiment_ids:
   - exp6582-gemma4-31b-flagship-source-shard
   un_retired_experiment_ids:

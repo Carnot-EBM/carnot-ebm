@@ -167,11 +167,6 @@
       "experiment_id": 2091,
       "completed_milestone": "2026.05.164",
       "reason": "gemini CLI consistent bail-out pattern (prompt-echo, 60+ retries 2h+ wall time); LaTeX markup fix did not resolve. Retired pending agent-routing investigation."
-    },
-    {
-      "experiment_id": 6582,
-      "completed_milestone": "2026.08.572",
-      "reason": "retire_if_same_verdict: two runs, both ending blocked_precondition_failed_without_quality_claim. CORRECTION 2 (2026-08-24): a precondition DID fail. preconditions_checked is a 29-key dict with all_required_preconditions_available=false and failed_preconditions ['idle_supported_gpu','verification_commands']. Correction 1 claimed no precondition failed; that came from reading the artifact through a principle-unwrap helper that nulls any dict-valued field. No model was loaded in either run: verification_commands requires the whole test suite to exit 0 first, so the 1109s and 2411s durations are pytest, not GPU inference. The suite is genuinely red repo-wide. idle_supported_gpu likely failed because the outer loop's own seed sweep holds GPU 1. Retirement still rests only on same-verdict-twice. See ops/exclusion_manifest.yaml correction_2026_08_24_second."
     }
   ]
 }
