@@ -54080,3 +54080,141 @@ matches the artifact content.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6572 | Implemented (`python/carnot/inference/gguf_metadata.py`, `python/carnot/experiment_6572_content_derived_gguf_metadata_resolver.py`, terminal artifact `results/experiment_6572_content_derived_gguf_metadata_resolver.json`) | Implemented (`tests/python/test_gguf_metadata.py`, `tests/python/test_experiment_6572_content_derived_gguf_metadata_resolver.py`) |
+
+### REQ-REPORT-6573: Flagship GGUF Admission SHALL Use Sequential CUDA Execution
+
+Carnot SHALL admit the three V570 flagship GGUF families only through fresh,
+one-at-a-time native llama.cpp CUDA execution. Each family SHALL bind the exact
+repository, revision, content-derived GGUF metadata, embedded tokenizer, and
+trusted blob SHA-256 before launch. Admission SHALL require a bounded nonempty
+generation, operating-system process identity, sampled GPU residency, normal
+shutdown, closed port, memory recovery, and a bounded substrate recovery check.
+It SHALL not infer fit from model size or memory arithmetic.
+
+Sub-requirements:
+
+- REQ-REPORT-6573-GATES: The producer SHALL evaluate both V570 structured
+  prerequisites using the exact upstream paths, fields, expected values,
+  observed values, and artifact hashes. A blocked gate SHALL name every failed
+  exact field and observed value.
+- REQ-REPORT-6573-IDENTITY: Each family SHALL resolve its repository revision,
+  snapshot filename, exact blob, trusted SHA-256, content-derived architecture
+  and quantization, complete shard identity, and embedded tokenizer before the
+  process starts. Filename inference, a wrong repository, or omitted split
+  shard SHALL fail closed.
+- REQ-REPORT-6573-SEQUENTIAL: Model order SHALL be frozen before launch. At most
+  one task-owned model process SHALL be resident. A later family SHALL not
+  start until the prior PID is gone, its port is closed, and its unload and
+  recovery row passes. Unrelated GPU work SHALL be recorded and preserved.
+- REQ-REPORT-6573-CUDA: Runtime evidence SHALL bind the real llama.cpp binary
+  and CUDA build, command digest, OS PID and parent, selected CUDA device,
+  before/during/after device telemetry, compute-process PID, GPU memory, and
+  sampled utilization. A stale PID, fake CUDA build, zero-layer offload,
+  process-wrapper mismatch, or cross-GPU worker SHALL fail closed.
+- REQ-REPORT-6573-GENERATION: Each family SHALL produce bounded, nonempty model
+  output that follows the frozen prompt enough to demonstrate token flow. The
+  row SHALL report prompt and generated token counts, output and response
+  hashes, stop reason, load and generation timing, exit code, and stderr hash.
+  Tokenizer-only output, reused output, self-report, or answer correctness SHALL
+  not constitute admission evidence.
+- REQ-REPORT-6573-UNLOAD: Shutdown SHALL be normal and bounded. The producer
+  SHALL verify that the exact PID is gone, the bound port is closed, and the
+  selected GPU memory returns within the preregistered tolerance. It SHALL run
+  only the frozen bounded recovery smoke before a later family. It SHALL never
+  invoke a broad GPU-process or zombie reaper.
+- REQ-REPORT-6573-LEGACY: Qwen3.5-0.8B and gemma-4-E4B-it MAY run as CPU smoke
+  checks, but SHALL never satisfy any flagship admission row or aggregate.
+- REQ-REPORT-6573-REDUCER: Each family score SHALL recompute from that family's
+  identity, process, GPU, generation, exit, unload, and recovery rows. The exact
+  `all_mandated_models_loaded_score` field SHALL equal bare `1.0` only when all
+  three mandated family scores equal `1.0`; a missing family SHALL remain
+  partial or blocked and SHALL not open downstream model science.
+- REQ-REPORT-6573-ATOMIC: The producer SHALL write exactly one terminal artifact
+  through same-directory atomic replacement. It SHALL close terminally even
+  when a family fails, preserve the protected roadmap and conductor byte for
+  byte, name actual execution as
+  `sequential_local_llama_cpp_cuda_flagship_gguf_execution`, set
+  `verifier_is_oracle=true`, and protect the final record with a reproducibility
+  checksum.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `model_specs`, `model_metadata_and_hash_rows`,
+`sequential_load_generation_rows`, `unload_and_recovery_rows`,
+`gpu_process_receipts`, `family_admitted_scores`, the exact
+`all_mandated_models_loaded_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`. A complete admission SHALL use
+`verdict_class=null`; a usable subset SHALL use `partial`; no authentic model
+run SHALL use `blocked`; predicted or fabricated receipts SHALL use
+`disqualified`. Runtime readiness is admission evidence only and SHALL not be
+reported as a positive scientific result.
+
+#### SCENARIO-REPORT-6573-SEQUENTIAL: Every Flagship Runs Alone In Frozen Order
+
+**Given** the three mandated repositories and both passing structured gates
+**When** Exp6573 executes admission
+**Then** the frozen order is unchanged, each model starts only after the prior
+model's unload and recovery pass, and no two task-owned model PIDs overlap.
+
+#### SCENARIO-REPORT-6573-IDENTITY: Process Binds To Content And Provenance
+
+**Given** hash-only cache blobs with content-derived Exp6572 metadata
+**When** a family launch row is produced
+**Then** the command names the exact selected blob and the row binds its
+repository, revision, snapshot, architecture, quantization, embedded tokenizer,
+and trusted SHA-256 without trusting the filename.
+
+#### SCENARIO-REPORT-6573-AUTHENTIC: CUDA And Process Receipts Are Independent
+
+**Given** a native llama.cpp server process
+**When** load and generation are sampled
+**Then** procfs verifies its PID and command, nvidia-smi independently links the
+PID to the selected GPU with positive memory residency, the CUDA build receipt
+passes, and a stale PID, wrapper exit, zero offload, or other-GPU worker fails.
+
+#### SCENARIO-REPORT-6573-GENERATION: Bounded Output Proves Token Flow
+
+**Given** a frozen prompt, seed, token limit, and timeout
+**When** the loaded server generates
+**Then** a nonempty prompt-following response reports positive generated tokens,
+a bounded stop reason, unique output and response hashes, and measured timing.
+
+#### SCENARIO-REPORT-6573-UNLOAD: Clean Exit Precedes Recovery
+
+**Given** a completed or failed family attempt
+**When** bounded shutdown runs
+**Then** the exact process exits normally, its port closes, selected-device
+memory returns within tolerance, unrelated processes remain present, and the
+frozen recovery smoke passes before another launch.
+
+#### SCENARIO-REPORT-6573-LEGACY: Tiny CPU Smoke Cannot Satisfy Admission
+
+**Given** either legacy Qwen3.5-0.8B or gemma-4-E4B-it output
+**When** aggregate readiness is recomputed
+**Then** no flagship family score changes and a missing mandated family keeps
+the aggregate below `1.0`.
+
+#### SCENARIO-REPORT-6573-ATTACKS: Adversarial Evidence Fails Closed
+
+**Given** stale PIDs, a non-CUDA build, zero GPU residency, tokenizer-only or
+reused output, repository or shard swaps, wrapper exit confusion, unload
+failure, cross-GPU interference, or one missing family
+**When** the row checks and aggregate reducer run
+**Then** the affected family is not admitted and aggregate readiness cannot be
+set to `1.0`.
+
+#### SCENARIO-REPORT-6573-ATOMIC: Failure Still Produces One Honest Terminal Record
+
+**Given** any family succeeds, blocks, or fails
+**When** Exp6573 finishes its bounded recovery path
+**Then** one atomic artifact names admitted and blocked families without a
+quality claim, recomputes its aggregate from emitted family rows, preserves both
+protected files, and carries a matching checksum.
+
+## Implementation Status (REQ-REPORT-6573)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6573 | Planned (`python/carnot/experiment_6573_sequential_flagship_gguf_admission_v2.py`, terminal artifact `results/experiment_6573_sequential_flagship_gguf_admission_v2.json`) | Planned (`tests/python/test_experiment_6573_sequential_flagship_gguf_admission_v2.py`) |
