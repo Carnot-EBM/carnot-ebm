@@ -54218,3 +54218,127 @@ protected files, and carries a matching checksum.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6573 | Planned (`python/carnot/experiment_6573_sequential_flagship_gguf_admission_v2.py`, terminal artifact `results/experiment_6573_sequential_flagship_gguf_admission_v2.json`) | Planned (`tests/python/test_experiment_6573_sequential_flagship_gguf_admission_v2.py`) |
+
+### REQ-REPORT-6574: Hop-Conditioned Joint Sufficiency SHALL Freeze Source-Byte Proof Obligations
+
+Carnot SHALL preregister source-byte-bound atomic proof obligations and a
+hop-conditioned dependency graph before any V570 outcome-bearing extraction.
+The method SHALL bind each atomic obligation to exact source bytes, compiler
+owned executable semantics, and a deterministic joint-sufficiency reducer. A
+composed multi-hop claim SHALL release only when every required node and edge
+passes exact checks. Any missing, drifting, disconnected, cyclic, duplicate,
+unsupported, contradictory, or post-outcome-mutated evidence SHALL abstain.
+
+Sub-requirements:
+
+- REQ-REPORT-6574-GATES: The producer SHALL evaluate the Exp6571 structured
+  gate from the exact upstream artifact path and field
+  `v570_evidence_contract_ready_score`. A failed gate SHALL name the missing
+  upstream field or observed value.
+- REQ-REPORT-6574-SOURCES: Source receipts SHALL include the primary
+  arXiv:2608.00585 page, checked date, availability, content hash, and the
+  V570 method-note hash from `research-references.md`.
+- REQ-REPORT-6574-NODES: The atomic node schema SHALL require node ID,
+  composed-claim ID, hop index, sub-question, source hash, byte offsets,
+  source-bytes hash, typed variables, whitelisted relation, compiler version,
+  executable obligation hash, exact result, counterexample, and action.
+- REQ-REPORT-6574-EDGES: The dependency-edge schema SHALL require parent ID,
+  child ID, relation type, required or optional status, ordering rule, coverage
+  role, and provenance. The reducer SHALL use only required nodes and required
+  edges for exact release.
+- REQ-REPORT-6574-REDUCER: The joint reducer SHALL be deterministic. It SHALL
+  release a composed claim only when node IDs are unique, spans match source
+  bytes, all relations are whitelisted, all required hop indexes are present,
+  all required nodes are exactly certified, all required edges connect known
+  nodes, the graph is connected over required nodes, and cycles are rejected.
+- REQ-REPORT-6574-SPLITS-ARMS: Train, calibration, and held units SHALL be
+  content-hashed before live outcomes. The no-filter, atomic-span-only, and
+  hop-conditioned-joint arms SHALL share corpus, raw responses, parser,
+  compiler, threshold, source bytes, seed, and charged cost.
+- REQ-REPORT-6574-FIXTURES: Conformance rows SHALL include valid single-hop,
+  valid two-hop, valid branched claim, missing hop, wrong span, unsupported
+  relation, contradictory nodes, disconnected graph, duplicate node, and cyclic
+  dependency fixtures. Every unsafe fixture SHALL abstain.
+- REQ-REPORT-6574-ATTACKS: The contract SHALL fail closed against
+  schema-valid semantic-invalid nodes, source-offset drift, omitted hops,
+  optional-edge laundering, graph cycles, duplicate support, model
+  self-citation, post-outcome decomposition, threshold changes, source leakage,
+  and exact-check bypass.
+- REQ-REPORT-6574-ACCEPTANCE: Acceptance gates SHALL require improved
+  exact-certified composed-claim coverage over atomic-only, noninferior
+  precision, zero unsafe release, complete lineage, and complete cost rows.
+  Repeat-retirement SHALL trigger if the graph adds no held coverage or
+  repeats zero exact semantics.
+- REQ-REPORT-6574-ATOMIC: The producer SHALL write exactly one terminal JSON
+  artifact through same-directory atomic replacement. It SHALL preserve
+  protected orchestration files, set
+  `inference_substrate=primary_source_joint_sufficiency_preregistration_and_local_conformance_no_llm`,
+  set `verifier_is_oracle=true`, and protect the record with a checksum.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `source_review_receipts`,
+`atomic_obligation_node_schema`,
+`dependency_edge_and_joint_reducer_contract`,
+`frozen_split_and_arm_commitment`, `conformance_rows`,
+`extraction_acceptance_and_retirement_gates`,
+`joint_sufficiency_method_ready_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`. Ready output SHALL use `verdict_class=null`.
+Usable but incomplete output SHALL use `partial`. Missing prerequisites SHALL
+use `blocked`. Retrospective method changes SHALL use `disqualified`.
+
+#### SCENARIO-REPORT-6574-NODES: Atomic Nodes Bind To Source Bytes
+
+**Given** a hop-conditioned sub-question and source text
+**When** the compiler builds an atomic obligation node
+**Then** the row records exact byte offsets, the source-bytes hash, typed
+variables, whitelisted relation, compiler version, executable obligation hash,
+exact result, counterexample, and action.
+
+#### SCENARIO-REPORT-6574-REDUCER: Required Graphs Release Only When Jointly Sufficient
+
+**Given** valid single-hop, two-hop, and branched fixtures
+**When** the joint reducer evaluates required nodes and edges
+**Then** each composed claim releases only after all required nodes are exact,
+all required edges are satisfied, and required-node coverage is complete.
+
+#### SCENARIO-REPORT-6574-ABSTAIN: Unsafe Graphs Fail Closed
+
+**Given** missing hop, wrong span, unsupported relation, contradiction,
+disconnection, duplicate node, and cycle fixtures
+**When** the reducer evaluates the graph
+**Then** every unsafe fixture abstains and records a specific abstention
+reason.
+
+#### SCENARIO-REPORT-6574-SPLITS-ARMS: Outcome-Blind Arms Are Matched
+
+**Given** frozen source units before live extraction
+**When** arms are compared
+**Then** no-filter, atomic-span-only, and hop-conditioned-joint arms share the
+same corpus, raw responses, parser, compiler, threshold, source bytes, seed,
+and charged cost.
+
+#### SCENARIO-REPORT-6574-ATTACKS: Attack Rows Close The Known Failure Modes
+
+**Given** schema-valid semantic-invalid nodes, offset drift, omitted hops,
+optional-edge laundering, cycles, duplicate support, model self-citation,
+post-outcome decomposition, threshold changes, leakage, or exact-check bypass
+**When** conformance rows replay
+**Then** each attack is closed by a frozen schema, compiler, reducer, split,
+gate, or abstention rule.
+
+#### SCENARIO-REPORT-6574-ATOMIC: Readiness Recomputes From Rows
+
+**Given** source receipts, schemas, splits, arms, fixtures, attacks, gates, and
+retirement rows
+**When** Exp6574 writes its terminal artifact
+**Then** readiness recomputes only from emitted rows, protected files remain
+byte-identical, `verifier_is_oracle=true`, and the checksum matches.
+
+## Implementation Status (REQ-REPORT-6574)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6574 | Planned (`python/carnot/experiment_6574_joint_sufficiency_method_contract.py`, terminal artifact `results/experiment_6574_joint_sufficiency_method_contract.json`) | Planned (`tests/python/test_experiment_6574_joint_sufficiency_method_contract.py`) |
