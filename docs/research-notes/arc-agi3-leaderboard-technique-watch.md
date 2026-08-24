@@ -198,3 +198,5 @@ CHECK_TIMED_OUT
 
   **POSSIBLE CARNOT LEVER:** Benchmark lossless DFlash2 speculative decoding on the RTX Pro 6000; higher local-generator throughput could buy more verifier-routed candidates and replanning turns within the nine-hour limit without adding RL.
 
+## 2026-08-24 13:36 UTC -- checked, nothing new
+

@@ -54606,3 +54606,109 @@ verdict class.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6577 | Implemented (`python/carnot/experiment_6577_flagship_source_stream_independent_audit.py`, terminal artifact `results/experiment_6577_flagship_source_stream_independent_audit.json`) | Implemented (`tests/python/test_experiment_6577_flagship_source_stream_independent_audit.py`; 18 focused tests; 100% module line coverage) |
+
+### REQ-REPORT-6579: V571 Terminal Recovery SHALL Preserve No-Artifact Evidence
+
+Carnot SHALL build Exp6579 without loading an LLM. The task SHALL replay the
+terminal V571 receipts. It SHALL preserve Exp6575 as a three-attempt hard
+timeout with no artifact. It SHALL preserve Exp6576 and Exp6578 as gate
+skips. It SHALL preserve Exp6577 as an independent blocked diagnosis.
+
+- REQ-REPORT-6579-PRECONDITIONS: The artifact SHALL record protected-file
+  hashes, expected V571 task and artifact paths, conductor-log hash,
+  failure-ledger hash, exclusion-manifest hash, Python and tool versions,
+  CPU count and model, RAM, disk, and the no-LLM substrate before replay.
+- REQ-REPORT-6579-TIMEOUTS: The producer SHALL reconstruct three distinct
+  Exp6575 attempt rows from the conductor log. Each row SHALL record attempt
+  index, derived start, logged end, elapsed seconds, terminal code, hard cap,
+  agent backend, artifact absence, timestamp precision, and log-source hash.
+  The producer SHALL not create or infer an Exp6575 science verdict.
+- REQ-REPORT-6579-TERMINALS: The producer SHALL emit one terminal row for
+  each V571 task. Exp6576 and Exp6578 SHALL remain gate skips rather than
+  science nulls. Exp6577 SHALL replay its stored blocked verdict, zero audit
+  score, and first failed gate check from its artifact rows.
+- REQ-REPORT-6579-DECOMPOSITION: The V572 contract SHALL assign at most one
+  mandated model family to a model task. Each model task SHALL use one fresh
+  process and context. It SHALL have bounded source units, an explicit task
+  timeout, periodic raw-row checkpoints, cleanup and terminal-output budgets,
+  verified unload, and one atomic terminal artifact. A model task SHALL not
+  compute a cross-family aggregate.
+- REQ-REPORT-6579-GATES: The producer SHALL resolve the active V572 roadmap.
+  It MAY use `research-roadmap.yaml` when activation has consumed the absent
+  `research-roadmap-next.yaml`. Every named upstream task SHALL exist in that
+  roadmap. Every gate field and frozen readiness field SHALL appear with
+  identical spelling in its owner task's required artifact fields.
+- REQ-REPORT-6579-ATTACKS: The artifact SHALL contain passing attack rows for
+  an invented Exp6575 artifact, stale log hash, duplicate timeout attempt,
+  truncated elapsed time, wrong-task gate attribution, multiple families in
+  one task, absent cleanup budget, and readiness from incomplete terminal
+  rows. Each attack SHALL make the candidate contract not ready.
+- REQ-REPORT-6579-REDUCER:
+  `v572_decomposition_contract_ready_score` SHALL be `1.0` only when all four
+  V571 terminal rows replay, all three Exp6575 attempts are distinct and
+  exact, the one-family contract and budgets close, the current-roadmap gate
+  map closes, every attack passes, and protected files remain unchanged.
+  Otherwise it SHALL be `0.0`.
+- REQ-REPORT-6579-ATOMIC: Exp6579 SHALL preserve
+  `research-roadmap.yaml` and `scripts/research_conductor.py`. It SHALL set
+  `inference_substrate=v571_terminal_receipt_replay_no_llm` and
+  `verifier_is_oracle=true`. It SHALL write one terminal JSON artifact by
+  same-directory atomic replacement. A ready result SHALL use
+  `verdict_class=null`. The task SHALL never use a positive verdict class.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `v571_terminal_rows`, `exp6575_timeout_attempt_rows`,
+`decomposition_contract`, `current_roadmap_gate_contract_rows`, `attack_rows`,
+`v572_decomposition_contract_ready_score`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6579-NO-ARTIFACT: Three Timeouts Stay Terminal Without Science
+
+**Given** the conductor log records three Exp6575 hard-timeout attempts and
+the expected artifact is absent
+**When** Exp6579 replays the terminal receipts
+**Then** all three attempts remain distinct, the missing artifact is explicit,
+and no Exp6575 science verdict is created.
+
+#### SCENARIO-REPORT-6579-GATE-SKIPS: Missing Science Does Not Become Null
+
+**Given** Exp6576 and Exp6578 were skipped because Exp6575 was retired or
+missing
+**When** Exp6579 creates the V571 terminal rows
+**Then** both rows retain their gate-skip class and failed upstream reason.
+
+#### SCENARIO-REPORT-6579-AUDIT: The Independent Block Replays From Rows
+
+**Given** the stored Exp6577 artifact names missing Exp6576 evidence
+**When** Exp6579 validates its verdict and gate summary
+**Then** the blocked class, zero readiness, and first failed local check match
+the emitted artifact rows.
+
+#### SCENARIO-REPORT-6579-DECOMPOSITION: One Family Fits One Bounded Task
+
+**Given** the active V572 roadmap and the three mandated family shard tasks
+**When** Exp6579 freezes their runtime contract
+**Then** every shard owns one family, bounded work, checkpoints, cleanup,
+unload, and atomic output, with no in-task cross-family aggregate.
+
+#### SCENARIO-REPORT-6579-ATTACKS: False Recovery Shapes Fail Closed
+
+**Given** one mutation for each required recovery and monolith attack
+**When** the readiness reducer evaluates each mutation
+**Then** every mutation produces a zero candidate readiness score.
+
+#### SCENARIO-REPORT-6579-ATOMIC: One Null-Class Contract Artifact Recomputes
+
+**Given** receipt replay, gate checks, budgets, attacks, and protected checks
+have ended
+**When** Exp6579 writes its terminal artifact
+**Then** the checksum validates, readiness recomputes from rows, protected
+files remain byte-identical, and the ready artifact uses a null verdict class.
+
+## Implementation Status (REQ-REPORT-6579)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6579 | Implemented (`python/carnot/experiment_6579_v572_terminal_recovery_and_decomposition_contract.py`, terminal artifact `results/experiment_6579_v572_terminal_recovery_and_decomposition_contract.json`) | Implemented (`tests/python/test_experiment_6579_v572_terminal_recovery_and_decomposition_contract.py`; 14 focused tests; 100% module statement coverage) |
