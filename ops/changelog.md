@@ -17529,3 +17529,4 @@ ops/test-results.md by the same session.
 - 2026-08-24: V572 SOTA source and joint-proof method protocol (✅ Complete) — honest_verdict=complete_v572_source_and_joint_method_protocol_ready: source_method_ready=1.0 and joint_method_ready=1.0; no V572 model outcome exists; results/experiment_6580_v572_source_and_joint_method_protocol.json
 - 2026-08-24: Qwen3.6 one-family flagship source shard (⚠️ Blocked) — honest_verdict=blocked_precondition_failed_without_quality_claim; results/experiment_6581_qwen36_flagship_source_shard.json
 - 2026-08-24: Gemma-4-31B one-family flagship source shard (⚠️ Blocked) — honest_verdict=blocked_precondition_failed_without_quality_claim; results/experiment_6582_gemma4_31b_flagship_source_shard.json
+- 2026-08-24: Gemma-4-31B one-family flagship source shard (⚠️ Blocked) — honest_verdict=blocked_precondition_failed_without_quality_claim; results/experiment_6582_gemma4_31b_flagship_source_shard.json
