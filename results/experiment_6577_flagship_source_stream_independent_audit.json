@@ -1,0 +1,664 @@
+{
+  "aggregate_row_recomputation": {
+    "all_attack_invariants_passed": false,
+    "all_failure_classes_retained": false,
+    "audit_ready_score_from_rows": 0.0,
+    "charged_cost": 0,
+    "checks": [
+      {
+        "expected": "file_exists",
+        "field": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "observed": "missing",
+        "passed": false
+      },
+      {
+        "expected": null,
+        "field": "exp6576.read_error",
+        "observed": "missing",
+        "passed": false
+      },
+      {
+        "expected": "complete_nonblocked",
+        "field": "exp6576.status",
+        "observed": null,
+        "passed": false
+      },
+      {
+        "expected": "qualified_artifact_with_ready_score_1.0",
+        "field": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json",
+        "observed": "missing",
+        "passed": false
+      },
+      {
+        "expected": "carnot.exp6576.immutable_flagship_source_span_stream.v3",
+        "field": "exp6576.schema",
+        "observed": null,
+        "passed": false
+      },
+      {
+        "expected": 0,
+        "field": "rows.row_replay_passed",
+        "observed": 0,
+        "passed": false
+      },
+      {
+        "expected": true,
+        "field": "failure_retention_rows.passed",
+        "observed": false,
+        "passed": false
+      },
+      {
+        "expected": true,
+        "field": "duplicate_and_drift_attack_rows.passed",
+        "observed": false,
+        "passed": false
+      },
+      {
+        "expected": 0.0,
+        "field": "immutable_claim_stream_ready_score",
+        "observed": null,
+        "passed": false
+      },
+      {
+        "expected": true,
+        "field": "protected_files_unchanged.all_unchanged",
+        "observed": true,
+        "passed": true
+      }
+    ],
+    "claim_bearing_row_count": 0,
+    "emitted_audit_row_count": 0,
+    "expected_row_count": 0,
+    "failed_checks": [
+      {
+        "expected": "file_exists",
+        "field": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "observed": "missing",
+        "passed": false
+      },
+      {
+        "expected": null,
+        "field": "exp6576.read_error",
+        "observed": "missing",
+        "passed": false
+      },
+      {
+        "expected": "complete_nonblocked",
+        "field": "exp6576.status",
+        "observed": null,
+        "passed": false
+      },
+      {
+        "expected": "qualified_artifact_with_ready_score_1.0",
+        "field": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json",
+        "observed": "missing",
+        "passed": false
+      },
+      {
+        "expected": "carnot.exp6576.immutable_flagship_source_span_stream.v3",
+        "field": "exp6576.schema",
+        "observed": null,
+        "passed": false
+      },
+      {
+        "expected": 0,
+        "field": "rows.row_replay_passed",
+        "observed": 0,
+        "passed": false
+      },
+      {
+        "expected": true,
+        "field": "failure_retention_rows.passed",
+        "observed": false,
+        "passed": false
+      },
+      {
+        "expected": true,
+        "field": "duplicate_and_drift_attack_rows.passed",
+        "observed": false,
+        "passed": false
+      },
+      {
+        "expected": 0.0,
+        "field": "immutable_claim_stream_ready_score",
+        "observed": null,
+        "passed": false
+      }
+    ],
+    "failure_row_count": 0,
+    "family_coverage": [],
+    "latency_s": 0,
+    "mandated_family_coverage_complete": false,
+    "observed_raw_row_count": 0,
+    "prompt_tokens": 0,
+    "protected_files_unchanged": true,
+    "replayed_row_count": 0,
+    "response_tokens": 0,
+    "row_hash": "sha256:6b93d3a24a60e6313379cad2792f6b448a7c8f8113efd2a5b20c69331b765879",
+    "total_tokens": 0,
+    "upstream_readiness_from_rows": 0.0,
+    "upstream_readiness_matches": false,
+    "upstream_readiness_observed": null,
+    "verdict_class_from_rows": "blocked"
+  },
+  "claim_stream_audit_ready_score": 0.0,
+  "duplicate_and_drift_attack_rows": [
+    {
+      "attack": "source_alias",
+      "expected": "invariant_passes",
+      "observed": "not_run_missing_upstream",
+      "passed": false,
+      "row_hash": "sha256:a506ce104f6af199d0647a75c2649ddcc85b2e07517bdf6358e7b73d2e508a58"
+    },
+    {
+      "attack": "duplicate_unit",
+      "expected": "invariant_passes",
+      "observed": "not_run_missing_upstream",
+      "passed": false,
+      "row_hash": "sha256:987bcd34a5a9b82050c6f50c042765776ec42de5e8de4a1f008d775885a139c5"
+    },
+    {
+      "attack": "copied_response_across_models",
+      "expected": "invariant_passes",
+      "observed": "not_run_missing_upstream",
+      "passed": false,
+      "row_hash": "sha256:046f60dcb78d93ae8d02e34652cb3d8759a31550299392a5e48f9617e9510563"
+    },
+    {
+      "attack": "selective_retry",
+      "expected": "invariant_passes",
+      "observed": "not_run_missing_upstream",
+      "passed": false,
+      "row_hash": "sha256:647044c3d70c2eb04aafcabbc5563f30ec2d7a907803ddd5be72b54956f9dedb"
+    },
+    {
+      "attack": "hidden_row_drop",
+      "expected": "invariant_passes",
+      "observed": "not_run_missing_upstream",
+      "passed": false,
+      "row_hash": "sha256:670da43d8a673fd59efa00346a75e7c62fd72ee6613503994c3c09dd32e3e547"
+    },
+    {
+      "attack": "legacy_model_substitution",
+      "expected": "invariant_passes",
+      "observed": "not_run_missing_upstream",
+      "passed": false,
+      "row_hash": "sha256:5340b857b4b4085421c905fa587188ebd14ffa48ef1dfb99309dddf589c6a099"
+    },
+    {
+      "attack": "inconsistent_family_label",
+      "expected": "invariant_passes",
+      "observed": "not_run_missing_upstream",
+      "passed": false,
+      "row_hash": "sha256:ba6124522e0dedd6ca254bb8969d71944213e372dbe9a3d3dbaf19811ef887d5"
+    },
+    {
+      "attack": "post_outcome_prompt_change",
+      "expected": "invariant_passes",
+      "observed": "not_run_missing_upstream",
+      "passed": false,
+      "row_hash": "sha256:d6f8d08a834f32eaf2d8da513ab862324a7670693b8ec37801f829c1af99f101"
+    },
+    {
+      "attack": "null_only_row",
+      "expected": "invariant_passes",
+      "observed": "not_run_missing_upstream",
+      "passed": false,
+      "row_hash": "sha256:b4cef46cdd55db35b979286f8736525f6a666101383b6360147f12797960429b"
+    },
+    {
+      "attack": "missing_content_path",
+      "expected": "invariant_passes",
+      "observed": "not_run_missing_upstream",
+      "passed": false,
+      "row_hash": "sha256:da29ed8470a9b930556e345b44622ef36b764eb6e68650e262d1bf9b69f9a4c0"
+    },
+    {
+      "attack": "aggregate_row_contradiction",
+      "expected": "invariant_passes",
+      "observed": "not_run_missing_upstream",
+      "passed": false,
+      "row_hash": "sha256:a919f3ed0511ae4757dc53314c01b497a10c35091126d9a6337f746ebb66add6"
+    }
+  ],
+  "duration_s": 0.001396,
+  "failure_retention_rows": [
+    {
+      "denominator_row_count": 0,
+      "failure_class": "timeout",
+      "observed_count": 0,
+      "passed": false,
+      "retained_count": 0,
+      "row_hash": "sha256:fffde214ff5770b80855203bbcbd965cd5a2faf184ec3422a50eb40096bba5a2",
+      "unit_ids": []
+    },
+    {
+      "denominator_row_count": 0,
+      "failure_class": "malformed_output",
+      "observed_count": 0,
+      "passed": false,
+      "retained_count": 0,
+      "row_hash": "sha256:0d4bdcd53cc767df5b3e13a1ef70caa1ce0c08c2a715c56f24e819d17bb84f44",
+      "unit_ids": []
+    },
+    {
+      "denominator_row_count": 0,
+      "failure_class": "refusal",
+      "observed_count": 0,
+      "passed": false,
+      "retained_count": 0,
+      "row_hash": "sha256:cf6839326570f09d99b186bc2184aea1fefc11cb9cc2901ae0ad6b1dcfcbdf02",
+      "unit_ids": []
+    },
+    {
+      "denominator_row_count": 0,
+      "failure_class": "empty_output",
+      "observed_count": 0,
+      "passed": false,
+      "retained_count": 0,
+      "row_hash": "sha256:0e489891653574184de8d35fa16aa44f4b30d9d7d7275d8f0e563cc146eb284e",
+      "unit_ids": []
+    },
+    {
+      "denominator_row_count": 0,
+      "failure_class": "process_failure",
+      "observed_count": 0,
+      "passed": false,
+      "retained_count": 0,
+      "row_hash": "sha256:02744fb7e00a926bbf0270b2b709073d999b4880644b74f2d005f0b8e5e7dc09",
+      "unit_ids": []
+    }
+  ],
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "principle": "Every audit headline derives from emitted rows.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "claim_stream_audit_ready_score": {
+      "principle": "This exact top-level binary field gates semantic-block extraction.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "duplicate_and_drift_attack_rows": {
+      "principle": "Aliases, copied output, prompt drift, and selective retries are tested explicitly.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "duration_s": {
+      "principle": "Monotonic duration exposes skipped replay or attack work.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "failure_retention_rows": {
+      "principle": "Failure classes cannot vanish from an aggregate denominator.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Each field identifies raw rows, hashes, and independent reducer code.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "gate_check_summary": {
+      "principle": "A block names the exact missing artifact or failed field and observed value.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The verdict states whether lineage and coverage independently replay.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "This is immutable artifact replay with no new LLM inference.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Input and tool receipts distinguish a block from a failed replay.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "The audit preserves both protected orchestration files.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A final hash detects audit mutation.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "rows": {
+      "principle": "Every expected source-family unit carries independently recomputed metrics.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "status": {
+      "principle": "The independent audit terminates even when upstream evidence is absent.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "tests_run": {
+      "principle": "Named commands and exits make the audit reproducible.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "upstream_artifact_receipt": {
+      "principle": "Path, hash, status, and schema bind the object under audit.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "verdict_class": {
+      "principle": "The audit uses only null, partial, blocked, or disqualified classes.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "The audit is evidence authority and therefore cannot create positive science.",
+      "reducer": "experiment_6577_flagship_source_stream_independent_audit",
+      "sources": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "expected_source_family_units",
+        "rows"
+      ]
+    }
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "expected": "file_exists",
+        "field": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "observed": "missing",
+        "passed": false
+      },
+      {
+        "expected": null,
+        "field": "exp6576.read_error",
+        "observed": "missing",
+        "passed": false
+      },
+      {
+        "expected": "complete_nonblocked",
+        "field": "exp6576.status",
+        "observed": null,
+        "passed": false
+      },
+      {
+        "expected": "qualified_artifact_with_ready_score_1.0",
+        "field": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json",
+        "observed": "missing",
+        "passed": false
+      },
+      {
+        "expected": "carnot.exp6576.immutable_flagship_source_span_stream.v3",
+        "field": "exp6576.schema",
+        "observed": null,
+        "passed": false
+      },
+      {
+        "expected": 0,
+        "field": "rows.row_replay_passed",
+        "observed": 0,
+        "passed": false
+      },
+      {
+        "expected": true,
+        "field": "failure_retention_rows.passed",
+        "observed": false,
+        "passed": false
+      },
+      {
+        "expected": true,
+        "field": "duplicate_and_drift_attack_rows.passed",
+        "observed": false,
+        "passed": false
+      },
+      {
+        "expected": 0.0,
+        "field": "immutable_claim_stream_ready_score",
+        "observed": null,
+        "passed": false
+      },
+      {
+        "expected": true,
+        "field": "protected_files_unchanged.all_unchanged",
+        "observed": true,
+        "passed": true
+      }
+    ],
+    "failed_check_count": 9,
+    "first_failure": {
+      "expected": "file_exists",
+      "field": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+      "observed": "missing",
+      "passed": false
+    },
+    "passed": false,
+    "row_hash": "sha256:b5f9520ae17bdf7ebd1b6a85816bb452fe0d6ed9aaba56fcf8fd20ad9d2f061e"
+  },
+  "honest_verdict": "blocked_flagship_source_stream_independent_audit: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json expected=file_exists observed=missing",
+  "inference_substrate": "immutable_source_stream_independent_replay_no_llm",
+  "preconditions_checked": {
+    "artifact_receipts": {
+      "exp6575": {
+        "exists": false,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json",
+        "read_error": "missing",
+        "row_hash": "sha256:cb056e3f48a69dcb05d3b9d71a02f87eff2ba4a19f39e120d8efadc1986ccccd",
+        "schema": null,
+        "sha256": "missing",
+        "status": "missing"
+      },
+      "exp6576": {
+        "exists": false,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+        "read_error": "missing",
+        "row_hash": "sha256:8b545707970d394d347c1507c3107dd5b8601ee0f577988e8417924309b0d641",
+        "schema": null,
+        "sha256": "missing",
+        "status": "missing"
+      }
+    },
+    "audit_tool_versions": [
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "sha256": "sha256:2ea54d1dd1fa0b0aa20a1ef3011081b6eddd3d72cad6a8a69425f2ba9f916275"
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/artifact_convention_audit.py",
+        "sha256": "sha256:40bac7c305857f7f7264c7d019615913e229777e6148d8d865ef81731d538d75"
+      }
+    ],
+    "disk": {
+      "free_bytes": 1084999323648,
+      "total_bytes": 3953289023488,
+      "used_bytes": 2868289699840
+    },
+    "expected_artifact_paths": {
+      "exp6575": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json",
+      "exp6576": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json"
+    },
+    "model_inference_invoked": false,
+    "planning_date": "20260824",
+    "protected_file_hashes_before": {
+      "research-roadmap.yaml": "sha256:3adc200376010b8acd83f166c8947e94e4fb83d8a84d046f1285a30c13663888",
+      "scripts/research_conductor.py": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8"
+    },
+    "python": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "implementation": "CPython",
+      "version": "3.12.13"
+    },
+    "raw_response_recovery": {
+      "content_path_row_count": 0,
+      "missing_or_invalid_row_count": 0,
+      "present": false,
+      "recoverable_row_count": 0,
+      "row_count": 0
+    },
+    "schema_versions": {
+      "audit": "carnot.exp6577.flagship_source_stream_independent_audit.v1",
+      "expected_exp6576": "carnot.exp6576.immutable_flagship_source_span_stream.v3",
+      "observed_exp6576": null
+    }
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "research-roadmap.yaml": "sha256:3adc200376010b8acd83f166c8947e94e4fb83d8a84d046f1285a30c13663888",
+      "scripts/research_conductor.py": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8"
+    },
+    "all_unchanged": true,
+    "before": {
+      "research-roadmap.yaml": "sha256:3adc200376010b8acd83f166c8947e94e4fb83d8a84d046f1285a30c13663888",
+      "scripts/research_conductor.py": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8"
+    },
+    "row_hash": "sha256:f2bfb45c9acef901d42aa77b745abf3c955579e07c0c6c89853908dc38752b0e"
+  },
+  "reproducibility_checksum": "sha256:ad211590d83b9b480aa50a8e96f9f14b288c082ac89f4b438974c656bb6422d7",
+  "rows": [],
+  "status": "blocked_flagship_source_stream_independent_audit",
+  "tests_run": [
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6577_flagship_source_stream_independent_audit --date 20260824",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6577_flagship_source_stream_independent_audit.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6577_flagship_source_stream_independent_audit.py -m pytest tests/python/test_experiment_6577_flagship_source_stream_independent_audit.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6577_flagship_source_stream_independent_audit.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "detail": "test_experiment_1736_kanele_synth.py overwrote its tracked artifact and removed the adversarial corrigendum while parallel tests read that artifact",
+      "exit_code": 1,
+      "outcome": "failed_pre_existing_test_record_mutation_race"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_6577_flagship_source_stream_independent_audit.py tests/python/test_experiment_6577_flagship_source_stream_independent_audit.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_6577_flagship_source_stream_independent_audit.py tests/python/test_experiment_6577_flagship_source_stream_independent_audit.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6577_flagship_source_stream_independent_audit.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6577_flagship_source_stream_independent_audit.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/artifact_convention_audit.py --recent 1",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6577_flagship_source_stream_independent_audit.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6577_flagship_source_stream_independent_audit --validate",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    }
+  ],
+  "upstream_artifact_receipt": {
+    "exists": false,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6576_immutable_flagship_source_span_stream_v3.json",
+    "read_error": "missing",
+    "row_hash": "sha256:8b545707970d394d347c1507c3107dd5b8601ee0f577988e8417924309b0d641",
+    "schema": null,
+    "sha256": "missing",
+    "status": "missing"
+  },
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}

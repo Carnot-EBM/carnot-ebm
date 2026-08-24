@@ -54480,3 +54480,129 @@ checksum matches.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6575 | Planned (`python/carnot/experiment_6575_v571_clean_evidence_and_flagship_qualification.py`, terminal artifact `results/experiment_6575_v571_clean_evidence_and_flagship_qualification.json`) | Planned (`tests/python/test_experiment_6575_v571_clean_evidence_and_flagship_qualification.py`) |
+
+### REQ-REPORT-6577: The Flagship Source Stream SHALL Replay Independently
+
+Carnot SHALL run Exp6577 even when Exp6576 is absent or blocked. The audit
+SHALL read immutable source and response rows. It SHALL NOT invoke a model. It
+SHALL NOT copy an Exp6576 aggregate into an audit result.
+
+- REQ-REPORT-6577-ALWAYS: The audit SHALL record the expected Exp6575 and
+  Exp6576 paths, existence, hashes, schema versions, disk state, Python
+  version, audit-tool hashes, protected-file hashes, and response-content
+  recovery state before replay. A missing Exp6576 artifact SHALL produce a
+  terminal `blocked` class. Its `honest_verdict` SHALL start with `blocked_`.
+  Its gate summary SHALL name the missing path.
+- REQ-REPORT-6577-MANIFEST: The audit SHALL derive expected work from the
+  immutable `expected_source_family_units` manifest. It SHALL emit one audit
+  row for every expected source-family unit. It SHALL reject missing, extra,
+  duplicated, reordered, or selectively retained units.
+- REQ-REPORT-6577-FAMILIES: The only mandated model repositories SHALL be
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`. Each SHALL use its canonical family label.
+  A legacy model or another repository SHALL not satisfy coverage.
+- REQ-REPORT-6577-REPLAY: Each audit row SHALL recover source, prompt, and raw
+  response bytes from inline bytes or a content-addressed path. It SHALL
+  recompute their hashes. It SHALL verify corpus commit, unit order, seed,
+  model repository, revision, GGUF hash, process exit, stop reason, token
+  totals, latency, and charged cost from row receipts. Model files SHALL be
+  hashed when a local model path is present.
+- REQ-REPORT-6577-RAW-FIRST: Each row SHALL prove that raw response storage
+  happened before parser work when sequence or monotonic receipts exist. A
+  missing ordering receipt SHALL remain visible and SHALL fail readiness.
+- REQ-REPORT-6577-FAILURES: Timeout, malformed-output, refusal, empty-output,
+  and process-failure rows SHALL remain in the expected-row denominator. The
+  audit SHALL recompute failure counts from raw row flags and bytes. It SHALL
+  not turn a failed row into a missing science null.
+- REQ-REPORT-6577-ATTACKS: The audit SHALL emit one attack row for each source
+  alias, duplicate unit, copied cross-model response, selective retry, hidden
+  row drop, legacy-model substitution, inconsistent family label,
+  post-outcome prompt change, null-only row, missing content path, and
+  aggregate contradiction invariant. Every attack result SHALL derive from
+  immutable manifest and response rows.
+- REQ-REPORT-6577-REDUCER: The audit SHALL recompute row count, family
+  coverage, failure count, prompt tokens, response tokens, total tokens,
+  latency, charged cost, claim-bearing row count, and Exp6576 readiness. The
+  exact top-level `claim_stream_audit_ready_score` SHALL equal `1.0` only when
+  all expected rows replay, all mandated families are present, failures remain
+  visible, attacks pass, protected files are unchanged, and the upstream
+  readiness value matches the row-derived readiness value.
+- REQ-REPORT-6577-ATOMIC: The audit SHALL preserve `research-roadmap.yaml` and
+  `scripts/research_conductor.py`. It SHALL set
+  `inference_substrate=immutable_source_stream_independent_replay_no_llm` and
+  `verifier_is_oracle=true`. It SHALL write exactly one terminal JSON artifact
+  by same-directory atomic replacement. A clean audit SHALL use
+  `verdict_class=null`. No audit result SHALL use a positive class.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `upstream_artifact_receipt`, `rows`,
+`failure_retention_rows`, `duplicate_and_drift_attack_rows`,
+`claim_stream_audit_ready_score`, `aggregate_row_recomputation`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+The required field principles are:
+
+- `status`: "The independent audit terminates even when upstream evidence is absent."
+- `honest_verdict`: "The verdict states whether lineage and coverage independently replay."
+- `verdict_class`: "The audit uses only null, partial, blocked, or disqualified classes."
+- `gate_check_summary`: "A block names the exact missing artifact or failed field and observed value."
+- `upstream_artifact_receipt`: "Path, hash, status, and schema bind the object under audit."
+- `rows`: "Every expected source-family unit carries independently recomputed metrics."
+- `failure_retention_rows`: "Failure classes cannot vanish from an aggregate denominator."
+- `duplicate_and_drift_attack_rows`: "Aliases, copied output, prompt drift, and selective retries are tested explicitly."
+- `claim_stream_audit_ready_score`: "This exact top-level binary field gates semantic-block extraction."
+- `aggregate_row_recomputation`: "Every audit headline derives from emitted rows."
+- `preconditions_checked`: "Input and tool receipts distinguish a block from a failed replay."
+- `protected_files_unchanged`: "The audit preserves both protected orchestration files."
+- `inference_substrate`: "This is immutable artifact replay with no new LLM inference."
+- `verifier_is_oracle`: "The audit is evidence authority and therefore cannot create positive science."
+- `field_provenance`: "Each field identifies raw rows, hashes, and independent reducer code."
+- `duration_s`: "Monotonic duration exposes skipped replay or attack work."
+- `tests_run`: "Named commands and exits make the audit reproducible."
+- `reproducibility_checksum`: "A final hash detects audit mutation."
+
+#### SCENARIO-REPORT-6577-MISSING: Missing Upstream Evidence Blocks Without Inference
+
+**Given** the expected Exp6576 path does not exist
+**When** Exp6577 runs
+**Then** it writes one atomic artifact, names that exact path, uses a
+`blocked_` verdict, emits a zero gate score, and does not create source rows.
+
+#### SCENARIO-REPORT-6577-COVERAGE: Every Family And Failure Stays Visible
+
+**Given** an immutable manifest and raw rows for all three mandated families
+**When** the audit replays coverage
+**Then** every expected unit has one audit row and every failed attempt remains
+in the same denominator as successful attempts.
+
+#### SCENARIO-REPORT-6577-REPLAY: Raw Bytes And Cost Recompute Independently
+
+**Given** recoverable source, prompt, response, model, process, token, timing,
+and cost receipts
+**When** the audit ignores stored Exp6576 aggregates
+**Then** all hashes and totals derive from raw rows and every contradiction is
+reported.
+
+#### SCENARIO-REPORT-6577-ATTACKS: Filtering Duplication And Drift Fail Closed
+
+**Given** one mutation for each required attack invariant
+**When** the independent reducer evaluates the mutated rows
+**Then** aliases, duplicates, copied output, selective retries, row drops,
+substitution, label drift, prompt drift, null rows, missing content, and
+aggregate contradictions prevent readiness.
+
+#### SCENARIO-REPORT-6577-ATOMIC: One Non-Positive Audit Artifact Recomputes
+
+**Given** replay and attack work has terminated
+**When** Exp6577 writes its result
+**Then** protected files remain byte-identical, the checksum validates, the
+top-level audit score matches emitted rows, and a clean result uses a null
+verdict class.
+
+## Implementation Status (REQ-REPORT-6577)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6577 | Implemented (`python/carnot/experiment_6577_flagship_source_stream_independent_audit.py`, terminal artifact `results/experiment_6577_flagship_source_stream_independent_audit.json`) | Implemented (`tests/python/test_experiment_6577_flagship_source_stream_independent_audit.py`; 18 focused tests; 100% module line coverage) |
