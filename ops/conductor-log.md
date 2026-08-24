@@ -16405,3 +16405,6 @@ code |
 | 2026-08-24 13:25 UTC | Semantic-block joint proof extractor v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6575-v571-clean-evidence-and-flagship-qua |
 | 2026-08-24 13:25 UTC | Activation REFUSED: milestone 2026.08.572 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-08-24 13:25 UTC | Activation replan 1/2: 2026.08.572 | OK | refused roadmap quarantined to roadmap-2026.08.572-refusal1.yaml; replanning wit |
+| 2026-08-24 13:30 UTC | Plan milestone 2026.08.572 | OK | 6 tasks proposed |
+| 2026-08-24 13:32 UTC | Semantic-block joint proof extractor v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6575-v571-clean-evidence-and-flagship-qua |
+| 2026-08-24 13:32 UTC | Milestone 2026.08.572 activated | OK | 6 tasks queued |
