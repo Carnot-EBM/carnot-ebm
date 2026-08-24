@@ -237,6 +237,38 @@ def _install_legacy_results_write_compat() -> None:
             guard.install_legacy_results_write_compat()
 
 
+def _child_results_guard():
+    """Import the child-process results guard, or None if unavailable.
+
+    Never raises, for the same reason its siblings never raise: a guard that can break the
+    suite it guards gets deleted by the first person it inconveniences.
+    """
+    try:
+        from carnot.testing import child_results_guard as _g
+
+        return _g
+    except Exception:  # noqa: BLE001 - deliberately total
+        return None
+
+
+def _install_child_results_guard(config) -> None:
+    """Carry the ``results/`` redirect into child processes.
+
+    The two in-process guards above cannot see a subprocess: a PEP 578 audit hook belongs to
+    the interpreter that added it, and a monkeypatched `builtins.open` belongs to that
+    interpreter's memory. Measured 2026-08-24 on `test_experiment_3361_*`, which exercises one
+    writer both ways -- the in-process half left the tree clean, the subprocess half rewrote
+    the committed artifact and still reported green. See `child_results_guard` for the full
+    mechanism and for what it still does not catch.
+    """
+    guard = _child_results_guard()
+    root = getattr(config, "_carnot_artifact_root", None)
+    if guard is None or not root:
+        return
+    with contextlib.suppress(Exception):
+        guard.install(str(root))
+
+
 def _is_xdist_worker(config) -> bool:
     """True inside an xdist worker process, where this must NOT run.
 
@@ -274,6 +306,7 @@ def pytest_configure(config) -> None:
     _install_operator_curated_doc_guard()
     _install_legacy_results_write_compat()
     _install_tracked_results_guard()
+    _install_child_results_guard(config)
 
     # ARM THE RECORD-REWRITE INTERLOCK, HOWEVER PYTEST WAS INVOKED (2026-07-29).
     #

@@ -193,6 +193,14 @@ GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
         "would never have found it -- listed here explicitly",
     ),
     (
+        PROJECT_ROOT / "python" / "carnot" / "testing" / "child_results_guard.py",
+        "carries the results/ write redirect across the subprocess boundary, so it decides "
+        "whether a test's child process may rewrite committed evidence. Its own origin is a "
+        "SILENT_NON_FIRING (2026-08-24): the two in-process guards are per-interpreter and "
+        "could not see a child, so every subprocess writer stripped flagged_adversarial and "
+        "the corrigendum fields while the suite reported green",
+    ),
+    (
         PROJECT_ROOT / "scripts" / "artifact_freshness_lint.py",
         "decides whether an analyser-produced artifact is stale, i.e. whether its numbers "
         "may still be cited",
