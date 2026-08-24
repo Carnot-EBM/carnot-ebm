@@ -519,3 +519,13 @@ def test_verification_is_bounded_without_spending_family_runtime(
     assert all("--no-cov" in text for text in commands if "pytest" in text)
     assert all(call[1] == root for call in calls)
     assert mod.family_task_deadline(_protocol(), now=1000.0) == 5200.0
+
+
+def test_server_command_keeps_measured_offload_logs() -> None:
+    """REQ-REPORT-6582-PROCESS: the launch keeps the layer receipt visible."""
+
+    with mod._family_configuration():
+        command = shared._server_command(Path("/llama-server"), Path("/model.gguf"), 6582)
+
+    verbosity_index = command.index("--log-verbosity") + 1
+    assert int(command[verbosity_index]) >= 4
