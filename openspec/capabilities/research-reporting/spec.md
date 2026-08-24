@@ -53827,3 +53827,159 @@ no positive integration claim.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6551 | Planned (`python/carnot/experiment_6551_production_safety_net_independent_audit.py`, terminal artifact `results/experiment_6551_production_safety_net_independent_audit.json`) | Planned (`tests/python/test_experiment_6551_production_safety_net_independent_audit.py`) |
+
+### REQ-REPORT-6571: V570 Evidence Root SHALL Freeze V569 Eligibility, Gates, Failures, And Retirement
+
+Carnot SHALL build Exp6571 as an additive V570 evidence, gate, failed-scope,
+and retirement root for planning date 20260824. It SHALL import Exp6565 through
+Exp6570 only at the exact deliverable paths declared by the V569 archive and
+only with SHA-256 content receipts. It SHALL emit one eligibility row for each
+expected artifact, including the absent
+`results/experiment_6569_source_span_proof_obligation_extractor.json`. The
+known Exp6569 absence SHALL be classified as `missing`, never `null`, and SHALL
+not by itself block closure of the evidence contract.
+
+Sub-requirements:
+
+- REQ-REPORT-6571-IMPORT: Every eligibility row SHALL record the exact path,
+  existence, content hash or `missing`, source status, source verdict, imported
+  closed verdict class, stamped flags, fresh flags, checker commands, exits,
+  monotonic durations, disposition, failed scope, and reason. Exp6568 SHALL be
+  imported as `blocked` even though its V569 gate artifact omitted that class.
+- REQ-REPORT-6571-LIVE: Exp6571 SHALL freshly replay the current adversarial
+  verifier, row-consistency conventions, and artifact-convention rules for all
+  six expected inputs. It SHALL preserve stamped-versus-live disagreement and
+  SHALL treat the expected missing-path checker result as evidence of absence,
+  not a clean artifact result.
+- REQ-REPORT-6571-GGUF: The GGUF admission root cause SHALL derive from Exp6567
+  rows. All three mandated blobs SHALL be resolved, embedded tokenizer, CUDA
+  runtime, and sequential memory receipts SHALL be recorded, the failed
+  `model_identity_and_file_shape` check SHALL trace to
+  `language_model_file=false` and `quantization_known=false` on hash-only
+  paths, and generation row count SHALL remain zero.
+- REQ-REPORT-6571-VERDICT: The terminal verdict class SHALL use only `null`,
+  `partial`, `blocked`, or `disqualified`. A complete audit contract SHALL use
+  `null`; usable incomplete evidence SHALL use `partial`; missing unexpected
+  prerequisites SHALL use `blocked`; false provenance SHALL use
+  `disqualified`.
+- REQ-REPORT-6571-GATES: Every structured V570 gate SHALL name an upstream task
+  in the active roadmap and an artifact field spelled exactly as that
+  upstream prompt's `REQUIRED ARTIFACT FIELDS` entry. Every task ID and
+  deliverable SHALL be frozen, and no `requires` or `gated_on` chain SHALL
+  reference a retired experiment ID.
+- REQ-REPORT-6571-FAILURES: Every active-roadmap `prior_failures` entry SHALL
+  preserve `experiment_id`, `verdict`, `addressed_by`, and
+  `retire_if_same_verdict`. Each row SHALL name a changed mechanism and a
+  mechanical repeat-retirement rule. Retired full-ConstraintIR or schema-
+  reprompt mechanisms SHALL not be reused.
+- REQ-REPORT-6571-BOUNDARIES: The mandated headline models SHALL remain
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy smoke models SHALL not substitute.
+  GGUF retry SHALL require content-derived header metadata and actual
+  execution. Extraction SHALL require source spans and joint sufficiency. ARC
+  SHALL remain prospective live-receipt work with no solve laundering.
+  Hardware SHALL issue no command without a changed operator receipt.
+- REQ-REPORT-6571-RUST: Rust fusion SHALL reopen only for one fused end-to-end
+  joint-proof workload materially different from Exps6563 and 6564. A repeated
+  no-benefit or NFR01 miss SHALL retire the acceleration lane.
+- REQ-REPORT-6571-ATTACKS: The reducer SHALL fail closed against hash aliases,
+  missing-artifact laundering, aggregate-only claims, stamped/live verifier
+  disagreement, false model admission, wrong verdict classes, field drift,
+  legacy-model substitution, retired ConstraintIR reuse, ARC solve laundering,
+  unchanged hardware commands, and protected-file mutation.
+- REQ-REPORT-6571-ATOMIC: The reducer SHALL record git, CPU, RAM, disk, Python,
+  Rust, PyO3, Z3, model-cache, artifact, protected-file, monotonic timer,
+  architecture-freshness, and network receipts without loading an LLM or
+  issuing a hardware command. It SHALL write one atomic terminal JSON artifact
+  with field provenance and a reproducibility checksum.
+
+The Exp6571 artifact SHALL be written to
+`results/experiment_6571_v570_evidence_gate_and_retirement_root.json` with
+`inference_substrate=immutable_v569_artifact_gate_failure_and_retirement_audit_no_llm`,
+`verifier_is_oracle=true`, and all artifact fields and principles declared in
+the Exp6571 active-roadmap prompt. Field principles SHALL be:
+
+- `status`: "A terminal state prevents a bootstrap record from posing as the evidence root."
+- `honest_verdict`: "The verdict must state eligibility, failed scopes, and retirement boundaries with a terminal prefix."
+- `verdict_class`: "A closed enum carries null, blocked, partial, and disqualified state downstream."
+- `v569_artifact_eligibility_rows`: "One row per expected V569 artifact makes missing and unusable evidence visible."
+- `live_verifier_and_duration_rows`: "Fresh commands, exits, flags, and monotonic durations resolve stale stamped findings."
+- `gguf_admission_root_cause`: "The next mechanism must target the observed hash-only path defect, not repeat generic fit prediction."
+- `v570_gate_contract_rows`: "Every downstream gate must name an in-roadmap task and exact upstream field."
+- `prior_failure_and_retirement_rows`: "Every scope match needs a changed mechanism and repeat-retirement rule."
+- `model_arc_and_hardware_boundary`: "The root freezes flagship, live-ARC, and zero-unchanged-command rules."
+- `v570_evidence_contract_ready_score`: "One binary field gates tasks that require the full V570 evidence contract."
+- `rust_fusion_reopen_ready_score`: "A separate binary field permits only the changed fused workload and freezes retirement."
+- `per_unit_rows`: "Artifact-level rows prevent one missing or invalid input from hiding in an aggregate."
+- `aggregate_row_recomputation`: "Readiness fields must derive only from emitted rows."
+- `gate_check_summary`: "A blocked verdict must name the failed check and observed value."
+- `preconditions_checked`: "Resource and input receipts distinguish missing prerequisites from evidence failure."
+- `protected_files_unchanged`: "The task must not mutate research-roadmap.yaml or scripts/research_conductor.py."
+- `inference_substrate`: "This is immutable artifact audit with no new LLM inference."
+- `verifier_is_oracle`: "Artifact validation is audit authority, so a clean result cannot use a positive class."
+- `field_provenance`: "Every headline field identifies source rows, hashes, and reducer."
+- `duration_s`: "Monotonic duration exposes skipped contract work."
+- `tests_run`: "Named commands and exit codes make the contract reproducible."
+- `reproducibility_checksum`: "A final content hash detects terminal-record mutation."
+
+`v570_evidence_contract_ready_score` SHALL
+equal bare `1.0` only when eligibility, live replay, exact gates, prior
+failures, GGUF cause, model, ARC, hardware, Rust, attack, protected-file,
+provenance, and checksum contracts close. `rust_fusion_reopen_ready_score`
+SHALL equal bare `1.0` only when the changed fused workload and repeat-
+retirement rule are both frozen.
+
+#### SCENARIO-REPORT-6571-IMPORT: V569 Inputs Are Immutable And Honestly Classified
+
+**Given** the V569 archive declares six deliverables and Exp6569 is absent
+**When** Exp6571 builds eligibility rows from exact paths and hashes
+**Then** Exp6565 and Exp6566 remain usable contracts, Exp6567 remains a blocked
+pre-inference admission, Exp6568 becomes a corrected blocked gate import,
+Exp6569 is `missing` rather than null, and Exp6570 remains a valid blocked audit.
+
+#### SCENARIO-REPORT-6571-LIVE: Fresh Replay Preserves Stamped Disagreement
+
+**Given** Exp6565 carries stamped adversarial findings and the six expected
+paths include one missing artifact
+**When** the current checkers replay every path
+**Then** commands, exits, durations, stamped flags, fresh flags, convention
+status, and disagreement state are emitted without treating the missing path
+as a clean loaded artifact.
+
+#### SCENARIO-REPORT-6571-GGUF: Root Cause Comes From Exp6567 Rows
+
+**Given** Exp6567 resolved three hash-only model blobs before inference
+**When** Exp6571 reduces its model and precondition rows
+**Then** tokenizer, CUDA, memory, failed file-shape booleans, hash-only path
+shape, and zero generation are all independently visible in the root-cause row.
+
+#### SCENARIO-REPORT-6571-GATES: Active Tasks And Exact Fields Are Frozen
+
+**Given** the active V570 roadmap declares tasks, deliverables, structured
+gates, and prior failures
+**When** Exp6571 validates the roadmap and exclusion manifest
+**Then** every task and deliverable is frozen, every upstream and field match,
+every prior failure is complete, and no dependency chain uses a retired ID.
+
+#### SCENARIO-REPORT-6571-BOUNDARIES: Changed Mechanisms Fail Closed
+
+**Given** V569 stopped before source extraction or graph-Potts utility
+**When** Exp6571 freezes retry and retirement policy
+**Then** only content-derived GGUF execution, source-span joint sufficiency,
+one fused Rust workload, prospective live ARC receipts, and changed-receipt
+hardware work may reopen, with no legacy or retired-mechanism substitution.
+
+#### SCENARIO-REPORT-6571-ATOMIC: Readiness Recomputes From Rows
+
+**Given** eligibility, live replay, gate, failure, GGUF, boundary, attack,
+protected-file, test, and provenance rows
+**When** Exp6571 writes its terminal artifact atomically
+**Then** both readiness scores recompute only from emitted rows, the checksum
+matches, the protected roadmap and conductor remain byte-identical,
+`verifier_is_oracle=true`, and no positive science class is emitted.
+
+## Implementation Status (REQ-REPORT-6571)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6571 | Planned (`python/carnot/experiment_6571_v570_evidence_gate_and_retirement_root.py`, terminal artifact `results/experiment_6571_v570_evidence_gate_and_retirement_root.json`) | Planned (`tests/python/test_experiment_6571_v570_evidence_gate_and_retirement_root.py`) |

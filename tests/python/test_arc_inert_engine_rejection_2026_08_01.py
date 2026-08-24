@@ -323,6 +323,7 @@ class _Proposer:
     would try to reach a GPU server; the method under test reads exactly two attributes."""
 
     last_stop_type = None
+    last_requested_n_predict = 0
     max_tokens = 4096
     _engine_defects = e3.LocalGGUFProposer._engine_defects
 

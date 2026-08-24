@@ -32,7 +32,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 
-def test_build_result_emits_metrics_used_field(tmp_path: Path) -> None:
+def test_build_result_emits_metrics_used_field(tmp_path: Path, monkeypatch) -> None:
     """build_result() must always include a metrics_used key.
 
     Default is the sentinel ``"unknown"`` so an experiment that forgot to pass
@@ -40,6 +40,7 @@ def test_build_result_emits_metrics_used_field(tmp_path: Path) -> None:
     """
     from experiment_template import ExperimentTemplate  # noqa: WPS433 (test-time import)
 
+    monkeypatch.setenv("CARNOT_EXPERIMENT_ARTIFACT_ROOT", str(tmp_path))
     deliverable = tmp_path / "experiment_x.json"
     tmpl = ExperimentTemplate(
         exp_id="exp9999-test",
