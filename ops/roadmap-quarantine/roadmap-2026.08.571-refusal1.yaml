@@ -227,15 +227,6 @@ tasks:
     estimated_wall_time_min: 60
     agent_type: codex
     model: gpt-5.6-sol
-    prior_failures:
-      - experiment_id: exp6234-fresh-flagship-constraint-event-stream
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Exp6234 attempted gated two-family stream generation. Exp6577 performs no generation or LLM inference. It independently audits Exp6576's immutable three-family rows and emits an exact missing-input diagnosis when the stream is unavailable."
-        retire_if_same_verdict: true
-      - experiment_id: exp6568-immutable-source-span-claim-stream
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Exp6568 attempted the upstream live source-span stream and failed its admission gate. Exp6577 is a downstream replay audit of the new Exp6576 stream contract. It recomputes claims from raw rows and does not reuse Exp6568's blocked artifact or technique."
-        retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Exp6576 should contain immutable source and response rows from all three mandated families. This audit always runs. It must diagnose a missing or blocked upstream artifact without consuming a model and must not trust upstream aggregate fields. Work at {project_root}. The planning date is {date}.
