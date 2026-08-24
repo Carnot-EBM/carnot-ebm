@@ -1,0 +1,53 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.570",
+  "generated_at": "2026-08-24T05:42:04Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 1.0,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Sequential flagship GGUF admission v2 by actual execution",
+      "duration_minutes": 0.87,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V570 immutable evidence, gate, and retirement root",
+      "duration_minutes": 0.08,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Content-derived GGUF metadata for hash-only cache blobs",
+      "duration_minutes": 0.08,
+      "compute_bound": true
+    },
+    {
+      "experiment": "SOTA hop-conditioned joint-sufficiency method contract",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Four experiments fit inside the reconstructed 1.0-minute window, and 3 carried compute-bound tags. Sequential flagship GGUF admission v2 by actual execution was first in the duration ranking; the locked field records no compute-task GPU-idle condition.",
+  "bottlenecks_identified": [
+    "The duration ranking identifies sequential flagship admission as the compute tail, but it contains no stage timings that can explain the lead.",
+    "Disk-mtime reconstruction replaced live commit timing, which hides the costs of short execution stages.",
+    "The monitor sample is not joined to per-experiment intervals. It shows instantaneous load, not utilization through each compute-bound task."
+  ],
+  "improvements_suggested": [
+    "Write phase clocks and task-keyed GPU samples into the live receipt instead of reconstructing elapsed time from file timestamps.",
+    "Let the single-model GGUF path batch compatible questions, then save batch size and elapsed time in its receipt.",
+    "Queue a second ready, independent single-model job on the unused device when dependencies permit; do not split a lone model by default.",
+    "Save concurrent model count and runner choice at launch; select DualGPURunner only for 2 or more models loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Join phase clocks and GPU samples to each compute task.",
+    "Measure batched question execution in the GGUF runner.",
+    "Dispatch independent model jobs by free-device capacity and record the runner decision."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The task tags and monitor sample reject a compute-idle diagnosis: GPU 1 was at 97% utilization, and the locked idle field is false. The evidence cannot explain stage cost or audit a launch with 2 or more parallel models."
+}
