@@ -101,6 +101,7 @@ FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
 RUFF_CHECK_COMMAND = f".venv/bin/ruff check {MODULE_RELATIVE_PATH} {TEST_RELATIVE_PATH}"
 RUFF_FORMAT_COMMAND = f".venv/bin/ruff format --check {MODULE_RELATIVE_PATH} {TEST_RELATIVE_PATH}"
 SPEC_COVERAGE_COMMAND = f".venv/bin/python scripts/check_spec_coverage.py {TEST_RELATIVE_PATH}"
+FULL_PYTEST_TIMEOUT_S = 7200.0
 
 
 # These helpers are byte- and family-neutral. Aliases keep one canonical hash,
@@ -420,6 +421,13 @@ def normalize_preconditions(preconditions: Mapping[str, Any]) -> JsonDict:
     return result
 
 
+def family_task_deadline(protocol: Mapping[str, Any], *, now: float) -> float:
+    """Start the frozen model budget after verification and resource checks."""
+
+    timeout_s = float(protocol.get("prompt_seed_budget_contract", {}).get("timeout_s", 4200))
+    return now + timeout_s
+
+
 def _resolve_metadata_receipt() -> JsonDict:  # pragma: no cover - live cache receipt.
     """Resolve and content-bind the exact dense Gemma GGUF."""
 
@@ -430,8 +438,16 @@ def _resolve_metadata_receipt() -> JsonDict:  # pragma: no cover - live cache re
 def _checkpoint_tests(repo_root: Path) -> list[JsonDict]:  # pragma: no cover - live checks.
     """Run the focused, coverage, full, lint, format, and spec checks once."""
 
-    with _family_configuration():
-        return shared._checkpoint_tests(repo_root)
+    commands = (
+        (FOCUSED_TEST_COMMAND, 180.0),
+        (COVERAGE_RUN_COMMAND, 180.0),
+        (COVERAGE_REPORT_COMMAND, 60.0),
+        (FULL_PYTEST_COMMAND, FULL_PYTEST_TIMEOUT_S),
+        (RUFF_CHECK_COMMAND, 60.0),
+        (RUFF_FORMAT_COMMAND, 60.0),
+        (SPEC_COVERAGE_COMMAND, 60.0),
+    )
+    return [shared._run_named_test(command, repo_root, timeout) for command, timeout in commands]
 
 
 def _collect_preconditions(
@@ -474,9 +490,7 @@ def run_experiment(repo_root: Path, run_date: str) -> JsonDict:  # pragma: no co
     diagnostics: list[JsonDict] = []
     process_receipt: JsonDict = {}
     unload_rows: list[JsonDict] = []
-    task_deadline = start + float(
-        protocol.get("prompt_seed_budget_contract", {}).get("timeout_s", 4200)
-    )
+    task_deadline = family_task_deadline(protocol, now=time.monotonic())
     if preconditions["all_required_preconditions_available"]:
         preconditions["model_process_started"] = True
         rows, checkpoints, diagnostics, process_receipt, unload_rows = _run_live_shard(
