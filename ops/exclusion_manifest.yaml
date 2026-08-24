@@ -1069,9 +1069,29 @@ retired_extras:
     precondition. It does not retire flagship model use in general. Reopen once
     someone diagnoses why the quality precondition fails after a successful load,
     and states what changed.
+  correction_2026_08_24: >-
+    APPENDED CORRECTION, not a rewrite. The reason text above is wrong on two
+    points and is kept verbatim so the error is visible.
+    FIRST, Exp6581 is UN-RETIRED. It ran once and never repeated. The conductor
+    journal shows 0 launches for the Qwen3.6 task and 2 for the Gemma-4-31B task.
+    retire_if_same_verdict requires the SAME verdict on a REPEAT run, which only
+    Exp6582 satisfies. The claim of "10 poison-and-rerun events across these two
+    tasks" came from a grep that also counted commit and in-process-doc lines. The
+    real rerun count is two, both Exp6582. Exp6581 was removed from
+    scripts/conductor_exclusion_manifest.json on 2026-08-24 and is free to run.
+    SECOND, no precondition failed. Both artifacts record
+    gate_check_summary.all_structured_gates_passed=true with first_failure=null,
+    aggregate_row_recomputation.authentic_terminal_row_count=0, and
+    preconditions_checked absent. Every structured gate PASSED. The run produced
+    zero authentic terminal rows and honestly declined to claim quality. The
+    original reason read the verdict STRING, not the artifact, and named a failing
+    quality precondition that does not exist.
+    The open question is therefore not "why does the precondition fail" but "why
+    does a 15-40 minute live run produce zero authentic terminal rows".
   experiment_ids:
-  - exp6581-qwen36-flagship-source-shard
   - exp6582-gemma4-31b-flagship-source-shard
+  un_retired_experiment_ids:
+  - exp6581-qwen36-flagship-source-shard
   retired_milestone: 2026.08.572
   retired_by_artifact: results/experiment_6582_gemma4_31b_flagship_source_shard.json
   operator_reopen_required: true
