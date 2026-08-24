@@ -54817,3 +54817,127 @@ verdict class.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6580 | Planned (`python/carnot/experiment_6580_v572_source_and_joint_method_protocol.py`, terminal artifact `results/experiment_6580_v572_source_and_joint_method_protocol.json`) | Planned (`tests/python/test_experiment_6580_v572_source_and_joint_method_protocol.py`) |
+
+### REQ-REPORT-6581: Qwen3.6 One-Family Source Shard SHALL Preserve Runtime Evidence
+
+Carnot SHALL run only `unsloth/Qwen3.6-35B-A3B-GGUF` for Exp6581. The
+task SHALL use the frozen Exp6580 source units, prompt, seed, order, token
+budget, stop rules, and timeout. The task SHALL measure runtime and source
+shard completeness only. It SHALL make no cross-family or quality claim.
+
+- REQ-REPORT-6581-GATES: The task SHALL evaluate the Exp6579
+  `v572_decomposition_contract_ready_score` and the Exp6580
+  `v572_source_method_ready_score`. Each observed value SHALL equal `1.0`
+  before a model process starts. A failed gate SHALL produce one terminal
+  blocked artifact. The gate summary SHALL name the exact upstream path,
+  field, expected value, and observed value.
+- REQ-REPORT-6581-IDENTITY: The model receipt SHALL bind the repository,
+  revision, trusted GGUF blob hash, snapshot path, content-derived
+  architecture, quantization, tensors, and embedded tokenizer. Positive
+  admission SHALL require the Qwen `qwen35moe` architecture. Bounded negative
+  fixtures SHALL reject non-GGUF bytes, a truncated header, a repository
+  mismatch, tokenizer-only content, and a wrong architecture.
+- REQ-REPORT-6581-SOURCE: The task SHALL replay every frozen Exp6580 source
+  unit in manifest order. Each row SHALL bind the immutable source bytes,
+  source hash, manifest hash, family-neutral prompt hash, request bytes, seed,
+  budget, and stop rules. Source selection SHALL not depend on model output.
+- REQ-REPORT-6581-RAW-FIRST: The task SHALL write one content-addressed raw
+  terminal checkpoint before claim segmentation for each source unit. Raw
+  bytes SHALL remain recoverable from the terminal row or its checkpoint.
+  The checkpoint SHALL use same-directory atomic replacement. Periodic row
+  hashes SHALL expose long-run truncation or later mutation.
+- REQ-REPORT-6581-FAILURES: The task SHALL retain timeout, malformed, refusal,
+  empty, no-claim, and process-failure outcomes. It SHALL not retry, filter,
+  or remove failed rows. Bounded claim-sentence segmentation SHALL remain a
+  derived diagnostic and SHALL not control row inclusion or readiness.
+- REQ-REPORT-6581-PROCESS: The task SHALL start one fresh external llama.cpp
+  process with its embedded tokenizer. The command SHALL request CUDA offload
+  for the selected device. Receipts SHALL bind the command digest, verified
+  PID and parent PID, GGUF path, positive offloaded layer count, repeated GPU
+  memory and utilization samples, raw process streams, and one-family
+  residency. The task SHALL not signal unrelated GPU processes.
+- REQ-REPORT-6581-UNLOAD: The task SHALL request worker shutdown after the
+  terminal source row. It SHALL verify process exit, port closure, worker
+  removal from GPU telemetry, and bounded memory recovery. A failed cleanup
+  or recovery check SHALL force readiness to `0.0`.
+- REQ-REPORT-6581-ATTACKS: The artifact SHALL fail closed against legacy-model
+  substitution, stale PID, zero-layer offload, reused output, prompt drift,
+  source aliasing, hidden retry, missing raw bytes, failed-row removal,
+  cross-family residency, and readiness from an incomplete manifest.
+- REQ-REPORT-6581-REDUCER: The
+  `qwen36_family_source_shard_ready_score` SHALL equal `1.0` only when every
+  expected source unit has one authentic terminal row, identity and CUDA
+  checks pass, at least one row has a claim-bearing output, failures remain
+  represented, charged costs recompute, unload recovers, all attacks pass,
+  and protected files remain unchanged. The reducer SHALL derive coverage,
+  failures, latency, tokens, and cost only from retained rows. A ready shard
+  SHALL use `verdict_class=null`, never a positive verdict class.
+- REQ-REPORT-6581-ATOMIC: Exp6581 SHALL preserve `research-roadmap.yaml` and
+  `scripts/research_conductor.py`. It SHALL set
+  `inference_substrate=live_llama_cpp_cuda_one_family_source_shard` and
+  `verifier_is_oracle=false`. It SHALL write one validated terminal JSON
+  artifact by same-directory atomic replacement. The checksum SHALL exclude
+  only its self-referential checksum field.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `model_specs`, `model_revision_and_hash_receipt`,
+`rows`, `raw_response_receipts`, `process_and_gpu_receipts`,
+`checkpoint_receipts`, `parser_diagnostic_rows`,
+`unload_and_recovery_rows`, `attack_rows`,
+`qwen36_family_source_shard_ready_score`, `aggregate_row_recomputation`,
+`seeds`, `preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6581-GATE-BLOCK: A Failed Gate Closes Without Model Work
+
+**Given** an exact Exp6579 or Exp6580 readiness field is absent or not `1.0`
+**When** Exp6581 evaluates its structured preconditions
+**Then** it writes a blocked terminal artifact that names the observed field
+value and records that no model process started.
+
+#### SCENARIO-REPORT-6581-IDENTITY: Content Rejects Qwen Substitution
+
+**Given** the cached Qwen GGUF and the five bounded negative fixtures
+**When** Exp6581 derives metadata from file content and cache provenance
+**Then** only the mandated Qwen language-model content can satisfy identity.
+
+#### SCENARIO-REPORT-6581-RAW-FIRST: Raw Bytes Precede Diagnostics
+
+**Given** one frozen source unit reaches a terminal generation outcome
+**When** Exp6581 records the outcome
+**Then** an atomic raw checkpoint with recoverable bytes and hashes exists
+before diagnostic claim segmentation begins.
+
+#### SCENARIO-REPORT-6581-FAILURES: Failed Outcomes Remain In Coverage
+
+**Given** one source unit times out or returns another retained failure class
+**When** the aggregate reducer recomputes the shard
+**Then** the unit keeps exactly one terminal row with no retry or filtering.
+
+#### SCENARIO-REPORT-6581-UNLOAD: Fresh CUDA Runtime Recovers
+
+**Given** one fresh Qwen llama.cpp process completed or failed terminally
+**When** Exp6581 closes the runtime
+**Then** the worker exits, its port closes, GPU residency clears, memory
+returns within tolerance, and unrelated processes remain untouched.
+
+#### SCENARIO-REPORT-6581-ATTACKS: Runtime And Row Mutations Fail Closed
+
+**Given** one required substitution, drift, retry, byte-loss, residency, or
+coverage mutation
+**When** Exp6581 recomputes readiness from raw evidence
+**Then** the candidate readiness score is `0.0`.
+
+#### SCENARIO-REPORT-6581-ATOMIC: One Null-Class Artifact Recomputes
+
+**Given** gates, source rows, process receipts, unload, and attacks have ended
+**When** Exp6581 atomically writes its terminal artifact
+**Then** the checksum validates, the readiness field matches the reducer, and
+a ready artifact uses a null verdict class.
+
+## Implementation Status (REQ-REPORT-6581)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6581 | Implemented (`python/carnot/experiment_6581_qwen36_flagship_source_shard.py`; terminal artifact `results/experiment_6581_qwen36_flagship_source_shard.json`) | Implemented (`tests/python/test_experiment_6581_qwen36_flagship_source_shard.py`) |
