@@ -1049,3 +1049,33 @@ retired_extras:
   blocked_patterns:
   - licensed transfer promoted while Exp6301 activation-bus integrity is blocked
   - retrieval-only or replay-only evidence counted as evidence-licensed transfer
+- id: exp6581_6582_one_family_flagship_source_shard_retired_v572
+  scope_key: one_family_flagship_source_shard_blocked_precondition_without_quality_claim
+  experiment_scope: One-family flagship GGUF source-shard runs that load a flagship model, run to completion, then fail a quality precondition and emit blocked_precondition_failed_without_quality_claim
+  reason: >-
+    retire_if_same_verdict: Exp6581 (Qwen3.6) and Exp6582 (Gemma-4-31B) reached the
+    identical blocked_precondition_failed_without_quality_claim verdict on two
+    different model families. The block is not a missing model and not a failed
+    admission gate. Both runs loaded a model and did real work first: Exp6581 ran
+    927s, Exp6582 ran 1109s and then 2411s on its re-run. Two families failing at
+    the same point points at the quality precondition itself, not at either model.
+    The conductor logged 10 poison-and-rerun events across these two tasks in four
+    hours. Each cycle is correct in isolation. The artifact honestly declares
+    verdict_class blocked, the poison guard correctly refuses to log it as OK, and
+    the re-run reproduces the same block. Together they form a loop with no exit,
+    and each iteration costs up to 40 minutes of live GPU. Retirement is the
+    mechanism the Failed-Experiment Rerun Discipline provides for exactly this.
+    This retires ONLY the one-family flagship source-shard scope at the current
+    precondition. It does not retire flagship model use in general. Reopen once
+    someone diagnoses why the quality precondition fails after a successful load,
+    and states what changed.
+  experiment_ids:
+  - exp6581-qwen36-flagship-source-shard
+  - exp6582-gemma4-31b-flagship-source-shard
+  retired_milestone: 2026.08.572
+  retired_by_artifact: results/experiment_6582_gemma4_31b_flagship_source_shard.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - one-family flagship source shard re-proposed without a diagnosed cause for the failing quality precondition
+  - flagship source shard retried after blocked_precondition_failed_without_quality_claim with no stated change

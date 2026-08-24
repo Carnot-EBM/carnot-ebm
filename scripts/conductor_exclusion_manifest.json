@@ -167,6 +167,16 @@
       "experiment_id": 2091,
       "completed_milestone": "2026.05.164",
       "reason": "gemini CLI consistent bail-out pattern (prompt-echo, 60+ retries 2h+ wall time); LaTeX markup fix did not resolve. Retired pending agent-routing investigation."
+    },
+    {
+      "experiment_id": 6581,
+      "completed_milestone": "2026.08.572",
+      "reason": "retire_if_same_verdict: blocked_precondition_failed_without_quality_claim after a live 927s flagship load. Exp6582 reached the identical verdict on a different model family, so the quality precondition is the cause, not either model. The poison guard re-ran these tasks 10 times in four hours at up to 40 min GPU per cycle. See ops/exclusion_manifest.yaml entry exp6581_6582_one_family_flagship_source_shard_retired_v572."
+    },
+    {
+      "experiment_id": 6582,
+      "completed_milestone": "2026.08.572",
+      "reason": "retire_if_same_verdict: blocked_precondition_failed_without_quality_claim on two runs (1109s then 2411s live GPU), same verdict as Exp6581 on a different model family. Retires only the one-family flagship source-shard scope at the current precondition, not flagship model use in general. See ops/exclusion_manifest.yaml entry exp6581_6582_one_family_flagship_source_shard_retired_v572."
     }
   ]
 }
