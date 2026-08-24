@@ -98,6 +98,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import numbers
 import re
 import sys
 from pathlib import Path
@@ -593,7 +594,15 @@ def check_terminal_artifact_readiness(
     classification: TerminalClassification,
     flags: list[Flag],
 ) -> None:
-    """Flag declared artifacts whose exact path has no terminal state."""
+    """Flag declared artifacts whose exact path has no terminal state.
+
+    The capstone carve-out matches `capstone` as a WHOLE WORD in the basename.
+    A plain substring test also matched `noncapstone`, so an artifact whose
+    name says it is not a capstone inherited the capstone exemption and its
+    critical flag was silently dropped (2026-08-23 QA-layer audit MISSED
+    INPUT). Same class as `"diffusiongemma_met"` matching inside
+    `meta_tensor`, fixed 2026-07-03.
+    """
 
     if classification.terminal:
         return
@@ -602,7 +611,7 @@ def check_terminal_artifact_readiness(
     verdict = str(classification.honest_verdict_raw or "").lower()
     if (
         classification.classification == "partial"
-        and "capstone" in path_name
+        and "capstone" in _name_tokens(path_name)
         and (status.startswith("complete_partial") or verdict.startswith("complete_partial"))
     ):
         return
@@ -627,13 +636,30 @@ def _flag_summary(flags: list[Flag]) -> dict[str, Any]:
 
 
 def _is_finite_number(v: Any) -> bool:
-    """True if v is a real, finite numeric value."""
+    """True if v is a real, finite numeric value.
+
+    Accepts any real number, not only Python's built-in int and float. An
+    experiment script that imports this module and checks its own in-memory
+    dict before writing it holds numpy scalars, and the old
+    `isinstance(v, (int, float))` answered False for every one of them -- so
+    those metrics silently skipped every numeric check (2026-08-23 QA-layer
+    audit, MISSED INPUT `numpy.float32(0.913)` as an `auroc`).
+
+    Two carve-outs survive the widening. bool is an int subclass but is not a
+    measurement, so it stays rejected. An integer too large to convert to
+    float used to raise OverflowError out of a predicate, taking the whole
+    verifier down on one oversized number in one artifact; it now answers
+    False.
+    """
     if isinstance(v, bool):
         # bool is a subclass of int; explicitly reject so True/False
         # don't trigger tautology comparison.
         return False
-    if isinstance(v, (int, float)):
-        return math.isfinite(float(v))
+    if isinstance(v, numbers.Real):
+        try:
+            return math.isfinite(float(v))
+        except (OverflowError, ValueError, TypeError):
+            return False
     return False
 
 
@@ -662,12 +688,46 @@ def _numeric_pairs(d: dict[str, Any]) -> list[tuple[str, str, float, float]]:
     return pairs
 
 
+def _name_tokens(name: str) -> set[str]:
+    """Whole words in a field name, so a marker can be matched as a word.
+
+    `folds_5` and `n_folds` both yield the word `folds`, while `discounted`
+    does not yield `count`. Shared by the count and timestamp classifiers so
+    they agree on what a word is.
+    """
+    return set(re.findall(r"[a-z0-9]+", name.lower()))
+
+
+# Ordinary count nouns. Each names a thing you can have several of, so two of
+# them landing on the same small integer is arithmetic, not evidence of a bug.
+# Added 2026-08-23 after the QA-layer audit named `{"folds": 5}` -- a
+# cross-validation fold count, exactly what the docstring below describes, that
+# the marker list did not recognize.
+_COUNT_WORDS = frozenset(
+    {
+        "wins",
+        "losses",
+        "ties",
+        "draws",
+        "folds",
+        "trials",
+        "replicates",
+        "samples",
+        "attempts",
+        "repeats",
+        "batches",
+        "successes",
+        "failures",
+    }
+)
+
+
 def _is_count_field(name: str) -> bool:
     """Field whose name implies a combinatorial count — small-integer
     coincidence is plausible, not suspicious."""
     nl = name.lower()
-    tokens = set(re.findall(r"[a-z0-9]+", nl))
-    if tokens & {"wins", "losses", "ties"}:
+    tokens = _name_tokens(nl)
+    if tokens & _COUNT_WORDS:
         return True
     count_markers = (
         "count",
@@ -719,6 +779,19 @@ _IDENTIFIER_FIELDS = frozenset(
 )
 
 
+# Words that name a span between two instants rather than one instant. A span
+# is a measurement and belongs in the tautology check; an instant is not.
+# `runtime` is here because `runtime_ms` was exempted by the `time`-inside-a-
+# longer-word match -- the 2026-08-23 QA-layer audit's counterexample, where a
+# runtime and a solver latency agreeing to seven digits went unexamined.
+_INTERVAL_WORDS = frozenset({"delta", "elapsed", "duration", "interval", "span", "runtime"})
+
+
+def _names_a_measured_interval(name: str) -> bool:
+    """True if the field name says it holds an elapsed span, not an instant."""
+    return bool(_name_tokens(name) & _INTERVAL_WORDS)
+
+
 def _is_timestamp_field(k: str) -> bool:
     """True if the field is a wall-clock TIMESTAMP (not a measured metric).
 
@@ -733,8 +806,17 @@ def _is_timestamp_field(k: str) -> bool:
     Conservative: a bare duration like `latency_ns` / `duration_ns` is NOT a
     timestamp (no time-ish token) and is left in the tautology check, so a real
     duration coincidence is still caught.
+
+    A field naming a measured INTERVAL is not a timestamp even when it also
+    carries a time-ish word. Origin: the 2026-08-23 QA-layer audit named
+    `checkpoint_mtime_delta_ns` in
+    `results/experiment_5039_self_play_verifier_checkpoint.json` -- a real
+    elapsed measurement that the `mtime` branch exempted, quietly removing a
+    genuine metric from tautology detection.
     """
     kl = k.lower()
+    if _names_a_measured_interval(kl):
+        return False
     if "mtime" in kl or "timestamp" in kl:
         return True
     if kl.endswith(("_ts", "_epoch", "_unixtime")):
@@ -752,11 +834,27 @@ def _is_chance_floor_score(k: str) -> bool:
     is 0.5 -- such fields legitimately sit at exactly 0.5 (a majority-class
     control by construction, a null/origin probe driven to chance, a shuffled
     control), so two of them coinciding at 0.5 is a floor coincidence, not a
-    distinct-measurement tautology. See exp4771 (S0' reopen) in check_tautology."""
+    distinct-measurement tautology. See exp4771 (S0' reopen) in check_tautology.
+
+    `permut` covers the other ordinary name for a shuffled-label control
+    (`binary_permuted_label_accuracy`, `label_permutation_control`). The
+    2026-08-23 QA-layer audit named that omission: the concept is "a control
+    whose expected value is chance", and half the project's vocabulary for it
+    was missing from a list that claimed to hold all of it."""
     kl = k.lower()
     return any(
         t in kl
-        for t in ("auroc", "auc", "probe", "control", "chance", "baseline", "majority", "shuffled")
+        for t in (
+            "auroc",
+            "auc",
+            "probe",
+            "control",
+            "chance",
+            "baseline",
+            "majority",
+            "shuffled",
+            "permut",
+        )
     )
 
 
@@ -6518,8 +6616,11 @@ def verify_artifact(path: Path, *, declared: bool | None = None) -> dict[str, An
     check_arc_offline_live_overclaim(d, flags)
     check_arc_outer_loop_solve(d, flags)
 
-    verdict_raw = d_raw.get("honest_verdict") or ""
-    verdict = verdict_raw if isinstance(verdict_raw, str) else ""
+    # Read the verdict the way every check above reads it: through the
+    # principle wrapper. 155 corpus artifacts wrap `honest_verdict`, and
+    # reading `d_raw` here reported an empty verdict for all of them -- the
+    # exact field the 2026-07-02 exp5161 incident was about.
+    verdict = _verdict_text(d) or ""
     return {
         "artifact": str(path),
         "loaded": True,
