@@ -16410,3 +16410,5 @@ code |
 | 2026-08-24 13:32 UTC | Milestone 2026.08.572 activated | OK | 6 tasks queued |
 | 2026-08-24 14:08 UTC | V572 terminal recovery and decomposed flagship con | OK | 95 passed, 1 warning in 20.78s |
 | 2026-08-24 14:26 UTC | V572 SOTA source and joint-proof method protocol | OK | 88 passed, 1 warning in 12.01s |
+| 2026-08-24 15:48 UTC | Qwen3.6 one-family flagship source shard | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: lues())
++    a |
