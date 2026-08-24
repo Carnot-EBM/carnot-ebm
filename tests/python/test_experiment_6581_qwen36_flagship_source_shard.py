@@ -301,11 +301,48 @@ def test_spec_declares_exp6581_requirements_and_scenarios() -> None:
         "REQ-REPORT-6581-ATTACKS",
         "REQ-REPORT-6581-REDUCER",
         "REQ-REPORT-6581-ATOMIC",
+        "REQ-REPORT-6581-VERIFY-SCOPE",
         "SCENARIO-REPORT-6581-GATE-BLOCK",
         "SCENARIO-REPORT-6581-RAW-FIRST",
         "SCENARIO-REPORT-6581-UNLOAD",
+        "SCENARIO-REPORT-6581-VERIFY-FAIL-CLOSED",
     ):
         assert anchor in text
+
+
+def test_focused_verification_fails_closed() -> None:
+    """SCENARIO-REPORT-6581-VERIFY-FAIL-CLOSED: unrun is not a pass."""
+
+    # Nothing ran, so nothing was verified.
+    assert mod.focused_verification_ok([]) is False
+    # A command that never reported an exit code did not pass.
+    assert mod.focused_verification_ok([{"command": "a"}]) is False
+    assert mod.focused_verification_ok([{"command": "a", "exit_code": None}]) is False
+    # A real failure is still a failure, including a timeout (124).
+    assert mod.focused_verification_ok([{"exit_code": 0}, {"exit_code": 124}]) is False
+    assert mod.focused_verification_ok([{"exit_code": 1}]) is False
+    # Only an all-zero, non-empty set passes.
+    assert mod.focused_verification_ok([{"exit_code": 0}, {"exit_code": 0}]) is True
+
+
+def test_verification_scope_excludes_repository_suite() -> None:
+    """REQ-REPORT-6581-VERIFY-SCOPE: no command runs the whole tests/python tree."""
+
+    commands = (
+        mod.FOCUSED_TEST_COMMAND,
+        mod.COVERAGE_RUN_COMMAND,
+        mod.COVERAGE_REPORT_COMMAND,
+        mod.RUFF_CHECK_COMMAND,
+        mod.RUFF_FORMAT_COMMAND,
+        mod.SPEC_COVERAGE_COMMAND,
+    )
+    # The repo-wide form blocked the model load on unrelated suite health.
+    assert not hasattr(mod, "FULL_PYTEST_COMMAND")
+    for text in commands:
+        assert "tests/python " not in f"{text} "
+        if "pytest" in text:
+            # A bare pytest inherits --cov from pyproject addopts.
+            assert "--no-cov" in text
 
 
 def test_hash_and_json_helpers_are_stable(tmp_path: Path) -> None:

@@ -4,6 +4,55 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-08-24: the repository-wide test suite is RED, and after today's fix nothing reports it
+
+**The finding.** `pytest tests/python` does not pass. Measured from artifacts
+that ran it, over twelve days:
+
+| Artifact | Reported |
+|---|---|
+| exp6582 (first run, `b40a131bfd`) | `87 failed, 10326 passed, 9 skipped` |
+| exp6510 | "stopped after 68 failed, 9638 passed ... xdist worker MemoryError" |
+| exp6506 | "interrupted after unrelated repository-wide failures, missing optional ONNX deps, tracked result mutations, and JAX worker aborts" |
+| exp6403 / exp6426 | 470 and 433 failures |
+
+**Why this entry exists.** Until today the only thing running the full suite was
+a precondition inside the exp6581 / exp6582 flagship shard experiments. That
+check blocked the model load on unrelated suite health, so it was removed
+(REQ-REPORT-6581-VERIFY-SCOPE). Removing it takes the last reporter away. This
+entry is where the signal now lives until it has a proper home.
+
+**Nothing else in the loop runs it.** `scripts/research_conductor.py:1467`
+`run_tests(full: bool = False)` has a correct full-suite branch at `:1525-1538`
+using `--no-cov -o addopts=`, but **every call site passes `full=False`**
+(`:6125`, `:6181`, `:6671`, `:6798`), two of them commented "full suite hangs
+serially". The `full=True` branch is dead code.
+
+**Read the counts with care.** They come from runs of the bare command, which
+inherits `--cov` and `-n 4` from `pyproject.toml` `addopts`. Coverage makes the
+suite about fifteen times slower and the observed crash was an xdist worker
+`MemoryError`. So an unknown share of those failures may be coverage or worker
+collateral rather than product breakage.
+
+**What is needed, in order.**
+
+1. One measured baseline with `--no-cov -o addopts= -n 0`. No such receipt
+   exists anywhere in the corpus. Until it does, nobody knows the real number.
+   It rewrites `results/**` and takes 18+ minutes, so it needs a run that owns
+   the box, not an experiment slot.
+2. Triage the real failures against `--cov-fail-under=99`, which the project's
+   own documented command applies.
+3. Give the check a home: revive the conductor's `full=True` branch on a low
+   cadence, or a periodic job. Not a per-experiment precondition.
+
+**Do not close this by re-adding the check to an experiment.** That is the
+defect that was just fixed; `test_verification_scope_excludes_repository_suite`
+will refuse it.
+
+**Cross-references:** `docs/research-notes/flagship-source-shard-precondition-diagnosis-2026-08-24.md`
+· commits `1c9fdb53f2`, `48b9d444d3` · CLAUDE.md "Pre-Launch Preconditions
+Discipline", "Test-Run Record Integrity Discipline".
+
 ### NEW 2026-08-18: the scored induce budget cannot be spent inside the scored induce timeout, and concurrency widens the gap
 
 **The arithmetic.** `scripts/kaggle/submission_kernel/main.py:589-590` sets

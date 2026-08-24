@@ -166,7 +166,6 @@ COVERAGE_REPORT_COMMAND = (
     "--include=python/carnot/experiment_6581_qwen36_flagship_source_shard.py "
     "--fail-under=100 --show-missing"
 )
-FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
 RUFF_CHECK_COMMAND = f".venv/bin/ruff check {MODULE_RELATIVE_PATH} {TEST_RELATIVE_PATH}"
 RUFF_FORMAT_COMMAND = f".venv/bin/ruff format --check {MODULE_RELATIVE_PATH} {TEST_RELATIVE_PATH}"
 SPEC_COVERAGE_COMMAND = f".venv/bin/python scripts/check_spec_coverage.py {TEST_RELATIVE_PATH}"
@@ -1452,14 +1451,33 @@ def _offloaded_layers(stderr_bytes: bytes) -> int:  # pragma: no cover
     return max(values, default=0)
 
 
+def focused_verification_ok(tests_run: Sequence[Mapping[str, Any]]) -> bool:
+    """Say whether every focused verification command ran AND exited zero.
+
+    Fails closed on purpose (REQ-REPORT-6581-VERIFY-SCOPE). An empty set means
+    nothing was verified, and a row with no exit code means the command never
+    reported. Both answer False. Treating "did not run" as a pass is the
+    trusted-and-silent state this project treats as the worst state for a guard.
+    """
+
+    rows = list(tests_run)
+    if not rows:
+        return False
+    return all(row.get("exit_code") == 0 for row in rows)
+
+
 def _checkpoint_tests(repo_root: Path) -> list[JsonDict]:  # pragma: no cover
-    """Run focused, added-code coverage, full tests, lint, and spec coverage once."""
+    """Run focused tests, added-code coverage, lint, and spec coverage once.
+
+    The repository-wide suite is deliberately absent (REQ-REPORT-6581-VERIFY-SCOPE).
+    It is not a resource this run needs, and it blocked the model load for a
+    reason unrelated to the measurement. See the 2026-08-24 research note.
+    """
 
     commands = (
         (FOCUSED_TEST_COMMAND, 180.0),
         (COVERAGE_RUN_COMMAND, 180.0),
         (COVERAGE_REPORT_COMMAND, 60.0),
-        (FULL_PYTEST_COMMAND, 2400.0),
         (RUFF_CHECK_COMMAND, 60.0),
         (RUFF_FORMAT_COMMAND, 60.0),
         (SPEC_COVERAGE_COMMAND, 60.0),
@@ -1510,8 +1528,7 @@ def _collect_preconditions(
         and initial.get("compute_query_exit_code") == 0,
         "idle_supported_gpu": selection.get("eligible") is True,
         "fresh_qwen_process": not task_pids,
-        "verification_commands": bool(tests_run)
-        and all(row.get("exit_code") == 0 for row in tests_run),
+        "verification_commands": focused_verification_ok(tests_run),
         "atomic_output_ready": os.access((repo_root / RESULT_RELATIVE_PATH).parent, os.W_OK),
     }
     return (
