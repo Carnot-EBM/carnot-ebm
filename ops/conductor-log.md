@@ -16379,3 +16379,4 @@ code |
 | 2026-08-24 01:50 UTC | Plan milestone 2026.08.570 | OK | 4 tasks proposed |
 | 2026-08-24 01:52 UTC | Source-span proof-obligation extraction with exact | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6568-immutable-source-span-claim-stream) |
 | 2026-08-24 01:52 UTC | Milestone 2026.08.570 activated | OK | 4 tasks queued |
+| 2026-08-24 02:45 UTC | V570 immutable evidence, gate, and retirement root | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
