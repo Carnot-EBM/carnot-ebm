@@ -52897,6 +52897,169 @@ and gate checks, and every required field has provenance.
 |---|---|---|
 | REQ-REPORT-6548 | Planned (`python/carnot/experiment_6548_v567_evidence_eligibility_contract.py`, terminal artifact `results/experiment_6548_v567_evidence_eligibility_contract.json`) | Planned (`tests/python/test_experiment_6548_v567_evidence_eligibility_contract.py`) |
 
+### REQ-REPORT-6567: Sequential Flagship GGUF Admission SHALL Use Actual Execution As Fit Authority
+
+Carnot SHALL build Exp6567 as an infrastructure admission for planning date
+20260823. It SHALL evaluate these structured gates before model execution:
+
+- Exp6565 `v569_evidence_contract_ready_score == 1.0`.
+- Exp6566 `source_method_contract_ready_score == 1.0`.
+
+Each gate receipt SHALL record the upstream path, file hash, field name,
+expected value, observed value, and result. The run SHALL also record CPU,
+RAM, disk, CUDA, driver, llama.cpp, llama-cpp-python, Z3, cached model
+candidates, protected-file hashes, and initial per-GPU state.
+
+The mandated `MODEL_SPECS` SHALL contain these repository IDs in this order:
+
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
+
+The resolver SHALL use the existing cache helpers. It SHALL not download
+weights. Each model row SHALL record repository ID, quantization, absolute
+path, byte size, SHA-256, mtime, revision, split-file state, and embedded
+tokenizer metadata. A missing file, wrong repository alias, projector file,
+split shard, or failed embedded tokenizer SHALL block that family.
+
+Actual one-at-a-time execution SHALL be the only fit authority. The workflow
+SHALL not require free VRAM to equal nominal device capacity. It SHALL freeze
+one short nonconstant prompt, seed, decoder settings, token budget, timeout,
+GPU selection, and recovery tolerance before model execution.
+
+The workflow SHALL start one llama.cpp worker at a time. Each worker row SHALL
+record the exact command, PID, parent PID, process start and end times,
+monotonic duration, stdout hash, stderr hash, raw output, raw output hash,
+prompt token IDs or hash, output token IDs or hash, exit code, signal state,
+and timeout state. The worker SHALL use the GGUF-embedded tokenizer. The run
+SHALL reject an empty output, an echo-only output, constant token output,
+reused output, a stale PID, or self-reported process identity.
+
+The workflow SHALL sample `nvidia-smi` before, during, and after each worker.
+Each sample SHALL include a UTC timestamp, monotonic timestamp, GPU identity,
+memory, utilization, temperature, compute-process rows, command exit, stdout
+hash, and stderr hash. At least one during sample SHALL contain the live worker
+PID on the selected GPU. The workflow SHALL reject constant telemetry,
+stale-process telemetry, hidden simultaneous Exp6567 workers, and telemetry
+that has no measured load delta.
+
+After each worker exits, the workflow SHALL prove that no task worker remains.
+It SHALL also prove that selected-device memory returns within the frozen
+tolerance of the pre-load baseline. It SHALL close recovery before it starts
+the next family. One successful family SHALL not stand in for another.
+Legacy Qwen3.5-0.8B and gemma-4-E4B-it rows SHALL be smoke-only and SHALL not
+enter the readiness reducer.
+
+`all_mandated_models_loaded_score` SHALL equal `1.0` only when all three
+required family rows have authentic model, tokenizer, process, token, output,
+GPU, exit, unload, and recovery receipts. A clean admission SHALL use
+`verdict_class=null`. A usable subset SHALL use `partial`. Missing runtime or
+weights SHALL use `blocked`. False receipts SHALL use `disqualified`.
+
+The workflow SHALL attack missing weights, repository alias substitution,
+wrong tokenizers, split files, stale workers, output reuse, constant GPU
+samples, failed unload, hidden simultaneous residency, and protected-file
+mutation. It SHALL write one terminal artifact atomically to
+`results/experiment_6567_sequential_flagship_gguf_admission.json`.
+
+The artifact SHALL set
+`inference_substrate=live_sequential_local_flagship_gguf_runtime_admission`
+and `verifier_is_oracle=true`. It SHALL include exactly these required fields:
+`status`, `honest_verdict`, `verdict_class`, `upstream_gate_receipts`,
+`MODEL_SPECS`, `resolved_model_file_rows`, `live_process_and_token_rows`,
+`gpu_telemetry_rows`, `unload_and_recovery_rows`,
+`all_mandated_models_loaded_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`random_seed`, `duration_s`, `tests_run`, and `reproducibility_checksum`.
+
+Field principles SHALL be:
+
+- `status`: "Admission must close terminally for ready, partial, or blocked runtime state."
+- `honest_verdict`: "The verdict names each admitted or blocked flagship family."
+- `verdict_class`: "Runtime readiness cannot be confused with positive model science."
+- `upstream_gate_receipts`: "Admission identifies the exact evidence and method contracts that authorized it."
+- `MODEL_SPECS`: "The artifact records all three mandated repository identities."
+- `resolved_model_file_rows`: "Concrete file, size, hash, quantization, and tokenizer receipts prevent alias substitution."
+- `live_process_and_token_rows`: "Commands, PIDs, outputs, tokens, exits, and timings prove actual execution."
+- `gpu_telemetry_rows`: "Timestamped PID-linked samples prove device use without impossible capacity thresholds."
+- `unload_and_recovery_rows`: "Each family must leave no worker and recover bounded device memory before the next load."
+- `all_mandated_models_loaded_score`: "One binary field gates every headline LLM experiment."
+- `per_unit_rows`: "Each model and smoke condition remains separately recheckable."
+- `aggregate_row_recomputation`: "Admission derives from required-family rows only."
+- `gate_check_summary`: "A blocked run names the failed gate, model, runtime, telemetry, or recovery check."
+- `preconditions_checked`: "Host and cache receipts distinguish absent prerequisites from runtime failure."
+- `protected_files_unchanged`: "Admission does not mutate protected orchestration files."
+- `inference_substrate`: "The artifact declares live sequential local GGUF execution."
+- `verifier_is_oracle`: "This is infrastructure admission, not verifier science."
+- `field_provenance`: "Every readiness field points to raw process, GPU, and file receipts."
+- `random_seed`: "The frozen prompt and seed make token smoke repeatable."
+- `duration_s`: "Monotonic duration covers every load and recovery interval."
+- `tests_run`: "Named tests and E2E commands show runtime checks executed."
+- `reproducibility_checksum`: "A final hash protects admission receipts."
+
+#### SCENARIO-REPORT-6567-GATES: Structured Gates And Host Preconditions Close First
+
+**Given** the two V569 upstream contracts and the local host
+**When** Exp6567 starts
+**Then** it records expected and observed gate values, paths, hashes, runtime
+versions, host capacity, cache candidates, protected hashes, and initial GPU
+state before any model worker starts.
+
+#### SCENARIO-REPORT-6567-RESOLVE: Model Files And Embedded Tokenizers Are Concrete
+
+**Given** each mandated repository is cached
+**When** Exp6567 resolves model identity
+**Then** each family records one non-split language-model GGUF with absolute
+path, revision, size, hash, mtime, quantization, and embedded tokenizer
+metadata, without a download or `AutoTokenizer` call.
+
+#### SCENARIO-REPORT-6567-SEQUENTIAL: Each Family Runs In Its Own Worker
+
+**Given** gates, model files, and runtime checks pass
+**When** Exp6567 admits the three families
+**Then** it starts one external llama.cpp worker at a time and records command,
+PID, parent PID, timings, output, token, exit, timeout, and stream hashes for
+each separate family.
+
+#### SCENARIO-REPORT-6567-TELEMETRY: GPU Samples Bind To The Live Worker
+
+**Given** an Exp6567 worker is running
+**When** the telemetry sampler records the worker interval
+**Then** a during sample identifies the live PID on the selected GPU, the
+samples change across load and recovery, and no second Exp6567 worker is
+resident.
+
+#### SCENARIO-REPORT-6567-UNLOAD: Recovery Closes Before The Next Family
+
+**Given** a family worker exits
+**When** Exp6567 performs unload verification
+**Then** no task worker remains and selected-device memory returns within the
+frozen tolerance before the next family starts.
+
+#### SCENARIO-REPORT-6567-ATTACKS: False Or Substituted Receipts Fail Closed
+
+**Given** a model, process, output, token, GPU, unload, or protected-file
+receipt is missing or inconsistent
+**When** Exp6567 recomputes readiness from required-family rows
+**Then** the score is zero, the failed check and family are named, and no
+legacy or successful sibling family supplies admission credit.
+
+#### SCENARIO-REPORT-6567-ATOMIC: One Terminal Artifact Is Recomputable
+
+**Given** all available model and runtime attempts have terminal rows
+**When** Exp6567 writes its artifact
+**Then** the required field set and principles match, readiness recomputes
+from three required-family rows, the checksum matches, and the atomic write
+leaves no partial target.
+
+## Implementation Status (REQ-REPORT-6567)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6567 | Implemented (`python/carnot/experiment_6567_sequential_flagship_gguf_admission.py`, terminal artifact `results/experiment_6567_sequential_flagship_gguf_admission.json`) | Implemented (`tests/python/test_experiment_6567_sequential_flagship_gguf_admission.py`) |
+
 ### REQ-REPORT-6566: V569 Proof-Obligation And Graph-Potts Method Contract SHALL Preregister New Mechanisms
 
 Carnot SHALL build Exp6566 as an additive method contract for planning date
