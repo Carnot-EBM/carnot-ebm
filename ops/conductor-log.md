@@ -16413,3 +16413,4 @@ code |
 | 2026-08-24 15:48 UTC | Qwen3.6 one-family flagship source shard | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: lues())
 +    a |
 | 2026-08-24 15:51 UTC | Qwen3.6 one-family flagship source shard | SKIP | Pre-tests failing, self-heal failed: 1 failed, 95 passed, 1 warning in 10.48s |
+| 2026-08-24 16:10 UTC | Qwen3.6 one-family flagship source shard | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6581_qwen36_ |
