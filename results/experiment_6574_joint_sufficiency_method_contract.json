@@ -1,0 +1,2631 @@
+{
+  "aggregate_row_recomputation": {
+    "acceptance_gates_ready": true,
+    "attack_rows_ready": true,
+    "conformance_fixtures_ready": true,
+    "conformance_row_count": 29,
+    "frozen_splits_and_matched_arms_ready": true,
+    "joint_sufficiency_method_ready_from_rows": true,
+    "preconditions_ready": true,
+    "retirement_rules_ready": true,
+    "schema_rows_ready": true,
+    "source_receipts_ready": true,
+    "structured_gate_ready": true,
+    "terminal_conformance_rows_ready": true
+  },
+  "atomic_obligation_node_schema": {
+    "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+    "compiler_owns_executable_obligation": true,
+    "compiler_version": "v6574.20260824",
+    "full_constraint_ir_generation_allowed": false,
+    "model_can_certify_release": false,
+    "required_node_fields": [
+      "node_id",
+      "composed_claim_id",
+      "hop_index",
+      "sub_question",
+      "source_hash",
+      "source_start",
+      "source_end",
+      "source_bytes_hash",
+      "typed_variables",
+      "relation",
+      "compiler_version",
+      "executable_obligation_hash",
+      "exact_result",
+      "counterexample",
+      "action"
+    ],
+    "schema_version": "carnot.atomic_obligation_node.v6574",
+    "source_byte_offsets_required": true,
+    "source_bytes_hash_required": true,
+    "supported_actions": [
+      "release",
+      "reject",
+      "abstain"
+    ],
+    "whitelisted_relations": [
+      "greater_than",
+      "less_than",
+      "equals",
+      "not_equals",
+      "contains"
+    ]
+  },
+  "conformance_rows": [
+    {
+      "abstention": false,
+      "abstention_reasons": [],
+      "action": "release",
+      "edges": [],
+      "expected_hops": [
+        0
+      ],
+      "fixture_id": "valid_single_hop",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "valid_single_hop",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:a6604252b1c49d73fa47c8ccebf5f36052848e00888bc9873c1ecb8eb61dfa6c",
+          "hop_index": 0,
+          "node_id": "valid_single_hop:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Is Ada older than Ben?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": false,
+        "abstention_reasons": [],
+        "action": "release",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 0,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "valid_single_hop:h0"
+        ],
+        "required_nodes_exact": true
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-valid_single_hop",
+      "unsafe_case": false,
+      "unsafe_release": false
+    },
+    {
+      "abstention": false,
+      "abstention_reasons": [],
+      "action": "release",
+      "edges": [
+        {
+          "child_id": "valid_two_hop:h1",
+          "coverage_role": "required_chain",
+          "ordering_rule": "parent_hop_before_child",
+          "parent_id": "valid_two_hop:h0",
+          "provenance": "frozen_fixture",
+          "relation_type": "requires_entity_binding",
+          "status": "required"
+        }
+      ],
+      "expected_hops": [
+        0,
+        1
+      ],
+      "fixture_id": "valid_two_hop",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "valid_two_hop",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:3c102a56e953bd1495bc3c63ced64de0fe8a9a587da6a309686c65aeaedaa6ab",
+          "hop_index": 0,
+          "node_id": "valid_two_hop:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Is Ada older than Ben?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        },
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "valid_two_hop",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:30f2fe78fb5dd4c3a302468ab1974874a76893b0b472b9ed74082cee4a964457",
+          "hop_index": 1,
+          "node_id": "valid_two_hop:h1",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:255afc42d69b6787f2e81908f1ad1d6eb3802f5ca42d8a3943957718a0827b63",
+          "source_end": 71,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 37,
+          "sub_question": "Is Ben older than Cy?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": false,
+        "abstention_reasons": [],
+        "action": "release",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 1,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "valid_two_hop:h0",
+          "valid_two_hop:h1"
+        ],
+        "required_nodes_exact": true
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-valid_two_hop",
+      "unsafe_case": false,
+      "unsafe_release": false
+    },
+    {
+      "abstention": false,
+      "abstention_reasons": [],
+      "action": "release",
+      "edges": [
+        {
+          "child_id": "valid_branched_claim:h1",
+          "coverage_role": "required_chain",
+          "ordering_rule": "parent_hop_before_child",
+          "parent_id": "valid_branched_claim:h0",
+          "provenance": "frozen_fixture",
+          "relation_type": "requires_set_membership",
+          "status": "required"
+        },
+        {
+          "child_id": "valid_branched_claim:h2",
+          "coverage_role": "required_chain",
+          "ordering_rule": "parent_hop_before_child",
+          "parent_id": "valid_branched_claim:h0",
+          "provenance": "frozen_fixture",
+          "relation_type": "requires_branch_support",
+          "status": "required"
+        }
+      ],
+      "expected_hops": [
+        0,
+        1,
+        2
+      ],
+      "fixture_id": "valid_branched_claim",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "valid_branched_claim",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:86dc4f555b5eb99db1b3427316543c2af113bfa45b49e9603984185533500bba",
+          "hop_index": 0,
+          "node_id": "valid_branched_claim:h0",
+          "relation": "equals",
+          "source_bytes_hash": "sha256:5c1d7b6282bc29e2dc692e5d5e2e68eeccb8560450db737aff404ed483103be1",
+          "source_end": 113,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 93,
+          "sub_question": "Where is Museum A?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        },
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "valid_branched_claim",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:c8b6b7d34f183fff19224b272716b9e8cff142d4c323b35f45183c4814bccb12",
+          "hop_index": 1,
+          "node_id": "valid_branched_claim:h1",
+          "relation": "equals",
+          "source_bytes_hash": "sha256:ac84bf23dc5514758cc6a1cec4f5c66e92f95986114cbc088a3328467c48ba63",
+          "source_end": 91,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 73,
+          "sub_question": "Which country contains Paris?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        },
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "valid_branched_claim",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:f8c5de93433688279c96c1762457e0a106a3bc16ba452b9be4541747e2e4b722",
+          "hop_index": 2,
+          "node_id": "valid_branched_claim:h2",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Does the independent age branch hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": false,
+        "abstention_reasons": [],
+        "action": "release",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 2,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "valid_branched_claim:h0",
+          "valid_branched_claim:h1",
+          "valid_branched_claim:h2"
+        ],
+        "required_nodes_exact": true
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-valid_branched_claim",
+      "unsafe_case": false,
+      "unsafe_release": false
+    },
+    {
+      "abstention": true,
+      "abstention_reasons": [
+        "missing_required_hop"
+      ],
+      "action": "abstain",
+      "edges": [],
+      "expected_hops": [
+        0,
+        1
+      ],
+      "fixture_id": "missing_hop",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "missing_hop",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:f20f184e2b33d3a0fba6c9676cff7f46ad67a6585e7a6261ca944c4d9516b675",
+          "hop_index": 0,
+          "node_id": "missing_hop:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": true,
+        "abstention_reasons": [
+          "missing_required_hop"
+        ],
+        "action": "abstain",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 0,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": false,
+        "required_node_ids": [
+          "missing_hop:h0"
+        ],
+        "required_nodes_exact": true
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-missing_hop",
+      "unsafe_case": true,
+      "unsafe_release": false
+    },
+    {
+      "abstention": true,
+      "abstention_reasons": [
+        "source_span_mismatch"
+      ],
+      "action": "abstain",
+      "edges": [],
+      "expected_hops": [
+        0
+      ],
+      "fixture_id": "wrong_span",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": "source_span_mismatch",
+          "action": "abstain",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "wrong_span",
+          "counterexample": null,
+          "exact_result": "source_span_mismatch",
+          "executable_obligation_hash": "sha256:16cdc1ef5d34bd87c18efc227f47aca267da080ac5beb1c9165c6e804aa943d9",
+          "hop_index": 0,
+          "node_id": "wrong_span:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:c3b796dfb590648090e6739ce658f56be80107d34880f0416d7032e60aa26068",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 1,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": true,
+        "abstention_reasons": [
+          "source_span_mismatch"
+        ],
+        "action": "abstain",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 0,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "wrong_span:h0"
+        ],
+        "required_nodes_exact": false
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-wrong_span",
+      "unsafe_case": true,
+      "unsafe_release": false
+    },
+    {
+      "abstention": true,
+      "abstention_reasons": [
+        "relation_not_whitelisted"
+      ],
+      "action": "abstain",
+      "edges": [],
+      "expected_hops": [
+        0
+      ],
+      "fixture_id": "unsupported_relation",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": "relation_not_whitelisted",
+          "action": "abstain",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "unsupported_relation",
+          "counterexample": null,
+          "exact_result": "unsupported_relation",
+          "executable_obligation_hash": "sha256:23d9635774bddb6742267d07921caf2d31d8d61fabe372524aab637a8511729d",
+          "hop_index": 0,
+          "node_id": "unsupported_relation:h0",
+          "relation": "may_prefer",
+          "source_bytes_hash": "sha256:5c1d7b6282bc29e2dc692e5d5e2e68eeccb8560450db737aff404ed483103be1",
+          "source_end": 113,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 93,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": true,
+        "abstention_reasons": [
+          "relation_not_whitelisted"
+        ],
+        "action": "abstain",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 0,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "unsupported_relation:h0"
+        ],
+        "required_nodes_exact": false
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-unsupported_relation",
+      "unsafe_case": true,
+      "unsafe_release": false
+    },
+    {
+      "abstention": true,
+      "abstention_reasons": [
+        "contradictory_nodes"
+      ],
+      "action": "abstain",
+      "edges": [
+        {
+          "child_id": "contradictory_nodes:h1",
+          "coverage_role": "required_chain",
+          "ordering_rule": "parent_hop_before_child",
+          "parent_id": "contradictory_nodes:h0",
+          "provenance": "frozen_fixture",
+          "relation_type": "requires_entity_binding",
+          "status": "required"
+        }
+      ],
+      "expected_hops": [
+        0,
+        1
+      ],
+      "fixture_id": "contradictory_nodes",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "contradictory_nodes",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:ab8d861a0572b6015f43d88fc84d8439c541cbd183b499e61aa0aaed5f6d6394",
+          "hop_index": 0,
+          "node_id": "contradictory_nodes:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        },
+        {
+          "abstention_reason": null,
+          "action": "reject",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "contradictory_nodes",
+          "counterexample": {
+            "left": 3,
+            "right": 5
+          },
+          "exact_result": "counterexample",
+          "executable_obligation_hash": "sha256:83fd4ebba04c5393741fa700759e2f7286f0079e005901d8d657a4d4da1877e5",
+          "hop_index": 1,
+          "node_id": "contradictory_nodes:h1",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:255afc42d69b6787f2e81908f1ad1d6eb3802f5ca42d8a3943957718a0827b63",
+          "source_end": 71,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 37,
+          "sub_question": "Does hop 1 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": true,
+        "abstention_reasons": [
+          "contradictory_nodes"
+        ],
+        "action": "abstain",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 1,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "contradictory_nodes:h0",
+          "contradictory_nodes:h1"
+        ],
+        "required_nodes_exact": false
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-contradictory_nodes",
+      "unsafe_case": true,
+      "unsafe_release": false
+    },
+    {
+      "abstention": true,
+      "abstention_reasons": [
+        "disconnected_required_graph"
+      ],
+      "action": "abstain",
+      "edges": [],
+      "expected_hops": [
+        0,
+        1
+      ],
+      "fixture_id": "disconnected_graph",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "disconnected_graph",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:6d4012ad8ef6cf89e982408dbbc7bd6db6a68b00638defc9015b1d655c323b67",
+          "hop_index": 0,
+          "node_id": "disconnected_graph:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        },
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "disconnected_graph",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:81b7a2333bd10eb95b2072a5298d915ac48742c3f8352c369194f7d98a66ce9c",
+          "hop_index": 1,
+          "node_id": "disconnected_graph:h1",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:255afc42d69b6787f2e81908f1ad1d6eb3802f5ca42d8a3943957718a0827b63",
+          "source_end": 71,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 37,
+          "sub_question": "Does hop 1 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": true,
+        "abstention_reasons": [
+          "disconnected_required_graph"
+        ],
+        "action": "abstain",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 0,
+        "required_edges_connected": false,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "disconnected_graph:h0",
+          "disconnected_graph:h1"
+        ],
+        "required_nodes_exact": true
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-disconnected_graph",
+      "unsafe_case": true,
+      "unsafe_release": false
+    },
+    {
+      "abstention": true,
+      "abstention_reasons": [
+        "duplicate_node_id",
+        "ordering_rule_violation",
+        "cyclic_dependency"
+      ],
+      "action": "abstain",
+      "edges": [
+        {
+          "child_id": "duplicate_node:h0",
+          "coverage_role": "required_chain",
+          "ordering_rule": "parent_hop_before_child",
+          "parent_id": "duplicate_node:h0",
+          "provenance": "frozen_fixture",
+          "relation_type": "requires_entity_binding",
+          "status": "required"
+        }
+      ],
+      "expected_hops": [
+        0,
+        1
+      ],
+      "fixture_id": "duplicate_node",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "duplicate_node",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:fdced9a7273be877549e64d8d2b68c04f06d5811cf3715d4f4fc68bb6cb4918f",
+          "hop_index": 0,
+          "node_id": "duplicate_node:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        },
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "duplicate_node",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:599bd128d6c2cebf4c8956ebf9f39580f3433f055664ef19247fa023610ea73b",
+          "hop_index": 1,
+          "node_id": "duplicate_node:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": true,
+        "abstention_reasons": [
+          "duplicate_node_id",
+          "ordering_rule_violation",
+          "cyclic_dependency"
+        ],
+        "action": "abstain",
+        "cycle_free": false,
+        "deterministic": true,
+        "required_edge_count": 1,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": false,
+        "required_node_ids": [
+          "duplicate_node:h0"
+        ],
+        "required_nodes_exact": true
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-duplicate_node",
+      "unsafe_case": true,
+      "unsafe_release": false
+    },
+    {
+      "abstention": true,
+      "abstention_reasons": [
+        "ordering_rule_violation",
+        "cyclic_dependency"
+      ],
+      "action": "abstain",
+      "edges": [
+        {
+          "child_id": "cyclic_dependency:h1",
+          "coverage_role": "required_chain",
+          "ordering_rule": "parent_hop_before_child",
+          "parent_id": "cyclic_dependency:h0",
+          "provenance": "frozen_fixture",
+          "relation_type": "requires_entity_binding",
+          "status": "required"
+        },
+        {
+          "child_id": "cyclic_dependency:h0",
+          "coverage_role": "required_chain",
+          "ordering_rule": "parent_hop_before_child",
+          "parent_id": "cyclic_dependency:h1",
+          "provenance": "frozen_fixture",
+          "relation_type": "requires_entity_binding",
+          "status": "required"
+        }
+      ],
+      "expected_hops": [
+        0,
+        1
+      ],
+      "fixture_id": "cyclic_dependency",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "cyclic_dependency",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:0f01708d904d1bcbfd8cdd5d2249b717837215ad40df411a2df3df5bf9407c78",
+          "hop_index": 0,
+          "node_id": "cyclic_dependency:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        },
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "cyclic_dependency",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:bf339c25d2619a04dd76741afa71b90ab7dd29bcce85f073dd876fef4d658733",
+          "hop_index": 1,
+          "node_id": "cyclic_dependency:h1",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:255afc42d69b6787f2e81908f1ad1d6eb3802f5ca42d8a3943957718a0827b63",
+          "source_end": 71,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 37,
+          "sub_question": "Does hop 1 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": true,
+        "abstention_reasons": [
+          "ordering_rule_violation",
+          "cyclic_dependency"
+        ],
+        "action": "abstain",
+        "cycle_free": false,
+        "deterministic": true,
+        "required_edge_count": 2,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "cyclic_dependency:h0",
+          "cyclic_dependency:h1"
+        ],
+        "required_nodes_exact": true
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-cyclic_dependency",
+      "unsafe_case": true,
+      "unsafe_release": false
+    },
+    {
+      "content_sha256": "sha256:2685119d61dbe8030cad885f6852a101192c352de73cba089f8f0d049e53675a",
+      "family": "logic_grid",
+      "row_type": "split",
+      "slice": "train",
+      "terminal": true,
+      "unit_id": "sha256:2685119d61dbe8030cad885f6852a101192c352de73cba089f8f0d049e53675a"
+    },
+    {
+      "content_sha256": "sha256:85960b0f5d1e9eca201d55238b026e037e1a1359b129f12a5d1dc9c176b6a56c",
+      "family": "multi_hop",
+      "row_type": "split",
+      "slice": "calibration",
+      "terminal": true,
+      "unit_id": "sha256:85960b0f5d1e9eca201d55238b026e037e1a1359b129f12a5d1dc9c176b6a56c"
+    },
+    {
+      "content_sha256": "sha256:afe92785ccad9afe2bf9d4827def880c7bb3b4ebe7e93c5d37e2af108a0adac0",
+      "family": "branched",
+      "row_type": "split",
+      "slice": "held",
+      "terminal": true,
+      "unit_id": "sha256:afe92785ccad9afe2bf9d4827def880c7bb3b4ebe7e93c5d37e2af108a0adac0"
+    },
+    {
+      "arm_name": "no_filter",
+      "charged_cost_units": 128,
+      "live_outcome_access": false,
+      "matched_commitment_hash": "sha256:7dc2791f5f4ee2256eb8d4e8a29c81a8eaaded83c4365738bfcd6f565e9cecfe",
+      "row_type": "arm",
+      "terminal": true,
+      "unit_id": "arm-no_filter"
+    },
+    {
+      "arm_name": "atomic_span_only",
+      "charged_cost_units": 128,
+      "live_outcome_access": false,
+      "matched_commitment_hash": "sha256:7dc2791f5f4ee2256eb8d4e8a29c81a8eaaded83c4365738bfcd6f565e9cecfe",
+      "row_type": "arm",
+      "terminal": true,
+      "unit_id": "arm-atomic_span_only"
+    },
+    {
+      "arm_name": "hop_conditioned_joint",
+      "charged_cost_units": 128,
+      "live_outcome_access": false,
+      "matched_commitment_hash": "sha256:7dc2791f5f4ee2256eb8d4e8a29c81a8eaaded83c4365738bfcd6f565e9cecfe",
+      "row_type": "arm",
+      "terminal": true,
+      "unit_id": "arm-hop_conditioned_joint"
+    },
+    {
+      "retire_if_same_verdict": true,
+      "row_type": "retirement",
+      "same_verdict": "no held composed-claim coverage gain",
+      "scope": "hop_conditioned_joint_sufficiency",
+      "terminal": true,
+      "unit_id": "retirement-hop_conditioned_joint_sufficiency"
+    },
+    {
+      "retire_if_same_verdict": true,
+      "row_type": "retirement",
+      "same_verdict": "zero exact semantics or any unsafe release",
+      "scope": "source_byte_atomic_obligation_extractor",
+      "terminal": true,
+      "unit_id": "retirement-source_byte_atomic_obligation_extractor"
+    },
+    {
+      "attack_id": "schema_valid_semantic_invalid_nodes",
+      "closed": true,
+      "control": "exact relation result controls release",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-schema_valid_semantic_invalid_nodes"
+    },
+    {
+      "attack_id": "source_offset_drift",
+      "closed": true,
+      "control": "source bytes hash and offset replay control release",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-source_offset_drift"
+    },
+    {
+      "attack_id": "omitted_hops",
+      "closed": true,
+      "control": "expected hop set controls release",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-omitted_hops"
+    },
+    {
+      "attack_id": "optional_edge_laundering",
+      "closed": true,
+      "control": "optional edges cannot satisfy required coverage",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-optional_edge_laundering"
+    },
+    {
+      "attack_id": "graph_cycles",
+      "closed": true,
+      "control": "cycle handling is reject",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-graph_cycles"
+    },
+    {
+      "attack_id": "duplicate_support",
+      "closed": true,
+      "control": "node ID uniqueness controls release",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-duplicate_support"
+    },
+    {
+      "attack_id": "model_self_citation",
+      "closed": true,
+      "control": "source hash must bind external source bytes",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-model_self_citation"
+    },
+    {
+      "attack_id": "post_outcome_decomposition",
+      "closed": true,
+      "control": "split and decomposition freeze before outcomes",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-post_outcome_decomposition"
+    },
+    {
+      "attack_id": "threshold_changes",
+      "closed": true,
+      "control": "exact-release threshold is frozen",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-threshold_changes"
+    },
+    {
+      "attack_id": "source_leakage",
+      "closed": true,
+      "control": "arm matching excludes target labels and live outcomes",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-source_leakage"
+    },
+    {
+      "attack_id": "exact_check_bypass",
+      "closed": true,
+      "control": "compiler plus exact checker owns release authority",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-exact_check_bypass"
+    }
+  ],
+  "dependency_edge_and_joint_reducer_contract": {
+    "cycle_handling": "reject",
+    "deterministic_reducer": "joint_sufficiency_reduce.v6574",
+    "edge_status_values": [
+      "required",
+      "optional"
+    ],
+    "optional_edges_can_satisfy_required_coverage": false,
+    "ordering_rule": "parent_hop_before_child",
+    "release_authority": "compiler_plus_exact_fixture_checker",
+    "release_rule": [
+      "node_ids_unique",
+      "source_byte_spans_match",
+      "relations_whitelisted",
+      "required_hops_present",
+      "required_nodes_exact_certified",
+      "required_edges_known_and_connected",
+      "cycle_free"
+    ],
+    "required_edge_fields": [
+      "parent_id",
+      "child_id",
+      "relation_type",
+      "status",
+      "ordering_rule",
+      "coverage_role",
+      "provenance"
+    ],
+    "schema_version": "carnot.dependency_edge_and_joint_reducer.v6574",
+    "whitelisted_relation_types": [
+      "requires_entity_binding",
+      "requires_temporal_order",
+      "requires_set_membership",
+      "requires_branch_support"
+    ]
+  },
+  "duration_s": 0.405827,
+  "extraction_acceptance_and_retirement_gates": {
+    "coverage_gate": {
+      "comparison": "hop_conditioned_joint > atomic_span_only on held units",
+      "exact_certified_composed_claim_coverage_must_improve": true
+    },
+    "lineage_and_cost_gate": {
+      "charged_cost_matched_across_arms": true,
+      "cost_rows_complete_required": true,
+      "lineage_complete_required": true
+    },
+    "post_outcome_mutation": {
+      "decomposition_changes_allowed": false,
+      "split_changes_allowed": false,
+      "threshold_changes_allowed": false
+    },
+    "precision_gate": {
+      "comparison": "hop_conditioned_joint precision >= atomic_span_only precision",
+      "precision_noninferior_required": true
+    },
+    "retirement_rules": [
+      {
+        "retire_if_same_verdict": true,
+        "same_verdict": "no held composed-claim coverage gain",
+        "scope": "hop_conditioned_joint_sufficiency"
+      },
+      {
+        "retire_if_same_verdict": true,
+        "same_verdict": "zero exact semantics or any unsafe release",
+        "scope": "source_byte_atomic_obligation_extractor"
+      }
+    ],
+    "safety_gate": {
+      "abstention_is_required_for_unsafe_fixture": true,
+      "unsafe_release_must_be_zero": true
+    }
+  },
+  "field_principles": {
+    "aggregate_row_recomputation": "Readiness derives only from frozen source and fixture rows.",
+    "atomic_obligation_node_schema": "Each node binds a hop-conditioned claim to source bytes and compiler-owned semantics.",
+    "conformance_rows": "Hand-checkable positive and abstention fixtures prove the method is executable.",
+    "dependency_edge_and_joint_reducer_contract": "Composed release needs explicit required edges and a deterministic sufficiency reducer.",
+    "duration_s": "Monotonic time exposes a contract that skipped source or fixture work.",
+    "extraction_acceptance_and_retirement_gates": "Coverage cannot hide lower precision, unsafe release, lost lineage, or repeated zero semantics.",
+    "field_provenance": "Every field points to source text, schema, fixture, compiler output, or reducer.",
+    "frozen_split_and_arm_commitment": "Content-hashed units and matched arms prevent retrospective method changes.",
+    "gate_check_summary": "A blocked contract names the missing upstream field or source receipt.",
+    "honest_verdict": "The verdict states whether joint sufficiency is executable and frozen.",
+    "inference_substrate": "This is literature-grounded local conformance with no model inference.",
+    "joint_sufficiency_method_ready_score": "This exact binary field gates the flagship stream and extractor.",
+    "per_unit_rows": "Every source and conformance fixture remains independently checkable.",
+    "preconditions_checked": "Source, tool, and corpus receipts separate prerequisite loss from method failure.",
+    "protected_files_unchanged": "The SOTA contract preserves protected orchestration files.",
+    "reproducibility_checksum": "A final hash protects the preregistration.",
+    "source_review_receipts": "Primary-source identifiers, dates, and hashes anchor the imported control.",
+    "status": "The preregistration must end terminally before outcome-bearing extraction.",
+    "tests_run": "Named tests prove schemas and reducers execute.",
+    "verdict_class": "Method readiness is infrastructure evidence, not positive science.",
+    "verifier_is_oracle": "Exact fixture checks are oracle authority and cannot create a scientific positive."
+  },
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "principle": "Readiness derives only from frozen source and fixture rows.",
+      "source": "aggregate_row_recomputation",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "atomic_obligation_node_schema": {
+      "principle": "Each node binds a hop-conditioned claim to source bytes and compiler-owned semantics.",
+      "source": "build_atomic_obligation_node_schema and compile_node",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "conformance_rows": {
+      "principle": "Hand-checkable positive and abstention fixtures prove the method is executable.",
+      "source": "conformance_rows",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "dependency_edge_and_joint_reducer_contract": {
+      "principle": "Composed release needs explicit required edges and a deterministic sufficiency reducer.",
+      "source": "build_dependency_edge_and_joint_reducer_contract and joint_sufficiency_reduce",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "duration_s": {
+      "principle": "Monotonic time exposes a contract that skipped source or fixture work.",
+      "source": "Exp6574 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "extraction_acceptance_and_retirement_gates": {
+      "principle": "Coverage cannot hide lower precision, unsafe release, lost lineage, or repeated zero semantics.",
+      "source": "build_extraction_acceptance_and_retirement_gates",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every field points to source text, schema, fixture, compiler output, or reducer.",
+      "source": "Exp6574 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "frozen_split_and_arm_commitment": {
+      "principle": "Content-hashed units and matched arms prevent retrospective method changes.",
+      "source": "build_frozen_split_and_arm_commitment",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "gate_check_summary": {
+      "principle": "A blocked contract names the missing upstream field or source receipt.",
+      "source": "gate_check_summary and Exp6571 structured gate receipt",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The verdict states whether joint sufficiency is executable and frozen.",
+      "source": "Exp6574 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "This is literature-grounded local conformance with no model inference.",
+      "source": "Exp6574 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "joint_sufficiency_method_ready_score": {
+      "principle": "This exact binary field gates the flagship stream and extractor.",
+      "source": "Exp6574 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "per_unit_rows": {
+      "principle": "Every source and conformance fixture remains independently checkable.",
+      "source": "Exp6574 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Source, tool, and corpus receipts separate prerequisite loss from method failure.",
+      "source": "build_preconditions_checked",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "The SOTA contract preserves protected orchestration files.",
+      "source": "_protected_files_unchanged",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A final hash protects the preregistration.",
+      "source": "Exp6574 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "source_review_receipts": {
+      "principle": "Primary-source identifiers, dates, and hashes anchor the imported control.",
+      "source": "SOURCE_CATALOG and build_source_review_receipts",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "status": {
+      "principle": "The preregistration must end terminally before outcome-bearing extraction.",
+      "source": "Exp6574 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "tests_run": {
+      "principle": "Named tests prove schemas and reducers execute.",
+      "source": "Exp6574 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "verdict_class": {
+      "principle": "Method readiness is infrastructure evidence, not positive science.",
+      "source": "Exp6574 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "Exact fixture checks are oracle authority and cannot create a scientific positive.",
+      "source": "Exp6574 deterministic method-contract reducer",
+      "spec_refs": [
+        "REQ-REPORT-6574"
+      ]
+    }
+  },
+  "frozen_split_and_arm_commitment": {
+    "arms": {
+      "atomic_span_only": {
+        "arm_name": "atomic_span_only",
+        "charged_cost_units": 128,
+        "compiler_version": "v6574.20260824",
+        "corpus_hash": "sha256:89eae325e168c4b40101260dc51e3314194679b3b44f7dd82e016634993e2521",
+        "live_outcome_access": false,
+        "matched_commitment_hash": "sha256:7dc2791f5f4ee2256eb8d4e8a29c81a8eaaded83c4365738bfcd6f565e9cecfe",
+        "parser_version": "source_byte_atomic_parser.v6574",
+        "raw_responses_hash": "sha256:e7e9ba536272642c95076a31ce7aa206248162dba63a580d813e34454f32aeea",
+        "seed": 6574,
+        "source_bytes_hash": "sha256:5b7bb10713bcda25f84842a19585820cbe62f0d690a7127a80e2f5f3f7986dd9",
+        "threshold": "exact_release_only"
+      },
+      "hop_conditioned_joint": {
+        "arm_name": "hop_conditioned_joint",
+        "charged_cost_units": 128,
+        "compiler_version": "v6574.20260824",
+        "corpus_hash": "sha256:89eae325e168c4b40101260dc51e3314194679b3b44f7dd82e016634993e2521",
+        "live_outcome_access": false,
+        "matched_commitment_hash": "sha256:7dc2791f5f4ee2256eb8d4e8a29c81a8eaaded83c4365738bfcd6f565e9cecfe",
+        "parser_version": "source_byte_atomic_parser.v6574",
+        "raw_responses_hash": "sha256:e7e9ba536272642c95076a31ce7aa206248162dba63a580d813e34454f32aeea",
+        "seed": 6574,
+        "source_bytes_hash": "sha256:5b7bb10713bcda25f84842a19585820cbe62f0d690a7127a80e2f5f3f7986dd9",
+        "threshold": "exact_release_only"
+      },
+      "no_filter": {
+        "arm_name": "no_filter",
+        "charged_cost_units": 128,
+        "compiler_version": "v6574.20260824",
+        "corpus_hash": "sha256:89eae325e168c4b40101260dc51e3314194679b3b44f7dd82e016634993e2521",
+        "live_outcome_access": false,
+        "matched_commitment_hash": "sha256:7dc2791f5f4ee2256eb8d4e8a29c81a8eaaded83c4365738bfcd6f565e9cecfe",
+        "parser_version": "source_byte_atomic_parser.v6574",
+        "raw_responses_hash": "sha256:e7e9ba536272642c95076a31ce7aa206248162dba63a580d813e34454f32aeea",
+        "seed": 6574,
+        "source_bytes_hash": "sha256:5b7bb10713bcda25f84842a19585820cbe62f0d690a7127a80e2f5f3f7986dd9",
+        "threshold": "exact_release_only"
+      }
+    },
+    "frozen_before_live_outcomes": true,
+    "live_outcomes_observed_before_freeze": false,
+    "matched_dimensions": [
+      "corpus_hash",
+      "raw_responses_hash",
+      "parser_version",
+      "compiler_version",
+      "threshold",
+      "source_bytes_hash",
+      "seed",
+      "charged_cost_units"
+    ],
+    "split_membership_sha256": "sha256:03c801f91c7dae76315bd54bb0acdb288d97d08feea913e4c10b51393724204a",
+    "split_names": [
+      "train",
+      "calibration",
+      "held"
+    ],
+    "split_rows": [
+      {
+        "content": "source-byte-single-hop",
+        "content_sha256": "sha256:2685119d61dbe8030cad885f6852a101192c352de73cba089f8f0d049e53675a",
+        "family": "logic_grid",
+        "slice": "train",
+        "unit_id": "sha256:2685119d61dbe8030cad885f6852a101192c352de73cba089f8f0d049e53675a"
+      },
+      {
+        "content": "source-byte-two-hop",
+        "content_sha256": "sha256:85960b0f5d1e9eca201d55238b026e037e1a1359b129f12a5d1dc9c176b6a56c",
+        "family": "multi_hop",
+        "slice": "calibration",
+        "unit_id": "sha256:85960b0f5d1e9eca201d55238b026e037e1a1359b129f12a5d1dc9c176b6a56c"
+      },
+      {
+        "content": "source-byte-branched-hop",
+        "content_sha256": "sha256:afe92785ccad9afe2bf9d4827def880c7bb3b4ebe7e93c5d37e2af108a0adac0",
+        "family": "branched",
+        "slice": "held",
+        "unit_id": "sha256:afe92785ccad9afe2bf9d4827def880c7bb3b4ebe7e93c5d37e2af108a0adac0"
+      }
+    ]
+  },
+  "gate_check_summary": {
+    "checks_closed": true,
+    "failed_checks": [],
+    "joint_sufficiency_method_ready_from_rows": true,
+    "missing_prerequisite": false,
+    "retrospective_method_change": false
+  },
+  "honest_verdict": "complete_joint_sufficiency_method_ready: source-byte atomic nodes, dependency edges, joint reducer, splits, arms, fixtures, attacks, gates, and retirement rules are frozen",
+  "inference_substrate": "primary_source_joint_sufficiency_preregistration_and_local_conformance_no_llm",
+  "joint_sufficiency_method_ready_score": 1.0,
+  "per_unit_rows": [
+    {
+      "abstention": false,
+      "abstention_reasons": [],
+      "action": "release",
+      "edges": [],
+      "expected_hops": [
+        0
+      ],
+      "fixture_id": "valid_single_hop",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "valid_single_hop",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:a6604252b1c49d73fa47c8ccebf5f36052848e00888bc9873c1ecb8eb61dfa6c",
+          "hop_index": 0,
+          "node_id": "valid_single_hop:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Is Ada older than Ben?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": false,
+        "abstention_reasons": [],
+        "action": "release",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 0,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "valid_single_hop:h0"
+        ],
+        "required_nodes_exact": true
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-valid_single_hop",
+      "unsafe_case": false,
+      "unsafe_release": false
+    },
+    {
+      "abstention": false,
+      "abstention_reasons": [],
+      "action": "release",
+      "edges": [
+        {
+          "child_id": "valid_two_hop:h1",
+          "coverage_role": "required_chain",
+          "ordering_rule": "parent_hop_before_child",
+          "parent_id": "valid_two_hop:h0",
+          "provenance": "frozen_fixture",
+          "relation_type": "requires_entity_binding",
+          "status": "required"
+        }
+      ],
+      "expected_hops": [
+        0,
+        1
+      ],
+      "fixture_id": "valid_two_hop",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "valid_two_hop",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:3c102a56e953bd1495bc3c63ced64de0fe8a9a587da6a309686c65aeaedaa6ab",
+          "hop_index": 0,
+          "node_id": "valid_two_hop:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Is Ada older than Ben?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        },
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "valid_two_hop",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:30f2fe78fb5dd4c3a302468ab1974874a76893b0b472b9ed74082cee4a964457",
+          "hop_index": 1,
+          "node_id": "valid_two_hop:h1",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:255afc42d69b6787f2e81908f1ad1d6eb3802f5ca42d8a3943957718a0827b63",
+          "source_end": 71,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 37,
+          "sub_question": "Is Ben older than Cy?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": false,
+        "abstention_reasons": [],
+        "action": "release",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 1,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "valid_two_hop:h0",
+          "valid_two_hop:h1"
+        ],
+        "required_nodes_exact": true
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-valid_two_hop",
+      "unsafe_case": false,
+      "unsafe_release": false
+    },
+    {
+      "abstention": false,
+      "abstention_reasons": [],
+      "action": "release",
+      "edges": [
+        {
+          "child_id": "valid_branched_claim:h1",
+          "coverage_role": "required_chain",
+          "ordering_rule": "parent_hop_before_child",
+          "parent_id": "valid_branched_claim:h0",
+          "provenance": "frozen_fixture",
+          "relation_type": "requires_set_membership",
+          "status": "required"
+        },
+        {
+          "child_id": "valid_branched_claim:h2",
+          "coverage_role": "required_chain",
+          "ordering_rule": "parent_hop_before_child",
+          "parent_id": "valid_branched_claim:h0",
+          "provenance": "frozen_fixture",
+          "relation_type": "requires_branch_support",
+          "status": "required"
+        }
+      ],
+      "expected_hops": [
+        0,
+        1,
+        2
+      ],
+      "fixture_id": "valid_branched_claim",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "valid_branched_claim",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:86dc4f555b5eb99db1b3427316543c2af113bfa45b49e9603984185533500bba",
+          "hop_index": 0,
+          "node_id": "valid_branched_claim:h0",
+          "relation": "equals",
+          "source_bytes_hash": "sha256:5c1d7b6282bc29e2dc692e5d5e2e68eeccb8560450db737aff404ed483103be1",
+          "source_end": 113,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 93,
+          "sub_question": "Where is Museum A?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        },
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "valid_branched_claim",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:c8b6b7d34f183fff19224b272716b9e8cff142d4c323b35f45183c4814bccb12",
+          "hop_index": 1,
+          "node_id": "valid_branched_claim:h1",
+          "relation": "equals",
+          "source_bytes_hash": "sha256:ac84bf23dc5514758cc6a1cec4f5c66e92f95986114cbc088a3328467c48ba63",
+          "source_end": 91,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 73,
+          "sub_question": "Which country contains Paris?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        },
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "valid_branched_claim",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:f8c5de93433688279c96c1762457e0a106a3bc16ba452b9be4541747e2e4b722",
+          "hop_index": 2,
+          "node_id": "valid_branched_claim:h2",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Does the independent age branch hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": false,
+        "abstention_reasons": [],
+        "action": "release",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 2,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "valid_branched_claim:h0",
+          "valid_branched_claim:h1",
+          "valid_branched_claim:h2"
+        ],
+        "required_nodes_exact": true
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-valid_branched_claim",
+      "unsafe_case": false,
+      "unsafe_release": false
+    },
+    {
+      "abstention": true,
+      "abstention_reasons": [
+        "missing_required_hop"
+      ],
+      "action": "abstain",
+      "edges": [],
+      "expected_hops": [
+        0,
+        1
+      ],
+      "fixture_id": "missing_hop",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "missing_hop",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:f20f184e2b33d3a0fba6c9676cff7f46ad67a6585e7a6261ca944c4d9516b675",
+          "hop_index": 0,
+          "node_id": "missing_hop:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": true,
+        "abstention_reasons": [
+          "missing_required_hop"
+        ],
+        "action": "abstain",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 0,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": false,
+        "required_node_ids": [
+          "missing_hop:h0"
+        ],
+        "required_nodes_exact": true
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-missing_hop",
+      "unsafe_case": true,
+      "unsafe_release": false
+    },
+    {
+      "abstention": true,
+      "abstention_reasons": [
+        "source_span_mismatch"
+      ],
+      "action": "abstain",
+      "edges": [],
+      "expected_hops": [
+        0
+      ],
+      "fixture_id": "wrong_span",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": "source_span_mismatch",
+          "action": "abstain",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "wrong_span",
+          "counterexample": null,
+          "exact_result": "source_span_mismatch",
+          "executable_obligation_hash": "sha256:16cdc1ef5d34bd87c18efc227f47aca267da080ac5beb1c9165c6e804aa943d9",
+          "hop_index": 0,
+          "node_id": "wrong_span:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:c3b796dfb590648090e6739ce658f56be80107d34880f0416d7032e60aa26068",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 1,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": true,
+        "abstention_reasons": [
+          "source_span_mismatch"
+        ],
+        "action": "abstain",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 0,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "wrong_span:h0"
+        ],
+        "required_nodes_exact": false
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-wrong_span",
+      "unsafe_case": true,
+      "unsafe_release": false
+    },
+    {
+      "abstention": true,
+      "abstention_reasons": [
+        "relation_not_whitelisted"
+      ],
+      "action": "abstain",
+      "edges": [],
+      "expected_hops": [
+        0
+      ],
+      "fixture_id": "unsupported_relation",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": "relation_not_whitelisted",
+          "action": "abstain",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "unsupported_relation",
+          "counterexample": null,
+          "exact_result": "unsupported_relation",
+          "executable_obligation_hash": "sha256:23d9635774bddb6742267d07921caf2d31d8d61fabe372524aab637a8511729d",
+          "hop_index": 0,
+          "node_id": "unsupported_relation:h0",
+          "relation": "may_prefer",
+          "source_bytes_hash": "sha256:5c1d7b6282bc29e2dc692e5d5e2e68eeccb8560450db737aff404ed483103be1",
+          "source_end": 113,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 93,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": true,
+        "abstention_reasons": [
+          "relation_not_whitelisted"
+        ],
+        "action": "abstain",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 0,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "unsupported_relation:h0"
+        ],
+        "required_nodes_exact": false
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-unsupported_relation",
+      "unsafe_case": true,
+      "unsafe_release": false
+    },
+    {
+      "abstention": true,
+      "abstention_reasons": [
+        "contradictory_nodes"
+      ],
+      "action": "abstain",
+      "edges": [
+        {
+          "child_id": "contradictory_nodes:h1",
+          "coverage_role": "required_chain",
+          "ordering_rule": "parent_hop_before_child",
+          "parent_id": "contradictory_nodes:h0",
+          "provenance": "frozen_fixture",
+          "relation_type": "requires_entity_binding",
+          "status": "required"
+        }
+      ],
+      "expected_hops": [
+        0,
+        1
+      ],
+      "fixture_id": "contradictory_nodes",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "contradictory_nodes",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:ab8d861a0572b6015f43d88fc84d8439c541cbd183b499e61aa0aaed5f6d6394",
+          "hop_index": 0,
+          "node_id": "contradictory_nodes:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        },
+        {
+          "abstention_reason": null,
+          "action": "reject",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "contradictory_nodes",
+          "counterexample": {
+            "left": 3,
+            "right": 5
+          },
+          "exact_result": "counterexample",
+          "executable_obligation_hash": "sha256:83fd4ebba04c5393741fa700759e2f7286f0079e005901d8d657a4d4da1877e5",
+          "hop_index": 1,
+          "node_id": "contradictory_nodes:h1",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:255afc42d69b6787f2e81908f1ad1d6eb3802f5ca42d8a3943957718a0827b63",
+          "source_end": 71,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 37,
+          "sub_question": "Does hop 1 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": true,
+        "abstention_reasons": [
+          "contradictory_nodes"
+        ],
+        "action": "abstain",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 1,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "contradictory_nodes:h0",
+          "contradictory_nodes:h1"
+        ],
+        "required_nodes_exact": false
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-contradictory_nodes",
+      "unsafe_case": true,
+      "unsafe_release": false
+    },
+    {
+      "abstention": true,
+      "abstention_reasons": [
+        "disconnected_required_graph"
+      ],
+      "action": "abstain",
+      "edges": [],
+      "expected_hops": [
+        0,
+        1
+      ],
+      "fixture_id": "disconnected_graph",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "disconnected_graph",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:6d4012ad8ef6cf89e982408dbbc7bd6db6a68b00638defc9015b1d655c323b67",
+          "hop_index": 0,
+          "node_id": "disconnected_graph:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        },
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "disconnected_graph",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:81b7a2333bd10eb95b2072a5298d915ac48742c3f8352c369194f7d98a66ce9c",
+          "hop_index": 1,
+          "node_id": "disconnected_graph:h1",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:255afc42d69b6787f2e81908f1ad1d6eb3802f5ca42d8a3943957718a0827b63",
+          "source_end": 71,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 37,
+          "sub_question": "Does hop 1 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": true,
+        "abstention_reasons": [
+          "disconnected_required_graph"
+        ],
+        "action": "abstain",
+        "cycle_free": true,
+        "deterministic": true,
+        "required_edge_count": 0,
+        "required_edges_connected": false,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "disconnected_graph:h0",
+          "disconnected_graph:h1"
+        ],
+        "required_nodes_exact": true
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-disconnected_graph",
+      "unsafe_case": true,
+      "unsafe_release": false
+    },
+    {
+      "abstention": true,
+      "abstention_reasons": [
+        "duplicate_node_id",
+        "ordering_rule_violation",
+        "cyclic_dependency"
+      ],
+      "action": "abstain",
+      "edges": [
+        {
+          "child_id": "duplicate_node:h0",
+          "coverage_role": "required_chain",
+          "ordering_rule": "parent_hop_before_child",
+          "parent_id": "duplicate_node:h0",
+          "provenance": "frozen_fixture",
+          "relation_type": "requires_entity_binding",
+          "status": "required"
+        }
+      ],
+      "expected_hops": [
+        0,
+        1
+      ],
+      "fixture_id": "duplicate_node",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "duplicate_node",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:fdced9a7273be877549e64d8d2b68c04f06d5811cf3715d4f4fc68bb6cb4918f",
+          "hop_index": 0,
+          "node_id": "duplicate_node:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        },
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "duplicate_node",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:599bd128d6c2cebf4c8956ebf9f39580f3433f055664ef19247fa023610ea73b",
+          "hop_index": 1,
+          "node_id": "duplicate_node:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": true,
+        "abstention_reasons": [
+          "duplicate_node_id",
+          "ordering_rule_violation",
+          "cyclic_dependency"
+        ],
+        "action": "abstain",
+        "cycle_free": false,
+        "deterministic": true,
+        "required_edge_count": 1,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": false,
+        "required_node_ids": [
+          "duplicate_node:h0"
+        ],
+        "required_nodes_exact": true
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-duplicate_node",
+      "unsafe_case": true,
+      "unsafe_release": false
+    },
+    {
+      "abstention": true,
+      "abstention_reasons": [
+        "ordering_rule_violation",
+        "cyclic_dependency"
+      ],
+      "action": "abstain",
+      "edges": [
+        {
+          "child_id": "cyclic_dependency:h1",
+          "coverage_role": "required_chain",
+          "ordering_rule": "parent_hop_before_child",
+          "parent_id": "cyclic_dependency:h0",
+          "provenance": "frozen_fixture",
+          "relation_type": "requires_entity_binding",
+          "status": "required"
+        },
+        {
+          "child_id": "cyclic_dependency:h0",
+          "coverage_role": "required_chain",
+          "ordering_rule": "parent_hop_before_child",
+          "parent_id": "cyclic_dependency:h1",
+          "provenance": "frozen_fixture",
+          "relation_type": "requires_entity_binding",
+          "status": "required"
+        }
+      ],
+      "expected_hops": [
+        0,
+        1
+      ],
+      "fixture_id": "cyclic_dependency",
+      "hand_check": "release requires all required nodes, byte spans, exact results, required edges, connectivity, and cycle-free ordering",
+      "nodes": [
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "cyclic_dependency",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:0f01708d904d1bcbfd8cdd5d2249b717837215ad40df411a2df3df5bf9407c78",
+          "hop_index": 0,
+          "node_id": "cyclic_dependency:h0",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:a4434b0c9116fcdb1d1482b409e095e1109a6ba043deb4041f03a93512743d05",
+          "source_end": 35,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 0,
+          "sub_question": "Does hop 0 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        },
+        {
+          "abstention_reason": null,
+          "action": "release",
+          "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+          "compiler_version": "v6574.20260824",
+          "composed_claim_id": "cyclic_dependency",
+          "counterexample": null,
+          "exact_result": "certified_true",
+          "executable_obligation_hash": "sha256:bf339c25d2619a04dd76741afa71b90ab7dd29bcce85f073dd876fef4d658733",
+          "hop_index": 1,
+          "node_id": "cyclic_dependency:h1",
+          "relation": "greater_than",
+          "source_bytes_hash": "sha256:255afc42d69b6787f2e81908f1ad1d6eb3802f5ca42d8a3943957718a0827b63",
+          "source_end": 71,
+          "source_hash": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+          "source_start": 37,
+          "sub_question": "Does hop 1 hold?",
+          "typed_variables": {
+            "left": "entity",
+            "right": "entity"
+          }
+        }
+      ],
+      "reducer_trace": {
+        "abstention": true,
+        "abstention_reasons": [
+          "ordering_rule_violation",
+          "cyclic_dependency"
+        ],
+        "action": "abstain",
+        "cycle_free": false,
+        "deterministic": true,
+        "required_edge_count": 2,
+        "required_edges_connected": true,
+        "required_node_coverage_complete": true,
+        "required_node_ids": [
+          "cyclic_dependency:h0",
+          "cyclic_dependency:h1"
+        ],
+        "required_nodes_exact": true
+      },
+      "row_type": "conformance_fixture",
+      "terminal": true,
+      "unit_id": "fixture-cyclic_dependency",
+      "unsafe_case": true,
+      "unsafe_release": false
+    },
+    {
+      "content_sha256": "sha256:2685119d61dbe8030cad885f6852a101192c352de73cba089f8f0d049e53675a",
+      "family": "logic_grid",
+      "row_type": "split",
+      "slice": "train",
+      "terminal": true,
+      "unit_id": "sha256:2685119d61dbe8030cad885f6852a101192c352de73cba089f8f0d049e53675a"
+    },
+    {
+      "content_sha256": "sha256:85960b0f5d1e9eca201d55238b026e037e1a1359b129f12a5d1dc9c176b6a56c",
+      "family": "multi_hop",
+      "row_type": "split",
+      "slice": "calibration",
+      "terminal": true,
+      "unit_id": "sha256:85960b0f5d1e9eca201d55238b026e037e1a1359b129f12a5d1dc9c176b6a56c"
+    },
+    {
+      "content_sha256": "sha256:afe92785ccad9afe2bf9d4827def880c7bb3b4ebe7e93c5d37e2af108a0adac0",
+      "family": "branched",
+      "row_type": "split",
+      "slice": "held",
+      "terminal": true,
+      "unit_id": "sha256:afe92785ccad9afe2bf9d4827def880c7bb3b4ebe7e93c5d37e2af108a0adac0"
+    },
+    {
+      "arm_name": "no_filter",
+      "charged_cost_units": 128,
+      "live_outcome_access": false,
+      "matched_commitment_hash": "sha256:7dc2791f5f4ee2256eb8d4e8a29c81a8eaaded83c4365738bfcd6f565e9cecfe",
+      "row_type": "arm",
+      "terminal": true,
+      "unit_id": "arm-no_filter"
+    },
+    {
+      "arm_name": "atomic_span_only",
+      "charged_cost_units": 128,
+      "live_outcome_access": false,
+      "matched_commitment_hash": "sha256:7dc2791f5f4ee2256eb8d4e8a29c81a8eaaded83c4365738bfcd6f565e9cecfe",
+      "row_type": "arm",
+      "terminal": true,
+      "unit_id": "arm-atomic_span_only"
+    },
+    {
+      "arm_name": "hop_conditioned_joint",
+      "charged_cost_units": 128,
+      "live_outcome_access": false,
+      "matched_commitment_hash": "sha256:7dc2791f5f4ee2256eb8d4e8a29c81a8eaaded83c4365738bfcd6f565e9cecfe",
+      "row_type": "arm",
+      "terminal": true,
+      "unit_id": "arm-hop_conditioned_joint"
+    },
+    {
+      "retire_if_same_verdict": true,
+      "row_type": "retirement",
+      "same_verdict": "no held composed-claim coverage gain",
+      "scope": "hop_conditioned_joint_sufficiency",
+      "terminal": true,
+      "unit_id": "retirement-hop_conditioned_joint_sufficiency"
+    },
+    {
+      "retire_if_same_verdict": true,
+      "row_type": "retirement",
+      "same_verdict": "zero exact semantics or any unsafe release",
+      "scope": "source_byte_atomic_obligation_extractor",
+      "terminal": true,
+      "unit_id": "retirement-source_byte_atomic_obligation_extractor"
+    },
+    {
+      "attack_id": "schema_valid_semantic_invalid_nodes",
+      "closed": true,
+      "control": "exact relation result controls release",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-schema_valid_semantic_invalid_nodes"
+    },
+    {
+      "attack_id": "source_offset_drift",
+      "closed": true,
+      "control": "source bytes hash and offset replay control release",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-source_offset_drift"
+    },
+    {
+      "attack_id": "omitted_hops",
+      "closed": true,
+      "control": "expected hop set controls release",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-omitted_hops"
+    },
+    {
+      "attack_id": "optional_edge_laundering",
+      "closed": true,
+      "control": "optional edges cannot satisfy required coverage",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-optional_edge_laundering"
+    },
+    {
+      "attack_id": "graph_cycles",
+      "closed": true,
+      "control": "cycle handling is reject",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-graph_cycles"
+    },
+    {
+      "attack_id": "duplicate_support",
+      "closed": true,
+      "control": "node ID uniqueness controls release",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-duplicate_support"
+    },
+    {
+      "attack_id": "model_self_citation",
+      "closed": true,
+      "control": "source hash must bind external source bytes",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-model_self_citation"
+    },
+    {
+      "attack_id": "post_outcome_decomposition",
+      "closed": true,
+      "control": "split and decomposition freeze before outcomes",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-post_outcome_decomposition"
+    },
+    {
+      "attack_id": "threshold_changes",
+      "closed": true,
+      "control": "exact-release threshold is frozen",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-threshold_changes"
+    },
+    {
+      "attack_id": "source_leakage",
+      "closed": true,
+      "control": "arm matching excludes target labels and live outcomes",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-source_leakage"
+    },
+    {
+      "attack_id": "exact_check_bypass",
+      "closed": true,
+      "control": "compiler plus exact checker owns release authority",
+      "row_type": "attack",
+      "terminal": true,
+      "unit_id": "attack-exact_check_bypass"
+    }
+  ],
+  "preconditions_checked": {
+    "compiler_and_solver_versions": {
+      "compiler": {
+        "module_sha256": "sha256:21550568c4c01b1bbc9de8a560e2d206207d21146cf450d2eead7a304f97dd90",
+        "name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+        "version": "v6574.20260824"
+      },
+      "gcc": {
+        "command": "gcc --version",
+        "exit_code": 0,
+        "stdout_or_error_sha256": "sha256:9ac1eb1e35bd7163a8d90041af1e736c0f518c10fa432a329b055719a6dc8370",
+        "version_text": "gcc (GCC) 16.1.1 20260625"
+      },
+      "python": {
+        "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "version": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]"
+      },
+      "rustc": {
+        "command": "rustc --version",
+        "exit_code": 0,
+        "stdout_or_error_sha256": "sha256:b15886f14fb2872354429b43233bd943638070ecf99cab7e2c48aaf59df5ac6a",
+        "version_text": "rustc 1.97.1 (8bab26f4f 2026-07-14) (Arch Linux rust 1:1.97.1-1.1)"
+      },
+      "z3": {
+        "available": true,
+        "module": "z3",
+        "version": "4.16.0.0"
+      }
+    },
+    "corpus_receipts": [
+      {
+        "path": "results/experiment_6542_drift_bench_external_intake_v2.json",
+        "sha256": "sha256:224bc59523b282be8a7685ad8cea61fc1d2c6a15ce29b5d23c08024026d55dbd"
+      },
+      {
+        "path": "results/fixtures/v566_drift_bench_external_slice.jsonl",
+        "sha256": "sha256:a8696e4711998c00d9398351c2f061670e01302ba5106d9ca76fed81c718a932"
+      }
+    ],
+    "exp6566_receipt": {
+      "path": "results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json",
+      "sha256": "sha256:79e7639c75f02ceb1fed6baf30fc49d3bb8a0ccac4c2ca339128c6c5386ea729",
+      "source_method_contract_ready_score": 1.0
+    },
+    "hardware_commands_issued": 0,
+    "no_hardware_execution": true,
+    "no_llm_inference": true,
+    "outcome_bearing_extraction_observed": false,
+    "planning_date": "20260824",
+    "protected_file_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "_bmad/traceability.md": "sha256:d9745e34019f4753315d1077b6da2a290995c01f3e30934d666c2bbef67f4f9b",
+      "openspec/capabilities/research-reporting/spec.md": "sha256:2b78006f38b65b9ef3b2ec914fa034827fe2f18a55ae23754f7fe7184c3c850f",
+      "ops/changelog.md": "sha256:80224c9e83b9b71cc792b468724ed499c9f7f6ba47776e59b478982b2df776ff",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/status.md": "sha256:f24a77ef7f8bf47f49472d63d25c12068f8f595c128fb71446d2b742276c70e4",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "research-references.md": "sha256:9108aa8fc842b8310c675bf62d29f105c8dccdd8e8d42285d402bc2123ee513e",
+      "research-roadmap.yaml": "sha256:0c3316c67e36b44658ae6f4bd183e08c496d1a5d3f397026871a59b0cb451469",
+      "results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json": "sha256:79e7639c75f02ceb1fed6baf30fc49d3bb8a0ccac4c2ca339128c6c5386ea729",
+      "results/experiment_6571_v570_evidence_gate_and_retirement_root.json": "sha256:049f645cf490234526668dfa5d949842d7f7794d46186e0e2935ac8c0df57eb5",
+      "scripts/research_conductor.py": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8"
+    },
+    "resources": {
+      "cpu": {
+        "count": 24,
+        "model": "x86_64"
+      },
+      "disk": {
+        "free_bytes": 1084877586432,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot",
+        "total_bytes": 3953289023488
+      },
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": {
+        "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "version": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]"
+      },
+      "ram": {
+        "available_kib": 109278912,
+        "total_kib": 131157332
+      }
+    },
+    "retired_sota_artifact_receipts": [
+      {
+        "path": "results/experiment_5909_sota_constraint_synthesis_ab.json",
+        "sha256": "sha256:dc847cfeb22037c53870d0523401e0edfbbedd3d7393156ffb14f3e11e2b54d3"
+      },
+      {
+        "path": "results/experiment_5910_verification_guided_constraint_repair.json",
+        "sha256": "sha256:4e19d3e8713807316495b36fb709867714adcf9436e52dba0c50526519ba3f3c"
+      },
+      {
+        "path": "results/experiment_5923_sota_schema_supported_constraintir_ab.json",
+        "sha256": "sha256:ebe0e6fdcce1fb4d1bed9b4be5b2ea89dba6239b33498bd903ff60f8d2044a6c"
+      }
+    ],
+    "run_date": "20260824",
+    "structured_gate": {
+      "artifact_field": "v570_evidence_contract_ready_score",
+      "artifact_sha256": "sha256:049f645cf490234526668dfa5d949842d7f7794d46186e0e2935ac8c0df57eb5",
+      "expected": 1.0,
+      "observed": 1.0,
+      "passed": true,
+      "path": "results/experiment_6571_v570_evidence_gate_and_retirement_root.json",
+      "upstream": "exp6571-v570-evidence-gate-and-retirement-root"
+    }
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "changed_paths": [],
+    "research_conductor_py_unchanged": true,
+    "rows": [
+      {
+        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "path": "AGENTS.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "before_sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "path": "CLAUDE.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "path": "CODEX.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:d9745e34019f4753315d1077b6da2a290995c01f3e30934d666c2bbef67f4f9b",
+        "before_sha256": "sha256:d9745e34019f4753315d1077b6da2a290995c01f3e30934d666c2bbef67f4f9b",
+        "path": "_bmad/traceability.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:2b78006f38b65b9ef3b2ec914fa034827fe2f18a55ae23754f7fe7184c3c850f",
+        "before_sha256": "sha256:2b78006f38b65b9ef3b2ec914fa034827fe2f18a55ae23754f7fe7184c3c850f",
+        "path": "openspec/capabilities/research-reporting/spec.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:80224c9e83b9b71cc792b468724ed499c9f7f6ba47776e59b478982b2df776ff",
+        "before_sha256": "sha256:80224c9e83b9b71cc792b468724ed499c9f7f6ba47776e59b478982b2df776ff",
+        "path": "ops/changelog.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "before_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "path": "ops/e2e-test-plan.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:f24a77ef7f8bf47f49472d63d25c12068f8f595c128fb71446d2b742276c70e4",
+        "before_sha256": "sha256:f24a77ef7f8bf47f49472d63d25c12068f8f595c128fb71446d2b742276c70e4",
+        "path": "ops/status.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "before_sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "path": "research-program.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:9108aa8fc842b8310c675bf62d29f105c8dccdd8e8d42285d402bc2123ee513e",
+        "before_sha256": "sha256:9108aa8fc842b8310c675bf62d29f105c8dccdd8e8d42285d402bc2123ee513e",
+        "path": "research-references.md",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:0c3316c67e36b44658ae6f4bd183e08c496d1a5d3f397026871a59b0cb451469",
+        "before_sha256": "sha256:0c3316c67e36b44658ae6f4bd183e08c496d1a5d3f397026871a59b0cb451469",
+        "path": "research-roadmap.yaml",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:79e7639c75f02ceb1fed6baf30fc49d3bb8a0ccac4c2ca339128c6c5386ea729",
+        "before_sha256": "sha256:79e7639c75f02ceb1fed6baf30fc49d3bb8a0ccac4c2ca339128c6c5386ea729",
+        "path": "results/experiment_6566_proof_obligation_and_graph_potts_method_contract.json",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:049f645cf490234526668dfa5d949842d7f7794d46186e0e2935ac8c0df57eb5",
+        "before_sha256": "sha256:049f645cf490234526668dfa5d949842d7f7794d46186e0e2935ac8c0df57eb5",
+        "path": "results/experiment_6571_v570_evidence_gate_and_retirement_root.json",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8",
+        "before_sha256": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8",
+        "path": "scripts/research_conductor.py",
+        "unchanged": true
+      }
+    ]
+  },
+  "random_seed": 6574,
+  "reproducibility_checksum": "sha256:16f57c61d3156fa1cc028c7bbc4b63451281965853212fca9122af3844efff83",
+  "source_review_receipts": [
+    {
+      "arxiv_id": "2608.00585",
+      "available": true,
+      "byte_count": 42710,
+      "checked_at_utc": "runtime",
+      "checked_date": "20260824",
+      "content_sha256": "sha256:1fa9b7cdaff27f5780068dce47c76b9f8110f8dfaf427937d9640e41e8286c59",
+      "duration_s": 0.130472,
+      "error": "",
+      "http_status": 200,
+      "imported_control": "Independently supported chunks can be insufficient for a composed multi-hop answer.",
+      "method_hook": "Condition verification on decomposed sub-questions and release only with joint sufficiency.",
+      "source_id": "arxiv:2608.00585",
+      "source_kind": "arxiv_primary",
+      "submitted_or_revised": "submitted 2026-08-01",
+      "title": "Verification Without Sufficiency: Per-Chunk Filtering Fails on Multi-Hop RAG, and Decomposition Repairs It",
+      "url": "https://arxiv.org/abs/2608.00585"
+    },
+    {
+      "anchor_end": "<!-- V570-PLANNER-REFRESH-20260823-END -->",
+      "anchor_start": "<!-- V570-PLANNER-REFRESH-20260823-START -->",
+      "available": true,
+      "byte_count": 5030,
+      "checked_at_utc": "runtime",
+      "checked_date": "20260824",
+      "content_sha256": "sha256:6da908965e84523796751f5abeb989cb4abb912690c71116fab020bbc9a5cc42",
+      "error": "",
+      "http_status": null,
+      "imported_control": "A source span may certify one atomic obligation without certifying a composed claim.",
+      "method_hook": "Add dependency graph over atomic obligations and joint-sufficiency release.",
+      "path": "research-references.md",
+      "source_id": "research-references:v570-planner-refresh-20260823",
+      "source_kind": "local_method_note",
+      "title": "V570 planner refresh method note"
+    }
+  ],
+  "status": "complete_joint_sufficiency_method_ready",
+  "tests_run": [
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6574_joint_sufficiency_method_contract --date 20260824",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6574_joint_sufficiency_method_contract.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6574_joint_sufficiency_method_contract.py -m pytest tests/python/test_experiment_6574_joint_sufficiency_method_contract.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6574_joint_sufficiency_method_contract.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_6574_joint_sufficiency_method_contract.py tests/python/test_experiment_6574_joint_sufficiency_method_contract.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_6574_joint_sufficiency_method_contract.py tests/python/test_experiment_6574_joint_sufficiency_method_contract.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6574_joint_sufficiency_method_contract.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6574_joint_sufficiency_method_contract.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6574_joint_sufficiency_method_contract.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6574_joint_sufficiency_method_contract --validate",
+      "exit_code": 0
+    },
+    {
+      "command": "manual e2e-plan check: Exp6574 is a no-LLM extraction method contract; ops/e2e-test-plan.md has no direct Exp6574 live extraction entry",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    }
+  ],
+  "verdict_class": null,
+  "verifier_is_oracle": true
+}
