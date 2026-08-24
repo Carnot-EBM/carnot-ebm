@@ -16392,3 +16392,5 @@ code |
 | 2026-08-24 07:05 UTC | Plan milestone 2026.08.571 | OK | 4 tasks proposed |
 | 2026-08-24 07:08 UTC | Milestone 2026.08.571 activated | OK | 4 tasks queued |
 | 2026-08-24 08:31 UTC | V571 clean evidence and flagship qualification rep | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ssing_required |
+| 2026-08-24 09:54 UTC | V571 clean evidence and flagship qualification rep | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ,
+       "Trut |

@@ -265,6 +265,8 @@ def test_v570_context_builder_marks_all_three_artifacts_ineligible(tmp_path: Pat
     assert all(row["eligible_for_v571_reducer"] is False for row in rows)
     assert all("v570_evidence_contract_ready_score" not in row for row in rows)
     assert all(row["structural_findings"] == ["DURATION_TOO_SHORT"] for row in rows)
+    assert all(not exp._forbidden_v570_readiness_field(row) for row in rows)
+    assert exp._forbidden_v570_readiness_field({"v570_evidence_contract_ready_score": 1.0})
 
 
 # REQ-REPORT-6575-METADATA / SCENARIO-REPORT-6575-METADATA:
@@ -552,6 +554,31 @@ def test_no_runtime_rows_with_failed_preconditions_is_blocked() -> None:
 
     assert artifact["status"] == "blocked_v571_flagship_qualification"
     assert artifact["verdict_class"] == "blocked"
+
+
+# REQ-REPORT-6575-ATOMIC: honest failed placeholders must survive terminal validation.
+def test_failed_runtime_placeholders_validate_when_preconditions_block_execution() -> None:
+    runtime_receipts = [
+        exp.hash_row(
+            {
+                "row_type": "fresh_family_runtime",
+                "repository_id": spec["repository_id"],
+                "sequence_index": index,
+                "fresh": True,
+                "process": {},
+                "gpu_samples": [],
+                "unload": {},
+                "passed": False,
+            }
+        )
+        for index, spec in enumerate(exp.MODEL_SPECS)
+    ]
+    artifact = _assemble(
+        runtime_receipts=runtime_receipts,
+        preconditions=_preconditions(ready=False),
+    )
+
+    assert exp.validate_artifact(artifact) == []
 
 
 # REQ-REPORT-6575-ATOMIC: validator diagnostics cover malformed top-level structures.
