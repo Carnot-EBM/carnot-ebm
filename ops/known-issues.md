@@ -18516,3 +18516,32 @@ stands as the killer; `gpu_monitor` remains a real hazard for MOSTLY-IDLE server
 the conductor is long-lived and holds pre-fix modules in memory until its next
 fresh-exec (`os.execv` at milestone boundaries); fresh experiment subprocesses pick
 the fixed code up immediately.
+
+### 2026-08-24 — The live-LLM corpus is 2.6% of the row corpus
+
+Measured across every `rows*.json` in the job scratch tree, deduplicated by
+(run, game, seed, arm): **2212 rows, 63 with `tokens_predicted > 0`, and 57
+that are both token-producing and `llm_on_row_valid: True`.**
+
+**`llm_on_row_valid` is not a live-LLM filter.** It reads True on 1188 rows
+while only 63 produced a token, because it means "valid measurement of its own
+arm" — an LLM-off row is validly LLM-off. Used to select live data it
+overstates coverage by roughly 19x. Filter on `llm.tokens_predicted > 0`.
+
+**Why this is filed.** Every claim about live-agent behaviour — induction
+rejection modes, per-game differences, the 16-level headline, the efficiency
+figure — rests on tens of rows. On 2026-08-24 two separate game-specific
+patterns were claimed from this base and both were wrong. Related: the 109 real
+induction-rejection events (1578 of 1687 skip events are `disabled_by_env`,
+i.e. induction never ran) spread over seven reasons and 25 games, median 1-2
+events per reason-game pair.
+
+Distribution, so it is not re-derived: `early_stop_sweep_20260726` 1131 rows
+(overwhelmingly llmoff, and the source of the inflated True count),
+`baseline25` 24, `llm_on_wallclock_rows_20260726` 15, `seedsweep` 11,
+`supab`/`fixrun` 7. The 2026-08-24 seed sweep added about a fifth of all
+LLM-on data the project has.
+
+**What would close this:** more live rows, not more analysis of these. A
+characterization of per-game failure modes needs a live corpus an order of
+magnitude larger than 57 rows.
