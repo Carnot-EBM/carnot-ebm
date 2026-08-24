@@ -16408,3 +16408,4 @@ code |
 | 2026-08-24 13:30 UTC | Plan milestone 2026.08.572 | OK | 6 tasks proposed |
 | 2026-08-24 13:32 UTC | Semantic-block joint proof extractor v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6575-v571-clean-evidence-and-flagship-qua |
 | 2026-08-24 13:32 UTC | Milestone 2026.08.572 activated | OK | 6 tasks queued |
+| 2026-08-24 14:08 UTC | V572 terminal recovery and decomposed flagship con | OK | 95 passed, 1 warning in 20.78s |
