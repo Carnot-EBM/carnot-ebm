@@ -16386,3 +16386,6 @@ code |
 | 2026-08-24 04:57 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 582006 serves 'ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167 |
 | 2026-08-24 05:18 UTC | Sequential flagship GGUF admission v2 by actual ex | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-24 05:36 UTC | SOTA hop-conditioned joint-sufficiency method cont | OK | 88 passed, 1 warning in 11.89s |
+| 2026-08-24 06:59 UTC | Plan milestone 2026.08.571 | OK | 4 tasks proposed |
+| 2026-08-24 07:01 UTC | Activation REFUSED: milestone 2026.08.571 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-24 07:01 UTC | Activation replan 1/2: 2026.08.571 | OK | refused roadmap quarantined to roadmap-2026.08.571-refusal1.yaml; replanning wit |
