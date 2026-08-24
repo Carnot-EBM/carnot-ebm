@@ -6318,3 +6318,10 @@ The critical path for milestone .250:
 - theme: actual GGUF admission set the operational tail while file timestamps supplied the only task clock
 - key result: one accelerator was nearly saturated in the snapshot, so the evidence does not support a compute-idle defect; multi-model concurrency and runner choice have no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.571
+
+- exp_range: no data available this milestone
+- theme: one compute-bound source-stream audit completed at the timing floor while one GPU handled active work
+- key result: the audit was the longest task by definition. The duration cause and any parallel multi-model runner requirement have no data available this milestone
+- acceptance: no data available this milestone

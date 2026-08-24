@@ -1,0 +1,39 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.571",
+  "generated_at": "2026-08-24T12:09:01Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.0,
+  "experiments_completed": 1,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Independent immutable flagship source-stream audit",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 1 compute-bound experiment in 0.0 total minutes. The listed audit is therefore both the slowest compute task and a zero-resolution record. The locked GPU-idle classification is false.",
+  "bottlenecks_identified": [
+    "The disk-mtime timing record rounds the only compute task to 0.0 minutes, so it cannot reveal a slow phase or explain the duration.",
+    "The GPU report is a point sample rather than task-linked telemetry, so it cannot establish utilization across the audit.",
+    "The record has no model-count or runner-selection receipt, so parallel-model DualGPURunner compliance cannot be assessed."
+  ],
+  "improvements_suggested": [
+    "Record start, stop, and phase clocks at sub-minute resolution for each compute task.",
+    "Attach GPU utilization samples to each task and phase instead of storing an unlinked monitor snapshot.",
+    "Batch 8-16 questions per forward pass when the workload permits, and measure the result against an unbatched baseline.",
+    "Record the loaded-model count and runner selection. Require DualGPURunner only when 2+ models run in parallel.",
+    "Schedule independent model work on the free GPU when concurrent compute tasks exist."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add sub-minute phase clocks with task-linked GPU samples.",
+    "Add configurable question batching with an unbatched timing baseline.",
+    "Add model-count and runner-selection receipts, plus free-device scheduling for concurrent model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This milestone's data can identify the only listed task, but it cannot explain runtime because the recorded duration is at the timing floor. Treat the GPU snapshot as capacity evidence, not a task-wide efficiency measurement."
+}
