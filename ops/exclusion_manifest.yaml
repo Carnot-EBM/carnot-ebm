@@ -1088,6 +1088,41 @@ retired_extras:
     quality precondition that does not exist.
     The open question is therefore not "why does the precondition fail" but "why
     does a 15-40 minute live run produce zero authentic terminal rows".
+  correction_2026_08_24_second: >-
+    SECOND APPENDED CORRECTION. The first correction above is also wrong, on its
+    central claim. Both prior texts are kept verbatim so the sequence of errors is
+    visible.
+    THE FIRST CORRECTION SAID no precondition failed. It did. Both artifacts carry
+    preconditions_checked as a 29-key dict with
+    all_required_preconditions_available=false and a populated failed_preconditions:
+    ['verification_commands'] for Exp6581, and
+    ['idle_supported_gpu', 'verification_commands'] for Exp6582. The verdict
+    blocked_precondition_failed_without_quality_claim was accurate the whole time.
+    HOW THE ERROR HAPPENED, because the mechanism matters more than the fact: the
+    outer loop read the artifact through a principle-unwrap helper that returns
+    d[k]['value'] for any dict-valued field. preconditions_checked IS a dict, so the
+    helper returned None and the field read as absent. A reader that assumes every
+    dict is a principle wrapper destroys any dict-valued field. That is the same bug
+    class this project's QA-layer discipline exists to catch.
+    THE ACTUAL CAUSE, diagnosed by an independent agent and verified against the
+    artifacts: the failing check is verification_commands at
+    experiment_6581_qwen36_flagship_source_shard.py:1513. It requires the ENTIRE
+    project test suite to exit 0 before a model may load. No model was ever loaded in
+    either run. Roughly 99.8% of each run was the test suite, so the 927s and 2411s
+    durations are pytest, NOT live GPU inference. The original reason text and the
+    first correction both describe GPU work that did not happen.
+    THE CHECK IS BOTH WRONG AND RIGHT. Wrongly placed, as a precondition rather than
+    a post-work focused test, and wrongly formed, since a bare pytest inherits the
+    coverage addopts. But the suite is genuinely red repo-wide, 68 to 470 failures
+    over twelve days, so the check reports a TRUE fact. The fix is to demote and
+    repair it, and to escalate the red suite separately. Deleting it would hide a
+    real problem.
+    EXP6582's SECOND FAILED PRECONDITION IS PROBABLY SELF-INFLICTED. idle_supported_gpu
+    failed on a contended box. The outer loop's own seed sweep has held GPU 1
+    continuously for over 19 hours. So a harness fix alone does not unblock Exp6582.
+    RETIREMENT STATUS IS UNCHANGED by this correction. Exp6582 stays retired on its
+    own evidence: two runs, same verdict. Exp6581 stays un-retired: it ran once.
+    Neither retirement rests on the mechanism claims corrected here.
   experiment_ids:
   - exp6582-gemma4-31b-flagship-source-shard
   un_retired_experiment_ids:
