@@ -36589,3 +36589,92 @@ abstain. They may not certify their own output.
   at receipt-gated continuity and issue no unchanged hardware command.
 
 <!-- V569-PLANNER-REFRESH-20260823-END -->
+
+## V570 planner refresh - 2026-08-23
+
+<!-- V570-PLANNER-REFRESH-20260823-START -->
+
+This refresh follows the terminal V569 artifacts. It checks the requested
+2025-2026 arXiv topics and the named secondary sources. Exact executable checks
+remain release authority. Learned methods may propose, route, or abstain. They
+may not certify their own output.
+
+### Promising finding selected for V570
+
+- **Verification Without Sufficiency: Per-Chunk Filtering Fails on Multi-Hop
+  RAG, and Decomposition Repairs It** - arXiv:2608.00585,
+  https://arxiv.org/abs/2608.00585; submitted 2026-08-01. The paper reports
+  that independent chunk entailment is near chance on multi-hop questions and
+  can perform worse than no filtering. Conditioning verification on the
+  decomposed sub-question raises later-hop discrimination in its benchmark.
+  Carnot hook: a source span may certify one atomic obligation without making
+  the composed claim sufficient. Add a dependency graph over atomic
+  obligations. Score each span against its hop-conditioned obligation. Release
+  a composed claim only when every required node has exact support and the
+  dependency graph is jointly sufficient. This is a new mechanism. It does not
+  reopen generated ConstraintIR, schema reprompting, or an LLM judge as release
+  authority.
+
+### Local evidence that changes the execution plan
+
+- V569 resolved all three mandated repositories and large cached blobs. It
+  also validated embedded tokenizers, the CUDA llama.cpp path, and sequential
+  memory headroom. Admission stopped before inference because the cache blob
+  paths are hash-only names. The preflight inferred `language_model_file` and
+  quantization from those paths, so both checks returned false. V570 must read
+  GGUF header metadata or llama.cpp model metadata. It must not repeat the same
+  filename-shape check.
+- V569 therefore did not test source-span extraction or graph-Potts learning.
+  Its downstream artifacts were gate blocks or absent. Treat them as unrun
+  science, not scientific nulls.
+
+### Requested secondary and product checks
+
+- **OpenReview:** current 2025-2026 searches surfaced constrained-decoding and
+  solver-verifier studies, but no public oracle-distinct release verifier that
+  changes Carnot's authority boundary. Direct record access was unavailable in
+  this planning session. Do not infer a stronger result from search snippets.
+- **Hugging Face Papers:** its current verification feed surfaced
+  arXiv:2608.00585. That paper supplies the joint-sufficiency control selected
+  above. No feed item justifies reviving answer-level parser tuning.
+- **Semantic Scholar:** the public API returned 35 citing records for EBT
+  (`2507.02092`) and eight for ARM-EBM (`2512.15605`). The newest relevant
+  records remain already cataloged methods such as Solver-Hard, Memoir,
+  Distributional EBMs, and Fixed-Point Reasoners. No citation supplies public
+  matching-base weights or a stronger exact-authority path.
+- **GitHub Trending and targeted repositories:** recent EBM, constraint, KAN,
+  verifier, and constrained-generation searches found no maintained repository
+  that should replace Carnot's pinned exact solver stack. Add no dependency for
+  novelty alone.
+- **Extropic:** the first-party update at
+  https://extropic.ai/writing/from-one-to-one-billion still reports a taped-out
+  269,568-pbit Z1, 16-neighbor connectivity, sampling above 50 MHz, power below
+  one watt, and 2027 early access. Carnot has no authenticated TSU device or
+  API. Schedule no TSU execution, latency, power, or availability claim.
+- **Logical Intelligence:**
+  https://logicalintelligence.com/kona-ebms-energy-based-models still provides
+  no public weights, reproducible training recipe, or documented local runner.
+  Kona remains a product comparator only.
+- **KAN, Ising, FPGA, and continual learning:** no new public result changes
+  the local hardware boundary. The next Ising-shaped work remains graph-Potts
+  online difficulty estimation on software. KAN training remains closed while
+  the binding gaps are live model admission, extractable proof obligations,
+  prospective evidence, and rollback-safe learning.
+
+### V570 planning impact
+
+- Replace filename-based cache-blob admission with content-derived GGUF
+  metadata and an actual one-model-at-a-time generation receipt.
+- Re-run the source stream only after all three mandated model families have
+  authentic receipts. Keep raw responses immutable.
+- Extend source-span proof obligations with hop-conditioned nodes and a
+  joint-sufficiency release rule.
+- Run graph-Potts continuous self-learning only after an independent audit can
+  recompute the prospective stream. Keep weights frozen and commits
+  transactional, reversible, chronological, and exact-verified.
+- Give the changed fused Rust workload one bounded final test. Retire it if the
+  same no-benefit verdict repeats.
+- Keep ARC on prospective live supervisor receipts. Keep physical hardware at
+  receipt-gated continuity. Issue no unchanged board command.
+
+<!-- V570-PLANNER-REFRESH-20260823-END -->

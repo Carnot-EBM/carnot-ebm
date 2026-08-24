@@ -10,90 +10,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CHECKABLE | 6 |
-| AGGREGATE_ONLY | 1 |
-| CANNOT_DETERMINE | 1 |
-
-## experiment_6557_constraint_saturation_independent_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because the required `rerun_discipline` entry naming a prior failure was absent.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6558_arc_live_redirect_ledger_reachability.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The live receipt path was reachable and seven arm firings were inspected, but the per-firing outcomes provided no supported reason to change the curated policy order.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6559_gatemate_changed_state_continuity.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The task was blocked because no dated, operator-authored GateMate physical-state receipt newer than Exp6525 was found, so zero hardware commands ran.
-
-## WHAT IS MISSING
-nothing; `"gate_check_summary.failed_check"`, `"gate_check_summary.observed_latest_receipt_date"`, `"operator_physical_state_receipt.candidate_rows"`, and `"per_unit_rows"` record the failed check, observed value, and candidate-level evidence.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6560_v567_independent_capstone.json
-
-**CANNOT_DETERMINE**
-
-> Audit-integrity guard: quoted field(s) ['gate_check_summary'] do not appear in the artifact, so this verdict was downgraded and must not be acted on.
-
-## VERDICT
-BLOCKED_WITHOUT_DIAGNOSTIC
-
-## WHAT THE CLAIM IS
-The artifact claims 12 tasks closed as three positive, five null, and four blocked, including a positive constraint-saturation result whose independent audit was blocked.
-
-## WHAT IS MISSING
-For `exp6557`, a `gate_check_summary` or equivalent failed-check identifier and observed value is missing; the artifact records only `"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, and `"blocked_gate_artifact": true`.
-
-## THE CHECK A READER CANNOT DO
-Which constraint-saturation audit gate failed, and what value caused it to fail?
-
-## experiment_6561_v568_evidence_gate_contract.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The V567 artifacts are content-addressed, Exp6549–Exp6551 are eligible production inputs, and the V568 gate, prior-failure, model, hardware, and protected-file contracts are complete.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+| CANNOT_DETERMINE | 2 |
 
 ## experiment_6562_constraint_saturation_independent_audit_v2.json
 
@@ -103,7 +20,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims a `"disqualified"` verdict because four explicitly named checks failed.
+The artifact’s headline claim is that the result was disqualified because four named audit checks failed.
 
 ## WHAT IS MISSING
 nothing
@@ -113,13 +30,45 @@ none
 
 ## experiment_6563_production_safety_net_workload_canary.json
 
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+Disabled identity, exact equality, fallback, restart, and rollback passed, while enabled routing produced no measured work or latency benefit.
+
+## WHAT IS MISSING
+The artifact is truncated inside `"per_unit_rows"` at `"row_hash"`; complete per-unit metrics are missing for the declared `"unsupported"`, `"fallback_heavy"`, `"exception"`, `"restart"`, and `"rollback"` workloads and their conditions.
+
+## THE CHECK A READER CANNOT DO
+Did enabled routing fail the work and latency thresholds on every workload—including restart and rollback—rather than only on the visible rows?
+
+## experiment_6564_rust_pyo3_safety_net_nfr01.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+Exact Python/Rust parity passed, but the Rust PyO3 batch achieved only 0.764013447× median speedup—below the 10.0× gate—with p99 latency of 6.312575e-05 seconds.
+
+## WHAT IS MISSING
+The artifact is truncated inside `"per_unit_rows"` and shows only `"implementation": "python_scalar"` rows; the corresponding per-unit `"rust_pyo3_batch"` measurements needed to check `"honest_verdict"` are not present in the supplied text.
+
+## THE CHECK A READER CANNOT DO
+Do paired Python and Rust per-unit timings actually reproduce the claimed 0.764013447× median batched speedup and exact parity result?
+
+## experiment_6565_v569_evidence_and_retirement_contract.json
+
 **CHECKABLE**
 
 ## VERDICT
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The safety-net conditions passed, while enabled routing showed no preregistered work or latency benefit.
+The V569 evidence and retirement contract is ready: V568 artifacts are individually classified, required contracts close, and the Rust-fusion boundary may reopen.
 
 ## WHAT IS MISSING
 nothing
@@ -127,18 +76,66 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6564_rust_pyo3_safety_net_nfr01.json
+## experiment_6566_proof_obligation_and_graph_potts_method_contract.json
 
-**AGGREGATE_ONLY**
+**CHECKABLE**
 
 ## VERDICT
-AGGREGATE_ONLY
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-Exact parity passed, but Rust/PyO3 batching achieved only 0.764013447× median speedup—below the 10.0× threshold—while p99 latency met the frozen bound.
+The source method contract is complete and ready, with its proof-obligation schema, splits, graph features, Potts equations, matched-dose arms, gates, attacks, and retirement rules frozen.
 
 ## WHAT IS MISSING
-Although `"per_unit_rows"` is present, every written row has `"implementation": "python_scalar"` and `"batch_size": 1`; per-unit `"rust_pyo3_batch"` timing/parity rows needed to reproduce the comparative speedup and exact-parity claims are missing.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-Did Rust/PyO3 batching underperform Python broadly across units and batch sizes, or did a small number of slow Rust measurements drive the reported 0.764013447× median?
+none
+
+## experiment_6567_sequential_flagship_gguf_admission.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The run was blocked because all three flagship model families failed runtime admission after the `model_identity_and_file_shape` precondition failed.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6568_immutable_source_span_claim_stream.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because `exp6567-sequential-flagship-gguf-admission.all_mandated_models_loaded_score` was 0.0 instead of the required 1.0.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6570_proof_obligation_independent_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The independent audit was blocked because required evidence was missing or unusable, so audit readiness and promotion were not confirmed.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
