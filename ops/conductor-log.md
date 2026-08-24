@@ -16416,3 +16416,5 @@ code |
 | 2026-08-24 16:10 UTC | Qwen3.6 one-family flagship source shard | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6581_qwen36_ |
 | 2026-08-24 16:49 UTC | Gemma-4-31B one-family flagship source shard | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6582_gemma4_ |
 | 2026-08-24 17:36 UTC | Gemma-4-31B one-family flagship source shard | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6582_gemma4_ |
+| 2026-08-24 18:59 UTC | Gemma-4-31B one-family flagship source shard | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ssert mod.fami |
+| 2026-08-24 19:01 UTC | Gemma-4-31B one-family flagship source shard | OK | Excluded by manifest: exp_id=6582 in manifest |
