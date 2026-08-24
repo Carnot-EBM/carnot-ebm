@@ -16385,3 +16385,4 @@ code |
 | 2026-08-24 04:56 UTC | Sequential flagship GGUF admission v2 by actual ex | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6573_sequent |
 | 2026-08-24 04:57 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 582006 serves 'ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167 |
 | 2026-08-24 05:18 UTC | Sequential flagship GGUF admission v2 by actual ex | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-24 05:36 UTC | SOTA hop-conditioned joint-sufficiency method cont | OK | 88 passed, 1 warning in 11.89s |
