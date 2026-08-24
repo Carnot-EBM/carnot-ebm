@@ -16422,3 +16422,4 @@ code |
 | 2026-08-24 19:20 UTC | Gemma-4-31B one-family flagship source shard | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-24 19:33 UTC | Gemma-4-26B-A4B one-family flagship source shard | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-24 21:53 UTC | JANITOR: conductor auto-start | WARN | conductor PID 3237266 not alive; unit was inactive; started (REQ-CONDUCTOR-RESTART-1) |
+| 2026-08-24 23:15 UTC | Independent three-family source receipt audit | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ntinel_state.j |
