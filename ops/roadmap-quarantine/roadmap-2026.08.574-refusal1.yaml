@@ -284,15 +284,6 @@ tasks:
         artifact_field: v574_cfr_launch_ready_score
         op: "=="
         value: 1.0
-    prior_failures:
-      - experiment_id: exp5814-channel-qualified-constraint-stream
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Exp6591 does not reuse the failed Exp5813 all-family channel gate. It uses the shipped Exp6587 CFR contract and the same-roadmap Exp6588 launch gate before fresh Gemma inference."
-        retire_if_same_verdict: true
-      - experiment_id: exp6234-fresh-flagship-constraint-event-stream
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Exp6591 does not reuse the missing Exp6228 readiness field or its exact constraint-event stream. It uses the explicitly declared Exp6588 gate and the frozen V573 CFR method."
-        retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Exp6587 froze one family-neutral CFR method and Exp6588 owns the bounded V574 launch gate. The dense flagship local path produced valid V572 runtime receipts, but it has not run the CFR intervention. This task generates one immutable Gemma stream in a process separate from Qwen and makes no cross-arm headline claim. Work at {project_root}. The planning date is {date}.
