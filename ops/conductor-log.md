@@ -16450,3 +16450,4 @@ code |
 | 2026-08-25 10:41 UTC | Plan milestone 2026.08.575 | OK | 6 tasks proposed |
 | 2026-08-25 10:43 UTC | Milestone 2026.08.575 activated | OK | 6 tasks queued |
 | 2026-08-25 11:20 UTC | V575 terminal intake and method lock | OK | 95 passed, 1 warning in 22.67s |
+| 2026-08-25 12:03 UTC | Independent CFR row reducer, gated on Exp6592 read | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
