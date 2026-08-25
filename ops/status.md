@@ -8908,7 +8908,9 @@ Working:
 - `scripts/mutation_marker_lint.py` + pre-commit hook `mutation-marker-lint`
   refuse any commit whose staged Python carries a mutation marker, whether or
   not a proof session was used. Verified end-to-end through real pre-commit
-  against the exact 2026-08-25 incident line.
+  against the exact 2026-08-25 incident line. Its 22 focused tests now cover
+  100% of the module's statements, including every fail-closed Git/read branch
+  and direct CLI dispatch; the expanded QA smart subset passes 219 tests.
 - `scripts/audit_findings_ledger.py` `EXCLUDED_SOURCES` names all six
   milestone-close audits with a written reason each; the list of audits is
   DERIVED from `research_conductor.py`, so a newly-wired one cannot drift into

@@ -55994,3 +55994,122 @@ or RED.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6589 | Implemented (`python/carnot/experiment_6589_isolated_pytest_receipt_remediation.py`; terminal blocked artifact `results/experiment_6589_isolated_pytest_receipt_remediation.json`) | Implemented (`tests/python/test_experiment_6589_isolated_pytest_receipt_remediation.py`; 38 focused tests; 100% module statement coverage) |
+
+### REQ-REPORT-6590: Qwen CFR Stream SHALL Preserve Every Frozen Row
+
+Carnot SHALL run the Exp6587 constraint-first method with
+`unsloth/Qwen3.6-35B-A3B-GGUF`. The task SHALL use one fresh local llama.cpp
+process. It SHALL report row completeness without a cross-arm quality claim.
+
+- REQ-REPORT-6590-PRECONDITIONS: The artifact SHALL bind the Exp6588 launch
+  score, both protected-file hashes, Exp6587 method and source hashes, the exact
+  registry hash, the content-derived local Qwen identity, the llama.cpp build,
+  runtime-selected idle RTX 3090 ownership, VRAM, CPU, RAM, disk, seeds, and
+  budgets. Repository-wide suite state SHALL not gate inference.
+- REQ-REPORT-6590-FROZEN: The producer SHALL recompute the Exp6587 source-unit,
+  prompt, router, decoding, seed, order, budget, stop-rule, and checker hashes.
+  Any mismatch SHALL block before a model process starts.
+- REQ-REPORT-6590-MODEL: `MODEL_SPECS` SHALL contain the mandated Qwen GGUF
+  repository. The producer SHALL follow the `cached_sota_pair()` cache pattern.
+  It SHALL load the resolved GGUF path through llama.cpp and use the embedded
+  tokenizer. It SHALL not call `AutoTokenizer` or download during measurement.
+  A legacy model SHALL not satisfy readiness.
+- REQ-REPORT-6590-ROWS: Each frozen unit SHALL retain direct, always-on CFR,
+  and routed CFR arm rows in the frozen order. Each arm row SHALL contain the
+  raw stage bytes, parsed proposals, source-span bindings, exact results,
+  abstention, tokens, latency, cost, and failure fields before the next unit.
+- REQ-REPORT-6590-RAW: Direct, Stage 1, and Stage 2 bytes SHALL remain separate.
+  The producer SHALL checkpoint raw bytes before parsing. Stage 2 SHALL receive
+  the exact preserved Stage 1 text. It SHALL not overwrite or repair a stage.
+- REQ-REPORT-6590-AUTHORITY: Only the frozen whitelisted exact dispatcher SHALL
+  decide release. Missing source support and malformed proposals SHALL remain
+  rejected. Contradictions SHALL force abstention. The model SHALL not certify
+  itself. Generated ConstraintIR and hidden repair calls SHALL remain forbidden.
+- REQ-REPORT-6590-FAILURES: Timeouts, malformed output, contradictions,
+  unsupported constraints, exact rejection, process failure, and exhausted task
+  time SHALL remain rows. The reducer SHALL charge Stage 1 and Stage 2 tokens
+  and latency. It SHALL not drop a failed unit after observing an outcome.
+- REQ-REPORT-6590-CHECKPOINTS: The producer SHALL write one durable atomic
+  checkpoint after each unit. Each receipt SHALL bind the unit index, raw row
+  hashes, file hash, write time, and completed prefix. A later timeout or
+  process failure SHALL not remove an earlier prefix.
+- REQ-REPORT-6590-LIFECYCLE: The task SHALL own at most one fresh Qwen process.
+  It SHALL sample GPU process identity, memory, and utilization before load,
+  during inference, and after unload. Cleanup SHALL signal only the owned child
+  process. Readiness SHALL require positive offload and clean unload proof.
+- REQ-REPORT-6590-ATTACKS: Prompt drift, post-outcome unit loss, stage
+  overwrite, Stage 1 answer leakage, uncharged Stage 1 work, family-label
+  substitution, legacy-model substitution, aggregate-only output, and a ready
+  score with missing rows SHALL each fail closed.
+- REQ-REPORT-6590-REDUCER: The bare field `qwen_cfr_rows_ready_score` SHALL equal
+  `1.0` only when every expected unit, arm, raw stage, exact receipt, checkpoint,
+  failure field, cost, model, GPU, cleanup, attack, and protected-file receipt
+  independently rechecks. A complete stream SHALL use `verdict_class=null`.
+- REQ-REPORT-6590-ATOMIC: Exp6590 SHALL preserve `research-roadmap.yaml` and
+  `scripts/research_conductor.py`. It SHALL set
+  `inference_substrate=fresh_local_qwen36_gguf_cfr_inference` and
+  `verifier_is_oracle=true`. It SHALL write one terminal JSON artifact through
+  same-directory file sync, atomic replacement, and directory sync. The final
+  checksum SHALL exclude only its own checksum field.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `per_unit_rows`, `model_spec_and_identity`,
+`prompt_source_router_hashes`, `raw_stage_receipts`,
+`exact_checker_receipts`, `checkpoint_receipts`, `gpu_process_receipts`,
+`failure_rows`, `qwen_cfr_rows_ready_score`, `attack_rows`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6590-FROZEN: Drift Blocks Before Inference
+
+**Given** the terminal Exp6587 method and Exp6588 launch artifacts
+**When** Exp6590 replays every frozen source, prompt, router, seed, budget, and checker hash
+**Then** exact matches permit Qwen launch, and any mismatch leaves the model process unstarted.
+
+#### SCENARIO-REPORT-6590-RAW: Three Arms Preserve Separate Stages
+
+**Given** one frozen source unit
+**When** direct, always-on CFR, and routed CFR run in order
+**Then** raw direct, Stage 1, and Stage 2 bytes remain separate, Stage 1
+precedes Stage 2, and every charged stage remains recoverable.
+
+#### SCENARIO-REPORT-6590-AUTHORITY: Exact Checks Own Release
+
+**Given** parsed Stage 1 proposals and a model answer
+**When** source binding and the frozen exact dispatcher run
+**Then** supported constraints are checked, unsupported constraints remain
+visible, contradictions force abstention, and model text cannot authorize release.
+
+#### SCENARIO-REPORT-6590-CHECKPOINTS: A Completed Prefix Survives Failure
+
+**Given** earlier units have durable checkpoints
+**When** a later generation times out or the owned process fails
+**Then** the completed prefix and failure row remain byte-recoverable in the terminal artifact.
+
+#### SCENARIO-REPORT-6590-LIFECYCLE: One Owned Qwen Process Unloads Cleanly
+
+**Given** one runtime-selected idle RTX 3090
+**When** Exp6590 loads, samples, runs, shuts down, and recovers memory
+**Then** receipts prove positive offload, repeated ownership-linked samples,
+closed process and port state, recovered memory, and zero unrelated signals.
+
+#### SCENARIO-REPORT-6590-ATTACKS: Missing Or Substituted Evidence Fails Closed
+
+**Given** one mutation for each required attack
+**When** the readiness reducer checks the candidate stream
+**Then** every drift, loss, overwrite, leakage, cost, substitution,
+aggregate-only, and missing-row candidate receives a ready score of zero.
+
+#### SCENARIO-REPORT-6590-ATOMIC: One Null Qwen Stream Recomputes
+
+**Given** all expected rows and lifecycle receipts are terminal
+**When** Exp6590 writes its final artifact
+**Then** readiness and checksum recompute, protected files remain byte-identical,
+and the artifact makes no CFR benefit claim.
+
+## Implementation Status (REQ-REPORT-6590)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6590 | Implemented (`python/carnot/experiment_6590_qwen36_constraint_first_stream.py`; terminal artifact `results/experiment_6590_qwen36_constraint_first_stream.json`) | Implemented (`tests/python/test_experiment_6590_qwen36_constraint_first_stream.py`; 13 focused tests; 100% module statement coverage) |

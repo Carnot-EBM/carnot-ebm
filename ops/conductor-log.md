@@ -16438,3 +16438,7 @@ code |
 | 2026-08-25 06:05 UTC | Milestone 2026.08.574 activated | OK | 4 tasks queued |
 | 2026-08-25 06:27 UTC | V574 bounded CFR launch root | OK | 93 passed, 1 warning in 17.18s |
 | 2026-08-25 07:27 UTC | Isolated pytest receipt remediation | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT — result quarantined, |
+| 2026-08-25 07:49 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 2080991 serves 'ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f16 |
+| 2026-08-25 08:47 UTC | Test-fix erasure gate | BLOCK | 0 added skip(s), 6 reverted file(s); restored 6 |
+| 2026-08-25 08:47 UTC | Qwen3.6 bounded constraint-first stream | FAIL | Post-tests failed: 1 failed, 192 passed, 1 warning in 18.14s |
+| 2026-08-25 08:49 UTC | Qwen3.6 bounded constraint-first stream | OK | Deliverable already exists in repo |

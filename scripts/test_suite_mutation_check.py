@@ -201,6 +201,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import hashlib
+import importlib.util
 import json
 import os
 import time
@@ -1076,6 +1077,11 @@ PROOF_LOCK_STALE_S = 12 * 60 * 60
 #: mutation, and scanning it bricked the tool against its own documentation on first use.
 _MARKER_SCAN_SUFFIXES = frozenset({".py", ".pyi", ".rs", ".sh", ".bash", ".js", ".ts"})
 
+#: Set after confirming by import which file the tests actually load, to proceed with a proof on
+#: a path-loaded file in a checkout the installed package does not point at. Forcing the agent to
+#: type it IS the control -- the same shape as ACKNOWLEDGED_NON_QA_LAYER.
+PATH_LOADED_ACK_ENV = "CARNOT_MUTATION_PATH_LOADED_VERIFIED"
+
 #: The two files that must contain the literal marker to DEFINE and TEST the scan. Everything else
 #: is scanned. An allow-list, not an extension filter, so the scan stays as wide as its concept.
 _MARKER_SCAN_EXEMPT = frozenset(
@@ -1129,14 +1135,6 @@ def _module_dotted_name(target: Path) -> str | None:
     return ".".join(parts) if parts else None
 
 
-def _is_under(path: Path, root: Path) -> bool:
-    try:
-        path.resolve().relative_to(root.resolve())
-    except ValueError:
-        return False
-    return True
-
-
 def _installed_package_root() -> Path | None:
     """The directory the interpreter will import `carnot` from.
 
@@ -1169,55 +1167,41 @@ def check_target_is_live(target: Path) -> tuple[bool, str]:
     target = target.resolve()
     if not target.exists():
         return False, f"target does not exist: {target}"
-    dotted = _module_dotted_name(target)
-
-    # No importable dotted name means this check is NOT APPLICABLE. Decide that before trying to
-    # resolve the installed package root: a hermetic runner may expose `carnot` through an import
-    # hook instead of a plain sys.path directory, but that has no bearing on a script loaded by
-    # explicit path. Refusing in that environment turns an inapplicable check into a false gate.
-    if dotted is None:
-        reason = (
-            "NOT APPLICABLE -- the target has no importable `carnot.*` module name and is "
-            f"loaded by explicit path: {target}."
-        )
-        root = _installed_package_root()
-        if root is None:
-            return True, (
-                f"{reason}\n"
-                "  The installed `carnot` checkout is not exposed as a sys.path directory; "
-                "that does\n"
-                "  not make this explicit-path target subject to Python import diversion."
-            )
-        # Outside python/. Resolution depends on WHO loads the file, and that cannot be known
-        # from here: pytest collecting in this rootdir reaches the local copy, but an installed
-        # carnot module deriving its own repo root from __file__ may reach the installed copy.
-        if not _is_under(target, root.parent):
-            return True, (
-                f"{reason}\n"
-                f"  CAUTION: `carnot` resolves to a DIFFERENT checkout ({root.parent}). A loader\n"
-                "  that derives its own repo root will reach that copy, not this one. Confirm by\n"
-                "  import which file your tests load before trusting a single reading."
-            )
-        return True, f"{reason}\n  It is in the checkout `carnot` resolves to ({root.parent})."
-
     root = _installed_package_root()
     if root is None:
         return False, "cannot tell which checkout `carnot` resolves to; sys.path has no carnot"
-    loaded = root.joinpath(*dotted.split(".")).with_suffix(".py")
-    if not loaded.exists():
-        loaded = root.joinpath(*dotted.split("."), "__init__.py")
-    if loaded.resolve() != target:
-        return False, (
-            f"INERT RUN -- the interpreter imports {dotted} from\n"
-            f"    {loaded}\n"
-            f"  but you are about to mutate\n"
-            f"    {target}\n"
-            "  Every mutation would read GREEN while measuring nothing. This is the\n"
-            "  worktree trap: the editable install pins an absolute path to the main\n"
-            "  checkout, so a worktree copy is never the file under test. Run the proof\n"
-            "  in the checkout the install points at, or repoint it."
+    dotted = _module_dotted_name(target)
+    if dotted is not None:
+        loaded = root.joinpath(*dotted.split(".")).with_suffix(".py")
+        if not loaded.exists():
+            loaded = root.joinpath(*dotted.split("."), "__init__.py")
+        if loaded.resolve() != target:
+            return False, (
+                f"INERT RUN -- the interpreter imports {dotted} from\n"
+                f"    {loaded}\n"
+                f"  but you are about to mutate\n"
+                f"    {target}\n"
+                "  Every mutation would read GREEN while measuring nothing. This is the\n"
+                "  worktree trap: the editable install pins an absolute path to the main\n"
+                "  checkout, so a worktree copy is never the file under test. Run the proof\n"
+                "  in the checkout the install points at, or repoint it."
+            )
+        return True, f"{dotted} resolves to the file being mutated"
+
+    # Outside python/. Resolution depends on WHO loads the file, and that cannot be known from
+    # here: pytest collecting in this rootdir reaches the local copy, but an installed carnot
+    # module deriving its own repo root from __file__ adds the INSTALLED checkout's scripts/ to
+    # sys.path and reaches that copy instead. WARN, do not refuse -- a hard refusal fires on
+    # every legitimate proof of a scripts/ or tests/ file outside the installed checkout, and a
+    # check that cries wolf gets bypassed, which is worse than the gap it closes.
+    if not _is_under(target, root.parent):
+        return True, (
+            f"{target} is loaded by explicit path, so its route cannot be resolved here.\n"
+            f"  CAUTION: `carnot` resolves to a DIFFERENT checkout ({root.parent}). A loader\n"
+            "  that derives its own repo root will reach that copy, not this one. Confirm by\n"
+            "  import which file your tests load before trusting a single reading."
         )
-    return True, f"{dotted} resolves to the file being mutated"
+    return True, f"{target} is loaded by explicit path from the checkout `carnot` resolves to"
 
 
 def _scan_paths_for_markers(paths: list[Path]) -> tuple[list[str], list[str]]:

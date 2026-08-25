@@ -20,6 +20,7 @@ All writes go under tmp_path; no test touches tracked state.
 
 from __future__ import annotations
 
+import runpy
 import subprocess
 import sys
 from pathlib import Path
@@ -162,6 +163,83 @@ def test_git_failure_refuses_rather_than_reporting_clean(repo, capsys, monkeypat
     assert "REFUSING THE COMMIT" in out and "could not run" in out
 
 
+def test_staged_blob_unexpected_git_failure_refuses(repo, monkeypatch):
+    """REQ-OPS-MUTATION-PROOF-2: an index read error other than a missing
+    entry is indeterminate, so it must raise instead of falling back to disk."""
+
+    result = subprocess.CompletedProcess(
+        ["git", "show", ":victim.py"],
+        2,
+        stdout=b"",
+        stderr=b"fatal: corrupt index",
+    )
+    monkeypatch.setattr(mml.subprocess, "run", lambda *_a, **_k: result)
+
+    with pytest.raises(mml.LintError, match="git could not read staged victim.py"):
+        mml._staged_blob("victim.py")
+
+
+@pytest.mark.parametrize(
+    "stderr",
+    [
+        "fatal: path 'victim.py' does not exist in 'index'",
+        "fatal: path 'victim.py' exists on disk, but not in the index",
+    ],
+)
+def test_staged_blob_missing_index_entry_uses_worktree_fallback(repo, monkeypatch, stderr):
+    """REQ-OPS-MUTATION-PROOF-2: Git's two missing-index spellings mean
+    only that the caller should inspect the worktree bytes instead."""
+
+    result = subprocess.CompletedProcess(
+        ["git", "show", ":victim.py"],
+        128,
+        stdout=b"",
+        stderr=stderr.encode(),
+    )
+    monkeypatch.setattr(mml.subprocess, "run", lambda *_a, **_k: result)
+
+    assert mml._staged_blob("victim.py") is None
+
+
+def test_missing_index_entry_with_unreadable_fallback_refuses(repo, monkeypatch):
+    """REQ-OPS-MUTATION-PROOF-2: a path absent from the index is read from
+    the worktree, but an unreadable fallback must still fail closed."""
+
+    missing = repo / "missing.py"
+    monkeypatch.setattr(mml, "_staged_blob", lambda _rel: None)
+
+    with pytest.raises(mml.LintError, match="missing.py could not be read"):
+        mml._read("missing.py", missing, "index")
+
+
+def test_scan_reports_an_explicit_path_outside_the_repo(repo):
+    """REQ-OPS-MUTATION-PROOF-2: explicit paths outside REPO remain
+    scannable and are identified by their full path in the refusal."""
+
+    outside = repo.parent / "outside.py"
+    outside.write_text("x = 1  # " + _MARKER + " M6\n")
+
+    assert mml.scan([outside], marker=_MARKER, source="worktree") == [
+        f"{outside}:1: x = 1  # {_MARKER} M6"
+    ]
+
+
+def test_staged_file_listing_git_failure_refuses(repo, monkeypatch):
+    """REQ-OPS-MUTATION-PROOF-2: failure to enumerate the commit candidate
+    cannot be reported as an empty, clean staged set."""
+
+    result = subprocess.CompletedProcess(
+        ["git", "diff"],
+        2,
+        stdout="",
+        stderr="fatal: index unavailable",
+    )
+    monkeypatch.setattr(mml.subprocess, "run", lambda *_a, **_k: result)
+
+    with pytest.raises(mml.LintError, match="git could not list staged files"):
+        mml.staged_python()
+
+
 def test_an_undecodable_staged_file_refuses(repo, capsys):
     """A .py that will not decode cannot be scanned, so it cannot be cleared."""
     bad = repo / "bad.py"
@@ -196,6 +274,23 @@ def test_explicit_filenames_are_honoured(repo, capsys):
     _git(repo, "add", "victim.py")
     assert mml.main([str(victim)]) == 1
     assert "victim.py:2" in capsys.readouterr().out
+
+
+def test_script_entrypoint_returns_main_status(tmp_path, monkeypatch):
+    """REQ-OPS-MUTATION-PROOF-2: direct hook execution dispatches through
+    main and propagates its clean status as the process exit code."""
+
+    harmless = tmp_path / "prose.txt"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [str(REPO / "scripts" / "mutation_marker_lint.py"), str(harmless)],
+    )
+
+    with pytest.raises(SystemExit) as exc:
+        runpy.run_path(str(REPO / "scripts" / "mutation_marker_lint.py"), run_name="__main__")
+
+    assert exc.value.code == 0
 
 
 def test_the_hook_is_wired_into_pre_commit():
