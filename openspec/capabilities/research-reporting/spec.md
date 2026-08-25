@@ -57388,3 +57388,105 @@ both protected hashes match, and the final artifact is atomic and checksummed.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6607 | Planned (`python/carnot/experiment_6607_gemma4_26b_direct_headroom.py`) | Planned (`tests/python/test_experiment_6607_gemma4_26b_direct_headroom.py`) |
+
+### REQ-REPORT-6608: Family Headroom Reducer SHALL Freeze Complete Family Evidence
+
+Carnot SHALL replay the Exp6604 fixture and every expected Exp6605 through
+Exp6607 baseline row without model inference. The reducer SHALL use the three
+mandated model families. It SHALL not replace a missing family with a legacy
+model.
+
+- REQ-REPORT-6608-PRECONDITIONS: The reducer SHALL record all four expected
+  artifact paths. It SHALL record present paths, file hashes, fixture and split
+  hashes, the model registry, expected counts, the closed interval `[0.20,
+  0.80]`, protected hashes, and a CPU-only substrate.
+- REQ-REPORT-6608-REPLAY: The reducer SHALL rebuild each available row from
+  frozen task bytes, prompt bytes, raw output bytes, parsed plan, exact result,
+  failure state, model identity, process receipt, seed, and task hash. A row
+  fails replay when any stored value disagrees with recomputation.
+- REQ-REPORT-6608-PARTIAL: `per_unit_rows` SHALL contain all 648 expected
+  family, task, and seed keys. Missing and blocked upstream evidence SHALL
+  produce explicit rows. The reducer SHALL not erase these rows or treat them
+  as successful inference.
+- REQ-REPORT-6608-COMPLETENESS: A family fails closed on a missing, duplicate,
+  reordered, or mutated row. It also fails closed on split, model, process,
+  exact-authority, or aggregate drift. Reported aggregates are comparison
+  evidence only. Recomputed row aggregates own the decision.
+- REQ-REPORT-6608-HEADROOM: The reducer SHALL recompute calibration and held
+  exact-success rates, Wilson intervals, failure modes, and source
+  completeness. A family is eligible only when all 216 rows and identity
+  receipts replay and its full held-family rate is in `[0.20, 0.80]`.
+- REQ-REPORT-6608-NO-CHERRY-PICK: Eligibility SHALL use all 108 held rows for a
+  family. The reducer SHALL not select a held task or seed because its outcome
+  is correct or incorrect.
+- REQ-REPORT-6608-FREEZE: `eligible_model_specs` SHALL contain only complete
+  mandated families. `frozen_held_unit_hashes` SHALL bind the full held split,
+  all selected family row hashes, and a policy that excludes outcome-based
+  selection. Both fields SHALL be final before treatment starts.
+- REQ-REPORT-6608-GATE: The bare field
+  `headroom_benchmark_ready_score` SHALL be `1.0` only when at least one family
+  is eligible and every selected contract is immutable. No-headroom with
+  complete evidence SHALL use `verdict_class=null`. Missing or blocked evidence
+  that prevents family replay SHALL use a `blocked_*` verdict and a named gate
+  summary.
+- REQ-REPORT-6608-ATTACKS: Family-label swap, aggregate-only eligibility,
+  one-row selection, failure erasure, legacy substitution, row duplication,
+  split drift, model drift, exact-check substitution, and protected-file
+  mutation SHALL each force readiness to zero.
+- REQ-REPORT-6608-ATOMIC: The reducer SHALL preserve
+  `research-roadmap.yaml` and `scripts/research_conductor.py`. It SHALL write
+  `results/experiment_6608_family_headroom_reducer.json` with file sync,
+  atomic replacement, and directory sync. The final checksum SHALL exclude
+  only its own field.
+
+The artifact SHALL set
+`inference_substrate=immutable_three_family_direct_headroom_row_reducer_no_llm`
+and `verifier_is_oracle=true`. It SHALL include every field that the V576
+Exp6608 task declares as required.
+
+#### SCENARIO-REPORT-6608-INDEPENDENT-REPLAY: Raw Rows Own Family Aggregates
+
+**Given** one complete mandated family with 216 frozen rows
+**When** the reducer replays task, raw output, exact, identity, and process data
+**Then** it rebuilds both split aggregates and ignores a conflicting reported
+aggregate when it decides eligibility.
+
+#### SCENARIO-REPORT-6608-PARTIAL-PRESERVATION: Missing And Blocked Families Stay Visible
+
+**Given** one missing family artifact and one blocked family artifact
+**When** the reducer builds the expected matrix
+**Then** all expected keys exist as explicit missing or blocked rows, the
+families remain ineligible, and no legacy family enters the matrix.
+
+#### SCENARIO-REPORT-6608-HEADROOM-BOUNDARIES: The Closed Interval Is Exact
+
+**Given** complete families with full held rates of `0.20`, `0.80`, and a value
+outside the interval
+**When** eligibility is recomputed
+**Then** both boundary families qualify and the outside family does not.
+
+#### SCENARIO-REPORT-6608-NO-UNIT-SELECTION: The Full Held Split Is Frozen
+
+**Given** mixed correct and incorrect held rows
+**When** a one-row or correctness-based subset is offered as eligible evidence
+**Then** the reducer rejects it and preserves every held task and seed hash.
+
+#### SCENARIO-REPORT-6608-GATE-OWNERSHIP: One Bare Field Owns Exp6609 Readiness
+
+**Given** all family replay rows and frozen contracts
+**When** at least one family is complete and inside the interval
+**Then** `headroom_benchmark_ready_score` is `1.0`; otherwise it is `0.0` with
+the correct null or blocked disposition.
+
+#### SCENARIO-REPORT-6608-ATTACKS-AND-ATOMIC: Mutations Fail Before Publication
+
+**Given** one mutation for every required attack
+**When** the reducer validates each candidate and writes its terminal artifact
+**Then** every attack fails closed, both protected hashes match, the checksum
+replays, and no partial terminal file remains.
+
+## Implementation Status (REQ-REPORT-6608)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6608 | Planned (`python/carnot/experiment_6608_family_headroom_reducer.py`) | Planned (`tests/python/test_experiment_6608_family_headroom_reducer.py`) |
