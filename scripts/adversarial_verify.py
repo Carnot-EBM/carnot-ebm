@@ -112,6 +112,12 @@ from carnot.terminal_artifacts import (
     path_sha256,
 )
 
+try:  # This module's own directory is not always on sys.path (conductor, worktrees).
+    import stamp_provenance
+except ImportError:  # pragma: no cover - exercised by direct-script and worktree runs
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import stamp_provenance
+
 # Floating-point agreement threshold for tautology detection. Two
 # distinct metrics agreeing to 5 significant figures is suspicious;
 # legitimate cases (two implementations of the same function with the
