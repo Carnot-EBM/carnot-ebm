@@ -57254,3 +57254,137 @@ both protected hashes match, and the final artifact is atomic and checksummed.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6605 | Implemented (`python/carnot/experiment_6605_qwen36_direct_headroom.py`; terminal artifact `results/experiment_6605_qwen36_direct_headroom.json`) | Implemented (`tests/python/test_experiment_6605_qwen36_direct_headroom.py`; 21 focused cases and 100% scoped statement coverage) |
+
+### REQ-REPORT-6607: Gemma 4 26B-A4B Direct Baseline SHALL Preserve Isolated Frozen Rows
+
+Carnot SHALL run the byte-frozen Exp6604 direct plan prompt with only
+`unsloth/gemma-4-26B-A4B-it-GGUF`. The run SHALL cover all 72 Exp6604 tasks
+with three fixed seeds per task. It SHALL measure the middle-MoE family before
+any constrained treatment or other family output can affect generation.
+
+- REQ-REPORT-6607-PRECONDITIONS: Before model launch, the producer SHALL bind
+  the structured Exp6604 gate, artifact hash, ordered task hashes, split
+  hashes, expected 216-row matrix, protected hashes, disk and checkpoint
+  space, timeout budget, GPU ownership and free VRAM, CUDA llama.cpp build,
+  exact GGUF shard paths and SHA-256 hashes, embedded tokenizer identity, and
+  embedded chat-template hash. A failed required condition SHALL write a
+  terminal blocked artifact. Its `gate_check_summary` SHALL name the failed
+  condition and observed value.
+- REQ-REPORT-6607-MODEL: `MODEL_SPECS` SHALL contain the mandated Gemma 4
+  26B-A4B hub ID, resolved local `model_path`, reviewed GPU assignment, Q4
+  quantization, and headline eligibility. The run SHALL use llama.cpp with
+  positive CUDA layer offload and the embedded GGUF tokenizer and chat
+  template. It SHALL not use `AutoTokenizer`, download a model, or substitute
+  a legacy tiny model. A legacy model MAY appear only in a labeled CPU smoke
+  receipt. It SHALL not fill `per_unit_rows` or family aggregates.
+- REQ-REPORT-6607-PROMPT: The producer SHALL use each Exp6604
+  `model_prompt_bytes` value without byte changes. It SHALL freeze direct-only
+  chat serialization, stop rules, temperature, top-p, top-k, repeat penalty,
+  context size, maximum output tokens, seed schedule, and timeout before model
+  output exists. No row SHALL use a grammar, semantic mask, repair, retry,
+  regeneration, previous response, held outcome, or other family output.
+- REQ-REPORT-6607-ROWS: `per_unit_rows` SHALL contain one ordered row for every
+  task and seed. Each row SHALL retain the task hash, prompt bytes, prompt
+  hash, raw response bytes, raw response hash, unmodified parsed-plan
+  candidate, seed, process and command identity, model and GGUF identity, GPU
+  identity, monotonic timing, token counts, finish reason, parse state, exact
+  executor result, attempt count, and every failure flag. Raw bytes SHALL exist
+  before parsing or exact execution.
+- REQ-REPORT-6607-FAILURES: Timeouts, process errors, empty or invalid UTF-8
+  output, syntax failures, precondition or ordering failures, unmet goals,
+  refusals, and bounded-output truncation SHALL remain charged rows. The
+  producer SHALL not select, drop, repair, or regenerate a row after it observes
+  parse or exact results.
+- REQ-REPORT-6607-ORACLE: The Exp6604 `IndependentExactExecutor` SHALL define
+  exact success. The producer SHALL pass the unmodified decoded response to the
+  executor. It SHALL not use the token or semantic compiler as final authority.
+- REQ-REPORT-6607-REDUCER: Calibration and held exact-success rates, Wilson
+  intervals, syntax failure, semantic failure, unmet goal, refusal, invalid
+  generation, timeout, and charged failure rates SHALL recompute only from
+  `per_unit_rows`. The held family rate SHALL include every held seed row.
+- REQ-REPORT-6607-HEADROOM: The bare field
+  `gemma26_headroom_ready_score` SHALL be `1.0` only when all 216 expected rows
+  are complete, authentic Gemma 4 26B-A4B CUDA rows and the held direct
+  exact-success rate is in the closed interval `[0.20, 0.80]`. A complete run
+  outside this interval SHALL remain terminal with score `0.0`. A complete
+  baseline SHALL use `verdict_class=null` in both cases.
+- REQ-REPORT-6607-CHECKPOINT: The producer SHALL write atomic checkpoints that
+  bind the prompt contract, Exp6604 task hash, model hash, completed row prefix,
+  raw bytes, row hashes, and process session. Resume SHALL accept only an exact
+  prefix. It SHALL never regenerate a retained failure because of its outcome.
+- REQ-REPORT-6607-LIFECYCLE: GPU receipts SHALL bind the owned worker PID,
+  selected device, VRAM, CUDA layer offload, repeated inference samples, row
+  timing, shutdown, absent orphan process, and recovered memory. CPU fallback
+  or requested offload without measured offload SHALL not authenticate
+  headline rows.
+- REQ-REPORT-6607-ATTACKS: Cross-family tuning, prompt and seed drift, leakage,
+  failure dropping, CPU fallback, fake CUDA offload, wrong model, tokenizer
+  substitution, answer regeneration, aggregate disagreement, and protected-file
+  mutation SHALL each force readiness to zero.
+- REQ-REPORT-6607-ATOMIC: The producer SHALL preserve
+  `research-roadmap.yaml` and `scripts/research_conductor.py`. It SHALL write
+  `results/experiment_6607_gemma4_26b_direct_headroom.json` through file sync,
+  atomic replacement, and directory sync. It SHALL set
+  `inference_substrate=live_local_gemma4_26b_a4b_gguf_direct_plan_baseline_cuda_llamacpp`
+  and `verifier_is_oracle=true`. The final content checksum SHALL exclude only
+  its own field.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `per_unit_rows`, `model_spec_and_identity`,
+`gpu_process_receipts`, `prompt_and_decode_contract`, `raw_model_receipts`,
+`failure_rows`, `family_headroom_summary`, `gemma26_headroom_ready_score`,
+`attack_rows`, `preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6607-BLOCKED: A Failed Live Condition Writes Evidence Before Exit
+
+**Given** the frozen Exp6604 gate and local runtime checks
+**When** any upstream, cache, GPU, model, tokenizer, chat-template, CUDA,
+checkpoint, timeout, exact-check, or protected-file condition fails
+**Then** Exp6607 writes one terminal blocked artifact, names the expected and
+observed value, starts no unauthorized fallback, and reports readiness zero.
+
+#### SCENARIO-REPORT-6607-FROZEN: Direct Inputs Cannot Drift Or Leak
+
+**Given** the 72 ordered Exp6604 task rows and three fixed seeds
+**When** Exp6607 builds the 216 generation jobs
+**Then** each prompt hash matches the frozen bytes, held inputs expose no
+outcomes, and no grammar, mask, repair, retry, family text, or prior response
+enters a request.
+
+#### SCENARIO-REPORT-6607-RAW-AND-ORACLE: Raw Bytes Precede Exact Execution
+
+**Given** one Gemma response, including a timeout or invalid response
+**When** the producer records and scores the row
+**Then** raw bytes and runtime metadata are sealed first, the unmodified decoded
+candidate reaches the independent executor once, and every failure remains
+charged.
+
+#### SCENARIO-REPORT-6607-HEADROOM: Completeness And Useful Headroom Stay Separate
+
+**Given** all expected rows are authentic and terminal
+**When** the reducer rebuilds calibration and held summaries
+**Then** row completeness can finish with readiness zero, readiness is one only
+for a held exact-success rate in `[0.20, 0.80]`, and the verdict class is null.
+
+#### SCENARIO-REPORT-6607-RESUME: Exact Checkpoints Never Regenerate An Outcome
+
+**Given** a durable completed prefix from the same prompt, task, model, and seed
+contract
+**When** a later process starts after interruption
+**Then** matching rows resume from retained raw bytes, mismatched checkpoint
+bytes fail closed, and no failed exact outcome is regenerated.
+
+#### SCENARIO-REPORT-6607-ATTACKS-AND-ATOMIC: Mutations Fail Before Final Readiness
+
+**Given** one mutation for every required attack
+**When** the row reducer and terminal writer run
+**Then** each mutation yields readiness zero, aggregate disagreement is visible,
+both protected hashes match, and the final artifact is atomic and checksummed.
+
+## Implementation Status (REQ-REPORT-6607)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6607 | Planned (`python/carnot/experiment_6607_gemma4_26b_direct_headroom.py`) | Planned (`tests/python/test_experiment_6607_gemma4_26b_direct_headroom.py`) |
