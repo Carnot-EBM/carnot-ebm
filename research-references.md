@@ -36896,3 +36896,97 @@ may not certify their own output.
   physical-state receipts.
 
 <!-- V572-PLANNER-REFRESH-20260824-END -->
+
+## V573 planner refresh - 2026-08-24
+
+<!-- V573-PLANNER-REFRESH-20260824-START -->
+
+This refresh follows the six terminal V572 tasks. It searched the requested
+2025-2026 arXiv topics and checked OpenReview, Hugging Face Papers, Semantic
+Scholar, GitHub, Extropic, and Logical Intelligence. Exact executable checks
+remain release authority. Learned methods may extract, propose, route, or
+abstain. They may not certify their own output.
+
+### Promising finding selected for V573
+
+- **Constraint-First Reasoning: A Training-Free Protocol for Exploiting
+  Answer-Space Constraints in Mathematical Problem Solving** -
+  arXiv:2608.05254, https://arxiv.org/abs/2608.05254; submitted 2026-08-05.
+  CFR separates generation into a constraint-summary stage and a solve-and-check
+  stage. The paper reports matched prompts, problem-level paired tests, token
+  accounting, routing controls, and direct audits of constraint quality. It also
+  limits the claim to tasks with recoverable constraints and reliable extraction.
+  Carnot hook: compare direct generation with a byte-frozen two-stage
+  constraint-first arm on exact-checkable tasks. Bind each extracted constraint
+  to source bytes. Preserve every raw stage. Let the exact checker, not the model
+  summary, decide validity. Measure unsupported and contradictory constraints,
+  abstention, paired exact success, and total tokens.
+
+### Cataloged findings retained as controls
+
+- **Position: Certified Correctness in Neural Constraint Reasoning Requires
+  Symbolic Integration** - arXiv:2608.14569,
+  https://arxiv.org/abs/2608.14569; accepted at ICML 2026. Its central boundary
+  matches Carnot's current authority rule: neural methods can propose symbols and
+  search heuristics, while an instance-level symbolic check certifies a hard
+  constraint. V573 uses this as a design control, not as empirical evidence for
+  Carnot.
+- **Verifier-Induced Support Reshaping in On-Policy Optimization** -
+  arXiv:2608.00220, https://arxiv.org/abs/2608.00220. Its pass-at-one versus
+  best-at-k divergence remains a warning for continuous learning. V573 therefore
+  measures held retention and future recoverable support before each update. It
+  keeps all generator weights frozen and makes every memory update reversible.
+- **Distributional Energy-Based Models for Uncertainty-Aware Structured LLM
+  Reasoning** - arXiv:2605.18871,
+  https://arxiv.org/abs/2605.18871. The deterministic-constraint term remains the
+  relevant part for this milestone. V573 does not reopen the retired external
+  text scorer and does not treat learned uncertainty as release authority.
+
+### Requested secondary and product checks
+
+- **OpenReview:** the current 2026 records reinforce execution-grounded code
+  verification, verifier-guided backtracking, and held retention. No record
+  supplies an oracle-distinct learned release verifier that changes Carnot's
+  authority boundary.
+- **Hugging Face Papers:** the current verification pages continue to surface
+  LLM-as-a-Verifier and verifier-induced support reshaping. They support paired
+  rows, criteria decomposition, and future-support metrics. They do not justify
+  an LLM judge as exact authority.
+- **Semantic Scholar:** the public API returned HTTP 429 during this refresh.
+  Retain the dated V572 receipt of 35 visible EBT citations and the last usable
+  receipt of eight ARM-EBM citations. Do not invent a new count. No newly
+  authenticated public matching-base checkpoint was established.
+- **GitHub Trending and targeted repositories:** current results were dominated
+  by existing Ising decoders, generic samplers, and KAN application code. No new
+  maintained repository supersedes Carnot's pinned exact solvers, local GGUF
+  path, or existing sampler stack. CFR did not expose a dependency that V573
+  needs to vendor.
+- **Extropic:** the 2026-08-03 update still reports Torx, a Thermalizers preview,
+  a taped-out 269,568-pbit Z1, and planned 2027 early access. The later funding
+  announcement describes a planned Z1.5 path. Carnot still has no authenticated
+  TSU runner. Schedule no TSU execution, latency, power, or availability claim.
+- **Logical Intelligence:**
+  https://logicalintelligence.com/kona-ebms-energy-based-models now labels the
+  product Kona 1.0 and describes an EBM constraint layer. The public page still
+  provides no weights, reproducible training recipe, or documented local runner.
+  Kona remains a product comparator only.
+- **KAN, FPGA, and Ising hardware:** recent KAN initialization and application
+  work does not address the binding extraction and evidence gaps. FPGA Ising
+  decomposition remains a co-design reference, not a compatible bitstream for
+  Carnot's attached boards. Keep every board task receipt-gated.
+
+### V573 planning impact
+
+- Replace the unfinished monolithic V572 aggregate with two independent,
+  checkpointed constraint-first model tasks. Use Qwen3.6 and Gemma 4 31B.
+- Compare direct and constraint-first arms only after an independent row replay.
+  Preserve source bytes, both raw stages, exact checker results, failures, and
+  token costs per unit.
+- Run continuous self-learning prospectively on exact-verified constraint rows.
+  Freeze generator weights. Protect trusted cores. Bound occupancy. Route
+  conflicts to bounded specialist state. Require retention, future-support,
+  restart, rollback, and poison controls.
+- Improve ARC through the live trajectory-supervisor ledger without claiming a
+  game solve. Keep KV260, GateMate, and PolarFire on changed-state continuity.
+
+<!-- V573-PLANNER-REFRESH-20260824-END -->
