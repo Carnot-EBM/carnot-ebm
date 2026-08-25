@@ -479,7 +479,10 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     "deterministic_automaton_no_llm",
     "immutable_v568_artifact_gate_failure_and_retirement_audit_no_llm",
     "immutable_v569_artifact_gate_failure_and_retirement_audit_no_llm",
-    "immutable_qwen_gemma_cfr_row_reducer_no_llm",
+    # `immutable_qwen_gemma_cfr_row_reducer_no_llm` was here. exp6593's own agent added
+    # it in exp6593's own commit -- the guard admitting the artifact that needed
+    # admitting. _declares_no_llm_by_name now covers it by rule, so the entry was
+    # redundant AND made the incident regression test pass with the rule deleted.
     "cfr_counterfactual_exact_authority_audit_no_llm",
     "primary_source_method_preregistration_and_local_conformance_no_llm",
     "primary_source_joint_sufficiency_preregistration_and_local_conformance_no_llm",
@@ -2177,24 +2180,54 @@ def _match_declared_substrate(raw: str, candidates: tuple[str, ...]) -> str | No
 # to the allowlist in its own commit. Anchored to the end of the leading token so
 # `..._no_llm_v2` does NOT match. Grants the SAME floor the allowlist already gives.
 _NO_LLM_NAME_SUFFIX_RE = re.compile(r"(?:^|_)no(?:_new|_experiment)?_llm$")
-_SUBSTRATE_NOTE_SEPARATORS = (" ", ";", ",", ":")
+# Kept in step with the boundary set in `_inference_substrate_value_matches`. They
+# split the same string for the same purpose, so a separator either both accept or
+# neither does; `.` and newline were missing here and made the two disagree.
+_SUBSTRATE_NOTE_SEPARATORS = (" ", ";", ",", ":", ".", "\n")
 
 
-def _substrate_leading_token(raw: str) -> str:
+def _substrate_leading_token(raw: object) -> str:
     """Strip a trailing human note so only the declared value is matched.
 
     Artifacts legitimately write `<value> -- why this floor applies`, so the note
     must not defeat a name-shape rule the way it once defeated exact matching.
+    Accepts any type: callers unwrap principle-annotated fields, but a guard here
+    means a malformed declaration is unrecognized rather than a crash in the linter.
     """
+    if not isinstance(raw, str):
+        return ""
     token = raw.split("--", 1)[0].strip()
     for sep in _SUBSTRATE_NOTE_SEPARATORS:
         token = token.split(sep, 1)[0]
     return token.strip()
 
 
-def _declares_no_llm_by_name(raw: str) -> bool:
+def _declares_no_llm_by_name(raw: object) -> bool:
     """True when the substrate value's own name declares that no model was loaded."""
     return bool(_NO_LLM_NAME_SUFFIX_RE.search(_substrate_leading_token(raw)))
+
+
+def _emit_no_llm_by_name_warning(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Keep a name-shape match auditable instead of silent.
+
+    Somebody deliberately reviewed each allowlist entry; nobody reviewed this one, so
+    the artifact gets its floor AND a warning naming how it was recognized.
+    """
+    floor = duration_floor_for_artifact(d)
+    if floor is None or floor.get("reason") != "no_llm_declared_by_name":
+        return
+    flags.append(
+        Flag(
+            kind="SUBSTRATE_NO_LLM_BY_NAME",
+            severity="warn",
+            detail=(
+                f"inference_substrate={_inference_substrate_text(d)!r} is on no allowlist; "
+                "its own name declares no model load, so the no-LLM floor "
+                f"({floor['min_duration_s']}s) was applied by name shape alone. "
+                "Confirm the run really loaded no model, or declare a reviewed substrate."
+            ),
+        )
+    )
 
 
 def _classify_inference_substrate(d: dict[str, Any]) -> dict[str, str]:
@@ -2702,6 +2735,11 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
 def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
     """Compute-bound artifact with implausibly short duration."""
     duration = d.get("duration_s")
+    # Emitted BEFORE the duration guards on purpose. A no-LLM claim nobody reviewed,
+    # carrying NO measured duration at all, is the case most worth surfacing -- and it
+    # is exactly the case an early return would hide. 50 artifacts sat in that blind
+    # spot when the warn was placed after the guards.
+    _emit_no_llm_by_name_warning(d, flags)
     if not _is_finite_number(duration):
         return
     if _is_precondition_check_only_blocked(d):
@@ -2754,24 +2792,6 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
     # is to make an unchecked declaration VISIBLE so a floor can be added, rather than letting
     # silence read as approval. Artifacts declaring no substrate at all are a separate, larger
     # population governed by the compute-bound-marker path below and are not flagged here.
-    # A name-shape match is self-declared, so it must not go silent the way an
-    # allowlist entry does: someone deliberately added those, nobody reviewed this
-    # one. WARN keeps it visible for audit while its floor is genuinely enforced.
-    _name_floor = duration_floor_for_artifact(d)
-    if _name_floor is not None and _name_floor.get("reason") == "no_llm_declared_by_name":
-        flags.append(
-            Flag(
-                kind="SUBSTRATE_NO_LLM_BY_NAME",
-                severity="warn",
-                detail=(
-                    f"inference_substrate={_inference_substrate_text(d)!r} is on no allowlist; "
-                    "its own name declares no model load, so the no-LLM floor "
-                    f"({_name_floor['min_duration_s']}s) was applied by name shape alone. "
-                    "Confirm the run really loaded no model, or declare a reviewed substrate."
-                ),
-            )
-        )
-
     _declared_substrate = _inference_substrate_text(d)
     if _declared_substrate and duration_floor_for_artifact(d) is None:
         flags.append(

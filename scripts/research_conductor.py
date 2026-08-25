@@ -7080,7 +7080,30 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
             deliverable_path = PROJECT_ROOT / deliverable_path_str
             if deliverable_path.exists():
                 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
-                from adversarial_verify import verify_artifact as _verify_artifact
+                # The conductor is ONE long-lived --loop process, so a plain import
+                # binds whatever copy of the linter was cached at first use -- 14h
+                # stale when exp6593 was quarantined by a rule its own commit fixed.
+                # Reload so a landed linter change takes effect on the next task, in
+                # BOTH directions: a new fabrication check, and a corrected false
+                # positive. Reload measured at ~1ms. See commit d5007390.
+                import importlib
+
+                import adversarial_verify as _av_module
+
+                # Reload can raise SyntaxError while a sibling agent is mid-write.
+                # Caught HERE, not by the outer handler: the outer one would skip the
+                # whole gate INCLUDING the pre-existing-stamp fallback below, turning a
+                # transient partial file into a silent fail-open on every task.
+                # Falling back to the cached module still checks something.
+                try:
+                    _av_module = importlib.reload(_av_module)
+                except Exception as _reload_exc:
+                    logger.warning(
+                        "adversarial_verify reload failed (%s); using the cached copy, "
+                        "which may predate a landed linter fix",
+                        _reload_exc,
+                    )
+                _verify_artifact = _av_module.verify_artifact
 
                 report = _verify_artifact(deliverable_path)
                 flags = report.get("flags") or []

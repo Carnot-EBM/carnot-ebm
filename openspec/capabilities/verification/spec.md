@@ -104,6 +104,94 @@ corpus live controls.
 |---|---|---|
 | REQ-VERIFY-5933 | Implemented (`scripts/adversarial_verify.py`, `results/experiment_5933_aggregation_substrate_qa_repair.json`) | Implemented (`tests/python/test_adversarial_verify_substrate_classification_5933.py`) |
 
+### REQ-VERIFY-6593: No-LLM Substrate Recognition SHALL State The Concept, Not Enumerate It
+
+`inference_substrate` is defined as a fixed enum. In practice it is free text: as
+measured 2026-08-25 over `results/`, 1,093 distinct values appear, 6 of them legal, with
+1,583 artifacts on a custom value. `scripts/adversarial_verify.py` absorbed that drift as
+allowlist accretion, and 41 of the 61 entries in `NO_LLM_SUBSTRATE_ALIASES` were
+hand-written strings ending in `_no_llm`, `_no_new_llm`, or `_no_experiment_llm`. The
+list enumerated a concept instead of stating it, which is the
+pattern-narrower-than-its-concept defect the QA-Layer Authenticity Discipline names.
+
+The verifier SHALL classify a substrate whose leading token ends in `_no_llm`,
+`_no_new_llm`, or `_no_experiment_llm` as a no-LLM substrate by rule. The rule SHALL be
+consulted only AFTER every allowlist, so a live-model declaration keeps its live floor.
+The rule SHALL be anchored at the end of the leading token, so `_no_llm_v2` does not
+match. A trailing human note (`<value> -- why this floor applies`) SHALL NOT defeat it.
+The rule SHALL grant the same floor the allowlist already grants and SHALL NOT lower any
+floor.
+
+Recognition by name SHALL NOT be silent. Nobody reviewed a name-shape match the way
+somebody reviewed each allowlist entry, so the verifier SHALL emit
+`SUBSTRATE_NO_LLM_BY_NAME` at warn severity and the floor descriptor SHALL report
+`no_llm_declared_by_name` rather than `no_llm_declared`.
+
+The fabrication gate SHALL evaluate an artifact with the linter on disk. The conductor
+runs as one long-lived `--loop` process, so `from adversarial_verify import
+verify_artifact` binds the function cached at first use. The verifier entrypoint SHALL
+detect a changed source revision, reload its own module, and delegate to the refreshed
+implementation before the gate stamps `flagged_adversarial`. Incomplete source that
+does not compile SHALL retain the last known-good implementation.
+
+#### Known gap, measured and deliberately not closed (2026-08-25)
+
+`check_duration_vs_claim` returns before applying any substrate floor when the artifact
+carries no compute-bound marker, so a declared no-LLM artifact with no vestigial GGUF or
+CUDA string can record `duration_s: 0.0` and draw no flag. This predates REQ-VERIFY-6593
+and affects allowlisted substrates identically. 102 historical artifacts sit below their
+own declared floor this way. Closing it would newly quarantine all 102, so it is recorded
+here for operator adjudication rather than changed silently.
+`tests/python/test_adversarial_verify_no_llm_name_rule_6593.py` pins the current
+behaviour so that closing the gap fails loudly.
+
+### SCENARIO-VERIFY-6593-NAME-RULE: The Incident Input Is Recognized Without Its Alias
+
+Given an artifact declares `inference_substrate="immutable_qwen_gemma_cfr_row_reducer_no_llm"`
+And its `duration_s` is 1.1603620913811028
+And it quotes an upstream GPU receipt containing a GGUF marker string
+When adversarial verification runs
+Then the verifier SHALL NOT emit `DURATION_TOO_SHORT`
+And recognition SHALL come from the name rule, so removing the matching allowlist entry
+SHALL NOT change the outcome.
+
+### SCENARIO-VERIFY-6593-LIVE-CONTROL: A Live Declaration Keeps The Live Floor
+
+Given an otherwise identical artifact declares `inference_substrate="live_llm_inference"`
+When adversarial verification runs with a duration below 60 seconds
+Then the verifier SHALL emit `DURATION_TOO_SHORT` with critical severity.
+
+### SCENARIO-VERIFY-6593-FLOOR-STILL-BITES: Recognition Is Not Exemption
+
+Given an artifact declares a no-LLM substrate recognized by name
+And it carries a compute-bound marker
+And its `duration_s` is below the no-LLM floor of 0.0001 seconds
+When adversarial verification runs
+Then the verifier SHALL emit `DURATION_TOO_SHORT` with critical severity.
+
+### SCENARIO-VERIFY-6593-VISIBLE: A Self-Declared Match Stays Auditable
+
+Given an artifact declares a substrate on no allowlist whose name ends in `_no_llm`
+When adversarial verification runs
+Then the verifier SHALL emit `SUBSTRATE_NO_LLM_BY_NAME` at warn severity
+And an unrecognized substrate with no no-LLM name shape SHALL still emit
+`SUBSTRATE_HAS_NO_DURATION_FLOOR`.
+
+### SCENARIO-VERIFY-6593-STALE-GATE: The Gate Judges With The Linter On Disk
+
+Given the conductor has been running as a single `--loop` process since before a linter
+change landed
+When it runs the adversarial-verify pass on a newly landed deliverable
+Then the cached verifier alias SHALL reload `adversarial_verify` before stamping
+And a landed fix SHALL take effect on that task in both directions: a new fabrication
+check SHALL fire, and a corrected false positive SHALL NOT be stamped.
+
+## Implementation Status (REQ-VERIFY-6593)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6593 | Implemented (`scripts/adversarial_verify.py` name rule + `SUBSTRATE_NO_LLM_BY_NAME`; source-revision refresh at the cached `verify_artifact` boundary) | Implemented (`tests/python/test_adversarial_verify_no_llm_name_rule_6593.py`, `tests/python/test_conductor_adversarial_verify_reload_6593.py`) |
+
 ### REQ-VERIFY-5251: Token-Guard Fragment-Level Carnot Pilot
 
 The repository shall provide an Exp 5251 local SOTA GGUF pilot that tests a
