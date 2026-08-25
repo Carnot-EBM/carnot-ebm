@@ -16425,3 +16425,6 @@ code |
 | 2026-08-24 23:15 UTC | Independent three-family source receipt audit | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ntinel_state.j |
 | 2026-08-25 00:38 UTC | Independent three-family source receipt audit | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: tifact(artifac |
 | 2026-08-25 02:02 UTC | Independent three-family source receipt audit | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: nd sample. The |
+| 2026-08-25 03:19 UTC | Plan milestone 2026.08.573 | OK | 3 tasks proposed |
+| 2026-08-25 03:21 UTC | Stop-authority receipt STALE | WARN | receipt 173 min old (janitor cadence is 30) |
+| 2026-08-25 03:22 UTC | Milestone 2026.08.573 activated | OK | 3 tasks queued |
