@@ -1,491 +1,456 @@
-# Research Roadmap vNEXT: Decomposed Proof Graphs and Conflict-Routed Self-Learning
+# Research Roadmap vNEXT: Constraint-First Proofs and Safe Online Memory
 
-**Milestone:** 2026.08.572  
+**Milestone:** 2026.08.573  
 **Planning date:** 2026-08-24  
-**Experiment range:** Exp6579-Exp6592  
+**Experiment range:** Exp6585-Exp6596  
 **Execution file:** research-roadmap-next.yaml  
 **Status:** planned
 
 ## Purpose
 
-Milestone 571 ended terminally, but it did not produce the intended flagship
-source stream or joint-proof result. Its all-family qualification task exceeded
-the conductor hard timeout three times and wrote no artifact. Two gated tasks
-were skipped. The independent source-stream audit ran and correctly diagnosed
-the missing chain.
+Milestone 572 closed with six terminal tasks. It proved that the source and
+joint-method protocol is executable. It produced valid four-row source shards
+for the dense and MoE Gemma families. The Qwen task blocked before model load
+because the repo-wide suite was used as a launch precondition. That precondition
+was later corrected. The final three-family audit then exceeded its hard limit
+three times and wrote no artifact.
 
-Milestone 572 replaces the monolithic root with one bounded runtime and source
-shard per mandated model family. It then audits and merges those shards,
-executes the already-frozen joint-sufficiency method, tests verifier
-counterfactuals, and runs prospective continuous self-learning with a new
-conflict-routed specialist arm. The final phase tests one open ARC live-path
-defect, preserves attached-hardware continuity, and reconciles the milestone.
+Milestone 573 does not repeat the unfinished three-family aggregate. It tests a
+new research question from arXiv:2608.05254: can a byte-frozen constraint-first
+stage improve exact-valid answers from current local models? It uses one model
+per task, preserves both generation stages, and gives release authority to the
+existing exact checker. It then tests reversible online constraint memory on
+the audited rows. A final side task refines the ARC trajectory supervisor from
+live receipts.
 
-## What milestone 571 proved
+## What milestone 572 proved
 
-| Item | Terminal evidence | Meaning for 572 |
+| Item | Terminal evidence | Meaning for 573 |
 |---|---|---|
-| Exp6575 clean evidence and flagship qualification | Three hard timeouts near 4,800 seconds; no terminal artifact | An all-family qualification, method replay, telemetry sweep, and attack suite cannot share one task budget. Retire that task shape. |
-| Exp6576 immutable flagship source stream | Pre-gate skip because Exp6575 was retired or missing | No source-quality conclusion exists. The science did not run. |
-| Exp6577 independent source-stream audit | Terminal blocked artifact; missing Exp6576 and Exp6575 were named; audit readiness was 0 | Always-run audits can diagnose broken evidence contracts without a model call. Preserve this pattern. |
-| Exp6578 semantic-block joint proof extractor | Pre-gate skip because Exp6575 was retired | No joint-proof utility conclusion exists. Reuse the clean Exp6574 method contract through a new decomposed evidence root. |
-| Exp6574 joint-sufficiency method contract | Clean terminal artifact; method readiness was 1 | Source-byte nodes, dependency edges, exact reducers, splits, attacks, and retirement rules are available for replay. |
-| Exp6553 and Exp6554 prospective self-learning | Both blocked by missing live flagship and transition receipts | Do not retry the GPU-coupled learning shape. Use audited immutable rows and frozen generator weights. |
-| Exp6558 ARC redirect ledger | Live receipt path was reachable, but no supported policy change followed | Target a named live-path defect: serial goal-predicate gating after per-attempt engine retention. |
-| Exp6559 GateMate continuity | No newer operator physical receipt; zero commands were correct | Hardware tasks must remain changed-state and receipt gated. |
+| Exp6579 recovery contract | Complete terminal recovery and one-family execution contract | Keep model work decomposed. Preserve periodic row checkpoints and terminal no-artifact receipts. |
+| Exp6580 source and joint-method protocol | Source-method and joint-method contracts closed | Reuse the exact source binding, fixture, authority, and failure rules. Add CFR before new inference. |
+| Exp6581 Qwen source shard | Blocked before model load because `verification_commands` timed out | This was an environmental precondition failure, not a Qwen quality result. The repo-wide suite no longer belongs in model launch checks. |
+| Exp6582 Gemma 4 31B source shard | Complete, four immutable rows and four checkpoints | The dense flagship local path is usable. Four rows are evidence of runtime, not decision-grade science. |
+| Exp6583 Gemma 4 26B-A4B source shard | Complete, four immutable rows and four checkpoints | The middle MoE local path is usable. It remains available as a smoke and replication family, but it is not required for this bounded milestone. |
+| Exp6584 three-family audit | Three hard limits near 4,800 seconds; no artifact | Retire monolithic all-family audits. Independent reducers must consume completed, bounded artifacts and perform no model load. |
+| Repo-wide test state | The isolated suite is known to be red and can rewrite tracked results | Measure it in a disposable checkout. Do not use it as a per-experiment launch gate. |
 
-The milestone number is terminal status, not a scientific success label. V572
-does not rewrite V571 artifacts or treat skipped tasks as null findings.
+The milestone number records terminal execution. It does not turn a blocked or
+missing scientific result into a null result.
 
 ## The three largest PRD gaps
 
-### Gap 1: no durable flagship evidence root
+### Gap 1: local model text does not yet become a faithful constraint object
 
-The PRD requires local, reproducible verification over current generators.
-Carnot can resolve the three mandated GGUF repositories, but V571 showed that
-the combined task shape is operationally invalid. There is no clean immutable
-three-family stream that survives independent row replay.
+The PRD requires exact constraint extraction from real model outputs. Carnot
+can preserve raw source and response bytes, but the completed V572 shards did
+not test whether a model can identify the binding constraints before it solves.
+There is no paired constraint-extraction result on a current local flagship.
 
-V572 response:
+V573 response:
 
-1. Freeze one small source-unit manifest and one method protocol.
-2. Run one model family per task and per artifact.
-3. Use a fresh process and context for every family.
-4. Audit and merge shards without trusting upstream aggregates.
+1. Freeze an exact-checkable source set before inference.
+2. Compare direct, always-on constraint-first, and routed constraint-first
+   generation on matched units.
+3. Preserve the plain-text constraint summary and final answer as separate raw
+   receipts. Do not revive generated ConstraintIR.
+4. Bind proposed constraints to source spans and let the exact checker decide
+   final validity.
 
-### Gap 2: real text still does not become an auditable joint proof
+### Gap 2: no independently audited proof that staged constraints help
 
-The PRD vision needs semantic constraints that can be checked, revised, and
-composed. Exp6574 froze a sound method, but no live all-family responses reached
-it. Carnot therefore has neither a positive nor a null result for semantic
-blocks, dependency completeness, or jointly sufficient release.
+The architecture needs evidence that constraint extraction changes useful
+behavior rather than formatting. V572 produced runtime receipts, but no
+cross-family comparison survived. It also did not test source, stage, label,
+or raw-byte counterfactuals.
 
-V572 response:
+V573 response:
 
-1. Preserve raw source and response bytes before derivation.
-2. Compare no-filter, atomic-support, and joint-graph release arms.
-3. Keep exact whitelisted checkers as release authority.
-4. Test source, rule, authority, family-label, and context counterfactuals.
+1. Run Qwen3.6 and Gemma 4 31B in separate tasks and fresh processes.
+2. Recompute every comparison from per-unit raw rows.
+3. Measure exact success, constraint precision and recall, unsupported and
+   contradictory constraints, abstention, tokens, latency, and failure rate.
+4. Attack source binding, stage order, family labels, raw hashes, and exact
+   authority before any method is adopted.
 
-### Gap 3: continuous learning has no prospective safe result
+### Gap 3: continuous self-learning has no prospective safe result
 
-FR-11 requires continuous self-learning. The existing prospective run was
-blocked before it produced valid transition, retention, or rollback evidence.
-The natural next step is not another model-weight update. It is a reversible
-constraint-memory experiment with exact commits and explicit conflict handling.
+FR-11 requires continuous self-learning. Exp6553 and Exp6554 blocked before
+valid live transitions existed. Exp6552 showed that hysteresis was reversible,
+but it did not beat matched controls. Carnot still lacks a chronological result
+with retained support, poison resistance, restart, and rollback.
 
-V572 response:
+V573 response:
 
-1. Conform ordinary graph-Potts, protected-core, bounded-occupancy, and
-   conflict-routed specialist mechanisms against hand-computed fixtures.
-2. Run all arms on one chronological audited stream.
-3. Freeze generator weights within and across queries.
-4. Measure retention, future support, poison resistance, restart, rollback,
-   memory growth, and charged cost.
+1. Keep all generator weights frozen.
+2. Admit only independently exact-verified constraint rows.
+3. Compare frozen memory, uniform replay, graph-Potts, protected-core plus
+   occupancy, and conflict-routed specialist state.
+4. Commit after the decision, evaluate on future rows, and require retention,
+   future support, bounded growth, restart, rollback, and poison controls.
 
 ## Research inputs
 
-The V572 literature refresh is recorded in research-references.md.
+The V573 source refresh is recorded in `research-references.md`.
 
-- arXiv:2608.21044 treats continual-learning interference as an allocation
-  problem. Its energy-based compatibility criterion motivates a specialist
-  state for verified updates that conflict with trusted family cores. V572
-  borrows that mechanism at the constraint-memory tier. It does not import the
-  paper's class-incremental result.
-- arXiv:2608.16003 finds that prior audit-repair context can shift an LLM
-  verifier's threshold. V572 isolates model contexts and adds a bounded
-  clean-versus-repair-context test.
-- arXiv:2605.18871 separates learned quality energy from deterministic
-  constraint energy and reports model-identity shortcuts. V572 keeps exact
-  release authority and adds per-family and family-label controls.
-- arXiv:2608.19475 and arXiv:2608.20938 remain the method basis for semantic
-  block well-formedness and grounds, norms, and authority receipts.
-- Extropic Z1 and Kona remain strategic comparators. Neither supplies an
-  authenticated local runner for this milestone.
+- arXiv:2608.05254 introduces Constraint-First Reasoning. It separates a
+  constraint-summary stage from a solve-and-check stage. It motivates the main
+  paired experiment. Carnot imports the staged protocol and paired accounting.
+  It does not import the paper's benchmark result.
+- arXiv:2608.14569 argues that neural constraint solvers need instance-level
+  symbolic certification when hard checks are cheap. It reinforces the existing
+  exact-authority boundary.
+- arXiv:2608.00220 shows that verifier-driven learning can improve current
+  pass-at-one while reducing future reachable support. It motivates held
+  future-support and retention gates for online memory.
+- arXiv:2605.18871 keeps deterministic constraint energy separate from learned
+  quality energy. V573 uses only the deterministic side for release.
+- Extropic Z1 and Kona 1.0 remain strategic comparators. Neither provides an
+  authenticated runner, public weights, or a reproducible local integration.
 
 ## Architecture
 
-    research sources + Exp6574 clean method
-                     |
-                     v
-          Exp6579 recovery contract
-                     |
-                     v
-          Exp6580 V572 method protocol
-             /          |          \
-            v           v           v
-      Exp6581       Exp6582       Exp6583
-      Qwen shard    dense shard    MoE shard
-             \          |          /
-                      v
-          Exp6584 independent merge audit
-                      |
-                      v
-          Exp6585 joint proof comparison
-                      |
-                      v
-          Exp6586 counterfactual/context audit
-                      |
-          +-----------+-----------+
-          |                       |
-          v                       v
-      Exp6587                 Exp6590
-      learner conformance     ARC live-path A/B
-          |
-          v
-      Exp6588 prospective CSL
-          |
-          v
-      Exp6589 independent CSL audit
-
-      Exp6591 attached-hardware continuity
-          |
-          +-----------+-----------+
-                      v
-                 Exp6592 capstone
-
-The generator side proposes text and spans. The exact side owns release.
-
-    local GGUF response
-            |
-            v
-    immutable response bytes
-            |
-            v
-    proposed claim nodes and source spans
-            |
-            v
-    semantic-block graph checks
-            |
-            v
-    whitelisted exact obligation checks
-            |
-            v
-    release, abstain, or block receipt
-
-No LLM judge certifies its own proposal. Exact-checker-defined gains carry
-verdict_class circular_positive.
-
-## Phase I: bounded flagship evidence
-
-### Exp6579 - V571 terminal recovery and decomposition contract
-
-Reconstruct the three Exp6575 hard-timeout attempts, both pre-gate skips, and
-the Exp6577 audit from local receipts. Freeze per-task time, row, process,
-telemetry, and cleanup budgets for V572. The contract forbids one task from
-loading more than one mandated model family.
-
-**Acceptance:** every V571 terminal row replays, the no-artifact state is
-explicit, and the decomposed contract closes without relabeling prior evidence.
-
-**Deliverable:** results/experiment_6579_v572_terminal_recovery_and_decomposition_contract.json
-
-### Exp6580 - SOTA source and joint-method protocol
-
-Bind the V572 method to the new conflict-routing and context-shift sources.
-Replay Exp6574 fixtures, freeze the source-unit manifest, prompt, seeds,
-budgets, failure policy, graph arms, context controls, and exact release rules.
-This is a protocol task. It performs no LLM inference.
-
-**Acceptance:** all primary sources resolve, Exp6574 fixture rows replay, and
-both source-method and joint-method readiness fields equal 1.
+```text
+V572 receipts + current exact registry + V573 source refresh
+                           |
+              +------------+-------------+
+              |                          |
+              v                          v
+   Exp6585 terminal recovery    Exp6586 isolated suite truth
+              |
+              v
+   Exp6587 constraint-first method contract
+              |
+       +------+------+
+       |             |
+       v             v
+ Exp6588 Qwen     Exp6589 Gemma 31B
+       |             |
+       +------+------+
+              v
+   Exp6590 independent paired comparison
+              |
+              v
+   Exp6591 counterfactual and authority audit
+              |
+       +------+------+
+       |             |
+       |      Exp6592 learner conformance
+       |             |
+       +------+------+
+              v
+   Exp6593 prospective continuous self-learning
+              |
+              v
+   Exp6594 independent learning audit
+
+   Exp6595 ARC redirect-ledger generalization
+              |
+              +-----------------------------+
+                                            v
+                               Exp6596 milestone capstone
+```
+
+The online reasoning path remains asymmetric.
+
+```text
+source bytes
+    |
+    v
+plain-text proposed constraints ----> source-span binding
+    |                                      |
+    v                                      v
+model final answer ----------------> exact obligation checker
+                                           |
+                               +-----------+-----------+
+                               |                       |
+                            release                 abstain
+```
+
+The model proposes. The exact checker certifies. Any gain defined by that
+checker carries `verdict_class=circular_positive`, not `positive`.
 
-**Deliverable:** results/experiment_6580_v572_source_and_joint_method_protocol.json
-
-### Exp6581 - Qwen flagship source shard
-
-Run unsloth/Qwen3.6-35B-A3B-GGUF alone. Use the frozen source units and prompt.
-Write raw response rows before segmentation. Record content-derived model
-identity, embedded tokenizer, CUDA offload, process and GPU samples, token and
-time receipts, failures, unload, and recovery.
+## Phase I: evidence and method closure
 
-**Acceptance:** the Qwen family has complete raw rows, at least one nonempty
-claim-bearing output, no family substitution, and clean unload. This is
-evidence readiness, not a model-quality claim.
+### Exp6585 - V572 terminal recovery and V573 execution contract
 
-**Deliverable:** results/experiment_6581_qwen36_flagship_source_shard.json
+Reconstruct all six V572 terminal rows and all three Exp6584 hard-limit
+attempts. Freeze V573 time, checkpoint, cleanup, gate-field, and protected-file
+contracts. This task loads no model.
 
-### Exp6582 - dense Gemma flagship source shard
+**Acceptance:** every V572 terminal state replays from local evidence and the
+new execution contract closes without inventing an Exp6584 artifact.
+
+**Deliverable:** `results/experiment_6585_v573_terminal_recovery_and_execution_contract.json`
 
-Run unsloth/gemma-4-31B-it-GGUF alone under the same manifest and protocol.
-Keep the process and context fresh. Preserve every failure row.
+### Exp6586 - isolated repo-wide suite truth baseline
 
-**Acceptance:** the dense family satisfies the same evidence contract as
-Exp6581.
+Run the full Python suite once in a disposable checkout with the project
+coverage configuration. Compare tracked file hashes before and after. Record
+all failures and mutation attempts. Do not make suite success a model-task gate.
 
-**Deliverable:** results/experiment_6582_gemma4_31b_flagship_source_shard.json
+**Acceptance:** the suite has one honest GREEN or RED baseline, the active
+worktree is unchanged, and every failure and attempted tracked write is named.
 
-### Exp6583 - MoE Gemma flagship source shard
+**Deliverable:** `results/experiment_6586_isolated_full_suite_truth_baseline.json`
 
-Run unsloth/gemma-4-26B-A4B-it-GGUF alone under the same manifest and protocol.
-Keep the process and context fresh. Preserve every failure row.
+### Exp6587 - SOTA constraint-first method contract
 
-**Acceptance:** the MoE family satisfies the same evidence contract as
-Exp6581.
+Bind CFR and the retained controls to immutable primary-source receipts. Freeze
+at least 16 exact-checkable units, direct and two-stage prompts, the restrictive
+cue router, seeds, budgets, source-span binding, exact checkers, metrics, stop
+rules, and attacks. Replay positive and negative fixtures without model load.
 
-**Deliverable:** results/experiment_6583_gemma4_26b_a4b_flagship_source_shard.json
+**Acceptance:** all fixtures replay and the exact field
+`v573_constraint_first_method_ready_score` equals 1.
 
-### Exp6584 - independent three-family receipt audit
+**Deliverable:** `results/experiment_6587_v573_constraint_first_method_contract.json`
 
-Always run. Recompute the source manifest, prompt, model hashes, raw output
-hashes, family coverage, timing, charged cost, failure retention, unload, and
-duplicate checks from shard rows. Do not trust shard readiness fields.
+## Phase II: paired local-model experiment
 
-**Acceptance:** every expected source-family unit has one authentic terminal
-row, all aggregates recompute, and the merged joint-proof input is immutable.
-A missing family produces an exact blocked diagnosis.
+### Exp6588 - Qwen3.6 constraint-first stream
 
-**Deliverable:** results/experiment_6584_three_family_source_receipt_audit.json
+Run `unsloth/Qwen3.6-35B-A3B-GGUF` in one fresh llama.cpp process. Generate
+matched direct, always-on constraint-first, and routed constraint-first rows.
+Checkpoint each completed unit. The task makes no headline quality claim.
 
-## Phase II: joint proof and counterfactual audit
+**Acceptance:** all expected Qwen rows, both CFR stages, exact results, token
+costs, process receipts, and clean unload are independently recheckable.
 
-### Exp6585 - semantic-block joint proof comparison
+**Deliverable:** `results/experiment_6588_qwen36_constraint_first_stream.json`
 
-Use the audited raw shards. Compare matched no-filter, atomic-source-support,
-and semantic-block joint-graph arms. Enforce acyclicity, single rule ownership,
-constraint domination, totality or ambiguity-stop, and source-byte binding.
-Dispatch only supported obligations to the frozen exact registry.
+### Exp6589 - Gemma 4 31B constraint-first stream
 
-**Acceptance:** all matched rows and attacks complete. Candidate readiness
-requires improved exact-certified composed-claim coverage over atomic support
-without lower precision, unsafe release, lineage loss, or a cost-bound failure.
-Rows readiness is separate and may pass on an honest null.
+Run `unsloth/gemma-4-31B-it-GGUF` under the same frozen contract in a separate
+fresh process. Preserve every timeout and parse failure as a row.
 
-**Deliverable:** results/experiment_6585_semantic_block_joint_proof_comparison.json
+**Acceptance:** the dense flagship satisfies the same row and runtime contract
+as Exp6588 without family-specific prompt drift.
 
-### Exp6586 - proof receipt and context-shift audit
+**Deliverable:** `results/experiment_6589_gemma4_31b_constraint_first_stream.json`
 
-Replay source, rule, authority, and family-label replacements. Run a bounded
-Qwen3.6 subset under clean context, prior audit-repair context, and a
-length-matched neutral context. Test whether proposal and release behavior
-changes for the reason frozen by the protocol.
+### Exp6590 - independent constraint-first comparison
 
-**Acceptance:** deterministic receipt transformations match their expected
-minimal changed links. The context arm reports per-unit criterion and
-discrimination changes. A context shift is a finding, not a release
-improvement.
+Consume only completed raw artifacts. Recompute direct versus always-on and
+routed CFR per unit and family. Report paired effects and uncertainty for exact
+success, constraint quality, unsafe release, abstention, tokens, latency, and
+failures. Do not trust upstream aggregates.
 
-**Deliverable:** results/experiment_6586_joint_proof_counterfactual_context_audit.json
+**Acceptance:** every aggregate replays. A positive candidate needs a strictly
+positive routed-CFR exact-success delta, a nonnegative preregistered paired
+lower bound, no unsafe-release increase, stage-one precision at or above the
+frozen floor, and token cost within budget. An exact-defined win is circular.
 
-## Phase III: conflict-routed continuous self-learning
+**Deliverable:** `results/experiment_6590_constraint_first_independent_comparison.json`
 
-### Exp6587 - learner conformance
+### Exp6591 - constraint-first counterfactual and authority audit
 
-Implement or harden the ordinary graph-Potts estimator, protected-core
-residual update, per-source and per-family occupancy, and conflict-routed
-specialist state. Test them against hand-computed Beta-Binomial, Potts,
-conflict, occupancy, restart, and rollback fixtures.
+Replay source-span replacement, constraint deletion, contradiction injection,
+stage swap, family-label swap, raw-byte tamper, answer leak, and exact-authority
+substitution attacks. This task performs no model inference.
 
-**Acceptance:** all calculations, protected-core invariants, bounds, journal
-replay, and rollback rows match the frozen expectations. This task makes no
-utility claim.
+**Acceptance:** every attack changes only the frozen expected links. Tamper,
+leak, and authority substitution fail closed. The audit may pass when the
+scientific comparison is null.
 
-**Deliverable:** results/experiment_6587_conflict_routed_graph_potts_conformance.json
+**Deliverable:** `results/experiment_6591_constraint_first_counterfactual_audit.json`
 
-### Exp6588 - prospective continuous self-learning
+## Phase III: prospective continuous self-learning
 
-Run one chronological stream with matched frozen-memory, uniform verified
-replay, ordinary graph-Potts, protected-core plus occupancy, and
-conflict-routed specialist arms. Commit only independently exact-verified
-memory. Freeze generator weights.
+### Exp6592 - protected conflict-memory conformance
 
-**Acceptance:** the conflict-routed arm must improve a preregistered current or
-future-support metric over matched uniform replay while meeting retention,
-unsafe-commit, poison, memory-growth, cost, restart, and rollback bounds.
-Otherwise report null, partial, blocked, or disqualified.
+Implement or harden graph-Potts state, protected trusted cores, per-source and
+per-family occupancy, and bounded conflict specialists. Replay hand-computed
+update, selection, conflict, poison, restart, and rollback fixtures. This task
+makes no utility claim.
 
-**Deliverable:** results/experiment_6588_prospective_conflict_routed_continuous_learning.json
+**Acceptance:** every fixture and invariant passes and
+`learner_conformance_ready_score` equals 1.
 
-### Exp6589 - independent self-learning audit
+**Deliverable:** `results/experiment_6592_protected_conflict_memory_conformance.json`
 
-Always run. Rebuild memory transitions, selections, conflicts, occupancies,
-retention, future support, poison outcomes, costs, restart, and rollback from
-rows and journals. Do not import upstream headlines.
+### Exp6593 - prospective exact-verified continuous self-learning
 
-**Acceptance:** all transition and claim rows replay. Missing prospective
-evidence produces a named blocked diagnosis.
+Use the audited constraint-first rows in chronological order. Compare frozen
+memory, uniform exact replay, graph-Potts, protected-core plus occupancy, and
+conflict-routed specialist arms. Snapshot before each decision. Commit only
+after independent exact verification. Keep model weights frozen.
 
-**Deliverable:** results/experiment_6589_continuous_learning_independent_audit.json
+**Acceptance:** a candidate win must improve preregistered future support over
+uniform replay while meeting retention, zero unsafe-commit, poison, occupancy,
+memory, cost, restart, and rollback bounds. Otherwise report an honest null,
+partial, block, or disqualification.
 
-## Phase IV: live-path generalization, hardware, and synthesis
+**Deliverable:** `results/experiment_6593_prospective_exact_verified_continuous_learning.json`
 
-### Exp6590 - ARC live goal-predicate separation
+### Exp6594 - independent continuous-learning audit
 
-Registry-precheck every target. Use the live E3AgentPolicy or
-make_carnot_agent route with adapters and game source disabled. Compare the
-current serial model gate with separate dynamics-validity and goal-predicate
-validity on the same retained per-attempt engines. Credit only the live
-agent's own attempts and runtime reverse engineering.
+Always run. Rebuild transitions, selections, conflicts, occupancies, retention,
+future support, poison results, costs, restart, and rollback from rows and
+journals. Do not import Exp6593 headlines.
 
-**Acceptance:** the split gate improves planning reachability or valid
-redirect selection on held live trajectories without new false redirects,
-off-path helpers, public-game duplicate credit, or outer-loop reverse
-engineering. No level solve is a milestone requirement.
+**Acceptance:** all transitions and claims replay. Missing prospective input is
+a named block, not a null result.
 
-**Deliverable:** results/experiment_6590_arc_live_goal_predicate_separation.json
+**Deliverable:** `results/experiment_6594_continuous_learning_independent_audit.json`
 
-### Exp6591 - attached-hardware continuity
+## Phase IV: ARC generalization and synthesis
 
-Audit KV260, PolarFire, and GateMate receipts. Issue at most one validated,
-non-destructive changed-state action per attached board only when a newer
-operator or device receipt authorizes it. KV260 uses SSH only. Never probe
-/dev/mmcblk. GateMate runs no command without a newer physical receipt.
+### Exp6595 - ARC trajectory-supervisor generalization refinement
 
-**Acceptance:** each board receives an honest terminal continuity row. No
-unchanged command, availability claim, latency claim, or power claim is
-allowed. Extropic remains no-auth watch-only.
+Read accumulated live `trajectory_supervisor` receipts with outcomes. Recompute
+per-arm fired and helped counts by held game and time. Change only selection or
+priority over the curated arm set when preregistered support exists. Do not add
+a game adapter, inspect game source, run an outer-loop solve, or claim a level.
+An empty ledger or unsupported change ends as `complete: no supported policy
+change` and still satisfies the ARC generalization slot.
 
-**Deliverable:** results/experiment_6591_attached_hardware_continuity.json
+**Acceptance:** all ledger rows replay, any shared-policy change is backed by
+held-game outcomes, and no per-game solve logic enters the live path.
 
-### Exp6592 - independent milestone capstone
+**Deliverable:** `results/experiment_6595_arc_redirect_ledger_generalization_refinement.json`
 
-Always run. Recompute every V572 readiness and scientific claim from task
-artifacts and row hashes. Separate positive, circular-positive, null, blocked,
-disqualified, and partial outcomes. Record adoption, retirement, and next-step
-decisions. Reconcile the roadmap, capability specs, traceability, status, and
-changelog with the actual result.
+### Exp6596 - independent V573 capstone
 
-**Acceptance:** every expected task has a terminal row or an exact missing
-diagnosis, no blocked task is summarized as null, and no oracle-defined result
-is summarized as non-circular positive.
+Account for every task and recompute all readiness and scientific dispositions.
+Separate `positive`, `circular_positive`, `null`, `blocked`, `disqualified`, and
+`partial`. Reconcile specs, traceability, status, and changelog with actual
+evidence. Do not edit the active roadmap or conductor.
 
-**Deliverable:** results/experiment_6592_v572_independent_capstone.json
+**Acceptance:** every expected task has a terminal artifact or exact missing
+diagnosis. No block becomes null. No exact-defined gain becomes non-circular.
+
+**Deliverable:** `results/experiment_6596_v573_independent_capstone.json`
 
 ## Dependency graph
 
-    Exp6579 recovery contract
-       |
-       +--> Exp6581 Qwen shard -----------+
-       +--> Exp6582 dense Gemma shard ----+--> Exp6584 audit
-       +--> Exp6583 MoE Gemma shard ------+        |
-       |                                           v
-    Exp6580 source and method protocol --------> Exp6585 proof
-                                                    |
-                                                    v
-                                                Exp6586 audit
-                                                    |
-                      Exp6587 conformance ---------+
-                                                    v
-                                                Exp6588 CSL
-                                                    |
-                                                    v
-                                                Exp6589 audit
+```text
+Exp6585 execution contract ---> Exp6588 Qwen -----+
+             |                                    |
+             +-----------------> Exp6589 Gemma ----+--> Exp6590 comparison
+             |                                                   |
+Exp6587 method contract --------+---------------------------------+
+                                                                 v
+                                                       Exp6591 audit
+                                                                 |
+Exp6592 learner conformance --------------------------------------+--> Exp6593 CSL
+                                                                        |
+                                                                        v
+                                                                  Exp6594 audit
 
-    Exp6590 ARC live path --------------------------+
-    Exp6591 hardware continuity -------------------+--> Exp6592 capstone
-    Exp6579-Exp6589 --------------------------------+
+Exp6586 isolated suite ----------------------------------------------+
+Exp6595 ARC generalization ------------------------------------------+--> Exp6596
+Exp6585-Exp6594 -----------------------------------------------------+
+```
 
 Structured runtime gates:
 
-- Exp6581, Exp6582, and Exp6583 require
-  v572_decomposition_contract_ready_score=1 and
-  v572_source_method_ready_score=1.
-- Exp6585 requires all_family_source_audit_ready_score=1 and
-  v572_joint_method_ready_score=1.
-- Exp6586 requires joint_proof_rows_ready_score=1.
-- Exp6588 requires joint_proof_audit_ready_score=1 and
-  conflict_router_conformance_ready_score=1.
+- Exp6588 and Exp6589 require `v573_execution_contract_ready_score=1` and
+  `v573_constraint_first_method_ready_score=1`.
+- Exp6590 requires `qwen_constraint_first_rows_ready_score=1`,
+  `gemma31_constraint_first_rows_ready_score=1`, and
+  `v573_constraint_first_method_ready_score=1`.
+- Exp6591 requires `constraint_first_comparison_rows_ready_score=1`.
+- Exp6593 requires `constraint_first_audit_ready_score=1` and
+  `learner_conformance_ready_score=1`.
 
-Exp6584, Exp6589, Exp6590, Exp6591, and Exp6592 always run. They diagnose
-missing inputs rather than disappearing behind a cascade.
+Exp6586, Exp6592, Exp6594, Exp6595, and Exp6596 always run. They can diagnose
+missing input without disappearing behind a gate cascade.
 
 ## Model requirements
 
 | Task | Required local model | Role |
 |---|---|---|
-| Exp6581 | unsloth/Qwen3.6-35B-A3B-GGUF | One-family runtime and immutable source shard |
-| Exp6582 | unsloth/gemma-4-31B-it-GGUF | One-family runtime and immutable source shard |
-| Exp6583 | unsloth/gemma-4-26B-A4B-it-GGUF | One-family runtime and immutable source shard |
-| Exp6586 | unsloth/Qwen3.6-35B-A3B-GGUF | Bounded clean, repair-context, and neutral-context control |
+| Exp6588 | `unsloth/Qwen3.6-35B-A3B-GGUF` | Flagship MoE matched constraint-first stream |
+| Exp6589 | `unsloth/gemma-4-31B-it-GGUF` | Flagship dense matched constraint-first stream |
 
-Legacy Qwen3.5-0.8B and gemma-4-E4B-it may smoke-test CPU plumbing only.
-They cannot satisfy a family readiness field or carry a headline result.
+`unsloth/gemma-4-26B-A4B-it-GGUF` remains an allowed SOTA replication family
+when capacity permits. Legacy Qwen3.5-0.8B and gemma-4-E4B-it may smoke-test CPU
+plumbing only. They cannot satisfy a readiness field or headline result.
 
-Each flagship task uses content-derived GGUF identity, the embedded tokenizer,
-CUDA llama.cpp, one-model residency, fresh process state, repeated GPU
-telemetry, bounded timeouts, and verified unload. Exp6581-Exp6583 are separate
-conductor tasks. They are not parallel GPU jobs.
+Each live task follows `cached_sota_pair()` cache-resolution practice, records
+content-derived GGUF identity, uses the embedded tokenizer through llama.cpp,
+runs one model at a time, samples GPU state, checkpoints raw rows, and verifies
+unload. It never calls `AutoTokenizer` on a GGUF repository.
 
 ## Hardware requirements
 
 | Resource | Tasks | Contract |
 |---|---|---|
-| Dual RTX 3090 | Exp6581-Exp6583 and Exp6586 | Run one large GGUF at a time. Preserve unrelated GPU work. Record process, offload, memory, utilization, timing, unload, and recovery receipts. |
-| CPU, RAM, local disk | All tasks | Record preconditions. Keep raw rows content-addressed. Use bounded fixtures and atomic terminal artifacts. |
-| Local model cache | Exp6581-Exp6583 and Exp6586 | Bind repository, revision, blob hash, GGUF metadata, quantization, and embedded tokenizer. |
-| KV260 | Exp6591 | SSH-only changed-state action. Never access /dev/mmcblk. No performance claim without a measured workload. |
-| PolarFire | Exp6591 | Use the documented remote route only after target validation and a changed receipt. |
-| GateMate | Exp6591 | No command without a newer operator-authored physical-state receipt. Preserve Exp3866 exclusion. |
-| Extropic TSU | none | No authenticated device or API exists. Keep watch-only. |
+| RTX 3090 GPU 0 | Exp6588 and Exp6589 | Conductor-owned. Run one model task at a time. Preserve unrelated processes. Record offload, memory, utilization, timing, and unload. |
+| RTX 3090 GPU 1 | none planned | Outer-loop owned. Do not claim or kill its active process. |
+| CPU, RAM, and local disk | All tasks | Record preconditions. Keep raw rows content-addressed. Use atomic terminal artifacts. |
+| Temporary disposable checkout | Exp6586 | Run the repo-wide suite outside the active worktree. Compare tracked hashes before and after. |
+| KV260 | none | Terminal state is already adversarial-verified. No new command or performance claim. |
+| GateMate | none | Terminal state is already reached. No command without a new operator physical receipt. |
+| PolarFire | none | Terminal workload validation is already recorded. No repeat smoke. |
+| Extropic TSU | none | No authenticated runner exists. Keep watch-only. |
 
-No hardware purchase is required for V572. The current wishlist remains valid.
+No hardware purchase is required. The hardware wishlist remains the source of
+truth for future acquisitions.
 
 ## Failed-scope discipline
 
-| V572 task | Prior terminal scope | Material change | Repeat rule |
+| V573 task | Prior terminal scope | Material change | Repeat rule |
 |---|---|---|---|
-| Exp6579 | Exp6575 no-artifact hard timeout | Diagnostic contract only; no model load | Retire if the recovery task itself repeats a no-artifact terminal state. |
-| Exp6581-Exp6583 | Exp6575 all-family qualification hard timeout | One family, one process, one bounded shard per task | Retire the affected family task if the same hard-timeout/no-artifact verdict repeats. |
-| Exp6584 | Exp6577 missing upstream audit | Three current same-milestone family artifacts and an always-run reducer | Retire if the same missing-chain verdict repeats. |
-| Exp6585 | Exp6578 pre-gate skip | New decomposed family root and audited merge | Retire if the same upstream-retired block repeats. |
-| Exp6588 | Exp6553 blocked prospective CSL | No live model load; audited immutable rows; conflict-routed state | Retire if the same missing flagship or transition evidence block repeats. |
-| Exp6589 | Exp6554 blocked CSL audit | Audits V572 journals and emitted transitions | Retire if the same missing-live-evidence verdict repeats. |
-| Exp6590 | Exp6558 reachable but no policy change | Separates goal validity from dynamics validity after per-attempt retention shipped | Retire this separation method if it again yields no supported policy change. |
-| Exp6591 | Exp6559 no newer GateMate receipt | One combined per-board continuity artifact; still changed-state gated | Preserve the zero-command terminal rule when physical state is unchanged. |
+| Exp6585 | Exp6584 hard limit with no artifact | Receipt-only recovery; no model or aggregate science | Retire this recovery shape if it also ends with the same no-artifact hard limit. |
+| Exp6587 | Exp6528 source-method contract blocked on OpenReview metadata | Direct arXiv receipts and local exact fixtures; no OpenReview date gate | Retire this source-contract shape if the same unavailable-channel verdict repeats. |
+| Exp6588 | Exp6581 blocked before Qwen load | Full suite removed from launch checks; new CFR paired output; per-unit checkpoints | Retire this Qwen CFR runtime scope if the same precondition block repeats. |
+| Exp6590 | Exp6584 monolithic three-family audit timed out | Two completed artifacts only; no model load; deterministic reducer | Retire this reducer shape if it repeats the same hard-limit/no-artifact result. |
+| Exp6593 | Exp6553 blocked on GPU and live receipt preconditions | No model load; audited immutable rows; chronological reversible memory | Retire if the same missing-live-evidence block repeats. |
+| Exp6594 | Exp6554 blocked on missing learning inputs | Audits current journals and transitions and always runs | Retire if the same missing-input audit verdict repeats. |
+| Exp6595 | Exp6558 found reachability but no supported policy change | Replays newer outcome-bearing ledgers and freezes a held-game support rule | Retire this priority-refinement method if the same no-change verdict repeats. |
 
-Every corresponding YAML task carries all four required prior_failures fields,
-including retire_if_same_verdict: true.
+Each corresponding YAML task carries all four required `prior_failures` fields,
+including `retire_if_same_verdict: true`.
 
 ## Milestone acceptance
 
-V572 succeeds operationally when all 14 tasks reach terminal artifacts or
-structured pre-gate terminal records and Exp6592 can account for each one.
+V573 succeeds operationally when all 12 tasks reach terminal artifacts or
+structured pre-gate terminal records and Exp6596 accounts for every task.
 
-The primary scientific result is eligible only when:
+The constraint-first result is eligible only when:
 
-1. all three family shards pass independent replay;
-2. joint-proof rows are complete and exact-certified;
-3. counterfactual receipt transformations replay;
-4. the continuous-learning stream is chronological and prospective;
-5. the selected learning arm meets retention, poison, future-support,
-   restart, rollback, memory, and cost bounds.
+1. both flagship streams pass independent row replay;
+2. prompts, sources, stages, and model identities remain frozen;
+3. exact results and costs recompute per unit;
+4. counterfactual and authority attacks fail closed;
+5. the verdict preserves exact-checker circularity.
 
-An exact-checker-defined gain is circular_positive. It is not evidence for a
-learned oracle-distinct verifier.
+The continuous-learning result is eligible only when:
 
-Honest stop outcomes include:
+1. inputs are independently audited and chronological;
+2. generator weights remain frozen;
+3. every commit follows an exact verification receipt;
+4. retention and future support use held future rows;
+5. poison, occupancy, memory, cost, restart, and rollback checks pass.
 
-- one family cannot produce an authentic bounded shard;
-- joint graph support is no better than atomic support;
-- family labels or prior repair context change decisions without a valid
-  evidence-path reason;
-- conflict routing does not beat matched uniform replay;
-- ARC goal separation produces no supported live-path change;
-- no hardware receipt changed.
-
-These outcomes are useful terminal results when positive controls and row
-receipts pass. A missing input is blocked, not null.
+Honest terminal outcomes include no CFR gain, a gain that costs too many
+tokens, low constraint precision, no online-memory benefit, an empty ARC
+redirect ledger, or no supported ARC priority change. Those are null findings
+when the full protocol ran. A missing input is blocked.
 
 ## Required reconciliation
 
-Each implementation task must ensure a relevant capability spec with REQ-*
-anchors exists before changing implementation code. Each task runs focused
-tests, lint, spec coverage, row consistency, artifact convention checks,
-adversarial verification, and the applicable checks in ops/e2e-test-plan.md.
+Before implementation changes, each task must confirm a relevant capability
+spec with `REQ-*` and `SCENARIO-*` anchors. Tasks write focused tests first and
+run the applicable unit, lint, spec-coverage, artifact, adversarial, and E2E
+checks from `ops/e2e-test-plan.md`.
 
-Exp6592 reconciles:
+Exp6596 reconciles:
 
-- openspec capability specs and this proposal;
-- _bmad/traceability.md;
-- _bmad/architecture.md when the accepted architecture changes;
-- ops/status.md;
-- ops/changelog.md;
-- the exclusion manifest for repeated retired verdicts.
+- relevant `openspec/capabilities/*/spec.md` files and this proposal;
+- `_bmad/traceability.md`;
+- `_bmad/architecture.md` only if the accepted architecture changes;
+- `ops/status.md`;
+- `ops/changelog.md`;
+- `ops/exclusion_manifest.yaml` for repeated retired verdicts.
 
 Protected throughout the milestone:
 
-- research-roadmap.yaml;
-- scripts/research_conductor.py;
-- prior terminal artifacts.
+- `research-roadmap.yaml`;
+- `scripts/research_conductor.py`;
+- prior terminal artifacts;
+- operator-owned GPU processes and dirty worktree changes.
 
 Do not push.

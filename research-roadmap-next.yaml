@@ -1,0 +1,271 @@
+milestone: "2026.08.573"
+milestone_title: "Constraint-First Proofs and Safe Online Memory"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+  - id: exp6585-v573-terminal-recovery-and-execution-contract
+    milestone: "2026.08.573"
+    deliverable: results/experiment_6585_v573_terminal_recovery_and_execution_contract.json
+    title: "V573 terminal recovery and bounded execution contract"
+    priority: critical
+    track: evidence-infrastructure
+    requires_gpu: false
+    max_turns: 100
+    estimated_wall_time_min: 50
+    model: opus
+    prior_failures:
+      - experiment_id: exp6584-three-family-source-receipt-audit
+        verdict: "failed_hard_timeout_no_artifact"
+        addressed_by: "Exp6584 loaded no model but still combined three family receipts, a merge, and a broad audit in one long task and hit the 4,800-second limit three times without an artifact. Exp6585 performs receipt-only terminal recovery, freezes smaller task budgets, and produces no family merge or scientific aggregate."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Milestone 2026.08.572 has six terminal tasks. Exp6579 and Exp6580 completed their contracts. Exp6581 blocked before Qwen model load because a repo-wide verification command timed out. Exp6582 and Exp6583 completed four immutable rows each. Exp6584 then hit the conductor hard limit three times and wrote no artifact. V573 must preserve these outcomes and freeze a smaller execution graph. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/research-roadmap.yaml, {project_root}/research-roadmap-next.yaml, {project_root}/research-complete.yaml, {project_root}/ops/conductor-log.md, {project_root}/ops/exclusion_manifest.yaml, and {project_root}/ops/known-issues.md
+      - {project_root}/results/experiment_6580_v572_source_and_joint_method_protocol.json, {project_root}/results/experiment_6581_qwen36_flagship_source_shard.json, {project_root}/results/experiment_6582_gemma4_31b_flagship_source_shard.json, {project_root}/results/experiment_6583_gemma4_26b_a4b_flagship_source_shard.json, and the expected but missing Exp6584 path
+      - conductor gate, hard-timeout, artifact lookup, task ledger, checkpoint, process cleanup, atomic-output, duration, and retirement helpers plus their focused tests
+      - {project_root}/scripts/roadmap_schema.py, {project_root}/scripts/conductor_gates.py, {project_root}/scripts/failure_ledger.py, {project_root}/scripts/exclusion_manifest_lint.py, and {project_root}/scripts/adversarial_verify.py
+      - relevant evidence and model-ingestion capability specs, {project_root}/_bmad/traceability.md, {project_root}/ops/status.md, {project_root}/ops/changelog.md, and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Create an exact terminal-recovery artifact for V572 and freeze the bounded V573 execution contract. Do not load an LLM. Do not invent an Exp6584 artifact or a scientific verdict for work that did not run. Do not edit research-roadmap.yaml or scripts/research_conductor.py.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record protected-file hashes, all expected V572 task and artifact paths, conductor-log hash, failure-ledger and exclusion-manifest hashes, Python and tool versions, CPU, RAM, disk, and the no-LLM substrate.
+      1. Add or confirm REQ-* and SCENARIO-* anchors for no-artifact terminal recovery, repeated hard-limit replay, gate-field closure, bounded model-task execution, raw checkpoints, cleanup, and atomic output. Write focused tests first for changed logic.
+      2. Reconstruct one terminal row for each V572 task. Reconstruct one distinct row for each Exp6584 attempt with start, end, elapsed, hard cap, agent backend, missing-artifact check, and source-log hash.
+      3. Replay the Exp6581 blocked fields and gate_check_summary. Replay Exp6582 and Exp6583 row and checkpoint counts. Do not relabel a block as null or a completed runtime shard as positive science.
+      4. Freeze task budgets for Exp6588 and Exp6589: one model family, one fresh process, at least one raw checkpoint per completed unit, bounded generation, explicit failure retention, terminal output, and verified unload.
+      5. Freeze the V573 gate map. Confirm each upstream task exists in this roadmap and each exact gate field appears in that upstream task's REQUIRED ARTIFACT FIELDS with identical spelling.
+      6. Attack a fabricated Exp6584 artifact, a collapsed three-attempt row, stale source hashes, a gate that points outside this roadmap, a misspelled upstream field, two models in one runtime task, missing checkpoints, and a ready score derived from incomplete terminal rows.
+      7. Set v573_execution_contract_ready_score=1.0 only when all terminal rows replay and every budget, field, attack, cleanup, and protected-file check passes.
+      8. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, artifact convention checks, adversarial verification, applicable evidence E2E checks, and final git status.
+
+      Required deliverable: {project_root}/results/experiment_6585_v573_terminal_recovery_and_execution_contract.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal state prevents recovery bootstrap work from posing as a closed contract."
+        honest_verdict:
+          principle: "The verdict distinguishes completed contracts, a precondition block, valid runtime rows, and no-artifact hard limits."
+        verdict_class:
+          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial; recovery readiness is null, never positive."
+        gate_check_summary:
+          principle: "Any blocked outcome names the exact failed receipt check and observed value."
+        v572_terminal_rows:
+          principle: "Every V572 task has one recheckable terminal or missing-artifact row."
+        exp6584_hard_limit_attempt_rows:
+          principle: "All hard-limit attempts remain distinct and source hashed."
+        v573_execution_budget_contract:
+          principle: "One-model residency, time, checkpoint, cleanup, and terminal-output limits are frozen."
+        current_roadmap_gate_contract_rows:
+          principle: "Every downstream gate names a same-roadmap upstream field with identical spelling."
+        attack_rows:
+          principle: "Fabricated recovery, renewed monoliths, and gate drift fail closed."
+        v573_execution_contract_ready_score:
+          principle: "This exact binary field gates both model stream tasks."
+        preconditions_checked:
+          principle: "Files, tools, resources, and protected hashes distinguish a block from recovery failure."
+        protected_files_unchanged:
+          principle: "The task preserves research-roadmap.yaml and scripts/research_conductor.py."
+        inference_substrate:
+          principle: "The artifact declares terminal receipt replay with no LLM."
+        verifier_is_oracle:
+          principle: "Exact receipt replay is infrastructure authority and cannot create positive science."
+        field_provenance:
+          principle: "Every field names source rows, hashes, and reducer code."
+        duration_s:
+          principle: "Monotonic duration exposes skipped recovery work."
+        tests_run:
+          principle: "Named commands, exits, durations, and isolated scope make verification reproducible."
+        reproducibility_checksum:
+          principle: "A final content hash detects terminal mutation."
+      Set inference_substrate=v572_terminal_receipt_replay_no_llm and verifier_is_oracle=true. A ready contract uses verdict_class=null. Use a terminal honest_verdict prefix complete:, success:, passed:, or shipped: for completed work. A genuine precondition block may use a blocked_* verdict and must populate gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6585_v573_terminal_recovery_and_execution_contract --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6586-isolated-full-suite-truth-baseline
+    milestone: "2026.08.573"
+    deliverable: results/experiment_6586_isolated_full_suite_truth_baseline.json
+    title: "Isolated repo-wide suite truth baseline and mutation audit"
+    priority: critical
+    track: evidence-infrastructure
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 100
+    estimated_wall_time_min: 90
+    model: opus
+    prompt: |
+      CONTEXT
+      The repo-wide Python suite is known to be red, and some tests can rewrite tracked result files. Exp6581 showed why this suite cannot be a model-launch precondition. V573 needs one honest low-cadence baseline in a disposable checkout. Test failures are scientific infrastructure evidence, not a task block. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/ops/known-issues.md, and the V573 roadmap document
+      - {project_root}/pytest.ini, {project_root}/pyproject.toml, {project_root}/tests/python/conftest.py, and test collection configuration
+      - {project_root}/scripts/test_suite_mutation_check.py, {project_root}/scripts/determination_preservation_lint.py, {project_root}/scripts/operator_curated_docs_lint.py, and their tests
+      - full-suite, coverage, xdist, temporary-worktree, tracked-hash, subprocess-timeout, process-cleanup, and atomic-output helpers plus tests
+      - relevant test-integrity and evidence capability specs, traceability, status, changelog, and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Measure the repo-wide Python suite once in a disposable checkout, preserve every failure and mutation receipt, and define a low-cadence baseline contract. Never run the full suite against the active worktree. Do not change scripts/research_conductor.py or make suite success a V573 runtime gate.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record protected-file and dirty-worktree hashes, git revision, Python, pytest and plugin versions, CPU, RAM, disk, timeout, temporary-root path, process ownership, and the no-LLM substrate. Refuse broad or unresolved temporary paths.
+      1. Add or confirm REQ-* and SCENARIO-* anchors for disposable full-suite execution, active-worktree non-mutation, failure preservation, low-cadence reporting, timeout cleanup, and atomic output. Write focused tests first.
+      2. Create a disposable checkout or worktree under a validated temporary directory. Use the current committed revision plus an explicit content-hashed patch only when required to reproduce the active tree. Never stage or discard the user's changes.
+      3. Snapshot tracked and operator-curated file hashes in both the active and disposable trees. Record the exact collected-test count before execution.
+      4. Run `.venv/bin/python -m pytest tests/python --no-cov -o addopts= -n 0` from the disposable checkout with the active project environment and a bounded but sufficient timeout. Preserve stdout, stderr, exit, duration, and process cleanup.
+      5. Emit one row per failed, errored, skipped, and timed-out test plus collection and family summaries. A RED exit is a complete measured result, not blocked. A block is reserved for inability to construct or validate the isolated environment.
+      6. Recompute all tracked hashes. Identify every attempted tracked write in the disposable tree and prove that the active worktree hashes and pre-existing dirty status are unchanged.
+      7. Freeze a low-cadence ownership proposal that runs this baseline outside experiment launch. Do not edit the conductor. Do not claim the suite is GREEN unless exit, collection, mutation, and cleanup checks all pass.
+      8. Attack execution in the active root, an omitted dirty patch, a passing headline with failed rows, a timeout called GREEN, unreported writes, leaked child processes, and active-tree hash drift.
+      9. Write one terminal artifact atomically. Run only focused tests needed for the wrapper or changed helpers, then lint, spec coverage, artifact convention checks, adversarial verification, applicable E2E checks, and final git status.
+
+      Required deliverable: {project_root}/results/experiment_6586_isolated_full_suite_truth_baseline.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The baseline terminates as measured GREEN, measured RED, timeout, or isolated-environment block."
+        honest_verdict:
+          principle: "The verdict reports the suite truth without turning test failure into a task block."
+        verdict_class:
+          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial; a measured suite baseline is null infrastructure."
+        gate_check_summary:
+          principle: "An isolated-environment block names the exact failed check and observed value."
+        rows:
+          principle: "Each failed, errored, skipped, or timed-out test remains individually recheckable."
+        collection_receipt:
+          principle: "The collected count and command prevent a partial suite from posing as complete."
+        suite_command_receipt:
+          principle: "Command, cwd, environment hash, exit, duration, stdout, and stderr bind the run."
+        disposable_checkout_receipt:
+          principle: "Revision, patch hash, and validated temporary path prove isolation."
+        mutation_rows:
+          principle: "Each attempted tracked write is named with before and after hashes."
+        active_worktree_unchanged:
+          principle: "The user's tracked hashes and pre-existing dirty state survive the run unchanged."
+        suite_truth_baseline:
+          principle: "GREEN or RED follows from test rows, exit, collection, mutation, and cleanup."
+        full_suite_baseline_ready_score:
+          principle: "This binary field means the suite truth was measured, even when the truth is RED."
+        low_cadence_ownership_contract:
+          principle: "The full suite remains outside per-experiment launch checks."
+        attack_rows:
+          principle: "Partial, mutating, leaked, and falsely green runs fail closed."
+        preconditions_checked:
+          principle: "Resources, versions, dirty state, ownership, and safe paths are explicit."
+        protected_files_unchanged:
+          principle: "Both protected orchestration files retain their original hashes."
+        inference_substrate:
+          principle: "The task declares isolated deterministic test execution with no LLM."
+        verifier_is_oracle:
+          principle: "Pytest is authority for suite state but not for positive research science."
+        field_provenance:
+          principle: "Each baseline field points to raw command or hash rows."
+        duration_s:
+          principle: "Monotonic duration exposes collection-only or truncated execution."
+        tests_run:
+          principle: "Focused validation commands are separate from the measured full-suite command."
+        reproducibility_checksum:
+          principle: "A final hash protects the baseline record."
+      Set inference_substrate=isolated_repo_test_execution_no_llm and verifier_is_oracle=true. A complete GREEN or RED baseline uses verdict_class=null. Use a terminal honest_verdict prefix complete:, success:, passed:, or shipped: for completed work. A genuine isolation block may use a blocked_* verdict and must populate gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6586_isolated_full_suite_truth_baseline --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6587-v573-constraint-first-method-contract
+    milestone: "2026.08.573"
+    deliverable: results/experiment_6587_v573_constraint_first_method_contract.json
+    title: "V573 SOTA constraint-first source and method contract"
+    priority: critical
+    track: sota-method-ingestion
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 75
+    prior_failures:
+      - experiment_id: exp6528-v565-source-model-method-contract
+        verdict: "blocked_v565_source_model_method_contract: unavailable_required_channels=openreview"
+        addressed_by: "Exp6528 required dated OpenReview channel receipts and blocked despite usable primary sources. Exp6587 binds direct content-hashed arXiv receipts, replays local exact fixtures, performs no model-cache qualification, and does not make OpenReview metadata an acceptance gate."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      V572 closed its source and exact-method protocol, but it did not test staged constraint extraction. The V573 refresh selects Constraint-First Reasoning, arXiv:2608.05254, as a training-free intervention. This task must freeze sources, units, prompts, stages, routing, exact authority, metrics, and attacks before any V573 model output exists. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, {project_root}/research-references.md, and the V573 roadmap document
+      - {project_root}/results/experiment_6580_v572_source_and_joint_method_protocol.json and {project_root}/results/experiment_6574_joint_sufficiency_method_contract.json
+      - source-byte binding, source-unit manifest, exact obligation registry, ambiguity-stop, prompt freeze, deterministic router, paired-metric, cost, fixture, attack, and atomic-output helpers plus tests
+      - exclusions for generated ConstraintIR, answer transport, external text scoring, model-self-certification, and public ARC solves
+      - relevant extraction, exact-verification, evidence, continual-learning, and model-ingestion specs; architecture; traceability; status; changelog; and E2E plan
+
+      TASK
+      Create the V573 SOTA constraint-first method contract. Bind primary research receipts and freeze a content-pinned exact-checkable evaluation with direct, always-on CFR, and routed CFR arms. Perform no LLM inference and no post-outcome source selection.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record protected-file hashes, arXiv URLs and content hashes where cached, Exp6580 and Exp6574 paths and hashes, exact registry hash, corpus revision and license, CPU, RAM, disk, and the no-LLM substrate.
+      1. Add or confirm REQ-* and SCENARIO-* anchors for constraint-first preregistration, plain-text stage preservation, source-span binding, exact authority, routing, matched arms, paired rows, cost, failure retention, and atomic output. Write focused tests first.
+      2. Bind arXiv:2608.05254, arXiv:2608.14569, arXiv:2608.00220, and arXiv:2605.18871 to method rows. State each exact Carnot hook and each non-imported claim.
+      3. Reuse or extend the V572 source manifest to at least 16 exact-checkable units selected without model outcomes. Balance restrictive-cue and ordinary units and include unsupported, ambiguous, contradictory, and positive-control cases. Bind exact source bytes, hashes, split, inclusion rule, and checker.
+      4. Freeze a family-neutral direct prompt. Freeze a plain-text Stage 1 constraint-summary prompt and Stage 2 solve-and-check prompt. Do not generate ConstraintIR or use schema-repair retries. Preserve both raw stages before parsing.
+      5. Freeze the deterministic restrictive-cue router before inference. Define direct, always-on CFR, and routed CFR arms with matched seeds, order, decoding, timeout, token limit, stop rules, and failure retention.
+      6. Freeze source-span binding and exact obligation dispatch. A proposed constraint without source support is unsupported. A contradictory proposed constraint cannot release an answer. The model never certifies itself.
+      7. Freeze per-unit metrics for exact success, Stage 1 precision and recall against the manifest, unsupported and contradictory constraints, abstention, unsafe release, tokens, latency, and failure. Freeze paired uncertainty and the circular-positive rule.
+      8. Freeze the downstream task and field map. Set v573_constraint_first_method_ready_score=1.0 only when source, prompts, router, arms, checkers, metrics, gates, attacks, and retirement rules close.
+      9. Attack post-outcome source selection, prompt drift by family, hidden answer leakage into Stage 1, generated ConstraintIR, missing raw stage bytes, router outcome leakage, LLM authority, uncharged Stage 1 tokens, and misspelled gate fields.
+      10. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, artifact convention checks, adversarial verification, applicable method E2E checks, and final git status.
+
+      Required deliverable: {project_root}/results/experiment_6587_v573_constraint_first_method_contract.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The method contract closes before any V573 model outcome."
+        honest_verdict:
+          principle: "The verdict states source, fixture, router, metric, and authority readiness."
+        verdict_class:
+          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial; preregistration is null infrastructure."
+        gate_check_summary:
+          principle: "Any block names the missing source, fixture, registry, or contract value."
+        primary_source_receipts:
+          principle: "Each borrowed method has an immutable source and bounded Carnot hook."
+        non_imported_claim_rows:
+          principle: "External benchmark and product claims cannot enter Carnot evidence."
+        source_unit_manifest:
+          principle: "Exact bytes, hashes, splits, inclusion rules, strata, and checkers freeze evaluation before inference."
+        prompt_stage_contract:
+          principle: "Direct, Stage 1, and Stage 2 prompts are family neutral and byte frozen."
+        router_contract:
+          principle: "Restrictive-cue routing is deterministic and outcome blind."
+        arm_seed_budget_contract:
+          principle: "Direct, always-on CFR, and routed CFR receive matched preregistered work."
+        source_binding_and_exact_authority_contract:
+          principle: "Source spans ground proposals and whitelisted exact checks own release."
+        metric_and_acceptance_contract:
+          principle: "Per-unit effects, uncertainty, safety, and total cost have frozen reducers and thresholds."
+        fixture_replay_rows:
+          principle: "Positive, unsupported, ambiguous, contradictory, and tamper fixtures replay exactly."
+        downstream_gate_field_rows:
+          principle: "Each downstream gate field is owned by an upstream task in this roadmap."
+        attack_rows:
+          principle: "Leakage, drift, self-certification, uncharged work, and schema revival fail closed."
+        v573_constraint_first_method_ready_score:
+          principle: "This exact binary field gates both model stream tasks and the comparison."
+        preconditions_checked:
+          principle: "Sources, fixtures, registry, resources, and protected hashes are explicit."
+        protected_files_unchanged:
+          principle: "The method task preserves both protected orchestration files."
+        inference_substrate:
+          principle: "The task declares primary-source and exact-fixture replay with no LLM."
+        verifier_is_oracle:
+          principle: "The exact checker defines validity, so later wins must remain circular-positive."
+        field_provenance:
+          principle: "Every contract field names source receipts, rows, hashes, and reducer code."
+        duration_s:
+          principle: "Monotonic duration exposes a source-only or fixture-skipped contract."
+        tests_run:
+          principle: "Named commands, exits, and durations make preregistration reproducible."
+        reproducibility_checksum:
+          principle: "A final hash protects the frozen contract."
+      Set inference_substrate=primary_source_and_exact_fixture_replay_no_llm and verifier_is_oracle=true. A ready contract uses verdict_class=null. Use a terminal honest_verdict prefix complete:, success:, passed:, or shipped: for completed work. A genuine precondition block may use a blocked_* verdict and must populate gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6587_v573_constraint_first_method_contract --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
