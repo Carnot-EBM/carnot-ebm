@@ -55281,6 +55281,9 @@ SHALL NOT import a family aggregate or readiness value into its reducer.
   coverage row SHALL keep every expected source-family pair explicit. The
   audit SHALL require identical frozen source units, prompt, unit order,
   budgets, and the prescribed seed contract, except for model identity.
+  The audit SHALL report the observed seed value for each family. It SHALL
+  report whether those values are identical without replacing them with an
+  inferred or missing value.
   Each observed family SHALL use one distinct fresh process.
 - REQ-REPORT-6584-RAW-FIRST: Where checkpoint and monotonic receipts exist,
   the audit SHALL verify that raw response storage precedes the derived parser

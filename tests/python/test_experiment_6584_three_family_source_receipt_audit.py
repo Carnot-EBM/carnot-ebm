@@ -490,6 +490,8 @@ def test_clean_three_family_replay_merges_rows_and_recomputes_every_aggregate(
         artifact["preconditions_checked"]["source_manifest_hash"]
         == protocol["source_unit_manifest"]["manifest_hash"]
     )
+    assert aggregate["protocol_comparison"]["observed_seed_values"] == [6581, 6582, 6583]
+    assert aggregate["protocol_comparison"]["seed_values_identical"] is False
     assert artifact["reproducibility_checksum"] == exp.artifact_checksum(artifact)
     assert exp.validate_artifact(artifact) == []
 
