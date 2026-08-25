@@ -16460,3 +16460,7 @@ code |
 | 2026-08-25 14:14 UTC | Conductor re-exec: fresh committed source | OK | 8d5bc109260e -> 99f1816fb313; argv preserved |
 | 2026-08-25 14:14 UTC | ConvergeFlow feasible-token projection canary | OK | Deliverable already exists in repo |
 | 2026-08-25 14:48 UTC | Spectral k-block Ising sampler canary | OK | 109 passed, 1 warning in 16.62s |
+| 2026-08-25 17:02 UTC | Plan milestone 2026.08.576 | OK | 12 tasks proposed |
+| 2026-08-25 17:04 UTC | Conductor re-exec: fresh committed source | OK | 99f1816fb313 -> fd4736a54c9e; argv preserved |
+| 2026-08-25 17:04 UTC | Activation REFUSED: milestone 2026.08.576 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: BLOCKED_PATTERN_MATCHED on exp66 |
+| 2026-08-25 17:04 UTC | Activation replan 1/2: 2026.08.576 | OK | refused roadmap quarantined to roadmap-2026.08.576-refusal1.yaml; replanning wit |

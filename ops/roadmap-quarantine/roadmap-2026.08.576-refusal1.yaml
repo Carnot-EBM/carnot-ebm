@@ -667,7 +667,7 @@ tasks:
       - relevant arc-agi, arc-world-model-trust-energy, continuous-learning, core-ebm, verification, evidence, and reporting specs; traceability; status; changelog; and E2E plan
 
       TASK
-      Wire a game-agnostic invariant projector into the default-off live E3 world-model proposal path. Replay archived live transitions with disjoint calibration and held-out games. Compare no projection, selected invariant projection, and norm-matched random projection using exact observed next frames. Make no solve claim and perform no new LLM inference.
+      Wire a game-agnostic invariant projector into the default-off live E3 world-model proposal path. Replay archived live transitions with disjoint calibration and held games. Compare no projection, selected invariant projection, and norm-matched random projection using exact observed next frames. Make no solve claim and perform no new LLM inference.
 
       CONCRETE STEPS
       0. PRECONDITIONS: record protected hashes, Exp6595 path and hash, ARC solve-registry receipt, live entrypoint hashes, archive source paths and hashes, valid world-model transition count, game IDs, proposed split, seeds, CPU and RAM, and no-LLM substrate. If there are too few game-disjoint live transitions, block with exact counts rather than using a per-game development proxy.
@@ -745,19 +745,14 @@ tasks:
     estimated_wall_time_min: 180
     agent_type: codex
     model: gpt-5.6-sol
-    prior_failures:
-      - experiment_id: exp5646-two-axis-tempering-rust-parity
-        verdict: blocked_gate_check_failed
-        addressed_by: "Exp5646 never reached parity because its two-axis tempering quality gate reported two material regressions. Exp6612 instead continues the completed Exp6597 spectral-partition canary, does not depend on the failed tempering gate, and adds random-block controls plus Rust parity on n=16 and n=32 systems."
-        retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Exp6597 found stationary noninferiority and ESS-per-transition gains for spectral k-block partitions on exact-enumerable six-spin fixtures, but charged wall time was worse. The next question is whether the algorithmic gain survives larger frustrated systems and a reusable Rust boundary. This block-averaging kernel is distinct from the retired Phase-3 homotopy argmin scope and from PIMI, FPGA execution, or a TSU task. Work at {project_root}. The planning date is {date}.
+      Exp6597 found stationary noninferiority and ESS-per-transition gains for spectral k-block partitions on exact-enumerable six-spin fixtures, but charged wall time was worse. The next question is whether the algorithmic gain survives larger frustrated systems and a reusable Rust boundary. This is not Spectral Annealing, PIMI, FPGA execution, or a TSU task. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V576 roadmap, Exp6597 artifact, implementation, tests, and capability anchors
       - {project_root}/python/carnot/samplers/backend.py, one_axis_rust_backend.py, mode_jump_rust_backend.py, existing Gibbs samplers, Rust sampler crates and PyO3 bindings, and their tests
-      - {project_root}/ops/exclusion_manifest.yaml entries for the retired Phase-3 homotopy argmin method and PIMI, plus sampler benchmark, exact/reference statistics, ESS, hashing, atomic output, and protected-file helpers
+      - {project_root}/ops/exclusion_manifest.yaml entries for SpecAnn and PIMI, plus sampler benchmark, exact/reference statistics, ESS, hashing, atomic output, and protected-file helpers
       - relevant samplers, ising-backend, rust-python-boundary, hardware, evidence, and reporting specs; traceability; status; changelog; and E2E plan
 
       TASK
@@ -772,7 +767,7 @@ tasks:
       5. Run sequential_gibbs, random_k_block, spectral_k_block_python, and spectral_k_block_rust over at least five seeds. Use explicit burn-in and enough retained samples for stable ESS and moment intervals.
       6. Emit per_unit_rows for every fixture, size, seed, and arm with partition setup, transition count, spins updated, energy and moment errors, ESS, ESS per transition, ESS per wall second, setup time, sampling time, total time, parity deltas, and failures.
       7. A win needs stationary-quality noninferiority and positive ESS-per-wall-time or charged wall-time gain over sequential Gibbs on the preregistered aggregate. Algorithmic-only transition gains remain partial or null. Set spectral_scale_ready_score=1.0 when all reference, arm, parity, and cost rows replay.
-      8. Attack retired homotopy/HUBO substitution, PIMI adjacency reuse, treatment-defined reference, burn-in deletion, transition undercharging, setup omission, identical random and spectral partitions, RNG sharing, parity tolerance inflation, FPGA or TSU wording, and protected-file mutation.
+      8. Attack SpecAnn/HUBO substitution, PIMI adjacency reuse, treatment-defined reference, burn-in deletion, transition undercharging, setup omission, identical random and spectral partitions, RNG sharing, parity tolerance inflation, FPGA or TSU wording, and protected-file mutation.
       9. Write atomically. Run Rust and Python focused tests, formatting, lint, spec coverage, artifact and row-consistency checks, adversarial verification, E2E-001 through E2E-004 as applicable, and final git status.
 
       Required deliverable: {project_root}/results/experiment_6612_spectral_k_block_scale_rust_parity.json.
@@ -804,7 +799,7 @@ tasks:
         hardware_path_receipt:
           principle: "Arithmetic, memory, RNG, and parallelism needs are stated without claiming attached hardware execution."
         claim_boundaries:
-          principle: "The task is distinct from retired homotopy argmin, PIMI, FPGA, TSU, and general hardware performance."
+          principle: "The task is distinct from SpecAnn, PIMI, FPGA, TSU, and general hardware performance."
         attack_rows:
           principle: "Scope, reference, burn-in, charge, setup, identity, RNG, parity, hardware, and mutation attacks fail closed."
         preconditions_checked:
@@ -823,7 +818,7 @@ tasks:
           principle: "Named Rust, Python, lint, spec, artifact, adversarial, and E2E commands include exits and durations."
         reproducibility_checksum:
           principle: "A final hash protects the software result."
-      Set inference_substrate=cpu_python_rust_frustrated_spectral_k_block_sampling_no_llm and verifier_is_oracle=false. A genuine block uses blocked_* and gate_check_summary. Do not use retired homotopy-argmin or PIMI code and make no attached-hardware claim.
+      Set inference_substrate=cpu_python_rust_frustrated_spectral_k_block_sampling_no_llm and verifier_is_oracle=false. A genuine block uses blocked_* and gate_check_summary. Do not use Spectral Annealing or PIMI code and make no attached-hardware claim.
 
       Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6612_spectral_k_block_scale_rust_parity --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
