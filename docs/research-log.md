@@ -6325,3 +6325,10 @@ The critical path for milestone .250:
 - theme: one compute-bound source-stream audit completed at the timing floor while one GPU handled active work
 - key result: the audit was the longest task by definition. The duration cause and any parallel multi-model runner requirement have no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.572
+
+- exp_range: no data available this milestone
+- theme: one-family flagship source-shard execution concentrated the reconstructed compute path while per-task phase telemetry remained absent
+- key result: the Qwen3.6 source shard took 15 minutes; GPU 1 was active at 94% while GPU 0 was unused, but no data available this milestone establishes parallel multi-model loading or a missed DualGPURunner engagement
+- acceptance: no data available this milestone
