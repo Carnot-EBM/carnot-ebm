@@ -427,6 +427,7 @@ def _protocol_checks(
         "failure_retention": contract.get("failure_retention_required") is True,
         "fresh_process": contract.get("fresh_process_per_family") is True,
     }
+    observed_seed_values = [row.get("observed_seed") for row in family_contract_rows]
     return {
         "checks": checks,
         "passed": all(checks.values()),
@@ -437,7 +438,9 @@ def _protocol_checks(
         "budget_sha256": sha256_json(budget),
         "manifest_hash": manifest.get("manifest_hash") if isinstance(manifest, Mapping) else None,
         "family_contract_rows": family_contract_rows,
-        "seed_values_identical": len({row.get("seed") for row in family_contract_rows}) == 1,
+        "observed_seed_values": observed_seed_values,
+        "seed_values_identical": bool(observed_seed_values)
+        and len(set(observed_seed_values)) == 1,
         "seed_contract_mode": "one prescribed deterministic seed per family task",
     }
 
@@ -1266,6 +1269,7 @@ def build_audit(
             == [row.get("unit_id") for row in sorted(units, key=lambda row: units.index(row))],
             "budget_identical": protocol_result["checks"]["family_contracts"],
             "prescribed_seeds_match": protocol_result["checks"]["family_contracts"],
+            "observed_seed_values": protocol_result["observed_seed_values"],
             "seed_values_identical": protocol_result["seed_values_identical"],
             "model_identity_only_runtime_difference_required": True,
         },
