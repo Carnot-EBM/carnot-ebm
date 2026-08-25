@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.575",
+  "generated_at": "2026-08-25T14:53:56Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.2,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "V575 terminal intake and method lock",
+      "duration_minutes": 0.1,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Spectral k-block Ising sampler canary",
+      "duration_minutes": 0.04,
+      "compute_bound": false
+    },
+    {
+      "experiment": "CFR counterfactual and exact-authority audit",
+      "duration_minutes": 0.03,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Independent CFR row reducer, gated on Exp6592 readiness",
+      "duration_minutes": 0.02,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Frozen world-model invariant-projection canary",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 6 experiments in 0.2 minutes, including 2 compute-bound entries. V575 terminal intake and method lock was the longest compute-bound entry at 0.1 minutes; the available data does not identify the cause.",
+  "bottlenecks_identified": [
+    "Disk-mtime fallback timing with no live git-log commits prevents phase-level attribution; the data does not explain why the 0.1-minute compute-bound intake exceeded the 0.02-minute compute-bound reducer.",
+    "The GPU report records one Python inference process but no batch-size receipt, so the suggested batching opportunity cannot be audited from task-level evidence.",
+    "The record omits task-level model count and runner choice. DualGPURunner applicability is therefore undetermined."
+  ],
+  "improvements_suggested": [
+    "Batch 8-16 questions per forward pass and record the effective batch size; the GPU monitor projects a 4-8x throughput improvement.",
+    "Emit per-task phase timing, GPU utilization, model count, batch size, and runner-selection receipts instead of relying only on disk-mtime reconstruction.",
+    "Use model-count-aware scheduling: keep a single GGUF model on one GPU, and dispatch across both GPUs only when 2 or more models run concurrently."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add 8-16-question inference batching with measured batch-size and throughput receipts.",
+    "Capture task-scoped phase and GPU telemetry for every compute-bound experiment.",
+    "Record model count and runner choice, then route concurrent multi-model work across both GPUs."
+  ],
+  "estimated_time_savings_pct": 45,
+  "meta_reflection": "The locked GPU-idle field is false, and the active GPU reached 97% utilization, so the retrospective does not classify GPU idle as a compute-bound bottleneck. The 45% estimate applies the lower 4x batching projection to the 0.12 compute-bound minutes within 0.2 total minutes; it is conditional because the data does not identify the batchable share."
+}

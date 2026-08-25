@@ -17738,3 +17738,14 @@ a parallel multi-model launch or missed DualGPURunner engagement.
 - 2026-08-25: CFR counterfactual and exact-authority audit (✅ Complete) — honest_verdict=complete: clean CFR replay and every applicable source, constraint, stage, family, tamper, leakage, and exact-authority attack behaved as preregistered; the CFR scientific effect remains null; results/experiment_6594_cfr_counterfactual_authority_audit.json
 - 2026-08-25: Frozen world-model invariant-projection canary (✅ Complete) — honest_verdict=complete: learned invariant projection improved held conservative frozen local rollouts over no projection and norm-matched random constraints; random projection was harmful; damped controls selected no comparable invariant and showed null learned benefit; the exact arm is diagnostic only; results/experiment_6595_invariant_projection_world_model_canary.json
 - 2026-08-25: Spectral k-block Ising sampler canary (✅ Complete) — honest_verdict=complete: charged CPU software exact-enumerable fixtures support every spectral k-block arm; no FPGA, TSU, PIMI, or general hardware claim; results/experiment_6597_spectral_k_block_ising_canary.json
+
+## 2026-08-25 — Milestone 2026.08.575 operational retrospective
+
+Across 0.2 minutes, 6 experiments finished and 2 carried compute-bound tags.
+Those compute entries occupied 0.1 and 0.02 minutes. No phase trace explains
+the difference. The compute-idle flag is false, and the active device reached
+97% utilization in the monitor snapshot. No launch is documented with 2 or
+more models, so there is no evidenced DualGPURunner eligibility case. For the
+next milestone, the tooling should group 8-16 questions per forward pass and
+write phase clocks, per-task accelerator samples, model count, and runner
+choice.

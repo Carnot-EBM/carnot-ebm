@@ -6346,3 +6346,10 @@ The critical path for milestone .250:
 - theme: two bounded model streams formed the execution tail while the GPU snapshot showed capacity for cross-experiment scheduling
 - key result: the supplied GPU evidence does not support a compute-idle defect, but no data available this milestone establishes parallel multi-model loading, a missed DualGPURunner engagement, or the phase-level cause of either long compute stream
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.575
+
+- exp_range: no data available this milestone
+- theme: short mixed execution exposed missing causal timing while one inference process made batching the clearest tooling opportunity
+- key result: 6 tasks finished in 0.2 minutes with compute-task GPU idle false; the records show neither a multi-model launch nor a case where the two-model runner can be assessed
+- acceptance: no data available this milestone
