@@ -1,5 +1,27 @@
 # Carnot — Changelog
 
+## 2026-08-25 — A stronger tamper test was measured and declined, with the numbers
+
+- The team lead recommended replacing the helper-level tamper test with one that
+  edits a RECORDED receipt value inside an artifact-shaped payload. Built it,
+  then measured whether it kills anything the suite does not. It does not.
+  Against a constant-hash mutation it goes red alongside 10 existing tests,
+  including the tamper test already fixed at `d23b873abd`. Against a
+  revert-to-working-tree mutation it stays GREEN while 6 existing tests go red.
+  Unique kills: zero.
+- Not shipped, on that evidence. A test that no mutation kills uniquely is the
+  bug class this suite just removed, and adding one to document a case would
+  re-commit it. The tampered-recorded-value case IS proved, at the level where
+  it can bite: break case 4 against exp5355, where editing the stored
+  `source_artifact_checksums.spec` takes the real replay test red and restoring
+  it returns green.
+- Precedent worth more than the fix: mutation testing caught four things today
+  that review did not, twice on the finder's own work. It also decided this one,
+  in the direction of writing less code. The existing rule ("prove each pattern
+  is under test by deleting it") already covers it; today is evidence that it
+  earns its keep in both directions.
+
+
 ## 2026-08-25 — Receipt sources named, and two guard gaps closed or stated
 
 - A `ReceiptResolutionError` is now raised when `git log` itself fails.
