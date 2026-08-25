@@ -17708,3 +17708,4 @@ outside-repository explicit path, staged-file enumeration failure, and direct
 `__main__` dispatch. Focused validation is 22 passed with 100% statement
 coverage for `scripts/mutation_marker_lint.py`; the expanded conductor-equivalent
 QA subset is 219 passed. No production behavior or test expectation changed.
+- 2026-08-25: Gemma 4 31B bounded constraint-first stream (✅ Complete) — honest_verdict=complete: every frozen Gemma CFR unit, arm, raw stage, exact check, checkpoint, cost, failure, model, and GPU receipt is complete; no CFR benefit claim is made; results/experiment_6591_gemma4_31b_constraint_first_stream.json
