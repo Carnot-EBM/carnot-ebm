@@ -55868,3 +55868,129 @@ terminal prefix with a null verdict class.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6588 | Implemented (`python/carnot/experiment_6588_v574_bounded_cfr_launch_root.py`; terminal artifact `results/experiment_6588_v574_bounded_cfr_launch_root.json`) | Implemented (`tests/python/test_experiment_6588_v574_bounded_cfr_launch_root.py`; 12 focused tests; 100% module statement coverage) |
+
+### REQ-REPORT-6589: Isolated Pytest Receipts SHALL Remain Complete For Every Terminal State
+
+Carnot SHALL repair the Exp6586 pytest receipt path before it measures the
+repository-wide Python suite. The repair SHALL validate focused positive and
+negative fixtures first. Suite GREEN or RED SHALL not become a science launch
+gate.
+
+- REQ-REPORT-6589-REPLAY: The artifact SHALL bind the Exp6586 artifact path,
+  SHA-256 hash, failed `pytest_receipt` check, observed missing sidecar path,
+  empty command receipts, zero per-test rows, and adversarial disposition. The
+  original blocked result SHALL remain unchanged.
+- REQ-REPORT-6589-RECEIPT: Each pytest command receipt SHALL retain command,
+  argument vector, resolved working directory, public environment values and
+  hash, exit, monotonic duration, stdout, stderr, collection count and node
+  hash, timeout state, cleanup, and sidecar state. Missing sidecar data SHALL
+  keep the raw command receipt and SHALL name the exact missing field.
+- REQ-REPORT-6589-FIXTURES: Focused positive and negative fixtures SHALL cover
+  each required receipt field. They SHALL reproduce the Exp6586 missing-sidecar
+  shape with the smallest pytest file. The suite SHALL not start unless every
+  focused receipt and mutation fixture passes.
+- REQ-REPORT-6589-CHECKOUT: The producer SHALL create a detached checkout under
+  a resolved narrow system-temporary path. It SHALL apply every active tracked
+  and untracked change as a content overlay. The receipt SHALL bind revision,
+  dirty paths, overlay rows, overlay hash, checkout path, and cleanup.
+- REQ-REPORT-6589-MUTATION: The producer SHALL hash tracked content in the
+  active and disposable trees before and after execution. Each attempted
+  disposable tracked write SHALL have one row with observed-write state and
+  before and after hashes. The active tree's tracked hashes and original dirty
+  state SHALL remain byte-identical.
+- REQ-REPORT-6589-SUITE: After focused validation passes, the producer SHALL run
+  `.venv/bin/python -m pytest tests/python --no-cov -o addopts= -n 0` once in
+  the disposable checkout. A nonzero completed exit SHALL be measured RED.
+  Collection errors SHALL be RED evidence. They SHALL not become an isolation
+  block.
+- REQ-REPORT-6589-ROWS: The artifact SHALL preserve one row per failed,
+  errored, skipped, or timed-out test. It SHALL preserve collection and family
+  summaries. A measured GREEN or RED claim with zero rows is valid only when
+  raw collection proves that no exceptional or skipped outcome occurred.
+- REQ-REPORT-6589-TIMEOUT: Collection and suite commands SHALL use new process
+  sessions and bounded timeouts. Cleanup SHALL signal only the owned process
+  group. A timeout SHALL retain stdout, stderr, a timeout row, TERM and KILL
+  receipts, exit state, survivors, and unrelated-signal count. Python commands
+  SHALL set and publicly receipt unbuffered streams rather than inheriting the
+  launcher's buffering policy. A timeout SHALL not be called complete GREEN or
+  RED.
+- REQ-REPORT-6589-VERDICT: A repaired complete GREEN or RED measurement SHALL
+  use `verdict_class=null`. Focused-fixture failure, timeout, and an actual
+  isolation block SHALL name the exact failed check and observed value.
+  `pytest_receipt_remediation_ready_score` SHALL equal `1.0` only when the
+  focused contract passes and each launched suite has a complete terminal
+  receipt.
+- REQ-REPORT-6589-ATTACKS: Active-root execution, omitted dirty content,
+  missing stdout, missing stderr, fabricated collection, false GREEN, false
+  timeout completion, leaked processes, unjustified zero rows, hidden writes,
+  and active-tree drift SHALL each fail closed.
+- REQ-REPORT-6589-ATOMIC: The producer SHALL preserve
+  `research-roadmap.yaml` and `scripts/research_conductor.py`. It SHALL set
+  `inference_substrate=isolated_pytest_receipt_repair_no_llm` and
+  `verifier_is_oracle=true`. It SHALL write one checksummed terminal artifact
+  with same-directory file sync, atomic replacement, and directory sync.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `rows`, `exp6586_failure_replay`,
+`focused_receipt_fixture_rows`, `suite_command_receipt`,
+`disposable_checkout_receipt`, `mutation_rows`, `active_worktree_unchanged`,
+`suite_truth_baseline`, `pytest_receipt_remediation_ready_score`,
+`attack_rows`, `preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6589-RECEIPT: Positive And Negative Fields Stay Recheckable
+
+**Given** the smallest passing, failing, skipped, collection-error, and missing-sidecar fixtures
+**When** the receipt validator evaluates every required field
+**Then** positive rows pass, negative rows name the missing or false field, and
+raw stdout and stderr remain present.
+
+#### SCENARIO-REPORT-6589-DISPOSABLE: Active Content Reaches Only The Checkout
+
+**Given** a resolved active repository with dirty and untracked content
+**When** the producer creates and validates its detached checkout
+**Then** every active path reaches the overlay, pytest uses only the checkout,
+and active status and tracked hashes remain unchanged.
+
+#### SCENARIO-REPORT-6589-RED: A Nonzero Completed Exit Is Measured Evidence
+
+**Given** complete collection and a completed suite with failure or error rows
+**When** the truth reducer evaluates raw receipts
+**Then** it reports measured RED with `verdict_class=null` and does not block a
+science launch.
+
+#### SCENARIO-REPORT-6589-TIMEOUT: Cleanup Preserves Partial Evidence
+
+**Given** a command exceeds its bounded timeout
+**When** owned-process cleanup completes
+**Then** stdout, stderr, timeout row, signals, exit, and survivors remain in a
+terminal timeout artifact that cannot pose as complete.
+
+#### SCENARIO-REPORT-6589-MUTATION: Writes Are Named And The Active Tree Does Not Move
+
+**Given** a disposable test attempts a tracked write
+**When** before and after snapshots and observer rows are combined
+**Then** the path and both hashes remain visible, and no active path changes.
+
+#### SCENARIO-REPORT-6589-ATTACKS: Partial Or False Receipts Fail Closed
+
+**Given** one mutation for each required attack
+**When** the validator recomputes receipt readiness
+**Then** every active-root, omitted-content, missing-stream, fabricated-count,
+false-state, leak, zero-row, hidden-write, and active-drift candidate is
+rejected.
+
+#### SCENARIO-REPORT-6589-ATOMIC: One Null Receipt-Repair Artifact Recomputes
+
+**Given** focused validation and any measured suite have terminal receipts
+**When** Exp6589 writes the final artifact
+**Then** the checksum and readiness recompute, both protected files remain
+byte-identical, and the durable artifact uses a null verdict class for GREEN
+or RED.
+
+## Implementation Status (REQ-REPORT-6589)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6589 | Implemented (`python/carnot/experiment_6589_isolated_pytest_receipt_remediation.py`; terminal blocked artifact `results/experiment_6589_isolated_pytest_receipt_remediation.json`) | Implemented (`tests/python/test_experiment_6589_isolated_pytest_receipt_remediation.py`; 38 focused tests; 100% module statement coverage) |

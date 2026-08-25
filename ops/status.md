@@ -8860,3 +8860,5 @@ re-measured this session. A second agent worked the same three defects concurren
 to `tests/python/test_arc_induction_diagnosis_6710_invariants.py` mid-session and
 is untracked at the time of writing, so it is NOT part of this commit. Both
 suites passed together when last run (30 tests).
+
+- 2026-08-25: Exp6589 timeout-receipt regression repaired (✅ Complete) — the owned-command wrapper now forces and receipts unbuffered Python streams, so SIGTERM cleanup retains output when the conductor itself has no `PYTHONUNBUFFERED`; the exact smart subset is green at 119 passed and the focused module remains at 100% statement coverage.
