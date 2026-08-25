@@ -55383,3 +55383,115 @@ null, partial, blocked, or disqualified verdict class.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6584 | Planned (`python/carnot/experiment_6584_three_family_source_receipt_audit.py`; terminal artifact `results/experiment_6584_three_family_source_receipt_audit.json`) | Planned (`tests/python/test_experiment_6584_three_family_source_receipt_audit.py`) |
+
+### REQ-REPORT-6585: V572 Terminal Recovery SHALL Freeze Bounded V573 Execution
+
+Carnot SHALL build Exp6585 without loading an LLM. The task SHALL replay all
+six V572 terminal states from checked-in artifacts, the completion ledger, and
+the conductor log. It SHALL not create an Exp6584 artifact or scientific
+verdict.
+
+- REQ-REPORT-6585-PRECONDITIONS: The artifact SHALL record every expected
+  V572 task and artifact path. It SHALL record protected-file hashes, source
+  artifact hashes, conductor-log hash, failure-ledger hash, exclusion-manifest
+  hash, Python and tool versions, CPU, RAM, disk, and the no-LLM substrate.
+- REQ-REPORT-6585-TERMINALS: The producer SHALL emit one row for each V572
+  task. It SHALL keep Exp6581 blocked on `verification_commands=false`. It
+  SHALL keep Exp6582 and Exp6583 as completed four-row runtime shards without
+  a positive science claim. It SHALL keep Exp6584 as a hard-limit outcome with
+  no artifact, not as a null result.
+- REQ-REPORT-6585-HARD-LIMITS: The producer SHALL reconstruct three distinct
+  Exp6584 attempt rows. Each row SHALL record its attempt index, derived start,
+  logged end, exact elapsed seconds, 4,800-second hard cap, agent backend,
+  missing-artifact check, conductor-log hash, source-line hash, and row hash.
+- REQ-REPORT-6585-GATES: Each V573 gate owner SHALL exist in the active V573
+  roadmap. Each gate field SHALL appear with identical spelling in that owner
+  task's `REQUIRED ARTIFACT FIELDS`. Exp6588 and Exp6589 SHALL both gate on
+  `v573_execution_contract_ready_score` from Exp6585.
+- REQ-REPORT-6585-BUDGETS: Exp6588 and Exp6589 SHALL each own one model family
+  and one fresh process. Each task SHALL have bounded load, generation,
+  cleanup, and terminal-output time. Each completed unit SHALL have at least
+  one raw checkpoint. Failed units SHALL remain explicit. Each task SHALL use
+  same-directory atomic terminal output and SHALL verify process, port, GPU,
+  and memory unload without signaling unrelated processes.
+- REQ-REPORT-6585-ATTACKS: Fabricated Exp6584 evidence, collapsed attempts,
+  stale source hashes, outside-roadmap gate owners, misspelled fields,
+  two-model residency, missing checkpoints, and readiness from incomplete
+  terminal rows SHALL each force candidate readiness to `0.0`.
+- REQ-REPORT-6585-REDUCER: The exact field
+  `v573_execution_contract_ready_score` SHALL equal `1.0` only when all six
+  terminal rows replay, all three hard-limit attempts replay, both execution
+  budgets close, every gate field closes, every attack passes, cleanup and
+  atomic-output rules close, and protected files remain unchanged. Otherwise
+  it SHALL equal `0.0`.
+- REQ-REPORT-6585-ATOMIC: Exp6585 SHALL preserve
+  `research-roadmap.yaml` and `scripts/research_conductor.py`. It SHALL set
+  `inference_substrate=v572_terminal_receipt_replay_no_llm` and
+  `verifier_is_oracle=true`. It SHALL write one terminal JSON artifact by
+  same-directory atomic replacement. A ready artifact SHALL use
+  `verdict_class=null` and a terminal success prefix. It SHALL not use a
+  positive verdict class.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `v572_terminal_rows`,
+`exp6584_hard_limit_attempt_rows`, `v573_execution_budget_contract`,
+`current_roadmap_gate_contract_rows`, `attack_rows`,
+`v573_execution_contract_ready_score`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6585-NO-ARTIFACT: Hard Limits Stay Distinct Without Science
+
+**Given** the conductor log records three Exp6584 hard-limit attempts and the
+declared artifact is absent
+**When** Exp6585 replays V572 terminal evidence
+**Then** all attempts stay distinct and source-hashed, and no Exp6584 artifact
+or scientific verdict is created.
+
+#### SCENARIO-REPORT-6585-BLOCKED-REPLAY: A Precondition Block Stays Blocked
+
+**Given** Exp6581 records `verification_commands=false` before model start
+**When** Exp6585 reconstructs the task row
+**Then** the row keeps the blocked class and names the exact failed check and
+observed value.
+
+#### SCENARIO-REPORT-6585-RUNTIME-REPLAY: Completed Shards Stay Runtime Evidence
+
+**Given** Exp6582 and Exp6583 each preserve four terminal rows and four raw
+checkpoints
+**When** Exp6585 replays their receipts
+**Then** both tasks remain complete runtime shards without positive science.
+
+#### SCENARIO-REPORT-6585-GATE-CLOSURE: Gate Owners And Fields Match The Roadmap
+
+**Given** the active V573 roadmap and its required artifact fields
+**When** Exp6585 validates the Exp6588 and Exp6589 gate map
+**Then** each upstream owner exists and each field spelling matches exactly.
+
+#### SCENARIO-REPORT-6585-BOUNDED-MODELS: Each Model Task Fits One Process Budget
+
+**Given** the Qwen and dense Gemma stream tasks
+**When** Exp6585 freezes their execution contract
+**Then** each task owns one family, one fresh process, bounded generation, raw
+checkpoints, failure retention, verified cleanup, and atomic terminal output.
+
+#### SCENARIO-REPORT-6585-ATTACKS: Fabrication Monoliths And Gate Drift Fail Closed
+
+**Given** one mutation for each required recovery, budget, and gate attack
+**When** the readiness reducer evaluates each candidate
+**Then** every mutation produces a zero readiness score.
+
+#### SCENARIO-REPORT-6585-ATOMIC: One Null-Class Recovery Artifact Recomputes
+
+**Given** terminal replay, budgets, gates, attacks, cleanup, and protected
+checks have ended
+**When** Exp6585 writes its artifact
+**Then** the checksum validates, readiness recomputes, protected files remain
+byte-identical, and the ready artifact uses a null verdict class.
+
+## Implementation Status (REQ-REPORT-6585)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6585 | Implemented (`python/carnot/experiment_6585_v573_terminal_recovery_and_execution_contract.py`; terminal artifact `results/experiment_6585_v573_terminal_recovery_and_execution_contract.json`) | Implemented (`tests/python/test_experiment_6585_v573_terminal_recovery_and_execution_contract.py`; 13 focused tests; 100% module statement coverage) |
