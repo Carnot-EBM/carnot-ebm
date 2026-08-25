@@ -589,6 +589,107 @@ def _manifest_line_count(man_path: Path) -> int:
         return 0
 
 
+# ---- REQ-ARC-WMTE-6710: the per-round induction record, kept instead of discarded -----------
+# `execute_bounded_llm_reinduction` builds one record per refinement round carrying that round's
+# own `skipped`, `heldout_accuracy` and counterexample. Those records reached this function on the
+# attempt dict and were read ONLY to build category counters, so the evidence that says WHICH
+# cause fired was rebuilt every cell and thrown away every cell.
+#
+# THE BOUNDS, AND WHY THESE NUMBERS. Rounds per attempt cap at 4 because the shipped
+# MAX_REFINEMENT_ROUNDS default is 1 and CARNOT_ARC_MAX_REFINEMENT_ROUNDS raises it for
+# experiments; 4 covers the raised case with headroom and still bounds a pathological setting.
+# Attempts are NOT capped -- an attempt is the unit being diagnosed, and dropping the tail would
+# reintroduce the same blind spot at a different scale.
+_ROUND_DIGEST_MAX_ROUNDS = 4
+_DIGEST_STR_CAP = 240
+
+
+def _counterexample_digest(ce: object) -> dict:
+    """Keep the scalars that NAME a failure; replace every list with its length.
+
+    A counterexample's `mismatches` / `real_mismatches` hold per-cell grid diffs and are by far
+    the largest thing on a round. How MANY mismatches the verifier saw is the diagnostic ("did it
+    have any evidence at all"); the grids themselves are not, at one-row-per-cell scale. The
+    length is kept under a `<key>_n` name so a reader can see a list was summarised, not dropped.
+    """
+
+    if not isinstance(ce, dict):
+        return {}
+    out: dict = {}
+    for k, v in ce.items():
+        if isinstance(v, (list, tuple)):
+            out[f"{k}_n"] = len(v)
+        elif isinstance(v, (bool, int, float)) or v is None:
+            out[k] = v
+        else:
+            out[k] = str(v)[:_DIGEST_STR_CAP]
+    return out
+
+
+def _round_digest(rounds: object) -> list:
+    """Project each refinement round down to what diagnoses it."""
+
+    if not isinstance(rounds, list):
+        return []
+    out = []
+    for r in rounds[:_ROUND_DIGEST_MAX_ROUNDS]:
+        if not isinstance(r, dict):
+            continue
+        out.append(
+            {
+                "round": r.get("round"),
+                "action": r.get("action"),
+                "skipped": r.get("skipped"),
+                "heldout_accuracy": r.get("heldout_accuracy"),
+                "accepted_by_heldout_verifier": r.get("accepted_by_heldout_verifier"),
+                "plan_reaches_goal": r.get("plan_reaches_goal"),
+                "counterexample": _counterexample_digest(r.get("counterexample")),
+            }
+        )
+    return out
+
+
+def _induction_round_records(atts: list) -> list:
+    """One entry per induction attempt, carrying its rounds and its counterexamples.
+
+    BOTH are kept because they are not the same set. A round that RAISED appends to the attempt's
+    `counterexamples` but never writes `row["counterexample"]`, so the exception evidence exists
+    only in the attempt-level list -- the exact case the round view cannot show.
+    """
+
+    out = []
+    for i, a in enumerate(atts):
+        if not isinstance(a, dict):
+            continue
+        rounds = _round_digest(a.get("refinement_rounds"))
+        ces = [
+            _counterexample_digest(c)
+            for c in list(a.get("counterexamples") or [])[:_ROUND_DIGEST_MAX_ROUNDS]
+        ]
+        if not rounds and not ces:
+            continue
+        out.append(
+            {
+                "attempt": i,
+                "reason": a.get("reason"),
+                "skipped": a.get("skipped"),
+                "rounds": rounds,
+                "counterexamples": ces,
+            }
+        )
+    return out
+
+
+def _channel_delta(before: dict, after: dict) -> dict:
+    """This cell's per-channel completion sizes, by subtracting two monotone reads.
+
+    The proposer is shared across cells, so its counters are cumulative for the whole process.
+    Differencing is the same mechanism `row["llm"]` already uses for the token counters.
+    """
+
+    return {k: int(after.get(k, 0)) - int(before.get(k, 0)) for k in after}
+
+
 def _action_key(move: dict) -> str:
     kind = move.get("kind")
     data = move.get("data") or {}
@@ -654,6 +755,8 @@ def run_cell(
     # nothing. Recording health on BOTH sides of the cell makes it detectable per row instead of
     # having to notice a GPU going idle.
     llm0 = proposer.snapshot() if proposer is not None else None
+    # REQ-ARC-WMTE-6710: the same before/after read for the per-channel completion sizes.
+    chan0 = dict(getattr(proposer, "channel_totals", None) or {}) if proposer is not None else None
     gen_ok_before = bool(proposer._inner._healthy()) if proposer is not None else None
     servers_before = _llama_server_count()
     t0 = time.time()
@@ -768,6 +871,12 @@ def run_cell(
             k: (round(now[k] - llm0[k], 3) if isinstance(now[k], float) else now[k] - llm0[k])
             for k in now
         }
+        # REQ-ARC-WMTE-6710. WHERE DID THE DECODED TOKENS GO? `row["llm"]["tokens_predicted"]`
+        # gives the total and cannot say whether the model spent them thinking or answering.
+        # A cell with a large `chars_reasoning`, a near-zero `chars_final` and a non-zero
+        # `reasoning_only` is the model reasoning to EOS without writing code -- a different
+        # fault, with a different fix, from a model that answered badly.
+        row["llm_channels"] = _channel_delta(chan0 or {}, dict(proposer.channel_totals or {}))
         row["generator_healthy_before"] = gen_ok_before
         row["generator_healthy_after"] = bool(proposer._inner._healthy())
         row["llama_servers_before"] = servers_before
@@ -788,6 +897,7 @@ def run_cell(
         )
     else:
         row["llm"] = None
+        row["llm_channels"] = None
         row["generator_healthy_before"] = None
         row["generator_healthy_after"] = None
         row["llm_on_row_valid"] = not llm
@@ -799,6 +909,12 @@ def run_cell(
     row["induction_skipped"] = dict(
         collections.Counter(a.get("skipped") for a in atts if a.get("skipped"))
     )
+    # REQ-ARC-WMTE-6710: the EVIDENCE behind the counter above, not only its tally. The counter
+    # holds one category string per attempt; the per-round records say which round failed, on what
+    # held-out accuracy, and against which counterexample. Those records already travelled here on
+    # the attempt dict and were read only to build counters, so every cell recomputed them and
+    # then dropped them. See `_induction_round_records` for the bounds and why they are those.
+    row["induction_round_records"] = _induction_round_records(atts)
     # CARRY THE MESSAGE, NOT ONLY THE TALLY (2026-08-19). The counter above counts the CATEGORY
     # string, so an attempt that raised reads `{"exception": 1}` -- the word, with the content
     # dropped. The agent stores the type, message and (since today) the traceback on the same
