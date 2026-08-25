@@ -17761,3 +17761,4 @@ more models, so there is no evidenced DualGPURunner eligibility case. For the
 next milestone, the tooling should group 8-16 questions per forward pass and
 write phase clocks, per-task accelerator samples, model count, and runner
 choice.
+- 2026-08-25: Exact two-level plan corpus and compiler contract (⚠️ Research Finding) — honest_verdict=complete: exact two-level plan corpus and oracle-distinct executor are ready; this is null infrastructure and no model benefit was measured; results/experiment_6604_exact_two_level_plan_corpus.json
