@@ -479,6 +479,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     "immutable_v568_artifact_gate_failure_and_retirement_audit_no_llm",
     "immutable_v569_artifact_gate_failure_and_retirement_audit_no_llm",
     "immutable_qwen_gemma_cfr_row_reducer_no_llm",
+    "cfr_counterfactual_exact_authority_audit_no_llm",
     "primary_source_method_preregistration_and_local_conformance_no_llm",
     "primary_source_joint_sufficiency_preregistration_and_local_conformance_no_llm",
     "primary_source_and_joint_method_replay_no_llm",
