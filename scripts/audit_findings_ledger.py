@@ -93,9 +93,28 @@ _CLOSED_DISPOSITIONS = ("ACCEPTED", "FIXED", "WONTFIX")
 
 
 def _load_module(name: str, path: Path):
+    """Load an audit module by path so its own constants can be imported.
+
+    The sys.modules entry is REQUIRED, not tidiness: `@dataclass` resolves
+    its annotations through `sys.modules[cls.__module__]`, so a module
+    loaded without one raises AttributeError at class-creation time.
+    `qa_layer_authenticity_audit.py` has one, and this is what stopped its
+    FLAGGED_VERDICTS being importable. A failed load restores whatever was
+    registered before, so a broken audit cannot leave a half-built module
+    behind for the next caller.
+    """
     spec = importlib.util.spec_from_file_location(name, path)
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    previous = sys.modules.get(name)
+    sys.modules[name] = module
+    try:
+        spec.loader.exec_module(module)
+    except BaseException:
+        if previous is None:
+            sys.modules.pop(name, None)
+        else:
+            sys.modules[name] = previous
+        raise
     return module
 
 
