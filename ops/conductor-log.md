@@ -16472,3 +16472,4 @@ code |
 | 2026-08-25 19:17 UTC | Qwen3.6 direct baseline headroom qualification | OK | Deliverable already exists in repo |
 | 2026-08-25 19:17 UTC | Gemma 4 31B direct baseline headroom qualification | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-08-25 19:19 UTC | Gemma 4 31B direct baseline headroom qualification | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-08-25 19:21 UTC | Gemma 4 31B direct baseline headroom qualification | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
