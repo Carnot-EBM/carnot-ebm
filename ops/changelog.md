@@ -17851,3 +17851,4 @@ choice.
   bounded math-library fanout, and the raw-completion fixture mode.
 - Reconciled REQ-REPORT-6605 and REQ-ARC-FCP-5699-43 with their focused test
   evidence. The full-suite baseline remains separately documented in status.
+- 2026-08-25: Gemma 4 26B-A4B direct baseline headroom qualification (⚠️ Blocked) — honest_verdict=blocked_gpu_ownership: expected True, observed False; results/experiment_6607_gemma4_26b_direct_headroom.json
