@@ -8901,3 +8901,22 @@ Next / open:
   Nothing yet requires an agent to open a session before hand-mutating a file;
   `cmd_gate` refuses a commit while one IS open, which is the half that can be
   enforced from a hook.
+
+### 2026-08-25 (follow-up) — Mutation-marker pre-commit hook
+
+Working:
+- `scripts/mutation_marker_lint.py` + pre-commit hook `mutation-marker-lint`
+  refuse any commit whose staged Python carries a mutation marker, whether or
+  not a proof session was used. Verified end-to-end through real pre-commit
+  against the exact 2026-08-25 incident line.
+- `scripts/audit_findings_ledger.py` `EXCLUDED_SOURCES` names all six
+  milestone-close audits with a written reason each; the list of audits is
+  DERIVED from `research_conductor.py`, so a newly-wired one cannot drift into
+  silence unnoticed.
+
+Known limits, deliberately not closed:
+- A hooks-skipping commit bypasses the marker hook. No pre-commit hook can
+  cover that; it is why the session wrapper still matters.
+- Opening a proof session is still agent discipline. Three of the five
+  REQ-OPS-MUTATION-PROOF-1 properties depend on an agent invoking it; the spec
+  now names which. Forcing the open would need a different mechanism.

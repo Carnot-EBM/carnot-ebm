@@ -520,3 +520,52 @@ def test_an_unknown_source_key_raises_rather_than_selecting_nothing(tmp_path):
             state_path=tmp_path / "state.json",
             today=_TODAY,
         )
+
+
+def test_every_milestone_close_audit_is_classified():
+    """An unstated exclusion looks identical to a working inclusion.
+
+    Both excluded audits report zero flagged findings today, so the ledger is
+    silent either way and nobody can tell which. Someone has to type the
+    reason -- that IS the control, the same shape as
+    `qa_layer_authenticity_audit.py --check-targets`. Discovery is DERIVED
+    from the conductor, so a newly-wired audit cannot drift into silence.
+    """
+    discovered = L.discover_milestone_close_audits()
+    assert discovered, "expected to discover audits from research_conductor.py"
+    unclassified = L.unclassified_audits()
+    assert not unclassified, (
+        f"milestone-close audit(s) in neither SOURCES nor EXCLUDED_SOURCES: "
+        f"{sorted(unclassified)} -- ingest them, or write the reason in EXCLUDED_SOURCES"
+    )
+
+
+def test_every_exclusion_carries_a_written_reason():
+    """A blank reason is a silence with extra steps."""
+    for name, reason in L.EXCLUDED_SOURCES.items():
+        assert len(reason.strip()) >= 40, f"{name} has no real reason written down"
+
+
+def test_the_two_ingested_audits_are_not_only_in_the_excluded_dict():
+    """The two INGESTED entries are bookkeeping. If one ever became the ONLY
+    record of an audit, the ledger would be silently not reading it while a
+    reader of the dict concluded it was covered."""
+    ingested = {f"{s.module}.py" for s in L.SOURCES}
+    assert "experiment_claim_audit.py" in ingested
+    assert "qa_layer_authenticity_audit.py" in ingested
+
+
+def test_the_classification_sweep_catches_an_unclassified_audit(monkeypatch):
+    """The sweep must DISTINGUISH 'correctly empty' from 'always empty'.
+
+    Everything is classified today, so asserting the result is empty passes
+    whether the sweep works or is stubbed to return nothing -- blanking
+    `unclassified_audits` left the suite GREEN. Inject an audit in neither
+    list and require it to surface.
+    """
+    monkeypatch.setattr(
+        L,
+        "discover_milestone_close_audits",
+        lambda: {"experiment_claim_audit.py", "brand_new_unwired_audit.py"},
+    )
+    assert L.unclassified_audits() == {"brand_new_unwired_audit.py"}
