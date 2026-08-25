@@ -78,10 +78,17 @@ def test_req_report_6610_churn_does_not_break_a_landed_receipt(repo: Path) -> No
 
 
 def test_req_report_6610_tamper_is_still_detected(repo: Path) -> None:
-    """SCENARIO-REPORT-6610-TAMPER: a hand-edited recorded hash still disagrees."""
+    """SCENARIO-REPORT-6610-TAMPER: a hand-edited recorded hash still disagrees.
 
+    The equality assertion is load-bearing. With only the inequality this test
+    stayed green when the hash function was replaced by a constant, because a
+    constant is still unequal to a value nobody ever hashed.
+    """
+
+    receipt = pr.receipt_sha256(repo / SPEC, artifact_relative_path=ARTIFACT)
     recorded = _sha("a value nobody ever hashed\n")
-    assert pr.receipt_sha256(repo / SPEC, artifact_relative_path=ARTIFACT) != recorded
+    assert receipt != recorded
+    assert receipt == _sha("spec v1\n")
 
 
 def test_req_report_6610_missing_dependency_fails_closed(repo: Path) -> None:
@@ -276,3 +283,67 @@ def test_req_report_6610_evidence_live_does_not_block_shared_files(
     assert pr.receipt_sha256(repo_with_upstream / SPEC, artifact_relative_path=ARTIFACT) == _sha(
         "spec v1\n"
     )
+
+
+def test_req_report_6610_the_four_working_tree_sources_are_distinguishable(
+    repo_with_upstream: Path,
+) -> None:
+    """REQ-REPORT-6610-SOURCE: a deliberate live read is not an unresolved one.
+
+    Three of these read the working tree and one reads a commit. They returned
+    an identical value before, so a reader could not tell policy from failure.
+    """
+
+    assert (
+        pr.receipt_source(repo_with_upstream / SPEC, artifact_relative_path=ARTIFACT)
+        == pr.SOURCE_COMMIT
+    )
+    assert (
+        pr.receipt_source(repo_with_upstream / UPSTREAM, artifact_relative_path=ARTIFACT)
+        == pr.SOURCE_LIVE_EVIDENCE
+    )
+    assert (
+        pr.receipt_source(
+            repo_with_upstream / SPEC, artifact_relative_path="results/never_landed.json"
+        )
+        == pr.SOURCE_AUTHORING
+    )
+    assert (
+        pr.receipt_source(Path("/tmp"), artifact_relative_path=ARTIFACT)
+        == pr.SOURCE_OUTSIDE_CHECKOUT
+    )
+
+
+def test_req_report_6610_a_git_failure_raises_instead_of_reading_the_disk(
+    repo: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """REQ-REPORT-6610-FAIL-CLOSED: a broken git must not answer from the disk.
+
+    This is the trusted-and-silent case: without it, every receipt in the corpus
+    would quietly become a working-tree hash while still calling itself pinned.
+    """
+
+    real = pr._run_git
+
+    def broken(root: Path, *args: str):
+        if args[:1] == ("log",):
+            return subprocess.CompletedProcess(args, 128, b"", b"fatal: broken repository")
+        return real(root, *args)
+
+    monkeypatch.setattr(pr, "_run_git", broken)
+    with pytest.raises(pr.ReceiptResolutionError, match="git log failed"):
+        pr.receipt_sha256(repo / SPEC, artifact_relative_path=ARTIFACT)
+
+
+def test_req_report_6610_a_checkout_with_no_commits_is_authoring(tmp_path: Path) -> None:
+    """REQ-REPORT-6610-AUTHORING: an empty repo has no history, so it is not broken.
+
+    `git log` exits non-zero here, which must NOT be read as a git failure.
+    """
+
+    root = tmp_path / "empty"
+    root.mkdir()
+    _git(root, "init", "-q")
+    _write(root, SPEC, "spec v1\n")
+    assert pr.artifact_commit(root, ARTIFACT) is None
+    assert pr.receipt_sha256(root / SPEC, artifact_relative_path=ARTIFACT) == _sha("spec v1\n")

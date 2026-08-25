@@ -27,13 +27,27 @@ import subprocess
 from pathlib import Path
 
 __all__ = [
+    "SOURCE_AUTHORING",
+    "SOURCE_COMMIT",
+    "SOURCE_LIVE_EVIDENCE",
+    "SOURCE_OUTSIDE_CHECKOUT",
     "ReceiptResolutionError",
     "artifact_commit",
     "receipt_bytes",
     "receipt_exists",
     "receipt_sha256",
+    "receipt_source",
     "repository_root",
 ]
+
+# Where a receipt was actually read from. Three of these mean the working tree,
+# and they are different things: one is deliberate policy, one is an experiment
+# authoring its first artifact, one is a fixture with no history. A git failure
+# is none of them -- it raises.
+SOURCE_COMMIT = "commit"
+SOURCE_LIVE_EVIDENCE = "live_evidence"
+SOURCE_AUTHORING = "authoring_never_committed"
+SOURCE_OUTSIDE_CHECKOUT = "outside_checkout"
 
 _COMMIT_RE = re.compile(r"\A[0-9a-f]{40}\Z")
 
@@ -82,6 +96,21 @@ def _run_git(root: Path, *args: str) -> subprocess.CompletedProcess[bytes]:
     )
 
 
+def _git_log_commit(root: Path, rel: str, *extra: str) -> str:
+    """Return one commit id for `rel`, or "" when git reports no such commit.
+
+    Fail-closed on a git error. Answering "" for a broken git would send every
+    receipt to the working tree while still calling itself a commit receipt --
+    a guard that is trusted and silent, which is worse than no guard.
+    """
+
+    proc = _run_git(root, "log", "-1", "--format=%H", *extra, "--", rel)
+    if proc.returncode != 0:
+        detail = proc.stderr.decode("utf-8", "replace").strip()
+        raise ReceiptResolutionError(f"git log failed for {rel} in {root}: {detail}")
+    return proc.stdout.decode("utf-8", "replace").strip()
+
+
 def artifact_commit(root: Path | str, artifact_relative_path: Path | str) -> str | None:
     """Return the commit that added the artifact, or None if it never landed.
 
@@ -96,15 +125,17 @@ def artifact_commit(root: Path | str, artifact_relative_path: Path | str) -> str
     if key in _COMMIT_CACHE:
         return _COMMIT_CACHE[key]
 
-    added = _run_git(root_path, "log", "-1", "--format=%H", "--diff-filter=A", "--", rel)
-    commit = added.stdout.decode("utf-8", "replace").strip() if added.returncode == 0 else ""
+    if _run_git(root_path, "rev-parse", "--verify", "HEAD").returncode != 0:
+        # A checkout with no commits at all. There is no history to resolve
+        # against, so this is authoring, not a broken repository.
+        _COMMIT_CACHE[key] = None
+        return None
+
+    commit = _git_log_commit(root_path, rel, "--diff-filter=A")
     if not commit:
         # A renamed or copied artifact has no recorded add; fall back to the
         # newest commit that touched it so such artifacts still resolve.
-        touched = _run_git(root_path, "log", "-1", "--format=%H", "--", rel)
-        commit = (
-            touched.stdout.decode("utf-8", "replace").strip() if touched.returncode == 0 else ""
-        )
+        commit = _git_log_commit(root_path, rel)
     if commit and not _COMMIT_RE.match(commit):
         raise ReceiptResolutionError(f"git returned a malformed commit id for {rel}: {commit!r}")
     _COMMIT_CACHE[key] = commit or None
@@ -125,39 +156,64 @@ def _resolve(
     root: Path | str | None,
     commit: str | None,
     allow_evidence_pin: bool = False,
-) -> tuple[Path, Path | None, str | None, str | None]:
-    """Return (absolute path, checkout, repo-relative path, commit).
+) -> tuple[Path, Path | None, str | None, str | None, str]:
+    """Return (absolute path, checkout, repo-relative path, commit, source).
 
-    A None commit means authoring mode: the artifact has not landed yet, so the
-    working tree is the only state that exists.
+    Four results send the receipt to the working tree rather than a commit, and
+    they are NOT the same thing. `source` names which one, so the caller and the
+    tests can tell a deliberate live read from an unresolved one. Nothing here
+    falls back after a git failure; `artifact_commit` raises on that.
     """
 
     absolute = Path(path).resolve()
     root_path = Path(root).resolve() if root is not None else repository_root(absolute)
     if root_path is None:
-        return absolute, None, None, None
+        # No checkout anywhere above this path. Fail-open by necessity: there is
+        # no history that could answer, so the disk is the only source.
+        return absolute, None, None, None, SOURCE_OUTSIDE_CHECKOUT
     try:
         rel = absolute.relative_to(root_path).as_posix()
     except ValueError:
-        # A fixture under tmp_path is not part of the checkout, so it has no
-        # commit history to resolve against.
-        return absolute, None, None, None
+        # A fixture built under tmp_path. Same reason as above.
+        return absolute, None, None, None, SOURCE_OUTSIDE_CHECKOUT
 
     if commit is None:
         commit = artifact_commit(root_path, artifact_relative_path)
         if commit is None:
-            return absolute, root_path, rel, None
+            # The artifact has never landed. Fail-open ON PURPOSE: this is the
+            # first write of a new experiment, and refusing it would make an
+            # experiment unable to author its own receipt. It is safe because a
+            # git failure raises instead of arriving here.
+            return absolute, root_path, rel, None, SOURCE_AUTHORING
     if not _COMMIT_RE.match(commit):
         raise ReceiptResolutionError(f"malformed artifact commit id: {commit!r}")
     if _run_git(root_path, "cat-file", "-e", f"{commit}^{{commit}}").returncode != 0:
         raise ReceiptResolutionError(f"artifact commit {commit} is not in this repository")
     if not allow_evidence_pin and rel.startswith(_EVIDENCE_PREFIXES):
-        # Answer from the working tree, so a later gate stamp or a dropped
-        # corrigendum still moves the receipt. Raising here instead would force
-        # every real caller to pass allow_evidence_pin=True, which is the one
-        # outcome this rule exists to prevent.
-        return absolute, None, None, None
-    return absolute, root_path, rel, commit
+        # DELIBERATELY LIVE, not an unresolved receipt. The commit resolved
+        # fine; pinning it is what we refuse, so a later gate stamp or a dropped
+        # corrigendum still moves the receipt. Raising instead would force every
+        # real caller to pass allow_evidence_pin=True, which is the one outcome
+        # this rule exists to prevent.
+        return absolute, root_path, rel, None, SOURCE_LIVE_EVIDENCE
+    return absolute, root_path, rel, commit, SOURCE_COMMIT
+
+
+def receipt_source(
+    path: Path | str,
+    *,
+    artifact_relative_path: Path | str,
+    root: Path | str | None = None,
+    commit: str | None = None,
+    allow_evidence_pin: bool = False,
+) -> str:
+    """Name where a receipt for `path` would be read from.
+
+    Exposed so the four working-tree cases are asserted by tests rather than
+    only described in a comment.
+    """
+
+    return _resolve(path, artifact_relative_path, root, commit, allow_evidence_pin)[4]
 
 
 def receipt_bytes(
@@ -170,7 +226,7 @@ def receipt_bytes(
 ) -> bytes:
     """Return the bytes of `path` as committed when the artifact landed."""
 
-    absolute, root_path, rel, resolved = _resolve(
+    absolute, root_path, rel, resolved, _source = _resolve(
         path, artifact_relative_path, root, commit, allow_evidence_pin
     )
     if root_path is None or rel is None or resolved is None:
@@ -196,7 +252,7 @@ def receipt_exists(
     receipt into a null.
     """
 
-    absolute, root_path, rel, resolved = _resolve(
+    absolute, root_path, rel, resolved, _source = _resolve(
         path, artifact_relative_path, root, commit, allow_evidence_pin
     )
     if root_path is None or rel is None or resolved is None:
