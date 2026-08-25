@@ -16444,3 +16444,6 @@ code |
 | 2026-08-25 08:49 UTC | Qwen3.6 bounded constraint-first stream | OK | Deliverable already exists in repo |
 | 2026-08-25 08:50 UTC | Gemma 4 31B bounded constraint-first stream | SKIP | Pre-tests failing, self-heal failed: # check that cries wolf gets bypassed, whic |
 | 2026-08-25 09:09 UTC | Gemma 4 31B bounded constraint-first stream | OK | 95 passed, 1 warning in 13.34s |
+| 2026-08-25 10:36 UTC | Plan milestone 2026.08.575 | OK | 6 tasks proposed |
+| 2026-08-25 10:38 UTC | Activation REFUSED: milestone 2026.08.575 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-25 10:38 UTC | Activation replan 1/2: 2026.08.575 | OK | refused roadmap quarantined to roadmap-2026.08.575-refusal1.yaml; replanning wit |
