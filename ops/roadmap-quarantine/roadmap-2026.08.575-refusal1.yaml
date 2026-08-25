@@ -283,31 +283,6 @@ tasks:
     per_unit_rows: true
     max_turns: 50
     estimated_wall_time_min: 90
-    prior_failures:
-      - experiment_id: exp4327-e3-executable-world-model-ar25
-        verdict: complete_e3_ar25_partial_model_0.89
-        addressed_by: "This canary replaces ARC E3 model induction with calibration-only invariant selection on preregistered local continuous-dynamics fixtures."
-        retire_if_same_verdict: true
-      - experiment_id: exp4328-e3-executable-world-model-ka59
-        verdict: complete_e3_ka59_partial_model_0.56
-        addressed_by: "This canary replaces ARC E3 model induction with calibration-only invariant selection on preregistered local continuous-dynamics fixtures."
-        retire_if_same_verdict: true
-      - experiment_id: exp4329-e3-executable-world-model-tr87-ft09
-        verdict: complete_e3_tr87_ft09_partial
-        addressed_by: "This canary replaces ARC E3 model induction with calibration-only invariant selection on preregistered local continuous-dynamics fixtures."
-        retire_if_same_verdict: true
-      - experiment_id: exp4557-executable-world-model-proposer
-        verdict: "complete: executable_proposer_positive_control_failed_no_deeper_barrier_refined"
-        addressed_by: "This canary does not propose an ARC simulator; it freezes an existing predictor and tests invariant projection against matched held controls."
-        retire_if_same_verdict: true
-      - experiment_id: exp4872-cegis-world-model-refinement
-        verdict: complete_cegis_no_heldout_accuracy_lift_residual_positive_control_failed
-        addressed_by: "This canary replaces CEGIS refinement with one frozen calibration fit and held projection arms, including an exact diagnostic and a random control."
-        retire_if_same_verdict: true
-      - experiment_id: exp5793-arc-live-world-model-ab
-        verdict: blocked_gate_check_failed
-        addressed_by: "This canary has no ARC selector gate; it uses self-contained local fixtures and tests a latent projection mechanism without solve credit."
-        retire_if_same_verdict: true
     prompt: |
       CONTEXT
       Carnot's long-term architecture needs energy correction inside continuous latent reasoning, not only exact checks after text generation. ArXiv:2608.23526 reports that projecting a frozen world model toward a learned energy-like invariant improves conservative rollouts while random constraints usually hurt. This task tests the mechanism on bounded local fixtures without claiming an ARC solve or importing the paper's result. Work at {project_root}. The planning date is {date}.
