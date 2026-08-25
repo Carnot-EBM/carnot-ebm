@@ -481,6 +481,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     "primary_source_method_preregistration_and_local_conformance_no_llm",
     "primary_source_joint_sufficiency_preregistration_and_local_conformance_no_llm",
     "primary_source_and_joint_method_replay_no_llm",
+    "primary_source_and_exact_fixture_replay_no_llm",
     "deterministic_validation_over_canonical_pool",
     "independent_raw_representation_audit_no_llm",
     "offline_exact_forensics_over_existing_real_gguf_rows_no_llm",

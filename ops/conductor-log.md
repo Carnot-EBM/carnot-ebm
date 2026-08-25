@@ -16429,3 +16429,4 @@ code |
 | 2026-08-25 03:21 UTC | Stop-authority receipt STALE | WARN | receipt 173 min old (janitor cadence is 30) |
 | 2026-08-25 03:22 UTC | Milestone 2026.08.573 activated | OK | 3 tasks queued |
 | 2026-08-25 03:59 UTC | V573 terminal recovery and bounded execution contr | OK | 134 passed, 1 warning in 15.09s |
+| 2026-08-25 04:25 UTC | Isolated repo-wide suite truth baseline and mutati | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT — result quarantined, |

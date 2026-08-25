@@ -55625,3 +55625,131 @@ and the low-cadence contract stays outside experiment launch.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6586 | Implemented (`python/carnot/experiment_6586_isolated_full_suite_truth_baseline.py`; terminal artifact `results/experiment_6586_isolated_full_suite_truth_baseline.json`) | Implemented (`tests/python/test_experiment_6586_isolated_full_suite_truth_baseline.py`; 23 focused tests; 100% module statement coverage) |
+
+### REQ-REPORT-6587: V573 Constraint-First Method SHALL Freeze Before Inference
+
+Carnot SHALL build Exp6587 without loading an LLM. The method contract SHALL
+freeze sources, units, prompts, stages, routing, exact authority, metrics,
+attacks, and downstream fields before any V573 model outcome exists.
+
+- REQ-REPORT-6587-PRECONDITIONS: The artifact SHALL record hashes for both
+  protected orchestration files, Exp6580, Exp6574, and the exact obligation
+  registry. It SHALL record the corpus revision, license, CPU, RAM, disk,
+  primary-source URLs, cached content hashes when present, and the no-LLM
+  substrate.
+- REQ-REPORT-6587-SOURCES: Source receipts SHALL bind arXiv:2608.05254,
+  arXiv:2608.14569, arXiv:2608.00220, and arXiv:2605.18871. Each receipt SHALL
+  state one bounded Carnot hook. A separate row SHALL state which benchmark,
+  product, learned-authority, or utility claim does not enter Carnot evidence.
+- REQ-REPORT-6587-SOURCE-UNITS: The source manifest SHALL contain at least 16
+  exact-checkable units. Selection SHALL occur without model outcomes. The
+  manifest SHALL balance restrictive-cue and ordinary strata. It SHALL include
+  positive-control, unsupported, ambiguous, contradictory, and tamper cases.
+  Each unit SHALL bind exact source bytes, task bytes, hashes, split, inclusion
+  rule, gold constraints, checker, checker version, and fixture hash.
+- REQ-REPORT-6587-STAGES: The contract SHALL byte-freeze one family-neutral
+  direct prompt, one plain-text Stage 1 constraint-summary prompt, and one
+  Stage 2 solve-and-check prompt. Stage 1 SHALL not contain or request the
+  answer. Both raw stages SHALL be stored before parsing. Generated
+  ConstraintIR, schema-repair retries, and Stage 1 answer transport SHALL be
+  forbidden.
+- REQ-REPORT-6587-ROUTER: A deterministic restrictive-cue router SHALL freeze
+  before inference. It SHALL read only the frozen task and source bytes. It
+  SHALL not read model identity, model output, exact result, latency, token
+  count, or failure state.
+- REQ-REPORT-6587-ARMS: Direct, always-on CFR, and routed CFR SHALL receive the
+  same ordered units, seed schedule, decoding values, total token envelope,
+  timeout, and stop rules. The contract SHALL retain every failure. It SHALL
+  charge Stage 1 and Stage 2 tokens and latency to CFR arms.
+- REQ-REPORT-6587-BINDING-AUTHORITY: A Stage 1 proposal SHALL bind to an exact
+  source span. A proposal without support SHALL be marked unsupported. A
+  contradictory proposal SHALL force abstention and SHALL not release an
+  answer. Only whitelisted deterministic checks SHALL authorize release. The
+  model SHALL not certify itself. External text scoring SHALL remain disabled.
+- REQ-REPORT-6587-METRICS: Per-unit rows SHALL report exact success, Stage 1
+  precision and recall against the manifest, unsupported and contradictory
+  constraint counts, abstention, unsafe release, total tokens, latency, and
+  failure. The contract SHALL freeze paired unit reducers, paired uncertainty,
+  thresholds, cost rules, and retirement rules. An exact-checker-defined win
+  SHALL use `circular_positive`, never `positive`.
+- REQ-REPORT-6587-GATES: The downstream field map SHALL bind each exact field
+  name to its owner and consumers in the V573 roadmap. The binary field
+  `v573_constraint_first_method_ready_score` SHALL equal `1.0` only when source,
+  prompt, router, arm, checker, metric, gate, attack, and retirement checks all
+  close.
+- REQ-REPORT-6587-ATTACKS: Post-outcome source selection, family prompt drift,
+  a hidden Stage 1 answer, generated ConstraintIR, missing raw stage bytes,
+  router outcome leakage, LLM authority, uncharged Stage 1 work, and misspelled
+  gate fields SHALL each fail closed.
+- REQ-REPORT-6587-ATOMIC: The producer SHALL preserve
+  `research-roadmap.yaml` and `scripts/research_conductor.py`. It SHALL set
+  `inference_substrate=primary_source_and_exact_fixture_replay_no_llm` and
+  `verifier_is_oracle=true`. A ready contract SHALL use `verdict_class=null`.
+  It SHALL write one terminal JSON artifact through same-directory file sync
+  and atomic replacement. The final checksum SHALL exclude only itself.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `primary_source_receipts`, `non_imported_claim_rows`,
+`source_unit_manifest`, `prompt_stage_contract`, `router_contract`,
+`arm_seed_budget_contract`, `source_binding_and_exact_authority_contract`,
+`metric_and_acceptance_contract`, `fixture_replay_rows`,
+`downstream_gate_field_rows`, `attack_rows`,
+`v573_constraint_first_method_ready_score`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6587-SOURCES: Borrowed Methods Stay Bounded
+
+**Given** the V573 source section and local source-cache paths
+**When** Exp6587 builds source and non-imported-claim rows
+**Then** all four arXiv URLs and available content hashes are bound, each
+Carnot hook is explicit, and no external result becomes Carnot evidence.
+
+#### SCENARIO-REPORT-6587-MANIFEST: Outcome-Blind Units Stay Exact And Balanced
+
+**Given** the clean Exp6574 fixture compiler and the Exp6580 source protocol
+**When** Exp6587 builds the source-unit manifest
+**Then** at least 16 hashed units balance restrictive and ordinary strata,
+cover all five required case classes, and name their exact checker dispatch.
+
+#### SCENARIO-REPORT-6587-STAGES-ROUTER: Plain Text And Routing Stay Frozen
+
+**Given** no V573 model row exists
+**When** direct, Stage 1, Stage 2, and router contracts are built
+**Then** prompt hashes are family neutral, both raw stages precede parsing,
+Stage 1 has no answer channel, and routing depends only on frozen input bytes.
+
+#### SCENARIO-REPORT-6587-AUTHORITY: Unsupported And Contradictory Proposals Fail Closed
+
+**Given** a Stage 1 proposal and its claimed source span
+**When** the source binder and exact obligation registry dispatch the proposal
+**Then** missing support is marked unsupported, contradiction forces
+abstention, and only the whitelisted exact checker can authorize release.
+
+#### SCENARIO-REPORT-6587-METRICS-ARMS: Paired Effects Charge All Work
+
+**Given** direct, always-on CFR, and routed CFR rows for the same ordered unit
+**When** the frozen metric reducer runs
+**Then** exact success, constraint quality, safety, failures, tokens, and
+latency remain paired by unit, and every CFR stage is charged.
+
+#### SCENARIO-REPORT-6587-FIXTURES-ATTACKS: Local Replays Close Known Failures
+
+**Given** positive, unsupported, ambiguous, contradictory, and tamper fixtures
+**When** the Exp6574 exact reducer and all required attacks replay
+**Then** positive controls release, unsafe fixtures abstain, and each leakage,
+authority, cost, raw-byte, schema, and field-spelling attack fails closed.
+
+#### SCENARIO-REPORT-6587-ATOMIC: One Null Method Artifact Recomputes
+
+**Given** all source, fixture, router, arm, metric, gate, and attack rows close
+**When** Exp6587 writes its terminal artifact
+**Then** the ready score recomputes to one, `verdict_class` is null, both
+protected files stay unchanged, no LLM call exists, and the checksum validates.
+
+## Implementation Status (REQ-REPORT-6587)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6587 | Planned (`python/carnot/experiment_6587_v573_constraint_first_method_contract.py`; terminal artifact `results/experiment_6587_v573_constraint_first_method_contract.json`) | Planned (`tests/python/test_experiment_6587_v573_constraint_first_method_contract.py`) |
