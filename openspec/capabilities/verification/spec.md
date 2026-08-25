@@ -38239,11 +38239,37 @@ Every write of `flagged_adversarial: true` by a GATE SHALL record a provenance b
 and `stamper`. The two gate writers are `adversarial_verify.backfill_stamps` and the
 conductor's completion gate.
 
-`gate_version` SHALL be a SEMANTIC fingerprint of `scripts/adversarial_verify.py`: the
-source parsed, docstrings stripped, the AST re-unparsed, then SHA-256. A raw content hash
-would change on every comment edit, so every artifact would read stale forever and the
-signal would be worthless. A comment-only or docstring-only edit SHALL NOT change the
-version. A change to executable logic SHALL change it.
+`gate_version` SHALL be a SEMANTIC fingerprint: each covered source parsed, docstrings
+stripped, the AST re-unparsed, then SHA-256, combined across sources. A comment-only or
+docstring-only edit SHALL NOT change the version. A change to executable logic in a COVERED
+SOURCE SHALL change it.
+
+Coverage SHALL span every source that decides a verdict, not only the gate entrypoint.
+`carnot/terminal_artifacts.py` SHALL be covered: it holds `TERMINAL_CLASSES` and the prefix
+tables that decide `NONTERMINAL_DECLARED_ARTIFACT`, which is 995 of the corpus's 1,126
+critical flags. Commit `4a1557fd85` added `"disqualified"` to those tables and flipped that
+verdict for real artifacts without touching `adversarial_verify.py`.
+
+The version SHALL be the one belonging to the module that PRODUCED the verdict, never the
+source read from disk at stamp time. `_module_with_current_source()` falls back to the cached
+module when a reload fails, so a disk read would pair an old verdict with a new version and
+report it `current` — the origin incident inverted. `verify_artifact` SHALL therefore report
+the judging module's own `LOADED_GATE_VERSION`, and a stamper SHALL use that.
+
+A provenance block whose `gate_version_algo` differs from the reader's SHALL classify as
+`unversioned`, because versions from different algorithms are not comparable.
+
+#### Measured limits (2026-08-25) — the SHALL above is bounded, not absolute
+
+`stale` saturates and is weak evidence. Over 128 tracked revisions of the gate, the AST
+normalization suppressed 1 version bump (0.8%), and the gate changed ~9 times a day in the
+week to 2026-08-25. A fresh stamp is expected to read `stale` within hours. `stale` means
+"the gate moved", NOT "this verdict would change". The durable value is the recorded version
+and timestamp; the `unversioned` -> `current` transition is the real gain.
+
+Coverage is source files only. A verdict can still change with the version frozen when it
+depends on DATA — notably `ops/arc_solve_registry.yaml`, which the gate reads to raise a
+critical flag. Widening to data files is possible and is deliberately not done here.
 
 Staleness SHALL be decidable without running the gate, in constant time per artifact, so
 the whole corpus can be classified without re-judging 6,900 artifacts. A reader SHALL

@@ -252,6 +252,92 @@ def test_backfill_cannot_revise_an_existing_determination(tmp_path: Path, monkey
     assert json.loads(artifact_path.read_text())["flagged_adversarial"] is True
 
 
+def test_the_version_covers_the_dependency_that_supplies_the_dominant_check() -> None:
+    """NONTERMINAL_DECLARED_ARTIFACT is 995 of 1,126 critical flags and its tables live
+    in carnot/terminal_artifacts.py. Commit 4a1557fd85 changed them without touching
+    adversarial_verify.py, so a one-file fingerprint would have missed the flip."""
+    names = [p.name for p in stamp_provenance.GATE_SOURCE_PATHS]
+    assert "adversarial_verify.py" in names
+    assert "terminal_artifacts.py" in names
+    for path in stamp_provenance.GATE_SOURCE_PATHS:
+        assert path.exists(), f"fingerprinted source is missing: {path}"
+
+
+def test_a_change_to_the_dependency_moves_the_version(tmp_path: Path, monkeypatch) -> None:
+    dep = tmp_path / "terminal_artifacts.py"
+    dep.write_text("TERMINAL_CLASSES = frozenset({'complete'})\n")
+    gate = _write_gate(tmp_path, _GATE_SRC)
+    monkeypatch.setattr(stamp_provenance, "GATE_SOURCE_PATHS", (gate, dep))
+
+    before = stamp_provenance.current_gate_version()
+    dep.write_text("TERMINAL_CLASSES = frozenset({'complete', 'disqualified'})\n")
+    assert stamp_provenance.current_gate_version() != before
+
+
+def test_the_stamped_version_comes_from_the_module_that_judged() -> None:
+    """A failed reload leaves OLD code judging while the DISK holds new source.
+    Stamping the disk version would certify that stale verdict as current."""
+    import adversarial_verify
+
+    assert adversarial_verify.LOADED_GATE_VERSION == stamp_provenance.current_gate_version()
+
+    explicit = stamp_provenance.make_provenance("t", gate_version="deadbeef")
+    assert explicit["gate_version"] == "deadbeef", "an explicit version must win over the disk"
+
+
+def test_verify_artifact_reports_the_version_it_used(tmp_path: Path) -> None:
+    import adversarial_verify
+
+    artifact = tmp_path / "experiment_9997_probe.json"
+    artifact.write_text(json.dumps({"experiment": 9997, "duration_s": 1.0}))
+    report = adversarial_verify.verify_artifact(artifact)
+    assert report["gate_version"] == adversarial_verify.LOADED_GATE_VERSION
+
+
+def test_a_version_from_another_algorithm_is_not_comparable(tmp_path: Path) -> None:
+    """Otherwise a future hashing change silently reads as stale-or-current."""
+    gate = _write_gate(tmp_path, _GATE_SRC)
+    artifact = _stamped(gate)
+    artifact[stamp_provenance.PROVENANCE_FIELD]["gate_version_algo"] = "some_other_scheme_v9"
+    assert stamp_provenance.stamp_status(artifact, gate_path=gate) == "unversioned"
+
+
+def test_backfill_does_not_skip_a_principle_wrapped_cleared_determination(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """A bare `.get` reads `{"value": false, ...}` as truthy and skips the artifact."""
+    import adversarial_verify
+
+    artifact = tmp_path / "experiment_9996_wrapped.json"
+    artifact.write_text(
+        json.dumps(
+            {
+                "experiment": 9996,
+                "flagged_adversarial": {"principle": "the verdict", "value": False},
+                "duration_s": 0.5,
+            }
+        )
+    )
+    monkeypatch.setattr(
+        adversarial_verify,
+        "verify_artifact",
+        lambda p, **kw: {
+            "flags": [{"kind": "GATE_PASSED_WITHOUT_DATA", "severity": "critical"}],
+            "gate_version": adversarial_verify.LOADED_GATE_VERSION,
+        },
+    )
+    records = adversarial_verify.backfill_stamps([artifact], apply=False)
+    assert records, "a wrapped, cleared determination was skipped as if it were stamped"
+
+
+def test_the_downstream_gate_does_not_quarantine_on_a_wrapped_false(tmp_path: Path) -> None:
+    import conductor_gates
+
+    cleared = {"flagged_adversarial": {"principle": "the verdict", "value": False}}
+    reason = conductor_gates._diagnose_missing_field(cleared, "score", "BASE")
+    assert "UPSTREAM IS QUARANTINED" not in reason
+
+
 def test_scan_groups_the_corpus_without_running_the_gate(tmp_path: Path) -> None:
     gate = _write_gate(tmp_path, _GATE_SRC)
     (tmp_path / "a.json").write_text(json.dumps({"flagged_adversarial": True}))

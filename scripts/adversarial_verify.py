@@ -118,6 +118,11 @@ except ImportError:  # pragma: no cover - exercised by direct-script and worktre
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import stamp_provenance
 
+# Computed at IMPORT time, so it identifies the source this module actually loaded.
+# Reading the disk at stamp time would fingerprint a newer file that a failed reload
+# never loaded, certifying a stale verdict as current (REQ-VERIFY-6601).
+LOADED_GATE_VERSION = stamp_provenance.current_gate_version()
+
 # Floating-point agreement threshold for tautology detection. Two
 # distinct metrics agreeing to 5 significant figures is suspicious;
 # legitimate cases (two implementations of the same function with the
@@ -6766,7 +6771,12 @@ def _module_with_current_source() -> Any:
 def verify_artifact(path: Path, *, declared: bool | None = None) -> dict[str, Any]:
     """Run the current on-disk verifier, including through a cached caller alias."""
     module = _module_with_current_source()
-    return module._verify_artifact_impl(path, declared=declared)
+    report = module._verify_artifact_impl(path, declared=declared)
+    # Carry the judging module's OWN version, so a stamper can never pair this
+    # verdict with a version that did not produce it (REQ-VERIFY-6601).
+    if isinstance(report, dict):
+        report.setdefault("gate_version", module.LOADED_GATE_VERSION)
+    return report
 
 
 def sweep_milestone_range(results_dir: Path, low: int, high: int) -> list[dict[str, Any]]:
@@ -6840,7 +6850,9 @@ def backfill_stamps(
             d = json.loads(p.read_text())
         except Exception:
             continue
-        if not isinstance(d, dict) or d.get("flagged_adversarial"):
+        # Read through a principle wrapper: a bare `.get` sees `{"value": false, ...}`
+        # as truthy and would silently skip an artifact that needs stamping.
+        if not isinstance(d, dict) or stamp_provenance.is_stamped(d):
             continue
         try:
             rep = verify_artifact(p)
@@ -6863,7 +6875,8 @@ def backfill_stamps(
             # Record WHICH gate made this call. Without it a determination cannot be
             # told apart from one made under rules that have since changed (REQ-VERIFY-6601).
             d[stamp_provenance.PROVENANCE_FIELD] = stamp_provenance.make_provenance(
-                "adversarial_verify.backfill_stamps"
+                "adversarial_verify.backfill_stamps",
+                gate_version=rep.get("gate_version"),
             )
             d.setdefault("corrigendum_pending", []).extend(crit)
             d["corrigendum_note"] = (
