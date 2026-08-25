@@ -2,6 +2,15 @@
 
 **Last Updated:** 2026-08-25
 
+**Operational Note:** 2026-08-25 Exp6604 exact two-level plan corpus repair
+reconciled `REQ-CONSTRAINT-6604` after the protected-roadmap receipt retained
+the pre-planning hash while the V576 roadmap had already frozen its escaped
+set literals. The implementation now pins the actual protected bytes, so the
+terminal artifact closes without weakening its mutation gate. Focused tests
+pass (`9 passed`), scoped module coverage is 100% (`493` statements, `0`
+missing), and the exact conductor smart subset passes (`90 passed, 1` existing
+warning). `scripts/research_conductor.py` was not modified.
+
 **Operational Note:** 2026-08-25 REQ-VERIFY-6593 stale-linter test repair
 kept `scripts/research_conductor.py` out of the follow-up edit and moved the
 freshness guarantee to the cached `verify_artifact` entrypoint in

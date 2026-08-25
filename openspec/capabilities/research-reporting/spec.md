@@ -56915,3 +56915,97 @@ and protected hashes pass without an LLM call or language-model claim.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6596 | Implemented (`python/carnot/experiment_6596_convergeflow_feasible_token_canary.py`; terminal artifact `results/experiment_6596_convergeflow_feasible_token_canary.json`) | Implemented (`tests/python/test_experiment_6596_convergeflow_feasible_token_canary.py`; 14 focused tests; 100% statement and branch coverage) |
+
+### REQ-REPORT-6610: Provenance Receipts SHALL Resolve Against the Artifact's Own Commit
+
+An experiment artifact records a provenance receipt: a sha256 over each file the
+experiment declared it read. Carnot SHALL compute that sha256 over the bytes of
+the file **as committed at the artifact's own commit**, not over the current
+working-tree copy.
+
+The reason is measured, not stylistic. Spec-first discipline requires every later
+experiment to append its own requirement to the same shared capability spec. A
+receipt taken over the whole working-tree spec therefore goes stale as soon as
+the next experiment lands, so a deterministic-replay test over such an artifact
+is red for a reason that is not a provenance break. On 2026-08-25, 52 of the 68
+`result == replay` tests were red and 50 of 63 replay-tested modules hashed at
+least one shared, high-churn file.
+
+- REQ-REPORT-6610-COMMIT: The artifact's commit SHALL be the commit that ADDED
+  the artifact file. When git records no add for that path, the newest commit
+  that touched it SHALL be used. The add commit is chosen because the
+  fabrication gate re-stamps landed artifacts; anchoring on the add commit keeps
+  the receipt pinned to the state the experiment actually ran against.
+- REQ-REPORT-6610-AUTHORING: When the artifact path has never been committed,
+  the receipt SHALL be computed from the working tree. This is the only state
+  that exists when an experiment first writes its artifact. The same applies to
+  a dependency that lies outside any git checkout, such as a fixture built under
+  `tmp_path`.
+- REQ-REPORT-6610-FAIL-CLOSED: Resolution SHALL raise, and SHALL NOT fall back
+  to the working tree, when: the commit id is not a 40-character hex string; the
+  commit is not an object in this repository; or the declared dependency is not
+  a file at that commit. A receipt that silently answers from a source other
+  than the one it claims is the failure this requirement removes.
+- REQ-REPORT-6610-EXISTENCE: A receipt that guards an optional dependency with
+  an existence test SHALL evaluate existence at the artifact's commit, not in
+  the working tree. Otherwise deleting the file from the working tree would turn
+  a real receipt into a null with no failure.
+- REQ-REPORT-6610-STILL-DETECTED: The receipt SHALL continue to fail on a
+  genuine provenance break. Four breaks are named, and each SHALL be red:
+  the artifact declares a dependency the module does not produce, or omits one
+  it does; the declared dependency does not exist at the artifact's commit; the
+  artifact's commit cannot be resolved; and the recorded hash does not match the
+  committed bytes of the declared dependency.
+- REQ-REPORT-6610-NOT-DETECTED: The receipt SHALL NOT report a later, unrelated
+  edit to a shared file. This is deliberate and is the whole change. That signal
+  was never a provenance break, it fired on every artifact at once, and a guard
+  that is always red is read by nobody.
+- REQ-REPORT-6610-SCOPE: This requirement governs receipts only. It does NOT
+  make an experiment read historical file CONTENT for its own logic. A module
+  that parses a shared, high-churn file and stores derived values, rather than a
+  hash, stays outside this requirement and its replay test may still be red.
+
+#### SCENARIO-REPORT-6610-CHURN: A Later Edit To A Shared Spec Does Not Break A Landed Receipt
+
+**Given** an artifact landed at a commit where its capability spec had one set of
+bytes
+**When** a later experiment appends a new requirement to that same spec and the
+artifact is replayed
+**Then** the receipt still resolves to the bytes at the artifact's own commit and
+the replay matches the stored artifact.
+
+#### SCENARIO-REPORT-6610-TAMPER: An Edited Receipt Value Fails
+
+**Given** a stored artifact whose recorded hash for a declared dependency has
+been changed by hand
+**When** the artifact is replayed
+**Then** the recomputed receipt differs from the recorded one and the replay
+fails.
+
+#### SCENARIO-REPORT-6610-MISSING: A Dependency Absent At The Artifact Commit Fails Closed
+
+**Given** a module that declares a dependency which did not exist at the
+artifact's commit
+**When** the receipt is resolved
+**Then** resolution raises `ReceiptResolutionError` and does not fall back to the
+working tree.
+
+#### SCENARIO-REPORT-6610-BAD-COMMIT: An Unresolvable Commit Fails Closed
+
+**Given** a commit id that is malformed, or that names no object in this
+repository
+**When** the receipt is resolved against it
+**Then** resolution raises `ReceiptResolutionError`.
+
+#### SCENARIO-REPORT-6610-DEPENDENCY-SET: A Changed Dependency Set Fails
+
+**Given** a stored artifact whose receipt names a dependency the module does not
+hash, or omits one it does
+**When** the artifact is replayed
+**Then** the recomputed receipt has a different key set and the replay fails.
+
+## Implementation Status (REQ-REPORT-6610)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6610 | Implemented (`python/carnot/provenance_receipts.py`; adopted by the replay-tested experiment modules that define their own file-hash primitive) | Implemented (`tests/python/test_provenance_receipts.py`) |
