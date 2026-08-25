@@ -20,6 +20,9 @@ ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_filters
 ARC_SUPERVISOR_RECEIPT_REPLAY_SUBSTRATE = (
     "live_arc_trajectory_supervisor_receipt_replay_no_llm"
 )
+ARC_LIVE_E3_ARCHIVE_PROJECTION_SUBSTRATE = (
+    "live_e3_world_model_archived_transition_invariant_projection_no_new_llm"
+)
 LIVE_LLM_SUBSTRATE = "live_llm_inference"
 
 SUBSTRATE_DURATION_FLOORS = {
@@ -28,6 +31,7 @@ SUBSTRATE_DURATION_FLOORS = {
     ARC_LIVE_AGENT_NO_LLM_SUBSTRATE: 0.01,
     ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE: 0.01,
     ARC_SUPERVISOR_RECEIPT_REPLAY_SUBSTRATE: 0.01,
+    ARC_LIVE_E3_ARCHIVE_PROJECTION_SUBSTRATE: 0.01,
     LIVE_LLM_SUBSTRATE: 60.0,
 }
 
@@ -72,6 +76,8 @@ FIELD_PRINCIPLES = {
         "ARC filter A/B stepping uses offline_arcade_live_agent_runtime_filters_no_new_llm"
         "; trajectory-supervisor receipt replay uses "
         "live_arc_trajectory_supervisor_receipt_replay_no_llm"
+        "; live E3 archived transition projection uses "
+        "live_e3_world_model_archived_transition_invariant_projection_no_new_llm"
     ),
     "duration_s": "bare float; must meet the selected substrate floor",
     "template_shipped": "bare bool: the helper + lint + tests landed green",

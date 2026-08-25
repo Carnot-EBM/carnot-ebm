@@ -5242,10 +5242,19 @@ class E3AgentPolicy:
         two_sided_goal_contract: Any | bool | None = None,
         active_reward_machine: Any | bool | None = None,
         target_licensed_route_shadow: Any | bool | None = False,
+        invariant_projection_config: Any | None = None,
     ) -> None:
         import os
 
+        from carnot.agentic.arc_invariant_projector import InvariantProjectionConfig
+
         self.short = str(game_id).split("-", 1)[0]
+        # REQ-ARC-WMTE-6611-LIVE: this proposal transform is explicit opt-in.
+        # It is resolved once at construction, never from an environment variable,
+        # so the shipped default cannot become active midway through an episode.
+        self.invariant_projection_config = (
+            invariant_projection_config or InvariantProjectionConfig()
+        )
         self.target_levels = int(target_levels)
         self.goal_guidance_lambda = max(0.0, float(goal_guidance_lambda))
         if active_probe_controller is None:
@@ -6582,6 +6591,21 @@ class E3AgentPolicy:
     def _world_model_candidates(self, engine, is_done) -> list[WorldModelCandidate]:
         import os
 
+        from carnot.agentic.arc_invariant_projector import wrap_world_model_engine
+
+        def project_candidates(rows):
+            return [
+                WorldModelCandidate(
+                    candidate.name,
+                    wrap_world_model_engine(
+                        candidate.engine,
+                        self.invariant_projection_config,
+                    ),
+                    candidate.is_level_complete,
+                )
+                for candidate in rows
+            ]
+
         candidates = [WorldModelCandidate("loaded_world_model.py", engine, is_done)]
         # PoE-World (arXiv:2505.10819), OFF by default (CARNOT_ARC_POE_WORLD=1). Adds a weighted
         # product-of-experts engine as an extra candidate so select_trusted_world_model can rank it
@@ -6606,7 +6630,7 @@ class E3AgentPolicy:
         if provider is None:
             provider = getattr(self.proposer, "candidate_engines", None)
         if not callable(provider):
-            return candidates
+            return project_candidates(candidates)
         for i, row in enumerate(provider(self.short)):
             if isinstance(row, WorldModelCandidate):
                 candidates.append(row)
@@ -6627,7 +6651,7 @@ class E3AgentPolicy:
                         rest[0] if rest else None,
                     )
                 )
-        return candidates
+        return project_candidates(candidates)
 
     def next_move(self, frames, latest):
         """THE choke point: every action the SCORED agent emits leaves through here.
@@ -9075,7 +9099,12 @@ def consume_process_bound_capability_preflight(
     }
 
 
-def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
+def make_carnot_agent(
+    base_cls,
+    cascade: bool = True,
+    proposer=None,
+    invariant_projection_config=None,
+):
     """Adapt the Carnot policy onto the real ARC-AGI-3-Agents `Agent` base class.
     Submission: `from agents.agent import Agent; CarnotAgent = make_carnot_agent(Agent)`.
 
@@ -9116,6 +9145,7 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
                 E3AgentPolicy(
                     gid,
                     proposer=proposer,
+                    invariant_projection_config=invariant_projection_config,
                     target_levels=int(SUBMITTED_AGENT_CONFIG["target_levels"]),
                     early_stop_grace=SUBMITTED_AGENT_CONFIG["early_stop_grace"],
                     value_weight=float(SUBMITTED_AGENT_CONFIG["value_weight"]),

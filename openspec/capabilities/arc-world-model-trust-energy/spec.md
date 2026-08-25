@@ -27464,3 +27464,109 @@ AND a counter reset between the two reads yields 0 rather than a negative count.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6710 | `python/carnot/agentic/arc_llm_reinduction.py` (`_channel_totals_snapshot`, `_channel_totals_delta`; `skipped = row["skipped"]` at the held-out and exception sites; `row["heldout_accuracy"]`, `row["accepted_by_heldout_verifier"]`, `row["channel_chars"]`). `python/carnot/agentic/arc_executable_world_model.py` (`_EMPTY_CHANNEL_TOTALS`, `LocalGGUFProposer.channel_totals`, accumulation in `_record_completion_diagnostics` and at the chat channel-split seam). `scripts/arc_scored_path_lever_harness.py` (`_counterexample_digest`, `_round_digest`, `_induction_round_records`, `_channel_delta`; `run_cell` emits `induction_round_records` and `llm_channels`). | `tests/python/test_arc_induction_diagnosis_6710.py` (SCENARIO-ARC-WMTE-6710-1..7; 7 mutations M1-M7 each RED then restored byte-identical). |
+
+### REQ-ARC-WMTE-6611: Live E3 Invariant Projection Uses Sealed Archive Evidence
+
+Carnot SHALL expose reusable, game-identity-blind quadratic level-set projection
+math through the scored `make_carnot_agent` to `E3AgentPolicy` import closure.
+The projector SHALL be disabled by default and SHALL wrap executable
+world-model proposals only after an explicit immutable configuration is
+supplied. Neither the projector API nor its features may accept a game
+identifier, source text, hidden state, an exhaustive solver, or an observed
+next frame.
+
+Exp6611 SHALL replay immutable `data/arc_transition_corpus/*.npz` transitions
+through the archived executable world models under a deterministic,
+game-disjoint calibration/held split. It SHALL use no new LLM inference, make
+no game or level solve claim, and registry-precheck every target game. If fewer
+than four games have valid world-model transitions, or either split cannot
+contain two games, it SHALL write a named insufficiency block with exact counts
+instead of substituting a within-game development split.
+
+- REQ-ARC-WMTE-6611-LIVE: `make_carnot_agent` and `E3AgentPolicy` SHALL carry
+  the same explicit projector configuration into every executable world-model
+  candidate. Missing configuration and `enabled=false` SHALL preserve the
+  original engine object and prediction exactly.
+- REQ-ARC-WMTE-6611-FEATURES: State and trajectory features SHALL be computed
+  only from the live policy's current observation and executable-model
+  prediction. They SHALL be independent of game identity and source code.
+- REQ-ARC-WMTE-6611-SPLIT: Candidate fitting and selection SHALL use calibration
+  games only. Held game identities and held exact outcomes SHALL not affect the
+  basis, threshold, cost budget, selected invariant, or random controls. The
+  split membership and all frozen settings SHALL bind by SHA-256 before held
+  replay.
+- REQ-ARC-WMTE-6611-ARCHIVE: Every archive and world-model source SHALL be read
+  without mutation and bound by path and SHA-256. The exact observed next frame
+  SHALL become available only after all arm predictions for its row have been
+  produced.
+- REQ-ARC-WMTE-6611-CONTROLS: Held replay SHALL compare `no_projection`,
+  `selected_invariant_projection`, and `norm_matched_random_projection` on the
+  same transition and seed. Random basis norm SHALL match the selected basis,
+  and random controls SHALL not reuse the selected correction.
+- REQ-ARC-WMTE-6611-ROWS: `per_unit_rows` SHALL retain every targeted game,
+  transition, seed, and arm, including unchanged predictions, no-headroom rows,
+  invalid engines, exceptions, and projection failures. Each row SHALL include
+  input, predicted, and exact observed grids; game-blind features; drift;
+  projection distance and iterations; exact mismatch; runtime validity;
+  charged cost; and failure.
+- REQ-ARC-WMTE-6611-VERDICT: A held win SHALL require strictly lower exact
+  next-frame error than no projection, separation from the norm-matched random
+  control, no runtime-validity loss, game-disjoint evidence, and bounded cost.
+  Such a win is `circular_positive` because exact next frames define the
+  metric. A complete no-effect comparison is `null`. Row-complete live-reachable
+  evidence SHALL set `live_projection_contract_ready_score=1.0` independently
+  of effect.
+- REQ-ARC-WMTE-6611-FAILURES: Invalid predictions, exceptions, no-headroom,
+  unchanged outputs, iterations, and monotonic wall time SHALL remain explicit
+  and charged. No reducer may silently drop a row.
+- REQ-ARC-WMTE-6611-ATOMIC: The experiment SHALL fail closed against off-path
+  import, default-on activation, game identity, held leakage, source reads,
+  outer-loop ground truth, pre-prediction observation access, random-control
+  reuse, invalid-row dropping, archive tamper, and protected-file mutation. It
+  SHALL atomically write a checksummed
+  `results/experiment_6611_live_arc_invariant_projection.json`.
+
+#### SCENARIO-ARC-WMTE-6611-LIVE: Explicit Opt-In Reaches The Scored Closure
+
+Given the real factory and E3 policy, when no projector configuration is
+provided, the executable engine and prediction remain identical. When a frozen
+enabled configuration is provided, every world-model candidate is wrapped by
+the reusable projector without receiving game identity.
+
+#### SCENARIO-ARC-WMTE-6611-SPLIT: Held Games Cannot Select The Invariant
+
+Given a deterministic game split and sealed held rows, changing held identities
+or outcomes after selection does not change the basis, thresholds, cost budget,
+selection hash, or random-control seeds.
+
+#### SCENARIO-ARC-WMTE-6611-ORACLE: Observation Opens Only After Prediction
+
+Given one archived transition, all three arm predictions are frozen before the
+exact observed next frame is passed to the evaluator. Any attempt to add that
+frame to the projector signature or open it earlier fails closed.
+
+#### SCENARIO-ARC-WMTE-6611-ROWS: Failures And No-Effect Rows Stay Complete
+
+Given invalid engines, exceptions, unchanged proposals, and no-headroom rows,
+the replay emits one row per game, transition, seed, and arm and recomputed held
+summaries retain every row and its charged cost.
+
+#### SCENARIO-ARC-WMTE-6611-ATTACKS: Live-Path Shortcuts Fail Closed
+
+Given the required adversarial mutations, off-path import, default-on
+activation, identity, leakage, source, ground-truth, timing, control reuse, row
+drop, archive tamper, and protected mutation each produce a named failed-closed
+attack row and cannot promote readiness.
+
+#### SCENARIO-ARC-WMTE-6611-ATOMIC: One Non-Solve Artifact Recomputes
+
+Given complete replay or a named insufficiency block, Exp6611 writes one
+atomically replaced artifact with the required principle-bearing fields,
+`inference_substrate=live_e3_world_model_archived_transition_invariant_projection_no_new_llm`,
+`verifier_is_oracle=true`, no `solve_provenance`, and a reproducibility checksum.
+
+## Implementation Status (REQ-ARC-WMTE-6611)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6611 | Implemented: `python/carnot/agentic/arc_invariant_projector.py`, `python/carnot/agentic/arc_competition_agent.py`, and `python/carnot/experiment_6611_live_arc_invariant_projection.py`. | Implemented: `tests/python/test_experiment_6611_live_arc_invariant_projection.py` (12 focused tests; 100% statement coverage on both added modules). |
