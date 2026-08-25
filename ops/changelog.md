@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-08-25 — Stale verifier alias test repair
+
+- Fixed the REQ-VERIFY-6593 regression without a follow-up edit to
+  `scripts/research_conductor.py`: the cached `verify_artifact` alias now checks
+  the verifier source revision, reloads on a complete changed source file, and
+  delegates to the refreshed implementation. A partial edit keeps the last
+  known-good gate active.
+- Added behavioral coverage so freshness no longer rests only on conductor
+  source assertions: it exercises the real verifier through a stale alias, plus a
+  partial-source fail-safe regression. The conductor-equivalent suite is green
+  (`118 passed, 1 warning`); scoped Exp6596 coverage is 100% across 428
+  statements and 136 branches.
+
 ## 2026-08-25 — Mutation-proof explicit-path applicability repair
 
 - Fixed `check_target_is_live` so targets without an importable `carnot.*`

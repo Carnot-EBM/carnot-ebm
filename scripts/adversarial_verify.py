@@ -96,6 +96,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import math
 import numbers
@@ -6581,7 +6582,7 @@ def check_arc_outer_loop_solve(d: dict[str, Any], flags: list[Flag]) -> None:
             )
 
 
-def verify_artifact(path: Path, *, declared: bool | None = None) -> dict[str, Any]:
+def _verify_artifact_impl(path: Path, *, declared: bool | None = None) -> dict[str, Any]:
     """Run all checks on a single artifact. Return a report dict."""
     path = Path(path)
     flags: list[Flag] = []
@@ -6718,6 +6719,48 @@ def verify_artifact(path: Path, *, declared: bool | None = None) -> dict[str, An
         "honest_verdict": verdict[:80],
         **_flag_summary(flags),
     }
+
+
+def _source_revision() -> tuple[int, int, int, int] | None:
+    """Return the verifier source identity used to detect an on-disk update."""
+    try:
+        stat = Path(__file__).stat()
+    except OSError:
+        return None
+    return (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns)
+
+
+_LOADED_SOURCE_REVISION = _source_revision()
+
+
+def _module_with_current_source() -> Any:
+    """Refresh this module when a long-lived caller holds an old function alias.
+
+    ``research_conductor`` imports ``verify_artifact`` inside one long-lived loop.
+    The alias therefore has to refresh at its own boundary: re-importing at the call
+    site would otherwise return Python's cached module.  Invalid source is never
+    loaded; the last known-good implementation remains available until a complete
+    edit lands.
+    """
+    module = sys.modules[__name__]
+    revision = _source_revision()
+    if revision is None or revision == _LOADED_SOURCE_REVISION:
+        return module
+    try:
+        source = Path(__file__).read_bytes()
+        compile(source, __file__, "exec")
+    except (OSError, SyntaxError):
+        return module
+    try:
+        return importlib.reload(module)
+    except (ImportError, OSError, SyntaxError):
+        return module
+
+
+def verify_artifact(path: Path, *, declared: bool | None = None) -> dict[str, Any]:
+    """Run the current on-disk verifier, including through a cached caller alias."""
+    module = _module_with_current_source()
+    return module._verify_artifact_impl(path, declared=declared)
 
 
 def sweep_milestone_range(results_dir: Path, low: int, high: int) -> list[dict[str, Any]]:

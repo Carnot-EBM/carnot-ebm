@@ -90,6 +90,33 @@ def test_req_verify_6593_cached_verifier_alias_refreshes_before_stamping(
         sys.modules.pop(module_name, None)
 
 
+def test_req_verify_6593_partial_verifier_edit_keeps_last_known_good_alias(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """SCENARIO-VERIFY-6593-STALE-GATE: incomplete source cannot disable the gate."""
+
+    module_name = "_exp6593_adversarial_verify_partial_edit_probe"
+    target = tmp_path / f"{module_name}.py"
+    original = VERIFIER.read_text(encoding="utf-8")
+    target.write_text(original, encoding="utf-8")
+    monkeypatch.syspath_prepend(str(tmp_path))
+    sys.modules.pop(module_name, None)
+
+    try:
+        verifier = importlib.import_module(module_name)
+        stale_alias = verifier.verify_artifact
+        artifact = tmp_path / "artifact.json"
+        artifact.write_text('{"schema": "blocked_precondition"}', encoding="utf-8")
+        expected = stale_alias(artifact)
+
+        target.write_text("def incomplete(:\n", encoding="utf-8")
+        importlib.invalidate_caches()
+
+        assert stale_alias(artifact) == expected
+    finally:
+        sys.modules.pop(module_name, None)
+
+
 def _adversarial_pass_source() -> str:
     """The `research_step` region that runs the fabrication gate."""
     source = CONDUCTOR.read_text(encoding="utf-8")

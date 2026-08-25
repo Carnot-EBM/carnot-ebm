@@ -16453,3 +16453,9 @@ code |
 | 2026-08-25 12:03 UTC | Independent CFR row reducer, gated on Exp6592 read | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-25 12:33 UTC | CFR counterfactual and exact-authority audit | OK | 95 passed, 1 warning in 12.40s |
 | 2026-08-25 13:11 UTC | Frozen world-model invariant-projection canary | OK | 94 passed, 1 warning in 15.02s |
+| 2026-08-25 13:40 UTC | Conductor self-edit reverted | WARN | working-tree edit to research_conductor.py reverted; diff at 20260825T134046Z.pa |
+| 2026-08-25 13:59 UTC | Test-fix erasure gate | BLOCK | 0 added skip(s), 1 reverted file(s); restored 1 |
+| 2026-08-25 14:12 UTC | Test-fix erasure gate | BLOCK | 0 added skip(s), 1 reverted file(s); restored 1 |
+| 2026-08-25 14:12 UTC | ConvergeFlow feasible-token projection canary | FAIL | Post-tests failed: 1 failed, 114 passed, 1 warning in 14.39s |
+| 2026-08-25 14:14 UTC | Conductor re-exec: fresh committed source | OK | 8d5bc109260e -> 99f1816fb313; argv preserved |
+| 2026-08-25 14:14 UTC | ConvergeFlow feasible-token projection canary | OK | Deliverable already exists in repo |
