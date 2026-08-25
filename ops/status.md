@@ -8826,11 +8826,14 @@ not a different design; it was the same design, missed twice. The result is a
 false report with the right shape: an attempt whose every round failed DYNAMICS
 verification was reported under a PLANNING label, which sends a reader to the
 planner instead of to the verifier. In the live corpus that default accounted
-for 9 of the 120 skip records the corpus holds outside the induction-disabled
-case (9 of 3034 including it), measured this session by sweeping every
-`induction_skipped` counter under `results/**`. The brief that started this work
-quoted "9 of 18"; the numerator reproduces, the denominator does not. Both sites
-now set the outer variable.
+No prevalence figure is quoted, because the counter cannot produce one.
+`no_reachable_plan_after_refinement` is ALSO the correct label for a genuine
+no-plan attempt, so counting that string cannot separate a real planning failure
+from a masked dynamics failure. Two figures were quoted during this work -- "9 of
+18" from the brief, and "9 of 120" measured from the corpus -- and neither can
+mean what it appears to mean. The per-round record added here is what makes the
+prevalence measurable for the first time. Both sites now set the outer
+variable.
 
 Two supporting gaps closed with it. The proposer's per-channel character
 counters had no consumer inside the refinement loop, so each round now records

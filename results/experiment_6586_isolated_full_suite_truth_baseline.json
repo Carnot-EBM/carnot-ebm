@@ -1,0 +1,313 @@
+{
+  "active_worktree_unchanged": {
+    "unchanged": null
+  },
+  "attack_rows": [
+    {
+      "attack": "active_root_execution",
+      "passed": true,
+      "refusal_condition": "suite cwd must equal checkout root and differ from active root"
+    },
+    {
+      "attack": "omitted_dirty_overlay",
+      "passed": true,
+      "refusal_condition": "dirty path set must equal verified overlay path set"
+    },
+    {
+      "attack": "passing_headline_with_failed_rows",
+      "passed": true,
+      "refusal_condition": "GREEN requires no failed or errored row"
+    },
+    {
+      "attack": "timeout_called_green",
+      "passed": true,
+      "refusal_condition": "a timed-out receipt reduces only to timeout"
+    },
+    {
+      "attack": "unreported_tracked_write",
+      "passed": true,
+      "refusal_condition": "mutation paths must equal the tracked snapshot difference and observations"
+    },
+    {
+      "attack": "leaked_child_process",
+      "passed": true,
+      "refusal_condition": "cleanup requires no surviving owned process and no unrelated signal"
+    },
+    {
+      "attack": "active_tree_hash_drift",
+      "passed": true,
+      "refusal_condition": "active tracked and dirty-state hashes must match their baselines"
+    }
+  ],
+  "collection_receipt": {},
+  "disposable_checkout_receipt": {},
+  "duration_s": 7.287843,
+  "experiment_id": 6586,
+  "family_summaries": [],
+  "field_provenance": {
+    "active_worktree_unchanged": {
+      "principle": "The active tracked hashes and original dirty status survive the run.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "attack_rows": {
+      "principle": "Partial, mutating, leaked, and falsely green runs fail closed.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "collection_receipt": {
+      "principle": "The collected count and command prevent a partial suite from posing as complete.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "disposable_checkout_receipt": {
+      "principle": "Revision, overlay hash, and validated path prove isolation.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "duration_s": {
+      "principle": "Monotonic duration exposes collection-only or truncated execution.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "field_provenance": {
+      "principle": "Each field points to raw command or hash receipts.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "full_suite_baseline_ready_score": {
+      "principle": "One means suite truth was measured, even when that truth is RED.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "gate_check_summary": {
+      "principle": "An isolation block names the exact failed check and observed value.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "honest_verdict": {
+      "principle": "The verdict reports suite truth without turning test failure into a task block.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "inference_substrate": {
+      "principle": "The task uses isolated deterministic test execution with no LLM.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "low_cadence_ownership_contract": {
+      "principle": "The full suite stays outside each experiment launch.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "mutation_rows": {
+      "principle": "Each attempted tracked write has before and after content hashes.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "preconditions_checked": {
+      "principle": "Resources, versions, dirty state, ownership, and paths are explicit.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "protected_files_unchanged": {
+      "principle": "Both protected orchestration files keep their original hashes.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "reproducibility_checksum": {
+      "principle": "A final content hash protects the baseline record.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "rows": {
+      "principle": "Each failed, errored, skipped, or timed-out test remains individually recheckable.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "status": {
+      "principle": "The baseline ends as measured GREEN, measured RED, timeout, or isolated-environment block.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "suite_command_receipt": {
+      "principle": "Command, checkout, environment, exit, duration, and streams bind the run.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "suite_truth_baseline": {
+      "principle": "GREEN or RED follows from collection, rows, exit, mutation, and cleanup.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "tests_run": {
+      "principle": "Focused validation commands stay separate from the measured full-suite command.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "verdict_class": {
+      "principle": "A measured suite baseline is null infrastructure, never positive science.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    },
+    "verifier_is_oracle": {
+      "principle": "Pytest controls suite state, but it cannot create positive research science.",
+      "source_receipts": {
+        "active_after": null,
+        "active_before": null,
+        "checkout_patch": null,
+        "collection": null,
+        "suite_environment": null
+      }
+    }
+  },
+  "full_suite_baseline_ready_score": 0,
+  "gate_check_summary": [
+    {
+      "check": "pytest_receipt",
+      "expected_value": "validated isolated environment",
+      "observed_value": "/tmp/carnot-exp6586-2eaz9gdw/collection-pytest-receipt.json",
+      "passed": false
+    }
+  ],
+  "honest_verdict": "blocked_isolated_environment: pytest_receipt",
+  "inference_substrate": "isolated_repo_test_execution_no_llm",
+  "low_cadence_ownership_contract": {
+    "conductor_change_required": false,
+    "experiment_launch_gate": false,
+    "model_load_gate": false,
+    "owner": "repository_maintainer",
+    "red_result_is_actionable_infrastructure_evidence": true,
+    "runs_outside_experiment_slots": true,
+    "schedule": "at_most_once_per_milestone_or_once_per_week"
+  },
+  "mutation_rows": [],
+  "planning_date": "20260825",
+  "preconditions_checked": {
+    "failed_check": "pytest_receipt",
+    "inference_substrate": "isolated_repo_test_execution_no_llm",
+    "observed_value": "/tmp/carnot-exp6586-2eaz9gdw/collection-pytest-receipt.json"
+  },
+  "protected_files_unchanged": {
+    "unchanged": null
+  },
+  "reproducibility_checksum": "sha256:26e04e7332a658b000a7d63076a1738bdeb6492b4e7327b179c8e9186951fb1d",
+  "rows": [],
+  "schema_version": "carnot.exp6586.isolated_full_suite_truth.v1",
+  "status": "isolated_environment_block",
+  "suite_command_receipt": {},
+  "suite_truth_baseline": {
+    "complete": false,
+    "ready_score": 0,
+    "state": "isolated_environment_block",
+    "verdict_class": "blocked"
+  },
+  "tests_run": [],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}

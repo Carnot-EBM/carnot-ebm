@@ -655,6 +655,11 @@ def _round_digest(rounds: object) -> list:
                 "skipped": r.get("skipped"),
                 "heldout_accuracy": r.get("heldout_accuracy"),
                 "accepted_by_heldout_verifier": r.get("accepted_by_heldout_verifier"),
+                # LEAVE THIS None WHEN THE KEY IS ABSENT -- do not default it to False.
+                # The writer sets a real bool only after planning ran, so absent means "this
+                # round skipped before the planner" and False means "the planner ran and found
+                # nothing". Collapsing the two rebuilds the masking defect this REQ removes,
+                # inside the instrument meant to expose it.
                 "plan_reaches_goal": r.get("plan_reaches_goal"),
                 "counterexample": _counterexample_digest(r.get("counterexample")),
             }
