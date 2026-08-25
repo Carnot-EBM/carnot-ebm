@@ -85,7 +85,9 @@ def test_sentinel_state_file_is_rewritten_on_a_clean_scan(tmp_path):
     spec2.loader.exec_module(ledger)
     lstate = tmp_path / "lstate.json"
     ledger.run(
-        report_path=tmp_path / "absent.md",
+        # The complete-map form. `report_path=` alone would isolate the claim
+        # audit and silently read the REAL tracked QA-layer report.
+        report_paths={n: tmp_path / "absent.md" for n in (ledger.AUDIT_NAME, ledger.QA_AUDIT_NAME)},
         ledger_path=tmp_path / "ledger.md",
         conductor_log=tmp_path / "log.md",
         known_issues=tmp_path / "ki.md",

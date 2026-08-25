@@ -187,7 +187,21 @@ def parse_qa_report(text: str, flagged: tuple[str, ...]) -> list[dict]:
             findings.append({"artifact": unit, "verdict": verdict})
 
     lines = text.splitlines()
+    in_flagged = False
     for index, line in enumerate(lines):
+        # The FLAGGED list is read ONLY inside its own section. Applied to the
+        # whole document the item pattern also matches the reviewer's prose --
+        # a reviewer comparing guards writes exactly this shape inside
+        # `## FINDINGS` -- and an append-only ledger cannot un-write a phantom
+        # row: it escalates weekly forever.
+        if line.startswith("###"):
+            in_flagged = "FLAGGED" in line
+        elif line.startswith("## "):
+            in_flagged = False
+        if in_flagged:
+            item = re.fullmatch(r"-\s+`([^`]+)`.*?\*\*([A-Z_]+)\*\*\s*", line)
+            if item:
+                add(item.group(1), item.group(2))
         heading = re.fullmatch(r"##\s+(\S.*?)\s*", line)
         if heading:
             for following in lines[index + 1 : index + 4]:
@@ -197,9 +211,6 @@ def parse_qa_report(text: str, flagged: tuple[str, ...]) -> list[dict]:
                 if verdict_line:
                     add(heading.group(1), verdict_line.group(1))
                 break
-        item = re.fullmatch(r"-\s+`([^`]+)`.*?\*\*([A-Z_]+)\*\*\s*", line)
-        if item:
-            add(item.group(1), item.group(2))
     return findings
 
 
@@ -265,8 +276,20 @@ def parse_ledger(text: str) -> tuple[list[dict], list[str]]:
     return entries, malformed
 
 
+def _normalize_artifact(name: str) -> str:
+    """Compare artifacts by basename.
+
+    A hand-entered row spells a guard `scripts/child_results_guard.py`; the
+    QA-layer report writes the bare `child_results_guard.py`. Two spellings of
+    one finding produced two rows on 2026-08-25, and an append-only ledger
+    cannot un-write them -- both escalate weekly until a human dispositions
+    each. Identity is the finding, not the spelling.
+    """
+    return name.strip().rsplit("/", 1)[-1]
+
+
 def _identity(entry: dict) -> tuple[str, str, str]:
-    return (entry["audit"], entry["artifact"], entry["verdict"])
+    return (entry["audit"], _normalize_artifact(entry["artifact"]), entry["verdict"])
 
 
 def append_new_rows(
@@ -285,7 +308,11 @@ def append_new_rows(
     else:
         known = set()
         prefix = _LEDGER_HEADER
-    fresh = [f for f in report_findings if (audit_name, f["artifact"], f["verdict"]) not in known]
+    fresh = [
+        f
+        for f in report_findings
+        if (audit_name, _normalize_artifact(f["artifact"]), f["verdict"]) not in known
+    ]
     if dry_run or not fresh:
         return len(fresh)
     with open(ledger_path, "a", encoding="utf-8") as fh:
@@ -387,6 +414,11 @@ def run(
         # later cannot silently leak a real report into an isolated run.
         # Isolating one source and inheriting the rest is how a test starts
         # reading tracked state without anyone noticing.
+        unknown = set(report_paths) - {s.name for s in SOURCES}
+        if unknown:
+            # A typo, or a stale literal after a rename, would otherwise
+            # select ZERO sources, append nothing, and return success.
+            raise KeyError(f"unknown audit source(s): {sorted(unknown)}")
         selected = [(s, report_paths[s.name]) for s in SOURCES if s.name in report_paths]
     appended = 0
     for source, path in selected:

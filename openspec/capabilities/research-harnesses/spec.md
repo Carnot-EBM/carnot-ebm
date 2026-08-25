@@ -8635,6 +8635,153 @@ emit no escalation for it and SHALL leave the row untouched.
 | REQ-CONDUCTOR-SENTINEL-3 | Implemented (same file: `escalate()` — log_step-format rows, known-issues sections for CRITICAL, fingerprint dedupe with 14-day re-arm, `last_scan_utc` receipt on every run; wired in `research_step` via `_run_audit_with_receipt` + the orphan-cleanup janitor above its conductor-liveness early-exit) | Implemented (same file + `tests/python/test_conductor_sentinel_wiring.py`; mutations: dedupe disabled -> RED, sentinel call unwired -> RED) |
 | REQ-OPS-AUDIT-LEDGER-1 | Implemented (`scripts/audit_findings_ledger.py`: append-only `ops/audit-findings-ledger.md`, 7-day aging, weekly re-bucket escalation, unrecognized dispositions fail closed; wired at milestone close after the claim audit with its own state-file receipt; E2E ingested the two real 2026-08-22 CLAIM_OVERSTATED findings) | Implemented (`tests/python/test_audit_findings_ledger.py`; mutations: idempotence broken -> RED, aging threshold absurd -> RED, week bucket frozen -> RED) |
 
+## REQ-OPS-AUDIT-LEDGER-2: The Ledger SHALL Ingest Every Milestone-Close Audit, Not One
+
+Origin: 2026-08-25. REQ-OPS-AUDIT-LEDGER-1 shipped reading a single
+report, `ops/experiment_claim_audit_report.md`. That was a pattern
+narrower than its own stated concept, "flagged audit verdicts someone
+must answer" — the exact class the QA-Layer Authenticity Discipline
+hunts, committed by the guard written to fix it. The module docstring
+cites the QA-layer audit's silent failure as the reason the ledger
+exists, and the ledger did not read the QA-layer audit.
+
+Measured cost: milestone closes `.572` and `.573` produced 7
+`SILENT_NON_FIRING` verdicts and the ledger ingested none. All 7 were
+hand-entered by the outer loop. The QA-layer report is REGENERATED at
+every close, so an un-ingested finding is overwritten, not merely
+unread.
+
+Rules:
+
+1. The ledger tool SHALL read a registry of audit sources, not one
+   hardcoded report. The registry SHALL include the claim audit and the
+   QA-layer authenticity audit.
+2. Each source's flagged-verdict set SHALL be IMPORTED from that
+   audit's own module. A copy in the ledger is forbidden: a copy is how
+   a ledger silently stops ingesting a verdict the audit still emits.
+3. An audit whose module exposes no importable flagged-verdict constant
+   SHALL be excluded, and the module SHALL state which audits are
+   excluded and why. Exclusion is a written decision, never a silence.
+4. The audit name SHALL be part of a row's identity, so two audits
+   flagging the same file name are two rows and neither dedups the
+   other away.
+5. A missing report SHALL be a no-op FOR THAT SOURCE. An audit that did
+   not run SHALL NOT make the ledger look answered.
+6. Existing `experiment_claim_audit` rows SHALL be unchanged. The
+   ledger stays append-only.
+
+#### SCENARIO-OPS-AUDIT-LEDGER-2-QA-INGEST
+
+Given a QA-layer report carrying a `SILENT_NON_FIRING` verdict absent
+from the ledger, the tool SHALL append exactly one OPEN row naming that
+unit, the verdict, and `qa_layer_authenticity_audit` as the audit.
+
+#### SCENARIO-OPS-AUDIT-LEDGER-2-NO-COLLISION
+
+Given two audits that flag the same artifact name, the tool SHALL
+append two rows, one per audit.
+
+#### SCENARIO-OPS-AUDIT-LEDGER-2-IMPORTED-VERDICTS
+
+For every registered source, the flagged set the ledger uses SHALL
+equal the constant in that audit's own module.
+
+#### SCENARIO-OPS-AUDIT-LEDGER-2-MISSING-REPORT
+
+Given a registered source whose report is absent, the tool SHALL append
+nothing for it and SHALL NOT close or silence any row.
+
+## REQ-OPS-MUTATION-PROOF-1: A Mutation Proof SHALL Be Exclusive, Verified Clean, And Never Inert
+
+Origin: 2026-08-25, observed. Two hand-run mutation proofs ran against
+one working tree at once. The tree carried
+`python/carnot/agentic/arc_executable_world_model.py:6466: pass  #
+MUTATED M6` — a line on the LIVE ARC scored path. `pass  # MUTATED` is
+valid Python that clears every hook, and the conductor commits on its
+own schedule with hooks skipped, so a checkpoint inside a mutation
+window publishes it silently. Readings were contaminated in both
+directions, and an 11-mutation proof set was voided.
+
+A second failure shares the origin: a proof run inside a `git worktree`
+copy is silently INERT here. The editable install
+(`__editable__.carnot_ebm-*.pth`) pins the ABSOLUTE path of the main
+checkout, so `carnot.*` resolves there from any worktree. The mutated
+file is never imported, every mutation reads GREEN, and the proof
+proves nothing while looking clean.
+
+This requirement covers the mutation-PROOF session only. It does NOT
+change `--snapshot`, `--check`, `--restore`, `--run`, or `--gate`, whose
+module docstring rejects a lock with a stated reason that still holds.
+
+Rules:
+
+1. A proof session SHALL be opened and closed explicitly, and SHALL
+   hold an exclusive lock between those two calls. A second open SHALL
+   be refused, naming the holding run, its target, and its start time.
+2. Reclaiming an abandoned lock SHALL be decided by AGE, not by holder
+   liveness. A session spans two CLI calls, so the process that wrote
+   the lock has always exited; a dead-holder rule reclaims every time
+   and locks nothing. A holder that IS running SHALL refuse regardless
+   of age. A reclaim SHALL be reported, never silent.
+3. Opening SHALL refuse when the tree already carries a mutation
+   marker, because that marker's effects would be attributed to the new
+   proof.
+4. Opening SHALL refuse when the target file is not the file the
+   interpreter imports for that module. Fail closed: an unresolvable
+   module refuses. A target with no importable module name SHALL be
+   declared not-applicable in words, not passed silently.
+5. Closing SHALL refuse while any mutation marker survives anywhere the
+   session could have touched, or while the target is not byte-identical
+   to its pre-mutation content. On refusal the lock SHALL be KEPT.
+6. An unreadable lock SHALL refuse. Unreadable is not unheld. Clearing
+   a wedged lock SHALL be an explicit command that reports what it
+   cleared.
+
+#### SCENARIO-OPS-MUTATION-PROOF-1-EXCLUSIVE
+
+Given an open proof session, a second open SHALL exit non-zero and name
+the holding run id and target.
+
+#### SCENARIO-OPS-MUTATION-PROOF-1-MARKER-SURVIVES
+
+Given a session whose tree carries a surviving `MUTATED` marker, close
+SHALL exit non-zero, name the file and line, and keep the lock.
+
+#### SCENARIO-OPS-MUTATION-PROOF-1-NOT-RESTORED
+
+Given a session whose target differs from its pre-mutation bytes, close
+SHALL exit non-zero even when no marker is present.
+
+#### SCENARIO-OPS-MUTATION-PROOF-1-INERT-WORKTREE
+
+Given a target under `python/` whose dotted module resolves to a
+different file, open SHALL exit non-zero and SHALL NOT take the lock.
+
+#### SCENARIO-OPS-MUTATION-PROOF-1-NOT-APPLICABLE
+
+Given a target with no importable `carnot.*` module name, the import-
+resolution check SHALL succeed while stating `NOT APPLICABLE` and that
+the target is loaded by explicit path. This decision SHALL NOT depend
+on whether the interpreter exposes the installed `carnot` checkout as
+a plain `sys.path` directory.
+
+#### SCENARIO-OPS-MUTATION-PROOF-1-FRESH-DEAD-HOLDER
+
+Given a lock whose recorded pid is not running but whose start time is
+within the stale window, open SHALL refuse.
+
+#### SCENARIO-OPS-MUTATION-PROOF-1-ABANDONED
+
+Given a lock older than the stale window, open SHALL reclaim it and
+SHALL print that the abandoned run's mutations may still be on disk.
+
+## Implementation Status (REQ-OPS-AUDIT-LEDGER-2, REQ-OPS-MUTATION-PROOF-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-OPS-AUDIT-LEDGER-2 | Implemented (`scripts/audit_findings_ledger.py`: `Source` registry + `SOURCES`, `parse_qa_report` reading per-unit `**Verdict:**` lines plus the `### FLAGGED` list SCOPED to that section — the item pattern also matches reviewer prose, and a phantom row in an append-only ledger is permanent; `source_flagged_verdicts` importing each audit's own constant; per-source `audit_name` in row identity; `_normalize_artifact` comparing by basename; `--qa-report` CLI; `report_paths` complete-map override that raises on an unknown key. `_load_module` now registers in `sys.modules`, without which `@dataclass` in the QA-layer audit made its constant unimportable — the actual blocker. Verified against the REAL `.573` report: 4 of 4 `SILENT_NON_FIRING` findings parsed. Excluded with reasons in-module: `verifier_authenticity_audit.py` (flagged set is a function local), `artifact_convention_audit.py` (positional slice, no name). Added to `qa_layer_authenticity_audit.py` `GUARD_TARGETS`, moving the unit count 181 -> 182 so `units_signature` mismatches and rotation resets to 0. | `tests/python/test_audit_findings_ledger.py` 11 -> 23; mutations M1/M2/M3/M4/M9/M10 each RED on removal, GREEN on byte-identical restore |
+| REQ-OPS-MUTATION-PROOF-1 | Implemented (`scripts/test_suite_mutation_check.py`: `PROOF_LOCK` under `--git-common-dir` so ~10 worktrees share ONE lock; `PROOF_LOCK_STALE_S` = 12 h; `_proof_lock_is_stale`; `check_target_is_live` resolving through `sys.path` rather than `find_spec`, which imported 90 carnot modules inside a test; `surviving_markers` over `git status --porcelain -uall -z` PLUS everything committed since `head_at_begin`; `_MARKER_SCAN_SUFFIXES` limiting the scan to files that RUN; `cmd_mutation_begin` / `cmd_mutation_end` / `cmd_mutation_force_unlock`; `cmd_gate` refuses while a session is open. Additive — no existing mode changed. Three defects were found AFTER the first build and are each pinned by a regression test: reclaim keyed on holder liveness locked nothing, scanning prose bricked the tool against this project's own spec and changelog, and an unpinned `--mutation-end` closed any open session. | `tests/python/test_test_suite_mutation_check.py` 44 -> 72; mutations M5/M6/M7/M8 and M11-M18 each RED on removal, GREEN on byte-identical restore |
+
 ## REQ-OPS-REBUILD-PRESERVE-1: Analyzer Rebuilds SHALL Carry Hand-Authored Keys Forward, Not Regenerate Them Away
 
 Origin: three independent hits on 2026-08-21. The `scripts/analyze_*.py`

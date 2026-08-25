@@ -200,6 +200,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import hashlib
 import json
 import os
 import time
@@ -1020,6 +1021,501 @@ def cmd_run(argv: list[str], do_restore: bool) -> int:
     return 1
 
 
+# --- MUTATION-PROOF SESSIONS: the OTHER thing this file is used for ------------------------------
+# Everything above answers "did a test run rewrite tracked files". A mutation PROOF is a different
+# activity that shares the word: an agent deletes a guard's pattern by hand, runs the suite,
+# expects RED, then restores. CLAUDE.md requires that proof for every new guard. Nothing enforced
+# it, and on 2026-08-25 two proofs ran against this working tree at once. The tree carried
+#
+#     python/carnot/agentic/arc_executable_world_model.py:6466: pass  # MUTATED M6
+#
+# on the LIVE ARC scored path. `pass  # MUTATED` is valid Python that clears every hook, and the
+# conductor commits `git add -A --no-verify` on its own schedule, so a checkpoint inside a mutation
+# window publishes it silently. Readings were contaminated both ways -- a RED credited to your own
+# deleted pattern can be the other harness's mutation -- and an 11-mutation proof set was voided.
+#
+# These three checks are additive and touch none of the paths above. The module docstring rejects a
+# lock for --snapshot/<work>/--check, and that reasoning stands: it spans two processes with
+# arbitrary work between them, and serialising a diagnostic is worse than the race. A proof session
+# is the opposite shape -- deliberately exclusive, explicitly begun and ended -- so it gets a lock.
+def _proof_lock_path() -> Path:
+    """One lock per REPOSITORY, not per checkout.
+
+    `REPO` is this file's own checkout, and this repo has ~10 live worktrees
+    sharing one venv whose editable .pth pins ONE checkout. A per-checkout lock
+    is therefore void in exactly the workflow the project uses for proofs: agent
+    A in the main tree and agent B in a worktree would each hold their own lock
+    and never see each other. `--git-common-dir` is shared by every worktree, so
+    a lock under it is shared too. Falls back to this checkout when git cannot
+    answer -- degraded, but never worse than the per-checkout version.
+    """
+    try:
+        common = _git("rev-parse", "--git-common-dir").strip()
+    except (GitError, OSError):
+        return REPO / "ops" / ".test_suite_mutation_proof.lock"
+    root = Path(common)
+    if not root.is_absolute():
+        root = (REPO / root).resolve()
+    return root / "carnot_mutation_proof.lock"
+
+
+PROOF_LOCK = _proof_lock_path()
+
+#: The marker convention agents write into a mutated line. Scanned for at session end.
+MUTATION_MARKER = "MUTATED"
+
+#: How long an unclosed session may sit before another may reclaim it. Age is the ONLY real
+#: protection here (see _proof_lock_is_stale), so this must exceed the longest honest proof, not
+#: the typical one: an 11-mutation set that re-runs the suite per mutation is hours, and the
+#: 2 h first guess would have reclaimed a live session mid-set. Twelve hours is longer than any
+#: proof and still shorter than forever, because a lock nobody can clear is its own outage.
+PROOF_LOCK_STALE_S = 12 * 60 * 60
+
+#: Only files that RUN can carry a damaging mutation. Prose that quotes the marker -- this
+#: project's spec, changelog and research notes all describe the incident verbatim -- is not a
+#: mutation, and scanning it bricked the tool against its own documentation on first use.
+_MARKER_SCAN_SUFFIXES = frozenset({".py", ".pyi", ".rs", ".sh", ".bash", ".js", ".ts"})
+
+#: The two files that must contain the literal marker to DEFINE and TEST the scan. Everything else
+#: is scanned. An allow-list, not an extension filter, so the scan stays as wide as its concept.
+_MARKER_SCAN_EXEMPT = frozenset(
+    {
+        "scripts/test_suite_mutation_check.py",
+        "tests/python/test_test_suite_mutation_check.py",
+    }
+)
+
+#: Files larger than this are reported as UNSCANNED rather than skipped silently. A marker hides
+#: just as well in a file nobody looked at as in one nobody checked.
+_MARKER_SCAN_MAX_BYTES = 2_000_000
+
+
+def _sha256(path: Path) -> str | None:
+    """Content hash, or None when it cannot be read. None never compares
+    equal to a recorded hash, so an unreadable target fails the restore
+    check rather than passing it."""
+    try:
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
+def _pid_alive(pid: int) -> bool | None:
+    """True / False / None when it cannot be known.
+
+    None is not "probably dead". The caller REFUSES on None, because a lock
+    whose holder cannot be checked is a lock that must be honoured.
+    """
+    try:
+        return Path(f"/proc/{pid}").exists()
+    except OSError:
+        return None
+
+
+def _module_dotted_name(target: Path) -> str | None:
+    """The dotted name `target` would be imported as, or None if it has none.
+
+    Only files under `python/` are importable as `carnot.*`. A script under
+    `scripts/` is loaded by explicit path, so no resolution ambiguity exists
+    for the inert check to find.
+    """
+    try:
+        rel = target.resolve().relative_to((REPO / "python").resolve())
+    except ValueError:
+        return None
+    parts = list(rel.with_suffix("").parts)
+    if parts and parts[-1] == "__init__":
+        parts.pop()
+    return ".".join(parts) if parts else None
+
+
+def _is_under(path: Path, root: Path) -> bool:
+    try:
+        path.resolve().relative_to(root.resolve())
+    except ValueError:
+        return False
+    return True
+
+
+def _installed_package_root() -> Path | None:
+    """The directory the interpreter will import `carnot` from.
+
+    Replicates the finder's own search over `sys.path` rather than calling
+    `importlib.util.find_spec`, which IMPORTS every parent package -- measured
+    at 90 carnot modules, several of them experiment modules, inside a test.
+    That is the write vector the Test-Run Record Integrity Discipline names, so
+    the check must not use it.
+    """
+    for entry in sys.path:
+        if not entry:
+            continue
+        if (Path(entry) / "carnot" / "__init__.py").exists():
+            return Path(entry).resolve()
+    return None
+
+
+def check_target_is_live(target: Path) -> tuple[bool, str]:
+    """(ok, explanation) -- would mutating this file change what the tests import?
+
+    THE INERT-RUN TRAP. A proof run inside a `git worktree` copy is silently
+    inert here: `.venv/.../__editable__.carnot_ebm.pth` holds the ABSOLUTE path
+    of the MAIN checkout, so `carnot.*` resolves there from any worktree. The
+    mutated file is never imported, every mutation reads GREEN, and the proof
+    proves nothing while looking clean.
+
+    Fails CLOSED: an unresolvable module refuses. A guard that passes while
+    measuring nothing is the failure this whole file exists for.
+    """
+    target = target.resolve()
+    if not target.exists():
+        return False, f"target does not exist: {target}"
+    dotted = _module_dotted_name(target)
+
+    # No importable dotted name means this check is NOT APPLICABLE. Decide that before trying to
+    # resolve the installed package root: a hermetic runner may expose `carnot` through an import
+    # hook instead of a plain sys.path directory, but that has no bearing on a script loaded by
+    # explicit path. Refusing in that environment turns an inapplicable check into a false gate.
+    if dotted is None:
+        reason = (
+            "NOT APPLICABLE -- the target has no importable `carnot.*` module name and is "
+            f"loaded by explicit path: {target}."
+        )
+        root = _installed_package_root()
+        if root is None:
+            return True, (
+                f"{reason}\n"
+                "  The installed `carnot` checkout is not exposed as a sys.path directory; "
+                "that does\n"
+                "  not make this explicit-path target subject to Python import diversion."
+            )
+        # Outside python/. Resolution depends on WHO loads the file, and that cannot be known
+        # from here: pytest collecting in this rootdir reaches the local copy, but an installed
+        # carnot module deriving its own repo root from __file__ may reach the installed copy.
+        if not _is_under(target, root.parent):
+            return True, (
+                f"{reason}\n"
+                f"  CAUTION: `carnot` resolves to a DIFFERENT checkout ({root.parent}). A loader\n"
+                "  that derives its own repo root will reach that copy, not this one. Confirm by\n"
+                "  import which file your tests load before trusting a single reading."
+            )
+        return True, f"{reason}\n  It is in the checkout `carnot` resolves to ({root.parent})."
+
+    root = _installed_package_root()
+    if root is None:
+        return False, "cannot tell which checkout `carnot` resolves to; sys.path has no carnot"
+    loaded = root.joinpath(*dotted.split(".")).with_suffix(".py")
+    if not loaded.exists():
+        loaded = root.joinpath(*dotted.split("."), "__init__.py")
+    if loaded.resolve() != target:
+        return False, (
+            f"INERT RUN -- the interpreter imports {dotted} from\n"
+            f"    {loaded}\n"
+            f"  but you are about to mutate\n"
+            f"    {target}\n"
+            "  Every mutation would read GREEN while measuring nothing. This is the\n"
+            "  worktree trap: the editable install pins an absolute path to the main\n"
+            "  checkout, so a worktree copy is never the file under test. Run the proof\n"
+            "  in the checkout the install points at, or repoint it."
+        )
+    return True, f"{dotted} resolves to the file being mutated"
+
+
+def _scan_paths_for_markers(paths: list[Path]) -> tuple[list[str], list[str]]:
+    """(hits, unscanned). A hit is 'path:line: text'."""
+    hits: list[str] = []
+    unscanned: list[str] = []
+    for path in paths:
+        try:
+            rel = str(path.resolve().relative_to(REPO))
+        except ValueError:
+            rel = str(path)
+        if rel in _MARKER_SCAN_EXEMPT or not path.is_file():
+            continue
+        if path.suffix not in _MARKER_SCAN_SUFFIXES:
+            continue
+        try:
+            if path.stat().st_size > _MARKER_SCAN_MAX_BYTES:
+                unscanned.append(f"{rel} (too large)")
+                continue
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError) as exc:
+            unscanned.append(f"{rel} ({type(exc).__name__})")
+            continue
+        for number, line in enumerate(text.splitlines(), start=1):
+            if MUTATION_MARKER in line:
+                hits.append(f"{rel}:{number}: {line.strip()[:120]}")
+    return hits, unscanned
+
+
+def _status_paths() -> list[Path]:
+    """Every path git currently reports as changed or untracked.
+
+    `-uall` lists files INSIDE a new directory. Plain `--porcelain` collapses a
+    wholly-untracked directory to one `dir/` entry, which is not a file, so the
+    whole subtree was skipped -- and a scratch copy of the file under mutation
+    lives in exactly such a directory. `-z` avoids the C-quoting that mangles a
+    non-ASCII path into one that does not exist, which the scan then drops.
+    """
+    out = _git("status", "--porcelain", "-uall", "-z")
+    paths: list[Path] = []
+    for record in out.split("\0"):
+        if len(record) < 4:
+            continue
+        name = record[3:]
+        if name:
+            paths.append(REPO / name)
+    return paths
+
+
+def _paths_changed_since(commit: str | None) -> list[Path]:
+    """Files changed since the commit HEAD pointed at when the session opened.
+
+    THE ORIGIN MECHANISM, and `git status` cannot see it: the conductor commits
+    on its own schedule, so a marker swept into a mid-session commit leaves the
+    working tree CLEAN. Closing on `git status` alone would report no marker
+    while the marker sits in HEAD -- published, which is worse than uncommitted.
+    """
+    if not commit:
+        return []
+    try:
+        out = _git("diff", "--name-only", "-z", f"{commit}..HEAD")
+    except GitError:
+        # Fail closed at the caller: an unanswerable git is reported, never
+        # silently treated as "nothing changed".
+        raise
+    return [REPO / n for n in out.split("\0") if n]
+
+
+def surviving_markers(
+    target: Path | None, since_commit: str | None = None
+) -> tuple[list[str], list[str]]:
+    """Markers left anywhere the session could have touched.
+
+    Blast radius: the working tree's changed and untracked files, everything
+    committed since the session opened, plus the declared target -- checked even
+    when clean, because clean is what a restored file looks like.
+    """
+    candidates: list[Path] = []
+    if target is not None:
+        candidates.append(target)
+    candidates.extend(_status_paths())
+    candidates.extend(_paths_changed_since(since_commit))
+    unique = {p.resolve(): p for p in candidates if p.exists()}
+    return _scan_paths_for_markers(list(unique.values()))
+
+
+def _read_proof_lock() -> dict | None:
+    try:
+        return json.loads(PROOF_LOCK.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return None
+    except (OSError, json.JSONDecodeError):
+        # Unreadable is NOT unheld. Signalled with a sentinel so the caller
+        # refuses rather than reclaiming a lock it cannot read.
+        return {"__unreadable__": True}
+
+
+def _proof_lock_is_stale(held: dict) -> tuple[bool, str]:
+    """(reclaimable, why) for a held lock.
+
+    LIVENESS ALONE CANNOT DECIDE THIS, and assuming it could is a defect this
+    function exists to correct. A proof session spans two CLI calls with the
+    agent's hand-editing in between, so the process that wrote the lock has
+    ALWAYS exited by the time anyone reads it. A dead-holder-means-reclaim rule
+    therefore reclaims every time and locks nothing -- measured, not argued:
+    the first build of this printed "mutation-proof session OPEN" for a second
+    caller while the first session was still notionally open.
+
+    So the rule is AGE, with liveness kept only as an extra refusal: a holder
+    that IS still running refuses regardless of age. Fail direction is toward
+    REFUSING -- an unreadable timestamp is not an expired one.
+    """
+    if held.get("host") == os.uname().nodename:
+        alive = _pid_alive(int(held.get("pid", -1)))
+        if alive:
+            return False, f"pid {held.get('pid')} is still running"
+        if alive is None:
+            # Honours _pid_alive's stated contract. Unknowable liveness is a
+            # lock that must be honoured, not one that falls through to age.
+            return False, f"pid {held.get('pid')} liveness could not be checked"
+    started = held.get("started_at")
+    if not started:
+        return False, "no start time recorded, so age cannot be checked"
+    try:
+        age = (datetime.now(UTC) - datetime.fromisoformat(started)).total_seconds()
+    except (TypeError, ValueError):
+        return False, f"unreadable start time {started!r}"
+    if age < PROOF_LOCK_STALE_S:
+        return False, f"open for {age / 60:.0f} min"
+    return True, f"abandoned {age / 3600:.1f} h ago"
+
+
+def cmd_mutation_force_unlock() -> int:
+    """Deliberate override. Explicit so a wedged lock never needs `rm`, and
+    auditable so nobody clears one by reflex."""
+    held = _read_proof_lock()
+    if held is None:
+        print("test-suite-mutation-check: no mutation-proof lock to clear.")
+        return 0
+    PROOF_LOCK.unlink(missing_ok=True)
+    print(f"test-suite-mutation-check: mutation-proof lock CLEARED by hand.\n  was: {held}")
+    print("  Any mutation it left is still in the tree. Read `git status` now.")
+    return 0
+
+
+def cmd_mutation_begin(target_arg: str | None, run_id: str | None) -> int:
+    """Open an exclusive mutation-proof session. Fails CLOSED throughout."""
+    if not target_arg:
+        print("test-suite-mutation-check: REFUSING -- --mutation-begin needs --mutation-target.")
+        print("  The target is what the inert-run check resolves; without it nothing is proven.")
+        return 1
+    target = Path(target_arg)
+    if not target.is_absolute():
+        target = REPO / target
+
+    held = _read_proof_lock()
+    if held is not None:
+        if held.get("__unreadable__"):
+            print(f"test-suite-mutation-check: REFUSING -- {PROOF_LOCK.name} is unreadable.")
+            print("  Unreadable is not unheld. Inspect it by hand and delete it deliberately.")
+            return 1
+        reclaim, why_stale = _proof_lock_is_stale(held)
+        if not reclaim:
+            print("test-suite-mutation-check: REFUSING -- a mutation proof is already open.")
+            print(
+                f"  held by pid {held.get('pid')}  run id {held.get('run_id')}\n"
+                f"  target      {held.get('target')}\n"
+                f"  started     {held.get('started_at')}  ({why_stale})\n"
+                "  Two concurrent proofs contaminate each other's readings in BOTH directions:\n"
+                "  a RED you credit to your own deleted pattern can be the other run's mutation.\n"
+                "  Close it with --mutation-end, or override with --mutation-force-unlock."
+            )
+            return 1
+        # Loud, never silent: the abandoned run's mutations may still be on disk.
+        print(
+            f"test-suite-mutation-check: reclaiming an abandoned lock ({why_stale})\n"
+            f"  pid {held.get('pid')}, run id {held.get('run_id')}, target {held.get('target')}.\n"
+            "  Its mutations may still be in the tree -- read `git status` before trusting\n"
+            "  anything this session measures."
+        )
+        PROOF_LOCK.unlink(missing_ok=True)
+
+    ok, why = check_target_is_live(target)
+    if not ok:
+        print(f"test-suite-mutation-check: REFUSING -- {why}")
+        return 1
+
+    leftovers, unscanned = surviving_markers(target)
+    if leftovers:
+        print("test-suite-mutation-check: REFUSING -- a MUTATION marker is already in the tree.")
+        for hit in leftovers[:20]:
+            print(f"    {hit}")
+        print("  Starting here would attribute someone else's mutation to your proof.")
+        return 1
+    if unscanned:
+        # An unlooked-at file is not a clean file. The constant's own comment says a marker
+        # hides just as well in one, so the list is a refusal here, not an advisory.
+        print("test-suite-mutation-check: REFUSING -- file(s) could not be scanned for markers.")
+        for name in unscanned[:20]:
+            print(f"    {name}")
+        return 1
+
+    rid = resolve_run_id(run_id)
+    try:
+        head = _git("rev-parse", "HEAD").strip()
+    except GitError:
+        head = ""  # reported at close; see _paths_changed_since
+    payload = {
+        "run_id": rid,
+        "pid": os.getpid(),
+        "ppid": os.getppid(),
+        "host": os.uname().nodename,
+        "target": str(target),
+        "target_sha": _sha256(target),
+        "head_at_begin": head,
+        "started_at": datetime.now(UTC).isoformat(),
+    }
+    PROOF_LOCK.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        # O_EXCL: the acquire is atomic, so two simultaneous --mutation-begin calls cannot both win.
+        fd = os.open(PROOF_LOCK, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+    except FileExistsError:
+        print("test-suite-mutation-check: REFUSING -- another session took the lock just now.")
+        return 1
+    with os.fdopen(fd, "w", encoding="utf-8") as fh:
+        json.dump(payload, fh, indent=2)
+    print("test-suite-mutation-check: mutation-proof session OPEN")
+    print(f"  run id  {rid}\n  target  {target}\n  live    {why}")
+    print(f"  end it with: python3 scripts/test_suite_mutation_check.py --mutation-end")
+    return 0
+
+
+def cmd_mutation_end(run_id: str | None) -> int:
+    """Close the session, verifying the tree carries nothing the proof left."""
+    held = _read_proof_lock()
+    if held is None:
+        print("test-suite-mutation-check: REFUSING -- no mutation-proof session is open.")
+        print(
+            "  Nothing to verify: a session that was never begun recorded no target and no\n"
+            "  pre-mutation hash, so 'restored' would be a guess."
+        )
+        return 1
+    if held.get("__unreadable__"):
+        print(f"test-suite-mutation-check: REFUSING -- {PROOF_LOCK.name} is unreadable.")
+        return 1
+    wanted = read_run_id(run_id)
+    if not wanted:
+        # Fail closed, the same shape as --check refusing without a baseline. An unpinned
+        # --mutation-end used to skip the ownership test entirely, so any second agent in a
+        # fresh shell closed whoever's session was open -- and if it landed between two
+        # mutations the tree looked clean, so it succeeded. That IS the incident, rebuilt.
+        print("test-suite-mutation-check: REFUSING -- no run id, so ownership cannot be checked.")
+        print(
+            "  Closing an unidentified session would let one agent end another's proof.\n"
+            f"  Pass --run-id <id>, or export ${RUN_ID_ENV} for the whole workflow.\n"
+            f"  The open session's id is: {held.get('run_id')}"
+        )
+        return 1
+    if held.get("run_id") != wanted:
+        print("test-suite-mutation-check: REFUSING -- that lock belongs to another run.")
+        print(f"  held by run id {held.get('run_id')}, you asked for {wanted}.")
+        return 1
+
+    target = Path(held["target"]) if held.get("target") else None
+    problems: list[str] = []
+
+    hits, unscanned = surviving_markers(target, held.get("head_at_begin"))
+    if hits:
+        problems.append(f"{len(hits)} surviving {MUTATION_MARKER} marker(s)")
+    if unscanned:
+        problems.append(f"{len(unscanned)} file(s) that could not be scanned")
+
+    if target is not None and held.get("target_sha"):
+        now = _sha256(target)
+        if now != held["target_sha"]:
+            problems.append("target is NOT byte-identical to its pre-mutation content")
+
+    if problems:
+        print("test-suite-mutation-check: SESSION NOT CLEAN -- " + "; ".join(problems))
+        for hit in hits[:40]:
+            print(f"    {hit}")
+        if target is not None and held.get("target_sha") and _sha256(target) != held["target_sha"]:
+            print(f"    {target} differs from its pre-mutation bytes")
+        if unscanned:
+            print(f"  {len(unscanned)} file(s) not scanned: {', '.join(unscanned[:5])}")
+        print(
+            "\n  The lock is KEPT so this cannot be left behind. `pass  # "
+            f"{MUTATION_MARKER}` is valid\n"
+            "  Python that clears every hook, and the conductor commits on its own schedule.\n"
+            "  Restore the file, then re-run --mutation-end."
+        )
+        return 1
+
+    PROOF_LOCK.unlink(missing_ok=True)
+    print("test-suite-mutation-check: mutation-proof session CLOSED -- tree carries no marker")
+    return 0
+
+
 def cmd_gate() -> int:
     """The pre-commit interlock. Exit 1 refuses the commit.
 
@@ -1036,6 +1532,16 @@ def cmd_gate() -> int:
             print(f"test-suite-mutation-check: pruned {n} spent file(s), {freed / 1048576:.0f} MB")
     except Exception:  # noqa: BLE001
         pass
+    # A commit taken mid-proof is how a mutated line reaches the record. The hook cannot stop a
+    # run that skips hooks, but it can stop the hook-respecting case, which is reachable.
+    if PROOF_LOCK.exists():
+        held = _read_proof_lock() or {}
+        print("test-suite-mutation-check: REFUSING THE COMMIT -- a mutation proof is open.")
+        print(
+            f"  run id {held.get('run_id')}, target {held.get('target')}.\n"
+            "  Committing now can publish a mutated line. Close it with --mutation-end."
+        )
+        return 1
     try:
         blocking = prune_stale_markers()
     except GitError as exc:
@@ -1150,10 +1656,39 @@ def main(argv: list[str] | None = None) -> int:
             f"Defaults to ${RUN_ID_ENV} if set, else an id derived from the parent shell."
         ),
     )
+    ap.add_argument(
+        "--mutation-begin",
+        action="store_true",
+        help="open an exclusive mutation-PROOF session (needs --mutation-target)",
+    )
+    ap.add_argument(
+        "--mutation-end",
+        action="store_true",
+        help="close the proof session; refuses while a MUTATED marker survives",
+    )
+    ap.add_argument(
+        "--mutation-target",
+        default=None,
+        help="the file the proof will mutate; resolved against what the interpreter imports",
+    )
+    ap.add_argument(
+        "--mutation-force-unlock",
+        action="store_true",
+        help="clear a wedged proof lock deliberately (prints what it cleared)",
+    )
     ap.add_argument("command", nargs=argparse.REMAINDER, help="the command to run (after --)")
     a = ap.parse_args(argv)
 
     try:
+        if a.mutation_begin and a.mutation_end:
+            ap.error("--mutation-begin and --mutation-end are separate calls")
+        if a.mutation_force_unlock:
+            return cmd_mutation_force_unlock()
+        if a.mutation_begin:
+            return cmd_mutation_begin(a.mutation_target, a.run_id)
+        if a.mutation_end:
+            return cmd_mutation_end(a.run_id)
+
         if a.gate:
             return cmd_gate()
 
