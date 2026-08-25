@@ -16,9 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (80 modul
 
 ## Hostile LLM review
 
-TL;DR: No recent solve artifacts exist to classify; zero evidence of new live self-discovery capability.
+TL;DR: **UNCLEAR / NO ADVANCE** — zero recent solve artifacts means there is no evidence of new live self-discovery capability. Reachability lint only proves code-path access, not autonomous solving.
 
-Per-artifact: None (0 artifacts in the last 7 days).
+Per-artifact: None — no artifacts were produced in the last seven days.
 
-Pattern watch: Reachability passed, but reachability alone proves nothing about autonomous discovery. Require future solve artifacts to show the live entrypoint, agent-generated attempts, runtime observations, model updates, and the successful action trace—without source access, offline ground-truth BFS, or hand-built per-game logic.
+Pattern watch: No outer-loop drift is evidenced, but there is also nothing to validate. Require future solve artifacts to capture live-entrypoint execution, attempt history, runtime observations, and provenance showing the agent—not a human, source reader, or offline BFS—discovered the solution.
 
