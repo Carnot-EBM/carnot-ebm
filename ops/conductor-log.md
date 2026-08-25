@@ -16470,3 +16470,4 @@ code |
 | 2026-08-25 18:37 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 675677 serves 'Qwen3.6-35B-A3B-UD-Q4_K_M.gguf', live pin is 'Qwen3.8-2 |
 | 2026-08-25 19:15 UTC | Qwen3.6 direct baseline headroom qualification | FAIL | Post-tests failed: bad_checksum["tests_run"] = [{"command": "changed", "outcome" |
 | 2026-08-25 19:17 UTC | Qwen3.6 direct baseline headroom qualification | OK | Deliverable already exists in repo |
+| 2026-08-25 19:17 UTC | Gemma 4 31B direct baseline headroom qualification | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
