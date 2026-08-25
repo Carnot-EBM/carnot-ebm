@@ -24,6 +24,7 @@ from typing import Any
 
 from carnot import experiment_5340_utility_weighted_context_memory_v487 as exp5340
 from carnot import experiment_5341_bounded_compressor_drift_monitor_v487 as exp5341
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -35,15 +36,9 @@ MILESTONE = "v488"
 SCHEMA = "carnot.experiment_5355.dependency_provenance_self_learning.v488"
 RUN_DATE = "2026-07-07"
 RANDOM_SEED = 5355
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5355_dependency_provenance_self_learning_v488.json"
-)
-EXP5340_RELATIVE_PATH = Path(
-    "results/experiment_5340_utility_weighted_context_memory_v487.json"
-)
-EXP5341_RELATIVE_PATH = Path(
-    "results/experiment_5341_bounded_compressor_drift_monitor_v487.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5355_dependency_provenance_self_learning_v488.json")
+EXP5340_RELATIVE_PATH = Path("results/experiment_5340_utility_weighted_context_memory_v487.json")
+EXP5341_RELATIVE_PATH = Path("results/experiment_5341_bounded_compressor_drift_monitor_v487.json")
 EXP5342_QUARANTINED_RELATIVE_PATH = Path(
     "results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json"
 )
@@ -81,39 +76,25 @@ REQUIRED_FIELD_PRINCIPLES = {
     "milestone": "Prevents `.487` quarantined scale-up evidence from being reused.",
     "status": "Lets gates distinguish clean fixture from blocked implementation.",
     "honest_verdict": (
-        "Terminal prefix `complete:` or `blocked_` prevents ambiguous "
-        "self-learning status."
+        "Terminal prefix `complete:` or `blocked_` prevents ambiguous self-learning status."
     ),
-    "inference_substrate": (
-        "Expected value is deterministic_dependency_provenance."
-    ),
+    "inference_substrate": ("Expected value is deterministic_dependency_provenance."),
     "continuous_self_learning_target": (
-        "Bare boolean must be true because this advances FR-11 without weight "
-        "mutation."
+        "Bare boolean must be true because this advances FR-11 without weight mutation."
     ),
-    "no_weight_mutation": (
-        "Bare boolean must be true to preserve frozen-model discipline."
-    ),
+    "no_weight_mutation": ("Bare boolean must be true to preserve frozen-model discipline."),
     "dependency_edge_count": "Bare integer proves the graph exists.",
     "dependency_edge_recall": "Bare numeric measures missing provenance edges.",
-    "dependency_edge_precision": (
-        "Bare numeric measures spurious provenance edges."
-    ),
+    "dependency_edge_precision": ("Bare numeric measures spurious provenance edges."),
     "point_in_time_reconstruction_rate": (
         "Bare numeric proves provenance can reconstruct past state."
     ),
     "execution_feedback_attribution_rate": (
         "Bare numeric separates outcome feedback from memory hygiene."
     ),
-    "memory_hygiene_delta": (
-        "Bare numeric kept distinct from efficiency and feedback metrics."
-    ),
-    "context_efficiency_delta": (
-        "Bare numeric kept distinct from hygiene and feedback metrics."
-    ),
-    "duplicated_metric_pairs": (
-        "Lists exact duplicated values to catch TAUTOLOGY regressions."
-    ),
+    "memory_hygiene_delta": ("Bare numeric kept distinct from efficiency and feedback metrics."),
+    "context_efficiency_delta": ("Bare numeric kept distinct from hygiene and feedback metrics."),
+    "duplicated_metric_pairs": ("Lists exact duplicated values to catch TAUTOLOGY regressions."),
     "unsafe_false_accepts": "Bare integer prevents bad memory from being accepted.",
     "dependency_provenance_ready": "Bare boolean gates self-learning scale-up.",
     "tests_run": "Lists graph, rollback, and schema tests.",
@@ -221,8 +202,7 @@ def confirm_source_fixture_readiness(root: Path | str = REPO_ROOT) -> JsonDict:
             and compressor.get("no_weight_mutation") is True
         ),
         "unsafe_upstream_accepts_zero": (
-            utility.get("unsafe_false_accepts") == 0
-            and compressor.get("unsafe_commits") == 0
+            utility.get("unsafe_false_accepts") == 0 and compressor.get("unsafe_commits") == 0
         ),
     }
     failed = [name for name, passed in checks.items() if not passed]
@@ -234,9 +214,7 @@ def confirm_source_fixture_readiness(root: Path | str = REPO_ROOT) -> JsonDict:
         "source_artifacts": [str(EXP5340_RELATIVE_PATH), str(EXP5341_RELATIVE_PATH)],
         "excluded_artifacts": [str(EXP5342_QUARANTINED_RELATIVE_PATH)],
         "utility_source_honest_verdict": _wrapped_value(utility.get("honest_verdict")),
-        "compressor_source_honest_verdict": _wrapped_value(
-            compressor.get("honest_verdict")
-        ),
+        "compressor_source_honest_verdict": _wrapped_value(compressor.get("honest_verdict")),
     }
 
 
@@ -374,17 +352,13 @@ def evaluate_dependency_provenance(
             policy_metrics["baseline_context_memory"]["context_efficiency"],
         ),
         "unsafe_false_accepts": sum(
-            1
-            for case in cases
-            if not case.safe_expected and case.final_decision == "accept"
+            1 for case in cases if not case.safe_expected and case.final_decision == "accept"
         ),
         "graph_integrity": graph_integrity,
         "execution_feedback_rows": _execution_feedback_rows(cases),
         "memory_hygiene_rows": _memory_hygiene_rows(cases),
         "fault_cases": [
-            case.as_dict()
-            for case in cases
-            if case.case_type in {"missing_edge", "cyclic"}
+            case.as_dict() for case in cases if case.case_type in {"missing_edge", "cyclic"}
         ],
         "policy_metrics": policy_metrics,
     }
@@ -409,11 +383,7 @@ def build_result_artifact(
         and source_gate["no_weight_mutation"]
         and tests_run
     )
-    status = (
-        "dependency_provenance_ready"
-        if complete
-        else "blocked_dependency_provenance_gate"
-    )
+    status = "dependency_provenance_ready" if complete else "blocked_dependency_provenance_gate"
     artifact: JsonDict = {
         "schema": SCHEMA,
         "experiment": EXPERIMENT,
@@ -435,12 +405,8 @@ def build_result_artifact(
         "dependency_edge_count": audit["dependency_edge_count"],
         "dependency_edge_recall": audit["dependency_edge_recall"],
         "dependency_edge_precision": audit["dependency_edge_precision"],
-        "point_in_time_reconstruction_rate": audit[
-            "point_in_time_reconstruction_rate"
-        ],
-        "execution_feedback_attribution_rate": audit[
-            "execution_feedback_attribution_rate"
-        ],
+        "point_in_time_reconstruction_rate": audit["point_in_time_reconstruction_rate"],
+        "execution_feedback_attribution_rate": audit["execution_feedback_attribution_rate"],
         "memory_hygiene_delta": audit["memory_hygiene_delta"],
         "context_efficiency_delta": audit["context_efficiency_delta"],
         "duplicated_metric_pairs": duplicated_metric_pairs,
@@ -449,12 +415,8 @@ def build_result_artifact(
         "tests_run": _wrap("tests_run", [dict(row) for row in tests_run]),
         "source_gate": source_gate,
         "dependency_cases": [case.as_dict() for case in audit["cases"]],
-        "expected_dependency_edges": [
-            edge.as_dict() for edge in audit["expected_edges"]
-        ],
-        "observed_dependency_edges": [
-            edge.as_dict() for edge in audit["observed_edges"]
-        ],
+        "expected_dependency_edges": [edge.as_dict() for edge in audit["expected_edges"]],
+        "observed_dependency_edges": [edge.as_dict() for edge in audit["observed_edges"]],
         "final_dependency_edges": [edge.as_dict() for edge in audit["final_edges"]],
         "graph_integrity": audit["graph_integrity"],
         "execution_feedback_rows": audit["execution_feedback_rows"],
@@ -507,9 +469,10 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     for field in BARE_NUMERIC_FIELDS:
         if not _is_numeric(artifact.get(field)):
             raise ValueError(f"{field} must be bare numeric")
-    if not isinstance(artifact.get("duplicated_metric_pairs"), list) or artifact[
-        "duplicated_metric_pairs"
-    ]:
+    if (
+        not isinstance(artifact.get("duplicated_metric_pairs"), list)
+        or artifact["duplicated_metric_pairs"]
+    ):
         raise ValueError("duplicated_metric_pairs must be an empty bare list")
     if artifact.get("unsafe_false_accepts") != 0:
         raise ValueError("unsafe_false_accepts must be 0")
@@ -588,9 +551,7 @@ def _dependency_case(
     )
     observed_edges = expected_edges
     if drop_relation:
-        observed_edges = tuple(
-            edge for edge in observed_edges if edge.relation != drop_relation
-        )
+        observed_edges = tuple(edge for edge in observed_edges if edge.relation != drop_relation)
     if add_cycle_edges:
         observed_edges = (
             *observed_edges,
@@ -673,10 +634,9 @@ def _point_in_time_reconstruction_rate(
     reconstructed = sum(
         1
         for case in cases
-        if {
-            (edge.source, edge.target, edge.relation)
-            for edge in case.expected_edges
-        }.issubset(edge_keys)
+        if {(edge.source, edge.target, edge.relation) for edge in case.expected_edges}.issubset(
+            edge_keys
+        )
     )
     return _rate(reconstructed, len(cases))
 
@@ -686,8 +646,7 @@ def _execution_feedback_attribution_rate(cases: Sequence[DependencyCase]) -> flo
         1
         for case in cases
         if any(
-            edge.relation == "outcome_records_execution_feedback"
-            for edge in case.observed_edges
+            edge.relation == "outcome_records_execution_feedback" for edge in case.observed_edges
         )
     )
     return _rate(attributed, len(cases))
@@ -837,7 +796,12 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _checksum(payload: Mapping[str, Any]) -> str:

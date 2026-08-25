@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any
 
 from carnot.pipeline import verifier_dose_scheduler_replay as scheduler
+from carnot.provenance_receipts import receipt_bytes, receipt_exists
 
 
 JsonDict = dict[str, Any]
@@ -726,9 +727,14 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 def _sha256_file(path: Path) -> str | None:
-    if not path.exists():
+    if not receipt_exists(path, artifact_relative_path=RESULT_RELATIVE_PATH):
         return None
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _checksum(artifact: Mapping[str, Any]) -> str:

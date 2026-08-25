@@ -28,6 +28,7 @@ from typing import Any
 
 from carnot import experiment_5761_exact_constraint_acquisition_benchmark as exp5761
 from carnot import experiment_5762_query_driven_constraint_lifecycle as exp5762
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -35,8 +36,12 @@ Probe = Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RESULT_RELATIVE_PATH = Path("results/experiment_5763_dependent_task_constraint_acquisition.json")
-MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5763_dependent_task_constraint_acquisition.py")
-TEST_RELATIVE_PATH = Path("tests/python/test_experiment_5763_dependent_task_constraint_acquisition.py")
+MODULE_RELATIVE_PATH = Path(
+    "python/carnot/experiment_5763_dependent_task_constraint_acquisition.py"
+)
+TEST_RELATIVE_PATH = Path(
+    "tests/python/test_experiment_5763_dependent_task_constraint_acquisition.py"
+)
 
 SCHEMA = "carnot.experiment_5763.dependent_task_constraint_acquisition.v1"
 EXPERIMENT = 5763
@@ -249,7 +254,12 @@ def sha256_json(value: Any) -> str:
 def sha256_file(path: str | Path) -> str:
     """Hash exact file bytes with a prefixed SHA-256 digest."""
 
-    return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _round(value: float, digits: int = 6) -> float:
@@ -276,14 +286,22 @@ def _memory_probe() -> JsonDict:  # pragma: no cover - host-dependent preflight.
             if line.startswith("MemAvailable:"):
                 available_mb = int(line.split()[1]) // 1024
                 break
-    return {"available_mb": available_mb, "required_mb": required_mb, "ok": available_mb >= required_mb}
+    return {
+        "available_mb": available_mb,
+        "required_mb": required_mb,
+        "ok": available_mb >= required_mb,
+    }
 
 
 def _disk_probe() -> JsonDict:  # pragma: no cover - host-dependent preflight.
     required_mb = DISK_FLOOR_MB
     usage = shutil.disk_usage(REPO_ROOT)
     available_mb = usage.free // (1024 * 1024)
-    return {"available_mb": available_mb, "required_mb": required_mb, "ok": available_mb >= required_mb}
+    return {
+        "available_mb": available_mb,
+        "required_mb": required_mb,
+        "ok": available_mb >= required_mb,
+    }
 
 
 def _gate_fields_are_bare(artifact: Mapping[str, Any]) -> bool:
@@ -386,7 +404,8 @@ def collect_preconditions(
         fixed_seeds = {
             "random_seeds": dict(RANDOM_SEEDS),
             "base_seed_frozen": RANDOM_SEEDS["base_seed"] == 5763,
-            "upstream_seed_frozen": dict(upstream.get("random_seeds") or {}).get("base_seed") == 5762,
+            "upstream_seed_frozen": dict(upstream.get("random_seeds") or {}).get("base_seed")
+            == 5762,
             "ok": RANDOM_SEEDS["base_seed"] == 5763
             and dict(upstream.get("random_seeds") or {}).get("base_seed") == 5762,
         }
@@ -394,7 +413,13 @@ def collect_preconditions(
             "model_weight_mutation": upstream.get("model_weight_mutation"),
             "production_default_enabled": upstream.get("production_default_enabled"),
             "verifier_is_oracle": upstream.get("verifier_is_oracle"),
-            "blocked_substrates": ["kan_scale_up", "online_lora", "broad_rl", "pseudo_label", "gguf_write"],
+            "blocked_substrates": [
+                "kan_scale_up",
+                "online_lora",
+                "broad_rl",
+                "pseudo_label",
+                "gguf_write",
+            ],
             "ok": upstream.get("model_weight_mutation") is False
             and upstream.get("production_default_enabled") is False
             and upstream.get("verifier_is_oracle") is True,
@@ -476,7 +501,9 @@ def _build_dependent_stream(upstream: Mapping[str, Any]) -> JsonDict:
     recovery_receipts: list[JsonDict] = []
     nodes: list[JsonDict] = []
     edges: list[JsonDict] = []
-    current_state_hash = str(dict(upstream.get("restart_equivalence") or {}).get("restart_hash") or sha256_json("s0"))
+    current_state_hash = str(
+        dict(upstream.get("restart_equivalence") or {}).get("restart_hash") or sha256_json("s0")
+    )
     for index in range(SESSION_COUNT):
         session_id = f"exp5763-session-{index:03d}"
         operation = LIFECYCLE_BOUNDARIES[index % len(LIFECYCLE_BOUNDARIES)]
@@ -495,7 +522,9 @@ def _build_dependent_stream(upstream: Mapping[str, Any]) -> JsonDict:
                 "accepted": operation != "rollback",
             }
         )
-        protected_prefix_ids = [f"exp5763-session-{i:03d}" for i in range(index + 1) if i < index - index % 12]
+        protected_prefix_ids = [
+            f"exp5763-session-{i:03d}" for i in range(index + 1) if i < index - index % 12
+        ]
         label_receipt = _exact_label_receipt(session_id, index, operation)
         row = {
             "session_id": session_id,
@@ -532,7 +561,9 @@ def _build_dependent_stream(upstream: Mapping[str, Any]) -> JsonDict:
             "injection": (
                 "checkpoint_corruption"
                 if operation == "rollback"
-                else ("delayed_counterexample" if index % 9 == 4 else "stale_or_contradictory_update")
+                else (
+                    "delayed_counterexample" if index % 9 == 4 else "stale_or_contradictory_update"
+                )
             ),
             "boundary": operation,
             "expected_state_hash": post_state_hash,
@@ -656,7 +687,9 @@ def _restart_equivalence(
         for row in transitions
         if row["operation"] == "rollback" and row["rollback_state_hash"] != row["pre_state_hash"]
     )
-    restart_mismatches = sum(1 for row in transitions if row["restart_state_hash"] != row["post_state_hash"])
+    restart_mismatches = sum(
+        1 for row in transitions if row["restart_state_hash"] != row["post_state_hash"]
+    )
     recovery_mismatches = sum(
         1 for row in recoveries if row["restored_state_hash"] != row["expected_state_hash"]
     )
@@ -666,7 +699,9 @@ def _restart_equivalence(
         "restart_hash_mismatch_count": restart_mismatches,
         "crash_recovery_hash_mismatch_count": recovery_mismatches,
         "checkpoint_corruption_hash_mismatch_count": 0,
-        "all_passed": rollback_mismatches == 0 and restart_mismatches == 0 and recovery_mismatches == 0,
+        "all_passed": rollback_mismatches == 0
+        and restart_mismatches == 0
+        and recovery_mismatches == 0,
         "restart_hash": sha256_json([row["restart_state_hash"] for row in transitions]),
     }
 
@@ -702,7 +737,9 @@ def _per_arm_metrics(transition_count: int) -> JsonDict:
             "old_task_retention": retention,
             "query_count": query_count,
             "accepted_update_count": updates,
-            "constraint_recovery_rate": 1.0 if arm == "qualified_query_driven_lifecycle" else accuracy,
+            "constraint_recovery_rate": 1.0
+            if arm == "qualified_query_driven_lifecycle"
+            else accuracy,
             "query_efficiency": _round(updates / max(1, query_count)),
             "dynamic_regret": _round(1.0 - accuracy),
             "state_budget": dict(STATE_BUDGET),
@@ -714,7 +751,8 @@ def _per_arm_metrics(transition_count: int) -> JsonDict:
 def _metric_bundle(stream: Mapping[str, Any], metrics: Mapping[str, Any]) -> JsonDict:
     query_metrics = dict(metrics["qualified_query_driven_lifecycle"])
     best_non_reset = max(
-        float(metrics[arm]["compositional_exact_accuracy"]) for arm in NON_ORACLE_NON_RESET_CONTROL_ARMS
+        float(metrics[arm]["compositional_exact_accuracy"])
+        for arm in NON_ORACLE_NON_RESET_CONTROL_ARMS
     )
     forward = _round(float(query_metrics["compositional_exact_accuracy"]) - best_non_reset)
     latencies = [float(row["update_latency_ms"]) for row in stream["transition_receipts"]]
@@ -729,7 +767,10 @@ def _metric_bundle(stream: Mapping[str, Any], metrics: Mapping[str, Any]) -> Jso
         "recovery_time": _distribution(recoveries),
         "old_task_retention_delta": _round(
             float(query_metrics["old_task_retention"])
-            - max(float(metrics[arm]["old_task_retention"]) for arm in NON_ORACLE_NON_RESET_CONTROL_ARMS)
+            - max(
+                float(metrics[arm]["old_task_retention"])
+                for arm in NON_ORACLE_NON_RESET_CONTROL_ARMS
+            )
         ),
         "update_latency_distribution": _distribution(latencies),
         "state_growth": {
@@ -759,7 +800,10 @@ def _source_file_checksums() -> JsonDict:
 
 
 def _principles_for(fields: Sequence[str]) -> JsonDict:
-    return {field: str(FIELD_PRINCIPLES.get(field) or "field is part of the Exp5763 artifact") for field in fields}
+    return {
+        field: str(FIELD_PRINCIPLES.get(field) or "field is part of the Exp5763 artifact")
+        for field in fields
+    }
 
 
 def _empty_artifact(
@@ -768,7 +812,13 @@ def _empty_artifact(
     test_commands: Sequence[str],
     test_exit_codes: Mapping[str, int],
 ) -> JsonDict:
-    stream = {"ledger": [], "transition_receipts": [], "query_label_receipts": [], "recovery_receipts": [], "dependency_graph": {"nodes": [], "edges": []}}
+    stream = {
+        "ledger": [],
+        "transition_receipts": [],
+        "query_label_receipts": [],
+        "recovery_receipts": [],
+        "dependency_graph": {"nodes": [], "edges": []},
+    }
     manifests = _build_manifests(stream)
     metrics = _per_arm_metrics(0)
     bundle = {
@@ -808,16 +858,21 @@ def _assemble_artifact(
     ledger = list(stream["ledger"])
     transitions = list(stream["transition_receipts"])
     recoveries = list(stream["recovery_receipts"])
-    certificate = _nonforgetting_certificate(ledger) if ledger else {
-        "protected_prefix_count": 0,
-        "protected_prefix_receipts": [],
-        "certificate_rate": 0.0,
-        "all_prefixes_exact": False,
-        "certificate_hash": sha256_json([]),
-    }
+    certificate = (
+        _nonforgetting_certificate(ledger)
+        if ledger
+        else {
+            "protected_prefix_count": 0,
+            "protected_prefix_receipts": [],
+            "certificate_rate": 0.0,
+            "all_prefixes_exact": False,
+            "certificate_hash": sha256_json([]),
+        }
+    )
     restart = _restart_equivalence(transitions, recoveries)
     upstream_hash = str(
-        dict(preconditions_checked.get("qualified_learner_checkpoint") or {}).get("artifact_hash") or ""
+        dict(preconditions_checked.get("qualified_learner_checkpoint") or {}).get("artifact_hash")
+        or ""
     )
     artifact: JsonDict = {
         "schema": SCHEMA,
@@ -833,7 +888,10 @@ def _assemble_artifact(
         "upstream_artifact_hashes": {
             "exp5762_artifact": upstream_hash,
             "exp5762_restart_checkpoint": str(
-                dict(preconditions_checked.get("qualified_learner_checkpoint") or {}).get("restart_hash") or ""
+                dict(preconditions_checked.get("qualified_learner_checkpoint") or {}).get(
+                    "restart_hash"
+                )
+                or ""
             ),
             "exp5761_artifact": str(
                 dict(preconditions_checked.get("benchmark_generator_and_exact_solvers") or {}).get(
@@ -932,9 +990,10 @@ def build_artifact(
             test_commands=test_commands,
             test_exit_codes=exit_codes,
         )
-    upstream_path = dict(preconditions_checked.get("qualified_learner_checkpoint") or {}).get(
-        "artifact_path"
-    ) or REPO_ROOT / exp5762.RESULT_RELATIVE_PATH
+    upstream_path = (
+        dict(preconditions_checked.get("qualified_learner_checkpoint") or {}).get("artifact_path")
+        or REPO_ROOT / exp5762.RESULT_RELATIVE_PATH
+    )
     upstream = _read_json(upstream_path)
     stream = _build_dependent_stream(upstream)
     manifests = _build_manifests(stream)
@@ -988,19 +1047,41 @@ def blocked_reasons(artifact: Mapping[str, Any]) -> list[str]:
         return sorted(set(reasons + ["bare_gate_fields"]))
     expected_score = dependent_task_ca_ready_score(artifact)
     checks = (
-        (float(artifact.get("dependent_task_ca_ready_score") or 0.0) != expected_score, "dependent_task_ca_ready_score"),
+        (
+            float(artifact.get("dependent_task_ca_ready_score") or 0.0) != expected_score,
+            "dependent_task_ca_ready_score",
+        ),
         (int(artifact.get("session_count") or 0) < 60, "session_count"),
         (int(artifact.get("heldout_composition_count") or 0) <= 0, "heldout_composition_count"),
         (float(artifact.get("forward_transfer") or 0.0) <= 0.0, "forward_transfer"),
-        (float(artifact.get("compositional_exact_accuracy") or 0.0) != 1.0, "compositional_exact_accuracy"),
+        (
+            float(artifact.get("compositional_exact_accuracy") or 0.0) != 1.0,
+            "compositional_exact_accuracy",
+        ),
         (float(artifact.get("constraint_recovery_rate") or 0.0) != 1.0, "constraint_recovery_rate"),
         (float(artifact.get("old_task_retention_delta") or -1.0) < 0.0, "old_task_retention_delta"),
         (int(artifact.get("unsafe_update_count") or 0) != 0, "unsafe_update_count"),
-        (int(artifact.get("rejected_update_propagation_count") or 0) != 0, "rejected_update_propagation_count"),
-        (int(artifact.get("rollback_hash_mismatch_count") or 0) != 0, "rollback_hash_mismatch_count"),
-        (dict(artifact.get("restart_equivalence") or {}).get("all_passed") is not True, "restart_equivalence"),
-        (dict(artifact.get("nonforgetting_certificate") or {}).get("all_prefixes_exact") is not True, "nonforgetting_certificate"),
-        (artifact.get("continuous_self_learning_target") is not True, "continuous_self_learning_target"),
+        (
+            int(artifact.get("rejected_update_propagation_count") or 0) != 0,
+            "rejected_update_propagation_count",
+        ),
+        (
+            int(artifact.get("rollback_hash_mismatch_count") or 0) != 0,
+            "rollback_hash_mismatch_count",
+        ),
+        (
+            dict(artifact.get("restart_equivalence") or {}).get("all_passed") is not True,
+            "restart_equivalence",
+        ),
+        (
+            dict(artifact.get("nonforgetting_certificate") or {}).get("all_prefixes_exact")
+            is not True,
+            "nonforgetting_certificate",
+        ),
+        (
+            artifact.get("continuous_self_learning_target") is not True,
+            "continuous_self_learning_target",
+        ),
         (artifact.get("model_weight_mutation") is not False, "model_weight_mutation"),
         (artifact.get("production_default_enabled") is not False, "production_default_enabled"),
         (artifact.get("verifier_is_oracle") is not True, "verifier_is_oracle"),
@@ -1013,7 +1094,9 @@ def blocked_reasons(artifact: Mapping[str, Any]) -> list[str]:
 def continuous_self_learning_credited(artifact: Mapping[str, Any]) -> bool:
     """Return True only when all dependent-task gates pass."""
 
-    return dict(artifact.get("preconditions_checked") or {}).get("preconditions_ready") is True and not blocked_reasons(artifact)
+    return dict(artifact.get("preconditions_checked") or {}).get(
+        "preconditions_ready"
+    ) is True and not blocked_reasons(artifact)
 
 
 def honest_verdict(artifact: Mapping[str, Any]) -> str:
@@ -1039,7 +1122,11 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
     errors = [f"missing required fields: {missing}"] if missing else []
     principles = artifact.get("field_principles")
-    errors.extend(["field_principles"] if not isinstance(principles, Mapping) or set(artifact) != set(principles) else [])
+    errors.extend(
+        ["field_principles"]
+        if not isinstance(principles, Mapping) or set(artifact) != set(principles)
+        else []
+    )
     errors.extend(["bare_gate_fields"] if not _gate_fields_are_bare(artifact) else [])
     expected_score = dependent_task_ca_ready_score(artifact) if not errors else 0.0
     errors.extend(
@@ -1053,14 +1140,34 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
         dict(artifact.get("preconditions_checked") or {}).get("preconditions_ready") is True
         and not expected_credit
     )
-    errors.extend([blocked_reasons(artifact)[0] if blocked_reasons(artifact) else "credit_gate"] if ready_but_blocked and not errors else [])
-    errors.extend(["continuous_self_learning_credited"] if artifact.get("continuous_self_learning_credited") is not expected_credit else [])
+    errors.extend(
+        [blocked_reasons(artifact)[0] if blocked_reasons(artifact) else "credit_gate"]
+        if ready_but_blocked and not errors
+        else []
+    )
+    errors.extend(
+        ["continuous_self_learning_credited"]
+        if artifact.get("continuous_self_learning_credited") is not expected_credit
+        else []
+    )
     errors.extend(["status"] if artifact.get("status") != expected_status else [])
     verdict = str(artifact.get("honest_verdict") or "")
-    errors.extend(["honest_verdict"] if expected_status == "complete" and not verdict.startswith("complete:") else [])
-    errors.extend(["honest_verdict"] if expected_status == "blocked" and not verdict.startswith("blocked:") else [])
+    errors.extend(
+        ["honest_verdict"]
+        if expected_status == "complete" and not verdict.startswith("complete:")
+        else []
+    )
+    errors.extend(
+        ["honest_verdict"]
+        if expected_status == "blocked" and not verdict.startswith("blocked:")
+        else []
+    )
     checksum = artifact.get("reproducibility_checksum")
-    errors.extend(["reproducibility_checksum"] if checksum and checksum != reproducibility_checksum(artifact) else [])
+    errors.extend(
+        ["reproducibility_checksum"]
+        if checksum and checksum != reproducibility_checksum(artifact)
+        else []
+    )
     if errors:
         raise ValueError(errors[0])
     return True

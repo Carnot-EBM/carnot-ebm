@@ -29,6 +29,7 @@ from carnot import experiment_5734_sota_exact_proposal_stream as exp5734
 from carnot import experiment_5735_zero_gate_kan_continuous_self_learning as exp5735
 from carnot import experiment_5736_csl_lifecycle_conflict_rollback as exp5736
 from carnot import experiment_5737_sota_stream_csl_shadow_ingress as exp5737
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -37,9 +38,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 RESULT_RELATIVE_PATH = Path("results/experiment_5749_csl_render_matched_mechanism_audit.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
 MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5749_csl_render_matched_mechanism_audit.py")
-TEST_RELATIVE_PATH = Path(
-    "tests/python/test_experiment_5749_csl_render_matched_mechanism_audit.py"
-)
+TEST_RELATIVE_PATH = Path("tests/python/test_experiment_5749_csl_render_matched_mechanism_audit.py")
 
 EXP5734_RELATIVE_PATH = exp5734.RESULT_RELATIVE_PATH
 EXP5734_ROW_MANIFEST_RELATIVE_PATH = exp5734.ROW_MANIFEST_RELATIVE_PATH
@@ -77,8 +76,7 @@ CONTROL_ARMS = (
 NON_KAN_MATCHED_ARMS = (MLP_CONTROL_ARM, FROZEN_ARM)
 ACTIVE_UPDATE_ARMS = (KAN_HEADLINE_ARM, MLP_CONTROL_ARM, NO_GROWTH_ARM, ALWAYS_OPEN_ARM)
 KAN_MECHANISM_RESIDUAL_DEFINITION = (
-    "best_matched_non_kan_suffix_error - "
-    "kan_suffix_error_after_all_safety_and_retention_gates"
+    "best_matched_non_kan_suffix_error - kan_suffix_error_after_all_safety_and_retention_gates"
 )
 SPEC_REFS = (
     "REQ-LEARN-5749",
@@ -201,7 +199,12 @@ def sha256_json(value: Any) -> str:
 def sha256_file(path: Path | str) -> str:
     """Return a prefixed SHA-256 digest over exact file bytes."""
 
-    return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _read_json(path: Path | str) -> JsonDict:
@@ -242,10 +245,7 @@ def compute_dynamic_regret_by_arm(suffix_error_by_arm: Mapping[str, float]) -> J
     """Return per-arm suffix-error regret relative to the best matched arm."""
 
     best_error = min(float(value) for value in suffix_error_by_arm.values())
-    return {
-        arm: _round(float(suffix_error_by_arm[arm]) - best_error)
-        for arm in CONTROL_ARMS
-    }
+    return {arm: _round(float(suffix_error_by_arm[arm]) - best_error) for arm in CONTROL_ARMS}
 
 
 def _free_ram_mb() -> float:
@@ -372,7 +372,9 @@ def _verify_upstreams(
             "path": str(exp5735.CHECKPOINT_RELATIVE_DIR),
             "sha256": sha256_json(zero_gate_artifact["checkpoint_hashes"]["receipts"]),
             "verified": zero_gate_artifact["checkpoint_hashes"]["all_replay_exact"] is True
-            and exp5735.verify_checkpoint_payloads(zero_gate_artifact["checkpoint_hashes"]["receipts"]),
+            and exp5735.verify_checkpoint_payloads(
+                zero_gate_artifact["checkpoint_hashes"]["receipts"]
+            ),
         },
         "exp5736_artifact": {
             "path": str(EXP5736_RELATIVE_PATH),
@@ -520,9 +522,7 @@ def _render_match_receipts(root: Path) -> JsonDict:
         "matched_keys": list(comparable_keys),
         "deprecation_enabled": enabled,
         "deprecation_disabled": disabled,
-        "matched_receipt_hash": sha256_json(
-            {key: enabled[key] for key in comparable_keys}
-        ),
+        "matched_receipt_hash": sha256_json({key: enabled[key] for key in comparable_keys}),
     }
 
 
@@ -596,9 +596,9 @@ def _chronology_receipts(
             "chronological_order_preserved"
         ]
         is True,
-        "corrupted_order_detected": zero_gate_artifact["adversarial_controls"][
-            "corrupted_order"
-        ]["detected"]
+        "corrupted_order_detected": zero_gate_artifact["adversarial_controls"]["corrupted_order"][
+            "detected"
+        ]
         is True
         and ingress_artifact["corrupted_order_results"]["detected"] is True,
         "chronology_hash": sha256_json(
@@ -642,7 +642,9 @@ def _nonforgetting_certificate(
             ingress_artifact["prefix_retention_delta"],
         )
     )
-    lifecycle_state_mismatch_count = 0 if lifecycle_artifact["ledger_replay_equivalence"]["passed"] else 1
+    lifecycle_state_mismatch_count = (
+        0 if lifecycle_artifact["ledger_replay_equivalence"]["passed"] else 1
+    )
     rejected_zero = (
         int(lifecycle_artifact["rejected_transition_count"]) > 0
         and int(lifecycle_artifact["unsafe_propagation_count"]) == 0
@@ -693,7 +695,9 @@ def _arm_metrics(
             "mechanism_family": mechanism_family[arm],
             "prefix_exact_error": float(source_metrics[arm]["prefix_error"]),
             "suffix_exact_error": float(source_metrics[arm]["suffix_error"]),
-            "forward_transfer": _round(frozen_suffix_error - float(source_metrics[arm]["suffix_error"])),
+            "forward_transfer": _round(
+                frozen_suffix_error - float(source_metrics[arm]["suffix_error"])
+            ),
             "dynamic_regret": float(dynamic_regret_by_arm[arm]),
             "recovery_time_sessions": recovery_time_for_error(
                 float(suffix_error_by_arm[arm]),
@@ -755,9 +759,10 @@ def _generic_csl_safety_passed(artifact: Mapping[str, Any]) -> bool:
 def kan_scaleup_ready_score(artifact: Mapping[str, Any]) -> float:
     """Return the KAN-specific readiness score after generic safety gates."""
 
-    ready = _generic_csl_safety_passed(artifact) and float(
-        artifact.get("kan_mechanism_residual", 0.0)
-    ) > 0.0
+    ready = (
+        _generic_csl_safety_passed(artifact)
+        and float(artifact.get("kan_mechanism_residual", 0.0)) > 0.0
+    )
     return 1.0 if ready else 0.0
 
 
@@ -799,18 +804,27 @@ def artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
     expected_residual = compute_kan_mechanism_residual(artifact["suffix_error_by_arm"])
     expected_regret = compute_dynamic_regret_by_arm(artifact["suffix_error_by_arm"])
     checks = (
-        (artifact.get("preconditions_checked", {}).get("all_passed") is not True, "preconditions_checked"),
-        (artifact.get("render_match_receipts", {}).get("all_passed") is not True, "render_match_receipts"),
         (
-            artifact.get("parameter_match_receipts", {}).get("parameter_budget_matched") is not True,
+            artifact.get("preconditions_checked", {}).get("all_passed") is not True,
+            "preconditions_checked",
+        ),
+        (
+            artifact.get("render_match_receipts", {}).get("all_passed") is not True,
+            "render_match_receipts",
+        ),
+        (
+            artifact.get("parameter_match_receipts", {}).get("parameter_budget_matched")
+            is not True,
             "parameter_match_receipts",
         ),
         (
-            artifact.get("update_count_match_receipts", {}).get("all_active_arms_matched") is not True,
+            artifact.get("update_count_match_receipts", {}).get("all_active_arms_matched")
+            is not True,
             "update_count_match_receipts",
         ),
         (
-            artifact.get("chronology_receipts", {}).get("all_headline_rows_replayed_once") is not True
+            artifact.get("chronology_receipts", {}).get("all_headline_rows_replayed_once")
+            is not True
             or artifact.get("chronology_receipts", {}).get("corrupted_order_detected") is not True,
             "chronology_receipts",
         ),
@@ -821,7 +835,10 @@ def artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
             int(artifact.get("rejected_update_propagation_count", -1)) != 0,
             "rejected_update_propagation_count",
         ),
-        (int(artifact.get("rollback_hash_mismatch_count", -1)) != 0, "rollback_hash_mismatch_count"),
+        (
+            int(artifact.get("rollback_hash_mismatch_count", -1)) != 0,
+            "rollback_hash_mismatch_count",
+        ),
         (
             artifact.get("nonforgetting_certificate", {}).get("all_passed") is not True,
             "nonforgetting_certificate",
@@ -830,9 +847,15 @@ def artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
             artifact.get("kan_mechanism_residual_definition") != KAN_MECHANISM_RESIDUAL_DEFINITION,
             "kan_mechanism_residual_definition",
         ),
-        (float(artifact.get("kan_mechanism_residual")) != expected_residual, "kan_mechanism_residual"),
+        (
+            float(artifact.get("kan_mechanism_residual")) != expected_residual,
+            "kan_mechanism_residual",
+        ),
         (dict(artifact.get("dynamic_regret_by_arm")) != expected_regret, "dynamic_regret_by_arm"),
-        (artifact.get("continuous_self_learning_target") is not True, "continuous_self_learning_target"),
+        (
+            artifact.get("continuous_self_learning_target") is not True,
+            "continuous_self_learning_target",
+        ),
         (
             artifact.get("continuous_self_learning_credited") is not True,
             "continuous_self_learning_credited",
@@ -840,9 +863,15 @@ def artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
         (artifact.get("model_weight_mutation") is not False, "model_weight_mutation"),
         (artifact.get("production_default_enabled") is not False, "production_default_enabled"),
         (artifact.get("inference_substrate") != INFERENCE_SUBSTRATE, "inference_substrate"),
-        (artifact.get("kan_scaleup_ready_score") != kan_scaleup_ready_score(artifact), "kan_scaleup_ready_score"),
+        (
+            artifact.get("kan_scaleup_ready_score") != kan_scaleup_ready_score(artifact),
+            "kan_scaleup_ready_score",
+        ),
         (artifact.get("honest_verdict") != honest_verdict(artifact), "honest_verdict"),
-        (artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact), "reproducibility_checksum"),
+        (
+            artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact),
+            "reproducibility_checksum",
+        ),
     )
     errors.extend(message for failed, message in checks if failed)
     return errors

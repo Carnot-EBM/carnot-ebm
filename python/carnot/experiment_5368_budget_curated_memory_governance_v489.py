@@ -23,6 +23,7 @@ from typing import Any
 from carnot import experiment_5355_dependency_provenance_self_learning_v488 as exp5355
 from carnot import experiment_5356_memory_tool_drift_harness_v488 as exp5356
 from carnot import experiment_5357_dependency_drift_self_learning_scaleup_v488 as exp5357
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -34,9 +35,7 @@ MILESTONE = "v489"
 SCHEMA = "carnot.experiment_5368.budget_curated_memory_governance.v489"
 RUN_DATE = "2026-07-07"
 RANDOM_SEED = 5368
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5368_budget_curated_memory_governance_v489.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5368_budget_curated_memory_governance_v489.json")
 EXP5355_RELATIVE_PATH = exp5355.RESULT_RELATIVE_PATH
 EXP5356_RELATIVE_PATH = exp5356.RESULT_RELATIVE_PATH
 EXP5357_RELATIVE_PATH = exp5357.RESULT_RELATIVE_PATH
@@ -69,38 +68,25 @@ STALE_QUARANTINE_RISK = 0.6
 
 REQUIRED_FIELD_PRINCIPLES = {
     "experiment_id": "Stable id ties the artifact to this roadmap task.",
-    "milestone": (
-        "Keeps the governance fixture tied to the `.489` memory budget "
-        "scale-up gate."
-    ),
+    "milestone": ("Keeps the governance fixture tied to the `.489` memory budget scale-up gate."),
     "status": "Complete only if the budget governance fixture runs.",
     "honest_verdict": "One-line ready or blocked verdict with a terminal prefix.",
-    "inference_substrate": (
-        "Expected value is deterministic_budget_curated_memory_governance."
-    ),
+    "inference_substrate": ("Expected value is deterministic_budget_curated_memory_governance."),
     "continuous_self_learning_target": (
-        "Bare boolean must be true because this advances continuous "
-        "self-learning."
+        "Bare boolean must be true because this advances continuous self-learning."
     ),
     "no_weight_mutation": (
-        "Bare boolean must be true because the fixture governs memory only, "
-        "not model weights."
+        "Bare boolean must be true because the fixture governs memory only, not model weights."
     ),
     "budget_curated_memory_ready": (
         "Bare boolean gate for scale-up; true only when value, cost, harm, "
         "and trust decisions are all measured."
     ),
     "memory_item_count": "Bare integer counts memory records evaluated.",
-    "budget_bytes": (
-        "Bare integer records the memory byte budget used by the fixture."
-    ),
+    "budget_bytes": ("Bare integer records the memory byte budget used by the fixture."),
     "retained_bytes": "Bare integer records bytes retained after curation.",
-    "value_minus_harm_per_byte_mean": (
-        "Bare numeric score normalized by byte cost."
-    ),
-    "keep_precision": (
-        "Bare numeric fraction of kept items that are useful and non-harmful."
-    ),
+    "value_minus_harm_per_byte_mean": ("Bare numeric score normalized by byte cost."),
+    "keep_precision": ("Bare numeric fraction of kept items that are useful and non-harmful."),
     "stale_memory_deflection_rate": (
         "Bare numeric fraction of stale items not trusted or not used."
     ),
@@ -108,22 +94,16 @@ REQUIRED_FIELD_PRINCIPLES = {
         "Bare numeric fraction of poisoned items not trusted or not used."
     ),
     "share_decision_precision": (
-        "Bare numeric fraction of shared items that pass provenance and trust "
-        "constraints."
+        "Bare numeric fraction of shared items that pass provenance and trust constraints."
     ),
     "trust_decision_precision": (
         "Bare numeric fraction of trusted items that are clean useful items."
     ),
-    "rollback_recovery_rate": (
-        "Bare numeric recovery rate after bad memory is detected."
-    ),
+    "rollback_recovery_rate": ("Bare numeric recovery rate after bad memory is detected."),
     "unsafe_false_accepts": (
-        "Bare integer count of harmful memory items accepted as trusted useful "
-        "memory."
+        "Bare integer count of harmful memory items accepted as trusted useful memory."
     ),
-    "tests_run": (
-        "Lists deterministic governance, coverage, and pytest commands."
-    ),
+    "tests_run": ("Lists deterministic governance, coverage, and pytest commands."),
 }
 WRAPPED_FIELDS = (
     "experiment_id",
@@ -202,13 +182,9 @@ def confirm_source_gate(root: Path | str = REPO_ROOT) -> JsonDict:
     drift = _read_json(root_path / EXP5356_RELATIVE_PATH)
     scaleup = _read_json(root_path / EXP5357_RELATIVE_PATH)
     checks = {
-        "dependency_provenance_ready": (
-            dependency.get("dependency_provenance_ready") is True
-        ),
+        "dependency_provenance_ready": (dependency.get("dependency_provenance_ready") is True),
         "memory_tool_drift_ready": drift.get("memory_tool_drift_ready") is True,
-        "self_learning_scaleup_ready": (
-            scaleup.get("self_learning_scaleup_ready") is True
-        ),
+        "self_learning_scaleup_ready": (scaleup.get("self_learning_scaleup_ready") is True),
         "source_unsafe_false_accepts_zero": (
             dependency.get("unsafe_false_accepts") == 0
             and drift.get("unsafe_false_accepts") == 0
@@ -234,13 +210,9 @@ def confirm_source_gate(root: Path | str = REPO_ROOT) -> JsonDict:
             str(EXP5356_RELATIVE_PATH),
             str(EXP5357_RELATIVE_PATH),
         ],
-        "dependency_source_honest_verdict": _wrapped_value(
-            dependency.get("honest_verdict")
-        ),
+        "dependency_source_honest_verdict": _wrapped_value(dependency.get("honest_verdict")),
         "drift_source_honest_verdict": _wrapped_value(drift.get("honest_verdict")),
-        "scaleup_source_honest_verdict": _wrapped_value(
-            scaleup.get("honest_verdict")
-        ),
+        "scaleup_source_honest_verdict": _wrapped_value(scaleup.get("honest_verdict")),
     }
 
 
@@ -423,11 +395,7 @@ def build_result_artifact(
     else:
         curation = _blocked_curation()
     complete = _governance_complete(source_gate, curation, tests_run)
-    status = (
-        "budget_curated_memory_ready"
-        if complete
-        else "blocked_budget_curated_memory_gate"
-    )
+    status = "budget_curated_memory_ready" if complete else "blocked_budget_curated_memory_gate"
     artifact: JsonDict = {
         "schema": SCHEMA,
         "experiment": EXPERIMENT,
@@ -453,16 +421,10 @@ def build_result_artifact(
         "memory_item_count": curation["memory_item_count"],
         "budget_bytes": curation["budget_bytes"],
         "retained_bytes": curation["retained_bytes"],
-        "value_minus_harm_per_byte_mean": curation[
-            "value_minus_harm_per_byte_mean"
-        ],
+        "value_minus_harm_per_byte_mean": curation["value_minus_harm_per_byte_mean"],
         "keep_precision": curation["keep_precision"],
-        "stale_memory_deflection_rate": curation[
-            "stale_memory_deflection_rate"
-        ],
-        "poison_memory_deflection_rate": curation[
-            "poison_memory_deflection_rate"
-        ],
+        "stale_memory_deflection_rate": curation["stale_memory_deflection_rate"],
+        "poison_memory_deflection_rate": curation["poison_memory_deflection_rate"],
         "share_decision_precision": curation["share_decision_precision"],
         "trust_decision_precision": curation["trust_decision_precision"],
         "rollback_recovery_rate": curation["rollback_recovery_rate"],
@@ -670,15 +632,12 @@ def _curation_metrics(
     bad = [
         row
         for row in rows
-        if row["harmful"]
-        or row["memory_variant"] in {"stale", "poisoned", "unverified"}
+        if row["harmful"] or row["memory_variant"] in {"stale", "poisoned", "unverified"}
     ]
     unsafe_false_accepts = sum(
         1
         for row in rows
-        if row["harmful"]
-        and row["keep_decision"] == "KEEP"
-        and row["trust_decision"] == "TRUST"
+        if row["harmful"] and row["keep_decision"] == "KEEP" and row["trust_decision"] == "TRUST"
     )
     decision_summary = {
         "keep_ids": [row["memory_id"] for row in kept],
@@ -695,9 +654,7 @@ def _curation_metrics(
         "memory_item_count": len(rows),
         "budget_bytes": budget_bytes,
         "retained_bytes": retained_bytes,
-        "value_minus_harm_per_byte_mean": _mean(
-            row["value_minus_harm_per_byte"] for row in rows
-        ),
+        "value_minus_harm_per_byte_mean": _mean(row["value_minus_harm_per_byte"] for row in rows),
         "keep_precision": _rate(
             sum(1 for row in kept if row["useful"] and not row["harmful"]),
             len(kept),
@@ -758,9 +715,7 @@ def _readiness_gate(
 ) -> JsonDict:
     checks = {
         "source_gate_passed": source_gate["all_passed"] is True,
-        "value_cost_harm_trust_measured": (
-            curation["value_cost_harm_trust_measured"] is True
-        ),
+        "value_cost_harm_trust_measured": (curation["value_cost_harm_trust_measured"] is True),
         "retained_within_budget": curation["retained_bytes"] <= curation["budget_bytes"],
         "unsafe_false_accepts_zero": curation["unsafe_false_accepts"] == 0,
         "stale_deflection_positive": curation["stale_memory_deflection_rate"] > 0.0,
@@ -806,9 +761,7 @@ def _honest_verdict(
     blockers.extend(_readiness_gate(source_gate, curation, tests_run)["failed_gates"])
     if not tests_run:
         blockers.append("tests_not_recorded")
-    return "blocked_budget_curated_memory_not_ready: " + ",".join(
-        dict.fromkeys(blockers)
-    )
+    return "blocked_budget_curated_memory_not_ready: " + ",".join(dict.fromkeys(blockers))
 
 
 def _weight_mutation_receipt() -> JsonDict:
@@ -853,7 +806,12 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _checksum(payload: Mapping[str, Any]) -> str:

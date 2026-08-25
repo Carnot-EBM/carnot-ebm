@@ -22,6 +22,7 @@ import json
 import math
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -29,9 +30,7 @@ JsonDict = dict[str, Any]
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RESULT_RELATIVE_PATH = Path("results/experiment_5473_csl_kan_surrogate_assurance_v497.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
-MODULE_RELATIVE_PATH = Path(
-    "python/carnot/experiment_5473_csl_kan_surrogate_assurance_v497.py"
-)
+MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5473_csl_kan_surrogate_assurance_v497.py")
 EXP5460_RESULT_RELATIVE_PATH = Path("results/experiment_5460_csl_policy_bandit_v496.json")
 EXP5461_RESULT_RELATIVE_PATH = Path(
     "results/experiment_5461_gated_sota_csl_memory_routing_v496.json"
@@ -275,8 +274,7 @@ def compute_assurance(
     accepted = [
         row
         for row in active
-        if row.get("surrogate_accept") is True
-        and row.get("accepted_by_final_authority") is True
+        if row.get("surrogate_accept") is True and row.get("accepted_by_final_authority") is True
     ]
     violations = [
         row
@@ -298,7 +296,9 @@ def compute_assurance(
         ),
         "assurance_ratio": ratio,
         "finite_sample_conservative_bound": finite_sample_bound(ratio, accepted_count),
-        "threshold_offset": max([float(row.get("threshold_offset", 0.0)) for row in active] or [0.0]),
+        "threshold_offset": max(
+            [float(row.get("threshold_offset", 0.0)) for row in active] or [0.0]
+        ),
     }
 
 
@@ -583,7 +583,12 @@ def _source_file_checksums(root: Path) -> JsonDict:
 
 
 def _file_checksum(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _read_json(path: Path) -> JsonDict:
@@ -615,7 +620,9 @@ def _rate(numerator: int | float, denominator: int | float) -> float:
 
 
 def _sha256_json(payload: Any) -> str:
-    encoded = json.dumps(_json_ready(payload), sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    encoded = json.dumps(
+        _json_ready(payload), sort_keys=True, separators=(",", ":"), ensure_ascii=True
+    )
     return "sha256:" + hashlib.sha256(encoded.encode("utf-8")).hexdigest()
 
 

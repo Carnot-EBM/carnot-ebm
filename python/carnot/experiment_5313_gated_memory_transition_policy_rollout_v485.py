@@ -22,6 +22,7 @@ from typing import Any
 
 from carnot import experiment_5312_trustmem_transition_verifier_self_learning_v485 as exp5312
 from carnot.pipeline.memory_transition_verifier import MemoryTransitionProposal
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -44,7 +45,9 @@ EXP5312_RELATIVE_PATH = Path(
     "results/experiment_5312_trustmem_transition_verifier_self_learning_v485.json"
 )
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
-MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5313_gated_memory_transition_policy_rollout_v485.py")
+MODULE_RELATIVE_PATH = Path(
+    "python/carnot/experiment_5313_gated_memory_transition_policy_rollout_v485.py"
+)
 INFERENCE_SUBSTRATE = "deterministic_memory_policy_rollout_no_llm"
 SPEC_REFS = ("REQ-LEARN-5313", "SCENARIO-LEARN-5313")
 TERMINAL_PREFIXES = ("complete:", "blocked_")
@@ -198,12 +201,8 @@ def confirm_upstream_gates(
     exp5303 = source.get("exp5303", {})
     exp5312_artifact = source.get("exp5312", {})
     checks = {
-        "exp5302_memory_policy_candidate_ready": bool(
-            exp5302.get("memory_policy_candidate_ready")
-        ),
-        "exp5303_memory_stress_passed": bool(
-            _wrapped_value(exp5303.get("memory_stress_passed"))
-        ),
+        "exp5302_memory_policy_candidate_ready": bool(exp5302.get("memory_policy_candidate_ready")),
+        "exp5303_memory_stress_passed": bool(_wrapped_value(exp5303.get("memory_stress_passed"))),
         "exp5312_memory_transition_verifier_ready": bool(
             exp5312_artifact.get("memory_transition_verifier_ready")
         ),
@@ -283,14 +282,14 @@ def build_rollout_panel() -> tuple[RolloutCase, ...]:
 def evaluate_policy_rollout(panel: Sequence[RolloutCase]) -> JsonDict:
     """Evaluate always-full, adaptive, and no-memory arms on identical cases."""
 
-    policy_rows = {policy: [_evaluate_case(case, policy) for case in panel] for policy in POLICY_ARMS}
+    policy_rows = {
+        policy: [_evaluate_case(case, policy) for case in panel] for policy in POLICY_ARMS
+    }
     policy_metrics = {policy: _policy_metrics(rows) for policy, rows in policy_rows.items()}
     adaptive = policy_metrics["adaptive"]
     always = policy_metrics["always_full"]
     no_weight_mutation = all(
-        row["model_weights_mutated"] is False
-        for rows in policy_rows.values()
-        for row in rows
+        row["model_weights_mutated"] is False for rows in policy_rows.values() for row in rows
     )
     complete = bool(
         _panel_complete(panel)
@@ -310,8 +309,7 @@ def evaluate_policy_rollout(panel: Sequence[RolloutCase]) -> JsonDict:
             always["transition_process_score"],
         ),
         "full_verifier_calls_avoided": int(
-            always["full_transition_verifier_calls"]
-            - adaptive["full_transition_verifier_calls"]
+            always["full_transition_verifier_calls"] - adaptive["full_transition_verifier_calls"]
         ),
         "unsafe_false_accepts": int(adaptive["unsafe_false_accepts"]),
         "unsafe_commits_rejected": int(adaptive["unsafe_commits_rejected"]),
@@ -560,9 +558,7 @@ def _policy_metrics(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
         "memory_policy_transitions": memory_policy_transitions,
         "no_memory_decisions": no_memory_decisions,
         "unsafe_false_accepts": sum(1 for row in rows if bool(row["unsafe_false_accept"])),
-        "unsafe_commits_rejected": sum(
-            1 for row in rows if bool(row["unsafe_commit_rejected"])
-        ),
+        "unsafe_commits_rejected": sum(1 for row in rows if bool(row["unsafe_commit_rejected"])),
         "rollback_events": rollback_events,
         "cost_units": _cost_units(
             full_calls=full_calls,
@@ -731,7 +727,12 @@ def _checksum(payload: Mapping[str, Any]) -> str:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:

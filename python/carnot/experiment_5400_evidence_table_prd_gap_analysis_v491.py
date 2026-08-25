@@ -17,6 +17,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -184,7 +185,9 @@ def build_artifact(
         "field_principles": dict(FIELD_PRINCIPLES),
         "status": status,
         "milestone": MILESTONE,
-        "artifacts_read": [str(relative) for relative in EXPECTED_ARTIFACTS if relative in artifacts],
+        "artifacts_read": [
+            str(relative) for relative in EXPECTED_ARTIFACTS if relative in artifacts
+        ],
         "missing_artifacts": missing_artifacts,
         "evidence_rows": evidence_rows,
         "closed_gaps": closed_gaps(evidence_rows),
@@ -274,9 +277,7 @@ def structured_local_sota_row(artifacts: Mapping[Path, JsonDict]) -> JsonDict:
         principal_metric={
             "fixture_count": int(payload["fixture_count"]),
             "constrained_semantic_validity_rate": payload["constrained_semantic_validity_rate"],
-            "unconstrained_semantic_validity_rate": payload[
-                "unconstrained_semantic_validity_rate"
-            ],
+            "unconstrained_semantic_validity_rate": payload["unconstrained_semantic_validity_rate"],
             "wrong_valid_reduction": wrong_valid_reduction,
             "unsafe_false_accept_count": int(payload["unsafe_false_accept_count"]),
         },
@@ -307,9 +308,7 @@ def formal_encoding_safety_row(artifacts: Mapping[Path, JsonDict]) -> JsonDict:
         ],
         principal_metric={
             "fixture_count": int(payload["fixture_count"]),
-            "encoded_intent_false_negative_rate": payload[
-                "encoded_intent_false_negative_rate"
-            ],
+            "encoded_intent_false_negative_rate": payload["encoded_intent_false_negative_rate"],
             "benign_false_positive_rate": payload["benign_false_positive_rate"],
             "forbidden_detail_leak_count": int(payload["forbidden_detail_leak_count"]),
             "flagged_adversarial": flagged,
@@ -345,9 +344,7 @@ def solver_corrigendum_row(artifacts: Mapping[Path, JsonDict]) -> JsonDict:
         principal_metric={
             "row_count": int(payload["row_count"]),
             "negative_control_pass_rate": payload["negative_control_pass_rate"],
-            "fallback_completeness_rate_from_rows": payload[
-                "fallback_completeness_rate_from_rows"
-            ],
+            "fallback_completeness_rate_from_rows": payload["fallback_completeness_rate_from_rows"],
             "unsafe_false_accept_count": int(payload["unsafe_false_accept_count"]),
         },
         next_action="Use the cleaned row-level solver contract as the gate source for capstone.",
@@ -606,7 +603,9 @@ def prd_alignment_row(artifacts: Mapping[Path, JsonDict]) -> JsonDict:
                 artifacts[source[0]].get("new_actionable_findings_count", 0)
             ),
             "structured_fixture_count": int(artifacts[source[1]]["fixture_count"]),
-            "self_learning_routed_decision_count": int(artifacts[source[2]]["routed_decision_count"]),
+            "self_learning_routed_decision_count": int(
+                artifacts[source[2]]["routed_decision_count"]
+            ),
             "hardware_repeatability_evidence_present": bool(
                 unwrap(artifacts[source[3]]["repeatability_evidence_present"])
             ),
@@ -842,9 +841,14 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     for row in rows:
         validate_row(row)
     require(artifact.get("claim_boundary_checks") == GUARDRAIL_CHECKS, "guardrail")
-    require(all(claim in artifact["disallowed_claims"] for claim in REQUIRED_DISALLOWED_CLAIMS), "disallowed_claims")
+    require(
+        all(claim in artifact["disallowed_claims"] for claim in REQUIRED_DISALLOWED_CLAIMS),
+        "disallowed_claims",
+    )
     require(str(artifact.get("honest_verdict", "")).startswith((f"{status}:",)), "honest_verdict")
-    require(artifact.get("reproducibility_checksum") == checksum(artifact), "reproducibility_checksum")
+    require(
+        artifact.get("reproducibility_checksum") == checksum(artifact), "reproducibility_checksum"
+    )
     return True
 
 
@@ -895,14 +899,21 @@ def checksum(payload: Mapping[str, Any]) -> str:
 def sha256_file(path: Path) -> str:
     """Return a SHA-256 checksum for an already-known existing file."""
 
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def write_json(path: Path, payload: Mapping[str, Any]) -> None:
     """Write stable JSON for conductor and capstone consumption."""
 
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(json_ready(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(json_ready(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
 
 def json_ready(value: Any) -> Any:

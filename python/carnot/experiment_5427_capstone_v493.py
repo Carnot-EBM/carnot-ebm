@@ -21,6 +21,7 @@ import json
 from pathlib import Path
 import subprocess
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -448,7 +449,9 @@ def read_inputs(root: Path) -> tuple[dict[str, JsonDict], list[str], list[str], 
     return payloads, read_paths, missing, errors
 
 
-def classify_lane(spec: JsonMap, payloads: Mapping[str, JsonMap], missing_paths: Sequence[str]) -> JsonDict:
+def classify_lane(
+    spec: JsonMap, payloads: Mapping[str, JsonMap], missing_paths: Sequence[str]
+) -> JsonDict:
     """Classify one lane without inventing evidence from neighboring lanes."""
 
     lane = str(spec["lane"])
@@ -470,7 +473,10 @@ def classify_lane(spec: JsonMap, payloads: Mapping[str, JsonMap], missing_paths:
             source_artifacts=sources,
             classification="blocked",
             claim_boundary=str(spec["claim_boundary"]),
-            evidence={"future_token_signal_allowed": future_token_signal_allowed(payloads), "backend_receipt_present": False},
+            evidence={
+                "future_token_signal_allowed": future_token_signal_allowed(payloads),
+                "backend_receipt_present": False,
+            },
             blocked_reason="no_authenticated_backend_receipt",
         )
 
@@ -589,16 +595,17 @@ def hardware_speedup_claim(payloads: Mapping[str, JsonMap]) -> bool:
     """Return true only if upstream hardware artifacts actually claimed speedup."""
 
     return any(
-        unwrap(payloads.get(path, {}).get("hardware_speedup_claim")) is True for path in (EXP5420, EXP5424)
+        unwrap(payloads.get(path, {}).get("hardware_speedup_claim")) is True
+        for path in (EXP5420, EXP5424)
     )
 
 
 def future_token_signal_allowed(payloads: Mapping[str, JsonMap]) -> bool:
     """Keep token/internal lanes closed unless a receipt explicitly opens them."""
 
-    return recursive_key_true(payloads.get(EXP5415, {}), "future_token_signal_allowed") or recursive_key_true(
-        payloads.get(EXP5426, {}), "future_token_signal_allowed"
-    )
+    return recursive_key_true(
+        payloads.get(EXP5415, {}), "future_token_signal_allowed"
+    ) or recursive_key_true(payloads.get(EXP5426, {}), "future_token_signal_allowed")
 
 
 def recursive_key_true(value: Any, key: str) -> bool:
@@ -658,7 +665,9 @@ def next_recommendations(payloads: Mapping[str, JsonMap]) -> list[JsonDict]:
             "target": "pbit_hardware_transfer",
             "recommendation": "Move p-bit beyond preflight only against the comparable CPU/PolarFire timing receipt, and keep acceleration unclaimed until board-local speedup evidence exists.",
             "evidence": {
-                "comparable_timing_receipts_ready": unwrap(timing.get("comparable_timing_receipts_ready")),
+                "comparable_timing_receipts_ready": unwrap(
+                    timing.get("comparable_timing_receipts_ready")
+                ),
                 "same_workload_hash_match": unwrap(timing.get("same_workload_hash_match")),
                 "same_result_hash_match": unwrap(timing.get("same_result_hash_match")),
                 "hardware_speedup_claim": unwrap(timing.get("hardware_speedup_claim")),
@@ -774,11 +783,15 @@ def validate_artifact(artifact: JsonMap) -> None:
     for bucket_name, expected_rows in expected_buckets.items():
         if artifact[bucket_name] != expected_rows:
             raise ValueError(f"lane bucket mismatch: {bucket_name}")
-    if lane_names(artifact["headline_ready_lanes"]) != ["evidence_reliance_csl", "gated_csl_promotion"] and not artifact[
-        "upstream_artifacts_missing"
-    ]:
+    if (
+        lane_names(artifact["headline_ready_lanes"])
+        != ["evidence_reliance_csl", "gated_csl_promotion"]
+        and not artifact["upstream_artifacts_missing"]
+    ):
         raise ValueError("headline_ready_lanes overclaim or drift")
-    if set(lane_names(artifact["headline_ready_lanes"])) & set(lane_names(artifact["blocked_lanes"])):
+    if set(lane_names(artifact["headline_ready_lanes"])) & set(
+        lane_names(artifact["blocked_lanes"])
+    ):
         raise ValueError("lane bucket overlap")
     if [row.get("target") for row in artifact["next_recommendations"]] != [
         "arc_live_levelup",
@@ -808,7 +821,12 @@ def payload_checksum(payload: JsonMap) -> str:
 def file_sha256(path: Path) -> str:
     """Hash a source artifact or context file for provenance."""
 
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def git_path_unchanged(root: Path, relative: str) -> bool:
@@ -843,7 +861,9 @@ def write_json(path: Path, payload: JsonMap) -> None:
     """Write pretty, stable JSON with a trailing newline for git diffs."""
 
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(json_ready(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(json_ready(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
 
 def main(argv: Sequence[str] | None = None) -> int:

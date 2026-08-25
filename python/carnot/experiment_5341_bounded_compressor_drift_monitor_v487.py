@@ -22,6 +22,7 @@ from typing import Any
 
 from carnot import experiment_5328_context_object_lifecycle_self_learning_v486 as exp5328
 from carnot import experiment_5330_sea_anytime_certificate_gate_v486 as exp5330
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -33,15 +34,11 @@ MILESTONE = "v487"
 SCHEMA = "carnot.experiment_5341.bounded_compressor_drift_monitor.v487"
 RUN_DATE = "2026-07-07"
 RANDOM_SEED = 5341
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5341_bounded_compressor_drift_monitor_v487.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5341_bounded_compressor_drift_monitor_v487.json")
 EXP5328_RELATIVE_PATH = Path(
     "results/experiment_5328_context_object_lifecycle_self_learning_v486.json"
 )
-EXP5330_RELATIVE_PATH = Path(
-    "results/experiment_5330_sea_anytime_certificate_gate_v486.json"
-)
+EXP5330_RELATIVE_PATH = Path("results/experiment_5330_sea_anytime_certificate_gate_v486.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
 MODULE_RELATIVE_PATH = Path(
     "python/carnot/experiment_5341_bounded_compressor_drift_monitor_v487.py"
@@ -114,8 +111,7 @@ REQUIRED_FIELD_PRINCIPLES = {
         "evaluation but explicitly not committed to persistent state."
     ),
     "drift_detection_rate": (
-        "Bare numeric rate over compression omission and over-compression drift "
-        "rows."
+        "Bare numeric rate over compression omission and over-compression drift rows."
     ),
     "stale_recall_detection_rate": "Bare numeric rate over stale-recall rows.",
     "poison_rejection_rate": (
@@ -123,8 +119,7 @@ REQUIRED_FIELD_PRINCIPLES = {
         "persistent commitment."
     ),
     "recoverability_rate": (
-        "Bare numeric rate over safe recovery rows that restore from sidecars "
-        "or rollback evidence."
+        "Bare numeric rate over safe recovery rows that restore from sidecars or rollback evidence."
     ),
     "unsafe_commits": (
         "Bare integer count of unsafe candidates that reached persistent state; "
@@ -272,11 +267,7 @@ def evaluate_compressor_cases(cases: Sequence[CompressorCase]) -> JsonDict:
     poison_counts = _poison_rejection_count(rows)
     recovery_counts = _recovery_count(rows)
     unsafe_commits = sum(1 for row in rows if bool(row["unsafe_commit"]))
-    recalled_rows = [
-        row
-        for row in rows
-        if row["commit_decision"] == RECALLED_NOT_COMMITTED
-    ]
+    recalled_rows = [row for row in rows if row["commit_decision"] == RECALLED_NOT_COMMITTED]
     recall_commit_separation_rate = _rate(
         sum(1 for row in recalled_rows if not row["persistent_state_changed"]),
         len(recalled_rows),
@@ -326,13 +317,10 @@ def confirm_fixture_gate(
     rows = source.get("lifecycle_rows", [])
     object_ids = set(source.get("context_object_ids", []))
     required_ids = {
-        object_id
-        for case in build_compressor_cases()
-        for object_id in case.source_object_ids
+        object_id for case in build_compressor_cases() for object_id in case.source_object_ids
     }
     checks = {
-        "context_lifecycle_fixture_ready": source.get("context_lifecycle_fixture_ready")
-        is True,
+        "context_lifecycle_fixture_ready": source.get("context_lifecycle_fixture_ready") is True,
         "no_weight_mutation": source.get("no_weight_mutation") is True,
         "lifecycle_rows_present": isinstance(rows, list) and bool(rows),
         "stable_object_ids_present": required_ids.issubset(object_ids),
@@ -355,8 +343,7 @@ def confirm_certificate_gate(
 
     source = dict(artifact or _read_json(Path(root) / EXP5330_RELATIVE_PATH))
     checks = {
-        "anytime_certificate_gate_ready": source.get("anytime_certificate_gate_ready")
-        is True,
+        "anytime_certificate_gate_ready": source.get("anytime_certificate_gate_ready") is True,
         "no_weight_mutation": source.get("no_weight_mutation") is True,
         "unsafe_promotions_zero": source.get("unsafe_promotions") == 0,
     }
@@ -380,9 +367,7 @@ def build_result_artifact(
     certificate_gate = confirm_certificate_gate(root=root)
     gates_pass = bool(fixture_gate["all_passed"] and certificate_gate["all_passed"])
     evaluation = (
-        evaluate_compressor_cases(build_compressor_cases())
-        if gates_pass
-        else _blocked_evaluation()
+        evaluate_compressor_cases(build_compressor_cases()) if gates_pass else _blocked_evaluation()
     )
     complete = _compressor_complete(
         evaluation=evaluation,
@@ -391,9 +376,7 @@ def build_result_artifact(
         tests_run=tests_run,
     )
     status = (
-        "compressor_drift_fixture_ready"
-        if complete
-        else "blocked_fixture_certificate_or_tests"
+        "compressor_drift_fixture_ready" if complete else "blocked_fixture_certificate_or_tests"
     )
     artifact: JsonDict = {
         "schema": SCHEMA,
@@ -528,9 +511,7 @@ def _evaluate_case(
     )
     commit_decision = _commit_decision(case, accepted_commit, detected_anomaly)
     committed_summary = (
-        _summary_from_case(case, summary_token_count, source_row)
-        if accepted_commit
-        else None
+        _summary_from_case(case, summary_token_count, source_row) if accepted_commit else None
     )
     if committed_summary is not None:
         persistent_state[str(committed_summary["summary_id"])] = committed_summary
@@ -672,9 +653,7 @@ def _detection_count(
 
 
 def _poison_rejection_count(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
-    total = sum(
-        1 for row in rows if row.get("expected_anomaly") == POISONED_CANDIDATE_MEMORY
-    )
+    total = sum(1 for row in rows if row.get("expected_anomaly") == POISONED_CANDIDATE_MEMORY)
     detected = sum(
         1
         for row in rows
@@ -859,7 +838,12 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _checksum(payload: Mapping[str, Any]) -> str:

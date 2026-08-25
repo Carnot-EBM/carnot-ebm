@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Any
 
 from carnot import experiment_5408_resource_accounted_csl_controller_v492 as exp5408
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -38,13 +39,9 @@ RUN_DATE = "2026-07-08"
 RANDOM_SEED = 5409
 INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
 
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5409_uncertainty_gated_promotion_v492.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5409_uncertainty_gated_promotion_v492.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
-MODULE_RELATIVE_PATH = Path(
-    "python/carnot/experiment_5409_uncertainty_gated_promotion_v492.py"
-)
+MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5409_uncertainty_gated_promotion_v492.py")
 EXP5408_RESULT_RELATIVE_PATH = exp5408.RESULT_RELATIVE_PATH
 EXP5408_MODULE_RELATIVE_PATH = exp5408.MODULE_RELATIVE_PATH
 
@@ -69,9 +66,7 @@ POISON_CONTROL_KINDS = frozenset(
         "high_cost_low_value",
     }
 )
-REQUIRED_FAMILIES = frozenset(
-    {"benign", "stale", "poisoned", "ambiguous", "scarce_evidence"}
-)
+REQUIRED_FAMILIES = frozenset({"benign", "stale", "poisoned", "ambiguous", "scarce_evidence"})
 
 FIELD_PRINCIPLES: dict[str, str] = {
     "gated_on_resource_accounted_csl": "Precondition.",
@@ -159,9 +154,7 @@ def build_trace_index(source_artifact: Mapping[str, Any]) -> JsonDict:
     return {
         "support_by_raw_id": dict(support_by_raw_id),
         "event_ids_by_raw_id": {key: sorted(value) for key, value in event_ids_by_raw_id.items()},
-        "tiers_by_raw_id": {
-            key: sorted(value) for key, value in tiers_by_raw_id.items()
-        },
+        "tiers_by_raw_id": {key: sorted(value) for key, value in tiers_by_raw_id.items()},
         "rollback_recovered_by_raw_id": dict(rollback_recovered_by_raw_id),
         "accepted_memory_id_counts": dict(accepted_memory_id_counts),
         "decision_indices_by_memory_id": {
@@ -175,14 +168,11 @@ def build_promotion_candidates(source_artifact: Mapping[str, Any]) -> JsonList:
     """Create benign, stale, poisoned, ambiguous, and scarce-evidence candidates."""
 
     candidates = [
-        _candidate_from_memory(row)
-        for row in source_artifact.get("memory_candidates", [])
+        _candidate_from_memory(row) for row in source_artifact.get("memory_candidates", [])
     ]
     by_memory_id = {str(row["source_memory_id"]): row for row in candidates}
     by_raw_id = {
-        raw_id: candidate
-        for candidate in candidates
-        for raw_id in candidate["raw_episode_ids"]
+        raw_id: candidate for candidate in candidates for raw_id in candidate["raw_episode_ids"]
     }
 
     clean_scaleup = by_memory_id["mem5396-clean-scaleup-summary"]
@@ -231,9 +221,7 @@ def score_promotion_candidate(
                 "certainty_threshold": MIN_CERTAINTY_SCORE,
                 "support_threshold": MIN_SUPPORT_COUNT,
                 "route_action": (
-                    "activate_controller_sidecar"
-                    if accepted
-                    else "retain_audit_only"
+                    "activate_controller_sidecar" if accepted else "retain_audit_only"
                 ),
             },
             "retained_for_audit": True,
@@ -259,9 +247,7 @@ def route_promoted_fragments(
     for row in accepted:
         fragment_id = str(row["fragment_id"])
         memory_id = str(row["source_memory_id"])
-        decision_indices = list(
-            trace_index["decision_indices_by_memory_id"].get(memory_id, [])
-        )
+        decision_indices = list(trace_index["decision_indices_by_memory_id"].get(memory_id, []))
         active_ids.append(fragment_id)
         if decision_indices:
             used_ids.append(fragment_id)
@@ -283,9 +269,7 @@ def route_promoted_fragments(
         "rejected_fragment_routing_influence_count": sum(
             1 for row in rejected if row["active_for_routing"]
         ),
-        "routing_effect_row_count": sum(
-            int(row["routing_effect_count"]) for row in effect_records
-        ),
+        "routing_effect_row_count": sum(int(row["routing_effect_count"]) for row in effect_records),
         "routing_effect_records": effect_records,
     }
 
@@ -325,8 +309,7 @@ def evaluate_uncertainty_gated_promotion(root: Path | str = REPO_ROOT) -> JsonDi
     routing_report = route_promoted_fragments(scored, source_artifact)
     active_ids = set(routing_report["accepted_fragment_ids_used_for_routing"])
     scored = [
-        {**row, "live_routing_effect": str(row["fragment_id"]) in active_ids}
-        for row in scored
+        {**row, "live_routing_effect": str(row["fragment_id"]) in active_ids} for row in scored
     ]
     accepted = [row for row in scored if row["promotion_decision"]["accepted"]]
     rejected = [row for row in scored if not row["promotion_decision"]["accepted"]]
@@ -392,21 +375,13 @@ def build_artifact(
         "field_principles": dict(FIELD_PRINCIPLES),
         "source_artifacts": [str(EXP5408_RESULT_RELATIVE_PATH)],
         "status": "complete" if ready else "blocked",
-        "gated_on_resource_accounted_csl": evaluation[
-            "gated_on_resource_accounted_csl"
-        ],
+        "gated_on_resource_accounted_csl": evaluation["gated_on_resource_accounted_csl"],
         "promotion_candidate_count": evaluation["promotion_candidate_count"],
         "accepted_promotion_count": evaluation["accepted_promotion_count"],
         "rejected_retained_count": evaluation["rejected_retained_count"],
-        "uncertainty_gate_rejection_rate": evaluation[
-            "uncertainty_gate_rejection_rate"
-        ],
-        "stale_promotion_rejection_rate": evaluation[
-            "stale_promotion_rejection_rate"
-        ],
-        "poisoned_promotion_rejection_rate": evaluation[
-            "poisoned_promotion_rejection_rate"
-        ],
+        "uncertainty_gate_rejection_rate": evaluation["uncertainty_gate_rejection_rate"],
+        "stale_promotion_rejection_rate": evaluation["stale_promotion_rejection_rate"],
+        "poisoned_promotion_rejection_rate": evaluation["poisoned_promotion_rejection_rate"],
         "reachability_violation_rejection_rate": evaluation[
             "reachability_violation_rejection_rate"
         ],
@@ -448,9 +423,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
         for field in INTEGER_FIELDS
         if isinstance(artifact.get(field), bool) or not isinstance(artifact.get(field), int)
     )
-    errors.extend(
-        field for field in NUMERIC_FIELDS if not _is_numeric(artifact.get(field))
-    )
+    errors.extend(field for field in NUMERIC_FIELDS if not _is_numeric(artifact.get(field)))
     if artifact.get("field_principles") != FIELD_PRINCIPLES:
         errors.append("field_principles")
     if not str(artifact.get("honest_verdict", "")).startswith(TERMINAL_PREFIXES):
@@ -471,21 +444,14 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
         errors.append("gated_on_resource_accounted_csl")
     if artifact.get("no_weight_mutation") is not True:
         errors.append("no_weight_mutation")
-    if artifact.get("promotion_candidate_count") != len(
-        artifact.get("promotion_candidates", [])
-    ):
+    if artifact.get("promotion_candidate_count") != len(artifact.get("promotion_candidates", [])):
         errors.append("promotion_candidate_count")
-    if artifact.get("accepted_promotion_count") != len(
-        artifact.get("accepted_promotions", [])
-    ):
+    if artifact.get("accepted_promotion_count") != len(artifact.get("accepted_promotions", [])):
         errors.append("accepted_promotion_count")
-    if artifact.get("rejected_retained_count") != len(
-        artifact.get("rejected_promotions", [])
-    ):
+    if artifact.get("rejected_retained_count") != len(artifact.get("rejected_promotions", [])):
         errors.append("rejected_retained_count")
     if artifact.get("promotion_candidate_count") != (
-        artifact.get("accepted_promotion_count", 0)
-        + artifact.get("rejected_retained_count", 0)
+        artifact.get("accepted_promotion_count", 0) + artifact.get("rejected_retained_count", 0)
     ):
         errors.append("promotion_candidate_count")
     routing = artifact.get("routing_report", {})
@@ -500,9 +466,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     ):
         errors.append("live_routing_effect")
     if errors:
-        raise ValueError(
-            "invalid Exp5409 artifact fields: " + ",".join(sorted(set(errors)))
-        )
+        raise ValueError("invalid Exp5409 artifact fields: " + ",".join(sorted(set(errors))))
     return True
 
 
@@ -568,9 +532,7 @@ def _candidate_from_memory(candidate: Mapping[str, Any]) -> JsonDict:
         "source_memory_accepted": bool(candidate["decision"]["accepted"]),
         "source_trust_label": dict(candidate["trust_label"]),
         "requested_activation": "promote_to_controller_sidecar",
-        "model_generated_rationale": (
-            "candidate asks for promotion; non-authoritative"
-        ),
+        "model_generated_rationale": ("candidate asks for promotion; non-authoritative"),
     }
 
 
@@ -580,9 +542,7 @@ def _ambiguous_candidate(clean: Mapping[str, Any], forged: Mapping[str, Any]) ->
         "record_type": "promotion_candidate",
         "fragment_id": "frag5409-ambiguous-scaleup-forged-merge",
         "source_memory_id": "ambiguous:mem5396-clean-scaleup-summary+mem5396-forged-reasoning-history",
-        "fragment_claim": (
-            "Merged clean scale-up summary with a forged reasoning shortcut."
-        ),
+        "fragment_claim": ("Merged clean scale-up summary with a forged reasoning shortcut."),
         "candidate_family": "ambiguous",
         "source_control_kind": "ambiguous_conflict",
         "raw_episode_ids": raw_ids,
@@ -618,9 +578,7 @@ def _scarce_evidence_candidate(clean: Mapping[str, Any]) -> JsonDict:
         },
         "support_count_override": 1,
         "requested_activation": "promote_to_controller_sidecar",
-        "model_generated_rationale": (
-            "single observed success asks to bypass support threshold"
-        ),
+        "model_generated_rationale": ("single observed success asks to bypass support threshold"),
     }
 
 
@@ -683,15 +641,10 @@ def _reachability_envelope(
 ) -> JsonDict:
     raw_ids = [str(raw_id) for raw_id in candidate["raw_episode_ids"]]
     observed_tiers = sorted(
-        {
-            tier
-            for raw_id in raw_ids
-            for tier in trace_index["tiers_by_raw_id"].get(raw_id, [])
-        }
+        {tier for raw_id in raw_ids for tier in trace_index["tiers_by_raw_id"].get(raw_id, [])}
     )
     recovered_count = sum(
-        int(trace_index["rollback_recovered_by_raw_id"].get(raw_id, 0))
-        for raw_id in raw_ids
+        int(trace_index["rollback_recovered_by_raw_id"].get(raw_id, 0)) for raw_id in raw_ids
     )
     checks = {
         "min_support_met": support_count >= MIN_SUPPORT_COUNT,
@@ -726,10 +679,7 @@ def _conflict_check(
     trace_index: Mapping[str, Any],
 ) -> JsonDict:
     raw_control_kinds = sorted(
-        {
-            str(trace_index["raw_control_by_id"].get(raw_id, "unknown"))
-            for raw_id in raw_ids
-        }
+        {str(trace_index["raw_control_by_id"].get(raw_id, "unknown")) for raw_id in raw_ids}
     )
     rejected_source = not bool(candidate["source_memory_accepted"])
     family_conflict = candidate["candidate_family"] in {
@@ -739,8 +689,7 @@ def _conflict_check(
     }
     mixed_raw_controls = len(raw_control_kinds) > 1
     rollback_conflicts = sum(
-        int(trace_index["rollback_recovered_by_raw_id"].get(raw_id, 0))
-        for raw_id in raw_ids
+        int(trace_index["rollback_recovered_by_raw_id"].get(raw_id, 0)) for raw_id in raw_ids
     )
     conflict_count = int(rejected_source) + int(family_conflict) + int(mixed_raw_controls)
     conflict_count += rollback_conflicts
@@ -796,10 +745,7 @@ def _readiness_checks(
     families = {row["candidate_family"] for row in evaluation["promotion_candidates"]}
     rejected = evaluation["rejected_promotions"]
     checks = {
-        "gated_on_resource_accounted_csl": evaluation[
-            "gated_on_resource_accounted_csl"
-        ]
-        is True,
+        "gated_on_resource_accounted_csl": evaluation["gated_on_resource_accounted_csl"] is True,
         "required_families_covered": REQUIRED_FAMILIES.issubset(families),
         "candidates_present": evaluation["promotion_candidate_count"] > 0,
         "accepted_promotions_present": evaluation["accepted_promotion_count"] > 0,
@@ -807,24 +753,16 @@ def _readiness_checks(
             row["live_routing_effect"] for row in evaluation["accepted_promotions"]
         ),
         "rejected_retained_inactive": all(
-            row["retained_for_audit"] and not row["active_for_routing"]
-            for row in rejected
+            row["retained_for_audit"] and not row["active_for_routing"] for row in rejected
         ),
         "rejected_zero_routing_influence": evaluation["routing_report"][
             "rejected_fragment_routing_influence_count"
         ]
         == 0,
-        "uncertainty_controls_rejected": evaluation[
-            "uncertainty_gate_rejection_rate"
-        ]
-        == 1.0,
-        "stale_controls_rejected": evaluation["stale_promotion_rejection_rate"]
-        == 1.0,
-        "poison_controls_rejected": evaluation["poisoned_promotion_rejection_rate"]
-        == 1.0,
-        "reachability_controls_rejected": evaluation[
-            "reachability_violation_rejection_rate"
-        ]
+        "uncertainty_controls_rejected": evaluation["uncertainty_gate_rejection_rate"] == 1.0,
+        "stale_controls_rejected": evaluation["stale_promotion_rejection_rate"] == 1.0,
+        "poison_controls_rejected": evaluation["poisoned_promotion_rejection_rate"] == 1.0,
+        "reachability_controls_rejected": evaluation["reachability_violation_rejection_rate"]
         == 1.0,
         "rollback_succeeded": evaluation["rollback_success_rate"] == 1.0,
         "no_weight_mutation": evaluation["no_weight_mutation"] is True,
@@ -882,7 +820,12 @@ def _checksum(payload: Mapping[str, Any]) -> str:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:

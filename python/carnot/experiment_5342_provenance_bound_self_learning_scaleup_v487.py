@@ -18,6 +18,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -33,12 +34,8 @@ RANDOM_SEED = 5342
 RESULT_RELATIVE_PATH = Path(
     "results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json"
 )
-EXP5340_RELATIVE_PATH = Path(
-    "results/experiment_5340_utility_weighted_context_memory_v487.json"
-)
-EXP5341_RELATIVE_PATH = Path(
-    "results/experiment_5341_bounded_compressor_drift_monitor_v487.json"
-)
+EXP5340_RELATIVE_PATH = Path("results/experiment_5340_utility_weighted_context_memory_v487.json")
+EXP5341_RELATIVE_PATH = Path("results/experiment_5341_bounded_compressor_drift_monitor_v487.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
 MODULE_RELATIVE_PATH = Path(
     "python/carnot/experiment_5342_provenance_bound_self_learning_scaleup_v487.py"
@@ -110,8 +107,7 @@ REQUIRED_FIELD_PRINCIPLES = {
         "adapters."
     ),
     "multi_session_trace_count": (
-        "Bare integer count of deterministic multi-session traces used by the "
-        "policy comparison."
+        "Bare integer count of deterministic multi-session traces used by the policy comparison."
     ),
     "context_hash_chain_valid": (
         "Bare gate proving every trace event hash links to its predecessor and "
@@ -134,8 +130,7 @@ REQUIRED_FIELD_PRINCIPLES = {
         "always-full verification."
     ),
     "cross_event_attack_detection_rate": (
-        "Bare numeric rate over cross-event attacks detected by aggregate "
-        "suspicion telemetry."
+        "Bare numeric rate over cross-event attacks detected by aggregate suspicion telemetry."
     ),
     "unsafe_false_accepts": (
         "Bare integer count of unsafe accepts by the combined certificate-gated "
@@ -209,8 +204,7 @@ def confirm_upstream_readiness(root: Path | str = REPO_ROOT) -> JsonDict:
             and compressor_certificate.get("no_weight_mutation") is True
         ),
         "unsafe_upstream_accepts_zero": (
-            utility.get("unsafe_false_accepts") == 0
-            and compressor.get("unsafe_commits") == 0
+            utility.get("unsafe_false_accepts") == 0 and compressor.get("unsafe_commits") == 0
         ),
     }
     failed = [name for name, passed in checks.items() if not passed]
@@ -219,9 +213,7 @@ def confirm_upstream_readiness(root: Path | str = REPO_ROOT) -> JsonDict:
         "failed_gates": failed,
         "all_passed": not failed,
         "utility_source_honest_verdict": _wrapped_value(utility.get("honest_verdict")),
-        "compressor_source_honest_verdict": _wrapped_value(
-            compressor.get("honest_verdict")
-        ),
+        "compressor_source_honest_verdict": _wrapped_value(compressor.get("honest_verdict")),
     }
 
 
@@ -528,9 +520,7 @@ def evaluate_policy_comparison(traces: Sequence[Mapping[str, Any]]) -> JsonDict:
         always["verifier_cost"],
     )
     process_metric_improved = bool(
-        memory_hygiene_delta > 0.0
-        or context_efficiency_delta > 0.0
-        or verifier_cost_delta > 0.0
+        memory_hygiene_delta > 0.0 or context_efficiency_delta > 0.0 or verifier_cost_delta > 0.0
     )
     return {
         "policy_rows": policy_rows,
@@ -540,9 +530,7 @@ def evaluate_policy_comparison(traces: Sequence[Mapping[str, Any]]) -> JsonDict:
         "memory_hygiene_delta": memory_hygiene_delta,
         "context_efficiency_delta": context_efficiency_delta,
         "verifier_cost_delta": verifier_cost_delta,
-        "quality_preserved_vs_always_full": (
-            combined["final_quality"] >= always["final_quality"]
-        ),
+        "quality_preserved_vs_always_full": (combined["final_quality"] >= always["final_quality"]),
         "process_metric_improved": process_metric_improved,
         "telemetry": telemetry,
     }
@@ -579,11 +567,7 @@ def build_result_artifact(
         comparison=comparison,
         tests_run=tests_run,
     )
-    status = (
-        "self_learning_scaleup_ready"
-        if complete
-        else "blocked_upstream_or_scaleup_gate"
-    )
+    status = "self_learning_scaleup_ready" if complete else "blocked_upstream_or_scaleup_gate"
     combined_metrics = comparison.get("policy_metrics", {}).get(COMBINED_POLICY, {})
     artifact: JsonDict = {
         "schema": SCHEMA,
@@ -607,9 +591,7 @@ def build_result_artifact(
         "no_weight_mutation": bool(upstream_gate["no_weight_mutation"]),
         "multi_session_trace_count": len(traces),
         "context_hash_chain_valid": bool(hash_chain["valid"]),
-        "point_in_time_reconstruction_rate": reconstruction[
-            "point_in_time_reconstruction_rate"
-        ],
+        "point_in_time_reconstruction_rate": reconstruction["point_in_time_reconstruction_rate"],
         "memory_hygiene_delta": comparison["memory_hygiene_delta"],
         "context_efficiency_delta": comparison["context_efficiency_delta"],
         "verifier_cost_delta": comparison["verifier_cost_delta"],
@@ -628,9 +610,7 @@ def build_result_artifact(
         "policy_rows": comparison["policy_rows"],
         "policy_metrics": comparison["policy_metrics"],
         "policy_comparison": {
-            "quality_preserved_vs_always_full": comparison[
-                "quality_preserved_vs_always_full"
-            ],
+            "quality_preserved_vs_always_full": comparison["quality_preserved_vs_always_full"],
             "process_metric_improved": comparison["process_metric_improved"],
             "same_trace_ids": comparison["same_trace_ids"],
             "all_policies_run": comparison["all_policies_run"],
@@ -804,8 +784,7 @@ def _build_event(
             "decision": decision,
             "per_diff_check": (
                 "pass"
-                if float(raw_event["per_diff_suspicion"])
-                < PER_DIFF_REJECTION_THRESHOLD
+                if float(raw_event["per_diff_suspicion"]) < PER_DIFF_REJECTION_THRESHOLD
                 else "reject"
             ),
             "certificate_gate": "combined_certificate_gated",
@@ -885,7 +864,9 @@ def _policy_route(
         if not accepted:
             rejection_reasons.append("utility_local_gate_rejected")
     elif policy == BOUNDED_ONLY_POLICY:
-        verifier_call = bool(event["action"] in {"fold", "retrieve", "rollback"} or not compressor_clean)
+        verifier_call = bool(
+            event["action"] in {"fold", "retrieve", "rollback"} or not compressor_clean
+        )
         accepted = bool(approved_current and per_diff_clean and compressor_clean)
         rollback_event = decision == "rollback" and not compressor_clean
         if not accepted and not rollback_event:
@@ -964,10 +945,7 @@ def _policy_metrics(
 
 
 def _same_trace_ids(policy_rows: Mapping[str, Sequence[Mapping[str, Any]]]) -> bool:
-    trace_ids = [
-        tuple(str(row["trace_id"]) for row in rows)
-        for rows in policy_rows.values()
-    ]
+    trace_ids = [tuple(str(row["trace_id"]) for row in rows) for rows in policy_rows.values()]
     return bool(trace_ids) and all(ids == trace_ids[0] for ids in trace_ids)
 
 
@@ -1089,7 +1067,12 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _hash_text(text: str) -> str:

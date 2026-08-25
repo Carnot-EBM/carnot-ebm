@@ -23,19 +23,16 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
 JsonList = list[JsonDict]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5435_verified_workflow_memory_csl_v494.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5435_verified_workflow_memory_csl_v494.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
-MODULE_RELATIVE_PATH = Path(
-    "python/carnot/experiment_5435_verified_workflow_memory_csl_v494.py"
-)
+MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5435_verified_workflow_memory_csl_v494.py")
 EXPERIMENT = "experiment_5435_verified_workflow_memory_csl_v494"
 EXPERIMENT_ID = "exp5435-v494-verified-workflow-memory-csl"
 MILESTONE = "2026.07.494"
@@ -370,7 +367,13 @@ def verify_before_store(fragment: Mapping[str, Any]) -> JsonDict:
     if all(gate_results.values()) and row.get("episode_family") == "positive":
         status = "promoted"
         reasons = ["all_verify_before_store_gates_passed"]
-    elif not evidence_passed and ontology_passed and kernel_passed and rollback_passed and resource_passed:
+    elif (
+        not evidence_passed
+        and ontology_passed
+        and kernel_passed
+        and rollback_passed
+        and resource_passed
+    ):
         status = "abstained"
     else:
         status = "rejected"
@@ -426,8 +429,7 @@ def route_memories(scored_fragments: Sequence[Mapping[str, Any]]) -> tuple[JsonL
         "deflected_trap_memory_ids": sorted(
             row["memory_id"]
             for row in routed
-            if row["episode_family"] == "retrieval_trap"
-            and row["promotion_status"] != "promoted"
+            if row["episode_family"] == "retrieval_trap" and row["promotion_status"] != "promoted"
         ),
         "rejected_memory_routing_influence_count": sum(
             1
@@ -584,9 +586,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     if artifact.get("status") == "blocked" and ready is True:
         errors.append("verified_workflow_memory_ready")
     if errors:
-        raise ValueError(
-            "invalid Exp5435 artifact fields: " + ",".join(sorted(set(errors)))
-        )
+        raise ValueError("invalid Exp5435 artifact fields: " + ",".join(sorted(set(errors))))
     return True
 
 
@@ -705,9 +705,7 @@ def _kernel_planner_valid(row: Mapping[str, Any]) -> bool:
 def _evidence_reliance_valid(row: Mapping[str, Any]) -> bool:
     if row.get("evidence_reliance_valid") is not True:
         return False
-    return set(row.get("expected_evidence", [])).issubset(
-        set(row.get("observed_evidence", []))
-    )
+    return set(row.get("expected_evidence", [])).issubset(set(row.get("observed_evidence", [])))
 
 
 def _rollback_pointer_valid(row: Mapping[str, Any]) -> bool:
@@ -716,7 +714,9 @@ def _rollback_pointer_valid(row: Mapping[str, Any]) -> bool:
 
 
 def _resource_accounting_valid(row: Mapping[str, Any]) -> bool:
-    return _is_numeric(row.get("resource_savings")) and row["resource_savings"] >= MIN_RESOURCE_SAVINGS
+    return (
+        _is_numeric(row.get("resource_savings")) and row["resource_savings"] >= MIN_RESOURCE_SAVINGS
+    )
 
 
 def _gate_failure_reasons(gates: Mapping[str, bool]) -> list[str]:
@@ -892,7 +892,9 @@ def _source_file_checksums(root: Path) -> JsonDict:
 
 
 def _sha256_file(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return hashlib.sha256(
+        receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+    ).hexdigest()
 
 
 def _rate(numerator: int, denominator: int) -> float:
@@ -913,7 +915,5 @@ def _json_ready(value: Any) -> Any:
 
 def _checksum(value: Any) -> str:
     return hashlib.sha256(
-        json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode(
-            "utf-8"
-        )
+        json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("utf-8")
     ).hexdigest()

@@ -22,6 +22,7 @@ import json
 from pathlib import Path
 import subprocess
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -383,7 +384,9 @@ def build_artifact(
     """Build the .495 capstone from upstream artifacts and source context only."""
 
     root_path = Path(root)
-    payloads, context_read, context_missing, artifacts_found, artifacts_missing, read_errors = read_inputs(root_path)
+    payloads, context_read, context_missing, artifacts_found, artifacts_missing, read_errors = (
+        read_inputs(root_path)
+    )
     truth_table = [classify_lane(spec, payloads, artifacts_missing) for spec in LANE_SPECS]
     buckets = bucket_lanes(truth_table)
 
@@ -416,7 +419,9 @@ def build_artifact(
         "roadmap_yaml_unchanged": git_path_unchanged(root_path, "research-roadmap.yaml"),
         "conductor_unchanged": git_path_unchanged(root_path, "scripts/research_conductor.py"),
         "inference_substrate": INFERENCE_SUBSTRATE,
-        "source_artifact_checksums": source_artifact_checksums(root_path, [*context_read, *artifacts_found]),
+        "source_artifact_checksums": source_artifact_checksums(
+            root_path, [*context_read, *artifacts_found]
+        ),
         "protected_file_checks": protected_file_checks(root_path),
         "tests_run": [dict(row) for row in tests_run],
     }
@@ -492,7 +497,9 @@ def read_inputs(
     return payloads, context_read, context_missing, artifacts_found, artifacts_missing, errors
 
 
-def classify_lane(spec: JsonMap, payloads: Mapping[str, JsonMap], artifacts_missing: Sequence[str]) -> JsonDict:
+def classify_lane(
+    spec: JsonMap, payloads: Mapping[str, JsonMap], artifacts_missing: Sequence[str]
+) -> JsonDict:
     """Classify one lane without borrowing evidence from a neighboring lane."""
 
     lane = str(spec["lane"])
@@ -517,7 +524,9 @@ def classify_lane(spec: JsonMap, payloads: Mapping[str, JsonMap], artifacts_miss
             terminal_evidence={
                 "token_internal_lane_reopened": token_internal_lane_reopened(payloads),
                 "backend_receipt_present": authenticated_backend_receipt_present(payloads),
-                "token_internal_claim_rejected": unwrap(payloads.get(EXP5451, {}).get("token_internal_claim_rejected")),
+                "token_internal_claim_rejected": unwrap(
+                    payloads.get(EXP5451, {}).get("token_internal_claim_rejected")
+                ),
             },
             blocked_reason="no_authenticated_backend_receipt",
         )
@@ -550,7 +559,11 @@ def classify_lane(spec: JsonMap, payloads: Mapping[str, JsonMap], artifacts_miss
         )
 
     classification = lane_classification(lane, payload)
-    blocked_reason = "" if classification in {"headline_ready", "bounded", "honest_null"} else f"{lane}_not_ready"
+    blocked_reason = (
+        ""
+        if classification in {"headline_ready", "bounded", "honest_null"}
+        else f"{lane}_not_ready"
+    )
     if classification == "honest_null":
         blocked_reason = str(payload.get("residual_wall", payload.get("status", "honest_null")))
     return lane_row(
@@ -574,7 +587,11 @@ def lane_classification(lane: str, payload: JsonMap) -> str:
         )
         return "headline_ready" if ready else "blocked"
     if lane == "local_sota_decoding":
-        return "bounded" if unwrap(payload.get("verifier_guided_decoding_ready")) is True else "blocked"
+        return (
+            "bounded"
+            if unwrap(payload.get("verifier_guided_decoding_ready")) is True
+            else "blocked"
+        )
     if lane == "ast_kb_witnesses":
         ready = (
             unwrap(payload.get("ast_kb_witness_ready")) is True
@@ -625,7 +642,11 @@ def lane_classification(lane: str, payload: JsonMap) -> str:
         )
         return "bounded" if ready else "blocked"
     if lane == "arc_live_progress":
-        return "headline_ready" if unwrap(payload.get("arc_new_level_banked")) is True else "honest_null"
+        return (
+            "headline_ready"
+            if unwrap(payload.get("arc_new_level_banked")) is True
+            else "honest_null"
+        )
     if lane == "kan_certificates":
         ready = (
             unwrap(payload.get("kan_certificate_ready")) is True
@@ -701,7 +722,9 @@ def contains_unsupported_claim(payload: JsonMap) -> bool:
     unsupported = payload.get("unsupported_claims_detected")
     if not isinstance(unsupported, list):
         return False
-    return any(not bool(unwrap(row.get("rejected"))) for row in unsupported if isinstance(row, Mapping))
+    return any(
+        not bool(unwrap(row.get("rejected"))) for row in unsupported if isinstance(row, Mapping)
+    )
 
 
 def evidence_for_spec(spec: JsonMap, payload: JsonMap) -> JsonDict:
@@ -753,7 +776,10 @@ def lane_bucket_name(classification: str) -> str:
 def hardware_speedup_claim(payloads: Mapping[str, JsonMap]) -> bool:
     """Return true only if upstream hardware artifacts actually claimed speedup."""
 
-    return any(recursive_key_true(payloads.get(path, {}), "hardware_speedup_claim") for path in (EXP5448, EXP5449))
+    return any(
+        recursive_key_true(payloads.get(path, {}), "hardware_speedup_claim")
+        for path in (EXP5448, EXP5449)
+    )
 
 
 def token_internal_lane_reopened(payloads: Mapping[str, JsonMap]) -> bool:
@@ -775,7 +801,11 @@ def authenticated_backend_receipt_present(payloads: Mapping[str, JsonMap]) -> bo
         "token_internal_lane_reopened",
         "future_token_signal_allowed",
     )
-    return any(recursive_key_true(payloads.get(path, {}), key) for path in (EXP5441, EXP5451) for key in keys)
+    return any(
+        recursive_key_true(payloads.get(path, {}), key)
+        for path in (EXP5441, EXP5451)
+        for key in keys
+    )
 
 
 def recursive_key_true(value: Any, key: str) -> bool:
@@ -806,7 +836,9 @@ def next_recommendations(payloads: Mapping[str, JsonMap]) -> list[JsonDict]:
             "evidence": {
                 "flagged_adversarial": unwrap(decoding.get("flagged_adversarial")),
                 "corrigendum_pending": unwrap(decoding.get("corrigendum_pending")),
-                "guided_validity_delta_vs_grammar_only": unwrap(decoding.get("guided_validity_delta_vs_grammar_only")),
+                "guided_validity_delta_vs_grammar_only": unwrap(
+                    decoding.get("guided_validity_delta_vs_grammar_only")
+                ),
                 "gpu_offload_verified": unwrap(decoding.get("gpu_offload_verified")),
             },
         },
@@ -838,7 +870,9 @@ def next_recommendations(payloads: Mapping[str, JsonMap]) -> list[JsonDict]:
             "recommendation": "Keep hardware work to matched hash receipts and repeatability until board-local timing supports an actual speedup claim.",
             "evidence": {
                 "hardware_receipts_ready": unwrap(hardware.get("hardware_receipts_ready")),
-                "hashes_match_before_timing_compare": unwrap(hardware.get("hashes_match_before_timing_compare")),
+                "hashes_match_before_timing_compare": unwrap(
+                    hardware.get("hashes_match_before_timing_compare")
+                ),
                 "timing_repeat_counts": unwrap(hardware.get("timing_repeat_counts")),
                 "hardware_speedup_claim": unwrap(hardware.get("hardware_speedup_claim")),
             },
@@ -956,7 +990,10 @@ def validate_artifact(artifact: JsonMap) -> None:
 
     if artifact["arc_new_level_banked"] is True:
         arc_evidence = rows_by_lane["arc_live_progress"]["terminal_evidence"]
-        if arc_evidence.get("arc_new_level_banked") is not True or arc_evidence.get("new_level_reproduced") is not True:
+        if (
+            arc_evidence.get("arc_new_level_banked") is not True
+            or arc_evidence.get("new_level_reproduced") is not True
+        ):
             raise ValueError("arc_new_level_banked requires reproduction-gated evidence")
     if not artifact["artifacts_missing"]:
         expected_headlines = [
@@ -998,7 +1035,12 @@ def payload_checksum(payload: JsonMap) -> str:
 def file_sha256(path: Path) -> str:
     """Hash a source artifact or context file for provenance."""
 
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def git_path_unchanged(root: Path, relative: str) -> bool:
@@ -1033,7 +1075,9 @@ def write_json(path: Path, payload: JsonMap) -> None:
     """Write pretty, stable JSON with a trailing newline for git diffs."""
 
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(json_ready(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(json_ready(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
 
 def main(argv: Sequence[str] | None = None) -> int:

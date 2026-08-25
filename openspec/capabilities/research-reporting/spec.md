@@ -57045,3 +57045,24 @@ adoption clause in the row above was not true when written. A grep for the word
 `provenance_receipts` matched an unrelated artifact FIELD of the same name in
 three experiment modules; no module imported the helper. Adoption is tracked
 separately and was still zero at the time REQ-REPORT-6610-EVIDENCE-LIVE landed.
+
+Adoption update 2026-08-25, appended: 50 modules now import the helper. They are
+the replay-tested modules that define their own file-hash primitive, 47 under
+`python/carnot/` and 3 under `python/carnot/pipeline/`. The `result == replay`
+suite moved from 52 failed / 26 passed / 1 error to 13 failed / 65 passed / 1
+error. 39 tests flipped green and none went red.
+
+Not adopted, with the reason for each:
+
+| Not adopted | Reason |
+|---|---|
+| `experiment_5415_transition_v493` and the 6 transition modules importing its `path_sha256` | The primitive is shared, so it cannot use one module's `RESULT_RELATIVE_PATH`. These modules stay red for the REQ-REPORT-6610-SCOPE cause anyway: they store values parsed out of `research-roadmap.yaml`, not a hash of it. |
+| `pipeline/verifier_dose_scheduler_replay` | Every path it hashes is under `results/`, so REQ-REPORT-6610-EVIDENCE-LIVE already requires a working-tree read. Adopting it would change nothing. Its replay test passes. |
+| 9 modules with no file-hash primitive | Nothing to resolve. |
+| Every module without a `result == replay` test | Out of measured scope. Adoption there cannot be verified today, because the repository-wide suite is red for unrelated reasons (`ops/known-issues.md`, 2026-08-24). |
+
+Four residual red causes remain, none of them a receipt failure:
+a fabrication-gate stamp the module never writes (3 tests); derived content read
+out of a shared high-churn file (8 tests, REQ-REPORT-6610-SCOPE); live machine
+state recorded in the artifact, such as `cpu_count` and `disk_free_mb` (1 test);
+and a module validator that rejects its own checked-in artifact (1 test).

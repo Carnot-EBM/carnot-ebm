@@ -25,6 +25,7 @@ from typing import Any
 from collections.abc import Mapping, Sequence
 
 from carnot import experiment_5435_verified_workflow_memory_csl_v494 as exp5435
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -33,9 +34,7 @@ JsonList = list[JsonDict]
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RESULT_RELATIVE_PATH = Path("results/experiment_5436_csl_memory_transfer_stress_v494.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
-MODULE_RELATIVE_PATH = Path(
-    "python/carnot/experiment_5436_csl_memory_transfer_stress_v494.py"
-)
+MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5436_csl_memory_transfer_stress_v494.py")
 EXP5435_RESULT_RELATIVE_PATH = exp5435.RESULT_RELATIVE_PATH
 EXP5435_MODULE_RELATIVE_PATH = exp5435.MODULE_RELATIVE_PATH
 
@@ -347,8 +346,7 @@ def evaluate_transfer_stress(
     verification = [
         row
         for row in scored
-        if row["transfer_status"]
-        in {"verification_routed", "abstained", "blocked_precondition"}
+        if row["transfer_status"] in {"verification_routed", "abstained", "blocked_precondition"}
     ]
     negative = [row for row in scored if row["ungated_quality_delta"] < 0.0]
     rollback = verify_rollback_restores_transfer_sidecar(promoted)
@@ -476,10 +474,7 @@ def verify_rollback_restores_transfer_sidecar(
 ) -> JsonDict:
     """Inject a bad transfer and verify rollback restores the active sidecar."""
 
-    prior = {
-        str(row["transfer_id"]): str(row["source_memory_id"])
-        for row in promoted_rows
-    }
+    prior = {str(row["transfer_id"]): str(row["source_memory_id"]) for row in promoted_rows}
     bad_transfer_id = "transfer5436-bad-promotion-probe"
     active_after_injection = dict(prior)
     active_after_injection[bad_transfer_id] = "case5435-stale-old-stock"
@@ -523,9 +518,7 @@ def build_artifact(
         "in_domain_quality_delta": evaluation["in_domain_quality_delta"],
         "out_of_domain_quality_delta": evaluation["out_of_domain_quality_delta"],
         "resource_delta": evaluation["resource_delta"],
-        "negative_transfer_deflection_rate": evaluation[
-            "negative_transfer_deflection_rate"
-        ],
+        "negative_transfer_deflection_rate": evaluation["negative_transfer_deflection_rate"],
         "reliance_drift_metric": evaluation["reliance_drift_metric"],
         "promoted_transfer_count": evaluation["promoted_transfer_count"],
         "quarantined_transfer_count": evaluation["quarantined_transfer_count"],
@@ -590,13 +583,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
         errors.append("honest_verdict")
     if artifact.get("transfer_fixture_count") != len(artifact.get("transfer_rows", [])):
         errors.append("transfer_fixture_count")
-    if artifact.get("promoted_transfer_count") != len(
-        artifact.get("promoted_transfers", [])
-    ):
+    if artifact.get("promoted_transfer_count") != len(artifact.get("promoted_transfers", [])):
         errors.append("promoted_transfer_count")
-    if artifact.get("quarantined_transfer_count") != len(
-        artifact.get("quarantined_transfers", [])
-    ):
+    if artifact.get("quarantined_transfer_count") != len(artifact.get("quarantined_transfers", [])):
         errors.append("quarantined_transfer_count")
     if artifact.get("research_conductor_modified") is not False:
         errors.append("research_conductor_modified")
@@ -608,9 +597,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     if artifact.get("status") == "blocked" and ready is True:
         errors.append("csl_transfer_stress_ready")
     if errors:
-        raise ValueError(
-            "invalid Exp5436 artifact fields: " + ",".join(sorted(set(errors)))
-        )
+        raise ValueError("invalid Exp5436 artifact fields: " + ",".join(sorted(set(errors))))
     return True
 
 
@@ -708,8 +695,7 @@ def _transfer_row(
 
 def _source_memory_index(source_artifact: Mapping[str, Any]) -> JsonDict:
     return {
-        str(row["memory_id"]): dict(row)
-        for row in source_artifact.get("promoted_memories", [])
+        str(row["memory_id"]): dict(row) for row in source_artifact.get("promoted_memories", [])
     }
 
 
@@ -790,13 +776,9 @@ def _readiness_checks(
 ) -> JsonDict:
     rows = evaluation["transfer_rows"]
     promoted = evaluation["promoted_transfers"]
-    non_promoted = [
-        row for row in rows if row["transfer_status"] != "promoted"
-    ]
+    non_promoted = [row for row in rows if row["transfer_status"] != "promoted"]
     checks = {
-        "source_ready": evaluation["source_readiness"][
-            "exp5435_verified_workflow_memory_ready"
-        ]
+        "source_ready": evaluation["source_readiness"]["exp5435_verified_workflow_memory_ready"]
         is True,
         "families_covered": REQUIRED_TRANSFER_FAMILIES.issubset(
             set(evaluation["transfer_family_counts"])
@@ -804,14 +786,10 @@ def _readiness_checks(
         "promoted_transfer_exists": evaluation["promoted_transfer_count"] > 0,
         "quarantined_transfer_exists": evaluation["quarantined_transfer_count"] > 0,
         "ontology_kernel_precede_routing": all(
-            row["gate_results"]["ontology"] and row["gate_results"]["kernel"]
-            for row in promoted
+            row["gate_results"]["ontology"] and row["gate_results"]["kernel"] for row in promoted
         ),
         "inactive_rows_cannot_route": all(row["routing_influence"] == 0 for row in non_promoted),
-        "negative_transfer_deflected": evaluation[
-            "negative_transfer_deflection_rate"
-        ]
-        == 1.0,
+        "negative_transfer_deflected": evaluation["negative_transfer_deflection_rate"] == 1.0,
         "promoted_quality_non_negative": all(
             row["guarded_quality_delta"] >= 0.0 for row in promoted
         ),
@@ -838,9 +816,7 @@ def _ready_artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
         is True,
         "promoted_transfer_count": artifact.get("promoted_transfer_count", 0) > 0,
         "quarantined_transfer_count": artifact.get("quarantined_transfer_count", 0) > 0,
-        "negative_transfer_deflection_rate": artifact.get(
-            "negative_transfer_deflection_rate"
-        )
+        "negative_transfer_deflection_rate": artifact.get("negative_transfer_deflection_rate")
         == 1.0,
         "rollback_verified": artifact.get("rollback_verified") is True,
         "no_weight_mutation": artifact.get("no_weight_mutation") is True,
@@ -897,7 +873,9 @@ def _source_file_checksums(root: Path) -> JsonDict:
 
 
 def _sha256_file(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return hashlib.sha256(
+        receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+    ).hexdigest()
 
 
 def _rate_is_valid(value: Any) -> bool:
@@ -914,7 +892,5 @@ def _json_ready(value: Any) -> Any:
 
 def _checksum(value: Any) -> str:
     return hashlib.sha256(
-        json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode(
-            "utf-8"
-        )
+        json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("utf-8")
     ).hexdigest()

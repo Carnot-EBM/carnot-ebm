@@ -23,6 +23,7 @@ import subprocess
 from typing import Any
 
 import yaml
+from carnot.provenance_receipts import receipt_bytes, receipt_exists
 
 
 JsonDict = dict[str, Any]
@@ -163,7 +164,10 @@ DEFAULT_TESTS_RUN = (
         ),
         "outcome": "passed",
     },
-    {"command": "python scripts/check_spec_coverage.py tests/python/test_experiment_5402_transition_v492.py", "outcome": "passed"},
+    {
+        "command": "python scripts/check_spec_coverage.py tests/python/test_experiment_5402_transition_v492.py",
+        "outcome": "passed",
+    },
     {"command": ".venv/bin/pytest tests/python -q", "outcome": "passed"},
 )
 
@@ -196,7 +200,14 @@ REQUIRED_OPEN_LANES = [
 
 
 def path_sha256(path: Path) -> str | None:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+        if receipt_exists(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        else None
+    )
 
 
 def payload_checksum(payload: JsonMap) -> str:
@@ -295,9 +306,7 @@ def _truth_rows(capstone: JsonMap) -> dict[str, JsonDict]:
     if not isinstance(rows, list):
         return {}
     return {
-        str(row["lane"]): dict(row)
-        for row in rows
-        if isinstance(row, Mapping) and "lane" in row
+        str(row["lane"]): dict(row) for row in rows if isinstance(row, Mapping) and "lane" in row
     }
 
 
@@ -419,8 +428,7 @@ def _capstone_failures(capstone: JsonMap, meta: JsonMap) -> list[str]:
     failures: list[str] = []
     if capstone.get("milestone") != PREVIOUS_MILESTONE:
         failures.append(
-            "capstone_milestone_expected_"
-            f"{PREVIOUS_MILESTONE}_observed_{capstone.get('milestone')}"
+            f"capstone_milestone_expected_{PREVIOUS_MILESTONE}_observed_{capstone.get('milestone')}"
         )
     if capstone.get("status") != "complete":
         failures.append(f"capstone_status_expected_complete_observed_{capstone.get('status')}")
@@ -486,7 +494,9 @@ def build_artifact(
     doc_text = doc_path.read_text(encoding="utf-8", errors="replace") if doc_path.exists() else ""
     doc_task_range = normalize_task_range(doc_text)
     roadmap_modified = _modification_status(root_path, ROADMAP_RELATIVE_PATH, modification_status)
-    conductor_modified = _modification_status(root_path, CONDUCTOR_RELATIVE_PATH, modification_status)
+    conductor_modified = _modification_status(
+        root_path, CONDUCTOR_RELATIVE_PATH, modification_status
+    )
     roadmap_milestone = roadmap.get("milestone")
     roadmap_milestone = str(roadmap_milestone) if roadmap_milestone is not None else None
     failures = _failed_preconditions(
@@ -585,7 +595,9 @@ def validate_artifact(payload: JsonMap) -> None:
     if status == "complete":
         if [row.get("lane") for row in closed if isinstance(row, Mapping)] != REQUIRED_CLOSED_LANES:
             raise ValueError("closed_lanes mismatch")
-        if [row.get("lane") for row in open_lanes if isinstance(row, Mapping)] != REQUIRED_OPEN_LANES:
+        if [
+            row.get("lane") for row in open_lanes if isinstance(row, Mapping)
+        ] != REQUIRED_OPEN_LANES:
             raise ValueError("open_lanes mismatch")
         if payload["roadmap_task_ids"] != EXPECTED_TASK_IDS:
             raise ValueError("roadmap_task_ids mismatch")

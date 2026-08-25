@@ -25,19 +25,16 @@ from typing import Any
 
 from carnot import experiment_5435_verified_workflow_memory_csl_v494 as exp5435
 from carnot import experiment_5436_csl_memory_transfer_stress_v494 as exp5436
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
 JsonList = list[JsonDict]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5446_governed_memory_csl_online_v495.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5446_governed_memory_csl_online_v495.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
-MODULE_RELATIVE_PATH = Path(
-    "python/carnot/experiment_5446_governed_memory_csl_online_v495.py"
-)
+MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5446_governed_memory_csl_online_v495.py")
 EXPERIMENT = "experiment_5446_governed_memory_csl_online_v495"
 EXPERIMENT_ID = "exp5446-v495-governed-memory-csl-online"
 MILESTONE = "2026.07.495"
@@ -131,7 +128,9 @@ def build_multi_session_trace_stream() -> JsonList:
             promotion_level="case",
             workflow_steps=order,
             evidence_support_edges=[f"evidence:{evidence[step]}" for step in order],
-            execution_dependency_edges=[f"{order[index]}->{order[index + 1]}" for index in range(5)],
+            execution_dependency_edges=[
+                f"{order[index]}->{order[index + 1]}" for index in range(5)
+            ],
             governed_quality=1.0,
             always_full_quality=1.0,
             no_memory_quality=0.82,
@@ -243,7 +242,9 @@ def build_multi_session_trace_stream() -> JsonList:
             promotion_level="case",
             workflow_steps=order,
             evidence_support_edges=[f"evidence:{evidence[step]}" for step in order],
-            execution_dependency_edges=[f"{order[index]}->{order[index + 1]}" for index in range(5)],
+            execution_dependency_edges=[
+                f"{order[index]}->{order[index + 1]}" for index in range(5)
+            ],
             temporal_decay_valid=False,
             governed_quality=0.91,
             always_full_quality=0.91,
@@ -404,9 +405,7 @@ def evaluate_governed_memory_loop(root: Path | str = REPO_ROOT) -> JsonDict:
             "post_rollback_decisions": _post_rollback_decisions(rollback),
             "multi_session_trace_count": len(routed),
             "promotion_level_counts": _promotion_level_counts(routed, promoted),
-            "evidence_support_edges": sum(
-                len(row["evidence_support_edges"]) for row in routed
-            ),
+            "evidence_support_edges": sum(len(row["evidence_support_edges"]) for row in routed),
             "execution_dependency_edges": sum(
                 len(row["execution_dependency_edges"]) for row in routed
             ),
@@ -426,9 +425,7 @@ def evaluate_governed_memory_loop(root: Path | str = REPO_ROOT) -> JsonDict:
                 governed["verifier_cost"],
             ),
             "unsafe_false_accepts": governed["unsafe_false_accepts"],
-            "negative_transfer_deflection_rate": _negative_transfer_deflection_rate(
-                negative
-            ),
+            "negative_transfer_deflection_rate": _negative_transfer_deflection_rate(negative),
             "rollback_audit": rollback,
             "no_weight_mutation": weight_receipt["no_weight_mutation"],
             "weight_mutation_receipt": weight_receipt,
@@ -536,8 +533,7 @@ def evaluate_control_policies(
         outcomes = [row["control_outcomes"][policy] for row in rows]
         metrics[policy] = {
             "quality_score": round(
-                sum(float(outcome["quality_score"]) for outcome in outcomes)
-                / len(outcomes),
+                sum(float(outcome["quality_score"]) for outcome in outcomes) / len(outcomes),
                 6,
             ),
             "context_cost": sum(int(outcome["context_cost"]) for outcome in outcomes),
@@ -556,11 +552,15 @@ def verify_rollback_removes_promoted_memories(
 
     promoted_ids = [str(row["memory_id"]) for row in promoted_rows]
     by_level = {
-        "case": [str(row["memory_id"]) for row in promoted_rows if row["promotion_level"] == "case"],
+        "case": [
+            str(row["memory_id"]) for row in promoted_rows if row["promotion_level"] == "case"
+        ],
         "skill": [
             str(row["memory_id"]) for row in promoted_rows if row["promotion_level"] == "skill"
         ],
-        "rule": [str(row["memory_id"]) for row in promoted_rows if row["promotion_level"] == "rule"],
+        "rule": [
+            str(row["memory_id"]) for row in promoted_rows if row["promotion_level"] == "rule"
+        ],
     }
     restored = {"case": [], "skill": [], "rule": []}
     return {
@@ -688,9 +688,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     if artifact.get("status") == "blocked" and ready is True:
         errors.append("governed_csl_loop_ready")
     if errors:
-        raise ValueError(
-            "invalid Exp5446 artifact fields: " + ",".join(sorted(set(errors)))
-        )
+        raise ValueError("invalid Exp5446 artifact fields: " + ",".join(sorted(set(errors))))
     return True
 
 
@@ -873,9 +871,13 @@ def _promotion_level_counts(
 
 
 def _replay_success_rate(promoted: Sequence[Mapping[str, Any]]) -> float:
-    return 1.0 if not promoted else round(
-        sum(row.get("replay_success") is True for row in promoted) / len(promoted),
-        6,
+    return (
+        1.0
+        if not promoted
+        else round(
+            sum(row.get("replay_success") is True for row in promoted) / len(promoted),
+            6,
+        )
     )
 
 
@@ -884,10 +886,14 @@ def _relative_savings(before: int | float, after: int | float) -> float:
 
 
 def _negative_transfer_deflection_rate(rows: Sequence[Mapping[str, Any]]) -> float:
-    return 1.0 if not rows else round(
-        sum(row.get("governed_negative_transfer_deflected") is True for row in rows)
-        / len(rows),
-        6,
+    return (
+        1.0
+        if not rows
+        else round(
+            sum(row.get("governed_negative_transfer_deflected") is True for row in rows)
+            / len(rows),
+            6,
+        )
     )
 
 
@@ -927,8 +933,7 @@ def _readiness_checks(
             set(evaluation["trace_family_counts"])
         ),
         "promotion_levels_covered": all(
-            evaluation["promotion_level_counts"][level] > 0
-            for level in ("case", "skill", "rule")
+            evaluation["promotion_level_counts"][level] > 0 for level in ("case", "skill", "rule")
         ),
         "promoted_gates_pass": all(all(row["gate_results"].values()) for row in promoted),
         "inactive_rows_cannot_route": all(row["routing_influence"] == 0 for row in inactive),
@@ -1009,10 +1014,7 @@ def _honest_verdict(ready: bool) -> str:
             "skill, and rule sidecars only through replay, provenance, decay, "
             "access, rollback, and no-weight gates"
         )
-    return (
-        "blocked: governed online memory lifecycle did not satisfy every "
-        "readiness gate"
-    )
+    return "blocked: governed online memory lifecycle did not satisfy every readiness gate"
 
 
 def _raw_trace_receipt(row: Mapping[str, Any]) -> JsonDict:
@@ -1035,14 +1037,16 @@ def _source_file_checksums(root: Path) -> JsonDict:
         "exp5435_module": exp5435.MODULE_RELATIVE_PATH,
         "exp5436_module": exp5436.MODULE_RELATIVE_PATH,
     }
-    return {
-        key: _sha256_file(root / relative_path)
-        for key, relative_path in files.items()
-    }
+    return {key: _sha256_file(root / relative_path) for key, relative_path in files.items()}
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _checksum(payload: Any) -> str:

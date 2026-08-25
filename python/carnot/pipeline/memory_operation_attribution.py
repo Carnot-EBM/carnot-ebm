@@ -18,6 +18,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes, receipt_exists
 
 
 JsonDict = dict[str, Any]
@@ -33,7 +34,9 @@ INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
 SPEC_REFS = ("REQ-LEARN-5289", "SCENARIO-LEARN-5289")
 
 EXP5275_RELATIVE_PATH = Path("results/experiment_5275_governed_decision_history_memory_v482.json")
-EXP5276_RELATIVE_PATH = Path("results/experiment_5276_memory_assisted_verifier_dose_gated_v482.json")
+EXP5276_RELATIVE_PATH = Path(
+    "results/experiment_5276_memory_assisted_verifier_dose_gated_v482.json"
+)
 SOURCE_ARTIFACTS = (str(EXP5275_RELATIVE_PATH), str(EXP5276_RELATIVE_PATH))
 
 STAGE_KEYS = ("extraction", "update", "routing", "maintenance", "use", "rollback")
@@ -68,8 +71,7 @@ FIELD_PRINCIPLES = {
         "Reports how many bounded control cases received a primary stage attribution."
     ),
     "unsafe_propagations": (
-        "Counts controlled unsafe memories that reached final action selection despite "
-        "governance."
+        "Counts controlled unsafe memories that reached final action selection despite governance."
     ),
     "local_maintenance_cost": (
         "Measures deterministic local ledger/provenance/scope/rollback checks instead "
@@ -566,9 +568,14 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 def _sha256_file(path: Path) -> str | None:
-    if not path.exists():
+    if not receipt_exists(path, artifact_relative_path=RESULT_RELATIVE_PATH):
         return None
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _checksum(artifact: Mapping[str, Any]) -> str:

@@ -18,6 +18,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -28,9 +29,7 @@ EXPERIMENT_ID = 5303
 SCHEMA = "carnot.experiment_5303.memory_stress_conflict_forgetting.v484"
 RUN_DATE = "2026-07-06"
 RANDOM_SEED = 5303
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5303_memory_stress_conflict_forgetting_v484.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5303_memory_stress_conflict_forgetting_v484.json")
 EXP5302_RELATIVE_PATH = Path(
     "results/experiment_5302_adaptive_memory_policy_self_learning_v484.json"
 )
@@ -337,9 +336,7 @@ def evaluate_stress_panel(
             continue
         memory_trace.append(_apply_memory_event(event, memory_state, policy_version))
 
-    policy_metrics = {
-        policy: _policy_metrics(query_rows, policy) for policy in POLICY_ARMS
-    }
+    policy_metrics = {policy: _policy_metrics(query_rows, policy) for policy in POLICY_ARMS}
     competency_metrics = _competency_metrics(query_rows)
     unsafe = _unsafe_false_accepts(query_rows)
     rollback = _rollback_success_rate(memory_trace)
@@ -448,9 +445,11 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     if artifact["inference_substrate"]["value"] != INFERENCE_SUBSTRATE:
         raise ValueError("inference_substrate must be offline_deterministic_fixture_no_llm")
     competency = artifact.get("competency_metrics")
-    if not isinstance(competency, Mapping) or competency.get("principle") != FIELD_PRINCIPLES[
-        "competency_metrics"
-    ] or any(name not in competency for name in COMPETENCIES):
+    if (
+        not isinstance(competency, Mapping)
+        or competency.get("principle") != FIELD_PRINCIPLES["competency_metrics"]
+        or any(name not in competency for name in COMPETENCIES)
+    ):
         raise ValueError("competency_metrics missing required competencies or principle")
     if not isinstance(artifact.get("tests_run"), list):
         raise ValueError("tests_run must be a bare list")
@@ -574,7 +573,11 @@ def _policy_metrics(rows: Sequence[Mapping[str, Any]], policy: str) -> JsonDict:
         "correct_n": correct,
         "quality_rate": _rate(correct, len(rows)),
         "full_verifier_calls": sum(1 for row in rows if bool(row[full_key])),
-        "false_accepts": sum(1 for row in rows if _is_false_accept(row[f"{prefix}selected_decision"], row["expected_decision"])),
+        "false_accepts": sum(
+            1
+            for row in rows
+            if _is_false_accept(row[f"{prefix}selected_decision"], row["expected_decision"])
+        ),
         "unsafe_false_accepts": sum(
             1
             for row in rows
@@ -644,10 +647,7 @@ def _stale_conflict_handling(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
         row
         for row in relevant
         if bool(row["adaptive_correct"])
-        and (
-            row["adaptive_route"] == ROUTE_FULL
-            or row["control_kind"] == "direct_conflict"
-        )
+        and (row["adaptive_route"] == ROUTE_FULL or row["control_kind"] == "direct_conflict")
     ]
     return {
         "resolved_or_escalated": len(resolved_or_escalated),
@@ -724,7 +724,9 @@ def _stress_passed(
     calls_avoided: Mapping[str, Any],
 ) -> bool:
     return bool(
-        all(float(competency_metrics[name]["adaptive_quality_rate"]) == 1.0 for name in COMPETENCIES)
+        all(
+            float(competency_metrics[name]["adaptive_quality_rate"]) == 1.0 for name in COMPETENCIES
+        )
         and int(unsafe_false_accepts["count"]) == 0
         and float(rollback_success_rate["rate"]) == 1.0
         and float(stale_conflict_handling["rate"]) == 1.0
@@ -875,15 +877,23 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _stable_hash(payload: Any) -> str:
-    return "sha256:" + hashlib.sha256(
-        json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode(
-            "utf-8"
-        )
-    ).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode(
+                "utf-8"
+            )
+        ).hexdigest()
+    )
 
 
 def _checksum(artifact: Mapping[str, Any]) -> str:

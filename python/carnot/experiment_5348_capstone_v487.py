@@ -21,6 +21,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -77,12 +78,10 @@ FIELD_PRINCIPLES: dict[str, str] = {
         "boolean, imported evidence, claim boundary, and caveat text."
     ),
     "next_milestone_recommendation": (
-        "short next branch recommendation grounded only in clean gates, blockers, and "
-        "flagged rows."
+        "short next branch recommendation grounded only in clean gates, blockers, and flagged rows."
     ),
     "cited_upstream_artifacts": (
-        "every upstream artifact cited by sha256 with the imported fields that affected "
-        "a gate."
+        "every upstream artifact cited by sha256 with the imported fields that affected a gate."
     ),
     "tests_run": (
         "validation commands and outcomes used to check the capstone module, artifact, "
@@ -333,7 +332,12 @@ def wrapped(field: str, value: Any) -> JsonDict:
 
 
 def _sha256(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _path_key(source: UpstreamArtifact) -> str:
@@ -625,7 +629,9 @@ def _gate_table(payloads: Mapping[str, JsonDict], issues: Sequence[JsonMap]) -> 
             "gate": "runtime",
             "source_artifacts": [str(EXP5337.relative_path)],
             "ready": runtime_clean,
-            "classification": "clean_runtime_no_quality_claim" if runtime_clean else "runtime_not_clean",
+            "classification": "clean_runtime_no_quality_claim"
+            if runtime_clean
+            else "runtime_not_clean",
             "claim_boundary": "runtime receipt only; no SOTA quality claim",
             "evidence": {
                 "sota_runtime_clean_receipt_ready": _payload_value(
@@ -674,9 +680,7 @@ def _gate_table(payloads: Mapping[str, JsonDict], issues: Sequence[JsonMap]) -> 
                 "paraphrase_label_preservation_rate": _payload_value(
                     exp5339, "paraphrase_label_preservation_rate"
                 ),
-                "rewrite_acceptability_rate": _payload_value(
-                    exp5339, "rewrite_acceptability_rate"
-                ),
+                "rewrite_acceptability_rate": _payload_value(exp5339, "rewrite_acceptability_rate"),
                 "headline_quality_claim": _payload_value(exp5339, "headline_quality_claim"),
             },
         },
@@ -748,9 +752,7 @@ def _gate_table(payloads: Mapping[str, JsonDict], issues: Sequence[JsonMap]) -> 
                 "qstr_fixture_ready": _payload_value(exp5343, "qstr_fixture_ready"),
                 "solver_authoritative": _payload_value(exp5343, "solver_authoritative"),
                 "false_accept_count": _payload_value(exp5343, "false_accept_count"),
-                "failure_localization_rate": _payload_value(
-                    exp5343, "failure_localization_rate"
-                ),
+                "failure_localization_rate": _payload_value(exp5343, "failure_localization_rate"),
             },
         },
         {
@@ -764,9 +766,7 @@ def _gate_table(payloads: Mapping[str, JsonDict], issues: Sequence[JsonMap]) -> 
                     exp5344, "solver_guidance_telemetry_ready"
                 ),
                 "solver_authoritative": _payload_value(exp5344, "solver_authoritative"),
-                "fallback_completeness_rate": _payload_value(
-                    exp5344, "fallback_completeness_rate"
-                ),
+                "fallback_completeness_rate": _payload_value(exp5344, "fallback_completeness_rate"),
                 "misleading_hint_false_accepts": _payload_value(
                     exp5344, "misleading_hint_false_accepts"
                 ),
@@ -807,9 +807,7 @@ def _gate_table(payloads: Mapping[str, JsonDict], issues: Sequence[JsonMap]) -> 
                 "injected_false_property_rejection_rate": _payload_value(
                     exp5346, "injected_false_property_rejection_rate"
                 ),
-                "no_broad_certificate_claim": _payload_value(
-                    exp5346, "no_broad_certificate_claim"
-                ),
+                "no_broad_certificate_claim": _payload_value(exp5346, "no_broad_certificate_claim"),
             },
         },
         {
@@ -824,9 +822,7 @@ def _gate_table(payloads: Mapping[str, JsonDict], issues: Sequence[JsonMap]) -> 
             "claim_boundary": "hardware continuity and board-local smoke only; no speedup claim",
             "evidence": {
                 "speedup_claim": _payload_value(exp5347, "speedup_claim"),
-                "authenticated_workload_run": _payload_value(
-                    exp5347, "authenticated_workload_run"
-                ),
+                "authenticated_workload_run": _payload_value(exp5347, "authenticated_workload_run"),
                 "polarfire_workload_validated": _payload_value(
                     exp5347, "polarfire_workload_validated"
                 ),
@@ -907,9 +903,7 @@ def build_result_artifact(
     payloads, artifacts_read, missing_or_malformed = read_upstream_artifacts(
         root, conductor_outcomes
     )
-    issues = _blocked_flagged_or_skipped_rows(
-        payloads, missing_or_malformed, conductor_outcomes
-    )
+    issues = _blocked_flagged_or_skipped_rows(payloads, missing_or_malformed, conductor_outcomes)
     gates = _gate_table(payloads, issues)
     all_artifacts_read = not any(
         row["classification"] in {"missing", "malformed"} for row in missing_or_malformed

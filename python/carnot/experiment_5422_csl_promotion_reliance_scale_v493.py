@@ -23,6 +23,7 @@ from typing import Any
 
 from carnot import experiment_5409_uncertainty_gated_promotion_v492 as exp5409
 from carnot import experiment_5421_evidence_reliance_csl_v493 as exp5421
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -37,13 +38,9 @@ RUN_DATE = "2026-07-08"
 RANDOM_SEED = 5422
 INFERENCE_SUBSTRATE = "deterministic_self_learning_controller"
 
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5422_csl_promotion_reliance_scale_v493.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5422_csl_promotion_reliance_scale_v493.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
-MODULE_RELATIVE_PATH = Path(
-    "python/carnot/experiment_5422_csl_promotion_reliance_scale_v493.py"
-)
+MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5422_csl_promotion_reliance_scale_v493.py")
 EXP5409_RESULT_RELATIVE_PATH = exp5409.RESULT_RELATIVE_PATH
 EXP5421_RESULT_RELATIVE_PATH = exp5421.RESULT_RELATIVE_PATH
 EXP5409_MODULE_RELATIVE_PATH = exp5409.MODULE_RELATIVE_PATH
@@ -149,15 +146,9 @@ def evaluate_csl_promotion_reliance_scale(root: Path | str = REPO_ROOT) -> JsonD
         candidates,
         source_artifacts,
     )
-    promoted = [
-        row for row in routed_candidates if row["promotion_status"] == "promoted"
-    ]
-    rejected = [
-        row for row in routed_candidates if row["promotion_status"] == "rejected"
-    ]
-    abstained = [
-        row for row in routed_candidates if row["promotion_status"] == "abstained"
-    ]
+    promoted = [row for row in routed_candidates if row["promotion_status"] == "promoted"]
+    rejected = [row for row in routed_candidates if row["promotion_status"] == "rejected"]
+    abstained = [row for row in routed_candidates if row["promotion_status"] == "abstained"]
     rollback = verify_rollback_restores_active_sidecar(routing_report)
     weight_receipt = _weight_mutation_receipt()
     grounding_preserved = bool(
@@ -165,12 +156,15 @@ def evaluate_csl_promotion_reliance_scale(root: Path | str = REPO_ROOT) -> JsonD
         and all(row["threshold_results"]["grounding"] for row in promoted)
         and source_readiness["exp5421_evidence_reliance_csl_ready"]
     )
-    rejected_quarantined = all(
-        row["audit_retained"]
-        and not row["active_for_routing"]
-        and row["routing_influence"] == 0
-        for row in rejected
-    ) and routing_report["rejected_fragment_routing_influence_count"] == 0
+    rejected_quarantined = (
+        all(
+            row["audit_retained"]
+            and not row["active_for_routing"]
+            and row["routing_influence"] == 0
+            for row in rejected
+        )
+        and routing_report["rejected_fragment_routing_influence_count"] == 0
+    )
     return {
         "source_artifacts": source_artifacts,
         "source_readiness": source_readiness,
@@ -305,9 +299,7 @@ def route_scored_candidates(
             for row in routed
             if row["promotion_status"] == "abstained" and row["routing_influence"] != 0
         ),
-        "routing_effect_row_count": sum(
-            int(row["routing_effect_count"]) for row in effect_records
-        ),
+        "routing_effect_row_count": sum(int(row["routing_effect_count"]) for row in effect_records),
         "routing_effect_records": effect_records,
         "rollback_probe_audit_fragment_ids": ["frag5422-poisoned-rollback-probe"],
     }
@@ -429,21 +421,13 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
         errors.append("reliance_drift_threshold")
     if artifact.get("accepted_risk_threshold") != ACCEPTED_RISK_THRESHOLD:
         errors.append("accepted_risk_threshold")
-    if artifact.get("candidate_fragment_count") != len(
-        artifact.get("promotion_candidates", [])
-    ):
+    if artifact.get("candidate_fragment_count") != len(artifact.get("promotion_candidates", [])):
         errors.append("candidate_fragment_count")
-    if artifact.get("promoted_fragment_count") != len(
-        artifact.get("promoted_fragments", [])
-    ):
+    if artifact.get("promoted_fragment_count") != len(artifact.get("promoted_fragments", [])):
         errors.append("promoted_fragment_count")
-    if artifact.get("rejected_fragment_count") != len(
-        artifact.get("rejected_fragments", [])
-    ):
+    if artifact.get("rejected_fragment_count") != len(artifact.get("rejected_fragments", [])):
         errors.append("rejected_fragment_count")
-    if artifact.get("abstained_fragment_count") != len(
-        artifact.get("abstained_fragments", [])
-    ):
+    if artifact.get("abstained_fragment_count") != len(artifact.get("abstained_fragments", [])):
         errors.append("abstained_fragment_count")
     if artifact.get("candidate_fragment_count") != (
         artifact.get("promoted_fragment_count", 0)
@@ -454,9 +438,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     if ready is True:
         errors.extend(_ready_artifact_errors(artifact))
     if errors:
-        raise ValueError(
-            "invalid Exp5422 artifact fields: " + ",".join(sorted(set(errors)))
-        )
+        raise ValueError("invalid Exp5422 artifact fields: " + ",".join(sorted(set(errors))))
     return True
 
 
@@ -633,18 +615,13 @@ def _readiness_checks(
         "promoted_have_routing_influence": all(
             row["routing_influence"] > 0 for row in evaluation["promoted_fragments"]
         ),
-        "rejected_zero_routing_influence": routing[
-            "rejected_fragment_routing_influence_count"
-        ]
+        "rejected_zero_routing_influence": routing["rejected_fragment_routing_influence_count"]
         == 0,
-        "abstained_zero_routing_influence": routing[
-            "abstained_fragment_routing_influence_count"
-        ]
+        "abstained_zero_routing_influence": routing["abstained_fragment_routing_influence_count"]
         == 0,
         "grounding_preserved": evaluation["grounding_preserved"] is True,
         "rollback_verified": evaluation["rollback_verified"] is True,
-        "rejected_fragments_quarantined": evaluation["rejected_fragments_quarantined"]
-        is True,
+        "rejected_fragments_quarantined": evaluation["rejected_fragments_quarantined"] is True,
         "no_weight_mutation": evaluation["no_weight_mutation"] is True,
         "tests_recorded": bool(tests_run),
         "inference_substrate_deterministic": INFERENCE_SUBSTRATE
@@ -678,8 +655,7 @@ def _ready_artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
     if routing.get("abstained_fragment_routing_influence_count") != 0:
         errors.append("abstained_fragment_routing_influence_count")
     if not all(
-        row.get("routing_influence", 0) > 0
-        for row in artifact.get("promoted_fragments", [])
+        row.get("routing_influence", 0) > 0 for row in artifact.get("promoted_fragments", [])
     ):
         errors.append("routing_influence")
     return errors
@@ -777,7 +753,12 @@ def _checksum(payload: Mapping[str, Any]) -> str:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _read_json(path: Path) -> JsonDict:

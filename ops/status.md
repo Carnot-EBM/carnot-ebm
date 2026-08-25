@@ -7,6 +7,17 @@ scoped module coverage is 100% across 493 statements, and the exact conductor
 smart subset passes 90 tests with one pre-existing warning. No change was made
 to `scripts/research_conductor.py`.)
 
+Prior: 2026-08-25 (provenance receipts now resolve against the artifact's own
+commit, REQ-REPORT-6610, adopted in 50 replay-tested modules. The
+`result == replay` suite went from 52 failed / 26 passed / 1 error to 13 failed
+/ 65 passed / 1 error; 39 flipped green and none went red. The receipt still
+bites: four provenance breaks proved RED against exp5355 and GREEN on restore.
+The 13 remaining reds are NOT receipt failures — 3 carry a fabrication-gate
+stamp the module never writes, 8 store content parsed out of a shared
+high-churn file rather than a hash of it, 1 records live machine state
+(`cpu_count`, `disk_free_mb`), and 1 has a module validator that rejects its own
+checked-in artifact. Those four causes are open and out of this change's scope.)
+
 Prior: 2026-08-25 (REQ-VERIFY-6593 stale-verifier regression repaired at the
 cached `verify_artifact` boundary without a follow-up
 `scripts/research_conductor.py` edit. Changed verifier source is reloaded before

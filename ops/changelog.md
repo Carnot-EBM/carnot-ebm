@@ -1,5 +1,30 @@
 # Carnot — Changelog
 
+## 2026-08-25 — Provenance receipts resolve against the artifact's own commit
+
+- Adopted REQ-REPORT-6610 in 50 replay-tested modules (47 under
+  `python/carnot/`, 3 under `python/carnot/pipeline/`). Each module's file-hash
+  primitive now calls `carnot.provenance_receipts`, so a receipt reads the bytes
+  as committed when the artifact landed instead of the current working tree.
+- Measured with the 68 `result == replay` tests, in an isolated git worktree
+  with `PYTHONPATH` verified by import: 52 failed / 26 passed / 1 error before,
+  13 failed / 65 passed / 1 error after. 39 flipped green, none went red.
+- The receipt is not vacuous. Four provenance breaks were proved RED against a
+  real adopted module (exp5355) and GREEN again on restore: a dependency the
+  module does not produce, a dependency absent at the artifact's commit, an
+  unresolvable artifact commit, and a recorded hash that does not match the
+  committed bytes.
+- Four residual red causes remain and none is a receipt failure: a
+  fabrication-gate stamp the module never writes (3 tests); content parsed out
+  of a shared high-churn file rather than hashed (8 tests); live machine state
+  such as `cpu_count` in the artifact (1 test); and a module validator that
+  rejects its own checked-in artifact (1 test).
+- Cost paid to land: `ruff format` reflowed the 50 modules. Those files were
+  already non-conforming at HEAD because conductor commits skip hooks, so the
+  formatting is unrelated whitespace churn that `ruff-format --check` required.
+  The 68-test result is byte-identical before and after it.
+
+
 ## 2026-08-25 — Exp6604 protected-receipt test repair
 
 - Fixed the Exp6604 terminal-artifact regression without reverting the V576

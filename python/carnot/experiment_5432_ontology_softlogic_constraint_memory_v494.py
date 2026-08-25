@@ -18,6 +18,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -131,10 +132,7 @@ def seed_graph() -> Graph:
     """Return the finite ontology graph and relation timestamps used by all rows."""
 
     triples: set[Triple] = {
-        *(
-            (entity, "rdf:type", next(iter(types)))
-            for entity, types in ENTITY_TYPES.items()
-        ),
+        *((entity, "rdf:type", next(iter(types))) for entity, types in ENTITY_TYPES.items()),
         ("workorder:wo-17", "targetsAsset", "asset:pump-a"),
         ("workorder:wo-17", "assignedTechnician", "tech:anika"),
         ("workorder:wo-17", "hasStatus", "status:open"),
@@ -147,8 +145,7 @@ def seed_graph() -> Graph:
     }
     triples.update(("workorder:wo-17", "hasStep", step) for step in WORKFLOW_ORDER)
     triples.update(
-        (before, "nextStep", after)
-        for before, after in zip(WORKFLOW_ORDER, WORKFLOW_ORDER[1:])
+        (before, "nextStep", after) for before, after in zip(WORKFLOW_ORDER, WORKFLOW_ORDER[1:])
     )
     triples.update(
         {
@@ -340,9 +337,7 @@ def build_artifact(
         "deterministic_solver_authority": evaluation["deterministic_solver_authority"],
         "false_triple_rejection_rate": evaluation["false_triple_rejection_rate"],
         "valid_update_preservation_rate": evaluation["valid_update_preservation_rate"],
-        "unsupported_update_abstention_rate": evaluation[
-            "unsupported_update_abstention_rate"
-        ],
+        "unsupported_update_abstention_rate": evaluation["unsupported_update_abstention_rate"],
         "soft_logic_residuals_recorded": evaluation["soft_logic_residuals_recorded"],
         "soft_logic_overrode_solver": evaluation["soft_logic_overrode_solver"],
         "ontology_constraint_memory_ready": ready,
@@ -407,9 +402,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     if artifact.get("status") == "complete" and ready is not True:
         errors.append("ontology_constraint_memory_ready")
     if errors:
-        raise ValueError(
-            "invalid Exp5432 artifact fields: " + ",".join(sorted(set(errors)))
-        )
+        raise ValueError("invalid Exp5432 artifact fields: " + ",".join(sorted(set(errors))))
     return True
 
 
@@ -538,7 +531,9 @@ def _triple_solver_reasons(
     if predicate == "usesPart" and not _evidence_reports_part(row, obj, graph):
         reasons.append("solver:part_evidence_missing")
     if (subject, predicate, obj) == ("step:drain", "hasStatus", "status:drained"):
-        if not _evidence_has_triple(row, ("toolout:valve-closed", "observesValveState", "valve:closed"), graph):
+        if not _evidence_has_triple(
+            row, ("toolout:valve-closed", "observesValveState", "valve:closed"), graph
+        ):
             reasons.append("solver:valve_closed_evidence_missing")
     if (subject, predicate, obj) == ("step:release", "hasStatus", "status:released"):
         if not _evidence_has_triple(
@@ -602,9 +597,7 @@ def _derive_metrics(rows: Sequence[Mapping[str, Any]], final_triples: Sequence[A
     total = len(rows)
     false_rows = [row for row in rows if row["expected_truth"] == "false"]
     valid_update_rows = [row for row in rows if row["fixture_family"] == "valid_update"]
-    unsupported_rows = [
-        row for row in rows if row["fixture_family"] == "unsupported_memory_write"
-    ]
+    unsupported_rows = [row for row in rows if row["fixture_family"] == "unsupported_memory_write"]
     return {
         "ontology_fixture_count": total,
         "triple_count": len(final_triples),
@@ -627,9 +620,7 @@ def _derive_metrics(rows: Sequence[Mapping[str, Any]], final_triples: Sequence[A
             len(unsupported_rows),
         ),
         "soft_logic_residuals_recorded": all("soft_logic" in row for row in rows),
-        "soft_logic_overrode_solver": any(
-            row["soft_logic_overrode_solver"] for row in rows
-        ),
+        "soft_logic_overrode_solver": any(row["soft_logic_overrode_solver"] for row in rows),
     }
 
 
@@ -643,9 +634,7 @@ def _readiness_checks(
         ),
         "false_triples_rejected": evaluation["false_triple_rejection_rate"] == 1.0,
         "valid_updates_preserved": evaluation["valid_update_preservation_rate"] == 1.0,
-        "unsupported_updates_abstained": (
-            evaluation["unsupported_update_abstention_rate"] == 1.0
-        ),
+        "unsupported_updates_abstained": (evaluation["unsupported_update_abstention_rate"] == 1.0),
         "deterministic_authority": evaluation["deterministic_solver_authority"] is True,
         "soft_residuals_advisory": (
             evaluation["soft_logic_residuals_recorded"] is True
@@ -731,12 +720,12 @@ def _source_file_checksums(root: Path) -> JsonDict:
 
 
 def _sha256_file(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return hashlib.sha256(
+        receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+    ).hexdigest()
 
 
 def _checksum(value: Any) -> str:
     return hashlib.sha256(
-        json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode(
-            "utf-8"
-        )
+        json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("utf-8")
     ).hexdigest()

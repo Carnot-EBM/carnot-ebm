@@ -18,6 +18,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -173,7 +174,9 @@ def value_of(value: Any) -> Any:
     return value
 
 
-def _read_inputs(root: Path | str) -> tuple[dict[str, JsonDict], list[str], list[str], list[JsonDict]]:
+def _read_inputs(
+    root: Path | str,
+) -> tuple[dict[str, JsonDict], list[str], list[str], list[JsonDict]]:
     root_path = Path(root)
     payloads: dict[str, JsonDict] = {}
     found: list[str] = []
@@ -262,7 +265,12 @@ def _source_number(payload: JsonMap | None, field: str, default: float = 0.0) ->
 
 def _artifact_sha256(root: Path | str, relative: str) -> str:
     path = Path(root) / relative
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _source_artifacts(root: Path | str, found: Sequence[str], payloads: JsonMap) -> list[JsonDict]:
@@ -432,9 +440,7 @@ def _phase_summaries(payloads: JsonMap, fields: JsonMap) -> list[JsonDict]:
                 ),
             ),
             "claim_boundary": (
-                "ready_but_flagged_adversarial"
-                if solver_flagged
-                else "solver_authoritative_ready"
+                "ready_but_flagged_adversarial" if solver_flagged else "solver_authoritative_ready"
             ),
         },
         {
@@ -545,7 +551,9 @@ def _retired_or_blocked_lanes(payloads: JsonMap, fields: JsonMap) -> list[JsonDi
         {
             "lane": "token_internal_feature_signal",
             "state": (
-                "open" if fields["future_token_signal_allowed"] else "retired_until_backend_features"
+                "open"
+                if fields["future_token_signal_allowed"]
+                else "retired_until_backend_features"
             ),
             "reason": _verdict(exp5387),
         },
@@ -602,7 +610,11 @@ def _next_milestone_recommendations() -> list[JsonDict]:
                 "Keep the live-agent geometric path, but only count .491 ARC progress "
                 "when a new level is reproduction-gated."
             ),
-            "guardrails": ["no_outer_loop_re", "no_per_game_adapter", "offline_reproduce_before_count"],
+            "guardrails": [
+                "no_outer_loop_re",
+                "no_per_game_adapter",
+                "offline_reproduce_before_count",
+            ],
         },
         {
             "action": "keep_token_backend_closed_until_real_features",
@@ -670,9 +682,7 @@ def build_artifact(
         "structured_methodology_receipt_ready": structured_receipt,
         "structured_protocol_clean": _source_bool(exp5379, "structured_protocol_clean"),
         "constraint_tax_panel_ready": _source_bool(exp5380, "constraint_tax_panel_ready"),
-        "budget_memory_corrigendum_clean": _source_bool(
-            exp5381, "budget_memory_corrigendum_clean"
-        ),
+        "budget_memory_corrigendum_clean": _source_bool(exp5381, "budget_memory_corrigendum_clean"),
         "continuous_self_learning_real_workflow_ready": workflow_ready,
         "continuous_self_learning_requirement_satisfied": workflow_ready,
         "overwrite_guidance_scale_ready": _source_bool(exp5383, "overwrite_guidance_scale_ready"),
@@ -736,10 +746,13 @@ def validate_artifact(artifact: JsonMap) -> None:
     for field in BOOLEAN_FIELDS:
         if not isinstance(artifact[field], bool):
             raise ValueError(f"{field} must be a bare boolean")
-    if artifact["continuous_self_learning_requirement_satisfied"] and not artifact[
-        "continuous_self_learning_real_workflow_ready"
-    ]:
-        raise ValueError("continuous self-learning requirement cannot pass without workflow evidence")
+    if (
+        artifact["continuous_self_learning_requirement_satisfied"]
+        and not artifact["continuous_self_learning_real_workflow_ready"]
+    ):
+        raise ValueError(
+            "continuous self-learning requirement cannot pass without workflow evidence"
+        )
     if artifact["hardware_speedup_claim"]:
         raise ValueError("hardware_speedup_claim must remain false without repeatable board timing")
     if artifact["active_roadmap_modified"]:
@@ -761,7 +774,9 @@ def run(
 ) -> JsonDict:
     artifact = build_artifact(root=root, tests_run=tests_run)
     validate_artifact(artifact)
-    output_path = Path(result_path) if result_path is not None else Path(root) / RESULT_RELATIVE_PATH
+    output_path = (
+        Path(result_path) if result_path is not None else Path(root) / RESULT_RELATIVE_PATH
+    )
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return artifact

@@ -20,6 +20,7 @@ import json
 from pathlib import Path
 import subprocess
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -440,7 +441,9 @@ def derive_readiness(
     )
 
     return {
-        "structured_scaleup_ready": source_bool(payloads.get(EXP5391), "constraint_tax_scaleup_ready"),
+        "structured_scaleup_ready": source_bool(
+            payloads.get(EXP5391), "constraint_tax_scaleup_ready"
+        ),
         "formal_encoding_fixture_ready": (
             source_bool(payloads.get(EXP5392), "formal_encoding_fixture_ready")
             and EXP5392 not in flagged_paths
@@ -879,7 +882,9 @@ def next_recommendations() -> list[JsonDict]:
     ]
 
 
-def source_artifacts(root: Path, payloads: Mapping[str, JsonDict], found: Sequence[str]) -> list[JsonDict]:
+def source_artifacts(
+    root: Path, payloads: Mapping[str, JsonDict], found: Sequence[str]
+) -> list[JsonDict]:
     """Record upstream checksums so later capstones can detect drift."""
 
     rows: list[JsonDict] = []
@@ -963,9 +968,7 @@ def honest_verdict(artifact: JsonMap) -> str:
     """Summarize the milestone without hiding blocked or honest-null lanes."""
 
     missing_count = len(artifact["missing_artifacts"])
-    missing_phrase = (
-        f"; missing {missing_count} upstream artifact(s)" if missing_count else ""
-    )
+    missing_phrase = f"; missing {missing_count} upstream artifact(s)" if missing_count else ""
     return (
         "complete: .491 capstone emitted from actual artifacts"
         f"{missing_phrase}; headline-ready bounded lanes are structured scale-up, "
@@ -1027,7 +1030,10 @@ def validate_artifact(artifact: JsonMap) -> None:
         and EXP5392 not in flagged_paths
     ):
         raise ValueError("flagged_artifacts must include Exp5392")
-    if artifact["truth_table"][6]["classification"] == "honest_null" and artifact["arc_new_level_banked"]:
+    if (
+        artifact["truth_table"][6]["classification"] == "honest_null"
+        and artifact["arc_new_level_banked"]
+    ):
         raise ValueError("arc_new_level_banked cannot be true for honest-null ARC row")
     if not str(artifact["honest_verdict"]).startswith("complete:"):
         raise ValueError("honest_verdict must start with complete:")
@@ -1038,7 +1044,12 @@ def validate_artifact(artifact: JsonMap) -> None:
 def file_sha256(path: Path) -> str:
     """Hash a local file using the same stable prefix convention as artifacts."""
 
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def payload_checksum(payload: JsonMap) -> str:

@@ -23,6 +23,7 @@ from typing import Any
 
 from carnot import experiment_5395_influence_share_verifier_budget_router_v491 as exp5395
 from carnot import experiment_5396_memory_guard_raw_episode_retention_v491 as exp5396
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -39,9 +40,7 @@ INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
 RESOURCE_ACCOUNTED_VARIANT = "resource_accounted_routing"
 MIN_SESSIONS = exp5395.MIN_SESSIONS
 
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5408_resource_accounted_csl_controller_v492.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5408_resource_accounted_csl_controller_v492.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
 MODULE_RELATIVE_PATH = Path(
     "python/carnot/experiment_5408_resource_accounted_csl_controller_v492.py"
@@ -135,11 +134,7 @@ def evaluate_resource_accounted_controller(root: Path | str = REPO_ROOT) -> Json
     safety = _safety_rates(decisions)
     raw_ids = {str(row["raw_episode_id"]) for row in raw_episodes}
     provenance_link_rate = _rate(
-        sum(
-            1
-            for row in decisions
-            if row["raw_episode_provenance"]["raw_episode_id"] in raw_ids
-        ),
+        sum(1 for row in decisions if row["raw_episode_provenance"]["raw_episode_id"] in raw_ids),
         len(decisions),
     )
     return {
@@ -148,9 +143,7 @@ def evaluate_resource_accounted_controller(root: Path | str = REPO_ROOT) -> Json
         "raw_episode_count": int(memory_eval["raw_episode_count"]),
         "influence_share_sum_valid_rate": routing_eval["influence_share_sum_valid_rate"],
         "quality_delta_vs_baseline": routing_eval["quality_delta_vs_baseline"],
-        "verifier_cost_delta_vs_baseline": routing_eval[
-            "verifier_cost_delta_vs_baseline"
-        ],
+        "verifier_cost_delta_vs_baseline": routing_eval["verifier_cost_delta_vs_baseline"],
         "wall_time_delta_vs_baseline": totals["wall_time_ms"],
         "token_or_context_delta_vs_baseline": totals["token_or_context_units"],
         "memory_delta_vs_baseline": totals["memory_proxy_mb"],
@@ -260,31 +253,17 @@ def build_artifact(
         "session_count": evaluation["session_count"],
         "decision_count": evaluation["decision_count"],
         "raw_episode_count": evaluation["raw_episode_count"],
-        "influence_share_sum_valid_rate": evaluation[
-            "influence_share_sum_valid_rate"
-        ],
+        "influence_share_sum_valid_rate": evaluation["influence_share_sum_valid_rate"],
         "quality_delta_vs_baseline": evaluation["quality_delta_vs_baseline"],
-        "verifier_cost_delta_vs_baseline": evaluation[
-            "verifier_cost_delta_vs_baseline"
-        ],
+        "verifier_cost_delta_vs_baseline": evaluation["verifier_cost_delta_vs_baseline"],
         "wall_time_delta_vs_baseline": evaluation["wall_time_delta_vs_baseline"],
-        "token_or_context_delta_vs_baseline": evaluation[
-            "token_or_context_delta_vs_baseline"
-        ],
+        "token_or_context_delta_vs_baseline": evaluation["token_or_context_delta_vs_baseline"],
         "memory_delta_vs_baseline": evaluation["memory_delta_vs_baseline"],
-        "unproductive_loop_reduction_rate": evaluation[
-            "unproductive_loop_reduction_rate"
-        ],
-        "stale_memory_deflection_rate": evaluation[
-            "stale_memory_deflection_rate"
-        ],
-        "poison_memory_deflection_rate": evaluation[
-            "poison_memory_deflection_rate"
-        ],
+        "unproductive_loop_reduction_rate": evaluation["unproductive_loop_reduction_rate"],
+        "stale_memory_deflection_rate": evaluation["stale_memory_deflection_rate"],
+        "poison_memory_deflection_rate": evaluation["poison_memory_deflection_rate"],
         "rollback_success_rate": evaluation["rollback_success_rate"],
-        "no_weight_mutation": evaluation["weight_mutation_receipt"][
-            "no_weight_mutation"
-        ],
+        "no_weight_mutation": evaluation["weight_mutation_receipt"]["no_weight_mutation"],
         "resource_accounted_csl_ready": ready,
         "inference_substrate": INFERENCE_SUBSTRATE,
         "honest_verdict": _honest_verdict(ready),
@@ -323,9 +302,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
         for field in INTEGER_FIELDS
         if isinstance(artifact.get(field), bool) or not isinstance(artifact.get(field), int)
     )
-    errors.extend(
-        field for field in NUMERIC_FIELDS if not _is_numeric(artifact.get(field))
-    )
+    errors.extend(field for field in NUMERIC_FIELDS if not _is_numeric(artifact.get(field)))
     if artifact.get("field_principles") != FIELD_PRINCIPLES:
         errors.append("field_principles")
     if not str(artifact.get("honest_verdict", "")).startswith(TERMINAL_PREFIXES):
@@ -341,9 +318,10 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
         errors.append("milestone")
     if artifact.get("influence_share_sum_valid_rate") != 1.0:
         errors.append("influence_share_sum_valid_rate")
-    if _is_numeric(artifact.get("quality_delta_vs_baseline")) and artifact[
-        "quality_delta_vs_baseline"
-    ] < 0.0:
+    if (
+        _is_numeric(artifact.get("quality_delta_vs_baseline"))
+        and artifact["quality_delta_vs_baseline"] < 0.0
+    ):
         errors.append("quality_delta_vs_baseline")
     for field in POSITIVE_RESOURCE_FIELDS:
         if _is_numeric(artifact.get(field)) and float(artifact[field]) <= 0.0:
@@ -357,9 +335,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
             errors.append(field)
     if artifact.get("no_weight_mutation") is not True:
         errors.append("no_weight_mutation")
-    if artifact.get("decision_count") != len(
-        artifact.get("resource_accounted_decisions", [])
-    ):
+    if artifact.get("decision_count") != len(artifact.get("resource_accounted_decisions", [])):
         errors.append("decision_count")
     if artifact.get("raw_episode_count") != len(artifact.get("raw_episodes", [])):
         errors.append("raw_episode_count")
@@ -466,8 +442,7 @@ def _provenance_payload(
             None if accepted_memory is None else str(accepted_memory["memory_id"])
         ),
         "allowed_for_routing": bool(
-            accepted_memory is not None
-            and accepted_memory["trust_label"]["allowed_for_routing"]
+            accepted_memory is not None and accepted_memory["trust_label"]["allowed_for_routing"]
         ),
     }
 
@@ -524,10 +499,7 @@ def _resource_totals(decisions: Sequence[Mapping[str, Any]]) -> JsonDict:
     return {
         **savings,
         "baseline_unproductive_loop_count": round(
-            sum(
-                float(row["baseline_resources"]["unproductive_loop_count"])
-                for row in decisions
-            ),
+            sum(float(row["baseline_resources"]["unproductive_loop_count"]) for row in decisions),
             6,
         ),
         "resource_accounted_unproductive_loop_count": round(
@@ -564,11 +536,7 @@ def _poison_control_summary(
     memory_candidates: Sequence[Mapping[str, Any]],
     decisions: Sequence[Mapping[str, Any]],
 ) -> JsonDict:
-    high_cost = [
-        row
-        for row in memory_candidates
-        if row["control_kind"] == "high_cost_low_value"
-    ]
+    high_cost = [row for row in memory_candidates if row["control_kind"] == "high_cost_low_value"]
     poison_decisions = [row for row in decisions if row["poison_probe"]]
     return {
         "locally_correct_nontransferable_deflected": bool(
@@ -625,10 +593,7 @@ def _readiness_checks(
         ]
         is True,
         "tests_recorded": bool(tests_run),
-        "no_weight_mutation": evaluation["weight_mutation_receipt"][
-            "no_weight_mutation"
-        ]
-        is True,
+        "no_weight_mutation": evaluation["weight_mutation_receipt"]["no_weight_mutation"] is True,
         "no_adapter_weight_mutation": evaluation["weight_mutation_receipt"][
             "no_adapter_weight_mutation"
         ]
@@ -675,7 +640,12 @@ def _checksum(payload: Mapping[str, Any]) -> str:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
