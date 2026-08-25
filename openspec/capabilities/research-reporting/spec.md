@@ -56501,3 +56501,144 @@ byte-identical, no model is loaded, and the write is durable and atomic.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6593 | Implemented (`python/carnot/experiment_6593_cfr_independent_row_reducer.py`; terminal artifact `results/experiment_6593_cfr_independent_row_reducer.json`) | Implemented (`tests/python/test_experiment_6593_cfr_independent_row_reducer.py`) |
+
+### REQ-REPORT-6594: CFR Counterfactual Audit SHALL Bind Evidence And Exact Authority
+
+Carnot SHALL always run Exp6594 without an LLM or model load. The audit SHALL
+replay clean Exp6590 and Exp6591 rows before it attacks source, constraints,
+stages, family identity, retained bytes, answer isolation, and exact authority.
+Missing or null upstream evidence SHALL produce a named block instead of a
+fabricated comparison.
+
+- REQ-REPORT-6594-PRECONDITIONS: The artifact SHALL record protected hashes,
+  every expected and available upstream path and SHA-256 hash, expected family-
+  unit-arm keys, the frozen exact registry hash, deterministic attack seeds,
+  safe temporary-fixture paths, historical artifact hashes, and the no-LLM
+  substrate. The task SHALL issue zero LLM calls, model loads, downloads, and
+  GPU calls.
+- REQ-REPORT-6594-CLEAN-REPLAY: The audit SHALL recompute one clean control row
+  for each family and unit. Each row SHALL bind its selected arm, raw input
+  hashes, source and task hashes, exact checker, exact outcome, release
+  decision, and the matching Exp6593 row. Any Exp6593 headline SHALL recompute
+  from clean rows before attacks run.
+- REQ-REPORT-6594-SOURCE-CONSTRAINT: Source replacement and source-span
+  deletion SHALL test source causality without new model output. Supported-
+  constraint deletion and contradiction injection SHALL test constraint
+  causality. Every applicable mutation SHALL change the preregistered link and
+  SHALL be rejected before release.
+- REQ-REPORT-6594-STAGE-FAMILY: Stage 1 and Stage 2 byte swaps SHALL fail stage
+  identity and request-binding checks. A family-label-only swap SHALL fail the
+  family binding while preserving the original exact score and source release
+  decision. One family SHALL never repair or select another family row.
+- REQ-REPORT-6594-TAMPER-LEAKAGE: A retained raw-byte mutation SHALL disagree
+  with the sealed byte hash and fail closed. A deterministic Stage 1 answer
+  leak SHALL trigger the frozen leakage detector and SHALL not release an
+  answer. Attack fixtures SHALL remain only in a resolved temporary directory.
+- REQ-REPORT-6594-AUTHORITY: Removing the exact checker or substituting its
+  registry hash SHALL block release. Model text, family identity, and a
+  substituted checker SHALL never become release authority. The exact registry
+  may authorize release but SHALL not create an oracle-distinct benefit claim.
+- REQ-REPORT-6594-MISSING: A missing upstream artifact or required field with
+  value `None` SHALL produce `status=blocked_missing_cfr_evidence`,
+  `verdict_class=blocked`, and `gate_check_summary` naming the path, field, and
+  observed value. The artifact SHALL not emit null science or substitute rows.
+- REQ-REPORT-6594-ROWS: `per_unit_rows` SHALL contain one row for every family-
+  unit clean control and one row for every family-unit attack. Each row SHALL
+  record family, unit, arm, input hash, expected effect, observed effect,
+  checker, score effect, source release decision, audit release decision, and
+  applicability. Separate grouped fields SHALL retain all source, constraint,
+  stage-family, tamper-leakage, and authority rows.
+- REQ-REPORT-6594-ATTACKS: Zero-row completion, silent attack skip, identical
+  control and treatment, expected-effect rewriting, source repair after
+  outcome, model-as-authority, exact-check substitution, family collapse, and
+  historical artifact mutation SHALL each fail closed. Every primary and
+  meta-attack SHALL occur exactly once in its preregistered order.
+- REQ-REPORT-6594-REDUCER: The bare binary field
+  `cfr_authority_audit_ready_score` SHALL equal `1.0` only when all clean rows
+  replay, every applicable primary attack has its preregistered effect, every
+  meta-attack fails closed, the Exp6593 headline recomputes, and all protected
+  content remains unchanged. A complete audit SHALL use `verdict_class=null`
+  even when the scientific CFR effect is null.
+- REQ-REPORT-6594-ATOMIC: Exp6594 SHALL preserve `research-roadmap.yaml`,
+  `scripts/research_conductor.py`, and all historical result artifacts. It
+  SHALL set
+  `inference_substrate=cfr_counterfactual_exact_authority_audit_no_llm` and
+  `verifier_is_oracle=true`. It SHALL validate and write one checksummed JSON
+  artifact through same-directory file sync, atomic replacement, and directory
+  sync. The final checksum SHALL exclude only itself.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `per_unit_rows`, `clean_replay_receipts`,
+`source_counterfactual_rows`, `constraint_counterfactual_rows`,
+`stage_and_family_attack_rows`, `tamper_and_leakage_rows`,
+`authority_substitution_rows`, `reducer_recomputation`,
+`cfr_authority_audit_ready_score`, `attack_rows`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6594-CLEAN: Controls And Headline Replay Before Attacks
+
+**Given** the frozen method, two immutable streams, intake, and reducer
+**When** Exp6594 recomputes its clean controls
+**Then** all 40 family-unit controls match raw rows and the Exp6593 null
+headline recomputes without trusting its stored summary.
+
+#### SCENARIO-REPORT-6594-SOURCE-CONSTRAINT: Minimal Causal Links Fail Closed
+
+**Given** one clean family-unit control
+**When** source replacement, span deletion, constraint deletion, and
+contradiction injection run without new generation
+**Then** every applicable mutation changes its named minimal link and the audit
+blocks release with the expected detector.
+
+#### SCENARIO-REPORT-6594-STAGE-FAMILY: Stage Identity And Family Isolation Hold
+
+**Given** sealed Stage 1 and Stage 2 receipts and a fixed family result
+**When** stages or the family label are swapped
+**Then** stage binding and family identity fail, while a label-only swap does
+not change the exact score or source release decision.
+
+#### SCENARIO-REPORT-6594-TAMPER-LEAKAGE: Bytes And Answers Cannot Bypass Checks
+
+**Given** retained raw bytes and a Stage 1 answer-free contract
+**When** one byte changes or an answer phrase enters Stage 1
+**Then** the sealed hash or leakage detector fails and release stays blocked.
+
+#### SCENARIO-REPORT-6594-AUTHORITY: Missing Or Substituted Checkers Cannot Release
+
+**Given** the frozen exact registry owns release authority
+**When** the checker is removed, its registry is substituted, or model text is
+presented as authority
+**Then** no answer releases and no oracle-distinct science claim appears.
+
+#### SCENARIO-REPORT-6594-MISSING: Missing Evidence Produces A Named Block
+
+**Given** an absent Exp6593 artifact or a required upstream field equal to
+`None`
+**When** Exp6594 performs preconditions
+**Then** it writes a checksummed `blocked_missing_cfr_evidence` artifact whose
+gate summary names the exact path, field, and observed value, with no audit
+rows fabricated.
+
+#### SCENARIO-REPORT-6594-ATTACKS: Audit Shortcuts Fail Closed
+
+**Given** the complete clean and primary attack matrix
+**When** a meta-attack removes rows, skips an attack, aliases treatment,
+rewrites expectations, repairs evidence after outcome, changes authority,
+collapses families, or mutates history
+**Then** readiness becomes zero and the responsible detector is named.
+
+#### SCENARIO-REPORT-6594-ATOMIC: One Null Integrity Artifact Recomputes
+
+**Given** clean replay, attacks, tests, and protection checks have ended
+**When** Exp6594 writes its terminal artifact
+**Then** the ready score and checksum recompute, temporary fixtures are
+isolated, historical artifacts stay byte-identical, and the durable write uses
+a null verdict class with no LLM call.
+
+## Implementation Status (REQ-REPORT-6594)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6594 | Implemented (`python/carnot/experiment_6594_cfr_counterfactual_authority_audit.py`; terminal artifact `results/experiment_6594_cfr_counterfactual_authority_audit.json`) | Implemented (`tests/python/test_experiment_6594_cfr_counterfactual_authority_audit.py`; 13 focused tests; 100% module statement coverage) |
