@@ -626,13 +626,26 @@ def _counterexample_digest(ce: object) -> dict:
     return out
 
 
+def _keep_head_and_tail(items: list) -> list:
+    """REQ-ARC-WMTE-6710: bound a list while ALWAYS keeping its last entry.
+
+    A plain head-slice drops the LAST round, and the last round is the one whose cause the
+    attempt reports -- so a truncated digest could assert a cause and show no evidence for it,
+    which is this REQ's own failure mode one layer down. Keep the first N-1 and the last.
+    """
+
+    if len(items) <= _ROUND_DIGEST_MAX_ROUNDS:
+        return list(items)
+    return list(items[: _ROUND_DIGEST_MAX_ROUNDS - 1]) + [items[-1]]
+
+
 def _round_digest(rounds: object) -> list:
     """Project each refinement round down to what diagnoses it."""
 
     if not isinstance(rounds, list):
         return []
     out = []
-    for r in rounds[:_ROUND_DIGEST_MAX_ROUNDS]:
+    for r in _keep_head_and_tail(rounds):
         if not isinstance(r, dict):
             continue
         out.append(
@@ -662,9 +675,11 @@ def _induction_round_records(atts: list) -> list:
         if not isinstance(a, dict):
             continue
         rounds = _round_digest(a.get("refinement_rounds"))
+        # Head-and-tail, not head: the exception counterexample is appended LAST, and it is the
+        # only place a raising round's evidence exists.
         ces = [
             _counterexample_digest(c)
-            for c in list(a.get("counterexamples") or [])[:_ROUND_DIGEST_MAX_ROUNDS]
+            for c in _keep_head_and_tail(list(a.get("counterexamples") or []))
         ]
         if not rounds and not ces:
             continue
@@ -685,9 +700,19 @@ def _channel_delta(before: dict, after: dict) -> dict:
 
     The proposer is shared across cells, so its counters are cumulative for the whole process.
     Differencing is the same mechanism `row["llm"]` already uses for the token counters.
+
+    Clamped at 0, and non-numeric values are dropped rather than crashing the cell. A counter
+    reset between the two reads is not a measurement, and this runs AFTER the episode -- raising
+    here would destroy a whole row of real data over a diagnostic field.
     """
 
-    return {k: int(after.get(k, 0)) - int(before.get(k, 0)) for k in after}
+    out: dict = {}
+    for k, v in (after or {}).items():
+        try:
+            out[k] = max(0, int(v) - int((before or {}).get(k, 0)))
+        except (TypeError, ValueError, OverflowError):
+            continue
+    return out
 
 
 def _action_key(move: dict) -> str:
@@ -876,7 +901,12 @@ def run_cell(
         # A cell with a large `chars_reasoning`, a near-zero `chars_final` and a non-zero
         # `reasoning_only` is the model reasoning to EOS without writing code -- a different
         # fault, with a different fix, from a model that answered badly.
-        row["llm_channels"] = _channel_delta(chan0 or {}, dict(proposer.channel_totals or {}))
+        # Read the AFTER side as defensively as `chan0` was read at entry. A proposer without the
+        # field would otherwise raise AttributeError here, after the episode has already run,
+        # destroying the whole cell row over a diagnostic field.
+        row["llm_channels"] = _channel_delta(
+            chan0 or {}, dict(getattr(proposer, "channel_totals", None) or {})
+        )
         row["generator_healthy_before"] = gen_ok_before
         row["generator_healthy_after"] = bool(proposer._inner._healthy())
         row["llama_servers_before"] = servers_before

@@ -10,7 +10,8 @@ rejected". Before this REQ it could not resolve that question, in three separate
       cause and wrote it ONLY to the per-round record -- the held-out dynamics failure, and the
       selection/planning exception. So an attempt whose every round failed DYNAMICS verification
       was reported under a PLANNING label, and a reader chasing it went to the planner instead of
-      to the dynamics model. In the live corpus that default was 9 of 18 skip records.
+      to the dynamics model. That default is 9 of the 120 skip records the corpus holds
+      outside the induction-disabled case (measured 2026-08-24 over `results/**`).
 
   (B) The per-round records reached the harness and were read only to build category counters.
       The evidence naming WHICH cause fired was rebuilt every cell and discarded every cell.
@@ -224,8 +225,8 @@ def test_all_rounds_failing_heldout_verification_is_not_reported_as_a_planning_f
 
     Every round fails held-out transition verification, which is a DYNAMICS failure. Before the
     fix this attempt reported `no_reachable_plan_after_refinement` -- a PLANNING label -- because
-    the site wrote its diagnosis only into the per-round record. 9 of 18 live skip records were
-    that default.
+    the site wrote its diagnosis only into the per-round record. 9 of the 120 non-disabled skip
+    records in the corpus were that default.
 
     Mutation M1: delete `skipped = row["skipped"]` at the held-out site. RED here.
     """
@@ -446,3 +447,141 @@ def test_every_round_carries_a_channel_record_even_when_it_failed(monkeypatch, t
             f"round {row.get('round')} carries no channel record: {sorted(row)}"
         )
         assert isinstance(row["channel_chars"], dict)
+
+
+# =============================================================================================
+# FIXES FROM THE ADVERSARIAL REVIEW OF COMMIT 288ea485f9. Each test below exists because a
+# hostile reviewer found the first version of this REQ wrong in a specific, reproducible way.
+# =============================================================================================
+
+
+class _CountingProposer(_ScriptedProposer):
+    """A scripted proposer that ALSO carries the real per-channel counters.
+
+    The plain `_ScriptedProposer` has no `channel_totals`, so every integration test above saw
+    `channel_chars == {}` and could not tell a per-round delta from a run total. That is what let
+    the loop-side `channels_before` read be decorative.
+    """
+
+    def __init__(self, store, game, sources, per_round_chars):
+        super().__init__(store, game, sources)
+        self.channel_totals = dict(e3._EMPTY_CHANNEL_TOTALS)
+        self.per_round_chars = list(per_round_chars)
+
+    def _write(self, index):
+        # Simulate one completion for this round, accumulating the way the real proposer does.
+        chars = self.per_round_chars[min(index, len(self.per_round_chars) - 1)]
+        self.channel_totals["completions"] += 1
+        self.channel_totals["chars_raw"] += chars
+        return super()._write(index)
+
+
+def test_a_round_reports_its_own_characters_not_every_earlier_round_s(monkeypatch, tmp_path):
+    """The loop must read the counters BEFORE the round's request. Nothing pinned that: a hostile
+    reviewer replaced `channels_before` with `{}` -- which makes every round publish the whole-run
+    cumulative total, exactly the failure this REQ is about -- and the suite stayed GREEN.
+
+    Mutation M8: `channels_before = {}` in the round loop. RED here.
+    """
+
+    monkeypatch.setattr(e3, "E3_DIR", tmp_path)
+    transitions, root = _corpus()
+    proposer = _CountingProposer(tmp_path, GAME, [PARTIAL_SRC] * 3, [100, 200, 400])
+    outcome = execute_bounded_llm_reinduction(
+        game=GAME,
+        transitions=transitions,
+        cell=1,
+        root_grid=root,
+        proposer=proposer,
+        candidate_provider=lambda engine, goal: [("loaded_world_model.py", engine, goal)],
+        load_engine=e3.load_engine,
+        plan_in_model=lambda engine, goal, grid: None,
+        max_rounds=3,
+        min_heldout_accuracy=1.0,
+    )
+
+    per_round = [r["channel_chars"].get("chars_raw") for r in outcome.rounds]
+    assert per_round == [100, 200, 400], (
+        f"each round must report its OWN characters; got {per_round}. "
+        "A running total would read [100, 300, 700]."
+    )
+    assert [r["channel_chars"].get("completions") for r in outcome.rounds] == [1, 1, 1]
+
+
+def test_an_earlier_dynamics_failure_does_not_outrank_a_later_no_plan_ending(monkeypatch, tmp_path):
+    """Round 1 fails held-out verification; rounds 2 and 3 VERIFY and fail only at planning. The
+    attempt therefore ended on the planner, and must say so.
+
+    The first version of this REQ reported `heldout_transition_verification_failed` here, because
+    the no-plan fall-through was the one loop exit that never assigned `skipped` -- so the fix for
+    a wrong label introduced a wrong label in the other direction. Latent on the shipped path
+    (MAX_REFINEMENT_ROUNDS defaults to 1) and live whenever the cap is raised.
+
+    Mutation M9: delete `skipped = "no_reachable_plan_after_refinement"` at the loop tail. RED.
+    """
+
+    outcome = _run(monkeypatch, tmp_path, [PARTIAL_SRC, PERFECT_SRC, PERFECT_SRC])
+
+    per_round = [r.get("skipped") for r in outcome.rounds]
+    assert per_round[0] == "heldout_transition_verification_failed", (
+        f"round 1 must still record its own dynamics failure; got {per_round}"
+    )
+    assert per_round[1:] == [None, None], (
+        f"rounds 2-3 must have verified and fallen through to the planner; got {per_round}"
+    )
+    assert outcome.skipped == "no_reachable_plan_after_refinement", (
+        f"the attempt ended on the planner, so it must report the planner; got {outcome.skipped!r}"
+    )
+
+
+def test_the_digest_never_drops_the_round_that_produced_the_reported_cause():
+    """A plain head-slice keeps rounds 1-4 and discards the LAST round -- the one whose cause the
+    attempt reports. The digest would then assert a cause and show no evidence for it, which is
+    this REQ's own failure mode one layer down.
+
+    Mutation M10: `_keep_head_and_tail` returns `items[:_ROUND_DIGEST_MAX_ROUNDS]`. RED here.
+    """
+
+    m = _harness()
+    rounds = [{"round": i + 1, "skipped": None} for i in range(5)]
+    rounds[-1]["skipped"] = "selection_or_planning_exception"
+
+    kept = m._round_digest(rounds)
+
+    assert len(kept) == m._ROUND_DIGEST_MAX_ROUNDS, "the digest must still be bounded"
+    assert kept[-1]["round"] == 5, f"the last round must survive truncation; got {kept}"
+    assert kept[-1]["skipped"] == "selection_or_planning_exception"
+
+    # The same rule protects the attempt-level counterexample list, where a raising round's
+    # evidence is appended LAST and exists nowhere else.
+    atts = [
+        {
+            "skipped": "selection_or_planning_exception",
+            "refinement_rounds": rounds,
+            "counterexamples": [{"kind": f"early_{i}"} for i in range(4)]
+            + [{"kind": "selection_or_planning_exception"}],
+        }
+    ]
+    ces = m._induction_round_records(atts)[0]["counterexamples"]
+    assert ces[-1]["kind"] == "selection_or_planning_exception", (
+        f"the raising round's only evidence must survive truncation; got {ces}"
+    )
+
+
+def test_the_harness_channel_delta_clamps_and_survives_junk():
+    """SCENARIO-ARC-WMTE-6710-7 requires the clamp, and the harness twin of the delta did not
+    have it -- it returned -500 on a counter reset. It also runs AFTER the episode, so raising
+    on a junk value would destroy a whole row of real data over a diagnostic field.
+
+    Mutation M11: restore the unclamped `int(after[k]) - int(before[k])` comprehension. RED here.
+    """
+
+    m = _harness()
+
+    assert m._channel_delta({"chars_final": 500}, {"chars_final": 0}) == {"chars_final": 0}
+    assert m._channel_delta({}, {"chars_final": 10}) == {"chars_final": 10}
+    # Junk values are dropped, not raised on.
+    assert m._channel_delta({}, {"ok": 3, "junk": "abc", "nested": {}, "nan": float("nan")}) == {
+        "ok": 3
+    }
+    assert m._channel_delta({}, {}) == {}

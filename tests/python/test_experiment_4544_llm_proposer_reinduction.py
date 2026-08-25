@@ -1020,7 +1020,12 @@ def test_req_arc_wmte_4544_helper_failure_paths() -> None:
         plan_in_model=lambda _engine, _goal, _grid: None,
         max_rounds=1,
     )
-    assert errored.skipped == "no_reachable_plan_after_refinement"
+    # UPDATED 2026-08-24 for REQ-ARC-WMTE-6710. This assertion previously required
+    # `no_reachable_plan_after_refinement` here, and the line below it shows why that was wrong:
+    # the attempt RAISED, and the cause was visible only in the counterexample while `skipped`
+    # reported a planning failure. The exception site now sets the outer variable, so the two
+    # lines agree. Kept as a pair on purpose -- they pin that the record and the label match.
+    assert errored.skipped == "selection_or_planning_exception"
     assert errored.counterexamples[0]["kind"] == "selection_or_planning_exception"
 
 

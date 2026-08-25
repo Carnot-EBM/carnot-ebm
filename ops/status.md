@@ -8826,7 +8826,11 @@ not a different design; it was the same design, missed twice. The result is a
 false report with the right shape: an attempt whose every round failed DYNAMICS
 verification was reported under a PLANNING label, which sends a reader to the
 planner instead of to the verifier. In the live corpus that default accounted
-for 9 of 18 skip records. Both sites now set the outer variable.
+for 9 of the 120 skip records the corpus holds outside the induction-disabled
+case (9 of 3034 including it), measured this session by sweeping every
+`induction_skipped` counter under `results/**`. The brief that started this work
+quoted "9 of 18"; the numerator reproduces, the denominator does not. Both sites
+now set the outer variable.
 
 Two supporting gaps closed with it. The proposer's per-channel character
 counters had no consumer inside the refinement loop, so each round now records
@@ -8849,7 +8853,7 @@ mutation step is what caught that, not review.
 WHAT IS NOT DONE. No live run has been made against this change — a scored-path
 lever run was in flight on GPU 1 throughout and was left untouched, so every
 claim here is unit-level. The 9-of-18 figure is inherited from the brief, not
-re-measured this session. A second agent independently built
-`tests/python/test_arc_induction_skip_cause_not_masked_20260824.py` against the
-same three defects; both suites pass against this code, and the duplication is
-left for the operator to resolve rather than deleted.
+re-measured this session. A second agent worked the same three defects concurrently; its suite was renamed
+to `tests/python/test_arc_induction_diagnosis_6710_invariants.py` mid-session and
+is untracked at the time of writing, so it is NOT part of this commit. Both
+suites passed together when last run (30 tests).

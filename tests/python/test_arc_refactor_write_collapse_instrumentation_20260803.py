@@ -591,6 +591,9 @@ _SIBLING_REQ_ROW_KEYS = {
     "acceptance_split_reason",
     "acceptance_split_gradeable_rows",
     "refinement_corpus_rows",
+    # REQ-ARC-WMTE-6710: this round's per-channel character split. Record only; nothing branches
+    # on it. Declared here because this guard is what makes a new round key a deliberate act.
+    "channel_chars",
 }
 
 IDENTITY_SRC = """

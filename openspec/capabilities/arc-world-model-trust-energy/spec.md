@@ -27359,7 +27359,11 @@ verification failure, and the selection-or-planning exception. Four sibling
 sites already write both the round record and the outer variable. So an
 attempt whose every round failed held-out DYNAMICS verification was reported
 under a PLANNING label. In the live corpus at the time of writing, that
-default accounted for 9 of 18 skip records. A reader sent to the planner by
+default accounted for 9 of the 120 skip records the corpus holds outside the
+induction-disabled case (9 of 3034 including it), measured 2026-08-24 by
+sweeping every `induction_skipped` counter under `results/**`. A brief for this
+work quoted "9 of 18"; the numerator reproduces and the denominator does not, so
+the measured figure is used here. A reader sent to the planner by
 that label cannot find the defect, because the defect is in the dynamics
 model.
 
