@@ -16467,3 +16467,6 @@ code |
 | 2026-08-25 17:15 UTC | Plan milestone 2026.08.576 | OK | 12 tasks proposed |
 | 2026-08-25 17:17 UTC | Milestone 2026.08.576 activated | OK | 12 tasks queued |
 | 2026-08-25 17:56 UTC | Exact two-level plan corpus and compiler contract | OK | 105 passed, 1 warning in 23.57s |
+| 2026-08-25 18:37 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 675677 serves 'Qwen3.6-35B-A3B-UD-Q4_K_M.gguf', live pin is 'Qwen3.8-2 |
+| 2026-08-25 19:15 UTC | Qwen3.6 direct baseline headroom qualification | FAIL | Post-tests failed: bad_checksum["tests_run"] = [{"command": "changed", "outcome" |
+| 2026-08-25 19:17 UTC | Qwen3.6 direct baseline headroom qualification | OK | Deliverable already exists in repo |

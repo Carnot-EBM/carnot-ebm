@@ -205,6 +205,58 @@ class TestTheBound:
         sv.engine_changes_anything_bounded(IDENTITY, transitions)
         assert seen["job_kind"] == "changes_anything"
 
+    def test_the_child_starts_without_package_owned_pickle_or_blas_fanout(
+        self, transitions, monkeypatch
+    ):
+        """SCENARIO-ARC-FCP-5699-43-INERTNESS-PROBE-IS-BOUNDED keeps startup
+        infrastructure outside the generated-code deadline under parallel pytest workers."""
+        import json
+        import pickle
+        from pathlib import Path
+        from types import SimpleNamespace
+
+        observed: dict = {}
+
+        def fake_run(argv, **kwargs):
+            with open(argv[-1], "rb") as handle:
+                observed["job"] = pickle.load(handle)
+            observed["argv"] = list(argv)
+            observed["env"] = dict(kwargs["env"])
+            return SimpleNamespace(
+                returncode=0,
+                stderr="",
+                stdout=json.dumps(
+                    {
+                        "changes_anything": False,
+                        "n_usable_predictions": 3,
+                        "n_tried": 3,
+                    }
+                ),
+            )
+
+        monkeypatch.setattr(sv.subprocess, "run", fake_run)
+        status, payload = sv._run_isolated_job(
+            IDENTITY,
+            transitions,
+            limit=25,
+            func_name="engine",
+            timeout_s=30.0,
+            job_kind="changes_anything",
+        )
+
+        assert status == "ok" and payload["n_usable_predictions"] == 3
+        assert observed["argv"][1] == str(Path(sv.__file__).resolve())
+        assert all(isinstance(row, dict) for row in observed["job"]["transitions"])
+        assert set(
+            observed["env"].get(name)
+            for name in (
+                "OPENBLAS_NUM_THREADS",
+                "OMP_NUM_THREADS",
+                "MKL_NUM_THREADS",
+                "NUMEXPR_NUM_THREADS",
+            )
+        ) == {"1"}
+
     def test_the_disable_knob_restores_the_unbounded_in_process_path_exactly(
         self, transitions, monkeypatch
     ):

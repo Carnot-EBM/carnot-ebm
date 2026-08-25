@@ -8947,3 +8947,23 @@ Known limits, deliberately not closed:
 - Opening a proof session is still agent discipline. Three of the five
   REQ-OPS-MUTATION-PROOF-1 properties depend on an agent invoking it; the spec
   now names which. Forcing the open would need a different mechanism.
+
+### 2026-08-25 Exp6605 Checksum And ARC Validator Test Repair
+
+The Exp6605 artifact validator now has an exact regression for replacing
+`tests_run` with `[{"command": "changed", "outcome": "failed"}]`; the
+reproducibility checksum rejects that mutation. Its focused suite passes 21
+tests with 374/374 statements covered.
+
+The ARC inert-engine subprocess now stages dependency-free transition data,
+executes the self-contained validator file directly, and limits inherited
+BLAS/OpenMP worker fanout. This keeps the bounded mechanical validation ahead
+of behavioral inertness under parallel test load. The focused repair set
+passes 79 tests; the formerly 56.32-second isolated regression completes in
+1.41 seconds.
+
+The repository-wide run remains red on documented baseline issues after
+reaching 7,505 passes and 7 skips: the stale Exp5901 repository hash artifact
+and two legacy artifact-path tests that conflict with the suite-wide artifact
+root redirect. No test was skipped, weakened, deleted, or reverted, and
+`scripts/research_conductor.py` was not changed.

@@ -191,6 +191,13 @@ def test_validate_engine_code_runs_BEFORE_the_trust_gate_scores_the_candidate(mo
 
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
+    # This fixture returns llama.cpp's native /completion response shape (`content` at the
+    # top level), so explicitly exercise that generation mode. The shipped think-mode default
+    # uses /v1/chat/completions and correctly requires an OpenAI-shaped `choices` response;
+    # letting an unrelated default flip choose the endpoint makes this ordering test fail before
+    # either operation it exists to order can run.
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "0")
+
     calls: list[str] = []
 
     class _Server:

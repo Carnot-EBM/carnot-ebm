@@ -17840,3 +17840,14 @@ next milestone, the tooling should group 8-16 questions per forward pass and
 write phase clocks, per-task accelerator samples, model count, and runner
 choice.
 - 2026-08-25: Exact two-level plan corpus and compiler contract (⚠️ Research Finding) — honest_verdict=complete: exact two-level plan corpus and oracle-distinct executor are ready; this is null infrastructure and no model benefit was measured; results/experiment_6604_exact_two_level_plan_corpus.json
+
+## 2026-08-25 — Exp6605 checksum mutation and bounded-validator repair
+
+- Pinned the reported Exp6605 `tests_run` replacement as a checksum regression;
+  21 focused tests pass with 100% scoped statement coverage.
+- Removed package-import and inherited thread-pool startup costs from the ARC
+  generated-engine child while preserving mechanical-defect precedence.
+- Added coverage for the dependency-free child payload, direct-file launch,
+  bounded math-library fanout, and the raw-completion fixture mode.
+- Reconciled REQ-REPORT-6605 and REQ-ARC-FCP-5699-43 with their focused test
+  evidence. The full-suite baseline remains separately documented in status.
