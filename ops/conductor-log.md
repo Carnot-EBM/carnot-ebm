@@ -16476,3 +16476,4 @@ code |
 | 2026-08-25 19:35 UTC | Gemma 4 26B-A4B direct baseline headroom qualifica | OK | 102 passed, 1 warning in 16.24s |
 | 2026-08-25 19:57 UTC | Independent three-family headroom reducer | OK | 117 passed, 1 warning in 14.03s |
 | 2026-08-25 19:59 UTC | Two-level local GGUF constrained decoding, gated o | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6608-family-headroom-reducer.headroom_b |
+| 2026-08-25 20:01 UTC | Two-level local GGUF constrained decoding, gated o | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6608-family-headroom-reducer.headroom_b |
