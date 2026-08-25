@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.572",
+  "generated_at": "2026-08-25T02:12:02Z",
+  "retro_type": "operational_in_progress",
+  "summary": "Across 5 experiments and 16.5 minutes, 3 experiments were compute-bound. Qwen3.6 one-family flagship source shard was the slowest at the reported 15-minute resolution; the other 4 entries were reported at 0-minute resolution.",
+  "total_wall_time_minutes": 16.5,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Qwen3.6 one-family flagship source shard",
+      "duration_minutes": 15.45,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gemma-4-26B-A4B one-family flagship source shard",
+      "duration_minutes": 0.47,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gemma-4-31B one-family flagship source shard",
+      "duration_minutes": 0.45,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V572 terminal recovery and decomposed flagship contract",
+      "duration_minutes": 0.09,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V572 SOTA source and joint-proof method protocol",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "bottlenecks_identified": [
+    "Qwen3.6 one-family flagship source shard formed the 15-minute compute critical path, but no data available this milestone identifies which execution phase caused that duration.",
+    "The other 4 entries are reported at 0-minute resolution, preventing useful phase or task-duration comparison below one minute.",
+    "The GPU report is a point sample without experiment-window linkage or readiness information, so it cannot show whether the unused device had an independent task available to run."
+  ],
+  "improvements_suggested": [
+    "Add task-linked start, stop, and phase clocks plus periodic GPU utilization samples for every compute-bound experiment.",
+    "Benchmark configurable batches of 8-16 compatible questions per forward pass and retain batching only when milestone-local timings improve.",
+    "Add a free-device scheduler that launches a second ready, independent single-model job on GPU 0 while keeping each single GGUF task on one GPU.",
+    "Emit loaded-model count, device assignment, and runner-selection receipts at launch so DualGPURunner is selected and auditable only when 2 or more models are loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Benchmark 8-16-question inference batches with before-and-after task timings.",
+    "Schedule a second ready, independent single-model job on the free GPU.",
+    "Join phase clocks and GPU samples to each task and record model-count and runner-selection receipts."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "GPU 1 was active at 94% utilization while GPU 0 was unused, which shows spare device capacity but not a compute-idle defect for a single-model task. No data available this milestone establishes a compute task with 2 or more models loaded in parallel, so a missed DualGPURunner engagement cannot be identified; the 0% savings estimate reflects the absence of a measured counterfactual.",
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false
+}
