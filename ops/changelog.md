@@ -17721,3 +17721,4 @@ The retrospective recommends GPU-aware independent-stream scheduling, inference
 batching, and task-scoped telemetry. No data available this milestone establishes
 a parallel multi-model launch or missed DualGPURunner engagement.
 - 2026-08-25: V575 terminal intake and method lock (⚠️ Blocked) — honest_verdict=complete: V574 terminal evidence replayed; Exp6589 remains blocked; both CFR streams bind complete nested receipts; V575 methods and gates are locked; no science result was created; results/experiment_6592_v575_terminal_intake_and_method_lock.json
+- 2026-08-25: Independent CFR row reducer, gated on Exp6592 readiness (✅ Complete) — honest_verdict=complete: Qwen, Gemma, and pooled CFR effects replayed; every exact-success delta is 0.0 with zero direct headroom, so no CFR benefit is eligible; results/experiment_6593_cfr_independent_row_reducer.json
