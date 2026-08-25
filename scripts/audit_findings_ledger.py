@@ -8,10 +8,9 @@ same shape as the QA-layer audit that wrote no report for four weeks while
 its caller reported success. A report can be ignored; a ledger row with a
 visible, growing age cannot stay ignored quietly.
 
-MECHANISM. This tool parses flagged verdicts (the claim audit's own
-FLAGGED_VERDICTS tuple, imported — one list, one home) out of
-ops/experiment_claim_audit_report.md and maintains
-ops/audit-findings-ledger.md:
+MECHANISM. This tool parses flagged verdicts out of each audit report in
+SOURCES (each audit's own FLAGGED_VERDICTS constant, imported — one list,
+one home) and maintains ops/audit-findings-ledger.md:
 
   * A new flagged finding appends one row with disposition OPEN.
   * Existing rows are NEVER rewritten or removed (never-prune). A human
@@ -30,9 +29,29 @@ this cycle — its own receipt check covers that); a MALFORMED ledger row is
 a finding, never a silent skip (a row this tool cannot read is a row whose
 age it cannot track).
 
-v1 scope, stated: the claim audit only. The other five milestone-close
-audits keep their existing operator flow until this disposition shape
-proves out on one.
+SCOPE, and the 2026-08-25 widening. v1 read ONE report, the claim audit's.
+That was a pattern narrower than this module's own stated concept
+("flagged audit verdicts someone must answer") — the exact class the
+QA-layer discipline hunts, committed by the guard written to fix it. The
+irony is precise: the docstring above cites the QA-layer audit's silent
+failure as the reason this tool exists, and the tool did not read the
+QA-layer audit. Measured cost: two milestone closes (.572, .573) produced
+7 SILENT_NON_FIRING verdicts and ingested none. All 7 were hand-entered by
+the outer loop. The report is REGENERATED at every close, so an
+un-ingested finding is not merely unread — it is overwritten.
+
+SOURCES now carries the claim audit plus the QA-layer audit. Two
+milestone-close audits stay out, and the reason is mechanical rather than
+editorial: neither exports a module-level flagged-verdict constant this
+tool could import, and re-declaring a copy here is the drift this module
+refuses on principle.
+
+  * verifier_authenticity_audit.py — its flagged set is a local variable
+    inside the run function (`flagged_verdicts = {...}`), unreachable.
+  * artifact_convention_audit.py — flagged is a positional slice of
+    VERDICTS, so there is no name to import.
+
+Promoting either to a module constant makes it a one-line addition here.
 """
 
 from __future__ import annotations
@@ -41,13 +60,17 @@ import argparse
 import importlib.util
 import re
 import sys
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import NamedTuple
 
 REPO = Path(__file__).resolve().parents[1]
 DEFAULT_REPORT = REPO / "ops" / "experiment_claim_audit_report.md"
+DEFAULT_QA_REPORT = REPO / "ops" / "qa_layer_authenticity_audit_report.md"
 DEFAULT_LEDGER = REPO / "ops" / "audit-findings-ledger.md"
 AUDIT_NAME = "experiment_claim_audit"
+QA_AUDIT_NAME = "qa_layer_authenticity_audit"
 # First escalation age. Was 7 days; lowered to 1 on 2026-08-23 (spec
 # AMENDMENT to REQ-OPS-AUDIT-LEDGER-1 rule 3): the loop closes several
 # milestones per day, and the three real 2026-08-22 CLAIM_OVERSTATED
@@ -83,6 +106,16 @@ def flagged_verdicts() -> tuple[str, ...]:
     return tuple(audit.FLAGGED_VERDICTS)
 
 
+def source_flagged_verdicts(source: Source) -> tuple[str, ...]:
+    """One audit's flagged set, read off that audit's own module.
+
+    Imported, never copied. A second copy here is the drift that makes a
+    ledger silently stop ingesting a verdict the audit still emits.
+    """
+    audit = _load_module(source.module, REPO / "scripts" / f"{source.module}.py")
+    return tuple(sorted(getattr(audit, source.verdict_attr)))
+
+
 def parse_report(text: str, flagged: tuple[str, ...]) -> list[dict]:
     """Flagged (artifact, verdict) pairs from a claim-audit report.
 
@@ -105,6 +138,83 @@ def parse_report(text: str, flagged: tuple[str, ...]) -> list[dict]:
                     findings.append({"artifact": current, "verdict": bold.group(1)})
                 current = None  # first bold line decides; ignore the rest
     return findings
+
+
+def parse_qa_report(text: str, flagged: tuple[str, ...]) -> list[dict]:
+    """Flagged (unit, verdict) pairs from a QA-layer audit report.
+
+    Two independent readings of the same fact, unioned and deduped, so a
+    format change on either side degrades to partial ingest rather than
+    silent zero:
+
+      * the per-unit section — a `## <unit>` heading whose next non-blank
+        line is the writer's `**Verdict:** \\`X\\`` line;
+      * the `### FLAGGED` summary list — `- \\`unit\\` — **VERDICT**`.
+
+    Only `##` headings followed by that exact verdict line count as a
+    unit. The reviewer's own prose carries `## VERDICT` / `## FINDINGS`
+    headings, and they are followed by a bare token, so they never match.
+
+    A verdict the Layer-1.5 integrity guard voided is already rewritten to
+    CANNOT_DETERMINE before the report is written, so a hallucinated
+    finding cannot reach the ledger.
+    """
+    findings: list[dict] = []
+    seen: set[tuple[str, str]] = set()
+
+    def add(unit: str, verdict: str) -> None:
+        if verdict in flagged and (unit, verdict) not in seen:
+            seen.add((unit, verdict))
+            findings.append({"artifact": unit, "verdict": verdict})
+
+    lines = text.splitlines()
+    for index, line in enumerate(lines):
+        heading = re.fullmatch(r"##\s+(\S.*?)\s*", line)
+        if heading:
+            for following in lines[index + 1 : index + 4]:
+                if not following.strip():
+                    continue
+                verdict_line = re.fullmatch(r"\*\*Verdict:\*\*\s*`([A-Z_]+)`\s*", following)
+                if verdict_line:
+                    add(heading.group(1), verdict_line.group(1))
+                break
+        item = re.fullmatch(r"-\s+`([^`]+)`.*?\*\*([A-Z_]+)\*\*\s*", line)
+        if item:
+            add(item.group(1), item.group(2))
+    return findings
+
+
+class Source(NamedTuple):
+    """One audit this ledger ingests.
+
+    `name` is the ledger's Audit cell and is part of a row's identity, so
+    two audits flagging the same file name are distinct rows and neither
+    dedups the other away.
+
+    NamedTuple, not a dataclass: this module is loaded by
+    `spec_from_file_location` without a `sys.modules` entry (its own
+    `_load_module`, and every test), and `@dataclass` needs that entry.
+    """
+
+    name: str
+    default_report: Path
+    module: str
+    verdict_attr: str
+    parser: Callable[[str, tuple[str, ...]], list[dict]]
+
+
+SOURCES: tuple[Source, ...] = (
+    # Claim audit stays first so a combined run appends its rows in the
+    # same order as before the widening.
+    Source(AUDIT_NAME, DEFAULT_REPORT, "experiment_claim_audit", "FLAGGED_VERDICTS", parse_report),
+    Source(
+        QA_AUDIT_NAME,
+        DEFAULT_QA_REPORT,
+        "qa_layer_authenticity_audit",
+        "FLAGGED_VERDICTS",
+        parse_qa_report,
+    ),
+)
 
 
 def parse_ledger(text: str) -> tuple[list[dict], list[str]]:
@@ -141,7 +251,11 @@ def _identity(entry: dict) -> tuple[str, str, str]:
 
 
 def append_new_rows(
-    ledger_path: Path, report_findings: list[dict], today: str, dry_run: bool = False
+    ledger_path: Path,
+    report_findings: list[dict],
+    today: str,
+    dry_run: bool = False,
+    audit_name: str = AUDIT_NAME,
 ) -> int:
     """Append rows for findings the ledger has never seen. Append-only:
     an existing row is never touched, whatever its disposition."""
@@ -152,7 +266,7 @@ def append_new_rows(
     else:
         known = set()
         prefix = _LEDGER_HEADER
-    fresh = [f for f in report_findings if (AUDIT_NAME, f["artifact"], f["verdict"]) not in known]
+    fresh = [f for f in report_findings if (audit_name, f["artifact"], f["verdict"]) not in known]
     if dry_run or not fresh:
         return len(fresh)
     with open(ledger_path, "a", encoding="utf-8") as fh:
@@ -160,7 +274,7 @@ def append_new_rows(
             fh.write(prefix)
         for finding in fresh:
             fh.write(
-                f"| {today} | {AUDIT_NAME} | {finding['artifact']} | "
+                f"| {today} | {audit_name} | {finding['artifact']} | "
                 f"{finding['verdict']} | {_OPEN} | |\n"
             )
     return len(fresh)
@@ -224,6 +338,7 @@ def aging_escalations(entries: list[dict], today: datetime) -> list[tuple[str, d
 def run(
     *,
     report_path: Path = DEFAULT_REPORT,
+    qa_report_path: Path = DEFAULT_QA_REPORT,
     ledger_path: Path = DEFAULT_LEDGER,
     conductor_log: Path | None = None,
     known_issues: Path | None = None,
@@ -243,12 +358,23 @@ def run(
     # a fresh sentinel scan mask a ledger run that crashed before writing.
     state_path = state_path or REPO / "ops" / ".audit_findings_ledger_state.json"
 
+    # Per-source report overrides, so a caller (or a test) can point one
+    # source at a fixture without disturbing the others.
+    overrides = {AUDIT_NAME: report_path, QA_AUDIT_NAME: qa_report_path}
     appended = 0
-    if report_path.exists():
-        findings = parse_report(report_path.read_text(encoding="utf-8"), flagged_verdicts())
-        appended = append_new_rows(ledger_path, findings, today_str, dry_run=dry_run)
-    # else: no report -> no-op ingest; the audit's own receipt check owns
-    # "the audit did not run", this tool owns "the findings sat unanswered".
+    for source in SOURCES:
+        path = overrides.get(source.name, source.default_report)
+        if not path.exists():
+            # A missing report is a no-op, per source. The audit's own
+            # receipt check owns "the audit did not run"; this tool owns
+            # "its findings sat unanswered". An audit that did not run must
+            # not make the ledger look clean, and an absent report appends
+            # nothing rather than closing anything.
+            continue
+        findings = source.parser(path.read_text(encoding="utf-8"), source_flagged_verdicts(source))
+        appended += append_new_rows(
+            ledger_path, findings, today_str, dry_run=dry_run, audit_name=source.name
+        )
 
     escalations: list[tuple[str, dict]] = []
     malformed: list[str] = []
@@ -284,12 +410,16 @@ def run(
 
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--report", default=str(DEFAULT_REPORT))
+    parser.add_argument("--report", default=str(DEFAULT_REPORT), help="claim-audit report")
+    parser.add_argument("--qa-report", default=str(DEFAULT_QA_REPORT), help="QA-layer audit report")
     parser.add_argument("--ledger", default=str(DEFAULT_LEDGER))
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
     summary = run(
-        report_path=Path(args.report), ledger_path=Path(args.ledger), dry_run=args.dry_run
+        report_path=Path(args.report),
+        qa_report_path=Path(args.qa_report),
+        ledger_path=Path(args.ledger),
+        dry_run=args.dry_run,
     )
     print(
         f"[audit-ledger] appended={summary['appended']} aging={summary['aging']} "
