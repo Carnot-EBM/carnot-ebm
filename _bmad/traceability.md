@@ -1,6 +1,15 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-08-23
+**Last Updated:** 2026-08-25
+
+**Operational Note:** 2026-08-25 REQ-VERIFY-6593 stale-linter test repair
+kept `scripts/research_conductor.py` out of the follow-up edit and moved the
+freshness guarantee to the cached `verify_artifact` entrypoint in
+`scripts/adversarial_verify.py`. A source-revision change reloads the verifier
+before delegating, while incomplete source retains the last known-good
+implementation. The conductor-equivalent smart subset passes (`118 passed, 1
+warning`), and the Exp6596 Carnot module retains 100% statement and branch
+coverage (`428` statements, `136` branches, none missing).
 
 **Operational Note:** 2026-08-23 Exp6542 DRIFT-Bench intake test fix
 reconciled `REQ-BENCH-6542` by marking the OpenSpec implementation/test row

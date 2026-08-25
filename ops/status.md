@@ -1,6 +1,13 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-08-23, latest (per-attempt world-model retention SHIPPED,
+**Last Updated:** 2026-08-25, latest (REQ-VERIFY-6593 stale-verifier regression
+repaired at the cached `verify_artifact` boundary without a follow-up
+`scripts/research_conductor.py` edit. Changed verifier source is reloaded before
+delegation; incomplete source retains the last known-good gate. The
+conductor-equivalent suite passes 118 tests with one warning, and the Exp6596
+module has 100% statement/branch coverage.)
+
+Prior: 2026-08-23 (per-attempt world-model retention SHIPPED,
 REQ-ARC-WMTE-6690, commit 8e2f938a0f: the live engine store no longer destroys
 its own induced models — every producer write is archived under
 `E3_DIR/<game>/attempts/` with a manifest; canonical file, returns, and read

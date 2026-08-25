@@ -56778,3 +56778,140 @@ and protected hashes all pass without an LLM call.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6595 | Implemented (`python/carnot/experiment_6595_invariant_projection_world_model_canary.py`; terminal artifact `results/experiment_6595_invariant_projection_world_model_canary.json`) | Implemented (`tests/python/test_experiment_6595_invariant_projection_world_model_canary.py`) |
+
+### REQ-REPORT-6596: Feasible-Token Flow Canary SHALL Keep Exact Authority Visible
+
+Carnot SHALL build a deterministic CPU-only Exp6596 canary. The canary SHALL
+use fixed toy token embeddings and exact feasible token sets. It SHALL compare
+unconstrained flow, full-vocabulary nearest-token endpoint rounding, and a
+ConvergeFlow-inspired convex-hull data predictor. It SHALL not train a model or
+claim language-model reproduction.
+
+- REQ-REPORT-6596-PRECONDITIONS: Before evaluation, the canary SHALL record the
+  arXiv:2608.23551v1 source hash and the observed state of the official linked
+  code. It SHALL hash the continuous EBM, continuous latent, flow sampler,
+  projection, exact-DFA, experiment, and test modules. It SHALL freeze the
+  embedding geometries, exact feasible sets, starts, perturbations, five held
+  seeds, error levels, integration grid, tolerances, CPU, RAM, disk, and both
+  protected orchestration files. The protected files SHALL be
+  `research-roadmap.yaml` and `scripts/research_conductor.py`.
+- REQ-REPORT-6596-FIXTURES: The canary SHALL use at least three fixed embedding
+  geometries. Each ordinary feasible set SHALL exclude at least one vocabulary
+  token. Five held seeds SHALL share identical starting states across all arms
+  and error levels. The clean predictor and at least two held perturbation
+  magnitudes SHALL have immutable row hashes. An empty feasible-set fixture
+  SHALL remain in the frozen fixture matrix and SHALL fail closed.
+- REQ-REPORT-6596-ARMS: The `unconstrained_flow` arm SHALL use the perturbed
+  predictor without feasible-set access or endpoint snapping. The
+  `nearest_token_rounding` arm SHALL use the same unprojected predictor and
+  SHALL round only once against the full vocabulary at the endpoint. The
+  `convex_hull_predictor_projection` arm SHALL use positive convex weights over
+  only the exact feasible embeddings at every predictor evaluation. All arms
+  SHALL share the same integration grid. Every predictor evaluation,
+  projection, and endpoint snap SHALL be charged.
+- REQ-REPORT-6596-ROWS: `per_unit_rows` SHALL contain exactly one row for every
+  geometry, constraint, error level, held seed, and arm. Each row SHALL record
+  valid endpoint, exact constraint result, integration steps, path length,
+  endpoint distortion, convergence, failure, predictor error, projection and
+  snap work, charged work, wall time, start hash, perturbation hash, and
+  endpoint hash. Expected empty-set failures SHALL stay in the rows.
+- REQ-REPORT-6596-EXACT: Independent `exact_endpoint_check_rows` SHALL replay
+  endpoint-to-token convergence and exact feasible-set membership. Empty sets
+  SHALL never pass. The exact set SHALL define validity, so
+  `verifier_is_oracle` SHALL be true and any exact-validity success SHALL be
+  `circular_positive` at best.
+- REQ-REPORT-6596-ROBUSTNESS: Clean and held perturbed results SHALL remain
+  separate in `robustness_summary`. `distortion_and_cost_summary` SHALL report
+  endpoint distortion, path length, projection work, snap work, integration
+  steps, charged work, failures, and wall time by arm and predictor condition.
+  Validity alone SHALL not support a benefit claim.
+- REQ-REPORT-6596-READINESS: `convergeflow_canary_ready_score` SHALL equal 1.0
+  only when every frozen ordinary and empty-set fixture, arm, error, seed,
+  perturbation, exact check, control-isolation check, and expected failure
+  replays. The score records conformance completeness. It does not record
+  scientific benefit. A complete non-beneficial result MAY use `null`.
+- REQ-REPORT-6596-ATTACKS: Feasible-set leakage, treatment projection in the
+  nearest-token arm, hidden endpoint-snap cost, empty-set acceptance,
+  post-outcome step tuning, dropped nonconvergence, one-seed promotion, and
+  aggregate-only output SHALL each fail closed in `attack_rows`.
+- REQ-REPORT-6596-VERDICT: The verdict SHALL be limited to toy feasible-token
+  flow. `verdict_class` SHALL be one of `positive`, `circular_positive`,
+  `null`, `blocked`, `disqualified`, or `partial`. It SHALL never be `positive`
+  when exact-set validity supplies the success. Any blocked verdict SHALL name
+  the failed source, module, fixture, numerical, or resource check and its
+  observed value in `gate_check_summary`.
+- REQ-REPORT-6596-ATOMIC: Exp6596 SHALL set
+  `inference_substrate=toy_convex_hull_feasible_token_flow_no_llm` and
+  `verifier_is_oracle=true`. It SHALL validate and write one checksummed JSON
+  artifact through same-directory file sync, atomic replacement, and directory
+  sync. The final checksum SHALL exclude only itself.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `per_unit_rows`, `method_source_receipt`,
+`embedding_and_constraint_receipts`, `arm_definition_rows`,
+`exact_endpoint_check_rows`, `robustness_summary`,
+`distortion_and_cost_summary`, `convergeflow_canary_ready_score`,
+`attack_rows`, `preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6596-FIXTURES: Frozen Geometry And Perturbations Replay
+
+**Given** three ordinary embedding geometries, one empty-set fixture, five held
+seeds, one clean error, and two held predictor errors
+**When** Exp6596 builds fixture receipts
+**Then** embedding, constraint, exact-DFA, start, and perturbation hashes bind
+every expected row and every ordinary feasible set excludes tokens.
+
+#### SCENARIO-REPORT-6596-CONTROLS: Arms Differ Only By Fixed Mechanisms
+
+**Given** a geometry, seed, predictor error, start, and integration grid
+**When** all three arms run
+**Then** they share the raw predictor input and budget, the nearest arm has no
+treatment projection, the convex-hull arm projects each predictor evaluation,
+and the nearest endpoint snap appears in path and cost metrics.
+
+#### SCENARIO-REPORT-6596-ROWS: Every Unit And Failure Remains Addressable
+
+**Given** the frozen geometry, constraint, error, seed, and arm product
+**When** Exp6596 emits `per_unit_rows`
+**Then** the row keys are exact and unique, nonconvergence remains present, and
+the expected empty-set failures are not dropped from any reducer.
+
+#### SCENARIO-REPORT-6596-EXACT: Independent Exact Sets Decide Validity
+
+**Given** continuous endpoints and any charged endpoint rounding
+**When** the independent exact checker runs
+**Then** it first checks convergence to one vocabulary embedding, then checks
+exact-set membership, rejects empty feasible sets, and reproduces each row's
+valid endpoint field without reading that field.
+
+#### SCENARIO-REPORT-6596-ROBUSTNESS: Validity Cannot Hide Distortion Or Cost
+
+**Given** clean and held perturbed rows
+**When** robustness and cost reducers run
+**Then** they remain separate by predictor condition and report validity,
+distortion, path, steps, projection, snapping, charged work, failures, and wall
+time for every arm.
+
+#### SCENARIO-REPORT-6596-ATTACKS: Canary Shortcuts Fail Closed
+
+**Given** one mutation for each required attack
+**When** the readiness validator evaluates the candidate
+**Then** leakage, contaminated controls, hidden snaps, empty acceptance, tuning,
+row drops, one-seed promotion, and aggregate-only evidence each produce a named
+safe failure.
+
+#### SCENARIO-REPORT-6596-ATOMIC: One Toy Canary Artifact Recomputes
+
+**Given** all frozen rows, exact checks, reducers, attacks, tests, and protected
+file checks have ended
+**When** Exp6596 writes its terminal artifact
+**Then** validation, checksum, file sync, atomic replacement, directory sync,
+and protected hashes pass without an LLM call or language-model claim.
+
+## Implementation Status (REQ-REPORT-6596)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6596 | Implemented (`python/carnot/experiment_6596_convergeflow_feasible_token_canary.py`; terminal artifact `results/experiment_6596_convergeflow_feasible_token_canary.json`) | Implemented (`tests/python/test_experiment_6596_convergeflow_feasible_token_canary.py`; 14 focused tests; 100% statement and branch coverage) |
