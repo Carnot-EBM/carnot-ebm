@@ -56368,3 +56368,136 @@ files remain byte-identical, and the write is durable and atomic.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6592 | Implemented (`python/carnot/experiment_6592_v575_terminal_intake_and_method_lock.py`; terminal artifact `results/experiment_6592_v575_terminal_intake_and_method_lock.json`) | Implemented (`tests/python/test_experiment_6592_v575_terminal_intake_and_method_lock.py`) |
+
+### REQ-REPORT-6593: Independent CFR Reduction SHALL Replay Immutable Rows
+
+Carnot SHALL build Exp6593 without an LLM or model load. The reducer SHALL
+consume the immutable Exp6590 and Exp6591 streams only after the Exp6592 gate
+replays. It SHALL compute each result from source rows instead of trusting an
+upstream aggregate.
+
+- REQ-REPORT-6593-PRECONDITIONS: The artifact SHALL record the Exp6592 gate,
+  all three source paths and SHA-256 hashes, the Exp6587 method and registry
+  hashes, protected-file hashes, expected family, unit, and arm counts, model
+  identities, prompt and router hashes, seeds, the paired-test plan, CPU
+  resources, and the no-LLM substrate.
+- REQ-REPORT-6593-ROWS: The reducer SHALL emit one `per_unit_rows` entry for
+  each family, source unit, and arm. Each row SHALL recompute exact success,
+  direct headroom, supported, unsupported, and contradictory constraints,
+  abstention, unsafe release, tokens, latency, failure states, and raw row and
+  stage references. Null, timeout, parse, contradiction, unsupported,
+  abstention, and exact-rejection states SHALL remain visible.
+- REQ-REPORT-6593-COMPLETENESS: Unit and arm keys SHALL follow the frozen
+  Exp6587 order. The reducer SHALL recompute present, duplicate, missing,
+  reordered, raw-stage, exact-result, failure, token, latency, source-hash,
+  seed, prompt, router, and model-identity checks. A duplicate, missing,
+  reordered, or cross-family row SHALL fail closed.
+- REQ-REPORT-6593-FAMILY: Qwen and Gemma effects SHALL be fixed independently
+  before pooling. Neither family SHALL repair, label, select, or otherwise use
+  the other family's output. Pooling SHALL include only units whose source,
+  task, fixture, expected action, and unit identity bytes match in both
+  streams. Pooled intervals SHALL cluster by canonical unit.
+- REQ-REPORT-6593-PAIRED: Direct versus always-on CFR and direct versus routed
+  CFR SHALL report exact-success delta, wins, losses, ties, direct headroom,
+  an exact McNemar or sign-test disposition, and a deterministic 10,000-draw
+  paired bootstrap interval. Token and latency deltas SHALL retain paired
+  intervals and exact sign-test receipts. Zero headroom or no discordant pair
+  SHALL be explicit and SHALL not support promotion.
+- REQ-REPORT-6593-CONSTRAINTS: Stage 1 precision SHALL equal matched supported
+  proposals divided by all Stage 1 proposals. Stage 1 recall SHALL equal
+  matched supported gold constraints divided by supported gold constraints in
+  the frozen manifest. Supported, unsupported, contradictory, leakage, and
+  proposal counts and rates SHALL replay from row bindings and raw stages.
+- REQ-REPORT-6593-SAFETY-COST: Each arm SHALL charge all direct, Stage 1, and
+  Stage 2 tokens and latency, including failed work. The summary SHALL report
+  unsafe release, abstention, failure classes, charged failures, total and
+  per-unit tokens, and total and per-unit latency.
+- REQ-REPORT-6593-GATE: Each family and pooled candidate SHALL record every
+  frozen Exp6587 condition with expected, observed, and passed values. A CFR
+  win requires a positive exact-success delta, a nonnegative paired lower
+  bound, no unsafe-release increase, the Stage 1 precision floor, and the
+  frozen cost limit. No-headroom and underpowered cases SHALL remain null. An
+  exact-checker-defined win SHALL use `circular_positive`, never `positive`.
+- REQ-REPORT-6593-ATTACKS: Aggregate-only claims, dropped failures,
+  family-label swaps, identical control and treatment, one-win promotion,
+  no-headroom promotion, seed drift, source drift, exact-check substitution,
+  cost omission, and recomputation disagreement SHALL each fail closed.
+- REQ-REPORT-6593-REDUCER: The bare binary field
+  `cfr_reducer_ready_score` SHALL equal `1.0` only when all 120 expected arm
+  rows and every family and pooled aggregate replay. Readiness SHALL not imply
+  benefit. A complete result without an eligible win SHALL use
+  `verdict_class=null`.
+- REQ-REPORT-6593-ATOMIC: Exp6593 SHALL preserve `research-roadmap.yaml` and
+  `scripts/research_conductor.py`. It SHALL set
+  `inference_substrate=immutable_qwen_gemma_cfr_row_reducer_no_llm` and
+  `verifier_is_oracle=true`. It SHALL validate and write one checksummed JSON
+  artifact through same-directory file sync, atomic replacement, and directory
+  sync.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `per_unit_rows`, `source_artifact_receipts`,
+`model_identity_replay_rows`, `row_completeness_recomputation`,
+`family_effect_rows`, `pooled_effect_summary`,
+`paired_statistical_receipts`, `constraint_quality_summary`,
+`safety_and_cost_summary`, `acceptance_gate_rows`,
+`cfr_reducer_ready_score`, `attack_rows`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6593-REPLAY: Every Family Unit And Arm Recomputes
+
+**Given** the frozen method and two complete immutable streams
+**When** Exp6593 ignores stored aggregates and replays the raw rows
+**Then** all 120 family-unit-arm entries retain exact, constraint, safety,
+cost, failure, and raw references, and every completeness count recomputes.
+
+#### SCENARIO-REPORT-6593-ISOLATION: Families Fix Before Shared-Unit Pooling
+
+**Given** independent Qwen and Gemma stream rows
+**When** family effects and the pooled summary are built
+**Then** each family result is fixed first, only byte-identical shared units
+enter the pool, and family heterogeneity remains visible.
+
+#### SCENARIO-REPORT-6593-PAIRED: No Headroom Cannot Become A Win
+
+**Given** direct succeeds on every paired source unit
+**When** CFR ties direct and the paired reducer runs
+**Then** headroom is zero, wins and losses are zero, the interval and exact-test
+disposition report no variation, and the acceptance gate does not promote CFR.
+
+#### SCENARIO-REPORT-6593-AUTHORITY: Exact Success Stays Circular
+
+**Given** the frozen exact checker defines the target outcome
+**When** any candidate passes every benefit gate
+**Then** its best allowed class is `circular_positive`; otherwise the complete
+result remains null, partial, blocked, or disqualified from row evidence.
+
+#### SCENARIO-REPORT-6593-FAILURES: Failed Work Is Retained And Charged
+
+**Given** a row with timeout, parse, contradiction, unsupported, abstention, or
+exact-rejection state
+**When** arm and aggregate summaries replay
+**Then** the state remains in `per_unit_rows`, its tokens and latency remain
+charged, and dropping it changes readiness to zero.
+
+#### SCENARIO-REPORT-6593-ATTACKS: Claim And Evidence Mutations Fail Closed
+
+**Given** one mutation for each required reducer attack
+**When** the independent reducer evaluates the candidate
+**Then** every aggregate, drop, swap, identity, promotion, drift, authority,
+cost, and disagreement mutation yields the safe expected result.
+
+#### SCENARIO-REPORT-6593-ATOMIC: One Terminal Comparison Recomputes
+
+**Given** row, family, pooled, constraint, safety, cost, gate, attack, and
+protection checks have ended
+**When** Exp6593 writes its terminal artifact
+**Then** the ready score and checksum recompute, protected files remain
+byte-identical, no model is loaded, and the write is durable and atomic.
+
+## Implementation Status (REQ-REPORT-6593)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6593 | Implemented (`python/carnot/experiment_6593_cfr_independent_row_reducer.py`; terminal artifact `results/experiment_6593_cfr_independent_row_reducer.json`) | Implemented (`tests/python/test_experiment_6593_cfr_independent_row_reducer.py`) |
