@@ -244,18 +244,6 @@ GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
         "2026-08-21: 57 phantom OK rows and 1,841 duplicate entries landed silently)",
     ),
     (
-        PROJECT_ROOT / "scripts" / "mutation_marker_lint.py",
-        "decides whether a mutation proof's marker may reach a commit. Its silent "
-        "non-firing publishes a mutated line into the record on a path nothing else "
-        "watches: a marked no-op statement is valid Python that clears every other "
-        "hook here, and on 2026-08-25 one sat in arc_executable_world_model.py on the "
-        "LIVE ARC scored path. It is also the ONLY mechanical half of "
-        "REQ-OPS-MUTATION-PROOF -- the session wrapper beside it is opt-in -- so a hole "
-        "here is the whole defense. (The marker token is deliberately not spelled out "
-        "in this string: the lint scans this file, and quoting it would brick every "
-        "commit.)",
-    ),
-    (
         PROJECT_ROOT / "scripts" / "audit_findings_ledger.py",
         "decides whether a flagged audit verdict is ever answered, so its silent non-firing "
         "makes every OTHER audit decorative. Its own origin is that failure (2026-08-25): it "

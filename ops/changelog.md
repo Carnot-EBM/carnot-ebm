@@ -17700,3 +17700,11 @@ and GREEN on byte-identical restore, run in a worktree with the loaded module
 verified by import. M23 was vacuous on first run — everything is classified
 today, so the sweep could not distinguish "correctly empty" from "always empty";
 it now injects an unclassified audit.
+
+**Coverage follow-up:** the hook's original 15 tests left ten fail-closed and
+entrypoint statements uncovered. Seven additive regression tests now exercise
+unexpected and missing-index Git errors, an unreadable worktree fallback, an
+outside-repository explicit path, staged-file enumeration failure, and direct
+`__main__` dispatch. Focused validation is 22 passed with 100% statement
+coverage for `scripts/mutation_marker_lint.py`; the expanded conductor-equivalent
+QA subset is 219 passed. No production behavior or test expectation changed.

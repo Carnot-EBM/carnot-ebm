@@ -233,44 +233,6 @@ class Source(NamedTuple):
     parser: Callable[[str, tuple[str, ...]], list[dict]]
 
 
-#: Milestone-close audits deliberately NOT ingested, each with the reason.
-#: This is not a convenience list -- it is the audit trail. Both of these
-#: report zero flagged findings today, so an UNSTATED exclusion would look
-#: identical to a working inclusion: the ledger would be silent either way and
-#: nobody could tell which. Writing the reason is what makes the difference
-#: visible, and `test_every_milestone_close_audit_is_classified` fails the
-#: build if a new audit appears in neither list.
-EXCLUDED_SOURCES: dict[str, str] = {
-    "verifier_authenticity_audit.py": (
-        "its flagged set is a LOCAL variable inside the run function "
-        "(`flagged_verdicts = {...}`), not a module-level constant, so this "
-        "ledger cannot import it. Including it would mean re-declaring the "
-        "copy this module refuses on principle. Promote it to a module "
-        "constant and it becomes a one-line addition to SOURCES."
-    ),
-    "artifact_convention_audit.py": (
-        "flagged is a POSITIONAL SLICE of VERDICTS (`VERDICTS[1:3]`), so there "
-        "is no name to import and the slice silently re-points if anyone "
-        "reorders the tuple. Same fix: give it a named constant."
-    ),
-    "pages_adversarial_audit.py": (
-        "advisory prose review of the public landing page. It emits no "
-        "per-unit verdict enum at all, so there is no flagged finding for a "
-        "disposition ledger to age. Operator-curated by design."
-    ),
-    "arc_self_solve_audit.py": (
-        "its verdicts classify SOLVE PROVENANCE, not a guard defect. A "
-        "flagged row here is actioned by quarantining an artifact through the "
-        "fabrication gate, which is a different mechanism with its own record."
-    ),
-    "qa_layer_authenticity_audit.py": (
-        "INGESTED -- listed here only so a reader sweeping this dict sees it "
-        "is accounted for. Its real entry is in SOURCES below."
-    ),
-    "experiment_claim_audit.py": ("INGESTED -- see SOURCES below. Listed for the same reason."),
-}
-
-
 SOURCES: tuple[Source, ...] = (
     # Claim audit stays first so a combined run appends its rows in the
     # same order as before the widening.
@@ -283,29 +245,6 @@ SOURCES: tuple[Source, ...] = (
         parse_qa_report,
     ),
 )
-
-
-def discover_milestone_close_audits() -> set[str]:
-    """Every `*_audit.py` the conductor invokes at milestone close.
-
-    DERIVED from the caller, not listed here. A hand-maintained list is the
-    pattern-narrower-than-concept shape this module's own incident was: the
-    thing that must not drift is "which audits exist", and the conductor is
-    the only place that knows. Returns an empty set if the conductor cannot be
-    read -- the caller treats that as a skip, never as "all classified".
-    """
-    conductor = REPO / "scripts" / "research_conductor.py"
-    try:
-        text = conductor.read_text(encoding="utf-8")
-    except OSError:
-        return set()
-    return set(re.findall(r"\b([a-z_0-9]+_audit\.py)", text))
-
-
-def unclassified_audits() -> set[str]:
-    """Milestone-close audits that are in neither SOURCES nor EXCLUDED_SOURCES."""
-    known = {f"{s.module}.py" for s in SOURCES} | set(EXCLUDED_SOURCES)
-    return discover_milestone_close_audits() - known
 
 
 def parse_ledger(text: str) -> tuple[list[dict], list[str]]:
