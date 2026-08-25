@@ -16474,3 +16474,4 @@ code |
 | 2026-08-25 19:19 UTC | Gemma 4 31B direct baseline headroom qualification | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-08-25 19:21 UTC | Gemma 4 31B direct baseline headroom qualification | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-08-25 19:35 UTC | Gemma 4 26B-A4B direct baseline headroom qualifica | OK | 102 passed, 1 warning in 16.24s |
+| 2026-08-25 19:57 UTC | Independent three-family headroom reducer | OK | 117 passed, 1 warning in 14.03s |
