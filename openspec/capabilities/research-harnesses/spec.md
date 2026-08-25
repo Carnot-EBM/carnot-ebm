@@ -8775,12 +8775,94 @@ within the stale window, open SHALL refuse.
 Given a lock older than the stale window, open SHALL reclaim it and
 SHALL print that the abandoned run's mutations may still be on disk.
 
+### WHAT IS MECHANICAL AND WHAT IS OPT-IN (read this before trusting the REQ)
+
+This requirement does NOT guarantee that a mutation proof is wrapped. Stating
+that plainly, because the REQ reads as though it might:
+
+| Property | Enforcement | Depends on an agent remembering? |
+|---|---|---|
+| A marker never reaches a commit | MECHANICAL — pre-commit `mutation-marker-lint`, REQ-OPS-MUTATION-PROOF-2 | No |
+| A commit is refused while a session is open | MECHANICAL — `cmd_gate` | No |
+| Two proofs are never concurrent | OPT-IN — needs `--mutation-begin` | YES |
+| The target is restored byte-identically | OPT-IN — needs `--mutation-end` | YES |
+| An inert run is refused | OPT-IN — needs `--mutation-begin` | YES |
+
+Three of the five rely on an agent invoking the session. Nothing forces the
+first `--mutation-begin`, so an agent that hand-mutates a file without wrapping
+gets none of rules 1 to 4. The mechanical half is deliberately aimed at the
+HARM (a mutated line in a commit) rather than at the RITUAL (wrapping), because
+a wrapper nobody calls is this project's own named bug class — `--check-targets`
+shipped with no caller and ran only when a human remembered to type it.
+
+## REQ-OPS-MUTATION-PROOF-2: A Mutation Marker SHALL NOT Reach A Commit
+
+Origin: 2026-08-25, the same incident as REQ-OPS-MUTATION-PROOF-1. The session
+wrapper defined there is opt-in, so it cannot be the only defense. The observed
+damage was `pass  # MUTATED M6` at
+`python/carnot/agentic/arc_executable_world_model.py:6466`, on the LIVE ARC
+scored path. That line is valid Python: it parses, imports, and clears ruff,
+mypy and every other hook in this repo, while the conductor commits on its own
+schedule with hooks skipped. Nothing in the configuration would have stopped it.
+
+Rules:
+
+1. A pre-commit hook SHALL refuse any commit whose STAGED Python contains a
+   mutation marker, whether or not a proof session was used.
+2. The marker token SHALL be imported from the module that defines it, never
+   re-declared.
+3. Scope is staged `*.py`. Prose that quotes the marker while documenting the
+   incident — this project's changelog, spec and research notes all do — SHALL
+   NOT trip it.
+4. Files that must contain the literal token to define or test it SHALL be
+   allow-listed by name, with the list asserted by a test.
+5. The check SHALL fail CLOSED. An unqueryable git, an unreadable file, or a
+   file that will not decode SHALL refuse, never report clean.
+6. The check SHALL read the INDEX, not the working tree: the question is what
+   the commit will contain, so an in-flight unstaged proof SHALL NOT be blocked.
+
+RESIDUAL, stated rather than implied: a commit that skips hooks bypasses this
+entirely, and that is how the observed incident would have landed. This
+requirement and REQ-OPS-MUTATION-PROOF-1 are COMPLEMENTS. The hook catches a
+marker nobody noticed; the session catches a marker the committer never tried
+to commit. Neither catches a deliberate hooks-skipping commit, and no
+pre-commit hook can.
+
+#### SCENARIO-OPS-MUTATION-PROOF-2-STAGED-MARKER-REFUSES
+
+Given a staged Python file containing a mutation marker, the hook SHALL exit
+non-zero and name the file and line.
+
+#### SCENARIO-OPS-MUTATION-PROOF-2-ALLOWLISTED-DEFINITION-PASSES
+
+Given a staged file that is on the allow-list because it defines or tests the
+marker, the hook SHALL pass.
+
+#### SCENARIO-OPS-MUTATION-PROOF-2-PROSE-IGNORED
+
+Given a staged non-Python file quoting the marker, the hook SHALL pass.
+
+#### SCENARIO-OPS-MUTATION-PROOF-2-UNSTAGED-NOT-BLOCKED
+
+Given a marker present only in the working tree, the hook SHALL pass.
+
+#### SCENARIO-OPS-MUTATION-PROOF-2-CANNOT-DETERMINE-REFUSES
+
+Given a git failure or an undecodable staged file, the hook SHALL exit non-zero
+rather than report clean.
+
+#### SCENARIO-OPS-MUTATION-PROOF-2-WORD-BOUNDARY
+
+Given a staged file containing `PERMUTATED`, the hook SHALL pass; given one
+containing the marker with a suffix, it SHALL refuse.
+
 ## Implementation Status (REQ-OPS-AUDIT-LEDGER-2, REQ-OPS-MUTATION-PROOF-1)
 
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-OPS-AUDIT-LEDGER-2 | Implemented (`scripts/audit_findings_ledger.py`: `Source` registry + `SOURCES`, `parse_qa_report` reading per-unit `**Verdict:**` lines plus the `### FLAGGED` list SCOPED to that section — the item pattern also matches reviewer prose, and a phantom row in an append-only ledger is permanent; `source_flagged_verdicts` importing each audit's own constant; per-source `audit_name` in row identity; `_normalize_artifact` comparing by basename; `--qa-report` CLI; `report_paths` complete-map override that raises on an unknown key. `_load_module` now registers in `sys.modules`, without which `@dataclass` in the QA-layer audit made its constant unimportable — the actual blocker. Verified against the REAL `.573` report: 4 of 4 `SILENT_NON_FIRING` findings parsed. Excluded with reasons in-module: `verifier_authenticity_audit.py` (flagged set is a function local), `artifact_convention_audit.py` (positional slice, no name). Added to `qa_layer_authenticity_audit.py` `GUARD_TARGETS`, moving the unit count 181 -> 182 so `units_signature` mismatches and rotation resets to 0. | `tests/python/test_audit_findings_ledger.py` 11 -> 23; mutations M1/M2/M3/M4/M9/M10 each RED on removal, GREEN on byte-identical restore |
 | REQ-OPS-MUTATION-PROOF-1 | Implemented (`scripts/test_suite_mutation_check.py`: `PROOF_LOCK` under `--git-common-dir` so ~10 worktrees share ONE lock; `PROOF_LOCK_STALE_S` = 12 h; `_proof_lock_is_stale`; `check_target_is_live` resolving through `sys.path` rather than `find_spec`, which imported 90 carnot modules inside a test; `surviving_markers` over `git status --porcelain -uall -z` PLUS everything committed since `head_at_begin`; `_MARKER_SCAN_SUFFIXES` limiting the scan to files that RUN; `cmd_mutation_begin` / `cmd_mutation_end` / `cmd_mutation_force_unlock`; `cmd_gate` refuses while a session is open. Additive — no existing mode changed. Three defects were found AFTER the first build and are each pinned by a regression test: reclaim keyed on holder liveness locked nothing, scanning prose bricked the tool against this project's own spec and changelog, and an unpinned `--mutation-end` closed any open session. | `tests/python/test_test_suite_mutation_check.py` 44 -> 72; mutations M5/M6/M7/M8 and M11-M18 each RED on removal, GREEN on byte-identical restore |
+| REQ-OPS-MUTATION-PROOF-2 | Implemented (`scripts/mutation_marker_lint.py`, pre-commit hook `mutation-marker-lint`, `files: '\.py$'`). Reads the INDEX via `git show :<path>` so the question is what the COMMIT will contain; `\bMUTATED` word-START boundary so `PERMUTATED` passes and a suffixed marker does not; 4-entry `ALLOWLIST` asserted by a test; marker token imported from `test_suite_mutation_check.MUTATION_MARKER`, never copied; every could-not-determine path REFUSES. Verified end-to-end through real pre-commit against the exact incident line. Classified in `qa_layer_authenticity_audit.py` `GUARD_TARGETS` — `--check-targets` fired on it before classification, as designed. | `tests/python/test_mutation_marker_lint.py` (15 tests, including a sweep asserting the lint does not fire on the tracked tree it was added to); mutations M19/M20/M21 each RED on removal, GREEN on byte-identical restore |
 
 ## REQ-OPS-REBUILD-PRESERVE-1: Analyzer Rebuilds SHALL Carry Hand-Authored Keys Forward, Not Regenerate Them Away
 

@@ -17631,3 +17631,72 @@ the next session has them.
 Spec: REQ-OPS-AUDIT-LEDGER-2, REQ-OPS-MUTATION-PROOF-1 with 10 SCENARIOs.
 Tests 55 -> 95. All 18 mutations RED on removal, GREEN on byte-identical restore, run
 in a worktree with the loaded module verified by import first.
+
+## 2026-08-25 (follow-up) — Mechanical backstop: a mutation marker may not reach a commit
+
+**Trigger:** outer-loop review of the mutation-proof session shipped earlier today.
+The session is OPT-IN. An agent has to remember to wrap, and a wrapper nobody
+calls is this project's own named bug class: `--check-targets` shipped with no
+caller and ran only when a human remembered to type it, which CLAUDE.md records
+as trust-without-verification one level up from the thing it was written to
+defeat.
+
+**Built `scripts/mutation_marker_lint.py`**, wired as the pre-commit hook
+`mutation-marker-lint` on staged `*.py`. It does not care whether a proof
+session was used. It watches for the ACTUAL harm — a mutated line reaching a
+commit — because that line is valid Python: it parses, imports, and clears ruff,
+mypy and every other hook in this repository. Nothing else in the config would
+have stopped the 2026-08-25 incident line.
+
+Design points, each with its reason:
+
+- Reads the INDEX via `git show :<path>`, not the working tree. The question is
+  what the COMMIT will contain, so an in-flight unstaged proof is not blocked
+  while a staged-then-cleaned-on-disk marker still refuses.
+- Word-START boundary only. `PERMUTATED` passes; a suffixed marker does not.
+  Requiring a word END too would let the suffixed form through, and the fail
+  direction here is toward catching.
+- Marker token imported from the module that defines it, never copied.
+- Four-entry allow-list, each file unable to do its job without the literal
+  word, asserted by a test.
+- Every could-not-determine path REFUSES: unqueryable git, unreadable file,
+  undecodable bytes.
+
+**Residual, stated rather than implied:** a commit that skips hooks bypasses
+this entirely, and that is how the observed incident would have landed. The hook
+and the session wrapper are complements, not alternatives. The spec now carries
+a table naming which of the five properties are mechanical (2) and which need an
+agent to invoke the session (3), so the REQ cannot be read as though wrapping
+were guaranteed.
+
+**Two self-inflicted problems caught by the work's own tests, recorded because
+the shape keeps recurring.** First, `_marker()` resolved the definition through
+`REPO`, which tests point at a throwaway tree — every test raised
+FileNotFoundError. Second, the reason string this session added to
+`GUARD_TARGETS` quoted the literal marker, so the new lint fired on
+`qa_layer_authenticity_audit.py` and would have refused every commit. That is
+the same brick the sibling guard committed hours earlier. Caught by
+`test_the_real_repo_is_clean_under_this_lint`, which exists precisely because
+the sibling's version was found by hand.
+
+**Source exclusions made machine-checkable.** Both audits excluded from the
+ledger report zero flagged findings today, so an UNSTATED exclusion would look
+identical to a working inclusion — the ledger is silent either way and nobody
+can tell which. `EXCLUDED_SOURCES` now names all six milestone-close audits with
+a written reason each, and `discover_milestone_close_audits()` DERIVES the list
+from `research_conductor.py` rather than hardcoding it, so a newly-wired audit
+cannot drift into silence. Recorded answers: `verifier_authenticity_audit.py`
+keeps its flagged set as a function local, `artifact_convention_audit.py` uses a
+positional slice with no name — neither can be imported, and re-declaring a copy
+is the drift the module refuses on principle. Promoting either to a module
+constant makes it a one-line addition.
+
+`--check-targets` fired on the new hook before it was classified, as designed;
+it is now in `GUARD_TARGETS` with the reason written down.
+
+Spec: REQ-OPS-MUTATION-PROOF-2 with 6 SCENARIOs, plus an enforcement table under
+REQ-OPS-MUTATION-PROOF-1. Tests 95 -> 122. Mutations M19-M24 each RED on removal
+and GREEN on byte-identical restore, run in a worktree with the loaded module
+verified by import. M23 was vacuous on first run — everything is classified
+today, so the sweep could not distinguish "correctly empty" from "always empty";
+it now injects an unclassified audit.

@@ -481,6 +481,24 @@ repos:
         files: '^python/carnot/(verify|pipeline)/.*\.py$'
         pass_filenames: false
 
+      # A mutation proof's marker must never reach a commit. On 2026-08-25 two
+      # hand-run proofs collided and left `pass  # MUTATED M6` in
+      # arc_executable_world_model.py, on the LIVE ARC scored path. That line
+      # is valid Python: it parses, imports, and clears every other hook here,
+      # so nothing else in this config would have stopped it. The sibling
+      # mutation-PROOF session in test_suite_mutation_check.py is opt-in -- an
+      # agent has to remember to wrap -- and a wrapper nobody calls is this
+      # project's own named bug class, so this hook watches for the harm
+      # instead of for the ritual. Residual: a hooks-skipped commit bypasses
+      # it, which is how the observed incident would have landed; the session
+      # wrapper and this hook are complements. Per CLAUDE.md "Test-Run Record
+      # Integrity Discipline" and REQ-OPS-MUTATION-PROOF-2.
+      - id: mutation-marker-lint
+        name: A mutation proof's marker may not reach a commit
+        entry: python3 scripts/mutation_marker_lint.py
+        language: system
+        files: '\.py$'
+
       # Torch CUDA build guard: catches the 2026-05-21 regression where
       # `torch 2.12.0+cpu` silently replaced the CUDA build, causing all
       # GPU-bound .268 experiment tasks to emit blocked_cuda_unavailable.
