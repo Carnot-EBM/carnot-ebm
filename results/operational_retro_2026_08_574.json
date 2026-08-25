@@ -1,0 +1,53 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.574",
+  "generated_at": "2026-08-25T09:14:15Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 6.7,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Gemma 4 31B bounded constraint-first stream",
+      "duration_minutes": 3.87,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qwen3.6 bounded constraint-first stream",
+      "duration_minutes": 2.66,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Isolated pytest receipt remediation",
+      "duration_minutes": 0.09,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V574 bounded CFR launch root",
+      "duration_minutes": 0.05,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 4 experiments in 6.7 minutes, including 3 compute-bound experiments. The 3.87-minute Gemma 4 31B stream and 2.66-minute Qwen3.6 stream formed the execution tail, while the locked compute-task GPU-idle assessment is false.",
+  "bottlenecks_identified": [
+    "The two longest compute streams dominated the milestone window, but the supplied timing data contains no phase-level evidence explaining why either stream took its observed duration.",
+    "The GPU snapshot shows compute concentrated on one accelerator with no concurrent work on the other; this left unused cross-experiment scheduling capacity even though the active accelerator was engaged.",
+    "Disk-mtime reconstruction and a single GPU snapshot do not attribute accelerator activity, batching, or launch concurrency to individual experiments."
+  ],
+  "improvements_suggested": [
+    "Add GPU-aware cross-experiment scheduling that can place independent single-model compute streams on separate GPUs when both are ready.",
+    "Batch multiple questions per forward pass when experiment semantics permit, as recommended by the GPU monitor.",
+    "Persist per-experiment phase timings, GPU utilization, device assignment, batch size, model count, and runner selection in operational receipts.",
+    "Keep DualGPURunner conditional on an actual launch with at least two models loaded in parallel; no such launch is established by this milestone's data."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Schedule independent Gemma 4 31B and Qwen3.6 compute streams concurrently, one per GPU, when resource and dependency checks allow.",
+    "Introduce inference batching for compatible question streams.",
+    "Replace snapshot-only diagnosis with task-scoped timing and GPU telemetry receipts."
+  ],
+  "estimated_time_savings_pct": 40,
+  "meta_reflection": "The evidence distinguishes accelerator engagement from whole-machine throughput: the active GPU was busy while another GPU remained available. The 40% savings estimate is 2.66 divided by 6.7, rounded, and assumes the shorter compute stream can overlap the longer one; it is not an observed result."
+}

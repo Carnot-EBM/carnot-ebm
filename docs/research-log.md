@@ -6339,3 +6339,10 @@ The critical path for milestone .250:
 - theme: synthesis-only contract and audit work closed through a coarse fallback clock with no compute path
 - key result: accelerator efficiency and parallel-model runner behavior had no applicable milestone task; the available timing cannot separate phase costs
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.574
+
+- exp_range: no data available this milestone
+- theme: two bounded model streams formed the execution tail while the GPU snapshot showed capacity for cross-experiment scheduling
+- key result: the supplied GPU evidence does not support a compute-idle defect, but no data available this milestone establishes parallel multi-model loading, a missed DualGPURunner engagement, or the phase-level cause of either long compute stream
+- acceptance: no data available this milestone
