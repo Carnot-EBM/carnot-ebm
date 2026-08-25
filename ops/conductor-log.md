@@ -16431,3 +16431,6 @@ code |
 | 2026-08-25 03:59 UTC | V573 terminal recovery and bounded execution contr | OK | 134 passed, 1 warning in 15.09s |
 | 2026-08-25 04:25 UTC | Isolated repo-wide suite truth baseline and mutati | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT — result quarantined, |
 | 2026-08-25 04:45 UTC | V573 SOTA constraint-first source and method contr | OK | 90 passed, 1 warning in 13.07s |
+| 2026-08-25 05:56 UTC | Plan milestone 2026.08.574 | OK | 4 tasks proposed |
+| 2026-08-25 05:58 UTC | Activation REFUSED: milestone 2026.08.574 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-25 05:58 UTC | Activation replan 1/2: 2026.08.574 | OK | refused roadmap quarantined to roadmap-2026.08.574-refusal1.yaml; replanning wit |
