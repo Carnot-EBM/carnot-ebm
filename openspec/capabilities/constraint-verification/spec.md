@@ -1141,3 +1141,116 @@ evaluation consumers, runs evaluator-swap and false-pass injections, and blocks
 any injected false pass.
 
 **Spec traces:** REQ-VERIFY-6301
+
+### REQ-CONSTRAINT-6604: Exact Two-Level Plan Corpus And Compiler Contract
+
+Carnot SHALL provide Exp6604 as a deterministic exact-executable plan corpus.
+The corpus SHALL contain at least 72 bounded tasks. Exactly 36 tasks SHALL be
+calibration tasks, and exactly 36 tasks SHALL be held tasks. Each task SHALL
+record immutable canonical source bytes, a fixed seed, one frozen split, and a
+content hash. Each task SHALL declare grounded actions, argument grammar,
+initial state, action preconditions and effects, ordering obligations, goal
+predicates, known feasibility, and an exact deterministic outcome. The corpus
+SHALL stratify lexical, temporal, branching, and distractor features without
+claiming that symbolic solver difficulty predicts model difficulty.
+
+Carnot SHALL expose separate reusable token-syntax and action-semantics
+compiler interfaces. The syntax compiler SHALL enforce canonical action names,
+arguments, types, arity, delimiters, and unambiguous plan boundaries. The
+semantic compiler SHALL consume structured meta-tokens. It SHALL expose state
+transitions for preconditions, ordering obligations, and goals. Compiler
+versions, meta-token mappings, transitions, and receipts SHALL be replayable.
+
+An independent exact executor SHALL decide final benchmark validity. It SHALL
+not call either decoding compiler and SHALL not use their acceptance result.
+The fixture SHALL include a deliberate incomplete semantic encoding. At least
+one candidate SHALL pass syntax and the incomplete semantic automaton, then
+fail the independent executor because the compiler omitted an obligation.
+Automata acceptance SHALL therefore never certify benchmark validity.
+
+The corpus SHALL retain one fixture row per task and one row per generated
+mutation. Mutations SHALL cover valid plans, syntax errors, precondition
+violations, ordering violations, unmet goals, impossible tasks, parser
+ambiguity, split leakage, and incomplete encodings. Attacks SHALL cover split
+leakage, duplicate bytes, seed drift, nondeterminism, goal-answer leakage,
+compiler-executor sharing, impossible-task mislabeling, and protected-file
+mutation. Every attack SHALL fail closed.
+
+Exp6604 SHALL write
+`results/experiment_6604_exact_two_level_plan_corpus.json` by complete-temp
+write, file synchronization, and atomic replacement. It SHALL set
+`inference_substrate` to
+`deterministic_two_level_plan_fixture_and_exact_executor_no_llm` and
+`verifier_is_oracle` to `true`. A complete contract SHALL use
+`verdict_class=null` and SHALL make no model-benefit claim.
+`headroom_fixture_ready_score` SHALL be the bare value `1.0` only when every
+task, split, hash, compiler receipt, executor receipt, mutation, attack,
+protected-file check, focused test, and output check replays. Otherwise the
+score SHALL be `0.0`, and `gate_check_summary` SHALL name each failed observed
+value.
+
+### SCENARIO-CONSTRAINT-6604-GENERATION-AND-SPLITS: Corpus Bytes And Splits Freeze
+
+Given the frozen generator version and seed schedule,
+When Exp6604 generates the corpus twice,
+Then both runs produce the same 72 canonical task bytes and hashes, with 36
+calibration rows, 36 held rows, unique bytes, and no cross-split membership.
+
+**Spec traces:** REQ-CONSTRAINT-6604
+
+### SCENARIO-CONSTRAINT-6604-TWO-LEVEL-COMPILATION: Syntax And Semantics Stay Separate
+
+Given one bounded task and a candidate plan,
+When the two compiler interfaces run,
+Then syntax produces canonical grounded meta-tokens and semantics produces
+explicit state transitions without merging either compiler with exact release
+authority.
+
+**Spec traces:** REQ-CONSTRAINT-6604
+
+### SCENARIO-CONSTRAINT-6604-INDEPENDENT-EXECUTION: Exact Execution Owns Validity
+
+Given valid, malformed, precondition-failing, order-failing, goal-incomplete,
+ambiguous, and impossible plan cases,
+When the independent executor runs twice,
+Then both executions are identical and only fully executable goal-satisfying
+plans are valid.
+
+**Spec traces:** REQ-CONSTRAINT-6604
+
+### SCENARIO-CONSTRAINT-6604-INCOMPLETE-ENCODING: Automata Do Not Certify Themselves
+
+Given a test semantic compiler that deliberately omits the audit-before-ship
+obligation,
+When it checks a canonical plan without the audit action,
+Then syntax and both encoded automata accept the plan while the independent
+executor rejects it.
+
+**Spec traces:** REQ-CONSTRAINT-6604
+
+### SCENARIO-CONSTRAINT-6604-ROW-RETENTION-AND-ATOMIC-OUTPUT: Evidence Is Complete
+
+Given all task and mutation rows,
+When Exp6604 writes its terminal artifact,
+Then every row remains present, all required fields have principles and
+provenance, the checksum replays, and atomic replacement leaves no partial
+terminal file.
+
+**Spec traces:** REQ-CONSTRAINT-6604
+
+### SCENARIO-CONSTRAINT-6604-ADVERSARIAL-CONTROLS: Corpus Attacks Fail Closed
+
+Given injected leakage, duplicate bytes, seed drift, nondeterminism, answer
+leakage, compiler-executor sharing, feasibility mislabeling, or protected-file
+mutation,
+When the corpus gate evaluates the injection,
+Then the matching detector reports the observed defect and readiness stays
+zero for the attacked copy.
+
+**Spec traces:** REQ-CONSTRAINT-6604
+
+## Implementation Status (REQ-CONSTRAINT-6604)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6604 and SCENARIO-CONSTRAINT-6604-* | Implemented (`python/carnot/experiment_6604_exact_two_level_plan_corpus.py`; terminal evidence in `results/experiment_6604_exact_two_level_plan_corpus.json`) | `tests/python/test_experiment_6604_exact_two_level_plan_corpus.py`: 9 passed; scoped module coverage: 493 statements, 0 missing (100%); conductor-equivalent smart subset: 90 passed, 1 pre-existing warning |

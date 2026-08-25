@@ -1,5 +1,17 @@
 # Carnot — Changelog
 
+## 2026-08-25 — Exp6604 protected-receipt test repair
+
+- Fixed the Exp6604 terminal-artifact regression without reverting the V576
+  roadmap update: the exact corpus builder now pins the roadmap bytes that were
+  actually frozen after its set literals were escaped for conductor template
+  rendering. The protected-file mutation gate remains fail-closed.
+- Regenerated the complete exact-corpus evidence with the current module and
+  protected-file receipts. Focused tests pass (`9 passed`), scoped module
+  coverage is 100% (`493` statements, `0` missing), and the exact conductor
+  smart subset passes (`90 passed, 1` pre-existing warning). No change was made
+  to `scripts/research_conductor.py`.
+
 ## 2026-08-25 — Stale verifier alias test repair
 
 - Fixed the REQ-VERIFY-6593 regression without a follow-up edit to

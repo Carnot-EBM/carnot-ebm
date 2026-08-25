@@ -1,7 +1,14 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-08-25, latest (REQ-VERIFY-6593 stale-verifier regression
-repaired at the cached `verify_artifact` boundary without a follow-up
+**Last Updated:** 2026-08-25, latest (Exp6604 exact two-level plan corpus
+regression repaired by aligning its protected-roadmap receipt with the frozen
+V576 roadmap bytes. The terminal artifact is complete, focused tests pass 9/9,
+scoped module coverage is 100% across 493 statements, and the exact conductor
+smart subset passes 90 tests with one pre-existing warning. No change was made
+to `scripts/research_conductor.py`.)
+
+Prior: 2026-08-25 (REQ-VERIFY-6593 stale-verifier regression repaired at the
+cached `verify_artifact` boundary without a follow-up
 `scripts/research_conductor.py` edit. Changed verifier source is reloaded before
 delegation; incomplete source retains the last known-good gate. The
 conductor-equivalent suite passes 118 tests with one warning, and the Exp6596
