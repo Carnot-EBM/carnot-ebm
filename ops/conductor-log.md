@@ -16436,3 +16436,4 @@ code |
 | 2026-08-25 05:58 UTC | Activation replan 1/2: 2026.08.574 | OK | refused roadmap quarantined to roadmap-2026.08.574-refusal1.yaml; replanning wit |
 | 2026-08-25 06:02 UTC | Plan milestone 2026.08.574 | OK | 4 tasks proposed |
 | 2026-08-25 06:05 UTC | Milestone 2026.08.574 activated | OK | 4 tasks queued |
+| 2026-08-25 06:27 UTC | V574 bounded CFR launch root | OK | 93 passed, 1 warning in 17.18s |
