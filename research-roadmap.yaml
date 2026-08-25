@@ -1,371 +1,559 @@
-milestone: "2026.08.574"
-milestone_title: "Audited Constraint-First Learning"
+milestone: "2026.08.575"
+milestone_title: "Constraint Memory and Latent Energy Correction"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-  - id: exp6588-v574-bounded-cfr-launch-root
-    milestone: "2026.08.574"
-    deliverable: results/experiment_6588_v574_bounded_cfr_launch_root.json
-    title: "V574 bounded CFR launch root"
+  - id: exp6592-v575-terminal-intake-and-method-lock
+    milestone: "2026.08.575"
+    deliverable: results/experiment_6592_v575_terminal_intake_and_method_lock.json
+    title: "V575 terminal intake and method lock"
     priority: critical
     track: evidence-infrastructure
     requires_gpu: false
-    max_turns: 50
-    estimated_wall_time_min: 60
-    operator_override: "2026-05-29 operator directive (standing): versioned lineage continuation — false-positive scope-match vs earlier launch and method contracts; V574 replays terminal V573 receipts and owns a new same-roadmap gate map without repeating model inference."
+    max_turns: 30
+    estimated_wall_time_min: 45
+    operator_override: "2026-05-29 standing operator directive: versioned lineage continuation; Exp6592 binds new V575 evidence and gate fields without rerunning the completed V574 model streams."
     prompt: |
       CONTEXT
-      Milestone 573 ended with a complete bounded-execution contract, a blocked isolated-suite receipt, and a complete Constraint-First Reasoning method contract. No V573 flagship CFR stream ran. V574 must replay those terminal facts and create one same-roadmap launch root before either model task starts. Work at {project_root}. The planning date is {date}.
+      Milestone 574 completed four tasks. Exp6588 opened the bounded CFR path. Exp6589 remained blocked at terminal report validation. Exp6590 and Exp6591 produced complete Qwen3.6 and Gemma 4 31B CFR row streams but made no quality claim. V575 must bind those facts, lock the new literature-derived methods, and create same-roadmap gates without rewriting history. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V574 roadmap document
-      - {project_root}/results/experiment_6585_v573_terminal_recovery_and_execution_contract.json
-      - {project_root}/results/experiment_6586_isolated_full_suite_truth_baseline.json and its adversarial verification artifact
-      - {project_root}/results/experiment_6587_v573_constraint_first_method_contract.json
-      - {project_root}/scripts/experiment_template.py, roadmap gate helpers, GGUF cache-resolution helpers, GPU ownership helpers, atomic artifact helpers, and their tests
-      - relevant evidence, exact-verification, model-ingestion, and continual-learning capability specs; traceability; status; changelog; and {project_root}/ops/e2e-test-plan.md
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V575 roadmap document
+      - {project_root}/results/experiment_6588_v574_bounded_cfr_launch_root.json through {project_root}/results/experiment_6591_gemma4_31b_constraint_first_stream.json
+      - {project_root}/research-references.md V575 refresh and the cited arXiv method pages
+      - {project_root}/scripts/summarize_artifact.py, artifact unwrapping, gate, hash, GGUF cache, GPU ownership, atomic output, and protected-file helpers plus their tests
+      - relevant evidence, exact-verification, continuous-latent, sampling, inference, and continual-learning capability specs; _bmad/traceability.md; ops/status.md; ops/changelog.md; and ops/e2e-test-plan.md
 
       TASK
-      Build the V574 bounded CFR launch root. Replay the V573 source, method, budget, cleanup, model-cache, exact-authority, and protected-file contracts. Treat the Exp6586 block as an infrastructure fact, not as a scientific launch gate. Perform no LLM inference.
+      Build the V575 terminal evidence root. Replay Exp6588-Exp6591 from raw fields, preserve Exp6589 as blocked, bind the two completed CFR streams to their nested methodology receipts, lock the new canary methods, and emit the exact same-roadmap gate map. Perform no LLM inference and do not rewrite a historical artifact.
 
       CONCRETE STEPS
-      0. PRECONDITIONS: record protected-file hashes, dirty-worktree status, all three V573 artifact paths and hashes, current roadmap hash, CPU, RAM, disk, local GGUF cache paths, visible GPU ownership, and the no-LLM substrate.
-      1. Add or confirm REQ-* and SCENARIO-* anchors for V574 launch replay, same-roadmap gates, one-model residency, periodic checkpoints, timeout cleanup, exact authority, and atomic terminal output. Write focused tests first.
-      2. Recompute Exp6585 readiness and Exp6587 method readiness from their raw fields. Preserve Exp6586 honest_verdict, verdict_class, gate_check_summary, and adversarial disposition without converting it to null or GREEN.
-      3. Resolve content-derived local GGUF identities for unsloth/Qwen3.6-35B-A3B-GGUF and unsloth/gemma-4-31B-it-GGUF. Do not load either model and do not download during this task.
-      4. Freeze one-model residency, runtime-selected idle RTX 3090 ownership, checkpoint interval, hard timeout, child-process cleanup, unload, failure-row, and terminal-artifact rules for Exp6590 and Exp6591.
-      5. Freeze the exact same-roadmap gate map. Exp6590 and Exp6591 read only v574_cfr_launch_ready_score from this artifact. Downstream fields must be spelled exactly as written in the owning task's REQUIRED ARTIFACT FIELDS.
-      6. Attack an invented V573 science result, a suite-GREEN launch requirement, missing source hashes, two-model residency, legacy smoke models as headline evidence, GGUF AutoTokenizer use, external download during measurement, incomplete terminal rows, and gate-field drift.
-      7. Set v574_cfr_launch_ready_score=1.0 only when both V573 contracts replay, both cached model identities resolve, budgets and cleanup close, all gates cross-reference, and protected files remain unchanged.
-      8. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, artifact convention checks, adversarial verification, applicable evidence E2E checks, and final git status.
+      0. PRECONDITIONS: record protected-file hashes, dirty-worktree state, all four source artifact paths and hashes, current roadmap and reference hashes, CPU, RAM, disk, local mandated GGUF cache identities, visible GPU ownership, and the no-LLM substrate.
+      1. Add or confirm REQ-* and SCENARIO-* anchors for V575 terminal replay, nested methodology binding, method-source locking, same-roadmap gates, protected historical artifacts, and atomic output. Write focused tests first.
+      2. Use scripts/summarize_artifact.py and raw field replay. Preserve each upstream honest_verdict, verdict_class, gate_check_summary, readiness score, adversarial disposition, and hash. Never infer GREEN from Exp6589.
+      3. For Exp6590 and Exp6591, bind every per-unit row to model_spec_and_identity, prompt_source_router_hashes, raw_stage_receipts, exact_checker_receipts, checkpoint_receipts, gpu_process_receipts, failure_rows, and stream recomputation. Record missing top-level methodology fields as warnings, not invented values.
+      4. Lock arXiv:2608.23526, arXiv:2608.23551, and arXiv:2608.21466 source IDs, retrieved titles, method boundaries, controls, metrics, and non-claims. No source result counts as Carnot evidence.
+      5. Resolve content-derived cache identities for unsloth/Qwen3.6-35B-A3B-GGUF and unsloth/gemma-4-31B-it-GGUF without loading or downloading a model. Record whether two idle, runtime-owned RTX 3090 devices are available.
+      6. Freeze the exact gate fields. Exp6593 reads v575_cfr_reducer_ready_score. Exp6602 reads v575_dual_gpu_canary_ready_score. Confirm every upstream task and artifact field exists in this roadmap and is spelled identically in the owning task's REQUIRED ARTIFACT FIELDS.
+      7. Attack invented CFR benefit, Exp6589 block erasure, principle-wrapper misread, missing row hashes, methodology invention, paper-result transfer, legacy-model substitution, unowned GPU eviction, gate-field drift, and historical artifact mutation.
+      8. Set v575_cfr_reducer_ready_score=1.0 only when both CFR row streams replay completely. Set v575_dual_gpu_canary_ready_score=1.0 only when both mandated caches resolve and two idle owned GPUs are visible. A zero dual-GPU score must not block the scientific phases.
+      9. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, artifact convention checks, adversarial verification, applicable evidence E2E checks, and final git status.
 
-      Required deliverable: {project_root}/results/experiment_6588_v574_bounded_cfr_launch_root.json.
+      Required deliverable: {project_root}/results/experiment_6592_v575_terminal_intake_and_method_lock.json.
       REQUIRED ARTIFACT FIELDS:
         status:
-          principle: "The launch root is terminal and cannot pose bootstrap work as readiness."
+          principle: "The intake is terminal and cannot pose bootstrap work as evidence."
         honest_verdict:
-          principle: "The verdict reports bounded V574 launch readiness without creating a science result."
+          principle: "The verdict reports evidence and method readiness without creating a science result."
         verdict_class:
-          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial; launch readiness is null infrastructure."
+          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial; a ready intake is null infrastructure."
         gate_check_summary:
-          principle: "Any blocked outcome names the failed source, cache, budget, gate, or protection check and its value."
-        v573_terminal_replay_rows:
-          principle: "Exp6585 through Exp6587 retain their actual terminal states and source hashes."
+          principle: "Any blocked outcome names the failed artifact, hash, cache, resource, gate, or protection check and its observed value."
+        v574_terminal_replay_rows:
+          principle: "Exp6588 through Exp6591 retain their actual terminal states, fields, adversarial dispositions, and hashes."
+        cfr_stream_methodology_binding_rows:
+          principle: "Each immutable CFR row binds nested model, source, seed, exact-check, checkpoint, failure, cost, and process receipts without invention."
+        method_source_lock_rows:
+          principle: "Each new paper method has a source ID, bounded import, controls, metrics, and explicit non-claims."
         model_cache_identity_rows:
-          principle: "Both mandated flagship caches resolve by content without a model load or download."
-        execution_budget_contract:
-          principle: "One-model residency, checkpoints, timeout, cleanup, unload, and terminal output are frozen."
+          principle: "Both mandated flagship caches resolve by content without model load or download."
+        gpu_ownership_rows:
+          principle: "Dual-GPU readiness follows from two idle runtime-owned devices and cannot evict unowned work."
         current_roadmap_gate_contract_rows:
-          principle: "Every downstream gate names an upstream task and exact field in this roadmap."
+          principle: "Every downstream gate names a current upstream task and an exact owner-declared field."
+        v575_cfr_reducer_ready_score:
+          principle: "This exact binary field gates Exp6593 only when both immutable CFR streams replay."
+        v575_dual_gpu_canary_ready_score:
+          principle: "This exact binary field gates Exp6602 without blocking science tasks."
         attack_rows:
-          principle: "Invented science, suite gating, model substitution, cache drift, and gate drift fail closed."
-        v574_cfr_launch_ready_score:
-          principle: "This exact binary field gates both flagship CFR stream tasks."
+          principle: "Invented science, block erasure, wrapper errors, drift, substitution, eviction, and historical mutation fail closed."
         preconditions_checked:
-          principle: "Artifacts, hashes, caches, resources, ownership, and protected files are explicit."
+          principle: "Artifacts, hashes, caches, resources, ownership, methods, and protected files are explicit."
         protected_files_unchanged:
           principle: "research-roadmap.yaml and scripts/research_conductor.py retain their original hashes."
         inference_substrate:
-          principle: "The task declares terminal receipt and contract replay with no LLM."
+          principle: "The task declares terminal artifact and method replay with no LLM."
         verifier_is_oracle:
-          principle: "Exact receipt replay owns launch readiness but cannot create positive research science."
+          principle: "Exact receipt replay owns readiness but cannot create positive research science."
         field_provenance:
-          principle: "Every field names source artifacts, rows, hashes, and reducer code."
+          principle: "Every field names source artifacts, raw rows, hashes, and reducer code."
         duration_s:
           principle: "Monotonic duration exposes a source-only shortcut."
         tests_run:
-          principle: "Named commands, exits, and durations make contract validation reproducible."
+          principle: "Named commands, exits, and durations make intake validation reproducible."
         reproducibility_checksum:
           principle: "A final content hash detects terminal mutation."
-      Set inference_substrate=v573_terminal_and_contract_replay_no_llm and verifier_is_oracle=true. A ready launch root uses verdict_class=null. Use a terminal honest_verdict prefix complete:, success:, passed:, or shipped: for completed work. A genuine precondition block may use a blocked_* verdict and must populate gate_check_summary.
+      Set inference_substrate=v574_terminal_and_v575_method_replay_no_llm and verifier_is_oracle=true. A ready intake uses verdict_class=null. Use a terminal honest_verdict prefix complete:, success:, passed:, or shipped:. A genuine block uses blocked_* and populates gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6588_v574_bounded_cfr_launch_root --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6592_v575_terminal_intake_and_method_lock --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6589-isolated-pytest-receipt-remediation
-    milestone: "2026.08.574"
-    deliverable: results/experiment_6589_isolated_pytest_receipt_remediation.json
-    title: "Isolated pytest receipt remediation"
+  - id: exp6593-cfr-independent-row-reducer
+    milestone: "2026.08.575"
+    deliverable: results/experiment_6593_cfr_independent_row_reducer.json
+    title: "Independent CFR row reducer, gated on Exp6592 readiness"
     priority: critical
-    track: evidence-infrastructure
+    track: constraint-first-adjudication
     requires_gpu: false
     per_unit_rows: true
-    max_turns: 100
+    max_turns: 50
+    estimated_wall_time_min: 75
+    agent_type: codex
+    model: gpt-5.6-sol
+    gated_on:
+      - upstream: exp6592-v575-terminal-intake-and-method-lock
+        artifact_field: v575_cfr_reducer_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT
+      Exp6590 and Exp6591 contain immutable direct, always-on CFR, and routed CFR rows for Qwen3.6 and Gemma 4 31B. The model tasks made no headline claim. Exp6592 has bound their methodology and exact gate. This task is the first independent comparison and must compute every result from rows without loading a model. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, and the V575 roadmap document
+      - {project_root}/results/experiment_6590_qwen36_constraint_first_stream.json, {project_root}/results/experiment_6591_gemma4_31b_constraint_first_stream.json, and {project_root}/results/experiment_6592_v575_terminal_intake_and_method_lock.json
+      - the frozen Exp6587 CFR method contract and its source, router, metric, and exact-check registry hashes
+      - paired-statistics, artifact unwrapping, row-consistency, failure retention, cost accounting, atomic output, and adversarial verification helpers plus tests
+      - relevant extraction, exact-verification, evidence, and inference specs; traceability; status; changelog; and E2E plan
+
+      TASK
+      Independently replay and compare direct, always-on CFR, and routed CFR rows by model family and pooled unit. Compute exact success, headroom, supported and contradictory constraints, abstention, unsafe release, tokens, latency, and failure outcomes. Do not load an LLM and do not trust upstream aggregates.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record protected hashes, structured gate value, source artifact hashes, method and registry hashes, expected unit and arm counts, model identity bindings, seeds, paired-test plan, and CPU-only substrate.
+      1. Add or confirm REQ-* and SCENARIO-* anchors for immutable CFR reduction, per-unit replay, family isolation, paired statistics, no-headroom handling, exact-authority circularity, failure retention, and atomic output. Write focused tests first.
+      2. Recompute expected units, arms, source hashes, model identities, prompt and router hashes, raw-stage presence, exact results, tokens, latency, and failures from each stream. Fail closed on duplicate, missing, reordered, or cross-family rows.
+      3. Emit one per_unit_rows entry for every family, source unit, and arm. Preserve raw outcome references and all null, timeout, parse, contradiction, unsupported, abstention, and exact-rejection states.
+      4. Compute direct versus always-on and routed CFR deltas by family and pooled paired unit. Report wins, losses, ties, headroom, McNemar or exact sign tests where valid, paired bootstrap intervals, Stage 1 precision and recall, unsupported and contradictory rates, unsafe release, tokens, latency, and charged failures.
+      5. Preregister the acceptance gate from the frozen Exp6587 contract. A candidate CFR win needs positive exact-success delta, nonnegative paired lower bound, no unsafe-release increase, the Stage 1 precision floor, and the frozen cost limit. Report no-headroom and underpowered cases directly.
+      6. Keep Qwen and Gemma proposals independent. Do not let one family's output repair, label, or select the other. Pool only byte-identical shared units after both family results are fixed.
+      7. Attack aggregate-only claims, dropped failures, family-label swap, identical control and treatment, one-win promotion, no-headroom promotion, seed drift, source drift, exact-check substitution, cost omission, and recomputation disagreement.
+      8. Set cfr_reducer_ready_score=1.0 only when every expected row and aggregate replays. Classify an acceptance-gate win as circular_positive because the exact checker defines the target. Otherwise report null, partial, blocked, or disqualified honestly.
+      9. Write atomically. Run focused tests, lint, spec coverage, artifact convention and verdict-row consistency checks, adversarial verification, applicable verification E2E checks, and final git status.
+
+      Required deliverable: {project_root}/results/experiment_6593_cfr_independent_row_reducer.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The reducer ends with a complete comparison or a named evidence block."
+        honest_verdict:
+          principle: "The verdict states family and pooled CFR effects without upgrading row completeness to benefit."
+        verdict_class:
+          principle: "Use the closed enum; an exact-checker-defined CFR win is circular_positive, never positive."
+        gate_check_summary:
+          principle: "Any block names the failed gate, artifact, row, hash, pairing, or method check and observed value."
+        per_unit_rows:
+          principle: "Every family, unit, and arm carries exact outcome, headroom, constraints, abstention, tokens, latency, failures, and raw references."
+        source_artifact_receipts:
+          principle: "Both immutable stream artifacts and the Exp6592 evidence root bind by path and hash."
+        model_identity_replay_rows:
+          principle: "Nested mandated GGUF identities and process receipts bind every family result."
+        row_completeness_recomputation:
+          principle: "Expected, present, duplicate, missing, reordered, and failure row counts derive from raw rows."
+        family_effect_rows:
+          principle: "Qwen and Gemma direct-versus-CFR effects are computed before pooling."
+        pooled_effect_summary:
+          principle: "Pooling uses only shared byte-identical paired units and cannot erase family heterogeneity."
+        paired_statistical_receipts:
+          principle: "Wins, losses, ties, headroom, tests, intervals, and underpowered cases remain explicit."
+        constraint_quality_summary:
+          principle: "Supported, unsupported, contradictory, precision, recall, and leakage measures replay from Stage 1 rows."
+        safety_and_cost_summary:
+          principle: "Unsafe release, abstention, tokens, latency, and failures are charged to each arm."
+        acceptance_gate_rows:
+          principle: "Every preregistered benefit condition records expected, observed, and passed values."
+        cfr_reducer_ready_score:
+          principle: "This exact binary field gates Exp6599 only when all rows and aggregates replay."
+        attack_rows:
+          principle: "Aggregate, drop, swap, identity, no-headroom, drift, authority, cost, and recomputation attacks fail closed."
+        preconditions_checked:
+          principle: "Gates, hashes, units, arms, identities, seeds, tests, and protected files are explicit."
+        protected_files_unchanged:
+          principle: "Both protected orchestration files retain their original hashes."
+        inference_substrate:
+          principle: "The task declares immutable CFR row reduction with no LLM."
+        verifier_is_oracle:
+          principle: "The exact checker defines CFR success, so any benefit is circular-positive."
+        field_provenance:
+          principle: "Every field points to raw rows, hashes, and reducer functions."
+        duration_s:
+          principle: "Monotonic duration exposes truncated replay."
+        tests_run:
+          principle: "Focused reducer and consistency commands include exits and durations."
+        reproducibility_checksum:
+          principle: "A final content hash protects the independent result."
+      Set inference_substrate=immutable_qwen_gemma_cfr_row_reducer_no_llm and verifier_is_oracle=true. A complete null uses verdict_class=null. A valid CFR gate win uses verdict_class=circular_positive. Any blocked_* verdict populates gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6593_cfr_independent_row_reducer --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6594-cfr-counterfactual-authority-audit
+    milestone: "2026.08.575"
+    deliverable: results/experiment_6594_cfr_counterfactual_authority_audit.json
+    title: "CFR counterfactual and exact-authority audit"
+    priority: critical
+    track: constraint-first-adjudication
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 70
+    agent_type: codex
+    model: gpt-5.6-sol
+    prompt: |
+      CONTEXT
+      Exp6593 is the decision reducer for the completed flagship CFR streams. This audit always runs so that missing or null science evidence still gets an exact diagnosis. It must test whether source, constraints, stages, model family, raw bytes, and the named exact checker are causally bound to the result. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, and the V575 roadmap document
+      - Exp6587's frozen CFR method contract; Exp6590 and Exp6591 row streams; Exp6592 intake; and Exp6593 reducer artifact when present
+      - counterfactual receipt, tamper detection, exact-check registry, source-span, row replay, artifact unwrapping, atomic output, and adversarial verification helpers plus tests
+      - relevant evidence, extraction, and exact-verification specs; traceability; status; changelog; and E2E plan
+
+      TASK
+      Independently attack the CFR evidence and authority chain without model inference. Replay controls plus source replacement, constraint deletion, contradiction injection, Stage 1 and Stage 2 swap, family-label swap, raw-byte tamper, answer leakage, and exact-authority substitution. Preserve one row per unit and attack.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record protected hashes, all available upstream paths and hashes, expected row keys, exact registry hash, attack seeds, immutable copies or safe temporary fixtures, and no-LLM substrate. Missing Exp6593 is diagnosable input, not a reason to skip the audit.
+      1. Add or confirm REQ-* and SCENARIO-* anchors for CFR counterfactual receipts, source and stage causality, family isolation, tamper detection, leakage rejection, exact-authority substitution, missing-input blocks, and atomic output. Write focused tests first.
+      2. Recompute the unmodified control rows. Bind each attack to a source family, unit, arm, input hash, expected effect, observed effect, exact checker, and release decision.
+      3. Run source replacement, source-span deletion, supported-constraint deletion, contradiction injection, Stage 1/Stage 2 swap, family-label swap, raw-byte tamper, answer leak, exact-checker removal, and exact-checker substitution. Never generate replacement model output.
+      4. Require content tamper and answer leakage to fail closed. Require authority removal or substitution to block release. A family-label swap alone must not create an unexplained score or release change.
+      5. Recompute any Exp6593 headline from the clean rows. Record whether attacks change the minimal expected links and whether the reducer rejects altered evidence.
+      6. If an upstream artifact is absent or a required field is None, write blocked_missing_cfr_evidence with gate_check_summary naming the path, field, and observed value. Do not emit null science or fabricate substitute rows.
+      7. Attack zero-row completion, silent attack skip, control/treatment identity, expected-effect rewriting, source repair after outcome, model-as-authority, exact-check substitution, family collapse, and historical artifact mutation.
+      8. Set cfr_authority_audit_ready_score=1.0 only when clean replay and every applicable attack behave as preregistered. An audit can pass when the CFR scientific effect is null.
+      9. Write atomically. Run focused tests, lint, spec coverage, artifact convention and verdict-row consistency checks, adversarial verification, applicable evidence E2E checks, and final git status.
+
+      Required deliverable: {project_root}/results/experiment_6594_cfr_counterfactual_authority_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The always-run audit ends as complete attack evidence or a named missing-input block."
+        honest_verdict:
+          principle: "The verdict separates authority integrity from CFR scientific benefit."
+        verdict_class:
+          principle: "Use the closed enum; a complete integrity audit is null infrastructure, not positive science."
+        gate_check_summary:
+          principle: "Any block names the missing path, field, hash, row, or checker and observed value."
+        per_unit_rows:
+          principle: "Every family, unit, control, and attack records inputs, expected effect, observed effect, checker, and release decision."
+        clean_replay_receipts:
+          principle: "Unmodified rows and any reducer headline recompute before attacks."
+        source_counterfactual_rows:
+          principle: "Replacement and span deletion test source causality without model regeneration."
+        constraint_counterfactual_rows:
+          principle: "Deletion and contradiction attacks test whether bound constraints affect the named rows."
+        stage_and_family_attack_rows:
+          principle: "Stage and family swaps expose hidden coupling or identity shortcuts."
+        tamper_and_leakage_rows:
+          principle: "Raw-byte tamper and answer leakage fail closed with explicit receipts."
+        authority_substitution_rows:
+          principle: "Missing or substituted exact authority cannot release an answer."
+        reducer_recomputation:
+          principle: "Any Exp6593 headline is independently reproduced from clean rows."
+        cfr_authority_audit_ready_score:
+          principle: "This exact binary field gates Exp6599 only when clean replay and attacks pass."
+        attack_rows:
+          principle: "Zero-row, skipped, identical, rewritten, repaired, collapsed, and mutating audits fail closed."
+        preconditions_checked:
+          principle: "Inputs, hashes, row keys, registry, seeds, temporary paths, and protected files are explicit."
+        protected_files_unchanged:
+          principle: "Both protected orchestration files and all historical result artifacts retain their hashes."
+        inference_substrate:
+          principle: "The task declares deterministic counterfactual row replay with no LLM."
+        verifier_is_oracle:
+          principle: "The exact registry owns release authority but cannot create a non-circular benefit claim."
+        field_provenance:
+          principle: "Every field points to source rows, attack fixtures, checkers, hashes, and reducers."
+        duration_s:
+          principle: "Monotonic duration exposes a skipped attack matrix."
+        tests_run:
+          principle: "Focused authority and tamper commands include exits and durations."
+        reproducibility_checksum:
+          principle: "A final content hash protects the audit."
+      Set inference_substrate=cfr_counterfactual_exact_authority_audit_no_llm and verifier_is_oracle=true. A complete audit uses verdict_class=null. A blocked_* verdict must populate gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6594_cfr_counterfactual_authority_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6595-invariant-projection-world-model-canary
+    milestone: "2026.08.575"
+    deliverable: results/experiment_6595_invariant_projection_world_model_canary.json
+    title: "Frozen world-model invariant-projection canary"
+    priority: high
+    track: continuous-latent-energy
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
     estimated_wall_time_min: 90
-    model: opus
     prior_failures:
-      - experiment_id: exp6586-isolated-full-suite-truth-baseline
-        verdict: "blocked_isolated_environment: pytest_receipt"
-        addressed_by: "Exp6589 narrows the scope to the malformed receipt contract, writes focused receipt fixtures first, validates the disposable environment before any suite run, and treats a RED suite as measured evidence rather than a block."
+      - experiment_id: exp4327-e3-executable-world-model-ar25
+        verdict: complete_e3_ar25_partial_model_0.89
+        addressed_by: "This canary replaces ARC E3 model induction with calibration-only invariant selection on preregistered local continuous-dynamics fixtures."
+        retire_if_same_verdict: true
+      - experiment_id: exp4328-e3-executable-world-model-ka59
+        verdict: complete_e3_ka59_partial_model_0.56
+        addressed_by: "This canary replaces ARC E3 model induction with calibration-only invariant selection on preregistered local continuous-dynamics fixtures."
+        retire_if_same_verdict: true
+      - experiment_id: exp4329-e3-executable-world-model-tr87-ft09
+        verdict: complete_e3_tr87_ft09_partial
+        addressed_by: "This canary replaces ARC E3 model induction with calibration-only invariant selection on preregistered local continuous-dynamics fixtures."
+        retire_if_same_verdict: true
+      - experiment_id: exp4557-executable-world-model-proposer
+        verdict: "complete: executable_proposer_positive_control_failed_no_deeper_barrier_refined"
+        addressed_by: "This canary does not propose an ARC simulator; it freezes an existing predictor and tests invariant projection against matched held controls."
+        retire_if_same_verdict: true
+      - experiment_id: exp4872-cegis-world-model-refinement
+        verdict: complete_cegis_no_heldout_accuracy_lift_residual_positive_control_failed
+        addressed_by: "This canary replaces CEGIS refinement with one frozen calibration fit and held projection arms, including an exact diagnostic and a random control."
+        retire_if_same_verdict: true
+      - experiment_id: exp5793-arc-live-world-model-ab
+        verdict: blocked_gate_check_failed
+        addressed_by: "This canary has no ARC selector gate; it uses self-contained local fixtures and tests a latent projection mechanism without solve credit."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Exp6586 attempted an isolated repo-wide suite baseline but ended blocked_isolated_environment: pytest_receipt. Adversarial verification found a nonterminal declared artifact and zero per-test rows. This task repairs that evidence contract without turning suite success into a model launch gate. Work at {project_root}. The planning date is {date}.
+      Carnot's long-term architecture needs energy correction inside continuous latent reasoning, not only exact checks after text generation. ArXiv:2608.23526 reports that projecting a frozen world model toward a learned energy-like invariant improves conservative rollouts while random constraints usually hurt. This task tests the mechanism on bounded local fixtures without claiming an ARC solve or importing the paper's result. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V574 roadmap document, and Exp6586's artifact and adversarial report
-      - {project_root}/pytest.ini, {project_root}/pyproject.toml, {project_root}/tests/python/conftest.py, and collection configuration
-      - {project_root}/scripts/test_suite_mutation_check.py, disposable-worktree helpers, subprocess receipt helpers, process cleanup, atomic output, and their tests
-      - relevant test-integrity and evidence capability specs, traceability, status, changelog, and {project_root}/ops/e2e-test-plan.md
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V575 roadmap document
+      - {project_root}/research-references.md V575 entry and https://arxiv.org/abs/2608.23526
+      - {project_root}/python/carnot/phase3/continuous_ebm.py, continuous latent state and projection modules, world-model fixtures, exact simulators, seeded statistics, and their tests
+      - relevant continuous-latent, KONA, energy, evidence, and sampling specs; traceability; status; changelog; and E2E-008
 
       TASK
-      Repair and validate the isolated pytest receipt path. Run focused receipt fixtures first. Only after the isolated environment validates, run one bounded disposable-suite measurement. Preserve RED, timeout, mutation, and collection evidence honestly. Never run the full suite in the active worktree.
+      Build a frozen-world-model invariant-projection canary. On preregistered conservative and damped fixtures, select a low-capacity invariant using calibration trajectories only, freeze it, and compare held rollouts under no projection, learned-invariant projection, an exact-invariant diagnostic control, and a norm-matched random constraint.
 
       CONCRETE STEPS
-      0. PRECONDITIONS: record protected hashes, active dirty state, Exp6586 hash and exact failed receipt fields, git revision, Python and pytest versions, plugin set, CPU, RAM, disk, timeout, safe temporary root, and process ownership.
-      1. Add or update REQ-* and SCENARIO-* anchors for complete pytest receipts, disposable execution, active-tree non-mutation, RED-as-measured, timeout cleanup, and atomic terminal output. Write focused failing tests before implementation.
-      2. Reproduce the malformed Exp6586 receipt with the smallest fixture. Fix command, cwd, environment hash, exit, duration, stdout, stderr, collection, timeout, cleanup, and mutation serialization without changing scientific code.
-      3. Build a validated disposable checkout under a resolved temporary directory. Preserve the user's active changes. Never stage, discard, or overwrite them.
-      4. Run the focused receipt and mutation fixtures. If they fail, write a terminal blocked artifact with the exact check and observed value; do not launch the full suite.
-      5. If isolation validates, run `.venv/bin/python -m pytest tests/python --no-cov -o addopts= -n 0` once in the disposable checkout with a bounded timeout. Preserve one row per failed, errored, skipped, or timed-out test plus collection and family summaries.
-      6. Recompute active and disposable tracked hashes. Name every attempted write and leaked child process. A RED exit is a complete measured baseline, not blocked.
-      7. Attack active-root execution, omitted dirty content, missing stdout or stderr, fabricated collection, a RED run called GREEN, a timeout called complete, leaked processes, zero rows with a measured claim, and active-tree drift.
-      8. Set pytest_receipt_remediation_ready_score=1.0 only when the focused contract passes and any launched suite has a complete terminal receipt. Write atomically and run focused tests, lint, spec coverage, artifact convention checks, adversarial verification, applicable E2E checks, and final git status.
+      0. PRECONDITIONS: record protected hashes, arXiv source and method hash, existing module hashes, fixture equations and parameters, calibration and held split hashes, candidate invariant basis, seeds, horizons, tolerances, and CPU resources.
+      1. Add REQ-* and SCENARIO-* anchors for calibration-only invariant selection, frozen held evaluation, conservative and damped controls, norm-matched random constraints, projection stability, per-row evidence, and atomic output. Write focused tests first.
+      2. Use at least two conservative and two matched damped fixtures with analytically checked transitions. Freeze at least five seeds, multiple rollout horizons, and a low-capacity invariant basis before fitting.
+      3. Fit or select the invariant on calibration trajectories only. Preserve candidate scores, selected expression or parameters, capacity, optimizer, seed, and split receipt. Do not use held outcomes for selection or tuning.
+      4. Freeze the world model and invariant. Run no projection, learned projection, exact-invariant diagnostic, and norm-matched random projection on identical held initial states and disturbances.
+      5. Emit one per_unit_rows entry per fixture, regime, horizon, seed, and arm with rollout error, invariant drift, energy, projection distance, iterations, convergence, failures, and wall time.
+      6. A positive mechanism result requires learned projection to improve held conservative rollout error over no projection with a positive paired interval, beat the random control, avoid instability, and avoid finding a comparable conserved invariant or false benefit in damped controls. The exact-invariant arm is diagnostic and cannot be the headline.
+      7. Attack held-split leakage, exact-invariant substitution, random-control norm mismatch, world-model mutation, post-outcome basis change, dropped unstable rows, one-seed promotion, damped-control omission, and aggregate-only reporting.
+      8. Write a terminal honest verdict. Keep verifier_is_oracle=false because the held simulator evaluates a frozen predictor independently from the learned projection. Do not claim exact certification of the learned invariant.
+      9. Write atomically. Run focused tests, lint, spec coverage, artifact convention and verdict-row consistency checks, adversarial verification, E2E-008, and final git status.
 
-      Required deliverable: {project_root}/results/experiment_6589_isolated_pytest_receipt_remediation.json.
+      Required deliverable: {project_root}/results/experiment_6595_invariant_projection_world_model_canary.json.
       REQUIRED ARTIFACT FIELDS:
         status:
-          principle: "The task ends as repaired measurement, focused-fixture failure, timeout, or isolated-environment block."
+          principle: "The canary ends with held comparative evidence or a named precondition block."
         honest_verdict:
-          principle: "The verdict separates receipt repair from the suite's GREEN or RED state."
+          principle: "The verdict is limited to frozen local world-model fixtures and names null or harmful controls."
         verdict_class:
-          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial; receipt repair is null infrastructure."
+          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial."
         gate_check_summary:
-          principle: "Any block names the exact isolation or receipt check and observed value."
-        rows:
-          principle: "Every failed, errored, skipped, or timed-out test remains individually recheckable."
-        exp6586_failure_replay:
-          principle: "The original malformed receipt and adversarial disposition remain source bound."
-        focused_receipt_fixture_rows:
-          principle: "Each required receipt field has a positive and negative fixture."
-        suite_command_receipt:
-          principle: "Command, cwd, environment, exit, duration, stdout, stderr, collection, timeout, and cleanup bind the run."
-        disposable_checkout_receipt:
-          principle: "Revision, dirty-content patch hash, and validated temporary path prove isolation."
-        mutation_rows:
-          principle: "Each attempted tracked write has before and after hashes."
-        active_worktree_unchanged:
-          principle: "The user's tracked hashes and pre-existing dirty state survive unchanged."
-        suite_truth_baseline:
-          principle: "GREEN, RED, timeout, or not-run follows from raw receipts without affecting science launch."
-        pytest_receipt_remediation_ready_score:
-          principle: "This binary field states whether the broken receipt contract was repaired."
+          principle: "Any block names the missing module, fixture, split, resource, or numerical check and observed value."
+        per_unit_rows:
+          principle: "Every fixture, regime, horizon, seed, and arm carries rollout, drift, energy, projection, convergence, cost, and failure metrics."
+        method_source_receipt:
+          principle: "The imported paper mechanism and Carnot-specific non-claims bind by source and hash."
+        fixture_and_split_receipts:
+          principle: "Equations, parameters, initial states, disturbances, and calibration versus held membership are immutable."
+        invariant_selection_rows:
+          principle: "Every candidate, capacity, calibration score, seed, and selected invariant is visible before held evaluation."
+        frozen_model_receipts:
+          principle: "World-model and invariant hashes prove that held evaluation mutates neither."
+        arm_summary_rows:
+          principle: "No projection, learned, exact diagnostic, and random controls recompute from per-unit rows."
+        paired_statistical_receipts:
+          principle: "Effects, intervals, wins, losses, ties, and underpowered cases remain explicit."
+        conservative_damped_specificity:
+          principle: "A claimed invariant benefit must distinguish conservative from damped dynamics."
+        acceptance_gate_rows:
+          principle: "Held improvement, random-control separation, stability, and specificity record expected and observed values."
         attack_rows:
-          principle: "Partial, mutating, leaked, zero-row, and falsely green runs fail closed."
+          principle: "Leakage, substitution, mismatch, mutation, tuning, row drop, seed, control, and aggregate attacks fail closed."
         preconditions_checked:
-          principle: "Versions, resources, dirty state, process ownership, and safe paths are explicit."
+          principle: "Sources, modules, fixtures, splits, basis, seeds, horizons, resources, and protected files are explicit."
         protected_files_unchanged:
           principle: "Both protected orchestration files retain their original hashes."
         inference_substrate:
-          principle: "The task declares isolated deterministic test execution with no LLM."
+          principle: "The task declares deterministic frozen-world-model continuous latent evaluation with no LLM."
         verifier_is_oracle:
-          principle: "Pytest owns suite state but not positive research science."
+          principle: "The held exact simulator is independent of invariant selection and projection."
         field_provenance:
-          principle: "Every field points to raw command, fixture, process, or hash rows."
+          principle: "Every field points to fixtures, split rows, model hashes, and reducer functions."
         duration_s:
-          principle: "Monotonic duration exposes collection-only or truncated execution."
+          principle: "Monotonic duration exposes a calibration-only shortcut."
         tests_run:
-          principle: "Focused validation commands are distinct from the measured full-suite command."
+          principle: "Focused numerical and E2E commands include exits and durations."
         reproducibility_checksum:
-          principle: "A final hash protects the repaired receipt."
-      Set inference_substrate=isolated_pytest_receipt_repair_no_llm and verifier_is_oracle=true. A repaired focused contract and honest GREEN or RED measurement use verdict_class=null. A genuine isolation block may use a blocked_* verdict and must populate gate_check_summary.
+          principle: "A final content hash protects the canary."
+      Set inference_substrate=frozen_continuous_world_model_invariant_projection and verifier_is_oracle=false. A valid held mechanism win may use verdict_class=positive. Any blocked_* verdict must populate gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6589_isolated_pytest_receipt_remediation --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6595_invariant_projection_world_model_canary --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6590-qwen36-constraint-first-stream
-    milestone: "2026.08.574"
-    deliverable: results/experiment_6590_qwen36_constraint_first_stream.json
-    title: "Qwen3.6 bounded constraint-first stream"
-    priority: critical
-    track: constraint-first-model-evidence
-    requires_gpu: true
+  - id: exp6596-convergeflow-feasible-token-canary
+    milestone: "2026.08.575"
+    deliverable: results/experiment_6596_convergeflow_feasible_token_canary.json
+    title: "ConvergeFlow feasible-token projection canary"
+    priority: high
+    track: continuous-latent-energy
+    requires_gpu: false
     per_unit_rows: true
     max_turns: 50
-    estimated_wall_time_min: 150
-    gated_on:
-      - upstream: exp6588-v574-bounded-cfr-launch-root
-        artifact_field: v574_cfr_launch_ready_score
-        op: "=="
-        value: 1.0
-    prior_failures:
-      - experiment_id: exp6581-qwen36-flagship-source-shard
-        verdict: "blocked_precondition_failed_without_quality_claim"
-        addressed_by: "Exp6590 removes the repo-wide suite from launch checks, runs the already-frozen Exp6587 CFR method instead of the V572 source-shard shape, and writes periodic per-unit checkpoints before any aggregate."
-        retire_if_same_verdict: true
+    estimated_wall_time_min: 80
+    agent_type: codex
+    model: gpt-5.6-sol
     prompt: |
       CONTEXT
-      Exp6587 froze direct, always-on CFR, and routed CFR arms over at least 16 exact-checkable units. Exp6581 previously blocked before Qwen quality evidence because a repo-wide suite was used as a precondition. Exp6588 now owns the bounded V574 launch gate. This task generates one immutable Qwen stream and makes no cross-arm headline claim. Work at {project_root}. The planning date is {date}.
+      ArXiv:2608.23551 constrains a continuous language-flow predictor to the convex hull of token embeddings and proves convergence under stated conditions. Carnot needs a small conformance and robustness test before considering a continuous-token architecture. This task uses fixed toy embeddings and exact feasible token sets. It does not train or reproduce a language model. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V574 roadmap document, and {project_root}/scripts/experiment_template.py docstring
-      - {project_root}/results/experiment_6587_v573_constraint_first_method_contract.json and {project_root}/results/experiment_6588_v574_bounded_cfr_launch_root.json
-      - {project_root}/results/experiment_6581_qwen36_flagship_source_shard.json
-      - llama.cpp GGUF runner, cached_sota_pair() pattern, GPU ownership, raw-stage preservation, source binding, exact checker dispatch, token accounting, checkpoint, cleanup, and atomic-output helpers plus tests
-      - relevant extraction, exact-verification, model-ingestion, evidence, and continual-learning specs; traceability; status; changelog; and E2E plan
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V575 roadmap document, and research-references.md V575 entry
+      - https://arxiv.org/abs/2608.23551 and any official linked code used only as a method reference
+      - {project_root}/python/carnot/phase3/continuous_ebm.py, continuous latent constraints, projection layers, exact token or DFA fixtures, seeded numerical helpers, and tests
+      - relevant KONA, continuous-latent, constraint, evidence, and sampling specs; traceability; status; changelog; and E2E-008
 
       TASK
-      Run the frozen CFR method with unsloth/Qwen3.6-35B-A3B-GGUF in one fresh llama.cpp process. Preserve every direct, Stage 1, Stage 2, exact-check, failure, cost, checkpoint, model, and GPU receipt. Do not tune prompts or sources and do not make a headline comparison.
+      Implement a bounded ConvergeFlow-inspired feasible-token canary. Compare unconstrained flow, nearest-token-only rounding, and convex-hull predictor projection over fixed embeddings, exact feasible token sets, matched predictor-error magnitudes, and held seeds.
 
       CONCRETE STEPS
-      0. PRECONDITIONS: record protected hashes, upstream gate value, method and source hashes, exact registry hash, resolved Qwen GGUF identity, llama.cpp version, runtime-selected idle RTX 3090 ownership, VRAM, CPU, RAM, disk, seeds, and budgets. Do not require the repo-wide suite to be GREEN.
-      1. Use MODEL_SPECS containing unsloth/Qwen3.6-35B-A3B-GGUF as the headline model. Follow the cached_sota_pair() pattern. Legacy small models may run a CPU smoke only and cannot satisfy readiness.
-      2. Add or confirm REQ-* and SCENARIO-* anchors for one-family CFR execution, raw two-stage preservation, exact authority, checkpoints, failure rows, cost, process cleanup, and atomic output. Write focused tests first.
-      3. Verify the byte hashes for source units, prompts, router, decoding, seeds, order, budgets, and checkers against Exp6587. Any drift blocks before inference.
-      4. Launch one fresh llama.cpp process using the GGUF-embedded tokenizer. Never call AutoTokenizer on the GGUF repository. Record content-derived model identity and actual offload.
-      5. For every unit, run matched direct, always-on CFR, and routed CFR arms in the frozen order. Persist raw direct output, raw Stage 1 constraints, raw Stage 2 output, parsed proposals, source spans, exact results, abstention, tokens, latency, and failure before the next unit.
-      6. Preserve timeouts, malformed output, contradictions, unsupported constraints, and exact rejection as rows. Never repair output with generated ConstraintIR or a hidden model call.
-      7. Checkpoint after every unit. Sample GPU process, memory, and utilization before load, during inference, and after unload. Kill only owned child processes and prove clean unload.
-      8. Attack prompt drift, post-outcome unit loss, stage overwrite, answer leakage, uncharged Stage 1 tokens, family-label substitution, legacy-model substitution, aggregate-only output, and a ready score with missing rows.
-      9. Set qwen_cfr_rows_ready_score=1.0 only when every expected row and receipt is complete and independently recheckable. Write atomically and run focused tests, lint, spec coverage, artifact convention checks, adversarial verification, applicable model E2E checks, and final git status.
+      0. PRECONDITIONS: record protected hashes, method source, module hashes, embedding and feasible-set hashes, constraint automata or exact-set definitions, seeds, error levels, integration steps, tolerances, and CPU resources.
+      1. Add REQ-* and SCENARIO-* anchors for convex-hull predictor projection, fixed feasible sets, matched controls, held predictor errors, endpoint validity, distortion, convergence, per-row evidence, and atomic output. Write focused tests first.
+      2. Freeze at least three embedding geometries, feasible subsets with nontrivial exclusions, five seeds, multiple predictor-error levels, and identical starting states. Include an infeasible or degenerate fixture that must fail closed.
+      3. Implement three arms: unconstrained continuous flow, nearest-token rounding without convex-hull predictor control, and convex-hull predictor projection. Share the same integration budget and charge all projection work.
+      4. Evaluate clean and held perturbed predictors. Emit one per_unit_rows entry per geometry, constraint, error level, seed, and arm with valid endpoint, exact constraint result, steps, path length, endpoint distortion, convergence, failure, and wall time.
+      5. Report validity and robustness separately. A valid endpoint forced by the exact feasible set is circular-positive at best. Any scientific claim must also report distortion and cost and cannot claim a full language model.
+      6. Attack feasible-set leakage, nearest-token arm given the treatment projection, endpoint snapping hidden from cost, empty feasible sets called valid, post-outcome step tuning, dropped nonconvergence, one-seed promotion, and aggregate-only output.
+      7. Set convergeflow_canary_ready_score=1.0 only when all frozen fixtures, controls, perturbations, and exact checks replay. A structurally valid but non-beneficial canary may still be complete_null.
+      8. Write atomically. Run focused tests, lint, spec coverage, artifact convention and verdict-row consistency checks, adversarial verification, E2E-008, and final git status.
 
-      Required deliverable: {project_root}/results/experiment_6590_qwen36_constraint_first_stream.json.
+      Required deliverable: {project_root}/results/experiment_6596_convergeflow_feasible_token_canary.json.
       REQUIRED ARTIFACT FIELDS:
         status:
-          principle: "The stream ends as complete rows, bounded partial rows, or a named precondition block."
+          principle: "The canary ends with complete fixture evidence or a named numerical or precondition block."
         honest_verdict:
-          principle: "The verdict reports Qwen row completeness without claiming CFR benefit."
+          principle: "The verdict is limited to toy feasible-token flow and cannot claim language-model reproduction."
         verdict_class:
-          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial; a complete source stream is null evidence infrastructure."
+          principle: "Use the closed enum; exact-set-defined validity is circular_positive at best."
         gate_check_summary:
-          principle: "Any blocked outcome names the exact gate, cache, resource, drift, or runtime check and value."
+          principle: "Any block names the source, module, fixture, numerical, or resource check and observed value."
         per_unit_rows:
-          principle: "Every source unit and arm carries raw stages, exact results, failures, tokens, and latency."
-        model_spec_and_identity:
-          principle: "The mandated Qwen GGUF spec and content-derived local file identity bind inference."
-        prompt_source_router_hashes:
-          principle: "The Exp6587 byte-frozen method cannot drift by family or outcome."
-        raw_stage_receipts:
-          principle: "Direct, Stage 1, and Stage 2 bytes remain separate and immutable."
-        exact_checker_receipts:
-          principle: "Whitelisted executable checks, not the model, decide validity."
-        checkpoint_receipts:
-          principle: "Each completed unit survives later timeout or process failure."
-        gpu_process_receipts:
-          principle: "Ownership, offload, memory, utilization, and clean unload bind the local run."
-        failure_rows:
-          principle: "Timeouts, parse failures, unsupported constraints, contradictions, and exact rejection remain evidence."
-        qwen_cfr_rows_ready_score:
-          principle: "This exact binary field gates the independent comparison."
+          principle: "Every geometry, constraint, error, seed, and arm carries validity, distortion, convergence, cost, and failure metrics."
+        method_source_receipt:
+          principle: "The paper mechanism, assumptions, bounded import, and non-claims bind by source."
+        embedding_and_constraint_receipts:
+          principle: "Fixed embeddings, feasible sets, exact automata, starts, and perturbations bind every row."
+        arm_definition_rows:
+          principle: "Unconstrained, nearest-token, and convex-hull arms differ only by preregistered mechanisms."
+        exact_endpoint_check_rows:
+          principle: "Independent exact feasible-set checks decide endpoint validity."
+        robustness_summary:
+          principle: "Clean and held predictor-error results remain separate."
+        distortion_and_cost_summary:
+          principle: "Validity cannot hide path distortion, projection work, steps, or wall time."
+        convergeflow_canary_ready_score:
+          principle: "This binary field records full fixture and control replay, not a language-model claim."
         attack_rows:
-          principle: "Drift, leakage, substitution, dropped failures, and aggregate-only claims fail closed."
+          principle: "Leakage, control contamination, hidden snap, emptiness, tuning, row drop, seed, and aggregate attacks fail closed."
         preconditions_checked:
-          principle: "Gates, hashes, cache, resources, ownership, budgets, and protected files are explicit."
+          principle: "Sources, modules, embeddings, constraints, seeds, errors, steps, tolerances, and protected files are explicit."
         protected_files_unchanged:
           principle: "Both protected orchestration files retain their original hashes."
         inference_substrate:
-          principle: "The task declares fresh local Qwen GGUF inference through llama.cpp."
+          principle: "The task declares deterministic continuous token-flow fixtures with no LLM."
         verifier_is_oracle:
-          principle: "Exact checks define row validity, so later exact wins are circular-positive."
+          principle: "The exact feasible set defines validity, so validity-only gains are circular."
         field_provenance:
-          principle: "Every field names source rows, raw bytes, process receipts, and reducer code."
+          principle: "Every field points to fixture rows, exact checks, and reducer functions."
         duration_s:
-          principle: "Monotonic duration exposes smoke-only or truncated execution."
+          principle: "Monotonic duration exposes skipped perturbations or controls."
         tests_run:
-          principle: "Named commands, exits, durations, and focused scope make validation reproducible."
+          principle: "Focused numerical and E2E commands include exits and durations."
         reproducibility_checksum:
-          principle: "A final content hash protects the immutable stream."
-      Set inference_substrate=fresh_local_qwen36_gguf_cfr_inference and verifier_is_oracle=true. A complete stream without a quality claim uses verdict_class=null. A bounded incomplete run uses partial or blocked as warranted and must populate gate_check_summary for blocked_* verdicts.
+          principle: "A final content hash protects the canary."
+      Set inference_substrate=toy_convex_hull_feasible_token_flow_no_llm and verifier_is_oracle=true. Exact-validity success uses verdict_class=circular_positive at best. Any blocked_* verdict populates gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6590_qwen36_constraint_first_stream --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6596_convergeflow_feasible_token_canary --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6591-gemma4-31b-constraint-first-stream
-    milestone: "2026.08.574"
-    deliverable: results/experiment_6591_gemma4_31b_constraint_first_stream.json
-    title: "Gemma 4 31B bounded constraint-first stream"
-    priority: critical
-    track: constraint-first-model-evidence
-    requires_gpu: true
+  - id: exp6597-spectral-k-block-ising-canary
+    milestone: "2026.08.575"
+    deliverable: results/experiment_6597_spectral_k_block_ising_canary.json
+    title: "Spectral k-block Ising sampler canary"
+    priority: high
+    track: sampling
+    requires_gpu: false
     per_unit_rows: true
     max_turns: 50
-    estimated_wall_time_min: 150
-    gated_on:
-      - upstream: exp6588-v574-bounded-cfr-launch-root
-        artifact_field: v574_cfr_launch_ready_score
-        op: "=="
-        value: 1.0
-    prior_failures:
-      - experiment_id: exp5814-channel-qualified-constraint-stream
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Exp6591 does not reuse the failed Exp5813 all-family channel gate. It uses the shipped Exp6587 CFR contract and the same-roadmap Exp6588 launch gate before fresh Gemma inference."
-        retire_if_same_verdict: true
-      - experiment_id: exp6234-fresh-flagship-constraint-event-stream
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Exp6591 does not reuse the missing Exp6228 readiness field or its exact constraint-event stream. It uses the explicitly declared Exp6588 gate and the frozen V573 CFR method."
-        retire_if_same_verdict: true
+    estimated_wall_time_min: 110
+    agent_type: codex
+    model: gpt-5.6-sol
     prompt: |
       CONTEXT
-      Exp6587 froze one family-neutral CFR method and Exp6588 owns the bounded V574 launch gate. The dense flagship local path produced valid V572 runtime receipts, but it has not run the CFR intervention. This task generates one immutable Gemma stream in a process separate from Qwen and makes no cross-arm headline claim. Work at {project_root}. The planning date is {date}.
+      ArXiv:2608.21466 proposes spectral partitions for k-block averaging Markov chains and reports gains on mean-field Ising cases. Carnot needs a bounded software canary against its existing Gibbs path before any scale or hardware work. Earlier PIMI hardware directions are retired; this task uses a different software spectral-partition mechanism and makes no FPGA or TSU claim. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V574 roadmap document, and {project_root}/scripts/experiment_template.py docstring
-      - {project_root}/results/experiment_6587_v573_constraint_first_method_contract.json and {project_root}/results/experiment_6588_v574_bounded_cfr_launch_root.json
-      - {project_root}/results/experiment_6582_gemma4_31b_flagship_source_shard.json
-      - llama.cpp GGUF runner, cached_sota_pair() pattern, GPU ownership, raw-stage preservation, source binding, exact checker dispatch, token accounting, checkpoint, cleanup, and atomic-output helpers plus tests
-      - relevant extraction, exact-verification, model-ingestion, evidence, and continual-learning specs; traceability; status; changelog; and E2E plan
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V575 roadmap document, and research-references.md V574/V575 sampler entries
+      - https://arxiv.org/abs/2608.21466
+      - existing Python and Rust Ising models, Gibbs samplers, exact enumeration, ESS and stationary-error helpers, benchmark fixtures, and their tests
+      - retired PIMI scope in ops/exclusion_manifest.yaml so this task does not repeat it
+      - relevant sampling, hardware, evidence, and Ising specs; traceability; status; changelog; and E2E-001/E2E-002
 
       TASK
-      Run the frozen CFR method with unsloth/gemma-4-31B-it-GGUF in one fresh llama.cpp process. Preserve every direct, Stage 1, Stage 2, exact-check, failure, cost, checkpoint, model, and GPU receipt. Do not tune prompts or sources and do not make a headline comparison.
+      Implement the smallest useful spectral k-block averaging sampler and compare it with sequential Gibbs on exact-enumerable independent, ferromagnetic, and frustrated Ising fixtures under matched seeds, initial states, burn-in, retained samples, and transition budgets.
 
       CONCRETE STEPS
-      0. PRECONDITIONS: record protected hashes, upstream gate value, method and source hashes, exact registry hash, resolved Gemma GGUF identity, llama.cpp version, runtime-selected idle RTX 3090 ownership, VRAM, CPU, RAM, disk, seeds, and budgets.
-      1. Use MODEL_SPECS containing unsloth/gemma-4-31B-it-GGUF as the headline model. Follow the cached_sota_pair() pattern. Legacy small models may run a CPU smoke only and cannot satisfy readiness.
-      2. Add or confirm REQ-* and SCENARIO-* anchors for one-family CFR execution, raw two-stage preservation, exact authority, checkpoints, failure rows, cost, process cleanup, and atomic output. Write focused tests first.
-      3. Verify source, prompt, router, decoding, seed, order, budget, and checker byte hashes against Exp6587. Match the Qwen task's contract without reading Qwen outcomes.
-      4. Launch one fresh llama.cpp process using the GGUF-embedded tokenizer. Never call AutoTokenizer on the GGUF repository. Record content-derived model identity and actual offload.
-      5. For every unit, run direct, always-on CFR, and routed CFR in the frozen order. Persist raw direct output, raw Stage 1 constraints, raw Stage 2 output, parsed proposals, source spans, exact results, abstention, tokens, latency, and failure before the next unit.
-      6. Preserve timeouts, malformed output, contradictions, unsupported constraints, and exact rejection as rows. Never repair output with generated ConstraintIR or a hidden model call.
-      7. Checkpoint after every unit. Sample GPU process, memory, and utilization before load, during inference, and after unload. Kill only owned child processes and prove clean unload.
-      8. Attack family-specific prompt drift, source drift, stage overwrite, answer leakage, uncharged work, model substitution, dropped failures, aggregate-only output, and a ready score with missing rows.
-      9. Set gemma31_cfr_rows_ready_score=1.0 only when every expected row and receipt is complete and independently recheckable. Write atomically and run focused tests, lint, spec coverage, artifact convention checks, adversarial verification, applicable model E2E checks, and final git status.
+      0. PRECONDITIONS: record protected hashes, paper method, existing sampler and exact-enumerator hashes, fixture matrices and fields, seeds, temperatures, block sizes, burn-in, retained sample count, transition budget, and CPU resources.
+      1. Add REQ-* and SCENARIO-* anchors for spectral partition construction, matched Gibbs comparison, exact stationary evaluation, sample-size floors, setup-cost charging, per-seed rows, retirement boundary, and atomic output. Write focused tests first.
+      2. Freeze at least three exact-enumerable fixture families, five seeds, and a preregistered block-size set. Use at least 10,000 retained samples per fixture and seed after explicit burn-in.
+      3. Implement the spectral partition from the squared transition operator or the closest paper-faithful finite-state construction. Record eigensolver, ordering, degeneracy handling, block membership, setup time, and failure states.
+      4. Run sequential Gibbs and every spectral k-block arm from matched initial states and random streams where valid. Charge partition setup, transition work, burn-in, and all failed runs.
+      5. Emit one per_unit_rows entry per fixture, temperature, seed, arm, and block size with total variation error, mean and covariance error, effective sample size, ESS per transition, setup and sample time, transitions, failures, and peak memory.
+      6. A win requires stationary-distribution noninferiority and a positive paired ESS-per-transition or charged wall-time effect with a nonnegative lower bound. Report family heterogeneity and do not pool away a frustrated-case regression.
+      7. Attack use of the exact distribution inside sampling, unmatched transitions, omitted setup, too few samples, seed drop, favorable block-size selection on test rows, synchronous-update bias, PIMI or hardware rebranding, and aggregate-only claims.
+      8. Write a terminal verdict scoped to software exact-enumerable fixtures. Keep verifier_is_oracle=false because exact enumeration evaluates rather than defines the sampler.
+      9. Write atomically. Run focused Python and Rust tests, lint, spec coverage, artifact convention and verdict-row consistency checks, adversarial verification, E2E-001/E2E-002 as applicable, and final git status.
 
-      Required deliverable: {project_root}/results/experiment_6591_gemma4_31b_constraint_first_stream.json.
+      Required deliverable: {project_root}/results/experiment_6597_spectral_k_block_ising_canary.json.
       REQUIRED ARTIFACT FIELDS:
         status:
-          principle: "The stream ends as complete rows, bounded partial rows, or a named precondition block."
+          principle: "The sampler canary ends with complete distributional evidence or a named numerical block."
         honest_verdict:
-          principle: "The verdict reports Gemma row completeness without claiming CFR benefit."
+          principle: "The verdict is limited to charged software fixtures and makes no hardware claim."
         verdict_class:
-          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial; a complete source stream is null evidence infrastructure."
+          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial."
         gate_check_summary:
-          principle: "Any blocked outcome names the exact gate, cache, resource, drift, or runtime check and value."
+          principle: "Any block names the method, fixture, eigensolver, sample, resource, or numerical check and observed value."
         per_unit_rows:
-          principle: "Every source unit and arm carries raw stages, exact results, failures, tokens, and latency."
-        model_spec_and_identity:
-          principle: "The mandated Gemma 4 31B GGUF spec and content-derived local file identity bind inference."
-        prompt_source_router_hashes:
-          principle: "The Exp6587 byte-frozen method cannot drift by family or outcome."
-        raw_stage_receipts:
-          principle: "Direct, Stage 1, and Stage 2 bytes remain separate and immutable."
-        exact_checker_receipts:
-          principle: "Whitelisted executable checks, not the model, decide validity."
-        checkpoint_receipts:
-          principle: "Each completed unit survives later timeout or process failure."
-        gpu_process_receipts:
-          principle: "Ownership, offload, memory, utilization, and clean unload bind the local run."
-        failure_rows:
-          principle: "Timeouts, parse failures, unsupported constraints, contradictions, and exact rejection remain evidence."
-        gemma31_cfr_rows_ready_score:
-          principle: "This exact binary field gates the independent comparison."
+          principle: "Every fixture, temperature, seed, arm, and block size carries distribution, ESS, cost, failure, and memory metrics."
+        method_source_receipt:
+          principle: "The spectral method, bounded implementation, and PIMI retirement distinction bind by source."
+        fixture_receipts:
+          principle: "Couplings, fields, temperatures, exact distributions, starts, seeds, and budgets are immutable."
+        spectral_partition_rows:
+          principle: "Operator, eigenvalues, degeneracy handling, blocks, setup cost, and failures are auditable."
+        sampler_run_rows:
+          principle: "Gibbs and block arms share matched budgets and retain all failed runs."
+        exact_distribution_comparison:
+          principle: "Stationary and moment errors recompute independently from retained samples."
+        effective_sample_size_summary:
+          principle: "ESS, ESS per transition, autocorrelation, and charged wall time remain separate."
+        paired_statistical_receipts:
+          principle: "Effects, intervals, wins, losses, ties, and family heterogeneity remain explicit."
+        acceptance_gate_rows:
+          principle: "Stationary noninferiority and efficiency conditions record expected and observed values."
         attack_rows:
-          principle: "Drift, leakage, substitution, dropped failures, and aggregate-only claims fail closed."
+          principle: "Oracle sampling, mismatch, omitted setup, sample floor, seed, selection, bias, rebranding, and aggregate attacks fail closed."
         preconditions_checked:
-          principle: "Gates, hashes, cache, resources, ownership, budgets, and protected files are explicit."
+          principle: "Sources, samplers, fixtures, seeds, temperatures, blocks, sample floors, resources, and protected files are explicit."
         protected_files_unchanged:
           principle: "Both protected orchestration files retain their original hashes."
         inference_substrate:
-          principle: "The task declares fresh local Gemma 4 31B GGUF inference through llama.cpp."
+          principle: "The task declares CPU software Ising sampling and exact enumeration with no LLM."
         verifier_is_oracle:
-          principle: "Exact checks define row validity, so later exact wins are circular-positive."
+          principle: "Exact enumeration independently evaluates stationary sampling quality."
         field_provenance:
-          principle: "Every field names source rows, raw bytes, process receipts, and reducer code."
+          principle: "Every field points to fixture, partition, sample, exact, and reducer rows."
         duration_s:
-          principle: "Monotonic duration exposes smoke-only or truncated execution."
+          principle: "Monotonic duration exposes too-short or skipped sampling."
         tests_run:
-          principle: "Named commands, exits, durations, and focused scope make validation reproducible."
+          principle: "Focused sampler, cross-language, and E2E commands include exits and durations."
         reproducibility_checksum:
-          principle: "A final content hash protects the immutable stream."
-      Set inference_substrate=fresh_local_gemma4_31b_gguf_cfr_inference and verifier_is_oracle=true. A complete stream without a quality claim uses verdict_class=null. A bounded incomplete run uses partial or blocked as warranted and must populate gate_check_summary for blocked_* verdicts.
+          principle: "A final content hash protects the distributional result."
+      Set inference_substrate=cpu_spectral_k_block_ising_exact_enumeration and verifier_is_oracle=false. A valid charged sampler win may use verdict_class=positive. Any blocked_* verdict populates gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6591_gemma4_31b_constraint_first_stream --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6597_spectral_k_block_ising_canary --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
