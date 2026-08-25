@@ -478,6 +478,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     "deterministic_automaton_no_llm",
     "immutable_v568_artifact_gate_failure_and_retirement_audit_no_llm",
     "immutable_v569_artifact_gate_failure_and_retirement_audit_no_llm",
+    "immutable_qwen_gemma_cfr_row_reducer_no_llm",
     "primary_source_method_preregistration_and_local_conformance_no_llm",
     "primary_source_joint_sufficiency_preregistration_and_local_conformance_no_llm",
     "primary_source_and_joint_method_replay_no_llm",
@@ -3019,11 +3020,14 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
     # Recognize singular (`random_seed`, `seed`) and plural
     # (`random_seeds_used`, `seeds`) forms. Multi-seed experiments
     # legitimately use the plural list-of-seeds form.
+    preconditions = d.get("preconditions_checked", {})
+    nested_seeds = preconditions.get("seeds") if isinstance(preconditions, dict) else None
     has_seed = (
         d.get("random_seed") is not None
         or d.get("seed") is not None
         or d.get("random_seeds_used")
         or d.get("seeds")
+        or nested_seeds
     )
     has_repro = d.get("reproducibility_checksum")
     # duration_s (added 2026-07-30). `check_duration_vs_claim` returns immediately when
