@@ -16442,3 +16442,4 @@ code |
 | 2026-08-25 08:47 UTC | Test-fix erasure gate | BLOCK | 0 added skip(s), 6 reverted file(s); restored 6 |
 | 2026-08-25 08:47 UTC | Qwen3.6 bounded constraint-first stream | FAIL | Post-tests failed: 1 failed, 192 passed, 1 warning in 18.14s |
 | 2026-08-25 08:49 UTC | Qwen3.6 bounded constraint-first stream | OK | Deliverable already exists in repo |
+| 2026-08-25 08:50 UTC | Gemma 4 31B bounded constraint-first stream | SKIP | Pre-tests failing, self-heal failed: # check that cries wolf gets bypassed, whic |
