@@ -1,0 +1,2152 @@
+{
+  "attack_rows": [
+    {
+      "attack_id": "cross_family_tuning",
+      "candidate_integrity_ready_score": 0.0,
+      "expected_integrity_ready_score": 0.0,
+      "failed_checks": [
+        "blocked_precondition"
+      ],
+      "failed_closed": true,
+      "not_run_due_to_block": true
+    },
+    {
+      "attack_id": "prompt_drift",
+      "candidate_integrity_ready_score": 0.0,
+      "expected_integrity_ready_score": 0.0,
+      "failed_checks": [
+        "blocked_precondition"
+      ],
+      "failed_closed": true,
+      "not_run_due_to_block": true
+    },
+    {
+      "attack_id": "seed_drift",
+      "candidate_integrity_ready_score": 0.0,
+      "expected_integrity_ready_score": 0.0,
+      "failed_checks": [
+        "blocked_precondition"
+      ],
+      "failed_closed": true,
+      "not_run_due_to_block": true
+    },
+    {
+      "attack_id": "split_leakage",
+      "candidate_integrity_ready_score": 0.0,
+      "expected_integrity_ready_score": 0.0,
+      "failed_checks": [
+        "blocked_precondition"
+      ],
+      "failed_closed": true,
+      "not_run_due_to_block": true
+    },
+    {
+      "attack_id": "omitted_failures",
+      "candidate_integrity_ready_score": 0.0,
+      "expected_integrity_ready_score": 0.0,
+      "failed_checks": [
+        "blocked_precondition"
+      ],
+      "failed_closed": true,
+      "not_run_due_to_block": true
+    },
+    {
+      "attack_id": "cpu_fallback",
+      "candidate_integrity_ready_score": 0.0,
+      "expected_integrity_ready_score": 0.0,
+      "failed_checks": [
+        "blocked_precondition"
+      ],
+      "failed_closed": true,
+      "not_run_due_to_block": true
+    },
+    {
+      "attack_id": "fake_cuda_offload",
+      "candidate_integrity_ready_score": 0.0,
+      "expected_integrity_ready_score": 0.0,
+      "failed_checks": [
+        "blocked_precondition"
+      ],
+      "failed_closed": true,
+      "not_run_due_to_block": true
+    },
+    {
+      "attack_id": "wrong_model",
+      "candidate_integrity_ready_score": 0.0,
+      "expected_integrity_ready_score": 0.0,
+      "failed_checks": [
+        "blocked_precondition"
+      ],
+      "failed_closed": true,
+      "not_run_due_to_block": true
+    },
+    {
+      "attack_id": "tokenizer_substitution",
+      "candidate_integrity_ready_score": 0.0,
+      "expected_integrity_ready_score": 0.0,
+      "failed_checks": [
+        "blocked_precondition"
+      ],
+      "failed_closed": true,
+      "not_run_due_to_block": true
+    },
+    {
+      "attack_id": "response_regeneration",
+      "candidate_integrity_ready_score": 0.0,
+      "expected_integrity_ready_score": 0.0,
+      "failed_checks": [
+        "blocked_precondition"
+      ],
+      "failed_closed": true,
+      "not_run_due_to_block": true
+    },
+    {
+      "attack_id": "aggregate_disagreement",
+      "candidate_integrity_ready_score": 0.0,
+      "expected_integrity_ready_score": 0.0,
+      "failed_checks": [
+        "blocked_precondition"
+      ],
+      "failed_closed": true,
+      "not_run_due_to_block": true
+    },
+    {
+      "attack_id": "protected_file_mutation",
+      "candidate_integrity_ready_score": 0.0,
+      "expected_integrity_ready_score": 0.0,
+      "failed_checks": [
+        "blocked_precondition"
+      ],
+      "failed_closed": true,
+      "not_run_due_to_block": true
+    }
+  ],
+  "checkpoint_receipts": {},
+  "duration_s": 65.724569,
+  "failure_rows": [],
+  "family_headroom_summary": {
+    "calibration": {
+      "charged_failure_count": 0,
+      "charged_failure_rate": 0.0,
+      "exact_success_count": 0,
+      "exact_success_interval_95": [
+        0.0,
+        0.0
+      ],
+      "exact_success_rate": 0.0,
+      "failure_counts": {
+        "invalid_generation": 0,
+        "process_failure": 0,
+        "refusal": 0,
+        "semantic_failure": 0,
+        "syntax_failure": 0,
+        "timeout": 0,
+        "unmet_goal": 0
+      },
+      "failure_rates": {
+        "invalid_generation": 0.0,
+        "process_failure": 0.0,
+        "refusal": 0.0,
+        "semantic_failure": 0.0,
+        "syntax_failure": 0.0,
+        "timeout": 0.0,
+        "unmet_goal": 0.0
+      },
+      "row_count": 0
+    },
+    "held": {
+      "charged_failure_count": 0,
+      "charged_failure_rate": 0.0,
+      "exact_success_count": 0,
+      "exact_success_interval_95": [
+        0.0,
+        0.0
+      ],
+      "exact_success_rate": 0.0,
+      "failure_counts": {
+        "invalid_generation": 0,
+        "process_failure": 0,
+        "refusal": 0,
+        "semantic_failure": 0,
+        "syntax_failure": 0,
+        "timeout": 0,
+        "unmet_goal": 0
+      },
+      "failure_rates": {
+        "invalid_generation": 0.0,
+        "process_failure": 0.0,
+        "refusal": 0.0,
+        "semantic_failure": 0.0,
+        "syntax_failure": 0.0,
+        "timeout": 0.0,
+        "unmet_goal": 0.0
+      },
+      "row_count": 0
+    },
+    "reducer": "exclusive row failure_class and exact_success fields"
+  },
+  "field_provenance": {
+    "attack_rows": {
+      "principle": "Drift, leakage, dropping, fallback, identity, regeneration, aggregate, and mutation attacks fail closed.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "integrity_reducer"
+    },
+    "duration_s": {
+      "principle": "Monotonic duration is consistent with the declared live workload.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    },
+    "failure_rows": {
+      "principle": "Timeouts, parse failures, refusals, invalid plans, and resource errors remain charged.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "integrity_reducer"
+    },
+    "family_headroom_summary": {
+      "principle": "Calibration and held exact success and failure modes recompute only from rows.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "family_headroom_summary"
+    },
+    "field_provenance": {
+      "principle": "Every aggregate points to per-unit raw, model, process, and exact-check receipts.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    },
+    "gate_check_summary": {
+      "principle": "Any block names the failed upstream, cache, GPU, model, tokenizer, row, timeout, checkpoint, or exact condition.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    },
+    "gemma26_headroom_ready_score": {
+      "principle": "This binary field marks complete held success in the frozen 20 to 80 percent interval.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "family_headroom_summary"
+    },
+    "gpu_process_receipts": {
+      "principle": "Owned process, device, VRAM, CUDA layer offload, timing, and unload prove local GPU inference.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    },
+    "honest_verdict": {
+      "principle": "The verdict distinguishes row completion from the presence of useful headroom.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    },
+    "inference_substrate": {
+      "principle": "The task declares live local Gemma 4 26B-A4B GGUF inference through CUDA llama.cpp.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    },
+    "model_spec_and_identity": {
+      "principle": "The mandated hub ID, GGUF shards, hashes, tokenizer, chat template, quantization, and context are bound.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    },
+    "per_unit_rows": {
+      "principle": "Every task and seed carries immutable inputs, raw output, parse, exact result, tokens, latency, process, and failures.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    },
+    "preconditions_checked": {
+      "principle": "Upstream gate, files, hashes, GPU, cache, model, tokenizer, timeouts, and protected files are explicit.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    },
+    "prompt_and_decode_contract": {
+      "principle": "Direct prompt bytes, stop rules, sampling settings, and seed schedule are frozen before inference.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    },
+    "protected_files_unchanged": {
+      "principle": "Both protected orchestration files retain their original hashes.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    },
+    "raw_model_receipts": {
+      "principle": "Every raw response is retained before parsing or exact checking.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "integrity_reducer"
+    },
+    "reproducibility_checksum": {
+      "principle": "A final content hash detects result mutation.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    },
+    "status": {
+      "principle": "The family run is terminal, resumable, and never hides a resource block.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    },
+    "tests_run": {
+      "principle": "Named validation commands include exits and durations.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    },
+    "verdict_class": {
+      "principle": "Use the closed enum; baseline qualification alone is null infrastructure.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    },
+    "verifier_is_oracle": {
+      "principle": "The independent exact executor defines plan success.",
+      "raw_sources": [
+        "Exp6604 frozen task and prompt bytes",
+        "per_unit_rows raw response bytes",
+        "Gemma 4 26B-A4B GGUF identity and GPU process sessions",
+        "IndependentExactExecutor results"
+      ],
+      "reducer": "direct immutable receipt"
+    }
+  },
+  "gate_check_summary": {
+    "all_passed": false,
+    "expected": true,
+    "failed_condition": "gpu_ownership",
+    "observed": false
+  },
+  "gemma26_headroom_ready_score": 0.0,
+  "gpu_process_receipts": {
+    "all_sessions_authentic": false,
+    "sessions": []
+  },
+  "honest_verdict": "blocked_gpu_ownership: expected True, observed False",
+  "inference_substrate": "live_local_gemma4_26b_a4b_gguf_direct_plan_baseline_cuda_llamacpp",
+  "model_spec_and_identity": {
+    "MODEL_SPECS": [
+      {
+        "gpu": 0,
+        "gpu_assignment_reviewed": true,
+        "headline_eligible": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it",
+        "quantization": "Q4_K_M",
+        "repository_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      }
+    ],
+    "architecture": "gemma4",
+    "auto_tokenizer_used": false,
+    "cache_provenance": {
+      "blob_key": "34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "cache_repository_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF",
+      "field_provenance": {
+        "repository_id": "expected repository argument and HF cache directory name",
+        "revision": "snapshots/<revision> path component",
+        "snapshot_filename": "snapshot symlink name",
+        "snapshot_symlink_target": "os.readlink output",
+        "trusted_sha256": "trusted upstream hash matched to HF blob key"
+      },
+      "full_blob_rehash_performed": false,
+      "ordered_shards": [
+        {
+          "blob_key": "34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "shard_count": 1,
+          "shard_number": 1,
+          "snapshot_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+        }
+      ],
+      "refs_pointing_to_revision": [
+        "main"
+      ],
+      "repository_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "resolved_blob_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "snapshot_filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "snapshot_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "snapshot_symlink_target": "../../blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "symlink_target_matches_blob": true,
+      "trusted_hash_matches_blob_key": true,
+      "trusted_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "valid": true
+    },
+    "content_metadata": {
+      "architecture": "gemma4",
+      "bounded_read_receipt": {
+        "data_offset": 15822688,
+        "file_size": 16947539744,
+        "maximum_header_bytes": 67108864,
+        "maximum_offset_inspected": 15822669,
+        "physical_bytes_read": 6260163,
+        "required_minimum_file_size": 16947528481,
+        "tensor_info_end": 15822669,
+        "tensor_info_start": 15782352,
+        "tensor_payload_bytes_read": 0
+      },
+      "field_provenance": {
+        "magic": {
+          "byte_end_offset": 4,
+          "byte_offset": 0
+        },
+        "metadata_count": {
+          "byte_end_offset": 24,
+          "byte_offset": 16
+        },
+        "metadata_keys": {
+          "gemma4.attention.head_count": {
+            "key_end_offset": 1176,
+            "key_offset": 1141,
+            "type_offset": 1176,
+            "value_end_offset": 1184,
+            "value_offset": 1180,
+            "value_type": "uint32"
+          },
+          "gemma4.attention.head_count_kv": {
+            "key_end_offset": 1222,
+            "key_offset": 1184,
+            "type_offset": 1222,
+            "value_end_offset": 1358,
+            "value_offset": 1226,
+            "value_type": "array"
+          },
+          "gemma4.attention.key_length": {
+            "key_end_offset": 1601,
+            "key_offset": 1566,
+            "type_offset": 1601,
+            "value_end_offset": 1609,
+            "value_offset": 1605,
+            "value_type": "uint32"
+          },
+          "gemma4.attention.key_length_swa": {
+            "key_end_offset": 1983,
+            "key_offset": 1944,
+            "type_offset": 1983,
+            "value_end_offset": 1991,
+            "value_offset": 1987,
+            "value_type": "uint32"
+          },
+          "gemma4.attention.layer_norm_rms_epsilon": {
+            "key_end_offset": 1483,
+            "key_offset": 1436,
+            "type_offset": 1483,
+            "value_end_offset": 1491,
+            "value_offset": 1487,
+            "value_type": "float32"
+          },
+          "gemma4.attention.shared_kv_layers": {
+            "key_end_offset": 1788,
+            "key_offset": 1747,
+            "type_offset": 1788,
+            "value_end_offset": 1796,
+            "value_offset": 1792,
+            "value_type": "uint32"
+          },
+          "gemma4.attention.sliding_window": {
+            "key_end_offset": 1739,
+            "key_offset": 1700,
+            "type_offset": 1739,
+            "value_end_offset": 1747,
+            "value_offset": 1743,
+            "value_type": "uint32"
+          },
+          "gemma4.attention.sliding_window_pattern": {
+            "key_end_offset": 1898,
+            "key_offset": 1851,
+            "type_offset": 1898,
+            "value_end_offset": 1944,
+            "value_offset": 1902,
+            "value_type": "array"
+          },
+          "gemma4.attention.value_length": {
+            "key_end_offset": 1646,
+            "key_offset": 1609,
+            "type_offset": 1646,
+            "value_end_offset": 1654,
+            "value_offset": 1650,
+            "value_type": "uint32"
+          },
+          "gemma4.attention.value_length_swa": {
+            "key_end_offset": 2032,
+            "key_offset": 1991,
+            "type_offset": 2032,
+            "value_end_offset": 2040,
+            "value_offset": 2036,
+            "value_type": "uint32"
+          },
+          "gemma4.block_count": {
+            "key_end_offset": 1015,
+            "key_offset": 989,
+            "type_offset": 1015,
+            "value_end_offset": 1023,
+            "value_offset": 1019,
+            "value_type": "uint32"
+          },
+          "gemma4.context_length": {
+            "key_end_offset": 1052,
+            "key_offset": 1023,
+            "type_offset": 1052,
+            "value_end_offset": 1060,
+            "value_offset": 1056,
+            "value_type": "uint32"
+          },
+          "gemma4.embedding_length": {
+            "key_end_offset": 1091,
+            "key_offset": 1060,
+            "type_offset": 1091,
+            "value_end_offset": 1099,
+            "value_offset": 1095,
+            "value_type": "uint32"
+          },
+          "gemma4.embedding_length_per_layer_input": {
+            "key_end_offset": 1843,
+            "key_offset": 1796,
+            "type_offset": 1843,
+            "value_end_offset": 1851,
+            "value_offset": 1847,
+            "value_type": "uint32"
+          },
+          "gemma4.expert_count": {
+            "key_end_offset": 1518,
+            "key_offset": 1491,
+            "type_offset": 1518,
+            "value_end_offset": 1526,
+            "value_offset": 1522,
+            "value_type": "uint32"
+          },
+          "gemma4.expert_feed_forward_length": {
+            "key_end_offset": 2081,
+            "key_offset": 2040,
+            "type_offset": 2081,
+            "value_end_offset": 2089,
+            "value_offset": 2085,
+            "value_type": "uint32"
+          },
+          "gemma4.expert_used_count": {
+            "key_end_offset": 1558,
+            "key_offset": 1526,
+            "type_offset": 1558,
+            "value_end_offset": 1566,
+            "value_offset": 1562,
+            "value_type": "uint32"
+          },
+          "gemma4.feed_forward_length": {
+            "key_end_offset": 1133,
+            "key_offset": 1099,
+            "type_offset": 1133,
+            "value_end_offset": 1141,
+            "value_offset": 1137,
+            "value_type": "uint32"
+          },
+          "gemma4.final_logit_softcapping": {
+            "key_end_offset": 1692,
+            "key_offset": 1654,
+            "type_offset": 1692,
+            "value_end_offset": 1700,
+            "value_offset": 1696,
+            "value_type": "float32"
+          },
+          "gemma4.rope.dimension_count": {
+            "key_end_offset": 2124,
+            "key_offset": 2089,
+            "type_offset": 2124,
+            "value_end_offset": 2132,
+            "value_offset": 2128,
+            "value_type": "uint32"
+          },
+          "gemma4.rope.dimension_count_swa": {
+            "key_end_offset": 2171,
+            "key_offset": 2132,
+            "type_offset": 2171,
+            "value_end_offset": 2179,
+            "value_offset": 2175,
+            "value_type": "uint32"
+          },
+          "gemma4.rope.freq_base": {
+            "key_end_offset": 1387,
+            "key_offset": 1358,
+            "type_offset": 1387,
+            "value_end_offset": 1395,
+            "value_offset": 1391,
+            "value_type": "float32"
+          },
+          "gemma4.rope.freq_base_swa": {
+            "key_end_offset": 1428,
+            "key_offset": 1395,
+            "type_offset": 1428,
+            "value_end_offset": 1436,
+            "value_offset": 1432,
+            "value_type": "float32"
+          },
+          "general.architecture": {
+            "key_end_offset": 52,
+            "key_offset": 24,
+            "type_offset": 52,
+            "value_end_offset": 70,
+            "value_offset": 56,
+            "value_type": "string"
+          },
+          "general.base_model.0.name": {
+            "key_end_offset": 726,
+            "key_offset": 693,
+            "type_offset": 726,
+            "value_end_offset": 756,
+            "value_offset": 730,
+            "value_type": "string"
+          },
+          "general.base_model.0.organization": {
+            "key_end_offset": 797,
+            "key_offset": 756,
+            "type_offset": 797,
+            "value_end_offset": 815,
+            "value_offset": 801,
+            "value_type": "string"
+          },
+          "general.base_model.0.repo_url": {
+            "key_end_offset": 852,
+            "key_offset": 815,
+            "type_offset": 852,
+            "value_end_offset": 912,
+            "value_offset": 856,
+            "value_type": "string"
+          },
+          "general.base_model.count": {
+            "key_end_offset": 685,
+            "key_offset": 653,
+            "type_offset": 685,
+            "value_end_offset": 693,
+            "value_offset": 689,
+            "value_type": "uint32"
+          },
+          "general.basename": {
+            "key_end_offset": 332,
+            "key_offset": 308,
+            "type_offset": 332,
+            "value_end_offset": 362,
+            "value_offset": 336,
+            "value_type": "string"
+          },
+          "general.file_type": {
+            "key_end_offset": 15782082,
+            "key_offset": 15782057,
+            "type_offset": 15782082,
+            "value_end_offset": 15782090,
+            "value_offset": 15782086,
+            "value_type": "uint32"
+          },
+          "general.finetune": {
+            "key_end_offset": 294,
+            "key_offset": 270,
+            "type_offset": 294,
+            "value_end_offset": 308,
+            "value_offset": 298,
+            "value_type": "string"
+          },
+          "general.license": {
+            "key_end_offset": 477,
+            "key_offset": 454,
+            "type_offset": 477,
+            "value_end_offset": 499,
+            "value_offset": 481,
+            "value_type": "string"
+          },
+          "general.license.link": {
+            "key_end_offset": 527,
+            "key_offset": 499,
+            "type_offset": 527,
+            "value_end_offset": 587,
+            "value_offset": 531,
+            "value_type": "string"
+          },
+          "general.name": {
+            "key_end_offset": 240,
+            "key_offset": 220,
+            "type_offset": 240,
+            "value_end_offset": 270,
+            "value_offset": 244,
+            "value_type": "string"
+          },
+          "general.quantization_version": {
+            "key_end_offset": 15782049,
+            "key_offset": 15782013,
+            "type_offset": 15782049,
+            "value_end_offset": 15782057,
+            "value_offset": 15782053,
+            "value_type": "uint32"
+          },
+          "general.quantized_by": {
+            "key_end_offset": 390,
+            "key_offset": 362,
+            "type_offset": 390,
+            "value_end_offset": 409,
+            "value_offset": 394,
+            "value_type": "string"
+          },
+          "general.repo_url": {
+            "key_end_offset": 611,
+            "key_offset": 587,
+            "type_offset": 611,
+            "value_end_offset": 653,
+            "value_offset": 615,
+            "value_type": "string"
+          },
+          "general.sampling.temp": {
+            "key_end_offset": 212,
+            "key_offset": 183,
+            "type_offset": 212,
+            "value_end_offset": 220,
+            "value_offset": 216,
+            "value_type": "float32"
+          },
+          "general.sampling.top_k": {
+            "key_end_offset": 137,
+            "key_offset": 107,
+            "type_offset": 137,
+            "value_end_offset": 145,
+            "value_offset": 141,
+            "value_type": "int32"
+          },
+          "general.sampling.top_p": {
+            "key_end_offset": 175,
+            "key_offset": 145,
+            "type_offset": 175,
+            "value_end_offset": 183,
+            "value_offset": 179,
+            "value_type": "float32"
+          },
+          "general.size_label": {
+            "key_end_offset": 435,
+            "key_offset": 409,
+            "type_offset": 435,
+            "value_end_offset": 454,
+            "value_offset": 439,
+            "value_type": "string"
+          },
+          "general.tags": {
+            "key_end_offset": 932,
+            "key_offset": 912,
+            "type_offset": 932,
+            "value_end_offset": 989,
+            "value_offset": 936,
+            "value_type": "array"
+          },
+          "general.type": {
+            "key_end_offset": 90,
+            "key_offset": 70,
+            "type_offset": 90,
+            "value_end_offset": 107,
+            "value_offset": 94,
+            "value_type": "string"
+          },
+          "quantize.imatrix.chunks_count": {
+            "key_end_offset": 15782344,
+            "key_offset": 15782307,
+            "type_offset": 15782344,
+            "value_end_offset": 15782352,
+            "value_offset": 15782348,
+            "value_type": "uint32"
+          },
+          "quantize.imatrix.dataset": {
+            "key_end_offset": 15782207,
+            "key_offset": 15782175,
+            "type_offset": 15782207,
+            "value_end_offset": 15782261,
+            "value_offset": 15782211,
+            "value_type": "string"
+          },
+          "quantize.imatrix.entries_count": {
+            "key_end_offset": 15782299,
+            "key_offset": 15782261,
+            "type_offset": 15782299,
+            "value_end_offset": 15782307,
+            "value_offset": 15782303,
+            "value_type": "uint32"
+          },
+          "quantize.imatrix.file": {
+            "key_end_offset": 15782119,
+            "key_offset": 15782090,
+            "type_offset": 15782119,
+            "value_end_offset": 15782175,
+            "value_offset": 15782123,
+            "value_type": "string"
+          },
+          "tokenizer.chat_template": {
+            "key_end_offset": 15764982,
+            "key_offset": 15764951,
+            "type_offset": 15764982,
+            "value_end_offset": 15781928,
+            "value_offset": 15764986,
+            "value_type": "string"
+          },
+          "tokenizer.ggml.add_bos_token": {
+            "key_end_offset": 15782008,
+            "key_offset": 15781972,
+            "type_offset": 15782008,
+            "value_end_offset": 15782013,
+            "value_offset": 15782012,
+            "value_type": "bool"
+          },
+          "tokenizer.ggml.add_space_prefix": {
+            "key_end_offset": 15781967,
+            "key_offset": 15781928,
+            "type_offset": 15781967,
+            "value_end_offset": 15781972,
+            "value_offset": 15781971,
+            "value_type": "bool"
+          },
+          "tokenizer.ggml.bos_token_id": {
+            "key_end_offset": 15764762,
+            "key_offset": 15764727,
+            "type_offset": 15764762,
+            "value_end_offset": 15764770,
+            "value_offset": 15764766,
+            "value_type": "uint32"
+          },
+          "tokenizer.ggml.eos_token_id": {
+            "key_end_offset": 15764805,
+            "key_offset": 15764770,
+            "type_offset": 15764805,
+            "value_end_offset": 15764813,
+            "value_offset": 15764809,
+            "value_type": "uint32"
+          },
+          "tokenizer.ggml.mask_token_id": {
+            "key_end_offset": 15764943,
+            "key_offset": 15764907,
+            "type_offset": 15764943,
+            "value_end_offset": 15764951,
+            "value_offset": 15764947,
+            "value_type": "uint32"
+          },
+          "tokenizer.ggml.merges": {
+            "key_end_offset": 6512992,
+            "key_offset": 6512963,
+            "type_offset": 6512992,
+            "value_end_offset": 15764727,
+            "value_offset": 6512996,
+            "value_type": "array"
+          },
+          "tokenizer.ggml.model": {
+            "key_end_offset": 2207,
+            "key_offset": 2179,
+            "type_offset": 2207,
+            "value_end_offset": 2225,
+            "value_offset": 2211,
+            "value_type": "string"
+          },
+          "tokenizer.ggml.padding_token_id": {
+            "key_end_offset": 15764899,
+            "key_offset": 15764860,
+            "type_offset": 15764899,
+            "value_end_offset": 15764907,
+            "value_offset": 15764903,
+            "value_type": "uint32"
+          },
+          "tokenizer.ggml.scores": {
+            "key_end_offset": 4415746,
+            "key_offset": 4415717,
+            "type_offset": 4415746,
+            "value_end_offset": 5464338,
+            "value_offset": 4415750,
+            "value_type": "array"
+          },
+          "tokenizer.ggml.token_type": {
+            "key_end_offset": 5464371,
+            "key_offset": 5464338,
+            "type_offset": 5464371,
+            "value_end_offset": 6512963,
+            "value_offset": 5464375,
+            "value_type": "array"
+          },
+          "tokenizer.ggml.tokens": {
+            "key_end_offset": 2254,
+            "key_offset": 2225,
+            "type_offset": 2254,
+            "value_end_offset": 4415717,
+            "value_offset": 2258,
+            "value_type": "array"
+          },
+          "tokenizer.ggml.unknown_token_id": {
+            "key_end_offset": 15764852,
+            "key_offset": 15764813,
+            "type_offset": 15764852,
+            "value_end_offset": 15764860,
+            "value_offset": 15764856,
+            "value_type": "uint32"
+          }
+        },
+        "quantization": {
+          "mapping": "llama.cpp llama_ftype enum",
+          "source": {
+            "key_end_offset": 15782082,
+            "key_offset": 15782057,
+            "type_offset": 15782082,
+            "value_end_offset": 15782090,
+            "value_offset": 15782086,
+            "value_type": "uint32"
+          },
+          "source_key": "general.file_type"
+        },
+        "repository_id": "not derived from GGUF bytes; cache provenance required",
+        "tensor_count": {
+          "byte_end_offset": 16,
+          "byte_offset": 8
+        },
+        "version": {
+          "byte_end_offset": 8,
+          "byte_offset": 4
+        }
+      },
+      "general_file_type": 15,
+      "is_language_model": true,
+      "magic": "GGUF",
+      "metadata_count": 60,
+      "model_name": "Gemma-4-26B-A4B-It",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "quantization": "Q4_K_M",
+      "shard_metadata": {
+        "split_count": null,
+        "split_no": null,
+        "split_tensors_count": null
+      },
+      "tensor_count": 658,
+      "tokenizer_metadata": {
+        "bos_token_id": 2,
+        "chat_template_present": true,
+        "eos_token_id": 106,
+        "model": "gemma4",
+        "padding_token_id": 0,
+        "pre": null,
+        "token_count": 262144
+      },
+      "version": 3
+    },
+    "context_length": 262144,
+    "download_performed": false,
+    "embedded_chat_template": {
+      "present": true,
+      "sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "source": "tokenizer.chat_template"
+    },
+    "embedded_tokenizer": {
+      "identity_sha256": "sha256:934fae3efd401348da0d79af074ca5643b29d7b86e6fe7eb09397ad439000f47",
+      "loadable": true,
+      "receipt": {
+        "add_bos_token": "true",
+        "architecture": "gemma4",
+        "autotokenizer_usage_count": 0,
+        "bos_token_id": "2",
+        "chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+        "embedded_tokenizer_ok": true,
+        "eos_token_id": "106",
+        "error": "",
+        "loader": "llama.cpp embedded GGUF tokenizer",
+        "model_name": "Gemma-4-26B-A4B-It",
+        "padding_token_id": "0",
+        "prompt_token_count": 16,
+        "prompt_token_ids_sha256": "sha256:5aa81b333dbdfa97d945dfba777971a3871a9ee8a2b7cbefcfa969384d7ff9fe",
+        "tokenizer_model": "gemma4",
+        "tokenizer_pre": "unknown"
+      },
+      "source": "embedded_gguf",
+      "token_count": 262144
+    },
+    "gguf_shards": [
+      {
+        "byte_count": 16947539744,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "shard_count": 1,
+        "shard_number": 1
+      }
+    ],
+    "hub_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "legacy_headline_row_count": 0,
+    "llama_cpp": {
+      "build_receipt": {
+        "binary_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "cuda_libraries": [
+          "libggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007f3ac0e00000)",
+          "libcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007f3aba200000)",
+          "libcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007f3ab8e00000)"
+        ],
+        "cuda_linked": true,
+        "dynamic_link_receipt": {
+          "command": [
+            "ldd",
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+          ],
+          "exit_code": 0,
+          "stderr": "",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "linux-vdso.so.1 (0x00007f3ac5fb7000)\n\tlibllama-server-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so (0x00007f3ac5400000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007f3ac4e00000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007f3ac52b3000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007f3ac4a00000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007f3ac5f9e000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007f3ac4843000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007f3ac0e00000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007f3ac4d29000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007f3aba200000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007f3ac4729000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007f3ab9a00000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007f3ab9600000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007f3aba0f9000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f3aba0c4000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f3ab9200000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007f3ac5fb9000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007f3ab9990000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007f3ab8e00000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007f3ab5600000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007f3a90000000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007f3ac5f68000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007f3ac52ae000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007f3ac52a9000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007f3ab9954000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007f3ab9506000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007f3ac0df0000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007f3a8fe9f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007f3aba0a1000)",
+          "stdout_sha256": "sha256:d3b5d03577b8c9867700315383da302c8438e1f9d45c5b52a7beeccab131e142"
+        },
+        "executable": true,
+        "exists": true,
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "version_receipt": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "--version"
+          ],
+          "exit_code": 0,
+          "stderr": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
+          "stderr_sha256": "sha256:65fb5b586c8fe67373ad140e0bf8d4c562770719c85a908dbca7997fd99af3e2",
+          "stdout": "",
+          "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "cuda_linked": true,
+      "version": ""
+    },
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+    "quantization": "Q4_K_M",
+    "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3"
+  },
+  "per_unit_rows": [],
+  "preconditions_checked": {
+    "all_required_preconditions_available": false,
+    "auto_tokenizer_allowed": false,
+    "checkpoint": {
+      "free_bytes": 1083133046784,
+      "minimum_free_bytes": 1000000000,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6607_gemma4_26b_direct_headroom/checkpoint.json"
+    },
+    "checkpoint_resume": {
+      "accepted": true,
+      "completed_row_count": 0,
+      "gate_check_summary": {
+        "all_passed": true,
+        "failed_condition": null
+      }
+    },
+    "checks": {
+      "atomic_output": true,
+      "checkpoint_resume": true,
+      "checkpoint_space": true,
+      "focused_tests": true,
+      "gpu_free_vram_mb": false,
+      "gpu_identity": true,
+      "gpu_ownership": false,
+      "gpu_query": true,
+      "llama_cpp_cuda": true,
+      "model_identity": true,
+      "output_space": true,
+      "protected_hashes": true,
+      "reviewed_gpu_assignment": true,
+      "row_count": true,
+      "task_and_split_hashes": true,
+      "task_count": true,
+      "timeout_budget": true,
+      "upstream_gate": true,
+      "upstream_status": true
+    },
+    "cpu_headline_fallback_allowed": false,
+    "download_allowed": false,
+    "exp6604_gate": {
+      "absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6604_exact_two_level_plan_corpus.json",
+      "artifact_sha256": "sha256:fc5ed4d0ec8e1355e8732fc7dc2d9c6f81c23a3e8677728f3dfa1161c9c948d0",
+      "expected": 1.0,
+      "field": "headroom_fixture_ready_score",
+      "observed": 1.0,
+      "path": "results/experiment_6604_exact_two_level_plan_corpus.json"
+    },
+    "expected_row_count": 216,
+    "failed_preconditions": [
+      "gpu_ownership",
+      "gpu_free_vram_mb"
+    ],
+    "gpu": {
+      "free_vram_mb": 2811,
+      "initial_sample": {
+        "all_devices": [
+          {
+            "driver_version": "610.43.03",
+            "index": 0,
+            "memory_free_mb": 2811,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 21313,
+            "name": "NVIDIA GeForce RTX 3090",
+            "temperature_c": 54,
+            "utilization_pct": 0,
+            "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+          },
+          {
+            "driver_version": "610.43.03",
+            "index": 1,
+            "memory_free_mb": 2626,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 21498,
+            "name": "NVIDIA GeForce RTX 3090",
+            "temperature_c": 50,
+            "utilization_pct": 0,
+            "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+          }
+        ],
+        "compute_processes": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 675677,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 21042
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 874364,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3408343,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 20686
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3408195,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 536
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 874364,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ],
+        "compute_query_command": [
+          "nvidia-smi",
+          "--query-compute-apps=gpu_uuid,pid,process_name,used_gpu_memory",
+          "--format=csv,noheader,nounits"
+        ],
+        "compute_query_exit_code": 0,
+        "compute_query_stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "compute_query_stdout_sha256": "sha256:457f32bc35ea9d7924114b69ab195536a60ce5032937216d3098c908555833b8",
+        "device": {
+          "driver_version": "610.43.03",
+          "index": 0,
+          "memory_free_mb": 2811,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 21313,
+          "name": "NVIDIA GeForce RTX 3090",
+          "temperature_c": 54,
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "gpu_query_command": [
+          "nvidia-smi",
+          "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,utilization.gpu,temperature.gpu,driver_version",
+          "--format=csv,noheader,nounits"
+        ],
+        "gpu_query_exit_code": 0,
+        "gpu_query_stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "gpu_query_stdout_sha256": "sha256:6ab3d0a0b1321198535580ac06042bdfe0c2c7116a8299ddb319dd0206b96990",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "monotonic_s": 2782273.507242642,
+        "repository_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "sample_index": 0,
+        "selected_gpu": 0,
+        "stage": "preconditions",
+        "task_owned_live_pids": [],
+        "timestamp_utc": "2026-08-25T19:32:41.255493Z",
+        "worker_pid": 0
+      },
+      "minimum_free_vram_mb": 16384,
+      "ownership_receipt": {
+        "available": false,
+        "controller_pid": 874364,
+        "foreign_selected_gpu_processes": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 675677,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 21042
+          }
+        ],
+        "selected_gpu_processes": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 675677,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 21042
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 874364,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ],
+        "selected_gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+      },
+      "requested": 0,
+      "reviewed": true
+    },
+    "model": {
+      "MODEL_SPECS": [
+        {
+          "gpu": 0,
+          "gpu_assignment_reviewed": true,
+          "headline_eligible": true,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it",
+          "quantization": "Q4_K_M",
+          "repository_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+        }
+      ],
+      "architecture": "gemma4",
+      "auto_tokenizer_used": false,
+      "cache_provenance": {
+        "blob_key": "34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "cache_repository_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF",
+        "field_provenance": {
+          "repository_id": "expected repository argument and HF cache directory name",
+          "revision": "snapshots/<revision> path component",
+          "snapshot_filename": "snapshot symlink name",
+          "snapshot_symlink_target": "os.readlink output",
+          "trusted_sha256": "trusted upstream hash matched to HF blob key"
+        },
+        "full_blob_rehash_performed": false,
+        "ordered_shards": [
+          {
+            "blob_key": "34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+            "shard_count": 1,
+            "shard_number": 1,
+            "snapshot_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+          }
+        ],
+        "refs_pointing_to_revision": [
+          "main"
+        ],
+        "repository_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "resolved_blob_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+        "snapshot_filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "snapshot_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "snapshot_symlink_target": "../../blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "symlink_target_matches_blob": true,
+        "trusted_hash_matches_blob_key": true,
+        "trusted_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "valid": true
+      },
+      "content_metadata": {
+        "architecture": "gemma4",
+        "bounded_read_receipt": {
+          "data_offset": 15822688,
+          "file_size": 16947539744,
+          "maximum_header_bytes": 67108864,
+          "maximum_offset_inspected": 15822669,
+          "physical_bytes_read": 6260163,
+          "required_minimum_file_size": 16947528481,
+          "tensor_info_end": 15822669,
+          "tensor_info_start": 15782352,
+          "tensor_payload_bytes_read": 0
+        },
+        "field_provenance": {
+          "magic": {
+            "byte_end_offset": 4,
+            "byte_offset": 0
+          },
+          "metadata_count": {
+            "byte_end_offset": 24,
+            "byte_offset": 16
+          },
+          "metadata_keys": {
+            "gemma4.attention.head_count": {
+              "key_end_offset": 1176,
+              "key_offset": 1141,
+              "type_offset": 1176,
+              "value_end_offset": 1184,
+              "value_offset": 1180,
+              "value_type": "uint32"
+            },
+            "gemma4.attention.head_count_kv": {
+              "key_end_offset": 1222,
+              "key_offset": 1184,
+              "type_offset": 1222,
+              "value_end_offset": 1358,
+              "value_offset": 1226,
+              "value_type": "array"
+            },
+            "gemma4.attention.key_length": {
+              "key_end_offset": 1601,
+              "key_offset": 1566,
+              "type_offset": 1601,
+              "value_end_offset": 1609,
+              "value_offset": 1605,
+              "value_type": "uint32"
+            },
+            "gemma4.attention.key_length_swa": {
+              "key_end_offset": 1983,
+              "key_offset": 1944,
+              "type_offset": 1983,
+              "value_end_offset": 1991,
+              "value_offset": 1987,
+              "value_type": "uint32"
+            },
+            "gemma4.attention.layer_norm_rms_epsilon": {
+              "key_end_offset": 1483,
+              "key_offset": 1436,
+              "type_offset": 1483,
+              "value_end_offset": 1491,
+              "value_offset": 1487,
+              "value_type": "float32"
+            },
+            "gemma4.attention.shared_kv_layers": {
+              "key_end_offset": 1788,
+              "key_offset": 1747,
+              "type_offset": 1788,
+              "value_end_offset": 1796,
+              "value_offset": 1792,
+              "value_type": "uint32"
+            },
+            "gemma4.attention.sliding_window": {
+              "key_end_offset": 1739,
+              "key_offset": 1700,
+              "type_offset": 1739,
+              "value_end_offset": 1747,
+              "value_offset": 1743,
+              "value_type": "uint32"
+            },
+            "gemma4.attention.sliding_window_pattern": {
+              "key_end_offset": 1898,
+              "key_offset": 1851,
+              "type_offset": 1898,
+              "value_end_offset": 1944,
+              "value_offset": 1902,
+              "value_type": "array"
+            },
+            "gemma4.attention.value_length": {
+              "key_end_offset": 1646,
+              "key_offset": 1609,
+              "type_offset": 1646,
+              "value_end_offset": 1654,
+              "value_offset": 1650,
+              "value_type": "uint32"
+            },
+            "gemma4.attention.value_length_swa": {
+              "key_end_offset": 2032,
+              "key_offset": 1991,
+              "type_offset": 2032,
+              "value_end_offset": 2040,
+              "value_offset": 2036,
+              "value_type": "uint32"
+            },
+            "gemma4.block_count": {
+              "key_end_offset": 1015,
+              "key_offset": 989,
+              "type_offset": 1015,
+              "value_end_offset": 1023,
+              "value_offset": 1019,
+              "value_type": "uint32"
+            },
+            "gemma4.context_length": {
+              "key_end_offset": 1052,
+              "key_offset": 1023,
+              "type_offset": 1052,
+              "value_end_offset": 1060,
+              "value_offset": 1056,
+              "value_type": "uint32"
+            },
+            "gemma4.embedding_length": {
+              "key_end_offset": 1091,
+              "key_offset": 1060,
+              "type_offset": 1091,
+              "value_end_offset": 1099,
+              "value_offset": 1095,
+              "value_type": "uint32"
+            },
+            "gemma4.embedding_length_per_layer_input": {
+              "key_end_offset": 1843,
+              "key_offset": 1796,
+              "type_offset": 1843,
+              "value_end_offset": 1851,
+              "value_offset": 1847,
+              "value_type": "uint32"
+            },
+            "gemma4.expert_count": {
+              "key_end_offset": 1518,
+              "key_offset": 1491,
+              "type_offset": 1518,
+              "value_end_offset": 1526,
+              "value_offset": 1522,
+              "value_type": "uint32"
+            },
+            "gemma4.expert_feed_forward_length": {
+              "key_end_offset": 2081,
+              "key_offset": 2040,
+              "type_offset": 2081,
+              "value_end_offset": 2089,
+              "value_offset": 2085,
+              "value_type": "uint32"
+            },
+            "gemma4.expert_used_count": {
+              "key_end_offset": 1558,
+              "key_offset": 1526,
+              "type_offset": 1558,
+              "value_end_offset": 1566,
+              "value_offset": 1562,
+              "value_type": "uint32"
+            },
+            "gemma4.feed_forward_length": {
+              "key_end_offset": 1133,
+              "key_offset": 1099,
+              "type_offset": 1133,
+              "value_end_offset": 1141,
+              "value_offset": 1137,
+              "value_type": "uint32"
+            },
+            "gemma4.final_logit_softcapping": {
+              "key_end_offset": 1692,
+              "key_offset": 1654,
+              "type_offset": 1692,
+              "value_end_offset": 1700,
+              "value_offset": 1696,
+              "value_type": "float32"
+            },
+            "gemma4.rope.dimension_count": {
+              "key_end_offset": 2124,
+              "key_offset": 2089,
+              "type_offset": 2124,
+              "value_end_offset": 2132,
+              "value_offset": 2128,
+              "value_type": "uint32"
+            },
+            "gemma4.rope.dimension_count_swa": {
+              "key_end_offset": 2171,
+              "key_offset": 2132,
+              "type_offset": 2171,
+              "value_end_offset": 2179,
+              "value_offset": 2175,
+              "value_type": "uint32"
+            },
+            "gemma4.rope.freq_base": {
+              "key_end_offset": 1387,
+              "key_offset": 1358,
+              "type_offset": 1387,
+              "value_end_offset": 1395,
+              "value_offset": 1391,
+              "value_type": "float32"
+            },
+            "gemma4.rope.freq_base_swa": {
+              "key_end_offset": 1428,
+              "key_offset": 1395,
+              "type_offset": 1428,
+              "value_end_offset": 1436,
+              "value_offset": 1432,
+              "value_type": "float32"
+            },
+            "general.architecture": {
+              "key_end_offset": 52,
+              "key_offset": 24,
+              "type_offset": 52,
+              "value_end_offset": 70,
+              "value_offset": 56,
+              "value_type": "string"
+            },
+            "general.base_model.0.name": {
+              "key_end_offset": 726,
+              "key_offset": 693,
+              "type_offset": 726,
+              "value_end_offset": 756,
+              "value_offset": 730,
+              "value_type": "string"
+            },
+            "general.base_model.0.organization": {
+              "key_end_offset": 797,
+              "key_offset": 756,
+              "type_offset": 797,
+              "value_end_offset": 815,
+              "value_offset": 801,
+              "value_type": "string"
+            },
+            "general.base_model.0.repo_url": {
+              "key_end_offset": 852,
+              "key_offset": 815,
+              "type_offset": 852,
+              "value_end_offset": 912,
+              "value_offset": 856,
+              "value_type": "string"
+            },
+            "general.base_model.count": {
+              "key_end_offset": 685,
+              "key_offset": 653,
+              "type_offset": 685,
+              "value_end_offset": 693,
+              "value_offset": 689,
+              "value_type": "uint32"
+            },
+            "general.basename": {
+              "key_end_offset": 332,
+              "key_offset": 308,
+              "type_offset": 332,
+              "value_end_offset": 362,
+              "value_offset": 336,
+              "value_type": "string"
+            },
+            "general.file_type": {
+              "key_end_offset": 15782082,
+              "key_offset": 15782057,
+              "type_offset": 15782082,
+              "value_end_offset": 15782090,
+              "value_offset": 15782086,
+              "value_type": "uint32"
+            },
+            "general.finetune": {
+              "key_end_offset": 294,
+              "key_offset": 270,
+              "type_offset": 294,
+              "value_end_offset": 308,
+              "value_offset": 298,
+              "value_type": "string"
+            },
+            "general.license": {
+              "key_end_offset": 477,
+              "key_offset": 454,
+              "type_offset": 477,
+              "value_end_offset": 499,
+              "value_offset": 481,
+              "value_type": "string"
+            },
+            "general.license.link": {
+              "key_end_offset": 527,
+              "key_offset": 499,
+              "type_offset": 527,
+              "value_end_offset": 587,
+              "value_offset": 531,
+              "value_type": "string"
+            },
+            "general.name": {
+              "key_end_offset": 240,
+              "key_offset": 220,
+              "type_offset": 240,
+              "value_end_offset": 270,
+              "value_offset": 244,
+              "value_type": "string"
+            },
+            "general.quantization_version": {
+              "key_end_offset": 15782049,
+              "key_offset": 15782013,
+              "type_offset": 15782049,
+              "value_end_offset": 15782057,
+              "value_offset": 15782053,
+              "value_type": "uint32"
+            },
+            "general.quantized_by": {
+              "key_end_offset": 390,
+              "key_offset": 362,
+              "type_offset": 390,
+              "value_end_offset": 409,
+              "value_offset": 394,
+              "value_type": "string"
+            },
+            "general.repo_url": {
+              "key_end_offset": 611,
+              "key_offset": 587,
+              "type_offset": 611,
+              "value_end_offset": 653,
+              "value_offset": 615,
+              "value_type": "string"
+            },
+            "general.sampling.temp": {
+              "key_end_offset": 212,
+              "key_offset": 183,
+              "type_offset": 212,
+              "value_end_offset": 220,
+              "value_offset": 216,
+              "value_type": "float32"
+            },
+            "general.sampling.top_k": {
+              "key_end_offset": 137,
+              "key_offset": 107,
+              "type_offset": 137,
+              "value_end_offset": 145,
+              "value_offset": 141,
+              "value_type": "int32"
+            },
+            "general.sampling.top_p": {
+              "key_end_offset": 175,
+              "key_offset": 145,
+              "type_offset": 175,
+              "value_end_offset": 183,
+              "value_offset": 179,
+              "value_type": "float32"
+            },
+            "general.size_label": {
+              "key_end_offset": 435,
+              "key_offset": 409,
+              "type_offset": 435,
+              "value_end_offset": 454,
+              "value_offset": 439,
+              "value_type": "string"
+            },
+            "general.tags": {
+              "key_end_offset": 932,
+              "key_offset": 912,
+              "type_offset": 932,
+              "value_end_offset": 989,
+              "value_offset": 936,
+              "value_type": "array"
+            },
+            "general.type": {
+              "key_end_offset": 90,
+              "key_offset": 70,
+              "type_offset": 90,
+              "value_end_offset": 107,
+              "value_offset": 94,
+              "value_type": "string"
+            },
+            "quantize.imatrix.chunks_count": {
+              "key_end_offset": 15782344,
+              "key_offset": 15782307,
+              "type_offset": 15782344,
+              "value_end_offset": 15782352,
+              "value_offset": 15782348,
+              "value_type": "uint32"
+            },
+            "quantize.imatrix.dataset": {
+              "key_end_offset": 15782207,
+              "key_offset": 15782175,
+              "type_offset": 15782207,
+              "value_end_offset": 15782261,
+              "value_offset": 15782211,
+              "value_type": "string"
+            },
+            "quantize.imatrix.entries_count": {
+              "key_end_offset": 15782299,
+              "key_offset": 15782261,
+              "type_offset": 15782299,
+              "value_end_offset": 15782307,
+              "value_offset": 15782303,
+              "value_type": "uint32"
+            },
+            "quantize.imatrix.file": {
+              "key_end_offset": 15782119,
+              "key_offset": 15782090,
+              "type_offset": 15782119,
+              "value_end_offset": 15782175,
+              "value_offset": 15782123,
+              "value_type": "string"
+            },
+            "tokenizer.chat_template": {
+              "key_end_offset": 15764982,
+              "key_offset": 15764951,
+              "type_offset": 15764982,
+              "value_end_offset": 15781928,
+              "value_offset": 15764986,
+              "value_type": "string"
+            },
+            "tokenizer.ggml.add_bos_token": {
+              "key_end_offset": 15782008,
+              "key_offset": 15781972,
+              "type_offset": 15782008,
+              "value_end_offset": 15782013,
+              "value_offset": 15782012,
+              "value_type": "bool"
+            },
+            "tokenizer.ggml.add_space_prefix": {
+              "key_end_offset": 15781967,
+              "key_offset": 15781928,
+              "type_offset": 15781967,
+              "value_end_offset": 15781972,
+              "value_offset": 15781971,
+              "value_type": "bool"
+            },
+            "tokenizer.ggml.bos_token_id": {
+              "key_end_offset": 15764762,
+              "key_offset": 15764727,
+              "type_offset": 15764762,
+              "value_end_offset": 15764770,
+              "value_offset": 15764766,
+              "value_type": "uint32"
+            },
+            "tokenizer.ggml.eos_token_id": {
+              "key_end_offset": 15764805,
+              "key_offset": 15764770,
+              "type_offset": 15764805,
+              "value_end_offset": 15764813,
+              "value_offset": 15764809,
+              "value_type": "uint32"
+            },
+            "tokenizer.ggml.mask_token_id": {
+              "key_end_offset": 15764943,
+              "key_offset": 15764907,
+              "type_offset": 15764943,
+              "value_end_offset": 15764951,
+              "value_offset": 15764947,
+              "value_type": "uint32"
+            },
+            "tokenizer.ggml.merges": {
+              "key_end_offset": 6512992,
+              "key_offset": 6512963,
+              "type_offset": 6512992,
+              "value_end_offset": 15764727,
+              "value_offset": 6512996,
+              "value_type": "array"
+            },
+            "tokenizer.ggml.model": {
+              "key_end_offset": 2207,
+              "key_offset": 2179,
+              "type_offset": 2207,
+              "value_end_offset": 2225,
+              "value_offset": 2211,
+              "value_type": "string"
+            },
+            "tokenizer.ggml.padding_token_id": {
+              "key_end_offset": 15764899,
+              "key_offset": 15764860,
+              "type_offset": 15764899,
+              "value_end_offset": 15764907,
+              "value_offset": 15764903,
+              "value_type": "uint32"
+            },
+            "tokenizer.ggml.scores": {
+              "key_end_offset": 4415746,
+              "key_offset": 4415717,
+              "type_offset": 4415746,
+              "value_end_offset": 5464338,
+              "value_offset": 4415750,
+              "value_type": "array"
+            },
+            "tokenizer.ggml.token_type": {
+              "key_end_offset": 5464371,
+              "key_offset": 5464338,
+              "type_offset": 5464371,
+              "value_end_offset": 6512963,
+              "value_offset": 5464375,
+              "value_type": "array"
+            },
+            "tokenizer.ggml.tokens": {
+              "key_end_offset": 2254,
+              "key_offset": 2225,
+              "type_offset": 2254,
+              "value_end_offset": 4415717,
+              "value_offset": 2258,
+              "value_type": "array"
+            },
+            "tokenizer.ggml.unknown_token_id": {
+              "key_end_offset": 15764852,
+              "key_offset": 15764813,
+              "type_offset": 15764852,
+              "value_end_offset": 15764860,
+              "value_offset": 15764856,
+              "value_type": "uint32"
+            }
+          },
+          "quantization": {
+            "mapping": "llama.cpp llama_ftype enum",
+            "source": {
+              "key_end_offset": 15782082,
+              "key_offset": 15782057,
+              "type_offset": 15782082,
+              "value_end_offset": 15782090,
+              "value_offset": 15782086,
+              "value_type": "uint32"
+            },
+            "source_key": "general.file_type"
+          },
+          "repository_id": "not derived from GGUF bytes; cache provenance required",
+          "tensor_count": {
+            "byte_end_offset": 16,
+            "byte_offset": 8
+          },
+          "version": {
+            "byte_end_offset": 8,
+            "byte_offset": 4
+          }
+        },
+        "general_file_type": 15,
+        "is_language_model": true,
+        "magic": "GGUF",
+        "metadata_count": 60,
+        "model_name": "Gemma-4-26B-A4B-It",
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "quantization": "Q4_K_M",
+        "shard_metadata": {
+          "split_count": null,
+          "split_no": null,
+          "split_tensors_count": null
+        },
+        "tensor_count": 658,
+        "tokenizer_metadata": {
+          "bos_token_id": 2,
+          "chat_template_present": true,
+          "eos_token_id": 106,
+          "model": "gemma4",
+          "padding_token_id": 0,
+          "pre": null,
+          "token_count": 262144
+        },
+        "version": 3
+      },
+      "context_length": 262144,
+      "download_performed": false,
+      "embedded_chat_template": {
+        "present": true,
+        "sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+        "source": "tokenizer.chat_template"
+      },
+      "embedded_tokenizer": {
+        "identity_sha256": "sha256:934fae3efd401348da0d79af074ca5643b29d7b86e6fe7eb09397ad439000f47",
+        "loadable": true,
+        "receipt": {
+          "add_bos_token": "true",
+          "architecture": "gemma4",
+          "autotokenizer_usage_count": 0,
+          "bos_token_id": "2",
+          "chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+          "embedded_tokenizer_ok": true,
+          "eos_token_id": "106",
+          "error": "",
+          "loader": "llama.cpp embedded GGUF tokenizer",
+          "model_name": "Gemma-4-26B-A4B-It",
+          "padding_token_id": "0",
+          "prompt_token_count": 16,
+          "prompt_token_ids_sha256": "sha256:5aa81b333dbdfa97d945dfba777971a3871a9ee8a2b7cbefcfa969384d7ff9fe",
+          "tokenizer_model": "gemma4",
+          "tokenizer_pre": "unknown"
+        },
+        "source": "embedded_gguf",
+        "token_count": 262144
+      },
+      "gguf_shards": [
+        {
+          "byte_count": 16947539744,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "shard_count": 1,
+          "shard_number": 1
+        }
+      ],
+      "hub_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_headline_row_count": 0,
+      "llama_cpp": {
+        "build_receipt": {
+          "binary_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+          "cuda_libraries": [
+            "libggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007f3ac0e00000)",
+            "libcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007f3aba200000)",
+            "libcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007f3ab8e00000)"
+          ],
+          "cuda_linked": true,
+          "dynamic_link_receipt": {
+            "command": [
+              "ldd",
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+            ],
+            "exit_code": 0,
+            "stderr": "",
+            "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdout": "linux-vdso.so.1 (0x00007f3ac5fb7000)\n\tlibllama-server-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so (0x00007f3ac5400000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007f3ac4e00000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007f3ac52b3000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007f3ac4a00000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007f3ac5f9e000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007f3ac4843000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007f3ac0e00000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007f3ac4d29000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007f3aba200000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007f3ac4729000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007f3ab9a00000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007f3ab9600000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007f3aba0f9000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f3aba0c4000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f3ab9200000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007f3ac5fb9000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007f3ab9990000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007f3ab8e00000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007f3ab5600000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007f3a90000000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007f3ac5f68000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007f3ac52ae000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007f3ac52a9000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007f3ab9954000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007f3ab9506000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007f3ac0df0000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007f3a8fe9f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007f3aba0a1000)",
+            "stdout_sha256": "sha256:d3b5d03577b8c9867700315383da302c8438e1f9d45c5b52a7beeccab131e142"
+          },
+          "executable": true,
+          "exists": true,
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "version_receipt": {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "--version"
+            ],
+            "exit_code": 0,
+            "stderr": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
+            "stderr_sha256": "sha256:65fb5b586c8fe67373ad140e0bf8d4c562770719c85a908dbca7997fd99af3e2",
+            "stdout": "",
+            "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "cuda_linked": true,
+        "version": ""
+      },
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "quantization": "Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3"
+    },
+    "model_process_started": false,
+    "prompt_contract_sha256": "sha256:1364df6859c1b8b90cd04189cfbc39e4ae5294808211e4a01ddd2c36157a1486",
+    "protected_file_hashes_after": {
+      "research-roadmap.yaml": "sha256:753df27210a62a5572e19e9ede78ee2b1af5e4a11cb83063e62b69367ef33270",
+      "scripts/research_conductor.py": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
+    },
+    "protected_file_hashes_before": {
+      "research-roadmap.yaml": "sha256:753df27210a62a5572e19e9ede78ee2b1af5e4a11cb83063e62b69367ef33270",
+      "scripts/research_conductor.py": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
+    },
+    "resource_receipts": {
+      "cpu": {
+        "architecture": "x86_64",
+        "count": 24,
+        "processor": ""
+      },
+      "disk": {
+        "free_bytes": 1083133046784,
+        "total_bytes": 3953289023488,
+        "used_bytes": 2870155976704
+      },
+      "ram": {
+        "available_kib": 100803552,
+        "total_kib": 131157332
+      }
+    },
+    "split_hashes": {
+      "calibration": "sha256:e4c9789c829adffc4d873f8cfd87a0c5fe87403d219593cc97da1c439eb5b98c",
+      "held": "sha256:3206f023d10330ebbe0ef570065abbff4509562477d38515607efc209ea9e6d1"
+    },
+    "task_count": 72,
+    "task_hashes": [
+      "sha256:b878d9e39921259513bd7fcf1e45fe7885f7b5a0dc803f8107c8316e3bc76fc9",
+      "sha256:67c066f5aeaba64978e7b0df99d5b6867f636564d591b4806ef40a202e8a6cb9",
+      "sha256:1b0e8e998f7108dd671acb407726f495e68ff857c7d9d66d1c89631a20e5261e",
+      "sha256:8e1982805216ff209c7839db939ebee343cb196d5c70a43c1d562f136653dfdd",
+      "sha256:5db5cc6b4afb069f4f887c270a4518ef2772e0c4398e0370baa2fc93608628c1",
+      "sha256:cf5501ea1003a407657a77091d666c4e6f77d272d66b22576b78e930656e7779",
+      "sha256:957c2ec875ed53150e12a800764c257dc94b9a07cfddfb1f5ba8a73bf88c8aab",
+      "sha256:069a8be25492805011a250a5d8c699753e7ec7492d4546000c63c79ed06afd0b",
+      "sha256:4af611f4350df94c7f42b2467879d9da68a33f83b4fe49b3fe6aa2a1ec20050e",
+      "sha256:fe39d7024d491c04b4ec67b86ce160886e90911bd0a1eadadedc52c53e09b20f",
+      "sha256:511a3dfbd8895b2b8b540a452809c1508353fb67a752fdb37d4ea83bf287459a",
+      "sha256:39b2e7de897a64841c7deae2cfeeb6783e63ab9c5550eed297b1cf3fd4300866",
+      "sha256:785a3957ce6b30805a36289d99b7924993169e62d8e8d7836f0fc4df5376947f",
+      "sha256:976fc2f254a5ae33461ada1d897cf12de030ef968b692e3965a50082fe423230",
+      "sha256:c1ee507f7ab6c8b5ef49694f515efdc9a51501dedebc4bf66a1fd4f7b0410811",
+      "sha256:9add7764c854951d163e31280698123e7abcd5e1516d3d5e709fa12b353ca736",
+      "sha256:13f1a5176592fa27518f0d8dfbb4fe6a8a30ffa05eba303c3f3de8483e5d7748",
+      "sha256:1413d2cef6134d6b3e4ebfeeb8bdc2186b0338f5b98b9abd1a98aee7724a9015",
+      "sha256:ddf85200824f9976af5668c035cdfdaa24ddb7254948472e16c6957a2e807641",
+      "sha256:a132e264228c7f246a29def6cdc4a2884a6bad63ad51c929cac5c22d29cbe477",
+      "sha256:83a8877edd2ae78d517f021ead875531259d52a7971b3edb663e2a659bc5005a",
+      "sha256:0497206cdd18d486e289a07d921d7cef2f7b60c4ce8ea160c79f9afb2eeb985c",
+      "sha256:12ec65abc5eac9e5bcb2c7c71e40e48879a146344d7843c86c0a144094053f60",
+      "sha256:93abdeaaecf9df6b8eafaf1a473a68cdf38c2e7e1f6e90a507307e59ef87c5d2",
+      "sha256:9b17410bdb912d7adce1897b9b141821e4389c5a9be44f8416bd51bc47488fc4",
+      "sha256:4b0373f8a3e384b9a5d9bb67a3eac15a1540a67666c73be37c4e0fb9716404e9",
+      "sha256:43556cb3558ca9bae3083e68e572f5ce0a9791e7a326e7822a563724b4f09ae9",
+      "sha256:8c6eb133ef99cc4a642b4468f07dd6685bd19f927bc72bf6ee50e1491a5b98b2",
+      "sha256:47fcbe24095250956e8ed141529c1ee343f1fc46e56b83a0fae6067ee0049a87",
+      "sha256:4087746d5913bbfda0c585d8fb0fe2d2ebfd0f6be81f3d2088c38766795350f4",
+      "sha256:59e7471db210ddb8faf691a53a6e30025f4ff7238e6a52f68718be77528293bc",
+      "sha256:9357a3b91a2eda7591f9564f611f1f00b09a623d687bdc8495892519328f249f",
+      "sha256:3b5bca7ed032397cf4baa65799bb293664b8bb0825f7d468df0e85230cf57f82",
+      "sha256:6f3659f209b17e8ca79a607a9571027aaa3d8081a7a26fd5e5b1b20dcf597372",
+      "sha256:bbaba73327685bcf611becc507a6efde5564bd6075a5794bcfc61817fd461f48",
+      "sha256:6e223205d3da907d70043ea8e1d49533209fd4b67a64fb84f4c0e749ea0be7a9",
+      "sha256:05827985e8aaf0be130221eaa4d555c51d3818e88fd8457c4f6a72823d7434d6",
+      "sha256:6b5590fac5158c99902074e8a02c1f14b78039219653349be96c290732c96012",
+      "sha256:e9eeb6177e17afb13f3509fe4086d1cf1f132937e76a3d0ef493ca48b61d12e1",
+      "sha256:0d80f5faf7fb8e43b3dd5125e66c4a09625c1d5ed35cb6b5ee48c7391419fb66",
+      "sha256:238c3fa17a87764a501a856ac15a74577cc169b69046501d20f9d9900e310869",
+      "sha256:274f3d1d290e769413636c588fa50e54f051e9b0963fd030d08a19ca0abf4d09",
+      "sha256:46b8d5027acd4a78e89e3e096cb4a02a6410e7ccc0c91fa8f6f4660ba9977ede",
+      "sha256:c5069e24a87bf4df9ef59e63924028ce2460960b9b3a8d6c2e10402d802ec219",
+      "sha256:65e110bd990a1bddf150a06cac8dae9768a868c6165b7c18aa1c41b989c668cb",
+      "sha256:dca2f51c550164dfc7a1cc22ea504699fc5b8999811ba68b77ab1a0db9cb3885",
+      "sha256:16b16520376033023230ba2b561e7d5af6f832bab02c810572cb155f92c8c18f",
+      "sha256:7d220ffd8fc92b7765637482629247114486ffb4e79a450af42500467ad1658a",
+      "sha256:a7b5a6d8718b72f3ddb6d77a744b27610ab6d142fa3131c6b9829cdd3a93ca65",
+      "sha256:8c3ad2d9d64cc0f81e17ebf75ef00b0026b582b4f217b8d8a168085cc0b8316e",
+      "sha256:8190cbd9a72134de415ec61446cd842bd474204090eb7bac762fa7868c4abe10",
+      "sha256:0e45c0d790435e0965dd2d1acdb0a0d8df1f06aa45ad4577475e23ca5b7623f5",
+      "sha256:8952ad5cf620f01b0155fea7b7a190b46705d95ef40ca12b84c6e3adc8cf5d1a",
+      "sha256:8a1111c4f19dd6b09e4e9f728670cd5e82ed5589abd09f02d6b29d52090881e9",
+      "sha256:0aa527dda533fac1418db71e58f3e006d33a6171f7c061689bc93794516dbe94",
+      "sha256:c6d61ce0891333778e103ff8cf53bff79eeed358deef2dfcb473e7291e00dda4",
+      "sha256:9c1a08085ba854d18506e3ec13365a66af8128b62fdb00c17bc4cbbd9c4a97d4",
+      "sha256:402b1e933143eec7c14a78b4b479ec9c0e402fed121ef7c65e807d24451ad069",
+      "sha256:ff2e196427aa4cd2381e0f824eb25df80b0998b5dffc18fdd9a010fe7f2e7e29",
+      "sha256:b7957779830c5b177740b851e1e90864ac3115732e39802a4940c5efd79d5c47",
+      "sha256:c7bcabc9f569397f0e43c2a79fc9c5d1341785f4461a156b99c9636eeed59398",
+      "sha256:5aa130667bfa0c9f8b2582353050ad0806eb4c19112eca133451edab274f32f1",
+      "sha256:2da2c5c5bc123b617db7c78b940e0b539748f33839a56482ca27d4b14c803013",
+      "sha256:12bbc821ca0a7c445ba510da7b23ca6f4123af3f2d9dbafd5e77cbbec88067ff",
+      "sha256:d7fa085f7232df5e4e2ddc1de53dad4b1898da61b025acc88ccdeaf07c4ed07f",
+      "sha256:d496616c75a0171ba37ef7f9ffaac468e3af13026289f9ea5bd6ae4908bba74d",
+      "sha256:b0ce2033e5631c87b9829c240db9c79e136641a5b4033ef3d5794d8b067826db",
+      "sha256:b258b06f08e6a05dd8dbdf48727bb8c8e03aee604e09fc40302f26502ef3f869",
+      "sha256:25914eb8b75e1669d34acccc0d7baa552e3a3a8ec66a70197efcd791445b8f34",
+      "sha256:08ebdfcd91a94375c2da716ce462c6311ea9d75c6a833b0faa2463ada5a2ca81",
+      "sha256:4f254e10991f626394ca63bbab35f0cb117b75919e9540c90fbb34e55e9cffd8",
+      "sha256:dd44b0af9eece5a467f9e938c1e69fa676032d61ba68b6db3895b617f4cfae7a"
+    ],
+    "timeout_budget": {
+      "expected_row_count": 216,
+      "load_s": 900.0,
+      "per_generation_s": 90.0,
+      "task_s": 21600.0
+    }
+  },
+  "prompt_and_decode_contract": {},
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "rows": [
+      {
+        "after_sha256": "sha256:753df27210a62a5572e19e9ede78ee2b1af5e4a11cb83063e62b69367ef33270",
+        "before_sha256": "sha256:753df27210a62a5572e19e9ede78ee2b1af5e4a11cb83063e62b69367ef33270",
+        "path": "research-roadmap.yaml",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+        "before_sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+        "path": "scripts/research_conductor.py",
+        "unchanged": true
+      }
+    ]
+  },
+  "raw_model_receipts": [],
+  "reproducibility_checksum": "sha256:fe26bb8f7f5d735a2a18a34ecceef72119eda2e6160787c5d03e265e4514008c",
+  "run_date": "20260825",
+  "schema": "carnot.experiment_6607.gemma4_26b_direct_headroom.v1",
+  "status": "blocked_gpu_ownership",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6607_gemma4_26b_direct_headroom.py -q --no-cov -n 0",
+      "duration_s": 7.675591,
+      "exit_code": 0,
+      "stderr": "",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 21 items\n\ntests/python/test_experiment_6607_gemma4_26b_direct_headroom.py ........ [ 38%]\n.............                                                            [100%]\n\n============================== 21 passed in 5.39s ==============================\n",
+      "stdout_sha256": "sha256:4f154a55a8cdb0a0894047701942a5dc403559f2d2a302cd8318912512422e1b"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6607_gemma4_26b_direct_headroom.py -m pytest tests/python/test_experiment_6607_gemma4_26b_direct_headroom.py -q --no-cov -n 0",
+      "duration_s": 12.170403,
+      "exit_code": 0,
+      "stderr": "",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 21 items\n\ntests/python/test_experiment_6607_gemma4_26b_direct_headroom.py ........ [ 38%]\n.............                                                            [100%]\n\n============================== 21 passed in 8.94s ==============================\n",
+      "stdout_sha256": "sha256:327c15cd904a5105dbc30e175096143293a7735eccf7b6c1963bc02799f931c1"
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6607_gemma4_26b_direct_headroom.py --fail-under=100 --show-missing",
+      "duration_s": 0.127648,
+      "exit_code": 0,
+      "stderr": "",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "Name                                                          Stmts   Miss  Cover   Missing\n-------------------------------------------------------------------------------------------\npython/carnot/experiment_6607_gemma4_26b_direct_headroom.py     382      0   100%\n-------------------------------------------------------------------------------------------\nTOTAL                                                           382      0   100%\n",
+      "stdout_sha256": "sha256:77343c4b7c0744c8bf0f416cf8f25a701cba1018817a8c36c611770e1524d55d"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_6607_gemma4_26b_direct_headroom.py tests/python/test_experiment_6607_gemma4_26b_direct_headroom.py",
+      "duration_s": 0.011811,
+      "exit_code": 0,
+      "stderr": "",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "All checks passed!\n",
+      "stdout_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_6607_gemma4_26b_direct_headroom.py tests/python/test_experiment_6607_gemma4_26b_direct_headroom.py",
+      "duration_s": 0.010683,
+      "exit_code": 0,
+      "stderr": "",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "2 files already formatted\n",
+      "stdout_sha256": "sha256:3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6607_gemma4_26b_direct_headroom.py",
+      "duration_s": 0.026111,
+      "exit_code": 0,
+      "stderr": "",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "OK: All tests reference specification requirements.\n",
+      "stdout_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867"
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}
