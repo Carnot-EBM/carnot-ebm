@@ -4578,3 +4578,77 @@ retirement of this mode-jump lane.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-6281 | Planned (`python/carnot/experiment_6281_mode_jump_multifamily_rerun.py`, `results/experiment_6281_mode_jump_multifamily_rerun.json`) | Planned (`tests/python/test_experiment_6281_mode_jump_multifamily_rerun.py`) |
+
+### REQ-SAMPLER-6597: Spectral k-Block Ising Canary
+
+Carnot SHALL provide a CPU-only finite-state canary at
+`python/carnot/experiment_6597_spectral_k_block_ising_canary.py`. It SHALL
+write `results/experiment_6597_spectral_k_block_ising_canary.json` atomically.
+
+- REQ-SAMPLER-6597-PARTITION: The canary SHALL build each partition from the
+  bottom nonconstant eigenspace of the squared random-site heat-bath operator.
+  It SHALL use stationary-weighted rounding and exact objective rescoring.
+  It SHALL record the eigensolver, ordering, tied-eigenvalue rule, blocks,
+  setup time, and failures.
+- REQ-SAMPLER-6597-MATCHED: Sequential single-spin Gibbs and each spectral
+  `G_O P` arm SHALL share fixture, temperature, seed, initial state, random-site
+  stream, burn-in, retained count, and kernel-transition budget where valid.
+  The artifact SHALL keep component work and charged wall time separate.
+- REQ-SAMPLER-6597-EXACT: A separate exact enumerator SHALL evaluate retained
+  counts. Each row SHALL report total variation, mean error, covariance error,
+  autocorrelation, ESS, ESS per transition, costs, transitions, failure, and
+  peak memory. The sampler SHALL not receive the evaluator probability vector.
+- REQ-SAMPLER-6597-FLOOR: The frozen matrix SHALL contain independent,
+  ferromagnetic, and frustrated exact-enumerable Ising families. It SHALL use
+  at least five seeds and at least 10,000 retained samples after explicit
+  burn-in. It SHALL preregister all tested block counts before sampling.
+- REQ-SAMPLER-6597-PAIRED: A positive verdict SHALL require stationary-error
+  noninferiority and a positive paired ESS-per-transition or charged-time
+  effect with a nonnegative lower bound. Family rows SHALL remain separate.
+  A frustrated-family regression SHALL block a pooled positive verdict.
+- REQ-SAMPLER-6597-ATTACKS: The canary SHALL fail closed on evaluator use in
+  sampling, unmatched transitions, omitted setup, sample-floor failure, seed
+  loss, favorable block selection, synchronous-update bias, PIMI or hardware
+  rebranding, and aggregate-only evidence.
+- REQ-SAMPLER-6597-BOUNDARY: The result SHALL apply only to charged CPU
+  software fixtures. It SHALL make no FPGA, TSU, PIMI, or general hardware
+  claim. `inference_substrate` SHALL equal
+  `cpu_spectral_k_block_ising_exact_enumeration`.
+  `verifier_is_oracle` SHALL be the bare boolean `false`.
+- REQ-SAMPLER-6597-ATOMIC: The terminal artifact SHALL contain the required
+  principle-annotated fields, per-seed rows, protected-file hashes, command
+  receipts, field provenance, duration, and a reproducibility checksum.
+  A blocked verdict SHALL name the failed method, fixture, sample, resource,
+  or numerical check and its observed value in `gate_check_summary`.
+
+### SCENARIO-SAMPLER-6597-PAPER-FAITHFUL-PARTITION
+
+**Given** a finite reversible heat-bath operator and an exact-enumerable Ising
+fixture
+**When** the canary constructs a spectral partition
+**Then** it rounds bottom modes of the squared operator
+**And** it records deterministic handling for ordering and degeneracy
+**And** it selects only from the preregistered block counts.
+
+### SCENARIO-SAMPLER-6597-MATCHED-EXACT-EVIDENCE
+
+**Given** the three frozen fixture families and five frozen seeds
+**When** sequential Gibbs and all spectral arms run
+**Then** every successful row retains at least 10,000 post-burn-in samples
+**And** all arms use matched transition budgets and matched initial states
+**And** the separate evaluator recomputes distribution and moment errors.
+
+### SCENARIO-SAMPLER-6597-FAIL-CLOSED-VERDICT
+
+**Given** per-seed distribution, mixing, cost, failure, and memory rows
+**When** the paired reducer and adversarial checks run
+**Then** a positive verdict requires both stationary and efficiency gates
+**And** every family remains visible
+**And** failed, missing, unmatched, under-sized, or rebranded evidence cannot
+support a positive verdict.
+
+## Implementation Status (REQ-SAMPLER-6597)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-6597 | Implemented (`python/carnot/experiment_6597_spectral_k_block_ising_canary.py`, `results/experiment_6597_spectral_k_block_ising_canary.json`) | Implemented (`tests/python/test_experiment_6597_spectral_k_block_ising_canary.py`) |
