@@ -258,6 +258,7 @@ AGGREGATION_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
 DETERMINISTIC_VERIFIER_SUBSTRATES = (
     "deterministic_verifier",
     "deterministic_verifier_plus_replay",
+    "frozen_continuous_world_model_invariant_projection",
     "deterministic_exact_verifier_and_versioned_external_state_no_llm",
     "artifact_provenance_audit",
     "post_marker_source_ingestion_and_roadmap_scope_audit",
@@ -2168,6 +2169,34 @@ def _match_declared_substrate(raw: str, candidates: tuple[str, ...]) -> str | No
     return None
 
 
+# A substrate string whose own NAME ends in a no-LLM declaration is recognized by
+# RULE, not by adding another allowlist entry. 41 of the 61 hand-written entries in
+# NO_LLM_SUBSTRATE_ALIASES are exactly this shape, so the list was enumerating a
+# concept instead of stating it -- the pattern-narrower-than-its-concept bug class.
+# Origin: exp6593 (see commit d5007390), whose agent added its own substrate string
+# to the allowlist in its own commit. Anchored to the end of the leading token so
+# `..._no_llm_v2` does NOT match. Grants the SAME floor the allowlist already gives.
+_NO_LLM_NAME_SUFFIX_RE = re.compile(r"(?:^|_)no(?:_new|_experiment)?_llm$")
+_SUBSTRATE_NOTE_SEPARATORS = (" ", ";", ",", ":")
+
+
+def _substrate_leading_token(raw: str) -> str:
+    """Strip a trailing human note so only the declared value is matched.
+
+    Artifacts legitimately write `<value> -- why this floor applies`, so the note
+    must not defeat a name-shape rule the way it once defeated exact matching.
+    """
+    token = raw.split("--", 1)[0].strip()
+    for sep in _SUBSTRATE_NOTE_SEPARATORS:
+        token = token.split(sep, 1)[0]
+    return token.strip()
+
+
+def _declares_no_llm_by_name(raw: str) -> bool:
+    """True when the substrate value's own name declares that no model was loaded."""
+    return bool(_NO_LLM_NAME_SUFFIX_RE.search(_substrate_leading_token(raw)))
+
+
 def _classify_inference_substrate(d: dict[str, Any]) -> dict[str, str]:
     """Classify substrate from explicit top-level provenance only.
 
@@ -2197,6 +2226,16 @@ def _classify_inference_substrate(d: dict[str, Any]) -> dict[str, str]:
                 "matched_value": matched,
                 "source": "top_level_inference_substrate",
             }
+
+    # Name-shape fallback, tried only after every allowlist. A live-model alias
+    # therefore still wins, so this can never pull a declared live run off its floor.
+    if _declares_no_llm_by_name(raw):
+        return {
+            "kind": SUBSTRATE_KIND_NO_LLM,
+            "declared_value": raw,
+            "matched_value": raw,
+            "source": "no_llm_name_suffix",
+        }
 
     return {
         "kind": SUBSTRATE_KIND_UNKNOWN,
@@ -2637,10 +2676,13 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
             "reason": "native_gguf_backend_bisect",
         }
     if classification["kind"] == SUBSTRATE_KIND_NO_LLM:
+        # Carry HOW the substrate was recognized into the reason, so a
+        # name-shape match stays auditable instead of reading as an allowlisted one.
+        by_name = classification["source"] == "no_llm_name_suffix"
         return {
             "substrate": classification["matched_value"] or _inference_substrate_text(d),
             "min_duration_s": NO_LLM_DECLARED_MIN_DURATION_S,
-            "reason": "no_llm_declared",
+            "reason": "no_llm_declared_by_name" if by_name else "no_llm_declared",
         }
     if _is_live_llm_inference(d):
         return {
@@ -2712,6 +2754,24 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
     # is to make an unchecked declaration VISIBLE so a floor can be added, rather than letting
     # silence read as approval. Artifacts declaring no substrate at all are a separate, larger
     # population governed by the compute-bound-marker path below and are not flagged here.
+    # A name-shape match is self-declared, so it must not go silent the way an
+    # allowlist entry does: someone deliberately added those, nobody reviewed this
+    # one. WARN keeps it visible for audit while its floor is genuinely enforced.
+    _name_floor = duration_floor_for_artifact(d)
+    if _name_floor is not None and _name_floor.get("reason") == "no_llm_declared_by_name":
+        flags.append(
+            Flag(
+                kind="SUBSTRATE_NO_LLM_BY_NAME",
+                severity="warn",
+                detail=(
+                    f"inference_substrate={_inference_substrate_text(d)!r} is on no allowlist; "
+                    "its own name declares no model load, so the no-LLM floor "
+                    f"({_name_floor['min_duration_s']}s) was applied by name shape alone. "
+                    "Confirm the run really loaded no model, or declare a reviewed substrate."
+                ),
+            )
+        )
+
     _declared_substrate = _inference_substrate_text(d)
     if _declared_substrate and duration_floor_for_artifact(d) is None:
         flags.append(
