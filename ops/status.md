@@ -8862,3 +8862,42 @@ is untracked at the time of writing, so it is NOT part of this commit. Both
 suites passed together when last run (30 tests).
 
 - 2026-08-25: Exp6589 timeout-receipt regression repaired (✅ Complete) — the owned-command wrapper now forces and receipts unbuffered Python streams, so SIGTERM cleanup retains output when the conductor itself has no `PYTHONUNBUFFERED`; the exact smart subset is green at 119 passed and the focused module remains at 100% statement coverage.
+
+### 2026-08-25 Mutation-Proof Applicability Repair
+
+`REQ-OPS-MUTATION-PROOF-1` is reconciled after repairing the explicit-path
+case in `check_target_is_live`. A target outside `python/` is now declared
+`NOT APPLICABLE` before installed-package-root discovery, so hermetic runners
+do not falsely refuse it; importable `carnot.*` targets retain the fail-closed
+inert-worktree check. The focused module passes 72 tests, and scoped Ruff
+check/format pass. E2E checks in `ops/e2e-test-plan.md` are not applicable to
+this deterministic operational guard: no model training/sampling, PyO3,
+serialization, packaged verifier, or hardware path changed. A full Python run
+was stopped after 7,614 passes when four unrelated existing ARC artifact,
+baseline, and dataset/config failures appeared; none names a task-owned file.
+
+### 2026-08-25 — QA-layer guards: multi-audit ledger + mutation-proof interlock
+
+Working:
+- `scripts/audit_findings_ledger.py` reads a `SOURCES` registry (claim audit +
+  QA-layer audit) instead of one hardcoded report. Verified against the real .573
+  report: 4 of 4 SILENT_NON_FIRING findings parse. Flagged sets are imported from
+  each audit's own module, never copied.
+- `scripts/test_suite_mutation_check.py` gained an additive mutation-PROOF session:
+  `--mutation-begin --mutation-target <path>` / `--mutation-end` /
+  `--mutation-force-unlock`. Exclusive across worktrees (lock under
+  `--git-common-dir`), refuses to close while a marker survives or the target is not
+  byte-identical, and refuses to open an INERT run. No existing mode changed.
+- `audit_findings_ledger.py` is now in `qa_layer_authenticity_audit.py`
+  `GUARD_TARGETS`; the unit count moved 181 -> 182 so rotation resets to 0 and the
+  new target is audited first.
+
+Next / open:
+- The blast-radius scan still misses a gitignored path, and the derived state-path
+  sweep in `test_test_suite_mutation_check.py` still misses `str` paths and paths
+  nested in tuples or dicts. Both from the 2026-08-25 adversarial review; neither is
+  on the incident path.
+- `--mutation-begin`/`--mutation-end` are agent discipline, not mechanically forced.
+  Nothing yet requires an agent to open a session before hand-mutating a file;
+  `cmd_gate` refuses a commit while one IS open, which is the half that can be
+  enforced from a hook.

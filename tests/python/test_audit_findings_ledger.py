@@ -426,3 +426,97 @@ def test_real_qa_report_parses_if_present():
     assert len(findings) >= flagged_in_summary
     for finding in findings:
         assert finding["verdict"] in L.source_flagged_verdicts(source)
+
+
+def test_two_spellings_of_one_finding_produce_one_row(tmp_path):
+    """M9, measured live. A hand-entered row spells a guard `scripts/child_results_guard.py`;
+    the QA report writes the bare basename. On 2026-08-25 the widening appended 4 rows that
+    duplicated 4 hand-entered ones, and an append-only ledger cannot un-write them -- each
+    duplicate escalates weekly until a human dispositions BOTH."""
+    pre = (
+        "| First seen | Audit | Artifact | Verdict | Disposition | Note |\n"
+        "|---|---|---|---|---|---|\n"
+        "| 2026-08-25 | qa_layer_authenticity_audit | scripts/child_results_guard.py "
+        "| SILENT_NON_FIRING | OPEN | hand-entered by the outer loop |\n"
+    )
+    report = tmp_path / "qa.md"
+    report.write_text(
+        "### FLAGGED — operator action recommended\n"
+        "- `child_results_guard.py` — **SILENT_NON_FIRING**\n"
+    )
+    ledger = tmp_path / "ledger.md"
+    ledger.write_text(pre)
+    summary = L.run(
+        report_paths={L.QA_AUDIT_NAME: report},
+        ledger_path=ledger,
+        conductor_log=tmp_path / "log.md",
+        known_issues=tmp_path / "ki.md",
+        state_path=tmp_path / "state.json",
+        today=_TODAY,
+    )
+    assert summary["appended"] == 0, "the bare basename is the same finding as the path form"
+    assert "hand-entered by the outer loop" in ledger.read_text()
+
+
+def test_reviewer_prose_shaped_like_a_flagged_item_produces_no_row(tmp_path):
+    """M10. The item pattern applied to the whole document also matches the reviewer's own
+    prose -- a reviewer comparing guards writes exactly this shape inside `## FINDINGS`. A
+    phantom row is permanent in an append-only ledger and escalates weekly forever."""
+    report = tmp_path / "qa.md"
+    report.write_text(
+        "## some_guard.py\n\n"
+        "**Verdict:** `CLEAN`\n\n"
+        "## FINDINGS\n"
+        "1. Compare against its sibling:\n"
+        "Its sibling was worse:\n"
+        "- `arc_artifact_lint.py` — **REAL_BUG**\n"
+    )
+    summary, ledger = None, tmp_path / "ledger.md"
+    summary = L.run(
+        report_paths={L.QA_AUDIT_NAME: report},
+        ledger_path=ledger,
+        conductor_log=tmp_path / "log.md",
+        known_issues=tmp_path / "ki.md",
+        state_path=tmp_path / "state.json",
+        today=_TODAY,
+    )
+    assert summary["appended"] == 0, "prose outside the FLAGGED section is not a finding"
+    assert not ledger.exists()
+
+
+def test_a_flagged_item_inside_the_flagged_section_still_ingests(tmp_path):
+    """The scoping must not throw away the real list it was written to read."""
+    report = tmp_path / "qa.md"
+    report.write_text(
+        "### FLAGGED — operator action recommended\n"
+        "- `arc_artifact_lint.py` — **REAL_BUG**\n"
+        "\n---\n"
+    )
+    summary, ledger = None, tmp_path / "ledger.md"
+    summary = L.run(
+        report_paths={L.QA_AUDIT_NAME: report},
+        ledger_path=ledger,
+        conductor_log=tmp_path / "log.md",
+        known_issues=tmp_path / "ki.md",
+        state_path=tmp_path / "state.json",
+        today=_TODAY,
+    )
+    assert summary["appended"] == 1
+    entries, _ = L.parse_ledger(ledger.read_text())
+    assert entries[0]["artifact"] == "arc_artifact_lint.py"
+
+
+def test_an_unknown_source_key_raises_rather_than_selecting_nothing(tmp_path):
+    """A typo, or a stale literal after a rename, would otherwise select ZERO sources,
+    append nothing, and return success."""
+    import pytest
+
+    with pytest.raises(KeyError):
+        L.run(
+            report_paths={"qa_layer_audit": tmp_path / "x.md"},
+            ledger_path=tmp_path / "ledger.md",
+            conductor_log=tmp_path / "log.md",
+            known_issues=tmp_path / "ki.md",
+            state_path=tmp_path / "state.json",
+            today=_TODAY,
+        )

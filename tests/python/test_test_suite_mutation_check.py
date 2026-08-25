@@ -21,9 +21,11 @@ reproduce the wrong question.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import uuid
+from datetime import timedelta
 from pathlib import Path
 
 import pytest
@@ -81,6 +83,9 @@ def repo(tmp_path, monkeypatch):
     # ops/.test_suite_mutation_backup/ -- a test suite that litters the tree it is checking is
     # exactly the hazard this module exists to detect.
     monkeypatch.setattr(tsm, "BACKUP", r / "ops" / ".test_suite_mutation_backup")
+    # The mutation-PROOF session lock. Without this redirect a proof test would take the REAL
+    # lock and block a live agent's proof, or reclaim one mid-session.
+    monkeypatch.setattr(tsm, "PROOF_LOCK", r / "ops" / ".test_suite_mutation_proof.lock")
     # The run id is otherwise derived from the parent PID, which every xdist worker shares -- so
     # without this, concurrent workers would collide on one snapshot name and the ambiguity
     # refusal would fire inside unrelated tests.
@@ -648,11 +653,32 @@ def test_no_module_state_path_escapes_the_throwaway_repo(repo):
     the exact hazard this module exists to detect, so the guard is now mechanical.
     """
     r, _ = repo
-    for name in ("SNAPSHOT", "PENDING", "RUNS", "BACKUP", "REPO"):
-        p = Path(getattr(tsm, name))
-        assert r in p.parents or p == r, (
-            f"tsm.{name} points at {p}, outside the throwaway repo {r} -- add it to the fixture"
-        )
+    # DERIVED, not listed. The hardcoded five names this replaced were a pattern list narrower
+    # than the concept it guards: PROOF_LOCK was added to the module on 2026-08-25 and the old
+    # list would have stayed green while the proof tests took the REAL lock. Every module-level
+    # Path is swept, so a new state constant is caught by existing.
+    # A module Path outside the repo is allowed ONLY if it is read-only, and the reason has to
+    # be written down here. Forcing someone to type the reason is the control -- the same shape
+    # as ACKNOWLEDGED_NON_QA_LAYER. The sweep found OBSERVER_DIR on its first run, which the
+    # hardcoded list had never covered.
+    read_only_by_design = {
+        "OBSERVER_DIR": "source of the sitecustomize shim; read and copied from, never written",
+    }
+    escapes = []
+    for name, value in vars(tsm).items():
+        if name.startswith("_") or not isinstance(value, Path):
+            continue
+        p = Path(value)
+        if r in p.parents or p == r or name in read_only_by_design:
+            continue
+        escapes.append(f"tsm.{name} -> {p}")
+    assert not escapes, (
+        f"state path(s) outside the throwaway repo {r}: {escapes} -- redirect them in the "
+        "fixture, or classify them in read_only_by_design with the reason"
+    )
+    # The sweep must actually see the known constants; an empty sweep would pass vacuously.
+    swept = {n for n, v in vars(tsm).items() if isinstance(v, Path) and not n.startswith("_")}
+    assert {"SNAPSHOT", "PENDING", "RUNS", "BACKUP", "REPO", "PROOF_LOCK"} <= swept
 
 
 def test_the_legacy_shared_baseline_is_not_used_even_when_present(repo):
@@ -1109,3 +1135,499 @@ def test_stale_patch_does_not_wedge_the_gate(repo, tmp_path, monkeypatch):
 def test_no_patch_dir_means_no_hidden_paths(repo):
     """Missing cache dir (fresh machine) is simply 'nothing stashed'."""
     assert tsm._stash_hidden_paths() == set()
+
+
+# --- REQ-OPS-MUTATION-PROOF-1: a mutation PROOF is exclusive, verified, and not inert ----------
+#
+# INCIDENT, 2026-08-25, observed not theorised. Two hand-run mutation proofs ran against this
+# working tree at once. The tree carried, on the LIVE ARC scored path:
+#
+#     python/carnot/agentic/arc_executable_world_model.py:6466: pass  # MUTATED M6
+#
+# `pass  # MUTATED` is valid Python that clears every hook, and the conductor commits with
+# `git add -A` and hooks skipped on its own schedule, so a checkpoint inside a mutation window
+# publishes it silently. Readings were contaminated in BOTH directions -- a RED credited to your
+# own deleted pattern can be the other run's mutation -- and an 11-mutation proof set was voided.
+#
+# Separately: a proof run in a `git worktree` copy is silently INERT, because
+# `.venv/.../__editable__.carnot_ebm.pth` pins the absolute path of the MAIN checkout. The
+# mutated file is never imported, every mutation reads GREEN, and the proof proves nothing.
+
+_INCIDENT_LINE = "    pass  # MUTATED M6\n"
+
+
+def _begin(target: Path, run_id: str | None = None) -> int:
+    return tsm.cmd_mutation_begin(str(target), run_id)
+
+
+def test_a_second_concurrent_proof_is_refused_and_names_the_holder(repo, capsys):
+    """THE INCIDENT: two proofs at once. The second must refuse, not open."""
+    r, _ = repo
+    target = r / "victim.py"
+    target.write_text("def f():\n    return 1\n")
+    assert _begin(target, "run-A") == 0
+    capsys.readouterr()
+
+    other = r / "other.py"
+    other.write_text("def g():\n    return 2\n")
+    assert _begin(other, "run-B") == 1, "a second proof must not open while one is held"
+    out = capsys.readouterr().out
+    assert "already open" in out
+    assert "run-A" in out, "the refusal must name which run holds the lock"
+    assert str(target) in out, "and what that run is mutating"
+
+
+def test_a_surviving_mutated_marker_fails_the_session_loudly(repo, capsys):
+    """The exact incident line must not survive a closed session."""
+    r, _ = repo
+    target = r / "victim.py"
+    target.write_text("def f():\n    return 1\n")
+    assert _begin(target, "run-A") == 0
+    capsys.readouterr()
+
+    target.write_text("def f():\n" + _INCIDENT_LINE)
+    assert tsm.cmd_mutation_end("run-A") == 1, "a surviving marker must fail the session"
+    out = capsys.readouterr().out
+    assert "SESSION NOT CLEAN" in out
+    assert "victim.py:2" in out, "the surviving marker must be named with its line"
+    assert tsm.PROOF_LOCK.exists(), "the lock is KEPT so the marker cannot be left behind"
+
+
+def test_a_marker_in_a_file_other_than_the_target_is_still_caught(repo, capsys):
+    """Scope is the blast radius, not the declared target. The 2026-08-25 marker sat in a file
+    the concurrent session had never declared."""
+    r, _ = repo
+    target = r / "victim.py"
+    target.write_text("def f():\n    return 1\n")
+    assert _begin(target, "run-A") == 0
+    capsys.readouterr()
+
+    stray = r / "results" / "elsewhere.py"
+    stray.write_text("x = 1  # MUTATED by the other harness\n")
+    assert tsm.cmd_mutation_end("run-A") == 1
+    assert "elsewhere.py:1" in capsys.readouterr().out
+
+
+def test_an_unrestored_target_fails_even_with_no_marker(repo, capsys):
+    """Byte-identity, not marker absence. A mutation stripped of its comment is still a
+    mutation, and 'no marker' is not 'restored'."""
+    r, _ = repo
+    target = r / "victim.py"
+    target.write_text("def f():\n    return 1\n")
+    assert _begin(target, "run-A") == 0
+    capsys.readouterr()
+
+    target.write_text("def f():\n    pass\n")  # mutated, marker deliberately omitted
+    assert tsm.cmd_mutation_end("run-A") == 1
+    assert "NOT byte-identical" in capsys.readouterr().out
+
+
+def test_a_clean_restore_closes_the_session_and_releases_the_lock(repo, capsys):
+    """GREEN on restore: byte-identical target, no marker anywhere, lock released."""
+    r, _ = repo
+    target = r / "victim.py"
+    original = "def f():\n    return 1\n"
+    target.write_text(original)
+    assert _begin(target, "run-A") == 0
+    target.write_text("def f():\n" + _INCIDENT_LINE)
+    target.write_text(original)  # restored byte-identical
+    capsys.readouterr()
+    assert tsm.cmd_mutation_end("run-A") == 0
+    assert "CLOSED" in capsys.readouterr().out
+    assert not tsm.PROOF_LOCK.exists()
+
+
+def test_a_pre_existing_marker_refuses_the_begin(repo, capsys):
+    """Opening over someone else's marker would attribute their mutation to your proof --
+    the reading contamination that voided the 11-mutation set."""
+    r, _ = repo
+    (r / "stray.py").write_text(_INCIDENT_LINE.strip() + "\n")
+    target = r / "victim.py"
+    target.write_text("def f():\n    return 1\n")
+    assert _begin(target, "run-A") == 1
+    assert "already in the tree" in capsys.readouterr().out
+    assert not tsm.PROOF_LOCK.exists()
+
+
+def test_mutation_end_without_a_session_refuses(repo, capsys):
+    """Fail closed: with no recorded target and no pre-mutation hash, 'restored' is a guess."""
+    assert tsm.cmd_mutation_end("run-A") == 1
+    assert "no mutation-proof session is open" in capsys.readouterr().out
+
+
+def test_mutation_end_without_a_run_id_refuses_to_close_anyones_session(repo, capsys, monkeypatch):
+    """THE SECOND HALF OF THE INCIDENT. An unpinned close used to skip the ownership check
+    entirely, so a second agent in a fresh shell closed whoever's session was open -- and
+    landing between two mutations, the tree looked clean, so it succeeded."""
+    r, _ = repo
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+    assert _begin(target, "run-A") == 0
+    capsys.readouterr()
+    # A fresh shell: no --run-id and no pinned env var.
+    monkeypatch.delenv(tsm.RUN_ID_ENV, raising=False)
+    assert tsm.cmd_mutation_end(None) == 1
+    out = capsys.readouterr().out
+    assert "no run id" in out and "run-A" in out
+    assert tsm.PROOF_LOCK.exists(), "an unidentified close must not release the lock"
+
+
+def test_an_unreadable_lock_refuses_rather_than_being_reclaimed(repo, capsys):
+    """Unreadable is not unheld."""
+    r, _ = repo
+    tsm.PROOF_LOCK.parent.mkdir(parents=True, exist_ok=True)
+    tsm.PROOF_LOCK.write_text("{ this is not json")
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+    assert _begin(target, "run-A") == 1
+    assert "unreadable" in capsys.readouterr().out
+
+
+def test_a_fresh_lock_from_a_dead_pid_is_still_honoured(repo, capsys):
+    """The defect this rule was rebuilt around, pinned as a test.
+
+    A proof session spans two CLI calls, so the process that wrote the lock has ALWAYS exited by
+    the time anyone reads it. The first build reclaimed on 'holder is dead' and therefore
+    reclaimed every time -- it printed "session OPEN" for a second caller and locked nothing.
+    Age decides; liveness may only ever add a refusal.
+    """
+    r, _ = repo
+    tsm.PROOF_LOCK.parent.mkdir(parents=True, exist_ok=True)
+    tsm.PROOF_LOCK.write_text(
+        json.dumps(
+            {
+                "run_id": "run-DEAD",
+                "pid": 999_999_999,  # certainly not running
+                "host": "some-other-host",
+                "target": str(r / "victim.py"),
+                "started_at": tsm.datetime.now(tsm.UTC).isoformat(),
+            }
+        )
+    )
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+    assert _begin(target, "run-B") == 1, "a dead pid alone must not authorise a reclaim"
+    assert "already open" in capsys.readouterr().out
+
+
+def test_a_live_holder_is_never_reclaimed_however_old_the_lock(repo, capsys):
+    """The liveness clause must BITE. Blanking it left the suite green in review, which made
+    it decorative -- and age alone would reclaim a legitimately long proof."""
+    r, _ = repo
+    ancient = tsm.datetime.now(tsm.UTC) - timedelta(seconds=tsm.PROOF_LOCK_STALE_S * 10)
+    tsm.PROOF_LOCK.parent.mkdir(parents=True, exist_ok=True)
+    tsm.PROOF_LOCK.write_text(
+        json.dumps(
+            {
+                "run_id": "run-LIVE",
+                "pid": os.getpid(),  # this process is certainly running
+                "host": os.uname().nodename,
+                "target": str(r / "victim.py"),
+                "started_at": ancient.isoformat(),
+            }
+        )
+    )
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+    assert _begin(target, "run-B") == 1, "a running holder must never be reclaimed on age"
+    assert "still running" in capsys.readouterr().out
+
+
+def test_unknowable_liveness_is_honoured_not_reclaimed(repo, monkeypatch, capsys):
+    """_pid_alive's stated contract: None means REFUSE. The caller used to write `if alive:`,
+    so None fell through to the age path -- a contract documented and not implemented."""
+    r, _ = repo
+    monkeypatch.setattr(tsm, "_pid_alive", lambda pid: None)
+    old = tsm.datetime.now(tsm.UTC) - timedelta(seconds=tsm.PROOF_LOCK_STALE_S + 60)
+    tsm.PROOF_LOCK.parent.mkdir(parents=True, exist_ok=True)
+    tsm.PROOF_LOCK.write_text(
+        json.dumps(
+            {
+                "run_id": "run-UNKNOWN",
+                "pid": 4242,
+                "host": os.uname().nodename,
+                "target": str(r / "victim.py"),
+                "started_at": old.isoformat(),
+            }
+        )
+    )
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+    assert _begin(target, "run-B") == 1
+    assert "liveness could not be checked" in capsys.readouterr().out
+
+
+def test_an_abandoned_lock_past_the_stale_window_is_reclaimed_loudly(repo, capsys):
+    """A crashed proof must not wedge every future proof forever."""
+    r, _ = repo
+    old = tsm.datetime.now(tsm.UTC) - timedelta(seconds=tsm.PROOF_LOCK_STALE_S + 60)
+    tsm.PROOF_LOCK.parent.mkdir(parents=True, exist_ok=True)
+    tsm.PROOF_LOCK.write_text(
+        json.dumps(
+            {
+                "run_id": "run-CRASHED",
+                "pid": 999_999_999,
+                "host": "some-other-host",
+                "target": str(r / "victim.py"),
+                "started_at": old.isoformat(),
+            }
+        )
+    )
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+    assert _begin(target, "run-B") == 0
+    out = capsys.readouterr().out
+    assert "reclaiming an abandoned lock" in out
+    assert "run-CRASHED" in out
+    assert "may still be in the tree" in out, "a reclaim must warn, never be silent"
+
+
+def test_an_inert_worktree_run_refuses_rather_than_reporting_a_clean_pass(
+    repo, capsys, monkeypatch
+):
+    """THE INERT-RUN TRAP, as the real editable install produces it.
+
+    A file under `python/` whose dotted name resolves to a DIFFERENT file must refuse. This is
+    the shape a `git worktree` proof takes here: the editable .pth pins the main checkout, so
+    the worktree copy is never the file the tests import.
+    """
+    r, _ = repo
+    pkgdir = r / "python" / "carnot" / "agentic"
+    pkgdir.mkdir(parents=True)
+    (r / "python" / "carnot" / "__init__.py").write_text("")
+    (pkgdir / "__init__.py").write_text("")
+    target = pkgdir / "arc_executable_world_model.py"
+    target.write_text("x = 1\n")
+    # find_spec resolves against the REAL installed carnot, which lives in the main checkout,
+    # so this target can never be the file the interpreter imports.
+    ok, why = tsm.check_target_is_live(target)
+    assert not ok, "a worktree copy of an installed module must not pass as live"
+    assert "INERT RUN" in why
+    assert _begin(target, "run-A") == 1
+    assert "INERT RUN" in capsys.readouterr().out
+    assert not tsm.PROOF_LOCK.exists(), "an inert run must not hold the lock"
+
+    monkeypatch.setattr(tsm, "_installed_package_root", lambda: None)
+    ok, why = tsm.check_target_is_live(target)
+    assert not ok
+    assert "cannot tell which checkout" in why
+
+    # Package __init__ modules resolve through the directory fallback rather than `carnot.py`.
+    monkeypatch.setattr(tsm, "_installed_package_root", lambda: r / "python")
+    ok, why = tsm.check_target_is_live(r / "python" / "carnot" / "__init__.py")
+    assert ok
+    assert "carnot resolves to the file being mutated" in why
+
+
+def test_a_file_outside_the_package_is_declared_not_applicable_not_silently_passed(
+    repo, monkeypatch
+):
+    """`scripts/*.py` is loaded by explicit path, so no import can be diverted. The check says
+    so in words rather than returning a bare True nobody can audit."""
+    r, _ = repo
+    target = r / "some_script.py"
+    target.write_text("x = 1\n")
+    ok, why = tsm.check_target_is_live(target)
+    assert ok, "a path-loaded file must not be refused; the refusal would cry wolf"
+    assert "NOT APPLICABLE" in why
+    assert "loaded by explicit path" in why
+    # It must still SAY when carnot resolves elsewhere, rather than passing in silence.
+    assert "CAUTION" in why or "checkout `carnot` resolves to" in why
+
+    # Applicability is a property of the target, not of whether this interpreter happens to
+    # expose its editable install as a plain sys.path entry. A hermetic runner may resolve
+    # `carnot` through an import hook instead; that cannot turn an explicitly loaded script into
+    # an import-resolution failure.
+    monkeypatch.setattr(tsm, "_installed_package_root", lambda: None)
+    ok, why = tsm.check_target_is_live(target)
+    assert ok
+    assert "NOT APPLICABLE" in why
+    assert "loaded by explicit path" in why
+
+    monkeypatch.setattr(tsm, "_installed_package_root", lambda: r / "python")
+    ok, why = tsm.check_target_is_live(target)
+    assert ok
+    assert "NOT APPLICABLE" in why
+    assert "checkout `carnot` resolves to" in why
+
+
+def test_a_missing_target_refuses(repo):
+    r, _ = repo
+    ok, why = tsm.check_target_is_live(r / "nope.py")
+    assert not ok and "does not exist" in why
+
+
+def test_force_unlock_clears_deliberately_and_says_what_it_cleared(repo, capsys):
+    r, _ = repo
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+    assert _begin(target, "run-A") == 0
+    capsys.readouterr()
+    assert tsm.cmd_mutation_force_unlock() == 0
+    out = capsys.readouterr().out
+    assert "CLEARED by hand" in out and "run-A" in out
+    assert "still in the tree" in out
+    assert not tsm.PROOF_LOCK.exists()
+
+
+def test_prose_that_quotes_the_marker_does_not_brick_the_session(repo, capsys):
+    """THE SELF-INFLICTED BRICK. The first build scanned every changed file, so this project's
+    own spec, changelog and research notes -- which quote `pass  # MUTATED M6` verbatim while
+    documenting the incident -- refused every open. A marker only does damage in a file that
+    RUNS; prose describing one is not a mutation."""
+    r, _ = repo
+    (r / "ops").mkdir(exist_ok=True)
+    (r / "ops" / "changelog.md").write_text(
+        "The tree carried `pass  # MUTATED M6` on the live scored path.\n"
+    )
+    (r / "spec.md").write_text("Given a tree carrying a surviving `MUTATED` marker, close...\n")
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+    assert _begin(target, "run-A") == 0, "prose quoting the marker must not refuse the open"
+    capsys.readouterr()
+    assert tsm.cmd_mutation_end("run-A") == 0
+
+
+def test_the_scanner_still_catches_a_marker_in_every_source_language_it_claims(repo, capsys):
+    """The suffix set is the concept 'files that run', so each one must actually be scanned."""
+    r, _ = repo
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+    assert _begin(target, "run-A") == 0
+    capsys.readouterr()
+    (r / "helper.sh").write_text("true  # MUTATED M6\n")
+    assert tsm.cmd_mutation_end("run-A") == 1
+    assert "helper.sh:1" in capsys.readouterr().out
+
+
+def test_mutation_end_refuses_a_lock_belonging_to_another_run(repo, capsys):
+    r, _ = repo
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+    assert _begin(target, "run-A") == 0
+    capsys.readouterr()
+    assert tsm.cmd_mutation_end("run-B") == 1
+    assert "belongs to another run" in capsys.readouterr().out
+    assert tsm.PROOF_LOCK.exists()
+
+
+def test_a_marker_inside_a_new_untracked_directory_is_caught(repo, capsys):
+    """F3. Plain `--porcelain` collapses a wholly-untracked directory to one `dir/` entry,
+    which is not a file, so the entire subtree was skipped in silence. A scratch copy of the
+    file under mutation lives in exactly such a directory."""
+    r, _ = repo
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+    assert _begin(target, "run-A") == 0
+    capsys.readouterr()
+
+    scratch = r / "scratch_copies" / "deep"
+    scratch.mkdir(parents=True)
+    (scratch / "probe.py").write_text("x = 1  # MUTATED M6\n")
+    assert tsm.cmd_mutation_end("run-A") == 1
+    assert "probe.py:1" in capsys.readouterr().out
+
+
+def test_a_marker_committed_mid_session_is_caught(repo, capsys):
+    """F4, the ORIGIN MECHANISM. The conductor commits on its own schedule, so a marker swept
+    into a mid-session commit leaves the working tree CLEAN. Closing on `git status` alone
+    reported no marker while the marker sat in HEAD -- published, which is worse."""
+    r, _ = repo
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+    _git(r, "add", "-A")
+    _git(r, "commit", "-q", "-m", "seed victim")
+    assert _begin(target, "run-A") == 0
+    capsys.readouterr()
+
+    (r / "swept.py").write_text("y = 2  # MUTATED M6\n")
+    _git(r, "add", "-A")
+    _git(r, "commit", "-q", "-m", "conductor checkpoint")
+    assert _git(r, "status", "--porcelain").strip() == "", "the tree must look clean"
+    assert tsm.cmd_mutation_end("run-A") == 1, "a committed marker must still fail the session"
+    assert "swept.py:1" in capsys.readouterr().out
+
+
+def test_an_unscannable_file_refuses_rather_than_being_noted(repo, capsys, monkeypatch):
+    """F7. A file nobody looked at is not a clean file. The unscanned list used to be dropped
+    entirely at open and merely printed at close."""
+    r, _ = repo
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+    monkeypatch.setattr(tsm, "_MARKER_SCAN_MAX_BYTES", 10)
+    (r / "big.py").write_text("# " + "x" * 500 + "\n")
+    assert _begin(target, "run-A") == 1
+    out = capsys.readouterr().out
+    assert "could not be scanned" in out and "big.py" in out
+    assert not tsm.PROOF_LOCK.exists()
+
+
+def test_the_gate_refuses_a_commit_while_a_proof_is_open(repo, capsys):
+    """F13. A commit taken mid-proof is how a mutated line reaches the record."""
+    r, _ = repo
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+    assert _begin(target, "run-A") == 0
+    capsys.readouterr()
+    assert tsm.cmd_gate() == 1
+    assert "a mutation proof is open" in capsys.readouterr().out
+
+
+def test_the_cli_dispatches_every_mutation_flag(repo, capsys):
+    """F12. The feature is ONLY reachable through the CLI, and blanking the dispatch left the
+    suite green -- so the flags could stop working with nothing to show for it."""
+    r, _ = repo
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+
+    assert tsm.main(["--mutation-begin", "--mutation-target", str(target), "--run-id", "cli"]) == 0
+    assert "session OPEN" in capsys.readouterr().out
+    assert tsm.PROOF_LOCK.exists()
+
+    assert tsm.main(["--mutation-end", "--run-id", "cli"]) == 0
+    assert "CLOSED" in capsys.readouterr().out
+    assert not tsm.PROOF_LOCK.exists()
+
+    assert tsm.main(["--mutation-begin", "--mutation-target", str(target), "--run-id", "cli"]) == 0
+    capsys.readouterr()
+    assert tsm.main(["--mutation-force-unlock"]) == 0
+    assert "CLEARED by hand" in capsys.readouterr().out
+
+
+def test_the_cli_refuses_mutation_begin_without_a_target(repo, capsys):
+    assert tsm.main(["--mutation-begin"]) == 1
+    assert "needs --mutation-target" in capsys.readouterr().out
+
+
+def test_the_proof_lock_is_shared_across_worktrees_of_one_repo(repo):
+    """F5. This repo has ~10 live worktrees sharing one venv. A per-checkout lock is void in
+    exactly the workflow the project uses for proofs, so the lock lives under the shared
+    `--git-common-dir`, not under the checkout."""
+    r, _ = repo
+    resolved = tsm._proof_lock_path()
+    common = Path(_git(r, "rev-parse", "--git-common-dir").strip())
+    if not common.is_absolute():
+        common = (r / common).resolve()
+    # No `or ops/` fallback: that made this vacuous, and blanking the git-common-dir lookup
+    # left the suite GREEN. The lock MUST live under the dir every worktree shares.
+    assert resolved.parent == common, (
+        f"lock at {resolved} is per-checkout; it must sit under the shared {common}"
+    )
+    assert resolved.name == "carnot_mutation_proof.lock"
+
+
+def test_an_unscannable_file_fails_the_close_not_just_the_open(repo, capsys, monkeypatch):
+    """M14. The open-side refusal was tested; the close-side was not, and blanking the close
+    check left the suite GREEN. A file nobody could read is not a file with no marker."""
+    r, _ = repo
+    target = r / "victim.py"
+    target.write_text("x = 1\n")
+    assert _begin(target, "run-A") == 0
+    capsys.readouterr()
+    # Only now does the unscannable file appear, so the open could not have caught it.
+    (r / "big.py").write_text("# " + "x" * 500 + "\n")
+    monkeypatch.setattr(tsm, "_MARKER_SCAN_MAX_BYTES", 10)
+    assert tsm.cmd_mutation_end("run-A") == 1
+    out = capsys.readouterr().out
+    assert "could not be scanned" in out and "big.py" in out
+    assert tsm.PROOF_LOCK.exists(), "the lock is kept until the tree can actually be read"

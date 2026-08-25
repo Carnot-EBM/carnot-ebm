@@ -1,5 +1,17 @@
 # Carnot — Changelog
 
+## 2026-08-25 — Mutation-proof explicit-path applicability repair
+
+- Fixed `check_target_is_live` so targets without an importable `carnot.*`
+  module name are classified before installed-package discovery. Explicitly
+  loaded scripts now report `NOT APPLICABLE` even under a hermetic import-hook
+  runner whose `sys.path` has no discoverable `carnot` directory; importable
+  modules remain fail-closed when their live checkout cannot be resolved.
+- Strengthened the named regression across different-checkout, same-checkout,
+  and no-discoverable-package-root cases. The focused mutation-check module is
+  green at 72 tests; Ruff check and format pass. No skip was added and
+  `scripts/research_conductor.py` was not modified.
+
 ## 2026-08-23 (outer-loop, per-attempt world-model retention: the engine store stops destroying its own work)
 
 REQ-ARC-WMTE-6690, commits 8e2f938a0f (+ bulk swept into 99fdf2797e by
@@ -17544,3 +17556,78 @@ ops/test-results.md by the same session.
 - 2026-08-25: V574 bounded CFR launch root (✅ Complete) — honest_verdict=complete: V573 execution and method contracts replayed; both local flagship GGUF identities and bounded V574 stream contracts are ready; no science result was created; results/experiment_6588_v574_bounded_cfr_launch_root.json
 - 2026-08-25: Fixed the Exp6589 conductor-only timeout fixture failure by making `run_owned_command` own Python stream buffering (`PYTHONUNBUFFERED=1`) and include that value in the public environment receipt. Strengthened the regression fixture by removing the variable from its parent environment; verified 20 consecutive timeout runs, the exact 119-test conductor subset, 38 focused tests, and 100% module statement coverage.
 - 2026-08-25: Isolated pytest receipt remediation (⚠️ Blocked) — honest_verdict=blocked_receipt_validation_block: terminal_report_validation; results/experiment_6589_isolated_pytest_receipt_remediation.json
+
+## 2026-08-25 — Two QA-layer guard fixes: the ledger reads every audit; a mutation proof is exclusive
+
+**Trigger:** outer-loop brief, after two incidents on 2026-08-25.
+
+**Fix 1 — `scripts/audit_findings_ledger.py` ingested exactly one audit.**
+`DEFAULT_REPORT` named the claim audit and nothing else, while the module's own
+docstring said it exists because "an audit whose findings accumulate unread is the
+next silent-but-trusted layer" and cited the QA-layer audit's silent failure as the
+reason. It did not read the QA-layer audit. Pattern narrower than concept, in the
+guard written to fix that class.
+
+Measured: milestone closes .572 and .573 produced 7 SILENT_NON_FIRING verdicts and
+the ledger ingested none. All 7 were hand-entered by the outer loop. The QA-layer
+report is regenerated at every close, so an un-ingested finding is overwritten, not
+merely unread.
+
+Built a `Source` registry. Each source's flagged-verdict set is IMPORTED from that
+audit's own module, never copied. `verifier_authenticity_audit.py` and
+`artifact_convention_audit.py` stay out with the reason written in the module:
+neither exposes a module-level constant to import, so including them would mean the
+copy this module refuses on principle. The actual blocker was `_load_module` not
+registering in `sys.modules`, which made `@dataclass` in the QA-layer audit fail at
+class creation and its constant unreachable.
+
+**Fix 2 — a hand-run mutation proof had no interlock.** Two proofs ran against this
+working tree at once; the tree carried a mutated line on the live ARC scored path.
+That line is valid Python that clears every hook, and the conductor commits on its
+own schedule, so a checkpoint inside a mutation window publishes it silently.
+Readings were contaminated both ways and an 11-mutation proof set was voided.
+
+Note the brief's premise was wrong and saying so changed the design:
+`test_suite_mutation_check.py` is a DETECTOR, not a mutation harness. It has no
+mutation-application mode, and its module docstring already REJECTS a lock for the
+`--snapshot`/`--check` flow with a stated reason that still holds. So the interlock
+went in as an additive, explicitly-scoped proof SESSION
+(`--mutation-begin` / `--mutation-end` / `--mutation-force-unlock`) that touches none
+of the existing modes.
+
+**Three defects found AFTER the first build, each now pinned by a regression test.**
+Recorded rather than quietly patched, because the failure modes are instructive:
+
+1. Reclaim keyed on holder liveness LOCKED NOTHING. A session spans two CLI calls, so
+   the process that wrote the lock has always exited; the rule reclaimed every time
+   and printed "session OPEN" to a second caller. Caught by running it live. Age
+   decides now; liveness may only ever ADD a refusal.
+2. Scanning every changed file BRICKED the tool against this project's own
+   documentation — the spec and changelog quote the marker verbatim while describing
+   the incident, so every open refused. A marker only does damage in a file that RUNS.
+3. An unpinned `--mutation-end` skipped the ownership check entirely, so a second
+   agent in a fresh shell closed whoever's session was open. Landing between two
+   mutations, the tree looked clean and it succeeded — the incident, rebuilt.
+
+**An independent adversarial reviewer found 16 findings; 11 were acted on.** Two were
+already causing live damage: the widened ledger had appended 4 duplicate rows to
+`ops/audit-findings-ledger.md` (two spellings of one finding, `scripts/x.py` vs `x.py`),
+and the marker scan had bricked `--mutation-begin` on this checkout. Also fixed:
+untracked directories collapsed by `--porcelain`, markers swept into a mid-session
+commit, unscannable files treated as clean, a per-checkout lock in a ~10-worktree repo,
+`_pid_alive`'s documented None-refusal never implemented, `--gate` unaware of an open
+session, and `find_spec` importing 90 carnot modules inside a test.
+
+**Duplicate rows remediated in place, not removed.** The 4 machine duplicates are
+dispositioned WONTFIX with a note pointing at the hand-entered row that still carries
+the finding as OPEN. Rows are never deleted (never-prune); this stops one finding
+escalating twice.
+
+**Not done, deliberately:** the reviewer's F16 (the derived state-path sweep still
+misses `str` paths and paths nested in containers) and the gitignored-path hole in
+the blast radius. Both are real and neither is on the incident path; recorded here so
+the next session has them.
+
+Spec: REQ-OPS-AUDIT-LEDGER-2, REQ-OPS-MUTATION-PROOF-1 with 10 SCENARIOs.
+Tests 55 -> 95. All 18 mutations RED on removal, GREEN on byte-identical restore, run
+in a worktree with the loaded module verified by import first.

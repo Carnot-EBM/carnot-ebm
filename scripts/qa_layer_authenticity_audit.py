@@ -244,6 +244,15 @@ GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
         "2026-08-21: 57 phantom OK rows and 1,841 duplicate entries landed silently)",
     ),
     (
+        PROJECT_ROOT / "scripts" / "audit_findings_ledger.py",
+        "decides whether a flagged audit verdict is ever answered, so its silent non-firing "
+        "makes every OTHER audit decorative. Its own origin is that failure (2026-08-25): it "
+        "read one report while its stated concept was 'flagged audit verdicts someone must "
+        "answer', so 7 SILENT_NON_FIRING findings from two milestone closes reached no ledger "
+        "and were overwritten by the next regeneration. It is not pre-commit wired, so "
+        "--check-targets would never have found it -- listed here explicitly",
+    ),
+    (
         PROJECT_ROOT / "scripts" / "run_stop_authority.py",
         "decides whether a live measurement RUN or an orphaned llama-server dies "
         "(REQ-CONDUCTOR-AUTHORITY-1/2). Both failure directions touch the record: "
