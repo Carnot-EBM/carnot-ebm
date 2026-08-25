@@ -17744,7 +17744,7 @@ a parallel multi-model launch or missed DualGPURunner engagement.
 Across 0.2 minutes, 6 experiments finished and 2 carried compute-bound tags.
 Those compute entries occupied 0.1 and 0.02 minutes. No phase trace explains
 the difference. The compute-idle flag is false, and the active device reached
-97% utilization in the monitor snapshot. No launch is documented with 2 or
+96% utilization in the monitor snapshot. No launch is documented with 2 or
 more models, so there is no evidenced DualGPURunner eligibility case. For the
 next milestone, the tooling should group 8-16 questions per forward pass and
 write phase clocks, per-task accelerator samples, model count, and runner
