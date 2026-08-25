@@ -16481,3 +16481,5 @@ code |
 | 2026-08-25 20:05 UTC | Independent constrained-decoding safety-hacking an | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6609-two-level-constrained-decoding) |
 | 2026-08-25 20:43 UTC | Live-path invariant projection on archived world-m | OK | 115 passed, 1 warning in 17.78s |
 | 2026-08-25 20:45 UTC | Independent constrained-decoding safety-hacking an | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6609-two-level-constrained-decoding) |
+| 2026-08-25 21:31 UTC | Frustrated spectral k-block scale and Rust parity | OK | 119 passed, 1 warning in 13.74s |
+| 2026-08-25 21:33 UTC | Independent constrained-decoding safety-hacking an | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6609-two-level-constrained-decoding) |
