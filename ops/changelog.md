@@ -17720,3 +17720,4 @@ unused cross-experiment scheduling capacity, not a compute-task GPU-idle defect.
 The retrospective recommends GPU-aware independent-stream scheduling, inference
 batching, and task-scoped telemetry. No data available this milestone establishes
 a parallel multi-model launch or missed DualGPURunner engagement.
+- 2026-08-25: V575 terminal intake and method lock (⚠️ Blocked) — honest_verdict=complete: V574 terminal evidence replayed; Exp6589 remains blocked; both CFR streams bind complete nested receipts; V575 methods and gates are locked; no science result was created; results/experiment_6592_v575_terminal_intake_and_method_lock.json
