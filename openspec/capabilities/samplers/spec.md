@@ -4652,3 +4652,97 @@ support a positive verdict.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-6597 | Implemented (`python/carnot/experiment_6597_spectral_k_block_ising_canary.py`, `results/experiment_6597_spectral_k_block_ising_canary.json`) | Implemented (`tests/python/test_experiment_6597_spectral_k_block_ising_canary.py`) |
+
+### REQ-SAMPLER-6612: Reusable Frustrated Spectral k-Block Scale Sampler
+
+Carnot SHALL provide a reusable Ising block heat-bath sampler at
+`python/carnot/samplers/spectral_k_block.py`. The implementation SHALL not
+import an experiment module. Exp6612 SHALL compare it with sequential Gibbs
+and random block controls on frozen frustrated systems at `n=16` and `n=32`.
+
+- REQ-SAMPLER-6612-PARTITION: The sampler SHALL create deterministic spectral
+  blocks from the symmetric Ising coupling graph. It SHALL also create a seeded
+  random-block control. Each partition receipt SHALL record blocks, balance,
+  setup time, source, seed, and hash. Random and spectral hashes SHALL differ.
+- REQ-SAMPLER-6612-TRANSITION: A block transition SHALL select one declared
+  spin block. It SHALL draw exactly from that block's Ising conditional by
+  enumerating its bounded spin assignments. Sequential Gibbs SHALL use the
+  same energy and temperature convention. Transitions and spins updated SHALL
+  remain separate.
+- REQ-SAMPLER-6612-FIXTURES: Exp6612 SHALL freeze at least six frustrated
+  fixtures at each size in `{16, 32}`. Each fixture SHALL contain an odd cycle,
+  mixed-sign couplings, and competing low-energy modes. The artifact SHALL
+  include the full matrix, fields, generation seed, and pre-sampling hash.
+- REQ-SAMPLER-6612-CONTROLS: Every fixture SHALL run `sequential_gibbs`,
+  `random_k_block`, `spectral_k_block_python`, and
+  `spectral_k_block_rust` for at least five declared treatment seeds. Each arm
+  SHALL use explicit burn-in, retained count, initial state, and a separate
+  domain-separated RNG stream.
+- REQ-SAMPLER-6612-REFERENCE: The `n=16` target statistics SHALL come from
+  exact enumeration. The `n=32` target statistics SHALL come from independent
+  long chains whose seeds do not overlap treatment seeds. Reference receipts
+  SHALL include uncertainty intervals. Treatment samples SHALL not define or
+  enter their target statistics.
+- REQ-SAMPLER-6612-PARITY: Matched Python and Rust runs SHALL use identical
+  fixture bytes, blocks, initial state, seed, RNG algorithm, burn-in, and
+  retained count. Parity rows SHALL expose sample, energy, moment, distribution,
+  and cost deltas under fixed tolerances. Missing Rust bindings SHALL block the
+  scale gate instead of silently falling back.
+- REQ-SAMPLER-6612-COST: Every unit row SHALL separate partition setup time,
+  sampling time, total charged time, transitions, spins updated, ESS per
+  transition, and ESS per wall second. Failed and burn-in transitions SHALL
+  remain charged. A positive verdict SHALL require stationary-quality
+  noninferiority and a positive held ESS-per-wall or total-time gain over
+  sequential Gibbs. Transition-only gains SHALL produce `partial` or `null`.
+- REQ-SAMPLER-6612-ATTACKS: Exp6612 SHALL fail closed on retired homotopy or
+  HUBO substitution, PIMI reuse, treatment-defined reference data, burn-in
+  deletion, transition undercharging, setup omission, identical random and
+  spectral partitions, shared mutable RNG state, changed parity tolerance,
+  FPGA or TSU wording, and protected-file mutation.
+- REQ-SAMPLER-6612-BOUNDARY: The result SHALL make only a CPU software claim.
+  It SHALL not claim attached hardware, FPGA, TSU, PIMI, retired Phase-3
+  homotopy argmin, or general hardware performance. `inference_substrate`
+  SHALL equal
+  `cpu_python_rust_frustrated_spectral_k_block_sampling_no_llm`, and
+  `verifier_is_oracle` SHALL be the bare boolean `false`.
+- REQ-SAMPLER-6612-ATOMIC: Exp6612 SHALL atomically write
+  `results/experiment_6612_spectral_k_block_scale_rust_parity.json`. It SHALL
+  keep every required principle field, row matrix, reference and code receipt,
+  test receipt, protected hash, field provenance entry, duration, and final
+  reproducibility checksum. A block SHALL use a `blocked_*` verdict and name
+  the failed fixture, chain, reference, parity, cost, toolchain, or protection
+  value in `gate_check_summary`.
+
+### SCENARIO-SAMPLER-6612-REUSABLE-PARTITION-AND-TRANSITION
+
+**Given** one symmetric finite Ising model and a bounded block size
+**When** callers build spectral and random partitions and run block heat-bath
+transitions through the sampler interface
+**Then** every spin appears in exactly one block
+**And** random and spectral partitions differ
+**And** exact block conditionals preserve the declared Ising target
+**And** no experiment module is imported by the sampler.
+
+### SCENARIO-SAMPLER-6612-INDEPENDENT-SCALE-EVIDENCE
+
+**Given** twelve frozen frustrated fixtures and five treatment seeds
+**When** the four preregistered arms complete explicit burn-in and retention
+**Then** every size, fixture, seed, and arm has one retained row
+**And** independent exact or long-chain references supply target intervals
+**And** setup, transition, spin-update, sampling, total-time, and failure data
+remain visible.
+
+### SCENARIO-SAMPLER-6612-RUST-PARITY-AND-FAIL-CLOSED-VERDICT
+
+**Given** matched Python and Rust descriptors with the frozen RNG contract
+**When** parity, stationary, efficiency, scope, and mutation gates run
+**Then** sample and distribution deltas stay within the frozen tolerances
+**And** `spectral_scale_ready_score` is one only when all rows replay
+**And** any missing or altered row blocks a positive verdict
+**And** no software result becomes an attached-hardware claim.
+
+## Implementation Status (REQ-SAMPLER-6612)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-6612 | Implemented (`python/carnot/samplers/spectral_k_block.py`, `python/carnot/experiment_6612_spectral_k_block_scale_rust_parity.py`, `results/experiment_6612_spectral_k_block_scale_rust_parity.json`) | Implemented (`tests/python/samplers/test_spectral_k_block.py`, `tests/python/test_experiment_6612_spectral_k_block_scale_rust_parity.py`, `crates/carnot-samplers/tests/spectral_k_block.rs`) |

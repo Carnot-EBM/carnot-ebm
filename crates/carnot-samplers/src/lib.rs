@@ -37,6 +37,7 @@ pub mod casal;
 pub mod ebft;
 pub mod mode_jump;
 pub mod one_axis_tempering;
+pub mod spectral_k_block;
 
 use carnot_core::{EnergyFunction, Float};
 use ndarray::Array1;
