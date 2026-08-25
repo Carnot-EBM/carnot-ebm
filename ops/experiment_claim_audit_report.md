@@ -11,56 +11,9 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| NO_CLAIM | 2 |
+| CLAIM_REFUTED_BY_OWN_DATA | 1 |
+| NO_CLAIM | 1 |
 | SKIPPED_ALREADY_FLAGGED | 6 |
-
-## experiment_3403_archive_v313_activate_v314.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable; this is an operational milestone receipt, not a comparative or value claim.
-
-## WAS THAT CHECKED
-No; the artifact records aggregated readiness and status fields but tests no method against a falsifying control or rival.
-
-## EVIDENCE
-`"inference_substrate": "aggregation_from_upstream_artifacts"`, `"archive_v313_activate_v314_ready": true`, `"status": "success"`, `"files_updated": []`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_2514_kv260_pynq_flash.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-A recorded failure to generate the KV260 HWH file, or an attempted physical SD-card flash that failed, would contradict the artifact’s status statements.
-
-## WAS THAT CHECKED
-Yes for HWH generation: the artifact records a boolean result and output path. No for physical flashing: it explicitly records that flashing was not attempted.
-
-## EVIDENCE
-`kv260_hwh_generated`: `true`; `kv260_hwh_path`: `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh`; `kv260_flash_attempted`: `false`; `Physical SD card flash not attempted as PYNQ SD card preparation is a documented manual operator step.`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_3361_archive_v309_activate_v310.json
-
-**SKIPPED_ALREADY_FLAGGED**
 
 ## experiment_3377_archive_v310_activate_v311.json
 
@@ -81,3 +34,51 @@ KEEP
 ## experiment_6583_gemma4_26b_a4b_flagship_source_shard.json
 
 **SKIPPED_ALREADY_FLAGGED**
+
+## experiment_6585_v573_terminal_recovery_and_execution_contract.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+For the limited operational assertion, a terminal state or hard-limit attempt failing replay, fewer than three distinct Exp6584 attempts, or an unbounded V573 task would refute it; there is no comparative scientific or verifier-value claim to falsify.
+
+## WAS THAT CHECKED
+Yes, for operational integrity: terminal and attempt rows, execution-budget contracts, gate checks, and fail-closed attack rows were checked. No scientific comparison was applicable.
+
+## EVIDENCE
+`honest_verdict` `complete: all six V572 terminal states and three Exp6584 hard-limit attempts replay; V573 model tasks are bounded; no science verdict was created` `verdict_class` `null` `inference_substrate` `v572_terminal_receipt_replay_no_llm` `verifier_is_oracle` `true` `infrastructure_contract_no_science` `method_contract_no_model_outcome` `runtime_evidence_no_quality_verdict`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6586_isolated_full_suite_truth_baseline.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_6587_v573_constraint_first_method_contract.json
+
+**CLAIM_REFUTED_BY_OWN_DATA**
+
+## VERDICT
+CLAIM_REFUTED_BY_OWN_DATA
+
+## THE HEADLINE CLAIM
+The source, fixture, router, metric, and exact-authority contracts are all ready before any V573 model outcome.
+
+## WHAT WOULD REFUTE IT
+Any required contract-readiness check remaining open or failed would falsify the claim of complete readiness.
+
+## WAS THAT CHECKED
+Yes, in the gate-check summary; it reports that checks were not closed and identifies one failed check.
+
+## EVIDENCE
+`honest_verdict`: `complete: source, fixture, router, metric, and exact-authority contracts are ready before any V573 model outcome`; `checks_closed`: `false`; `failed_check_count`: `1`; `check`: `arms_authority_metrics`; `v573_constraint_first_method_ready_score`: `1.0`
+
+## RECOMMENDATION
+CORRECT_THE_RECORD

@@ -36990,3 +36990,105 @@ abstain. They may not certify their own output.
   game solve. Keep KV260, GateMate, and PolarFire on changed-state continuity.
 
 <!-- V573-PLANNER-REFRESH-20260824-END -->
+
+## V574 planner refresh - 2026-08-25
+
+<!-- V574-PLANNER-REFRESH-20260825-START -->
+
+This refresh follows the three terminal V573 tasks. It searched the requested
+2025-2026 arXiv topics and checked OpenReview, Hugging Face Papers, Semantic
+Scholar, GitHub, Extropic, and Logical Intelligence. Exact executable checks
+remain release authority. Learned methods may extract, propose, route, or
+abstain. They may not certify their own output.
+
+### Promising findings selected for V574
+
+- **LongWoF-Bench: Benchmarking Long-Horizon Workflow Learning from
+  Feedback** - arXiv:2608.23200, https://arxiv.org/abs/2608.23200; submitted
+  2026-08-24. The benchmark contains 778 machine-verifiable long workflows. Its
+  verified successful trajectories can be consolidated into a compact,
+  structured `Gene` instead of retaining a full trace or a generic skill
+  summary. The reported gains are external evidence only. Carnot hook: compare
+  raw verified rows, a reference-distilled generic summary, and a typed
+  verifier-confirmed constraint Gene. Bind every Gene item to immutable source
+  and exact-check receipts. Reject unsupported fields, keep generator weights
+  frozen, and measure prospective utility and held retention per row.
+- **Experience-Amortized Retrieval for Test-Time Agentic Memory** -
+  arXiv:2608.22767, https://arxiv.org/abs/2608.22767; submitted 2026-08-24.
+  EARM stores sparse query-memory relevance observations and estimates missing
+  relevance before reranking. Carnot hook: build relevance only from exact
+  prospective outcomes, keep observed and estimated entries distinct, and test
+  whether bounded matrix completion reduces lookup cost without changing exact
+  authority. Estimated relevance may route a proposal; it may not write trusted
+  memory or release an answer.
+- **InjecMEM: Revealing the Vulnerability of Agent Memory to Single-Interaction
+  Injection Attacks** - arXiv:2608.23471,
+  https://arxiv.org/abs/2608.23471; submitted 2026-08-24. The attack combines a
+  high-recall topical anchor with an adversarial command and remains relevant
+  under later topic drift. Carnot hook: attack the proposed constraint memory
+  with query-shaped anchors, command-bearing fields, cross-family topical
+  transfer, and benign near-neighbors. Memory records must be typed data, never
+  executable instructions. Require exact re-verification, quarantine, rollback,
+  and held benign utility before any default-off shadow consumer is allowed.
+- **Spectral Partitioning for $k$-Block Averaging Markov Chains** -
+  arXiv:2608.21466, https://arxiv.org/abs/2608.21466; submitted 2026-08-23.
+  The method derives block partitions from bottom eigenfunctions of a squared
+  transition operator and reports improved sampling on mean-field Ising cases.
+  Carnot hook: run a small seeded software canary against the existing Gibbs
+  path on exact-enumerable Ising fixtures. Report stationary-distribution error,
+  effective sample size, transition cost, and wall time per seed. Treat any
+  partition setup cost explicitly. This is a software result, not an FPGA or TSU
+  performance claim.
+
+### Cataloged finding held for a later milestone
+
+- **Function-Symbol Grounding for Hard-Constraint Satisfaction in
+  Logic-Integrated Generative Models** - arXiv:2608.21605,
+  https://arxiv.org/abs/2608.21605; submitted 2026-08-23. Function symbols can
+  parameterize feasible charts and avoid the boundary collapse seen with some
+  predicate penalties or post-hoc clamps. This is a useful continuous-constraint
+  reference for Carnot's future energy landscape work. V574 does not mix that
+  new representation into the already bounded CFR and memory questions.
+
+### Requested secondary and product checks
+
+- **OpenReview and Hugging Face Papers:** the current records continue to favor
+  execution-grounded verification, criteria decomposition, and held retention.
+  No newly authenticated result changes Carnot's exact-authority boundary or
+  supplies a public matching-base EBT or ARM-EBM checkpoint.
+- **Semantic Scholar:** the public records show 35 citations for EBT
+  (arXiv:2507.02092) and eight for ARM-EBM (arXiv:2512.15605) on this date. The
+  visible EBT citing records are already represented by the current catalog.
+  The ARM-EBM citation endpoint did not return usable citing-paper rows, so no
+  titles are inferred from the count.
+- **GitHub discovery:** targeted recent-repository searches found maintained
+  general EBM and KAN toolkits, including `davidkhjo/ebmkit`, but no dependency
+  that supersedes Carnot's pinned exact solvers, local GGUF path, or sampler
+  stack. V574 vendors no new research repository.
+- **Extropic:** the 2026-08-03 hardware update still describes Torx, upcoming
+  Thermalizers, a taped-out 269,568-pbit Z1 with 16-neighbor connectivity, and
+  planned 2027 early access. Carnot has no authenticated TSU runner. V574 makes
+  no TSU latency, power, availability, or hardware-execution claim.
+- **Logical Intelligence:** the public Kona 1.0 material still provides product
+  architecture prose, not weights, a reproducible recipe, or a documented local
+  runner. Kona remains a comparator only.
+
+### V574 planning impact
+
+- Execute the frozen V573 CFR method with two independent flagship families:
+  Qwen3.6 35B-A3B and Gemma 4 31B. Preserve both raw stages, source bytes, exact
+  results, failures, and token costs for every unit.
+- Repair the isolated-suite receipt contract separately from the scientific
+  streams. Compare CFR only through a reducer that replays immutable rows, then
+  run an always-on counterfactual and authority audit.
+- Consolidate only exact-verified rows into typed constraint Genes. Compare raw,
+  generic-summary, and Gene memory prospectively. Add observed-only and bounded
+  estimated-relevance routing without giving estimates write or release
+  authority.
+- Attack the memory with InjecMEM-style anchors and command fields before a
+  default-off production shadow consumer can run.
+- Run one bounded spectral block-sampling canary on exact-enumerable Ising
+  fixtures. Keep attached accelerators on continuity only; no unchanged board
+  command is part of V574.
+
+<!-- V574-PLANNER-REFRESH-20260825-END -->
