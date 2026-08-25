@@ -4,6 +4,92 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-08-25: 14 deterministic-replay tests are RED because a provenance receipt hashes a shared append-only spec — OPERATOR DECISION NEEDED
+
+**The finding.** 14 experiment tests assert `result == replay` against a
+checked-in artifact. All 14 fail. All 14 fail for one reason, and it is not a
+provenance break. Each artifact records a `source_artifact_checksums.spec`
+entry. That entry is the sha256 of a WHOLE shared capability spec, for example
+`openspec/capabilities/self-learning/spec.md` at 28,540 lines. The project's own
+spec-first discipline requires every later experiment to append its REQ section
+to that same file. So the recorded hash is guaranteed to go stale.
+
+**The mean time to failure is one experiment.** Exp5342 landed at commit
+`1e9bee1412` on 2026-07-07. Its recorded spec hash matched that commit exactly,
+so the artifact was self-consistent at birth. The next commit to touch that spec
+was `268b2376d5`, the same day. That commit is exp5355 — the next experiment in
+the same capability. Exp5355 then broke in the same way at `3e1d295b8f`
+(exp5356), also the same day. The check is broken by the project's own mandatory
+next step.
+
+**The brief that started this said 2 tests. It is 14.** Measured by running the
+replay tests of every affected module together:
+
+| Scope | Count |
+|---|---|
+| Modules with a `source_artifact_checksums` receipt | 34 |
+| Artifacts whose recorded checksums no longer match disk | 25 |
+| Of those, stale on `spec` alone | 21 |
+| Of those, stale on `exclusion_manifest` alone | 4 |
+| Affected modules that also have an `assert result == replay` test | 14 |
+| Those tests failing | 14 of 14 |
+
+**Only the spec entry drifted.** For exp5342 and exp5355, five of the six
+checksummed inputs are byte-identical today: both upstream result artifacts and
+all three modules. No fabrication-gate stamp, no analyzer rebuild, and no
+test-run rewrite is involved. Inside each experiment's own REQ section the
+requirement text is also byte-identical. The only delta is a trailing `---`
+separator, emitted when the NEXT section was appended below it.
+
+**Why the fields cannot be reconciled in code.** The stored value is the hash of
+a file as it stood in July. No recomputation over today's file can equal it. So
+one of two things must give: the artifacts change, or the contract changes.
+Rewriting `results/**` is an evidence write and an operator call, so this entry
+records the decision rather than taking it.
+
+**Recommended fix, measured.** Scope the spec receipt to the experiment's OWN
+REQ section, and normalize away trailing blank lines and `---` separators.
+Checked against real history for all 14 affected experiments, from each
+artifact's own commit to HEAD, across 88 commits to the self-learning spec:
+
+| Result | Count |
+|---|---|
+| REQ-section hash stable | 14 of 14 |
+| Whole-file hash stable | 0 of 14 |
+
+Mutation proof that the narrowed receipt still bites:
+
+| Mutation | Section hash | Whole-file hash |
+|---|---|---|
+| A: unrelated experiment appends a new REQ section | holds | changes |
+| B: real edit inside this requirement's own text | changes | changes |
+| C: this requirement's section deleted | absent | changes |
+
+Case A is the mechanism that broke all 14. Case B proves a genuine provenance
+break still goes RED. Case C must fail closed: an absent section is a hard
+failure, never a pass.
+
+**Cost of the fix.** It changes the recorded value, so it needs a one-time
+regeneration of the 25 affected artifacts under operator authority. After that
+the receipt holds, because a later experiment appending to the shared spec no
+longer moves it.
+
+**The pattern is extinct, so no new lint is proposed.** The last module to emit
+a `source_artifact_checksums` spec hash landed 2026-07-08 (v495). Current
+modules, for example `experiment_6597_spectral_k_block_ising_canary.py`, hash
+only their own artifact content with the checksum field blanked, and reference
+the spec by path without hashing its bytes. A commit-time check here would guard
+a pattern nobody writes any more. Per the Error Lifecycle, the honest step 6
+answer is prose, not a check, and this entry is that prose.
+
+**Do not fix this by excluding the checksum fields from the assertion.** Five of
+the six entries are the real reproducibility inputs and do hold. Dropping the
+comparison would delete a guard that works, to hide one entry that cannot.
+
+**Reproduce:** `.venv/bin/python -m pytest --no-cov -q -p no:randomly
+tests/python/test_experiment_53{12,13,28,29,30,40,41,42,55,57,68,69,82}_*.py
+tests/python/test_experiment_5451_*.py -k replay`
+
 ### NEW 2026-08-24: the repository-wide test suite is RED, and after today's fix nothing reports it
 
 **The finding.** `pytest tests/python` does not pass. Measured from artifacts

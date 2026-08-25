@@ -37218,3 +37218,103 @@ abstain. They may not certify their own output.
   on changed-state receipt continuity with no repeated unchanged command.
 
 <!-- V575-PLANNER-REFRESH-20260825-END -->
+
+## V576 planner refresh - 2026-08-25
+
+<!-- V576-PLANNER-REFRESH-20260825-START -->
+
+This refresh follows the six terminal V575 tasks. It searched the requested
+2025-2026 arXiv topics and checked OpenReview, Hugging Face Papers, Semantic
+Scholar, GitHub, Extropic, and Logical Intelligence. Exact executable checks
+remain release authority. Learned methods may propose, route, project, or
+abstain. They may not certify their own output.
+
+### Promising findings selected for V576
+
+- **MemGuard: Persisting Verifier Signals for LLM-Agent Memory Governance** -
+  arXiv:2608.21867, https://arxiv.org/abs/2608.21867; code:
+  https://github.com/whyyyyy123/MemGuard; submitted 2026-08-22. MemGuard stores
+  verifier reward, confidence, label, and uncertainty as lifecycle metadata.
+  It reuses that metadata for admission, retrieval, conflict handling,
+  summarization, and archival. Carnot hook: make exact-check provenance persist
+  with every learned invariant record. Use provisional, active, quarantined,
+  and archived states. Revalidate records at retrieval and after conflicts.
+  Treat the public results as external evidence only because the released core
+  omits the benchmark harnesses, datasets, agent runtimes, and model clients.
+- **Safety Hacking in Constrained Best-of-N Inference-time Scaling** -
+  arXiv:2608.22915, https://arxiv.org/abs/2608.22915; submitted 2026-08-24. The
+  paper shows that an imperfect learned constraint can admit unsafe candidates
+  and that reward maximization can amplify this contamination as sample count
+  grows. Coverage control bounds amplification but does not clean a contaminated
+  feasible set. Carnot hook: keep exact checks as final authority, test poison
+  and high-score false-accept rows, and report false-accept rate against sample
+  count. Never infer safety from a learned projection or memory-admission score.
+- **Meta-Ctrl: Guaranteed Plan Generation by Decoupling Syntactic and Semantic
+  Constraints** - arXiv:2608.22149,
+  https://arxiv.org/abs/2608.22149; project:
+  https://meta-ctrlg.github.io/; submitted 2026-08-23. Meta-Ctrl factors token
+  syntax from action-level preconditions, goals, and ordering. The paper reports
+  a much smaller constrained-decoding state space while preserving encoded hard
+  guarantees. Carnot hook: build a local GGUF headroom test with separate token
+  and semantic automata. Compare direct, syntax-only, and two-level constraint
+  arms. Keep exact execution distinct from the decoding automata so incomplete
+  encodings cannot certify themselves.
+- **Prime Agent: A Self-Improving RLM Harness** - arXiv:2608.23552,
+  https://arxiv.org/abs/2608.23552; code:
+  https://github.com/PrimeIntellect-ai/prime-agent; submitted 2026-08-24. Its
+  continual harness preserves histories, memories, skills, prompts, and agent
+  definitions. Small evidence-backed refinements leave the base system prompt
+  immutable and keep snapshots for rollback. Carnot hook: update only typed,
+  reviewable side state; preserve pre-update snapshots; run exact prospective
+  gates; and keep generator weights and base policy immutable. The reported
+  ARC-AGI-3 result is external and is not evidence for Carnot's live path.
+
+### Requested secondary and product checks
+
+- **OpenReview:** current ICLR and NeurIPS records still support
+  difference-of-convex iterative energy minimization, causal energy
+  interpretations, and exact symbolic integration. No new record changes
+  Carnot's release-authority boundary or supplies a public matching-base EBT.
+- **Hugging Face Papers:** recent verification entries include
+  verifier-induced support reshaping and selective verification. They reinforce
+  per-unit replay, recoverable-support measurement, and abstention. They do not
+  justify an LLM judge as exact authority.
+- **Semantic Scholar:** the public API returned 35 visible citations for EBT
+  (arXiv:2507.02092) and eight for ARM-EBM (arXiv:2512.15605) on this date. The
+  newest directly relevant entries remain Solver-Hard, Memoir, Distributional
+  EBMs, and LoopUS, which are already cataloged. Counts are discovery receipts,
+  not evidence of reproducibility.
+- **GitHub discovery:** targeted recent-repository searches still rank
+  `youtube/static-constraint-decoding`, `eth-sri/constrained-diffusion`,
+  EnergyMatching, `davidkhjo/ebmkit`, and KAN application repositories. The
+  new MemGuard and Prime Agent repositories are useful contract references.
+  V576 should copy no dependency merely for novelty.
+- **Extropic:** the latest technical material still reports Torx, a
+  Thermalizers preview, the taped-out 269,568-pbit Z1, and planned 2027 early
+  access. Carnot has no authenticated TSU runner. Schedule no TSU execution,
+  latency, power, or availability claim.
+- **Logical Intelligence:** the public Kona 1.0 page still describes an EBM
+  constraint layer without public weights, a reproducible training recipe, or
+  a documented local runner. Kona remains a product comparator only.
+- **KAN, Ising, and attached FPGA tracks:** no new KAN result closes Carnot's
+  binding or evidence gaps. Spectral k-block sampling remains a software
+  continuation distinct from retired Spectral Annealing and PIMI. KV260,
+  GateMate, and PolarFire remain changed-state-only hardware paths.
+
+### V576 planning impact
+
+- Turn V575's positive invariant projection into a live-path world-model
+  primitive. Test archive replay first, then a default-off live consumer. Do
+  not claim a game solve.
+- Scale the positive spectral k-block sampler beyond exact-enumerable size.
+  Separate transition efficiency from wall time and build a Rust parity path
+  before any hardware claim.
+- Create a headroom-bearing local GGUF benchmark. Compare direct, syntax-only,
+  and two-level semantic constraints on at least one mandated flagship model.
+- Run continuous self-learning with verifier-governed invariant records,
+  immutable generator weights, chronological updates, held-future support,
+  poison, restart, and rollback tests.
+- Audit false accepts across candidate budget. A learned gate, projection, or
+  memory score may reduce work, but only the exact checker may release output.
+
+<!-- V576-PLANNER-REFRESH-20260825-END -->
