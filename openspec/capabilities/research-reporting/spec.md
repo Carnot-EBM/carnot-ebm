@@ -56642,3 +56642,139 @@ a null verdict class with no LLM call.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6594 | Implemented (`python/carnot/experiment_6594_cfr_counterfactual_authority_audit.py`; terminal artifact `results/experiment_6594_cfr_counterfactual_authority_audit.json`) | Implemented (`tests/python/test_experiment_6594_cfr_counterfactual_authority_audit.py`; 13 focused tests; 100% module statement coverage) |
+
+### REQ-REPORT-6595: Frozen World-Model Invariant Projection SHALL Use Held Comparative Evidence
+
+Carnot SHALL build a deterministic CPU-only Exp6595 canary. The canary SHALL
+test invariant projection inside frozen continuous world-model rollouts. It
+SHALL use at least two conservative fixtures and two matched damped fixtures.
+Each fixture transition SHALL have an analytic reference check. The canary
+SHALL not claim an ARC solve, a language-model result, or exact certification
+of a learned invariant.
+
+- REQ-REPORT-6595-PRECONDITIONS: Before calibration, the canary SHALL record
+  source and method hashes for arXiv:2608.23526v1. It SHALL record source hashes
+  for the continuous EBM, continuous latent, projection, experiment, and test
+  modules. It SHALL freeze fixture equations, parameters, split hashes,
+  candidate basis, seeds, horizons, tolerances, CPU, RAM, disk, and both
+  protected orchestration file hashes. The protected files SHALL be
+  `research-roadmap.yaml` and `scripts/research_conductor.py`.
+- REQ-REPORT-6595-CALIBRATION: Invariant fitting and selection SHALL use
+  calibration trajectories only. The candidate families and capacity penalty
+  SHALL be fixed before fitting. Every candidate, capacity, optimizer, seed,
+  calibration score, coefficient vector, and selected expression SHALL remain
+  visible in `invariant_selection_rows`. Held outcomes SHALL not affect basis,
+  selection, thresholds, projection settings, or random controls.
+- REQ-REPORT-6595-FROZEN: The world-model and selected-invariant hashes SHALL be
+  fixed before held evaluation. The canary SHALL hash them again after held
+  evaluation. A changed hash SHALL disqualify the result. The held exact
+  simulator SHALL evaluate the frozen predictor independently from invariant
+  fitting and projection.
+- REQ-REPORT-6595-FIXTURES: The canary SHALL use at least five fixed seeds and
+  multiple horizons. Conservative dynamics SHALL have an analytic quadratic
+  invariant. Matched damped dynamics SHALL remove that conservation law while
+  keeping fixture geometry and disturbance construction matched. Calibration
+  and held initial states and disturbances SHALL have immutable membership
+  hashes.
+- REQ-REPORT-6595-ARMS: Held rollouts SHALL compare `no_projection`,
+  `learned_invariant_projection`, `exact_invariant_diagnostic`, and
+  `norm_matched_random_projection` on identical initial states and
+  disturbances. Random constraints SHALL match the learned constraint's
+  coefficient norm. The exact arm SHALL remain diagnostic and SHALL not decide
+  the headline verdict.
+- REQ-REPORT-6595-ROWS: `per_unit_rows` SHALL contain exactly one row for each
+  fixture, regime, horizon, seed, and arm. Each row SHALL record rollout error,
+  invariant drift, energy, projection distance, iterations, convergence,
+  failure state, and monotonic wall time. Unstable and failed rows SHALL remain
+  present and charged.
+- REQ-REPORT-6595-STATISTICS: Arm summaries SHALL recompute only from per-unit
+  rows. Paired receipts SHALL record effects, fixed-seed intervals, wins,
+  losses, ties, sample sizes, and underpowered cases. Conservative benefit SHALL
+  use `no_projection_error - learned_projection_error`. Random-control
+  separation SHALL use `random_projection_error - learned_projection_error`.
+- REQ-REPORT-6595-SPECIFICITY: A positive result SHALL require a strictly
+  positive lower paired interval for conservative benefit and random-control
+  separation. It SHALL require no learned-arm instability. It SHALL also
+  require no comparable selected invariant and no false learned benefit in the
+  damped controls. Exact-arm performance SHALL not satisfy these gates.
+- REQ-REPORT-6595-ATTACKS: Held leakage, exact-invariant substitution,
+  random-norm mismatch, world-model mutation, post-outcome basis change,
+  unstable-row dropping, one-seed promotion, damped-control omission, and
+  aggregate-only reporting SHALL each fail closed in `attack_rows`.
+- REQ-REPORT-6595-VERDICT: The terminal verdict SHALL be limited to frozen
+  local fixtures. It SHALL name null or harmful controls. `verdict_class` SHALL
+  be one of `positive`, `circular_positive`, `null`, `blocked`, `disqualified`,
+  or `partial`. Any blocked verdict SHALL populate `gate_check_summary` with the
+  missing resource or failed numerical check and its observed value.
+- REQ-REPORT-6595-ATOMIC: Exp6595 SHALL set
+  `inference_substrate=frozen_continuous_world_model_invariant_projection` and
+  `verifier_is_oracle=false`. It SHALL validate and write one checksummed JSON
+  artifact through same-directory file sync, atomic replacement, and directory
+  sync. The final checksum SHALL exclude only itself.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `per_unit_rows`, `method_source_receipt`,
+`fixture_and_split_receipts`, `invariant_selection_rows`,
+`frozen_model_receipts`, `arm_summary_rows`, `paired_statistical_receipts`,
+`conservative_damped_specificity`, `acceptance_gate_rows`, `attack_rows`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6595-CALIBRATION: Held Outcomes Cannot Select The Invariant
+
+**Given** frozen candidate families and calibration memberships
+**When** Exp6595 fits and selects an invariant
+**Then** every score uses calibration rows only, held labels remain sealed, and
+changing held outcomes cannot change the selected family or coefficients.
+
+#### SCENARIO-REPORT-6595-FROZEN: Held Evaluation Cannot Mutate Models
+
+**Given** frozen world-model and invariant hashes
+**When** all held arms finish
+**Then** before and after hashes match, each arm used identical held inputs, and
+the exact simulator remained independent of projection selection.
+
+#### SCENARIO-REPORT-6595-CONTROLS: Conservative And Damped Arms Stay Matched
+
+**Given** two analytic conservative fixtures and two matched damped fixtures
+**When** four arms run on five seeds and multiple horizons
+**Then** row keys are complete, random coefficient norms match, exact-arm rows
+remain diagnostic, and damped controls cannot be omitted from specificity.
+
+#### SCENARIO-REPORT-6595-ROWS: Every Aggregate Recomputes From Stable Rows
+
+**Given** all held rollout rows, including failures
+**When** arm and paired summaries are reduced
+**Then** every summary recomputes from row fields, failures stay present, and no
+aggregate-only or dropped-row result can pass.
+
+#### SCENARIO-REPORT-6595-POSITIVE: Positive Evidence Requires Specific Held Benefit
+
+**Given** learned, baseline, random, exact-diagnostic, and damped rows
+**When** the acceptance gates run
+**Then** `positive` requires positive conservative paired lower bounds against
+baseline and random, stable projection, and damped specificity. The exact arm
+cannot replace the learned arm in any headline gate.
+
+#### SCENARIO-REPORT-6595-ATTACKS: Canary Shortcuts Fail Closed
+
+**Given** one mutation for each required attack
+**When** the readiness reducer evaluates the candidate
+**Then** leakage, substitution, mismatch, mutation, tuning, row drop, seed
+promotion, control omission, and aggregate-only evidence each produce a safe
+zero readiness decision with a named detector.
+
+#### SCENARIO-REPORT-6595-ATOMIC: One Terminal Canary Artifact Recomputes
+
+**Given** calibration, held evaluation, controls, attacks, tests, and protected
+file checks have ended
+**When** Exp6595 writes its terminal artifact
+**Then** validation, checksum, file sync, atomic replacement, directory sync,
+and protected hashes all pass without an LLM call.
+
+## Implementation Status (REQ-REPORT-6595)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6595 | Implemented (`python/carnot/experiment_6595_invariant_projection_world_model_canary.py`; terminal artifact `results/experiment_6595_invariant_projection_world_model_canary.json`) | Implemented (`tests/python/test_experiment_6595_invariant_projection_world_model_canary.py`) |
