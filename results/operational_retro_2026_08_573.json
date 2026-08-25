@@ -1,0 +1,45 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.573",
+  "generated_at": "2026-08-25T04:54:02Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.1,
+  "experiments_completed": 3,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Isolated repo-wide suite truth baseline and mutation audit",
+      "duration_minutes": 0.12,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V573 terminal recovery and bounded execution contract",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V573 SOTA constraint-first source and method contract",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 3 synthesis-only experiments in 0.1 minutes and recorded 0 compute-bound experiments. No compute-runtime, accelerator-efficiency, or DualGPURunner bottleneck can therefore be evaluated from this milestone.",
+  "bottlenecks_identified": [
+    "Task timing was reconstructed from disk modification times after the live commit path found no commits, so the record cannot isolate phase costs within the synthesis-only work."
+  ],
+  "improvements_suggested": [
+    "Persist monotonic start, end, and phase timestamps for every experiment before any git-log or disk-mtime fallback is needed.",
+    "Carry experiment identifiers and acceptance totals into the milestone closeout payload so the research-log fields can be completed from authoritative data.",
+    "Suppress GPU-efficiency and DualGPURunner recommendations automatically when the milestone contains no compute-bound tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Replace commit-derived and disk-mtime task clocks with conductor-owned monotonic timers and phase spans.",
+    "Persist compute classification, loaded-model count, and runner-selection receipts with each experiment record.",
+    "Populate experiment-range and acceptance fields from the milestone manifest during closeout."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence supports only an instrumentation conclusion: synthesis-only work finished quickly, but the reconstruction method is too coarse to diagnose phase costs. No measured counterfactual supports a nonzero time-savings estimate."
+}

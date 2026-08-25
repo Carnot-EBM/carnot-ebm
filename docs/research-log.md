@@ -6332,3 +6332,10 @@ The critical path for milestone .250:
 - theme: one-family flagship source-shard execution concentrated the reconstructed compute path while per-task phase telemetry remained absent
 - key result: the Qwen3.6 source shard took 15 minutes; GPU 1 was active at 94% while GPU 0 was unused, but no data available this milestone establishes parallel multi-model loading or a missed DualGPURunner engagement
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.573
+
+- exp_range: no data available this milestone
+- theme: synthesis-only contract and audit work closed through a coarse fallback clock with no compute path
+- key result: accelerator efficiency and parallel-model runner behavior had no applicable milestone task; the available timing cannot separate phase costs
+- acceptance: no data available this milestone
