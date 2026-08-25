@@ -6854,6 +6854,11 @@ def backfill_stamps(
         written = False
         if apply:
             d["flagged_adversarial"] = True
+            # Record WHICH gate made this call. Without it a determination cannot be
+            # told apart from one made under rules that have since changed (REQ-VERIFY-6601).
+            d[stamp_provenance.PROVENANCE_FIELD] = stamp_provenance.make_provenance(
+                "adversarial_verify.backfill_stamps"
+            )
             d.setdefault("corrigendum_pending", []).extend(crit)
             d["corrigendum_note"] = (
                 "backfill_stamps: flagged_adversarial added by "
