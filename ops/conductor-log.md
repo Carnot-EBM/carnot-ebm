@@ -16459,3 +16459,4 @@ code |
 | 2026-08-25 14:12 UTC | ConvergeFlow feasible-token projection canary | FAIL | Post-tests failed: 1 failed, 114 passed, 1 warning in 14.39s |
 | 2026-08-25 14:14 UTC | Conductor re-exec: fresh committed source | OK | 8d5bc109260e -> 99f1816fb313; argv preserved |
 | 2026-08-25 14:14 UTC | ConvergeFlow feasible-token projection canary | OK | Deliverable already exists in repo |
+| 2026-08-25 14:48 UTC | Spectral k-block Ising sampler canary | OK | 109 passed, 1 warning in 16.62s |
