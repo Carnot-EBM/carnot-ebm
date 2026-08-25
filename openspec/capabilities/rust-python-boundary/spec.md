@@ -132,3 +132,31 @@ matches the request order.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-RUSTPY-6564 | Planned (`crates/carnot-python/src/safety_net.rs`, `python/carnot/experiment_6564_rust_pyo3_safety_net_nfr01.py`) | Planned (`tests/python/test_safety_net_rust_pyo3_parity.py`, `tests/python/test_experiment_6564_rust_pyo3_safety_net_nfr01.py`) |
+
+### REQ-RUSTPY-6612: Spectral k-Block Ising PyO3 Parity Contract
+
+Carnot MUST expose the reusable bounded block heat-bath kernel from
+`carnot-samplers` through PyO3. Python and Rust SHALL accept the same coupling
+matrix, fields, temperature, block membership, initial state, seed, burn-in,
+and retained count. Both paths SHALL use the documented 64-bit LCG random
+stream and return identical retained spins for matched descriptors.
+
+The boundary SHALL reject non-square, asymmetric, non-finite, empty-block,
+duplicate-spin, missing-spin, invalid-state, nonpositive-temperature, zero
+retention, and count-overflow inputs. It SHALL not silently use a Python
+fallback when the Rust module is absent or rejects an input. The boundary is a
+CPU software interface. It SHALL make no attached-hardware performance claim.
+
+### SCENARIO-RUSTPY-6612-MATCHED-CHAIN-PARITY
+
+**Given** a frozen frustrated Ising fixture and one validated spin partition
+**When** Python and PyO3 run the same seeded descriptor
+**Then** retained samples, final state, RNG state, transitions, and spins
+updated match exactly
+**And** malformed descriptors raise explicit errors without fallback.
+
+## Implementation Status (REQ-RUSTPY-6612)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-6612 | Implemented (`crates/carnot-samplers/src/spectral_k_block.rs`, `crates/carnot-python/src/spectral_k_block.rs`) | Implemented (`crates/carnot-samplers/tests/spectral_k_block.rs`, `tests/python/samplers/test_spectral_k_block.py`) |

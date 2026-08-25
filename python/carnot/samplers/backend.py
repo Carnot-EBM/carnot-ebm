@@ -72,6 +72,7 @@ from carnot.samplers.clut_backend import ClutCpuBackend
 from carnot.samplers.mode_jump_rust_backend import ModeJumpRustBackend
 from carnot.samplers.one_axis_rust_backend import OneAxisRustBackend
 from carnot.samplers.parallel_ising import AnnealingSchedule, ParallelIsingSampler
+from carnot.samplers.spectral_k_block import SpectralKBlockBackend
 
 logger = logging.getLogger(__name__)
 
@@ -602,6 +603,7 @@ _BACKENDS: dict[str, BackendFactory] = {
     "cpu": CpuBackend,
     "mode_jump_rust": ModeJumpRustBackend,
     "one_axis_rust": OneAxisRustBackend,
+    "spectral_k_block": SpectralKBlockBackend,
     "tsu": TsuBackend,
 }
 
@@ -626,6 +628,7 @@ def _build_backend_registry() -> dict[str, type]:
         "dwave": DWaveNealBackend,
         "mode_jump_rust": ModeJumpRustBackend,
         "one_axis_rust": OneAxisRustBackend,
+        "spectral_k_block": SpectralKBlockBackend,
         "thrml_tsu": TSUSampler,
     }
 
