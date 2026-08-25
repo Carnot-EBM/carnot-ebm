@@ -266,6 +266,20 @@ def _eval_op(actual: Any, op: str, expected: Any) -> tuple[bool, str]:
     return False, f"unknown op {op!r}"
 
 
+def _stamp_staleness_note(data: dict) -> str:
+    """Say so when the quarantine being relied on was made by an older gate.
+
+    Fails quiet by design: a broken provenance reader must not stop a real
+    quarantine from blocking. The stamp still holds; only the note is lost.
+    """
+    try:
+        import stamp_provenance
+
+        return stamp_provenance.describe_stamp_status(data)
+    except Exception:
+        return ""
+
+
 def _diagnose_missing_field(data: dict, field: str, base_reason: str) -> str:
     """Say WHY a gated field read None. `dict.get` cannot tell these three cases apart.
 
@@ -314,6 +328,9 @@ def _diagnose_missing_field(data: dict, field: str, base_reason: str) -> str:
             + ". The fabrication gate already rejected this artifact, so the null field is a "
             "symptom, not the problem. Do not fill the field in; the upstream task has to "
             "actually run. Per CLAUDE.md, never aggregate a flagged artifact's numbers."
+            # A determination is only as good as the gate that made it. Say so out loud
+            # rather than presenting an undatable stamp as a fresh one (REQ-VERIFY-6601).
+             + _stamp_staleness_note(data)
         )
 
     if field in data:

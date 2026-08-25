@@ -7127,6 +7127,21 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
                                 art = json.load(_af)
                             if isinstance(art, dict):
                                 art["flagged_adversarial"] = True
+                                # Stamp WHICH gate judged this. The conductor is a
+                                # long-lived process, so "the gate" is a moving target;
+                                # without this the verdict cannot be dated (REQ-VERIFY-6601).
+                                try:
+                                    import stamp_provenance as _sp
+
+                                    art[_sp.PROVENANCE_FIELD] = _sp.make_provenance(
+                                        "research_conductor.completion_gate"
+                                    )
+                                except Exception as _sp_exc:
+                                    logger.warning(
+                                        "stamp provenance unavailable (%s); the stamp will "
+                                        "read as unversioned",
+                                        _sp_exc,
+                                    )
                                 art.setdefault("corrigendum_pending", []).extend(flags)
                                 with open(deliverable_path, "w") as _af:
                                     json.dump(art, _af, indent=2)

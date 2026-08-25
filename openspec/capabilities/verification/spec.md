@@ -38219,6 +38219,93 @@ when Exp6478 evaluates the attack matrix,
 then every attack is detected and no attack can increase
 `held_exact_energy_selection_ready_score`.
 
+### REQ-VERIFY-6601: A Fabrication-Gate Determination SHALL Carry The Version That Made It
+
+`flagged_adversarial` is the fabrication gate's verdict. `scripts/conductor_gates.py`
+blocks a downstream task whose upstream carries it. As measured 2026-08-25, 565 artifacts
+carry the flag and NONE records which gate version stamped it or when. A determination made
+under rules that have since changed is therefore indistinguishable, on disk, from one made
+by the gate now running.
+
+The cost is two-directional and the second direction is the larger one. Re-judging the whole
+corpus under the current gate shows 200 of the 565 would no longer draw a critical flag, and
+1,126 UNSTAMPED artifacts now would. Of those 1,126, 995 carry
+`NONTERMINAL_DECLARED_ARTIFACT`, a check added 2026-08-09 that has never run against
+history. A stale stamp that should clear merely quarantines honest work; a check added after
+a stamp never ran against that artifact at all.
+
+Every write of `flagged_adversarial: true` by a GATE SHALL record a provenance block at
+`flagged_adversarial_provenance` holding `gate_version`, `gate_version_algo`, `stamped_at`,
+and `stamper`. The two gate writers are `adversarial_verify.backfill_stamps` and the
+conductor's completion gate.
+
+`gate_version` SHALL be a SEMANTIC fingerprint of `scripts/adversarial_verify.py`: the
+source parsed, docstrings stripped, the AST re-unparsed, then SHA-256. A raw content hash
+would change on every comment edit, so every artifact would read stale forever and the
+signal would be worthless. A comment-only or docstring-only edit SHALL NOT change the
+version. A change to executable logic SHALL change it.
+
+Staleness SHALL be decidable without running the gate, in constant time per artifact, so
+the whole corpus can be classified without re-judging 6,900 artifacts. A reader SHALL
+classify a determination as `current`, `stale`, `unversioned`, or `unstamped`.
+
+A reader that RELIES on a determination SHALL say so out loud when that determination is
+stale or unversioned. `conductor_gates.py` SHALL append this to its "UPSTREAM IS
+QUARANTINED" message. It SHALL NOT silently re-verify, and it SHALL NOT lift the quarantine:
+correcting a determination writes `results/`, which is evidence, and is an operator call.
+
+The provenance reader SHALL read through a `{"principle": ..., "value": ...}` wrapper, per
+the QA-Layer Authenticity Discipline. The gate-version cache SHALL be keyed on the source
+file's mtime and size, never on its path alone, because caching by path is the defect that
+caused the origin incident.
+
+#### Deliberately not done (2026-08-25)
+
+The 565 existing determinations are NOT re-stamped and NOT cleared. `backfill_stamps` could
+not do it in any case: it skips an artifact that already carries the flag, so it can only
+ADD determinations, never revise one. The correction of history is proposed to the operator
+in `docs/research-notes/stale-fabrication-stamps-2026-08-25.md`, not executed.
+
+### SCENARIO-VERIFY-6601-PROSE-EDIT-IS-NOT-A-VERSION-CHANGE
+
+Given a gate source
+When only its comments and docstrings change
+Then `semantic_fingerprint` returns the same value
+And an artifact stamped before the edit still reads `current`
+
+### SCENARIO-VERIFY-6601-LOGIC-EDIT-IS-A-VERSION-CHANGE
+
+Given a gate source
+When a threshold in an executable statement changes
+Then `semantic_fingerprint` returns a different value
+And an artifact stamped before the edit reads `stale`
+
+### SCENARIO-VERIFY-6601-LEGACY-STAMP-IS-IDENTIFIABLE
+
+Given an artifact carries `flagged_adversarial: true` with no provenance block
+When its stamp status is read
+Then the status is `unversioned`
+And the status is reached without running the gate
+
+### SCENARIO-VERIFY-6601-READER-SAYS-SO
+
+Given a downstream gate blocks on an upstream whose determination is unversioned or stale
+When the gate composes its block reason
+Then the reason names the staleness
+And the gate still blocks
+
+### SCENARIO-VERIFY-6601-CACHE-INVALIDATES-ON-EDIT
+
+Given the gate version has been computed once
+When the gate source on disk changes
+Then the next read returns the NEW version rather than the cached one
+
+### SCENARIO-VERIFY-6601-PRINCIPLE-WRAPPED-STAMP-IS-READ
+
+Given `flagged_adversarial` is written as `{"principle": "...", "value": true}`
+When its stamp status is read
+Then the artifact is treated as stamped, not as unstamped
+
 ## Implementation Status (REQ-VERIFY-6478)
 
 | Requirement | Implementation | Tests |
