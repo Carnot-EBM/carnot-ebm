@@ -17852,3 +17852,4 @@ choice.
 - Reconciled REQ-REPORT-6605 and REQ-ARC-FCP-5699-43 with their focused test
   evidence. The full-suite baseline remains separately documented in status.
 - 2026-08-25: Gemma 4 26B-A4B direct baseline headroom qualification (⚠️ Blocked) — honest_verdict=blocked_gpu_ownership: expected True, observed False; results/experiment_6607_gemma4_26b_direct_headroom.json
+- 2026-08-25: Independent three-family headroom reducer (⚠️ Blocked) — honest_verdict=blocked_family_baseline_evidence: no family has complete replayable baseline rows; eligibility is frozen empty and no treatment benefit is claimed; results/experiment_6608_family_headroom_reducer.json
