@@ -2454,6 +2454,12 @@ def execute_bounded_llm_reinduction(
         last_counterexample = dict(check["counterexample"])
         counterexamples.append(last_counterexample)
         row["counterexample"] = dict(last_counterexample)
+        # REQ-ARC-WMTE-6710: this round VERIFIED and then found no plan, so it must claim the
+        # no-plan cause. Every other exit from this loop assigns `skipped`; this fall-through was
+        # the one that did not, so an earlier round's dynamics failure survived into an attempt
+        # that ended on the planner. Last round wins, consistently -- the attempt ended because
+        # the final round ended.
+        skipped = "no_reachable_plan_after_refinement"
         rounds.append(row)
 
     return LlmReinductionResult(

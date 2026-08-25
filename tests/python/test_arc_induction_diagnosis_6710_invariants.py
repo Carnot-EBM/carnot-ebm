@@ -30,6 +30,18 @@ The invariants, and what each would catch:
   6. MONOTONICITY. Differencing two reads is only valid on counters that never decrease.
   7. INSTRUMENTATION MUST NOT FAIL A CELL. A malformed attempt must not raise out of the digest.
 
+WHY THE FIX EXISTS, IN ONE SENTENCE. Because the masking label is ALSO the correct label for a
+genuine no-plan, the `induction_skipped` counter can never size its own mislabelling -- which is
+the defect restated, and it means no prevalence figure taken from that field is trustworthy until
+the per-round record lands.
+
+A PREVALENCE FIGURE THAT DID NOT SURVIVE RE-DERIVATION. The brief this work was built from cited
+`no_reachable_plan_after_refinement` as 9 of 18 skip records. Measured over `results/**` the count
+is 7 of 56 non-`disabled_by_env` records; no file or window reproduces 9-of-18. Recorded here
+rather than dropped, because the sentence above is the reason the number could not be checked
+against anything: an unknown share of those 7 are held-out dynamics failures wearing a planning
+label, and the field cannot say which.
+
 EVIDENCE SAFETY: the tests that run the loop redirect the engine store to `tmp_path`. Nothing
 here writes `results/**`. No network, no GPU: the chat transport is stubbed at `urlopen`.
 
