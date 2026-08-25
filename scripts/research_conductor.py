@@ -7134,7 +7134,8 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
                                     import stamp_provenance as _sp
 
                                     art[_sp.PROVENANCE_FIELD] = _sp.make_provenance(
-                                        "research_conductor.completion_gate"
+                                        "research_conductor.completion_gate",
+                                        gate_version=report.get("gate_version"),
                                     )
                                 except Exception as _sp_exc:
                                     logger.warning(

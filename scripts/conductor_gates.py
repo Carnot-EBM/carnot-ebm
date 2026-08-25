@@ -266,6 +266,20 @@ def _eval_op(actual: Any, op: str, expected: Any) -> tuple[bool, str]:
     return False, f"unknown op {op!r}"
 
 
+def _is_quarantined(data: dict) -> bool:
+    """True when the fabrication gate's determination is set.
+
+    Fails CLOSED: if the provenance reader is unavailable, fall back to the bare
+    read, so a broken import can never let a quarantined artifact through.
+    """
+    try:
+        import stamp_provenance
+
+        return stamp_provenance.is_stamped(data)
+    except Exception:
+        return bool(data.get("flagged_adversarial"))
+
+
 def _stamp_staleness_note(data: dict) -> str:
     """Say so when the quarantine being relied on was made by an older gate.
 
@@ -317,7 +331,9 @@ def _diagnose_missing_field(data: dict, field: str, base_reason: str) -> str:
     # its preconditions and stopped. adversarial_verify.py caught that and stamped it. Four gates
     # then read the same artifact and reported `actual=None`, never mentioning the stamp sitting
     # beside the field they were reading. The answer was already on disk and nothing surfaced it.
-    if data.get("flagged_adversarial"):
+    # Read through a principle wrapper. A bare `.get` reads `{"value": false, ...}`
+    # as truthy and would report a quarantine that was explicitly cleared.
+    if _is_quarantined(data):
         pend = data.get("corrigendum_pending") or []
         kinds = sorted({p.get("kind", "?") for p in pend if isinstance(p, dict)})
         status = data.get("status")

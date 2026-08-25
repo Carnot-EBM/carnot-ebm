@@ -35,7 +35,7 @@ itself applies, so it is comparable to what a real run would do.
 
 The prior estimate of ~200 is confirmed exactly.
 
-Of the 200: 164 draw no flag at all, 36 still draw warnings. Their ORIGINAL flags were
+Of the 200: 164 draw no critical and no warning flag, 36 still draw warnings. Their ORIGINAL flags were
 `DURATION_TOO_SHORT` (135), `METHODOLOGY_MISSING` (101), `TAUTOLOGY` (88),
 `IMPLAUSIBLE_PERFECT` (23). By declared verdict, 136 are terminal successes
 (`complete_*` 124, `success_*` 12) and 51 are `blocked_*`. So roughly **136 honest results
@@ -63,7 +63,12 @@ This is the larger number and the more serious one.
 | unstamped artifacts | 6,359 |
 | current gate returns a CRITICAL flag | **1,126** |
 | backfill-eligible after the live-claim guard | 1,090 |
-| of which `--high-precision-only` would stamp | **21** |
+| of which `--high-precision-only` would stamp | 21 |
+
+**Scope caveat on those last two rows.** They are measured over `results/*.json`. The tool
+globs `results/experiment_*.json` (`adversarial_verify.py:6937`), which is 5,790 of the 6,924
+artifacts. What the commands below actually reach is **1,054** and **4**, not 1,090 and 21.
+Direction A is unaffected — all 565 stamped and all 200 clearing are inside the tool's glob.
 
 Decomposition of the 1,126:
 
@@ -81,8 +86,27 @@ Decomposition of the 1,126:
 This is the generalisation of the incident. The origin commit noted that "any fabrication
 check added in those 14h was equally inert." The measurement shows the same hole across the
 whole history, not just a 14-hour window: **a check added at time T has never judged any
-artifact stamped before T.** A stale stamp that should clear merely quarantines honest work.
-A check that never ran means fabrication was never looked for.
+artifact stamped before T.**
+
+**Correction (adversarial review, same day): this direction is NOT mostly fabrication.**
+Classifying the 864 `NONTERMINAL`-only artifacts through `carnot.terminal_artifacts`:
+
+| classification | count |
+|---|---|
+| `unknown` | 773 (89%) |
+| `partial` | 61 |
+| `running` | 28 |
+| `running_bootstrap` | 2 |
+
+The 773 are old artifacts with `status: success` whose verdict strings predate the Verdict
+Terminal-Prefix Discipline — `tier2_deployed`, `preflight_complete`,
+`schema_validation_complete`. `normalize_marker` returns `unknown`, which is not in
+`TERMINAL_CLASSES`, so the flag fires. Only ~91 of 864 are genuinely non-terminal.
+
+So an unqualified default backfill would quarantine ~773 honest historical artifacts for a
+**naming convention** — the exact mirror of the 200 this note wants to un-quarantine. The
+earlier framing here ("a check that never ran means fabrication was never looked for") was
+wrong for 89% of the population and is retracted.
 
 ## Correction of the brief
 
@@ -126,6 +150,40 @@ lifts a quarantine.
 
 Current corpus state under the new check: **565 unversioned, 0 current, 0 stale.**
 
+### What this mechanism does NOT give you (measured, after adversarial review)
+
+1. **`stale` saturates, so it is weak evidence.** Over the gate's 128 tracked revisions the
+   AST normalization suppressed only **1** version bump (0.8%). `adversarial_verify.py`
+   changed ~9 times a day in the week to 2026-08-25, so a fresh stamp is expected to read
+   `stale` within hours. `stale` means "the gate moved", NOT "this verdict would change".
+   The durable value is the RECORDED VERSION AND TIMESTAMP, which turn an unknown into a
+   dated fact and make a targeted re-judge possible. The `unversioned` -> `current`
+   transition is the real win; the `current` -> `stale` transition is nearly free-running.
+2. **Coverage is source files, not data.** The version now spans
+   `adversarial_verify.py` AND `carnot/terminal_artifacts.py` — the latter because commit
+   `4a1557fd85` added `"disqualified"` to `TERMINAL_CLASSES` and flipped
+   `NONTERMINAL_DECLARED_ARTIFACT`, the corpus's single largest critical flag, without
+   touching the gate file at all. A one-file fingerprint would have missed it. Still
+   uncovered: `ops/arc_solve_registry.yaml`, which the gate reads to raise a critical flag
+   and which has hundreds of commits.
+3. **The corpus-level scan is not wired to anything.** `stamp_provenance.py --json` must be
+   run by hand. Per the QA-Layer discipline a check nothing calls is the bug class, so this
+   is a real gap; the natural close is a milestone-close report of the `stale` +
+   `unversioned` counts. Not built here.
+
+### Defects found by adversarial review and fixed before commit
+
+- The stamp fingerprinted the gate source **on disk**, while the verdict came from the
+  **loaded module**. When `_module_with_current_source()` falls back after a failed reload,
+  that pairs an old verdict with a new version and reports `current` — the origin incident,
+  inverted and now certified. Fixed: `verify_artifact` returns the judging module's own
+  `LOADED_GATE_VERSION` and the stampers use it.
+- `gate_version_algo` was written and never read. Fixed: a version from another algorithm
+  reads `unversioned`.
+- `backfill_stamps` and `conductor_gates` read `flagged_adversarial` with a bare `.get`, so a
+  principle-wrapped `{"value": false}` read as truthy. Latent (0 artifacts wrap it today),
+  fixed anyway.
+
 ## Proposal (operator decision — NOT executed)
 
 Two decisions on two disjoint sets. They should not be taken together.
@@ -161,27 +219,37 @@ precedent for the append-only STYLE, not for this action.
 
 ### Decision B — the 1,126 unstamped-critical artifacts
 
-**Recommendation: do not run the default backfill. Run the high-precision form, and refer
-`NONTERMINAL_DECLARED_ARTIFACT` to the operator separately.**
+**Recommendation: do NOT run the default backfill. Do not treat `--high-precision-only` as a
+meaningful action either. Refer `NONTERMINAL_DECLARED_ARTIFACT` to the operator as a policy
+question.**
 
 The exact commands, dry-run first in both cases:
 
 ```bash
-# Conservative: 21 artifacts, DURATION_TOO_SHORT only, the guard's own trusted subset.
+# Conservative subset: reaches 4 artifacts, DURATION_TOO_SHORT only.
 .venv/bin/python scripts/adversarial_verify.py --backfill --high-precision-only
 .venv/bin/python scripts/adversarial_verify.py --backfill --high-precision-only --apply
 
-# Default: 1,090 artifacts. NOT recommended without adjudicating the 995 below.
+# Default: 1,054 artifacts. NOT recommended -- see the classification table above.
 .venv/bin/python scripts/adversarial_verify.py --backfill
 ```
 
-`HIGH_PRECISION_KINDS` exists precisely because retroactive stamping over-flags, and its own
-comment says TAUTOLOGY is excluded for that reason. 21 artifacts is a reviewable blast radius.
-1,090 is not.
+Why not the default: ~773 of the artifacts it would stamp are honest historical results whose
+verdict strings predate a naming convention. Stamping them trades 200 stale false positives
+for roughly 773 fresh ones, and every one of them would then block downstream work through
+`conductor_gates.py`. `HIGH_PRECISION_KINDS` exists precisely because retroactive stamping
+over-flags; its own comment says TAUTOLOGY is excluded for that reason.
+
+Why `--high-precision-only` is not the answer either: it reaches **4** artifacts. That is a
+rounding error, not a policy. It was quoted as 21 in an earlier draft of this note, measured
+over `results/*.json`; the tool's glob excludes the other 17. Running it is harmless and
+close to pointless.
 
 The 995 `NONTERMINAL_DECLARED_ARTIFACT` artifacts are a policy question, not a mechanical one:
-should a check added 2026-08-09 quarantine 16 days of prior history? It is the same shape as
-the 102-artifact duration-floor gap that commit `82d8219adf` deliberately left open for the
+should a check added 2026-08-09 quarantine 16 days of prior history, when 89% of what it
+catches is an old verdict-naming style rather than a non-terminal run? The cheaper fix is
+probably to narrow the check for historical artifacts, not to stamp them. It is the same shape
+as the 102-artifact duration-floor gap that commit `82d8219adf` deliberately left open for the
 operator. Recording it here rather than acting on it.
 
 ### Prevention (the part that outlasts both decisions)
@@ -194,7 +262,9 @@ rather than needing a session like this one to discover. Not built here.
 ## Cross-references
 
 - `scripts/stamp_provenance.py` — the mechanism
-- `tests/python/test_stamp_provenance_stale_gate_6601.py` — 19 tests, 8 mutation proofs
+- `tests/python/test_stamp_provenance_stale_gate_6601.py` — 26 tests, 13 mutation proofs
+  (each RED on delete, GREEN on restore, in a git worktree with module resolution verified
+  by import)
 - `openspec/capabilities/verification/spec.md` — REQ-VERIFY-6601 + 6 SCENARIOs
 - commit `82d8219adf` — the reload fix; the origin incident
 - `scripts/determination_preservation_lint.py` — the clearing convention Decision A must use

@@ -85,7 +85,11 @@ def test_req_verify_6593_cached_verifier_alias_refreshes_before_stamping(
         )
         importlib.invalidate_caches()
 
-        assert stale_alias(tmp_path / "unused.json") == {"implementation": "fresh-on-disk"}
+        report = stale_alias(tmp_path / "unused.json")
+        # The delegation is what this scenario pins. `gate_version` is added by
+        # verify_artifact per REQ-VERIFY-6601, so match the marker, not the whole dict.
+        assert report["implementation"] == "fresh-on-disk"
+        assert report["gate_version"], "the verdict must carry the version that produced it"
     finally:
         sys.modules.pop(module_name, None)
 
