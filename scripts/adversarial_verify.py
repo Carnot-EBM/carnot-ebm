@@ -307,6 +307,9 @@ ARC_SUBMITTED_KERNEL_OFFLINE_FROZEN_POLICY_REPLAY_SUBSTRATE = (
     "submitted_live_agent_kernel_acquisition_plus_offline_frozen_policy_replay"
 )
 ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_filters_no_new_llm"
+ARC_LIVE_E3_ARCHIVE_PROJECTION_SUBSTRATE = (
+    "live_e3_world_model_archived_transition_invariant_projection_no_new_llm"
+)
 ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S = (
     0.01  # 10ms/action-scale floor; still nonzero-fabrication-proof
 )
@@ -461,6 +464,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     ARC_LIVE_E3_ADAPTER_DISABLED_RUNTIME_TRANSITIONS_SUBSTRATE,
     ARC_SUBMITTED_KERNEL_OFFLINE_FROZEN_POLICY_REPLAY_SUBSTRATE,
     ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE,
+    ARC_LIVE_E3_ARCHIVE_PROJECTION_SUBSTRATE,
     LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE,
     WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE,
     SOURCE_RECEIPTS_METHOD_PREREGISTRATION_NO_LLM_SUBSTRATE,
