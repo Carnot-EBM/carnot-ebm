@@ -4,6 +4,90 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-08-25: 52 deterministic-replay tests are RED, for two causes that are both built in — OPERATOR DECISION NEEDED
+
+**The finding.** 52 tests assert `result == replay` against a checked-in
+artifact, and fail. Measured twice:
+
+```
+FILES=$(grep -rl "result == replay" tests/python/*.py | tr '\n' ' ')   # 68 files
+.venv/bin/python -m pytest --no-cov -q -p no:randomly $FILES -k replay
+# 52 failed, 27 passed in 117s
+```
+
+Neither cause is a provenance break. Both are structural: the replay recomputes
+something the stored artifact was never going to keep.
+
+**Cause A — the fabrication gate stamps the artifact after the module writes
+it.** `adversarial_verify.py` adds `flagged_adversarial` and
+`corrigendum_pending` to a landed artifact. The module that built the artifact
+never emits those keys, so a whole-artifact equality replay can never hold
+again. exp5342 is the clean example, and its two commits are ten minutes apart:
+
+| Commit | Time (2026-07-07) | Keys | State |
+|---|---|---|---|
+| `2d4d50af13` | 04:08:48 | 37 | clean, replay-equal |
+| `1e9bee1412` | 04:18:36 | 39 | `flagged_adversarial: true` + TAUTOLOGY note |
+
+`grep -c flagged_adversarial` on the module returns 0 at both commits and at
+HEAD. So exp5342's replay test went RED ten minutes after the artifact landed.
+
+**Cause B — the artifact records a sha256 over whole shared, high-churn
+files.** The receipt covers the capability spec, and in newer modules also
+`CLAUDE.md`, `ops/exclusion_manifest.yaml`, `research-references.md` and
+`openspec/change-proposals/research-roadmap-vNEXT.md`. Spec-first discipline
+requires every later experiment to append its REQ section to the same shared
+spec, so the recorded hash is guaranteed to go stale. exp5342's spec hash
+matched its own commit exactly and broke at `268b2376d5` — which is exp5355,
+the next experiment in the same capability, the same day. exp5355 then broke at
+`3e1d295b8f` (exp5356), also the same day. Mean time to failure is one
+experiment.
+
+Measured over the 63 modules behind a `result == replay` test whose artifact
+exists (`stamp_scan.py`):
+
+| Property | Count |
+|---|---|
+| Artifact carries a gate stamp the module never writes | 3 |
+| Module hashes at least one shared high-churn file | 50 |
+| Both causes at once | 2 |
+
+exp5342 — the artifact this investigation started from — has both.
+
+**The pattern is live and widening, not historical.** The helper was renamed:
+24 further modules define `source_file_checksums` rather than
+`source_artifact_checksums`. `experiment_6597_spectral_k_block_ising_canary.py`
+landed 2026-08-25 (`a4c8e8a681`) and hashes twelve paths including `CLAUDE.md`,
+`research-references.md` and `ops/exclusion_manifest.yaml` — files that change
+almost daily and that no experiment controls.
+
+**Why no code-only fix is proposed here.** One exists for cause B: resolve each
+receipt against the commit that last wrote the artifact, recovering the old
+bytes from git. It turns most of these green. It also makes the receipt agree by
+construction, which buys a green suite at the cost of the receipt's meaning, and
+it does nothing for cause A. Making the assertion ignore the checksum or stamp
+fields would delete the guard rather than repair it. Regenerating the artifacts
+is an evidence write under `results/**`. All three are operator calls, so this
+entry records the decision instead of taking it.
+
+**A narrower receipt was measured and has a hole.** Scoping the spec hash to the
+experiment's own `## REQ-<id>:` section is stable for 14 of 14 in the original
+self-learning group, and a real edit inside that section still goes RED. But it
+cannot see an upstream requirement change: exp5342's gate stands on
+REQ-LEARN-5340, and edits to REQ-LEARN-5340 — including deleting it — leave
+exp5342's section hash untouched. It is also unstable for the KAN group
+(REQ-KAN-5399 / 5412 / 5425 / 5438). Recorded so the next reader does not
+re-derive it.
+
+**Correction to the brief that opened this.** The brief said two tests, two
+differing fields, and no gate stamp involved. It is 52 tests; exp5342's stored
+artifact has 39 keys against the replay's 37; and a gate stamp is one of the two
+causes. The first scan here repeated the same mistake in a different place — it
+grepped one helper name, `source_artifact_checksums`, concluded the pattern was
+extinct after 2026-07-08, and missed 24 modules using the renamed helper plus an
+instance that shipped this morning. A pattern list narrower than its concept,
+which is the bug class this project already has a discipline about.
+
 ### NEW 2026-08-24: the repository-wide test suite is RED, and after today's fix nothing reports it
 
 **The finding.** `pytest tests/python` does not pass. Measured from artifacts
