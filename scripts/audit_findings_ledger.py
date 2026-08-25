@@ -358,6 +358,7 @@ def run(
     *,
     report_path: Path = DEFAULT_REPORT,
     qa_report_path: Path = DEFAULT_QA_REPORT,
+    report_paths: dict[str, Path] | None = None,
     ledger_path: Path = DEFAULT_LEDGER,
     conductor_log: Path | None = None,
     known_issues: Path | None = None,
@@ -377,12 +378,18 @@ def run(
     # a fresh sentinel scan mask a ledger run that crashed before writing.
     state_path = state_path or REPO / "ops" / ".audit_findings_ledger_state.json"
 
-    # Per-source report overrides, so a caller (or a test) can point one
-    # source at a fixture without disturbing the others.
-    overrides = {AUDIT_NAME: report_path, QA_AUDIT_NAME: qa_report_path}
+    if report_paths is None:
+        # Production shape: every source reads its own report.
+        named = {AUDIT_NAME: report_path, QA_AUDIT_NAME: qa_report_path}
+        selected = [(s, named.get(s.name, s.default_report)) for s in SOURCES]
+    else:
+        # An explicit map is the COMPLETE source list, so a source added
+        # later cannot silently leak a real report into an isolated run.
+        # Isolating one source and inheriting the rest is how a test starts
+        # reading tracked state without anyone noticing.
+        selected = [(s, report_paths[s.name]) for s in SOURCES if s.name in report_paths]
     appended = 0
-    for source in SOURCES:
-        path = overrides.get(source.name, source.default_report)
+    for source, path in selected:
         if not path.exists():
             # A missing report is a no-op, per source. The audit's own
             # receipt check owns "the audit did not run"; this tool owns

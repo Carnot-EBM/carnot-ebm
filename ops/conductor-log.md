@@ -16437,3 +16437,4 @@ code |
 | 2026-08-25 06:02 UTC | Plan milestone 2026.08.574 | OK | 4 tasks proposed |
 | 2026-08-25 06:05 UTC | Milestone 2026.08.574 activated | OK | 4 tasks queued |
 | 2026-08-25 06:27 UTC | V574 bounded CFR launch root | OK | 93 passed, 1 warning in 17.18s |
+| 2026-08-25 07:27 UTC | Isolated pytest receipt remediation | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT — result quarantined, |
