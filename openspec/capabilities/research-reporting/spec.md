@@ -56960,6 +56960,41 @@ least one shared, high-churn file.
   edit to a shared file. This is deliberate and is the whole change. That signal
   was never a provenance break, it fired on every artifact at once, and a guard
   that is always red is read by nobody.
+- REQ-REPORT-6610-SOURCE: A receipt SHALL report which source answered it. Four
+  results read the working tree instead of a commit, and they are different
+  things: a deliberate live read of an evidence path, an artifact that has not
+  landed yet, a path outside any checkout, and -- previously -- a git failure.
+  The first three are named `live_evidence`, `authoring_never_committed` and
+  `outside_checkout`, and a pinned read is named `commit`. A git failure is NOT
+  one of them: `git log` exiting non-zero SHALL raise, because answering "" for a
+  broken git would send every receipt in the corpus to the working tree while
+  still calling itself a commit receipt. A checkout with no commits at all is
+  authoring, not a git failure, and SHALL NOT raise.
+- REQ-REPORT-6610-AUTHORING-FAIL-OPEN: The authoring case is fail-open on
+  purpose. Refusing it would stop a new experiment writing its own first
+  receipt. It is safe only because a git failure raises before reaching it.
+
+**Stated limits.** Two things this requirement does not guard. Both are written
+here rather than left to be rediscovered.
+
+- LIMIT 1, weakening a requirement is unguarded. A sibling replay test pins the
+  capability spec by doing `spec.index("## REQ-LEARN-<id>")`, so DELETING the
+  section raises `ValueError` and the test fails. Changing a `SHALL` to a `MAY`
+  inside that section leaves the same test passing. Measured 2026-08-25 against
+  `REQ-LEARN-5342-2` in `openspec/capabilities/self-learning/spec.md`: deletion
+  RED, `SHALL` -> `MAY` GREEN. In those terms: "the live spec still contains
+  this requirement" is guarded; "it still says the same thing" is guarded by
+  nothing. Commit-resolution does not cause this and does not fix it. The
+  working-tree receipt did move on a weakening edit, but it moved on every
+  unrelated edit as well, so it never distinguished the two.
+- LIMIT 2, a pinned receipt cannot see a later edit to what it covers. For
+  `results/` this is why REQ-REPORT-6610-EVIDENCE-LIVE exists. It still applies
+  to every OTHER pinned path, including an upstream `.py` module named in a
+  receipt: editing that module without changing its artifact is invisible to the
+  downstream receipt. The stakes are lower, because the upstream module has its
+  own replay test, and higher where it does not. `_EVIDENCE_PREFIXES` currently
+  holds `results/` alone; widening it is the lever if this bites.
+
 - REQ-REPORT-6610-SCOPE: This requirement governs receipts only. It does NOT
   make an experiment read historical file CONTENT for its own logic. A module
   that parses a shared, high-churn file and stores derived values, rather than a
@@ -57011,6 +57046,21 @@ repository
 **When** the receipt is resolved against it
 **Then** resolution raises `ReceiptResolutionError`.
 
+#### SCENARIO-REPORT-6610-SOURCE: A Deliberate Live Read Is Not An Unresolved One
+
+**Given** a shared spec path, an evidence path under `results/`, an artifact that
+never landed, and a fixture outside any checkout
+**When** the receipt source is asked for each
+**Then** it reports `commit`, `live_evidence`, `authoring_never_committed` and
+`outside_checkout` respectively, so policy is distinguishable from failure.
+
+#### SCENARIO-REPORT-6610-GIT-FAILURE: A Broken Git Raises Instead Of Reading The Disk
+
+**Given** a repository where `git log` exits non-zero
+**When** a receipt is resolved
+**Then** resolution raises `ReceiptResolutionError` and no receipt is answered
+from the working tree while claiming to be pinned.
+
 #### SCENARIO-REPORT-6610-DEPENDENCY-SET: A Changed Dependency Set Fails
 
 **Given** a stored artifact whose receipt names a dependency the module does not
@@ -57060,6 +57110,13 @@ Not adopted, with the reason for each:
 | `pipeline/verifier_dose_scheduler_replay` | Every path it hashes is under `results/`, so REQ-REPORT-6610-EVIDENCE-LIVE already requires a working-tree read. Adopting it would change nothing. Its replay test passes. |
 | 9 modules with no file-hash primitive | Nothing to resolve. |
 | Every module without a `result == replay` test | Out of measured scope. Adoption there cannot be verified today, because the repository-wide suite is red for unrelated reasons (`ops/known-issues.md`, 2026-08-24). |
+
+Adoption completeness was swept rather than assumed: every replay-tested module
+was scanned for a line that still hashes a repository file from the working
+tree. Exactly two remain, and both are the deliberate non-adoptions named in the
+table above. The scan keys on the file-read primitive, not on an aggregator
+name, so the three aggregator names and four primitive names in the corpus are
+all covered by one rule.
 
 Four residual red causes remain, none of them a receipt failure:
 a fabrication-gate stamp the module never writes (3 tests); derived content read

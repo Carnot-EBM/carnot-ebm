@@ -1,5 +1,36 @@
 # Carnot — Changelog
 
+## 2026-08-25 — Receipt sources named, and two guard gaps closed or stated
+
+- A `ReceiptResolutionError` is now raised when `git log` itself fails.
+  Previously a git failure and "this artifact never landed" both produced an
+  empty commit id, so a broken git would have sent every receipt in the corpus
+  to the working tree while still calling itself a commit receipt. A checkout
+  with no commits at all is still authoring, not a failure, and does not raise.
+- `receipt_source()` names which of four sources answered a receipt: `commit`,
+  `live_evidence`, `authoring_never_committed`, `outside_checkout`. Three of
+  those read the working tree and used to return an identical value, so a
+  deliberate live read was indistinguishable from an unresolved one. The
+  distinction is now asserted by a test rather than described in a comment.
+- Fixed a decorative test. `test_req_report_6610_tamper_is_still_detected`
+  asserted only an inequality against a value nobody ever hashed, which stays
+  true when the hash function is replaced by a constant. Found by an independent
+  reviewer. It now also asserts the expected digest, and the constant-hash
+  mutation takes that test alone red.
+- Two limits written into REQ-REPORT-6610 rather than left to be rediscovered.
+  Weakening a requirement is unguarded: a sibling replay test does
+  `spec.index("## REQ-LEARN-<id>")`, so deleting the section fails but changing
+  a `SHALL` to a `MAY` inside it passes. Confirmed here against REQ-LEARN-5342-2:
+  deletion RED, `SHALL` to `MAY` GREEN. And a pinned receipt cannot see a later
+  edit to any path it covers, which for `results/` is why EVIDENCE-LIVE exists
+  and which still applies to an upstream `.py` module named in a receipt.
+- Four new mutation proofs, each asserting its anchor before mutating: constant
+  hash, git-failure fall-through, empty-repo guard removed, evidence branch
+  mislabelled. All bite; all restore green. 21 helper tests pass.
+- The 68 replay tests are unchanged by this work: 13 failed / 65 passed / 1
+  error, identical red set.
+
+
 ## 2026-08-25 — Provenance receipts resolve against the artifact's own commit
 
 - Adopted REQ-REPORT-6610 in 50 replay-tested modules (47 under
