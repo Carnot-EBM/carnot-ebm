@@ -16484,3 +16484,5 @@ code |
 | 2026-08-25 21:31 UTC | Frustrated spectral k-block scale and Rust parity | OK | 119 passed, 1 warning in 13.74s |
 | 2026-08-25 21:33 UTC | Independent constrained-decoding safety-hacking an | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6609-two-level-constrained-decoding) |
 | 2026-08-25 22:18 UTC | Verifier-governed invariant-memory lifecycle confo | OK | 102 passed, 1 warning in 10.75s |
+| 2026-08-25 23:41 UTC | Prospective chronological invariant continuous sel | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ay(
++        [ |
