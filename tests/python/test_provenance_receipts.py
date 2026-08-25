@@ -120,9 +120,7 @@ def test_req_report_6610_authoring_mode_reads_the_working_tree(repo: Path) -> No
     """REQ-REPORT-6610-AUTHORING: an artifact that never landed has no commit."""
 
     assert pr.artifact_commit(repo, "results/never_committed.json") is None
-    value = pr.receipt_sha256(
-        repo / SPEC, artifact_relative_path="results/never_committed.json"
-    )
+    value = pr.receipt_sha256(repo / SPEC, artifact_relative_path="results/never_committed.json")
     assert value == _sha("spec v1\n")
 
 
@@ -187,9 +185,9 @@ def test_req_report_6610_falls_back_to_the_newest_touch_without_an_add(repo: Pat
 def test_req_report_6610_explicit_root_is_honoured(repo: Path) -> None:
     """The caller may name the checkout instead of having it discovered."""
 
-    assert pr.receipt_sha256(
-        repo / SPEC, artifact_relative_path=ARTIFACT, root=repo
-    ) == _sha("spec v1\n")
+    assert pr.receipt_sha256(repo / SPEC, artifact_relative_path=ARTIFACT, root=repo) == _sha(
+        "spec v1\n"
+    )
 
 
 def test_req_report_6610_receipt_bytes_returns_the_committed_bytes(repo: Path) -> None:
@@ -206,3 +204,75 @@ def test_req_report_6610_repository_root_finds_a_worktree_marker(tmp_path: Path)
     (wt / "python").mkdir(parents=True)
     (wt / ".git").write_text("gitdir: /elsewhere\n", encoding="utf-8")
     assert pr.repository_root(wt / "python" / "mod.py") == wt
+
+
+UPSTREAM = "results/experiment_0_upstream.json"
+
+
+@pytest.fixture
+def repo_with_upstream(tmp_path: Path) -> Path:
+    """A repo where an upstream evidence artifact landed in the SAME commit.
+
+    Separate from `repo` because a dependency added later legitimately fails the
+    missing-at-commit check, which would mask what these tests measure.
+    """
+
+    root = tmp_path / "repo"
+    root.mkdir()
+    _git(root, "init", "-q")
+    _git(root, "config", "user.email", "test@example.com")
+    _git(root, "config", "user.name", "Test")
+    _write(root, SPEC, "spec v1\n")
+    _write(root, UPSTREAM, '{"ready": true}\n')
+    _write(root, ARTIFACT, '{"receipt": "placeholder"}\n')
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", "land the artifact and its upstream")
+    return root
+
+
+def test_req_report_6610_evidence_live_reads_the_working_tree_by_default(
+    repo_with_upstream: Path,
+) -> None:
+    """SCENARIO-REPORT-6610-EVIDENCE-LIVE: an evidence receipt is not pinned.
+
+    Both calls agree while the working tree matches the commit. The next test
+    separates them, which is where the behaviour actually shows.
+    """
+
+    upstream = repo_with_upstream / UPSTREAM
+    assert pr.receipt_sha256(upstream, artifact_relative_path=ARTIFACT) == _sha('{"ready": true}\n')
+    assert pr.receipt_sha256(
+        upstream, artifact_relative_path=ARTIFACT, allow_evidence_pin=True
+    ) == _sha('{"ready": true}\n')
+
+
+def test_req_report_6610_evidence_live_sees_a_later_gate_stamp(
+    repo_with_upstream: Path,
+) -> None:
+    """REQ-REPORT-6610-EVIDENCE-LIVE: the incident shape that motivated the rule.
+
+    A fabrication-gate stamp added after the upstream landed changes no field a
+    downstream module reads, so the receipt is the only thing that can report it.
+    """
+
+    upstream = repo_with_upstream / UPSTREAM
+    landed = _sha('{"ready": true}\n')
+    _write(repo_with_upstream, UPSTREAM, '{"ready": true, "flagged_adversarial": true}\n')
+    pr._COMMIT_CACHE.clear()
+    pr._BLOB_CACHE.clear()
+
+    default = pr.receipt_sha256(upstream, artifact_relative_path=ARTIFACT)
+    assert default != landed, "the default receipt must move when the upstream is stamped"
+
+    pinned = pr.receipt_sha256(upstream, artifact_relative_path=ARTIFACT, allow_evidence_pin=True)
+    assert pinned == landed, "a pinned receipt cannot see the stamp -- why live is the default"
+
+
+def test_req_report_6610_evidence_live_does_not_block_shared_files(
+    repo_with_upstream: Path,
+) -> None:
+    """The refusal is scoped to evidence; a shared spec still pins as before."""
+
+    assert pr.receipt_sha256(repo_with_upstream / SPEC, artifact_relative_path=ARTIFACT) == _sha(
+        "spec v1\n"
+    )

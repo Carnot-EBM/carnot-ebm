@@ -56964,6 +56964,20 @@ least one shared, high-churn file.
   make an experiment read historical file CONTENT for its own logic. A module
   that parses a shared, high-churn file and stores derived values, rather than a
   hash, stays outside this requirement and its replay test may still be red.
+- REQ-REPORT-6610-EVIDENCE-LIVE (added 2026-08-25): A receipt over a file under
+  `results/` SHALL read the working tree, not the artifact's commit. Pinning it
+  SHALL require the caller to pass `allow_evidence_pin=True`. Pinning an
+  evidence artifact hides the two rewrites this project keeps suffering, and
+  measurement shows nothing else reports them. Mutating an upstream artifact
+  three ways and rebuilding exp5342 gives: a field the downstream module reads
+  (`utility_memory_ready`) changes 19 content fields and is caught without any
+  receipt; a fabrication-gate stamp (`flagged_adversarial`) changes NO content
+  field; and a dropped hand-written note changes NO content field. The last two
+  are the documented incidents -- the gate stamping a landed artifact, and a
+  test run dropping `inference_substrate_correction_note` from exp3946. Under a
+  pinned receipt both are green. The default is therefore the strict one, and
+  an exception has to be typed out, because writing the reason down is the
+  control.
 
 #### SCENARIO-REPORT-6610-CHURN: A Later Edit To A Shared Spec Does Not Break A Landed Receipt
 
@@ -57004,8 +57018,30 @@ hash, or omits one it does
 **When** the artifact is replayed
 **Then** the recomputed receipt has a different key set and the replay fails.
 
+#### SCENARIO-REPORT-6610-EVIDENCE-LIVE: A Receipt Over An Evidence Artifact Is Not Pinned
+
+**Given** a module whose declared dependency is a file under `results/`
+**When** the receipt is resolved without `allow_evidence_pin=True`
+**Then** the receipt reads the working tree rather than the artifact's commit
+**And** a fabrication-gate stamp added to that upstream artifact after it landed
+changes the receipt, so the replay fails
+**And** the same receipt taken with `allow_evidence_pin=True` does NOT change,
+which is what makes pinning the wrong default here.
+
+Raising on an evidence path was written first and then rejected. A hard error
+makes every honest caller pass `allow_evidence_pin=True` simply to get working
+code, which yields pinned evidence receipts everywhere -- the outcome this
+requirement exists to prevent. Reading the working tree gives the safe behaviour
+with no caller action, and leaves the override for the rare deliberate case.
+
 ## Implementation Status (REQ-REPORT-6610)
 
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6610 | Implemented (`python/carnot/provenance_receipts.py`; adopted by the replay-tested experiment modules that define their own file-hash primitive) | Implemented (`tests/python/test_provenance_receipts.py`) |
+
+Correction 2026-08-25, appended rather than edited per the never-prune rule: the
+adoption clause in the row above was not true when written. A grep for the word
+`provenance_receipts` matched an unrelated artifact FIELD of the same name in
+three experiment modules; no module imported the helper. Adoption is tracked
+separately and was still zero at the time REQ-REPORT-6610-EVIDENCE-LIVE landed.
