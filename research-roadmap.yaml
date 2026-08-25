@@ -1,95 +1,90 @@
-milestone: "2026.08.573"
-milestone_title: "Constraint-First Proofs and Safe Online Memory"
+milestone: "2026.08.574"
+milestone_title: "Audited Constraint-First Learning"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-  - id: exp6585-v573-terminal-recovery-and-execution-contract
-    milestone: "2026.08.573"
-    deliverable: results/experiment_6585_v573_terminal_recovery_and_execution_contract.json
-    title: "V573 terminal recovery and bounded execution contract"
+  - id: exp6588-v574-bounded-cfr-launch-root
+    milestone: "2026.08.574"
+    deliverable: results/experiment_6588_v574_bounded_cfr_launch_root.json
+    title: "V574 bounded CFR launch root"
     priority: critical
     track: evidence-infrastructure
     requires_gpu: false
-    max_turns: 100
-    estimated_wall_time_min: 50
-    model: opus
-    prior_failures:
-      - experiment_id: exp6584-three-family-source-receipt-audit
-        verdict: "failed_hard_timeout_no_artifact"
-        addressed_by: "Exp6584 loaded no model but still combined three family receipts, a merge, and a broad audit in one long task and hit the 4,800-second limit three times without an artifact. Exp6585 performs receipt-only terminal recovery, freezes smaller task budgets, and produces no family merge or scientific aggregate."
-        retire_if_same_verdict: true
+    max_turns: 50
+    estimated_wall_time_min: 60
+    operator_override: "2026-05-29 operator directive (standing): versioned lineage continuation — false-positive scope-match vs earlier launch and method contracts; V574 replays terminal V573 receipts and owns a new same-roadmap gate map without repeating model inference."
     prompt: |
       CONTEXT
-      Milestone 2026.08.572 has six terminal tasks. Exp6579 and Exp6580 completed their contracts. Exp6581 blocked before Qwen model load because a repo-wide verification command timed out. Exp6582 and Exp6583 completed four immutable rows each. Exp6584 then hit the conductor hard limit three times and wrote no artifact. V573 must preserve these outcomes and freeze a smaller execution graph. Work at {project_root}. The planning date is {date}.
+      Milestone 573 ended with a complete bounded-execution contract, a blocked isolated-suite receipt, and a complete Constraint-First Reasoning method contract. No V573 flagship CFR stream ran. V574 must replay those terminal facts and create one same-roadmap launch root before either model task starts. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
-      - {project_root}/research-roadmap.yaml, {project_root}/research-roadmap-next.yaml, {project_root}/research-complete.yaml, {project_root}/ops/conductor-log.md, {project_root}/ops/exclusion_manifest.yaml, and {project_root}/ops/known-issues.md
-      - {project_root}/results/experiment_6580_v572_source_and_joint_method_protocol.json, {project_root}/results/experiment_6581_qwen36_flagship_source_shard.json, {project_root}/results/experiment_6582_gemma4_31b_flagship_source_shard.json, {project_root}/results/experiment_6583_gemma4_26b_a4b_flagship_source_shard.json, and the expected but missing Exp6584 path
-      - conductor gate, hard-timeout, artifact lookup, task ledger, checkpoint, process cleanup, atomic-output, duration, and retirement helpers plus their focused tests
-      - {project_root}/scripts/roadmap_schema.py, {project_root}/scripts/conductor_gates.py, {project_root}/scripts/failure_ledger.py, {project_root}/scripts/exclusion_manifest_lint.py, and {project_root}/scripts/adversarial_verify.py
-      - relevant evidence and model-ingestion capability specs, {project_root}/_bmad/traceability.md, {project_root}/ops/status.md, {project_root}/ops/changelog.md, and {project_root}/ops/e2e-test-plan.md
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and the V574 roadmap document
+      - {project_root}/results/experiment_6585_v573_terminal_recovery_and_execution_contract.json
+      - {project_root}/results/experiment_6586_isolated_full_suite_truth_baseline.json and its adversarial verification artifact
+      - {project_root}/results/experiment_6587_v573_constraint_first_method_contract.json
+      - {project_root}/scripts/experiment_template.py, roadmap gate helpers, GGUF cache-resolution helpers, GPU ownership helpers, atomic artifact helpers, and their tests
+      - relevant evidence, exact-verification, model-ingestion, and continual-learning capability specs; traceability; status; changelog; and {project_root}/ops/e2e-test-plan.md
 
       TASK
-      Create an exact terminal-recovery artifact for V572 and freeze the bounded V573 execution contract. Do not load an LLM. Do not invent an Exp6584 artifact or a scientific verdict for work that did not run. Do not edit research-roadmap.yaml or scripts/research_conductor.py.
+      Build the V574 bounded CFR launch root. Replay the V573 source, method, budget, cleanup, model-cache, exact-authority, and protected-file contracts. Treat the Exp6586 block as an infrastructure fact, not as a scientific launch gate. Perform no LLM inference.
 
       CONCRETE STEPS
-      0. PRECONDITIONS: record protected-file hashes, all expected V572 task and artifact paths, conductor-log hash, failure-ledger and exclusion-manifest hashes, Python and tool versions, CPU, RAM, disk, and the no-LLM substrate.
-      1. Add or confirm REQ-* and SCENARIO-* anchors for no-artifact terminal recovery, repeated hard-limit replay, gate-field closure, bounded model-task execution, raw checkpoints, cleanup, and atomic output. Write focused tests first for changed logic.
-      2. Reconstruct one terminal row for each V572 task. Reconstruct one distinct row for each Exp6584 attempt with start, end, elapsed, hard cap, agent backend, missing-artifact check, and source-log hash.
-      3. Replay the Exp6581 blocked fields and gate_check_summary. Replay Exp6582 and Exp6583 row and checkpoint counts. Do not relabel a block as null or a completed runtime shard as positive science.
-      4. Freeze task budgets for Exp6588 and Exp6589: one model family, one fresh process, at least one raw checkpoint per completed unit, bounded generation, explicit failure retention, terminal output, and verified unload.
-      5. Freeze the V573 gate map. Confirm each upstream task exists in this roadmap and each exact gate field appears in that upstream task's REQUIRED ARTIFACT FIELDS with identical spelling.
-      6. Attack a fabricated Exp6584 artifact, a collapsed three-attempt row, stale source hashes, a gate that points outside this roadmap, a misspelled upstream field, two models in one runtime task, missing checkpoints, and a ready score derived from incomplete terminal rows.
-      7. Set v573_execution_contract_ready_score=1.0 only when all terminal rows replay and every budget, field, attack, cleanup, and protected-file check passes.
+      0. PRECONDITIONS: record protected-file hashes, dirty-worktree status, all three V573 artifact paths and hashes, current roadmap hash, CPU, RAM, disk, local GGUF cache paths, visible GPU ownership, and the no-LLM substrate.
+      1. Add or confirm REQ-* and SCENARIO-* anchors for V574 launch replay, same-roadmap gates, one-model residency, periodic checkpoints, timeout cleanup, exact authority, and atomic terminal output. Write focused tests first.
+      2. Recompute Exp6585 readiness and Exp6587 method readiness from their raw fields. Preserve Exp6586 honest_verdict, verdict_class, gate_check_summary, and adversarial disposition without converting it to null or GREEN.
+      3. Resolve content-derived local GGUF identities for unsloth/Qwen3.6-35B-A3B-GGUF and unsloth/gemma-4-31B-it-GGUF. Do not load either model and do not download during this task.
+      4. Freeze one-model residency, runtime-selected idle RTX 3090 ownership, checkpoint interval, hard timeout, child-process cleanup, unload, failure-row, and terminal-artifact rules for Exp6590 and Exp6591.
+      5. Freeze the exact same-roadmap gate map. Exp6590 and Exp6591 read only v574_cfr_launch_ready_score from this artifact. Downstream fields must be spelled exactly as written in the owning task's REQUIRED ARTIFACT FIELDS.
+      6. Attack an invented V573 science result, a suite-GREEN launch requirement, missing source hashes, two-model residency, legacy smoke models as headline evidence, GGUF AutoTokenizer use, external download during measurement, incomplete terminal rows, and gate-field drift.
+      7. Set v574_cfr_launch_ready_score=1.0 only when both V573 contracts replay, both cached model identities resolve, budgets and cleanup close, all gates cross-reference, and protected files remain unchanged.
       8. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, artifact convention checks, adversarial verification, applicable evidence E2E checks, and final git status.
 
-      Required deliverable: {project_root}/results/experiment_6585_v573_terminal_recovery_and_execution_contract.json.
+      Required deliverable: {project_root}/results/experiment_6588_v574_bounded_cfr_launch_root.json.
       REQUIRED ARTIFACT FIELDS:
         status:
-          principle: "A terminal state prevents recovery bootstrap work from posing as a closed contract."
+          principle: "The launch root is terminal and cannot pose bootstrap work as readiness."
         honest_verdict:
-          principle: "The verdict distinguishes completed contracts, a precondition block, valid runtime rows, and no-artifact hard limits."
+          principle: "The verdict reports bounded V574 launch readiness without creating a science result."
         verdict_class:
-          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial; recovery readiness is null, never positive."
+          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial; launch readiness is null infrastructure."
         gate_check_summary:
-          principle: "Any blocked outcome names the exact failed receipt check and observed value."
-        v572_terminal_rows:
-          principle: "Every V572 task has one recheckable terminal or missing-artifact row."
-        exp6584_hard_limit_attempt_rows:
-          principle: "All hard-limit attempts remain distinct and source hashed."
-        v573_execution_budget_contract:
-          principle: "One-model residency, time, checkpoint, cleanup, and terminal-output limits are frozen."
+          principle: "Any blocked outcome names the failed source, cache, budget, gate, or protection check and its value."
+        v573_terminal_replay_rows:
+          principle: "Exp6585 through Exp6587 retain their actual terminal states and source hashes."
+        model_cache_identity_rows:
+          principle: "Both mandated flagship caches resolve by content without a model load or download."
+        execution_budget_contract:
+          principle: "One-model residency, checkpoints, timeout, cleanup, unload, and terminal output are frozen."
         current_roadmap_gate_contract_rows:
-          principle: "Every downstream gate names a same-roadmap upstream field with identical spelling."
+          principle: "Every downstream gate names an upstream task and exact field in this roadmap."
         attack_rows:
-          principle: "Fabricated recovery, renewed monoliths, and gate drift fail closed."
-        v573_execution_contract_ready_score:
-          principle: "This exact binary field gates both model stream tasks."
+          principle: "Invented science, suite gating, model substitution, cache drift, and gate drift fail closed."
+        v574_cfr_launch_ready_score:
+          principle: "This exact binary field gates both flagship CFR stream tasks."
         preconditions_checked:
-          principle: "Files, tools, resources, and protected hashes distinguish a block from recovery failure."
+          principle: "Artifacts, hashes, caches, resources, ownership, and protected files are explicit."
         protected_files_unchanged:
-          principle: "The task preserves research-roadmap.yaml and scripts/research_conductor.py."
+          principle: "research-roadmap.yaml and scripts/research_conductor.py retain their original hashes."
         inference_substrate:
-          principle: "The artifact declares terminal receipt replay with no LLM."
+          principle: "The task declares terminal receipt and contract replay with no LLM."
         verifier_is_oracle:
-          principle: "Exact receipt replay is infrastructure authority and cannot create positive science."
+          principle: "Exact receipt replay owns launch readiness but cannot create positive research science."
         field_provenance:
-          principle: "Every field names source rows, hashes, and reducer code."
+          principle: "Every field names source artifacts, rows, hashes, and reducer code."
         duration_s:
-          principle: "Monotonic duration exposes skipped recovery work."
+          principle: "Monotonic duration exposes a source-only shortcut."
         tests_run:
-          principle: "Named commands, exits, durations, and isolated scope make verification reproducible."
+          principle: "Named commands, exits, and durations make contract validation reproducible."
         reproducibility_checksum:
           principle: "A final content hash detects terminal mutation."
-      Set inference_substrate=v572_terminal_receipt_replay_no_llm and verifier_is_oracle=true. A ready contract uses verdict_class=null. Use a terminal honest_verdict prefix complete:, success:, passed:, or shipped: for completed work. A genuine precondition block may use a blocked_* verdict and must populate gate_check_summary.
+      Set inference_substrate=v573_terminal_and_contract_replay_no_llm and verifier_is_oracle=true. A ready launch root uses verdict_class=null. Use a terminal honest_verdict prefix complete:, success:, passed:, or shipped: for completed work. A genuine precondition block may use a blocked_* verdict and must populate gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6585_v573_terminal_recovery_and_execution_contract --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6588_v574_bounded_cfr_launch_root --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6586-isolated-full-suite-truth-baseline
-    milestone: "2026.08.573"
-    deliverable: results/experiment_6586_isolated_full_suite_truth_baseline.json
-    title: "Isolated repo-wide suite truth baseline and mutation audit"
+  - id: exp6589-isolated-pytest-receipt-remediation
+    milestone: "2026.08.574"
+    deliverable: results/experiment_6589_isolated_pytest_receipt_remediation.json
+    title: "Isolated pytest receipt remediation"
     priority: critical
     track: evidence-infrastructure
     requires_gpu: false
@@ -97,175 +92,280 @@ tasks:
     max_turns: 100
     estimated_wall_time_min: 90
     model: opus
+    prior_failures:
+      - experiment_id: exp6586-isolated-full-suite-truth-baseline
+        verdict: "blocked_isolated_environment: pytest_receipt"
+        addressed_by: "Exp6589 narrows the scope to the malformed receipt contract, writes focused receipt fixtures first, validates the disposable environment before any suite run, and treats a RED suite as measured evidence rather than a block."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      The repo-wide Python suite is known to be red, and some tests can rewrite tracked result files. Exp6581 showed why this suite cannot be a model-launch precondition. V573 needs one honest low-cadence baseline in a disposable checkout. Test failures are scientific infrastructure evidence, not a task block. Work at {project_root}. The planning date is {date}.
+      Exp6586 attempted an isolated repo-wide suite baseline but ended blocked_isolated_environment: pytest_receipt. Adversarial verification found a nonterminal declared artifact and zero per-test rows. This task repairs that evidence contract without turning suite success into a model launch gate. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/ops/known-issues.md, and the V573 roadmap document
-      - {project_root}/pytest.ini, {project_root}/pyproject.toml, {project_root}/tests/python/conftest.py, and test collection configuration
-      - {project_root}/scripts/test_suite_mutation_check.py, {project_root}/scripts/determination_preservation_lint.py, {project_root}/scripts/operator_curated_docs_lint.py, and their tests
-      - full-suite, coverage, xdist, temporary-worktree, tracked-hash, subprocess-timeout, process-cleanup, and atomic-output helpers plus tests
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V574 roadmap document, and Exp6586's artifact and adversarial report
+      - {project_root}/pytest.ini, {project_root}/pyproject.toml, {project_root}/tests/python/conftest.py, and collection configuration
+      - {project_root}/scripts/test_suite_mutation_check.py, disposable-worktree helpers, subprocess receipt helpers, process cleanup, atomic output, and their tests
       - relevant test-integrity and evidence capability specs, traceability, status, changelog, and {project_root}/ops/e2e-test-plan.md
 
       TASK
-      Measure the repo-wide Python suite once in a disposable checkout, preserve every failure and mutation receipt, and define a low-cadence baseline contract. Never run the full suite against the active worktree. Do not change scripts/research_conductor.py or make suite success a V573 runtime gate.
+      Repair and validate the isolated pytest receipt path. Run focused receipt fixtures first. Only after the isolated environment validates, run one bounded disposable-suite measurement. Preserve RED, timeout, mutation, and collection evidence honestly. Never run the full suite in the active worktree.
 
       CONCRETE STEPS
-      0. PRECONDITIONS: record protected-file and dirty-worktree hashes, git revision, Python, pytest and plugin versions, CPU, RAM, disk, timeout, temporary-root path, process ownership, and the no-LLM substrate. Refuse broad or unresolved temporary paths.
-      1. Add or confirm REQ-* and SCENARIO-* anchors for disposable full-suite execution, active-worktree non-mutation, failure preservation, low-cadence reporting, timeout cleanup, and atomic output. Write focused tests first.
-      2. Create a disposable checkout or worktree under a validated temporary directory. Use the current committed revision plus an explicit content-hashed patch only when required to reproduce the active tree. Never stage or discard the user's changes.
-      3. Snapshot tracked and operator-curated file hashes in both the active and disposable trees. Record the exact collected-test count before execution.
-      4. Run `.venv/bin/python -m pytest tests/python --no-cov -o addopts= -n 0` from the disposable checkout with the active project environment and a bounded but sufficient timeout. Preserve stdout, stderr, exit, duration, and process cleanup.
-      5. Emit one row per failed, errored, skipped, and timed-out test plus collection and family summaries. A RED exit is a complete measured result, not blocked. A block is reserved for inability to construct or validate the isolated environment.
-      6. Recompute all tracked hashes. Identify every attempted tracked write in the disposable tree and prove that the active worktree hashes and pre-existing dirty status are unchanged.
-      7. Freeze a low-cadence ownership proposal that runs this baseline outside experiment launch. Do not edit the conductor. Do not claim the suite is GREEN unless exit, collection, mutation, and cleanup checks all pass.
-      8. Attack execution in the active root, an omitted dirty patch, a passing headline with failed rows, a timeout called GREEN, unreported writes, leaked child processes, and active-tree hash drift.
-      9. Write one terminal artifact atomically. Run only focused tests needed for the wrapper or changed helpers, then lint, spec coverage, artifact convention checks, adversarial verification, applicable E2E checks, and final git status.
+      0. PRECONDITIONS: record protected hashes, active dirty state, Exp6586 hash and exact failed receipt fields, git revision, Python and pytest versions, plugin set, CPU, RAM, disk, timeout, safe temporary root, and process ownership.
+      1. Add or update REQ-* and SCENARIO-* anchors for complete pytest receipts, disposable execution, active-tree non-mutation, RED-as-measured, timeout cleanup, and atomic terminal output. Write focused failing tests before implementation.
+      2. Reproduce the malformed Exp6586 receipt with the smallest fixture. Fix command, cwd, environment hash, exit, duration, stdout, stderr, collection, timeout, cleanup, and mutation serialization without changing scientific code.
+      3. Build a validated disposable checkout under a resolved temporary directory. Preserve the user's active changes. Never stage, discard, or overwrite them.
+      4. Run the focused receipt and mutation fixtures. If they fail, write a terminal blocked artifact with the exact check and observed value; do not launch the full suite.
+      5. If isolation validates, run `.venv/bin/python -m pytest tests/python --no-cov -o addopts= -n 0` once in the disposable checkout with a bounded timeout. Preserve one row per failed, errored, skipped, or timed-out test plus collection and family summaries.
+      6. Recompute active and disposable tracked hashes. Name every attempted write and leaked child process. A RED exit is a complete measured baseline, not blocked.
+      7. Attack active-root execution, omitted dirty content, missing stdout or stderr, fabricated collection, a RED run called GREEN, a timeout called complete, leaked processes, zero rows with a measured claim, and active-tree drift.
+      8. Set pytest_receipt_remediation_ready_score=1.0 only when the focused contract passes and any launched suite has a complete terminal receipt. Write atomically and run focused tests, lint, spec coverage, artifact convention checks, adversarial verification, applicable E2E checks, and final git status.
 
-      Required deliverable: {project_root}/results/experiment_6586_isolated_full_suite_truth_baseline.json.
+      Required deliverable: {project_root}/results/experiment_6589_isolated_pytest_receipt_remediation.json.
       REQUIRED ARTIFACT FIELDS:
         status:
-          principle: "The baseline terminates as measured GREEN, measured RED, timeout, or isolated-environment block."
+          principle: "The task ends as repaired measurement, focused-fixture failure, timeout, or isolated-environment block."
         honest_verdict:
-          principle: "The verdict reports the suite truth without turning test failure into a task block."
+          principle: "The verdict separates receipt repair from the suite's GREEN or RED state."
         verdict_class:
-          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial; a measured suite baseline is null infrastructure."
+          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial; receipt repair is null infrastructure."
         gate_check_summary:
-          principle: "An isolated-environment block names the exact failed check and observed value."
+          principle: "Any block names the exact isolation or receipt check and observed value."
         rows:
-          principle: "Each failed, errored, skipped, or timed-out test remains individually recheckable."
-        collection_receipt:
-          principle: "The collected count and command prevent a partial suite from posing as complete."
+          principle: "Every failed, errored, skipped, or timed-out test remains individually recheckable."
+        exp6586_failure_replay:
+          principle: "The original malformed receipt and adversarial disposition remain source bound."
+        focused_receipt_fixture_rows:
+          principle: "Each required receipt field has a positive and negative fixture."
         suite_command_receipt:
-          principle: "Command, cwd, environment hash, exit, duration, stdout, and stderr bind the run."
+          principle: "Command, cwd, environment, exit, duration, stdout, stderr, collection, timeout, and cleanup bind the run."
         disposable_checkout_receipt:
-          principle: "Revision, patch hash, and validated temporary path prove isolation."
+          principle: "Revision, dirty-content patch hash, and validated temporary path prove isolation."
         mutation_rows:
-          principle: "Each attempted tracked write is named with before and after hashes."
+          principle: "Each attempted tracked write has before and after hashes."
         active_worktree_unchanged:
-          principle: "The user's tracked hashes and pre-existing dirty state survive the run unchanged."
+          principle: "The user's tracked hashes and pre-existing dirty state survive unchanged."
         suite_truth_baseline:
-          principle: "GREEN or RED follows from test rows, exit, collection, mutation, and cleanup."
-        full_suite_baseline_ready_score:
-          principle: "This binary field means the suite truth was measured, even when the truth is RED."
-        low_cadence_ownership_contract:
-          principle: "The full suite remains outside per-experiment launch checks."
+          principle: "GREEN, RED, timeout, or not-run follows from raw receipts without affecting science launch."
+        pytest_receipt_remediation_ready_score:
+          principle: "This binary field states whether the broken receipt contract was repaired."
         attack_rows:
-          principle: "Partial, mutating, leaked, and falsely green runs fail closed."
+          principle: "Partial, mutating, leaked, zero-row, and falsely green runs fail closed."
         preconditions_checked:
-          principle: "Resources, versions, dirty state, ownership, and safe paths are explicit."
+          principle: "Versions, resources, dirty state, process ownership, and safe paths are explicit."
         protected_files_unchanged:
           principle: "Both protected orchestration files retain their original hashes."
         inference_substrate:
           principle: "The task declares isolated deterministic test execution with no LLM."
         verifier_is_oracle:
-          principle: "Pytest is authority for suite state but not for positive research science."
+          principle: "Pytest owns suite state but not positive research science."
         field_provenance:
-          principle: "Each baseline field points to raw command or hash rows."
+          principle: "Every field points to raw command, fixture, process, or hash rows."
         duration_s:
           principle: "Monotonic duration exposes collection-only or truncated execution."
         tests_run:
-          principle: "Focused validation commands are separate from the measured full-suite command."
+          principle: "Focused validation commands are distinct from the measured full-suite command."
         reproducibility_checksum:
-          principle: "A final hash protects the baseline record."
-      Set inference_substrate=isolated_repo_test_execution_no_llm and verifier_is_oracle=true. A complete GREEN or RED baseline uses verdict_class=null. Use a terminal honest_verdict prefix complete:, success:, passed:, or shipped: for completed work. A genuine isolation block may use a blocked_* verdict and must populate gate_check_summary.
+          principle: "A final hash protects the repaired receipt."
+      Set inference_substrate=isolated_pytest_receipt_repair_no_llm and verifier_is_oracle=true. A repaired focused contract and honest GREEN or RED measurement use verdict_class=null. A genuine isolation block may use a blocked_* verdict and must populate gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6586_isolated_full_suite_truth_baseline --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6589_isolated_pytest_receipt_remediation --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6587-v573-constraint-first-method-contract
-    milestone: "2026.08.573"
-    deliverable: results/experiment_6587_v573_constraint_first_method_contract.json
-    title: "V573 SOTA constraint-first source and method contract"
+  - id: exp6590-qwen36-constraint-first-stream
+    milestone: "2026.08.574"
+    deliverable: results/experiment_6590_qwen36_constraint_first_stream.json
+    title: "Qwen3.6 bounded constraint-first stream"
     priority: critical
-    track: sota-method-ingestion
-    requires_gpu: false
+    track: constraint-first-model-evidence
+    requires_gpu: true
+    per_unit_rows: true
     max_turns: 50
-    estimated_wall_time_min: 75
+    estimated_wall_time_min: 150
+    gated_on:
+      - upstream: exp6588-v574-bounded-cfr-launch-root
+        artifact_field: v574_cfr_launch_ready_score
+        op: "=="
+        value: 1.0
     prior_failures:
-      - experiment_id: exp6528-v565-source-model-method-contract
-        verdict: "blocked_v565_source_model_method_contract: unavailable_required_channels=openreview"
-        addressed_by: "Exp6528 required dated OpenReview channel receipts and blocked despite usable primary sources. Exp6587 binds direct content-hashed arXiv receipts, replays local exact fixtures, performs no model-cache qualification, and does not make OpenReview metadata an acceptance gate."
+      - experiment_id: exp6581-qwen36-flagship-source-shard
+        verdict: "blocked_precondition_failed_without_quality_claim"
+        addressed_by: "Exp6590 removes the repo-wide suite from launch checks, runs the already-frozen Exp6587 CFR method instead of the V572 source-shard shape, and writes periodic per-unit checkpoints before any aggregate."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      V572 closed its source and exact-method protocol, but it did not test staged constraint extraction. The V573 refresh selects Constraint-First Reasoning, arXiv:2608.05254, as a training-free intervention. This task must freeze sources, units, prompts, stages, routing, exact authority, metrics, and attacks before any V573 model output exists. Work at {project_root}. The planning date is {date}.
+      Exp6587 froze direct, always-on CFR, and routed CFR arms over at least 16 exact-checkable units. Exp6581 previously blocked before Qwen quality evidence because a repo-wide suite was used as a precondition. Exp6588 now owns the bounded V574 launch gate. This task generates one immutable Qwen stream and makes no cross-arm headline claim. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, {project_root}/research-references.md, and the V573 roadmap document
-      - {project_root}/results/experiment_6580_v572_source_and_joint_method_protocol.json and {project_root}/results/experiment_6574_joint_sufficiency_method_contract.json
-      - source-byte binding, source-unit manifest, exact obligation registry, ambiguity-stop, prompt freeze, deterministic router, paired-metric, cost, fixture, attack, and atomic-output helpers plus tests
-      - exclusions for generated ConstraintIR, answer transport, external text scoring, model-self-certification, and public ARC solves
-      - relevant extraction, exact-verification, evidence, continual-learning, and model-ingestion specs; architecture; traceability; status; changelog; and E2E plan
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V574 roadmap document, and {project_root}/scripts/experiment_template.py docstring
+      - {project_root}/results/experiment_6587_v573_constraint_first_method_contract.json and {project_root}/results/experiment_6588_v574_bounded_cfr_launch_root.json
+      - {project_root}/results/experiment_6581_qwen36_flagship_source_shard.json
+      - llama.cpp GGUF runner, cached_sota_pair() pattern, GPU ownership, raw-stage preservation, source binding, exact checker dispatch, token accounting, checkpoint, cleanup, and atomic-output helpers plus tests
+      - relevant extraction, exact-verification, model-ingestion, evidence, and continual-learning specs; traceability; status; changelog; and E2E plan
 
       TASK
-      Create the V573 SOTA constraint-first method contract. Bind primary research receipts and freeze a content-pinned exact-checkable evaluation with direct, always-on CFR, and routed CFR arms. Perform no LLM inference and no post-outcome source selection.
+      Run the frozen CFR method with unsloth/Qwen3.6-35B-A3B-GGUF in one fresh llama.cpp process. Preserve every direct, Stage 1, Stage 2, exact-check, failure, cost, checkpoint, model, and GPU receipt. Do not tune prompts or sources and do not make a headline comparison.
 
       CONCRETE STEPS
-      0. PRECONDITIONS: record protected-file hashes, arXiv URLs and content hashes where cached, Exp6580 and Exp6574 paths and hashes, exact registry hash, corpus revision and license, CPU, RAM, disk, and the no-LLM substrate.
-      1. Add or confirm REQ-* and SCENARIO-* anchors for constraint-first preregistration, plain-text stage preservation, source-span binding, exact authority, routing, matched arms, paired rows, cost, failure retention, and atomic output. Write focused tests first.
-      2. Bind arXiv:2608.05254, arXiv:2608.14569, arXiv:2608.00220, and arXiv:2605.18871 to method rows. State each exact Carnot hook and each non-imported claim.
-      3. Reuse or extend the V572 source manifest to at least 16 exact-checkable units selected without model outcomes. Balance restrictive-cue and ordinary units and include unsupported, ambiguous, contradictory, and positive-control cases. Bind exact source bytes, hashes, split, inclusion rule, and checker.
-      4. Freeze a family-neutral direct prompt. Freeze a plain-text Stage 1 constraint-summary prompt and Stage 2 solve-and-check prompt. Do not generate ConstraintIR or use schema-repair retries. Preserve both raw stages before parsing.
-      5. Freeze the deterministic restrictive-cue router before inference. Define direct, always-on CFR, and routed CFR arms with matched seeds, order, decoding, timeout, token limit, stop rules, and failure retention.
-      6. Freeze source-span binding and exact obligation dispatch. A proposed constraint without source support is unsupported. A contradictory proposed constraint cannot release an answer. The model never certifies itself.
-      7. Freeze per-unit metrics for exact success, Stage 1 precision and recall against the manifest, unsupported and contradictory constraints, abstention, unsafe release, tokens, latency, and failure. Freeze paired uncertainty and the circular-positive rule.
-      8. Freeze the downstream task and field map. Set v573_constraint_first_method_ready_score=1.0 only when source, prompts, router, arms, checkers, metrics, gates, attacks, and retirement rules close.
-      9. Attack post-outcome source selection, prompt drift by family, hidden answer leakage into Stage 1, generated ConstraintIR, missing raw stage bytes, router outcome leakage, LLM authority, uncharged Stage 1 tokens, and misspelled gate fields.
-      10. Write one terminal artifact atomically. Run focused tests, lint, spec coverage, artifact convention checks, adversarial verification, applicable method E2E checks, and final git status.
+      0. PRECONDITIONS: record protected hashes, upstream gate value, method and source hashes, exact registry hash, resolved Qwen GGUF identity, llama.cpp version, runtime-selected idle RTX 3090 ownership, VRAM, CPU, RAM, disk, seeds, and budgets. Do not require the repo-wide suite to be GREEN.
+      1. Use MODEL_SPECS containing unsloth/Qwen3.6-35B-A3B-GGUF as the headline model. Follow the cached_sota_pair() pattern. Legacy small models may run a CPU smoke only and cannot satisfy readiness.
+      2. Add or confirm REQ-* and SCENARIO-* anchors for one-family CFR execution, raw two-stage preservation, exact authority, checkpoints, failure rows, cost, process cleanup, and atomic output. Write focused tests first.
+      3. Verify the byte hashes for source units, prompts, router, decoding, seeds, order, budgets, and checkers against Exp6587. Any drift blocks before inference.
+      4. Launch one fresh llama.cpp process using the GGUF-embedded tokenizer. Never call AutoTokenizer on the GGUF repository. Record content-derived model identity and actual offload.
+      5. For every unit, run matched direct, always-on CFR, and routed CFR arms in the frozen order. Persist raw direct output, raw Stage 1 constraints, raw Stage 2 output, parsed proposals, source spans, exact results, abstention, tokens, latency, and failure before the next unit.
+      6. Preserve timeouts, malformed output, contradictions, unsupported constraints, and exact rejection as rows. Never repair output with generated ConstraintIR or a hidden model call.
+      7. Checkpoint after every unit. Sample GPU process, memory, and utilization before load, during inference, and after unload. Kill only owned child processes and prove clean unload.
+      8. Attack prompt drift, post-outcome unit loss, stage overwrite, answer leakage, uncharged Stage 1 tokens, family-label substitution, legacy-model substitution, aggregate-only output, and a ready score with missing rows.
+      9. Set qwen_cfr_rows_ready_score=1.0 only when every expected row and receipt is complete and independently recheckable. Write atomically and run focused tests, lint, spec coverage, artifact convention checks, adversarial verification, applicable model E2E checks, and final git status.
 
-      Required deliverable: {project_root}/results/experiment_6587_v573_constraint_first_method_contract.json.
+      Required deliverable: {project_root}/results/experiment_6590_qwen36_constraint_first_stream.json.
       REQUIRED ARTIFACT FIELDS:
         status:
-          principle: "The method contract closes before any V573 model outcome."
+          principle: "The stream ends as complete rows, bounded partial rows, or a named precondition block."
         honest_verdict:
-          principle: "The verdict states source, fixture, router, metric, and authority readiness."
+          principle: "The verdict reports Qwen row completeness without claiming CFR benefit."
         verdict_class:
-          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial; preregistration is null infrastructure."
+          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial; a complete source stream is null evidence infrastructure."
         gate_check_summary:
-          principle: "Any block names the missing source, fixture, registry, or contract value."
-        primary_source_receipts:
-          principle: "Each borrowed method has an immutable source and bounded Carnot hook."
-        non_imported_claim_rows:
-          principle: "External benchmark and product claims cannot enter Carnot evidence."
-        source_unit_manifest:
-          principle: "Exact bytes, hashes, splits, inclusion rules, strata, and checkers freeze evaluation before inference."
-        prompt_stage_contract:
-          principle: "Direct, Stage 1, and Stage 2 prompts are family neutral and byte frozen."
-        router_contract:
-          principle: "Restrictive-cue routing is deterministic and outcome blind."
-        arm_seed_budget_contract:
-          principle: "Direct, always-on CFR, and routed CFR receive matched preregistered work."
-        source_binding_and_exact_authority_contract:
-          principle: "Source spans ground proposals and whitelisted exact checks own release."
-        metric_and_acceptance_contract:
-          principle: "Per-unit effects, uncertainty, safety, and total cost have frozen reducers and thresholds."
-        fixture_replay_rows:
-          principle: "Positive, unsupported, ambiguous, contradictory, and tamper fixtures replay exactly."
-        downstream_gate_field_rows:
-          principle: "Each downstream gate field is owned by an upstream task in this roadmap."
+          principle: "Any blocked outcome names the exact gate, cache, resource, drift, or runtime check and value."
+        per_unit_rows:
+          principle: "Every source unit and arm carries raw stages, exact results, failures, tokens, and latency."
+        model_spec_and_identity:
+          principle: "The mandated Qwen GGUF spec and content-derived local file identity bind inference."
+        prompt_source_router_hashes:
+          principle: "The Exp6587 byte-frozen method cannot drift by family or outcome."
+        raw_stage_receipts:
+          principle: "Direct, Stage 1, and Stage 2 bytes remain separate and immutable."
+        exact_checker_receipts:
+          principle: "Whitelisted executable checks, not the model, decide validity."
+        checkpoint_receipts:
+          principle: "Each completed unit survives later timeout or process failure."
+        gpu_process_receipts:
+          principle: "Ownership, offload, memory, utilization, and clean unload bind the local run."
+        failure_rows:
+          principle: "Timeouts, parse failures, unsupported constraints, contradictions, and exact rejection remain evidence."
+        qwen_cfr_rows_ready_score:
+          principle: "This exact binary field gates the independent comparison."
         attack_rows:
-          principle: "Leakage, drift, self-certification, uncharged work, and schema revival fail closed."
-        v573_constraint_first_method_ready_score:
-          principle: "This exact binary field gates both model stream tasks and the comparison."
+          principle: "Drift, leakage, substitution, dropped failures, and aggregate-only claims fail closed."
         preconditions_checked:
-          principle: "Sources, fixtures, registry, resources, and protected hashes are explicit."
+          principle: "Gates, hashes, cache, resources, ownership, budgets, and protected files are explicit."
         protected_files_unchanged:
-          principle: "The method task preserves both protected orchestration files."
+          principle: "Both protected orchestration files retain their original hashes."
         inference_substrate:
-          principle: "The task declares primary-source and exact-fixture replay with no LLM."
+          principle: "The task declares fresh local Qwen GGUF inference through llama.cpp."
         verifier_is_oracle:
-          principle: "The exact checker defines validity, so later wins must remain circular-positive."
+          principle: "Exact checks define row validity, so later exact wins are circular-positive."
         field_provenance:
-          principle: "Every contract field names source receipts, rows, hashes, and reducer code."
+          principle: "Every field names source rows, raw bytes, process receipts, and reducer code."
         duration_s:
-          principle: "Monotonic duration exposes a source-only or fixture-skipped contract."
+          principle: "Monotonic duration exposes smoke-only or truncated execution."
         tests_run:
-          principle: "Named commands, exits, and durations make preregistration reproducible."
+          principle: "Named commands, exits, durations, and focused scope make validation reproducible."
         reproducibility_checksum:
-          principle: "A final hash protects the frozen contract."
-      Set inference_substrate=primary_source_and_exact_fixture_replay_no_llm and verifier_is_oracle=true. A ready contract uses verdict_class=null. Use a terminal honest_verdict prefix complete:, success:, passed:, or shipped: for completed work. A genuine precondition block may use a blocked_* verdict and must populate gate_check_summary.
+          principle: "A final content hash protects the immutable stream."
+      Set inference_substrate=fresh_local_qwen36_gguf_cfr_inference and verifier_is_oracle=true. A complete stream without a quality claim uses verdict_class=null. A bounded incomplete run uses partial or blocked as warranted and must populate gate_check_summary for blocked_* verdicts.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6587_v573_constraint_first_method_contract --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6590_qwen36_constraint_first_stream --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6591-gemma4-31b-constraint-first-stream
+    milestone: "2026.08.574"
+    deliverable: results/experiment_6591_gemma4_31b_constraint_first_stream.json
+    title: "Gemma 4 31B bounded constraint-first stream"
+    priority: critical
+    track: constraint-first-model-evidence
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 150
+    gated_on:
+      - upstream: exp6588-v574-bounded-cfr-launch-root
+        artifact_field: v574_cfr_launch_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp5814-channel-qualified-constraint-stream
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp6591 does not reuse the failed Exp5813 all-family channel gate. It uses the shipped Exp6587 CFR contract and the same-roadmap Exp6588 launch gate before fresh Gemma inference."
+        retire_if_same_verdict: true
+      - experiment_id: exp6234-fresh-flagship-constraint-event-stream
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp6591 does not reuse the missing Exp6228 readiness field or its exact constraint-event stream. It uses the explicitly declared Exp6588 gate and the frozen V573 CFR method."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6587 froze one family-neutral CFR method and Exp6588 owns the bounded V574 launch gate. The dense flagship local path produced valid V572 runtime receipts, but it has not run the CFR intervention. This task generates one immutable Gemma stream in a process separate from Qwen and makes no cross-arm headline claim. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V574 roadmap document, and {project_root}/scripts/experiment_template.py docstring
+      - {project_root}/results/experiment_6587_v573_constraint_first_method_contract.json and {project_root}/results/experiment_6588_v574_bounded_cfr_launch_root.json
+      - {project_root}/results/experiment_6582_gemma4_31b_flagship_source_shard.json
+      - llama.cpp GGUF runner, cached_sota_pair() pattern, GPU ownership, raw-stage preservation, source binding, exact checker dispatch, token accounting, checkpoint, cleanup, and atomic-output helpers plus tests
+      - relevant extraction, exact-verification, model-ingestion, evidence, and continual-learning specs; traceability; status; changelog; and E2E plan
+
+      TASK
+      Run the frozen CFR method with unsloth/gemma-4-31B-it-GGUF in one fresh llama.cpp process. Preserve every direct, Stage 1, Stage 2, exact-check, failure, cost, checkpoint, model, and GPU receipt. Do not tune prompts or sources and do not make a headline comparison.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record protected hashes, upstream gate value, method and source hashes, exact registry hash, resolved Gemma GGUF identity, llama.cpp version, runtime-selected idle RTX 3090 ownership, VRAM, CPU, RAM, disk, seeds, and budgets.
+      1. Use MODEL_SPECS containing unsloth/gemma-4-31B-it-GGUF as the headline model. Follow the cached_sota_pair() pattern. Legacy small models may run a CPU smoke only and cannot satisfy readiness.
+      2. Add or confirm REQ-* and SCENARIO-* anchors for one-family CFR execution, raw two-stage preservation, exact authority, checkpoints, failure rows, cost, process cleanup, and atomic output. Write focused tests first.
+      3. Verify source, prompt, router, decoding, seed, order, budget, and checker byte hashes against Exp6587. Match the Qwen task's contract without reading Qwen outcomes.
+      4. Launch one fresh llama.cpp process using the GGUF-embedded tokenizer. Never call AutoTokenizer on the GGUF repository. Record content-derived model identity and actual offload.
+      5. For every unit, run direct, always-on CFR, and routed CFR in the frozen order. Persist raw direct output, raw Stage 1 constraints, raw Stage 2 output, parsed proposals, source spans, exact results, abstention, tokens, latency, and failure before the next unit.
+      6. Preserve timeouts, malformed output, contradictions, unsupported constraints, and exact rejection as rows. Never repair output with generated ConstraintIR or a hidden model call.
+      7. Checkpoint after every unit. Sample GPU process, memory, and utilization before load, during inference, and after unload. Kill only owned child processes and prove clean unload.
+      8. Attack family-specific prompt drift, source drift, stage overwrite, answer leakage, uncharged work, model substitution, dropped failures, aggregate-only output, and a ready score with missing rows.
+      9. Set gemma31_cfr_rows_ready_score=1.0 only when every expected row and receipt is complete and independently recheckable. Write atomically and run focused tests, lint, spec coverage, artifact convention checks, adversarial verification, applicable model E2E checks, and final git status.
+
+      Required deliverable: {project_root}/results/experiment_6591_gemma4_31b_constraint_first_stream.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The stream ends as complete rows, bounded partial rows, or a named precondition block."
+        honest_verdict:
+          principle: "The verdict reports Gemma row completeness without claiming CFR benefit."
+        verdict_class:
+          principle: "Use only positive, circular_positive, null, blocked, disqualified, or partial; a complete source stream is null evidence infrastructure."
+        gate_check_summary:
+          principle: "Any blocked outcome names the exact gate, cache, resource, drift, or runtime check and value."
+        per_unit_rows:
+          principle: "Every source unit and arm carries raw stages, exact results, failures, tokens, and latency."
+        model_spec_and_identity:
+          principle: "The mandated Gemma 4 31B GGUF spec and content-derived local file identity bind inference."
+        prompt_source_router_hashes:
+          principle: "The Exp6587 byte-frozen method cannot drift by family or outcome."
+        raw_stage_receipts:
+          principle: "Direct, Stage 1, and Stage 2 bytes remain separate and immutable."
+        exact_checker_receipts:
+          principle: "Whitelisted executable checks, not the model, decide validity."
+        checkpoint_receipts:
+          principle: "Each completed unit survives later timeout or process failure."
+        gpu_process_receipts:
+          principle: "Ownership, offload, memory, utilization, and clean unload bind the local run."
+        failure_rows:
+          principle: "Timeouts, parse failures, unsupported constraints, contradictions, and exact rejection remain evidence."
+        gemma31_cfr_rows_ready_score:
+          principle: "This exact binary field gates the independent comparison."
+        attack_rows:
+          principle: "Drift, leakage, substitution, dropped failures, and aggregate-only claims fail closed."
+        preconditions_checked:
+          principle: "Gates, hashes, cache, resources, ownership, budgets, and protected files are explicit."
+        protected_files_unchanged:
+          principle: "Both protected orchestration files retain their original hashes."
+        inference_substrate:
+          principle: "The task declares fresh local Gemma 4 31B GGUF inference through llama.cpp."
+        verifier_is_oracle:
+          principle: "Exact checks define row validity, so later exact wins are circular-positive."
+        field_provenance:
+          principle: "Every field names source rows, raw bytes, process receipts, and reducer code."
+        duration_s:
+          principle: "Monotonic duration exposes smoke-only or truncated execution."
+        tests_run:
+          principle: "Named commands, exits, durations, and focused scope make validation reproducible."
+        reproducibility_checksum:
+          principle: "A final content hash protects the immutable stream."
+      Set inference_substrate=fresh_local_gemma4_31b_gguf_cfr_inference and verifier_is_oracle=true. A complete stream without a quality claim uses verdict_class=null. A bounded incomplete run uses partial or blocked as warranted and must populate gate_check_summary for blocked_* verdicts.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6591_gemma4_31b_constraint_first_stream --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
