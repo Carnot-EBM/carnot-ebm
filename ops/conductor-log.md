@@ -16479,3 +16479,5 @@ code |
 | 2026-08-25 20:01 UTC | Two-level local GGUF constrained decoding, gated o | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6608-family-headroom-reducer.headroom_b |
 | 2026-08-25 20:03 UTC | Two-level local GGUF constrained decoding, gated o | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6608-family-headroom-reducer.headroom_b |
 | 2026-08-25 20:05 UTC | Independent constrained-decoding safety-hacking an | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6609-two-level-constrained-decoding) |
+| 2026-08-25 20:43 UTC | Live-path invariant projection on archived world-m | OK | 115 passed, 1 warning in 17.78s |
+| 2026-08-25 20:45 UTC | Independent constrained-decoding safety-hacking an | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6609-two-level-constrained-decoding) |
