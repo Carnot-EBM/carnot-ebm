@@ -1898,6 +1898,7 @@ def execute_bounded_llm_reinduction(
                 # round that diagnosed a DYNAMICS failure and wrote it only to `row` was reported
                 # to every caller under a PLANNING label. Mirrors the sites below that already do
                 # this. Overwritten by a later round, cleared to "" by any planned return.
+                skipped = row["skipped"]
                 # ---- REQ-ARC-WMTE-6042 WRITE-COLLAPSE INSTRUMENTATION (record only) ----------
                 # WHAT DID THE EMITTED ENGINE BECOME? `prefix_accuracy` says the refactor rounds
                 # fit almost nothing (4/160 above zero, ceiling 0.125, against 28/88 and a ceiling
