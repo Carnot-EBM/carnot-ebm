@@ -28538,3 +28538,172 @@ oracles.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-6366 | Planned (`python/carnot/experiment_6366_repaired_live_factor_proposal_authenticity.py`, `results/experiment_6366_repaired_live_factor_proposal_authenticity.json`) | Planned (`tests/python/test_experiment_6366_repaired_live_factor_proposal_authenticity.py`) |
+
+---
+
+## REQ-LEARN-6614: Prospective Chronological Invariant Self-Learning
+
+Carnot SHALL compare `no_learning`, `static_projector`,
+`governed_online_memory`, and `shuffled_admission_control` on one immutable
+stream of archived live E3 world-model transitions. Each seed and arm SHALL
+receive every opportunity in the same chronological order. All arm state
+snapshots and predictions for an event SHALL become immutable before the exact
+next frame opens. The observed frame MAY govern only post-event evidence and
+side-state admission. It SHALL never alter generator, world-model, base-policy,
+or projector weights or source.
+
+The adaptation stream and untouched retention set SHALL be source-disjoint.
+The shuffled control SHALL receive the governed arm's candidate count, memory
+capacity, and update budget. Its source association SHALL use a frozen
+derangement that cannot read outcomes. The no-learning and static arms SHALL
+remain read-only. The governed and shuffled arms SHALL use the Exp6613 typed
+record, exact descriptor, lifecycle, journal, restart, and rollback contract.
+Every proposal SHALL end in an exact-evidence-bound commit, quarantine,
+archive, rejection, or no-op.
+
+The artifact SHALL measure immediate error, error on later chronological
+events, untouched retention change, future recoverable support, unsafe
+commits, occupancy, conflicts, latency, memory, failures, restart equality,
+rollback equality, and frozen hashes. All summaries SHALL recompute from
+immutable per-unit and memory-transition rows. A candidate win SHALL require a
+positive preregistered held-future benefit over both the static and shuffled
+controls. It SHALL also require noninferior retention and recoverable support,
+zero unsafe commits, matched dose, bounded cost and occupancy, exact restart
+and rollback, complete chronology, and unchanged frozen hashes.
+
+`continuous_self_learning_task` SHALL be bare `true`.
+`continuous_self_learning_ready_score` SHALL be bare `1.0` only for a
+candidate win. An exact-observation-governed win SHALL use
+`verdict_class=circular_positive`. A complete no-benefit result SHALL use
+`verdict_class=null`. A failed precondition SHALL use a named `blocked_*`
+class and SHALL record the exact expected and observed value.
+`inference_substrate` SHALL equal
+`prospective_chronological_live_e3_invariant_side_memory_no_new_llm`.
+`verifier_is_oracle` SHALL be bare `true` because exact observed frames govern
+post-event admission and the preregistered outcome.
+
+### REQ-LEARN-6614 Sub-requirements
+
+- REQ-LEARN-6614-PRECONDITIONS: Exp6611 live-path readiness and Exp6613 memory
+  readiness SHALL pass before any outcome opens. Protected hashes, archive and
+  chronology hashes, model and policy hashes, projector hash, schema and
+  journal versions, opportunities, arms, seeds, margins, rollback path, CPU,
+  RAM, disk, and atomic output SHALL freeze first.
+- REQ-LEARN-6614-CHRONOLOGY: Every event SHALL record all pre-state hashes and
+  prediction commitments before the observation receipt. State SHALL not
+  mutate between snapshot and observation.
+- REQ-LEARN-6614-DOSE: Every seed and arm SHALL receive every opportunity.
+  Governed and shuffled proposals, capacity, and storage budget SHALL match.
+- REQ-LEARN-6614-FROZEN: Generator weights, world-model sources, base policy,
+  projector, and protected files SHALL retain their pre-run hashes.
+- REQ-LEARN-6614-ADMISSION: Exact post-event error and validity SHALL decide
+  every side-state transition under the Exp6613 lifecycle. Unsafe, stale,
+  uncertain, command-bearing, duplicate, and conflicting records SHALL not
+  become active.
+- REQ-LEARN-6614-ROWS: `per_unit_rows` SHALL contain one row for each event,
+  arm, and seed. Each row SHALL contain pre-state, retrieval, prediction,
+  observation, exact error, validity, update, evidence, lifecycle decision,
+  post-state, occupancy, cost, failures, and support contribution.
+- REQ-LEARN-6614-UTILITY: Held-future benefit SHALL use only later events.
+  Retention SHALL use the untouched source-disjoint set after adaptation.
+  Recoverable support SHALL retain the frozen unprojected proposal path.
+- REQ-LEARN-6614-RECOVERY: Fresh restart and rollback SHALL recreate canonical
+  state bytes and probe predictions exactly for each mutable arm and seed.
+- REQ-LEARN-6614-ATTACKS: Future-frame leakage, game identity, opportunity
+  omission, dose mismatch, control reuse, shuffled correction, unsafe commit,
+  stale record, source duplication, pre-prediction mutation, weight mutation,
+  support collapse, journal corruption, restart drift, rollback drift, and
+  protected mutation SHALL fail closed.
+- REQ-LEARN-6614-ATOMIC: Checkpoints and the terminal artifact SHALL use atomic
+  replacement. The terminal checksum SHALL cover every field except itself.
+
+### SCENARIO-LEARN-6614-PREDICT-BEFORE-OBSERVE: Observation Cannot Steer A Prediction
+
+**Given** one frozen chronological event and all arm pre-state snapshots
+**When** every arm predicts
+**Then** prediction commitments exist before the observed frame opens, no arm
+state changes early, and exact evidence becomes available only afterward.
+
+### SCENARIO-LEARN-6614-MATCHED-ARMS: Opportunities And Dose Match
+
+**Given** the four registered arms and fixed seeds
+**When** the full stream runs
+**Then** each arm receives each event in the same order, and the governed and
+shuffled arms have equal proposal counts, capacity, and storage budget.
+
+### SCENARIO-LEARN-6614-LIFECYCLE: Exact Evidence Controls Side State
+
+**Given** beneficial, neutral, harmful, stale, duplicate, poisoned, and
+conflicting candidate updates
+**When** post-event evidence enters the Exp6613 lifecycle
+**Then** only exact safe candidates can become active, every other candidate
+has an explicit terminal decision, and generator and world-model weights stay
+frozen.
+
+### SCENARIO-LEARN-6614-UTILITY: Later Events Define Benefit
+
+**Given** completed adaptation rows and a source-disjoint retention set
+**When** reducers compare the online arm with static and shuffled controls
+**Then** held-future benefit uses later rows only, retention and recoverable
+support use their fixed margins, and row completion alone cannot open
+readiness.
+
+### SCENARIO-LEARN-6614-RECOVERY: Restart And Rollback Are Exact
+
+**Given** each final mutable arm state, its journal, an initial snapshot, and a
+frozen probe
+**When** a fresh process opens the state and a copied store rolls back
+**Then** canonical bytes and predictions match before and after restart, and
+rollback restores the target bytes and predictions exactly.
+
+### SCENARIO-LEARN-6614-ATTACKS: Shortcuts Fail Closed
+
+**Given** every registered timing, identity, dose, control, lifecycle, source,
+support, journal, recovery, weight, and protected-file mutation
+**When** the attack matrix replays copied state and rows
+**Then** each mutation is detected, no unsafe record becomes active, and no
+attack can promote readiness.
+
+### SCENARIO-LEARN-6614-ARTIFACT: One Checksummed Result States The Boundary
+
+**Given** all rows, reducers, gates, recovery checks, attacks, and test receipts
+**When** Exp6614 writes its terminal artifact
+**Then** every required field and principle exists, the checksum reproduces,
+the inference substrate and oracle fields are exact, and the verdict states
+benefit, retention, support, safety, recovery, and immutability without a game
+or level solve claim.
+
+### Required Artifact Fields and Principles
+
+- `status`: The task ends with complete prospective evidence or a named gate block.
+- `honest_verdict`: The verdict states benefit, retention, support, safety, recovery, and immutability without upgrading row completion.
+- `verdict_class`: The closed enum separates circular positive, null, and named blocked results.
+- `gate_check_summary`: Every failed upstream, chronology, dose, benefit, retention, support, safety, recovery, resource, or hash gate records its value.
+- `continuous_self_learning_task`: Bare true marks the mandatory FR-11 task.
+- `per_unit_rows`: Every event, arm, and seed carries complete pre-state through post-state evidence.
+- `chronology_and_split_receipts`: Source-disjoint order and untouched retention data freeze before updates.
+- `arm_and_dose_receipts`: All arms receive every opportunity in the same order and budget.
+- `frozen_model_policy_receipts`: Generator, world-model, base-policy, and projector hashes remain immutable.
+- `prediction_before_observation_rows`: Prediction commitments precede exact observation receipts.
+- `memory_transition_rows`: Every update decision binds exact evidence and journal hashes.
+- `held_future_benefit_summary`: Later-event utility compares online memory with static and shuffled controls from rows.
+- `retention_and_support_summary`: Untouched retention and recoverable support remain noninferior under fixed margins.
+- `safety_occupancy_and_cost_summary`: Unsafe commits, conflicts, occupancy, memory, latency, and failures remain explicit.
+- `restart_and_rollback_receipts`: Restart and rollback recreate byte-identical state and predictions.
+- `acceptance_gate_rows`: Every science and safety gate records expected, observed, and passed values.
+- `continuous_self_learning_ready_score`: This binary field opens only for benefit plus every safety and recovery gate.
+- `attack_rows`: Timing, identity, dose, control, lifecycle, source, support, journal, recovery, weight, and mutation attacks fail closed.
+- `preconditions_checked`: Gates, hashes, schemas, opportunities, metrics, resources, rollback, and protected files are explicit.
+- `protected_files_unchanged`: Both protected orchestration files retain original hashes.
+- `inference_substrate`: The task declares prospective live-path archive learning with frozen models and no new LLM.
+- `verifier_is_oracle`: Exact observed frames govern post-event admission and the preregistered outcome.
+- `field_provenance`: Every field points to immutable rows, hashes, evidence, journals, and reducers.
+- `duration_s`: Monotonic duration covers opportunities, arms, recovery checks, and attacks.
+- `tests_run`: Named learning, lifecycle, lint, spec, artifact, gate, adversarial, and E2E commands include exits and durations.
+- `reproducibility_checksum`: A final content hash protects the result.
+
+## Implementation Status (REQ-LEARN-6614)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-6614 | Implemented (`python/carnot/experiment_6614_prospective_invariant_self_learning.py`, `results/experiment_6614_prospective_invariant_self_learning.json`) | Implemented (`tests/python/test_experiment_6614_prospective_invariant_self_learning.py`) |
