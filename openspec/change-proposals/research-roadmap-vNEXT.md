@@ -1,156 +1,153 @@
-# Research Roadmap vNEXT: Audited Constraint-First Learning
+# Research Roadmap vNEXT: Constraint Memory and Latent Energy Correction
 
-**Milestone:** 2026.08.574  
+**Milestone:** 2026.08.575  
 **Planning date:** 2026-08-25  
-**Experiment range:** Exp6588-Exp6600  
+**Experiment range:** Exp6592-Exp6603  
 **Execution file:** research-roadmap-next.yaml  
 **Status:** planned
 
 ## Purpose
 
-Milestone 573 closed three tasks. It recovered the terminal V572 evidence,
-froze a bounded constraint-first method, and measured the isolated-suite
-environment. It did not run a flagship constraint-first stream. The suite task
-also blocked on a malformed pytest receipt and was adversarially nonterminal.
+Milestone 574 closed four tasks. It proved that the frozen Constraint-First
+Reasoning (CFR) method can produce complete Qwen3.6 and Gemma 4 31B row streams
+on the local GGUF path. It did not prove that CFR improves exact success. Its
+isolated pytest receipt repair also remained blocked and adversarially flagged.
 
-Milestone 574 executes the frozen Constraint-First Reasoning method on two
-current local flagship families. It compares the rows through an independent
-reducer and attacks the source and authority links. It then tests a new form of
-continuous self-learning: compact verifier-confirmed constraint Genes with
-outcome-based relevance, reversible commits, and memory-injection defenses.
-One software-only Ising canary tests a recent spectral block sampler idea. One
-ARC task refines the live trajectory supervisor from accumulated outcomes.
+Milestone 575 converts the two immutable streams into one decision-grade result.
+It then tests three native energy mechanisms: invariant projection for frozen
+world models, convex-hull projection for continuous token flows, and spectral
+k-block Ising sampling. The final scientific phase tests continuous
+self-learning through typed, exact-verified constraint Genes with reversible
+memory, held-future utility, and injection defenses. A bounded dual-GPU canary
+tests whether the two local RTX 3090 cards can keep the two flagship families
+resident without changing their outputs.
 
-The milestone does not revive generated ConstraintIR, an external text scorer,
-model self-certification, public ARC game solving, or unchanged FPGA commands.
+The milestone does not rerun the completed CFR streams, revive the retired
+external text scorer, let a model certify itself, patch cached GGUF weights,
+claim an ARC level, or repeat an unchanged physical-board command.
 
-## What milestone 573 proved
+## What milestone 574 proved
 
-| Item | Terminal evidence | Meaning for 574 |
+| Item | Terminal evidence | Meaning for 575 |
 |---|---|---|
-| Exp6585 terminal recovery and execution contract | Complete. All six V572 terminal states and three Exp6584 hard-limit attempts replayed. The model tasks were bounded. | Reuse the one-model, checkpoint, cleanup, and no-artifact rules. Do not rebuild a monolithic three-family task. |
-| Exp6586 isolated suite truth baseline | `blocked_isolated_environment: pytest_receipt`; adversarial review found a nonterminal declared artifact and zero rows. | Repair only the receipt and isolation contract. Suite success remains outside scientific task launch gates. |
-| Exp6587 constraint-first method contract | Complete. The source, fixture, router, metrics, and exact-authority contracts are frozen. | Execute the method without prompt, source, checker, or acceptance drift. |
-| V573 scientific outcome | No flagship CFR rows were generated. | V574 begins with bounded model evidence. V573 readiness is not a quality result. |
+| Exp6588 V574 launch root | Complete with `v574_cfr_launch_ready_score=1`. | The frozen CFR source and method contracts were runnable. Readiness is not a quality result. |
+| Exp6589 isolated pytest receipt remediation | `blocked_receipt_validation_block: terminal_report_validation`; `pytest_receipt_remediation_ready_score=0`. | Preserve the block. Do not use suite GREEN as a science gate and do not spend another milestone slot on the same receipt shape. |
+| Exp6590 Qwen3.6 CFR stream | Complete with `qwen_cfr_rows_ready_score=1`; all direct and staged rows exist. | Reuse immutable rows. Do not rerun Qwen merely to compute a headline. |
+| Exp6591 Gemma 4 31B CFR stream | Complete with `gemma31_cfr_rows_ready_score=1`; all direct and staged rows exist. | Reuse immutable rows. Keep family evidence independent until reduction. |
+| V574 scientific outcome | Neither model task made a CFR benefit claim. Live artifact review warned that compute methodology was not exposed in the expected top-level fields. | Exp6592 must bind nested model identity, source, seed, and process receipts before opening comparison. |
 
 The milestone number records terminal execution. A blocked infrastructure task
-does not become a null scientific result, and a method contract does not prove a
-model benefit.
+does not become a null scientific result. Complete row production does not
+become evidence of benefit until an independent reducer replays every row.
 
 ## The three largest PRD gaps
 
-### Gap 1: no decision-grade constraint-first result on current local models
+### Gap 1: no independent flagship CFR result
 
-The PRD needs faithful constraint extraction from real model output. Exp6587
-froze the method, but Carnot has no paired direct-versus-CFR rows from a current
-flagship model.
+The PRD calls for faithful constraint extraction and verifiable reasoning on
+real model output. Carnot now has two current flagship streams, but no
+independent direct-versus-CFR result.
 
-V574 response:
+V575 response:
 
-1. Run Qwen3.6 35B-A3B and Gemma 4 31B in separate fresh llama.cpp processes.
-2. Preserve direct output, the plain-text constraint stage, the final stage,
-   source bytes, exact results, failures, tokens, and latency for every unit.
-3. Recompute effects from immutable rows. Do not trust model-task aggregates.
-4. Treat exact-checker-defined improvement as `circular_positive`, never as an
-   oracle-distinct positive result.
+1. Bind both stream artifacts by content hash and replay their nested model,
+   source, seed, exact-check, failure, token, and latency receipts.
+2. Recompute every family and pooled metric from per-unit rows.
+3. Run an always-on source, constraint, stage, family, and authority attack.
+4. Classify any exact-checker-defined improvement as `circular_positive`, not
+   oracle-distinct positive evidence.
 
-### Gap 2: scientific claims still depend on brittle evidence contracts
+### Gap 2: Carnot still corrects mostly after generation
 
-Exp6586 blocked on a receipt shape, and Exp6584 previously hit the hard limit
-without an artifact. Carnot does not yet have an independent, counterfactual
-proof that a CFR result is caused by bound constraints rather than prompt
-format, family labels, source drift, or authority substitution.
+The long-term architecture calls for continuous latent reasoning and energy
+descent inside the reasoning process. The shipped system is strongest at exact
+post-generation checks. It has little current evidence that a native latent or
+sampling correction improves held behavior.
 
-V574 response:
+V575 response:
 
-1. Repair the isolated-suite receipt in its own infrastructure task.
-2. Keep model streams bounded and independently checkpointed.
-3. Compare only through a reducer with no model load.
-4. Run an always-on counterfactual and authority audit that can diagnose missing
-   inputs instead of disappearing behind a gate cascade.
+1. Test learned-invariant projection on frozen conservative and damped world
+   model fixtures with no-projection and random-constraint controls.
+2. Test a ConvergeFlow-inspired convex-hull token projection on fixed toy
+   embeddings and held predictor errors.
+3. Test spectral k-block sampling against sequential Gibbs on exact-enumerable
+   Ising fixtures.
+4. Keep the canaries separate so a failure in one mechanism cannot mask or
+   cascade-block the others.
 
-### Gap 3: continuous self-learning has no prospective safe utility result
+### Gap 3: continuous self-learning lacks prospective safe utility
 
-FR-11 requires continuous self-learning. Exp6552 proved reversible hysteresis
-but found no comparative benefit. Exp6553 and Exp6554 blocked before valid live
-transitions existed. Carnot still lacks a chronological memory result with
-retention, support, poison, restart, and rollback evidence.
+FR-11 requires continuous self-learning. Earlier factor and memory tasks proved
+parts of rollback and lifecycle control, but they did not produce an eligible
+held-future benefit. Exp6553 blocked before live transitions, and Exp6498 found
+that the earlier claim was ineligible because held-future benefit failed.
 
-V574 response:
+V575 response:
 
-1. Consolidate only exact-verified rows into typed, source-bound constraint
-   Genes inspired by LongWoF-Bench.
-2. Compare raw verified replay, a frozen generic summary, a constraint Gene,
-   and a Gene plus outcome-based EARM-style relevance.
-3. Keep observed and estimated relevance separate. Estimated relevance may
-   route a proposal but cannot write trusted state or release an answer.
-4. Attack the memory with InjecMEM-style topical anchors and command fields.
-5. Permit a default-off production shadow only after prospective utility and
-   poison-safety gates pass.
+1. Consolidate only exact-verified CFR rows into typed, source-bound constraint
+   Genes.
+2. Compare no update, raw verified replay, Gene memory, observed relevance, and
+   bounded estimated relevance in chronological order.
+3. Freeze generator weights and snapshot state before every decision.
+4. Require held-future support, retention, occupancy, restart, rollback, and
+   poison safety before a default-off shadow consumer can run.
 
 ## Research inputs
 
-The V574 source refresh is recorded in `research-references.md` before this
+The V575 source refresh was written to `research-references.md` before this
 roadmap was designed.
 
-- arXiv:2608.23200, LongWoF-Bench, motivates compact structured Genes derived
-  from verifier-confirmed successful trajectories. V574 imports the verified
-  consolidation idea, not the paper's reported benchmark gain.
-- arXiv:2608.22767, EARM, motivates a sparse observed relevance matrix and
-  bounded estimation of missing relevance. V574 denies estimated entries write
-  and release authority.
-- arXiv:2608.23471, InjecMEM, motivates a single-interaction memory attack that
-  combines topical anchors and adversarial commands. V574 treats memory as
-  typed non-executable data and requires quarantine and rollback.
-- arXiv:2608.21466 motivates a small spectral k-block averaging canary on exact-
-  enumerable Ising fixtures. It is software evidence only.
-- arXiv:2608.21605 is retained for a later continuous-constraint milestone. It
-  is not mixed into V574's already bounded CFR and memory questions.
-- Extropic Z1 and Kona 1.0 remain product comparators. Neither supplies an
-  authenticated local runner that V574 can evaluate.
+- arXiv:2608.23526 motivates a held-rollout invariant-projection canary. V575
+  imports the frozen-model correction idea, not the paper's result.
+- arXiv:2608.23551 motivates a convex-hull feasible-token projection. V575 uses
+  fixed toy embeddings and does not claim to reproduce a language model.
+- arXiv:2608.23541 motivates independent model-family streams and a reducer that
+  does not let one family read the other family's solution.
+- arXiv:2608.23554 is retained as a later parallel discrete-diffusion route.
+  V575 first measures the already bounded spectral k-block sampler idea from
+  arXiv:2608.21466.
+- arXiv:2608.17687 and arXiv:2608.23244 are held outside execution. The first
+  depends on MoE router telemetry plus LLM-judge labels. The second requires a
+  reviewed LoRA ensemble path. Neither changes exact release authority.
+- Extropic Z1 and Logical Intelligence Kona 1.0 remain product comparators. No
+  authenticated local runner is available for either.
 
 ## Architecture
 
 ```text
-V573 terminal evidence + frozen CFR method + exact registry
-                          |
-                Exp6588 launch root
-                  /       |       \
-                 v        v        v
-       Exp6589 receipt  Exp6590   Exp6591
-          repair         Qwen      Gemma
-                           \        /
-                            v      v
-                    Exp6592 row reducer
-                             |
-                             v
-                    Exp6593 authority audit
-                             |
-             +---------------+---------------+
-             |                               |
-             v                               v
-   Exp6595 Gene/EARM conformance      Exp6594 spectral sampler
-             |
-             v
-   Exp6596 prospective self-learning
-             |
-             v
-   Exp6597 memory-injection audit
-             |
-             v
-   Exp6598 default-off shadow adapter
-
-   Exp6599 ARC held-game arm selection
-             |
-             +-------------------------------+
-                                             v
-                                  Exp6600 capstone
+V574 Qwen rows + V574 Gemma rows + frozen CFR method
+                         |
+                         v
+             Exp6592 terminal intake/method lock
+                    /                     \
+                   v                       v
+       Exp6593 independent reducer   Exp6602 dual-GPU canary
+                   |
+                   v
+       Exp6594 counterfactual authority audit
+                   |
+                   +------------------------------+
+                                                  |
+Exp6595 invariant projection ---------------------+
+Exp6596 feasible-token flow ----------------------+--> Exp6603 capstone
+Exp6597 spectral Ising sampler -------------------+
+                                                  |
+Exp6598 constraint-Gene conformance               |
+                   |                              |
+                   v                              |
+Exp6599 prospective continuous self-learning      |
+                   |                              |
+                   v                              |
+Exp6600 independent memory safety audit           |
+                   |                              |
+                   v                              |
+Exp6601 default-off shadow adapter ---------------+
 ```
 
-The learned-memory path stays asymmetric.
+The memory path stays asymmetric.
 
 ```text
-immutable source + exact-verified row
+immutable source + exact-verified CFR row
                  |
                  v
        typed constraint Gene ----------> observed relevance
@@ -167,293 +164,293 @@ immutable source + exact-verified row
                     release          abstain
 ```
 
-Only exact verification can admit trusted memory or release an answer. A learned
-score or estimated relevance can rank candidates, route work, or abstain.
+A learned or estimated value may rank, route, project, or abstain. Only the
+independent exact obligation check can admit trusted memory or release an
+answer.
 
-## Phase I: bounded evidence closure
+## Phase I: independent CFR adjudication
 
-### Exp6588 - V574 bounded CFR launch root
+### Exp6592 - V575 terminal intake and method lock
 
-Replay Exp6585 and Exp6587 contracts, record the Exp6586 block without treating
-it as a science gate, and freeze the same-roadmap field map for V574. This task
-loads no model.
+Replay Exp6588 through Exp6591 without rewriting them. Bind the two completed
+streams to model identity, source, prompt, seed, exact-check, checkpoint,
+failure, cost, and process receipts. Preserve Exp6589 as blocked. Lock the new
+paper methods and the same-roadmap gate field map.
 
-**Acceptance:** the source, method, budgets, protected files, model cache
-identities, gates, and cleanup rules replay; `v574_cfr_launch_ready_score=1` only
-when both model streams can run independently.
+**Acceptance:** `v575_cfr_reducer_ready_score=1` only when both flagship streams
+have complete row-addressable evidence. `v575_dual_gpu_canary_ready_score=1`
+only when both mandated GGUF caches and two idle, owned RTX 3090 devices are
+available. No science result is created.
 
-**Deliverable:** `results/experiment_6588_v574_bounded_cfr_launch_root.json`
+**Deliverable:** `results/experiment_6592_v575_terminal_intake_and_method_lock.json`
 
-### Exp6589 - isolated pytest receipt remediation
+### Exp6593 - independent CFR row reducer
 
-Repair the malformed Exp6586 pytest receipt and rerun only the bounded receipt
-fixtures plus one disposable-suite measurement when the isolated environment is
-valid. Do not make a GREEN suite a model-launch requirement.
+Consume the immutable Qwen and Gemma rows. Recompute direct, always-on CFR, and
+routed CFR results by family and pooled unit. Measure exact success, headroom,
+constraint support, contradiction, abstention, unsafe release, tokens, latency,
+and failures.
 
-**Acceptance:** every receipt carries command, cwd, environment, exit, duration,
-stdout, stderr, collection, cleanup, and mutation fields; RED is a measured
-baseline, not a task failure.
+**Acceptance:** every aggregate replays from per-unit rows. A CFR win needs a
+positive paired exact-success delta, a nonnegative preregistered paired lower
+bound, no unsafe-release increase, the frozen Stage 1 precision floor, and the
+frozen cost bound. A result defined by the exact checker is
+`circular_positive` at best.
 
-**Deliverable:** `results/experiment_6589_isolated_pytest_receipt_remediation.json`
+**Deliverable:** `results/experiment_6593_cfr_independent_row_reducer.json`
 
-### Exp6590 - Qwen3.6 constraint-first stream
+### Exp6594 - CFR counterfactual and authority audit
 
-Run `unsloth/Qwen3.6-35B-A3B-GGUF` in one fresh llama.cpp process under the
-Exp6587 method. Generate matched direct, always-on CFR, and routed CFR rows. This
-task makes no headline quality claim.
-
-**Acceptance:** every expected unit has raw direct and staged receipts, exact
-results, token and latency costs, failure retention, checkpoints, model identity,
-GPU receipts, and clean unload.
-
-**Deliverable:** `results/experiment_6590_qwen36_constraint_first_stream.json`
-
-### Exp6591 - Gemma 4 31B constraint-first stream
-
-Run `unsloth/gemma-4-31B-it-GGUF` under the same byte-frozen method in a separate
-fresh llama.cpp process.
-
-**Acceptance:** the dense flagship satisfies the same row and runtime contract
-as Exp6590 without family-specific prompt, source, or checker drift.
-
-**Deliverable:** `results/experiment_6591_gemma4_31b_constraint_first_stream.json`
-
-## Phase II: independent comparison and energy-side canary
-
-### Exp6592 - independent constraint-first comparison
-
-Consume only completed immutable stream artifacts. Recompute direct versus
-always-on and routed CFR by family and unit. Report exact success, constraint
-precision and recall, unsupported and contradictory constraints, unsafe release,
-abstention, tokens, latency, and failures.
-
-**Acceptance:** every aggregate replays from per-unit rows. A candidate win needs
-a positive routed-CFR exact-success delta, a nonnegative preregistered paired
-lower bound, no unsafe-release increase, the frozen Stage 1 precision floor, and
-the frozen cost bound. Any exact-defined win is circular.
-
-**Deliverable:** `results/experiment_6592_constraint_first_independent_comparison.json`
-
-### Exp6593 - counterfactual and exact-authority audit
-
-Replay source replacement, constraint deletion, contradiction injection, stage
-swap, family-label swap, raw-byte tamper, answer leak, and exact-authority
-substitution. This task performs no model inference and always runs.
+Always run. Replay source replacement, constraint deletion, contradiction
+injection, stage swap, family-label swap, byte tamper, answer leak, and exact-
+authority substitution. Perform no model inference.
 
 **Acceptance:** tamper, leakage, and authority substitution fail closed. Missing
-model evidence produces a named block with `gate_check_summary`. A null scientific
-comparison can still have a successful authority audit.
+input produces a named `blocked_*` verdict with `gate_check_summary`; it does
+not turn into a null comparison.
 
-**Deliverable:** `results/experiment_6593_constraint_first_authority_audit.json`
+**Deliverable:** `results/experiment_6594_cfr_counterfactual_authority_audit.json`
 
-### Exp6594 - spectral k-block Ising sampler canary
+## Phase II: native energy mechanism canaries
 
-Implement the smallest useful form of arXiv:2608.21466 over existing exact-
-enumerable Ising fixtures. Compare sequential Gibbs with spectral-selected
-k-block averaging under matched seeds and transition budgets.
+### Exp6595 - frozen world-model invariant projection
 
-**Acceptance:** stationary error, effective sample size, setup cost, transition
-cost, and wall time replay per fixture and seed. The result makes no FPGA, TSU,
-or general hardware-speed claim.
+Implement the smallest useful arXiv:2608.23526 canary over existing continuous
+EBM fixtures. Select an invariant from a preregistered low-capacity basis on a
+calibration split. Freeze it before held rollouts. Compare no projection,
+learned-invariant projection, an exact-invariant diagnostic control, and a
+norm-matched random constraint on conservative and damped dynamics.
 
-**Deliverable:** `results/experiment_6594_spectral_k_block_ising_canary.json`
+**Acceptance:** report held rollout error, invariant drift, energy, projection
+distance, steps, and wall time for every fixture, arm, horizon, and seed. A
+positive mechanism result requires held conservative improvement over no
+projection and random controls without a damped-model false invariant. It is not
+an ARC solve and does not make the learned invariant exact authority.
 
-## Phase III: continuous self-learning and ARC generalization
+**Deliverable:** `results/experiment_6595_invariant_projection_world_model_canary.json`
 
-### Exp6595 - verifier-confirmed constraint Gene conformance
+### Exp6596 - ConvergeFlow feasible-token projection
 
-Implement typed source-bound constraint Genes and an outcome-based sparse
-relevance matrix. Replay hand-computed fixtures for admission, consolidation,
-observed-versus-estimated relevance, occupancy, conflict, quarantine, restart,
-and rollback. The frozen generic-summary control is reference data, not a live
-LLM judge.
+Build a bounded continuous-flow canary with fixed toy token embeddings and
+exact feasible token sets. Compare unconstrained flow, nearest-token-only
+rounding, and convex-hull predictor projection under matched predictor errors
+and seeds.
 
-**Acceptance:** unsupported and command-bearing fields cannot enter trusted
-memory; estimated relevance cannot write or release; every invariant and fixture
-passes before any utility comparison.
+**Acceptance:** report valid-token convergence, hard-constraint violations,
+steps, path length, endpoint distortion, and wall time per unit. Constraint
+satisfaction that follows from the exact feasible set is circular. The canary
+must not claim language-model reproduction.
 
-**Deliverable:** `results/experiment_6595_constraint_gene_earm_conformance.json`
+**Deliverable:** `results/experiment_6596_convergeflow_feasible_token_canary.json`
 
-### Exp6596 - prospective exact-verified continuous self-learning
+### Exp6597 - spectral k-block Ising sampler
 
-Process audited CFR rows in chronological order. Compare frozen memory, raw
-verified replay, a frozen generic summary, typed constraint Genes, and Genes plus
-bounded EARM-style relevance. Snapshot before each decision and commit only after
-independent exact verification. Keep all generator weights frozen.
+Implement a software-only spectral partition canary from arXiv:2608.21466.
+Compare sequential Gibbs and spectral-selected k-block averaging on independent,
+ferromagnetic, and frustrated exact-enumerable Ising fixtures under matched
+seeds and transition budgets.
 
-**Acceptance:** a candidate win must improve preregistered future support over
-raw verified replay while meeting retention, zero unsafe commit, occupancy,
-memory, cost, restart, and rollback bounds. Otherwise report an honest null,
-partial, block, or disqualification.
+**Acceptance:** use at least 10,000 retained samples per fixture and seed after
+explicit burn-in. Report total variation error, moment error, effective sample
+size, setup cost, transition cost, and wall time per row. A win requires
+stationary-distribution noninferiority plus an ESS-per-transition or charged
+wall-time gain. Make no FPGA, TSU, or general hardware claim.
 
-**Deliverable:** `results/experiment_6596_prospective_constraint_gene_self_learning.json`
+**Deliverable:** `results/experiment_6597_spectral_k_block_ising_canary.json`
 
-### Exp6597 - memory-injection and independent learning audit
+## Phase III: continuous self-learning and safe memory
 
-Always reconstruct Exp6596 transitions from rows and journals. Attack topical
-anchors, command-bearing fields, topic drift, cross-family transfer, duplicate
-sources, near-neighbor benign records, tampered relevance, restart, and rollback.
+### Exp6598 - typed constraint-Gene conformance
 
-**Acceptance:** every transition and utility claim replays. No attack can create
-a trusted write or unsafe release. Missing prospective input is a named block,
-not a null result.
+Implement typed source-bound constraint Genes and a sparse outcome-relevance
+matrix. Test admission, consolidation, observed-versus-estimated relevance,
+source occupancy, conflict, quarantine, restart, and rollback on hand-computed
+fixtures. Treat every memory value as data, never as an executable instruction.
 
-**Deliverable:** `results/experiment_6597_constraint_memory_injection_audit.json`
+**Acceptance:** unsupported or command-bearing fields cannot enter trusted
+memory. Estimated relevance cannot write or release. Every invariant passes
+before the prospective comparison can start.
 
-### Exp6598 - default-off constraint Gene shadow adapter
+**Deliverable:** `results/experiment_6598_constraint_gene_conformance.json`
 
-Only when prospective utility and poison-safety gates pass, wire a default-off,
-read-only production shadow consumer. It may route stored proposals to the exact
-checker. It cannot mutate generator weights, write trusted memory, or affect a
-released answer.
+### Exp6599 - prospective constraint-Gene continuous self-learning
 
-**Acceptance:** baseline and shadow rows are identical at the release boundary;
-shadow selections, abstentions, costs, restart, and disable behavior replay. A
-failed gate skips the task before an agent call.
+Process audited CFR rows in chronological order. Compare no update, raw
+verified replay, typed Genes, Genes with observed relevance, and Genes with
+bounded estimated relevance. Snapshot before each prediction and commit only
+after independent exact verification. Keep all generator weights frozen.
 
-**Deliverable:** `results/experiment_6598_constraint_gene_shadow_adapter.json`
+**Acceptance:** a candidate win must improve preregistered held-future support
+over raw verified replay while meeting retention, zero unsafe commit, occupancy,
+memory, cost, restart, and rollback bounds. The artifact declares
+`continuous_self_learning_task=true`. An exact-checker-defined win is
+`circular_positive`.
 
-### Exp6599 - ARC held-game arm-selection refinement
+**Deliverable:** `results/experiment_6599_prospective_constraint_gene_self_learning.json`
 
-Read accumulated live `trajectory_supervisor` outcome receipts after Exp6558.
-Recompute fired and helped counts by held game and time. Change only selection or
-priority over the curated arm table when preregistered support exists. Do not add
-a game adapter, inspect game source, run an outer-loop solve, or claim a level.
+### Exp6600 - independent memory injection and lifecycle audit
 
-**Acceptance:** all live ledger rows replay. Any shared-policy change is backed
-by held-game outcomes. An empty ledger or unsupported change ends as
-`complete: no supported policy change` and still satisfies the ARC generalization
-floor.
+Always run. Reconstruct every Exp6599 transition from immutable rows and journal
+hashes. Attack topical anchors, command fields, topic drift, cross-family
+transfer, duplicate sources, benign near neighbors, estimated relevance,
+restart, and rollback.
 
-**Deliverable:** `results/experiment_6599_arc_held_game_arm_selection.json`
+**Acceptance:** every transition, utility value, and safety decision replays. No
+attack creates a trusted write or unsafe release. Missing prospective input is a
+named block, not a null result.
 
-## Phase IV: synthesis
+**Deliverable:** `results/experiment_6600_constraint_memory_safety_audit.json`
 
-### Exp6600 - independent V574 capstone
+### Exp6601 - default-off constraint-Gene shadow adapter
 
-Account for all thirteen tasks and recompute readiness and scientific
-dispositions. Separate positive, circular-positive, null, blocked,
-disqualified, and partial results. Reconcile specs, traceability, architecture,
-status, and changelog with actual evidence.
+Only after prospective utility and memory-safety gates pass, wire a default-off,
+read-only shadow consumer. It may route stored constraints to the exact checker.
+It cannot mutate generator weights, write trusted memory, or affect a released
+answer.
+
+**Acceptance:** baseline and shadow release rows are identical. Shadow routing,
+abstention, cost, restart, disable, and rollback behavior replay. Failed gates
+skip the task before an agent call.
+
+**Deliverable:** `results/experiment_6601_constraint_gene_shadow_adapter.json`
+
+## Phase IV: local systems evidence and synthesis
+
+### Exp6602 - dual-GPU isolated-residency canary
+
+Use `unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-31B-it-GGUF` in two isolated llama.cpp processes, one per RTX
+3090. Compare sequential and concurrent execution on a small byte-frozen set.
+Do not exchange solutions across families.
+
+**Acceptance:** preserve per-unit output, exact result, tokens, first-token
+latency, throughput, VRAM, utilization, process ownership, and cleanup. A
+systems win requires at least 1.5x aggregate throughput, no exact-output drift,
+no OOM, and no more than 25% per-stream latency regression. This is a local
+systems result, not a CFR quality result.
+
+**Deliverable:** `results/experiment_6602_dual_gpu_flagship_residency_canary.json`
+
+### Exp6603 - independent V575 capstone
+
+Account for all twelve tasks. Recompute readiness and scientific dispositions
+from rows. Separate positive, circular-positive, null, blocked, disqualified,
+and partial results. Reconcile specs, traceability, architecture, status, and
+changelog with actual execution evidence.
 
 **Acceptance:** every expected task has a terminal artifact or exact missing
 diagnosis. No block becomes null. No exact-defined result becomes non-circular.
-The capstone records whether `_bmad/architecture.md` was reconciled from its
-stale pre-milestone date.
+The capstone states whether the stale pre-milestone architecture document was
+reconciled from current evidence.
 
-**Deliverable:** `results/experiment_6600_v574_independent_capstone.json`
+**Deliverable:** `results/experiment_6603_v575_independent_capstone.json`
 
 ## Dependency graph
 
 ```text
-Exp6588 launch root ------> Exp6590 Qwen ------+
-          |                                     |
-          +---------------> Exp6591 Gemma ------+--> Exp6592 comparison
-                                                           |
-                                                           v
-                                                    Exp6593 audit
-                                                           |
-Exp6595 Gene conformance ----------------------------------+--> Exp6596 CSL
-                                                                    |
-                                                                    v
-                                                             Exp6597 audit
-                                                                    |
-                                                                    v
-                                                             Exp6598 shadow
+Exp6592 intake ---> Exp6593 CFR reducer
+       |                    |
+       |                    v
+       |             Exp6594 authority audit
+       |                    |
+       |                    +--------------------+
+       |                                         |
+       +---> Exp6602 dual-GPU canary              |
+                                                 |
+Exp6598 Gene conformance -------------------------+--> Exp6599 CSL
+                                                        |
+                                                        v
+                                                 Exp6600 safety audit
+                                                        |
+                                                        v
+                                                 Exp6601 shadow
 
-Exp6589 receipt repair -------------------------------------------+
-Exp6594 sampler canary --------------------------------------------+
-Exp6599 ARC generalization ----------------------------------------+--> Exp6600
-Exp6588-Exp6598 ---------------------------------------------------+
+Exp6595 invariant projection ---------------------------+
+Exp6596 feasible-token projection ----------------------+--> Exp6603
+Exp6597 spectral Ising sampler -------------------------+
+Exp6592-Exp6602 ----------------------------------------+
 ```
 
 Structured runtime gates:
 
-- Exp6590 and Exp6591 require `v574_cfr_launch_ready_score=1`.
-- Exp6592 requires `qwen_cfr_rows_ready_score=1` and
-  `gemma31_cfr_rows_ready_score=1`.
-- Exp6596 requires `constraint_first_comparison_rows_ready_score=1`,
-  `constraint_first_authority_audit_ready_score=1`, and
-  `constraint_gene_conformance_ready_score=1`.
-- Exp6598 requires `prospective_csl_ready_score=1` and
-  `memory_injection_safety_ready_score=1`.
+- Exp6593 requires `v575_cfr_reducer_ready_score=1` from Exp6592.
+- Exp6599 requires `cfr_reducer_ready_score=1` from Exp6593,
+  `cfr_authority_audit_ready_score=1` from Exp6594, and
+  `constraint_gene_conformance_ready_score=1` from Exp6598.
+- Exp6601 requires `prospective_constraint_gene_csl_ready_score=1` from Exp6599
+  and `constraint_memory_safety_ready_score=1` from Exp6600.
+- Exp6602 requires `v575_dual_gpu_canary_ready_score=1` from Exp6592.
 
-Exp6589, Exp6593, Exp6594, Exp6595, Exp6597, Exp6599, and Exp6600 always
-run. They can diagnose missing inputs without a gate cascade.
+Exp6594, Exp6595, Exp6596, Exp6597, Exp6598, Exp6600, and Exp6603 always run.
+They can preserve a useful diagnosis when a dependent input is missing.
 
 ## Model requirements
 
 | Task | Required local model | Role |
 |---|---|---|
-| Exp6590 | `unsloth/Qwen3.6-35B-A3B-GGUF` | Flagship MoE matched CFR stream |
-| Exp6591 | `unsloth/gemma-4-31B-it-GGUF` | Flagship dense matched CFR stream |
+| Exp6602 | `unsloth/Qwen3.6-35B-A3B-GGUF` | Flagship MoE isolated residency |
+| Exp6602 | `unsloth/gemma-4-31B-it-GGUF` | Flagship dense isolated residency |
 
-`unsloth/gemma-4-26B-A4B-it-GGUF` remains an allowed SOTA replication
-family when capacity permits. Legacy Qwen3.5-0.8B and gemma-4-E4B-it may
-smoke-test CPU plumbing only. They cannot satisfy readiness or headline fields.
+No other V575 task performs new LLM inference. Exp6592 through Exp6601 consume
+fixed artifacts, deterministic fixtures, or exact simulators.
 
-Each model task follows the `cached_sota_pair()` cache-resolution pattern,
-records content-derived GGUF identity, uses the GGUF-embedded tokenizer through
-llama.cpp, runs one model at a time, samples GPU state, checkpoints raw rows, and
-verifies unload. It never calls `AutoTokenizer` on a GGUF repository.
+`unsloth/gemma-4-26B-A4B-it-GGUF` remains an allowed independent SOTA
+replication family for a later milestone. Legacy Qwen3.5-0.8B and
+gemma-4-E4B-it may smoke-test CPU plumbing only. They cannot satisfy readiness
+or headline fields. Exp6602 follows the `cached_sota_pair()` pattern, records
+exact hub IDs and content-derived GGUF identities, uses GGUF-embedded tokenizers,
+and does not download during measurement.
 
 ## Hardware requirements
 
-| Resource | Tasks | Contract |
+| Resource | Requirement | Use and boundary |
 |---|---|---|
-| RTX 3090 GPU 0 or runtime-selected idle 3090 | Exp6590, Exp6591 | Run one model task at a time. Preserve unrelated processes. Record device selection, offload, memory, utilization, timing, and unload. |
-| Second RTX 3090 | Optional capacity only | Do not assume it is idle. A task may use it only after a fresh ownership and VRAM receipt. No dual-model residency is planned. |
-| CPU and RAM | Exp6588, Exp6589, Exp6592-Exp6600 | Reducers and audits are CPU-first. Bound parallelism and record peak memory. |
-| Local GGUF cache | Exp6590, Exp6591 | Required. Resolve cached files before inference. No download during the measured run. |
-| KV260, GateMate, PolarFire | No V574 command | Their defined terminal fields already exist in non-fabricated artifacts. V574 does not repeat unchanged continuity commands or claim new board performance. |
-| Extropic TSU/Z1 | None | No authenticated runner exists. The spectral canary is software-only. |
+| CPU and RAM | Enough for exact row replay, toy flow, exact Ising enumeration, and statistical reduction | Exp6592-Exp6601 and Exp6603 are CPU-first. Each task records the observed resources. |
+| Local storage | Existing V574 artifacts, checkpoints, and cached GGUF files | No task rewrites historical artifacts or downloads a model during measurement. |
+| GPU 0 | One idle, runtime-owned RTX 3090 with 24 GiB | Exp6602 Qwen or Gemma process, selected at runtime. |
+| GPU 1 | One idle, runtime-owned RTX 3090 with 24 GiB | Exp6602's other isolated process. |
+| Physical accelerators | No requirement | KV260, GateMate, PolarFire, and Extropic stay on changed-state receipt continuity. No unchanged command or simulated hardware claim is allowed. |
 
-The spectral canary can inform a later partition-precompute or accelerator study.
-It is not evidence about current attached boards.
+The July architecture inventory is stale. Every hardware claim therefore comes
+from a fresh task preflight and process receipt, not from the architecture
+document. If either GPU is busy or a cache identity is missing, Exp6602 is
+blocked or skipped with the exact observed value; it does not evict unowned work.
 
-## Evidence and authority rules
+## Execution and claim rules
 
-1. Exact executable checks own validity and release.
-2. Model output, constraint Genes, and relevance estimates are proposals.
-3. Raw bytes and per-unit rows are immutable inputs to independent reducers.
-4. Every comparative task emits `per_unit_rows`, `rows`, or
-   `per_game_results` for every unit.
-5. Every artifact emits the closed `verdict_class` enum.
-6. Every blocked verdict names the failed check and value in
-   `gate_check_summary`.
-7. No missing artifact or blocked task becomes a null result.
-8. No exact-defined benefit is reported as an oracle-distinct positive.
-9. Generator weights remain frozen in all continuous-learning tasks.
-10. Memory records are typed data and never executable instructions.
+1. Preserve `research-roadmap.yaml` and `scripts/research_conductor.py` byte for
+   byte.
+2. Write every artifact atomically. Never overwrite Exp6588-Exp6591.
+3. Every comparison emits per-unit rows. Aggregates alone cannot support a
+   claim.
+4. Every blocked verdict uses `gate_check_summary` with the exact failed check
+   and observed value.
+5. Every artifact declares the closed `verdict_class` enum.
+6. Exact-checker-defined wins are circular-positive. Infrastructure readiness
+   is null evidence, not positive science.
+7. All prospective learning is chronological, reversible, source-bound, and
+   frozen-weight. No outcome may influence an earlier decision.
+8. Learned invariants, relevance estimates, and energy values may guide a
+   proposal. They may not certify themselves.
+9. No ARC game solve is in scope, so no `solve_provenance` claim is permitted.
+10. Before terminal reporting, run focused tests, lint, spec coverage, artifact
+    convention checks, verdict-row consistency checks, adversarial verification,
+    applicable E2E checks, and final protected-file and git-status checks.
 
-## Stop and retirement rules
+## Expected milestone decisions
 
-- If Exp6590 repeats Exp6581's precondition block after the V574 launch root,
-  retire that task shape under its declared `prior_failures` rule.
-- If Exp6589 repeats Exp6586's isolated receipt verdict, retire the unchanged
-  remediation shape and keep suite state outside model launch gates.
-- If Exp6592 repeats Exp6584's hard-limit/no-artifact result despite its
-  reducer-only shape, retire monolithic cross-family comparison work.
-- If Exp6596 repeats the prior continuous-learning blocked or null verdict after
-  valid audited rows and Gene conformance, retire this constraint-Gene approach
-  rather than moving thresholds.
-- If Exp6597 repeats the prior missing-evidence block, retire the dependent
-  shadow chain. If poison reaches trusted write or release, disqualify adoption.
-- If Exp6599 has no new live outcomes, make no policy change. An honest no-change
-  result satisfies the ARC slot.
-- Do not reopen generated ConstraintIR, external text scorers, public ARC solves,
-  finite-ID answer transport, PIMI, or unchanged hardware-continuity commands.
+V575 should end with five explicit decisions:
 
-## Documentation and architecture reconciliation
+1. Whether CFR improves exact success for Qwen3.6, Gemma 4 31B, both, or neither.
+2. Whether invariant projection improves held frozen-world-model rollouts beyond
+   matched random constraints.
+3. Whether convex-hull token flow and spectral block sampling merit larger
+   native-energy experiments.
+4. Whether typed constraint Genes produce eligible held-future utility without
+   retention, poison, restart, or rollback failure.
+5. Whether dual-GPU isolated residency provides enough charged local throughput
+   gain to change future conductor scheduling.
 
-`_bmad/architecture.md` was more than 30 days old at planning time. This roadmap
-uses current executable code, terminal artifacts, capability specs, and ops
-records when they are more recent. Exp6600 must reconcile the architecture date
-and content if V574 changes the implemented design. No experiment may cite a
-stale architecture statement as empirical evidence.
-
-Before reporting the milestone complete, run focused unit and lint commands,
-roadmap and spec coverage checks, artifact convention checks, adversarial
-verification, and applicable end-to-end checks from `ops/e2e-test-plan.md`.
-Reconcile `openspec/`, `_bmad/traceability.md`, `_bmad/architecture.md`,
-`ops/status.md`, and `ops/changelog.md` with the evidence actually produced.
+Null and blocked answers are valid outcomes. The milestone succeeds when these
+questions are answered from recheckable rows without changing the authority
+boundary.

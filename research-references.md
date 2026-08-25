@@ -37092,3 +37092,129 @@ abstain. They may not certify their own output.
   command is part of V574.
 
 <!-- V574-PLANNER-REFRESH-20260825-END -->
+
+## V575 planner refresh - 2026-08-25
+
+<!-- V575-PLANNER-REFRESH-20260825-START -->
+
+This refresh follows the four terminal V574 tasks. It searched the requested
+2025-2026 arXiv topics and checked OpenReview, Hugging Face Papers, Semantic
+Scholar, GitHub, Extropic, and Logical Intelligence. Exact executable checks
+remain release authority. Learned methods may propose, route, project, or
+abstain. They may not certify their own output.
+
+### Promising findings selected for V575
+
+- **Correcting a learned physical invariant improves world-model rollouts** -
+  arXiv:2608.23526, https://arxiv.org/abs/2608.23526; submitted 2026-08-24.
+  A label-free search recovers an energy-like invariant in frozen conservative
+  world models. Projecting latent rollouts toward the initial level set reduces
+  rollout error, while matched random constraints usually make it worse.
+  Carnot hook: add a bounded invariant-projection canary to the existing
+  continuous EBM path. Compare no projection, the selected invariant, and a
+  norm-matched random constraint on exact-enumerable conservative and damped
+  fixtures. Keep the world model frozen. Report constraint drift, rollout
+  error, energy, and projection cost per seed. This is a mechanism test, not an
+  ARC solve or proof that a learned invariant is exact.
+- **ConvergeFlow: Language Flow with Provable Convergence to Token
+  Embeddings** - arXiv:2608.23551, https://arxiv.org/abs/2608.23551; submitted
+  2026-08-24. ConvergeFlow constrains its data predictor to the convex hull of
+  token embeddings and proves convergence to valid token embeddings under its
+  stated regularity conditions, without a cross-entropy decoder. Carnot hook:
+  test a small continuous-latent feasible-token projection against unconstrained
+  flow and nearest-token-only controls. Use fixed toy embeddings and exact
+  feasible token sets. Measure valid-token convergence, constraint violations,
+  steps, and distance distortion per seed. Do not claim that the canary trains
+  or reproduces a language model.
+- **The Interaction Tax: When Communication Erases Diversity in Multi-Agent
+  Teams** - arXiv:2608.23541, https://arxiv.org/abs/2608.23541; submitted
+  2026-08-24 and reported as accepted at ICML 2026. The paper finds that full
+  solution exchange can erase cross-family diversity on verifier-scored tasks,
+  while independent proposals preserve it. Carnot hook: keep the Qwen and
+  Gemma CFR streams immutable and separate. Let an independent reducer compare
+  them without any model reading the other family's output. This is a protocol
+  control, not evidence that the existing CFR rows improve accuracy.
+- **Provably adaptive sampling with uniform and remasking discrete diffusion
+  models** - arXiv:2608.23554, https://arxiv.org/abs/2608.23554; submitted
+  2026-08-24. Its first-order sampler updates coordinates in parallel and can
+  correct earlier denoising errors. Its step bound depends on dual total
+  correlation rather than ambient dimension. Carnot hook: retain it as a later
+  parallel discrete-sampling route. V575 first runs the already planned
+  spectral k-block Ising canary. The paper does not supply a drop-in sampler for
+  Carnot's GGUF or current exact-check paths.
+
+### Relevant findings held outside the V575 execution path
+
+- **Mixture-of-Expert Blocks Contain Strong Hallucination Detection Signals** -
+  arXiv:2608.17687, https://arxiv.org/abs/2608.17687. The method uses router
+  entropy, expert disagreement, and usage patterns for token-level detection.
+  Its detector labels come from an LLM-as-judge pipeline, and the current
+  llama.cpp GGUF path does not expose a reviewed expert-routing receipt.
+  Therefore V575 does not treat this as an exact verifier or reopen the retired
+  external-text scorer. A later telemetry-only study must first prove that the
+  local Qwen MoE route can expose stable, model-bound router signals.
+- **Credal Large Language Models for Semantic Commitment under Uncertainty** -
+  arXiv:2608.23244, https://arxiv.org/abs/2608.23244. The method uses an ensemble
+  of trained LoRA adapters to represent a set of predictive distributions.
+  V575 keeps the mandated GGUF generators frozen and does not have a reviewed
+  adapter-training or serving contract. Credal width may become an abstention
+  feature later, but it cannot certify correctness.
+- **KAN-Robust-Bench** - arXiv:2608.21488,
+  https://arxiv.org/abs/2608.21488. The benchmark studies empirical and
+  certified robustness of KAN variants under evasion attacks. It reinforces the
+  need for attacks and explicit certificates. It does not resolve Carnot's
+  current extraction, prospective-utility, or nonforgetting gaps, so V575 does
+  not add another KAN training task.
+
+### Requested secondary and product checks
+
+- **OpenReview:** ICLR and NeurIPS records for automata-guided beam search,
+  FSNet feasibility seeking, constrained Langevin diffusion, and neural Ising
+  machines support hard feasibility checks and explicit projection controls.
+  These records are already represented in the catalog. None provides a new
+  oracle-distinct release verifier or a reason to replace Carnot's exact
+  authority boundary.
+- **Hugging Face Papers:** current verification pages continue to surface
+  stepwise evidence grounding, reasoning-trace denoising, and probabilistic
+  LLM verifiers. These methods may rank or filter candidates. They do not
+  justify an LLM judge as exact authority or a positive verdict without row
+  replay.
+- **Semantic Scholar:** the EBT (`2507.02092`) paper request returned HTTP 429
+  during this refresh. The ARM-EBM (`2512.15605`) paper record still reports
+  eight citations. Retain V574's dated count of 35 EBT citations rather than
+  inventing a new value. No authenticated public matching-base checkpoint was
+  found.
+- **GitHub discovery:** the targeted search found `davidkhjo/ebmkit` updated on
+  2026-08-25, plus current EnergyMatching, Enso, NVIDIA Ising, and KAN
+  repositories. None supersedes Carnot's pinned exact solvers, local GGUF path,
+  or sampler stack. V575 may read public algorithm code for comparison but must
+  not add a dependency for novelty alone.
+- **Extropic:** https://extropic.ai/writing still lists the 2026-08-03/04 Torx,
+  Thermalizers, and Z1 material as its latest technical update. Z1 remains a
+  future-access device and Carnot has no authenticated TSU route. Schedule no
+  TSU execution, latency, power, or availability claim.
+- **Logical Intelligence:**
+  https://logicalintelligence.com/kona-ebms-energy-based-models still describes
+  Kona 1.0 as a constraint layer, but supplies no public weights, reproducible
+  training recipe, or documented local runner. Kona remains a product
+  comparator only.
+
+### V575 planning impact
+
+- Replay the V574 Qwen and Gemma CFR rows through one independent reducer and
+  one always-run counterfactual authority audit. Do not rerun either model
+  stream merely to compute a headline.
+- Test invariant projection, feasible-token flow projection, and spectral
+  k-block sampling as three separate, bounded mechanism canaries. Keep every
+  control exact-enumerable and every comparison row-addressable.
+- Consolidate only exact-verified CFR rows into typed constraint Genes. Run a
+  chronological prospective self-learning test with frozen generator weights,
+  held-future support, retention, poison, restart, and rollback checks.
+- Allow a default-off memory consumer only after an independent injection audit
+  passes. Estimated relevance may route a proposal. It may not write trusted
+  memory or release an answer.
+- Use the two free local GPUs for a bounded parallel-residency canary only after
+  the scientific rows are fixed. Keep KV260, GateMate, PolarFire, and Extropic
+  on changed-state receipt continuity with no repeated unchanged command.
+
+<!-- V575-PLANNER-REFRESH-20260825-END -->

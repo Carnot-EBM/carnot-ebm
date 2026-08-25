@@ -9,88 +9,24 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| AGGREGATE_ONLY | 2 |
-
-## experiment_3377_archive_v310_activate_v311.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The archive is complete and milestone 2026.05.311 is ready for activation.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_3392_archive_v311_activate_v312.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The archive of milestone 2026.05.311 is complete, and milestone 2026.05.312 is activated and ready.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_833_constraint_delta_root_cause.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The root cause is a missing write path: verification found a violation, but `"n_store_write_calls"` remained 0 despite 10 retrieval calls.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6582_gemma4_31b_flagship_source_shard.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-The four-unit Gemma4-31B source shard completed successfully and met the readiness gate with `"gemma4_31b_family_source_shard_ready_score": 1.0`.
-
-## WHAT IS MISSING
-The per-unit `"rows"` containing each unit’s raw output, runtime, failure status, token counts, timing, and cost metrics are missing; only aggregate counts in `"aggregate_row_recomputation"`, hashes in `"checkpoint_receipts"`, and limited `"parser_diagnostic_rows"` are present.
-
-## THE CHECK A READER CANNOT DO
-Did every one of the four source units independently satisfy all readiness criteria, or does the aggregate conceal a degenerate or anomalous unit?
+| CHECKABLE | 7 |
+| CANNOT_DETERMINE | 1 |
 
 ## experiment_6583_gemma4_26b_a4b_flagship_source_shard.json
 
-**AGGREGATE_ONLY**
+**CHECKABLE**
 
 ## VERDICT
-AGGREGATE_ONLY
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-The Gemma4-26B-A4B source shard completed and met the readiness gate with `"gemma4_26b_a4b_family_source_shard_ready_score": 1.0`.
+The Gemma4-26B-A4B runtime and immutable four-unit source shard completed successfully with readiness score 1.0, without making a comparative quality claim.
 
 ## WHAT IS MISSING
-The per-unit `"rows"` containing each source unit’s readiness checks and metric values are missing; only aggregate counts in `"aggregate_row_recomputation"` and non-metric `"checkpoint_receipts"` and `"parser_diagnostic_rows"` are present.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-Did every one of the four source units independently satisfy all readiness conditions, or did the aggregate score conceal a degenerate or exceptional unit?
+none
 
 ## experiment_6585_v573_terminal_recovery_and_execution_contract.json
 
@@ -100,7 +36,7 @@ Did every one of the four source units independently satisfy all readiness condi
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V572 terminal states and three Exp6584 hard-limit attempts were successfully replayed, making the V573 execution contract ready without creating a scientific claim.
+All six V572 terminal states and three Exp6584 hard-limit attempts replayed successfully, making the V573 execution contract ready without creating a scientific verdict.
 
 ## WHAT IS MISSING
 nothing
@@ -116,7 +52,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The task was blocked because the `pytest_receipt` check failed in the isolated environment.
+The run was blocked because the isolated environment’s `pytest_receipt` validation failed.
 
 ## WHAT IS MISSING
 nothing
@@ -132,10 +68,74 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The source, fixture, router, metric, and exact-authority contracts are complete and ready before any V573 model outcomes exist.
+The source, fixture, router, metric, and exact-authority contracts are ready before any V573 model outcome.
 
 ## WHAT IS MISSING
 nothing
 
 ## THE CHECK A READER CANNOT DO
 none
+
+## experiment_6588_v574_bounded_cfr_launch_root.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+V573 contracts replayed successfully and the bounded V574 CFR launch gate is ready, while no science result was created.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6589_isolated_pytest_receipt_remediation.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because terminal report validation observed `fabricated_collection_count`, leaving the suite result unrecoverable.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6590_qwen36_constraint_first_stream.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+All listed attack checks passed, and the recorded arm-by-unit `exact_checker_receipts` report exact success.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6591_gemma4_31b_constraint_first_stream.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+no claim
+
+## WHAT IS MISSING
+The artifact is truncated inside `"exact_checker_receipts"` and lacks a complete top-level verdict/status or headline-claim field; `"attack_rows"` and `"checkpoint_receipts"` are present.
+
+## THE CHECK A READER CANNOT DO
+A reader cannot determine whether the completed artifact claimed a comparative win, reported a gate result, or declared the run blocked.

@@ -26,3 +26,4 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-08-25 | qa_layer_authenticity_audit | child_results_guard.py | SILENT_NON_FIRING | OPEN | |
 | 2026-08-25 | qa_layer_authenticity_audit | artifact_freshness_lint.py | SILENT_NON_FIRING | OPEN | |
 | 2026-08-25 | qa_layer_authenticity_audit | arc_artifact_lint.py | SILENT_NON_FIRING | OPEN | |
+| 2026-08-25 | qa_layer_authenticity_audit | determination_preservation_lint.py | SILENT_NON_FIRING | OPEN | |
