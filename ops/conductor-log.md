@@ -16483,3 +16483,4 @@ code |
 | 2026-08-25 20:45 UTC | Independent constrained-decoding safety-hacking an | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6609-two-level-constrained-decoding) |
 | 2026-08-25 21:31 UTC | Frustrated spectral k-block scale and Rust parity | OK | 119 passed, 1 warning in 13.74s |
 | 2026-08-25 21:33 UTC | Independent constrained-decoding safety-hacking an | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6609-two-level-constrained-decoding) |
+| 2026-08-25 22:18 UTC | Verifier-governed invariant-memory lifecycle confo | OK | 102 passed, 1 warning in 10.75s |
