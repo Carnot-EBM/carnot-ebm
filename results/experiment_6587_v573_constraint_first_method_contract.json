@@ -1,0 +1,2436 @@
+{
+  "arm_seed_budget_contract": {
+    "arms": {
+      "always_on_cfr": {
+        "arm_name": "always_on_cfr",
+        "decoding_hash": "sha256:52893c2ab34a4afcfe812cec193be4b6afd00d1e413b22fed0323679f1738b71",
+        "execution_stages": [
+          "stage1",
+          "stage2"
+        ],
+        "failure_retention_required": true,
+        "post_outcome_retry_allowed": false,
+        "seed_schedule_hash": "sha256:d3b17b401d4efd932e49c8b469e382674347769dcdb5265b1f3ceadf5f4f182a",
+        "stop_rules_hash": "sha256:8f942f7307c9cb4a679cdb81f91f40089bfe4f5149ed8914332ddcc130bc2e8c",
+        "timeout_s": 180,
+        "total_token_limit": 768,
+        "unit_order_hash": "sha256:7aaa2471d3c2834bdc01c4adda55c373820e8842196142d1ed7fa2b6292a3596"
+      },
+      "direct": {
+        "arm_name": "direct",
+        "decoding_hash": "sha256:52893c2ab34a4afcfe812cec193be4b6afd00d1e413b22fed0323679f1738b71",
+        "execution_stages": [
+          "direct"
+        ],
+        "failure_retention_required": true,
+        "post_outcome_retry_allowed": false,
+        "seed_schedule_hash": "sha256:d3b17b401d4efd932e49c8b469e382674347769dcdb5265b1f3ceadf5f4f182a",
+        "stop_rules_hash": "sha256:8f942f7307c9cb4a679cdb81f91f40089bfe4f5149ed8914332ddcc130bc2e8c",
+        "timeout_s": 180,
+        "total_token_limit": 768,
+        "unit_order_hash": "sha256:7aaa2471d3c2834bdc01c4adda55c373820e8842196142d1ed7fa2b6292a3596"
+      },
+      "routed_cfr": {
+        "arm_name": "routed_cfr",
+        "decoding_hash": "sha256:52893c2ab34a4afcfe812cec193be4b6afd00d1e413b22fed0323679f1738b71",
+        "execution_stages": [
+          "direct_or_stage1",
+          "stage2_only_when_routed_cfr"
+        ],
+        "failure_retention_required": true,
+        "post_outcome_retry_allowed": false,
+        "seed_schedule_hash": "sha256:d3b17b401d4efd932e49c8b469e382674347769dcdb5265b1f3ceadf5f4f182a",
+        "stop_rules_hash": "sha256:8f942f7307c9cb4a679cdb81f91f40089bfe4f5149ed8914332ddcc130bc2e8c",
+        "timeout_s": 180,
+        "total_token_limit": 768,
+        "unit_order_hash": "sha256:7aaa2471d3c2834bdc01c4adda55c373820e8842196142d1ed7fa2b6292a3596"
+      }
+    },
+    "contract_hash": "sha256:68c535e49b3237614748cee07984819482f4fb97ac3b40517b1440334ee3f28f",
+    "decoding": {
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "direct_tokens_charged": true,
+    "failure_retention_required": true,
+    "matched_dimensions": [
+      "unit_order_hash",
+      "seed_schedule_hash",
+      "decoding_hash",
+      "stop_rules_hash",
+      "total_token_limit",
+      "timeout_s"
+    ],
+    "per_unit_timeout_s": 180,
+    "raw_timeout_bytes_retained": true,
+    "schema": "carnot.v573.arm_seed_budget_contract.v1",
+    "seed_schedule": [
+      {
+        "seed": 65870001,
+        "unit_id": "sha256:85121028fd69af118fa100a192a5d92ce12fc3519fd009cd569730ebb4049b02"
+      },
+      {
+        "seed": 65870002,
+        "unit_id": "sha256:25259a6a23dd712ab8d0f519e838e20ddd0f4b4cd1c6fc001445d47701ed8345"
+      },
+      {
+        "seed": 65870003,
+        "unit_id": "sha256:b0d286b9306b3a6ded5ad60b0ce9212ed81347ae04f324eab9551e63310769f9"
+      },
+      {
+        "seed": 65870004,
+        "unit_id": "sha256:cc117dbbb84683ac1713422856200b1dafd430fca57b6904d73782a6ffd4df8b"
+      },
+      {
+        "seed": 65870005,
+        "unit_id": "sha256:b051f7f46425db726739b2e3474aee8b2f3c67b44a2a5ad11b6056cfbc9c991f"
+      },
+      {
+        "seed": 65870006,
+        "unit_id": "sha256:79cbd862634ad7b01b2cf8db0bf21a49e852dd150416bfe809f32550372f0c85"
+      },
+      {
+        "seed": 65870007,
+        "unit_id": "sha256:15efbaeb50c9091d00f31d3ba070fa1e97d4e6e1791aa43c600948c4e4f62fe9"
+      },
+      {
+        "seed": 65870008,
+        "unit_id": "sha256:9bdf8c93edda39c7fd422a7387dd2ec32ae51a2bde99d94fab040d09a90d9c51"
+      },
+      {
+        "seed": 65870009,
+        "unit_id": "sha256:91b445656f12441826d3f2f6597b1190f22d4fcf69816bf4ea34dedc559e9db3"
+      },
+      {
+        "seed": 65870010,
+        "unit_id": "sha256:893e6c8c8a8593c9eb90b20e78443cb01540b603693f0b238356d064b4bd1997"
+      },
+      {
+        "seed": 65870011,
+        "unit_id": "sha256:4d32670b558abf3d9bc2032c78cb107fdf05e77a71fe28a78e1c810bc8ba467f"
+      },
+      {
+        "seed": 65870012,
+        "unit_id": "sha256:cac702b8cc534937dd947c5be256a55c9e5d81dff1e83de70a951edc5274c0f3"
+      },
+      {
+        "seed": 65870013,
+        "unit_id": "sha256:55663e946653912ed61d8d6ec6fa780d29db61d80c598e26a8837e1e3cc7202b"
+      },
+      {
+        "seed": 65870014,
+        "unit_id": "sha256:8de1b5f9e4e805a4d53c634ef9a18c0580564110388fe905acc6d73fa30e053b"
+      },
+      {
+        "seed": 65870015,
+        "unit_id": "sha256:56446b70cdf111b3387a6937226c01e3f117ac149d1d58dd1095b79430092b96"
+      },
+      {
+        "seed": 65870016,
+        "unit_id": "sha256:33b87144c8e2f80e0b87e5446c907ba6471fd43ec15ccc141a29d2f56d952f27"
+      },
+      {
+        "seed": 65870017,
+        "unit_id": "sha256:677f4731cf4c9a9ac0418cf83b1d6c16034cd4239c56b0d99a863a00e66e0c7d"
+      },
+      {
+        "seed": 65870018,
+        "unit_id": "sha256:a69afc00f5e5eb2562267d8fcd0b7f27783c7c02ad614bb4100ae7ae50d7ad0f"
+      },
+      {
+        "seed": 65870019,
+        "unit_id": "sha256:a88a57e18a47946440228ef859f37f77c110e1e99b17f1bb890b82626ea42b09"
+      },
+      {
+        "seed": 65870020,
+        "unit_id": "sha256:f820fd884ed7fdd9c51d0bfa4014455e9573f2f002685b36af6fb2b71584a9f1"
+      }
+    ],
+    "stage1_latency_charged": true,
+    "stage1_tokens_charged": true,
+    "stage2_latency_charged": true,
+    "stage2_tokens_charged": true,
+    "stage_token_limits": {
+      "direct": 768,
+      "stage1": 256,
+      "stage2": 512
+    },
+    "stop_rules": [
+      "<|eot_id|>",
+      "<stop>"
+    ],
+    "total_token_limit": 768,
+    "unit_order": [
+      "sha256:85121028fd69af118fa100a192a5d92ce12fc3519fd009cd569730ebb4049b02",
+      "sha256:25259a6a23dd712ab8d0f519e838e20ddd0f4b4cd1c6fc001445d47701ed8345",
+      "sha256:b0d286b9306b3a6ded5ad60b0ce9212ed81347ae04f324eab9551e63310769f9",
+      "sha256:cc117dbbb84683ac1713422856200b1dafd430fca57b6904d73782a6ffd4df8b",
+      "sha256:b051f7f46425db726739b2e3474aee8b2f3c67b44a2a5ad11b6056cfbc9c991f",
+      "sha256:79cbd862634ad7b01b2cf8db0bf21a49e852dd150416bfe809f32550372f0c85",
+      "sha256:15efbaeb50c9091d00f31d3ba070fa1e97d4e6e1791aa43c600948c4e4f62fe9",
+      "sha256:9bdf8c93edda39c7fd422a7387dd2ec32ae51a2bde99d94fab040d09a90d9c51",
+      "sha256:91b445656f12441826d3f2f6597b1190f22d4fcf69816bf4ea34dedc559e9db3",
+      "sha256:893e6c8c8a8593c9eb90b20e78443cb01540b603693f0b238356d064b4bd1997",
+      "sha256:4d32670b558abf3d9bc2032c78cb107fdf05e77a71fe28a78e1c810bc8ba467f",
+      "sha256:cac702b8cc534937dd947c5be256a55c9e5d81dff1e83de70a951edc5274c0f3",
+      "sha256:55663e946653912ed61d8d6ec6fa780d29db61d80c598e26a8837e1e3cc7202b",
+      "sha256:8de1b5f9e4e805a4d53c634ef9a18c0580564110388fe905acc6d73fa30e053b",
+      "sha256:56446b70cdf111b3387a6937226c01e3f117ac149d1d58dd1095b79430092b96",
+      "sha256:33b87144c8e2f80e0b87e5446c907ba6471fd43ec15ccc141a29d2f56d952f27",
+      "sha256:677f4731cf4c9a9ac0418cf83b1d6c16034cd4239c56b0d99a863a00e66e0c7d",
+      "sha256:a69afc00f5e5eb2562267d8fcd0b7f27783c7c02ad614bb4100ae7ae50d7ad0f",
+      "sha256:a88a57e18a47946440228ef859f37f77c110e1e99b17f1bb890b82626ea42b09",
+      "sha256:f820fd884ed7fdd9c51d0bfa4014455e9573f2f002685b36af6fb2b71584a9f1"
+    ]
+  },
+  "attack_rows": [
+    {
+      "attack_id": "post_outcome_source_selection",
+      "candidate_ready_score": 0.0,
+      "closed": true,
+      "control": "static unit specs and manifest hashes reject reselection",
+      "passed": true,
+      "row_hash": "sha256:cba89a16a109a9fca0918aecb37839a67ba03be0c790f4e5838b520e246054dc"
+    },
+    {
+      "attack_id": "prompt_drift_by_family",
+      "candidate_ready_score": 0.0,
+      "closed": true,
+      "control": "all prompt rows require family_neutral and frozen hashes",
+      "passed": true,
+      "row_hash": "sha256:6151aacdd8ff7771d2e7dec7a87c3b8c1aa3f9551e66b8c614d9fb1058e40844"
+    },
+    {
+      "attack_id": "hidden_answer_leakage_into_stage1",
+      "candidate_ready_score": 0.0,
+      "closed": true,
+      "control": "Stage 1 requests constraints only and has no answer channel",
+      "passed": true,
+      "row_hash": "sha256:2c2a0d2d8b8f7d12db174426ea8e59e60b68c2ae08d2adf16b360e53c5f2d5cd"
+    },
+    {
+      "attack_id": "generated_constraint_ir",
+      "candidate_ready_score": 0.0,
+      "closed": true,
+      "control": "plain text is required and ConstraintIR generation is false",
+      "passed": true,
+      "row_hash": "sha256:98a8aad4090c93e8024d10c4f4ffc1f31cf2986f01d4d699849e3fcf5f0020a3"
+    },
+    {
+      "attack_id": "missing_raw_stage_bytes",
+      "candidate_ready_score": 0.0,
+      "closed": true,
+      "control": "both raw stage byte records must precede parsing",
+      "passed": true,
+      "row_hash": "sha256:614758ceaa64202d0eaab3750a85898d3c0947709c648186bd4b12c7db28202c"
+    },
+    {
+      "attack_id": "router_outcome_leakage",
+      "candidate_ready_score": 0.0,
+      "closed": true,
+      "control": "router allowed inputs are source and task bytes only",
+      "passed": true,
+      "row_hash": "sha256:903c3bd9e7ee0e830a1c677a52c0c178dd436c211eaf3c8891bd5dba217b6df9"
+    },
+    {
+      "attack_id": "llm_release_authority",
+      "candidate_ready_score": 0.0,
+      "closed": true,
+      "control": "Exp6574 exact registry is the sole release authority",
+      "passed": true,
+      "row_hash": "sha256:7573a572a869b2b7e784eb5534c011225c72c20340335c0c1a94d94135843349"
+    },
+    {
+      "attack_id": "uncharged_stage1_work",
+      "candidate_ready_score": 0.0,
+      "closed": true,
+      "control": "Stage 1 tokens and latency are charged to CFR",
+      "passed": true,
+      "row_hash": "sha256:9e2ad8b71100ef5ab08b1e09fd990735d67b3eab6b05e8a6c1eca5b67eda6611"
+    },
+    {
+      "attack_id": "misspelled_gate_field",
+      "candidate_ready_score": 0.0,
+      "closed": true,
+      "control": "exact roadmap owner and consumer field names must match",
+      "passed": true,
+      "row_hash": "sha256:10511f79777dac27c40e6f4d5c2ba469e4dd280c8f3861f0cba928443927125e"
+    }
+  ],
+  "downstream_gate_field_rows": [
+    {
+      "all_consumers_declared": true,
+      "artifact_field": "v573_constraint_first_method_ready_score",
+      "consumer_task_ids": [
+        "exp6588-qwen36-constraint-first-stream",
+        "exp6589-gemma4-31b-constraint-first-stream",
+        "exp6590-independent-constraint-first-comparison"
+      ],
+      "exact_spelling_required": true,
+      "owner_declared": true,
+      "owner_task_id": "exp6587-v573-constraint-first-method-contract",
+      "roadmap_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "roadmap_sha256": "sha256:fdd440c3bd6a98b153dd4337bf9fe7abf90e81fe622c40485703f78393fac110",
+      "row_hash": "sha256:5e68827fd0b57808d72a27b75c3423f644e928c00dd5f4174f316a1f6c7f79d3"
+    },
+    {
+      "all_consumers_declared": true,
+      "artifact_field": "v573_execution_contract_ready_score",
+      "consumer_task_ids": [
+        "exp6588-qwen36-constraint-first-stream",
+        "exp6589-gemma4-31b-constraint-first-stream"
+      ],
+      "exact_spelling_required": true,
+      "owner_declared": true,
+      "owner_task_id": "exp6585-v573-terminal-recovery-and-execution-contract",
+      "roadmap_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "roadmap_sha256": "sha256:fdd440c3bd6a98b153dd4337bf9fe7abf90e81fe622c40485703f78393fac110",
+      "row_hash": "sha256:0f966f0842bd567056e143677adc413f4a62b8aadbf21e1f60c348ea40961f04"
+    },
+    {
+      "all_consumers_declared": true,
+      "artifact_field": "qwen_constraint_first_rows_ready_score",
+      "consumer_task_ids": [
+        "exp6590-independent-constraint-first-comparison"
+      ],
+      "exact_spelling_required": true,
+      "owner_declared": true,
+      "owner_task_id": "exp6588-qwen36-constraint-first-stream",
+      "roadmap_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "roadmap_sha256": "sha256:fdd440c3bd6a98b153dd4337bf9fe7abf90e81fe622c40485703f78393fac110",
+      "row_hash": "sha256:72fddaad242ed9168e7f93e0d23d842ee852cd2cade664f03ed16627571227be"
+    },
+    {
+      "all_consumers_declared": true,
+      "artifact_field": "gemma31_constraint_first_rows_ready_score",
+      "consumer_task_ids": [
+        "exp6590-independent-constraint-first-comparison"
+      ],
+      "exact_spelling_required": true,
+      "owner_declared": true,
+      "owner_task_id": "exp6589-gemma4-31b-constraint-first-stream",
+      "roadmap_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "roadmap_sha256": "sha256:fdd440c3bd6a98b153dd4337bf9fe7abf90e81fe622c40485703f78393fac110",
+      "row_hash": "sha256:096cf439857da1569fdb0ebdef3e0d386e7194ce260be9f7cf27061840bf352f"
+    },
+    {
+      "all_consumers_declared": true,
+      "artifact_field": "constraint_first_comparison_rows_ready_score",
+      "consumer_task_ids": [
+        "exp6591-constraint-first-counterfactual-and-authority-audit"
+      ],
+      "exact_spelling_required": true,
+      "owner_declared": true,
+      "owner_task_id": "exp6590-independent-constraint-first-comparison",
+      "roadmap_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "roadmap_sha256": "sha256:fdd440c3bd6a98b153dd4337bf9fe7abf90e81fe622c40485703f78393fac110",
+      "row_hash": "sha256:357b39ec7ad61c6bfefbcd953e1cd8edb6c4db4b3071f35df50c74262d2277c1"
+    },
+    {
+      "all_consumers_declared": true,
+      "artifact_field": "constraint_first_audit_ready_score",
+      "consumer_task_ids": [
+        "exp6593-prospective-exact-verified-continuous-self-learning"
+      ],
+      "exact_spelling_required": true,
+      "owner_declared": true,
+      "owner_task_id": "exp6591-constraint-first-counterfactual-and-authority-audit",
+      "roadmap_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "roadmap_sha256": "sha256:fdd440c3bd6a98b153dd4337bf9fe7abf90e81fe622c40485703f78393fac110",
+      "row_hash": "sha256:cdd3ef98ad38988503d4f4462aed69bbbfdca6651f07d272c93a36a7d1412610"
+    }
+  ],
+  "duration_s": 0.05917775770649314,
+  "field_provenance": {
+    "arm_seed_budget_contract": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Direct, always-on CFR, and routed CFR receive matched preregistered work.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "arm_seed_budget_contract"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "attack_rows": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Leakage, drift, self-certification, uncharged work, and schema revival fail closed.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "attack_rows"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "downstream_gate_field_rows": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Each downstream gate field is owned by an upstream task in this roadmap.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "downstream_gate_field_rows"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "duration_s": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Monotonic duration exposes a source-only or fixture-skipped contract.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "duration_s"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "field_provenance": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Every contract field names source receipts, rows, hashes, and reducer code.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "field_provenance"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "fixture_replay_rows": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Positive, unsupported, ambiguous, contradictory, and tamper fixtures replay exactly.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "fixture_replay_rows"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "gate_check_summary": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Any block names the missing source, fixture, registry, or contract value.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "gate_check_summary"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "honest_verdict": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "The verdict states source, fixture, router, metric, and authority readiness.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "honest_verdict"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "inference_substrate": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "The task declares primary-source and exact-fixture replay with no LLM.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "inference_substrate"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "metric_and_acceptance_contract": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Per-unit effects, uncertainty, safety, and total cost have frozen reducers and thresholds.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "metric_and_acceptance_contract"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "non_imported_claim_rows": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "External benchmark and product claims cannot enter Carnot evidence.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "non_imported_claim_rows"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "preconditions_checked": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Sources, fixtures, registry, resources, and protected hashes are explicit.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "preconditions_checked"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "primary_source_receipts": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Each borrowed method has an immutable source and bounded Carnot hook.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "primary_source_receipts"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "prompt_stage_contract": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Direct, Stage 1, and Stage 2 prompts are family neutral and byte frozen.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "prompt_stage_contract"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "protected_files_unchanged": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "The method task preserves both protected orchestration files.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "protected_files_unchanged"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "reproducibility_checksum": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "A final hash protects the frozen contract.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "reproducibility_checksum"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "router_contract": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Restrictive-cue routing is deterministic and outcome blind.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "router_contract"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "source_binding_and_exact_authority_contract": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Source spans ground proposals and whitelisted exact checks own release.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "source_binding_and_exact_authority_contract"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "source_unit_manifest": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Exact bytes, hashes, splits, inclusion rules, strata, and checkers freeze evaluation before inference.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "source_unit_manifest"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "status": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "The method contract closes before any V573 model outcome.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "status"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "tests_run": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Named commands, exits, and durations make preregistration reproducible.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "tests_run"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "v573_constraint_first_method_ready_score": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "This exact binary field gates both model stream tasks and the comparison.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "v573_constraint_first_method_ready_score"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "verdict_class": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "Use only positive, circular_positive, null, blocked, disqualified, or partial; preregistration is null infrastructure.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "verdict_class"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    },
+    "verifier_is_oracle": {
+      "hashes": [
+        "reproducibility_checksum"
+      ],
+      "principle": "The exact checker defines validity, so later wins must remain circular-positive.",
+      "reducer": "readiness_reducer.v6587",
+      "rows": [
+        "verifier_is_oracle"
+      ],
+      "source": "Exp6587 source receipts and deterministic contract builders",
+      "spec_refs": [
+        "REQ-REPORT-6587"
+      ]
+    }
+  },
+  "fixture_replay_rows": [
+    {
+      "abstention_reasons": [],
+      "case_class": "positive_control",
+      "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+      "checker_version": "v6574.20260824",
+      "expected_action": "release",
+      "fixture_hash": "sha256:5ccd1aec5c4f911f5a879ae88eb2f35144730d64cfd8a2bf047e7037ddc10fad",
+      "fixture_id": "valid_single_hop",
+      "observed_action": "release",
+      "passed": true,
+      "row_hash": "sha256:7860b8bc492b0782b67ca138eb74348b33c4b44716d5b56ead2133171dba852d",
+      "unsafe_release": false
+    },
+    {
+      "abstention_reasons": [
+        "relation_not_whitelisted"
+      ],
+      "case_class": "unsupported",
+      "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+      "checker_version": "v6574.20260824",
+      "expected_action": "abstain",
+      "fixture_hash": "sha256:7009aa5a62bfeff28aa8081619b7656644b1aedf494b198eae8ad96540aeb530",
+      "fixture_id": "unsupported_relation",
+      "observed_action": "abstain",
+      "passed": true,
+      "row_hash": "sha256:d6e8d4551e79e7c1f407e792d6390b77f64a75867725a3528a9a0f10cc0276e4",
+      "unsafe_release": false
+    },
+    {
+      "abstention_reasons": [
+        "disconnected_required_graph"
+      ],
+      "case_class": "ambiguous",
+      "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+      "checker_version": "v6574.20260824",
+      "expected_action": "abstain",
+      "fixture_hash": "sha256:726770a6672118eaa7afe78606f96322637c1747b55540f3ecc1fb550adbd0e3",
+      "fixture_id": "disconnected_graph",
+      "observed_action": "abstain",
+      "passed": true,
+      "row_hash": "sha256:b8881d3c699c84bfd2df146e2c4f98a63698bfbc5814108b9643ed3e39787013",
+      "unsafe_release": false
+    },
+    {
+      "abstention_reasons": [
+        "contradictory_nodes"
+      ],
+      "case_class": "contradictory",
+      "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+      "checker_version": "v6574.20260824",
+      "expected_action": "abstain",
+      "fixture_hash": "sha256:43749894a5e52da075b1e7d0048ef38c1665d0aae38eb0acabd848595666200f",
+      "fixture_id": "contradictory_nodes",
+      "observed_action": "abstain",
+      "passed": true,
+      "row_hash": "sha256:ea32c182c0c5ffa2ad3c61eefad9f67162326c5bdaed4ddd8fd12c38997638a1",
+      "unsafe_release": false
+    },
+    {
+      "abstention_reasons": [
+        "source_span_mismatch"
+      ],
+      "case_class": "tamper",
+      "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+      "checker_version": "v6574.20260824",
+      "expected_action": "abstain",
+      "fixture_hash": "sha256:8848925afeba04372e23a1b8ba759be522e8ee784f520e56d2d112801ffe2153",
+      "fixture_id": "wrong_span",
+      "observed_action": "abstain",
+      "passed": true,
+      "row_hash": "sha256:119c551badcb138b03e4abb4b5309ef657db2d4111031a07df2f12b042ea5545",
+      "unsafe_release": false
+    }
+  ],
+  "gate_check_summary": {
+    "checks_closed": false,
+    "failed_check_count": 1,
+    "failed_checks": [
+      {
+        "check": "arms_authority_metrics",
+        "expected": true,
+        "observed": [
+          {
+            "retire_if_same_verdict": true,
+            "same_verdict": "no routed exact-success gain in two frozen flagship families",
+            "scope": "constraint_first_staging"
+          },
+          {
+            "retire_if_same_verdict": true,
+            "same_verdict": "no measured work benefit or any unsafe-release increase",
+            "scope": "restrictive_cue_router"
+          }
+        ]
+      }
+    ],
+    "first_failure": {
+      "check": "arms_authority_metrics",
+      "expected": true,
+      "observed": [
+        {
+          "retire_if_same_verdict": true,
+          "same_verdict": "no routed exact-success gain in two frozen flagship families",
+          "scope": "constraint_first_staging"
+        },
+        {
+          "retire_if_same_verdict": true,
+          "same_verdict": "no measured work benefit or any unsafe-release increase",
+          "scope": "restrictive_cue_router"
+        }
+      ]
+    },
+    "ready_score": 1.0,
+    "row_hash": "sha256:cf70496c5c192af8c2331648fb195aa4be24083473a9c5377314f5bf7bb92764"
+  },
+  "honest_verdict": "complete: source, fixture, router, metric, and exact-authority contracts are ready before any V573 model outcome",
+  "inference_substrate": "primary_source_and_exact_fixture_replay_no_llm",
+  "metric_and_acceptance_contract": {
+    "acceptance_thresholds": {
+      "latency_per_unit_s_max": 180,
+      "mcnemar_p_max": 0.05,
+      "routed_exact_success_delta_min_exclusive": 0.0,
+      "routed_paired_ci95_lower_min": 0.0,
+      "stage1_precision_floor": 0.95,
+      "stage1_recall_floor": 0.8,
+      "total_tokens_per_unit_max": 768,
+      "unsafe_release_increase_max": 0
+    },
+    "block_rule": "A required source, fixture, registry, raw stage, or model row is missing.",
+    "circular_positive_rule": "Any later win defined by this exact checker is circular-positive because the checker is the oracle.",
+    "contract_hash": "sha256:495c940a2a1cb1201e54e4cfb9e915d6475376ccb908983f0284e972b45c7ce0",
+    "disqualification_rule": "Post-outcome selection, prompt drift, answer leakage, or authority substitution.",
+    "failure_policy": "retain every parse, timeout, empty, and runtime failure as a row",
+    "later_positive_verdict_class": "circular_positive",
+    "null_rule": "No eligible exact-success gain or a frozen cost threshold fails.",
+    "paired_effect_reducer": "within-unit arm exact-success delta; never pool repeated rows as independent units",
+    "paired_uncertainty": {
+      "cluster": "unit_id",
+      "method": "paired_unit_bootstrap_ci95",
+      "paired_exact_test": "two-sided exact McNemar on discordant units",
+      "resamples": 10000,
+      "seed": 6587
+    },
+    "paired_unit_key": "unit_id",
+    "per_unit_fields": [
+      "exact_success",
+      "stage1_precision",
+      "stage1_recall",
+      "unsupported_constraint_count",
+      "contradictory_constraint_count",
+      "abstention",
+      "unsafe_release",
+      "total_tokens",
+      "latency_s",
+      "failure"
+    ],
+    "ready_contract_verdict_class": null,
+    "retirement_rules": [
+      {
+        "retire_if_same_verdict": true,
+        "same_verdict": "no routed exact-success gain in two frozen flagship families",
+        "scope": "constraint_first_staging"
+      },
+      {
+        "retire_if_same_verdict": true,
+        "same_verdict": "no measured work benefit or any unsafe-release increase",
+        "scope": "restrictive_cue_router"
+      }
+    ],
+    "schema": "carnot.v573.metric_and_acceptance_contract.v1",
+    "stage1_precision_reducer": "source-supported matched proposals / all Stage 1 proposals; empty is 1 only when the manifest has no supported gold constraint",
+    "stage1_recall_reducer": "matched supported gold constraints / supported gold constraints in manifest",
+    "success_rule": "Routed CFR clears all frozen effect, uncertainty, safety, precision, recall, cost, and failure thresholds.",
+    "total_cost_reducer": "sum direct, Stage 1, and Stage 2 input plus output tokens; sum their latency; retain timeout and failure work"
+  },
+  "non_imported_claim_rows": [
+    {
+      "allowed_import": "bounded Carnot method hook only",
+      "arxiv_id": "2608.05254",
+      "claim_imported_into_carnot_evidence": false,
+      "non_imported_claim": "Reported external math benchmark gains, extraction quality, and token efficiency do not enter Carnot evidence.",
+      "replacement_authority": "local_exact_fixture_replay",
+      "row_hash": "sha256:b5c02dbd2860ac26f103bcfc5823e06eebd5a2162f81cc83ca7186ceb3669c62",
+      "stable_url": "https://arxiv.org/abs/2608.05254"
+    },
+    {
+      "allowed_import": "bounded Carnot method hook only",
+      "arxiv_id": "2608.14569",
+      "claim_imported_into_carnot_evidence": false,
+      "non_imported_claim": "Conference status, neural-system certification claims, and external task results do not prove correctness or utility in Carnot.",
+      "replacement_authority": "local_exact_fixture_replay",
+      "row_hash": "sha256:4195c81a67e54a08faa9e1f163ea5b113c4efd8e4309b5241eac0fd8c4d3aea9",
+      "stable_url": "https://arxiv.org/abs/2608.14569"
+    },
+    {
+      "allowed_import": "bounded Carnot method hook only",
+      "arxiv_id": "2608.00220",
+      "claim_imported_into_carnot_evidence": false,
+      "non_imported_claim": "On-policy optimization effects, pass-at-one deltas, and best-at-k findings do not enter this no-training method artifact.",
+      "replacement_authority": "local_exact_fixture_replay",
+      "row_hash": "sha256:ed544714865b603540b9454969ab34a5f94f11cc257e01a10dd11145a15ef41b",
+      "stable_url": "https://arxiv.org/abs/2608.00220"
+    },
+    {
+      "allowed_import": "bounded Carnot method hook only",
+      "arxiv_id": "2605.18871",
+      "claim_imported_into_carnot_evidence": false,
+      "non_imported_claim": "Learned uncertainty quality, external structured benchmark wins, and product claims do not enter Carnot evidence.",
+      "replacement_authority": "local_exact_fixture_replay",
+      "row_hash": "sha256:42c7554406a4a63db62a6dc2b18f050766935c7cfe9db805b631d636c66201ee",
+      "stable_url": "https://arxiv.org/abs/2605.18871"
+    }
+  ],
+  "preconditions_checked": {
+    "corpus": {
+      "license_spdx": "MIT-0",
+      "name": "V573 balanced Exp6574 exact-fixture cue pairs",
+      "parent_exp6580_manifest_hash": "sha256:e062aa06f654cffbb8209b80a51160eab6c218fbe31bf4b127a19b2e1934b459",
+      "revision": "sha256:96e92355df55bfd608e31ac1fcc5d1fc84e69e5c6f292a229f326d033b5c61f2",
+      "unit_count": 20
+    },
+    "exact_registry": {
+      "artifact_sha256": "sha256:20caafe973287103a021ffd1be0796915d6f00de734f487c53ed1ebf9e9732cd",
+      "atomic_node_schema_hash": "sha256:314a20c01a67a9ee39fc23de05f10da4f3e20d77d3b2c294145056a0bb73d614",
+      "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+      "compiler_version": "v6574.20260824",
+      "dependency_contract_hash": "sha256:78f8c8e99ca7a68fb4e057547322dd45fb583020052b5aeb13de4a06c1ee6c02",
+      "deterministic_reducer": "joint_sufficiency_reduce.v6574",
+      "llm_judge_release_authority": false,
+      "module_sha256": "sha256:21550568c4c01b1bbc9de8a560e2d206207d21146cf450d2eead7a304f97dd90",
+      "registry_name": "exp6574_hop_conditioned_exact_release_registry",
+      "registry_sha256": "sha256:ee64c00678844b77928099e85060858baa06e9bfea917d8924944e354475bd9a",
+      "release_authority": "compiler_plus_exact_fixture_checker"
+    },
+    "exp6574_receipt": {
+      "joint_method_ready_score": 1.0,
+      "path": "results/experiment_6574_joint_sufficiency_method_contract.json",
+      "sha256": "sha256:20caafe973287103a021ffd1be0796915d6f00de734f487c53ed1ebf9e9732cd",
+      "status": "complete_joint_sufficiency_method_ready"
+    },
+    "exp6580_receipt": {
+      "path": "results/experiment_6580_v572_source_and_joint_method_protocol.json",
+      "sha256": "sha256:93ae57af6cef718b74aa0d036cfd7cbddb0e3baba5a00ea3009ed692adb8b88e",
+      "source_method_ready_score": 1.0,
+      "status": "complete_v572_source_and_joint_method_protocol_ready"
+    },
+    "external_text_scorer_calls": 0,
+    "inference_substrate": "primary_source_and_exact_fixture_replay_no_llm",
+    "license": {
+      "path": "LICENSE",
+      "sha256": "sha256:7d5e950cbe0079f5da22de8510277dbca16c7a23287c981b3a1ed4ae59aebd98",
+      "spdx": "MIT-0"
+    },
+    "llm_calls_issued": 0,
+    "model_inference_invoked": false,
+    "model_outcomes_available": false,
+    "planning_date": "20260825",
+    "primary_source_cache_summary": {
+      "all_urls_bound": true,
+      "cached_content_hashes": [],
+      "cached_source_count": 0,
+      "required_arxiv_ids": [
+        "2608.05254",
+        "2608.14569",
+        "2608.00220",
+        "2605.18871"
+      ]
+    },
+    "protected_file_hashes": {
+      "research-roadmap.yaml": "sha256:c743819ccf3738a0ce530cb6824cc0db7d6eab84c923112da9a0bb86fbdce649",
+      "scripts/research_conductor.py": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8"
+    },
+    "public_arc_solve_attempted": false,
+    "resources": {
+      "cpu": {
+        "logical_count": 24,
+        "model": "x86_64"
+      },
+      "disk": {
+        "free_bytes": 1083877011456,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot",
+        "total_bytes": 3953289023488
+      },
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": {
+        "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "version": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]"
+      },
+      "ram": {
+        "available_bytes": 106240126976,
+        "total_bytes": 134305107968
+      }
+    }
+  },
+  "primary_source_receipts": [
+    {
+      "arxiv_id": "2608.05254",
+      "imported_as": "bounded_method_control",
+      "local_cache_content_hash": "not_cached",
+      "local_cache_rows": [],
+      "local_cache_status": "not_cached",
+      "method_hook": "Carnot hook: compare direct generation with byte-frozen plain-text constraint summary and solve-and-check stages on exact-checkable units.",
+      "non_imported_claim": "Reported external math benchmark gains, extraction quality, and token efficiency do not enter Carnot evidence.",
+      "planning_date": "20260825",
+      "receipt_hash": "sha256:defd364fb502859b7b8df874c93b34c98cfe0a7a36b719a98a51efb9ca88597d",
+      "reference_contains_arxiv_id": true,
+      "reference_path": "research-references.md",
+      "reference_section_sha256": "sha256:47da1ab2087f937017db6d98a07e958564d6e456fab78a379caef61de4de7e47",
+      "source_id": "arxiv:2608.05254",
+      "source_kind": "arxiv_primary_url",
+      "stable_url": "https://arxiv.org/abs/2608.05254",
+      "title": "Constraint-First Reasoning: A Training-Free Protocol for Exploiting Answer-Space Constraints in Mathematical Problem Solving"
+    },
+    {
+      "arxiv_id": "2608.14569",
+      "imported_as": "bounded_method_control",
+      "local_cache_content_hash": "not_cached",
+      "local_cache_rows": [],
+      "local_cache_status": "not_cached",
+      "method_hook": "Carnot hook: let neural text propose constraints while an instance-level symbolic check remains the only release authority.",
+      "non_imported_claim": "Conference status, neural-system certification claims, and external task results do not prove correctness or utility in Carnot.",
+      "planning_date": "20260825",
+      "receipt_hash": "sha256:885ef337e696494ddf26267d6c26e1397852e2ffbbc88e34a6d86d05b10c2eb4",
+      "reference_contains_arxiv_id": true,
+      "reference_path": "research-references.md",
+      "reference_section_sha256": "sha256:47da1ab2087f937017db6d98a07e958564d6e456fab78a379caef61de4de7e47",
+      "source_id": "arxiv:2608.14569",
+      "source_kind": "arxiv_primary_url",
+      "stable_url": "https://arxiv.org/abs/2608.14569",
+      "title": "Position: Certified Correctness in Neural Constraint Reasoning Requires Symbolic Integration"
+    },
+    {
+      "arxiv_id": "2608.00220",
+      "imported_as": "bounded_method_control",
+      "local_cache_content_hash": "not_cached",
+      "local_cache_rows": [],
+      "local_cache_status": "not_cached",
+      "method_hook": "Carnot hook: retain paired exact-support rows and future-support controls without changing generator weights or using best-at-k as authority.",
+      "non_imported_claim": "On-policy optimization effects, pass-at-one deltas, and best-at-k findings do not enter this no-training method artifact.",
+      "planning_date": "20260825",
+      "receipt_hash": "sha256:7577519e92c492aface7839d2f0f8b7c896724c56db2ed72cf3d2ea8bc2bf794",
+      "reference_contains_arxiv_id": true,
+      "reference_path": "research-references.md",
+      "reference_section_sha256": "sha256:47da1ab2087f937017db6d98a07e958564d6e456fab78a379caef61de4de7e47",
+      "source_id": "arxiv:2608.00220",
+      "source_kind": "arxiv_primary_url",
+      "stable_url": "https://arxiv.org/abs/2608.00220",
+      "title": "Verifier-Induced Support Reshaping in On-Policy Optimization"
+    },
+    {
+      "arxiv_id": "2605.18871",
+      "imported_as": "bounded_method_control",
+      "local_cache_content_hash": "not_cached",
+      "local_cache_rows": [],
+      "local_cache_status": "not_cached",
+      "method_hook": "Carnot hook: retain the deterministic constraint term for exact dispatch while uncertainty remains diagnostic and cannot release an answer.",
+      "non_imported_claim": "Learned uncertainty quality, external structured benchmark wins, and product claims do not enter Carnot evidence.",
+      "planning_date": "20260825",
+      "receipt_hash": "sha256:ff52cefb80917b6618d14ccfaec8619015e061d5d371d02e2e58cd8e35de6a9c",
+      "reference_contains_arxiv_id": true,
+      "reference_path": "research-references.md",
+      "reference_section_sha256": "sha256:47da1ab2087f937017db6d98a07e958564d6e456fab78a379caef61de4de7e47",
+      "source_id": "arxiv:2605.18871",
+      "source_kind": "arxiv_primary_url",
+      "stable_url": "https://arxiv.org/abs/2605.18871",
+      "title": "Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning"
+    }
+  ],
+  "prompt_stage_contract": {
+    "constraint_ir_generation_allowed": false,
+    "contract_hash": "sha256:0af19bb6e5465b0ec34be8168ac32c0b94589b865d4b9873343113307092e6f2",
+    "external_text_scoring_allowed": false,
+    "failure_raw_bytes_required": true,
+    "prompts": {
+      "direct": {
+        "family_neutral": true,
+        "sha256": "sha256:fc5ee2fb7b09adbf7e22e0279b012fb3eb4cdf130af3b9a522bba9650d91b99b",
+        "text": "Read [SOURCE] and [TASK]. Solve the task from those bytes. Give the result and quote the source spans that support it. Do not use model identity, prior outcomes, or unstated knowledge."
+      },
+      "stage1": {
+        "family_neutral": true,
+        "sha256": "sha256:5710e1bc6c3948a0d7d23db6dec80273242944646cbd454cb1f9c0130e1a4332",
+        "text": "Read [SOURCE] and [TASK]. List the source constraints needed for the task. For each constraint, quote its exact source text and give a short plain-text summary. Do not solve the task or state a result. If no supported constraint exists, write: No supported constraint."
+      },
+      "stage2": {
+        "family_neutral": true,
+        "sha256": "sha256:502cccb4237aad698e34be1fd22f0ffec897085d6e5357e4a858356041715fc2",
+        "text": "Read [SOURCE], [TASK], and the preserved plain-text [STAGE1_RAW]. Solve the task, check every cited constraint against its source span, and give the final result. Abstain if a cited constraint contradicts the exact checker."
+      }
+    },
+    "raw_stage1_required": true,
+    "raw_stage2_required": true,
+    "raw_stage_write_before_parse": true,
+    "schema": "carnot.v573.prompt_stage_contract.v1",
+    "schema_repair_retry_count": 0,
+    "stage1_answer_requested": false,
+    "stage1_answer_transport_allowed": false,
+    "stage1_output_format": "plain_text",
+    "stage1_parser": "plain_text_source_quote_parser.v573"
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "changed_paths": [],
+    "research_conductor_py_unchanged": true,
+    "research_roadmap_yaml_unchanged": true,
+    "row_hash": "sha256:7d6418733f6c11a3bcd1f743e4d194607ae4062a47b648e751d44a1614a968da",
+    "rows": [
+      {
+        "after_sha256": "sha256:c743819ccf3738a0ce530cb6824cc0db7d6eab84c923112da9a0bb86fbdce649",
+        "before_sha256": "sha256:c743819ccf3738a0ce530cb6824cc0db7d6eab84c923112da9a0bb86fbdce649",
+        "path": "research-roadmap.yaml",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8",
+        "before_sha256": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8",
+        "path": "scripts/research_conductor.py",
+        "unchanged": true
+      }
+    ]
+  },
+  "reproducibility_checksum": "sha256:fae19a177d4e28b5626193f87b676611040a809c38eb43e0b36fbd2f26933bdb",
+  "router_contract": {
+    "allowed_inputs": [
+      "exact_task_bytes",
+      "exact_source_bytes"
+    ],
+    "contract_hash": "sha256:658245e9bfc3484e09c22989f09b8ef906522fa391f3ef434126ba74857e15c8",
+    "cue_set_hash": "sha256:9f1bc451d3d3b36c95f6cfacde21cdf35c06b162bac43d241e5c7b3bf88b5611",
+    "forbidden_inputs": [
+      "model_identity",
+      "model_output",
+      "exact_result",
+      "latency",
+      "token_count",
+      "failure_state"
+    ],
+    "frozen_before_inference": true,
+    "normalization": "Unicode casefold followed by whole-word cue matching",
+    "outcome_blind": true,
+    "restrictive_cues": [
+      "only",
+      "exactly",
+      "at most",
+      "at least",
+      "must",
+      "cannot",
+      "except",
+      "distinct",
+      "no more than",
+      "no fewer than"
+    ],
+    "router_version": "restrictive_cue_regex.v573.20260825",
+    "routing_rows": [
+      {
+        "expected_route": "direct",
+        "input_hash": "sha256:b921c104ce956f3b0cc3ad14141f021b4c75275220a57d41e098f2a85ca5cf52",
+        "matched_cues": [],
+        "observed_route": "direct",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:b8a58e08fd90c7160e2e1740a4c49d3f912405038f1b12d9f41f3e58c2001d0f",
+        "unit_id": "sha256:85121028fd69af118fa100a192a5d92ce12fc3519fd009cd569730ebb4049b02"
+      },
+      {
+        "expected_route": "cfr",
+        "input_hash": "sha256:11080ea693bf14c1204cf9a7490eac61fa1acc92d8100fd4fc37600f005533fb",
+        "matched_cues": [
+          "only"
+        ],
+        "observed_route": "cfr",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:3d78ae0166e9a6f6794f8145a60ce63e0b7f1d7b58009a9ba469ea7f88d83709",
+        "unit_id": "sha256:25259a6a23dd712ab8d0f519e838e20ddd0f4b4cd1c6fc001445d47701ed8345"
+      },
+      {
+        "expected_route": "direct",
+        "input_hash": "sha256:63c9623adbc8201da4bfcaab3c11888a81f622c7fa874ab8699b297947016b28",
+        "matched_cues": [],
+        "observed_route": "direct",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:33f7c25ae54cfe5b76dd1bb95b87d1ca6d537e4ba134ee52b5411df9c3a58c9b",
+        "unit_id": "sha256:b0d286b9306b3a6ded5ad60b0ce9212ed81347ae04f324eab9551e63310769f9"
+      },
+      {
+        "expected_route": "cfr",
+        "input_hash": "sha256:353106ac81cc9694c95080970866da0043ffee08334e7da8405b867fef5ac25a",
+        "matched_cues": [
+          "only"
+        ],
+        "observed_route": "cfr",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:d874439d893ae2213789957844c4e485903c1279f72db6699313d8fb7e05b9ec",
+        "unit_id": "sha256:cc117dbbb84683ac1713422856200b1dafd430fca57b6904d73782a6ffd4df8b"
+      },
+      {
+        "expected_route": "direct",
+        "input_hash": "sha256:c9ed23c8dc12bdb342176a65634d1217e2edbe8525384b80f205fd943e4504e6",
+        "matched_cues": [],
+        "observed_route": "direct",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:79213d35e31379cada81b5690b781b01d1b72f0520328fc0bc20fc6cecbe60f6",
+        "unit_id": "sha256:b051f7f46425db726739b2e3474aee8b2f3c67b44a2a5ad11b6056cfbc9c991f"
+      },
+      {
+        "expected_route": "cfr",
+        "input_hash": "sha256:e64e97022dd5046837a7f7bce1440e9ee81f7cdf512827c5cc8c8fef9f6dda06",
+        "matched_cues": [
+          "only"
+        ],
+        "observed_route": "cfr",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:d214baaf69340f1cff91391d29fdd5cbb37adb6864e0b789b95a5bbd9f056d0e",
+        "unit_id": "sha256:79cbd862634ad7b01b2cf8db0bf21a49e852dd150416bfe809f32550372f0c85"
+      },
+      {
+        "expected_route": "direct",
+        "input_hash": "sha256:3e9c5923c2a57923a1541e47054fba47e6cc1f8ac092362c3647747977cc5102",
+        "matched_cues": [],
+        "observed_route": "direct",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:354953d7f076a499323d7a43179043518d9188b3e8491655e4017813b1137f6b",
+        "unit_id": "sha256:15efbaeb50c9091d00f31d3ba070fa1e97d4e6e1791aa43c600948c4e4f62fe9"
+      },
+      {
+        "expected_route": "cfr",
+        "input_hash": "sha256:bf24946c449402aa8f8b399482d8a444a6989825aca050720d76ffa7246534ab",
+        "matched_cues": [
+          "only"
+        ],
+        "observed_route": "cfr",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:19aca247965640bc7f4592559ad813b6beec96f869ce8ef1b42ef088aadf7759",
+        "unit_id": "sha256:9bdf8c93edda39c7fd422a7387dd2ec32ae51a2bde99d94fab040d09a90d9c51"
+      },
+      {
+        "expected_route": "direct",
+        "input_hash": "sha256:23220fd58b9a3c7125f2f9f53821da9234f92f3d051950039e1fcb2172c8d5f7",
+        "matched_cues": [],
+        "observed_route": "direct",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:171110d67abb71e8309819e30df186a261ac5829142fa25569844db284d20ac5",
+        "unit_id": "sha256:91b445656f12441826d3f2f6597b1190f22d4fcf69816bf4ea34dedc559e9db3"
+      },
+      {
+        "expected_route": "cfr",
+        "input_hash": "sha256:2de5d729ffb6124f5385b98708b92ef6141e07258f41f0a8d3502d5455a5d770",
+        "matched_cues": [
+          "only"
+        ],
+        "observed_route": "cfr",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:b7deed7511662a54af24ba1fb4ebdd27635a3c21de95de6aa69cf6af476e2204",
+        "unit_id": "sha256:893e6c8c8a8593c9eb90b20e78443cb01540b603693f0b238356d064b4bd1997"
+      },
+      {
+        "expected_route": "direct",
+        "input_hash": "sha256:338b122fff8db5ee45243f9fac28f1ee4ce6057e8dce7e688162509397013411",
+        "matched_cues": [],
+        "observed_route": "direct",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:6c190ab69e61444949854158bf4edcabb397d5f1cc1bf6094c5bbf20e22bb386",
+        "unit_id": "sha256:4d32670b558abf3d9bc2032c78cb107fdf05e77a71fe28a78e1c810bc8ba467f"
+      },
+      {
+        "expected_route": "cfr",
+        "input_hash": "sha256:57caa715a17b73ccd8ec5b7118d5f64b925587a6194b56ec8bba9bb9dd8aefce",
+        "matched_cues": [
+          "only"
+        ],
+        "observed_route": "cfr",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:bddf1f60973ea551f4009f511ad87f9670479bc4772f25c0c2521d941738f5e9",
+        "unit_id": "sha256:cac702b8cc534937dd947c5be256a55c9e5d81dff1e83de70a951edc5274c0f3"
+      },
+      {
+        "expected_route": "direct",
+        "input_hash": "sha256:3cf389f87bc54293b89703bde1053d90e53e34e61fc61ad005b8aee27e0bbc9a",
+        "matched_cues": [],
+        "observed_route": "direct",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:02bb385371922ffeda72723b7536e95e519c54e7820cc431805bb35dbe6c93c3",
+        "unit_id": "sha256:55663e946653912ed61d8d6ec6fa780d29db61d80c598e26a8837e1e3cc7202b"
+      },
+      {
+        "expected_route": "cfr",
+        "input_hash": "sha256:f99702e00dc5db3841fca39824a389b9a339602228d107f5b9ce6fe3dd10e126",
+        "matched_cues": [
+          "only"
+        ],
+        "observed_route": "cfr",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:acab39bbe43cefdd311afa6aa91f07e1245163f601882f0d15e7b0164719877c",
+        "unit_id": "sha256:8de1b5f9e4e805a4d53c634ef9a18c0580564110388fe905acc6d73fa30e053b"
+      },
+      {
+        "expected_route": "direct",
+        "input_hash": "sha256:67a27a1eb19bec7a17bc673baf5c011418233e1baa6b5b3c8d2aa6f653f6c14f",
+        "matched_cues": [],
+        "observed_route": "direct",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:4314d1363b57ebc7f03f3471273c536ab87e036dea8d917cd5bc81c29907768f",
+        "unit_id": "sha256:56446b70cdf111b3387a6937226c01e3f117ac149d1d58dd1095b79430092b96"
+      },
+      {
+        "expected_route": "cfr",
+        "input_hash": "sha256:cc8c12e213a5e0da8e3ef13775a01aecca1cefdeb7c95bd8dff699294a49f9b8",
+        "matched_cues": [
+          "only"
+        ],
+        "observed_route": "cfr",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:f1e274960b65c13fec0da81e8fdf05a522949f84e16cfadda70a6b056c85de34",
+        "unit_id": "sha256:33b87144c8e2f80e0b87e5446c907ba6471fd43ec15ccc141a29d2f56d952f27"
+      },
+      {
+        "expected_route": "direct",
+        "input_hash": "sha256:fc6ddee981a3baab91b8ece301b86f74034079f932c7e7c0f681e9c1601e5163",
+        "matched_cues": [],
+        "observed_route": "direct",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:10e7685f68b60b534ee97e04059def9386b2f581246639427e29098d198bd6b1",
+        "unit_id": "sha256:677f4731cf4c9a9ac0418cf83b1d6c16034cd4239c56b0d99a863a00e66e0c7d"
+      },
+      {
+        "expected_route": "cfr",
+        "input_hash": "sha256:a34685758f0efe1f7e6f095e7755df4c5f584f90554776eda342ff1d327fc473",
+        "matched_cues": [
+          "only"
+        ],
+        "observed_route": "cfr",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:5f647d54a705a9b1b9842d7b22727236890274a1ddf392ffbbaf8dcc4bd50e60",
+        "unit_id": "sha256:a69afc00f5e5eb2562267d8fcd0b7f27783c7c02ad614bb4100ae7ae50d7ad0f"
+      },
+      {
+        "expected_route": "direct",
+        "input_hash": "sha256:e1b226738c4e36651f532d30411533e1b0cccd425a4ba3f39fa7a48e88f87531",
+        "matched_cues": [],
+        "observed_route": "direct",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:8e5e8211d3f50b3ba1da06cc8c752f96074b4811ea310d90a359c8d125216d38",
+        "unit_id": "sha256:a88a57e18a47946440228ef859f37f77c110e1e99b17f1bb890b82626ea42b09"
+      },
+      {
+        "expected_route": "cfr",
+        "input_hash": "sha256:978adf3e65ae42f407e0fd7bef49d5a1cd83a0592c50760bdde601a5eedb3963",
+        "matched_cues": [
+          "only"
+        ],
+        "observed_route": "cfr",
+        "route_matches_stratum": true,
+        "row_hash": "sha256:80dd6839ac876bd32eb8881c48c129f06d42597a028f946e1df2aef3244e03e0",
+        "unit_id": "sha256:f820fd884ed7fdd9c51d0bfa4014455e9573f2f002685b36af6fb2b71584a9f1"
+      }
+    ],
+    "schema": "carnot.v573.restrictive_cue_router.v1"
+  },
+  "source_binding_and_exact_authority_contract": {
+    "ambiguity_action": "abstain",
+    "answer_release_authority": "compiler_plus_exact_fixture_checker",
+    "answer_transport_allowed": false,
+    "contract_hash": "sha256:9d7553da5df9aa0bda1f3db3d19c7b3a96d23cec70aa9b6bd79ae4e5a5d93447",
+    "contradictory_constraint_action": "force abstention before answer release",
+    "exact_obligation_dispatch": {
+      "contains": "exp6574.compile_node",
+      "equals": "exp6574.compile_node",
+      "greater_than": "exp6574.compile_node",
+      "less_than": "exp6574.compile_node",
+      "not_equals": "exp6574.compile_node"
+    },
+    "exact_obligation_registry": {
+      "artifact_sha256": "sha256:20caafe973287103a021ffd1be0796915d6f00de734f487c53ed1ebf9e9732cd",
+      "atomic_node_schema_hash": "sha256:314a20c01a67a9ee39fc23de05f10da4f3e20d77d3b2c294145056a0bb73d614",
+      "compiler_name": "carnot_hop_conditioned_joint_sufficiency_compiler",
+      "compiler_version": "v6574.20260824",
+      "dependency_contract_hash": "sha256:78f8c8e99ca7a68fb4e057547322dd45fb583020052b5aeb13de4a06c1ee6c02",
+      "deterministic_reducer": "joint_sufficiency_reduce.v6574",
+      "llm_judge_release_authority": false,
+      "module_sha256": "sha256:21550568c4c01b1bbc9de8a560e2d206207d21146cf450d2eead7a304f97dd90",
+      "registry_name": "exp6574_hop_conditioned_exact_release_registry",
+      "registry_sha256": "sha256:ee64c00678844b77928099e85060858baa06e9bfea917d8924944e354475bd9a",
+      "release_authority": "compiler_plus_exact_fixture_checker"
+    },
+    "external_text_scoring_allowed": false,
+    "generated_constraint_ir_allowed": false,
+    "llm_release_authority": false,
+    "model_can_certify_release": false,
+    "public_arc_solve_scope": false,
+    "schema": "carnot.v573.source_binding_and_exact_authority.v1",
+    "schema_repair_retry_allowed": false,
+    "source_span_binding": "exact UTF-8 byte offsets plus exact quoted bytes",
+    "unsupported_constraint_action": "record and exclude from support"
+  },
+  "source_unit_manifest": {
+    "bounded_unit_count": 20,
+    "case_class_counts": {
+      "ambiguous": 8,
+      "contradictory": 2,
+      "positive_control": 6,
+      "tamper": 2,
+      "unsupported": 2
+    },
+    "manifest_hash": "sha256:96e92355df55bfd608e31ac1fcc5d1fc84e69e5c6f292a229f326d033b5c61f2",
+    "minimum_unit_count": 16,
+    "parent_exp6580_artifact_sha256": "sha256:93ae57af6cef718b74aa0d036cfd7cbddb0e3baba5a00ea3009ed692adb8b88e",
+    "parent_exp6580_manifest_hash": "sha256:e062aa06f654cffbb8209b80a51160eab6c218fbe31bf4b127a19b2e1934b459",
+    "schema": "carnot.v573.constraint_first_source_unit_manifest.v1",
+    "selected_without_model_outcomes": true,
+    "selection_rule": "Take both cue strata for every named Exp6574 fixture in UNIT_FIXTURE_SPECS order before model outcomes exist.",
+    "split_names": [
+      "train",
+      "calibration",
+      "held"
+    ],
+    "stratum_counts": {
+      "ordinary": 10,
+      "restrictive_cue": 10
+    },
+    "units": [
+      {
+        "case_class": "positive_control",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Evaluate fixture valid_single_hop from the supplied source facts.",
+        "expected_action": "release",
+        "fixture_hash": "sha256:5ccd1aec5c4f911f5a879ae88eb2f35144730d64cfd8a2bf047e7037ddc10fad",
+        "fixture_id": "valid_single_hop",
+        "fixture_index": 1,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "valid_single_hop:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:valid_single_hop:ordinary",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:bbc5cf77008c44fccfe321b7d1abcdf1e7f8b00df49dfa51ca9592ea88b4eca4",
+        "selected_without_model_outcome": true,
+        "selection_index": 0,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "train",
+        "stratum": "ordinary",
+        "task_bytes_sha256": "sha256:3a464841798c4a15b0c297b0ed245921b9562b79a54f75360e67df564acf29ae",
+        "unit_id": "sha256:85121028fd69af118fa100a192a5d92ce12fc3519fd009cd569730ebb4049b02"
+      },
+      {
+        "case_class": "positive_control",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Use only the supplied source bytes. Evaluate fixture valid_single_hop under every stated condition.",
+        "expected_action": "release",
+        "fixture_hash": "sha256:5ccd1aec5c4f911f5a879ae88eb2f35144730d64cfd8a2bf047e7037ddc10fad",
+        "fixture_id": "valid_single_hop",
+        "fixture_index": 1,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "valid_single_hop:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:valid_single_hop:restrictive_cue",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:c6c7e9ab87c1e502059c1446c54c88ae85bcabdb90785e23e3fe74b7b4fe6e62",
+        "selected_without_model_outcome": true,
+        "selection_index": 1,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "train",
+        "stratum": "restrictive_cue",
+        "task_bytes_sha256": "sha256:8934dea07fe6b574f8e7c51eaea38ecce33545d8cb51946466d42473aaf2736c",
+        "unit_id": "sha256:25259a6a23dd712ab8d0f519e838e20ddd0f4b4cd1c6fc001445d47701ed8345"
+      },
+      {
+        "case_class": "positive_control",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Evaluate fixture valid_two_hop from the supplied source facts.",
+        "expected_action": "release",
+        "fixture_hash": "sha256:f70ff979aa01825dec67c03c605da91cf6d5844653794455cff9aeb94814b78d",
+        "fixture_id": "valid_two_hop",
+        "fixture_index": 2,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "valid_two_hop:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          },
+          {
+            "constraint_class": "supported",
+            "constraint_id": "valid_two_hop:h1",
+            "expected_exact_result": "certified_true",
+            "hop_index": 1,
+            "operands": {
+              "left": 5,
+              "right": 3
+            },
+            "quoted_span": "Ben age 5 is greater than Cy age 3",
+            "relation": "greater_than",
+            "source_end": 71,
+            "source_start": 37
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:valid_two_hop:ordinary",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:12a695872a89f895f1c2f87b655bc5f4868b14d6070cbd958b954f86d604b747",
+        "selected_without_model_outcome": true,
+        "selection_index": 2,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "calibration",
+        "stratum": "ordinary",
+        "task_bytes_sha256": "sha256:25918ddadfd3c19d0b324fa5f895c864bb4b8c75f23a46444617c5dfe5ceb577",
+        "unit_id": "sha256:b0d286b9306b3a6ded5ad60b0ce9212ed81347ae04f324eab9551e63310769f9"
+      },
+      {
+        "case_class": "positive_control",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Use only the supplied source bytes. Evaluate fixture valid_two_hop under every stated condition.",
+        "expected_action": "release",
+        "fixture_hash": "sha256:f70ff979aa01825dec67c03c605da91cf6d5844653794455cff9aeb94814b78d",
+        "fixture_id": "valid_two_hop",
+        "fixture_index": 2,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "valid_two_hop:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          },
+          {
+            "constraint_class": "supported",
+            "constraint_id": "valid_two_hop:h1",
+            "expected_exact_result": "certified_true",
+            "hop_index": 1,
+            "operands": {
+              "left": 5,
+              "right": 3
+            },
+            "quoted_span": "Ben age 5 is greater than Cy age 3",
+            "relation": "greater_than",
+            "source_end": 71,
+            "source_start": 37
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:valid_two_hop:restrictive_cue",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:c672b40b76caa9603df04fda0e33ab941c1ba1e1d8dd9f9dba8dee717129ddd3",
+        "selected_without_model_outcome": true,
+        "selection_index": 3,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "calibration",
+        "stratum": "restrictive_cue",
+        "task_bytes_sha256": "sha256:efa9fc2a7c52abee217922821ddb08f24669907254eebe1a95fe2993a64a94d3",
+        "unit_id": "sha256:cc117dbbb84683ac1713422856200b1dafd430fca57b6904d73782a6ffd4df8b"
+      },
+      {
+        "case_class": "positive_control",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Evaluate fixture valid_branched_claim from the supplied source facts.",
+        "expected_action": "release",
+        "fixture_hash": "sha256:5c34e7267734147629168f06db73e9490304aca2c3a14b8872778305f81b382f",
+        "fixture_id": "valid_branched_claim",
+        "fixture_index": 3,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "valid_branched_claim:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": "Paris",
+              "right": "Paris"
+            },
+            "quoted_span": "Museum A is in Paris",
+            "relation": "equals",
+            "source_end": 113,
+            "source_start": 93
+          },
+          {
+            "constraint_class": "supported",
+            "constraint_id": "valid_branched_claim:h1",
+            "expected_exact_result": "certified_true",
+            "hop_index": 1,
+            "operands": {
+              "left": "France",
+              "right": "France"
+            },
+            "quoted_span": "Paris is in France",
+            "relation": "equals",
+            "source_end": 91,
+            "source_start": 73
+          },
+          {
+            "constraint_class": "supported",
+            "constraint_id": "valid_branched_claim:h2",
+            "expected_exact_result": "certified_true",
+            "hop_index": 2,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:valid_branched_claim:ordinary",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:83bd58d230556115f229e295bfa9f03a345adf4855cf6028c7b2318a1a1008df",
+        "selected_without_model_outcome": true,
+        "selection_index": 4,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "held",
+        "stratum": "ordinary",
+        "task_bytes_sha256": "sha256:a32aeffc814b2899749401c5d9efed2fdda47d54574db0072d14ea94e450900d",
+        "unit_id": "sha256:b051f7f46425db726739b2e3474aee8b2f3c67b44a2a5ad11b6056cfbc9c991f"
+      },
+      {
+        "case_class": "positive_control",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Use only the supplied source bytes. Evaluate fixture valid_branched_claim under every stated condition.",
+        "expected_action": "release",
+        "fixture_hash": "sha256:5c34e7267734147629168f06db73e9490304aca2c3a14b8872778305f81b382f",
+        "fixture_id": "valid_branched_claim",
+        "fixture_index": 3,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "valid_branched_claim:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": "Paris",
+              "right": "Paris"
+            },
+            "quoted_span": "Museum A is in Paris",
+            "relation": "equals",
+            "source_end": 113,
+            "source_start": 93
+          },
+          {
+            "constraint_class": "supported",
+            "constraint_id": "valid_branched_claim:h1",
+            "expected_exact_result": "certified_true",
+            "hop_index": 1,
+            "operands": {
+              "left": "France",
+              "right": "France"
+            },
+            "quoted_span": "Paris is in France",
+            "relation": "equals",
+            "source_end": 91,
+            "source_start": 73
+          },
+          {
+            "constraint_class": "supported",
+            "constraint_id": "valid_branched_claim:h2",
+            "expected_exact_result": "certified_true",
+            "hop_index": 2,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:valid_branched_claim:restrictive_cue",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:4bd1d1dbe9278a6b90dd72c23454a2466cfa601c8261791ddf12a8588649ae04",
+        "selected_without_model_outcome": true,
+        "selection_index": 5,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "held",
+        "stratum": "restrictive_cue",
+        "task_bytes_sha256": "sha256:c32f6bac321103687c0bf20d86e4d16a2554c00b1e14a3956d049f4b85142a64",
+        "unit_id": "sha256:79cbd862634ad7b01b2cf8db0bf21a49e852dd150416bfe809f32550372f0c85"
+      },
+      {
+        "case_class": "unsupported",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Evaluate fixture unsupported_relation from the supplied source facts.",
+        "expected_action": "abstain",
+        "fixture_hash": "sha256:7009aa5a62bfeff28aa8081619b7656644b1aedf494b198eae8ad96540aeb530",
+        "fixture_id": "unsupported_relation",
+        "fixture_index": 4,
+        "gold_constraints": [
+          {
+            "constraint_class": "unsupported",
+            "constraint_id": "unsupported_relation:h0",
+            "expected_exact_result": "unsupported_relation",
+            "hop_index": 0,
+            "operands": {
+              "left": "Museum A",
+              "right": "Paris"
+            },
+            "quoted_span": "Museum A is in Paris",
+            "relation": "may_prefer",
+            "source_end": 113,
+            "source_start": 93
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:unsupported_relation:ordinary",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:35e0d72a8dca48e6ae4fc9aef4cc04ddbeefa674271a09aaf487d545766cfc8c",
+        "selected_without_model_outcome": true,
+        "selection_index": 6,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "train",
+        "stratum": "ordinary",
+        "task_bytes_sha256": "sha256:bc3054c1f4771dcfa246d7a1be7f6a68b659d6ecef25f967213f4cbcfa79ce72",
+        "unit_id": "sha256:15efbaeb50c9091d00f31d3ba070fa1e97d4e6e1791aa43c600948c4e4f62fe9"
+      },
+      {
+        "case_class": "unsupported",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Use only the supplied source bytes. Evaluate fixture unsupported_relation under every stated condition.",
+        "expected_action": "abstain",
+        "fixture_hash": "sha256:7009aa5a62bfeff28aa8081619b7656644b1aedf494b198eae8ad96540aeb530",
+        "fixture_id": "unsupported_relation",
+        "fixture_index": 4,
+        "gold_constraints": [
+          {
+            "constraint_class": "unsupported",
+            "constraint_id": "unsupported_relation:h0",
+            "expected_exact_result": "unsupported_relation",
+            "hop_index": 0,
+            "operands": {
+              "left": "Museum A",
+              "right": "Paris"
+            },
+            "quoted_span": "Museum A is in Paris",
+            "relation": "may_prefer",
+            "source_end": 113,
+            "source_start": 93
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:unsupported_relation:restrictive_cue",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:ed3d1bad78b3b44891344e9f65aa4bb38e7aa1c0232d1a79622f1e8ada69cf9f",
+        "selected_without_model_outcome": true,
+        "selection_index": 7,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "train",
+        "stratum": "restrictive_cue",
+        "task_bytes_sha256": "sha256:d8b8e0fb1f265266dfefa8d84ca7aa10ba6cf88a51b0fdfe052ac2bca20308e1",
+        "unit_id": "sha256:9bdf8c93edda39c7fd422a7387dd2ec32ae51a2bde99d94fab040d09a90d9c51"
+      },
+      {
+        "case_class": "ambiguous",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Evaluate fixture missing_hop from the supplied source facts.",
+        "expected_action": "abstain",
+        "fixture_hash": "sha256:15173139ca9281a3c4068f84c69f139ccd9f9b9e9e00afbd1e7836b36a4d8cff",
+        "fixture_id": "missing_hop",
+        "fixture_index": 5,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "missing_hop:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:missing_hop:ordinary",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:117ff6ea336a4f52ae1661395c47fa9ef872fac54edd4a57d29b28268ddb7eb9",
+        "selected_without_model_outcome": true,
+        "selection_index": 8,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "calibration",
+        "stratum": "ordinary",
+        "task_bytes_sha256": "sha256:643d3c4ef4e9684c1872e435f4fc9311bac32a3a70e5fe3fa411d4ab335dd4f0",
+        "unit_id": "sha256:91b445656f12441826d3f2f6597b1190f22d4fcf69816bf4ea34dedc559e9db3"
+      },
+      {
+        "case_class": "ambiguous",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Use only the supplied source bytes. Evaluate fixture missing_hop under every stated condition.",
+        "expected_action": "abstain",
+        "fixture_hash": "sha256:15173139ca9281a3c4068f84c69f139ccd9f9b9e9e00afbd1e7836b36a4d8cff",
+        "fixture_id": "missing_hop",
+        "fixture_index": 5,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "missing_hop:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:missing_hop:restrictive_cue",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:caed05da6dcdfdd5d643e8ad964fdc0fafbc0f7b3669ee6afe0228fbdb325200",
+        "selected_without_model_outcome": true,
+        "selection_index": 9,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "calibration",
+        "stratum": "restrictive_cue",
+        "task_bytes_sha256": "sha256:e9d8b7fbdf776bca4a03762727a890d44c1b5856b566f5c280bd8da682c99d9a",
+        "unit_id": "sha256:893e6c8c8a8593c9eb90b20e78443cb01540b603693f0b238356d064b4bd1997"
+      },
+      {
+        "case_class": "ambiguous",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Evaluate fixture disconnected_graph from the supplied source facts.",
+        "expected_action": "abstain",
+        "fixture_hash": "sha256:726770a6672118eaa7afe78606f96322637c1747b55540f3ecc1fb550adbd0e3",
+        "fixture_id": "disconnected_graph",
+        "fixture_index": 6,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "disconnected_graph:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          },
+          {
+            "constraint_class": "supported",
+            "constraint_id": "disconnected_graph:h1",
+            "expected_exact_result": "certified_true",
+            "hop_index": 1,
+            "operands": {
+              "left": 5,
+              "right": 3
+            },
+            "quoted_span": "Ben age 5 is greater than Cy age 3",
+            "relation": "greater_than",
+            "source_end": 71,
+            "source_start": 37
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:disconnected_graph:ordinary",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:37dd4f9af8e6562f0fd57998e6939e02e01aaee619cfb6c2339b78eb60c616e5",
+        "selected_without_model_outcome": true,
+        "selection_index": 10,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "held",
+        "stratum": "ordinary",
+        "task_bytes_sha256": "sha256:24a5273d007157ebf97d33ebf63fa3f9cc2e19d1916adf5c307987c759fa7c39",
+        "unit_id": "sha256:4d32670b558abf3d9bc2032c78cb107fdf05e77a71fe28a78e1c810bc8ba467f"
+      },
+      {
+        "case_class": "ambiguous",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Use only the supplied source bytes. Evaluate fixture disconnected_graph under every stated condition.",
+        "expected_action": "abstain",
+        "fixture_hash": "sha256:726770a6672118eaa7afe78606f96322637c1747b55540f3ecc1fb550adbd0e3",
+        "fixture_id": "disconnected_graph",
+        "fixture_index": 6,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "disconnected_graph:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          },
+          {
+            "constraint_class": "supported",
+            "constraint_id": "disconnected_graph:h1",
+            "expected_exact_result": "certified_true",
+            "hop_index": 1,
+            "operands": {
+              "left": 5,
+              "right": 3
+            },
+            "quoted_span": "Ben age 5 is greater than Cy age 3",
+            "relation": "greater_than",
+            "source_end": 71,
+            "source_start": 37
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:disconnected_graph:restrictive_cue",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:c1c575188646eb2e4dc947b59a8e5dbe0e2fc01a5f3d2e0cae244be90e312095",
+        "selected_without_model_outcome": true,
+        "selection_index": 11,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "held",
+        "stratum": "restrictive_cue",
+        "task_bytes_sha256": "sha256:d5793ebe569a7d9bb34f4fb73d5f5c6ef0d9ff5eb7ac536efe9501d64e806838",
+        "unit_id": "sha256:cac702b8cc534937dd947c5be256a55c9e5d81dff1e83de70a951edc5274c0f3"
+      },
+      {
+        "case_class": "ambiguous",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Evaluate fixture duplicate_node from the supplied source facts.",
+        "expected_action": "abstain",
+        "fixture_hash": "sha256:db33fbf9953de06f3d56fd54bf703baa0bae7e0174c30f7cb200d249c3fa2f7d",
+        "fixture_id": "duplicate_node",
+        "fixture_index": 7,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "duplicate_node:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          },
+          {
+            "constraint_class": "supported",
+            "constraint_id": "duplicate_node:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 1,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:duplicate_node:ordinary",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:0363e5d9f278bd1645f458dc6facb649f2f2e65e8b338502b4de540736bbdfd4",
+        "selected_without_model_outcome": true,
+        "selection_index": 12,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "train",
+        "stratum": "ordinary",
+        "task_bytes_sha256": "sha256:14e9ad418773fc632c8edc0c46b6ffc5206425de35d09ce39c0eb0c57cb16e1f",
+        "unit_id": "sha256:55663e946653912ed61d8d6ec6fa780d29db61d80c598e26a8837e1e3cc7202b"
+      },
+      {
+        "case_class": "ambiguous",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Use only the supplied source bytes. Evaluate fixture duplicate_node under every stated condition.",
+        "expected_action": "abstain",
+        "fixture_hash": "sha256:db33fbf9953de06f3d56fd54bf703baa0bae7e0174c30f7cb200d249c3fa2f7d",
+        "fixture_id": "duplicate_node",
+        "fixture_index": 7,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "duplicate_node:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          },
+          {
+            "constraint_class": "supported",
+            "constraint_id": "duplicate_node:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 1,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:duplicate_node:restrictive_cue",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:2ae290c80ba726ceab2c42e689d7baeb4c29be0d9cd235adebdf904a728db56b",
+        "selected_without_model_outcome": true,
+        "selection_index": 13,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "train",
+        "stratum": "restrictive_cue",
+        "task_bytes_sha256": "sha256:24c44c2aee7527d2f9fcb2f3c17372f1c4bcd108608b8ddc7a212bc348a86171",
+        "unit_id": "sha256:8de1b5f9e4e805a4d53c634ef9a18c0580564110388fe905acc6d73fa30e053b"
+      },
+      {
+        "case_class": "ambiguous",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Evaluate fixture cyclic_dependency from the supplied source facts.",
+        "expected_action": "abstain",
+        "fixture_hash": "sha256:c097c59b269528542fc490f4d75e57a2d36ff149ffd64862b209453ddb169609",
+        "fixture_id": "cyclic_dependency",
+        "fixture_index": 8,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "cyclic_dependency:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          },
+          {
+            "constraint_class": "supported",
+            "constraint_id": "cyclic_dependency:h1",
+            "expected_exact_result": "certified_true",
+            "hop_index": 1,
+            "operands": {
+              "left": 5,
+              "right": 3
+            },
+            "quoted_span": "Ben age 5 is greater than Cy age 3",
+            "relation": "greater_than",
+            "source_end": 71,
+            "source_start": 37
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:cyclic_dependency:ordinary",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:ae8106d3c15d7ceeb4d32a700d132a95ad68019b4ae86ac1d6535b326cf48d9b",
+        "selected_without_model_outcome": true,
+        "selection_index": 14,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "held",
+        "stratum": "ordinary",
+        "task_bytes_sha256": "sha256:77b20671e1efaa2f6361ac8374c3d874bdc58670b2f3c331179cc016da4a56de",
+        "unit_id": "sha256:56446b70cdf111b3387a6937226c01e3f117ac149d1d58dd1095b79430092b96"
+      },
+      {
+        "case_class": "ambiguous",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Use only the supplied source bytes. Evaluate fixture cyclic_dependency under every stated condition.",
+        "expected_action": "abstain",
+        "fixture_hash": "sha256:c097c59b269528542fc490f4d75e57a2d36ff149ffd64862b209453ddb169609",
+        "fixture_id": "cyclic_dependency",
+        "fixture_index": 8,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "cyclic_dependency:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          },
+          {
+            "constraint_class": "supported",
+            "constraint_id": "cyclic_dependency:h1",
+            "expected_exact_result": "certified_true",
+            "hop_index": 1,
+            "operands": {
+              "left": 5,
+              "right": 3
+            },
+            "quoted_span": "Ben age 5 is greater than Cy age 3",
+            "relation": "greater_than",
+            "source_end": 71,
+            "source_start": 37
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:cyclic_dependency:restrictive_cue",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:9c8fbd1cd692ed672cd3b444eb7765c8196e17665407a30e392498daa785a4ad",
+        "selected_without_model_outcome": true,
+        "selection_index": 15,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "held",
+        "stratum": "restrictive_cue",
+        "task_bytes_sha256": "sha256:b2ededaa7b9fe02e1af868107006a9877dddcdc5dea7a7f70b0e7b84adc90a50",
+        "unit_id": "sha256:33b87144c8e2f80e0b87e5446c907ba6471fd43ec15ccc141a29d2f56d952f27"
+      },
+      {
+        "case_class": "contradictory",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Evaluate fixture contradictory_nodes from the supplied source facts.",
+        "expected_action": "abstain",
+        "fixture_hash": "sha256:43749894a5e52da075b1e7d0048ef38c1665d0aae38eb0acabd848595666200f",
+        "fixture_id": "contradictory_nodes",
+        "fixture_index": 9,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "contradictory_nodes:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          },
+          {
+            "constraint_class": "contradictory",
+            "constraint_id": "contradictory_nodes:h1",
+            "expected_exact_result": "counterexample",
+            "hop_index": 1,
+            "operands": {
+              "left": 3,
+              "right": 5
+            },
+            "quoted_span": "Ben age 5 is greater than Cy age 3",
+            "relation": "greater_than",
+            "source_end": 71,
+            "source_start": 37
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:contradictory_nodes:ordinary",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:c462e37807d5f3b8fd6abc9327068365f383164ba8fbdc4ef5ac7e8a8391eccb",
+        "selected_without_model_outcome": true,
+        "selection_index": 16,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "calibration",
+        "stratum": "ordinary",
+        "task_bytes_sha256": "sha256:23b0967e5baf03347f15d6dc8e3f17d831c75aa50f24edbbb2882e27d6c28bad",
+        "unit_id": "sha256:677f4731cf4c9a9ac0418cf83b1d6c16034cd4239c56b0d99a863a00e66e0c7d"
+      },
+      {
+        "case_class": "contradictory",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Use only the supplied source bytes. Evaluate fixture contradictory_nodes under every stated condition.",
+        "expected_action": "abstain",
+        "fixture_hash": "sha256:43749894a5e52da075b1e7d0048ef38c1665d0aae38eb0acabd848595666200f",
+        "fixture_id": "contradictory_nodes",
+        "fixture_index": 9,
+        "gold_constraints": [
+          {
+            "constraint_class": "supported",
+            "constraint_id": "contradictory_nodes:h0",
+            "expected_exact_result": "certified_true",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 0
+          },
+          {
+            "constraint_class": "contradictory",
+            "constraint_id": "contradictory_nodes:h1",
+            "expected_exact_result": "counterexample",
+            "hop_index": 1,
+            "operands": {
+              "left": 3,
+              "right": 5
+            },
+            "quoted_span": "Ben age 5 is greater than Cy age 3",
+            "relation": "greater_than",
+            "source_end": 71,
+            "source_start": 37
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:contradictory_nodes:restrictive_cue",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:e82943262b4ce76ccc70be579bf1c4b6bf406e74b159b540a808da718bf21aaf",
+        "selected_without_model_outcome": true,
+        "selection_index": 17,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "calibration",
+        "stratum": "restrictive_cue",
+        "task_bytes_sha256": "sha256:906d28937c5cfa834b0f2686fcd5d38337d94e9dd243324decf355e936a8792b",
+        "unit_id": "sha256:a69afc00f5e5eb2562267d8fcd0b7f27783c7c02ad614bb4100ae7ae50d7ad0f"
+      },
+      {
+        "case_class": "tamper",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Evaluate fixture wrong_span from the supplied source facts.",
+        "expected_action": "abstain",
+        "fixture_hash": "sha256:8848925afeba04372e23a1b8ba759be522e8ee784f520e56d2d112801ffe2153",
+        "fixture_id": "wrong_span",
+        "fixture_index": 10,
+        "gold_constraints": [
+          {
+            "constraint_class": "unsupported",
+            "constraint_id": "wrong_span:h0",
+            "expected_exact_result": "source_span_mismatch",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 1
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:wrong_span:ordinary",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:f1c82af90bd89e2800a223a6ec02b522130f5ef61bda0ca355fa7a740ce1c0a2",
+        "selected_without_model_outcome": true,
+        "selection_index": 18,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "held",
+        "stratum": "ordinary",
+        "task_bytes_sha256": "sha256:bb60e44f847b916e8eb4e1fdf7f434611db0fd52748d7820c5e8bd7172f0447d",
+        "unit_id": "sha256:a88a57e18a47946440228ef859f37f77c110e1e99b17f1bb890b82626ea42b09"
+      },
+      {
+        "case_class": "tamper",
+        "checker": "exp6574.compile_node_plus_joint_sufficiency_reduce",
+        "checker_version": "v6574.20260824",
+        "exact_source_bytes": "Ada age 7 is greater than Ben age 5. Ben age 5 is greater than Cy age 3. Paris is in France. Museum A is in Paris.",
+        "exact_task_bytes": "Use only the supplied source bytes. Evaluate fixture wrong_span under every stated condition.",
+        "expected_action": "abstain",
+        "fixture_hash": "sha256:8848925afeba04372e23a1b8ba759be522e8ee784f520e56d2d112801ffe2153",
+        "fixture_id": "wrong_span",
+        "fixture_index": 10,
+        "gold_constraints": [
+          {
+            "constraint_class": "unsupported",
+            "constraint_id": "wrong_span:h0",
+            "expected_exact_result": "source_span_mismatch",
+            "hop_index": 0,
+            "operands": {
+              "left": 7,
+              "right": 5
+            },
+            "quoted_span": "Ada age 7 is greater than Ben age 5",
+            "relation": "greater_than",
+            "source_end": 35,
+            "source_start": 1
+          }
+        ],
+        "inclusion_rule": "pre_outcome_static_pair:wrong_span:restrictive_cue",
+        "lineage": "Exp6574 exact fixture extended as a balanced V573 cue pair; Exp6580 source protocol is the parent manifest",
+        "model_outcome_fields_accessed": false,
+        "row_hash": "sha256:7821ee676b185c6647c10f7d8af962f9841e9abd3c6fc0b86a017a56eea3bc96",
+        "selected_without_model_outcome": true,
+        "selection_index": 19,
+        "source_bytes_sha256": "sha256:b21f104babb6803c0cbf2b9100e5a63014cfa0a40e1f201d676643f3d848065e",
+        "split": "held",
+        "stratum": "restrictive_cue",
+        "task_bytes_sha256": "sha256:fb3fb8ad30f76be98217595bdaf838b9ad5729a5cd718691e923175e86cf4a24",
+        "unit_id": "sha256:f820fd884ed7fdd9c51d0bfa4014455e9573f2f002685b36af6fb2b71584a9f1"
+      }
+    ]
+  },
+  "status": "complete_v573_constraint_first_method_ready",
+  "tests_run": [
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6587_v573_constraint_first_method_contract --date 20260825",
+      "duration_s": 0.1,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6587_v573_constraint_first_method_contract.py -q --no-cov -n 0",
+      "duration_s": 0.1,
+      "exit_code": 0
+    },
+    {
+      "command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 COVERAGE_FILE=/tmp/carnot_exp6587.coverage .venv/bin/coverage run --source=python/carnot -m pytest -o addopts='' --noconftest tests/python/test_experiment_6587_v573_constraint_first_method_contract.py -q",
+      "duration_s": 0.1,
+      "exit_code": 0
+    },
+    {
+      "command": "COVERAGE_FILE=/tmp/carnot_exp6587.coverage .venv/bin/coverage report --include='*/experiment_6587_v573_constraint_first_method_contract.py' --show-missing --fail-under=100",
+      "duration_s": 0.1,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "duration_s": 0.1,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_6587_v573_constraint_first_method_contract.py tests/python/test_experiment_6587_v573_constraint_first_method_contract.py",
+      "duration_s": 0.1,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_6587_v573_constraint_first_method_contract.py tests/python/test_experiment_6587_v573_constraint_first_method_contract.py",
+      "duration_s": 0.1,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6587_v573_constraint_first_method_contract.py",
+      "duration_s": 0.1,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6587_v573_constraint_first_method_contract.json",
+      "duration_s": 0.1,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/artifact_convention_audit.py --recent 1 --dry-run",
+      "duration_s": 0.1,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6587_v573_constraint_first_method_contract.json",
+      "duration_s": 0.1,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6587_v573_constraint_first_method_contract --validate",
+      "duration_s": 0.1,
+      "exit_code": 0
+    },
+    {
+      "command": "manual e2e-plan check: Exp6587 is no-LLM primary-source binding and exact fixture replay; ops/e2e-test-plan.md has no constraint-first model entry",
+      "duration_s": 0.0,
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "duration_s": 0.1,
+      "exit_code": 0
+    }
+  ],
+  "v573_constraint_first_method_ready_score": 1.0,
+  "verdict_class": null,
+  "verifier_is_oracle": true
+}
