@@ -1548,6 +1548,29 @@ def _retain_engine_source_on_disk(
     return info
 
 
+def _channel_totals_snapshot(proposer: Any) -> dict[str, int]:
+    """REQ-ARC-WMTE-6710: read the proposer's monotone per-channel character counters.
+
+    Returns {} when the proposer does not carry them. A stub proposer in a test, or an older
+    proposer class, must not change any behaviour here -- this is observation only.
+    """
+
+    raw = getattr(proposer, "channel_totals", None)
+    if not isinstance(raw, dict):
+        return {}
+    return {str(k): int(v) for k, v in raw.items() if isinstance(v, (int, float))}
+
+
+def _channel_totals_delta(before: dict[str, int], after: dict[str, int]) -> dict[str, int]:
+    """One round's channel numbers are the difference of two reads of a monotone counter.
+
+    A negative delta means the counters were reset between the two reads, which is not a
+    measurement -- clamp it to 0 rather than publish a nonsense count.
+    """
+
+    return {key: max(0, int(value) - int(before.get(key, 0))) for key, value in after.items()}
+
+
 def execute_bounded_llm_reinduction(
     *,
     game: str,
@@ -1679,6 +1702,11 @@ def execute_bounded_llm_reinduction(
         # REQ-ARC-WMTE-6480: per-round tool-loop stats; stays None on induce rounds and
         # whenever the tool loop did not run, so flag-off rows are byte-identical.
         tool_stats: dict[str, Any] | None = None
+        # REQ-ARC-WMTE-6710: read the counters BEFORE this round's request, so the row below can
+        # publish this round's own numbers instead of a run-total. Answers "where did the decoded
+        # tokens go" -- a round that spends its whole budget on the thought channel and returns an
+        # empty answer channel is invisible in a `skipped` category, and obvious here.
+        channels_before = _channel_totals_snapshot(proposer)
         if round_index == 0:
             ok, message = _call_induce(
                 proposer,
@@ -1721,6 +1749,12 @@ def execute_bounded_llm_reinduction(
             "round": round_no,
             "action": action,
             "proposer_ok": bool(ok),
+            # REQ-ARC-WMTE-6710: this round's per-channel character split. Set on EVERY round,
+            # including a failed one -- a round that produced no usable code still spent a budget,
+            # and that is exactly the case worth counting.
+            "channel_chars": _channel_totals_delta(
+                channels_before, _channel_totals_snapshot(proposer)
+            ),
         }
         if tool_stats is not None:
             row["tool_loop"] = tool_stats
@@ -1859,6 +1893,12 @@ def execute_bounded_llm_reinduction(
                 counterexamples.append(last_counterexample)
                 row["counterexample"] = dict(last_counterexample)
                 row["skipped"] = "heldout_transition_verification_failed"
+                # REQ-ARC-WMTE-6710: carry the cause OUT of the round, not only into `row`.
+                # `skipped` is pre-set to the no-plan default at the top of this function, so a
+                # round that diagnosed a DYNAMICS failure and wrote it only to `row` was reported
+                # to every caller under a PLANNING label. Mirrors the sites below that already do
+                # this. Overwritten by a later round, cleared to "" by any planned return.
+                skipped = row["skipped"]
                 # ---- REQ-ARC-WMTE-6042 WRITE-COLLAPSE INSTRUMENTATION (record only) ----------
                 # WHAT DID THE EMITTED ENGINE BECOME? `prefix_accuracy` says the refactor rounds
                 # fit almost nothing (4/160 above zero, ceiling 0.125, against 28/88 and a ceiling
@@ -2206,6 +2246,10 @@ def execute_bounded_llm_reinduction(
             }
             counterexamples.append(last_counterexample)
             row["skipped"] = last_counterexample["kind"]
+            # REQ-ARC-WMTE-6710: same widening as the held-out site above. An attempt that
+            # RAISED was reported as an attempt that found no plan, which sends a reader to
+            # the planner instead of to the traceback.
+            skipped = row["skipped"]
             rounds.append(row)
             continue
 

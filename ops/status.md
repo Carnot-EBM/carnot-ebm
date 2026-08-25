@@ -8811,3 +8811,45 @@ slow-but-valid-run judgment (the baseline25 class); prompt/scored-path
 changes — note FOUR live prompt constants still embed a literal
 `/no_think\n` the Qwen3.8 pin consumes as prompt text (locations in the
 research note); root-level kill forensics.
+
+## 2026-08-24 (outer loop) — The diagnostic instrument could not name its own cause
+
+SHIPPED: REQ-ARC-WMTE-6710. `induction_skipped` is the field this project reads
+to answer "why was the induced world model rejected". It could not answer it.
+
+`execute_bounded_llm_reinduction` pre-set its outer `skipped` variable to
+`no_reachable_plan_after_refinement` before any refinement round ran. Two sites
+diagnosed a real cause and wrote it ONLY into the per-round record — the
+held-out transition verification failure, and the selection-or-planning
+exception. Four sibling sites in the same loop already wrote both, so this was
+not a different design; it was the same design, missed twice. The result is a
+false report with the right shape: an attempt whose every round failed DYNAMICS
+verification was reported under a PLANNING label, which sends a reader to the
+planner instead of to the verifier. In the live corpus that default accounted
+for 9 of 18 skip records. Both sites now set the outer variable.
+
+Two supporting gaps closed with it. The proposer's per-channel character
+counters had no consumer inside the refinement loop, so each round now records
+its own `channel_chars` by differencing two monotone reads — "where do the
+decoded tokens go" becomes a measurement instead of an inference. The chat
+channel-split accumulation moved out of the request method into
+`LocalGGUFProposer._record_chat_channel_split`, so it lives and is tested in one
+place. Raw text is never persisted; the counters are characters, because a
+per-channel token count needs a tokenizer call the request never made.
+
+Evidence: `tests/python/test_arc_induction_diagnosis_6710.py`, 10 tests,
+SCENARIO-ARC-WMTE-6710-1..7. Seven mutations, each RED on deletion and restored
+byte-identical. The regression test named for the incident input is
+`test_all_rounds_failing_heldout_verification_is_not_reported_as_a_planning_failure`.
+
+Two candidate changes were REVERTED as decorative: their mutations stayed GREEN
+because the round's `row.update(...)` block already wrote both fields. The
+mutation step is what caught that, not review.
+
+WHAT IS NOT DONE. No live run has been made against this change — a scored-path
+lever run was in flight on GPU 1 throughout and was left untouched, so every
+claim here is unit-level. The 9-of-18 figure is inherited from the brief, not
+re-measured this session. A second agent independently built
+`tests/python/test_arc_induction_skip_cause_not_masked_20260824.py` against the
+same three defects; both suites pass against this code, and the duplication is
+left for the operator to resolve rather than deleted.

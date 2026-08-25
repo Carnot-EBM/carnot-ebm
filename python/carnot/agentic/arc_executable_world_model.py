@@ -5941,6 +5941,28 @@ def _ffn_cpu_override_regex(n_cpu_layers: int) -> str:
     return rf"blk\.({idx})\.ffn_(gate|up|down)\.weight=CPU"
 
 
+# REQ-ARC-WMTE-6710. The per-channel completion-size counters, declared in ONE place so the
+# proposer field, the reset helper and any consumer cannot drift apart. Every value is a monotone
+# integer, which is what lets a caller difference two reads to get one cell's numbers.
+#   completions            -- completions seen at the diagnostics seam (both endpoints)
+#   chars_raw              -- length of the folded `<think>...</think>final` text
+#   chat_completions       -- chat requests, the only ones with a real channel split
+#   chars_final            -- length of the answer channel
+#   chars_reasoning        -- length of the thought channel
+#   reasoning_only         -- answer channel empty while the thought channel is not: the shape
+#                             that spends a whole budget and returns no code
+#   both_channels_empty    -- the server answered with nothing in either channel
+_EMPTY_CHANNEL_TOTALS: dict[str, int] = {
+    "completions": 0,
+    "chars_raw": 0,
+    "chat_completions": 0,
+    "chars_final": 0,
+    "chars_reasoning": 0,
+    "reasoning_only": 0,
+    "both_channels_empty": 0,
+}
+
+
 @dataclass
 class LocalGGUFProposer:
     """OFFLINE-LEGAL, DECENTRALIZED, GPU-ENFORCED proposer (CLAUDE.md decentralization
@@ -6116,6 +6138,13 @@ class LocalGGUFProposer:
     # nothing branches on them, so recording them changes no behaviour on any path.
     last_final_content: str = ""
     last_reasoning_content: str = ""
+    # REQ-ARC-WMTE-6710: the SAME split, accumulated instead of overwritten. The three `last_*`
+    # fields above hold only the most recent call, so every earlier completion's split died in
+    # memory and a run could not say where its decoded tokens went. These are monotone character
+    # counters; a caller that reads them before and after a cell gets that cell's split by
+    # subtraction. Characters, not tokens -- a per-channel token count needs a tokenizer call the
+    # request never made. Pure observation, exactly like the fields above.
+    channel_totals: dict[str, int] = field(default_factory=lambda: dict(_EMPTY_CHANNEL_TOTALS))
     # The n_predict the most recent generate() call actually SENT after the pool clamp
     # (REQ-ARC-WMTE-6620); -1 until a call runs. _limit_diagnostic reads this so its message
     # names the budget the server was really asked for, not the configured cap.
@@ -6425,10 +6454,31 @@ class LocalGGUFProposer:
             "generator_orphaned_child_cleanups": list(self.orphaned_child_cleanups),
         }
 
+    def _record_chat_channel_split(self, final: str, reasoning: str) -> None:
+        """REQ-ARC-WMTE-6710: accumulate one chat completion's per-channel character split.
+
+        Called where both channels are FRESH. Doing it at the `_record_completion_diagnostics`
+        seam instead would read whatever the last CHAT call left behind whenever the raw
+        /completion endpoint served the request, because that endpoint never sets those fields.
+        Counted per REQUEST, so an opt-in continuation retry adds a second count here.
+        """
+
+        self.channel_totals["chat_completions"] += 1
+        self.channel_totals["chars_final"] += len(final)
+        self.channel_totals["chars_reasoning"] += len(reasoning)
+        if not final.strip():
+            # The shape that spends a whole budget and returns no code, kept distinct from a
+            # response that carried nothing at all.
+            key = "reasoning_only" if reasoning.strip() else "both_channels_empty"
+            self.channel_totals[key] += 1
+
     def _record_completion_diagnostics(self, response: dict) -> None:
         self.last_stop_type = str(response.get("stop_type") or "")
         self.last_prompt_truncated = bool(response.get("truncated"))
         self.last_raw_completion = str(response.get("content") or "")
+        # REQ-ARC-WMTE-6710: accumulate what the line above overwrites. Both endpoints reach here.
+        self.channel_totals["completions"] += 1
+        self.channel_totals["chars_raw"] += len(self.last_raw_completion)
         # How many tokens the server ACTUALLY generated. Load-bearing for telling the two
         # "stop_type == limit" cases apart -- see _limit_diagnostic().
         timings = response.get("timings")
@@ -6578,6 +6628,7 @@ class LocalGGUFProposer:
         # per-channel truth is available even when the caller goes on to fail the candidate.
         self.last_final_content = final
         self.last_reasoning_content = reasoning
+        self._record_chat_channel_split(final, reasoning)
         # OPT-IN EMPTY-ANSWER-CHANNEL FALLBACK (CARNOT_ARC_CHAT_EMPTY_CONTENT_FALLBACK=1).
         #
         # WHAT IT IS FOR. This build splits the model's thought channel out into

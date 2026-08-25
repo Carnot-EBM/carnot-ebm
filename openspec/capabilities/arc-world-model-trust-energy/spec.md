@@ -27343,3 +27343,117 @@ THEN the report shows 2 files, 1 distinct file and 1 distinct goal predicate.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6700 | `scripts/arc_induction_quality.py` (`classify_path`, `find_models` returning kept + excluded, `score_model` emitting `file_sha16`/`goal_predicate_sha16`, `main` reporting three population sizes and failing closed). | `tests/python/test_arc_induction_quality_guards.py` (SCENARIO-ARC-WMTE-6700-1..6; 6 mutations M1-M6 each RED then restored byte-identical). |
+
+### REQ-ARC-WMTE-6710: Induction Diagnosis Reports The Cause It Diagnosed
+
+`induction_skipped` is the field this project uses to answer "why was the
+induced world model rejected". It cannot resolve that question today, for
+three separate reasons.
+
+**A fall-through default masks two diagnosed causes.**
+`execute_bounded_llm_reinduction` sets `skipped =
+"no_reachable_plan_after_refinement"` before any refinement round runs, and
+clears it only on a planned return. Two sites diagnose a real, specific cause
+and write it ONLY to the per-round record: the held-out transition
+verification failure, and the selection-or-planning exception. Four sibling
+sites already write both the round record and the outer variable. So an
+attempt whose every round failed held-out DYNAMICS verification was reported
+under a PLANNING label. In the live corpus at the time of writing, that
+default accounted for 9 of 18 skip records. A reader sent to the planner by
+that label cannot find the defect, because the defect is in the dynamics
+model.
+
+**The per-round record is computed and then discarded.** Each refinement round
+builds a record carrying its own cause, its held-out score and its
+counterexample. Those records reach the attempt dict, and the scored-path
+lever harness reads them ONLY to build category counters. The evidence that
+says WHICH cause fired is rebuilt every cell and thrown away every cell, so a
+category count can never be traced back to the round that produced it.
+
+**The reasoning/final channel split is never persisted.** The proposer folds
+the model's thought channel and answer channel into three `last_*` fields that
+each hold only the most recent call. Every earlier completion's split dies in
+memory. A run that decodes tens of thousands of tokens per call therefore has
+no record of where those tokens went, and "the model spends its budget
+thinking and returns an empty answer" stays an inference rather than a
+measurement.
+
+The system SHALL carry a diagnosed cause out of the round that diagnosed it.
+Both sites above SHALL set the outer `skipped` variable in addition to the
+round record, matching the four sites that already do.
+
+The per-round record already carries the round's own held-out accuracy
+(`heldout_accuracy`) and acceptance verdict (`accepted_by_heldout_verifier`),
+written by the round's `row.update(...)` block. The harness digest reads both
+off that record, and nothing pinned the contract. It SHALL be pinned by test,
+so an edit to that block cannot silently make the digest publish an empty score
+for every round.
+
+The harness row SHALL persist a bounded per-attempt digest of those records
+(`induction_round_records`), carrying per round the round index, action,
+`skipped`, `heldout_accuracy`, `accepted_by_heldout_verifier`,
+`plan_reaches_goal`, and a counterexample summary in which every list is
+replaced by its length under a `<key>_n` name. Rounds are capped at 4 per
+attempt; attempts are not capped, because the attempt is the unit being
+diagnosed. Both the round view and the attempt-level counterexample list are
+kept, because a round that RAISED appends to the attempt list without ever
+writing a round counterexample.
+
+The proposer SHALL accumulate monotone per-channel CHARACTER counters
+(`channel_totals`) beside the existing `last_*` fields, covering completions
+seen, raw characters, chat completions, answer-channel characters,
+thought-channel characters, and the two empty-answer shapes. The counters are
+characters, not tokens: a per-channel token count needs a tokenizer call the
+request never made. Raw text SHALL NOT be persisted. The counters being
+monotone is what lets a caller difference two reads to get one unit's numbers;
+the per-round record SHALL carry that difference as `channel_chars`, and the
+harness row SHALL carry the per-cell difference as `llm_channels`.
+
+Every field in this REQ is observation only. Nothing branches on any of them.
+
+#### SCENARIO-ARC-WMTE-6710-1 (a dynamics failure is not reported as a planning failure)
+GIVEN a reinduction attempt whose every round fails held-out transition verification
+WHEN the attempt returns
+THEN `skipped` is `heldout_transition_verification_failed`
+AND `skipped` is NOT `no_reachable_plan_after_refinement`.
+
+#### SCENARIO-ARC-WMTE-6710-2 (an exception is not reported as a planning failure)
+GIVEN a reinduction attempt whose round raises during selection or planning
+WHEN the attempt returns
+THEN `skipped` is `selection_or_planning_exception`.
+
+#### SCENARIO-ARC-WMTE-6710-3 (the default still survives a genuine no-plan attempt)
+GIVEN a reinduction attempt whose rounds verify and plan but reach no goal
+WHEN the attempt returns
+THEN `skipped` is `no_reachable_plan_after_refinement`.
+
+#### SCENARIO-ARC-WMTE-6710-4 (the per-round record reaches the harness row)
+GIVEN attempts carrying refinement rounds and counterexamples
+WHEN the harness builds a cell row
+THEN `induction_round_records` holds one entry per attempt
+AND each entry carries at most 4 rounds
+AND every counterexample list is replaced by its length under a `<key>_n` name.
+
+#### SCENARIO-ARC-WMTE-6710-5 (the channel split is counted, not overwritten)
+GIVEN a proposer that serves two chat completions
+WHEN both complete
+THEN `channel_totals` counts two chat completions
+AND the answer-channel and thought-channel character counts are the sums of both.
+
+#### SCENARIO-ARC-WMTE-6710-6 (an empty answer channel is counted as its own shape)
+GIVEN a completion whose answer channel is blank while the thought channel is not
+WHEN it completes
+THEN `channel_totals["reasoning_only"]` is incremented
+AND `channel_totals["both_channels_empty"]` is not.
+
+#### SCENARIO-ARC-WMTE-6710-7 (a round publishes its own numbers, not a run total)
+GIVEN a proposer whose counters already hold a previous round's characters
+WHEN a further round runs
+THEN that round's `channel_chars` holds only the difference
+AND a counter reset between the two reads yields 0 rather than a negative count.
+
+## Implementation Status (REQ-ARC-WMTE-6710)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6710 | `python/carnot/agentic/arc_llm_reinduction.py` (`_channel_totals_snapshot`, `_channel_totals_delta`; `skipped = row["skipped"]` at the held-out and exception sites; `row["heldout_accuracy"]`, `row["accepted_by_heldout_verifier"]`, `row["channel_chars"]`). `python/carnot/agentic/arc_executable_world_model.py` (`_EMPTY_CHANNEL_TOTALS`, `LocalGGUFProposer.channel_totals`, accumulation in `_record_completion_diagnostics` and at the chat channel-split seam). `scripts/arc_scored_path_lever_harness.py` (`_counterexample_digest`, `_round_digest`, `_induction_round_records`, `_channel_delta`; `run_cell` emits `induction_round_records` and `llm_channels`). | `tests/python/test_arc_induction_diagnosis_6710.py` (SCENARIO-ARC-WMTE-6710-1..7; 7 mutations M1-M7 each RED then restored byte-identical). |
