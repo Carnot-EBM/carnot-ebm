@@ -23,6 +23,7 @@ from typing import Any
 
 from carnot import experiment_5408_resource_accounted_csl_controller_v492 as exp5408
 from carnot import experiment_5409_uncertainty_gated_promotion_v492 as exp5409
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -58,9 +59,7 @@ TERMINAL_PREFIXES = ("complete:", "blocked:")
 REQUIRED_EPISODE_FAMILIES = frozenset(
     {"clean", "stale", "poisoned", "underspecified", "distribution_shift"}
 )
-UNSAFE_EPISODE_FAMILIES = frozenset(
-    {"stale", "poisoned", "underspecified", "distribution_shift"}
-)
+UNSAFE_EPISODE_FAMILIES = frozenset({"stale", "poisoned", "underspecified", "distribution_shift"})
 STALE_POISON_FAMILIES = frozenset({"stale", "poisoned"})
 DEFLECTING_ACTIONS = frozenset(
     {"route_to_deterministic_verifier", "abstain", "retain_non_promoted_evidence"}
@@ -133,11 +132,17 @@ def evaluate_evidence_reliance_csl(root: Path | str = REPO_ROOT) -> JsonDict:
     accuracy_before = _rate(sum(row["answer_correct_before"] for row in paired), len(paired))
     accuracy_after = _rate(sum(row["answer_correct_after"] for row in paired), len(paired))
     resource_delta = round(
-        sum(float(row["always_verify_resource_cost"]) - float(row["resource_cost_after"]) for row in paired),
+        sum(
+            float(row["always_verify_resource_cost"]) - float(row["resource_cost_after"])
+            for row in paired
+        ),
         6,
     )
     verifier_cost_delta = round(
-        sum(float(row["always_verify_verifier_calls"]) - float(row["verifier_calls_after"]) for row in paired),
+        sum(
+            float(row["always_verify_verifier_calls"]) - float(row["verifier_calls_after"])
+            for row in paired
+        ),
         6,
     )
     reliance_drift_metric = max(float(row["evidence_reliance_drift"]) for row in paired)
@@ -189,8 +194,7 @@ def build_raw_episode_index(exp5408_artifact: Mapping[str, Any]) -> JsonDict:
     """Index retained raw episodes and add the Exp5421 diagnostic controls."""
 
     raw_index = {
-        str(row["raw_episode_id"]): dict(row)
-        for row in exp5408_artifact.get("raw_episodes", [])
+        str(row["raw_episode_id"]): dict(row) for row in exp5408_artifact.get("raw_episodes", [])
     }
     raw_index["raw5421-underspecified-constraint-gap"] = _diagnostic_raw_episode(
         raw_episode_id="raw5421-underspecified-constraint-gap",
@@ -374,7 +378,9 @@ def build_paired_episodes(
     return [_episode_from_template(template, raw_index) for template in templates]
 
 
-def verify_rollback_restores_prior_routing(paired_episodes: Sequence[Mapping[str, Any]]) -> JsonDict:
+def verify_rollback_restores_prior_routing(
+    paired_episodes: Sequence[Mapping[str, Any]],
+) -> JsonDict:
     """Inject one bad promotion and verify controller-side rollback is exact."""
 
     prior_active = {
@@ -445,9 +451,7 @@ def build_artifact(
         "raw_episode_count": evaluation["raw_episode_count"],
         "accuracy_before_rate": evaluation["accuracy_before_rate"],
         "accuracy_after_rate": evaluation["accuracy_after_rate"],
-        "uncertain_reliance_deflection_rate": evaluation[
-            "uncertain_reliance_deflection_rate"
-        ],
+        "uncertain_reliance_deflection_rate": evaluation["uncertain_reliance_deflection_rate"],
         "hidden_forgetting_threshold": HIDDEN_FORGETTING_THRESHOLD,
         "rollback_audit": evaluation["rollback_audit"],
         "readiness_checks": readiness,
@@ -594,8 +598,13 @@ def _episode_from_template(
 def _evidence_reliance_drift(row: Mapping[str, Any]) -> float:
     before = row["influence_shares_before"]
     after = row["influence_shares_after"]
-    memory_delta = max(0.0, float(after["learned_memory"]) - float(before["learned_memory"])) / 100.0
-    verifier_drop = max(0.0, float(before["deterministic_verifier"]) - float(after["deterministic_verifier"])) / 100.0
+    memory_delta = (
+        max(0.0, float(after["learned_memory"]) - float(before["learned_memory"])) / 100.0
+    )
+    verifier_drop = (
+        max(0.0, float(before["deterministic_verifier"]) - float(after["deterministic_verifier"]))
+        / 100.0
+    )
     source_changed = row["grounding_source_before"] != row["grounding_source_after"]
     verifier_changed = row["verifier_dependency_before"] != row["verifier_dependency_after"]
     constraint_changed = row["constraint_evidence_before"] != row["constraint_evidence_after"]
@@ -708,10 +717,7 @@ def _readiness_checks(
         "drift_threshold_crossed": evaluation["reliance_drift_metric"]
         >= HIDDEN_FORGETTING_THRESHOLD,
         "stale_poison_deflected": evaluation["stale_poison_deflection_rate"] == 1.0,
-        "uncertain_reliance_deflected": evaluation[
-            "uncertain_reliance_deflection_rate"
-        ]
-        == 1.0,
+        "uncertain_reliance_deflected": evaluation["uncertain_reliance_deflection_rate"] == 1.0,
         "resource_delta_numeric": _is_numeric(evaluation["resource_delta"]),
         "verifier_cost_delta_numeric": _is_numeric(evaluation["verifier_cost_delta"]),
         "rollback_verified": evaluation["rollback_verified"] is True,
@@ -772,7 +778,12 @@ def _checksum(payload: Mapping[str, Any]) -> str:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _read_json(path: Path) -> JsonDict:

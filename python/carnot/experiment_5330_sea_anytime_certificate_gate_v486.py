@@ -23,6 +23,7 @@ from typing import Any
 
 from carnot import experiment_5328_context_object_lifecycle_self_learning_v486 as exp5328
 from carnot import experiment_5329_memory_context_policy_rollout_v486 as exp5329
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -34,19 +35,13 @@ MILESTONE = "v486"
 SCHEMA = "carnot.experiment_5330.sea_anytime_certificate_gate.v486"
 RUN_DATE = "2026-07-07"
 RANDOM_SEED = 5330
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5330_sea_anytime_certificate_gate_v486.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5330_sea_anytime_certificate_gate_v486.json")
 EXP5328_RELATIVE_PATH = Path(
     "results/experiment_5328_context_object_lifecycle_self_learning_v486.json"
 )
-EXP5329_RELATIVE_PATH = Path(
-    "results/experiment_5329_memory_context_policy_rollout_v486.json"
-)
+EXP5329_RELATIVE_PATH = Path("results/experiment_5329_memory_context_policy_rollout_v486.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
-MODULE_RELATIVE_PATH = Path(
-    "python/carnot/experiment_5330_sea_anytime_certificate_gate_v486.py"
-)
+MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5330_sea_anytime_certificate_gate_v486.py")
 EXP5328_MODULE_RELATIVE_PATH = Path(
     "python/carnot/experiment_5328_context_object_lifecycle_self_learning_v486.py"
 )
@@ -103,15 +98,12 @@ REQUIRED_FIELD_PRINCIPLES = {
         "lifecycle policy choices and never mutates model weights or adapters."
     ),
     "candidate_policy_count": (
-        "Bare count of candidate lifecycle policy updates evaluated by the "
-        "certificate."
+        "Bare count of candidate lifecycle policy updates evaluated by the certificate."
     ),
     "policy_promotions": (
         "Bare count of candidates accepted for promotion by the certificate gate."
     ),
-    "policy_rejections": (
-        "Bare count of candidates rejected by the certificate gate."
-    ),
+    "policy_rejections": ("Bare count of candidates rejected by the certificate gate."),
     "policy_deferrals": (
         "Bare count of candidates deferred because bounded evidence was "
         "insufficient for safe promotion or rejection."
@@ -126,8 +118,7 @@ REQUIRED_FIELD_PRINCIPLES = {
         "value 0 is required for readiness."
     ),
     "rollback_events": (
-        "Bare count of rejected or later-invalidated promotions that recorded "
-        "rollback behavior."
+        "Bare count of rejected or later-invalidated promotions that recorded rollback behavior."
     ),
     "anytime_certificate_gate_ready": (
         "Bare gate true only when promotion decisions are reproducible, no "
@@ -191,8 +182,7 @@ def confirm_fixture_gate(
     source = dict(artifact or load_fixture_artifact(root))
     rows = source.get("lifecycle_rows", [])
     checks = {
-        "context_lifecycle_fixture_ready": source.get("context_lifecycle_fixture_ready")
-        is True,
+        "context_lifecycle_fixture_ready": source.get("context_lifecycle_fixture_ready") is True,
         "no_weight_mutation": source.get("no_weight_mutation") is True,
         "lifecycle_rows_present": isinstance(rows, list) and bool(rows),
         "action_counts_present": isinstance(source.get("lifecycle_action_counts"), Mapping),
@@ -236,9 +226,7 @@ def build_candidate_policies() -> tuple[CandidatePolicy, ...]:
         CandidatePolicy(
             policy_id="retrieval_fast_path_later_invalidated",
             decision_mode="later_invalidated_fast_path",
-            lifecycle_actions=tuple(
-                action for action in actions if action != "retrieve"
-            ),
+            lifecycle_actions=tuple(action for action in actions if action != "retrieve"),
             preliminary_promoted_then_invalidated=True,
         ),
     )
@@ -253,13 +241,9 @@ def evaluate_certificate_gate(
     cases = exp5328.build_lifecycle_fixture()
     policy_rollout = exp5329.evaluate_policy_rollout(cases)
     full_rows = list(fixture_artifact["lifecycle_rows"])
-    transition_rows = list(
-        policy_rollout["policy_rows"][exp5329.TRANSITION_ONLY_POLICY]
-    )
+    transition_rows = list(policy_rollout["policy_rows"][exp5329.TRANSITION_ONLY_POLICY])
     baseline_quality = float(
-        policy_rollout["policy_metrics"][exp5329.TRANSITION_ONLY_POLICY][
-            "final_quality"
-        ]
+        policy_rollout["policy_metrics"][exp5329.TRANSITION_ONLY_POLICY]["final_quality"]
     )
     rows = _certificate_rows(
         policies=policies,
@@ -279,9 +263,7 @@ def evaluate_certificate_gate(
         and all(not bool(row.get("model_weights_mutated")) for row in full_rows)
     )
     unsafe_promotions = sum(
-        1
-        for row in rows
-        if row["decision"] == DECISION_PROMOTE and row["unsafe_accepts"] > 0
+        1 for row in rows if row["decision"] == DECISION_PROMOTE and row["unsafe_accepts"] > 0
     )
     rollback_events = sum(1 for row in rows if bool(row["rollback_event"]))
     no_op_present = any(bool(row["is_control"]) for row in rows)
@@ -500,7 +482,9 @@ def _certify_policy(
     control_delta: float,
 ) -> JsonDict:
     reasons: list[str] = []
-    preliminary_decision = DECISION_PROMOTE if policy.preliminary_promoted_then_invalidated else None
+    preliminary_decision = (
+        DECISION_PROMOTE if policy.preliminary_promoted_then_invalidated else None
+    )
     rollback_event = False
     if policy.is_control:
         decision = DECISION_REJECT
@@ -654,9 +638,7 @@ def _fixture_quality(rows: Sequence[Mapping[str, Any]]) -> float:
 
 def _unsafe_accepts(rows: Sequence[Mapping[str, Any]]) -> int:
     return sum(
-        1
-        for row in rows
-        if row.get("failure_family") is not None and bool(row.get("accepted"))
+        1 for row in rows if row.get("failure_family") is not None and bool(row.get("accepted"))
     )
 
 
@@ -783,7 +765,12 @@ def _checksum(payload: Mapping[str, Any]) -> str:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:

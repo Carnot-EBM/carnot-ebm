@@ -21,6 +21,7 @@ import json
 from pathlib import Path
 import subprocess
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -456,7 +457,9 @@ def read_inputs(root: Path) -> tuple[dict[str, JsonDict], list[str], list[str], 
     return payloads, read_paths, missing, errors
 
 
-def classify_lane(spec: JsonMap, payloads: Mapping[str, JsonMap], missing_paths: Sequence[str]) -> JsonDict:
+def classify_lane(
+    spec: JsonMap, payloads: Mapping[str, JsonMap], missing_paths: Sequence[str]
+) -> JsonDict:
     """Classify one lane without inventing evidence from neighboring lanes."""
 
     lane = str(spec["lane"])
@@ -508,7 +511,11 @@ def classify_lane(spec: JsonMap, payloads: Mapping[str, JsonMap], missing_paths:
         )
 
     classification = lane_classification(lane, payload, payloads)
-    blocked_reason = "" if classification in {"headline_ready", "bounded", "honest_null"} else f"{lane}_not_ready"
+    blocked_reason = (
+        ""
+        if classification in {"headline_ready", "bounded", "honest_null"}
+        else f"{lane}_not_ready"
+    )
     if classification == "honest_null":
         blocked_reason = str(payload.get("failure_mode", "honest_null"))
     return lane_row(
@@ -540,7 +547,11 @@ def lane_classification(lane: str, payload: JsonMap, payloads: Mapping[str, Json
     if lane == "structured_taxonomy_replication":
         risk = unwrap(payload.get("accepted_risk_bound"))
         threshold = unwrap(payload.get("accepted_risk_bound_threshold"))
-        bounded_risk = isinstance(risk, (int, float)) and isinstance(threshold, (int, float)) and risk <= threshold
+        bounded_risk = (
+            isinstance(risk, (int, float))
+            and isinstance(threshold, (int, float))
+            and risk <= threshold
+        )
         ready = (
             unwrap(payload.get("structured_taxonomy_replication_ready")) is True
             and unwrap(payload.get("gated_upstream_clean")) is True
@@ -564,15 +575,18 @@ def lane_classification(lane: str, payload: JsonMap, payloads: Mapping[str, Json
         )
         return "bounded" if ready else "blocked"
     if lane == "pbit_polarfire_timing_variance":
-        ready = all(
-            unwrap(payload.get(field)) is True
-            for field in (
-                "timing_variance_receipts_ready",
-                "measurement_access_complete",
-                "same_workload_hash_match",
-                "same_result_hash_match",
+        ready = (
+            all(
+                unwrap(payload.get(field)) is True
+                for field in (
+                    "timing_variance_receipts_ready",
+                    "measurement_access_complete",
+                    "same_workload_hash_match",
+                    "same_result_hash_match",
+                )
             )
-        ) and unwrap(payload.get("hardware_speedup_claim")) is False
+            and unwrap(payload.get("hardware_speedup_claim")) is False
+        )
         return "bounded" if ready else "blocked"
     if lane == "verified_workflow_memory_csl":
         ready = all(
@@ -589,9 +603,12 @@ def lane_classification(lane: str, payload: JsonMap, payloads: Mapping[str, Json
     if lane == "csl_memory_transfer_stress":
         in_domain_delta = unwrap(payload.get("in_domain_quality_delta"))
         out_domain_delta = unwrap(payload.get("out_of_domain_quality_delta"))
-        deltas_non_negative = isinstance(in_domain_delta, (int, float)) and isinstance(
-            out_domain_delta, (int, float)
-        ) and in_domain_delta >= 0 and out_domain_delta >= 0
+        deltas_non_negative = (
+            isinstance(in_domain_delta, (int, float))
+            and isinstance(out_domain_delta, (int, float))
+            and in_domain_delta >= 0
+            and out_domain_delta >= 0
+        )
         ready = (
             unwrap(payload.get("csl_transfer_stress_ready")) is True
             and unwrap(payload.get("negative_transfer_deflection_rate")) == 1.0
@@ -601,7 +618,11 @@ def lane_classification(lane: str, payload: JsonMap, payloads: Mapping[str, Json
         )
         return "headline_ready" if ready else "blocked"
     if lane == "arc_live_reinduction_levelup":
-        return "headline_ready" if unwrap(payload.get("arc_new_level_banked")) is True else "honest_null"
+        return (
+            "headline_ready"
+            if unwrap(payload.get("arc_new_level_banked")) is True
+            else "honest_null"
+        )
     if lane == "kan_ontology_certificates":
         ready = (
             unwrap(payload.get("kan_ontology_certificate_ready")) is True
@@ -689,9 +710,9 @@ def lane_bucket_name(classification: str) -> str:
 def hardware_speedup_claim(payloads: Mapping[str, JsonMap]) -> bool:
     """Return true only if upstream hardware artifacts actually claimed speedup."""
 
-    return recursive_key_true(payloads.get(EXP5434, {}), "hardware_speedup_claim") or recursive_key_true(
-        payloads.get(EXP5439, {}), "hardware_speedup_claim"
-    )
+    return recursive_key_true(
+        payloads.get(EXP5434, {}), "hardware_speedup_claim"
+    ) or recursive_key_true(payloads.get(EXP5439, {}), "hardware_speedup_claim")
 
 
 def future_token_signal_allowed(payloads: Mapping[str, JsonMap]) -> bool:
@@ -774,22 +795,30 @@ def next_recommendations(payloads: Mapping[str, JsonMap]) -> list[JsonDict]:
             "target": "structured_verification",
             "recommendation": "Scale structured verification only while the Exp5430 corrigendum stays clean and Exp5431 keeps independent bounded-risk replication receipts.",
             "evidence": {
-                "structured_corrigendum_clean": unwrap(corrigendum.get("structured_corrigendum_clean")),
+                "structured_corrigendum_clean": unwrap(
+                    corrigendum.get("structured_corrigendum_clean")
+                ),
                 "adversarial_verify_clean": unwrap(corrigendum.get("adversarial_verify_clean")),
                 "structured_taxonomy_replication_ready": unwrap(
                     taxonomy.get("structured_taxonomy_replication_ready")
                 ),
-                "metric_independence_checks_passed": unwrap(taxonomy.get("metric_independence_checks_passed")),
+                "metric_independence_checks_passed": unwrap(
+                    taxonomy.get("metric_independence_checks_passed")
+                ),
             },
         },
         {
             "target": "continuous_self_learning",
             "recommendation": "Expand CSL only while workflow-memory transfer remains stable under rollback, negative-transfer deflection, and no-weight-mutation gates.",
             "evidence": {
-                "verified_workflow_memory_ready": unwrap(workflow.get("verified_workflow_memory_ready")),
+                "verified_workflow_memory_ready": unwrap(
+                    workflow.get("verified_workflow_memory_ready")
+                ),
                 "csl_transfer_stress_ready": unwrap(transfer.get("csl_transfer_stress_ready")),
                 "in_domain_quality_delta": unwrap(transfer.get("in_domain_quality_delta")),
-                "negative_transfer_deflection_rate": unwrap(transfer.get("negative_transfer_deflection_rate")),
+                "negative_transfer_deflection_rate": unwrap(
+                    transfer.get("negative_transfer_deflection_rate")
+                ),
                 "no_weight_mutation": unwrap(workflow.get("no_weight_mutation")) is True
                 and unwrap(transfer.get("no_weight_mutation")) is True,
             },
@@ -809,7 +838,9 @@ def next_recommendations(payloads: Mapping[str, JsonMap]) -> list[JsonDict]:
             "target": "pbit_hardware_timing",
             "recommendation": "Keep hardware speedup closed until matched repeated board evidence supports acceleration; Exp5434 supplies timing variance receipts but not a speedup.",
             "evidence": {
-                "timing_variance_receipts_ready": unwrap(timing.get("timing_variance_receipts_ready")),
+                "timing_variance_receipts_ready": unwrap(
+                    timing.get("timing_variance_receipts_ready")
+                ),
                 "cpu_repeat_count": unwrap(timing.get("cpu_repeat_count")),
                 "board_repeat_count": unwrap(timing.get("board_repeat_count")),
                 "same_workload_hash_match": unwrap(timing.get("same_workload_hash_match")),
@@ -894,8 +925,13 @@ def validate_artifact(artifact: JsonMap) -> None:
         raise ValueError("hardware_speedup_claim must remain false")
     if artifact["future_token_signal_allowed"] is not False:
         raise ValueError("future_token_signal_allowed must remain false")
-    if not artifact["upstream_artifacts_missing"] and artifact["local_sota_gguf_receipts_valid"] is not True:
-        raise ValueError("local_sota_gguf_receipts_valid must be true when structured inputs are present")
+    if (
+        not artifact["upstream_artifacts_missing"]
+        and artifact["local_sota_gguf_receipts_valid"] is not True
+    ):
+        raise ValueError(
+            "local_sota_gguf_receipts_valid must be true when structured inputs are present"
+        )
     if artifact["research_roadmap_yaml_unchanged"] is not True:
         raise ValueError("research_roadmap_yaml_unchanged must be true")
     if artifact["conductor_unchanged"] is not True:
@@ -958,7 +994,12 @@ def payload_checksum(payload: JsonMap) -> str:
 def file_sha256(path: Path) -> str:
     """Hash a source artifact or context file for provenance."""
 
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def git_path_unchanged(root: Path, relative: str) -> bool:
@@ -993,7 +1034,9 @@ def write_json(path: Path, payload: JsonMap) -> None:
     """Write pretty, stable JSON with a trailing newline for git diffs."""
 
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(json_ready(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(json_ready(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
 
 def main(argv: Sequence[str] | None = None) -> int:

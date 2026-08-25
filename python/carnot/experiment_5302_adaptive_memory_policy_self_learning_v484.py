@@ -18,6 +18,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes, receipt_exists
 
 
 JsonDict = dict[str, Any]
@@ -33,9 +34,7 @@ RESULT_RELATIVE_PATH = Path(
     "results/experiment_5302_adaptive_memory_policy_self_learning_v484.json"
 )
 
-EXP5275_RELATIVE_PATH = Path(
-    "results/experiment_5275_governed_decision_history_memory_v482.json"
-)
+EXP5275_RELATIVE_PATH = Path("results/experiment_5275_governed_decision_history_memory_v482.json")
 EXP5285_RELATIVE_PATH = Path(
     "results/experiment_5285_knowledge_thought_coherence_fixture_v483.json"
 )
@@ -442,7 +441,11 @@ def choose_adaptive_route(row: AdaptivePolicyCase, state: Mapping[str, Any]) -> 
         return ROUTE_CHEAP
     if row.rollback_required or row.case_type == "rollback":
         return ROUTE_FULL
-    if row.unsafe or row.case_type == "harmful-memory" or row.memory_control_kind == "harmful_memory":
+    if (
+        row.unsafe
+        or row.case_type == "harmful-memory"
+        or row.memory_control_kind == "harmful_memory"
+    ):
         return ROUTE_FULL
     if row.memory_control_kind in ESCALATING_CONTROL_KINDS:
         return ROUTE_FULL
@@ -577,9 +580,10 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
         raise ValueError("continuous_self_learning_task.value must be true")  # pragma: no cover
     if not isinstance(artifact.get("memory_policy_candidate_ready"), bool):
         raise ValueError("memory_policy_candidate_ready must be a bare bool")
-    if artifact.get("memory_policy_candidate_ready_principle") != FIELD_PRINCIPLES[
-        "memory_policy_candidate_ready"
-    ]:
+    if (
+        artifact.get("memory_policy_candidate_ready_principle")
+        != FIELD_PRINCIPLES["memory_policy_candidate_ready"]
+    ):
         raise ValueError("memory_policy_candidate_ready_principle mismatch")  # pragma: no cover
     if artifact["no_weight_mutation"]["value"] is not True:
         raise ValueError("no_weight_mutation.value must be true")
@@ -641,7 +645,9 @@ def _case_from_coherence(
         format_valid=bool(row["format_valid"]),
         expected_decision=expected_decision,
         full_decision=full_decision,
-        cheap_decision=_cheap_decision(final_case_type, bool(row["format_valid"]), bool(row["lexical_baseline_accept"])),
+        cheap_decision=_cheap_decision(
+            final_case_type, bool(row["format_valid"]), bool(row["lexical_baseline_accept"])
+        ),
         memory_check_decision=str(row["memory_check_decision"]),
         memory_control_kind=memory_control_kind,
         memory_confidence=memory_confidence,
@@ -743,7 +749,9 @@ def _promoted_entries(rows: Sequence[AdaptivePolicyCase], threshold: float) -> l
                 "status": "promoted",
                 "scope": scope,
                 "provenance": {
-                    "source_artifacts": sorted({artifact for row in scope_rows for artifact in row.source_artifacts}),
+                    "source_artifacts": sorted(
+                        {artifact for row in scope_rows for artifact in row.source_artifacts}
+                    ),
                     "source_case_ids": [row.case_id for row in scope_rows],
                     "evidence_checksum": _stable_hash([_case_to_json(row) for row in scope_rows]),
                 },
@@ -977,7 +985,9 @@ def _honest_verdict(evaluation: Mapping[str, Any], no_weight: Mapping[str, Any])
             f"avoided {calls['vs_always_full']}/{calls['always_full_calls']} full verifier calls "
             "and kept unsafe_false_accepts=0 without weight mutation"
         )
-    return "null: adaptive memory policy preserved safety but did not improve held-out call avoidance"
+    return (
+        "null: adaptive memory policy preserved safety but did not improve held-out call avoidance"
+    )
 
 
 def _split_summary(splits: PolicySplits) -> JsonDict:
@@ -987,8 +997,12 @@ def _split_summary(splits: PolicySplits) -> JsonDict:
         "selection_case_ids": selection_ids,
         "heldout_case_ids": heldout_ids,
         "case_ids_disjoint": set(selection_ids).isdisjoint(heldout_ids),
-        "selection_case_type_counts": _ordered_counts(Counter(row.case_type for row in splits.selection)),
-        "heldout_case_type_counts": _ordered_counts(Counter(row.case_type for row in splits.heldout)),
+        "selection_case_type_counts": _ordered_counts(
+            Counter(row.case_type for row in splits.selection)
+        ),
+        "heldout_case_type_counts": _ordered_counts(
+            Counter(row.case_type for row in splits.heldout)
+        ),
     }
 
 
@@ -1110,17 +1124,25 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 def _sha256_file(path: Path) -> str | None:
-    if not path.exists():
+    if not receipt_exists(path, artifact_relative_path=RESULT_RELATIVE_PATH):
         return None  # pragma: no cover
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _stable_hash(payload: Any) -> str:
-    return "sha256:" + hashlib.sha256(
-        json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode(
-            "utf-8"
-        )
-    ).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode(
+                "utf-8"
+            )
+        ).hexdigest()
+    )
 
 
 def _checksum(artifact: Mapping[str, Any]) -> str:

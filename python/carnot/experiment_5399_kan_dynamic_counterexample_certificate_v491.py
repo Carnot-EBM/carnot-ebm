@@ -18,6 +18,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes, receipt_exists
 
 
 JsonDict = dict[str, Any]
@@ -214,7 +215,9 @@ def split_train_heldout(
 ) -> tuple[tuple[TraceSample, ...], tuple[TraceSample, ...]]:
     """Use the first bounded block for model setup and the tail for checks."""
 
-    split_at = TRAIN_SAMPLE_COUNT if len(samples) > TRAIN_SAMPLE_COUNT else max(1, len(samples) // 2)
+    split_at = (
+        TRAIN_SAMPLE_COUNT if len(samples) > TRAIN_SAMPLE_COUNT else max(1, len(samples) // 2)
+    )
     return tuple(samples[:split_at]), tuple(samples[split_at:])
 
 
@@ -396,18 +399,32 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     _require(artifact["false_property_count"] > 0, "false_property_count")
     _require(artifact["false_property_rejection_rate"] == 1.0, "false_property_rejection_rate")
     _require(artifact["true_property_preservation_rate"] == 1.0, "true_property_preservation_rate")
-    _require(artifact["counterexample_region_count"] == len(artifact["counterexample_regions"]), "counterexample")
+    _require(
+        artifact["counterexample_region_count"] == len(artifact["counterexample_regions"]),
+        "counterexample",
+    )
     _require(artifact["counterexample_region_count"] > 0, "counterexample")
     _require(artifact["broad_kan_verification_claim"] is False, "broad_kan_verification_claim")
     _require(artifact["dynamic_counterexample_certificate_ready"] is True, "ready")
     _require(str(artifact["honest_verdict"]).startswith(TERMINAL_PREFIXES), "honest_verdict")
     _require(bool(artifact.get("tests_run")), "tests_run")
     _require(_limits_explicit(artifact.get("claim_limits", ())), "claim_limits")
-    _require(all(row["preserved"] is True for row in artifact["true_property_checks"]), "true_property_checks")
-    _require(all(row["rejected"] is True for row in artifact["false_property_checks"]), "false_property_checks")
-    _require(all(row["rejects_false_property"] is True for row in artifact["counterexample_regions"]), "counterexample")
+    _require(
+        all(row["preserved"] is True for row in artifact["true_property_checks"]),
+        "true_property_checks",
+    )
+    _require(
+        all(row["rejected"] is True for row in artifact["false_property_checks"]),
+        "false_property_checks",
+    )
+    _require(
+        all(row["rejects_false_property"] is True for row in artifact["counterexample_regions"]),
+        "counterexample",
+    )
     _require("REQ-KAN-5399" in artifact.get("spec_refs", ()), "spec_refs")
-    _require(artifact.get("reproducibility_checksum") == _checksum(artifact), "reproducibility_checksum")
+    _require(
+        artifact.get("reproducibility_checksum") == _checksum(artifact), "reproducibility_checksum"
+    )
     return True
 
 
@@ -474,15 +491,39 @@ def _synthetic_samples() -> tuple[TraceSample, ...]:
     rows = [
         _synthetic_row(1, "s01-clean-retrieve", "clean", "none", "accept", "retrieve", 18.0),
         _synthetic_row(2, "s02-clean-commit", "clean", "none", "accept", "commit", 17.9),
-        _synthetic_row(3, "s03-stale-onset", "stale", "stale_tool_route", "rollback", "retrieve", 17.8),
+        _synthetic_row(
+            3, "s03-stale-onset", "stale", "stale_tool_route", "rollback", "retrieve", 17.8
+        ),
         _synthetic_row(4, "s04-stale-restore", "clean", "none", "accept", "restore", 16.6),
-        _synthetic_row(5, "s05-poison-onset", "poisoned", "poisoned_tool_bypass", "rollback", "tool_select", 16.5),
+        _synthetic_row(
+            5,
+            "s05-poison-onset",
+            "poisoned",
+            "poisoned_tool_bypass",
+            "rollback",
+            "tool_select",
+            16.5,
+        ),
         _synthetic_row(6, "s06-poison-restore", "clean", "none", "accept", "restore", 15.3),
-        _synthetic_row(7, "s07-constraint-reject", "unverified", "missing_dependency_edge", "reject", "revise", 15.2),
-        _synthetic_row(8, "s08-cyclic-reject", "clean", "cyclic_dependency", "reject", "fold", 14.7),
-        _synthetic_row(9, "s09-benign-style", "biased", "benign_style_bias", "accept", "revise", 14.2),
+        _synthetic_row(
+            7,
+            "s07-constraint-reject",
+            "unverified",
+            "missing_dependency_edge",
+            "reject",
+            "revise",
+            15.2,
+        ),
+        _synthetic_row(
+            8, "s08-cyclic-reject", "clean", "cyclic_dependency", "reject", "fold", 14.7
+        ),
+        _synthetic_row(
+            9, "s09-benign-style", "biased", "benign_style_bias", "accept", "revise", 14.2
+        ),
         _synthetic_row(10, "s10-clean-summary", "clean", "none", "accept", "summarize", 13.7),
-        _synthetic_row(11, "s11-stale-onset", "stale", "stale_tool_route", "rollback", "retrieve", 13.6),
+        _synthetic_row(
+            11, "s11-stale-onset", "stale", "stale_tool_route", "rollback", "retrieve", 13.6
+        ),
         _synthetic_row(12, "s12-clean-restore", "clean", "none", "accept", "restore", 12.4),
     ]
     return _samples_from_routing_decisions(rows)
@@ -498,13 +539,30 @@ def _synthetic_row(
     budget_remaining_before: float,
 ) -> JsonDict:
     stale = 0.95 if memory_variant == "stale" else 0.08
-    poison = 0.95 if memory_variant == "poisoned" else (0.45 if memory_variant == "unverified" else 0.06)
+    poison = (
+        0.95 if memory_variant == "poisoned" else (0.45 if memory_variant == "unverified" else 0.06)
+    )
     constraint = 0.9 if certificate_decision in {"reject", "rollback"} else 0.18
-    novelty = 0.68 if memory_variant in {"unverified", "biased"} or drift_type in {"cyclic_dependency", "missing_dependency_edge"} else 0.2
-    confidence = 0.62 if memory_variant in {"stale", "poisoned"} else (0.72 if certificate_decision == "reject" else 0.9)
-    user_impact = 0.85 if action in {"commit", "tool_select", "fold"} else (0.72 if action in {"retrieve", "restore"} else 0.5)
+    novelty = (
+        0.68
+        if memory_variant in {"unverified", "biased"}
+        or drift_type in {"cyclic_dependency", "missing_dependency_edge"}
+        else 0.2
+    )
+    confidence = (
+        0.62
+        if memory_variant in {"stale", "poisoned"}
+        else (0.72 if certificate_decision == "reject" else 0.9)
+    )
+    user_impact = (
+        0.85
+        if action in {"commit", "tool_select", "fold"}
+        else (0.72 if action in {"retrieve", "restore"} else 0.5)
+    )
     uncertainty = _round(1.0 - confidence)
-    selected_tier = _synthetic_selected_tier(stale, poison, constraint, novelty, uncertainty, user_impact, budget_remaining_before)
+    selected_tier = _synthetic_selected_tier(
+        stale, poison, constraint, novelty, uncertainty, user_impact, budget_remaining_before
+    )
     return {
         "event_id": event_id,
         "trace_id": "synthetic-drift-trace",
@@ -598,7 +656,10 @@ def _false_property_checks(
         ),
         (
             "false_constraint_reject_can_remain_cheap",
-            _find_sample(heldout, lambda row: row.constraint_risk >= 0.8 and row.certificate_decision == "reject"),
+            _find_sample(
+                heldout,
+                lambda row: row.constraint_risk >= 0.8 and row.certificate_decision == "reject",
+            ),
             "cheap_deterministic",
             "constraint_reject_rich",
         ),
@@ -627,7 +688,9 @@ def _false_property_checks(
                 "lifted_features": model.lift(sample),
             }
         )
-        regions.append(_counterexample_region(cell_id, false_property_id, sample, model_tier, rejected))
+        regions.append(
+            _counterexample_region(cell_id, false_property_id, sample, model_tier, rejected)
+        )
     return checks, regions
 
 
@@ -649,12 +712,22 @@ def _counterexample_region(
     rejected: bool,
 ) -> JsonDict:
     bounds = {
-        "stale_risk": [0.8, 1.0] if sample.memory_variant == "stale" else [sample.stale_risk, sample.stale_risk],
-        "poison_risk": [0.8, 1.0] if sample.memory_variant == "poisoned" else [sample.poison_risk, sample.poison_risk],
-        "constraint_risk": [0.45, 1.0] if sample.constraint_risk >= 0.45 else [sample.constraint_risk, sample.constraint_risk],
+        "stale_risk": [0.8, 1.0]
+        if sample.memory_variant == "stale"
+        else [sample.stale_risk, sample.stale_risk],
+        "poison_risk": [0.8, 1.0]
+        if sample.memory_variant == "poisoned"
+        else [sample.poison_risk, sample.poison_risk],
+        "constraint_risk": [0.45, 1.0]
+        if sample.constraint_risk >= 0.45
+        else [sample.constraint_risk, sample.constraint_risk],
         "novelty": [0.6, 1.0] if sample.novelty >= 0.6 else [sample.novelty, sample.novelty],
-        "uncertainty": [0.3, 1.0] if sample.uncertainty >= 0.3 else [sample.uncertainty, sample.uncertainty],
-        "user_impact": [0.7, 1.0] if sample.user_impact >= 0.7 else [sample.user_impact, sample.user_impact],
+        "uncertainty": [0.3, 1.0]
+        if sample.uncertainty >= 0.3
+        else [sample.uncertainty, sample.uncertainty],
+        "user_impact": [0.7, 1.0]
+        if sample.user_impact >= 0.7
+        else [sample.user_impact, sample.user_impact],
     }
     return {
         "cell_id": cell_id,
@@ -684,7 +757,11 @@ def _count_support(samples: Sequence[TraceSample], tier: str) -> int:
 
 
 def _claim_limits(trace_source: Mapping[str, Any]) -> list[str]:
-    source_label = "bounded Exp5395 verifier-routing fixture" if trace_source["source_type"] == "exp5395" else "bounded synthetic verifier-drift fallback fixture"
+    source_label = (
+        "bounded Exp5395 verifier-routing fixture"
+        if trace_source["source_type"] == "exp5395"
+        else "bounded synthetic verifier-drift fallback fixture"
+    )
     return [
         source_label + " only",
         "KAN/KANDy-style lifted features are an interpretable diagnostic, not a trained governing-equation discovery claim",
@@ -737,7 +814,14 @@ def _checksum(payload: Mapping[str, Any]) -> str:
 
 
 def _sha256_if_exists(path: Path) -> str | None:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+        if receipt_exists(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        else None
+    )
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:

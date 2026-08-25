@@ -23,6 +23,7 @@ from typing import Any
 from carnot import experiment_5328_context_object_lifecycle_self_learning_v486 as exp5328
 from carnot import experiment_5329_memory_context_policy_rollout_v486 as exp5329
 from carnot import experiment_5330_sea_anytime_certificate_gate_v486 as exp5330
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -34,25 +35,17 @@ MILESTONE = "v487"
 SCHEMA = "carnot.experiment_5340.utility_weighted_context_memory.v487"
 RUN_DATE = "2026-07-07"
 RANDOM_SEED = 5340
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5340_utility_weighted_context_memory_v487.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5340_utility_weighted_context_memory_v487.json")
 Q_VALUE_TABLE_RELATIVE_PATH = Path(
     "results/experiment_5340_utility_weighted_context_memory_q_values_v487.json"
 )
 EXP5328_RELATIVE_PATH = Path(
     "results/experiment_5328_context_object_lifecycle_self_learning_v486.json"
 )
-EXP5329_RELATIVE_PATH = Path(
-    "results/experiment_5329_memory_context_policy_rollout_v486.json"
-)
-EXP5330_RELATIVE_PATH = Path(
-    "results/experiment_5330_sea_anytime_certificate_gate_v486.json"
-)
+EXP5329_RELATIVE_PATH = Path("results/experiment_5329_memory_context_policy_rollout_v486.json")
+EXP5330_RELATIVE_PATH = Path("results/experiment_5330_sea_anytime_certificate_gate_v486.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
-MODULE_RELATIVE_PATH = Path(
-    "python/carnot/experiment_5340_utility_weighted_context_memory_v487.py"
-)
+MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5340_utility_weighted_context_memory_v487.py")
 EXP5328_MODULE_RELATIVE_PATH = Path(
     "python/carnot/experiment_5328_context_object_lifecycle_self_learning_v486.py"
 )
@@ -132,8 +125,7 @@ REQUIRED_FIELD_PRINCIPLES = {
         "policy state changed, never model weights or adapters."
     ),
     "utility_update_count": (
-        "Bare integer count of Q-value updates applied from deterministic fixture "
-        "feedback labels."
+        "Bare integer count of Q-value updates applied from deterministic fixture feedback labels."
     ),
     "q_value_table_path": (
         "Points to the deterministic utility table artifact so downstream gates "
@@ -156,8 +148,7 @@ REQUIRED_FIELD_PRINCIPLES = {
         "policy; any positive count blocks readiness."
     ),
     "rollback_events": (
-        "Bare integer count of rollback transitions exercised by the "
-        "utility-weighted policy."
+        "Bare integer count of rollback transitions exercised by the utility-weighted policy."
     ),
     "utility_memory_ready": (
         "Bare gate true only when all policies run, unsafe false accepts are zero, "
@@ -426,8 +417,7 @@ def confirm_fixture_gate(
     rows = source.get("lifecycle_rows", [])
     actions = {row.get("action") for row in rows if isinstance(row, Mapping)}
     checks = {
-        "context_lifecycle_fixture_ready": source.get("context_lifecycle_fixture_ready")
-        is True,
+        "context_lifecycle_fixture_ready": source.get("context_lifecycle_fixture_ready") is True,
         "no_weight_mutation": source.get("no_weight_mutation") is True,
         "lifecycle_rows_present": isinstance(rows, list) and bool(rows),
         "utility_actions_present": set(UTILITY_OPERATIONS).issubset(actions),
@@ -450,8 +440,7 @@ def confirm_certificate_gate(
 
     source = dict(artifact or _read_json(Path(root) / EXP5330_RELATIVE_PATH))
     checks = {
-        "anytime_certificate_gate_ready": source.get("anytime_certificate_gate_ready")
-        is True,
+        "anytime_certificate_gate_ready": source.get("anytime_certificate_gate_ready") is True,
         "no_weight_mutation": source.get("no_weight_mutation") is True,
         "unsafe_promotions_zero": source.get("unsafe_promotions") == 0,
         "no_op_control_cleared": _is_numeric(source.get("no_op_control_delta"))
@@ -483,10 +472,7 @@ def evaluate_utility_memory(q_table: Mapping[str, Any]) -> JsonDict:
         UTILITY_WEIGHTED_POLICY: utility_rows,
         SHUFFLED_UTILITY_CONTROL: shuffled_rows,
     }
-    policy_metrics = {
-        policy: _policy_metrics(rows)
-        for policy, rows in policy_rows.items()
-    }
+    policy_metrics = {policy: _policy_metrics(rows) for policy, rows in policy_rows.items()}
     always = policy_metrics[ALWAYS_FULL_POLICY]
     transition = policy_metrics[TRANSITION_ONLY_POLICY]
     utility = policy_metrics[UTILITY_WEIGHTED_POLICY]
@@ -507,9 +493,7 @@ def evaluate_utility_memory(q_table: Mapping[str, Any]) -> JsonDict:
     no_weight_mutation = bool(
         q_table.get("no_weight_mutation") is True
         and not any(
-            bool(row.get("model_weights_mutated"))
-            for rows in policy_rows.values()
-            for row in rows
+            bool(row.get("model_weights_mutated")) for rows in policy_rows.values() for row in rows
         )
     )
     ready = bool(
@@ -546,9 +530,7 @@ def build_result_artifact(
     certificate_gate = confirm_certificate_gate(root=root)
     gates_pass = bool(fixture_gate["all_passed"] and certificate_gate["all_passed"])
     q_table = (
-        learn_utility_values(build_utility_feedback_panel())
-        if gates_pass
-        else _blocked_q_table()
+        learn_utility_values(build_utility_feedback_panel()) if gates_pass else _blocked_q_table()
     )
     evaluation = evaluate_utility_memory(q_table) if gates_pass else _blocked_evaluation()
     complete = _utility_complete(
@@ -575,7 +557,9 @@ def build_result_artifact(
         "status": _wrap("status", status),
         "honest_verdict": _wrap(
             "honest_verdict",
-            _honest_verdict(complete, q_table, evaluation, fixture_gate, certificate_gate, tests_run),
+            _honest_verdict(
+                complete, q_table, evaluation, fixture_gate, certificate_gate, tests_run
+            ),
         ),
         "inference_substrate": _wrap("inference_substrate", INFERENCE_SUBSTRATE),
         "continuous_self_learning_target": True,
@@ -728,19 +712,14 @@ def _policy_metrics(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
         "final_correct": final_correct,
         "final_quality": _rate(final_correct, n_rows),
         "verifier_calls": sum(1 for row in rows if bool(row["verifier_call"])),
-        "unsafe_false_accepts": sum(
-            1 for row in rows if bool(row["unsafe_false_accept"])
-        ),
+        "unsafe_false_accepts": sum(1 for row in rows if bool(row["unsafe_false_accept"])),
         "rollback_events": sum(1 for row in rows if bool(row["rollback_event"])),
         "model_weights_mutated": any(bool(row["model_weights_mutated"]) for row in rows),
     }
 
 
 def _same_case_ids(policy_rows: Mapping[str, Sequence[Mapping[str, Any]]]) -> bool:
-    case_ids = [
-        tuple(str(row["case_id"]) for row in rows)
-        for rows in policy_rows.values()
-    ]
+    case_ids = [tuple(str(row["case_id"]) for row in rows) for rows in policy_rows.values()]
     return bool(case_ids) and all(ids == case_ids[0] for ids in case_ids)
 
 
@@ -901,7 +880,12 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _checksum(payload: Mapping[str, Any]) -> str:

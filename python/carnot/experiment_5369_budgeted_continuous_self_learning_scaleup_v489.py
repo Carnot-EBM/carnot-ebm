@@ -19,6 +19,7 @@ from typing import Any
 
 from carnot import experiment_5357_dependency_drift_self_learning_scaleup_v488 as exp5357
 from carnot import experiment_5368_budget_curated_memory_governance_v489 as exp5368
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -57,9 +58,7 @@ MIN_CHECKED_EVENTS = 30
 
 REQUIRED_FIELD_PRINCIPLES = {
     "experiment_id": "Stable id ties the artifact to this roadmap task.",
-    "milestone": (
-        "Keeps the scale-up tied to the `.489` budget-curated memory milestone."
-    ),
+    "milestone": ("Keeps the scale-up tied to the `.489` budget-curated memory milestone."),
     "status": "Complete only if the gated scale-up runs.",
     "honest_verdict": "One-line ready or blocked verdict with a terminal prefix.",
     "inference_substrate": (
@@ -67,8 +66,7 @@ REQUIRED_FIELD_PRINCIPLES = {
     ),
     "budget_curated_memory_ready": "Copied from the Exp5368 gate source.",
     "continuous_self_learning_target": (
-        "Bare boolean must be true to mark this as the required milestone "
-        "self-learning slot."
+        "Bare boolean must be true to mark this as the required milestone self-learning slot."
     ),
     "continuous_self_learning_budget_scaleup_ready": (
         "Bare boolean true only when dependency, drift, rollback, budget, and "
@@ -80,26 +78,16 @@ REQUIRED_FIELD_PRINCIPLES = {
     "verifier_cost_delta": (
         "Verifier-cost reduction versus always-full or always-verify baseline."
     ),
-    "quality_delta_vs_always_full": (
-        "Task-quality delta versus always-full baseline."
-    ),
+    "quality_delta_vs_always_full": ("Task-quality delta versus always-full baseline."),
     "dependency_attribution_rate": (
         "Fraction of selected memories with traceable dependency edges."
     ),
     "drift_detection_rate": "Fraction of induced drift cases detected.",
-    "rollback_recovery_rate": (
-        "Fraction of bad-memory cases recovered after rollback."
-    ),
-    "stale_memory_deflection_rate": (
-        "Fraction of stale memories rejected or quarantined."
-    ),
-    "poison_memory_deflection_rate": (
-        "Fraction of poisoned memories rejected or quarantined."
-    ),
+    "rollback_recovery_rate": ("Fraction of bad-memory cases recovered after rollback."),
+    "stale_memory_deflection_rate": ("Fraction of stale memories rejected or quarantined."),
+    "poison_memory_deflection_rate": ("Fraction of poisoned memories rejected or quarantined."),
     "retained_bytes_delta": "Bytes saved versus uncurated memory.",
-    "unsafe_false_accepts": (
-        "Count of harmful, stale, or poisoned memories accepted as useful."
-    ),
+    "unsafe_false_accepts": ("Count of harmful, stale, or poisoned memories accepted as useful."),
     "no_weight_mutation": "Must be true.",
     "tests_run": "Lists deterministic replay, coverage, and pytest commands.",
 }
@@ -141,18 +129,12 @@ def confirm_source_gate(root: Path | str = REPO_ROOT) -> JsonDict:
     source = _read_json(Path(root) / EXP5368_RELATIVE_PATH)
     exp5368_status = _wrapped_value(source.get("status"))
     checks = {
-        "budget_curated_memory_ready": (
-            source.get("budget_curated_memory_ready") is True
-        ),
+        "budget_curated_memory_ready": (source.get("budget_curated_memory_ready") is True),
         "exp5368_status_ready": exp5368_status == "budget_curated_memory_ready",
         "source_unsafe_false_accepts_zero": source.get("unsafe_false_accepts") == 0,
         "source_no_weight_mutation": source.get("no_weight_mutation") is True,
-        "source_stale_deflection_ready": (
-            source.get("stale_memory_deflection_rate") == 1.0
-        ),
-        "source_poison_deflection_ready": (
-            source.get("poison_memory_deflection_rate") == 1.0
-        ),
+        "source_stale_deflection_ready": (source.get("stale_memory_deflection_rate") == 1.0),
+        "source_poison_deflection_ready": (source.get("poison_memory_deflection_rate") == 1.0),
     }
     failed = [name for name, passed in checks.items() if not passed]
     return {
@@ -196,12 +178,8 @@ def evaluate_budgeted_loop(
     no_memory = evaluate_no_memory_baseline(trace_rows)
     combined = policy["policy_metrics"][exp5357.COMBINED_POLICY]
     always = policy["policy_metrics"][exp5357.ALWAYS_FULL_POLICY]
-    event_ids = [
-        row["event_id"] for row in policy["policy_rows"][exp5357.COMBINED_POLICY]
-    ]
-    same_event_ids = bool(
-        policy["same_event_ids"] and event_ids == no_memory["event_ids"]
-    )
+    event_ids = [row["event_id"] for row in policy["policy_rows"][exp5357.COMBINED_POLICY]]
+    same_event_ids = bool(policy["same_event_ids"] and event_ids == no_memory["event_ids"])
     quality_delta = _delta(combined["final_quality"], always["final_quality"])
     context_delta = _rate(
         always["active_token_count"] - combined["active_token_count"],
@@ -212,8 +190,7 @@ def evaluate_budgeted_loop(
         always["verifier_cost"],
     )
     unsafe_false_accepts = int(
-        combined.get("unsafe_false_accepts", 0)
-        + budget_curation.get("unsafe_false_accepts", 0)
+        combined.get("unsafe_false_accepts", 0) + budget_curation.get("unsafe_false_accepts", 0)
     )
     return {
         "multi_session_trace_count": len(trace_rows),
@@ -225,8 +202,7 @@ def evaluate_budgeted_loop(
         "policy_comparison": {
             "same_event_ids": same_event_ids,
             "baselines_compared": {
-                "always_full_context": exp5357.ALWAYS_FULL_POLICY
-                in policy["policy_metrics"],
+                "always_full_context": exp5357.ALWAYS_FULL_POLICY in policy["policy_metrics"],
                 "no_memory": no_memory["event_count"] == len(event_ids),
             },
             "quality_delta_vs_always_full": quality_delta,
@@ -255,9 +231,7 @@ def evaluate_budget_curation() -> JsonDict:
     """Run Exp5368 curation and add the uncurated-byte savings metric."""
 
     curation = exp5368.curate_memory_items(exp5368.build_memory_items())
-    uncurated_bytes = sum(
-        int(row["byte_cost"]) for row in curation["decision_rows"]
-    )
+    uncurated_bytes = sum(int(row["byte_cost"]) for row in curation["decision_rows"])
     retained_bytes_delta = uncurated_bytes - int(curation["retained_bytes"])
     return {
         **curation,
@@ -274,9 +248,7 @@ def evaluate_no_memory_baseline(
     events = _flatten_events(traces)
     trace_count = len({event["trace_id"] for event in events})
     failed_trace_ids = {
-        str(event["trace_id"])
-        for event in events
-        if _no_memory_misses_required_context(event)
+        str(event["trace_id"]) for event in events if _no_memory_misses_required_context(event)
     }
     return {
         "policy": "no_memory",
@@ -326,9 +298,7 @@ def build_result_artifact(
             _honest_verdict(complete, source_gate, replay, readiness_gate),
         ),
         "inference_substrate": _wrap("inference_substrate", INFERENCE_SUBSTRATE),
-        "budget_curated_memory_ready": bool(
-            source_gate["budget_curated_memory_ready"]
-        ),
+        "budget_curated_memory_ready": bool(source_gate["budget_curated_memory_ready"]),
         "continuous_self_learning_target": True,
         "continuous_self_learning_budget_scaleup_ready": complete,
         "multi_session_trace_count": int(replay["multi_session_trace_count"]),
@@ -722,12 +692,8 @@ def _readiness_gate(
     budget = replay["budget_curation"]
     checks = {
         "source_gate_passed": source_gate["all_passed"] is True,
-        "trace_count_ready": (
-            replay["multi_session_trace_count"] >= MIN_MULTI_SESSION_TRACES
-        ),
-        "checked_event_count_ready": (
-            replay["checked_event_count"] >= MIN_CHECKED_EVENTS
-        ),
+        "trace_count_ready": (replay["multi_session_trace_count"] >= MIN_MULTI_SESSION_TRACES),
+        "checked_event_count_ready": (replay["checked_event_count"] >= MIN_CHECKED_EVENTS),
         "dependency_metric_present": provenance["dependency_attribution_rate"] > 0.0,
         "drift_metric_present": provenance["drift_detection_rate"] > 0.0,
         "rollback_metric_present": provenance["rollback_recovery_rate"] == 1.0,
@@ -768,9 +734,8 @@ def _honest_verdict(
         )
     blockers = list(source_gate.get("failed_gates", []))
     blockers.extend(readiness_gate["failed_gates"])
-    return (
-        "blocked_budgeted_continuous_self_learning_not_ready: "
-        + ",".join(dict.fromkeys(blockers))
+    return "blocked_budgeted_continuous_self_learning_not_ready: " + ",".join(
+        dict.fromkeys(blockers)
     )
 
 
@@ -794,11 +759,7 @@ def _weight_mutation_receipt() -> JsonDict:
 
 
 def _flatten_events(traces: Sequence[Mapping[str, Any]]) -> JsonList:
-    return [
-        dict(event)
-        for trace in traces
-        for event in trace.get("events", [])
-    ]
+    return [dict(event) for trace in traces for event in trace.get("events", [])]
 
 
 def _no_memory_misses_required_context(event: Mapping[str, Any]) -> bool:
@@ -832,7 +793,12 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _checksum(payload: Mapping[str, Any]) -> str:

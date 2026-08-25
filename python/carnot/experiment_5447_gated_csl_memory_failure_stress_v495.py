@@ -26,19 +26,16 @@ from pathlib import Path
 from typing import Any
 
 from carnot import experiment_5446_governed_memory_csl_online_v495 as exp5446
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
 JsonList = list[JsonDict]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5447_gated_csl_memory_failure_stress_v495.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5447_gated_csl_memory_failure_stress_v495.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
-MODULE_RELATIVE_PATH = Path(
-    "python/carnot/experiment_5447_gated_csl_memory_failure_stress_v495.py"
-)
+MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5447_gated_csl_memory_failure_stress_v495.py")
 EXP5446_RESULT_RELATIVE_PATH = exp5446.RESULT_RELATIVE_PATH
 EXP5446_MODULE_RELATIVE_PATH = exp5446.MODULE_RELATIVE_PATH
 
@@ -308,13 +305,16 @@ def apply_failure_gates(
             "active_for_routing": False,
             "routing_influence": 0,
             "audit_retained": True,
-            "governed_deflected": upstream_ready is True and status in {"rejected", "verification_routed"},
+            "governed_deflected": upstream_ready is True
+            and status in {"rejected", "verification_routed"},
         }
     )
     return _json_ready(row)
 
 
-def evaluate_control_policies(rows: Sequence[Mapping[str, Any]]) -> tuple[JsonDict, dict[str, list[str]]]:
+def evaluate_control_policies(
+    rows: Sequence[Mapping[str, Any]],
+) -> tuple[JsonDict, dict[str, list[str]]]:
     """Aggregate the same case IDs under full, empty, ungated, and governed memory."""
 
     metrics: JsonDict = {}
@@ -344,7 +344,9 @@ def verify_bad_memory_rollback(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
     )
     prior_active_sidecar = ["mem5447-safe-baseline-case"]
     active_with_bad_memory = [*prior_active_sidecar, injected_id]
-    restored_active_sidecar = [memory_id for memory_id in active_with_bad_memory if memory_id != injected_id]
+    restored_active_sidecar = [
+        memory_id for memory_id in active_with_bad_memory if memory_id != injected_id
+    ]
     return {
         "injected_bad_memory_id": injected_id,
         "active_sidecar_before_insertion": prior_active_sidecar,
@@ -384,9 +386,7 @@ def build_artifact(
         "failure_operation_counts": evaluation["failure_operation_counts"],
         "stale_memory_deflection_rate": evaluation["stale_memory_deflection_rate"],
         "poisoned_memory_deflection_rate": evaluation["poisoned_memory_deflection_rate"],
-        "retrieval_collision_deflection_rate": evaluation[
-            "retrieval_collision_deflection_rate"
-        ],
+        "retrieval_collision_deflection_rate": evaluation["retrieval_collision_deflection_rate"],
         "negative_transfer_deflection_rate": evaluation["negative_transfer_deflection_rate"],
         "rollback_recovery_rate": evaluation["rollback_recovery_rate"],
         "quality_delta_vs_always_full": evaluation["quality_delta_vs_always_full"],
@@ -466,9 +466,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     if artifact.get("status") == "blocked" and ready is True:
         errors.append("csl_memory_stress_ready")
     if errors:
-        raise ValueError(
-            "invalid Exp5447 artifact fields: " + ",".join(sorted(set(errors)))
-        )
+        raise ValueError("invalid Exp5447 artifact fields: " + ",".join(sorted(set(errors))))
     return True
 
 
@@ -632,20 +630,16 @@ def _readiness_checks(
     controls = evaluation["control_case_id_sets"]
     checks = {
         "gated_upstream_ready": evaluation["gated_upstream_ready"] is True,
-        "families_covered": REQUIRED_CASE_FAMILIES.issubset(
-            set(evaluation["case_family_counts"])
-        ),
-        "operations_covered": set(evaluation["failure_operation_counts"]) == set(FAILURE_OPERATIONS),
+        "families_covered": REQUIRED_CASE_FAMILIES.issubset(set(evaluation["case_family_counts"])),
+        "operations_covered": set(evaluation["failure_operation_counts"])
+        == set(FAILURE_OPERATIONS),
         "operation_counts_match": evaluation["failure_operation_counts"]
         == _failure_operation_counts(rows),
         "inactive_rows_cannot_route": all(row["routing_influence"] == 0 for row in rows),
         "controls_same_cases": len({tuple(ids) for ids in controls.values()}) == 1,
         "stale_memory_deflected": evaluation["stale_memory_deflection_rate"] == 1.0,
         "poisoned_memory_deflected": evaluation["poisoned_memory_deflection_rate"] == 1.0,
-        "retrieval_collision_deflected": evaluation[
-            "retrieval_collision_deflection_rate"
-        ]
-        == 1.0,
+        "retrieval_collision_deflected": evaluation["retrieval_collision_deflection_rate"] == 1.0,
         "negative_transfer_deflected": evaluation["negative_transfer_deflection_rate"] == 1.0,
         "rollback_recovered": evaluation["rollback_recovery_rate"] == 1.0,
         "quality_preserved": evaluation["quality_delta_vs_always_full"] >= 0.0,
@@ -696,7 +690,9 @@ def _honest_verdict(ready: bool) -> str:
             "negative-transfer memories, verified rollback, and preserved the "
             "no-weight-mutation boundary"
         )
-    return "blocked: governed CSL memory stress preconditions or verification evidence are incomplete"
+    return (
+        "blocked: governed CSL memory stress preconditions or verification evidence are incomplete"
+    )
 
 
 def _operation_token(operation: object) -> str:
@@ -728,7 +724,12 @@ def _source_file_checksums(root: Path) -> JsonDict:
 
 
 def _file_checksum(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _read_json(path: Path) -> JsonDict:

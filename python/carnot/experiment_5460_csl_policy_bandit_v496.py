@@ -25,6 +25,7 @@ from typing import Any
 
 from carnot import experiment_5446_governed_memory_csl_online_v495 as exp5446
 from carnot import experiment_5447_gated_csl_memory_failure_stress_v495 as exp5447
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -551,9 +552,7 @@ def evaluate_policy_bandit(root: Path | str = REPO_ROOT) -> JsonDict:
                 policy_metrics["verifier_cost"],
             ),
             "cumulative_constraint_violations": policy_metrics["constraint_violations"],
-            "negative_transfer_deflection_rate": _negative_transfer_deflection_rate(
-                negative_rows
-            ),
+            "negative_transfer_deflection_rate": _negative_transfer_deflection_rate(negative_rows),
             "rollback_recovery_rate": rollback_recovery_rate,
             "no_weight_mutation": _weight_mutation_receipt()["no_weight_mutation"],
             "weight_mutation_receipt": _weight_mutation_receipt(),
@@ -586,18 +585,12 @@ def build_artifact(
         "multi_session_trace_count": evaluation["multi_session_trace_count"],
         "baseline_names": list(BASELINE_NAMES),
         "policy_confidence_receipts_path": str(CONFIDENCE_RECEIPTS_RELATIVE_PATH),
-        "regret_proxy_delta_vs_no_memory": evaluation[
-            "regret_proxy_delta_vs_no_memory"
-        ],
+        "regret_proxy_delta_vs_no_memory": evaluation["regret_proxy_delta_vs_no_memory"],
         "quality_delta_vs_naive_icl": evaluation["quality_delta_vs_naive_icl"],
         "context_efficiency_delta": evaluation["context_efficiency_delta"],
         "verifier_cost_delta": evaluation["verifier_cost_delta"],
-        "cumulative_constraint_violations": evaluation[
-            "cumulative_constraint_violations"
-        ],
-        "negative_transfer_deflection_rate": evaluation[
-            "negative_transfer_deflection_rate"
-        ],
+        "cumulative_constraint_violations": evaluation["cumulative_constraint_violations"],
+        "negative_transfer_deflection_rate": evaluation["negative_transfer_deflection_rate"],
         "rollback_recovery_rate": evaluation["rollback_recovery_rate"],
         "no_weight_mutation": evaluation["no_weight_mutation"],
         "csl_policy_ready": ready,
@@ -657,9 +650,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
         errors.append("field_principles")
     if artifact.get("baseline_names") != list(BASELINE_NAMES):
         errors.append("baseline_names")
-    if artifact.get("policy_confidence_receipts_path") != str(
-        CONFIDENCE_RECEIPTS_RELATIVE_PATH
-    ):
+    if artifact.get("policy_confidence_receipts_path") != str(CONFIDENCE_RECEIPTS_RELATIVE_PATH):
         errors.append("policy_confidence_receipts_path")
     if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
         errors.append("inference_substrate")
@@ -669,9 +660,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     if artifact.get("multi_session_trace_count") != len(artifact.get("trace_rows", [])):
         errors.append("multi_session_trace_count")
     policy_metrics = artifact.get("policy_metrics", {})
-    if artifact.get("policy_update_count") != policy_metrics.get(
-        "active_policy_update_count"
-    ):
+    if artifact.get("policy_update_count") != policy_metrics.get("active_policy_update_count"):
         errors.append("policy_update_count")
     if artifact.get("research_conductor_modified") is not False:
         errors.append("research_conductor_modified")
@@ -683,9 +672,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     if artifact.get("status") == "blocked" and ready is True:
         errors.append("csl_policy_ready")
     if errors:
-        raise ValueError(
-            "invalid Exp5460 artifact fields: " + ",".join(sorted(set(errors)))
-        )
+        raise ValueError("invalid Exp5460 artifact fields: " + ",".join(sorted(set(errors))))
     return True
 
 
@@ -765,13 +752,9 @@ def load_upstream_artifacts(root: Path | str = REPO_ROOT) -> JsonDict:
     exp5447_payload = _read_json(base / EXP5447_RESULT_RELATIVE_PATH)
     return _json_ready(
         {
-            "exp5446_governed_csl_loop_ready": exp5446_payload.get(
-                "governed_csl_loop_ready"
-            )
+            "exp5446_governed_csl_loop_ready": exp5446_payload.get("governed_csl_loop_ready")
             is True,
-            "exp5447_csl_memory_stress_ready": exp5447_payload.get(
-                "csl_memory_stress_ready"
-            )
+            "exp5447_csl_memory_stress_ready": exp5447_payload.get("csl_memory_stress_ready")
             is True,
             "exp5446_reproducibility_checksum": exp5446_payload.get(
                 "reproducibility_checksum",
@@ -876,22 +859,32 @@ def _future_receipts_exclude_rolled_back(
     rolled_back_ids: Sequence[str],
 ) -> bool:
     blocked = set(rolled_back_ids)
-    return all(blocked.isdisjoint(receipt.get("cited_evidence_ids", [])) for receipt in receipts[-1:])
+    return all(
+        blocked.isdisjoint(receipt.get("cited_evidence_ids", [])) for receipt in receipts[-1:]
+    )
 
 
 def _rollback_recovery_rate(rollback_audits: Sequence[Mapping[str, Any]]) -> float:
-    return 1.0 if rollback_audits and all(row.get("rollback_success") is True for row in rollback_audits) else 0.0
+    return (
+        1.0
+        if rollback_audits and all(row.get("rollback_success") is True for row in rollback_audits)
+        else 0.0
+    )
 
 
 def _negative_transfer_deflection_rate(rows: Sequence[Mapping[str, Any]]) -> float:
-    return 1.0 if not rows else round(
-        sum(
-            row["policy_outcome"].get("negative_transfer") is not True
-            and row["policy_outcome"].get("constraint_violation") is not True
-            for row in rows
+    return (
+        1.0
+        if not rows
+        else round(
+            sum(
+                row["policy_outcome"].get("negative_transfer") is not True
+                and row["policy_outcome"].get("constraint_violation") is not True
+                for row in rows
+            )
+            / len(rows),
+            6,
         )
-        / len(rows),
-        6,
     )
 
 
@@ -1025,7 +1018,12 @@ def _source_file_checksums(root: Path) -> JsonDict:
 
 
 def _file_checksum(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _read_json(path: Path) -> JsonDict:

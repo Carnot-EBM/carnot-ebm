@@ -21,6 +21,7 @@ import json
 from pathlib import Path
 import subprocess
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -368,7 +369,9 @@ def derive_readiness(
     """Compute required capstone booleans from source fields only."""
 
     flagged_paths = {str(row["path"]) for row in flagged_artifacts}
-    formal = clean_bool(payloads, EXP5404, "formal_encoding_corrigendum_clean", missing_artifacts, flagged_paths)
+    formal = clean_bool(
+        payloads, EXP5404, "formal_encoding_corrigendum_clean", missing_artifacts, flagged_paths
+    )
     structured = clean_bool(
         payloads,
         EXP5405,
@@ -401,12 +404,16 @@ def derive_readiness(
             flagged_paths,
         ),
         "pbit_qubo_stress_ready": (
-            clean_bool(payloads, EXP5407, "pbit_qubo_stress_ready", missing_artifacts, flagged_paths)
+            clean_bool(
+                payloads, EXP5407, "pbit_qubo_stress_ready", missing_artifacts, flagged_paths
+            )
             and bool(unwrap(pbit_payload.get("simulation_only"))) is True
             and bool(unwrap(pbit_payload.get("hardware_speedup_claim"))) is False
         ),
         "resource_accounted_csl_ready": (
-            clean_bool(payloads, EXP5408, "resource_accounted_csl_ready", missing_artifacts, flagged_paths)
+            clean_bool(
+                payloads, EXP5408, "resource_accounted_csl_ready", missing_artifacts, flagged_paths
+            )
             and bool(unwrap(resource_payload.get("no_weight_mutation"))) is True
         ),
         "uncertainty_gated_promotion_ready": (
@@ -501,7 +508,9 @@ def build_truth_table(
         truth_row(
             lane="formal_corrigendum",
             source_artifacts=[EXP5404],
-            classification=classification(EXP5404, missing_artifacts, flagged_paths, "headline_ready"),
+            classification=classification(
+                EXP5404, missing_artifacts, flagged_paths, "headline_ready"
+            ),
             headline_ready=bool(booleans["formal_encoding_corrigendum_clean"]),
             claim_boundary="row_level_formal_encoding_safety_only",
             evidence=formal_evidence(payloads.get(EXP5404)),
@@ -509,7 +518,9 @@ def build_truth_table(
         truth_row(
             lane="structured_safety_action_scaleup",
             source_artifacts=[EXP5405],
-            classification=classification(EXP5405, missing_artifacts, flagged_paths, "headline_ready"),
+            classification=classification(
+                EXP5405, missing_artifacts, flagged_paths, "headline_ready"
+            ),
             headline_ready=bool(booleans["structured_safety_action_panel_ready"]),
             claim_boundary="structured_fixture_panel_not_general_sota_quality",
             evidence=structured_evidence(payloads.get(EXP5405)),
@@ -517,7 +528,9 @@ def build_truth_table(
         truth_row(
             lane="active_constraint_guidance",
             source_artifacts=[EXP5406],
-            classification=classification(EXP5406, missing_artifacts, flagged_paths, "bounded_ready"),
+            classification=classification(
+                EXP5406, missing_artifacts, flagged_paths, "bounded_ready"
+            ),
             headline_ready=False,
             claim_boundary="advisory_hints_solver_authority_preserved",
             evidence=active_constraint_evidence(payloads.get(EXP5406)),
@@ -525,7 +538,9 @@ def build_truth_table(
         truth_row(
             lane="pbit_qubo_stress",
             source_artifacts=[EXP5407],
-            classification=classification(EXP5407, missing_artifacts, flagged_paths, "bounded_ready"),
+            classification=classification(
+                EXP5407, missing_artifacts, flagged_paths, "bounded_ready"
+            ),
             headline_ready=False,
             claim_boundary="cpu_only_no_hardware_speedup",
             evidence=pbit_evidence(payloads.get(EXP5407)),
@@ -533,7 +548,9 @@ def build_truth_table(
         truth_row(
             lane="resource_accounted_csl",
             source_artifacts=[EXP5408],
-            classification=classification(EXP5408, missing_artifacts, flagged_paths, "headline_ready"),
+            classification=classification(
+                EXP5408, missing_artifacts, flagged_paths, "headline_ready"
+            ),
             headline_ready=bool(booleans["resource_accounted_csl_ready"]),
             claim_boundary="controller_routing_no_weight_mutation",
             evidence=resource_csl_evidence(payloads.get(EXP5408)),
@@ -541,7 +558,9 @@ def build_truth_table(
         truth_row(
             lane="uncertainty_gated_promotion",
             source_artifacts=[EXP5409],
-            classification=classification(EXP5409, missing_artifacts, flagged_paths, "headline_ready"),
+            classification=classification(
+                EXP5409, missing_artifacts, flagged_paths, "headline_ready"
+            ),
             headline_ready=bool(booleans["uncertainty_gated_promotion_ready"]),
             claim_boundary="uncertainty_gate_no_ungated_memory_promotion",
             evidence=uncertainty_evidence(payloads.get(EXP5409)),
@@ -566,7 +585,9 @@ def build_truth_table(
         truth_row(
             lane="kan_active_constraint_certificate",
             source_artifacts=[EXP5412],
-            classification=classification(EXP5412, missing_artifacts, flagged_paths, "bounded_ready"),
+            classification=classification(
+                EXP5412, missing_artifacts, flagged_paths, "bounded_ready"
+            ),
             headline_ready=False,
             claim_boundary="bounded_certificate_no_broad_kan_verification",
             evidence=kan_evidence(payloads.get(EXP5412)),
@@ -689,7 +710,9 @@ def structured_evidence(payload: JsonMap | None) -> JsonDict:
     if not payload:
         return {}
     return {
-        "structured_safety_action_panel_ready": bool(payload["structured_safety_action_panel_ready"]),
+        "structured_safety_action_panel_ready": bool(
+            payload["structured_safety_action_panel_ready"]
+        ),
         "fixture_count": int(payload["fixture_count"]),
         "constrained_validity": float(payload["constrained_validity"]),
         "unconstrained_validity": float(payload["unconstrained_validity"]),
@@ -797,7 +820,9 @@ def kan_evidence(payload: JsonMap | None) -> JsonDict:
     if not payload:
         return {}
     return {
-        "kan_active_constraint_certificate_ready": bool(payload["kan_active_constraint_certificate_ready"]),
+        "kan_active_constraint_certificate_ready": bool(
+            payload["kan_active_constraint_certificate_ready"]
+        ),
         "true_property_count": int(payload["true_property_count"]),
         "false_property_count": int(payload["false_property_count"]),
         "false_property_rejection_rate": float(payload["false_property_rejection_rate"]),
@@ -1053,7 +1078,12 @@ def git_path_modified(root: Path, relative: str) -> bool:
 def file_sha256(path: Path) -> str:
     """Hash a file using the repo's stable sha256 prefix convention."""
 
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def payload_checksum(payload: JsonMap) -> str:

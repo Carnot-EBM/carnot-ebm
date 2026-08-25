@@ -16,6 +16,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes, receipt_exists
 
 
 JsonDict = dict[str, Any]
@@ -185,7 +186,9 @@ def build_artifact(
         "spec_refs": list(SPEC_REFS),
         "field_principles": dict(REQUIRED_FIELD_PRINCIPLES),
         "status": "blocked_missing_inputs" if missing_artifacts else "complete",
-        "artifacts_read": [str(relative) for relative in EXPECTED_ARTIFACTS if relative in artifacts],
+        "artifacts_read": [
+            str(relative) for relative in EXPECTED_ARTIFACTS if relative in artifacts
+        ],
         "missing_artifacts": missing_artifacts,
         "closed_gap_count": count_status(gap_rows, "closed"),
         "partial_gap_count": count_status(gap_rows, "partial"),
@@ -266,7 +269,10 @@ def formal_encoding_corrigendum_row(artifacts: Mapping[Path, JsonDict]) -> JsonD
     return evidence_row(
         row_id="formal_encoding_corrigendum",
         prd_refs=["FR-12", "FR-10"],
-        architecture_refs=["Verification Pipeline Tiers", "Hidden-State Verifier Research Frontier"],
+        architecture_refs=[
+            "Verification Pipeline Tiers",
+            "Hidden-State Verifier Research Frontier",
+        ],
         source_artifacts=[source],
         evidence_status="closed",
         claim_strength="headline_ready",
@@ -333,8 +339,12 @@ def active_constraint_warmstart_row(artifacts: Mapping[Path, JsonDict]) -> JsonD
         source_artifacts=[source],
         evidence_status="closed",
         claim_strength="bounded",
-        claim_allowed=["active-constraint hints reduced solver work while solver authority was preserved"],
-        claim_blocked=["hint authority, final-sequence certification, hardware sampler, or speedup claim"],
+        claim_allowed=[
+            "active-constraint hints reduced solver work while solver authority was preserved"
+        ],
+        claim_blocked=[
+            "hint authority, final-sequence certification, hardware sampler, or speedup claim"
+        ],
         principal_metric={
             "active_constraint_warmstart_ready": bool(payload["active_constraint_warmstart_ready"]),
             "solver_iteration_delta": int(payload["solver_iteration_delta"]),
@@ -393,7 +403,9 @@ def resource_accounted_csl_row(artifacts: Mapping[Path, JsonDict]) -> JsonDict:
         claim_allowed=[
             "resource-accounted CSL controller preserved quality while reducing verifier, wall-time, context, memory, and waste-loop costs"
         ],
-        claim_blocked=["model-weight mutation, adapter-weight mutation, or Rust-transpiled self-improvement"],
+        claim_blocked=[
+            "model-weight mutation, adapter-weight mutation, or Rust-transpiled self-improvement"
+        ],
         principal_metric={
             "resource_accounted_csl_ready": bool(payload["resource_accounted_csl_ready"]),
             "session_count": int(payload["session_count"]),
@@ -402,7 +414,9 @@ def resource_accounted_csl_row(artifacts: Mapping[Path, JsonDict]) -> JsonDict:
             "quality_delta_vs_baseline": float(payload["quality_delta_vs_baseline"]),
             "verifier_cost_delta_vs_baseline": float(payload["verifier_cost_delta_vs_baseline"]),
             "wall_time_delta_vs_baseline": float(payload["wall_time_delta_vs_baseline"]),
-            "token_or_context_delta_vs_baseline": float(payload["token_or_context_delta_vs_baseline"]),
+            "token_or_context_delta_vs_baseline": float(
+                payload["token_or_context_delta_vs_baseline"]
+            ),
             "memory_delta_vs_baseline": float(payload["memory_delta_vs_baseline"]),
             "unproductive_loop_reduction_rate": float(payload["unproductive_loop_reduction_rate"]),
             "no_weight_mutation": bool(payload["no_weight_mutation"]),
@@ -426,7 +440,9 @@ def uncertainty_gated_promotion_row(artifacts: Mapping[Path, JsonDict]) -> JsonD
         source_artifacts=[source],
         evidence_status="closed",
         claim_strength="headline_ready",
-        claim_allowed=["uncertainty gates promoted only supported reachable fragments and kept rejected fragments inactive"],
+        claim_allowed=[
+            "uncertainty gates promoted only supported reachable fragments and kept rejected fragments inactive"
+        ],
         claim_blocked=["ungated memory/world-model promotion or model-weight mutation"],
         principal_metric={
             "accepted_promotion_count": int(payload["accepted_promotion_count"]),
@@ -454,7 +470,9 @@ def arc_live_path_row(artifacts: Mapping[Path, JsonDict]) -> JsonDict:
         source_artifacts=[source],
         evidence_status="blocked",
         claim_strength="blocked",
-        claim_allowed=["live-agent self-discovery path was exercised without offline BFS or per-game adapter shortcuts"],
+        claim_allowed=[
+            "live-agent self-discovery path was exercised without offline BFS or per-game adapter shortcuts"
+        ],
         claim_blocked=["new ARC level banked or official live-score improvement"],
         principal_metric={
             "arc_new_level_banked": bool(payload["arc_new_level_banked"]),
@@ -484,7 +502,9 @@ def hardware_repeatability_row(artifacts: Mapping[Path, JsonDict]) -> JsonDict:
         evidence_status="partial",
         claim_strength="partial",
         claim_allowed=["PolarFire repeated same-workload receipt is restored"],
-        claim_blocked=["KV260 reachability, GateMate JTAG reachability, or any hardware speedup claim"],
+        claim_blocked=[
+            "KV260 reachability, GateMate JTAG reachability, or any hardware speedup claim"
+        ],
         principal_metric={
             "kv260_ssh_reachable": bool(payload["kv260_ssh_reachable"]),
             "polarfire_reachable": bool(payload["polarfire_reachable"]),
@@ -511,10 +531,16 @@ def kan_active_constraint_certificate_row(artifacts: Mapping[Path, JsonDict]) ->
         source_artifacts=[source],
         evidence_status="partial",
         claim_strength="bounded",
-        claim_allowed=["bounded active-constraint certificate rejects stale and adversarial false hint-routing properties"],
-        claim_blocked=["broad KAN verification, trained-network soundness, hardware execution, or speedup"],
+        claim_allowed=[
+            "bounded active-constraint certificate rejects stale and adversarial false hint-routing properties"
+        ],
+        claim_blocked=[
+            "broad KAN verification, trained-network soundness, hardware execution, or speedup"
+        ],
         principal_metric={
-            "kan_active_constraint_certificate_ready": bool(payload["kan_active_constraint_certificate_ready"]),
+            "kan_active_constraint_certificate_ready": bool(
+                payload["kan_active_constraint_certificate_ready"]
+            ),
             "true_property_count": int(payload["true_property_count"]),
             "false_property_count": int(payload["false_property_count"]),
             "false_property_rejection_rate": float(payload["false_property_rejection_rate"]),
@@ -539,8 +565,12 @@ def source_delta_watch_only_row(artifacts: Mapping[Path, JsonDict]) -> JsonDict:
         source_artifacts=[source],
         evidence_status="partial",
         claim_strength="watch_only",
-        claim_allowed=["six execution-time source deltas were appended while retired scopes stayed closed"],
-        claim_blocked=["external proof-agent, training/RL, non-local hardware, or browser-challenge sources as Carnot-local evidence"],
+        claim_allowed=[
+            "six execution-time source deltas were appended while retired scopes stayed closed"
+        ],
+        claim_blocked=[
+            "external proof-agent, training/RL, non-local hardware, or browser-challenge sources as Carnot-local evidence"
+        ],
         principal_metric={
             "new_actionable_findings_count": int(payload["new_actionable_findings_count"]),
             "retired_scopes_reopened": bool(payload["retired_scopes_reopened"]),
@@ -567,7 +597,9 @@ def token_internal_feature_backend_row(artifacts: Mapping[Path, JsonDict]) -> Js
         evidence_status="blocked",
         claim_strength="blocked",
         claim_allowed=["token/internal lane remains explicitly tracked as closed"],
-        claim_blocked=["no .492 backend feature artifact authorizes a token/internal-feature headline claim"],
+        claim_blocked=[
+            "no .492 backend feature artifact authorizes a token/internal-feature headline claim"
+        ],
         principal_metric={
             "future_token_signal_allowed": False,
             "transition_mentions_token_lane_closed": "token/internal" in open_lanes,
@@ -712,8 +744,13 @@ def source_artifact_checksums(root: Path) -> dict[str, str]:
     checksums: dict[str, str] = {}
     for relative in EXPECTED_ARTIFACTS:
         path = root / relative
-        if path.exists():
-            checksums[str(relative)] = "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+        if receipt_exists(path, artifact_relative_path=RESULT_RELATIVE_PATH):
+            checksums[str(relative)] = (
+                "sha256:"
+                + hashlib.sha256(
+                    receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+                ).hexdigest()
+            )
     return checksums
 
 
@@ -721,7 +758,9 @@ def write_json(path: Path, payload: Mapping[str, Any]) -> None:
     """Write deterministic JSON for the deliverable or sidecar table."""
 
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(json_ready(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(json_ready(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
 
 def validate_artifact(artifact: Mapping[str, Any]) -> None:
@@ -735,8 +774,12 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
         artifact.get("inference_substrate") == "aggregation_from_upstream_artifacts",
         "inference_substrate",
     )
-    _require(artifact.get("prd_gap_table_path") == str(PRD_GAP_TABLE_RELATIVE_PATH), "prd_gap_table_path")
-    _require(artifact.get("claim_boundary_checks") == CLAIM_BOUNDARY_CHECKS, "claim_boundary_checks")
+    _require(
+        artifact.get("prd_gap_table_path") == str(PRD_GAP_TABLE_RELATIVE_PATH), "prd_gap_table_path"
+    )
+    _require(
+        artifact.get("claim_boundary_checks") == CLAIM_BOUNDARY_CHECKS, "claim_boundary_checks"
+    )
     rows = list(artifact.get("gap_rows", []))
     _require([row.get("row_id") for row in rows] == list(ROW_IDS), "row_ids")
     for row in rows:
@@ -747,7 +790,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
     _require(artifact.get("partial_gap_count") == count_status(rows, "partial"), "gap counts")
     _require(artifact.get("blocked_gap_count") == count_status(rows, "blocked"), "gap counts")
     _require(artifact.get("missing_gap_count") == count_status(rows, "missing"), "gap counts")
-    _require(artifact.get("headline_ready_lanes") == headline_ready_lanes(rows), "headline_ready_lanes")
+    _require(
+        artifact.get("headline_ready_lanes") == headline_ready_lanes(rows), "headline_ready_lanes"
+    )
     _require(artifact.get("non_headline_lanes") == non_headline_lanes(rows), "non_headline_lanes")
     _require(hardware_speedup_metric(rows) is False, "hardware_speedup_claim")
     _require(pbit_speedup_metric(rows) is False, "pbit hardware_speedup_claim")
@@ -757,7 +802,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
     verdict = str(artifact.get("honest_verdict", ""))
     _require(verdict.startswith(("complete:", "blocked:")), "honest_verdict")
     expected_checksum = checksum_without_current(artifact)
-    _require(artifact.get("reproducibility_checksum") == expected_checksum, "reproducibility_checksum")
+    _require(
+        artifact.get("reproducibility_checksum") == expected_checksum, "reproducibility_checksum"
+    )
 
 
 def hardware_speedup_metric(rows: Sequence[Mapping[str, Any]]) -> bool:

@@ -29,15 +29,14 @@ from typing import Any
 
 from carnot import experiment_5735_zero_gate_kan_continuous_self_learning as exp5735
 from carnot import experiment_5617_kan_critical_task_duration_map as exp5617
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RESULT_RELATIVE_PATH = Path("results/experiment_5736_csl_lifecycle_conflict_rollback.json")
-LEDGER_RELATIVE_PATH = Path(
-    "results/experiment_5736_csl_lifecycle_conflict_rollback_ledger.jsonl"
-)
+LEDGER_RELATIVE_PATH = Path("results/experiment_5736_csl_lifecycle_conflict_rollback_ledger.jsonl")
 CHECKPOINT_RELATIVE_DIR = Path(
     "results/experiment_5736_csl_lifecycle_conflict_rollback_checkpoints"
 )
@@ -239,7 +238,12 @@ def sha256_json(value: Any) -> str:
 def sha256_file(path: Path | str) -> str:
     """Return a prefixed SHA-256 digest over exact file bytes."""
 
-    return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _round(value: float, digits: int = 6) -> float:
@@ -385,7 +389,9 @@ def _first_suffix_per_session(context: LifecycleContext) -> list[exp5617.StreamE
     return [rows[0] for _stream_id, rows in sorted(context.suffix_by_stream.items())]
 
 
-def _exact_validator_receipt(event: Mapping[str, Any], row: exp5617.StreamExample | None) -> JsonDict:
+def _exact_validator_receipt(
+    event: Mapping[str, Any], row: exp5617.StreamExample | None
+) -> JsonDict:
     """Validate event evidence with the exact Exp5616 label authority."""
 
     evidence = dict(event["evidence"])
@@ -395,7 +401,9 @@ def _exact_validator_receipt(event: Mapping[str, Any], row: exp5617.StreamExampl
         exact_label = None
     else:
         exact_label = int(row.label)
-        accepted = proposed == exact_label and evidence.get("validator") == "exp5616_exact_current_rule"
+        accepted = (
+            proposed == exact_label and evidence.get("validator") == "exp5616_exact_current_rule"
+        )
     payload = {
         "event_id": event["event_id"],
         "operation": event["operation"],
@@ -632,7 +640,17 @@ def _apply_event(
         state_update_decision, recovery_latency_ms = "rejected_fail_closed", 0.0
     prefix_effect = _prefix_effect(system, context)
     if prefix_effect["passed"] is not True:  # pragma: no cover - prefix lock should prevent this.
-        _restore_system(system, _system_from_snapshot({"sidecar": exp5735.state_snapshot(before_sidecar), "entries": _controller_snapshot(system)["entries"], "accepted_event_ids": [], "committed_ledger_tokens": []}))
+        _restore_system(
+            system,
+            _system_from_snapshot(
+                {
+                    "sidecar": exp5735.state_snapshot(before_sidecar),
+                    "entries": _controller_snapshot(system)["entries"],
+                    "accepted_event_ids": [],
+                    "committed_ledger_tokens": [],
+                }
+            ),
+        )
         accepted = False
         reason = "protected_prefix_certificate_failed"
         state_update_decision = "rolled_back_prefix_certificate"
@@ -1005,7 +1023,9 @@ def _recovery_snapshot_receipt(
     }
     if checkpoint_path is not None:
         checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
-        checkpoint_path.write_text(json.dumps(payload, sort_keys=True, ensure_ascii=True) + "\n", encoding="utf-8")
+        checkpoint_path.write_text(
+            json.dumps(payload, sort_keys=True, ensure_ascii=True) + "\n", encoding="utf-8"
+        )
         receipt["checkpoint_path"] = checkpoint_path.as_posix()
         receipt["checkpoint_hash"] = sha256_file(checkpoint_path)
         receipt["embedded_hash"] = payload["hash"]
@@ -1040,7 +1060,9 @@ def lifecycle_operation_counts(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
         "total": len(rows),
         "accepted": sum(row.get("accepted") is True for row in rows),
         "rejected": sum(row.get("accepted") is False for row in rows),
-        "by_operation": {operation: int(by_operation.get(operation, 0)) for operation in LIFECYCLE_OPERATIONS},
+        "by_operation": {
+            operation: int(by_operation.get(operation, 0)) for operation in LIFECYCLE_OPERATIONS
+        },
     }
 
 
@@ -1072,21 +1094,32 @@ def replay_operation_ledger(
     invalid_rejected = 0
     for row in rows:
         if row["transition_hash"] != transition_row_hash(row):
-            return {"passed": False, "reason": "transition_hash", "transition_id": row["transition_id"]}
+            return {
+                "passed": False,
+                "reason": "transition_hash",
+                "transition_id": row["transition_id"],
+            }
         if row["predecessor_hash"] != current:
-            return {"passed": False, "reason": "predecessor_hash", "transition_id": row["transition_id"]}
+            return {
+                "passed": False,
+                "reason": "predecessor_hash",
+                "transition_id": row["transition_id"],
+            }
         if row["accepted"] is False:
             if row["successor_hash"] != row["predecessor_hash"]:
-                return {"passed": False, "reason": "rejected_mutated", "transition_id": row["transition_id"]}
+                return {
+                    "passed": False,
+                    "reason": "rejected_mutated",
+                    "transition_id": row["transition_id"],
+                }
             invalid_rejected += 1
         else:
             valid_replayed += 1
         current = row["successor_hash"]
     operation_counts = lifecycle_operation_counts(rows)
-    passed = (
-        sha256_json([row["transition_hash"] for row in rows]) == artifact.get("operation_ledger_hash")
-        and current == artifact.get("ledger_replay_equivalence", {}).get("final_hash", current)
-    )
+    passed = sha256_json([row["transition_hash"] for row in rows]) == artifact.get(
+        "operation_ledger_hash"
+    ) and current == artifact.get("ledger_replay_equivalence", {}).get("final_hash", current)
     return {
         "passed": bool(passed),
         "transition_count": len(rows),
@@ -1104,7 +1137,8 @@ def verify_operation_ledger(rows: Sequence[Mapping[str, Any]], artifact: Mapping
     return (
         len(rows) == int(artifact.get("operation_counts", {}).get("total", -1))
         and all(row.get("transition_hash") == transition_row_hash(row) for row in rows)
-        and sha256_json([row["transition_hash"] for row in rows]) == artifact.get("operation_ledger_hash")
+        and sha256_json([row["transition_hash"] for row in rows])
+        == artifact.get("operation_ledger_hash")
     )
 
 
@@ -1122,7 +1156,12 @@ def _entry_receipts(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
                     "scope": row["scope"],
                     "successor_hash": row["successor_hash"]["combined_hash"],
                     "entry_receipt_hash": sha256_json(
-                        [row["transition_id"], row["operation"], row["target"], row["successor_hash"]]
+                        [
+                            row["transition_id"],
+                            row["operation"],
+                            row["target"],
+                            row["successor_hash"],
+                        ]
                     ),
                 }
             )
@@ -1249,7 +1288,9 @@ def _session_improvements(
     return improvements
 
 
-def _statistical_model_check(improvements: Sequence[float], prefix_retention_delta: float) -> JsonDict:
+def _statistical_model_check(
+    improvements: Sequence[float], prefix_retention_delta: float
+) -> JsonDict:
     """Build the preregistered epsilon/delta lifecycle release certificate."""
 
     receipt = exp5735.statistical_model_check(improvements)
@@ -1301,7 +1342,8 @@ def _upstream_gate_receipts(root: Path | str) -> JsonDict:
         "artifact_hash_matches_expected": artifact_hash == EXPECTED_EXP5735_HASH,
         "schema_valid": schema_valid,
         "zero_gate_csl_ready": exp5735_artifact.get("zero_gate_csl_ready_score") == 1.0,
-        "function_preserving_insertion": exp5735_artifact.get("function_preserving_insertion_score") == 1.0,
+        "function_preserving_insertion": exp5735_artifact.get("function_preserving_insertion_score")
+        == 1.0,
         "operation_ledger_replay": exp5735.verify_operation_ledger(ledger_rows, exp5735_artifact),
         "checkpoint_replay": exp5735.verify_checkpoint_payloads(
             exp5735_artifact["checkpoint_hashes"]["receipts"]
@@ -1393,15 +1435,23 @@ def csl_lifecycle_ready_score(artifact: Mapping[str, Any]) -> float:
         and artifact.get("upstream_gate_receipts", {}).get("all_passed") is True
         and artifact.get("upstream_hash") == EXPECTED_EXP5735_HASH
         and artifact.get("ledger_replay_equivalence", {}).get("passed") is True
-        and artifact.get("ledger_replay_equivalence", {}).get("all_valid_operations_replayed") is True
-        and artifact.get("ledger_replay_equivalence", {}).get("all_invalid_operations_rejected") is True
+        and artifact.get("ledger_replay_equivalence", {}).get("all_valid_operations_replayed")
+        is True
+        and artifact.get("ledger_replay_equivalence", {}).get("all_invalid_operations_rejected")
+        is True
         and artifact.get("rollback_state_hash_matches") is True
         and int(artifact.get("unsafe_propagation_count", -1)) == 0
         and float(artifact.get("prefix_retention_delta", 99.0)) <= PREFIX_RETENTION_MARGIN
         and float(artifact.get("suffix_improvement", 0.0)) > 0.0
         and artifact.get("statistical_model_check_receipt", {}).get("passes") is True
-        and all(row.get("fail_closed") is True and row.get("recovered") is True for row in artifact.get("crash_injection_matrix", []))
-        and all(row.get("detected") is True and row.get("rejected") is True for row in artifact.get("corruption_controls", {}).values())
+        and all(
+            row.get("fail_closed") is True and row.get("recovered") is True
+            for row in artifact.get("crash_injection_matrix", [])
+        )
+        and all(
+            row.get("detected") is True and row.get("rejected") is True
+            for row in artifact.get("corruption_controls", {}).values()
+        )
         and artifact.get("model_weight_mutation") is False
         and artifact.get("production_default_enabled") is False
         and artifact.get("verifier_is_oracle") is True
@@ -1444,22 +1494,43 @@ def artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
         if any(field not in principles for field in artifact):
             errors.append("field_principles")
     checks = (
-        (artifact.get("preconditions_checked", {}).get("all_passed") is not True, "preconditions_checked"),
-        (artifact.get("upstream_gate_receipts", {}).get("all_passed") is not True, "upstream_gate_receipts"),
+        (
+            artifact.get("preconditions_checked", {}).get("all_passed") is not True,
+            "preconditions_checked",
+        ),
+        (
+            artifact.get("upstream_gate_receipts", {}).get("all_passed") is not True,
+            "upstream_gate_receipts",
+        ),
         (artifact.get("upstream_hash") != EXPECTED_EXP5735_HASH, "upstream_hash"),
         (float(artifact.get("suffix_improvement", 0.0)) <= 0.0, "suffix_improvement"),
-        (float(artifact.get("prefix_retention_delta", 99.0)) > PREFIX_RETENTION_MARGIN, "prefix_retention_delta"),
+        (
+            float(artifact.get("prefix_retention_delta", 99.0)) > PREFIX_RETENTION_MARGIN,
+            "prefix_retention_delta",
+        ),
         (int(artifact.get("unsafe_propagation_count", -1)) != 0, "unsafe_propagation_count"),
         (artifact.get("rollback_state_hash_matches") is not True, "rollback_state_hash_matches"),
-        (artifact.get("ledger_replay_equivalence", {}).get("passed") is not True, "ledger_replay_equivalence"),
-        (artifact.get("statistical_model_check_receipt", {}).get("passes") is not True, "statistical_model_check_receipt"),
+        (
+            artifact.get("ledger_replay_equivalence", {}).get("passed") is not True,
+            "ledger_replay_equivalence",
+        ),
+        (
+            artifact.get("statistical_model_check_receipt", {}).get("passes") is not True,
+            "statistical_model_check_receipt",
+        ),
         (artifact.get("model_weight_mutation") is not False, "model_weight_mutation"),
         (artifact.get("production_default_enabled") is not False, "production_default_enabled"),
         (artifact.get("verifier_is_oracle") is not True, "verifier_is_oracle"),
         (artifact.get("inference_substrate") != INFERENCE_SUBSTRATE, "inference_substrate"),
-        (artifact.get("csl_lifecycle_ready_score") != csl_lifecycle_ready_score(artifact), "csl_lifecycle_ready_score"),
+        (
+            artifact.get("csl_lifecycle_ready_score") != csl_lifecycle_ready_score(artifact),
+            "csl_lifecycle_ready_score",
+        ),
         (artifact.get("honest_verdict") != honest_verdict(artifact), "honest_verdict"),
-        (artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact), "reproducibility_checksum"),
+        (
+            artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact),
+            "reproducibility_checksum",
+        ),
     )
     errors.extend(message for failed, message in checks if failed)
     return errors
@@ -1581,11 +1652,19 @@ def build_artifact(
         },
         {
             "recovery_type": "recover",
-            "transition_id": next(row for row in lifecycle_rows if row["operation"] == "recover")["transition_id"],
-            "target_hash": next(row for row in lifecycle_rows if row["operation"] == "recover")["successor_hash"],
-            "successor_hash": next(row for row in lifecycle_rows if row["operation"] == "recover")["successor_hash"],
+            "transition_id": next(row for row in lifecycle_rows if row["operation"] == "recover")[
+                "transition_id"
+            ],
+            "target_hash": next(row for row in lifecycle_rows if row["operation"] == "recover")[
+                "successor_hash"
+            ],
+            "successor_hash": next(row for row in lifecycle_rows if row["operation"] == "recover")[
+                "successor_hash"
+            ],
             "exact_hash_match": True,
-            "recovery_latency_ms": next(row for row in lifecycle_rows if row["operation"] == "recover")["recovery_latency_ms"],
+            "recovery_latency_ms": next(
+                row for row in lifecycle_rows if row["operation"] == "recover"
+            )["recovery_latency_ms"],
         },
     ]
     checkpoint_receipt = _recovery_snapshot_receipt(
@@ -1689,9 +1768,7 @@ def run(
     root_path = Path(root)
     resolved_ledger = _resolve_path(root_path, ledger_path)
     resolved_checkpoint = (
-        Path(checkpoint_dir)
-        if checkpoint_dir is not None
-        else root_path / CHECKPOINT_RELATIVE_DIR
+        Path(checkpoint_dir) if checkpoint_dir is not None else root_path / CHECKPOINT_RELATIVE_DIR
     )
     artifact = build_artifact(
         root=root_path,

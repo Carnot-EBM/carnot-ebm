@@ -20,6 +20,7 @@ from typing import Any
 
 from carnot import experiment_5382_real_workflow_continuous_self_learning_v490 as exp5382
 from carnot import experiment_5395_influence_share_verifier_budget_router_v491 as exp5395
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -33,9 +34,7 @@ SCHEMA = "carnot.experiment_5396.memory_guard_raw_episode_retention.v491"
 RUN_DATE = "2026-07-08"
 RANDOM_SEED = 5396
 
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5396_memory_guard_raw_episode_retention_v491.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5396_memory_guard_raw_episode_retention_v491.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
 MODULE_RELATIVE_PATH = Path(
     "python/carnot/experiment_5396_memory_guard_raw_episode_retention_v491.py"
@@ -59,9 +58,7 @@ SELF_REFERENCE_COUNT_MAX = 2
 TRUST_VALUE_MIN = 0.55
 MAX_BYTE_COST = 420
 SHARE_RISK_MAX = 0.12
-FORGED_CONTROL_KINDS = frozenset(
-    {"forged_reasoning_history", "self_referential_amplification"}
-)
+FORGED_CONTROL_KINDS = frozenset({"forged_reasoning_history", "self_referential_amplification"})
 
 FIELD_PRINCIPLES: dict[str, str] = {
     "status": "Complete if the guard and controls ran.",
@@ -70,21 +67,16 @@ FIELD_PRINCIPLES: dict[str, str] = {
     "consolidated_memory_count": "Number of accepted consolidated memories.",
     "rejected_memory_count": "Number of rejected memory candidates.",
     "forged_reasoning_control_count": "Number of forged-reasoning controls.",
-    "forged_reasoning_deflection_rate": (
-        "Rejection rate for forged reasoning controls."
-    ),
+    "forged_reasoning_deflection_rate": ("Rejection rate for forged reasoning controls."),
     "stale_memory_deflection_rate": "Rejection rate for stale controls.",
     "benign_memory_accept_rate": "Accept rate for benign useful controls.",
     "provenance_hash_valid_rate": "Rate of memories linked to raw episodes.",
     "rollback_success_rate": "Rollback success rate.",
     "no_weight_mutation": "Must be true.",
     "raw_episode_guard_ready": (
-        "True only if forged/stale controls are deflected and benign controls "
-        "are preserved."
+        "True only if forged/stale controls are deflected and benign controls are preserved."
     ),
-    "honest_verdict": (
-        "One-line summary starting with complete: or blocked:."
-    ),
+    "honest_verdict": ("One-line summary starting with complete: or blocked:."),
 }
 
 REQUIRED_FIELDS = tuple(FIELD_PRINCIPLES)
@@ -111,7 +103,9 @@ def build_raw_episodes(root: Path | str = REPO_ROOT) -> JsonList:
     return [
         _raw_episode(
             "raw5396-clean-dependency-edge",
-            _first(decisions, lambda row: "mem5368-clean-dependency-edge" in row["supporting_context"]),
+            _first(
+                decisions, lambda row: "mem5368-clean-dependency-edge" in row["supporting_context"]
+            ),
             "benign_useful",
             value=0.94,
             byte_cost=120,
@@ -123,7 +117,9 @@ def build_raw_episodes(root: Path | str = REPO_ROOT) -> JsonList:
         ),
         _raw_episode(
             "raw5396-clean-rollback-route",
-            _first(decisions, lambda row: "mem5368-clean-rollback-route" in row["supporting_context"]),
+            _first(
+                decisions, lambda row: "mem5368-clean-rollback-route" in row["supporting_context"]
+            ),
             "benign_useful",
             value=0.89,
             byte_cost=110,
@@ -135,7 +131,9 @@ def build_raw_episodes(root: Path | str = REPO_ROOT) -> JsonList:
         ),
         _raw_episode(
             "raw5396-clean-scaleup-summary",
-            _first(decisions, lambda row: "mem5368-clean-scaleup-summary" in row["supporting_context"]),
+            _first(
+                decisions, lambda row: "mem5368-clean-scaleup-summary" in row["supporting_context"]
+            ),
             "benign_useful",
             value=0.81,
             byte_cost=150,
@@ -214,9 +212,7 @@ def build_consolidated_memory_candidates(raw_episodes: Sequence[Mapping[str, Any
                     "value_score": float(evidence["value_score"]),
                     "byte_cost": int(evidence["byte_cost"]),
                     "stale_risk": float(evidence["stale_risk"]),
-                    "forged_reasoning_risk": float(
-                        evidence["forged_reasoning_risk"]
-                    ),
+                    "forged_reasoning_risk": float(evidence["forged_reasoning_risk"]),
                     "self_reference_count": int(evidence["self_reference_count"]),
                     "sharing_risk": float(evidence["sharing_risk"]),
                     "provenance_verified": bool(evidence["provenance_verified"]),
@@ -224,9 +220,7 @@ def build_consolidated_memory_candidates(raw_episodes: Sequence[Mapping[str, Any
                     "rollback_verified": bool(evidence["rollback_verified"]),
                     "model_generated_rationale_used": False,
                 },
-                "model_generated_rationale": (
-                    "candidate consolidation text; non-authoritative"
-                ),
+                "model_generated_rationale": ("candidate consolidation text; non-authoritative"),
             }
         )
     return candidates
@@ -253,14 +247,12 @@ def score_memory_candidate(
         or net_value_per_byte <= 0.0
     )
     rollback_ok = inputs["rollback_available"] and inputs["rollback_verified"]
-    accepted = bool(provenance_valid and rollback_ok and not rejected_for_safety and not rejected_for_value)
+    accepted = bool(
+        provenance_valid and rollback_ok and not rejected_for_safety and not rejected_for_value
+    )
     keep = "KEEP" if accepted else ("QUARANTINE" if rejected_for_safety else "DROP")
     trust = "TRUST" if accepted else "UNTRUST"
-    share = (
-        "SHARE"
-        if accepted and inputs["sharing_risk"] <= SHARE_RISK_MAX
-        else "DO_NOT_SHARE"
-    )
+    share = "SHARE" if accepted and inputs["sharing_risk"] <= SHARE_RISK_MAX else "DO_NOT_SHARE"
     memory_id = str(candidate["memory_id"])
     decision = {
         "keep": keep,
@@ -303,9 +295,7 @@ def score_memory_candidate(
             "pointer_id": "rollback:" + memory_id,
             "target_raw_episode_ids": raw_ids,
             "action": (
-                "not_required"
-                if accepted
-                else "retain_raw_episode_and_exclude_consolidated_memory"
+                "not_required" if accepted else "retain_raw_episode_and_exclude_consolidated_memory"
             ),
             "rollback_success": rollback_ok,
         },
@@ -344,9 +334,7 @@ def evaluate_memory_guard(root: Path | str = REPO_ROOT) -> JsonDict:
     rejected = [row for row in candidates if not row["decision"]["accepted"]]
     routing = build_downstream_routing_report(candidates, root)
     control_summary = _control_summary(candidates)
-    forged_controls = [
-        row for row in candidates if row["control_kind"] in FORGED_CONTROL_KINDS
-    ]
+    forged_controls = [row for row in candidates if row["control_kind"] in FORGED_CONTROL_KINDS]
     stale_controls = [row for row in candidates if row["control_kind"] == "stale_memory"]
     benign_controls = [row for row in candidates if row["control_kind"] == "benign_useful"]
     return {
@@ -402,9 +390,7 @@ def build_downstream_routing_report(
     ]
     return {
         "routing_decision_count": int(routing_eval["routed_decision_count"]),
-        "accepted_memory_ids_used_for_routing": [
-            str(row["memory_id"]) for row in accepted
-        ],
+        "accepted_memory_ids_used_for_routing": [str(row["memory_id"]) for row in accepted],
         "rejected_memory_ids_seen_by_routing": rejected_seen,
         "rejected_memory_routing_influence_count": len(rejected_seen),
         "routing_context_records": [
@@ -445,19 +431,13 @@ def build_artifact(
         "raw_episode_count": evaluation["raw_episode_count"],
         "consolidated_memory_count": evaluation["consolidated_memory_count"],
         "rejected_memory_count": evaluation["rejected_memory_count"],
-        "forged_reasoning_control_count": evaluation[
-            "forged_reasoning_control_count"
-        ],
-        "forged_reasoning_deflection_rate": evaluation[
-            "forged_reasoning_deflection_rate"
-        ],
+        "forged_reasoning_control_count": evaluation["forged_reasoning_control_count"],
+        "forged_reasoning_deflection_rate": evaluation["forged_reasoning_deflection_rate"],
         "stale_memory_deflection_rate": evaluation["stale_memory_deflection_rate"],
         "benign_memory_accept_rate": evaluation["benign_memory_accept_rate"],
         "provenance_hash_valid_rate": evaluation["provenance_hash_valid_rate"],
         "rollback_success_rate": evaluation["rollback_success_rate"],
-        "no_weight_mutation": evaluation["weight_mutation_receipt"][
-            "no_weight_mutation"
-        ],
+        "no_weight_mutation": evaluation["weight_mutation_receipt"]["no_weight_mutation"],
         "raw_episode_guard_ready": ready,
         "honest_verdict": _honest_verdict(ready),
         "tests_run": [dict(row) for row in tests_run],
@@ -495,9 +475,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
         for field in INTEGER_FIELDS
         if isinstance(artifact.get(field), bool) or not isinstance(artifact.get(field), int)
     )
-    errors.extend(
-        field for field in NUMERIC_FIELDS if not _is_numeric(artifact.get(field))
-    )
+    errors.extend(field for field in NUMERIC_FIELDS if not _is_numeric(artifact.get(field)))
     if artifact.get("field_principles") != FIELD_PRINCIPLES:
         errors.append("field_principles")
     if not str(artifact.get("honest_verdict", "")).startswith(TERMINAL_PREFIXES):
@@ -722,7 +700,12 @@ def _canonical_json(value: Any) -> str:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:

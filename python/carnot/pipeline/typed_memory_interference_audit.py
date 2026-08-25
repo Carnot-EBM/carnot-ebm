@@ -21,6 +21,7 @@ from typing import Any
 
 from carnot.pipeline import multihead_verifier_memory
 from carnot.pipeline.verifier_memory import DEFAULT_PROMOTION_THRESHOLD, decide_promotion
+from carnot.provenance_receipts import receipt_bytes, receipt_exists
 
 
 JsonDict = dict[str, Any]
@@ -171,7 +172,9 @@ def build_deterministic_fixtures() -> AuditFixtureSet:
             task_slot="mmlu_hidden_state",
             fixture_kind="aligned",
             action="retire_mmlu_hidden_state_path",
-            evidence=("results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json",),
+            evidence=(
+                "results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json",
+            ),
             guard_passed=True,
             heldout_delta=0.0,
             invalidated_by="results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json",
@@ -182,7 +185,9 @@ def build_deterministic_fixtures() -> AuditFixtureSet:
             task_slot="arc_patch",
             fixture_kind="aligned",
             action="block_arc_patch_until_positive_validation",
-            evidence=("results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json",),
+            evidence=(
+                "results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json",
+            ),
             guard_passed=True,
             heldout_delta=-0.20,
             invalidated_by="results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json",
@@ -327,11 +332,13 @@ def evaluate_audit(fixtures: AuditFixtureSet) -> JsonDict:
     aligned_rows = [_score_task(task, _select_memory(task, active)) for task in useful_tasks]
     shuffled_rows = [
         _score_task(task, memory)
-        for task, memory in zip(useful_tasks, _derange([row["memory"] for row in aligned_rows], fixtures.seed), strict=True)
+        for task, memory in zip(
+            useful_tasks,
+            _derange([row["memory"] for row in aligned_rows], fixtures.seed),
+            strict=True,
+        )
     ]
-    unrelated_rows = [
-        _score_task(task, _select_memory(task, active)) for task in unrelated_tasks
-    ]
+    unrelated_rows = [_score_task(task, _select_memory(task, active)) for task in unrelated_tasks]
     retention_rate = _rate(sum(row["correct"] for row in aligned_rows), len(aligned_rows))
     interference_rate = _rate(
         sum(row["selected_subject"] is not None for row in unrelated_rows),
@@ -354,7 +361,9 @@ def evaluate_audit(fixtures: AuditFixtureSet) -> JsonDict:
         "interference_rate": interference_rate,
         "harmful_memory_rollback_passed": bool(harmful_rollback_passed),
         "aligned_accuracy": retention_rate,
-        "shuffled_accuracy": _rate(sum(row["correct"] for row in shuffled_rows), len(shuffled_rows)),
+        "shuffled_accuracy": _rate(
+            sum(row["correct"] for row in shuffled_rows), len(shuffled_rows)
+        ),
         "aligned_rows": [_public_row(row) for row in aligned_rows],
         "shuffled_rows": [_public_row(row) for row in shuffled_rows],
         "unrelated_rows": [_public_row(row) for row in unrelated_rows],
@@ -433,9 +442,7 @@ def fixture_checksums(*, fixtures: AuditFixtureSet, root: Path | str = REPO_ROOT
     }
     return {
         "fixture_set_sha256": _sha256_json(fixture_payload),
-        "memories": {
-            memory.subject: _sha256_json(asdict(memory)) for memory in fixtures.memories
-        },
+        "memories": {memory.subject: _sha256_json(asdict(memory)) for memory in fixtures.memories},
         "tasks": {task.task_id: _sha256_json(asdict(task)) for task in fixtures.tasks},
         "source_artifacts": _source_artifact_checksums(Path(root)),
     }
@@ -452,7 +459,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     if not (verdict.startswith("complete:") or verdict.startswith("blocked_")):
         raise ValueError("honest_verdict terminal prefix invalid")  # pragma: no cover
     if _wrapped_value(artifact, "inference_substrate") != INFERENCE_SUBSTRATE:
-        raise ValueError("inference_substrate must be cached_fixture_replay_no_llm")  # pragma: no cover
+        raise ValueError(
+            "inference_substrate must be cached_fixture_replay_no_llm"
+        )  # pragma: no cover
     if not isinstance(artifact.get("memory_policy_ready"), bool):
         raise ValueError("memory_policy_ready must be a bare bool")  # pragma: no cover
     if not artifact.get("memory_policy_ready_principle"):
@@ -555,11 +564,7 @@ def _score_task(task: AuditTask, memory: AuditMemory | None) -> JsonDict:
 
 
 def _public_row(row: Mapping[str, Any]) -> JsonDict:
-    return {
-        key: value
-        for key, value in row.items()
-        if key not in {"task", "memory"}
-    }
+    return {key: value for key, value in row.items() if key not in {"task", "memory"}}
 
 
 def _derange(memories: Sequence[AuditMemory | None], seed: int) -> tuple[AuditMemory | None, ...]:
@@ -577,8 +582,7 @@ def _honest_verdict(audit: Mapping[str, Any]) -> str:
             "live_cross_model_memory_still_unclaimed"
         )
     return (
-        "complete: memory policy needs redesign before future continuous "
-        "self-learning experiments"
+        "complete: memory policy needs redesign before future continuous self-learning experiments"
     )
 
 
@@ -604,12 +608,18 @@ def _source_artifact_checksums(root: Path) -> JsonDict:
     for source in SOURCE_ARTIFACTS:
         path_text = source.split("#", 1)[0]
         path = root / path_text
-        checksums[source] = _sha256_bytes(path.read_bytes()) if path.exists() else None
+        checksums[source] = (
+            _sha256_bytes(receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH))
+            if receipt_exists(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+            else None
+        )
     return checksums
 
 
 def _sha256_json(value: Any) -> str:
-    return _sha256_bytes(json.dumps(value, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8"))
+    return _sha256_bytes(
+        json.dumps(value, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
+    )
 
 
 def _sha256_bytes(value: bytes) -> str:

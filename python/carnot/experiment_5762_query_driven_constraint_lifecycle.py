@@ -31,6 +31,7 @@ from typing import Any
 
 from carnot import experiment_5736_csl_lifecycle_conflict_rollback as exp5736
 from carnot import experiment_5761_exact_constraint_acquisition_benchmark as exp5761
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -195,7 +196,12 @@ def sha256_json(value: Any) -> str:
 def sha256_file(path: str | Path) -> str:
     """Hash exact file bytes."""
 
-    return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _round(value: float, digits: int = 6) -> float:
@@ -226,14 +232,22 @@ def _memory_probe() -> JsonDict:  # pragma: no cover - host-dependent preflight.
         pages = os.sysconf("SC_AVPHYS_PAGES")
         page_size = os.sysconf("SC_PAGE_SIZE")
         available_mb = int(pages * page_size / (1024 * 1024))
-    return {"available_mb": available_mb, "required_mb": required_mb, "ok": available_mb >= required_mb}
+    return {
+        "available_mb": available_mb,
+        "required_mb": required_mb,
+        "ok": available_mb >= required_mb,
+    }
 
 
 def _disk_probe() -> JsonDict:  # pragma: no cover - host-dependent preflight.
     required_mb = DISK_FLOOR_MB
     usage = shutil.disk_usage(REPO_ROOT)
     available_mb = int(usage.free / (1024 * 1024))
-    return {"available_mb": available_mb, "required_mb": required_mb, "ok": available_mb >= required_mb}
+    return {
+        "available_mb": available_mb,
+        "required_mb": required_mb,
+        "ok": available_mb >= required_mb,
+    }
 
 
 def _variant_by_kind(row: Mapping[str, Any], kind: str) -> JsonDict:
@@ -266,12 +280,16 @@ def _model_hash_ok(variant: Mapping[str, Any]) -> bool:
     )
 
 
-def _verify_exp5761_manifest(rows: Sequence[Mapping[str, Any]], artifact: Mapping[str, Any]) -> JsonDict:
+def _verify_exp5761_manifest(
+    rows: Sequence[Mapping[str, Any]], artifact: Mapping[str, Any]
+) -> JsonDict:
     row_hashes_ok = exp5761.verify_benchmark_manifest(rows, artifact)
     model_hashes_ok = all(_model_hash_ok(variant) for row in rows for variant in row["variants"])
     query_hashes_ok = all(
         _query_receipt_hash_ok(variant["distinguishing_query_receipt"])
-        and all(_query_hash_ok(query) for query in variant["distinguishing_query_receipt"]["queries"])
+        and all(
+            _query_hash_ok(query) for query in variant["distinguishing_query_receipt"]["queries"]
+        )
         for row in rows
         for variant in row["variants"]
     )
@@ -333,7 +351,8 @@ def collect_preconditions(
             "science_row_hashes": list(artifact.get("science_row_hashes") or []),
             "ok": artifact.get("train_dev_science_disjoint_score") == 1.0
             and len(science_rows) == 40
-            and science_split_hash == exp5761.sha256_json([row["row_hash"] for row in science_rows]),
+            and science_split_hash
+            == exp5761.sha256_json([row["row_hash"] for row in science_rows]),
         }
         oracle_boundary = {
             "verifier_is_oracle": artifact.get("verifier_is_oracle") is True,
@@ -347,7 +366,8 @@ def collect_preconditions(
         }
         seed_receipt = {
             "random_seeds": dict(RANDOM_SEEDS),
-            "chronological_episode_seed_frozen": RANDOM_SEEDS["chronological_episode_seed"] == 5_762_001,
+            "chronological_episode_seed_frozen": RANDOM_SEEDS["chronological_episode_seed"]
+            == 5_762_001,
             "upstream_random_seeds": dict(artifact.get("random_seeds") or {}),
             "ok": dict(artifact.get("random_seeds") or {}) == dict(exp5761.RANDOM_SEEDS),
         }
@@ -464,21 +484,35 @@ def _state_hash(model_ast: Mapping[str, Any]) -> str:
 
 
 def _candidate_by_id(source_row: Mapping[str, Any], candidate_id: str) -> JsonDict:
-    return next(dict(row) for row in source_row["candidate_pool"] if row["candidate_id"] == candidate_id)
+    return next(
+        dict(row) for row in source_row["candidate_pool"] if row["candidate_id"] == candidate_id
+    )
 
 
-def _model_accepts(source_row: Mapping[str, Any], model_ast: Mapping[str, Any], candidate_id: str) -> bool:
-    return bool(exp5761.evaluate_model_candidate(source_row, model_ast, _candidate_by_id(source_row, candidate_id))["feasible"])
+def _model_accepts(
+    source_row: Mapping[str, Any], model_ast: Mapping[str, Any], candidate_id: str
+) -> bool:
+    return bool(
+        exp5761.evaluate_model_candidate(
+            source_row, model_ast, _candidate_by_id(source_row, candidate_id)
+        )["feasible"]
+    )
 
 
-def _oracle_accepts(row: Mapping[str, Any], source_row: Mapping[str, Any], candidate_id: str) -> bool:
+def _oracle_accepts(
+    row: Mapping[str, Any], source_row: Mapping[str, Any], candidate_id: str
+) -> bool:
     faithful = _variant_by_kind(row, "faithful")
     return _model_accepts(source_row, faithful["model_ast"], candidate_id)
 
 
-def _model_candidate_labels(source_row: Mapping[str, Any], model_ast: Mapping[str, Any]) -> dict[str, bool]:
+def _model_candidate_labels(
+    source_row: Mapping[str, Any], model_ast: Mapping[str, Any]
+) -> dict[str, bool]:
     return {
-        str(candidate["candidate_id"]): _model_accepts(source_row, model_ast, str(candidate["candidate_id"]))
+        str(candidate["candidate_id"]): _model_accepts(
+            source_row, model_ast, str(candidate["candidate_id"])
+        )
         for candidate in source_row["candidate_pool"]
     }
 
@@ -497,7 +531,9 @@ def behavioral_accuracy(
 
     model_labels = _model_candidate_labels(source_row, model_ast)
     faithful_labels = _model_candidate_labels(source_row, faithful_model_ast)
-    matches = sum(1 for candidate_id, label in model_labels.items() if faithful_labels[candidate_id] == label)
+    matches = sum(
+        1 for candidate_id, label in model_labels.items() if faithful_labels[candidate_id] == label
+    )
     return _round(matches / max(1, len(model_labels)))
 
 
@@ -596,7 +632,9 @@ def _constraint_holds(
     return bool(exp5761._constraint_holds(model_ast, constraint, assignment))
 
 
-def _violated_constraint_ids(model_ast: Mapping[str, Any], assignment: Mapping[str, Any]) -> list[str]:
+def _violated_constraint_ids(
+    model_ast: Mapping[str, Any], assignment: Mapping[str, Any]
+) -> list[str]:
     return [
         str(constraint["id"])
         for constraint in model_ast["hard_constraints"]
@@ -737,7 +775,9 @@ def _membership_receipt(
     oracle_accepts: bool,
     confidence_before: float,
 ) -> JsonDict:
-    confidence_after = min(1.0, confidence_before + (0.5 if current_accepts != oracle_accepts else 0.1))
+    confidence_after = min(
+        1.0, confidence_before + (0.5 if current_accepts != oracle_accepts else 0.1)
+    )
     receipt = {
         "episode_id": episode_id,
         "query_index": query_index,
@@ -764,7 +804,8 @@ def _promotion_gates(
     template_support: int,
 ) -> JsonDict:
     consistent = all(
-        _model_accepts(source_row, model_ast, str(row["candidate_id"])) == bool(row["oracle_accepts"])
+        _model_accepts(source_row, model_ast, str(row["candidate_id"]))
+        == bool(row["oracle_accepts"])
         for row in observed
     )
     feasible = exp5761.model_solution_receipt(source_row, model_ast)["satisfiable"] is True
@@ -1029,36 +1070,50 @@ def _run_lifecycle(
         refinements.extend(outcome["constraint_refinement_receipts"])
         quarantines.extend(outcome["constraint_quarantine_receipts"])
         supersessions.extend(outcome["constraint_supersession_receipts"])
-        per_episode_control_scores.append(_control_scores(outcome["ledger_row"]["initial_behavioral_accuracy"]))
+        per_episode_control_scores.append(
+            _control_scores(outcome["ledger_row"]["initial_behavioral_accuracy"])
+        )
         initial_constraint_counts.append(len(variant["model_ast"]["hard_constraints"]))
         final_constraint_counts.append(len(outcome["final_model_ast"]["hard_constraints"]))
     per_arm_metrics: JsonDict = {}
-    upper_accuracy = _mean([scores["exact_query_budget_oracle_upper_bound"] for scores in per_episode_control_scores])
+    upper_accuracy = _mean(
+        [scores["exact_query_budget_oracle_upper_bound"] for scores in per_episode_control_scores]
+    )
     for arm in CONTROL_ARMS:
         arm_scores = [float(scores[arm]) for scores in per_episode_control_scores]
-        query_count = len(membership_receipts) if arm == "query_driven_refinement" else len(lifecycle_rows) * QUERY_BUDGET_PER_EPISODE
+        query_count = (
+            len(membership_receipts)
+            if arm == "query_driven_refinement"
+            else len(lifecycle_rows) * QUERY_BUDGET_PER_EPISODE
+        )
         per_arm_metrics[arm] = {
             "episode_count": len(lifecycle_rows),
             "behavioral_exact_accuracy": _mean(arm_scores),
             "held_out_error": _round(1.0 - _mean(arm_scores)),
             "query_count": query_count,
-            "update_count": len(births) + len(quarantines) if arm == "query_driven_refinement" else 0,
-            "query_efficiency": _round((len(births) + len(quarantines)) / max(1, query_count)) if arm == "query_driven_refinement" else 0.0,
+            "update_count": len(births) + len(quarantines)
+            if arm == "query_driven_refinement"
+            else 0,
+            "query_efficiency": _round((len(births) + len(quarantines)) / max(1, query_count))
+            if arm == "query_driven_refinement"
+            else 0.0,
             "dynamic_regret": _round(upper_accuracy - _mean(arm_scores)),
         }
     paired_deltas = [
-        _round(scores["query_driven_refinement"] - max(scores[arm] for arm in NON_ORACLE_CONTROL_ARMS))
+        _round(
+            scores["query_driven_refinement"] - max(scores[arm] for arm in NON_ORACLE_CONTROL_ARMS)
+        )
         for scores in per_episode_control_scores
     ]
-    latencies = [
-        float(value)
-        for row in lifecycle_rows
-        for value in row["update_latency_ms"]
-    ]
+    latencies = [float(value) for row in lifecycle_rows for value in row["update_latency_ms"]]
     state_growth = {
         "query_driven_refinement": {
-            "initial_mean_active_constraints": _mean([float(value) for value in initial_constraint_counts]),
-            "final_mean_active_constraints": _mean([float(value) for value in final_constraint_counts]),
+            "initial_mean_active_constraints": _mean(
+                [float(value) for value in initial_constraint_counts]
+            ),
+            "final_mean_active_constraints": _mean(
+                [float(value) for value in final_constraint_counts]
+            ),
             "active_constraint_growth": _round(
                 _mean([float(value) for value in final_constraint_counts])
                 - _mean([float(value) for value in initial_constraint_counts])
@@ -1087,7 +1142,11 @@ def _run_lifecycle(
 
 
 def _f1(precision: float, recall: float) -> float:
-    return 0.0 if precision + recall == 0.0 else _round(2.0 * precision * recall / (precision + recall))
+    return (
+        0.0
+        if precision + recall == 0.0
+        else _round(2.0 * precision * recall / (precision + recall))
+    )
 
 
 def _metric_summary(lifecycle: Mapping[str, Any]) -> JsonDict:
@@ -1110,13 +1169,17 @@ def _metric_summary(lifecycle: Mapping[str, Any]) -> JsonDict:
         "missing_constraint_recovery_rate": 1.0 if birth_count else 0.0,
         "query_efficiency": float(query_metrics["query_efficiency"]),
         "dynamic_regret": float(query_metrics["dynamic_regret"]),
-        "constraint_recovery_gain": _round(float(query_metrics["behavioral_exact_accuracy"]) - best_non_oracle),
+        "constraint_recovery_gain": _round(
+            float(query_metrics["behavioral_exact_accuracy"]) - best_non_oracle
+        ),
         "constraint_recovery_gain_lcb": paired_lcb95(lifecycle["paired_recovery_deltas"]),
     }
 
 
 def _restart_equivalence(lifecycle_rows: Sequence[Mapping[str, Any]]) -> JsonDict:
-    rollback_mismatches = sum(1 for row in lifecycle_rows if row["rollback_hash_matches"] is not True)
+    rollback_mismatches = sum(
+        1 for row in lifecycle_rows if row["rollback_hash_matches"] is not True
+    )
     restart_mismatches = sum(1 for row in lifecycle_rows if row["restart_hash_matches"] is not True)
     return {
         "episode_count": len(lifecycle_rows),
@@ -1191,7 +1254,13 @@ def _empty_artifact(
             for arm in CONTROL_ARMS
         },
         "paired_recovery_deltas": [],
-        "update_latency_distribution": {"count": 0, "mean": 0.0, "p50": 0.0, "p95": 0.0, "max": 0.0},
+        "update_latency_distribution": {
+            "count": 0,
+            "mean": 0.0,
+            "p50": 0.0,
+            "p95": 0.0,
+            "max": 0.0,
+        },
         "state_growth": {"query_driven_refinement": {"active_constraint_growth": 0.0}},
     }
     metrics = {
@@ -1210,9 +1279,16 @@ def _empty_artifact(
         preconditions_checked=preconditions_checked,
         benchmark_manifest_hash="",
         benchmark_manifest_path=str(REPO_ROOT / exp5761.BENCHMARK_MANIFEST_RELATIVE_PATH),
-        science_split_hash=str(dict(preconditions_checked.get("science_split") or {}).get("science_split_hash") or ""),
+        science_split_hash=str(
+            dict(preconditions_checked.get("science_split") or {}).get("science_split_hash") or ""
+        ),
         template_library_hash=sha256_json({}),
-        query_budget={"per_episode": QUERY_BUDGET_PER_EPISODE, "episode_count": 0, "total": 0, "used": 0},
+        query_budget={
+            "per_episode": QUERY_BUDGET_PER_EPISODE,
+            "episode_count": 0,
+            "total": 0,
+            "used": 0,
+        },
         lifecycle=lifecycle,
         metrics=metrics,
         test_commands=test_commands,
@@ -1247,10 +1323,17 @@ def _assemble_artifact(
         "preconditions_checked": dict(preconditions_checked),
         "spec_refs": list(SPEC_REFS),
         "upstream_artifact_hashes": {
-            "exp5761_artifact": str(dict(preconditions_checked.get("benchmark_replay") or {}).get("artifact_hash") or ""),
-            "exp5761_manifest": str(dict(preconditions_checked.get("benchmark_replay") or {}).get("manifest_hash") or ""),
+            "exp5761_artifact": str(
+                dict(preconditions_checked.get("benchmark_replay") or {}).get("artifact_hash") or ""
+            ),
+            "exp5761_manifest": str(
+                dict(preconditions_checked.get("benchmark_replay") or {}).get("manifest_hash") or ""
+            ),
             "exp5736_lifecycle_artifact": str(
-                dict(preconditions_checked.get("lifecycle_checkpoint_compatibility") or {}).get("artifact_hash") or ""
+                dict(preconditions_checked.get("lifecycle_checkpoint_compatibility") or {}).get(
+                    "artifact_hash"
+                )
+                or ""
             ),
         },
         "benchmark_manifest_hash": benchmark_manifest_hash,
@@ -1279,7 +1362,9 @@ def _assemble_artifact(
         "state_growth": dict(lifecycle["state_growth"]),
         "constraint_recovery_gain": metrics["constraint_recovery_gain"],
         "constraint_recovery_gain_lcb": metrics["constraint_recovery_gain_lcb"],
-        "prefix_retention_pass_score": 1.0 if preconditions_checked.get("preconditions_ready") is True else 0.0,
+        "prefix_retention_pass_score": 1.0
+        if preconditions_checked.get("preconditions_ready") is True
+        else 0.0,
         "unsafe_update_count": 0,
         "rejected_update_propagation_count": 0,
         "rollback_hash_mismatch_count": int(restart["rollback_hash_mismatch_count"]),
@@ -1352,7 +1437,9 @@ def build_artifact(
         preconditions_checked=preconditions_checked,
         benchmark_manifest_hash=sha256_file(benchmark_manifest_path),
         benchmark_manifest_path=str(benchmark_manifest_path),
-        science_split_hash=str(dict(preconditions_checked.get("science_split") or {}).get("science_split_hash") or ""),
+        science_split_hash=str(
+            dict(preconditions_checked.get("science_split") or {}).get("science_split_hash") or ""
+        ),
         template_library_hash=sha256_json(template_library),
         query_budget=query_budget,
         lifecycle=lifecycle,
@@ -1409,7 +1496,9 @@ def blocked_reasons(artifact: Mapping[str, Any]) -> list[str]:
 def continuous_self_learning_credited(artifact: Mapping[str, Any]) -> bool:
     """Return True only when all FR-11 5762 gate fields pass."""
 
-    return dict(artifact.get("preconditions_checked") or {}).get("preconditions_ready") is True and not blocked_reasons(artifact)
+    return dict(artifact.get("preconditions_checked") or {}).get(
+        "preconditions_ready"
+    ) is True and not blocked_reasons(artifact)
 
 
 def honest_verdict(artifact: Mapping[str, Any]) -> str:
@@ -1443,7 +1532,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
         errors.append("producer_gate_fields")
     expected_credit = continuous_self_learning_credited(artifact) if not errors else False
     expected_status = "complete" if expected_credit else "blocked"
-    preconditions_ready = dict(artifact.get("preconditions_checked") or {}).get("preconditions_ready") is True
+    preconditions_ready = (
+        dict(artifact.get("preconditions_checked") or {}).get("preconditions_ready") is True
+    )
     if preconditions_ready and not expected_credit:
         reasons = blocked_reasons(artifact)
         errors.append(reasons[0] if reasons else "continuous_self_learning_credited")

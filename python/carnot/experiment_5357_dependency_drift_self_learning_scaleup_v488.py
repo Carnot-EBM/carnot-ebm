@@ -19,6 +19,7 @@ import json
 from itertools import combinations
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -34,18 +35,14 @@ RANDOM_SEED = 5357
 RESULT_RELATIVE_PATH = Path(
     "results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json"
 )
-EXP5330_RELATIVE_PATH = Path(
-    "results/experiment_5330_sea_anytime_certificate_gate_v486.json"
-)
+EXP5330_RELATIVE_PATH = Path("results/experiment_5330_sea_anytime_certificate_gate_v486.json")
 EXP5342_QUARANTINED_RELATIVE_PATH = Path(
     "results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json"
 )
 EXP5355_RELATIVE_PATH = Path(
     "results/experiment_5355_dependency_provenance_self_learning_v488.json"
 )
-EXP5356_RELATIVE_PATH = Path(
-    "results/experiment_5356_memory_tool_drift_harness_v488.json"
-)
+EXP5356_RELATIVE_PATH = Path("results/experiment_5356_memory_tool_drift_harness_v488.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
 MODULE_RELATIVE_PATH = Path(
     "python/carnot/experiment_5357_dependency_drift_self_learning_scaleup_v488.py"
@@ -98,47 +95,28 @@ REQUIRED_FIELD_PRINCIPLES = {
     "milestone": "Prevents quarantined `.487` scale-up evidence from being reused.",
     "status": "Lets capstone distinguish clean scale-up from gate skip or block.",
     "honest_verdict": (
-        "Terminal prefix `complete:` or `blocked_` prevents ambiguous "
-        "self-learning claims."
+        "Terminal prefix `complete:` or `blocked_` prevents ambiguous self-learning claims."
     ),
-    "inference_substrate": (
-        "Expected value is deterministic_dependency_safe_self_learning."
-    ),
+    "inference_substrate": ("Expected value is deterministic_dependency_safe_self_learning."),
     "continuous_self_learning_target": (
         "Bare boolean must be true to satisfy the research-program mandate."
     ),
-    "no_weight_mutation": (
-        "Bare boolean must be true to preserve frozen-model discipline."
-    ),
+    "no_weight_mutation": ("Bare boolean must be true to preserve frozen-model discipline."),
     "multi_session_trace_count": "Bare integer fixes scale-up scope.",
     "context_hash_chain_valid": "Bare boolean proves provenance integrity.",
     "dependency_attribution_rate": (
         "Bare numeric measures whether decisions are tied to supporting context."
     ),
-    "drift_detection_rate": (
-        "Bare numeric measures memory-induced drift control."
-    ),
+    "drift_detection_rate": ("Bare numeric measures memory-induced drift control."),
     "quality_delta_vs_always_full": (
         "Bare numeric ensures process gains do not reduce correctness."
     ),
-    "memory_hygiene_delta": (
-        "Bare numeric kept distinct from efficiency/cost metrics."
-    ),
-    "context_efficiency_delta": (
-        "Bare numeric kept distinct from hygiene/cost metrics."
-    ),
-    "verifier_cost_delta": (
-        "Bare numeric measures compute savings separately."
-    ),
-    "duplicated_metric_pairs": (
-        "Explicitly catches TAUTOLOGY regressions."
-    ),
-    "unsafe_false_accepts": (
-        "Bare integer blocks unsafe self-learning promotion."
-    ),
-    "rollback_recovery_rate": (
-        "Bare numeric proves bad state can be undone."
-    ),
+    "memory_hygiene_delta": ("Bare numeric kept distinct from efficiency/cost metrics."),
+    "context_efficiency_delta": ("Bare numeric kept distinct from hygiene/cost metrics."),
+    "verifier_cost_delta": ("Bare numeric measures compute savings separately."),
+    "duplicated_metric_pairs": ("Explicitly catches TAUTOLOGY regressions."),
+    "unsafe_false_accepts": ("Bare integer blocks unsafe self-learning promotion."),
+    "rollback_recovery_rate": ("Bare numeric proves bad state can be undone."),
     "self_learning_scaleup_ready": "Bare boolean gates capstone.",
     "tests_run": "Lists deterministic, rollback, and anti-tautology checks.",
 }
@@ -184,21 +162,15 @@ def confirm_source_gate(root: Path | str = REPO_ROOT) -> JsonDict:
         }
     )
     checks = {
-        "dependency_provenance_ready": (
-            dependency.get("dependency_provenance_ready") is True
-        ),
+        "dependency_provenance_ready": (dependency.get("dependency_provenance_ready") is True),
         "memory_tool_drift_ready": drift.get("memory_tool_drift_ready") is True,
-        "certificate_gate_ready": (
-            certificate.get("anytime_certificate_gate_ready") is True
-        ),
+        "certificate_gate_ready": (certificate.get("anytime_certificate_gate_ready") is True),
         "source_unsafe_false_accepts_zero": (
             dependency.get("unsafe_false_accepts") == 0
             and drift.get("unsafe_false_accepts") == 0
             and certificate.get("unsafe_promotions") == 0
         ),
-        "source_metric_duplicates_clear": (
-            dependency.get("duplicated_metric_pairs") == []
-        ),
+        "source_metric_duplicates_clear": (dependency.get("duplicated_metric_pairs") == []),
         "rollback_recovery_ready": (
             drift.get("rollback_recovery_rate") == 1.0
             and int(certificate.get("rollback_events", 0)) > 0
@@ -223,13 +195,9 @@ def confirm_source_gate(root: Path | str = REPO_ROOT) -> JsonDict:
             str(EXP5330_RELATIVE_PATH),
         ],
         "excluded_artifacts": [str(EXP5342_QUARANTINED_RELATIVE_PATH)],
-        "dependency_source_honest_verdict": _wrapped_value(
-            dependency.get("honest_verdict")
-        ),
+        "dependency_source_honest_verdict": _wrapped_value(dependency.get("honest_verdict")),
         "drift_source_honest_verdict": _wrapped_value(drift.get("honest_verdict")),
-        "certificate_source_honest_verdict": _wrapped_value(
-            certificate.get("honest_verdict")
-        ),
+        "certificate_source_honest_verdict": _wrapped_value(certificate.get("honest_verdict")),
     }
 
 
@@ -445,18 +413,12 @@ def evaluate_trace_provenance(traces: Sequence[Mapping[str, Any]]) -> JsonDict:
     """Measure dependency attribution, drift detection, and rollback replay."""
 
     events = _flatten_events(traces)
-    drift_rows = [
-        event for event in events if event["drift_injection"]["drift_type"] != "none"
-    ]
+    drift_rows = [event for event in events if event["drift_injection"]["drift_type"] != "none"]
     rollback_rows = [event for event in events if event["rollback_event"]["triggered"]]
     return {
         "event_count": len(events),
         "dependency_attribution_rate": _rate(
-            sum(
-                1
-                for event in events
-                if event["dependency_graph"]["decision_attributed"]
-            ),
+            sum(1 for event in events if event["dependency_graph"]["decision_attributed"]),
             len(events),
         ),
         "drift_detection_rate": _rate(
@@ -499,13 +461,11 @@ def evaluate_policy_comparison(traces: Sequence[Mapping[str, Any]]) -> JsonDict:
 
     events = _flatten_events(traces)
     policy_rows = {
-        policy: [_policy_route(policy, event) for event in events]
-        for policy in POLICY_ARMS
+        policy: [_policy_route(policy, event) for event in events] for policy in POLICY_ARMS
     }
     trace_count = len({event["trace_id"] for event in events})
     policy_metrics = {
-        policy: _policy_metrics(rows, trace_count)
-        for policy, rows in policy_rows.items()
+        policy: _policy_metrics(rows, trace_count) for policy, rows in policy_rows.items()
     }
     always = policy_metrics[ALWAYS_FULL_POLICY]
     combined = policy_metrics[COMBINED_POLICY]
@@ -523,9 +483,7 @@ def evaluate_policy_comparison(traces: Sequence[Mapping[str, Any]]) -> JsonDict:
         always["verifier_cost"],
     )
     process_metric_improved = bool(
-        memory_hygiene_delta > 0.0
-        or context_efficiency_delta > 0.0
-        or verifier_cost_delta > 0.0
+        memory_hygiene_delta > 0.0 or context_efficiency_delta > 0.0 or verifier_cost_delta > 0.0
     )
     return {
         "policy_rows": policy_rows,
@@ -584,11 +542,7 @@ def build_result_artifact(
         duplicated_metric_pairs=duplicated_metric_pairs,
         tests_run=tests_run,
     )
-    status = (
-        "self_learning_scaleup_ready"
-        if complete
-        else "blocked_dependency_drift_scaleup_gate"
-    )
+    status = "self_learning_scaleup_ready" if complete else "blocked_dependency_drift_scaleup_gate"
     artifact: JsonDict = {
         "schema": SCHEMA,
         "experiment": EXPERIMENT,
@@ -634,18 +588,14 @@ def build_result_artifact(
         "policy_comparison": {
             "all_policies_run": comparison["all_policies_run"],
             "same_event_ids": comparison["same_event_ids"],
-            "quality_preserved_vs_always_full": comparison[
-                "quality_preserved_vs_always_full"
-            ],
+            "quality_preserved_vs_always_full": comparison["quality_preserved_vs_always_full"],
             "process_metric_improved": comparison["process_metric_improved"],
         },
         "metric_duplication_check": {
             "checked_fields": list(AGGREGATE_METRIC_FIELDS),
             "metric_values": dict(aggregate_metrics),
             "duplicated_metric_pairs": duplicated_metric_pairs,
-            "quarantined_v487_pairs": source_gate[
-                "prior_v487_duplicated_metric_pairs"
-            ],
+            "quarantined_v487_pairs": source_gate["prior_v487_duplicated_metric_pairs"],
         },
         "metric_reports": {
             "quality": {
@@ -673,9 +623,7 @@ def build_result_artifact(
                 "measurement": "detected drift injections over all drift rows",
             },
             "unsafe_accepts": {
-                "combined_policy_count": int(
-                    combined_metrics.get("unsafe_false_accepts", 0)
-                ),
+                "combined_policy_count": int(combined_metrics.get("unsafe_false_accepts", 0)),
             },
             "rollback_recovery": {
                 "rate": provenance["rollback_recovery_rate"],
@@ -731,9 +679,10 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
             raise ValueError(f"{field} must be bare numeric")
     if artifact.get("quality_delta_vs_always_full", 0.0) < 0.0:
         raise ValueError("quality_delta_vs_always_full must be nonnegative")
-    if not isinstance(artifact.get("duplicated_metric_pairs"), list) or artifact[
-        "duplicated_metric_pairs"
-    ]:
+    if (
+        not isinstance(artifact.get("duplicated_metric_pairs"), list)
+        or artifact["duplicated_metric_pairs"]
+    ):
         raise ValueError("duplicated_metric_pairs must be an empty bare list")
     if artifact.get("unsafe_false_accepts") != 0:
         raise ValueError("unsafe_false_accepts must be 0")
@@ -781,9 +730,7 @@ def source_artifact_checksums(root: Path | str = REPO_ROOT) -> JsonDict:
     root_path = Path(root)
     return {
         "exp5330": _sha256_file(root_path / EXP5330_RELATIVE_PATH),
-        "exp5342_quarantined": _sha256_file(
-            root_path / EXP5342_QUARANTINED_RELATIVE_PATH
-        ),
+        "exp5342_quarantined": _sha256_file(root_path / EXP5342_QUARANTINED_RELATIVE_PATH),
         "exp5355": _sha256_file(root_path / EXP5355_RELATIVE_PATH),
         "exp5356": _sha256_file(root_path / EXP5356_RELATIVE_PATH),
         "spec": _sha256_file(root_path / SPEC_RELATIVE_PATH),
@@ -990,9 +937,7 @@ def _rollback_event(raw_event: Mapping[str, Any]) -> JsonDict:
         "restore_object_id": restore_object_id,
         "restore_payload": restore_payload,
         "restore_payload_sha256": _hash_text(str(restore_payload)),
-        "rollback_reason": (
-            raw_event["drift_type"] if triggered else "not_required"
-        ),
+        "rollback_reason": (raw_event["drift_type"] if triggered else "not_required"),
     }
 
 
@@ -1040,8 +985,7 @@ def _policy_route(policy: str, event: Mapping[str, Any]) -> JsonDict:
             rejection_reasons.append("utility_score_too_low")
     elif policy == COMPRESSOR_ONLY_POLICY:
         verifier_call = bool(
-            compressor_status != "clean"
-            or event["event_action"] in {"retrieve", "fold"}
+            compressor_status != "clean" or event["event_action"] in {"retrieve", "fold"}
         )
         accepted = bool(utility_score >= 0.5 and compressor_status == "clean")
         rollback_event = bool(rollback_required and compressor_status != "clean")
@@ -1073,22 +1017,15 @@ def _policy_route(policy: str, event: Mapping[str, Any]) -> JsonDict:
     )
     active = bool(policy == ALWAYS_FULL_POLICY or accepted or rollback_event)
     active_tokens = (
-        int(event["sidecar_token_count"])
-        if rollback_event
-        else int(event["token_count"])
+        int(event["sidecar_token_count"]) if rollback_event else int(event["token_count"])
     )
     clean_active = bool(
-        active
-        and not unsafe_false_accept
-        and (safe_expected or rollback_recovered)
+        active and not unsafe_false_accept and (safe_expected or rollback_recovered)
     )
     useful = bool(
         active
         and not unsafe_false_accept
-        and (
-            (safe_expected and event["useful_context"])
-            or rollback_recovered
-        )
+        and ((safe_expected and event["useful_context"]) or rollback_recovered)
     )
     return {
         "policy": policy,
@@ -1281,10 +1218,7 @@ def _blocked_comparison() -> JsonDict:
 
 
 def _same_event_ids(policy_rows: Mapping[str, Sequence[Mapping[str, Any]]]) -> bool:
-    event_sets = [
-        [row["event_id"] for row in rows]
-        for rows in policy_rows.values()
-    ]
+    event_sets = [[row["event_id"] for row in rows] for rows in policy_rows.values()]
     return bool(event_sets and all(event_set == event_sets[0] for event_set in event_sets))
 
 
@@ -1311,11 +1245,7 @@ def _drift_detectors(raw_event: Mapping[str, Any]) -> list[str]:
 
 
 def _flatten_events(traces: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
-    return [
-        dict(event)
-        for trace in traces
-        for event in trace.get("events", [])
-    ]
+    return [dict(event) for trace in traces for event in trace.get("events", [])]
 
 
 def _weight_mutation_receipt() -> JsonDict:
@@ -1359,11 +1289,7 @@ def _checksum(payload: Mapping[str, Any]) -> str:
 
 
 def _event_hash(event: Mapping[str, Any]) -> str:
-    payload = {
-        key: value
-        for key, value in event.items()
-        if key != "event_hash"
-    }
+    payload = {key: value for key, value in event.items() if key != "event_hash"}
     return _checksum(payload)
 
 
@@ -1376,7 +1302,12 @@ def _hash_text(value: str) -> str:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _json_ready(value: Any) -> Any:

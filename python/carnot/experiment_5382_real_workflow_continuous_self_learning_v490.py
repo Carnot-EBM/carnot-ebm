@@ -20,6 +20,7 @@ from typing import Any
 
 from carnot import experiment_5369_budgeted_continuous_self_learning_scaleup_v489 as exp5369
 from carnot import experiment_5381_budget_memory_tautology_corrigendum_v490 as exp5381
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -63,37 +64,23 @@ FIELD_PRINCIPLES: dict[str, str] = {
     "status": "Complete only if the gated real-workflow experiment ran.",
     "continuous_self_learning_target": "Must be true.",
     "continuous_self_learning_real_workflow_ready": (
-        "True only if the real-workflow result has clean evidence and no "
-        "unsafe false accepts."
+        "True only if the real-workflow result has clean evidence and no unsafe false accepts."
     ),
     "upstream_budget_memory_corrigendum_clean": "Copied from Exp5381.",
     "workflow_name": "Name of the real multi-session workflow.",
     "session_count": "Number of sessions.",
     "trace_count": "Number of traces.",
-    "checked_event_count": (
-        "Number of events evaluated by deterministic checks."
-    ),
-    "context_efficiency_delta": (
-        "Self-learning minus baseline context efficiency."
-    ),
+    "checked_event_count": ("Number of events evaluated by deterministic checks."),
+    "context_efficiency_delta": ("Self-learning minus baseline context efficiency."),
     "verifier_cost_delta": (
-        "Baseline minus self-learning verifier cost, positive means "
-        "improvement."
+        "Baseline minus self-learning verifier cost, positive means improvement."
     ),
     "quality_delta": "Self-learning minus baseline task quality.",
-    "stale_memory_deflection_rate": (
-        "Fraction of stale-memory probes rejected."
-    ),
-    "poison_memory_deflection_rate": (
-        "Fraction of poisoned-memory probes rejected."
-    ),
-    "rollback_success_rate": (
-        "Fraction of failed updates rolled back correctly."
-    ),
+    "stale_memory_deflection_rate": ("Fraction of stale-memory probes rejected."),
+    "poison_memory_deflection_rate": ("Fraction of poisoned-memory probes rejected."),
+    "rollback_success_rate": ("Fraction of failed updates rolled back correctly."),
     "no_weight_mutation": "Must be true.",
-    "unsafe_false_accepts": (
-        "Count of bad learned decisions accepted as good."
-    ),
+    "unsafe_false_accepts": ("Count of bad learned decisions accepted as good."),
     "honest_verdict": "One-line result or block reason.",
 }
 
@@ -125,18 +112,12 @@ def confirm_upstream_gate(root: Path | str = REPO_ROOT) -> JsonDict:
 
     source = _read_json(Path(root) / EXP5381_RELATIVE_PATH)
     checks = {
-        "budget_memory_corrigendum_clean": (
-            source.get("budget_memory_corrigendum_clean") is True
-        ),
+        "budget_memory_corrigendum_clean": (source.get("budget_memory_corrigendum_clean") is True),
         "source_status_complete": source.get("status") == "complete",
-        "source_unsafe_false_accepts_zero": (
-            source.get("unsafe_false_accepts") == 0
-        ),
+        "source_unsafe_false_accepts_zero": (source.get("unsafe_false_accepts") == 0),
         "source_no_weight_mutation": source.get("no_weight_mutation") is True,
         "source_rollback_supported": source.get("rollback_supported") is True,
-        "source_policy_ready": (
-            source.get("keep_share_trust_policy_ready") is True
-        ),
+        "source_policy_ready": (source.get("keep_share_trust_policy_ready") is True),
     }
     failed = [name for name, passed in checks.items() if not passed]
     return {
@@ -167,9 +148,7 @@ def describe_workflow(traces: Sequence[Mapping[str, Any]]) -> JsonDict:
             if event.get("verifier_tool_decision", {}).get("selected_tool")
             and event.get("verifier_tool_decision", {}).get("selected_verifier")
         ),
-        "rollback": sum(
-            1 for event in events if event.get("rollback_event", {}).get("required")
-        ),
+        "rollback": sum(1 for event in events if event.get("rollback_event", {}).get("required")),
         "constraint_selection": sum(
             1
             for event in events
@@ -201,8 +180,7 @@ def build_corrected_memory_policy(
     kept_rows = [
         row
         for row in rows
-        if row["recomputed_keep_decision"] == "KEEP"
-        and row["recomputed_trust_decision"] == "TRUST"
+        if row["recomputed_keep_decision"] == "KEEP" and row["recomputed_trust_decision"] == "TRUST"
     ]
     rejected_rows = [row for row in rows if row not in kept_rows]
     retained_bytes = sum(row["cost_evidence"]["byte_cost"] for row in kept_rows)
@@ -212,13 +190,9 @@ def build_corrected_memory_policy(
         "budget_limit_respected": retained_bytes <= BUDGET_LIMIT_BYTES,
         "kept_memory_ids": sorted(row["memory_id"] for row in kept_rows),
         "trusted_memory_ids": sorted(
-            row["memory_id"]
-            for row in rows
-            if row["recomputed_trust_decision"] == "TRUST"
+            row["memory_id"] for row in rows if row["recomputed_trust_decision"] == "TRUST"
         ),
-        "rejected_or_quarantined_memory_ids": sorted(
-            row["memory_id"] for row in rejected_rows
-        ),
+        "rejected_or_quarantined_memory_ids": sorted(row["memory_id"] for row in rejected_rows),
         "evidence_row_count": len(rows),
         "rows": rows,
     }
@@ -263,9 +237,7 @@ def evaluate_real_workflow(
         "context_efficiency_delta": _delta(
             learner["context_efficiency"], baseline["context_efficiency"]
         ),
-        "verifier_cost_delta": _delta(
-            baseline["verifier_cost"], learner["verifier_cost"]
-        ),
+        "verifier_cost_delta": _delta(baseline["verifier_cost"], learner["verifier_cost"]),
         "quality_delta": _delta(learner["quality"], baseline["quality"]),
         "stale_memory_deflection_rate": safety["stale_memory_deflection_rate"],
         "poison_memory_deflection_rate": safety["poison_memory_deflection_rate"],
@@ -278,9 +250,7 @@ def evaluate_real_workflow(
         "weight_mutation_receipt": _weight_mutation_receipt(),
         "source_replay_metrics": {
             "exp5369_checked_event_count": replay["checked_event_count"],
-            "exp5369_context_efficiency_delta": comparison[
-                "context_efficiency_delta"
-            ],
+            "exp5369_context_efficiency_delta": comparison["context_efficiency_delta"],
             "exp5369_verifier_cost_delta_rate": comparison["verifier_cost_delta"],
         },
     }
@@ -294,9 +264,7 @@ def build_artifact(
     """Build the Exp5382 artifact from gated workflow evidence."""
 
     gate = confirm_upstream_gate(root)
-    evaluation = (
-        evaluate_real_workflow(root=root) if gate["all_passed"] else _blocked_evaluation()
-    )
+    evaluation = evaluate_real_workflow(root=root) if gate["all_passed"] else _blocked_evaluation()
     readiness = _readiness_checks(gate, evaluation, tests_run)
     ready = bool(readiness["all_passed"])
     workflow = evaluation["workflow"]
@@ -313,9 +281,7 @@ def build_artifact(
         "status": "complete" if ready else "blocked",
         "continuous_self_learning_target": True,
         "continuous_self_learning_real_workflow_ready": ready,
-        "upstream_budget_memory_corrigendum_clean": bool(
-            gate["budget_memory_corrigendum_clean"]
-        ),
+        "upstream_budget_memory_corrigendum_clean": bool(gate["budget_memory_corrigendum_clean"]),
         "workflow_name": workflow["workflow_name"],
         "session_count": int(workflow["session_count"]),
         "trace_count": int(workflow["trace_count"]),
@@ -323,16 +289,10 @@ def build_artifact(
         "context_efficiency_delta": evaluation["context_efficiency_delta"],
         "verifier_cost_delta": evaluation["verifier_cost_delta"],
         "quality_delta": evaluation["quality_delta"],
-        "stale_memory_deflection_rate": evaluation[
-            "stale_memory_deflection_rate"
-        ],
-        "poison_memory_deflection_rate": evaluation[
-            "poison_memory_deflection_rate"
-        ],
+        "stale_memory_deflection_rate": evaluation["stale_memory_deflection_rate"],
+        "poison_memory_deflection_rate": evaluation["poison_memory_deflection_rate"],
         "rollback_success_rate": evaluation["rollback_success_rate"],
-        "no_weight_mutation": evaluation["weight_mutation_receipt"][
-            "no_weight_mutation"
-        ],
+        "no_weight_mutation": evaluation["weight_mutation_receipt"]["no_weight_mutation"],
         "unsafe_false_accepts": int(evaluation["unsafe_false_accepts"]),
         "honest_verdict": _honest_verdict(ready, gate, readiness, evaluation),
         "tests_run": [dict(row) for row in tests_run],
@@ -348,9 +308,7 @@ def build_artifact(
             "source_replay_metrics": evaluation["source_replay_metrics"],
         },
         "corrected_memory_policy": {
-            key: value
-            for key, value in evaluation["memory_policy"].items()
-            if key != "rows"
+            key: value for key, value in evaluation["memory_policy"].items() if key != "rows"
         },
         "event_decisions": evaluation["event_decisions"],
         "weight_mutation_receipt": evaluation["weight_mutation_receipt"],
@@ -496,12 +454,8 @@ def _evaluate_event_decisions(
                 "bad_memory": bad_memory,
                 "accepted_as_good": accepted_as_good,
                 "unsafe_false_accept": bool(bad_memory and accepted_as_good),
-                "rollback_required": bool(
-                    event.get("rollback_event", {}).get("required")
-                ),
-                "rollback_recovered": bool(
-                    event.get("rollback_event", {}).get("recovered")
-                ),
+                "rollback_required": bool(event.get("rollback_event", {}).get("required")),
+                "rollback_recovered": bool(event.get("rollback_event", {}).get("recovered")),
             }
         )
     return decisions
@@ -516,9 +470,7 @@ def _safety_controls(
     poison = [row for row in decisions if row["memory_variant"] == "poisoned"]
     rollback = [row for row in decisions if row["rollback_required"]]
     stale_rejected = [row for row in stale if row["learned_decision"] in {"reject", "rollback"}]
-    poison_rejected = [
-        row for row in poison if row["learned_decision"] in {"reject", "rollback"}
-    ]
+    poison_rejected = [row for row in poison if row["learned_decision"] in {"reject", "rollback"}]
     return {
         "checked_event_count": len(events),
         "budget_limit_bytes": memory_policy["budget_limit_bytes"],
@@ -533,9 +485,7 @@ def _safety_controls(
             sum(1 for row in rollback if row["rollback_recovered"]),
             len(rollback),
         ),
-        "unsafe_false_accepts": sum(
-            1 for row in decisions if row["unsafe_false_accept"]
-        ),
+        "unsafe_false_accepts": sum(1 for row in decisions if row["unsafe_false_accept"]),
     }
 
 
@@ -648,9 +598,7 @@ def _readiness_checks(
         "upstream_gate_passed": gate["all_passed"] is True,
         "session_count_ready": workflow["session_count"] >= MIN_SESSIONS,
         "trace_count_ready": workflow["trace_count"] >= MIN_TRACES,
-        "checked_event_count_ready": (
-            evaluation["checked_event_count"] >= MIN_CHECKED_EVENTS
-        ),
+        "checked_event_count_ready": (evaluation["checked_event_count"] >= MIN_CHECKED_EVENTS),
         "same_event_ids": evaluation["same_event_ids"] is True,
         "context_efficiency_improved": evaluation["context_efficiency_delta"] > 0.0,
         "verifier_cost_reduced": evaluation["verifier_cost_delta"] > 0.0,
@@ -658,16 +606,10 @@ def _readiness_checks(
         "stale_memory_deflected": evaluation["stale_memory_deflection_rate"] == 1.0,
         "poison_memory_deflected": evaluation["poison_memory_deflection_rate"] == 1.0,
         "rollback_succeeded": evaluation["rollback_success_rate"] == 1.0,
-        "budget_limit_respected": evaluation["safety_controls"][
-            "budget_limit_respected"
-        ]
-        is True,
+        "budget_limit_respected": evaluation["safety_controls"]["budget_limit_respected"] is True,
         "unsafe_false_accepts_zero": evaluation["unsafe_false_accepts"] == 0,
         "tests_recorded": bool(tests_run),
-        "no_weight_mutation": evaluation["weight_mutation_receipt"][
-            "no_weight_mutation"
-        ]
-        is True,
+        "no_weight_mutation": evaluation["weight_mutation_receipt"]["no_weight_mutation"] is True,
     }
     failed = [name for name, passed in checks.items() if not passed]
     return {**checks, "failed_gates": failed, "all_passed": not failed}
@@ -690,9 +632,7 @@ def _honest_verdict(
         )
     blockers = list(gate.get("failed_gates", []))
     blockers.extend(readiness["failed_gates"])
-    return "blocked_real_workflow_continuous_self_learning: " + ",".join(
-        dict.fromkeys(blockers)
-    )
+    return "blocked_real_workflow_continuous_self_learning: " + ",".join(dict.fromkeys(blockers))
 
 
 def _weight_mutation_receipt() -> JsonDict:
@@ -731,7 +671,12 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _checksum(payload: Mapping[str, Any]) -> str:

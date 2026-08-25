@@ -26,15 +26,14 @@ from typing import Any
 from carnot import experiment_5734_sota_exact_proposal_stream as exp5734
 from carnot import experiment_5735_zero_gate_kan_continuous_self_learning as exp5735
 from carnot import experiment_5736_csl_lifecycle_conflict_rollback as exp5736
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RESULT_RELATIVE_PATH = Path("results/experiment_5737_sota_stream_csl_shadow_ingress.json")
-LEDGER_RELATIVE_PATH = Path(
-    "results/experiment_5737_sota_stream_csl_shadow_ingress_ledger.jsonl"
-)
+LEDGER_RELATIVE_PATH = Path("results/experiment_5737_sota_stream_csl_shadow_ingress_ledger.jsonl")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
 MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5737_sota_stream_csl_shadow_ingress.py")
 TEST_RELATIVE_PATH = Path("tests/python/test_experiment_5737_sota_stream_csl_shadow_ingress.py")
@@ -82,7 +81,9 @@ ARM_NAMES = (
     CORRUPTED_ORDER_ARM,
     STALE_CONFLICT_ARM,
 )
-PRODUCTION_CONTROLLER_HASH = "sha256:7b3eb1125abc89481108570f51343511332a0bd85a83f6f55d56e8630e244113"
+PRODUCTION_CONTROLLER_HASH = (
+    "sha256:7b3eb1125abc89481108570f51343511332a0bd85a83f6f55d56e8630e244113"
+)
 
 REQUIRED_ARTIFACT_FIELDS = (
     "field_principles",
@@ -194,7 +195,12 @@ def sha256_json(value: Any) -> str:
 def sha256_file(path: Path | str) -> str:
     """Return a prefixed SHA-256 digest over exact file bytes."""
 
-    return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _read_json(path: Path | str) -> JsonDict:
@@ -240,7 +246,9 @@ def _gate_scalar(state: Mapping[str, Any]) -> float:
     return _round(min(1.0, float(state.get("updates", 0)) / float(PREFIX_LENGTH)), 12)
 
 
-def _predict_next_label(state: Mapping[str, Any], row: Mapping[str, Any], offset: int = 0) -> tuple[str, str]:
+def _predict_next_label(
+    state: Mapping[str, Any], row: Mapping[str, Any], offset: int = 0
+) -> tuple[str, str]:
     """Predict the next label from the learned chronological cycle or fallback proposal."""
 
     cycle = list(state.get("cycle") or [])
@@ -258,7 +266,10 @@ def _apply_label_update(state: JsonDict, label: str, row_id: str) -> str:
     if operation == "remember":
         state["remembered_cycle_positions"].append(str(row_id))
     state["updates"] = int(state["updates"]) + 1
-    if len(state["cycle"]) != LABEL_CYCLE_LENGTH and len(state["label_history"]) >= LABEL_CYCLE_LENGTH:
+    if (
+        len(state["cycle"]) != LABEL_CYCLE_LENGTH
+        and len(state["label_history"]) >= LABEL_CYCLE_LENGTH
+    ):
         state["cycle"] = list(state["label_history"][:LABEL_CYCLE_LENGTH])
     return operation
 
@@ -295,7 +306,9 @@ def _exact_label_receipt(row: Mapping[str, Any]) -> JsonDict:
     }
 
 
-def _build_ingress_ledger(prefix_rows: Sequence[Mapping[str, Any]]) -> tuple[list[JsonDict], JsonDict]:
+def _build_ingress_ledger(
+    prefix_rows: Sequence[Mapping[str, Any]],
+) -> tuple[list[JsonDict], JsonDict]:
     """Consume committed prefix rows exactly once in chronological order."""
 
     state = _initial_state("exact_validator_label")
@@ -393,7 +406,9 @@ def verify_ingress_ledger(rows: Sequence[Mapping[str, Any]], artifact: Mapping[s
     )
 
 
-def _train_cycle(prefix_rows: Sequence[Mapping[str, Any]], label_field: str, *, reverse: bool = False) -> JsonDict:
+def _train_cycle(
+    prefix_rows: Sequence[Mapping[str, Any]], label_field: str, *, reverse: bool = False
+) -> JsonDict:
     """Train a cycle state from a chosen label field on the committed prefix."""
 
     state = _initial_state(label_field)
@@ -418,7 +433,10 @@ def _proposal_predictions(rows: Sequence[Mapping[str, Any]]) -> list[str]:
 def _accuracy(predictions: Sequence[str], rows: Sequence[Mapping[str, Any]]) -> float:
     """Return exact-label accuracy for a set of predictions."""
 
-    correct = sum(prediction == row["admitted_label"] for prediction, row in zip(predictions, rows, strict=True))
+    correct = sum(
+        prediction == row["admitted_label"]
+        for prediction, row in zip(predictions, rows, strict=True)
+    )
     return _round(correct / max(len(rows), 1))
 
 
@@ -437,7 +455,9 @@ def _first_changed_decision(
 ) -> JsonDict | None:
     """Return the first suffix decision changed by an arm relative to no-update."""
 
-    for index, (before, after, row) in enumerate(zip(before_predictions, after_predictions, rows, strict=True)):
+    for index, (before, after, row) in enumerate(
+        zip(before_predictions, after_predictions, rows, strict=True)
+    ):
         if before != after:
             return {
                 "arm": arm,
@@ -552,7 +572,9 @@ def _rollback_probe(state: Mapping[str, Any]) -> tuple[bool, list[JsonDict]]:
     target = deepcopy(dict(state))
     target_hash = _state_hash(target)
     mutated = deepcopy(target)
-    _apply_label_update(mutated, "F" if target.get("cycle", ["A"])[0] != "F" else "A", "rollback-control")
+    _apply_label_update(
+        mutated, "F" if target.get("cycle", ["A"])[0] != "F" else "A", "rollback-control"
+    )
     mutated_hash = _state_hash(mutated)
     restored = deepcopy(target)
     restored_hash = _state_hash(restored)
@@ -567,7 +589,9 @@ def _rollback_probe(state: Mapping[str, Any]) -> tuple[bool, list[JsonDict]]:
     ]
 
 
-def _load_and_validate_upstreams(root: Path) -> tuple[JsonDict, list[JsonDict], JsonDict, JsonDict, JsonDict]:
+def _load_and_validate_upstreams(
+    root: Path,
+) -> tuple[JsonDict, list[JsonDict], JsonDict, JsonDict, JsonDict]:
     """Load upstream artifacts and return validation receipts."""
 
     exp5734_path = root / EXP5734_RELATIVE_PATH
@@ -601,8 +625,12 @@ def _load_and_validate_upstreams(root: Path) -> tuple[JsonDict, list[JsonDict], 
         "exp5735_ledger_hash_present": bool(zero_gate_artifact.get("operation_ledger_hash")),
         "exp5736_artifact_valid": bool(lifecycle_valid),
         "exp5736_lifecycle_ready": lifecycle_artifact.get("csl_lifecycle_ready_score") == 1.0,
-        "exp5736_rollback_hash_match": lifecycle_artifact.get("rollback_state_hash_matches") is True,
-        "exp5736_ledger_replay": lifecycle_artifact.get("ledger_replay_equivalence", {}).get("passed") is True,
+        "exp5736_rollback_hash_match": lifecycle_artifact.get("rollback_state_hash_matches")
+        is True,
+        "exp5736_ledger_replay": lifecycle_artifact.get("ledger_replay_equivalence", {}).get(
+            "passed"
+        )
+        is True,
         "model_weight_immutable_upstream": all(
             artifact.get("model_weight_mutation") is False
             for artifact in (stream_artifact, zero_gate_artifact, lifecycle_artifact)
@@ -672,7 +700,9 @@ def _validator_hashes(
             stream_artifact.get("exact_validator_versions")
         ),
         "exp5734_module_hash": sha256_file(root / exp5734.MODULE_RELATIVE_PATH),
-        "exp5735_controller_versions_hash": sha256_json(zero_gate_artifact.get("controller_versions")),
+        "exp5735_controller_versions_hash": sha256_json(
+            zero_gate_artifact.get("controller_versions")
+        ),
         "exp5735_module_hash": sha256_file(root / exp5735.MODULE_RELATIVE_PATH),
         "exp5736_transition_schema_hash": sha256_json(lifecycle_artifact.get("transition_schema")),
         "exp5736_module_hash": sha256_file(root / exp5736.MODULE_RELATIVE_PATH),
@@ -824,8 +854,14 @@ def artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
         if any(field not in principles for field in artifact):
             errors.append("field_principles")
     checks = (
-        (artifact.get("preconditions_checked", {}).get("all_passed") is not True, "preconditions_checked"),
-        (artifact.get("upstream_gate_receipts", {}).get("all_passed") is not True, "upstream_gate_receipts"),
+        (
+            artifact.get("preconditions_checked", {}).get("all_passed") is not True,
+            "preconditions_checked",
+        ),
+        (
+            artifact.get("upstream_gate_receipts", {}).get("all_passed") is not True,
+            "upstream_gate_receipts",
+        ),
         (artifact.get("validator_hashes", {}).get("all_validated") is not True, "validator_hashes"),
         (float(artifact.get("suffix_improvement", 0.0)) <= 0.0, "suffix_improvement"),
         (float(artifact.get("prefix_retention_delta", 99.0)) > 0.0, "prefix_retention_delta"),
@@ -833,7 +869,10 @@ def artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
         (artifact.get("rollback_state_hash_matches") is not True, "rollback_state_hash_matches"),
         (
             artifact.get("proposal_label_control_results", {}).get("diagnostic_only") is not True
-            or artifact.get("proposal_label_control_results", {}).get("protected_controller_mutated") is not False,
+            or artifact.get("proposal_label_control_results", {}).get(
+                "protected_controller_mutated"
+            )
+            is not False,
             "proposal_label_control_results",
         ),
         (
@@ -844,9 +883,15 @@ def artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
         (artifact.get("production_default_enabled") is not False, "production_default_enabled"),
         (artifact.get("verifier_is_oracle") is not True, "verifier_is_oracle"),
         (artifact.get("inference_substrate") != INFERENCE_SUBSTRATE, "inference_substrate"),
-        (artifact.get("sota_csl_ingress_ready_score") != sota_csl_ingress_ready_score(artifact), "sota_csl_ingress_ready_score"),
+        (
+            artifact.get("sota_csl_ingress_ready_score") != sota_csl_ingress_ready_score(artifact),
+            "sota_csl_ingress_ready_score",
+        ),
         (artifact.get("honest_verdict") != honest_verdict(artifact), "honest_verdict"),
-        (artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact), "reproducibility_checksum"),
+        (
+            artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact),
+            "reproducibility_checksum",
+        ),
     )
     errors.extend(message for failed, message in checks if failed)
     return errors

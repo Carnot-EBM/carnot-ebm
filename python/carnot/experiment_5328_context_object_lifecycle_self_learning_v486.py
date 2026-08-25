@@ -25,6 +25,7 @@ from carnot.pipeline.memory_transition_verifier import (
     MemoryTransitionProposal,
     MemoryTransitionVerifier,
 )
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -442,10 +443,7 @@ def evaluate_lifecycle_fixture(cases: Sequence[LifecycleCase]) -> JsonDict:
     """Evaluate lifecycle safety, recoverability, and separated failure rates."""
 
     rows = [_evaluate_case(case) for case in cases]
-    failure_counts = {
-        family: _failure_count(rows, family)
-        for family in FAILURE_FAMILIES
-    }
+    failure_counts = {family: _failure_count(rows, family) for family in FAILURE_FAMILIES}
     rollback_rows = [row for row in rows if bool(row["rollback_expected"])]
     rollback_success_rate = _rate(
         sum(1 for row in rollback_rows if bool(row["rollback_success"])),
@@ -453,7 +451,9 @@ def evaluate_lifecycle_fixture(cases: Sequence[LifecycleCase]) -> JsonDict:
     )
     no_weight_mutation = all(row["model_weights_mutated"] is False for row in rows)
     action_set_complete = set(LIFECYCLE_ACTION_SET).issubset(lifecycle_action_counts(cases))
-    object_schema_valid = all(_object_schema_valid(obj) for case in cases for obj in objects_in_case(case))
+    object_schema_valid = all(
+        _object_schema_valid(obj) for case in cases for obj in objects_in_case(case)
+    )
     safe_rows_ok = all(
         bool(row["accepted"])
         for row in rows
@@ -487,21 +487,15 @@ def evaluate_lifecycle_fixture(cases: Sequence[LifecycleCase]) -> JsonDict:
         "context_object_count": context_object_count(cases),
         "lifecycle_action_counts": lifecycle_action_counts(cases),
         "failure_counts": failure_counts,
-        "bank_failure_detection_rate": _detection_rate(
-            failure_counts[BANK_FAILURE_FAMILY]
-        ),
+        "bank_failure_detection_rate": _detection_rate(failure_counts[BANK_FAILURE_FAMILY]),
         "retrieval_failure_detection_rate": _detection_rate(
             failure_counts[RETRIEVAL_FAILURE_FAMILY]
         ),
-        "answer_failure_detection_rate": _detection_rate(
-            failure_counts[ANSWER_FAILURE_FAMILY]
-        ),
+        "answer_failure_detection_rate": _detection_rate(failure_counts[ANSWER_FAILURE_FAMILY]),
         "rollback_success_rate": rollback_success_rate,
         "transition_verifier_reuse": {
             "verifier_path": str(VERIFIER_RELATIVE_PATH),
-            "bank_mutation_rows": sum(
-                1 for row in rows if bool(row["transition_verifier_reused"])
-            ),
+            "bank_mutation_rows": sum(1 for row in rows if bool(row["transition_verifier_reused"])),
         },
         "no_weight_mutation": no_weight_mutation,
         "context_lifecycle_fixture_ready": ready,
@@ -1064,7 +1058,12 @@ def _checksum(payload: Mapping[str, Any]) -> str:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _sha256_text(text: str) -> str:

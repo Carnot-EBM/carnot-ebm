@@ -22,6 +22,7 @@ from typing import Any
 
 from carnot import experiment_5328_context_object_lifecycle_self_learning_v486 as exp5328
 from carnot.pipeline.memory_transition_verifier import MemoryTransitionProposal
+from carnot.provenance_receipts import receipt_bytes
 
 
 JsonDict = dict[str, Any]
@@ -33,9 +34,7 @@ MILESTONE = "v486"
 SCHEMA = "carnot.experiment_5329.memory_context_policy_rollout.v486"
 RUN_DATE = "2026-07-07"
 RANDOM_SEED = 5329
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5329_memory_context_policy_rollout_v486.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5329_memory_context_policy_rollout_v486.json")
 EXP5328_RELATIVE_PATH = Path(
     "results/experiment_5328_context_object_lifecycle_self_learning_v486.json"
 )
@@ -43,9 +42,7 @@ EXP5313_RELATIVE_PATH = Path(
     "results/experiment_5313_gated_memory_transition_policy_rollout_v485.json"
 )
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
-MODULE_RELATIVE_PATH = Path(
-    "python/carnot/experiment_5329_memory_context_policy_rollout_v486.py"
-)
+MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5329_memory_context_policy_rollout_v486.py")
 EXP5328_MODULE_RELATIVE_PATH = Path(
     "python/carnot/experiment_5328_context_object_lifecycle_self_learning_v486.py"
 )
@@ -185,8 +182,7 @@ def confirm_fixture_gate(
     source = dict(artifact or load_fixture_artifact(root))
     rows = source.get("lifecycle_rows", [])
     checks = {
-        "context_lifecycle_fixture_ready": source.get("context_lifecycle_fixture_ready")
-        is True,
+        "context_lifecycle_fixture_ready": source.get("context_lifecycle_fixture_ready") is True,
         "bank_failure_detection_rate_present": _is_numeric(
             source.get("bank_failure_detection_rate")
         ),
@@ -220,10 +216,7 @@ def evaluate_policy_rollout(panel: Sequence[exp5328.LifecycleCase]) -> JsonDict:
         ]
         for policy in POLICY_ARMS
     }
-    policy_metrics = {
-        policy: _policy_metrics(rows)
-        for policy, rows in policy_rows.items()
-    }
+    policy_metrics = {policy: _policy_metrics(rows) for policy, rows in policy_rows.items()}
     always = policy_metrics[ALWAYS_FULL_POLICY]
     lifecycle = policy_metrics[CONTEXT_LIFECYCLE_POLICY]
     all_variants_ran = bool(
@@ -233,9 +226,7 @@ def evaluate_policy_rollout(panel: Sequence[exp5328.LifecycleCase]) -> JsonDict:
         and _same_case_ids(policy_rows)
     )
     no_weight_mutation = all(
-        row["model_weights_mutated"] is False
-        for rows in policy_rows.values()
-        for row in rows
+        row["model_weights_mutated"] is False for rows in policy_rows.values() for row in rows
     )
     quality_delta = _delta(lifecycle["final_quality"], always["final_quality"])
     bank_delta = _delta(lifecycle["bank_failure_rate"], always["bank_failure_rate"])
@@ -285,7 +276,11 @@ def build_result_artifact(
     """Build the Exp5329 artifact from deterministic policy rollout."""
 
     gate = confirm_fixture_gate(root=root)
-    evaluation = evaluate_policy_rollout(build_policy_panel()) if gate["all_passed"] else _blocked_evaluation()
+    evaluation = (
+        evaluate_policy_rollout(build_policy_panel())
+        if gate["all_passed"]
+        else _blocked_evaluation()
+    )
     complete = _rollout_complete(evaluation, gate, tests_run)
     status = "policy_rollout_ready" if complete else "blocked_fixture_gate_or_tests"
     artifact: JsonDict = {
@@ -455,17 +450,10 @@ def _transition_only_row(case: exp5328.LifecycleCase) -> JsonDict:
     accepted = bool(transition["accepted"])
     detected_failure = bool(transition["detected_failure"])
     changed = bool(transition["persistent_state_changed"])
-    recovered = bool(
-        case.action == "rollback"
-        and accepted
-        and _recoverable_from_sidecar(case)
-    )
+    recovered = bool(case.action == "rollback" and accepted and _recoverable_from_sidecar(case))
     rollback_event = bool(
         case.rollback_expected
-        and (
-            recovered
-            or (not case.safe_expected and detected_failure and not changed)
-        )
+        and (recovered or (not case.safe_expected and detected_failure and not changed))
     )
     return {
         "case_id": case.case_id,
@@ -527,9 +515,7 @@ def _policy_metrics(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
             exp5328.RETRIEVAL_FAILURE_FAMILY,
         ),
         "answer_failure_rate": _family_failure_rate(rows, exp5328.ANSWER_FAILURE_FAMILY),
-        "unsafe_false_accepts": sum(
-            1 for row in rows if bool(row["unsafe_false_accept"])
-        ),
+        "unsafe_false_accepts": sum(1 for row in rows if bool(row["unsafe_false_accept"])),
         "rollback_events": sum(1 for row in rows if bool(row["rollback_event"])),
         "recoveries": sum(1 for row in rows if bool(row["recovered_from_sidecar"])),
         "model_weights_mutated": any(bool(row["model_weights_mutated"]) for row in rows),
@@ -704,7 +690,12 @@ def _checksum(payload: Mapping[str, Any]) -> str:
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:

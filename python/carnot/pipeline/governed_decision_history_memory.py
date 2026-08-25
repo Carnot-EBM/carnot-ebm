@@ -23,6 +23,7 @@ from carnot.pipeline.verifier_memory import (
     assert_no_test_gold_leak,
     decide_promotion,
 )
+from carnot.provenance_receipts import receipt_bytes, receipt_exists
 
 
 JsonDict = dict[str, Any]
@@ -325,7 +326,9 @@ def build_result_artifact(
     return artifact
 
 
-def fixture_checksums(*, fixtures: DecisionHistoryFixtureSet, root: Path | str = REPO_ROOT) -> JsonDict:
+def fixture_checksums(
+    *, fixtures: DecisionHistoryFixtureSet, root: Path | str = REPO_ROOT
+) -> JsonDict:
     """Return stable checksums for fixture rows and cited upstream artifacts."""
 
     return {
@@ -348,7 +351,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     if not (verdict.startswith("complete:") or verdict.startswith("blocked_")):
         raise ValueError("honest_verdict terminal prefix invalid")  # pragma: no cover
     if _wrapped_value(artifact, "inference_substrate") != INFERENCE_SUBSTRATE:
-        raise ValueError("inference_substrate must be aggregation_from_upstream_artifacts")  # pragma: no cover
+        raise ValueError(
+            "inference_substrate must be aggregation_from_upstream_artifacts"
+        )  # pragma: no cover
     if not isinstance(artifact.get("memory_decision_history_ready"), bool):
         raise ValueError("memory_decision_history_ready must be a bare bool")  # pragma: no cover
     if not artifact.get("memory_decision_history_ready_principle"):
@@ -448,9 +453,14 @@ def _governance_row(row: Mapping[str, Any], *, canonical_scopes: set[str]) -> Js
         action = "reject_poisoning"
     elif "out_of_scope" in set(row.get("scope_flags", [])):
         action = "reject_out_of_scope"
-    elif row.get("conflict_status") == "stale_conflict" and row.get("task_scope") in canonical_scopes:
+    elif (
+        row.get("conflict_status") == "stale_conflict" and row.get("task_scope") in canonical_scopes
+    ):
         action = "evict_stale_conflict"
-    elif row.get("rollback_status") == "rolled_back_harmful" or row.get("promotion_state") == "rolled_back":
+    elif (
+        row.get("rollback_status") == "rolled_back_harmful"
+        or row.get("promotion_state") == "rolled_back"
+    ):
         action = "rollback_harmful" if safe_action_selected else "rollback_unsafe"
         active = safe_action_selected
     elif row.get("promotion_state") == "promoted":
@@ -529,14 +539,17 @@ def _evidence_checksum(entry: Mapping[str, Any], verifier_outcome: Mapping[str, 
 
 
 def _memory_id(failure_signature: str, promoted_decision: str) -> str:
-    return "verifier-memory:" + hashlib.sha256(
-        _canonical_json(
-            {
-                "failure_signature": str(failure_signature),
-                "promoted_decision": str(promoted_decision),
-            }
-        ).encode("utf-8")
-    ).hexdigest()[:16]
+    return (
+        "verifier-memory:"
+        + hashlib.sha256(
+            _canonical_json(
+                {
+                    "failure_signature": str(failure_signature),
+                    "promoted_decision": str(promoted_decision),
+                }
+            ).encode("utf-8")
+        ).hexdigest()[:16]
+    )
 
 
 def _decision_id(row: Mapping[str, Any]) -> str:
@@ -547,14 +560,20 @@ def _decision_id(row: Mapping[str, Any]) -> str:
         "promoted_decision": row.get("promoted_decision"),
         "rejected_alternatives": row.get("rejected_alternatives", []),
     }
-    return "decision-history:" + hashlib.sha256(_canonical_json(seed).encode("utf-8")).hexdigest()[:16]
+    return (
+        "decision-history:" + hashlib.sha256(_canonical_json(seed).encode("utf-8")).hexdigest()[:16]
+    )
 
 
 def _source_artifact_checksums(root: Path) -> JsonDict:
     checksums: JsonDict = {}
     for source in SOURCE_ARTIFACTS:
         path = root / source.split("#", 1)[0]
-        checksums[source] = _sha256_bytes(path.read_bytes()) if path.exists() else None
+        checksums[source] = (
+            _sha256_bytes(receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH))
+            if receipt_exists(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+            else None
+        )
     return checksums
 
 
