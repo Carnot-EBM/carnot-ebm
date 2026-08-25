@@ -881,3 +881,123 @@ When Exp6523 validates the artifact,
 
 Then the required fields match exactly, scores recompute from rows, protected
 files remain unchanged, `verifier_is_oracle=false`, and the checksum matches.
+
+### REQ-STORE-6613 — Verifier-governed invariant-memory lifecycle
+
+Carnot SHALL provide a versioned invariant record and a bounded persistent
+store for the live projector. Each record SHALL retain source transition
+hashes, the world-model hash, the feature schema, the invariant basis and
+threshold, exact pre-event and post-event metrics, confidence, uncertainty,
+lifecycle state, admission reason, a deterministic sequence index, and a
+journal checksum. Record values are typed data. They SHALL never execute as
+prompts, instructions, code, or queries.
+
+The store SHALL implement `provisional`, `active`, `quarantined`, and
+`archived` states. Admission and retrieval SHALL revalidate the source hash,
+world-model identity, feature schema, exact evidence, staleness, and conflicts.
+Estimated or uncertain metadata MAY route a proposal. It SHALL NOT activate a
+record. Command-bearing or query-shaped data SHALL enter quarantine before it
+can become active.
+
+The store SHALL bound total occupancy and occupancy per source. Duplicate,
+conflict, supersession, archive, and restore decisions SHALL use deterministic
+record hashes and sequence indices. The mechanism SHALL make no claim that
+conflict hysteresis has benefit. Every transition SHALL first write a snapshot.
+It SHALL then append one checksummed journal event and atomically replace the
+committed state. Corrupt journals and interrupted writes SHALL fail closed.
+Restart, rollback, and archive restore SHALL reproduce canonical state bytes.
+
+The generator weights, generator model identity, E3 base-policy source, live
+projector source, and protected orchestration files SHALL remain immutable.
+The store SHALL expose compact little-endian serialization, bounded lookup,
+and projection-arithmetic receipts for a CPU/Rust-compatible path. The receipt
+SHALL bound bytes and operation counts. It SHALL not claim Rust, FPGA, or other
+hardware execution unless authenticated execution evidence exists.
+
+The Exp6613 artifact SHALL contain `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `invariant_record_schema_receipts`,
+`lifecycle_transition_rows`, `verifier_descriptor_rows`,
+`occupancy_and_conflict_rows`, `journal_snapshot_restart_rows`,
+`poison_and_injection_rows`, `base_policy_immutability_receipts`,
+`hardware_path_receipt`, `invariant_memory_ready_score`, `attack_rows`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`. Each field SHALL retain its stated task principle.
+`inference_substrate` SHALL equal
+`deterministic_verifier_governed_invariant_memory_lifecycle_no_llm`.
+`verifier_is_oracle` SHALL be bare `true` only for exact transition evidence.
+`verdict_class` SHALL use the closed experiment enum and SHALL equal `null` for
+a ready conformance-only store. `invariant_memory_ready_score` SHALL be bare
+`1.0` only when every lifecycle mutation replays, restart and rollback are
+byte-equal, each active record retains exact provenance, and protected hashes
+remain unchanged.
+
+### SCENARIO-STORE-6613-ADMISSION-RETRIEVAL — Exact evidence controls active use
+
+Given a clean provisional record and candidates with duplicate, stale,
+world-model-mismatched, schema-mismatched, uncertain, contradictory, or
+incomplete exact evidence,
+
+When the store admits and retrieves the records,
+
+Then only the clean record becomes active, every active retrieval revalidates
+the full verifier descriptor, and unsafe candidates are rejected,
+quarantined, archived, or deterministically superseded before projection use.
+
+### SCENARIO-STORE-6613-INJECTION — Memory values stay non-executable
+
+Given command-bearing fields, query-shaped injection, a benign near-neighbor,
+and a poisoned exact-evidence descriptor,
+
+When admission and retrieval validate the typed records,
+
+Then command-bearing, query-shaped, and poisoned records never become active,
+the benign near-neighbor follows normal exact validation, and no stored value
+is sent to an interpreter, prompt, query engine, or model.
+
+### SCENARIO-STORE-6613-LIFECYCLE — Bounded transitions are deterministic
+
+Given total and per-source occupancy limits, duplicate proposals,
+contradictory invariants, a stronger exact superseding record, and an archived
+record,
+
+When provisional, active, quarantine, archive, restore, conflict, and
+supersession transitions run,
+
+Then capacity remains bounded, tie-breaking is deterministic, every transition
+is explicit, and no comparative utility or hysteresis claim is emitted.
+
+### SCENARIO-STORE-6613-RECOVERY — Journal, restart, and rollback fail closed
+
+Given a committed store with pre-transition snapshots, a corrupt journal, an
+interrupted temporary write, a fresh restart, a rollback target, and an archive
+restore target,
+
+When recovery replays each case,
+
+Then corrupt or partial state is not published, restart bytes equal committed
+bytes, rollback bytes equal snapshot bytes, archive restore replays exactly,
+and each journal entry validates its predecessor and checksum.
+
+### SCENARIO-STORE-6613-IMMUTABILITY-HARDWARE — Side state cannot alter policy
+
+Given frozen generator-model, generator-code, E3 base-policy, projector, and
+protected-file hashes plus a compact record batch,
+
+When every lifecycle mutation and CPU lookup or projection arithmetic receipt
+completes,
+
+Then all frozen hashes remain unchanged, memory and operation counts stay
+within declared bounds, the serialization is Rust-compatible, and the artifact
+makes no LLM, utility, Rust-execution, FPGA-execution, speed, or solve claim.
+
+### SCENARIO-STORE-6613-ARTIFACT — Readiness derives from replayed rows
+
+Given all schema, lifecycle, verifier, occupancy, recovery, injection,
+immutability, hardware-path, attack, precondition, and test receipts,
+
+When Exp6613 validates and atomically writes its artifact,
+
+Then every required field and principle exists, the checksum reproduces,
+`verdict_class=null`, and `invariant_memory_ready_score=1.0` only if every
+conformance gate passes.
