@@ -16428,3 +16428,4 @@ code |
 | 2026-08-25 03:19 UTC | Plan milestone 2026.08.573 | OK | 3 tasks proposed |
 | 2026-08-25 03:21 UTC | Stop-authority receipt STALE | WARN | receipt 173 min old (janitor cadence is 30) |
 | 2026-08-25 03:22 UTC | Milestone 2026.08.573 activated | OK | 3 tasks queued |
+| 2026-08-25 03:59 UTC | V573 terminal recovery and bounded execution contr | OK | 134 passed, 1 warning in 15.09s |
