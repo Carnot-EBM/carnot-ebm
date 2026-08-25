@@ -694,8 +694,13 @@ def _run_isolated_job(
 
     tmp = None
     try:
+        # Serialize plain values rather than `_ShimTransition` instances. Pickle otherwise
+        # records this module as the class owner, so the child has to import `carnot` merely to
+        # reconstruct three attributes. That package import initializes JAX and the model stack;
+        # under a parallel coverage run it can consume the entire generated-code deadline before
+        # the probe starts. The child rebuilds its local shim after unpickling these dictionaries.
         staged = [
-            _ShimTransition(grid=t.grid, action=t.action, data=getattr(t, "data", None))
+            {"grid": t.grid, "action": t.action, "data": getattr(t, "data", None)}
             for t in list(transitions)[: int(limit)]
         ]
         with tempfile.NamedTemporaryFile(prefix="arc_dry_run_", suffix=".pkl", delete=False) as fh:
@@ -724,13 +729,19 @@ def _run_isolated_job(
     # generated engine from grabbing a GPU the live agent is using.
     env["CUDA_VISIBLE_DEVICES"] = ""
     env["JAX_PLATFORMS"] = "cpu"
+    # Tiny ARC grids do not benefit from a BLAS thread pool. More importantly, four parallel
+    # pytest workers can otherwise make four validator children each initialize a machine-sized
+    # pool and spend the probe's wall-clock bound contending before generated code has run.
+    env["OPENBLAS_NUM_THREADS"] = "1"
+    env["OMP_NUM_THREADS"] = "1"
+    env["MKL_NUM_THREADS"] = "1"
+    env["NUMEXPR_NUM_THREADS"] = "1"
 
     try:
         proc = subprocess.run(  # noqa: S603
             [
                 sys.executable,
-                "-m",
-                "carnot.agentic.arc_engine_static_validation",
+                str(Path(__file__).resolve()),
                 "--dry-run-job",
                 str(tmp),
             ],
@@ -841,13 +852,19 @@ def _dry_run_child_main(job_path: str) -> int:
 
     with open(job_path, "rb") as fh:
         job = pickle.load(fh)  # noqa: S301 - written by this process's parent, not untrusted input
+    transitions = [
+        _ShimTransition(grid=row["grid"], action=row["action"], data=row.get("data"))
+        if isinstance(row, dict)
+        else row
+        for row in job["transitions"]
+    ]
     kind = str(job.get("job_kind") or "dry_run")
     if kind == "changes_anything":
         print(
             json.dumps(
                 _change_census_inprocess(
                     job["code"],
-                    job["transitions"],
+                    transitions,
                     limit=int(job["limit"]),
                     func_name=str(job["func_name"]),
                 ),
@@ -857,7 +874,7 @@ def _dry_run_child_main(job_path: str) -> int:
         return 0
     defects = _dry_run_defects_inprocess(
         job["code"],
-        job["transitions"],
+        transitions,
         limit=int(job["limit"]),
         func_name=str(job["func_name"]),
     )

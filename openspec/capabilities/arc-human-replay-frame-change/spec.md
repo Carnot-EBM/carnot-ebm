@@ -10897,3 +10897,46 @@ generalizes to, which is NEW GAMES. Reporting the within-prompt p alone is pseud
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-FCP-5699-41 | `python/carnot/agentic/arc_executable_world_model.py` — `_INDUCE_REPEAT_PENALTY` (1.1) / `_INDUCE_REPEAT_LAST_N` (256) / `_INDUCE_DEFECT_REASKS` (1) / `_INDUCE_PLAIN_REASK_BLOCK`, applied in `LocalGGUFProposer.generate()` under `_engine_induce_call` (`codeonly_eligible AND "engine" in required` — the same condition as `_defect_check_on`, named separately so narrowing one cannot move the other); defect check via `LocalGGUFProposer._engine_defects` → `arc_engine_static_validation.validate_engine_code` (see REQ-ARC-WMTE-6052 CORRECTION #2, which records that this wiring superseded that module's standalone status). `repair_prompt_block()` deliberately UNWIRED: defect-naming text measured p = 1.000 against the neutral block. Env: `CARNOT_ARC_INDUCE_REPEAT_PENALTY` (1.0 = byte-identical off), `CARNOT_ARC_INDUCE_DEFECT_REASKS` (0 = off, independent of the penalty). | `tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py` — 15 tests. **Mutation-proven:** the original 13 killed 3 mutations including removal of the `attempt < tries - 1` safety guard (which the first draft got WRONG — the `continue` fell through to the content-failure return, caught by the mutation check and not by review); the 2 added 2026-07-31 pin the narrowed scope from BOTH sides and kill "widen the penalty back to `codeonly_eligible`" and "drop the penalty entirely". **Measurement:** `results/arc_induce_confirm_20260731/confirm_scored.json` — 36 attempt-matched pairs, 6 games, gemma-4-31B-it Q4_K_M, CUDA build proven from `/proc/<pid>/exe` + 21416 MiB per-PID VRAM on distinct bus IDs, one server process per GPU shared by both arms, scored OUT-OF-SAMPLE against a proven held-out split (`split.json`). Usable 13/36 → 22/36 (within-prompt p = 0.049; **game-clustered p = 0.125**, permutation p = 0.125, 4 better / 0 worse / 2 tied, min reachable clustered p 0.031); strict quality on change-gradable games 4/36 both arms; cost 100.3 s → 47.2 s per attempt. **Config caveat:** measured at `CARNOT_ARC_INDUCE_N_CTX=32768`, while the shipped `_default_induce_n_ctx()` still returns 81920 — the COST half is completion-budget sensitive and is conditioned on 32768 until the default is fixed or the treatment re-measured at it. **Live pre-flight (`results/arc_phase3_preflight_20260731/`) REFUSED a banked-levels grid:** the wired change produced 17 distinct engines across 17 cells and byte-identical action traces in 4 of 4 comparable A/B pairs, so no endpoint downstream of the actions could reach alpha (minimum reachable p = 1.0). The re-ask half fired 0 times in all 17 live cells — Phase 1's 22-of-36 defective-accept rate did not reproduce live, which is "the tier never fired", not "the tier did not help". |
+
+### REQ-ARC-FCP-5699-43: Inert-Engine Rejection SHALL Remain Bounded And Observable Under Test-Suite Contention
+
+When `CARNOT_ARC_INDUCE_REJECT_INERT=1`, the induced-engine path SHALL reject an
+engine only after at least one usable observed prediction establishes that every
+usable prediction is identical to its input. A timeout, validator crash, missing
+function, or zero usable predictions SHALL remain undetermined rather than being
+relabeled as inert. A separately established mechanical defect SHALL retain
+precedence over inertness.
+
+The bounded probe SHALL execute generated code in a killable child without
+charging heavyweight `carnot` package initialization against the generated-code
+deadline. Parent-to-child transition data SHALL use dependency-free serialized
+values so the child does not import the package merely to unpickle a helper
+class. The existing timeout and `CARNOT_ARC_DRY_RUN_TIMEOUT_S=0` disable contract
+SHALL remain unchanged.
+
+#### SCENARIO-ARC-FCP-5699-43-INERT-ENGINE-IS-A-DEFECT
+
+- **WHEN** an engine returns an input-identical grid for every usable observed
+  transition
+- **THEN** the probe SHALL return `engine_inert`, including when a different
+  transition raises; the live caller SHALL nevertheless report the earlier
+  `engine_raised` defect alone.
+
+#### SCENARIO-ARC-FCP-5699-43-INERTNESS-PROBE-IS-BOUNDED
+
+- **WHEN** generated code does not terminate
+- **THEN** its child SHALL be killed at the configured deadline and inertness
+  SHALL remain undetermined, while the mechanical dry run reports
+  `engine_nonterminating`.
+
+#### SCENARIO-ARC-FCP-5699-43-DEFAULT-OFF-IS-BYTE-FOR-BYTE-THE-OLD-PATH
+
+- **WHEN** `CARNOT_ARC_INDUCE_REJECT_INERT` is unset or is not exactly `1`
+- **THEN** the live caller SHALL not launch the inertness probe and SHALL preserve
+  its pre-feature defect result.
+
+## Implementation Status (REQ-ARC-FCP-5699-43)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-FCP-5699-43 | Implemented in `python/carnot/agentic/arc_engine_static_validation.py` (`_run_isolated_job`, `_dry_run_child_main`, `engine_inertness_defect`) and `python/carnot/agentic/arc_executable_world_model.py` (`LocalGGUFProposer._engine_defects`). | `tests/python/test_arc_inert_engine_rejection_2026_08_01.py` |
