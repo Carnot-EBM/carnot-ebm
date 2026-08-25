@@ -306,8 +306,9 @@ eligible rows and attacks replay.
 Extract the bounded projector from Exp6595 into a reusable, default-off module.
 Wire it through `make_carnot_agent` and `E3AgentPolicy` so the scored path can
 reach it without a per-game adapter. Replay immutable archived live-agent
-world-model transitions with game-identity-blind features. Compare no
-projection, selected invariant projection, and norm-matched random projection.
+world-model transitions on held-out games with game-identity-blind features.
+Compare no projection, selected invariant projection, and norm-matched random
+projection.
 
 **Acceptance:** the actual live import closure reaches the projector; calibration
 and held games are disjoint; no source code, outer-loop search, or offline
@@ -329,8 +330,14 @@ hardware cost envelope.
 **Acceptance:** reference moments or independent long-chain intervals are
 declared before comparison; stationary quality is noninferior; parity matches
 within tolerance; setup, transition, and wall costs are separate; and a win
-requires either charged wall-time or ESS-per-wall-time gain. This is not
-Spectral Annealing, PIMI, FPGA execution, or a TSU claim.
+requires either charged wall-time or ESS-per-wall-time gain. This distinct
+block-averaging kernel does not reopen retired Phase-3 homotopy argmin, PIMI,
+FPGA execution, or TSU scopes.
+
+**Prior-failure discipline:** Exp5646 never reached Rust parity because its
+two-axis tempering quality gate reported two material regressions. Exp6612
+instead continues completed Exp6597, has no dependency on the failed tempering
+gate, adds a random-block control, and retires if it repeats the blocked verdict.
 
 **Deliverable:**
 `results/experiment_6612_spectral_k_block_scale_rust_parity.json`
@@ -460,7 +467,7 @@ clearly labeled CPU smoke test and can never supply a milestone result.
   `circular_positive`, not a general positive verification claim.
 - The live projection and self-learning tasks do not claim an ARC game solve,
   level solve, or leaderboard gain.
-- The sampler task does not reopen Spectral Annealing or PIMI and makes no
+- The sampler task does not reopen retired homotopy argmin or PIMI and makes no
   attached-hardware claim.
 - A complete infrastructure task normally has `verdict_class=null`.
 - Every comparative task emits per-unit rows. Every blocked verdict emits
