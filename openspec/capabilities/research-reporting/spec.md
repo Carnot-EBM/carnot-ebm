@@ -56234,3 +56234,137 @@ and the artifact makes no CFR benefit claim.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6591 | Implemented (`python/carnot/experiment_6591_gemma4_31b_constraint_first_stream.py`; terminal artifact `results/experiment_6591_gemma4_31b_constraint_first_stream.json`) | Implemented (`tests/python/test_experiment_6591_gemma4_31b_constraint_first_stream.py`; focused tests; 100% module statement coverage) |
+
+### REQ-REPORT-6592: V575 Intake SHALL Replay Terminal V574 Evidence Without New Science
+
+Carnot SHALL build Exp6592 without LLM inference or model download. The task
+SHALL replay Exp6588 through Exp6591 from raw fields. It SHALL preserve the
+Exp6589 terminal block. It SHALL bind each CFR unit to its nested methodology
+receipts. The intake SHALL not create a CFR benefit or other science result.
+
+- REQ-REPORT-6592-PRECONDITIONS: The artifact SHALL record the four source
+  paths and SHA-256 hashes, the active roadmap and V575 reference hashes,
+  protected-file hashes, dirty worktree state, CPU, RAM, disk, local GGUF
+  identities, visible GPU ownership, and the no-LLM substrate. It SHALL record
+  zero LLM calls, model loads, downloads, and GPU-eviction signals.
+- REQ-REPORT-6592-REPLAY: Each V574 row SHALL preserve the source
+  `honest_verdict`, `verdict_class`, `gate_check_summary`, readiness field,
+  stamped adversarial state, warnings, and artifact hash. Exp6588 readiness and
+  the Exp6590 and Exp6591 stream scores SHALL recompute from raw receipts.
+  Exp6589 SHALL remain blocked with a zero score. Stored scores SHALL not decide
+  the completed CFR stream replay.
+- REQ-REPORT-6592-METHODOLOGY: Each Exp6590 and Exp6591 unit SHALL bind its
+  unit and arm row hashes to `model_spec_and_identity`,
+  `prompt_source_router_hashes`, raw stages, exact checks, the matching
+  checkpoint prefix, GPU process lifecycle, failure rows, seed values, charged
+  tokens, latency, cost, and stream recomputation. Missing top-level
+  `model_specs` or seed fields SHALL be warnings. The task SHALL not invent
+  values that already exist only in nested receipts.
+- REQ-REPORT-6592-METHOD-SOURCES: The method lock SHALL name
+  `arXiv:2608.23526`, `arXiv:2608.23551`, and `arXiv:2608.21466` with their
+  retrieved titles, source URLs, bounded Carnot import, controls, metrics, and
+  explicit non-claims. A paper result SHALL not count as Carnot evidence.
+- REQ-REPORT-6592-CACHE: The producer SHALL resolve
+  `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` through
+  bounded content-derived local GGUF receipts. It SHALL read no tensor payload.
+  It SHALL not load a model, call `AutoTokenizer`, or download a file.
+- REQ-REPORT-6592-GPU: Each visible GPU row SHALL record device identity,
+  utilization, memory, active compute processes, local runtime access, idle
+  state, and availability for runtime ownership. Any unrelated process SHALL
+  remain visible and SHALL make that device ineligible. The task SHALL send no
+  signal and SHALL not evict a process.
+- REQ-REPORT-6592-GATES: Exp6593 SHALL read the exact bare field
+  `v575_cfr_reducer_ready_score` from Exp6592. Exp6602 SHALL read the exact bare
+  field `v575_dual_gpu_canary_ready_score` from Exp6592. Each gate row SHALL
+  state whether the active task, consumer task, exact gate, upstream field, and
+  consumer output field exist in the current roadmap. A roadmap task that is
+  not active SHALL remain a named warning. The producer SHALL not invent its
+  missing `REQUIRED ARTIFACT FIELDS` declaration.
+- REQ-REPORT-6592-ATTACKS: Invented CFR benefit, Exp6589 block erasure,
+  principle-wrapper misread, missing unit hashes, invented top-level
+  methodology, paper-result transfer, legacy-model substitution, unowned GPU
+  eviction, gate-field drift, and historical artifact mutation SHALL each fail
+  closed.
+- REQ-REPORT-6592-REDUCER: The exact bare field
+  `v575_cfr_reducer_ready_score` SHALL equal `1.0` only when both immutable CFR
+  streams replay completely. The exact bare field
+  `v575_dual_gpu_canary_ready_score` SHALL equal `1.0` only when both mandated
+  caches resolve and two idle local RTX 3090 devices are available for runtime
+  ownership. A zero dual-GPU score or a future inactive gate SHALL not block
+  scientific phases. A complete intake SHALL use `verdict_class=null` and
+  SHALL make no positive science claim.
+- REQ-REPORT-6592-ATOMIC: Exp6592 SHALL preserve Exp6588 through Exp6591,
+  `research-roadmap.yaml`, and `scripts/research_conductor.py`. It SHALL set
+  `inference_substrate=v574_terminal_and_v575_method_replay_no_llm` and
+  `verifier_is_oracle=true`. It SHALL validate and write one terminal JSON
+  artifact through same-directory file sync, atomic replacement, and directory
+  sync. The final checksum SHALL exclude only itself.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `v574_terminal_replay_rows`,
+`cfr_stream_methodology_binding_rows`, `method_source_lock_rows`,
+`model_cache_identity_rows`, `gpu_ownership_rows`,
+`current_roadmap_gate_contract_rows`, `v575_cfr_reducer_ready_score`,
+`v575_dual_gpu_canary_ready_score`, `attack_rows`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6592-REPLAY: Exp6589 Stays Blocked While CFR Rows Replay
+
+**Given** the four terminal V574 artifacts
+**When** Exp6592 replays their raw fields and nested reducers
+**Then** Exp6589 retains its blocked verdict and zero score, both CFR streams
+recompute to one, and no CFR quality claim appears.
+
+#### SCENARIO-REPORT-6592-METHODOLOGY: Every CFR Unit Binds Nested Receipts
+
+**Given** complete Exp6590 and Exp6591 unit rows
+**When** Exp6592 builds methodology bindings
+**Then** all 40 units bind their source, seed, stage, exact, checkpoint,
+failure, cost, process, model, prompt, and recomputation receipts by hash, and
+missing top-level methodology stays a warning.
+
+#### SCENARIO-REPORT-6592-METHOD-SOURCES: Papers Define Methods Not Evidence
+
+**Given** the three locked arXiv source records
+**When** Exp6592 records their method boundaries
+**Then** each row names controls, metrics, and non-claims, and no paper result
+is counted as a Carnot measurement.
+
+#### SCENARIO-REPORT-6592-GATES: Active And Future Gate Drift Stays Visible
+
+**Given** the active V575 YAML and V575 design document
+**When** Exp6592 checks Exp6593 and Exp6602 consumers
+**Then** exact active references close, inactive future tasks remain named and
+false, and neither task nor field is invented.
+
+#### SCENARIO-REPORT-6592-GPU: Busy Or Unowned Devices Cannot Open The Canary
+
+**Given** two visible RTX 3090 devices where either device has an unrelated
+compute process or lacks local runtime access
+**When** Exp6592 computes dual-GPU readiness
+**Then** the dual-GPU score is zero, the process remains untouched, and CFR
+scientific readiness is unchanged.
+
+#### SCENARIO-REPORT-6592-ATTACKS: Evidence And Authority Mutation Fail Closed
+
+**Given** one mutation for each required attack
+**When** the corresponding intake reducer evaluates the candidate
+**Then** invented science, block erasure, wrapper errors, missing hashes,
+method invention, source transfer, substitution, eviction, gate drift, and
+historical mutation each yield the safe expected score.
+
+#### SCENARIO-REPORT-6592-ATOMIC: One Null Intake Artifact Recomputes
+
+**Given** replay, methodology, source, cache, GPU, gate, attack, and protection
+checks have ended
+**When** Exp6592 writes its final artifact
+**Then** both scores and the checksum recompute, all protected and historical
+files remain byte-identical, and the write is durable and atomic.
+
+## Implementation Status (REQ-REPORT-6592)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6592 | Implemented (`python/carnot/experiment_6592_v575_terminal_intake_and_method_lock.py`; terminal artifact `results/experiment_6592_v575_terminal_intake_and_method_lock.json`) | Implemented (`tests/python/test_experiment_6592_v575_terminal_intake_and_method_lock.py`) |
