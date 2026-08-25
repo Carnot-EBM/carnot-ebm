@@ -1,0 +1,1402 @@
+{
+  "attack_rows": [
+    {
+      "attack_id": "invented_v573_science_result",
+      "candidate_ready_score": 0.0,
+      "disposition": "fail_closed",
+      "expected_ready_score": 0.0,
+      "passed": true,
+      "row_hash": "sha256:7c25c6c4eeefb6129d923bb8f6e181e56dfeeadd47986c536609aa47b250be0e"
+    },
+    {
+      "attack_id": "suite_green_launch_requirement",
+      "candidate_ready_score": 0.0,
+      "disposition": "fail_closed",
+      "expected_ready_score": 0.0,
+      "passed": true,
+      "row_hash": "sha256:2b3664d085e4e2083594a923a838ce67d6050cd2f6656e078a00730d536e8bc7"
+    },
+    {
+      "attack_id": "missing_source_hashes",
+      "candidate_ready_score": 0.0,
+      "disposition": "fail_closed",
+      "expected_ready_score": 0.0,
+      "passed": true,
+      "row_hash": "sha256:8cc80d587d69cf0b03ce0bd2fcf6410f1616423528bbe9cfc5c3e21dfadb2430"
+    },
+    {
+      "attack_id": "two_model_residency",
+      "candidate_ready_score": 0.0,
+      "disposition": "fail_closed",
+      "expected_ready_score": 0.0,
+      "passed": true,
+      "row_hash": "sha256:1bd2a518000adb615e2ceac0e9d2a27011170e73d82018189ac23936f68c58b4"
+    },
+    {
+      "attack_id": "legacy_smoke_model_headline",
+      "candidate_ready_score": 0.0,
+      "disposition": "fail_closed",
+      "expected_ready_score": 0.0,
+      "passed": true,
+      "row_hash": "sha256:b2c5df73ad1add6382d54e4e94aed72c65f101e016bf4b7fc4bad5e6d7a4956c"
+    },
+    {
+      "attack_id": "gguf_auto_tokenizer_use",
+      "candidate_ready_score": 0.0,
+      "disposition": "fail_closed",
+      "expected_ready_score": 0.0,
+      "passed": true,
+      "row_hash": "sha256:2d45184152846fe33bdd1ec469f35324515323540a21df9c2e0de1d25e63d0aa"
+    },
+    {
+      "attack_id": "external_download_during_measurement",
+      "candidate_ready_score": 0.0,
+      "disposition": "fail_closed",
+      "expected_ready_score": 0.0,
+      "passed": true,
+      "row_hash": "sha256:ee4887de38ad9e619a535acbdca6209ed26f8509bf0f2a6a32273cae40742c21"
+    },
+    {
+      "attack_id": "incomplete_terminal_rows",
+      "candidate_ready_score": 0.0,
+      "disposition": "fail_closed",
+      "expected_ready_score": 0.0,
+      "passed": true,
+      "row_hash": "sha256:21fa827b39850f65a512f44662378b1d7fba2218df9103af294edac3ee69dc37"
+    },
+    {
+      "attack_id": "gate_field_drift",
+      "candidate_ready_score": 0.0,
+      "disposition": "fail_closed",
+      "expected_ready_score": 0.0,
+      "passed": true,
+      "row_hash": "sha256:422b06011132fe23af700b78392ef29759f1c79b50f8bcf9fbbce448002774ee"
+    }
+  ],
+  "current_roadmap_gate_contract_rows": [
+    {
+      "all_cross_references_close": true,
+      "artifact_field": "v574_cfr_launch_ready_score",
+      "consumer_task_exists": true,
+      "consumer_task_id": "exp6590-qwen36-constraint-first-stream",
+      "expected_value": 1.0,
+      "gate_declared_exactly_once": true,
+      "launch_field_declared_by_upstream": true,
+      "milestone": "2026.08.574",
+      "operator": "==",
+      "owner_output_field": "qwen_cfr_rows_ready_score",
+      "owner_output_field_declared": true,
+      "roadmap_path": "research-roadmap.yaml",
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "row_hash": "sha256:1a174c275da856ba62761f8ec6ff04d0742a3ebe3f1417f5200af10f62f06f5b",
+      "upstream_task_exists": true,
+      "upstream_task_id": "exp6588-v574-bounded-cfr-launch-root"
+    },
+    {
+      "all_cross_references_close": true,
+      "artifact_field": "v574_cfr_launch_ready_score",
+      "consumer_task_exists": true,
+      "consumer_task_id": "exp6591-gemma4-31b-constraint-first-stream",
+      "expected_value": 1.0,
+      "gate_declared_exactly_once": true,
+      "launch_field_declared_by_upstream": true,
+      "milestone": "2026.08.574",
+      "operator": "==",
+      "owner_output_field": "gemma31_cfr_rows_ready_score",
+      "owner_output_field_declared": true,
+      "roadmap_path": "research-roadmap.yaml",
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "row_hash": "sha256:67d4f798b5563c375ecd3d63ef9437379dffcadeca33c1c9f6734519c9da98bf",
+      "upstream_task_exists": true,
+      "upstream_task_id": "exp6588-v574-bounded-cfr-launch-root"
+    }
+  ],
+  "duration_s": 2.813821285031736,
+  "execution_budget_contract": [
+    {
+      "atomic_terminal_output": true,
+      "auto_tokenizer_allowed": false,
+      "checkpoint_interval_units": 1,
+      "checkpoint_max_interval_s": 180,
+      "checkpoint_write_order": "raw_before_derived",
+      "cleanup_budget_s": 180,
+      "conductor_hard_cap_s": 4800,
+      "embedded_gguf_tokenizer_required": true,
+      "external_download_allowed": false,
+      "failure_rows_required": true,
+      "fresh_context_per_unit": true,
+      "fresh_process": true,
+      "generation_arms_per_unit": 3,
+      "generation_budget_s": 2880,
+      "gpu_selection_rule": "choose a visible RTX 3090 with no unrelated compute owner and adequate free memory at launch",
+      "hard_timeout_s": 4200,
+      "kill_only_owned_child_process_group": true,
+      "legacy_headline_model_allowed": false,
+      "load_budget_s": 600,
+      "max_concurrent_model_families": 1,
+      "max_model_processes": 1,
+      "max_output_tokens_per_call": 512,
+      "max_source_units": 20,
+      "model_families": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "per_generation_timeout_s": 60,
+      "per_unit_timeout_s": 180,
+      "replayed_from": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+      "retain_failure_classes": [
+        "load_timeout",
+        "generation_timeout",
+        "malformed_output",
+        "contradiction",
+        "unsupported_constraint",
+        "exact_rejection",
+        "process_failure",
+        "task_deadline_exhausted"
+      ],
+      "row_hash": "sha256:5d14375ea427e150e6159571b9d330cdabf066283c02c03b8ecc361f74f6fd5d",
+      "runtime_select_idle_rtx_3090": true,
+      "signals_to_unrelated_processes_allowed": false,
+      "task_id": "exp6590-qwen36-constraint-first-stream",
+      "terminal_output_budget_s": 120,
+      "terminal_output_required_on_failure": true,
+      "unload_required_before_exit": true,
+      "verified_unload_checks": [
+        "worker_process_exited",
+        "port_closed",
+        "worker_absent_from_gpu_telemetry",
+        "memory_recovered_within_256_mb"
+      ]
+    },
+    {
+      "atomic_terminal_output": true,
+      "auto_tokenizer_allowed": false,
+      "checkpoint_interval_units": 1,
+      "checkpoint_max_interval_s": 180,
+      "checkpoint_write_order": "raw_before_derived",
+      "cleanup_budget_s": 180,
+      "conductor_hard_cap_s": 4800,
+      "embedded_gguf_tokenizer_required": true,
+      "external_download_allowed": false,
+      "failure_rows_required": true,
+      "fresh_context_per_unit": true,
+      "fresh_process": true,
+      "generation_arms_per_unit": 3,
+      "generation_budget_s": 2880,
+      "gpu_selection_rule": "choose a visible RTX 3090 with no unrelated compute owner and adequate free memory at launch",
+      "hard_timeout_s": 4200,
+      "kill_only_owned_child_process_group": true,
+      "legacy_headline_model_allowed": false,
+      "load_budget_s": 600,
+      "max_concurrent_model_families": 1,
+      "max_model_processes": 1,
+      "max_output_tokens_per_call": 512,
+      "max_source_units": 20,
+      "model_families": [
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "per_generation_timeout_s": 60,
+      "per_unit_timeout_s": 180,
+      "replayed_from": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+      "retain_failure_classes": [
+        "load_timeout",
+        "generation_timeout",
+        "malformed_output",
+        "contradiction",
+        "unsupported_constraint",
+        "exact_rejection",
+        "process_failure",
+        "task_deadline_exhausted"
+      ],
+      "row_hash": "sha256:7db3ac43d5647ea45b2050c0ba4c3ae8fc06ec41a7949f267d6f9d48ba272303",
+      "runtime_select_idle_rtx_3090": true,
+      "signals_to_unrelated_processes_allowed": false,
+      "task_id": "exp6591-gemma4-31b-constraint-first-stream",
+      "terminal_output_budget_s": 120,
+      "terminal_output_required_on_failure": true,
+      "unload_required_before_exit": true,
+      "verified_unload_checks": [
+        "worker_process_exited",
+        "port_closed",
+        "worker_absent_from_gpu_telemetry",
+        "memory_recovered_within_256_mb"
+      ]
+    }
+  ],
+  "field_provenance": {
+    "attack_rows": {
+      "principle": "Invented science, suite gating, model substitution, cache drift, and gate drift fail closed.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "current_roadmap_gate_contract_rows": {
+      "principle": "Every downstream gate names an upstream task and exact field in this roadmap.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "duration_s": {
+      "principle": "Monotonic duration exposes a source-only shortcut.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "execution_budget_contract": {
+      "principle": "One-model residency, checkpoints, timeout, cleanup, unload, and terminal output are frozen.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "field_provenance": {
+      "principle": "Every field names source artifacts, rows, hashes, and reducer code.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "gate_check_summary": {
+      "principle": "A block names the failed source, cache, budget, gate, or protection check and its value.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "honest_verdict": {
+      "principle": "The verdict reports bounded V574 launch readiness without creating a science result.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "inference_substrate": {
+      "principle": "The task declares terminal receipt and contract replay with no LLM.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "model_cache_identity_rows": {
+      "principle": "Both mandated flagship caches resolve by content without a model load or download.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "preconditions_checked": {
+      "principle": "Artifacts, hashes, caches, resources, ownership, and protected files are explicit.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "protected_files_unchanged": {
+      "principle": "The roadmap and conductor retain their original hashes.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "reproducibility_checksum": {
+      "principle": "A final content hash detects terminal mutation.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "status": {
+      "principle": "The launch root is terminal and cannot pose bootstrap work as readiness.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "tests_run": {
+      "principle": "Named commands, exits, and durations make contract validation reproducible.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "v573_terminal_replay_rows": {
+      "principle": "Exp6585 through Exp6587 retain their actual terminal states and source hashes.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "v574_cfr_launch_ready_score": {
+      "principle": "This exact binary field gates both flagship CFR stream tasks.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "verdict_class": {
+      "principle": "Launch readiness is null infrastructure and never positive science.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    },
+    "verifier_is_oracle": {
+      "principle": "Exact receipt replay owns launch readiness but cannot create positive research science.",
+      "reducer_code": {
+        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
+        "checksum": "artifact_checksum",
+        "launch": "readiness_reducer"
+      },
+      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "source_artifacts": [
+        {
+          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+        },
+        {
+          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+        },
+        {
+          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+        },
+        {
+          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
+        }
+      ],
+      "source_rows": {
+        "V573": "v573_terminal_replay_rows",
+        "attacks": "attack_rows",
+        "budget": "execution_budget_contract",
+        "cache": "model_cache_identity_rows",
+        "gates": "current_roadmap_gate_contract_rows"
+      }
+    }
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "v573_terminal_replay_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "model_cache_identity_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "execution_budget_contract",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "current_roadmap_gate_contract_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "suite_green_not_required",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "protected_files_unchanged",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "attack_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      }
+    ],
+    "failed_check_count": 0,
+    "first_failure": null,
+    "passed": true,
+    "ready_score": 1.0
+  },
+  "honest_verdict": "complete: V573 execution and method contracts replayed; both local flagship GGUF identities and bounded V574 stream contracts are ready; no science result was created",
+  "inference_substrate": "v573_terminal_and_contract_replay_no_llm",
+  "model_cache_identity_rows": [
+    {
+      "admitted": true,
+      "auto_tokenizer_used": false,
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "content_metadata": {
+        "architecture": "qwen35moe",
+        "bounded_read_receipt": {
+          "data_offset": 10990048,
+          "file_size": 22134528992,
+          "maximum_header_bytes": 67108864,
+          "maximum_offset_inspected": 10990035,
+          "physical_bytes_read": 4006412,
+          "required_minimum_file_size": 22134520801,
+          "tensor_info_end": 10990035,
+          "tensor_info_start": 10943779,
+          "tensor_payload_bytes_read": 0
+        },
+        "general_file_type": 15,
+        "is_language_model": true,
+        "magic": "GGUF",
+        "metadata_count": 54,
+        "model_name": "Qwen3.6-35B-A3B",
+        "quantization": "Q4_K_M",
+        "shard_metadata": {
+          "split_count": null,
+          "split_no": null,
+          "split_tensors_count": null
+        },
+        "tensor_count": 733,
+        "tokenizer_metadata": {
+          "bos_token_id": 248044,
+          "chat_template_present": true,
+          "eos_token_id": 248046,
+          "model": "gpt2",
+          "padding_token_id": 248055,
+          "pre": "qwen35",
+          "token_count": 248320
+        },
+        "version": 3
+      },
+      "download_performed": false,
+      "gguf_embedded_tokenizer_required_downstream": true,
+      "model_load_performed": false,
+      "provenance": {
+        "blob_key": "ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "cache_repository_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
+        "field_provenance": {
+          "repository_id": "expected repository argument and HF cache directory name",
+          "revision": "snapshots/<revision> path component",
+          "snapshot_filename": "snapshot symlink name",
+          "snapshot_symlink_target": "os.readlink output",
+          "trusted_sha256": "trusted upstream hash matched to HF blob key"
+        },
+        "full_blob_rehash_performed": false,
+        "ordered_shards": [
+          {
+            "blob_key": "ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+            "shard_count": 1,
+            "shard_number": 1,
+            "snapshot_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+          }
+        ],
+        "refs_pointing_to_revision": [
+          "main"
+        ],
+        "repository_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "resolved_blob_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+        "snapshot_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "snapshot_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "snapshot_symlink_target": "../../blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "symlink_target_matches_blob": true,
+        "trusted_hash_matches_blob_key": true,
+        "trusted_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "valid": true
+      },
+      "rejection_reason": null,
+      "rejection_reasons": [],
+      "repository_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "resolved": true,
+      "row_hash": "sha256:3ffe921fa697f0f50c3f6d25fe3de90d43fe35d193d39a8e0f91c9db951b0c86",
+      "source_artifact_path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+      "source_artifact_sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570",
+      "trusted_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+    },
+    {
+      "admitted": true,
+      "auto_tokenizer_used": false,
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "content_metadata": {
+        "architecture": "gemma4",
+        "bounded_read_receipt": {
+          "data_offset": 15832192,
+          "file_size": 18323731456,
+          "maximum_header_bytes": 67108864,
+          "maximum_offset_inspected": 15832167,
+          "physical_bytes_read": 6266051,
+          "required_minimum_file_size": 18323709953,
+          "tensor_info_end": 15832167,
+          "tensor_info_start": 15782350,
+          "tensor_payload_bytes_read": 0
+        },
+        "general_file_type": 15,
+        "is_language_model": true,
+        "magic": "GGUF",
+        "metadata_count": 57,
+        "model_name": "Gemma-4-31B-It",
+        "quantization": "Q4_K_M",
+        "shard_metadata": {
+          "split_count": null,
+          "split_no": null,
+          "split_tensors_count": null
+        },
+        "tensor_count": 833,
+        "tokenizer_metadata": {
+          "bos_token_id": 2,
+          "chat_template_present": true,
+          "eos_token_id": 106,
+          "model": "gemma4",
+          "padding_token_id": 0,
+          "pre": null,
+          "token_count": 262144
+        },
+        "version": 3
+      },
+      "download_performed": false,
+      "gguf_embedded_tokenizer_required_downstream": true,
+      "model_load_performed": false,
+      "provenance": {
+        "blob_key": "9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "cache_repository_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
+        "field_provenance": {
+          "repository_id": "expected repository argument and HF cache directory name",
+          "revision": "snapshots/<revision> path component",
+          "snapshot_filename": "snapshot symlink name",
+          "snapshot_symlink_target": "os.readlink output",
+          "trusted_sha256": "trusted upstream hash matched to HF blob key"
+        },
+        "full_blob_rehash_performed": false,
+        "ordered_shards": [
+          {
+            "blob_key": "9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+            "shard_count": 1,
+            "shard_number": 1,
+            "snapshot_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+          }
+        ],
+        "refs_pointing_to_revision": [],
+        "repository_id": "unsloth/gemma-4-31B-it-GGUF",
+        "resolved_blob_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+        "snapshot_filename": "gemma-4-31B-it-Q4_K_M.gguf",
+        "snapshot_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "snapshot_symlink_target": "../../blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "symlink_target_matches_blob": true,
+        "trusted_hash_matches_blob_key": true,
+        "trusted_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "valid": true
+      },
+      "rejection_reason": null,
+      "rejection_reasons": [],
+      "repository_id": "unsloth/gemma-4-31B-it-GGUF",
+      "resolved": true,
+      "row_hash": "sha256:423a883312640af2ecdbe89883ba2bf6cfd9d31278c035e2023c310fb2184f3e",
+      "source_artifact_path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
+      "source_artifact_sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570",
+      "trusted_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
+    }
+  ],
+  "preconditions_checked": {
+    "auto_tokenizer_calls_issued": 0,
+    "cpu": {
+      "count": 24,
+      "model": "AMD Ryzen AI 9 HX 370 w/ Radeon 890M"
+    },
+    "dirty_worktree": {
+      "command": "git status --short",
+      "entries": [
+        " M openspec/capabilities/research-reporting/spec.md",
+        " M ops/.audit_findings_ledger_state.json",
+        " M ops/.run_sentinel_state.json",
+        " M ops/.stop_authority_state.json",
+        "?? python/carnot/experiment_6588_v574_bounded_cfr_launch_root.py",
+        "?? tests/python/test_experiment_6588_v574_bounded_cfr_launch_root.py"
+      ],
+      "exit_code": 0,
+      "is_dirty": true,
+      "status_sha256": "sha256:724d59ba0966a2493760c356b8a7bfcb036d07cf0b0f99aca093166ba77a1dd6"
+    },
+    "disk": {
+      "free_bytes": 1086940987392,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot",
+      "total_bytes": 3953289023488
+    },
+    "downloads_issued": 0,
+    "inference_substrate": "v573_terminal_and_contract_replay_no_llm",
+    "llm_calls_issued": 0,
+    "local_gguf_cache_paths": [
+      {
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "repository_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "resolved": true,
+        "trusted_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+      },
+      {
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "repository_id": "unsloth/gemma-4-31B-it-GGUF",
+        "resolved": true,
+        "trusted_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
+      }
+    ],
+    "model_loads_issued": 0,
+    "no_llm_substrate": true,
+    "planning_date": "20260825",
+    "protected_file_hashes_before": {
+      "research-roadmap.yaml": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+      "scripts/research_conductor.py": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8"
+    },
+    "ram": {
+      "available_kib": 103229604,
+      "total_kib": 131157332
+    },
+    "roadmap": {
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4"
+    },
+    "v573_artifacts": [
+      {
+        "exists": true,
+        "experiment_id": "Exp6585",
+        "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+        "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
+      },
+      {
+        "exists": true,
+        "experiment_id": "Exp6586",
+        "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+        "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
+      },
+      {
+        "exists": true,
+        "experiment_id": "Exp6587",
+        "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+        "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
+      }
+    ],
+    "visible_gpu_ownership": {
+      "compute_process_rows": [
+        {
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "pid": 218269,
+          "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "used_memory_mb": 20686
+        },
+        {
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "pid": 218052,
+          "process_name": ".venv/bin/python",
+          "used_memory_mb": 536
+        }
+      ],
+      "gpu_query_exit_code": 0,
+      "gpu_rows": [
+        {
+          "index": 0,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 2887,
+          "memory_total_mb": 24576,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 95,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "process_query_exit_code": 0,
+      "selection_performed": false,
+      "signals_sent": [],
+      "visible": true
+    }
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "changed_paths": [],
+    "rows": [
+      {
+        "after_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+        "before_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
+        "path": "research-roadmap.yaml",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8",
+        "before_sha256": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8",
+        "path": "scripts/research_conductor.py",
+        "unchanged": true
+      }
+    ]
+  },
+  "reproducibility_checksum": "sha256:a657d138d40b07740bfd88089be14da61f8c3864e9c4e2146ac08aa0258014ea",
+  "status": "complete_v574_cfr_launch_ready",
+  "suite_green_launch_requirement": false,
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6588_v574_bounded_cfr_launch_root.py -q",
+      "duration_s": 0.0,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "duration_s": 0.0,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "duration_s": 0.0,
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6588_v574_bounded_cfr_launch_root.json",
+      "duration_s": 0.0,
+      "exit_code": 0
+    }
+  ],
+  "v573_terminal_replay_rows": [
+    {
+      "contract_kind": "bounded_execution_contract",
+      "experiment_id": "Exp6585",
+      "gate_check_summary": {
+        "checks": [
+          {
+            "check": "v572_terminal_rows",
+            "expected_value": true,
+            "observed_value": true,
+            "passed": true,
+            "row_hash": "sha256:7154603b2cdcfea144e710a24edd07436fba591431481b9133c4812def16409d"
+          },
+          {
+            "check": "exp6584_hard_limit_attempt_rows",
+            "expected_value": true,
+            "observed_value": true,
+            "passed": true,
+            "row_hash": "sha256:345cd74ff44943df28810cb1bc69d493ce51dada62ddf9c4f2ebbc53d28d22ba"
+          },
+          {
+            "check": "v573_execution_budget_contract",
+            "expected_value": true,
+            "observed_value": true,
+            "passed": true,
+            "row_hash": "sha256:b6c37fe2200e15837a8f2cf0f992ca707496d4ed17754791c723fee90c0d0b59"
+          },
+          {
+            "check": "current_roadmap_gate_contract_rows",
+            "expected_value": true,
+            "observed_value": true,
+            "passed": true,
+            "row_hash": "sha256:fd9943f434043efbf72a540f736973ffbf16c097883459cbb6a12347ee2a8133"
+          },
+          {
+            "check": "attack_rows",
+            "expected_value": true,
+            "observed_value": true,
+            "passed": true,
+            "row_hash": "sha256:b860af215db9f9b3999d65d25445ad2a49cfd9c86d829b3e32942a9573e8108f"
+          },
+          {
+            "check": "protected_files_unchanged",
+            "expected_value": true,
+            "observed_value": true,
+            "passed": true,
+            "row_hash": "sha256:df6a14a2dc03f9d2c51a20296ccca04f1aa59d6de293b5ae083a2d84700f363e"
+          }
+        ],
+        "failed_check_count": 0,
+        "first_failure": null,
+        "passed": true,
+        "row_hash": "sha256:a330e28fe08fcba16d84b1dcddf8a8396b070c8184ccff1e1ed297a069941f30"
+      },
+      "honest_verdict": "complete: all six V572 terminal states and three Exp6584 hard-limit attempts replay; V573 model tasks are bounded; no science verdict was created",
+      "inference_substrate": "v572_terminal_receipt_replay_no_llm",
+      "recomputed_checks": {
+        "attack_rows": true,
+        "execution_budget_rows": true,
+        "hard_limit_rows": true,
+        "protected_files": true,
+        "roadmap_gate_rows": true,
+        "terminal_rows": true
+      },
+      "recomputed_ready_score": 1.0,
+      "row_hash": "sha256:63d83e4a727df95ea411dacb1099e7beb7969732cd44488d09d320514c7472e6",
+      "science_result_created": false,
+      "source_artifact_path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
+      "source_artifact_sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989",
+      "status": "complete_v573_execution_contract_ready",
+      "stored_ready_score": 1.0,
+      "verdict_class": "null",
+      "verifier_is_oracle": true
+    },
+    {
+      "adversarial_disposition": {
+        "claim_audit_disposition": "SKIPPED_ALREADY_FLAGGED",
+        "claim_audit_path": "ops/experiment_claim_audit_report.md",
+        "claim_audit_sha256": "sha256:c3155cce949e8067edaa986caf995aaf9e0639447616040d73536b26fc541654",
+        "corrigendum_pending": [
+          {
+            "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6586_isolated_full_suite_truth_baseline.json; classification=unknown; reason=status or honest_verdict is absent or unknown",
+            "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+            "severity": "critical"
+          }
+        ],
+        "flagged_adversarial": true
+      },
+      "contract_kind": "blocked_isolated_suite_infrastructure_fact",
+      "experiment_id": "Exp6586",
+      "gate_check_summary": [
+        {
+          "check": "pytest_receipt",
+          "expected_value": "validated isolated environment",
+          "observed_value": "/tmp/carnot-exp6586-2eaz9gdw/collection-pytest-receipt.json",
+          "passed": false
+        }
+      ],
+      "honest_verdict": "blocked_isolated_environment: pytest_receipt",
+      "inference_substrate": "isolated_repo_test_execution_no_llm",
+      "recomputed_ready_score": null,
+      "row_hash": "sha256:ad8b7b79e742d2fc8db448eae40e3dd4b68b9f675fca5472bab179bf78ca7e53",
+      "science_launch_gate": false,
+      "science_result_created": false,
+      "source_artifact_path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
+      "source_artifact_sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29",
+      "status": "isolated_environment_block",
+      "stored_ready_score": 0,
+      "verdict_class": "blocked",
+      "verifier_is_oracle": true
+    },
+    {
+      "contract_kind": "constraint_first_method_contract",
+      "experiment_id": "Exp6587",
+      "gate_check_summary": {
+        "checks_closed": false,
+        "failed_check_count": 1,
+        "failed_checks": [
+          {
+            "check": "arms_authority_metrics",
+            "expected": true,
+            "observed": [
+              {
+                "retire_if_same_verdict": true,
+                "same_verdict": "no routed exact-success gain in two frozen flagship families",
+                "scope": "constraint_first_staging"
+              },
+              {
+                "retire_if_same_verdict": true,
+                "same_verdict": "no measured work benefit or any unsafe-release increase",
+                "scope": "restrictive_cue_router"
+              }
+            ]
+          }
+        ],
+        "first_failure": {
+          "check": "arms_authority_metrics",
+          "expected": true,
+          "observed": [
+            {
+              "retire_if_same_verdict": true,
+              "same_verdict": "no routed exact-success gain in two frozen flagship families",
+              "scope": "constraint_first_staging"
+            },
+            {
+              "retire_if_same_verdict": true,
+              "same_verdict": "no measured work benefit or any unsafe-release increase",
+              "scope": "restrictive_cue_router"
+            }
+          ]
+        },
+        "ready_score": 1.0,
+        "row_hash": "sha256:cf70496c5c192af8c2331648fb195aa4be24083473a9c5377314f5bf7bb92764"
+      },
+      "honest_verdict": "complete: source, fixture, router, metric, and exact-authority contracts are ready before any V573 model outcome",
+      "inference_substrate": "primary_source_and_exact_fixture_replay_no_llm",
+      "recomputed_checks": {
+        "arms_authority_metrics": true,
+        "fixtures_gates_attacks": true,
+        "no_llm_precondition": true,
+        "oracle_boundary": true,
+        "prompt_and_router": true,
+        "protected_files": true,
+        "source_rows": true,
+        "source_unit_manifest": true
+      },
+      "recomputed_ready_score": 1.0,
+      "row_hash": "sha256:26e2b07c9e31f4935839464d20d66bcf879431ab4c3da21a512286f95cb419bb",
+      "science_result_created": false,
+      "source_artifact_path": "results/experiment_6587_v573_constraint_first_method_contract.json",
+      "source_artifact_sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9",
+      "source_gate_summary_checks_closed": false,
+      "status": "complete_v573_constraint_first_method_ready",
+      "stored_ready_score": 1.0,
+      "verdict_class": null,
+      "verifier_is_oracle": true
+    }
+  ],
+  "v574_cfr_launch_ready_score": 1.0,
+  "verdict_class": null,
+  "verifier_is_oracle": true
+}

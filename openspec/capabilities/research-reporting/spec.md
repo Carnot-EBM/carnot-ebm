@@ -55753,3 +55753,118 @@ protected files stay unchanged, no LLM call exists, and the checksum validates.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6587 | Planned (`python/carnot/experiment_6587_v573_constraint_first_method_contract.py`; terminal artifact `results/experiment_6587_v573_constraint_first_method_contract.json`) | Planned (`tests/python/test_experiment_6587_v573_constraint_first_method_contract.py`) |
+
+### REQ-REPORT-6588: V574 CFR Launch SHALL Replay Terminal V573 Contracts
+
+Carnot SHALL build Exp6588 without loading an LLM or downloading a model. The
+task SHALL replay the Exp6585 execution contract and the Exp6587 method
+contract from raw fields. It SHALL retain the Exp6586 infrastructure block as
+blocked evidence. It SHALL not turn any V573 receipt into a science result.
+
+- REQ-REPORT-6588-PRECONDITIONS: The artifact SHALL record the three V573
+  artifact paths and hashes, current roadmap hash, protected-file hashes, dirty
+  worktree state, CPU, RAM, disk, local cache paths, visible GPU ownership, and
+  the no-LLM substrate. Exp6586 SHALL retain its exact `honest_verdict`,
+  `verdict_class`, `gate_check_summary`, and adversarial disposition.
+- REQ-REPORT-6588-REPLAY: Exp6585 readiness SHALL recompute from terminal,
+  hard-limit, budget, gate, attack, and protected-file rows. Exp6587 readiness
+  SHALL recompute from source, manifest, prompt, router, arm, authority,
+  metric, fixture, gate, attack, retirement, and protected-file rows. Stored
+  ready scores SHALL not decide the replay.
+- REQ-REPORT-6588-CACHE: The producer SHALL resolve
+  `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` from the
+  local Hugging Face cache. Each row SHALL bind bounded content-derived GGUF
+  metadata to repository, revision, snapshot link, blob key, and trusted hash.
+  It SHALL read no tensor payload. It SHALL not load a model, call
+  `AutoTokenizer`, or use a network download path.
+- REQ-REPORT-6588-BUDGETS: The Exp6590 and Exp6591 contracts SHALL each own
+  one model family and at most one model process. Each contract SHALL select an
+  idle RTX 3090 at runtime. It SHALL freeze per-unit checkpoints, hard timeout,
+  owned-child cleanup, failure-row retention, unload proof, and atomic terminal
+  output. The two model families SHALL never be resident for the task at the
+  same time. Cleanup SHALL not signal an unrelated process.
+- REQ-REPORT-6588-GATES: The active V574 roadmap SHALL own the exact gate map.
+  Exp6590 and Exp6591 SHALL read only `v574_cfr_launch_ready_score` from
+  Exp6588. Their output fields SHALL be spelled `qwen_cfr_rows_ready_score` and
+  `gemma31_cfr_rows_ready_score`, as declared by each owner task's
+  `REQUIRED ARTIFACT FIELDS`.
+- REQ-REPORT-6588-AUTHORITY: Exact receipt and fixture replay SHALL own launch
+  readiness. It SHALL not create an oracle-distinct positive result. Exact
+  executable checks SHALL remain the only release authority for downstream
+  rows. Model output SHALL not certify itself.
+- REQ-REPORT-6588-ATTACKS: Invented V573 science, a suite-GREEN launch gate,
+  missing source hashes, two-model residency, legacy headline models, GGUF
+  `AutoTokenizer`, measurement-time download, incomplete terminal rows, and
+  gate-field drift SHALL each force candidate readiness to `0.0`.
+- REQ-REPORT-6588-REDUCER: The exact bare field
+  `v574_cfr_launch_ready_score` SHALL equal `1.0` only when both V573
+  contracts replay, both cache identities resolve, both execution budgets and
+  cleanup contracts close, every current-roadmap gate cross-reference closes,
+  every attack fails closed, and protected files remain unchanged. Exp6586
+  suite state SHALL not be a reducer input. A ready launch SHALL use
+  `verdict_class=null`.
+- REQ-REPORT-6588-ATOMIC: Exp6588 SHALL preserve `research-roadmap.yaml` and
+  `scripts/research_conductor.py`. It SHALL set
+  `inference_substrate=v573_terminal_and_contract_replay_no_llm` and
+  `verifier_is_oracle=true`. It SHALL write one terminal JSON artifact through
+  same-directory file sync, atomic replacement, and directory sync. The final
+  checksum SHALL exclude only its own checksum field.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `v573_terminal_replay_rows`,
+`model_cache_identity_rows`, `execution_budget_contract`,
+`current_roadmap_gate_contract_rows`, `attack_rows`,
+`v574_cfr_launch_ready_score`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6588-REPLAY: Raw V573 Contracts Decide Readiness
+
+**Given** terminal Exp6585 through Exp6587 artifacts
+**When** Exp6588 ignores stored ready scores and recomputes both contract gates
+**Then** Exp6585 and Exp6587 replay as ready, Exp6586 stays blocked and flagged,
+and no V573 science result is created.
+
+#### SCENARIO-REPORT-6588-CACHE: Cached Flagships Resolve Without Inference
+
+**Given** the two mandated local GGUF repositories
+**When** the bounded metadata and cache-provenance resolver reads them
+**Then** both identities bind to content and trusted local provenance without a
+model load, tensor-payload read, tokenizer load, or download.
+
+#### SCENARIO-REPORT-6588-BUDGETS: Model Streams Run One At A Time
+
+**Given** separate Qwen and Gemma downstream tasks
+**When** Exp6588 freezes their execution contracts
+**Then** each task owns one family, one runtime-selected idle RTX 3090,
+per-unit checkpoints, bounded time, owned cleanup, unload proof, failure rows,
+and atomic terminal output.
+
+#### SCENARIO-REPORT-6588-GATES: Same-Roadmap Fields Match Exactly
+
+**Given** the active V574 roadmap
+**When** Exp6588 validates the two model stream gates
+**Then** both tasks consume only `v574_cfr_launch_ready_score`, and each output
+field matches its owning task's required artifact fields exactly.
+
+#### SCENARIO-REPORT-6588-ATTACKS: Science Gate Cache And Lifecycle Drift Fail Closed
+
+**Given** one mutation for each required attack
+**When** the readiness reducer evaluates the mutated candidate
+**Then** every invented claim, suite gate, missing hash, residency, model,
+tokenizer, download, terminal-row, and gate-field mutation yields `0.0`.
+
+#### SCENARIO-REPORT-6588-ATOMIC: One Null Launch Artifact Recomputes
+
+**Given** replay, cache, budget, gate, attack, and protection checks have ended
+**When** Exp6588 writes its artifact
+**Then** the checksum and readiness recompute, protected files remain
+byte-identical, the write is durable and atomic, and the ready artifact uses a
+terminal prefix with a null verdict class.
+
+## Implementation Status (REQ-REPORT-6588)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6588 | Implemented (`python/carnot/experiment_6588_v574_bounded_cfr_launch_root.py`; terminal artifact `results/experiment_6588_v574_bounded_cfr_launch_root.json`) | Implemented (`tests/python/test_experiment_6588_v574_bounded_cfr_launch_root.py`; 12 focused tests; 100% module statement coverage) |
