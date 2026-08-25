@@ -55495,3 +55495,133 @@ byte-identical, and the ready artifact uses a null verdict class.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6585 | Implemented (`python/carnot/experiment_6585_v573_terminal_recovery_and_execution_contract.py`; terminal artifact `results/experiment_6585_v573_terminal_recovery_and_execution_contract.json`) | Implemented (`tests/python/test_experiment_6585_v573_terminal_recovery_and_execution_contract.py`; 13 focused tests; 100% module statement coverage) |
+
+### REQ-REPORT-6586: The Full Python Suite SHALL Run Once In An Isolated Checkout
+
+Carnot SHALL measure the repository-wide Python suite in a disposable Git
+checkout. It SHALL not run that suite in the active worktree. A test failure is
+suite evidence. It is not an isolated-environment block.
+
+- REQ-REPORT-6586-PRECONDITIONS: The producer SHALL record the Git revision,
+  dirty status, tracked-file hashes, protected-file hashes, Python version,
+  pytest and plugin versions, CPU, RAM, disk, timeout, temporary root, process
+  owner, and no-LLM substrate before it starts the suite. It SHALL reject the
+  system temporary root, the active repository, a path outside the system
+  temporary root, a symlink escape, and an unresolved path.
+- REQ-REPORT-6586-CHECKOUT: The producer SHALL create a detached checkout at
+  the current committed revision. If the active tree differs from that
+  revision, the producer SHALL apply every active change as an explicit
+  content overlay. It SHALL hash each overlay row and the complete overlay.
+  It SHALL not stage, discard, or change an active-tree file.
+- REQ-REPORT-6586-COLLECTION: The producer SHALL collect `tests/python` before
+  execution. The collection receipt SHALL bind the command, checkout, exit,
+  duration, stdout, stderr, exact node count, and node-list hash. Collection
+  errors SHALL remain suite evidence and SHALL not become an environment block.
+- REQ-REPORT-6586-SUITE: The measured command SHALL be
+  `.venv/bin/python -m pytest tests/python --no-cov -o addopts= -n 0`. It SHALL
+  run from the disposable checkout with the active project interpreter. The
+  receipt SHALL bind the command, working directory, environment hash, exit,
+  duration, stdout, stderr, and timeout state.
+- REQ-REPORT-6586-ROWS: The artifact SHALL retain one recheckable row for each
+  failed, errored, skipped, or timed-out test. It SHALL also retain collection
+  and test-family summaries. A passing headline with a failed or error row
+  SHALL fail validation.
+- REQ-REPORT-6586-MUTATION: The producer SHALL hash all tracked files and all
+  operator-curated files before and after the measured run. Each changed,
+  created, or deleted tracked path in the disposable checkout SHALL have a
+  mutation row with before and after hashes. The active tree's tracked hashes
+  and pre-existing dirty status SHALL remain unchanged during collection and
+  execution.
+- REQ-REPORT-6586-TIMEOUT: The suite SHALL run in a new process session with a
+  bounded timeout. Cleanup SHALL signal only the owned process group. The
+  receipt SHALL record TERM, KILL, exit, surviving owned processes, and whether
+  any unrelated process was signaled. A timeout SHALL not be GREEN. A leaked
+  owned child SHALL fail validation.
+- REQ-REPORT-6586-VERDICT: The terminal state SHALL be measured GREEN,
+  measured RED, timeout, or isolated-environment block. GREEN requires a zero
+  suite exit, complete collection, no failure rows, no unreported mutation,
+  clean process cleanup, and unchanged active hashes. RED requires a completed
+  nonzero suite result with all rows preserved. A complete GREEN or RED result
+  SHALL set `verdict_class=null` and
+  `full_suite_baseline_ready_score=1`. Only inability to construct or validate
+  isolation SHALL use a blocked verdict and name the failed check and value.
+- REQ-REPORT-6586-CADENCE: The ownership contract SHALL place this baseline in
+  an operator-owned periodic job at most once per milestone or once per week.
+  It SHALL keep the suite outside experiment launch and model-load gates. It
+  SHALL not require a change to `scripts/research_conductor.py`.
+- REQ-REPORT-6586-ATTACKS: Active-root execution, an omitted dirty overlay, a
+  passing headline with failed rows, timeout called GREEN, an unreported
+  tracked write, a leaked child, and active-tree hash drift SHALL each fail
+  closed.
+- REQ-REPORT-6586-ATOMIC: The producer SHALL preserve
+  `research-roadmap.yaml` and `scripts/research_conductor.py`. It SHALL set
+  `inference_substrate=isolated_repo_test_execution_no_llm` and
+  `verifier_is_oracle=true`. It SHALL write one terminal artifact with a
+  same-directory temporary file, file sync, atomic replacement, and directory
+  sync. Its final checksum SHALL exclude only its own checksum field.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `rows`, `collection_receipt`,
+`suite_command_receipt`, `disposable_checkout_receipt`, `mutation_rows`,
+`active_worktree_unchanged`, `suite_truth_baseline`,
+`full_suite_baseline_ready_score`, `low_cadence_ownership_contract`,
+`attack_rows`, `preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`duration_s`, `tests_run`, and `reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6586-DISPOSABLE: The Active Tree Is Never The Suite Working Directory
+
+**Given** a resolved active repository and a validated narrow temporary root
+**When** the producer creates and verifies the detached checkout
+**Then** collection and execution use only that checkout, and an active-root
+command is refused before pytest starts.
+
+#### SCENARIO-REPORT-6586-DIRTY-OVERLAY: Every Active Change Reaches The Checkout
+
+**Given** tracked or untracked active changes that are required for the run
+**When** the producer builds the content overlay
+**Then** every dirty path has a content hash and matching disposable content,
+and omission of any path fails validation.
+
+#### SCENARIO-REPORT-6586-RED: Test Failures Complete The Measurement
+
+**Given** complete collection and a bounded pytest run with a nonzero exit
+**When** every failed, errored, and skipped outcome is retained
+**Then** the baseline is measured RED, uses `verdict_class=null`, and has a
+ready score of one without becoming an isolated-environment block.
+
+#### SCENARIO-REPORT-6586-TIMEOUT: Owned Processes Are Cleaned Without Broad Signals
+
+**Given** the measured command exceeds its timeout
+**When** the owner cleans the new process session
+**Then** the artifact reports timeout, retains a timeout row, records each
+signal, proves no owned process survives, and never reports GREEN.
+
+#### SCENARIO-REPORT-6586-MUTATION: Disposable Writes Stay Visible And Contained
+
+**Given** a test changes a tracked file in the disposable checkout
+**When** post-run hashes are compared
+**Then** the exact path and before and after hashes appear in `mutation_rows`,
+and every active-tree tracked hash and original dirty status stays unchanged.
+
+#### SCENARIO-REPORT-6586-ATTACKS: False Completeness Fails Closed
+
+**Given** one mutation for each required attack
+**When** the baseline validator evaluates the candidate artifact
+**Then** active-root, omitted-overlay, false-GREEN, false-timeout, hidden-write,
+leaked-process, and active-drift candidates are all rejected.
+
+#### SCENARIO-REPORT-6586-ATOMIC: One Null Infrastructure Artifact Recomputes
+
+**Given** collection, execution, mutation, cleanup, and attack checks have
+ended
+**When** the producer writes the terminal artifact
+**Then** the checksum validates, the two protected files remain unchanged,
+the artifact uses a terminal success prefix for a complete GREEN or RED run,
+and the low-cadence contract stays outside experiment launch.
+
+## Implementation Status (REQ-REPORT-6586)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6586 | Implemented (`python/carnot/experiment_6586_isolated_full_suite_truth_baseline.py`; terminal artifact `results/experiment_6586_isolated_full_suite_truth_baseline.json`) | Implemented (`tests/python/test_experiment_6586_isolated_full_suite_truth_baseline.py`; 23 focused tests; 100% module statement coverage) |

@@ -10,8 +10,9 @@ rejected". Before this REQ it could not resolve that question, in three separate
       cause and wrote it ONLY to the per-round record -- the held-out dynamics failure, and the
       selection/planning exception. So an attempt whose every round failed DYNAMICS verification
       was reported under a PLANNING label, and a reader chasing it went to the planner instead of
-      to the dynamics model. That default is 9 of the 120 skip records the corpus holds
-      outside the induction-disabled case (measured 2026-08-24 over `results/**`).
+      to the dynamics model. No prevalence figure is quoted: the same string is ALSO the
+      correct label for a genuine no-plan attempt, so the counter cannot separate the two.
+      The per-round record below is what makes that measurable.
 
   (B) The per-round records reached the harness and were read only to build category counters.
       The evidence naming WHICH cause fired was rebuilt every cell and discarded every cell.
@@ -225,8 +226,7 @@ def test_all_rounds_failing_heldout_verification_is_not_reported_as_a_planning_f
 
     Every round fails held-out transition verification, which is a DYNAMICS failure. Before the
     fix this attempt reported `no_reachable_plan_after_refinement` -- a PLANNING label -- because
-    the site wrote its diagnosis only into the per-round record. 9 of the 120 non-disabled skip
-    records in the corpus were that default.
+    the site wrote its diagnosis only into the per-round record.
 
     Mutation M1: delete `skipped = row["skipped"]` at the held-out site. RED here.
     """
