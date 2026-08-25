@@ -17708,4 +17708,15 @@ outside-repository explicit path, staged-file enumeration failure, and direct
 `__main__` dispatch. Focused validation is 22 passed with 100% statement
 coverage for `scripts/mutation_marker_lint.py`; the expanded conductor-equivalent
 QA subset is 219 passed. No production behavior or test expectation changed.
+
 - 2026-08-25: Gemma 4 31B bounded constraint-first stream (✅ Complete) — honest_verdict=complete: every frozen Gemma CFR unit, arm, raw stage, exact check, checkpoint, cost, failure, model, and GPU receipt is complete; no CFR benefit claim is made; results/experiment_6591_gemma4_31b_constraint_first_stream.json
+
+## 2026-08-25 — Milestone 2026.08.574 operational retrospective
+
+Recorded 4 experiments over 6.7 minutes, including 3 compute-bound streams. The
+3.87-minute Gemma 4 31B stream and 2.66-minute Qwen3.6 stream set the execution
+tail. The GPU snapshot showed GPU 1 active while GPU 0 was idle. This indicates
+unused cross-experiment scheduling capacity, not a compute-task GPU-idle defect.
+The retrospective recommends GPU-aware independent-stream scheduling, inference
+batching, and task-scoped telemetry. No data available this milestone establishes
+a parallel multi-model launch or missed DualGPURunner engagement.
