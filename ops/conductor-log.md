@@ -16464,3 +16464,5 @@ code |
 | 2026-08-25 17:04 UTC | Conductor re-exec: fresh committed source | OK | 99f1816fb313 -> fd4736a54c9e; argv preserved |
 | 2026-08-25 17:04 UTC | Activation REFUSED: milestone 2026.08.576 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: BLOCKED_PATTERN_MATCHED on exp66 |
 | 2026-08-25 17:04 UTC | Activation replan 1/2: 2026.08.576 | OK | refused roadmap quarantined to roadmap-2026.08.576-refusal1.yaml; replanning wit |
+| 2026-08-25 17:15 UTC | Plan milestone 2026.08.576 | OK | 12 tasks proposed |
+| 2026-08-25 17:17 UTC | Milestone 2026.08.576 activated | OK | 12 tasks queued |
