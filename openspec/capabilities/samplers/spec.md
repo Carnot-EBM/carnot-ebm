@@ -4746,3 +4746,101 @@ remain visible.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-6612 | Implemented (`python/carnot/samplers/spectral_k_block.py`, `python/carnot/experiment_6612_spectral_k_block_scale_rust_parity.py`, `results/experiment_6612_spectral_k_block_scale_rust_parity.json`) | Implemented (`tests/python/samplers/test_spectral_k_block.py`, `tests/python/test_experiment_6612_spectral_k_block_scale_rust_parity.py`, `crates/carnot-samplers/tests/spectral_k_block.rs`) |
+
+### REQ-SAMPLER-6639: Bounded Exact Kac--Ward Planar-Ising Reference
+
+Carnot SHALL provide a CPU-only exact autoregressive reference at
+`python/carnot/experiment_6639_kac_ward_planar_reference.py`. It SHALL write
+`results/experiment_6639_kac_ward_planar_reference.json` and its passing sample
+banks atomically. Its conclusions SHALL apply only to the frozen, bounded,
+zero-field planar fixtures that pass independent full-enumeration checks.
+
+- REQ-SAMPLER-6639-PLANARITY: Every accepted instance SHALL be a finite,
+  connected planar graph with a finite straight-line embedding and a connected
+  search order. Nonplanar graphs, invalid embeddings, disconnected prefixes,
+  duplicate edges, self-loops, and unsupported sizes SHALL fail closed before
+  determinant evaluation or sampling.
+- REQ-SAMPLER-6639-ZERO-FIELD: Every accepted instance SHALL have exactly zero
+  external field. Nonzero or nonfinite fields, couplings, coordinates, or
+  temperatures SHALL fail closed. The method SHALL not imply exact support for
+  arbitrary-field planar Ising models.
+- REQ-SAMPLER-6639-AUXILIARY: Each autoregressive conditional SHALL contract
+  the connected frozen prefix to one auxiliary spin. Boundary fields SHALL
+  become auxiliary pair couplings. The extended graph SHALL be checked for
+  planarity before the zero-field Kac--Ward formula is evaluated.
+- REQ-SAMPLER-6639-CONDITIONING: The Kac--Ward matrix SHALL use directed,
+  non-backtracking edges, signed half-angle phases, and dimensionless
+  couplings. A singular matrix, excessive condition number, invalid determinant
+  phase, nonfinite log partition, or unsupported determinant branch SHALL fail
+  closed with the observed numerical value.
+- REQ-SAMPLER-6639-LIKELIHOOD: The sampler SHALL multiply the exact ancestral
+  conditionals into a normalized state likelihood. Every emitted sample SHALL
+  carry its normalized likelihood and SHALL match the independently enumerated
+  state probability within the frozen tolerance.
+- REQ-SAMPLER-6639-RNG: Every graph-temperature-seed case SHALL use a new,
+  domain-separated NumPy PCG64 stream. Enumeration SHALL use no treatment RNG.
+  Mutable RNG state SHALL not be shared across cases, and fixed inputs SHALL
+  reproduce byte-identical sample rows.
+- REQ-SAMPLER-6639-ENUMERATION: Before a reference sample bank is emitted, full
+  enumeration SHALL independently compare the partition function, every state
+  probability, every unique prefix conditional, first and second spin moments,
+  energy moment, and probability normalization. Any mismatch SHALL block that
+  bank and set the reference-ready score to zero.
+- REQ-SAMPLER-6639-PRECISION: The bounded implementation SHALL support only
+  frozen IEEE-754 binary64 real inputs and complex128 determinant arithmetic.
+  Unsupported precision, loss of determinant conditioning, or tolerance
+  failure SHALL be a named precision block. The result SHALL not claim the
+  paper's arbitrary-precision or full-scale performance.
+- REQ-SAMPLER-6639-ATTACKS: The experiment SHALL attack planarity, zero field,
+  coupling sign, directed-edge orientation, auxiliary-spin omission,
+  determinant branch, precision, graph permutation, RNG reuse, and enumeration
+  mismatch. Every attack SHALL pass before readiness is one.
+- REQ-SAMPLER-6639-ATOMIC: The experiment SHALL atomically replace the terminal
+  JSON and each sealed sample bank in the destination directory. It SHALL
+  record frozen fixture and source hashes, package and resource receipts,
+  protected-file hashes, sample-bank hashes, test command exits, field
+  provenance, monotonic duration, and a checksum over final content with the
+  checksum field blanked.
+- REQ-SAMPLER-6639-BOUNDARY: `kac_ward_reference_ready_score` SHALL be exactly
+  `1.0` only if every math, parity, precision, test, protection, attack, and
+  sample-bank gate passes. Otherwise it SHALL be `0.0` with a `blocked_*`
+  status and a named observed failure. `inference_substrate` SHALL equal
+  `bounded_cpu_kac_ward_and_full_enumeration_no_llm`, and
+  `verifier_is_oracle` SHALL be the bare boolean `false` because enumeration
+  independently checks the new sampler.
+
+### SCENARIO-SAMPLER-6639-EXACT-AUTOREGRESSIVE-PARITY
+
+**Given** the frozen planar graphs, couplings, temperatures, connected spin
+orders, binary64 precision, tolerances, and seeds
+**When** the bounded Kac--Ward reference evaluates every ancestral prefix
+**Then** each auxiliary graph remains planar
+**And** Kac--Ward partitions, probabilities, conditionals, moments, and
+normalization match full enumeration
+**And** exactly one per-instance row exists for each graph-temperature-seed
+case.
+
+### SCENARIO-SAMPLER-6639-FAIL-CLOSED-NUMERICS
+
+**Given** a nonplanar, nonzero-field, nonfinite, oversized, singular,
+ill-conditioned, invalid-branch, or unsupported-precision input
+**When** validation or determinant evaluation runs
+**Then** the input is rejected before a reference sample bank can qualify
+**And** the failure names the invalid method, graph, field, size, precision,
+condition number, determinant phase, or observed parity value.
+
+### SCENARIO-SAMPLER-6639-SEALED-INDEPENDENT-EVIDENCE
+
+**Given** a graph-temperature-seed case that passed every independent
+enumeration comparison
+**When** ancestral samples are generated from a fresh domain-separated stream
+**Then** the sealed bank records spins, normalized likelihoods, conditional
+probabilities, setup cost, sampling wall time, and content hashes
+**And** replay with the same inputs reproduces the same sample content
+**And** atomic replacement leaves no partial temporary evidence.
+
+## Implementation Status (REQ-SAMPLER-6639)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-6639 | Planned (`python/carnot/experiment_6639_kac_ward_planar_reference.py`, `results/experiment_6639_kac_ward_planar_reference.json`) | Planned (`tests/python/test_experiment_6639_kac_ward_planar_reference.py`) |

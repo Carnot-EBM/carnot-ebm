@@ -16558,3 +16558,6 @@ code |
 | 2026-08-26 11:17 UTC | Delayed two-level constrained decoding | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6635-matched-direct-headroom.headroom_r |
 | 2026-08-26 11:19 UTC | Cold-context verifier unit calibration | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6634-mandated-model-admission, exp6634-ma |
 | 2026-08-26 11:19 UTC | Independent exact decoding authority audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6636-delayed-two-level-decoding) |
+| 2026-08-26 12:40 UTC | Kac-Ward exact planar-Ising reference | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: vel_validation |
+| 2026-08-26 12:42 UTC | Cold-context verifier unit calibration | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6634-mandated-model-admission, exp6634-ma |
+| 2026-08-26 12:42 UTC | Independent exact decoding authority audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6636-delayed-two-level-decoding) |
