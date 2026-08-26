@@ -79,6 +79,15 @@ def test_req_report_6633_spec_and_principled_fields() -> None:
         assert field in exp.FIELD_PRINCIPLES
 
 
+def test_req_report_6633_default_receipts_preserve_full_suite_blocker() -> None:
+    """REQ-REPORT-6633: a nonzero required suite cannot open readiness."""
+
+    receipt = next(row for row in exp.DEFAULT_TESTS_RUN if row["command"] == exp.FULL_TEST_COMMAND)
+    assert receipt["exit_code"] == 3
+    assert "1037 failed" in receipt["summary"]
+    assert "FileNotFoundError" in receipt["summary"]
+
+
 def test_process_fixtures_cover_race_crash_stale_tamper_and_restart(tmp_path: Path) -> None:
     """Bounded fixtures replay atomic ownership and crash recovery."""
 
@@ -202,7 +211,16 @@ def test_req_report_6633_cli_run_and_validate(
         == 0
     )
     summary = json.loads(capsys.readouterr().out.splitlines()[-1])
-    assert summary["gpu_lease_scheduler_ready_score"] == 1.0
+    assert summary["status"].startswith("blocked_")
+    assert summary["gpu_lease_scheduler_ready_score"] == 0.0
+    written = json.loads(output.read_text(encoding="utf-8"))
+    assert written["gate_check_summary"] == [
+        {
+            "check": "tests_run",
+            "expected": "all_exit_codes_zero",
+            "observed": [{"command": exp.FULL_TEST_COMMAND, "exit_code": 3}],
+        }
+    ]
     assert exp.main(["--validate", "--output", str(output)]) == 0
     assert json.loads(capsys.readouterr().out.splitlines()[-1])["valid"] is True
 
@@ -316,6 +334,7 @@ def test_scenario_report_6633_validator_rejects_every_schema_mutation(
     assert "ready_gate_summary_not_empty" in errors_for(gate_check_summary=[{"bad": True}])
     assert "inference_substrate_mismatch" in errors_for(inference_substrate="wrong")
     assert "verifier_is_oracle_mismatch" in errors_for(verifier_is_oracle=False)
+    assert "readiness_score_mismatch" in errors_for(tests_run=[None])
 
     invalid_provenance = deepcopy(ready["field_provenance"])
     invalid_provenance["status"] = {}

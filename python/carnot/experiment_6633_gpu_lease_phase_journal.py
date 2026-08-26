@@ -153,7 +153,15 @@ DEFAULT_TESTS_RUN = (
         "exit_code": 0,
         "summary": "new modules have 100% scoped line and branch coverage",
     },
-    {"command": FULL_TEST_COMMAND, "exit_code": 0, "summary": "all Python tests passed"},
+    {
+        "command": FULL_TEST_COMMAND,
+        "exit_code": 3,
+        "summary": (
+            "1037 failed, 34797 passed, 103 skipped, 140 warnings in 2310.03s; "
+            "pytest/xdist stopped at 62% after an existing test removed its worker CWD, "
+            "raising FileNotFoundError"
+        ),
+    },
     {"command": SPEC_COMMAND, "exit_code": 0, "summary": "focused spec coverage passed"},
     {"command": RUFF_COMMAND, "exit_code": 0, "summary": "focused lint passed"},
     {"command": FORMAT_COMMAND, "exit_code": 0, "summary": "focused format check passed"},
@@ -962,11 +970,6 @@ def _readiness_failures(artifact: Mapping[str, Any]) -> list[JsonDict]:
             artifact.get("lease_api_receipts", {}).get("all_owner_bound") is True,
         ),
         (
-            "focused_tests",
-            True,
-            bool(tests) and all(row.get("exit_code") == 0 for row in tests),
-        ),
-        (
             "protected_files",
             True,
             artifact.get("protected_files_unchanged", {}).get("all_unchanged") is True,
@@ -979,7 +982,7 @@ def _readiness_failures(artifact: Mapping[str, Any]) -> list[JsonDict]:
             .get("model_load_attempt_count"),
         ),
     )
-    return [
+    failures = [
         {
             "check": name,
             "expected": sorted(expected) if isinstance(expected, set) else expected,
@@ -988,6 +991,23 @@ def _readiness_failures(artifact: Mapping[str, Any]) -> list[JsonDict]:
         for name, expected, observed in checks
         if observed != expected
     ]
+    failed_tests = [
+        {
+            "command": row.get("command") if isinstance(row, Mapping) else None,
+            "exit_code": row.get("exit_code") if isinstance(row, Mapping) else None,
+        }
+        for row in tests
+        if not isinstance(row, Mapping) or row.get("exit_code") != 0
+    ]
+    if not tests or failed_tests:
+        failures.append(
+            {
+                "check": "tests_run",
+                "expected": "all_exit_codes_zero",
+                "observed": failed_tests,
+            }
+        )
+    return failures
 
 
 def _field_provenance(artifact: Mapping[str, Any]) -> dict[str, JsonDict]:
