@@ -253,3 +253,136 @@ def test_req_report_6615_provenance_protection_and_reconciliation(
         "ops/changelog.md",
     ):
         assert reconciliation[deferred]["action"] == "deferred_to_conductor"
+
+
+def test_req_report_6615_input_helpers_fail_closed(tmp_path: Path) -> None:
+    """REQ-REPORT-6615-PRECONDITIONS: malformed inputs cannot enter the audit."""
+
+    invalid_json = tmp_path / "invalid.json"
+    invalid_json.write_text("[]", encoding="utf-8")
+    with pytest.raises(ValueError, match="artifact root"):
+        mod._read_json(invalid_json)
+
+    roadmap = tmp_path / mod.ROADMAP_RELATIVE_PATH
+    roadmap.write_text("milestone: wrong\ntasks: []\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="expected roadmap milestone"):
+        mod.load_v576_tasks(tmp_path)
+    roadmap.write_text(f"milestone: '{mod.MILESTONE}'\ntasks: wrong\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="tasks must be a list"):
+        mod.load_v576_tasks(tmp_path)
+
+    with pytest.raises(ValueError, match="invalid experiment task id"):
+        mod._experiment_number("not-an-experiment")
+    assert mod._declared_artifact_fields({"prompt": "no field block"}) == set()
+    assert mod._compare_gate(2, ">=", 1)
+    assert mod._compare_gate(1, "<=", 2)
+    assert not mod._compare_gate(None, ">=", 1)
+    assert not mod._compare_gate(None, "<=", 1)
+    assert not mod._compare_gate(1, "!=", 1)
+
+    hashed_row = {"row_id": "changed", "value": 1, "row_hash": "sha256:bad"}
+    assert mod._verify_row_hashes([hashed_row]) == {
+        "checked": 1,
+        "mismatch_count": 1,
+        "mismatches": ["changed"],
+    }
+
+    verdict, discrepancies = mod._source_verdict_class(
+        {
+            "present": True,
+            "payload": {
+                "status": "complete",
+                "honest_verdict": "complete",
+                "verdict_class": "outside_enum",
+            },
+        },
+        [],
+    )
+    assert verdict == "null"
+    assert discrepancies == ["source verdict_class is outside closed enum: outside_enum"]
+
+    tasks = mod.load_v576_tasks(REPO)
+    sources = mod.load_source_artifacts(REPO, tasks)
+    alternate_identity = deepcopy(sources)
+    qwen = alternate_identity["exp6605-qwen36-direct-headroom"]["payload"]
+    qwen["model_spec_and_identity"] = {"repository_id": mod.EXPECTED_MODEL_REGISTRY[
+        "exp6605-qwen36-direct-headroom"
+    ]}
+    replay = mod.replay_constrained_decoding(alternate_identity)
+    assert replay["direct_arms"]["exp6605-qwen36-direct-headroom"]["identity_match"]
+
+
+def test_req_report_6615_validator_rejects_each_contract_mutation(
+    artifact: dict[str, object], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """REQ-REPORT-6615-ATOMIC: each schema and durability boundary fails closed."""
+
+    def rejected(mutated: dict[str, object], message: str) -> None:
+        mutated["reproducibility_checksum"] = mod.reproducibility_checksum(mutated)
+        with pytest.raises(ValueError, match=message):
+            mod.validate_artifact(mutated)
+
+    missing = deepcopy(artifact)
+    missing.pop("status")
+    with pytest.raises(ValueError, match="missing required fields"):
+        mod.validate_artifact(missing)
+
+    bad = deepcopy(artifact)
+    bad["inference_substrate"] = "wrong"
+    rejected(bad, "inference substrate")
+    bad = deepcopy(artifact)
+    bad["verifier_is_oracle"] = False
+    rejected(bad, "verifier_is_oracle")
+    bad = deepcopy(artifact)
+    bad["per_unit_rows"] = [
+        row for row in bad["per_unit_rows"] if row.get("experiment_number") != 6604
+    ]
+    rejected(bad, "task matrix")
+    bad = deepcopy(artifact)
+    bad["per_unit_rows"] = [
+        row for row in bad["per_unit_rows"] if row["row_kind"] == "task"
+    ]
+    rejected(bad, "comparative unit")
+    bad = deepcopy(artifact)
+    bad["roadmap_gate_contract_rows"][0]["contract_valid"] = False
+    rejected(bad, "roadmap gate")
+    bad = deepcopy(artifact)
+    bad["task_disposition_rows"][0]["verdict_class"] = "outside_enum"
+    rejected(bad, "task disposition")
+    bad = deepcopy(artifact)
+    bad["attack_rows"][0]["fail_closed"] = False
+    rejected(bad, "attacks did not fail closed")
+    bad = deepcopy(artifact)
+    bad["attack_rows"].pop()
+    rejected(bad, "attack matrix")
+    bad = deepcopy(artifact)
+    bad["protected_files_unchanged"]["all_unchanged"] = False
+    rejected(bad, "protected file")
+    bad = deepcopy(artifact)
+    bad["field_provenance"].pop("status")
+    rejected(bad, "field provenance")
+    bad = deepcopy(artifact)
+    source_with_hashes = next(
+        row for row in bad["source_artifact_receipts"] if row.get("row_hash_receipts")
+    )
+    next(iter(source_with_hashes["row_hash_receipts"].values()))["mismatch_count"] = 1
+    rejected(bad, "source row hash")
+    bad = deepcopy(artifact)
+    bad["tests_run"] = [{"command": "missing receipt fields"}]
+    rejected(bad, "test receipt")
+
+    output = tmp_path / "receipt.json"
+    mod.write_artifact_atomic(output, artifact)
+    updated = mod.update_test_receipts(
+        output,
+        [{"command": "focused", "exit_code": 0, "duration_s": 1.0}],
+        3.0,
+    )
+    assert updated["duration_s"] == 3.0
+    assert updated["tests_run"][0]["command"] == "focused"
+
+    failed_output = tmp_path / "failed.json"
+    monkeypatch.setattr(mod.os, "replace", lambda *_args: (_ for _ in ()).throw(OSError("stop")))
+    with pytest.raises(OSError, match="stop"):
+        mod.write_artifact_atomic(failed_output, artifact)
+    assert not list(tmp_path.glob("*.tmp"))
