@@ -2822,3 +2822,38 @@ smoke row can satisfy the missing family.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFER-SOTA-6648 | Implemented (`python/carnot/experiment_6648_three_family_gguf_canaries.py`) | Implemented (`tests/python/test_experiment_6648_three_family_gguf_canaries.py`; exact resolver, embedded-tokenizer, identity, and inference-row coverage) |
+
+### REQ-INFER-SOTA-6649: Two Mandated MoE Models SHALL Produce Comparable Direct Rows
+
+Exp6649 SHALL define exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-26B-A4B-it-GGUF` as headline models. It SHALL resolve them
+with `cached_sota_pair(gpu_indices=(0, 1), model_indices=(0, 1))`. Each model
+SHALL receive the same ordered task set and comparable frozen decoding limits.
+Legacy models MAY run only as labeled smoke checks. Their rows SHALL not enter
+headline counts or rates.
+
+Each headline row SHALL bind the exact model file and hash, process identity,
+accelerator receipt, prompt and output token counts, latency, raw output, and
+lineage. Exp6649 SHALL make one direct attempt per model-task unit. It SHALL not
+repair, retry, or regenerate output after checking.
+
+#### SCENARIO-INFER-SOTA-6649-COMPARABLE-ROWS
+
+**Given** the admitted Qwen and middle-Gemma GGUF files
+**When** Exp6649 runs the frozen task manifest
+**Then** both models receive every task once with the frozen budgets and every
+row binds local CUDA process evidence.
+
+#### SCENARIO-INFER-SOTA-6649-NO-LEGACY-OR-REPAIR
+
+**Given** a legacy smoke model or an invalid direct proposal
+**When** Exp6649 reduces headline evidence
+**Then** the legacy row is excluded and the invalid proposal remains unchanged
+without retry, repair, or regeneration.
+
+## Implementation Status (REQ-INFER-SOTA-6649)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFER-SOTA-6649 | Implemented (`python/carnot/experiment_6649_exact_certificate_proposal_corpus.py`) | Implemented (`tests/python/test_experiment_6649_exact_certificate_proposal_corpus.py`; exact model pair, comparable row, and no-intervention coverage) |

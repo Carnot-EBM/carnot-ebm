@@ -58052,3 +58052,72 @@ partial final file.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6648 | Implemented (`python/carnot/experiment_6648_three_family_gguf_canaries.py`) | Implemented (`tests/python/test_experiment_6648_three_family_gguf_canaries.py`; ready/blocked reduction, adversarial rows, provenance, checksum, and atomic-write coverage) |
+
+### REQ-REPORT-6649: Exact Proposal Corpus SHALL Be Immutable And Outcome-Blind
+
+Exp6649 SHALL write
+`results/experiment_6649_exact_certificate_proposal_corpus.json` atomically.
+Before generation, it SHALL freeze at least 24 task IDs, prompts, exact
+targets, seeds, decoding settings, parser version, compiler identity, and
+checker hashes. It SHALL bind the exact Exp6648
+`all_mandated_models_admitted=true` field and artifact hash.
+
+`candidate_rows` and `per_unit_rows` SHALL contain every expected headline
+model-task unit. Each row SHALL preserve raw output and its hash before parsing.
+It SHALL preserve the parsed plan or an explicit parse failure, final exact
+validity, per-step exact outcomes, first failing step, valid-prefix length,
+token counts, latency, process and accelerator receipts, and lineage.
+`parse_failure_rows` SHALL contain parse failures without zero coercion.
+
+`candidate_corpus_complete` SHALL be true only when all expected headline rows
+exist, remain unique, match the frozen manifest, and independently recheck.
+The field SHALL not depend on direct success rate or regeneration headroom.
+`regeneration_headroom_count` SHALL equal the row-derived size of
+`regeneration_headroom_rows`. The artifact SHALL report model and pooled direct
+rates with Wilson uncertainty. It SHALL make no repair claim.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `upstream_gate_receipt`, `defined_model_specs`,
+`frozen_task_manifest`, `candidate_rows`, `parse_failure_rows`,
+`model_level_metrics`, `regeneration_headroom_rows`,
+`candidate_corpus_complete`, `regeneration_headroom_count`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6649-IMMUTABLE-SELECTION
+
+**Given** no model output exists
+**When** Exp6649 builds the task manifest
+**Then** at least 24 ordered task contracts and all input hashes are frozen and
+both headline models receive the same task order.
+
+#### SCENARIO-REPORT-6649-RAW-RETENTION
+
+**Given** any model output, including malformed or empty output
+**When** Exp6649 records the unit
+**Then** it seals the raw bytes and hash before parsing and retains either the
+parsed plan or the explicit parse failure.
+
+#### SCENARIO-REPORT-6649-COMPLETENESS-INDEPENDENT-OF-SUCCESS
+
+**Given** every expected row independently rechecks and every direct proposal
+is invalid
+**When** Exp6649 recomputes completeness
+**Then** `candidate_corpus_complete` is true while direct success remains zero
+and headroom is reported only from eligible prefix rows.
+
+#### SCENARIO-REPORT-6649-BLOCKED-AND-ATOMIC
+
+**Given** an upstream, model identity, row, parser, checker, protected-file, or
+content check fails
+**When** Exp6649 finalizes the artifact
+**Then** it records the exact failed value, does not invent missing rows, and
+an atomic reader never observes a partial final JSON document.
+
+## Implementation Status (REQ-REPORT-6649)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6649 and SCENARIO-REPORT-6649-* | Implemented (`python/carnot/experiment_6649_exact_certificate_proposal_corpus.py`) | Implemented (`tests/python/test_experiment_6649_exact_certificate_proposal_corpus.py`; 38 focused cases and 100% scoped statement coverage) |

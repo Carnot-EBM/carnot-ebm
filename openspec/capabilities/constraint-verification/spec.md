@@ -1254,3 +1254,35 @@ zero for the attacked copy.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6604 and SCENARIO-CONSTRAINT-6604-* | Implemented (`python/carnot/experiment_6604_exact_two_level_plan_corpus.py`; terminal evidence in `results/experiment_6604_exact_two_level_plan_corpus.json`) | `tests/python/test_experiment_6604_exact_two_level_plan_corpus.py`: 9 passed; scoped module coverage: 493 statements, 0 missing (100%); conductor-equivalent smart subset: 90 passed, 1 pre-existing warning |
+
+### REQ-CONSTRAINT-6649: Exact Proposal Checking SHALL Localize The First Failure
+
+Exp6649 SHALL check each parsed proposal with the Exp6604 independent exact
+executor. It SHALL retain one exact outcome for every parsed step. An invalid
+proposal SHALL record the first failing step, its reason, and the exact-valid
+prefix length. A parse failure SHALL remain distinct from an exact invalid
+plan. It SHALL not become an invalid plan with prefix length zero.
+
+`regeneration_headroom_rows` SHALL contain only invalid parsed plans with a
+non-empty exact-valid prefix and at least one remaining target step. The task
+SHALL count these rows without changing or regenerating a proposal.
+
+#### SCENARIO-CONSTRAINT-6649-FIRST-FAILURE
+
+**Given** a parsed plan with valid early actions and one later invalid action
+**When** Exp6649 checks the proposal step by step
+**Then** it records every step outcome, the first failing step, and the exact
+valid-prefix length.
+
+#### SCENARIO-CONSTRAINT-6649-PARSE-FAILURE
+
+**Given** output that cannot produce canonical action lines
+**When** Exp6649 parses and checks the row
+**Then** it records an explicit parse failure and does not invent an exact
+failure step or a zero-length invalid plan.
+
+## Implementation Status (REQ-CONSTRAINT-6649)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6649 and SCENARIO-CONSTRAINT-6649-* | Implemented (`python/carnot/experiment_6649_exact_certificate_proposal_corpus.py`) | Implemented (`tests/python/test_experiment_6649_exact_certificate_proposal_corpus.py`; exact localization, parse-failure, mutation, and replay coverage) |
