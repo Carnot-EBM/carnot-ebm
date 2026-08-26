@@ -38337,3 +38337,58 @@ Then the artifact is treated as stamped, not as unstamped
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6478 | Planned (`python/carnot/experiment_6478_identifiable_held_exact_energy_selection.py`, `results/experiment_6478_identifiable_held_exact_energy_selection.json`) | Planned (`tests/python/test_experiment_6478_identifiable_held_exact_energy_selection.py`) |
+
+### REQ-VERIFY-6650: Verification Units SHALL Separate Discrimination From Rejection
+
+Exp6650 SHALL preregister three units before it scores a twin: the changed
+step, the changed step plus its next step, and the full remaining suffix. The
+unit definitions, transition scorer, rejection threshold, abstention interval,
+tie rule, bootstrap seed, and recommendation rule SHALL be immutable during
+scoring. Every unit SHALL use the same scorer and the same accepted twins.
+
+The scorer SHALL use only frozen action identities and transition support. It
+SHALL not invoke an LLM or execute the exact checker. Each twin-unit result
+SHALL record the score, decision, abstention, latency, exact label, catch,
+false reject, and lineage hashes.
+
+Each unit SHALL report catch rate, false-reject rate, informedness, balanced
+accuracy, AUROC, AUPRC, Brier calibration, expected calibration error,
+coverage, rejection rate, and deterministic 95 percent uncertainty where the
+metric is defined. Missing denominators SHALL remain null. A unit can be
+recommended only when it improves discrimination over a shorter unit without
+an unsupported false-reject increase. A tie or failed safety condition SHALL
+produce an explicit no-selection or partial result.
+
+#### SCENARIO-VERIFY-6650-PREREGISTERED-UNITS
+
+**Given** a frozen set of pairable twins
+**When** Exp6650 scores one-step, two-step, and remaining-suffix views
+**Then** only the view length changes and the scorer, thresholds, twins, and
+ordering remain fixed.
+
+#### SCENARIO-VERIFY-6650-PAIRED-RATES
+
+**Given** one clean and one error member for each pair
+**When** metrics are reduced
+**Then** catches and false rejects stay paired and raw rejection cannot stand
+in for informedness or balanced accuracy.
+
+#### SCENARIO-VERIFY-6650-ABSTENTION
+
+**Given** a score inside the frozen abstention interval
+**When** a unit makes its decision
+**Then** it records abstention, excludes that member from covered decisions,
+and keeps the exact label visible.
+
+#### SCENARIO-VERIFY-6650-RECOMMENDATION
+
+**Given** a longer unit rejects more clean twins without better discrimination
+**When** Exp6650 applies the frozen recommendation rule
+**Then** the longer unit is not recommended and the reason names the false
+reject increase.
+
+## Implementation Status (REQ-VERIFY-6650)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6650 and SCENARIO-VERIFY-6650-* | Implemented (`python/carnot/experiment_6650_twin_prefix_verifier_map.py`) | Implemented (`tests/python/test_experiment_6650_twin_prefix_verifier_map.py`; fixed units, paired metrics, abstention, and recommendation coverage) |
