@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.578",
+  "generated_at": "2026-08-26T07:23:19Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.0,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Complete V578 activation and gate-ownership contract",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Task-scoped GPU lease and phase receipt implementation",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bounded Qwen3.6 direct-headroom requalification",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Headroom-gated delayed two-level constrained decoding",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Spectral k-block sampler integrity and reference repair",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone recorded 5 experiments in 0.0 total minutes, including 3 compute-bound entries. Complete V578 activation and gate-ownership contract, Bounded Qwen3.6 direct-headroom requalification, and Headroom-gated delayed two-level constrained decoding all tie at 0.0 minutes under disk-mtime reconstruction. No phase timing can attribute their execution costs.",
+  "bottlenecks_identified": [
+    "Disk-mtime reconstruction collapsed every listed experiment to the same 0.0-minute value, preventing a meaningful slow-path ranking.",
+    "No phase-level timing identifies why any compute-bound entry consumed its recorded time.",
+    "The supplied evidence does not correlate accelerator samples, concurrent model count, or runner choice with individual compute-bound task windows."
+  ],
+  "improvements_suggested": [
+    "Emit monotonic start, stop, and phase-duration receipts for each experiment instead of relying only on disk modification times.",
+    "Attach task-scoped GPU utilization samples to each compute-bound receipt so accelerator efficiency is directly assessable.",
+    "Record concurrent model count and selected runner, routing to DualGPURunner only when multiple models are loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add per-experiment monotonic phase clocks.",
+    "Add task-correlated GPU utilization receipts for compute-bound work.",
+    "Log model concurrency and runner selection, with DualGPURunner dispatch gated on parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The strongest finding is an observability limitation rather than a measured runtime regression. A standalone GPU snapshot and zero-resolution reconstructed durations cannot explain task-window efficiency or establish whether parallel-model dispatch was applicable."
+}

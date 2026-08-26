@@ -6367,3 +6367,10 @@ The critical path for milestone .250:
 - theme: zero-resolution compute receipts exposed accelerator-engagement and observability gaps
 - key result: both compute-bound tasks tied at 0 minutes and compute-task GPU idle is true; phase causes and any parallel multi-model DualGPURunner miss have no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.578
+
+- exp_range: no data available this milestone
+- theme: mixed compute and synthesis execution exposed the limits of modification-time reconstruction
+- key result: all listed tasks tied at the timing floor, leaving compute-phase causes, task-window GPU efficiency, and parallel-model runner applicability unresolved
+- acceptance: no data available this milestone

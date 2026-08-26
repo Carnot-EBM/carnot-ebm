@@ -17884,3 +17884,14 @@ a parallel multi-model launch or missed DualGPURunner use. The next tooling
 priority is a GPU-engagement launch gate backed by task-scoped phase receipts and
 explicit model-count and runner-selection evidence.
 - 2026-08-26: Complete V578 activation and gate-ownership contract (⚠️ Blocked) — honest_verdict=blocked_v578_activation_contract_incomplete: document promises Exp6619-Exp6632 but both YAML sources contain only Exp6619-Exp6628; results/experiment_6619_v578_activation_contract.json
+
+## 2026-08-26 — Milestone 2026.08.578 operational retrospective
+
+Recorded 5 experiments in 0.0 minutes, with 3 marked compute-bound. All listed
+tasks share the 0.0-minute disk-mtime reconstruction floor, so neither the
+compute tail nor its phase-level cause can be separated. The locked compute-task
+GPU-idle field is false, and no supplied evidence establishes a parallel
+multi-model launch or missed DualGPURunner engagement. The next tooling priority
+is task-scoped monotonic phase timing joined to accelerator, model-count, and
+runner-selection receipts; estimated time savings is 0% because the supplied
+clock has no measurable duration to reclaim.
