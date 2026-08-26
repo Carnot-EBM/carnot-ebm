@@ -57912,3 +57912,71 @@ and any content mutation fails validation.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6633 | Implemented (`python/carnot/experiment_6633_gpu_lease_phase_journal.py`) | Implemented (`tests/python/test_experiment_6633_gpu_lease_phase_journal.py`; bounded subprocess, artifact, adversarial, and CLI coverage) |
+
+### REQ-REPORT-6647: Receipt-Scoped Admission SHALL Preserve Global Truth Separately
+
+Exp6647 SHALL reduce only the ordered checks in `REQ-INFRA-6647`. The artifact
+SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `prior_failure_receipt`,
+`preregistered_task_owned_checks`, `task_owned_check_rows`,
+`global_suite_diagnostic`, `reducer_contract`,
+`task_owned_admission_ready_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+The prior-failure receipt SHALL record the Exp6633 verdict, artifact hash,
+`focused_tests` as the exact failed reduction field, and the changed boundary.
+The global diagnostic SHALL retain its full-suite command, exit code, summary,
+known-issue link, and explicit non-gating rationale. It SHALL not be hidden,
+renamed as a focused test, or included in readiness.
+
+`task_owned_admission_ready_score` SHALL equal `1.0` only when every
+preregistered row exists and its observed value exactly equals its expected
+value. Otherwise it SHALL equal `0.0`. A ready artifact SHALL use
+`verdict_class=null`. Any blocked artifact SHALL use a `blocked_` status and
+verdict. Its `gate_check_summary` SHALL name every failed owned check and its
+observed value. Missing and null values SHALL remain distinct from zero.
+
+`field_provenance` SHALL name the source path, parser, function, hash, and schema
+for every top-level field. The artifact SHALL use
+`inference_substrate=receipt_scoped_gpu_lease_reducer_no_llm` and
+`verifier_is_oracle=true`. It SHALL make no model-quality claim. The final JSON
+write SHALL use file sync, atomic replace, and directory sync.
+
+#### SCENARIO-REPORT-6647-READY
+
+**Given** every preregistered task-owned row passes
+**When** Exp6647 recomputes the aggregate from rows
+**Then** readiness is exactly one, `verdict_class` is null, and the global-suite
+diagnostic remains visible but non-gating.
+
+#### SCENARIO-REPORT-6647-GLOBAL-DIAGNOSTIC
+
+**Given** the repo-wide pytest receipt is nonzero because of the known
+xdist/CWD issue
+**When** all task-owned rows pass
+**Then** the diagnostic keeps its exact command, exit, summary, and issue link
+without changing task-owned readiness.
+
+#### SCENARIO-REPORT-6647-BLOCKED-RECEIPT
+
+**Given** any owned receipt is missing, null, malformed, duplicated, reordered,
+or does not match its expected value
+**When** the artifact is reduced or validated
+**Then** it fails closed with readiness zero and names the check plus the exact
+observed value.
+
+#### SCENARIO-REPORT-6647-ATOMIC-PROVENANCE
+
+**Given** complete owned and diagnostic rows
+**When** the artifact is written or changed
+**Then** readers see one complete JSON document, every field hash replays, and
+the final content checksum detects the change.
+
+## Implementation Status (REQ-REPORT-6647)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6647 | Planned (`python/carnot/experiment_6647_receipt_scoped_admission_boundary.py`) | Planned (`tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py`) |
