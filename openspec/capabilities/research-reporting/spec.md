@@ -57935,9 +57935,13 @@ renamed as a focused test, or included in readiness.
 `task_owned_admission_ready_score` SHALL equal `1.0` only when every
 preregistered row exists and its observed value exactly equals its expected
 value. Otherwise it SHALL equal `0.0`. A ready artifact SHALL use
-`verdict_class=null`. Any blocked artifact SHALL use a `blocked_` status and
-verdict. Its `gate_check_summary` SHALL name every failed owned check and its
-observed value. Missing and null values SHALL remain distinct from zero.
+`status=complete_ready` and `verdict_class=null`. Any blocked artifact SHALL use
+a `blocked_` status and verdict. Its `gate_check_summary` SHALL name every
+failed owned check and its observed value. Missing and null values SHALL remain
+distinct from zero. The adversarial verifier receipt MAY report exit code `1`
+for one non-critical substrate review warning; because adversarial review is not
+one of the preregistered task-owned checks, that diagnostic SHALL remain visible
+without changing task-owned readiness or terminal-ready classification.
 
 `field_provenance` SHALL name the source path, parser, function, hash, and schema
 for every top-level field. The artifact SHALL use
@@ -57949,8 +57953,10 @@ write SHALL use file sync, atomic replace, and directory sync.
 
 **Given** every preregistered task-owned row passes
 **When** Exp6647 recomputes the aggregate from rows
-**Then** readiness is exactly one, `verdict_class` is null, and the global-suite
-diagnostic remains visible but non-gating.
+**Then** readiness is exactly one, `status` is `complete_ready`,
+`verdict_class` is null, the artifact classifies as terminal-ready, and the
+global-suite and non-critical adversarial diagnostics remain visible but
+non-gating.
 
 #### SCENARIO-REPORT-6647-GLOBAL-DIAGNOSTIC
 
@@ -57979,4 +57985,4 @@ the final content checksum detects the change.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-REPORT-6647 | Planned (`python/carnot/experiment_6647_receipt_scoped_admission_boundary.py`) | Planned (`tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py`) |
+| REQ-REPORT-6647 | Implemented (`python/carnot/experiment_6647_receipt_scoped_admission_boundary.py`) | Implemented (`tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py`; terminal-ready classification, diagnostic isolation, provenance, and atomic artifact coverage) |

@@ -1,0 +1,1796 @@
+{
+  "aggregate_row_recomputation": {
+    "all_task_owned_checks_passed": true,
+    "excluded_diagnostic_count": 1,
+    "expected_row_count": 13,
+    "failed_checks": [],
+    "included_owned_row_count": 13,
+    "missing_or_null_coerced_to_zero": false,
+    "observed_row_count": 13,
+    "ordered_check_ids": [
+      "acquisition",
+      "same_device_exclusion",
+      "independent_device_allowance",
+      "token_pid_start_device_binding",
+      "heartbeat",
+      "phase_transitions",
+      "unload_release",
+      "crash_recovery",
+      "tamper_detection",
+      "atomic_artifact_write",
+      "focused_tests",
+      "spec_coverage",
+      "applicable_e2e_checks"
+    ],
+    "passed_check_ids": [
+      "acquisition",
+      "same_device_exclusion",
+      "independent_device_allowance",
+      "token_pid_start_device_binding",
+      "heartbeat",
+      "phase_transitions",
+      "unload_release",
+      "crash_recovery",
+      "tamper_detection",
+      "atomic_artifact_write",
+      "focused_tests",
+      "spec_coverage",
+      "applicable_e2e_checks"
+    ],
+    "received_ordered_check_ids": [
+      "acquisition",
+      "same_device_exclusion",
+      "independent_device_allowance",
+      "token_pid_start_device_binding",
+      "heartbeat",
+      "phase_transitions",
+      "unload_release",
+      "crash_recovery",
+      "tamper_detection",
+      "atomic_artifact_write",
+      "focused_tests",
+      "spec_coverage",
+      "applicable_e2e_checks"
+    ],
+    "recomputed_task_owned_admission_ready_score": 1.0,
+    "schema": "carnot.experiment_6647.aggregate.v1"
+  },
+  "duration_s": 9.325561,
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "function": "reduce_task_owned_rows",
+      "hash": "sha256:d1fe1e7dfa8d28c75abfdbd61da855ac5bf5c89b45148401f2302b374486b75c",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "The aggregate is rebuilt from rows without null coercion.",
+      "schema": "carnot.experiment_6647.field.aggregate_row_recomputation.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "duration_s": {
+      "function": "build_artifact",
+      "hash": "sha256:b91eaad6b43cb0c431793da551c83c827badd2f9dff774646c7c87af444e08e7",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "Monotonic elapsed time proves the bounded replay ran.",
+      "schema": "carnot.experiment_6647.field.duration_s.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "field_provenance": {
+      "function": "build_field_provenance",
+      "hash": "sha256:9654e7f1da0abc42000c44fb6cda901dd2990c0c55579e54c8226d6d0e7b99ab",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "Each field names its producer, parser, schema, and content hash.",
+      "schema": "carnot.experiment_6647.field.field_provenance.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "gate_check_summary": {
+      "function": "build_artifact",
+      "hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "Each block keeps the failed check and exact observed value.",
+      "schema": "carnot.experiment_6647.field.gate_check_summary.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "global_suite_diagnostic": {
+      "function": "load_global_suite_diagnostic",
+      "hash": "sha256:638601ec017daeabe2a9a178bd188ab5386cf6b49379fe6e1c462e9224e5dd4a",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "Repo-wide failure truth stays visible and non-gating.",
+      "schema": "carnot.experiment_6647.field.global_suite_diagnostic.v1",
+      "source_path": "results/experiment_6633_gpu_lease_phase_journal.json"
+    },
+    "honest_verdict": {
+      "function": "build_artifact",
+      "hash": "sha256:b39cc79fbddd5fed05120f612caa8a2bf1a41c1d112a75fc83e875512eefa22e",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "The conclusion is limited to receipt-bound infrastructure.",
+      "schema": "carnot.experiment_6647.field.honest_verdict.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "inference_substrate": {
+      "function": "build_artifact",
+      "hash": "sha256:7a4d5accac48a99a68c00f6e7512754990466f1fdb04bb7996c40ec3ccaa2d2f",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "The substrate prevents an infrastructure result becoming a model claim.",
+      "schema": "carnot.experiment_6647.field.inference_substrate.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "per_unit_rows": {
+      "function": "build_artifact",
+      "hash": "sha256:4ec60a856f8135b67eabf72d6309711239a5520dbcd1715ae6d414f20f0e4c5e",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "Owned and diagnostic rows remain individually inspectable.",
+      "schema": "carnot.experiment_6647.field.per_unit_rows.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "preconditions_checked": {
+      "function": "collect_preconditions",
+      "hash": "sha256:052ad8da84767e3e0570a6d49ccbada0f0afea3f4fb168dc778b633aba41d39f",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "Inputs, tools, resources, hashes, and no-LLM scope are recorded.",
+      "schema": "carnot.experiment_6647.field.preconditions_checked.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "preregistered_task_owned_checks": {
+      "function": "build_artifact",
+      "hash": "sha256:1ea595df511c9b2148b495042510e3f26c37101e039832b32817d72668ee1bf0",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "The ordered gate set exists before execution.",
+      "schema": "carnot.experiment_6647.field.preregistered_task_owned_checks.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "prior_failure_receipt": {
+      "function": "_prior_failure_receipt",
+      "hash": "sha256:75d3a4faff083a6349bb05e58ff90ba2be5092e2b8f806059f45d6644ad849df",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "The changed boundary stays tied to the Exp6633 failure.",
+      "schema": "carnot.experiment_6647.field.prior_failure_receipt.v1",
+      "source_path": "results/experiment_6633_gpu_lease_phase_journal.json"
+    },
+    "protected_files_unchanged": {
+      "function": "_protected_receipt",
+      "hash": "sha256:2cd48df7c243e91943ff68f57c5c3f7998acd0c569dbbe805bcc416f1599d7e2",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "The active roadmap and conductor stay byte-identical.",
+      "schema": "carnot.experiment_6647.field.protected_files_unchanged.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "random_seed": {
+      "function": "build_artifact",
+      "hash": "sha256:21d79c60f58d912fcdffdb879a00c69c920e6d746b32548cb7f46ca8f47650ab",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "A fixed seed pins the fixture order even though no random sampling occurs.",
+      "schema": "carnot.experiment_6647.field.random_seed.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "reducer_contract": {
+      "function": "build_artifact",
+      "hash": "sha256:276bf9f0eff43bf7194d49ab8d863073b90d16e20448d8ee662026df7415f280",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "Inclusion and exclusion rules prevent boundary drift.",
+      "schema": "carnot.experiment_6647.field.reducer_contract.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "reproducibility_checksum": {
+      "function": "payload_checksum",
+      "hash": "self_excluded_from_content_hash",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "The final content hash detects any artifact mutation.",
+      "schema": "carnot.experiment_6647.field.reproducibility_checksum.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "status": {
+      "function": "build_artifact",
+      "hash": "sha256:5dd1176dd85abfa42941812a91fcd00cb6aa09a4cf4225f875532f1086175792",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "One terminal state reports whether every owned receipt passed.",
+      "schema": "carnot.experiment_6647.field.status.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "task_owned_admission_ready_score": {
+      "function": "build_artifact",
+      "hash": "sha256:d0ff5974b6aa52cf562bea5921840c032a860a91a3512f7fe8f768f6bbe005f6",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "Only exact owned rows control this binary field.",
+      "schema": "carnot.experiment_6647.field.task_owned_admission_ready_score.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "task_owned_check_rows": {
+      "function": "replay_task_owned_checks",
+      "hash": "sha256:7da74f4be2c6176b69a5aaf6510856f800f6517c3b0d5767966d8e69599f5033",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "One replayable row exists for each owned definition.",
+      "schema": "carnot.experiment_6647.field.task_owned_check_rows.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "tests_run": {
+      "function": "build_artifact",
+      "hash": "sha256:a71c3c2b0e60bf74d756faf5fc1a21acce0a3c7742244ed510295bbfabdd68be",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "Commands and exits preserve verification evidence without widening readiness.",
+      "schema": "carnot.experiment_6647.field.tests_run.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "verdict_class": {
+      "function": "build_artifact",
+      "hash": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "Ready infrastructure is null; failed owned evidence is blocked.",
+      "schema": "carnot.experiment_6647.field.verdict_class.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    },
+    "verifier_is_oracle": {
+      "function": "build_artifact",
+      "hash": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+      "parser": "json.loads_and_exact_row_reduction",
+      "principle": "Fixture expectations define null infrastructure readiness.",
+      "schema": "carnot.experiment_6647.field.verifier_is_oracle.v1",
+      "source_path": "python/carnot/experiment_6647_receipt_scoped_admission_boundary.py"
+    }
+  },
+  "gate_check_summary": [],
+  "global_suite_diagnostic": {
+    "command": ".venv/bin/pytest tests/python -q",
+    "exit_code": 3,
+    "gating": false,
+    "known_issue_link": "ops/known-issues.md:2620",
+    "non_gating_rationale": "The repo-wide selection includes unrelated tests and the known xdist/CWD failure. It remains operational truth but does not own this task's readiness.",
+    "receipt_hash": "sha256:d541416f97b9f05dbae07b724379da35cb702840a92fe5cd9e23164a5f76aa72",
+    "row_kind": "global_suite_diagnostic",
+    "schema": "carnot.experiment_6647.global_suite_diagnostic.v1",
+    "source": "results/experiment_6633_gpu_lease_phase_journal.json",
+    "summary": "1037 failed, 34797 passed, 103 skipped, 140 warnings in 2310.03s; pytest/xdist stopped at 62% after an existing test removed its worker CWD, raising FileNotFoundError"
+  },
+  "honest_verdict": "complete: preregistered task-owned GPU lease receipts support infrastructure admission; the global suite remains diagnostic; no model-quality claim",
+  "inference_substrate": "receipt_scoped_gpu_lease_reducer_no_llm",
+  "per_unit_rows": [
+    {
+      "check_id": "acquisition",
+      "command": "fixture:acquisition",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/01-acquisition",
+      "observed_value": true,
+      "ordinal": 1,
+      "receipt": {
+        "owner": {
+          "acquired_monotonic_ns": 66978205361006,
+          "argv_digest": "sha256:92643135fca975eb6ce614352a945cfe509e597ca4fd93f1dbcd0c9bee95426e",
+          "device_uuid": "GPU-exp6647-acquisition",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "fixture/no-model.gguf",
+          "expires_monotonic_ns": 67008205361006,
+          "pid": 582009,
+          "pid_start_ticks": 6697770,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "exp6647-acquisition",
+          "token_digest": "sha256:d495d714986d161b77bfe329a8c82da693a7cb6dd01476ad0cac33941974ad3b",
+          "token_length": 43,
+          "token_opaque": true
+        },
+        "release": {
+          "checksum": "sha256:9abc8730ff9422bd3d0fb99964eeac638022615229e1961817ae9ce1dd03ffd6",
+          "device_uuid": "GPU-exp6647-acquisition",
+          "phase": "terminal_blocked",
+          "pid": 582009,
+          "pid_start_ticks": 6697770,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "receipt_hash": "sha256:ed55e0a24317739675968c32bd6fbf3e84fe9a9b9cc375e5e87991739e14bfa9",
+      "receipt_schema": "carnot.experiment_6647.check.acquisition.v1",
+      "row_kind": "task_owned_check",
+      "source": "GpuLease.acquire"
+    },
+    {
+      "check_id": "same_device_exclusion",
+      "command": "fixture:same-device-exclusion",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/02-same_device_exclusion",
+      "observed_value": true,
+      "ordinal": 2,
+      "receipt": {
+        "contender_outcome": "LeaseBusy",
+        "release": {
+          "checksum": "sha256:ec22303f2c0587517c706d524edb58fb68654cf3af4cf64939baf2ea91da1cd3",
+          "device_uuid": "GPU-exp6647-same",
+          "phase": "terminal_blocked",
+          "pid": 582009,
+          "pid_start_ticks": 6697770,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "receipt_hash": "sha256:5fbe3b41322235a3a747560125797729e438bd6c902f756758cb759431742479",
+      "receipt_schema": "carnot.experiment_6647.check.same_device_exclusion.v1",
+      "row_kind": "task_owned_check",
+      "source": "GpuLease.acquire/LeaseBusy"
+    },
+    {
+      "check_id": "independent_device_allowance",
+      "command": "fixture:independent-device-allowance",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/03-independent_device_allowance",
+      "observed_value": true,
+      "ordinal": 3,
+      "receipt": {
+        "owners": [
+          {
+            "acquired_monotonic_ns": 66979383380968,
+            "argv_digest": "sha256:92643135fca975eb6ce614352a945cfe509e597ca4fd93f1dbcd0c9bee95426e",
+            "device_uuid": "GPU-exp6647-independent-0",
+            "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+            "expected_model": "fixture/no-model.gguf",
+            "expires_monotonic_ns": 67009383380968,
+            "pid": 582009,
+            "pid_start_ticks": 6697770,
+            "recovery": {
+              "performed": false,
+              "signals_sent": []
+            },
+            "signals_sent": [],
+            "task_id": "exp6647-independent-0",
+            "token_digest": "sha256:fd0c38d880b0d2961196b3562fe3c6cb5efcd509de85e7482c540e5e1a1c821d",
+            "token_length": 43,
+            "token_opaque": true
+          },
+          {
+            "acquired_monotonic_ns": 66979584980952,
+            "argv_digest": "sha256:92643135fca975eb6ce614352a945cfe509e597ca4fd93f1dbcd0c9bee95426e",
+            "device_uuid": "GPU-exp6647-independent-1",
+            "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+            "expected_model": "fixture/no-model.gguf",
+            "expires_monotonic_ns": 67009584980952,
+            "pid": 582009,
+            "pid_start_ticks": 6697770,
+            "recovery": {
+              "performed": false,
+              "signals_sent": []
+            },
+            "signals_sent": [],
+            "task_id": "exp6647-independent-1",
+            "token_digest": "sha256:51f10dca6907d396ddedfa06a0c6ea71639ba40ce121340302787910d4078a15",
+            "token_length": 43,
+            "token_opaque": true
+          }
+        ],
+        "releases": [
+          {
+            "checksum": "sha256:2d5459b8c3269952eea123227d0ccfc83a608ab2d8dc0eca1828c67ce8c57e09",
+            "device_uuid": "GPU-exp6647-independent-0",
+            "phase": "terminal_blocked",
+            "pid": 582009,
+            "pid_start_ticks": 6697770,
+            "released": true,
+            "signals_sent": []
+          },
+          {
+            "checksum": "sha256:3d9377b2e3d47cd1d76f2bf0b6214167d574d428d96f595a74cbed272326a233",
+            "device_uuid": "GPU-exp6647-independent-1",
+            "phase": "terminal_blocked",
+            "pid": 582009,
+            "pid_start_ticks": 6697770,
+            "released": true,
+            "signals_sent": []
+          }
+        ]
+      },
+      "receipt_hash": "sha256:0c9f90ce2cb49e1885290e7f47f29d35bfa26bf70a31a27cd4226c198c6aaf52",
+      "receipt_schema": "carnot.experiment_6647.check.independent_device_allowance.v1",
+      "row_kind": "task_owned_check",
+      "source": "GpuLease.acquire/device-scoped-lock"
+    },
+    {
+      "check_id": "token_pid_start_device_binding",
+      "command": "fixture:token-pid-start-device-binding",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/04-token_pid_start_device_binding",
+      "observed_value": true,
+      "ordinal": 4,
+      "receipt": {
+        "attack_ids": [
+          "wrong_token",
+          "wrong_device",
+          "pid_reuse"
+        ],
+        "outcomes": {
+          "pid_reuse": "OwnershipError",
+          "wrong_device": "OwnershipError",
+          "wrong_token": "OwnershipError"
+        },
+        "release": {
+          "checksum": "sha256:3207a3c22cf6e3fafdf492894e26ca33ceca81be9b38dd13655fc0ba20d8f807",
+          "device_uuid": "GPU-exp6647-binding",
+          "phase": "terminal_blocked",
+          "pid": 582009,
+          "pid_start_ticks": 6697770,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "receipt_hash": "sha256:eef4cdb87c7b31a130fec867898a992126dbc59edc5e8596d986f0ba8f6edc7c",
+      "receipt_schema": "carnot.experiment_6647.check.token_pid_start_device_binding.v1",
+      "row_kind": "task_owned_check",
+      "source": "GpuLease._verify_owner"
+    },
+    {
+      "check_id": "heartbeat",
+      "command": "fixture:heartbeat",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/05-heartbeat",
+      "observed_value": true,
+      "ordinal": 5,
+      "receipt": {
+        "heartbeat": {
+          "checksum": "sha256:969d1afa8b55bcc20596610f2cdddc224e98d8a340634b7c10980bcab1274ace",
+          "expires_monotonic_ns": 67011193549073,
+          "heartbeat_monotonic_ns": 66981193549073,
+          "owner_verified": true
+        },
+        "release": {
+          "checksum": "sha256:aa3fd7c2ccfa56163b0d7cc88c235dda1dfc553356eec31e5a6bf2ecf4e40b6d",
+          "device_uuid": "GPU-exp6647-heartbeat",
+          "phase": "terminal_blocked",
+          "pid": 582009,
+          "pid_start_ticks": 6697770,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "receipt_hash": "sha256:978ef2b3369f873d93a022ec98a160beadb2aa386b464067745c5377b9521b8d",
+      "receipt_schema": "carnot.experiment_6647.check.heartbeat.v1",
+      "row_kind": "task_owned_check",
+      "source": "GpuLease.heartbeat"
+    },
+    {
+      "check_id": "phase_transitions",
+      "command": "fixture:phase-transitions",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/06-phase_transitions",
+      "observed_value": true,
+      "ordinal": 6,
+      "receipt": {
+        "rejected_cases": [
+          "reversal",
+          "second_terminal",
+          "skip"
+        ],
+        "rows": [
+          {
+            "accepted": true,
+            "case": "initial_acquire",
+            "from_phase": null,
+            "reason": "atomic_acquire",
+            "to_phase": "preflight"
+          },
+          {
+            "accepted": true,
+            "case": "allowed",
+            "event_checksum": "sha256:8dd807e3f005de1c8fe1f84ce03fc4d7c1284f01751a5d4d31ad2e8a541372c0",
+            "from_phase": "preflight",
+            "journal_checksum": "sha256:83c97c3e3616f561c70dd451fb8f5ef298dccc46385187f500d98541b71e9ba4",
+            "reason": "allowed",
+            "to_phase": "admitted"
+          },
+          {
+            "accepted": true,
+            "case": "allowed",
+            "event_checksum": "sha256:3c577d4cdd2dcb8d79f33bc4002bf3a6094a5196e7e421dabc9d4d67d34a4b5b",
+            "from_phase": "admitted",
+            "journal_checksum": "sha256:fe0695cf7ed0a16f08e54e2adfddce7479e57a45464d8b061baf7a436ae2cfc1",
+            "reason": "allowed",
+            "to_phase": "loading"
+          },
+          {
+            "accepted": true,
+            "case": "allowed",
+            "event_checksum": "sha256:14bb478f2c02d4f6df3b3eea9a19ec886236f3e5f51dd3f45bc1aa42936c47f8",
+            "from_phase": "loading",
+            "journal_checksum": "sha256:76d5b4e2270eb550446f4079302d2108db2d29db36a08f8db1ca9a4084461995",
+            "reason": "allowed",
+            "to_phase": "resident"
+          },
+          {
+            "accepted": true,
+            "case": "allowed",
+            "event_checksum": "sha256:ea69687b35a78cd23d07973b9fae1dee0e48055bb11a3659fca016ce95e19d0c",
+            "from_phase": "resident",
+            "journal_checksum": "sha256:f9d08474d862e4f5a256274f3be9079005c712e93d1562f4bd4ca9cc1bac8545",
+            "reason": "allowed",
+            "to_phase": "inferencing"
+          },
+          {
+            "accepted": true,
+            "case": "allowed",
+            "event_checksum": "sha256:02812d67b96a140577aee760f9e938d14d5f04fd8d573f263b990020df3c0e98",
+            "from_phase": "inferencing",
+            "journal_checksum": "sha256:f8967ec468b6f9463df1e6c9aa8d39de8238004706951d0b6d92247782de8ee1",
+            "reason": "allowed",
+            "to_phase": "unloading"
+          },
+          {
+            "accepted": true,
+            "case": "allowed",
+            "event_checksum": "sha256:be82ffe3dbf65a5ad7ffe342dfdaab7639ab8706baf2d72423e4653bb2b660a2",
+            "from_phase": "unloading",
+            "journal_checksum": "sha256:7f962276b2714445c081b876f6685b246c936b09407206017ebad165692fe780",
+            "reason": "allowed",
+            "to_phase": "validating"
+          },
+          {
+            "accepted": true,
+            "case": "allowed",
+            "event_checksum": "sha256:74d3c9342dc2f90ec967a6f4638129e902e40c8678644553b1cb0c75e6667015",
+            "from_phase": "validating",
+            "journal_checksum": "sha256:e6523164e576aa596892e62d296d4e3140470deff661ce4d8e0f77bfeb122a57",
+            "reason": "allowed",
+            "to_phase": "terminal_complete"
+          },
+          {
+            "accepted": false,
+            "case": "skip",
+            "from_phase": "preflight",
+            "reason": "transition_not_allowed:preflight->loading",
+            "to_phase": "loading"
+          },
+          {
+            "accepted": false,
+            "case": "reversal",
+            "from_phase": "admitted",
+            "reason": "transition_not_allowed:admitted->preflight",
+            "to_phase": "preflight"
+          },
+          {
+            "accepted": false,
+            "case": "second_terminal",
+            "from_phase": "terminal_blocked",
+            "reason": "terminal_already_set",
+            "to_phase": "terminal_complete"
+          }
+        ]
+      },
+      "receipt_hash": "sha256:53da1b68d52d647b1bb311101001121c58058d52143a2fd737d634f4ef826f0c",
+      "receipt_schema": "carnot.experiment_6647.check.phase_transitions.v1",
+      "row_kind": "task_owned_check",
+      "source": "build_phase_transition_rows"
+    },
+    {
+      "check_id": "unload_release",
+      "command": "fixture:unload-release",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/07-unload_release",
+      "observed_value": true,
+      "ordinal": 7,
+      "receipt": {
+        "exit_evidence": {
+          "exit_code": 0,
+          "observed_monotonic_ns": 66984811640480
+        },
+        "phase_rows": [
+          {
+            "accepted": true,
+            "event_checksum": "sha256:3f57546a125728693f6ca8e9e8316b44c1a65baefbfa26dc44131fe57fd56211",
+            "from_phase": "preflight",
+            "journal_checksum": "sha256:4cfc7cb0d0c50fdef6f90dddce42b1a257ada38caf49dc59c6cbdf89622b3065",
+            "to_phase": "admitted"
+          },
+          {
+            "accepted": true,
+            "event_checksum": "sha256:3cd13adfe24cb7995d5706296bc568a97419e3884ae307d6c87801496f232e7b",
+            "from_phase": "admitted",
+            "journal_checksum": "sha256:9a6af3d76c8820d98c62d0b793ab7152ed3650ee57cd5be519c2813452c815f6",
+            "to_phase": "loading"
+          },
+          {
+            "accepted": true,
+            "event_checksum": "sha256:9affae3eebeaa72999adefc3412f0a1fa45c61bfedb5d31cc741769591bcf10d",
+            "from_phase": "loading",
+            "journal_checksum": "sha256:7d3c860a255fd6d91c624a8f7b60b788e321ffed2f711762b29dfbc4a369cb55",
+            "to_phase": "resident"
+          },
+          {
+            "accepted": true,
+            "event_checksum": "sha256:4e17e3c71ddeed0a19da1af151d37bb07bdbcf9218cb8726711d8659f3a7978f",
+            "from_phase": "resident",
+            "journal_checksum": "sha256:b39aeb2c4aba76ca548d7a439f673ac44c2712a0f1de21a517a5e2c11f40281e",
+            "to_phase": "inferencing"
+          },
+          {
+            "accepted": true,
+            "event_checksum": "sha256:be88ee845652df7968c9caf7f8d49b7a0c053aa13dff9d01293cfbe37bf3ccb6",
+            "from_phase": "inferencing",
+            "journal_checksum": "sha256:3b0d4d38c0c1f916b470fc239870472c5ba05efea8116d8d733f716f7666a48d",
+            "to_phase": "unloading"
+          },
+          {
+            "accepted": true,
+            "event_checksum": "sha256:fa72207518d373a72553ca8aeacc12dd496866ddff235d8b3e1f11583e0b3484",
+            "from_phase": "unloading",
+            "journal_checksum": "sha256:3caf9b888a08297e88e1453a477d3b96556ee9cc151b7e0966e85ff097c58af9",
+            "to_phase": "validating"
+          },
+          {
+            "accepted": true,
+            "event_checksum": "sha256:5e1b484549d77a0aa1cbb2ddabbc062657109b37d4b934312deee6f170456033",
+            "from_phase": "validating",
+            "journal_checksum": "sha256:dbe77f74973268e0126eae04fa454947179ab4de42ac9d0ca3aeb5980081c249",
+            "to_phase": "terminal_complete"
+          }
+        ],
+        "release": {
+          "checksum": "sha256:7b8c14235c7a667543dd95cd660fd935db1c7933178655bde1c1a5ce4c7f1ac6",
+          "device_uuid": "GPU-exp6647-unload",
+          "phase": "terminal_complete",
+          "pid": 582009,
+          "pid_start_ticks": 6697770,
+          "released": true,
+          "signals_sent": []
+        },
+        "unload_evidence": {
+          "observed": true,
+          "observed_monotonic_ns": 66984811640480,
+          "required": true
+        }
+      },
+      "receipt_hash": "sha256:37183140e0bb86794b1c55700b25e1beae45f273b82dbdf100b38be237e0adb4",
+      "receipt_schema": "carnot.experiment_6647.check.unload_release.v1",
+      "row_kind": "task_owned_check",
+      "source": "GpuLease.release"
+    },
+    {
+      "check_id": "crash_recovery",
+      "command": "fixture:crash-recovery",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/08-crash_recovery",
+      "observed_value": true,
+      "ordinal": 8,
+      "receipt": {
+        "commands": [
+          [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-m",
+            "carnot.gpu_lease_phase_journal",
+            "--runtime-dir",
+            "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/08-crash_recovery",
+            "--task-id",
+            "exp6647-crash",
+            "--device-uuid",
+            "GPU-exp6647-crash",
+            "--behavior",
+            "crash",
+            "--hold-s",
+            "0.0",
+            "--ttl-s",
+            "5.0",
+            "--exit-code",
+            "23"
+          ],
+          [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-m",
+            "carnot.gpu_lease_phase_journal",
+            "--runtime-dir",
+            "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/08-crash_recovery",
+            "--task-id",
+            "exp6647-recovery",
+            "--device-uuid",
+            "GPU-exp6647-crash",
+            "--behavior",
+            "recover_complete",
+            "--hold-s",
+            "0.0",
+            "--ttl-s",
+            "5.0",
+            "--exit-code",
+            "23"
+          ]
+        ],
+        "crash_exit_code": 23,
+        "crash_rows": [
+          {
+            "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/08-crash_recovery/device-22a3121c99e11ad57bde7f62cef91ec40a5574e4705f47fd79bd696bac8e2ba6.journal.json",
+            "outcome": "acquired",
+            "owner": {
+              "acquired_monotonic_ns": 66985641859113,
+              "argv_digest": "sha256:cf8dd6d1f28ba6100ad6ed0c2c8ec88866b011bcf1b32adc1a8be8d7ba9b91ab",
+              "device_uuid": "GPU-exp6647-crash",
+              "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+              "expected_model": "fixture/model.gguf",
+              "expires_monotonic_ns": 66990641859113,
+              "pid": 582062,
+              "pid_start_ticks": 6698521,
+              "recovery": {
+                "performed": false,
+                "signals_sent": []
+              },
+              "signals_sent": [],
+              "task_id": "exp6647-crash",
+              "token_digest": "sha256:b98bbb6ab3c1b98b8d1e25f2e72b7705b7548bc65200ebe6a06821474f471aef",
+              "token_length": 43,
+              "token_opaque": true
+            }
+          }
+        ],
+        "recovery_exit_code": 0,
+        "recovery_rows": [
+          {
+            "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/08-crash_recovery/device-22a3121c99e11ad57bde7f62cef91ec40a5574e4705f47fd79bd696bac8e2ba6.journal.json",
+            "outcome": "acquired",
+            "owner": {
+              "acquired_monotonic_ns": 66986288666843,
+              "argv_digest": "sha256:a08a833d28051a1e9b3b18665e8100d3949b8a679a0e6e3c3c922a5db2291a9b",
+              "device_uuid": "GPU-exp6647-crash",
+              "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+              "expected_model": "fixture/model.gguf",
+              "expires_monotonic_ns": 66991288666843,
+              "pid": 582086,
+              "pid_start_ticks": 6698582,
+              "recovery": {
+                "performed": true,
+                "previous_checksum": "sha256:b25f58b14230c2c8d14e3e99e586544dce40c28f448a192c32ddf6ddd27ceee3",
+                "previous_pid": 582062,
+                "previous_pid_start_ticks": 6698521,
+                "previous_task_id": "exp6647-crash",
+                "reason": "recorded_owner_absent_or_pid_reused",
+                "signals_sent": []
+              },
+              "signals_sent": [],
+              "task_id": "exp6647-recovery",
+              "token_digest": "sha256:882139dfcbdbff944a2c3b107607ebf4fa4cf65ea25639cead5ec3be9c0158bf",
+              "token_length": 43,
+              "token_opaque": true
+            }
+          },
+          {
+            "outcome": "released",
+            "release": {
+              "checksum": "sha256:608669a3f46795ac59402916cd7cdee05c43f527bbaf100f2358cde910daaa80",
+              "device_uuid": "GPU-exp6647-crash",
+              "phase": "terminal_complete",
+              "pid": 582086,
+              "pid_start_ticks": 6698582,
+              "released": true,
+              "signals_sent": []
+            }
+          }
+        ],
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      "receipt_hash": "sha256:260a04daa30e69f1436baf3634f1e261011a7a7bf93e4876260b2186bcf13f0b",
+      "receipt_schema": "carnot.experiment_6647.check.crash_recovery.v1",
+      "row_kind": "task_owned_check",
+      "source": "fixture_worker_main/GpuLease.acquire"
+    },
+    {
+      "check_id": "tamper_detection",
+      "command": "fixture:tamper-detection",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/09-tamper_detection",
+      "observed_value": true,
+      "ordinal": 9,
+      "receipt": {
+        "outcome": "JournalError",
+        "reason": "checksum_mismatch"
+      },
+      "receipt_hash": "sha256:1a534d2441f8d7c70d75527e1610da75469c2684980200436e78dddacba5fd70",
+      "receipt_schema": "carnot.experiment_6647.check.tamper_detection.v1",
+      "row_kind": "task_owned_check",
+      "source": "GpuLease._refresh"
+    },
+    {
+      "check_id": "atomic_artifact_write",
+      "command": "fixture:atomic-artifact-write",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/10-atomic_artifact_write",
+      "observed_value": true,
+      "ordinal": 10,
+      "receipt": {
+        "observed": {
+          "sequence": [
+            1,
+            2,
+            3
+          ],
+          "state": "terminal"
+        },
+        "partial_paths": [],
+        "target": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/10-atomic_artifact_write/atomic-probe.json",
+        "target_sha256": "sha256:5655cdfa48b6910364b56df572ac1af9d1e32b73a228a20d05a312a0d28e41f0"
+      },
+      "receipt_hash": "sha256:89811152623f980a76a455cc9d896fa6e312acd7a20ea2cc9b54211bdb7d3e4f",
+      "receipt_schema": "carnot.experiment_6647.check.atomic_artifact_write.v1",
+      "row_kind": "task_owned_check",
+      "source": "write_json_atomic"
+    },
+    {
+      "check_id": "focused_tests",
+      "command": ".venv/bin/pytest tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "expected_value": true,
+      "observed_value": true,
+      "ordinal": 11,
+      "receipt": {
+        "command": ".venv/bin/pytest tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py -q --no-cov -n 0",
+        "exit_code": 0,
+        "summary": "focused tests passed"
+      },
+      "receipt_hash": "sha256:06cf7dd12c167fee446c8c8ac5a42f39dd8d2f5ee82d2672d89e7e60d3032917",
+      "receipt_schema": "carnot.experiment_6647.check.focused_tests.v1",
+      "row_kind": "task_owned_check",
+      "source": "tests_run"
+    },
+    {
+      "check_id": "spec_coverage",
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py",
+      "exit_code": 0,
+      "expected_value": true,
+      "observed_value": true,
+      "ordinal": 12,
+      "receipt": {
+        "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py",
+        "exit_code": 0,
+        "summary": "focused spec coverage passed"
+      },
+      "receipt_hash": "sha256:485f903932ae89b7a096421ef239dfed7e4d8266c8c869d7ca2b5a9272a27b89",
+      "receipt_schema": "carnot.experiment_6647.check.spec_coverage.v1",
+      "row_kind": "task_owned_check",
+      "source": "tests_run"
+    },
+    {
+      "check_id": "applicable_e2e_checks",
+      "command": "Exp6647 E2E: fresh-path acquisition, exclusion, independent-device, binding, heartbeat, phase, unload, recovery, tamper, and atomic-write replay",
+      "exit_code": 0,
+      "expected_value": true,
+      "observed_value": true,
+      "ordinal": 13,
+      "receipt": {
+        "command": "Exp6647 E2E: fresh-path acquisition, exclusion, independent-device, binding, heartbeat, phase, unload, recovery, tamper, and atomic-write replay",
+        "exit_code": 0,
+        "summary": "all preregistered owned fixtures passed in fresh temporary paths"
+      },
+      "receipt_hash": "sha256:1eac0f1fb51319331e7d93af54567f57a17ea3e048ad6d9e87c7a280545155cf",
+      "receipt_schema": "carnot.experiment_6647.check.applicable_e2e_checks.v1",
+      "row_kind": "task_owned_check",
+      "source": "tests_run"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 3,
+      "gating": false,
+      "known_issue_link": "ops/known-issues.md:2620",
+      "non_gating_rationale": "The repo-wide selection includes unrelated tests and the known xdist/CWD failure. It remains operational truth but does not own this task's readiness.",
+      "receipt_hash": "sha256:d541416f97b9f05dbae07b724379da35cb702840a92fe5cd9e23164a5f76aa72",
+      "row_kind": "global_suite_diagnostic",
+      "schema": "carnot.experiment_6647.global_suite_diagnostic.v1",
+      "source": "results/experiment_6633_gpu_lease_phase_journal.json",
+      "summary": "1037 failed, 34797 passed, 103 skipped, 140 warnings in 2310.03s; pytest/xdist stopped at 62% after an existing test removed its worker CWD, raising FileNotFoundError"
+    }
+  ],
+  "preconditions_checked": {
+    "current_global_suite_receipt": {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 3,
+      "gating": false,
+      "known_issue_link": "ops/known-issues.md:2620",
+      "non_gating_rationale": "The repo-wide selection includes unrelated tests and the known xdist/CWD failure. It remains operational truth but does not own this task's readiness.",
+      "receipt_hash": "sha256:d541416f97b9f05dbae07b724379da35cb702840a92fe5cd9e23164a5f76aa72",
+      "row_kind": "global_suite_diagnostic",
+      "schema": "carnot.experiment_6647.global_suite_diagnostic.v1",
+      "source": "results/experiment_6633_gpu_lease_phase_journal.json",
+      "summary": "1037 failed, 34797 passed, 103 skipped, 140 warnings in 2310.03s; pytest/xdist stopped at 62% after an existing test removed its worker CWD, raising FileNotFoundError"
+    },
+    "fixture_root": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975",
+    "host_resources": {
+      "cpu_count": 24,
+      "disk_free_bytes": 1071781339136,
+      "disk_total_bytes": 3953289023488,
+      "ram_bytes": 134304591872
+    },
+    "inputs": {
+      "infrastructure_spec_sha256": "sha256:7374668f95755ead96ceb27d8f6b0ffc08212d35ff2fac9469821c0b7601a6d2",
+      "lease_module_sha256": "sha256:b2bf64903fe4927f956025b01e099a010a9ddf36131a89b8f048a247312c43e0",
+      "module_sha256": "sha256:2ad9dd929331aedfe1be2ab7295a9cc69a16d24d73b50e9e92b99ba26efb7b24",
+      "planning_date": "20260826",
+      "prior_artifact_path": "results/experiment_6633_gpu_lease_phase_journal.json",
+      "prior_artifact_sha256": "sha256:f57473ad44f9416c6e9517c91353ff4d47d58ecfb73d2b5c9c670e5bcfa92750",
+      "prior_reducer_sha256": "sha256:57a6ee58cc4efd948e6ce9da4a15b9ec349829a84eccebdbe5663ce7962a2224",
+      "reporting_spec_sha256": "sha256:b6e2a477d7545d4f56d2eb185a6b15fb96eeb423cf115767cfc981bd4efb0e76",
+      "research_conductor_sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+      "research_roadmap_sha256": "sha256:ff53e2fc388ee853f6db403c97c4bfae1fdbb8b58a6a377d294d2d093768432a",
+      "root": "/home/ianblenke/github.com/ianblenke/carnot",
+      "test_sha256": "sha256:d8430a8bfde4a7e6748a8a765ee6e62b30a6a23f214540c2c5b539be3455bd99"
+    },
+    "no_llm": {
+      "generation_attempt_count": 0,
+      "inference_substrate": "receipt_scoped_gpu_lease_reducer_no_llm",
+      "llm_import_required": false,
+      "model_load_attempt_count": 0
+    },
+    "protected_hashes_before": {
+      "research-roadmap.yaml": "sha256:ff53e2fc388ee853f6db403c97c4bfae1fdbb8b58a6a377d294d2d093768432a",
+      "scripts/research_conductor.py": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
+    },
+    "python": {
+      "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+      "implementation": "CPython",
+      "version": "3.12.13"
+    },
+    "schema": "carnot.experiment_6647.preconditions.v1",
+    "task_owned_fixture_inventory": [
+      "acquisition",
+      "same_device_exclusion",
+      "independent_device_allowance",
+      "token_pid_start_device_binding",
+      "heartbeat",
+      "phase_transitions",
+      "unload_release",
+      "crash_recovery",
+      "tamper_detection",
+      "atomic_artifact_write",
+      "focused_tests",
+      "spec_coverage",
+      "applicable_e2e_checks"
+    ],
+    "tools": {
+      "adversarial_verify": true,
+      "coverage": true,
+      "pytest": true,
+      "spec_coverage": true
+    }
+  },
+  "preregistered_task_owned_checks": [
+    {
+      "check_id": "acquisition",
+      "command": "fixture:acquisition",
+      "expected_value": true,
+      "ordinal": 1,
+      "receipt_schema": "carnot.experiment_6647.check.acquisition.v1",
+      "source": "GpuLease.acquire"
+    },
+    {
+      "check_id": "same_device_exclusion",
+      "command": "fixture:same-device-exclusion",
+      "expected_value": true,
+      "ordinal": 2,
+      "receipt_schema": "carnot.experiment_6647.check.same_device_exclusion.v1",
+      "source": "GpuLease.acquire/LeaseBusy"
+    },
+    {
+      "check_id": "independent_device_allowance",
+      "command": "fixture:independent-device-allowance",
+      "expected_value": true,
+      "ordinal": 3,
+      "receipt_schema": "carnot.experiment_6647.check.independent_device_allowance.v1",
+      "source": "GpuLease.acquire/device-scoped-lock"
+    },
+    {
+      "check_id": "token_pid_start_device_binding",
+      "command": "fixture:token-pid-start-device-binding",
+      "expected_value": true,
+      "ordinal": 4,
+      "receipt_schema": "carnot.experiment_6647.check.token_pid_start_device_binding.v1",
+      "source": "GpuLease._verify_owner"
+    },
+    {
+      "check_id": "heartbeat",
+      "command": "fixture:heartbeat",
+      "expected_value": true,
+      "ordinal": 5,
+      "receipt_schema": "carnot.experiment_6647.check.heartbeat.v1",
+      "source": "GpuLease.heartbeat"
+    },
+    {
+      "check_id": "phase_transitions",
+      "command": "fixture:phase-transitions",
+      "expected_value": true,
+      "ordinal": 6,
+      "receipt_schema": "carnot.experiment_6647.check.phase_transitions.v1",
+      "source": "build_phase_transition_rows"
+    },
+    {
+      "check_id": "unload_release",
+      "command": "fixture:unload-release",
+      "expected_value": true,
+      "ordinal": 7,
+      "receipt_schema": "carnot.experiment_6647.check.unload_release.v1",
+      "source": "GpuLease.release"
+    },
+    {
+      "check_id": "crash_recovery",
+      "command": "fixture:crash-recovery",
+      "expected_value": true,
+      "ordinal": 8,
+      "receipt_schema": "carnot.experiment_6647.check.crash_recovery.v1",
+      "source": "fixture_worker_main/GpuLease.acquire"
+    },
+    {
+      "check_id": "tamper_detection",
+      "command": "fixture:tamper-detection",
+      "expected_value": true,
+      "ordinal": 9,
+      "receipt_schema": "carnot.experiment_6647.check.tamper_detection.v1",
+      "source": "GpuLease._refresh"
+    },
+    {
+      "check_id": "atomic_artifact_write",
+      "command": "fixture:atomic-artifact-write",
+      "expected_value": true,
+      "ordinal": 10,
+      "receipt_schema": "carnot.experiment_6647.check.atomic_artifact_write.v1",
+      "source": "write_json_atomic"
+    },
+    {
+      "check_id": "focused_tests",
+      "command": ".venv/bin/pytest tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py -q --no-cov -n 0",
+      "expected_value": true,
+      "ordinal": 11,
+      "receipt_schema": "carnot.experiment_6647.check.focused_tests.v1",
+      "source": "tests_run"
+    },
+    {
+      "check_id": "spec_coverage",
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py",
+      "expected_value": true,
+      "ordinal": 12,
+      "receipt_schema": "carnot.experiment_6647.check.spec_coverage.v1",
+      "source": "tests_run"
+    },
+    {
+      "check_id": "applicable_e2e_checks",
+      "command": "Exp6647 E2E: fresh-path acquisition, exclusion, independent-device, binding, heartbeat, phase, unload, recovery, tamper, and atomic-write replay",
+      "expected_value": true,
+      "ordinal": 13,
+      "receipt_schema": "carnot.experiment_6647.check.applicable_e2e_checks.v1",
+      "source": "tests_run"
+    }
+  ],
+  "prior_failure_receipt": {
+    "artifact_path": "results/experiment_6633_gpu_lease_phase_journal.json",
+    "artifact_sha256": "sha256:f57473ad44f9416c6e9517c91353ff4d47d58ecfb73d2b5c9c670e5bcfa92750",
+    "changed_boundary": "Exp6647 includes only preregistered task-owned rows in readiness and keeps the repo-wide suite receipt as a separate diagnostic.",
+    "exact_failed_reduction_field": "focused_tests",
+    "experiment_id": 6633,
+    "observed_value": false,
+    "schema": "carnot.experiment_6647.prior_failure.v1",
+    "status": "blocked_gpu_lease_scheduler_not_ready",
+    "verdict": "blocked_gpu_lease_scheduler_not_ready: infrastructure checks failed; no model-quality claim",
+    "verdict_class": "blocked"
+  },
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "research-roadmap.yaml": "sha256:ff53e2fc388ee853f6db403c97c4bfae1fdbb8b58a6a377d294d2d093768432a",
+      "scripts/research_conductor.py": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
+    },
+    "all_unchanged": true,
+    "before_hashes": {
+      "research-roadmap.yaml": "sha256:ff53e2fc388ee853f6db403c97c4bfae1fdbb8b58a6a377d294d2d093768432a",
+      "scripts/research_conductor.py": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
+    },
+    "files": {
+      "research-roadmap.yaml": {
+        "after": "sha256:ff53e2fc388ee853f6db403c97c4bfae1fdbb8b58a6a377d294d2d093768432a",
+        "before": "sha256:ff53e2fc388ee853f6db403c97c4bfae1fdbb8b58a6a377d294d2d093768432a",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+        "before": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+        "unchanged": true
+      }
+    },
+    "schema": "carnot.experiment_6647.protected_files.v1"
+  },
+  "random_seed": 6647,
+  "reducer_contract": {
+    "excluded_fields": [
+      "global_suite_diagnostic"
+    ],
+    "exclusion_rule": "Exclude global_suite_diagnostic and every unregistered repo-wide result from task_owned_admission_ready_score.",
+    "included_check_ids": [
+      "acquisition",
+      "same_device_exclusion",
+      "independent_device_allowance",
+      "token_pid_start_device_binding",
+      "heartbeat",
+      "phase_transitions",
+      "unload_release",
+      "crash_recovery",
+      "tamper_detection",
+      "atomic_artifact_write",
+      "focused_tests",
+      "spec_coverage",
+      "applicable_e2e_checks"
+    ],
+    "inclusion_rule": "Include exactly one valid row for each preregistered task-owned check, in declared order, and require observed_value == expected_value.",
+    "missing_rule": "Missing and null observations remain distinct and block readiness.",
+    "ownership_rule": "Only task_owned_check_rows own task_owned_admission_ready_score; the global suite owns operational diagnostics only.",
+    "schema": "carnot.experiment_6647.reducer_contract.v1"
+  },
+  "reproducibility_checksum": "sha256:44d0224f1e0ef6a75bd96fb4f52cae9f3d8cec36db88933b14a7ec4b3571f965",
+  "status": "complete_ready",
+  "task_owned_admission_ready_score": 1.0,
+  "task_owned_check_rows": [
+    {
+      "check_id": "acquisition",
+      "command": "fixture:acquisition",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/01-acquisition",
+      "observed_value": true,
+      "ordinal": 1,
+      "receipt": {
+        "owner": {
+          "acquired_monotonic_ns": 66978205361006,
+          "argv_digest": "sha256:92643135fca975eb6ce614352a945cfe509e597ca4fd93f1dbcd0c9bee95426e",
+          "device_uuid": "GPU-exp6647-acquisition",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "fixture/no-model.gguf",
+          "expires_monotonic_ns": 67008205361006,
+          "pid": 582009,
+          "pid_start_ticks": 6697770,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "exp6647-acquisition",
+          "token_digest": "sha256:d495d714986d161b77bfe329a8c82da693a7cb6dd01476ad0cac33941974ad3b",
+          "token_length": 43,
+          "token_opaque": true
+        },
+        "release": {
+          "checksum": "sha256:9abc8730ff9422bd3d0fb99964eeac638022615229e1961817ae9ce1dd03ffd6",
+          "device_uuid": "GPU-exp6647-acquisition",
+          "phase": "terminal_blocked",
+          "pid": 582009,
+          "pid_start_ticks": 6697770,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "receipt_hash": "sha256:ed55e0a24317739675968c32bd6fbf3e84fe9a9b9cc375e5e87991739e14bfa9",
+      "receipt_schema": "carnot.experiment_6647.check.acquisition.v1",
+      "source": "GpuLease.acquire"
+    },
+    {
+      "check_id": "same_device_exclusion",
+      "command": "fixture:same-device-exclusion",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/02-same_device_exclusion",
+      "observed_value": true,
+      "ordinal": 2,
+      "receipt": {
+        "contender_outcome": "LeaseBusy",
+        "release": {
+          "checksum": "sha256:ec22303f2c0587517c706d524edb58fb68654cf3af4cf64939baf2ea91da1cd3",
+          "device_uuid": "GPU-exp6647-same",
+          "phase": "terminal_blocked",
+          "pid": 582009,
+          "pid_start_ticks": 6697770,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "receipt_hash": "sha256:5fbe3b41322235a3a747560125797729e438bd6c902f756758cb759431742479",
+      "receipt_schema": "carnot.experiment_6647.check.same_device_exclusion.v1",
+      "source": "GpuLease.acquire/LeaseBusy"
+    },
+    {
+      "check_id": "independent_device_allowance",
+      "command": "fixture:independent-device-allowance",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/03-independent_device_allowance",
+      "observed_value": true,
+      "ordinal": 3,
+      "receipt": {
+        "owners": [
+          {
+            "acquired_monotonic_ns": 66979383380968,
+            "argv_digest": "sha256:92643135fca975eb6ce614352a945cfe509e597ca4fd93f1dbcd0c9bee95426e",
+            "device_uuid": "GPU-exp6647-independent-0",
+            "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+            "expected_model": "fixture/no-model.gguf",
+            "expires_monotonic_ns": 67009383380968,
+            "pid": 582009,
+            "pid_start_ticks": 6697770,
+            "recovery": {
+              "performed": false,
+              "signals_sent": []
+            },
+            "signals_sent": [],
+            "task_id": "exp6647-independent-0",
+            "token_digest": "sha256:fd0c38d880b0d2961196b3562fe3c6cb5efcd509de85e7482c540e5e1a1c821d",
+            "token_length": 43,
+            "token_opaque": true
+          },
+          {
+            "acquired_monotonic_ns": 66979584980952,
+            "argv_digest": "sha256:92643135fca975eb6ce614352a945cfe509e597ca4fd93f1dbcd0c9bee95426e",
+            "device_uuid": "GPU-exp6647-independent-1",
+            "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+            "expected_model": "fixture/no-model.gguf",
+            "expires_monotonic_ns": 67009584980952,
+            "pid": 582009,
+            "pid_start_ticks": 6697770,
+            "recovery": {
+              "performed": false,
+              "signals_sent": []
+            },
+            "signals_sent": [],
+            "task_id": "exp6647-independent-1",
+            "token_digest": "sha256:51f10dca6907d396ddedfa06a0c6ea71639ba40ce121340302787910d4078a15",
+            "token_length": 43,
+            "token_opaque": true
+          }
+        ],
+        "releases": [
+          {
+            "checksum": "sha256:2d5459b8c3269952eea123227d0ccfc83a608ab2d8dc0eca1828c67ce8c57e09",
+            "device_uuid": "GPU-exp6647-independent-0",
+            "phase": "terminal_blocked",
+            "pid": 582009,
+            "pid_start_ticks": 6697770,
+            "released": true,
+            "signals_sent": []
+          },
+          {
+            "checksum": "sha256:3d9377b2e3d47cd1d76f2bf0b6214167d574d428d96f595a74cbed272326a233",
+            "device_uuid": "GPU-exp6647-independent-1",
+            "phase": "terminal_blocked",
+            "pid": 582009,
+            "pid_start_ticks": 6697770,
+            "released": true,
+            "signals_sent": []
+          }
+        ]
+      },
+      "receipt_hash": "sha256:0c9f90ce2cb49e1885290e7f47f29d35bfa26bf70a31a27cd4226c198c6aaf52",
+      "receipt_schema": "carnot.experiment_6647.check.independent_device_allowance.v1",
+      "source": "GpuLease.acquire/device-scoped-lock"
+    },
+    {
+      "check_id": "token_pid_start_device_binding",
+      "command": "fixture:token-pid-start-device-binding",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/04-token_pid_start_device_binding",
+      "observed_value": true,
+      "ordinal": 4,
+      "receipt": {
+        "attack_ids": [
+          "wrong_token",
+          "wrong_device",
+          "pid_reuse"
+        ],
+        "outcomes": {
+          "pid_reuse": "OwnershipError",
+          "wrong_device": "OwnershipError",
+          "wrong_token": "OwnershipError"
+        },
+        "release": {
+          "checksum": "sha256:3207a3c22cf6e3fafdf492894e26ca33ceca81be9b38dd13655fc0ba20d8f807",
+          "device_uuid": "GPU-exp6647-binding",
+          "phase": "terminal_blocked",
+          "pid": 582009,
+          "pid_start_ticks": 6697770,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "receipt_hash": "sha256:eef4cdb87c7b31a130fec867898a992126dbc59edc5e8596d986f0ba8f6edc7c",
+      "receipt_schema": "carnot.experiment_6647.check.token_pid_start_device_binding.v1",
+      "source": "GpuLease._verify_owner"
+    },
+    {
+      "check_id": "heartbeat",
+      "command": "fixture:heartbeat",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/05-heartbeat",
+      "observed_value": true,
+      "ordinal": 5,
+      "receipt": {
+        "heartbeat": {
+          "checksum": "sha256:969d1afa8b55bcc20596610f2cdddc224e98d8a340634b7c10980bcab1274ace",
+          "expires_monotonic_ns": 67011193549073,
+          "heartbeat_monotonic_ns": 66981193549073,
+          "owner_verified": true
+        },
+        "release": {
+          "checksum": "sha256:aa3fd7c2ccfa56163b0d7cc88c235dda1dfc553356eec31e5a6bf2ecf4e40b6d",
+          "device_uuid": "GPU-exp6647-heartbeat",
+          "phase": "terminal_blocked",
+          "pid": 582009,
+          "pid_start_ticks": 6697770,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "receipt_hash": "sha256:978ef2b3369f873d93a022ec98a160beadb2aa386b464067745c5377b9521b8d",
+      "receipt_schema": "carnot.experiment_6647.check.heartbeat.v1",
+      "source": "GpuLease.heartbeat"
+    },
+    {
+      "check_id": "phase_transitions",
+      "command": "fixture:phase-transitions",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/06-phase_transitions",
+      "observed_value": true,
+      "ordinal": 6,
+      "receipt": {
+        "rejected_cases": [
+          "reversal",
+          "second_terminal",
+          "skip"
+        ],
+        "rows": [
+          {
+            "accepted": true,
+            "case": "initial_acquire",
+            "from_phase": null,
+            "reason": "atomic_acquire",
+            "to_phase": "preflight"
+          },
+          {
+            "accepted": true,
+            "case": "allowed",
+            "event_checksum": "sha256:8dd807e3f005de1c8fe1f84ce03fc4d7c1284f01751a5d4d31ad2e8a541372c0",
+            "from_phase": "preflight",
+            "journal_checksum": "sha256:83c97c3e3616f561c70dd451fb8f5ef298dccc46385187f500d98541b71e9ba4",
+            "reason": "allowed",
+            "to_phase": "admitted"
+          },
+          {
+            "accepted": true,
+            "case": "allowed",
+            "event_checksum": "sha256:3c577d4cdd2dcb8d79f33bc4002bf3a6094a5196e7e421dabc9d4d67d34a4b5b",
+            "from_phase": "admitted",
+            "journal_checksum": "sha256:fe0695cf7ed0a16f08e54e2adfddce7479e57a45464d8b061baf7a436ae2cfc1",
+            "reason": "allowed",
+            "to_phase": "loading"
+          },
+          {
+            "accepted": true,
+            "case": "allowed",
+            "event_checksum": "sha256:14bb478f2c02d4f6df3b3eea9a19ec886236f3e5f51dd3f45bc1aa42936c47f8",
+            "from_phase": "loading",
+            "journal_checksum": "sha256:76d5b4e2270eb550446f4079302d2108db2d29db36a08f8db1ca9a4084461995",
+            "reason": "allowed",
+            "to_phase": "resident"
+          },
+          {
+            "accepted": true,
+            "case": "allowed",
+            "event_checksum": "sha256:ea69687b35a78cd23d07973b9fae1dee0e48055bb11a3659fca016ce95e19d0c",
+            "from_phase": "resident",
+            "journal_checksum": "sha256:f9d08474d862e4f5a256274f3be9079005c712e93d1562f4bd4ca9cc1bac8545",
+            "reason": "allowed",
+            "to_phase": "inferencing"
+          },
+          {
+            "accepted": true,
+            "case": "allowed",
+            "event_checksum": "sha256:02812d67b96a140577aee760f9e938d14d5f04fd8d573f263b990020df3c0e98",
+            "from_phase": "inferencing",
+            "journal_checksum": "sha256:f8967ec468b6f9463df1e6c9aa8d39de8238004706951d0b6d92247782de8ee1",
+            "reason": "allowed",
+            "to_phase": "unloading"
+          },
+          {
+            "accepted": true,
+            "case": "allowed",
+            "event_checksum": "sha256:be82ffe3dbf65a5ad7ffe342dfdaab7639ab8706baf2d72423e4653bb2b660a2",
+            "from_phase": "unloading",
+            "journal_checksum": "sha256:7f962276b2714445c081b876f6685b246c936b09407206017ebad165692fe780",
+            "reason": "allowed",
+            "to_phase": "validating"
+          },
+          {
+            "accepted": true,
+            "case": "allowed",
+            "event_checksum": "sha256:74d3c9342dc2f90ec967a6f4638129e902e40c8678644553b1cb0c75e6667015",
+            "from_phase": "validating",
+            "journal_checksum": "sha256:e6523164e576aa596892e62d296d4e3140470deff661ce4d8e0f77bfeb122a57",
+            "reason": "allowed",
+            "to_phase": "terminal_complete"
+          },
+          {
+            "accepted": false,
+            "case": "skip",
+            "from_phase": "preflight",
+            "reason": "transition_not_allowed:preflight->loading",
+            "to_phase": "loading"
+          },
+          {
+            "accepted": false,
+            "case": "reversal",
+            "from_phase": "admitted",
+            "reason": "transition_not_allowed:admitted->preflight",
+            "to_phase": "preflight"
+          },
+          {
+            "accepted": false,
+            "case": "second_terminal",
+            "from_phase": "terminal_blocked",
+            "reason": "terminal_already_set",
+            "to_phase": "terminal_complete"
+          }
+        ]
+      },
+      "receipt_hash": "sha256:53da1b68d52d647b1bb311101001121c58058d52143a2fd737d634f4ef826f0c",
+      "receipt_schema": "carnot.experiment_6647.check.phase_transitions.v1",
+      "source": "build_phase_transition_rows"
+    },
+    {
+      "check_id": "unload_release",
+      "command": "fixture:unload-release",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/07-unload_release",
+      "observed_value": true,
+      "ordinal": 7,
+      "receipt": {
+        "exit_evidence": {
+          "exit_code": 0,
+          "observed_monotonic_ns": 66984811640480
+        },
+        "phase_rows": [
+          {
+            "accepted": true,
+            "event_checksum": "sha256:3f57546a125728693f6ca8e9e8316b44c1a65baefbfa26dc44131fe57fd56211",
+            "from_phase": "preflight",
+            "journal_checksum": "sha256:4cfc7cb0d0c50fdef6f90dddce42b1a257ada38caf49dc59c6cbdf89622b3065",
+            "to_phase": "admitted"
+          },
+          {
+            "accepted": true,
+            "event_checksum": "sha256:3cd13adfe24cb7995d5706296bc568a97419e3884ae307d6c87801496f232e7b",
+            "from_phase": "admitted",
+            "journal_checksum": "sha256:9a6af3d76c8820d98c62d0b793ab7152ed3650ee57cd5be519c2813452c815f6",
+            "to_phase": "loading"
+          },
+          {
+            "accepted": true,
+            "event_checksum": "sha256:9affae3eebeaa72999adefc3412f0a1fa45c61bfedb5d31cc741769591bcf10d",
+            "from_phase": "loading",
+            "journal_checksum": "sha256:7d3c860a255fd6d91c624a8f7b60b788e321ffed2f711762b29dfbc4a369cb55",
+            "to_phase": "resident"
+          },
+          {
+            "accepted": true,
+            "event_checksum": "sha256:4e17e3c71ddeed0a19da1af151d37bb07bdbcf9218cb8726711d8659f3a7978f",
+            "from_phase": "resident",
+            "journal_checksum": "sha256:b39aeb2c4aba76ca548d7a439f673ac44c2712a0f1de21a517a5e2c11f40281e",
+            "to_phase": "inferencing"
+          },
+          {
+            "accepted": true,
+            "event_checksum": "sha256:be88ee845652df7968c9caf7f8d49b7a0c053aa13dff9d01293cfbe37bf3ccb6",
+            "from_phase": "inferencing",
+            "journal_checksum": "sha256:3b0d4d38c0c1f916b470fc239870472c5ba05efea8116d8d733f716f7666a48d",
+            "to_phase": "unloading"
+          },
+          {
+            "accepted": true,
+            "event_checksum": "sha256:fa72207518d373a72553ca8aeacc12dd496866ddff235d8b3e1f11583e0b3484",
+            "from_phase": "unloading",
+            "journal_checksum": "sha256:3caf9b888a08297e88e1453a477d3b96556ee9cc151b7e0966e85ff097c58af9",
+            "to_phase": "validating"
+          },
+          {
+            "accepted": true,
+            "event_checksum": "sha256:5e1b484549d77a0aa1cbb2ddabbc062657109b37d4b934312deee6f170456033",
+            "from_phase": "validating",
+            "journal_checksum": "sha256:dbe77f74973268e0126eae04fa454947179ab4de42ac9d0ca3aeb5980081c249",
+            "to_phase": "terminal_complete"
+          }
+        ],
+        "release": {
+          "checksum": "sha256:7b8c14235c7a667543dd95cd660fd935db1c7933178655bde1c1a5ce4c7f1ac6",
+          "device_uuid": "GPU-exp6647-unload",
+          "phase": "terminal_complete",
+          "pid": 582009,
+          "pid_start_ticks": 6697770,
+          "released": true,
+          "signals_sent": []
+        },
+        "unload_evidence": {
+          "observed": true,
+          "observed_monotonic_ns": 66984811640480,
+          "required": true
+        }
+      },
+      "receipt_hash": "sha256:37183140e0bb86794b1c55700b25e1beae45f273b82dbdf100b38be237e0adb4",
+      "receipt_schema": "carnot.experiment_6647.check.unload_release.v1",
+      "source": "GpuLease.release"
+    },
+    {
+      "check_id": "crash_recovery",
+      "command": "fixture:crash-recovery",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/08-crash_recovery",
+      "observed_value": true,
+      "ordinal": 8,
+      "receipt": {
+        "commands": [
+          [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-m",
+            "carnot.gpu_lease_phase_journal",
+            "--runtime-dir",
+            "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/08-crash_recovery",
+            "--task-id",
+            "exp6647-crash",
+            "--device-uuid",
+            "GPU-exp6647-crash",
+            "--behavior",
+            "crash",
+            "--hold-s",
+            "0.0",
+            "--ttl-s",
+            "5.0",
+            "--exit-code",
+            "23"
+          ],
+          [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-m",
+            "carnot.gpu_lease_phase_journal",
+            "--runtime-dir",
+            "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/08-crash_recovery",
+            "--task-id",
+            "exp6647-recovery",
+            "--device-uuid",
+            "GPU-exp6647-crash",
+            "--behavior",
+            "recover_complete",
+            "--hold-s",
+            "0.0",
+            "--ttl-s",
+            "5.0",
+            "--exit-code",
+            "23"
+          ]
+        ],
+        "crash_exit_code": 23,
+        "crash_rows": [
+          {
+            "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/08-crash_recovery/device-22a3121c99e11ad57bde7f62cef91ec40a5574e4705f47fd79bd696bac8e2ba6.journal.json",
+            "outcome": "acquired",
+            "owner": {
+              "acquired_monotonic_ns": 66985641859113,
+              "argv_digest": "sha256:cf8dd6d1f28ba6100ad6ed0c2c8ec88866b011bcf1b32adc1a8be8d7ba9b91ab",
+              "device_uuid": "GPU-exp6647-crash",
+              "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+              "expected_model": "fixture/model.gguf",
+              "expires_monotonic_ns": 66990641859113,
+              "pid": 582062,
+              "pid_start_ticks": 6698521,
+              "recovery": {
+                "performed": false,
+                "signals_sent": []
+              },
+              "signals_sent": [],
+              "task_id": "exp6647-crash",
+              "token_digest": "sha256:b98bbb6ab3c1b98b8d1e25f2e72b7705b7548bc65200ebe6a06821474f471aef",
+              "token_length": 43,
+              "token_opaque": true
+            }
+          }
+        ],
+        "recovery_exit_code": 0,
+        "recovery_rows": [
+          {
+            "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/08-crash_recovery/device-22a3121c99e11ad57bde7f62cef91ec40a5574e4705f47fd79bd696bac8e2ba6.journal.json",
+            "outcome": "acquired",
+            "owner": {
+              "acquired_monotonic_ns": 66986288666843,
+              "argv_digest": "sha256:a08a833d28051a1e9b3b18665e8100d3949b8a679a0e6e3c3c922a5db2291a9b",
+              "device_uuid": "GPU-exp6647-crash",
+              "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+              "expected_model": "fixture/model.gguf",
+              "expires_monotonic_ns": 66991288666843,
+              "pid": 582086,
+              "pid_start_ticks": 6698582,
+              "recovery": {
+                "performed": true,
+                "previous_checksum": "sha256:b25f58b14230c2c8d14e3e99e586544dce40c28f448a192c32ddf6ddd27ceee3",
+                "previous_pid": 582062,
+                "previous_pid_start_ticks": 6698521,
+                "previous_task_id": "exp6647-crash",
+                "reason": "recorded_owner_absent_or_pid_reused",
+                "signals_sent": []
+              },
+              "signals_sent": [],
+              "task_id": "exp6647-recovery",
+              "token_digest": "sha256:882139dfcbdbff944a2c3b107607ebf4fa4cf65ea25639cead5ec3be9c0158bf",
+              "token_length": 43,
+              "token_opaque": true
+            }
+          },
+          {
+            "outcome": "released",
+            "release": {
+              "checksum": "sha256:608669a3f46795ac59402916cd7cdee05c43f527bbaf100f2358cde910daaa80",
+              "device_uuid": "GPU-exp6647-crash",
+              "phase": "terminal_complete",
+              "pid": 582086,
+              "pid_start_ticks": 6698582,
+              "released": true,
+              "signals_sent": []
+            }
+          }
+        ],
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      "receipt_hash": "sha256:260a04daa30e69f1436baf3634f1e261011a7a7bf93e4876260b2186bcf13f0b",
+      "receipt_schema": "carnot.experiment_6647.check.crash_recovery.v1",
+      "source": "fixture_worker_main/GpuLease.acquire"
+    },
+    {
+      "check_id": "tamper_detection",
+      "command": "fixture:tamper-detection",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/09-tamper_detection",
+      "observed_value": true,
+      "ordinal": 9,
+      "receipt": {
+        "outcome": "JournalError",
+        "reason": "checksum_mismatch"
+      },
+      "receipt_hash": "sha256:1a534d2441f8d7c70d75527e1610da75469c2684980200436e78dddacba5fd70",
+      "receipt_schema": "carnot.experiment_6647.check.tamper_detection.v1",
+      "source": "GpuLease._refresh"
+    },
+    {
+      "check_id": "atomic_artifact_write",
+      "command": "fixture:atomic-artifact-write",
+      "exit_code": 0,
+      "expected_value": true,
+      "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/10-atomic_artifact_write",
+      "observed_value": true,
+      "ordinal": 10,
+      "receipt": {
+        "observed": {
+          "sequence": [
+            1,
+            2,
+            3
+          ],
+          "state": "terminal"
+        },
+        "partial_paths": [],
+        "target": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6647_receipt_scoped_admission_boundary/run-66978200164975/10-atomic_artifact_write/atomic-probe.json",
+        "target_sha256": "sha256:5655cdfa48b6910364b56df572ac1af9d1e32b73a228a20d05a312a0d28e41f0"
+      },
+      "receipt_hash": "sha256:89811152623f980a76a455cc9d896fa6e312acd7a20ea2cc9b54211bdb7d3e4f",
+      "receipt_schema": "carnot.experiment_6647.check.atomic_artifact_write.v1",
+      "source": "write_json_atomic"
+    },
+    {
+      "check_id": "focused_tests",
+      "command": ".venv/bin/pytest tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "expected_value": true,
+      "observed_value": true,
+      "ordinal": 11,
+      "receipt": {
+        "command": ".venv/bin/pytest tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py -q --no-cov -n 0",
+        "exit_code": 0,
+        "summary": "focused tests passed"
+      },
+      "receipt_hash": "sha256:06cf7dd12c167fee446c8c8ac5a42f39dd8d2f5ee82d2672d89e7e60d3032917",
+      "receipt_schema": "carnot.experiment_6647.check.focused_tests.v1",
+      "source": "tests_run"
+    },
+    {
+      "check_id": "spec_coverage",
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py",
+      "exit_code": 0,
+      "expected_value": true,
+      "observed_value": true,
+      "ordinal": 12,
+      "receipt": {
+        "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py",
+        "exit_code": 0,
+        "summary": "focused spec coverage passed"
+      },
+      "receipt_hash": "sha256:485f903932ae89b7a096421ef239dfed7e4d8266c8c869d7ca2b5a9272a27b89",
+      "receipt_schema": "carnot.experiment_6647.check.spec_coverage.v1",
+      "source": "tests_run"
+    },
+    {
+      "check_id": "applicable_e2e_checks",
+      "command": "Exp6647 E2E: fresh-path acquisition, exclusion, independent-device, binding, heartbeat, phase, unload, recovery, tamper, and atomic-write replay",
+      "exit_code": 0,
+      "expected_value": true,
+      "observed_value": true,
+      "ordinal": 13,
+      "receipt": {
+        "command": "Exp6647 E2E: fresh-path acquisition, exclusion, independent-device, binding, heartbeat, phase, unload, recovery, tamper, and atomic-write replay",
+        "exit_code": 0,
+        "summary": "all preregistered owned fixtures passed in fresh temporary paths"
+      },
+      "receipt_hash": "sha256:1eac0f1fb51319331e7d93af54567f57a17ea3e048ad6d9e87c7a280545155cf",
+      "receipt_schema": "carnot.experiment_6647.check.applicable_e2e_checks.v1",
+      "source": "tests_run"
+    }
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "summary": "focused tests passed"
+    },
+    {
+      "command": "JAX_PLATFORMS=cpu PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 COVERAGE_FILE=/tmp/carnot_exp6647.coverage .venv/bin/coverage run --include='*/experiment_6647_receipt_scoped_admission_boundary.py' -m pytest --noconftest tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py -q -o addopts=",
+      "exit_code": 0,
+      "summary": "scoped coverage run passed"
+    },
+    {
+      "command": "COVERAGE_FILE=/tmp/carnot_exp6647.coverage .venv/bin/coverage report --include='*/experiment_6647_receipt_scoped_admission_boundary.py' -m --fail-under=100",
+      "exit_code": 0,
+      "summary": "new module has 100% scoped statement coverage"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 3,
+      "summary": "1037 failed, 34797 passed, 103 skipped, 140 warnings in 2310.03s; pytest/xdist stopped at 62% after an existing test removed its worker CWD, raising FileNotFoundError"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py",
+      "exit_code": 0,
+      "summary": "focused spec coverage passed"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_6647_receipt_scoped_admission_boundary.py tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py",
+      "exit_code": 0,
+      "summary": "focused lint passed"
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_6647_receipt_scoped_admission_boundary.py tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py",
+      "exit_code": 0,
+      "summary": "focused format check passed"
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6647_receipt_scoped_admission_boundary --validate",
+      "exit_code": 0,
+      "summary": "artifact validation passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6647_receipt_scoped_admission_boundary.json",
+      "exit_code": 1,
+      "summary": "one non-critical substrate review warning; no critical finding"
+    },
+    {
+      "command": "Exp6647 E2E: fresh-path acquisition, exclusion, independent-device, binding, heartbeat, phase, unload, recovery, tamper, and atomic-write replay",
+      "exit_code": 0,
+      "summary": "all preregistered owned fixtures passed in fresh temporary paths"
+    }
+  ],
+  "verdict_class": null,
+  "verifier_is_oracle": true
+}

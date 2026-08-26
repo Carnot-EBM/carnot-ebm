@@ -224,8 +224,8 @@ DEFAULT_TESTS_RUN = (
     {"command": VALIDATE_COMMAND, "exit_code": 0, "summary": "artifact validation passed"},
     {
         "command": ADVERSARIAL_COMMAND,
-        "exit_code": 0,
-        "summary": "no critical adversarial finding",
+        "exit_code": 1,
+        "summary": "one non-critical substrate review warning; no critical finding",
     },
     {
         "command": E2E_COMMAND,
@@ -853,7 +853,7 @@ def finalize_reduction(artifact: Mapping[str, Any]) -> JsonDict:
         for row in result.get("task_owned_check_rows", [])
     ] + [{"row_kind": "global_suite_diagnostic", **diagnostic}]
     if score == 1.0:
-        result["status"] = "terminal_complete"
+        result["status"] = "complete_ready"
         result["honest_verdict"] = (
             "complete: preregistered task-owned GPU lease receipts support infrastructure "
             "admission; the global suite remains diagnostic; no model-quality claim"
@@ -962,7 +962,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
     if artifact.get("reducer_contract") != _reducer_contract():
         errors.append("reducer_contract_mismatch")
     if score == 1.0:
-        if artifact.get("status") != "terminal_complete":
+        if artifact.get("status") != "complete_ready":
             errors.append("ready_status_mismatch")
         if artifact.get("verdict_class") is not None:
             errors.append("ready_verdict_class_mismatch")
