@@ -1,0 +1,122 @@
+{
+  "acquired_monotonic_ns": 66024704788786,
+  "checksum": "sha256:3ef2a72c2272045923a2b4c8211116eb8cad62a1aa2e5e407791adf719a4dcdc",
+  "device_uuid": "GPU-phase-allowed",
+  "exit_evidence": {
+    "exit_code": 0,
+    "observed_monotonic_ns": 66025508550987
+  },
+  "expected_model": "fixture/model.gguf",
+  "expires_monotonic_ns": 66054704788786,
+  "heartbeat_monotonic_ns": 66024704788786,
+  "lease_generation": 1,
+  "owner": {
+    "argv_digest": "sha256:92643135fca975eb6ce614352a945cfe509e597ca4fd93f1dbcd0c9bee95426e",
+    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+    "pid": 579387,
+    "pid_start_ticks": 6602109,
+    "token_digest": "sha256:657d65f8e224b5925812cfdc1196aff9e7bd40236c147275bfd13f8a08059229"
+  },
+  "phase": "terminal_complete",
+  "phase_history": [
+    {
+      "details": {
+        "recovery_performed": false
+      },
+      "event_checksum": "sha256:305198486d6228fbc7778fe340dad735860c75cf5348a71b0d67e80601e9d4c2",
+      "monotonic_ns": 66024704788786,
+      "owner_token_digest": "sha256:657d65f8e224b5925812cfdc1196aff9e7bd40236c147275bfd13f8a08059229",
+      "phase": "preflight",
+      "previous_event_checksum": null,
+      "previous_phase": null
+    },
+    {
+      "details": {},
+      "event_checksum": "sha256:cfddd5420c6ac071aeb53761b4545af76b040f6a7d9043a9eacb0a6c74aac3e9",
+      "monotonic_ns": 66024906384643,
+      "owner_token_digest": "sha256:657d65f8e224b5925812cfdc1196aff9e7bd40236c147275bfd13f8a08059229",
+      "phase": "admitted",
+      "previous_event_checksum": "sha256:305198486d6228fbc7778fe340dad735860c75cf5348a71b0d67e80601e9d4c2",
+      "previous_phase": "preflight"
+    },
+    {
+      "details": {},
+      "event_checksum": "sha256:96b9fabe3b24e60e44537dbbbfc2da0da0b4085d809577f806bdaa9a995aa37f",
+      "monotonic_ns": 66025106520950,
+      "owner_token_digest": "sha256:657d65f8e224b5925812cfdc1196aff9e7bd40236c147275bfd13f8a08059229",
+      "phase": "loading",
+      "previous_event_checksum": "sha256:cfddd5420c6ac071aeb53761b4545af76b040f6a7d9043a9eacb0a6c74aac3e9",
+      "previous_phase": "admitted"
+    },
+    {
+      "details": {
+        "vram_resident_mb": 1028
+      },
+      "event_checksum": "sha256:2ed63da7caef9a25635d6585fb01ee6ab453e15c7a7c0f05c3699268e6262007",
+      "monotonic_ns": 66025123367791,
+      "owner_token_digest": "sha256:657d65f8e224b5925812cfdc1196aff9e7bd40236c147275bfd13f8a08059229",
+      "phase": "resident",
+      "previous_event_checksum": "sha256:96b9fabe3b24e60e44537dbbbfc2da0da0b4085d809577f806bdaa9a995aa37f",
+      "previous_phase": "loading"
+    },
+    {
+      "details": {},
+      "event_checksum": "sha256:57246f10e747d84a4bfff80edb93394591eba6466355a3fa5924fe0e1df493a9",
+      "monotonic_ns": 66025124748482,
+      "owner_token_digest": "sha256:657d65f8e224b5925812cfdc1196aff9e7bd40236c147275bfd13f8a08059229",
+      "phase": "inferencing",
+      "previous_event_checksum": "sha256:2ed63da7caef9a25635d6585fb01ee6ab453e15c7a7c0f05c3699268e6262007",
+      "previous_phase": "resident"
+    },
+    {
+      "details": {},
+      "event_checksum": "sha256:34b6ba2fa990dfaf62cac1ccf0b42ce7014032750d81533dd78e393659f60c63",
+      "monotonic_ns": 66025307489553,
+      "owner_token_digest": "sha256:657d65f8e224b5925812cfdc1196aff9e7bd40236c147275bfd13f8a08059229",
+      "phase": "unloading",
+      "previous_event_checksum": "sha256:57246f10e747d84a4bfff80edb93394591eba6466355a3fa5924fe0e1df493a9",
+      "previous_phase": "inferencing"
+    },
+    {
+      "details": {
+        "exit_code": 0,
+        "unload_observed": true,
+        "vram_after_mb": 4
+      },
+      "event_checksum": "sha256:e8aefbaee343ce832ea02a40b94b35125f15af386c7361fbf0fde0820c00c84a",
+      "monotonic_ns": 66025508550987,
+      "owner_token_digest": "sha256:657d65f8e224b5925812cfdc1196aff9e7bd40236c147275bfd13f8a08059229",
+      "phase": "validating",
+      "previous_event_checksum": "sha256:34b6ba2fa990dfaf62cac1ccf0b42ce7014032750d81533dd78e393659f60c63",
+      "previous_phase": "unloading"
+    },
+    {
+      "details": {},
+      "event_checksum": "sha256:9e4b27b93e98e436fd5d4ef8de3ffec7e742192f698b87556e13376964a0a230",
+      "monotonic_ns": 66025510447706,
+      "owner_token_digest": "sha256:657d65f8e224b5925812cfdc1196aff9e7bd40236c147275bfd13f8a08059229",
+      "phase": "terminal_complete",
+      "previous_event_checksum": "sha256:e8aefbaee343ce832ea02a40b94b35125f15af386c7361fbf0fde0820c00c84a",
+      "previous_phase": "validating"
+    }
+  ],
+  "recovery": {
+    "performed": false,
+    "signals_sent": []
+  },
+  "released": true,
+  "released_monotonic_ns": 66025512194033,
+  "schema": "carnot.gpu_lease_phase_journal.v1",
+  "task_id": "phase-allowed",
+  "ttl_ns": 30000000000,
+  "unload_evidence": {
+    "observed": true,
+    "observed_monotonic_ns": 66025508550987,
+    "required": true
+  },
+  "vram_mb": {
+    "after": 4,
+    "before": 4,
+    "resident": 1028
+  }
+}

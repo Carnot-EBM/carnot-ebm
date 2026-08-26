@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-08-26 — Exp6647 terminal-ready test repair
+
+- Fixed the Exp6647 producer and validator to use the canonical
+  `status=complete_ready` marker once every preregistered task-owned receipt
+  passes. The shared terminal-artifact classifier now sees the result as
+  terminal and ready without any classifier exception.
+- Preserved the real adversarial-verifier result as one non-critical no-LLM
+  substrate warning with exit code 1. It remains outside the frozen owned gate
+  set, so it is visible without overriding task-owned readiness.
+- Reconciled `REQ-INFRA-6647` and `REQ-REPORT-6647`, regenerated the valid
+  result artifact, and verified the exact conductor smart subset (`90 passed,
+  1` existing warning) plus 100% focused module coverage (`372` statements,
+  `0` missing). No change was made to `scripts/research_conductor.py`.
+
 ## 2026-08-25 — A stronger tamper test was measured and declined, with the numbers
 
 - The team lead recommended replacing the helper-level tamper test with one that

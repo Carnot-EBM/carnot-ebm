@@ -17,6 +17,7 @@ from pathlib import Path
 import pytest
 
 from carnot import experiment_6647_receipt_scoped_admission_boundary as exp
+from carnot.terminal_artifacts import classify_artifact_payload
 
 
 REPO = Path(__file__).resolve().parents[2]
@@ -101,7 +102,7 @@ def test_scenario_report_6647_ready_ignores_global_suite_exit(tmp_path: Path) ->
 
     artifact = _ready_artifact(tmp_path)
     assert exp.validate_artifact(artifact) == []
-    assert artifact["status"] == "terminal_complete"
+    assert artifact["status"] == "complete_ready"
     assert artifact["verdict_class"] is None
     assert artifact["task_owned_admission_ready_score"] == 1.0
     assert artifact["gate_check_summary"] == []
@@ -114,6 +115,16 @@ def test_scenario_report_6647_ready_ignores_global_suite_exit(tmp_path: Path) ->
     assert artifact["prior_failure_receipt"]["artifact_sha256"].startswith("sha256:")
     assert set(artifact["field_provenance"]) == set(exp.REQUIRED_ARTIFACT_FIELDS)
     assert artifact["reproducibility_checksum"] == exp.payload_checksum(artifact)
+
+    classification = classify_artifact_payload(artifact, path=exp.RESULT_PATH)
+    assert classification.terminal is True
+    assert classification.classification == "ready"
+
+    adversarial = next(
+        row for row in artifact["tests_run"] if row["command"] == exp.ADVERSARIAL_COMMAND
+    )
+    assert adversarial["exit_code"] == 1
+    assert "one non-critical substrate review warning" in adversarial["summary"]
 
 
 def test_scenario_infra_6647_missing_null_duplicate_and_reordered_fail_closed(

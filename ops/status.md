@@ -1,6 +1,14 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-08-25, latest (Exp6604 exact two-level plan corpus
+**Last Updated:** 2026-08-26 (Exp6647 terminal-ready regression repaired by
+making the receipt reducer emit and validate `status=complete_ready`, while the
+single non-critical no-LLM substrate warning remains visible and non-gating.
+The exact conductor smart subset passes 90 tests with one existing warning;
+focused Exp6647 coverage is 100% across 372 statements; artifact validation,
+spec coverage, Ruff, formatting, and focused mypy pass. No change was made to
+`scripts/research_conductor.py`.)
+
+Prior: 2026-08-25, latest (Exp6604 exact two-level plan corpus
 regression repaired by aligning its protected-roadmap receipt with the frozen
 V576 roadmap bytes. The terminal artifact is complete, focused tests pass 9/9,
 scoped module coverage is 100% across 493 statements, and the exact conductor

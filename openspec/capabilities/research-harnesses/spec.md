@@ -9441,4 +9441,4 @@ failed check plus observed value appears in `gate_check_summary`.
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-INFRA-6647 | Planned (`python/carnot/experiment_6647_receipt_scoped_admission_boundary.py`) | Planned (`tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py`) |
+| REQ-INFRA-6647 | Implemented (`python/carnot/experiment_6647_receipt_scoped_admission_boundary.py`) | Implemented (`tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py`; exact owned-receipt, fail-closed reduction, and fresh-path fixture coverage) |

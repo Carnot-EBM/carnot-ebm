@@ -1,6 +1,15 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-08-25
+**Last Updated:** 2026-08-26
+
+**Operational Note:** 2026-08-26 Exp6647 terminal-ready test repair reconciled
+`REQ-INFRA-6647` and `REQ-REPORT-6647` by making the reducer's ready status
+canonical (`complete_ready`) and retaining the single non-critical no-LLM
+substrate warning as a non-owned diagnostic. The result artifact validates and
+classifies as terminal-ready. The exact conductor smart subset passes (`90
+passed, 1` existing warning), scoped module coverage is 100% (`372` statements,
+`0` missing), and focused spec, Ruff, format, and mypy checks pass.
+`scripts/research_conductor.py` was not modified.
 
 **Operational Note:** 2026-08-25 Exp6604 exact two-level plan corpus repair
 reconciled `REQ-CONSTRAINT-6604` after the protected-roadmap receipt retained
