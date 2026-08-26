@@ -11,101 +11,8 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 3 |
-| NO_CLAIM | 4 |
-| SKIPPED_ALREADY_FLAGGED | 1 |
-
-## experiment_6611_live_arc_invariant_projection.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Selected invariant projection had no effect on held exact-next-frame prediction error, with no game- or level-solve claim.
-
-## WHAT WOULD REFUTE IT
-A different charged exact-mismatch total or mean for `selected_invariant_projection` versus `no_projection`, or a projection-induced runtime-validity difference, would refute the no-effect claim.
-
-## WAS THAT CHECKED
-Yes. The held-arm and runtime-validity summaries compare the selected projection directly with no projection across 52 rows per arm, retain invalid rows, and charge failures; both arms have identical mismatch and validity results. The observed next frames were opened only after prediction, so the null result was not forced by candidate access to held outcomes.
-
-## EVIDENCE
-`honest_verdict`: `complete_held_world_model_prediction_projection_no_effect_no_solve_claim`; `verdict_class`: `null`; `candidate_held_win`: `false`; `strictly_lower_than_no_projection`: `false`; `arm`: `no_projection`; `arm`: `selected_invariant_projection`; `charged_exact_mismatch_total`: `9376`; `charged_exact_mismatch_mean`: `180.30769230769232`; `row_count`: `52`; `runtime_invalid_count`: `2`; `invalid_rows_retained`: `true`; `selected_runtime_validity_loss`: `0`; `observation_opened_after_prediction`: `true`; `held_outcomes_used`: `0`; `game_disjoint`: `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6612_spectral_k_block_scale_rust_parity.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable: the artifact explicitly withholds stationary, transition, wall-time, and parity conclusions rather than asserting a positive comparative result.
-
-## WAS THAT CHECKED
-No affirmative claim required refutation; the blocking condition is documented by an incomplete test suite and a failed gate.
-
-## EVIDENCE
-`honest_verdict`: `blocked_reference_parity_cost_or_protection: stationary, transition, wall, and parity conclusions are withheld; CPU software only`; `verdict_class`: `blocked`; `status`: `blocked_reference_parity_cost_or_protection`; `tests_complete`: `false`; `gate`: `toolchain_or_test_failure`; `exit_code`: `3`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6613_invariant_memory_lifecycle.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No observation can refute a nonexistent utility or comparative claim; a conformance failure would only refute the lifecycle receipt.
-
-## WAS THAT CHECKED
-No utility comparison was attempted; the artifact checks only lifecycle conformance through transition, attack, recovery, integrity, and test receipts.
-
-## EVIDENCE
-`honest_verdict`: `complete_invariant_memory_lifecycle_conformance_no_utility_claim`; `no_utility_claim`: `true`; `utility_claimed`: `false`; `verdict_class`: `null`; `verifier_is_oracle`: `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6614_prospective_invariant_self_learning.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_6605_qwen36_direct_headroom.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The direct Qwen baseline’s integrity did not complete because GPU process receipts failed.
-
-## WHAT WOULD REFUTE IT
-A complete integrity recomputation with the GPU receipt check passing and all GPU sessions authenticated would refute the blocked-integrity claim.
-
-## WAS THAT CHECKED
-Yes. The gate, integrity recomputation, and GPU session receipts explicitly checked this; the GPU receipt check failed and the sessions were not all authentic.
-
-## EVIDENCE
-`"honest_verdict": "blocked_gpu_process_receipts: direct baseline integrity did not complete"`; `"all_passed": false`; `"failed_condition": "gpu_process_receipts"`; `"gpu_process_receipts": false`; `"complete": false`; `"failed_checks": ["gpu_process_receipts"]`; `"all_sessions_authentic": false`
-
-## RECOMMENDATION
-KEEP
+| CLAIM_SUPPORTED | 1 |
+| NO_CLAIM | 7 |
 
 ## experiment_6615_v576_independent_capstone.json
 
@@ -115,16 +22,16 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The available evidence replays to blocked or partial decoding and sampler results, null projection and self-learning utility, and conformant lifecycle behavior without a positive scientific result.
+The available evidence supports blocked decoding, null live projection, software-only partial sampler evidence, conformant lifecycle behavior without utility, and zero prospective self-learning benefit.
 
 ## WHAT WOULD REFUTE IT
-A nonzero held-future benefit over the serious static-projector baseline, a nonzero selected-projection effect over no projection, or a failed lifecycle invariant would refute the corresponding headline conclusions.
+A positive `held_future_benefit_over_static` for governed online memory on the prospective held-future pairs would refute the headline’s zero-benefit claim.
 
 ## WAS THAT CHECKED
-Yes. Held-future comparisons used static and shuffled controls across 36 pairs; projection used no-projection and random-projection controls; and lifecycle transitions, chronology, restart, rollback, recovery, and weight immutability were checked. The verifier is the conformance oracle, but the artifact claims conformance—not independent scientific value from that verifier.
+Yes. `continuous_learning_replay` compares four arms across 36 held-future pairs, including the serious `static_projector` and `no_learning` baselines; it reports exactly zero benefit. Predictions preceded observations, and the disqualified source verdict was retained rather than promoted. The oracle was used for adjudication, but no positive verifier-value claim was made.
 
 ## EVIDENCE
-`held_future_benefit_over_static`: `0.0`; `held_future_benefit_over_shuffled`: `0.0`; `held_future_pairs`: `36`; `selected_minus_no_projection_mean_error`: `0.0`; `selected_minus_random_mean_error`: `0.0`; `all_lifecycle_transitions_passed`: `true`; `scientific_verdict_class`: `null`; `verdict_class`: `partial`; `oracle_defined_win_promoted_to_positive`: `false`; `verifier_is_oracle`: `true`
+`held_future_benefit_over_static` `0.0`; `held_future_benefit_over_shuffled` `0.0`; `held_future_pairs` `36`; `governed_online_memory` `88`; `no_learning` `88`; `static_projector` `88`; `all_predictions_before_observations` `true`; `scientific_verdict_class` `null`; `selected_minus_no_projection_mean_error` `0.0`; `selected_minus_random_mean_error` `0.0`; `oracle_defined_win_promoted_to_positive` `false`; `verifier_is_oracle` `true`; `verdict_class` `partial`
 
 ## RECOMMENDATION
 KEEP
@@ -140,13 +47,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable; the artifact reports contract readiness rather than scientific or comparative value. Its administrative blocked status would be contradicted if all 13 expected task contracts were present and all gate checks passed.
+No scientific or comparative claim is made; treating the blocked contract status as the operational assertion, it would be refuted if all 13 expected YAML task contracts were present and the contract checks passed.
 
 ## WAS THAT CHECKED
-Yes. `exact_task_set` and `model_policy` explicitly checked completeness and recorded missing tasks and failed checks.
+Yes. The exact task-set and model-policy checks could have passed, but recorded missing tasks and failed checks.
 
 ## EVIDENCE
-`honest_verdict`: `blocked_roadmap_contract_incomplete: expected Exp6616-Exp6628 YAML contracts are not all present`; `verdict_class`: `blocked`; `execution_contract_ready_score`: `0.0`; `all_passed`: `false`; `expected_task_count`: `13`; `yaml_task_count`: `3`; `verifier_is_oracle`: `true`; `v577_roadmap_evidence_and_phase_receipt_contract_no_llm`; `The verdict reports contract readiness without claiming scientific benefit.`
+`honest_verdict` `blocked_roadmap_contract_incomplete: expected Exp6616-Exp6628 YAML contracts are not all present` `execution_contract_ready_score` `0.0` `all_passed` `false` `expected_task_count` `13` `yaml_task_count` `3` `verdict_class` `blocked` `verifier_is_oracle` `true` `The verdict reports contract readiness without claiming scientific benefit.`
 
 ## RECOMMENDATION
 KEEP
@@ -162,19 +69,123 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked-gate receipt and reports no experimental, comparative, or value claim to falsify.
+Not applicable; the artifact is a blocked-gate receipt and makes no substantive or comparative claim about GPU lease or task-phase performance.
 
 ## WAS THAT CHECKED
-No. The method was not evaluated because execution stopped at the conductor pre-gate; the artifact contains only the failed gate result.
+No. The experiment did not run; it stopped at `conductor_pre_gate` after its sole readiness gate failed.
 
 ## EVIDENCE
-`status` `blocked`  
-`honest_verdict` `blocked_gate_check_failed`  
-`failed_field` `execution_contract_ready_score`  
-`failed_expected` `1.0`  
-`failed_observed` `0.0`  
-`passed` `false`  
-`blocked_at_layer` `conductor_pre_gate`
+`"schema"`: `"blocked_gate_check_v1"`; `"status"`: `"blocked"`; `"honest_verdict"`: `"blocked_gate_check_failed"`; `"duration_s"`: `0.0`; `"gate_check_summary"`: `"1 of 1 gate(s) failed; first failure: exp6616-v577-execution-contract.execution_contract_ready_score (actual=0.0 == expected=1.0)"`; `"passed"`: `false`; `"blocked_at_layer"`: `"conductor_pre_gate"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6619_v578_activation_contract.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+For the operational blocked status, both YAML sources containing the complete Exp6619–Exp6632 contract with matching tasks, gates, models, hardware, and deliverables would refute it.
+
+## WAS THAT CHECKED
+Yes. The document-to-YAML checks explicitly compared the expected contract against both active and pre-staged sources and found four missing tasks.
+
+## EVIDENCE
+`activation_contract_ready_score`: `0.0`; `all_passed`: `false`; `active_task_count`: `10`; `expected_task_count`: `14`; `missing_task_ids`: `["exp6629-live-memory-actionability", "exp6630-error-independent-memory-patch-gate", "exp6631-prospective-support-preserving-csl", "exp6632-v578-independent-capstone"]`; `honest_verdict`: `blocked_v578_activation_contract_incomplete: document promises Exp6619-Exp6632 but both YAML sources contain only Exp6619-Exp6628`; `The verdict reports contract readiness without claiming scientific benefit.`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6620_gpu_lease_phase_receipts.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No falsifier applies because this is a blocked-gate receipt, not a result claiming implementation success or comparative value.
+
+## WAS THAT CHECKED
+No; the method was never evaluated because execution stopped at the upstream gate. The prerequisite itself was checked and failed.
+
+## EVIDENCE
+`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_observed`: `0.0`; `failed_expected`: `1.0`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6622_qwen36_direct_headroom.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Nothing can falsify a performance or direct-headroom claim because no result was produced or asserted.
+
+## WAS THAT CHECKED
+No; execution stopped at the pre-gate because the required upstream artifact was unavailable.
+
+## EVIDENCE
+`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"actual": null`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6624_delayed_two_level_decoding.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable: the artifact reports a blocked gate check and makes no empirical or comparative claim.
+
+## WAS THAT CHECKED
+No; execution stopped at `conductor_pre_gate`, before any method outputs, comparator results, or scored rows were produced.
+
+## EVIDENCE
+`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"duration_s": 0.0`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6627_spectral_integrity_repair.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No falsifying observation applies because this is a blocked-gate receipt and reports no result about sampler integrity or repair.
+
+## WAS THAT CHECKED
+No; execution stopped at the upstream gate before the experiment ran.
+
+## EVIDENCE
+`status` is `blocked`; `honest_verdict` is `blocked_gate_check_failed`; `passed` is `false`; `blocked_at_layer` is `conductor_pre_gate`.
 
 ## RECOMMENDATION
 KEEP

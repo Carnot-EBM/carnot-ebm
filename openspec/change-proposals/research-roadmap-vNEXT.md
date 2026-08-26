@@ -1,414 +1,359 @@
-# Research Roadmap vNEXT - Milestone 2026.08.578
+# Research Roadmap vNEXT: Executable Constraints and Verified Skill Evolution
 
-**Milestone:** 2026.08.578  
-**Title:** Execution-Qualified Verification and Support-Preserving Self-Learning  
-**Experiments:** Exp6619-Exp6632  
-**Phases:** four  
-**Planning date:** 2026-08-26
+**Milestone:** 2026.08.579  
+**Status:** Planned  
+**Tasks:** 14  
+**Execution file:** `research-roadmap-next.yaml`  
+**Research basis:** `research-references.md`, V579 planner refresh
 
-## What milestone 2026.08.577 proved
+## What milestone 2026.08.578 proved
 
-Milestone 2026.08.577 completed all three tasks that reached the conductor. Its
-result is an execution-contract finding, not a scientific result.
+V578 ended terminally, but it did not test its scientific hypotheses. Its design
+document named Exp6619 through Exp6632. The active YAML named only Exp6619
+through Exp6628. Exp6619 detected that mismatch and set its readiness score to
+zero. The dependent execution and science tasks then blocked or skipped.
 
-1. Exp6616 found that the staged roadmap document promised Exp6616-Exp6628, but
-   `research-roadmap.yaml` contained only Exp6616-Exp6618. It honestly returned
-   `blocked_roadmap_contract_incomplete` and set
-   `execution_contract_ready_score=0`.
-2. Exp6617 was correctly blocked by the failed Exp6616 gate. Repeated gate
-   checks did not implement the GPU lease. Exp6618 was then skipped because its
-   upstream task retired.
-3. The conductor gate failed closed. No task silently treated missing model,
-   process, GPU, phase, or science evidence as success.
-4. No mandated GGUF family ran in V577. No constrained-decoding, spectral,
-   memory-actionability, or continuous-learning claim was tested.
-5. The failure exposed a missing planning invariant: a roadmap document and its
-   execution YAML must be validated as one complete activation unit before the
-   first task starts.
+That result proves one operational point: a roadmap must be one prevalidated
+execution unit. It does not prove that the GPU lease, mandated models, delayed
+constraints, spectral sampler, invariant memory, or continuous self-learning
+hypotheses fail.
 
-V576 remains the last scientific evidence base. It established an exact
-two-level plan corpus, a null live invariant projection, promising but blocked
-software-only spectral rows, a conformant memory lifecycle without utility, and
-zero prospective self-learning benefit. V578 must preserve those verdicts.
+V576 still supplies the last scientific evidence:
 
-## The three biggest gaps to the PRD vision
+| Area | Evidence retained | Limit |
+|---|---|---|
+| Direct flagship baselines | Model files and partial process evidence exist | No complete, owned, replayable candidate rows |
+| Delayed two-level constraints | Exact corpus and method contract exist | No eligible flagship treatment run |
+| Live ARC invariant projection | The live `E3AgentPolicy` path was reached | Projection changed no action and earned no solve credit |
+| Spectral k-block sampling | Software rows suggested transition and wall-time gains | Reference parity, protection, and independent replay did not pass |
+| Invariant memory | Lifecycle and rollback contracts passed | Prospective arm had no credited future benefit |
 
-### Gap 1: the execution substrate cannot yet support a flagship claim
+## Three largest gaps to the PRD vision
 
-The PRD requires verifiable local inference. Carnot has exact corpora and model
-loaders, but V576 and V577 did not produce one complete flagship direct-baseline
-artifact with task-scoped GPU ownership, process identity, model hash, phase
-receipts, raw rows, and unload evidence. Until this exists, constrained decoding
-has no eligible baseline and model-family comparisons have no scientific
-meaning.
+### Gap 1: no execution-admitted flagship evidence
 
-**V578 response:** validate the complete 14-task activation manifest, implement
-the lease and receipt substrate, run independent canaries for all three mandated
-families, then qualify one bounded Qwen3.6 baseline through an independent
-reducer.
+The PRD needs local, privacy-preserving reasoning on useful models. Carnot has
+the mandated GGUF files, but it lacks one proven task-scoped path from lease to
+load, resident inference, unload, and atomic evidence. A model result is not
+admissible until identity, process, phase, accelerator, and row receipts share
+one owner.
 
-### Gap 2: learned verification can alter support or its own decision threshold
+### Gap 2: constraints guide proposals, but exact authority is not yet closed
 
-Carnot separates learned proposal scores from exact release authority, but it
-does not yet measure two 2026 failure modes. Prior audit-repair context can shift
-an LLM verifier's criterion. Verifier-guided optimization can improve pass-at-one
-while reducing fixed-budget recoverable support for later objectives. A valid
-output rate alone cannot reveal either failure.
+Carnot has exact checkers, constraint-first streams, frozen candidate pools, and
+sampler prototypes. It does not yet have a complete flagship comparison in
+which direct generation establishes headroom, delayed syntax and semantic
+constraints preserve support, the verifier unit is calibrated on clean twins,
+and an independent exact audit owns release. The Ising branch also lacks an
+independent exact reference for its speed claims.
 
-**V578 response:** compare direct, syntax-only, and delayed semantic constraint
-arms only after direct headroom exists. Run a separate cold-context verifier
-experiment with length-matched controls. Audit exact false accepts, semantic
-support, and best-at-k across candidate budgets.
+### Gap 3: self-learning state is stored but does not improve future live action
 
-### Gap 3: persistent memory is safe but behaviorally inert
+The PRD requires continuous learning with provenance, rollback, and safety.
+Carnot can store and retire invariant memory, yet it has not shown that stored
+state survives handoff as a binding constraint, changes a live held-out ARC
+action, repairs an independently located component, and improves later events
+across task orders. Same-event adaptation and same-model self-grades do not
+close this gap.
 
-The PRD requires autonomous continuous self-learning from verifier feedback.
-V576 proved lifecycle conformance but not useful learning. Its live projection
-had no effect, and the prospective treatment had zero benefit. Memory must be
-state-grounded, invoked by the live policy, error-independent from the model
-that produced the candidate, and useful on held-future events.
+## Research questions
 
-**V578 response:** establish live-policy influence before patching memory. Admit
-only component-scoped patches that repair a source failure without reducing
-anchors or recoverable support. Compare memory against frozen and context-only
-controls across seeds and task orders. Keep model weights and the base policy
-immutable.
+1. Can a task-scoped dual-RTX execution envelope admit all three mandated GGUF
+   families without reconstructed or shared process evidence?
+2. Does delayed two-level constraint guidance improve exact validity while
+   preserving candidate support on complete flagship rows?
+3. Which verification unit improves discrimination rather than merely raising
+   rejection?
+4. Can a Kac--Ward exact planar reference support an honest local spectral
+   sampler replay?
+5. Can operationally complete memory change a held-out live ARC action and then
+   improve future events under exact update authority?
 
-## Research inputs added before planning
-
-The dated V578 section of `research-references.md` records the external scan.
-The following findings directly shape this milestone:
-
-- arXiv:2608.16003 requires fresh-context and length-matched controls for learned
-  verifier signals after audit-repair histories.
-- arXiv:2608.00017 requires error-independence checks and forbids same-model
-  self-grades from admitting memory updates.
-- arXiv:2608.00220 requires fixed-budget recoverable-support measurements before
-  and after a verifier-governed update.
-- arXiv:2608.03874 requires a context-only control and proof that retrieved state
-  influenced the live action.
-- arXiv:2608.12700 supports independent execution, exactness, evidence, and
-  protection gates rather than one pooled success flag.
-- Extropic's summer 2026 update makes Torx and THRML useful portability targets.
-  Carnot still has no authenticated TSU runner, so V578 makes no TSU claim.
-
-## Milestone thesis
-
-Carnot can make scientific progress only after the execution chain is
-replayable. Once one flagship family has complete direct rows and real headroom,
-factored constraints can improve exact success without silently collapsing
-semantic support. Separately, a state-grounded memory patch can improve held
-future behavior only when its admission signal is exact, cold-context-safe, and
-independent of the error process it judges.
-
-The milestone has four release boundaries:
-
-1. **Execution boundary:** no model science without identity, lease, process,
-   phase, accelerator, and unload receipts.
-2. **Verification boundary:** only exact executable checks release outputs.
-   Learned signals are diagnostic or routing evidence.
-3. **Learning boundary:** no memory credit without live influence, source repair,
-   held-anchor retention, prospective benefit, and support preservation.
-4. **Hardware boundary:** RTX 3090 measurements are local accelerator evidence.
-   Rust, Torx simulation, and THRML compatibility are not TSU hardware evidence.
-
-## Target architecture
+## Architecture under test
 
 ```text
-            complete V578 roadmap document + YAML
-                           |
-                 [Exp6619 activation contract]
-                           |
-                 [Exp6620 lease + phase journal]
-                           |
-         +-----------------+--------------------+
-         |                                      |
- [Exp6621 model canaries]                CPU evidence branch
-         |                               [Exp6627 integrity]
- [Exp6622 Qwen direct rows]                      |
-         |                               [Exp6628 CPU/GPU replay]
- [Exp6623 independent reducer]
-         |
-         +----------------------+-----------------------+
-         |                      |                       |
- [Exp6624 delayed        [Exp6625 cold-context   [Exp6629 live memory
-  two-level decoding]     verifier control]       actionability]
-         |                                              |
- [Exp6626 exact safety]                         [Exp6630 patch gate]
-                                                        |
-                              [Exp6631 prospective continuous learning]
-                                                        |
-                           [Exp6632 independent capstone]
+                         exact authority plane
+             +-----------------------------------------+
+             | corpus labels | twin labels | Kac--Ward |
+             | ARC outcomes  | support audit | rollback|
+             +-----------+-------------+---------------+
+                         |             |
+                         v             v
++------------------+   +------------------------+   +------------------+
+| local GGUF models|-->| proposal and search    |-->| checked candidate |
+| Qwen3.6 35B A3B  |   | direct / delayed       |   | pool and release  |
+| Gemma 4 31B      |   | syntax / semantic      |   | decision          |
+| Gemma 4 26B A4B  |   +-----------+------------+   +------------------+
++--------+---------+               |
+         ^                         v
+         |             +--------------------------+
+         |             | live E3AgentPolicy       |
+         |             | held-out state/action    |
+         |             +------------+-------------+
+         |                          |
+         |                          v
+         |             +--------------------------+
+         +-------------| verified skill memory    |
+                       | invoke / revise / retire  |
+                       | restart / rollback        |
+                       +--------------------------+
 
-Learned path:  propose -> route -> constrain -> patch -> abstain
-Exact path:    parse -> execute -> check -> admit/reject -> release
-State path:    observe -> retrieve -> influence -> exact feedback -> candidate patch
-Hardware path: CPU reference -> Rust parity -> RTX GPU replay -> future TSU portability
+Execution envelope: task lease -> model identity -> phase journal -> rows
+Sampler branch: planar instance -> Kac--Ward reference -> CPU/Rust/RTX replay
 ```
 
-The exact path never consumes a learned verifier verdict as release authority.
-The state path never mutates model weights or the immutable base policy. The
-capstone runs even when earlier gates block and reports the dependency cut.
+The exact plane owns admission and release. Learned models may propose, score,
+route, or abstain. A learned signal never certifies itself.
 
-## Phase I: activation truth and bounded flagship headroom
+## Phase A: Admit real local inference
 
-### Exp6619 - complete V578 activation and gate-ownership contract
+### Exp6633 - Task-scoped GPU lease and phase journal
 
-Validate that the document and YAML describe the same Exp6619-Exp6632 task set.
-Check IDs, deliverables, milestone values, prior failures, gate owners, required
-artifact fields, model policy, protected files, and prompt endings. This differs
-from Exp6616 because the complete YAML exists before the task starts.
+Implement the reusable lease that V577 and V578 never reached. Bind task, token,
+device UUID, PID start, model identity, heartbeat, phase, VRAM, exit, and unload.
+Test races, PID reuse, stale owners, tamper, restart, and protected files without
+loading an LLM.
 
-**Deliverable:** `results/experiment_6619_v578_activation_contract.json`  
-**Gate field:** `activation_contract_ready_score`
+- Deliverable: `results/experiment_6633_gpu_lease_phase_journal.json`
+- Gate output: `gpu_lease_scheduler_ready_score`
+- Prior scopes: Exp6617 and Exp6620
+- Hardware: bounded process fixtures only
 
-### Exp6620 - task-scoped GPU lease and phase receipts
+### Exp6634 - Independent admission of all mandated GGUF families
 
-Implement the previously blocked lease substrate. Bind task, token, device UUID,
-PID start time, model hash, VRAM, phase, heartbeat, terminal reason, and unload
-evidence. Prove race, stale-owner, PID-reuse, tamper, timeout, and restart
-behavior with process fixtures before loading a model.
+Run three fresh-process canaries under independent leases. Admit each family
+separately. A failure in one family must not erase valid evidence for another.
 
-**Deliverable:** `results/experiment_6620_gpu_lease_phase_receipts.json`  
-**Gate field:** `gpu_lease_scheduler_ready_score`
+- Models: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`
+- Deliverable: `results/experiment_6634_mandated_model_admission.json`
+- Gate outputs: `qwen36_admitted_score`, `gemma4_31b_admitted_score`, and
+  `gemma4_26b_admitted_score`
+- Hardware: dual RTX 3090; one family per fresh process
 
-### Exp6621 - independent mandated-model admission canaries
+## Phase B: Close the constrained-generation authority loop
 
-Run short fresh-process CUDA canaries for Qwen3.6-35B-A3B, Gemma-4-31B-it, and
-Gemma-4-26B-A4B-it. Emit readiness per family. One failure must not erase another
-family's valid receipt. Legacy small models cannot satisfy readiness.
+### Exp6635 - Matched direct-headroom baselines
 
-**Deliverable:** `results/experiment_6621_mandated_model_admission.json`  
-**Gate fields:** `qwen_admission_ready_score`, `gemma31_admission_ready_score`,
-`gemma26_admission_ready_score`
+Run frozen direct prompts on Qwen3.6-35B-A3B and Gemma-4-26B-A4B. Emit every
+candidate row, exact validity, support, model identity, and process receipt.
+Open the treatment gate only if complete rows show preregistered error headroom.
 
-### Exp6622 - bounded Qwen3.6 direct-headroom requalification
+- Deliverable: `results/experiment_6635_matched_direct_headroom.json`
+- Gate outputs: `direct_rows_complete_score`, `headroom_ready_score`
+- Prior scopes: Exp6605, Exp6607, and Exp6622
 
-Use the exact V576 corpus and one frozen Qwen3.6 configuration. Run direct
-generation only. Preserve every attempt, exact result, failure category, timing,
-model identity, phase receipt, and candidate-budget row. Do not add a treatment.
+### Exp6636 - Delayed two-level constrained decoding
 
-**Deliverable:** `results/experiment_6622_qwen36_direct_headroom.json`  
-**Gate field:** `baseline_rows_complete_score`
+Compare direct, syntax-only, and delayed syntax-plus-semantic guidance on one
+frozen pool specification and fixed budgets. Keep an unconstrained reasoning
+region. Measure exact validity, diversity, best-at-k support, latency, and
+constraint activation per unit.
 
-### Exp6623 - independent headroom and support reducer
+- Deliverable: `results/experiment_6636_delayed_two_level_decoding.json`
+- Gate output: `decoding_rows_complete_score`
+- Prior scopes: Exp6609 and Exp6624
 
-Replay Exp6622 from raw rows. Freeze eligibility, exact success, syntax failure,
-semantic failure, best-at-k, and preregistered headroom. The reducer must not
-load an LLM. It opens Phase II only when the direct arm is complete and has
-nontrivial repair headroom.
+### Exp6637 - Cold-context verifier unit calibration
 
-**Deliverable:** `results/experiment_6623_headroom_support_reducer.json`  
-**Gate field:** `constrained_decoding_ready_score`
+Use byte-matched clean/error twins. Vary only the reviewed action unit. Compare
+fresh, prior-repair, and length-matched contexts. Report catch, false rejection,
+informedness, criterion, and discrimination. Exact labels own the answer.
 
-## Phase II: constrained decoding and verifier-context safety
+- Models: Qwen3.6-35B-A3B and Gemma-4-31B
+- Deliverable: `results/experiment_6637_verifier_unit_calibration.json`
+- Research anchors: arXiv:2608.23941 and arXiv:2608.16003
 
-### Exp6624 - delayed two-level constrained decoding
+### Exp6638 - Independent exact release audit
 
-Compare direct, syntax-only, and delayed syntax-plus-semantic constraints on the
-same prompts, seeds, budgets, model, and exact checker. Preserve free-form
-reasoning until the structured-output trigger. Report exact validity, semantic
-success, best-at-k, support, latency, and constraint activation per unit.
+Recompute all Exp6636 validity and support fields from frozen candidate rows.
+Compare the learned routing signal with exact outcomes, verify that rejected
+valid candidates remain counted, and issue the only release decision for the
+decoding branch.
 
-**Deliverable:** `results/experiment_6624_delayed_two_level_decoding.json`  
-**Gate field:** `decoding_rows_ready_score`
+- Deliverable: `results/experiment_6638_exact_decoding_authority_audit.json`
+- Gate output: `exact_decoding_release_score`
 
-### Exp6625 - cold-context verifier criterion control
+## Phase C: Establish an exact sampling reference before acceleration
 
-On byte-identical labeled traces, compare learned verifier output in fresh,
-prior audit-repair, and length-matched neutral contexts. Use Qwen3.6 and Gemma
-26B as independent measurement families. Exact labels remain authority. Report
-criterion, discrimination, false positives, false negatives, and per-row logits
-or stable scores.
+### Exp6639 - Kac--Ward planar-Ising reference
 
-**Deliverable:** `results/experiment_6625_cold_context_verifier_control.json`  
-**Gate field:** `cold_context_verifier_ready_score`
+Implement a bounded exact autoregressive sampler for small zero-field planar
+Ising instances. Cross-check normalized likelihoods and moments against full
+enumeration. Generate independent reference rows for later sampler comparison.
 
-### Exp6626 - exact constraint authority and support audit
+- Deliverable: `results/experiment_6639_kac_ward_planar_reference.json`
+- Gate output: `kac_ward_reference_ready_score`
+- Research anchor: arXiv:2608.24382
+- Prior scope: Exp6612, addressed by a new independent exact technique
 
-Independently replay Exp6624. Attack incomplete semantic automata, malformed
-plans, contradictory constraints, budget inflation, duplicate candidates, and
-learned-verifier disagreement. Measure false accepts and recoverable support at
-each budget. Only the exact checker can accept.
+### Exp6640 - CPU, Rust, and RTX spectral replay
 
-**Deliverable:** `results/experiment_6626_constraint_authority_support_audit.json`
+Replay the k-block method only after the exact reference passes. Compare
+stationary error, transition cost, setup, wall time, effective sample size,
+autocorrelation, and protection receipts on matched planar rows. Scope the claim
+to measured local paths. Do not make FPGA or TSU claims.
 
-## Phase III: spectral sampler evidence and local acceleration
+- Deliverable: `results/experiment_6640_spectral_local_replay.json`
+- Prior scopes: Exp6612 and Exp6627
+- Hardware: CPU, Rust implementation, and local RTX 3090 CUDA path
 
-### Exp6627 - spectral integrity and reference repair
+## Phase D: Make verified memory affect future live action
 
-Repair the V576 spectral artifact's failing parity, cost, test, and protection
-receipts. Compare the Rust k-block kernel against exact enumeration where
-tractable and a sequential Gibbs reference above that range. Separate setup,
-transition, effective-sample-size, autocorrelation, and wall time.
+### Exp6641 - Operational-state handoff preservation
 
-**Deliverable:** `results/experiment_6627_spectral_integrity_repair.json`  
-**Gate field:** `sampler_integrity_ready_score`
+Compare direct handoff, ordinary compression, and a typed four-field handoff for
+live-policy memory. Measure prerequisite, authority, fallback, consequence,
+deactivation, and forbidden action per episode. Semantic mention alone does not
+count as preservation.
 
-### Exp6628 - independent CPU/GPU spectral replay
+- Model: Qwen3.6-35B-A3B
+- Deliverable: `results/experiment_6641_operational_state_handoff.json`
+- Gate output: `operational_state_ready_score`
+- Research anchor: arXiv:2608.24569
 
-Replay the qualified kernel in a fresh process. Compare sequential CPU, Rust
-k-block CPU, and batched RTX GPU execution on identical Ising instances and
-seeds. Report setup and transfer costs. Retain a sparse 16-neighbor portability
-record for future Torx, THRML, or Z1 work, but make no TSU claim.
+### Exp6642 - Held-out live ARC actionability canary
 
-**Deliverable:** `results/experiment_6628_spectral_cpu_gpu_replay.json`
+Attach the qualified handoff to the real `E3AgentPolicy` path. Compare frozen,
+context-only, and typed-memory arms on held-out, game-agnostic transitions. Log
+retrieval, pre-generation routing, prompt influence, parsed action, and exact
+environment result. This is a generalization and actionability test. It is not a
+game or level solve task.
 
-## Phase IV: live actionability and continuous self-learning
+- Model: Qwen3.6-35B-A3B
+- Deliverable: `results/experiment_6642_arc_live_actionability.json`
+- Gate outputs: `arc_actionability_rows_ready_score`,
+  `arc_action_influence_score`
+- Prior scope: Exp6611
 
-### Exp6629 - held-out live memory actionability canary
+### Exp6643 - Exact component-patch admission
 
-Route typed invariant memory through the real `E3AgentPolicy` decision path on a
-held archive. Record state, retrieval, candidate action before and after memory,
-influence, exact outcome, and abstention. Use game-agnostic interfaces. Make no
-ARC game or level solve claim.
+From Exp6642 failures, localize one game-agnostic memory, router, or feedback
+component. Admit a patch only when an exact checker proves source repair,
+held-anchor retention, support preservation, and rollback. Same-model
+self-grades are diagnostic only.
 
-**Deliverable:** `results/experiment_6629_live_memory_actionability.json`  
-**Gate field:** `live_memory_activation_ready_score`
+- Deliverable: `results/experiment_6643_exact_component_patch_gate.json`
+- Gate outputs: `patch_contract_ready_score`, `eligible_patch_count`
+- Prior scope: Exp6614
+- Research anchors: arXiv:2608.00017 and arXiv:2608.00220
 
-### Exp6630 - error-independent component patch gate
+### Exp6644 - Prospective multi-order continuous self-learning
 
-Localize a failed trajectory to one typed component: stored record, working
-state, invocation rule, or exact checker binding. Compare exact feedback with a
-same-model self-grade only as a contamination diagnostic. Admit no patch unless
-the exact signal is error-independent, the source failure repairs, anchors
-retain, recoverable support does not fall, restart replays, and rollback works.
+Run frozen, context-only, and verified-memory arms prospectively across at least
+three seeds and three task orders. Skills must record invocation and evidence and
+may append, revise, or retire. Measure current, future, cross-constraint,
+recoverable-support, regression, restart, and rollback effects. Update admission
+comes only from exact outcomes.
 
-**Deliverable:** `results/experiment_6630_error_independent_memory_patch_gate.json`  
-**Gate field:** `memory_patch_contract_ready_score`
+- Model: Qwen3.6-35B-A3B
+- Deliverable: `results/experiment_6644_prospective_skill_evolution.json`
+- Gate output: `prospective_future_benefit_delta`
+- Prior scope: Exp6614
+- Research anchors: SkillForge, CAFE, ContinualSkillBench, and Recuris
 
-### Exp6631 - prospective multi-order continuous self-learning
+### Exp6645 - Dense-family self-learning confirmation
 
-Compare frozen, context-only, and verifier-governed memory arms across multiple
-seeds and chronological, reverse, and shuffled orders. Apply only past accepted
-patches to later events. Keep weights and base policy frozen. Report activation,
-future exact success, best-at-k, support, retention, poison, restart, rollback,
-and variance per event.
+If Exp6644 shows positive prospective future benefit, replay the frozen contract
+with Gemma-4-31B. Keep event order, budgets, exact authority, and memory records
+fixed. The result tests family transfer; it does not pool away per-order losses.
 
-**Deliverable:** `results/experiment_6631_prospective_support_preserving_csl.json`
+- Model: Gemma-4-31B
+- Deliverable: `results/experiment_6645_dense_skill_evolution_confirmation.json`
 
-### Exp6632 - independent capstone and architecture reconciliation
+### Exp6646 - Independent milestone capstone
 
-Replay every available V578 artifact, including blocked artifacts. Recompute
-gates and headline claims from per-unit rows. Report the strongest supported
-execution, decoding, verifier-context, sampler, and self-learning statements.
-Update capability specs, traceability, architecture, status, and changelog only
-to match evidence.
+Aggregate every terminal artifact, including blocks and nulls. Recompute gates
+and headline values from rows. Separate measured facts, inferences, and open
+questions. Reconcile the roadmap, architecture, traceability, status, changelog,
+and completed-research records without changing the conductor or active roadmap.
 
-**Deliverable:** `results/experiment_6632_v578_independent_capstone.json`
+- Deliverable: `results/experiment_6646_v579_capstone.json`
+- Hardware: no new inference
 
 ## Dependency graph
 
 ```text
-Exp6619 activation contract
-  -> Exp6620 GPU lease
-       -> Exp6621 model admission
-            -> Exp6622 direct Qwen rows
-                 -> Exp6623 headroom reducer
-                      -> Exp6624 delayed constraints
-                           -> Exp6626 exact authority audit
-            -> Exp6625 cold-context verifier control
-            -> Exp6629 live memory actionability
-                 -> Exp6630 component patch gate
-                      -> Exp6631 prospective CSL
+Exp6633 lease
+  `-> Exp6634 model admission
+        |-> Exp6635 direct headroom
+        |     `-> Exp6636 delayed decoding
+        |            `-> Exp6638 exact release audit
+        |-> Exp6637 verifier unit calibration
+        `-> Exp6641 operational handoff
+              `-> Exp6642 ARC live actionability
+                    `-> Exp6643 exact patch gate
+                          `-> Exp6644 prospective CSL
+                                `-> Exp6645 dense confirmation
 
-Exp6619 activation contract
-  -> Exp6627 spectral integrity
-       -> Exp6628 CPU/GPU spectral replay
+Exp6639 Kac--Ward reference
+  `-> Exp6640 local spectral replay
 
-All available artifacts -> Exp6632 capstone (ungated)
+All terminal artifacts, including blocked ones
+  `-> Exp6646 independent capstone
 ```
 
-Structured gates:
+Exp6646 is deliberately ungated. It must report a blocked or null branch instead
+of disappearing when an upstream gate fails.
+
+## Gate contract
 
 | Downstream | Upstream field | Condition |
 |---|---|---|
-| Exp6620 | `exp6619.activation_contract_ready_score` | `== 1.0` |
-| Exp6621 | `exp6620.gpu_lease_scheduler_ready_score` | `== 1.0` |
-| Exp6622 | `exp6621.qwen_admission_ready_score` | `== 1.0` |
-| Exp6623 | `exp6622.baseline_rows_complete_score` | `== 1.0` |
-| Exp6624 | `exp6623.constrained_decoding_ready_score` | `== 1.0` |
-| Exp6625 | `exp6621.qwen_admission_ready_score` | `== 1.0` |
-| Exp6626 | `exp6624.decoding_rows_ready_score` | `== 1.0` |
-| Exp6627 | `exp6619.activation_contract_ready_score` | `== 1.0` |
-| Exp6628 | `exp6627.sampler_integrity_ready_score` | `== 1.0` |
-| Exp6629 | `exp6621.qwen_admission_ready_score` | `== 1.0` |
-| Exp6630 | `exp6629.live_memory_activation_ready_score` | `== 1.0` |
-| Exp6631 | `exp6621.qwen_admission_ready_score` and `exp6630.memory_patch_contract_ready_score` | both `== 1.0` |
+| Exp6634 | Exp6633 `gpu_lease_scheduler_ready_score` | `== 1.0` |
+| Exp6635 | Exp6634 Qwen and Gemma-26 admission scores | both `== 1.0` |
+| Exp6636 | Exp6635 `headroom_ready_score` | `== 1.0` |
+| Exp6637 | Exp6634 Qwen and Gemma-31 admission scores | both `== 1.0` |
+| Exp6638 | Exp6636 `decoding_rows_complete_score` | `== 1.0` |
+| Exp6640 | Exp6639 `kac_ward_reference_ready_score` | `== 1.0` |
+| Exp6641 | Exp6634 `qwen36_admitted_score` | `== 1.0` |
+| Exp6642 | Exp6641 `operational_state_ready_score` and Exp6634 Qwen admission | both `== 1.0` |
+| Exp6643 | Exp6642 `arc_action_influence_score` | `> 0.0` |
+| Exp6644 | Exp6643 patch readiness and eligible count | ready `== 1.0`, count `> 0` |
+| Exp6645 | Exp6644 `prospective_future_benefit_delta` and Exp6634 Gemma-31 admission | delta `> 0.0`, admission `== 1.0` |
 
-Exp6632 has no structured gate. It must diagnose a broken chain rather than
-disappear behind it.
+Every named field appears in the upstream task's required artifact fields with
+the same spelling. All gates point backward within this roadmap.
 
-## Hardware requirements and boundaries
+## Hardware requirements
 
-- **Primary inference hardware:** two local RTX 3090 GPUs with task-scoped
-  leases. Record UUID, PID start, model hash, free and resident VRAM, offload,
-  heartbeat, exit, unload, and residual VRAM.
-- **CPU and RAM:** required for exact checkers, independent reducers, Rust
-  reference kernels, and sampler parity. Report CPU model, thread count, RAM,
-  and affinity when measured.
-- **Local acceleration:** Exp6628 may use an RTX 3090 for batched Ising updates.
-  It must report host-device transfer, setup, transition, and wall costs.
-- **Attached FPGA boards:** KV260, GateMate, and PolarFire are out of scope
-  without a new changed-state receipt. Do not probe them merely because they are
-  attached.
-- **Thermodynamic hardware:** no authenticated XTR-0 or Z1 runner is available.
-  Torx, Thermalizers, THRML, and Z1 sparse topology are interface references.
-  Simulator evidence cannot support a TSU latency, power, or hardware claim.
-- **Disk:** preserve raw rows, logs, process receipts, model hashes, and atomic
-  artifacts. Stop before inference when the preregistered evidence budget is not
-  available.
+| Resource | Tasks | Requirement |
+|---|---|---|
+| CPU and RAM | All tasks | Schema checks, exact verifiers, Kac--Ward reference, reducers, and tests |
+| Dual RTX 3090 | Exp6634-Exp6637, Exp6640-Exp6642, Exp6644-Exp6645 | Task-scoped leases, explicit device UUIDs, VRAM and unload receipts |
+| Local GGUF cache | LLM tasks | Exact repo ID, file path, size, and SHA-256; no silent substitute |
+| Rust toolchain | Exp6639-Exp6640 | Bounded reference and spectral implementation checks |
+| KV260, GateMate, PolarFire | None | No changed-state receipt; no board task |
+| Extropic TSU / Z1 | None | No authenticated runner; early access remains scheduled for 2027 |
 
-## Model policy
+Legacy Qwen3.5-0.8B and Gemma-4-E4B may run CPU smoke tests only. They cannot
+produce headline rows or satisfy a model gate.
 
-Every task that invokes an LLM binds at least one of these exact repo IDs in
-`MODEL_SPECS`:
+## Acceptance and reporting rules
 
-- `unsloth/Qwen3.6-35B-A3B-GGUF`
-- `unsloth/gemma-4-31B-it-GGUF`
-- `unsloth/gemma-4-26B-A4B-it-GGUF`
-
-Exp6621 uses all three. Exp6622, Exp6624, Exp6629, and Exp6631 use Qwen3.6.
-Exp6625 uses Qwen3.6 and Gemma 26B. Each uses the cached SOTA pattern from
-`scripts/experiment_template.py`, records exact model and quant hashes, derives
-tokenizer and chat-template behavior from GGUF metadata, and refuses silent
-fallback. Qwen3.5-0.8B and Gemma-4-E4B-it may run CPU smoke tests only. Their
-rows cannot satisfy readiness or headline fields.
-
-## Claim, ARC, and safety boundaries
-
-- No task claims that a learned verifier is an oracle.
-- No task accepts a candidate without an exact executable checker.
-- `circular_positive` is required if a task accidentally uses its own tested
-  mechanism as authority. Such a result cannot become a headline.
-- Comparative tasks retain one row per prompt, seed, budget, instance, event,
-  or condition. Aggregates are secondary.
-- Every blocked artifact uses `gate_check_summary` and names the failed check and
+- Every task writes one unique atomic JSON deliverable.
+- Every task declares `verdict_class` from the closed enum.
+- Every blocked artifact writes `gate_check_summary` with the failed check and
   observed value.
-- Exp6629-Exp6631 improve only a game-agnostic live-policy path. They make no ARC
-  game-level or level-level solve claim and therefore receive no solve credit.
-- No offline ground-truth BFS, game-source reading, hand GameAdapter, or
-  per-game calibration may enter the live path.
-- Memory updates are typed, local, reviewable, immutable until admitted, and
-  reversible. The generator weights and base policy remain frozen.
-- `research-roadmap.yaml` and `scripts/research_conductor.py` are protected in
-  every task.
+- Every comparative task emits per-unit rows. Aggregates cannot replace rows.
+- Every LLM task declares `MODEL_SPECS` with at least one mandated model.
+- ARC work targets the held-out live policy. It makes no level solve claim and
+  does not use an offline game adapter as credit.
+- Reruns cite prior honest verdicts, name the changed condition, and retire the
+  scope if the same verdict returns.
+- Exp6646 includes negative, blocked, disqualified, circular, and partial
+  evidence in the capstone denominator.
 
-## Expected milestone outcomes
+## Deferred work
 
-A positive milestone has all of the following:
-
-1. A complete activation contract and task-scoped execution receipts.
-2. At least one mandated family with replayable direct rows and honest headroom.
-3. An exact constrained-decoding result that reports semantic support as well as
-   validity, or an honest null/block showing why it cannot proceed.
-4. A cold-context verifier result that separates criterion shift from
-   discrimination.
-5. A repaired sampler result with independent CPU/GPU cost accounting, or an
-   honest failure that retires the unchanged scope.
-6. A prospective self-learning result with live influence, context-only control,
-   exact error-independent admission, held-future benefit, and support
-   preservation, or an honest null that prevents another passive-memory rerun.
-
-The capstone may still be partial. It must preserve every negative result and
-identify the smallest next dependency cut.
+- Matching-base EBT or ARM-EBM comparisons remain deferred until public weights
+  and a reproducible local runner exist.
+- Kona remains a product comparator until public weights and a local method
+  appear.
+- TSU and attached-FPGA measurements remain deferred until a changed-state
+  hardware receipt exists.
+- KAN work remains deferred because it does not close one of the three current
+  gaps.
+- Game-level ARC claims remain deferred. This milestone improves live held-out
+  policy behavior only.
