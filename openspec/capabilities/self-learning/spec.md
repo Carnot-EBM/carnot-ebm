@@ -28575,8 +28575,9 @@ and rollback, complete chronology, and unchanged frozen hashes.
 `continuous_self_learning_ready_score` SHALL be bare `1.0` only for a
 candidate win. An exact-observation-governed win SHALL use
 `verdict_class=circular_positive`. A complete no-benefit result SHALL use
-`verdict_class=null`. A failed precondition SHALL use a named `blocked_*`
-class and SHALL record the exact expected and observed value.
+`verdict_class=null`. A failed precondition SHALL use `verdict_class=blocked`.
+Its `status` SHALL use a named `blocked_*` value. The artifact SHALL record the
+exact expected and observed gate value.
 `inference_substrate` SHALL equal
 `prospective_chronological_live_e3_invariant_side_memory_no_new_llm`.
 `verifier_is_oracle` SHALL be bare `true` because exact observed frames govern
@@ -28677,7 +28678,7 @@ or level solve claim.
 
 - `status`: The task ends with complete prospective evidence or a named gate block.
 - `honest_verdict`: The verdict states benefit, retention, support, safety, recovery, and immutability without upgrading row completion.
-- `verdict_class`: The closed enum separates circular positive, null, and named blocked results.
+- `verdict_class`: The closed enum uses circular positive, null, or blocked. A named blocked status supplies the exact block class.
 - `gate_check_summary`: Every failed upstream, chronology, dose, benefit, retention, support, safety, recovery, resource, or hash gate records its value.
 - `continuous_self_learning_task`: Bare true marks the mandatory FR-11 task.
 - `per_unit_rows`: Every event, arm, and seed carries complete pre-state through post-state evidence.
