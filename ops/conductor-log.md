@@ -16568,3 +16568,4 @@ code |
 | 2026-08-26 16:51 UTC | Plan milestone 2026.08.580 | OK | 13 tasks proposed |
 | 2026-08-26 16:54 UTC | Milestone 2026.08.580 activated | OK | 13 tasks queued |
 | 2026-08-26 18:17 UTC | Receipt-scoped model admission boundary | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output:     assert pre |
+| 2026-08-26 19:40 UTC | Receipt-scoped model admission boundary | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: receipt and wi |
