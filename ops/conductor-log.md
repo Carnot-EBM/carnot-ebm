@@ -16551,3 +16551,5 @@ code |
 | 2026-08-26 11:09 UTC | Independent admission of all mandated GGUF familie | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6633-gpu-lease-phase-journal.gpu_lease_ |
 | 2026-08-26 11:11 UTC | Independent admission of all mandated GGUF familie | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6633-gpu-lease-phase-journal.gpu_lease_ |
 | 2026-08-26 11:13 UTC | Matched direct-headroom baselines | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6634-mandated-model-admission, exp6634-ma |
+| 2026-08-26 11:13 UTC | Delayed two-level constrained decoding | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6635-matched-direct-headroom.headroom_r |
+| 2026-08-26 11:15 UTC | Matched direct-headroom baselines | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6634-mandated-model-admission, exp6634-ma |
