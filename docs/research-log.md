@@ -6353,3 +6353,10 @@ The critical path for milestone .250:
 - theme: short mixed execution exposed missing causal timing while one inference process made batching the clearest tooling opportunity
 - key result: 6 tasks finished in 0.2 minutes with compute-task GPU idle false; the records show neither a multi-model launch nor a case where the two-model runner can be assessed
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.576
+
+- exp_range: no data available this milestone
+- theme: mixed baseline and synthesis execution exposed gaps in phase timing and cross-experiment scheduling evidence
+- key result: the active accelerator was engaged during the compute tail; no data available this milestone explains the phase costs or reveals concurrent model loading and a runner-selection error
+- acceptance: no data available this milestone

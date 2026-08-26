@@ -17860,3 +17860,15 @@ choice.
 - 2026-08-26: V576 independent capstone and architecture reconciliation (⚠️ Research Finding) — honest_verdict=complete_partial: all available V576 evidence was independently replayed; decoding remains blocked, live projection is null, sampler evidence is partial and software-only, lifecycle is conformant without utility, and prospective self-learning has zero benefit with a disqualified source verdict field; results/experiment_6615_v576_independent_capstone.json
 - 2026-08-26: V576 independent capstone and architecture reconciliation (⚠️ Research Finding) — honest_verdict=complete_partial: all available V576 evidence was independently replayed; decoding remains blocked, live projection is null, sampler evidence is partial and software-only, lifecycle is conformant without utility, and prospective self-learning has zero benefit with a disqualified source verdict field; results/experiment_6615_v576_independent_capstone.json
 - 2026-08-26: V576 independent capstone and architecture reconciliation (⚠️ Research Finding) — honest_verdict=complete_partial: all available V576 evidence was independently replayed; decoding remains blocked, live projection is null, sampler evidence is partial and software-only, lifecycle is conformant without utility, and prospective self-learning has zero benefit with a disqualified source verdict field; results/experiment_6615_v576_independent_capstone.json
+
+## 2026-08-26 — Milestone 2026.08.576 operational retrospective
+
+The milestone closed 11 experiments in 10.2 minutes, including 5 compute-bound
+experiments. Qwen3.6 direct baseline headroom qualification was the longest
+compute entry at 3.68 minutes, followed by Gemma 4 26B-A4B direct baseline
+headroom qualification at 1.1 minutes. For the phase-level cause of these
+durations, no data available this milestone. The GPU sample placed the active
+device at 99% utilization, so the locked compute-idle flag remains false.
+Concurrent model loading and DualGPURunner eligibility cannot be determined
+from the supplied records. The next tooling priority is a readiness-aware GPU
+scheduler paired with task-scoped phase and accelerator receipts.

@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.576",
+  "generated_at": "2026-08-26T03:19:43Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 10.2,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 5,
+  "slowest_experiments": [
+    {
+      "experiment": "Frustrated spectral k-block scale and Rust parity",
+      "duration_minutes": 4.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qwen3.6 direct baseline headroom qualification",
+      "duration_minutes": 3.68,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gemma 4 26B-A4B direct baseline headroom qualification",
+      "duration_minutes": 1.1,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Verifier-governed invariant-memory lifecycle conformance",
+      "duration_minutes": 0.67,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Live-path invariant projection on archived world-model transitions",
+      "duration_minutes": 0.03,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Execution covered 11 experiments in 10.2 minutes; 5 carried compute-bound labels. Qwen3.6 direct baseline headroom qualification was the longest compute entry, the locked compute-task idle assessment is false, and the records lack causal phase timing and model-concurrency fields.",
+  "bottlenecks_identified": [
+    "Qwen3.6 direct baseline headroom qualification took 3.68 minutes and Gemma 4 26B-A4B direct baseline headroom qualification took 1.1 minutes. For the reason behind either duration, no data available this milestone.",
+    "The point-in-time GPU report cannot grade accelerator use across all 5 compute-bound experiments or establish whether another ready experiment could have used the available device capacity.",
+    "The closeout evidence omits loaded-model count and runner-selection receipts, so DualGPURunner eligibility cannot be audited."
+  ],
+  "improvements_suggested": [
+    "Record monotonic task and phase clocks together with task-linked accelerator samples for every compute-bound experiment.",
+    "Add a readiness-aware scheduler that can place independent single-model experiments on separate available GPUs while retaining one GPU per single-model task.",
+    "Persist loaded-model count, device assignment, and runner choice at launch so DualGPURunner is selected and auditable only for parallel multi-model work."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Schedule ready independent single-model experiments across available GPUs.",
+    "Capture task-scoped phase clocks and accelerator telemetry.",
+    "Emit model-count, device-assignment, and runner-selection receipts at launch."
+  ],
+  "estimated_time_savings_pct": 11,
+  "meta_reflection": "The GPU sample shows strong engagement on the active device, so it does not support a compute-task idle defect; spare device capacity instead motivates a conditional cross-experiment scheduling test. The 11% estimate is 1.1 divided by 10.2, rounded, and assumes the named compute streams were ready to overlap; the records provide no concurrent-model launch receipt with which to judge DualGPURunner."
+}
