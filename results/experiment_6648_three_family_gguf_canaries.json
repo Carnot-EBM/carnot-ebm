@@ -1,0 +1,3482 @@
+{
+  "aggregate_row_recomputation": {
+    "all_mandated_models_admitted": true,
+    "distinct_worker_identity_count": 3,
+    "expected_family_ids": [
+      "qwen36_flagship_moe",
+      "gemma4_26b_middle_moe",
+      "gemma4_31b_flagship_dense"
+    ],
+    "family_row_count": 3,
+    "gate_failure_count": 0,
+    "observed_family_ids": [
+      "qwen36_flagship_moe",
+      "gemma4_26b_middle_moe",
+      "gemma4_31b_flagship_dense"
+    ],
+    "per_family": [
+      {
+        "admitted": true,
+        "failures": [],
+        "family_id": "qwen36_flagship_moe"
+      },
+      {
+        "admitted": true,
+        "failures": [],
+        "family_id": "gemma4_26b_middle_moe"
+      },
+      {
+        "admitted": true,
+        "failures": [],
+        "family_id": "gemma4_31b_flagship_dense"
+      }
+    ],
+    "preconditions_passed": true,
+    "reducer": "exact family identity plus independent process and complete receipt conjunction",
+    "sequential_launch_order": true,
+    "upstream_gate_passed": true,
+    "verification_commands_passed": true
+  },
+  "all_mandated_models_admitted": true,
+  "defined_model_specs": [
+    {
+      "device_index": 0,
+      "family_id": "qwen36_flagship_moe",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "quantization": "Q4_K_M",
+      "resolution_method": "cached_sota_pair",
+      "role": "flagship_moe"
+    },
+    {
+      "device_index": 1,
+      "family_id": "gemma4_26b_middle_moe",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "quantization": "Q4_K_M",
+      "resolution_method": "cached_sota_pair",
+      "role": "middle_moe"
+    },
+    {
+      "device_index": 0,
+      "family_id": "gemma4_31b_flagship_dense",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "quantization": "Q4_K_M",
+      "resolution_method": "resolve_cached_gguf",
+      "role": "flagship_dense"
+    }
+  ],
+  "duration_s": 78.13386,
+  "embedded_tokenizer_rows": [
+    {
+      "auto_tokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+      "error": "",
+      "family_id": "qwen36_flagship_moe",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loadable": true,
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "prompt_token_count": 7,
+      "source": "llama.cpp_embedded_gguf"
+    },
+    {
+      "auto_tokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "error": "",
+      "family_id": "gemma4_26b_middle_moe",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loadable": true,
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "prompt_token_count": 8,
+      "source": "llama.cpp_embedded_gguf"
+    },
+    {
+      "auto_tokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "error": "",
+      "family_id": "gemma4_31b_flagship_dense",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "loadable": true,
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "prompt_token_count": 8,
+      "source": "llama.cpp_embedded_gguf"
+    }
+  ],
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "hash": "sha256:1d382299d24cb3305bd86ac4132b625ecf9f42bb1445f2ba4519a106c4af8a4a",
+      "reducer": "identity or deterministic projection",
+      "schema": "carnot.experiment_6648.field.aggregate_row_recomputation.v1",
+      "source": "reduce_model_admission_rows"
+    },
+    "all_mandated_models_admitted": {
+      "hash": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+      "reducer": "all three exact family rows",
+      "schema": "carnot.experiment_6648.field.all_mandated_models_admitted.v1",
+      "source": "aggregate_row_recomputation"
+    },
+    "defined_model_specs": {
+      "hash": "sha256:d1046baa5d11d24109d1371a39468e9269c1b709ad090ac6b33c89d6a548cbcd",
+      "reducer": "identity or deterministic projection",
+      "schema": "carnot.experiment_6648.field.defined_model_specs.v1",
+      "source": "MODEL_SPECS"
+    },
+    "duration_s": {
+      "hash": "sha256:f6533d8640e9931e076666adbe566ea609493a17ec898103c883d78a9043cc45",
+      "reducer": "identity or deterministic projection",
+      "schema": "carnot.experiment_6648.field.duration_s.v1",
+      "source": "build_artifact"
+    },
+    "embedded_tokenizer_rows": {
+      "hash": "sha256:3831b1712f5ead404af553cb62543e46d4fb55707a20702ad0436bc9e0cd5e51",
+      "reducer": "identity or deterministic projection",
+      "schema": "carnot.experiment_6648.field.embedded_tokenizer_rows.v1",
+      "source": "model_admission_rows.tokenizer"
+    },
+    "field_provenance": {
+      "hash": "sha256:cac22831f56ea61e8513dfd8d0cc4c3bfdb80cd0b37ccf63cb7da1ccc80469c1",
+      "reducer": "required-field manifest",
+      "schema": "carnot.experiment_6648.field.field_provenance.v1",
+      "source": "build_artifact"
+    },
+    "gate_check_summary": {
+      "hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "reducer": "ordered failed-check retention",
+      "schema": "carnot.experiment_6648.field.gate_check_summary.v1",
+      "source": "build_artifact"
+    },
+    "honest_verdict": {
+      "hash": "sha256:e971aed5954a11a8c7f4d2307e2f1bc22deb6c27f71343f44918b82a58f81483",
+      "reducer": "terminal infrastructure conclusion",
+      "schema": "carnot.experiment_6648.field.honest_verdict.v1",
+      "source": "build_artifact"
+    },
+    "inference_substrate": {
+      "hash": "sha256:940cf4102ed7dcf4f409eb7818a851d98f3fa17eb404d4191c1fb3f02221d74e",
+      "reducer": "identity or deterministic projection",
+      "schema": "carnot.experiment_6648.field.inference_substrate.v1",
+      "source": "build_artifact"
+    },
+    "lease_and_unload_receipts": {
+      "hash": "sha256:41605c93e425d6b5b6bdae0720a3e0cba333486d289067ccde5b1dab519daf52",
+      "reducer": "identity or deterministic projection",
+      "schema": "carnot.experiment_6648.field.lease_and_unload_receipts.v1",
+      "source": "model_admission_rows.lease+unload"
+    },
+    "model_admission_rows": {
+      "hash": "sha256:b07c4e7480e90c514235092fe004a9821971091dfd7df47e006c7faf9d7cedff",
+      "reducer": "identity or deterministic projection",
+      "schema": "carnot.experiment_6648.field.model_admission_rows.v1",
+      "source": "run_family_workers"
+    },
+    "model_resolution_receipts": {
+      "hash": "sha256:eeaa74a3ffaca1fce6b415d4ff91208732f4f5706feac52fd3d8f293f8a99740",
+      "reducer": "identity or deterministic projection",
+      "schema": "carnot.experiment_6648.field.model_resolution_receipts.v1",
+      "source": "resolve_model_specs"
+    },
+    "per_unit_rows": {
+      "hash": "sha256:87d704962a64237bed768b868b9656aacbffcdf684f8dbf0feb22ccbcfe28207",
+      "reducer": "family rows followed by attack rows",
+      "schema": "carnot.experiment_6648.field.per_unit_rows.v1",
+      "source": "build_artifact"
+    },
+    "preconditions_checked": {
+      "hash": "sha256:0ef1de9be43967378b2958b3e06870c431a6ba2ae8fc802ea59f9c8e9c91acdb",
+      "reducer": "identity or deterministic projection",
+      "schema": "carnot.experiment_6648.field.preconditions_checked.v1",
+      "source": "collect_preconditions"
+    },
+    "protected_files_unchanged": {
+      "hash": "sha256:96c44155dc65e7bab2f72bce750f06e2ca33c7f44cb0227dd9b8303c2e04665b",
+      "reducer": "identity or deterministic projection",
+      "schema": "carnot.experiment_6648.field.protected_files_unchanged.v1",
+      "source": "protected_hashes"
+    },
+    "random_seed": {
+      "hash": "sha256:5694843d6e229fcddf92206331b8e731ceffd4dde75c90d0d08cf90e35ab5df5",
+      "reducer": "identity or deterministic projection",
+      "schema": "carnot.experiment_6648.field.random_seed.v1",
+      "source": "build_artifact"
+    },
+    "reproducibility_checksum": {
+      "hash": "sha256:356323e6b61474bc4b3fcd296f57ffc1262ba01aa59eefe4c1cedacac7e6b841",
+      "reducer": "all fields except self",
+      "schema": "carnot.experiment_6648.field.reproducibility_checksum.v1",
+      "source": "payload_checksum"
+    },
+    "status": {
+      "hash": "sha256:5dd1176dd85abfa42941812a91fcd00cb6aa09a4cf4225f875532f1086175792",
+      "reducer": "final admission conjunction",
+      "schema": "carnot.experiment_6648.field.status.v1",
+      "source": "build_artifact"
+    },
+    "tests_run": {
+      "hash": "sha256:0df061990628e85ce38abc32472dccae7e3c63f3a2274327e7e2792e2252f526",
+      "reducer": "identity or deterministic projection",
+      "schema": "carnot.experiment_6648.field.tests_run.v1",
+      "source": "run_verification_commands"
+    },
+    "upstream_gate_receipt": {
+      "hash": "sha256:4831c26cc12edfbbaa1b3c1f9a4eced1d3f95a20c65e82131fac95dd3b1085e3",
+      "reducer": "identity or deterministic projection",
+      "schema": "carnot.experiment_6648.field.upstream_gate_receipt.v1",
+      "source": "results/experiment_6647_receipt_scoped_admission_boundary.json"
+    },
+    "verdict_class": {
+      "hash": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "reducer": "closed verdict enum",
+      "schema": "carnot.experiment_6648.field.verdict_class.v1",
+      "source": "build_artifact"
+    },
+    "verifier_is_oracle": {
+      "hash": "sha256:fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+      "reducer": "identity or deterministic projection",
+      "schema": "carnot.experiment_6648.field.verifier_is_oracle.v1",
+      "source": "build_artifact"
+    }
+  },
+  "gate_check_summary": [],
+  "honest_verdict": "complete: all three mandated local GGUF families passed independent infrastructure admission canaries",
+  "inference_substrate": "fresh_process_llama_cpp_cuda_gguf_canaries",
+  "lease_and_unload_receipts": [
+    {
+      "accelerator": {
+        "after": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609688,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609688,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69131384672504,
+          "temperature_c": 52,
+          "utilization_pct": 100,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "before": {
+          "compute_processes": [],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69115511213514,
+          "temperature_c": 44,
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "cuda_offload": true,
+        "offloaded_layers": 41,
+        "resident": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609688,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609744,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 20980
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609688,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 2873,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 21251,
+          "model_pid_present": true,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69130299700860,
+          "temperature_c": 51,
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "resident_vram_delta_mb": 21247
+      },
+      "family_id": "qwen36_flagship_moe",
+      "lease": {
+        "journal_checksum": "sha256:8a733cf7839391afb00076d90859f9a0d9782d4033b051011b469aa7bc665cab",
+        "journal_path": "results/.experiment_6648_three_family_gguf_canaries/leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+        "owner": {
+          "acquired_monotonic_ns": 69116702330211,
+          "argv_digest": "sha256:03e7dcd7f902d19c73d3094fc24b5eb87e8131fb400c5aad148b9e902eccef9a",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "expires_monotonic_ns": 70316702330211,
+          "pid": 609688,
+          "pid_start_ticks": 6911507,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "exp6648-qwen36_flagship_moe",
+          "token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+          "token_length": 43,
+          "token_opaque": true
+        },
+        "owner_bound": true,
+        "phase_history": [
+          {
+            "details": {
+              "recovery_performed": false
+            },
+            "event_checksum": "sha256:d6710affa33fe119ff05d8858a1843fd24a3bae12022672a919f0a790e7012fd",
+            "monotonic_ns": 69116702330211,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "preflight",
+            "previous_event_checksum": null,
+            "previous_phase": null
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:98eb2ac7162ef8993e2bffff5ee25a7eab66ce0a28f0843400a00f9cd4e275cd",
+            "monotonic_ns": 69116704363208,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "admitted",
+            "previous_event_checksum": "sha256:d6710affa33fe119ff05d8858a1843fd24a3bae12022672a919f0a790e7012fd",
+            "previous_phase": "preflight"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:ce1c3bbb85b0151a249b558611a72691bc2e3bb692ec1122bb85bff2ea983224",
+            "monotonic_ns": 69116885101404,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "loading",
+            "previous_event_checksum": "sha256:98eb2ac7162ef8993e2bffff5ee25a7eab66ce0a28f0843400a00f9cd4e275cd",
+            "previous_phase": "admitted"
+          },
+          {
+            "details": {
+              "vram_resident_mb": 21251
+            },
+            "event_checksum": "sha256:7e9c6591d2797ec0446307b5db0f5164bad351645feba163333e9c4eda1c083e",
+            "monotonic_ns": 69130300795214,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "resident",
+            "previous_event_checksum": "sha256:ce1c3bbb85b0151a249b558611a72691bc2e3bb692ec1122bb85bff2ea983224",
+            "previous_phase": "loading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:9a0a98158883986d8bc7dc30d63e37081e5a53a8775af540115a112441e49bc2",
+            "monotonic_ns": 69130455949973,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "inferencing",
+            "previous_event_checksum": "sha256:7e9c6591d2797ec0446307b5db0f5164bad351645feba163333e9c4eda1c083e",
+            "previous_phase": "resident"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:d7e6fd710c66b572d275ab46268c13dcbd83d307db0c13378a338e14dd840e6e",
+            "monotonic_ns": 69130797830491,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "unloading",
+            "previous_event_checksum": "sha256:9a0a98158883986d8bc7dc30d63e37081e5a53a8775af540115a112441e49bc2",
+            "previous_phase": "inferencing"
+          },
+          {
+            "details": {
+              "exit_code": 0,
+              "unload_observed": true,
+              "vram_after_mb": 266
+            },
+            "event_checksum": "sha256:0293c19b801161e5cf5750ba3e8fdde4613717ade27e7b20b640f013fc2b14e3",
+            "monotonic_ns": 69131385091801,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "validating",
+            "previous_event_checksum": "sha256:d7e6fd710c66b572d275ab46268c13dcbd83d307db0c13378a338e14dd840e6e",
+            "previous_phase": "unloading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:888facf78755b372236a6c720d4a324703b5565c4d9f1ecac31fd456bd92b105",
+            "monotonic_ns": 69131386780501,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "terminal_complete",
+            "previous_event_checksum": "sha256:0293c19b801161e5cf5750ba3e8fdde4613717ade27e7b20b640f013fc2b14e3",
+            "previous_phase": "validating"
+          }
+        ],
+        "phase_sequence": [
+          "preflight",
+          "admitted",
+          "loading",
+          "resident",
+          "inferencing",
+          "unloading",
+          "validating",
+          "terminal_complete"
+        ],
+        "release": {
+          "checksum": "sha256:8a733cf7839391afb00076d90859f9a0d9782d4033b051011b469aa7bc665cab",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "phase": "terminal_complete",
+          "pid": 609688,
+          "pid_start_ticks": 6911507,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "model_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "49439",
+          "--ctx-size",
+          "512",
+          "--n-gpu-layers",
+          "all",
+          "--device",
+          "CUDA0",
+          "--split-mode",
+          "none",
+          "--main-gpu",
+          "0",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "128",
+          "--ubatch-size",
+          "128",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-ui",
+          "--log-verbosity",
+          "4"
+        ],
+        "argv_sha256": "sha256:137521da89c03d1359f73bdbc4b8911c27c615d35ead25dd464ba53976ecbbad",
+        "ended_monotonic_ns": 69131323636885,
+        "executable": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "exit_code": 0,
+        "parent_pid": 609688,
+        "pid": 609744,
+        "pid_start_ticks": 6911708,
+        "started_monotonic_ns": 69117088307134
+      },
+      "unload": {
+        "model_process_absent": true,
+        "observed": true,
+        "vram_recovered": true
+      },
+      "worker_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6648_three_family_gguf_canaries",
+          "--worker",
+          "--worker-spec",
+          "results/.experiment_6648_three_family_gguf_canaries/qwen36_flagship_moe.spec.json",
+          "--worker-output",
+          "results/.experiment_6648_three_family_gguf_canaries/qwen36_flagship_moe.row.json",
+          "--runtime-dir",
+          "results/.experiment_6648_three_family_gguf_canaries"
+        ],
+        "argv_sha256": "sha256:f9d4de666cc97a8b170bea44d74e0f1a9dd7af0c37edf37dee0e5b3f61191811",
+        "ended_monotonic_ns": 69132018517226,
+        "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+        "exit_code": 0,
+        "pid": 609688,
+        "pid_start_ticks": 6911507,
+        "started_monotonic_ns": 69115074786167,
+        "stderr_sha256": "sha256:6c4d3134c04c74720a8d0ab8cd7f0f08f532df635ba9493d6d99f6ffd931e09b",
+        "stdout_sha256": "sha256:36abf506fe5feb8d018f3b95538c4465f12d2f8c9555173f680399b2fab45c46"
+      }
+    },
+    {
+      "accelerator": {
+        "after": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609824,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609824,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "driver_version": "610.57.04",
+          "index": 1,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69146085986433,
+          "temperature_c": 52,
+          "utilization_pct": 0,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        },
+        "before": {
+          "compute_processes": [],
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "driver_version": "610.57.04",
+          "index": 1,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69132566617749,
+          "temperature_c": 44,
+          "utilization_pct": 0,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        },
+        "cuda_offload": true,
+        "offloaded_layers": 31,
+        "resident": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609824,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609824,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609867,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 16582
+            }
+          ],
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "driver_version": "610.57.04",
+          "index": 1,
+          "memory_free_mb": 7271,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 16853,
+          "model_pid_present": true,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69145466979985,
+          "temperature_c": 51,
+          "utilization_pct": 25,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        },
+        "resident_vram_delta_mb": 16849
+      },
+      "family_id": "gemma4_26b_middle_moe",
+      "lease": {
+        "journal_checksum": "sha256:64bec49ca3d81701df38003c240e02284ac14e2a67466479f1628eee5d028a23",
+        "journal_path": "results/.experiment_6648_three_family_gguf_canaries/leases/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.journal.json",
+        "owner": {
+          "acquired_monotonic_ns": 69134017218036,
+          "argv_digest": "sha256:ab319a3b0ae1cb4c4ae5049f1bad548d87158255aa40674b95f34faabec6806b",
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "expires_monotonic_ns": 70334017218036,
+          "pid": 609824,
+          "pid_start_ticks": 6913202,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "exp6648-gemma4_26b_middle_moe",
+          "token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+          "token_length": 43,
+          "token_opaque": true
+        },
+        "owner_bound": true,
+        "phase_history": [
+          {
+            "details": {
+              "recovery_performed": false
+            },
+            "event_checksum": "sha256:3b351d6d8ebaaf3d68ddf467f43f14a35d5e8e518e19b8fbbc6ce0d427486511",
+            "monotonic_ns": 69134017218036,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "preflight",
+            "previous_event_checksum": null,
+            "previous_phase": null
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:5b8243755bae19796bc03767ad4adbe356f0c7ceea2ddd11deae64a88a190545",
+            "monotonic_ns": 69134019093437,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "admitted",
+            "previous_event_checksum": "sha256:3b351d6d8ebaaf3d68ddf467f43f14a35d5e8e518e19b8fbbc6ce0d427486511",
+            "previous_phase": "preflight"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:dcd85812b2aaf0b8b2d0a766a94fc364232133e9a22e0b73cd8875ad05e261ef",
+            "monotonic_ns": 69134174746562,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "loading",
+            "previous_event_checksum": "sha256:5b8243755bae19796bc03767ad4adbe356f0c7ceea2ddd11deae64a88a190545",
+            "previous_phase": "admitted"
+          },
+          {
+            "details": {
+              "vram_resident_mb": 16853
+            },
+            "event_checksum": "sha256:23b3fce02fe0f39e679cafad4aaa16a529424a25e53d5a59f773cccd089eff08",
+            "monotonic_ns": 69145467919739,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "resident",
+            "previous_event_checksum": "sha256:dcd85812b2aaf0b8b2d0a766a94fc364232133e9a22e0b73cd8875ad05e261ef",
+            "previous_phase": "loading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:2cf4ace619004338b721b2bc26cf137d3d075bac6b806e1f706a70c8d3dd5a6b",
+            "monotonic_ns": 69145469165208,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "inferencing",
+            "previous_event_checksum": "sha256:23b3fce02fe0f39e679cafad4aaa16a529424a25e53d5a59f773cccd089eff08",
+            "previous_phase": "resident"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:5c3b012869dc4b8a03b8096d54b8c408d1f446decf0b1fb0b4be119145eda463",
+            "monotonic_ns": 69145708804149,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "unloading",
+            "previous_event_checksum": "sha256:2cf4ace619004338b721b2bc26cf137d3d075bac6b806e1f706a70c8d3dd5a6b",
+            "previous_phase": "inferencing"
+          },
+          {
+            "details": {
+              "exit_code": 0,
+              "unload_observed": true,
+              "vram_after_mb": 266
+            },
+            "event_checksum": "sha256:96509d8433851fb16828e992bdccf5025c9e19e32a185fbd635ebf46cf51459d",
+            "monotonic_ns": 69146086392736,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "validating",
+            "previous_event_checksum": "sha256:5c3b012869dc4b8a03b8096d54b8c408d1f446decf0b1fb0b4be119145eda463",
+            "previous_phase": "unloading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:f917fcc5f8fd16f9707065f5a0adcd1cbb2e1fed3cad039106f3271739b5b0fd",
+            "monotonic_ns": 69146088238461,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "terminal_complete",
+            "previous_event_checksum": "sha256:96509d8433851fb16828e992bdccf5025c9e19e32a185fbd635ebf46cf51459d",
+            "previous_phase": "validating"
+          }
+        ],
+        "phase_sequence": [
+          "preflight",
+          "admitted",
+          "loading",
+          "resident",
+          "inferencing",
+          "unloading",
+          "validating",
+          "terminal_complete"
+        ],
+        "release": {
+          "checksum": "sha256:64bec49ca3d81701df38003c240e02284ac14e2a67466479f1628eee5d028a23",
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "phase": "terminal_complete",
+          "pid": 609824,
+          "pid_start_ticks": 6913202,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "model_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "33041",
+          "--ctx-size",
+          "512",
+          "--n-gpu-layers",
+          "all",
+          "--device",
+          "CUDA0",
+          "--split-mode",
+          "none",
+          "--main-gpu",
+          "0",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "128",
+          "--ubatch-size",
+          "128",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-ui",
+          "--log-verbosity",
+          "4"
+        ],
+        "argv_sha256": "sha256:4fab824d79cbe9955af4cbf09c8b2c5751bdf9163b3aebac91df717afafde722",
+        "ended_monotonic_ns": 69146026314386,
+        "executable": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "exit_code": 0,
+        "parent_pid": 609824,
+        "pid": 609867,
+        "pid_start_ticks": 6913437,
+        "started_monotonic_ns": 69134376505645
+      },
+      "unload": {
+        "model_process_absent": true,
+        "observed": true,
+        "vram_recovered": true
+      },
+      "worker_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6648_three_family_gguf_canaries",
+          "--worker",
+          "--worker-spec",
+          "results/.experiment_6648_three_family_gguf_canaries/gemma4_26b_middle_moe.spec.json",
+          "--worker-output",
+          "results/.experiment_6648_three_family_gguf_canaries/gemma4_26b_middle_moe.row.json",
+          "--runtime-dir",
+          "results/.experiment_6648_three_family_gguf_canaries"
+        ],
+        "argv_sha256": "sha256:aaf9391462b7f9b6638a447cbb8ef5173cc1c37497d8eeeb53b18ead704c5bac",
+        "ended_monotonic_ns": 69146695677410,
+        "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+        "exit_code": 0,
+        "pid": 609824,
+        "pid_start_ticks": 6913202,
+        "started_monotonic_ns": 69132021354022,
+        "stderr_sha256": "sha256:6c4d3134c04c74720a8d0ab8cd7f0f08f532df635ba9493d6d99f6ffd931e09b",
+        "stdout_sha256": "sha256:49069c61a40c036935be8bdd12d7acbd0465adeb3ab6a7d5e8867281945d152e"
+      }
+    },
+    {
+      "accelerator": {
+        "after": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609934,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609934,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69161335337706,
+          "temperature_c": 54,
+          "utilization_pct": 100,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "before": {
+          "compute_processes": [],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69147285407841,
+          "temperature_c": 46,
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "cuda_offload": true,
+        "offloaded_layers": 61,
+        "resident": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609934,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609978,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 18246
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609934,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 5607,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 18517,
+          "model_pid_present": true,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69160468477150,
+          "temperature_c": 53,
+          "utilization_pct": 27,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "resident_vram_delta_mb": 18513
+      },
+      "family_id": "gemma4_31b_flagship_dense",
+      "lease": {
+        "journal_checksum": "sha256:3046ab308e088f8405c741262b75a601a081d8c73c9a94f7027879f97cd1b7d5",
+        "journal_path": "results/.experiment_6648_three_family_gguf_canaries/leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+        "owner": {
+          "acquired_monotonic_ns": 69148689508872,
+          "argv_digest": "sha256:d2b09596d3c7102254ba8d02567f321e90e39497ddc10edcc657f4f2d7d57fd0",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "expires_monotonic_ns": 70348689508872,
+          "pid": 609934,
+          "pid_start_ticks": 6914678,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "exp6648-gemma4_31b_flagship_dense",
+          "token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+          "token_length": 43,
+          "token_opaque": true
+        },
+        "owner_bound": true,
+        "phase_history": [
+          {
+            "details": {
+              "recovery_performed": false
+            },
+            "event_checksum": "sha256:c81c88dbd2606cd7ba226a6c8c4a21edd217b56c8769f1578489d2bb3b094315",
+            "monotonic_ns": 69148689508872,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "preflight",
+            "previous_event_checksum": null,
+            "previous_phase": null
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:b9f4efce30b48108fecfac35f7147a0d3b4815eafd7d3e302721bfeab6ce8740",
+            "monotonic_ns": 69148853925971,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "admitted",
+            "previous_event_checksum": "sha256:c81c88dbd2606cd7ba226a6c8c4a21edd217b56c8769f1578489d2bb3b094315",
+            "previous_phase": "preflight"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:c560dec705deb9dd9fa898835106dc21c6b92f97c1900413b7f2a2d224668ca6",
+            "monotonic_ns": 69149053115726,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "loading",
+            "previous_event_checksum": "sha256:b9f4efce30b48108fecfac35f7147a0d3b4815eafd7d3e302721bfeab6ce8740",
+            "previous_phase": "admitted"
+          },
+          {
+            "details": {
+              "vram_resident_mb": 18517
+            },
+            "event_checksum": "sha256:512f7bfb450972099bf515e35749ad8c02b78deac95597e5411b1d962f551324",
+            "monotonic_ns": 69160469445157,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "resident",
+            "previous_event_checksum": "sha256:c560dec705deb9dd9fa898835106dc21c6b92f97c1900413b7f2a2d224668ca6",
+            "previous_phase": "loading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:7ab4bd9c507da0f3b3129167e0b76ba5810bd73a9c6ddf5e97761d431fe449b1",
+            "monotonic_ns": 69160470843533,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "inferencing",
+            "previous_event_checksum": "sha256:512f7bfb450972099bf515e35749ad8c02b78deac95597e5411b1d962f551324",
+            "previous_phase": "resident"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:ef034409105e224a14d3b490e2ef053a450115e833d4657cb73667a1de9d7c68",
+            "monotonic_ns": 69160770534822,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "unloading",
+            "previous_event_checksum": "sha256:7ab4bd9c507da0f3b3129167e0b76ba5810bd73a9c6ddf5e97761d431fe449b1",
+            "previous_phase": "inferencing"
+          },
+          {
+            "details": {
+              "exit_code": 0,
+              "unload_observed": true,
+              "vram_after_mb": 266
+            },
+            "event_checksum": "sha256:41dc44d0f3aa351aa75b273103c8c625912091477a6d8ab70fd859dc77ebd97f",
+            "monotonic_ns": 69161335852463,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "validating",
+            "previous_event_checksum": "sha256:ef034409105e224a14d3b490e2ef053a450115e833d4657cb73667a1de9d7c68",
+            "previous_phase": "unloading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:d3468108e09b08d49b49cf166744f37233289409fe9c6ad07ea4331b12dca9df",
+            "monotonic_ns": 69161337542395,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "terminal_complete",
+            "previous_event_checksum": "sha256:41dc44d0f3aa351aa75b273103c8c625912091477a6d8ab70fd859dc77ebd97f",
+            "previous_phase": "validating"
+          }
+        ],
+        "phase_sequence": [
+          "preflight",
+          "admitted",
+          "loading",
+          "resident",
+          "inferencing",
+          "unloading",
+          "validating",
+          "terminal_complete"
+        ],
+        "release": {
+          "checksum": "sha256:3046ab308e088f8405c741262b75a601a081d8c73c9a94f7027879f97cd1b7d5",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "phase": "terminal_complete",
+          "pid": 609934,
+          "pid_start_ticks": 6914678,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "model_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "51541",
+          "--ctx-size",
+          "512",
+          "--n-gpu-layers",
+          "all",
+          "--device",
+          "CUDA0",
+          "--split-mode",
+          "none",
+          "--main-gpu",
+          "0",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "128",
+          "--ubatch-size",
+          "128",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-ui",
+          "--log-verbosity",
+          "4"
+        ],
+        "argv_sha256": "sha256:bbba96d3ecafa7c67b60dbb1203cb8030ef4a2a794c6b2e60f0c420fb25ed578",
+        "ended_monotonic_ns": 69161278547992,
+        "executable": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "exit_code": 0,
+        "parent_pid": 609934,
+        "pid": 609978,
+        "pid_start_ticks": 6914925,
+        "started_monotonic_ns": 69149255683525
+      },
+      "unload": {
+        "model_process_absent": true,
+        "observed": true,
+        "vram_recovered": true
+      },
+      "worker_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6648_three_family_gguf_canaries",
+          "--worker",
+          "--worker-spec",
+          "results/.experiment_6648_three_family_gguf_canaries/gemma4_31b_flagship_dense.spec.json",
+          "--worker-output",
+          "results/.experiment_6648_three_family_gguf_canaries/gemma4_31b_flagship_dense.row.json",
+          "--runtime-dir",
+          "results/.experiment_6648_three_family_gguf_canaries"
+        ],
+        "argv_sha256": "sha256:c5474b517190e5fc6fe0521c62e6b523c45e0970cc93e7ddac6515d3634fff5e",
+        "ended_monotonic_ns": 69161893354649,
+        "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+        "exit_code": 0,
+        "pid": 609934,
+        "pid_start_ticks": 6914678,
+        "started_monotonic_ns": 69146786838439,
+        "stderr_sha256": "sha256:6c4d3134c04c74720a8d0ab8cd7f0f08f532df635ba9493d6d99f6ffd931e09b",
+        "stdout_sha256": "sha256:165c6b95ec3a1305e451c63830260cd4112909728d11d4846a738d53e745b69a"
+      }
+    }
+  ],
+  "model_admission_rows": [
+    {
+      "accelerator": {
+        "after": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609688,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609688,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69131384672504,
+          "temperature_c": 52,
+          "utilization_pct": 100,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "before": {
+          "compute_processes": [],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69115511213514,
+          "temperature_c": 44,
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "cuda_offload": true,
+        "offloaded_layers": 41,
+        "resident": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609688,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609744,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 20980
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609688,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 2873,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 21251,
+          "model_pid_present": true,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69130299700860,
+          "temperature_c": 51,
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "resident_vram_delta_mb": 21247
+      },
+      "admitted": true,
+      "device_index": 0,
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "errors": [],
+      "failed_checks": [],
+      "family_id": "qwen36_flagship_moe",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "lease": {
+        "journal_checksum": "sha256:8a733cf7839391afb00076d90859f9a0d9782d4033b051011b469aa7bc665cab",
+        "journal_path": "results/.experiment_6648_three_family_gguf_canaries/leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+        "owner": {
+          "acquired_monotonic_ns": 69116702330211,
+          "argv_digest": "sha256:03e7dcd7f902d19c73d3094fc24b5eb87e8131fb400c5aad148b9e902eccef9a",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "expires_monotonic_ns": 70316702330211,
+          "pid": 609688,
+          "pid_start_ticks": 6911507,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "exp6648-qwen36_flagship_moe",
+          "token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+          "token_length": 43,
+          "token_opaque": true
+        },
+        "owner_bound": true,
+        "phase_history": [
+          {
+            "details": {
+              "recovery_performed": false
+            },
+            "event_checksum": "sha256:d6710affa33fe119ff05d8858a1843fd24a3bae12022672a919f0a790e7012fd",
+            "monotonic_ns": 69116702330211,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "preflight",
+            "previous_event_checksum": null,
+            "previous_phase": null
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:98eb2ac7162ef8993e2bffff5ee25a7eab66ce0a28f0843400a00f9cd4e275cd",
+            "monotonic_ns": 69116704363208,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "admitted",
+            "previous_event_checksum": "sha256:d6710affa33fe119ff05d8858a1843fd24a3bae12022672a919f0a790e7012fd",
+            "previous_phase": "preflight"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:ce1c3bbb85b0151a249b558611a72691bc2e3bb692ec1122bb85bff2ea983224",
+            "monotonic_ns": 69116885101404,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "loading",
+            "previous_event_checksum": "sha256:98eb2ac7162ef8993e2bffff5ee25a7eab66ce0a28f0843400a00f9cd4e275cd",
+            "previous_phase": "admitted"
+          },
+          {
+            "details": {
+              "vram_resident_mb": 21251
+            },
+            "event_checksum": "sha256:7e9c6591d2797ec0446307b5db0f5164bad351645feba163333e9c4eda1c083e",
+            "monotonic_ns": 69130300795214,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "resident",
+            "previous_event_checksum": "sha256:ce1c3bbb85b0151a249b558611a72691bc2e3bb692ec1122bb85bff2ea983224",
+            "previous_phase": "loading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:9a0a98158883986d8bc7dc30d63e37081e5a53a8775af540115a112441e49bc2",
+            "monotonic_ns": 69130455949973,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "inferencing",
+            "previous_event_checksum": "sha256:7e9c6591d2797ec0446307b5db0f5164bad351645feba163333e9c4eda1c083e",
+            "previous_phase": "resident"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:d7e6fd710c66b572d275ab46268c13dcbd83d307db0c13378a338e14dd840e6e",
+            "monotonic_ns": 69130797830491,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "unloading",
+            "previous_event_checksum": "sha256:9a0a98158883986d8bc7dc30d63e37081e5a53a8775af540115a112441e49bc2",
+            "previous_phase": "inferencing"
+          },
+          {
+            "details": {
+              "exit_code": 0,
+              "unload_observed": true,
+              "vram_after_mb": 266
+            },
+            "event_checksum": "sha256:0293c19b801161e5cf5750ba3e8fdde4613717ade27e7b20b640f013fc2b14e3",
+            "monotonic_ns": 69131385091801,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "validating",
+            "previous_event_checksum": "sha256:d7e6fd710c66b572d275ab46268c13dcbd83d307db0c13378a338e14dd840e6e",
+            "previous_phase": "unloading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:888facf78755b372236a6c720d4a324703b5565c4d9f1ecac31fd456bd92b105",
+            "monotonic_ns": 69131386780501,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "terminal_complete",
+            "previous_event_checksum": "sha256:0293c19b801161e5cf5750ba3e8fdde4613717ade27e7b20b640f013fc2b14e3",
+            "previous_phase": "validating"
+          }
+        ],
+        "phase_sequence": [
+          "preflight",
+          "admitted",
+          "loading",
+          "resident",
+          "inferencing",
+          "unloading",
+          "validating",
+          "terminal_complete"
+        ],
+        "release": {
+          "checksum": "sha256:8a733cf7839391afb00076d90859f9a0d9782d4033b051011b469aa7bc665cab",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "phase": "terminal_complete",
+          "pid": 609688,
+          "pid_start_ticks": 6911507,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "49439",
+          "--ctx-size",
+          "512",
+          "--n-gpu-layers",
+          "all",
+          "--device",
+          "CUDA0",
+          "--split-mode",
+          "none",
+          "--main-gpu",
+          "0",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "128",
+          "--ubatch-size",
+          "128",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-ui",
+          "--log-verbosity",
+          "4"
+        ],
+        "argv_sha256": "sha256:137521da89c03d1359f73bdbc4b8911c27c615d35ead25dd464ba53976ecbbad",
+        "ended_monotonic_ns": 69131323636885,
+        "executable": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "exit_code": 0,
+        "parent_pid": 609688,
+        "pid": 609744,
+        "pid_start_ticks": 6911708,
+        "started_monotonic_ns": 69117088307134
+      },
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "output": {
+        "api_response_sha256": "sha256:928cf854b2c307bced6b8d2fcbde5cc5d49df15487aa884693788481ed60b402",
+        "finish_reason": "stop",
+        "http_status": 200,
+        "latency_s": 0.140882,
+        "non_empty": true,
+        "output_token_count": 2,
+        "prompt_token_count": 19,
+        "sha256": "sha256:c2e3ac47f4a325469c1a2d5f117e463ec943c721986d5d9f09ac4540b7d80526",
+        "text": "READY"
+      },
+      "prompt": {
+        "random_seed": 6648001,
+        "sha256": "sha256:03ad3e8204d219c6a993c3f8c8502a1ca88fbb802811f6a08ac4924610a064da"
+      },
+      "quantization": "Q4_K_M",
+      "resolution_method": "cached_sota_pair",
+      "role": "flagship_moe",
+      "row_kind": "mandated_model_family",
+      "row_sha256": "sha256:08b49db57eaee803c8d3077e41551f4d06080d5a796574b2435b9f461e7b01c6",
+      "tokenizer": {
+        "auto_tokenizer_used": false,
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "error": "",
+        "loadable": true,
+        "prompt_token_count": 7,
+        "source": "llama.cpp_embedded_gguf"
+      },
+      "unload": {
+        "model_process_absent": true,
+        "observed": true,
+        "vram_recovered": true
+      },
+      "worker_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6648_three_family_gguf_canaries",
+          "--worker",
+          "--worker-spec",
+          "results/.experiment_6648_three_family_gguf_canaries/qwen36_flagship_moe.spec.json",
+          "--worker-output",
+          "results/.experiment_6648_three_family_gguf_canaries/qwen36_flagship_moe.row.json",
+          "--runtime-dir",
+          "results/.experiment_6648_three_family_gguf_canaries"
+        ],
+        "argv_sha256": "sha256:f9d4de666cc97a8b170bea44d74e0f1a9dd7af0c37edf37dee0e5b3f61191811",
+        "ended_monotonic_ns": 69132018517226,
+        "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+        "exit_code": 0,
+        "pid": 609688,
+        "pid_start_ticks": 6911507,
+        "started_monotonic_ns": 69115074786167,
+        "stderr_sha256": "sha256:6c4d3134c04c74720a8d0ab8cd7f0f08f532df635ba9493d6d99f6ffd931e09b",
+        "stdout_sha256": "sha256:36abf506fe5feb8d018f3b95538c4465f12d2f8c9555173f680399b2fab45c46"
+      }
+    },
+    {
+      "accelerator": {
+        "after": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609824,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609824,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "driver_version": "610.57.04",
+          "index": 1,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69146085986433,
+          "temperature_c": 52,
+          "utilization_pct": 0,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        },
+        "before": {
+          "compute_processes": [],
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "driver_version": "610.57.04",
+          "index": 1,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69132566617749,
+          "temperature_c": 44,
+          "utilization_pct": 0,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        },
+        "cuda_offload": true,
+        "offloaded_layers": 31,
+        "resident": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609824,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609824,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609867,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 16582
+            }
+          ],
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "driver_version": "610.57.04",
+          "index": 1,
+          "memory_free_mb": 7271,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 16853,
+          "model_pid_present": true,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69145466979985,
+          "temperature_c": 51,
+          "utilization_pct": 25,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        },
+        "resident_vram_delta_mb": 16849
+      },
+      "admitted": true,
+      "device_index": 1,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "errors": [],
+      "failed_checks": [],
+      "family_id": "gemma4_26b_middle_moe",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "lease": {
+        "journal_checksum": "sha256:64bec49ca3d81701df38003c240e02284ac14e2a67466479f1628eee5d028a23",
+        "journal_path": "results/.experiment_6648_three_family_gguf_canaries/leases/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.journal.json",
+        "owner": {
+          "acquired_monotonic_ns": 69134017218036,
+          "argv_digest": "sha256:ab319a3b0ae1cb4c4ae5049f1bad548d87158255aa40674b95f34faabec6806b",
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "expires_monotonic_ns": 70334017218036,
+          "pid": 609824,
+          "pid_start_ticks": 6913202,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "exp6648-gemma4_26b_middle_moe",
+          "token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+          "token_length": 43,
+          "token_opaque": true
+        },
+        "owner_bound": true,
+        "phase_history": [
+          {
+            "details": {
+              "recovery_performed": false
+            },
+            "event_checksum": "sha256:3b351d6d8ebaaf3d68ddf467f43f14a35d5e8e518e19b8fbbc6ce0d427486511",
+            "monotonic_ns": 69134017218036,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "preflight",
+            "previous_event_checksum": null,
+            "previous_phase": null
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:5b8243755bae19796bc03767ad4adbe356f0c7ceea2ddd11deae64a88a190545",
+            "monotonic_ns": 69134019093437,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "admitted",
+            "previous_event_checksum": "sha256:3b351d6d8ebaaf3d68ddf467f43f14a35d5e8e518e19b8fbbc6ce0d427486511",
+            "previous_phase": "preflight"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:dcd85812b2aaf0b8b2d0a766a94fc364232133e9a22e0b73cd8875ad05e261ef",
+            "monotonic_ns": 69134174746562,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "loading",
+            "previous_event_checksum": "sha256:5b8243755bae19796bc03767ad4adbe356f0c7ceea2ddd11deae64a88a190545",
+            "previous_phase": "admitted"
+          },
+          {
+            "details": {
+              "vram_resident_mb": 16853
+            },
+            "event_checksum": "sha256:23b3fce02fe0f39e679cafad4aaa16a529424a25e53d5a59f773cccd089eff08",
+            "monotonic_ns": 69145467919739,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "resident",
+            "previous_event_checksum": "sha256:dcd85812b2aaf0b8b2d0a766a94fc364232133e9a22e0b73cd8875ad05e261ef",
+            "previous_phase": "loading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:2cf4ace619004338b721b2bc26cf137d3d075bac6b806e1f706a70c8d3dd5a6b",
+            "monotonic_ns": 69145469165208,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "inferencing",
+            "previous_event_checksum": "sha256:23b3fce02fe0f39e679cafad4aaa16a529424a25e53d5a59f773cccd089eff08",
+            "previous_phase": "resident"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:5c3b012869dc4b8a03b8096d54b8c408d1f446decf0b1fb0b4be119145eda463",
+            "monotonic_ns": 69145708804149,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "unloading",
+            "previous_event_checksum": "sha256:2cf4ace619004338b721b2bc26cf137d3d075bac6b806e1f706a70c8d3dd5a6b",
+            "previous_phase": "inferencing"
+          },
+          {
+            "details": {
+              "exit_code": 0,
+              "unload_observed": true,
+              "vram_after_mb": 266
+            },
+            "event_checksum": "sha256:96509d8433851fb16828e992bdccf5025c9e19e32a185fbd635ebf46cf51459d",
+            "monotonic_ns": 69146086392736,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "validating",
+            "previous_event_checksum": "sha256:5c3b012869dc4b8a03b8096d54b8c408d1f446decf0b1fb0b4be119145eda463",
+            "previous_phase": "unloading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:f917fcc5f8fd16f9707065f5a0adcd1cbb2e1fed3cad039106f3271739b5b0fd",
+            "monotonic_ns": 69146088238461,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "terminal_complete",
+            "previous_event_checksum": "sha256:96509d8433851fb16828e992bdccf5025c9e19e32a185fbd635ebf46cf51459d",
+            "previous_phase": "validating"
+          }
+        ],
+        "phase_sequence": [
+          "preflight",
+          "admitted",
+          "loading",
+          "resident",
+          "inferencing",
+          "unloading",
+          "validating",
+          "terminal_complete"
+        ],
+        "release": {
+          "checksum": "sha256:64bec49ca3d81701df38003c240e02284ac14e2a67466479f1628eee5d028a23",
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "phase": "terminal_complete",
+          "pid": 609824,
+          "pid_start_ticks": 6913202,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "33041",
+          "--ctx-size",
+          "512",
+          "--n-gpu-layers",
+          "all",
+          "--device",
+          "CUDA0",
+          "--split-mode",
+          "none",
+          "--main-gpu",
+          "0",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "128",
+          "--ubatch-size",
+          "128",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-ui",
+          "--log-verbosity",
+          "4"
+        ],
+        "argv_sha256": "sha256:4fab824d79cbe9955af4cbf09c8b2c5751bdf9163b3aebac91df717afafde722",
+        "ended_monotonic_ns": 69146026314386,
+        "executable": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "exit_code": 0,
+        "parent_pid": 609824,
+        "pid": 609867,
+        "pid_start_ticks": 6913437,
+        "started_monotonic_ns": 69134376505645
+      },
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "output": {
+        "api_response_sha256": "sha256:de9022d83dfc4cc715052d44e60dabb942763b9d3bcf86c48364a74ef95761ec",
+        "finish_reason": "stop",
+        "http_status": 200,
+        "latency_s": 0.073387,
+        "non_empty": true,
+        "output_token_count": 2,
+        "prompt_token_count": 20,
+        "sha256": "sha256:c2e3ac47f4a325469c1a2d5f117e463ec943c721986d5d9f09ac4540b7d80526",
+        "text": "READY"
+      },
+      "prompt": {
+        "random_seed": 6648001,
+        "sha256": "sha256:03ad3e8204d219c6a993c3f8c8502a1ca88fbb802811f6a08ac4924610a064da"
+      },
+      "quantization": "Q4_K_M",
+      "resolution_method": "cached_sota_pair",
+      "role": "middle_moe",
+      "row_kind": "mandated_model_family",
+      "row_sha256": "sha256:bb606b2f57fecf0460de91bab2428c67f51b9a69472296723c16463e078e081a",
+      "tokenizer": {
+        "auto_tokenizer_used": false,
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "error": "",
+        "loadable": true,
+        "prompt_token_count": 8,
+        "source": "llama.cpp_embedded_gguf"
+      },
+      "unload": {
+        "model_process_absent": true,
+        "observed": true,
+        "vram_recovered": true
+      },
+      "worker_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6648_three_family_gguf_canaries",
+          "--worker",
+          "--worker-spec",
+          "results/.experiment_6648_three_family_gguf_canaries/gemma4_26b_middle_moe.spec.json",
+          "--worker-output",
+          "results/.experiment_6648_three_family_gguf_canaries/gemma4_26b_middle_moe.row.json",
+          "--runtime-dir",
+          "results/.experiment_6648_three_family_gguf_canaries"
+        ],
+        "argv_sha256": "sha256:aaf9391462b7f9b6638a447cbb8ef5173cc1c37497d8eeeb53b18ead704c5bac",
+        "ended_monotonic_ns": 69146695677410,
+        "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+        "exit_code": 0,
+        "pid": 609824,
+        "pid_start_ticks": 6913202,
+        "started_monotonic_ns": 69132021354022,
+        "stderr_sha256": "sha256:6c4d3134c04c74720a8d0ab8cd7f0f08f532df635ba9493d6d99f6ffd931e09b",
+        "stdout_sha256": "sha256:49069c61a40c036935be8bdd12d7acbd0465adeb3ab6a7d5e8867281945d152e"
+      }
+    },
+    {
+      "accelerator": {
+        "after": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609934,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609934,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69161335337706,
+          "temperature_c": 54,
+          "utilization_pct": 100,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "before": {
+          "compute_processes": [],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69147285407841,
+          "temperature_c": 46,
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "cuda_offload": true,
+        "offloaded_layers": 61,
+        "resident": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609934,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609978,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 18246
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609934,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 5607,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 18517,
+          "model_pid_present": true,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69160468477150,
+          "temperature_c": 53,
+          "utilization_pct": 27,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "resident_vram_delta_mb": 18513
+      },
+      "admitted": true,
+      "device_index": 0,
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "errors": [],
+      "failed_checks": [],
+      "family_id": "gemma4_31b_flagship_dense",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "lease": {
+        "journal_checksum": "sha256:3046ab308e088f8405c741262b75a601a081d8c73c9a94f7027879f97cd1b7d5",
+        "journal_path": "results/.experiment_6648_three_family_gguf_canaries/leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+        "owner": {
+          "acquired_monotonic_ns": 69148689508872,
+          "argv_digest": "sha256:d2b09596d3c7102254ba8d02567f321e90e39497ddc10edcc657f4f2d7d57fd0",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "expires_monotonic_ns": 70348689508872,
+          "pid": 609934,
+          "pid_start_ticks": 6914678,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "exp6648-gemma4_31b_flagship_dense",
+          "token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+          "token_length": 43,
+          "token_opaque": true
+        },
+        "owner_bound": true,
+        "phase_history": [
+          {
+            "details": {
+              "recovery_performed": false
+            },
+            "event_checksum": "sha256:c81c88dbd2606cd7ba226a6c8c4a21edd217b56c8769f1578489d2bb3b094315",
+            "monotonic_ns": 69148689508872,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "preflight",
+            "previous_event_checksum": null,
+            "previous_phase": null
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:b9f4efce30b48108fecfac35f7147a0d3b4815eafd7d3e302721bfeab6ce8740",
+            "monotonic_ns": 69148853925971,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "admitted",
+            "previous_event_checksum": "sha256:c81c88dbd2606cd7ba226a6c8c4a21edd217b56c8769f1578489d2bb3b094315",
+            "previous_phase": "preflight"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:c560dec705deb9dd9fa898835106dc21c6b92f97c1900413b7f2a2d224668ca6",
+            "monotonic_ns": 69149053115726,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "loading",
+            "previous_event_checksum": "sha256:b9f4efce30b48108fecfac35f7147a0d3b4815eafd7d3e302721bfeab6ce8740",
+            "previous_phase": "admitted"
+          },
+          {
+            "details": {
+              "vram_resident_mb": 18517
+            },
+            "event_checksum": "sha256:512f7bfb450972099bf515e35749ad8c02b78deac95597e5411b1d962f551324",
+            "monotonic_ns": 69160469445157,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "resident",
+            "previous_event_checksum": "sha256:c560dec705deb9dd9fa898835106dc21c6b92f97c1900413b7f2a2d224668ca6",
+            "previous_phase": "loading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:7ab4bd9c507da0f3b3129167e0b76ba5810bd73a9c6ddf5e97761d431fe449b1",
+            "monotonic_ns": 69160470843533,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "inferencing",
+            "previous_event_checksum": "sha256:512f7bfb450972099bf515e35749ad8c02b78deac95597e5411b1d962f551324",
+            "previous_phase": "resident"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:ef034409105e224a14d3b490e2ef053a450115e833d4657cb73667a1de9d7c68",
+            "monotonic_ns": 69160770534822,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "unloading",
+            "previous_event_checksum": "sha256:7ab4bd9c507da0f3b3129167e0b76ba5810bd73a9c6ddf5e97761d431fe449b1",
+            "previous_phase": "inferencing"
+          },
+          {
+            "details": {
+              "exit_code": 0,
+              "unload_observed": true,
+              "vram_after_mb": 266
+            },
+            "event_checksum": "sha256:41dc44d0f3aa351aa75b273103c8c625912091477a6d8ab70fd859dc77ebd97f",
+            "monotonic_ns": 69161335852463,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "validating",
+            "previous_event_checksum": "sha256:ef034409105e224a14d3b490e2ef053a450115e833d4657cb73667a1de9d7c68",
+            "previous_phase": "unloading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:d3468108e09b08d49b49cf166744f37233289409fe9c6ad07ea4331b12dca9df",
+            "monotonic_ns": 69161337542395,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "terminal_complete",
+            "previous_event_checksum": "sha256:41dc44d0f3aa351aa75b273103c8c625912091477a6d8ab70fd859dc77ebd97f",
+            "previous_phase": "validating"
+          }
+        ],
+        "phase_sequence": [
+          "preflight",
+          "admitted",
+          "loading",
+          "resident",
+          "inferencing",
+          "unloading",
+          "validating",
+          "terminal_complete"
+        ],
+        "release": {
+          "checksum": "sha256:3046ab308e088f8405c741262b75a601a081d8c73c9a94f7027879f97cd1b7d5",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "phase": "terminal_complete",
+          "pid": 609934,
+          "pid_start_ticks": 6914678,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "51541",
+          "--ctx-size",
+          "512",
+          "--n-gpu-layers",
+          "all",
+          "--device",
+          "CUDA0",
+          "--split-mode",
+          "none",
+          "--main-gpu",
+          "0",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "128",
+          "--ubatch-size",
+          "128",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-ui",
+          "--log-verbosity",
+          "4"
+        ],
+        "argv_sha256": "sha256:bbba96d3ecafa7c67b60dbb1203cb8030ef4a2a794c6b2e60f0c420fb25ed578",
+        "ended_monotonic_ns": 69161278547992,
+        "executable": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "exit_code": 0,
+        "parent_pid": 609934,
+        "pid": 609978,
+        "pid_start_ticks": 6914925,
+        "started_monotonic_ns": 69149255683525
+      },
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "output": {
+        "api_response_sha256": "sha256:959630075f32dc1cf4c8fa0fb7cddc09dea74af65a8444750465a414d686de73",
+        "finish_reason": "stop",
+        "http_status": 200,
+        "latency_s": 0.157279,
+        "non_empty": true,
+        "output_token_count": 2,
+        "prompt_token_count": 20,
+        "sha256": "sha256:c2e3ac47f4a325469c1a2d5f117e463ec943c721986d5d9f09ac4540b7d80526",
+        "text": "READY"
+      },
+      "prompt": {
+        "random_seed": 6648001,
+        "sha256": "sha256:03ad3e8204d219c6a993c3f8c8502a1ca88fbb802811f6a08ac4924610a064da"
+      },
+      "quantization": "Q4_K_M",
+      "resolution_method": "resolve_cached_gguf",
+      "role": "flagship_dense",
+      "row_kind": "mandated_model_family",
+      "row_sha256": "sha256:52a46e43924c5831dee7855d30460da512dac518ccd87bbde87f3e6d5bb591e3",
+      "tokenizer": {
+        "auto_tokenizer_used": false,
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "error": "",
+        "loadable": true,
+        "prompt_token_count": 8,
+        "source": "llama.cpp_embedded_gguf"
+      },
+      "unload": {
+        "model_process_absent": true,
+        "observed": true,
+        "vram_recovered": true
+      },
+      "worker_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6648_three_family_gguf_canaries",
+          "--worker",
+          "--worker-spec",
+          "results/.experiment_6648_three_family_gguf_canaries/gemma4_31b_flagship_dense.spec.json",
+          "--worker-output",
+          "results/.experiment_6648_three_family_gguf_canaries/gemma4_31b_flagship_dense.row.json",
+          "--runtime-dir",
+          "results/.experiment_6648_three_family_gguf_canaries"
+        ],
+        "argv_sha256": "sha256:c5474b517190e5fc6fe0521c62e6b523c45e0970cc93e7ddac6515d3634fff5e",
+        "ended_monotonic_ns": 69161893354649,
+        "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+        "exit_code": 0,
+        "pid": 609934,
+        "pid_start_ticks": 6914678,
+        "started_monotonic_ns": 69146786838439,
+        "stderr_sha256": "sha256:6c4d3134c04c74720a8d0ab8cd7f0f08f532df635ba9493d6d99f6ffd931e09b",
+        "stdout_sha256": "sha256:165c6b95ec3a1305e451c63830260cd4112909728d11d4846a738d53e745b69a"
+      }
+    }
+  ],
+  "model_resolution_receipts": [
+    {
+      "byte_count": 22134528992,
+      "device_index": 0,
+      "download_performed": false,
+      "family_id": "qwen36_flagship_moe",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "quantization": "Q4_K_M",
+      "resolution_method": "cached_sota_pair",
+      "resolved": true,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "resolver_call": "cached_sota_pair(gpu_indices=(0, 1), model_indices=(0, 1))",
+      "role": "flagship_moe"
+    },
+    {
+      "byte_count": 16947539744,
+      "device_index": 1,
+      "download_performed": false,
+      "family_id": "gemma4_26b_middle_moe",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "quantization": "Q4_K_M",
+      "resolution_method": "cached_sota_pair",
+      "resolved": true,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "resolver_call": "cached_sota_pair(gpu_indices=(0, 1), model_indices=(0, 1))",
+      "role": "middle_moe"
+    },
+    {
+      "byte_count": 18323731456,
+      "device_index": 0,
+      "download_performed": false,
+      "family_id": "gemma4_31b_flagship_dense",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "quantization": "Q4_K_M",
+      "resolution_method": "resolve_cached_gguf",
+      "resolved": true,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "resolver_call": "resolve_cached_gguf('unsloth/gemma-4-31B-it-GGUF', 'Q4_K_M')",
+      "role": "flagship_dense"
+    }
+  ],
+  "per_unit_rows": [
+    {
+      "accelerator": {
+        "after": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609688,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609688,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69131384672504,
+          "temperature_c": 52,
+          "utilization_pct": 100,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "before": {
+          "compute_processes": [],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69115511213514,
+          "temperature_c": 44,
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "cuda_offload": true,
+        "offloaded_layers": 41,
+        "resident": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609688,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609744,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 20980
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609688,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 2873,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 21251,
+          "model_pid_present": true,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69130299700860,
+          "temperature_c": 51,
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "resident_vram_delta_mb": 21247
+      },
+      "admitted": true,
+      "device_index": 0,
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "errors": [],
+      "failed_checks": [],
+      "family_id": "qwen36_flagship_moe",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "lease": {
+        "journal_checksum": "sha256:8a733cf7839391afb00076d90859f9a0d9782d4033b051011b469aa7bc665cab",
+        "journal_path": "results/.experiment_6648_three_family_gguf_canaries/leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+        "owner": {
+          "acquired_monotonic_ns": 69116702330211,
+          "argv_digest": "sha256:03e7dcd7f902d19c73d3094fc24b5eb87e8131fb400c5aad148b9e902eccef9a",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "expires_monotonic_ns": 70316702330211,
+          "pid": 609688,
+          "pid_start_ticks": 6911507,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "exp6648-qwen36_flagship_moe",
+          "token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+          "token_length": 43,
+          "token_opaque": true
+        },
+        "owner_bound": true,
+        "phase_history": [
+          {
+            "details": {
+              "recovery_performed": false
+            },
+            "event_checksum": "sha256:d6710affa33fe119ff05d8858a1843fd24a3bae12022672a919f0a790e7012fd",
+            "monotonic_ns": 69116702330211,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "preflight",
+            "previous_event_checksum": null,
+            "previous_phase": null
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:98eb2ac7162ef8993e2bffff5ee25a7eab66ce0a28f0843400a00f9cd4e275cd",
+            "monotonic_ns": 69116704363208,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "admitted",
+            "previous_event_checksum": "sha256:d6710affa33fe119ff05d8858a1843fd24a3bae12022672a919f0a790e7012fd",
+            "previous_phase": "preflight"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:ce1c3bbb85b0151a249b558611a72691bc2e3bb692ec1122bb85bff2ea983224",
+            "monotonic_ns": 69116885101404,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "loading",
+            "previous_event_checksum": "sha256:98eb2ac7162ef8993e2bffff5ee25a7eab66ce0a28f0843400a00f9cd4e275cd",
+            "previous_phase": "admitted"
+          },
+          {
+            "details": {
+              "vram_resident_mb": 21251
+            },
+            "event_checksum": "sha256:7e9c6591d2797ec0446307b5db0f5164bad351645feba163333e9c4eda1c083e",
+            "monotonic_ns": 69130300795214,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "resident",
+            "previous_event_checksum": "sha256:ce1c3bbb85b0151a249b558611a72691bc2e3bb692ec1122bb85bff2ea983224",
+            "previous_phase": "loading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:9a0a98158883986d8bc7dc30d63e37081e5a53a8775af540115a112441e49bc2",
+            "monotonic_ns": 69130455949973,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "inferencing",
+            "previous_event_checksum": "sha256:7e9c6591d2797ec0446307b5db0f5164bad351645feba163333e9c4eda1c083e",
+            "previous_phase": "resident"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:d7e6fd710c66b572d275ab46268c13dcbd83d307db0c13378a338e14dd840e6e",
+            "monotonic_ns": 69130797830491,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "unloading",
+            "previous_event_checksum": "sha256:9a0a98158883986d8bc7dc30d63e37081e5a53a8775af540115a112441e49bc2",
+            "previous_phase": "inferencing"
+          },
+          {
+            "details": {
+              "exit_code": 0,
+              "unload_observed": true,
+              "vram_after_mb": 266
+            },
+            "event_checksum": "sha256:0293c19b801161e5cf5750ba3e8fdde4613717ade27e7b20b640f013fc2b14e3",
+            "monotonic_ns": 69131385091801,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "validating",
+            "previous_event_checksum": "sha256:d7e6fd710c66b572d275ab46268c13dcbd83d307db0c13378a338e14dd840e6e",
+            "previous_phase": "unloading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:888facf78755b372236a6c720d4a324703b5565c4d9f1ecac31fd456bd92b105",
+            "monotonic_ns": 69131386780501,
+            "owner_token_digest": "sha256:3b694a66fe56c289a2dd9d3fd5bca234e822842491cc8df3075e6b611d7d27e3",
+            "phase": "terminal_complete",
+            "previous_event_checksum": "sha256:0293c19b801161e5cf5750ba3e8fdde4613717ade27e7b20b640f013fc2b14e3",
+            "previous_phase": "validating"
+          }
+        ],
+        "phase_sequence": [
+          "preflight",
+          "admitted",
+          "loading",
+          "resident",
+          "inferencing",
+          "unloading",
+          "validating",
+          "terminal_complete"
+        ],
+        "release": {
+          "checksum": "sha256:8a733cf7839391afb00076d90859f9a0d9782d4033b051011b469aa7bc665cab",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "phase": "terminal_complete",
+          "pid": 609688,
+          "pid_start_ticks": 6911507,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "49439",
+          "--ctx-size",
+          "512",
+          "--n-gpu-layers",
+          "all",
+          "--device",
+          "CUDA0",
+          "--split-mode",
+          "none",
+          "--main-gpu",
+          "0",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "128",
+          "--ubatch-size",
+          "128",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-ui",
+          "--log-verbosity",
+          "4"
+        ],
+        "argv_sha256": "sha256:137521da89c03d1359f73bdbc4b8911c27c615d35ead25dd464ba53976ecbbad",
+        "ended_monotonic_ns": 69131323636885,
+        "executable": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "exit_code": 0,
+        "parent_pid": 609688,
+        "pid": 609744,
+        "pid_start_ticks": 6911708,
+        "started_monotonic_ns": 69117088307134
+      },
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "output": {
+        "api_response_sha256": "sha256:928cf854b2c307bced6b8d2fcbde5cc5d49df15487aa884693788481ed60b402",
+        "finish_reason": "stop",
+        "http_status": 200,
+        "latency_s": 0.140882,
+        "non_empty": true,
+        "output_token_count": 2,
+        "prompt_token_count": 19,
+        "sha256": "sha256:c2e3ac47f4a325469c1a2d5f117e463ec943c721986d5d9f09ac4540b7d80526",
+        "text": "READY"
+      },
+      "prompt": {
+        "random_seed": 6648001,
+        "sha256": "sha256:03ad3e8204d219c6a993c3f8c8502a1ca88fbb802811f6a08ac4924610a064da"
+      },
+      "quantization": "Q4_K_M",
+      "resolution_method": "cached_sota_pair",
+      "role": "flagship_moe",
+      "row_kind": "mandated_model_family",
+      "row_sha256": "sha256:08b49db57eaee803c8d3077e41551f4d06080d5a796574b2435b9f461e7b01c6",
+      "tokenizer": {
+        "auto_tokenizer_used": false,
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "error": "",
+        "loadable": true,
+        "prompt_token_count": 7,
+        "source": "llama.cpp_embedded_gguf"
+      },
+      "unload": {
+        "model_process_absent": true,
+        "observed": true,
+        "vram_recovered": true
+      },
+      "worker_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6648_three_family_gguf_canaries",
+          "--worker",
+          "--worker-spec",
+          "results/.experiment_6648_three_family_gguf_canaries/qwen36_flagship_moe.spec.json",
+          "--worker-output",
+          "results/.experiment_6648_three_family_gguf_canaries/qwen36_flagship_moe.row.json",
+          "--runtime-dir",
+          "results/.experiment_6648_three_family_gguf_canaries"
+        ],
+        "argv_sha256": "sha256:f9d4de666cc97a8b170bea44d74e0f1a9dd7af0c37edf37dee0e5b3f61191811",
+        "ended_monotonic_ns": 69132018517226,
+        "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+        "exit_code": 0,
+        "pid": 609688,
+        "pid_start_ticks": 6911507,
+        "started_monotonic_ns": 69115074786167,
+        "stderr_sha256": "sha256:6c4d3134c04c74720a8d0ab8cd7f0f08f532df635ba9493d6d99f6ffd931e09b",
+        "stdout_sha256": "sha256:36abf506fe5feb8d018f3b95538c4465f12d2f8c9555173f680399b2fab45c46"
+      }
+    },
+    {
+      "accelerator": {
+        "after": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609824,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609824,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "driver_version": "610.57.04",
+          "index": 1,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69146085986433,
+          "temperature_c": 52,
+          "utilization_pct": 0,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        },
+        "before": {
+          "compute_processes": [],
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "driver_version": "610.57.04",
+          "index": 1,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69132566617749,
+          "temperature_c": 44,
+          "utilization_pct": 0,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        },
+        "cuda_offload": true,
+        "offloaded_layers": 31,
+        "resident": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609824,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609824,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609867,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 16582
+            }
+          ],
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "driver_version": "610.57.04",
+          "index": 1,
+          "memory_free_mb": 7271,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 16853,
+          "model_pid_present": true,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69145466979985,
+          "temperature_c": 51,
+          "utilization_pct": 25,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        },
+        "resident_vram_delta_mb": 16849
+      },
+      "admitted": true,
+      "device_index": 1,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "errors": [],
+      "failed_checks": [],
+      "family_id": "gemma4_26b_middle_moe",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "lease": {
+        "journal_checksum": "sha256:64bec49ca3d81701df38003c240e02284ac14e2a67466479f1628eee5d028a23",
+        "journal_path": "results/.experiment_6648_three_family_gguf_canaries/leases/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.journal.json",
+        "owner": {
+          "acquired_monotonic_ns": 69134017218036,
+          "argv_digest": "sha256:ab319a3b0ae1cb4c4ae5049f1bad548d87158255aa40674b95f34faabec6806b",
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "expires_monotonic_ns": 70334017218036,
+          "pid": 609824,
+          "pid_start_ticks": 6913202,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "exp6648-gemma4_26b_middle_moe",
+          "token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+          "token_length": 43,
+          "token_opaque": true
+        },
+        "owner_bound": true,
+        "phase_history": [
+          {
+            "details": {
+              "recovery_performed": false
+            },
+            "event_checksum": "sha256:3b351d6d8ebaaf3d68ddf467f43f14a35d5e8e518e19b8fbbc6ce0d427486511",
+            "monotonic_ns": 69134017218036,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "preflight",
+            "previous_event_checksum": null,
+            "previous_phase": null
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:5b8243755bae19796bc03767ad4adbe356f0c7ceea2ddd11deae64a88a190545",
+            "monotonic_ns": 69134019093437,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "admitted",
+            "previous_event_checksum": "sha256:3b351d6d8ebaaf3d68ddf467f43f14a35d5e8e518e19b8fbbc6ce0d427486511",
+            "previous_phase": "preflight"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:dcd85812b2aaf0b8b2d0a766a94fc364232133e9a22e0b73cd8875ad05e261ef",
+            "monotonic_ns": 69134174746562,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "loading",
+            "previous_event_checksum": "sha256:5b8243755bae19796bc03767ad4adbe356f0c7ceea2ddd11deae64a88a190545",
+            "previous_phase": "admitted"
+          },
+          {
+            "details": {
+              "vram_resident_mb": 16853
+            },
+            "event_checksum": "sha256:23b3fce02fe0f39e679cafad4aaa16a529424a25e53d5a59f773cccd089eff08",
+            "monotonic_ns": 69145467919739,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "resident",
+            "previous_event_checksum": "sha256:dcd85812b2aaf0b8b2d0a766a94fc364232133e9a22e0b73cd8875ad05e261ef",
+            "previous_phase": "loading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:2cf4ace619004338b721b2bc26cf137d3d075bac6b806e1f706a70c8d3dd5a6b",
+            "monotonic_ns": 69145469165208,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "inferencing",
+            "previous_event_checksum": "sha256:23b3fce02fe0f39e679cafad4aaa16a529424a25e53d5a59f773cccd089eff08",
+            "previous_phase": "resident"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:5c3b012869dc4b8a03b8096d54b8c408d1f446decf0b1fb0b4be119145eda463",
+            "monotonic_ns": 69145708804149,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "unloading",
+            "previous_event_checksum": "sha256:2cf4ace619004338b721b2bc26cf137d3d075bac6b806e1f706a70c8d3dd5a6b",
+            "previous_phase": "inferencing"
+          },
+          {
+            "details": {
+              "exit_code": 0,
+              "unload_observed": true,
+              "vram_after_mb": 266
+            },
+            "event_checksum": "sha256:96509d8433851fb16828e992bdccf5025c9e19e32a185fbd635ebf46cf51459d",
+            "monotonic_ns": 69146086392736,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "validating",
+            "previous_event_checksum": "sha256:5c3b012869dc4b8a03b8096d54b8c408d1f446decf0b1fb0b4be119145eda463",
+            "previous_phase": "unloading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:f917fcc5f8fd16f9707065f5a0adcd1cbb2e1fed3cad039106f3271739b5b0fd",
+            "monotonic_ns": 69146088238461,
+            "owner_token_digest": "sha256:a32784b7451a9b6f5984d606b48b7573847e7c092557656f6137148f9bd92802",
+            "phase": "terminal_complete",
+            "previous_event_checksum": "sha256:96509d8433851fb16828e992bdccf5025c9e19e32a185fbd635ebf46cf51459d",
+            "previous_phase": "validating"
+          }
+        ],
+        "phase_sequence": [
+          "preflight",
+          "admitted",
+          "loading",
+          "resident",
+          "inferencing",
+          "unloading",
+          "validating",
+          "terminal_complete"
+        ],
+        "release": {
+          "checksum": "sha256:64bec49ca3d81701df38003c240e02284ac14e2a67466479f1628eee5d028a23",
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "phase": "terminal_complete",
+          "pid": 609824,
+          "pid_start_ticks": 6913202,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "33041",
+          "--ctx-size",
+          "512",
+          "--n-gpu-layers",
+          "all",
+          "--device",
+          "CUDA0",
+          "--split-mode",
+          "none",
+          "--main-gpu",
+          "0",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "128",
+          "--ubatch-size",
+          "128",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-ui",
+          "--log-verbosity",
+          "4"
+        ],
+        "argv_sha256": "sha256:4fab824d79cbe9955af4cbf09c8b2c5751bdf9163b3aebac91df717afafde722",
+        "ended_monotonic_ns": 69146026314386,
+        "executable": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "exit_code": 0,
+        "parent_pid": 609824,
+        "pid": 609867,
+        "pid_start_ticks": 6913437,
+        "started_monotonic_ns": 69134376505645
+      },
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "output": {
+        "api_response_sha256": "sha256:de9022d83dfc4cc715052d44e60dabb942763b9d3bcf86c48364a74ef95761ec",
+        "finish_reason": "stop",
+        "http_status": 200,
+        "latency_s": 0.073387,
+        "non_empty": true,
+        "output_token_count": 2,
+        "prompt_token_count": 20,
+        "sha256": "sha256:c2e3ac47f4a325469c1a2d5f117e463ec943c721986d5d9f09ac4540b7d80526",
+        "text": "READY"
+      },
+      "prompt": {
+        "random_seed": 6648001,
+        "sha256": "sha256:03ad3e8204d219c6a993c3f8c8502a1ca88fbb802811f6a08ac4924610a064da"
+      },
+      "quantization": "Q4_K_M",
+      "resolution_method": "cached_sota_pair",
+      "role": "middle_moe",
+      "row_kind": "mandated_model_family",
+      "row_sha256": "sha256:bb606b2f57fecf0460de91bab2428c67f51b9a69472296723c16463e078e081a",
+      "tokenizer": {
+        "auto_tokenizer_used": false,
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "error": "",
+        "loadable": true,
+        "prompt_token_count": 8,
+        "source": "llama.cpp_embedded_gguf"
+      },
+      "unload": {
+        "model_process_absent": true,
+        "observed": true,
+        "vram_recovered": true
+      },
+      "worker_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6648_three_family_gguf_canaries",
+          "--worker",
+          "--worker-spec",
+          "results/.experiment_6648_three_family_gguf_canaries/gemma4_26b_middle_moe.spec.json",
+          "--worker-output",
+          "results/.experiment_6648_three_family_gguf_canaries/gemma4_26b_middle_moe.row.json",
+          "--runtime-dir",
+          "results/.experiment_6648_three_family_gguf_canaries"
+        ],
+        "argv_sha256": "sha256:aaf9391462b7f9b6638a447cbb8ef5173cc1c37497d8eeeb53b18ead704c5bac",
+        "ended_monotonic_ns": 69146695677410,
+        "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+        "exit_code": 0,
+        "pid": 609824,
+        "pid_start_ticks": 6913202,
+        "started_monotonic_ns": 69132021354022,
+        "stderr_sha256": "sha256:6c4d3134c04c74720a8d0ab8cd7f0f08f532df635ba9493d6d99f6ffd931e09b",
+        "stdout_sha256": "sha256:49069c61a40c036935be8bdd12d7acbd0465adeb3ab6a7d5e8867281945d152e"
+      }
+    },
+    {
+      "accelerator": {
+        "after": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609934,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609934,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69161335337706,
+          "temperature_c": 54,
+          "utilization_pct": 100,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "before": {
+          "compute_processes": [],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "model_pid_present": false,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69147285407841,
+          "temperature_c": 46,
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "cuda_offload": true,
+        "offloaded_layers": 61,
+        "resident": {
+          "compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609934,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 609978,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 18246
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 609934,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 5607,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 18517,
+          "model_pid_present": true,
+          "name": "NVIDIA GeForce RTX 3090",
+          "observed_monotonic_ns": 69160468477150,
+          "temperature_c": 53,
+          "utilization_pct": 27,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "resident_vram_delta_mb": 18513
+      },
+      "admitted": true,
+      "device_index": 0,
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "errors": [],
+      "failed_checks": [],
+      "family_id": "gemma4_31b_flagship_dense",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "lease": {
+        "journal_checksum": "sha256:3046ab308e088f8405c741262b75a601a081d8c73c9a94f7027879f97cd1b7d5",
+        "journal_path": "results/.experiment_6648_three_family_gguf_canaries/leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+        "owner": {
+          "acquired_monotonic_ns": 69148689508872,
+          "argv_digest": "sha256:d2b09596d3c7102254ba8d02567f321e90e39497ddc10edcc657f4f2d7d57fd0",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "expires_monotonic_ns": 70348689508872,
+          "pid": 609934,
+          "pid_start_ticks": 6914678,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "exp6648-gemma4_31b_flagship_dense",
+          "token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+          "token_length": 43,
+          "token_opaque": true
+        },
+        "owner_bound": true,
+        "phase_history": [
+          {
+            "details": {
+              "recovery_performed": false
+            },
+            "event_checksum": "sha256:c81c88dbd2606cd7ba226a6c8c4a21edd217b56c8769f1578489d2bb3b094315",
+            "monotonic_ns": 69148689508872,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "preflight",
+            "previous_event_checksum": null,
+            "previous_phase": null
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:b9f4efce30b48108fecfac35f7147a0d3b4815eafd7d3e302721bfeab6ce8740",
+            "monotonic_ns": 69148853925971,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "admitted",
+            "previous_event_checksum": "sha256:c81c88dbd2606cd7ba226a6c8c4a21edd217b56c8769f1578489d2bb3b094315",
+            "previous_phase": "preflight"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:c560dec705deb9dd9fa898835106dc21c6b92f97c1900413b7f2a2d224668ca6",
+            "monotonic_ns": 69149053115726,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "loading",
+            "previous_event_checksum": "sha256:b9f4efce30b48108fecfac35f7147a0d3b4815eafd7d3e302721bfeab6ce8740",
+            "previous_phase": "admitted"
+          },
+          {
+            "details": {
+              "vram_resident_mb": 18517
+            },
+            "event_checksum": "sha256:512f7bfb450972099bf515e35749ad8c02b78deac95597e5411b1d962f551324",
+            "monotonic_ns": 69160469445157,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "resident",
+            "previous_event_checksum": "sha256:c560dec705deb9dd9fa898835106dc21c6b92f97c1900413b7f2a2d224668ca6",
+            "previous_phase": "loading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:7ab4bd9c507da0f3b3129167e0b76ba5810bd73a9c6ddf5e97761d431fe449b1",
+            "monotonic_ns": 69160470843533,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "inferencing",
+            "previous_event_checksum": "sha256:512f7bfb450972099bf515e35749ad8c02b78deac95597e5411b1d962f551324",
+            "previous_phase": "resident"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:ef034409105e224a14d3b490e2ef053a450115e833d4657cb73667a1de9d7c68",
+            "monotonic_ns": 69160770534822,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "unloading",
+            "previous_event_checksum": "sha256:7ab4bd9c507da0f3b3129167e0b76ba5810bd73a9c6ddf5e97761d431fe449b1",
+            "previous_phase": "inferencing"
+          },
+          {
+            "details": {
+              "exit_code": 0,
+              "unload_observed": true,
+              "vram_after_mb": 266
+            },
+            "event_checksum": "sha256:41dc44d0f3aa351aa75b273103c8c625912091477a6d8ab70fd859dc77ebd97f",
+            "monotonic_ns": 69161335852463,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "validating",
+            "previous_event_checksum": "sha256:ef034409105e224a14d3b490e2ef053a450115e833d4657cb73667a1de9d7c68",
+            "previous_phase": "unloading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:d3468108e09b08d49b49cf166744f37233289409fe9c6ad07ea4331b12dca9df",
+            "monotonic_ns": 69161337542395,
+            "owner_token_digest": "sha256:736007c55b6fa60015e140da348cf5f5fc14579e669840191dc9c31c2bfc4118",
+            "phase": "terminal_complete",
+            "previous_event_checksum": "sha256:41dc44d0f3aa351aa75b273103c8c625912091477a6d8ab70fd859dc77ebd97f",
+            "previous_phase": "validating"
+          }
+        ],
+        "phase_sequence": [
+          "preflight",
+          "admitted",
+          "loading",
+          "resident",
+          "inferencing",
+          "unloading",
+          "validating",
+          "terminal_complete"
+        ],
+        "release": {
+          "checksum": "sha256:3046ab308e088f8405c741262b75a601a081d8c73c9a94f7027879f97cd1b7d5",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "phase": "terminal_complete",
+          "pid": 609934,
+          "pid_start_ticks": 6914678,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "51541",
+          "--ctx-size",
+          "512",
+          "--n-gpu-layers",
+          "all",
+          "--device",
+          "CUDA0",
+          "--split-mode",
+          "none",
+          "--main-gpu",
+          "0",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "128",
+          "--ubatch-size",
+          "128",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-ui",
+          "--log-verbosity",
+          "4"
+        ],
+        "argv_sha256": "sha256:bbba96d3ecafa7c67b60dbb1203cb8030ef4a2a794c6b2e60f0c420fb25ed578",
+        "ended_monotonic_ns": 69161278547992,
+        "executable": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "exit_code": 0,
+        "parent_pid": 609934,
+        "pid": 609978,
+        "pid_start_ticks": 6914925,
+        "started_monotonic_ns": 69149255683525
+      },
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "output": {
+        "api_response_sha256": "sha256:959630075f32dc1cf4c8fa0fb7cddc09dea74af65a8444750465a414d686de73",
+        "finish_reason": "stop",
+        "http_status": 200,
+        "latency_s": 0.157279,
+        "non_empty": true,
+        "output_token_count": 2,
+        "prompt_token_count": 20,
+        "sha256": "sha256:c2e3ac47f4a325469c1a2d5f117e463ec943c721986d5d9f09ac4540b7d80526",
+        "text": "READY"
+      },
+      "prompt": {
+        "random_seed": 6648001,
+        "sha256": "sha256:03ad3e8204d219c6a993c3f8c8502a1ca88fbb802811f6a08ac4924610a064da"
+      },
+      "quantization": "Q4_K_M",
+      "resolution_method": "resolve_cached_gguf",
+      "role": "flagship_dense",
+      "row_kind": "mandated_model_family",
+      "row_sha256": "sha256:52a46e43924c5831dee7855d30460da512dac518ccd87bbde87f3e6d5bb591e3",
+      "tokenizer": {
+        "auto_tokenizer_used": false,
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "error": "",
+        "loadable": true,
+        "prompt_token_count": 8,
+        "source": "llama.cpp_embedded_gguf"
+      },
+      "unload": {
+        "model_process_absent": true,
+        "observed": true,
+        "vram_recovered": true
+      },
+      "worker_process": {
+        "absent_after_exit": true,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6648_three_family_gguf_canaries",
+          "--worker",
+          "--worker-spec",
+          "results/.experiment_6648_three_family_gguf_canaries/gemma4_31b_flagship_dense.spec.json",
+          "--worker-output",
+          "results/.experiment_6648_three_family_gguf_canaries/gemma4_31b_flagship_dense.row.json",
+          "--runtime-dir",
+          "results/.experiment_6648_three_family_gguf_canaries"
+        ],
+        "argv_sha256": "sha256:c5474b517190e5fc6fe0521c62e6b523c45e0970cc93e7ddac6515d3634fff5e",
+        "ended_monotonic_ns": 69161893354649,
+        "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+        "exit_code": 0,
+        "pid": 609934,
+        "pid_start_ticks": 6914678,
+        "started_monotonic_ns": 69146786838439,
+        "stderr_sha256": "sha256:6c4d3134c04c74720a8d0ab8cd7f0f08f532df635ba9493d6d99f6ffd931e09b",
+        "stdout_sha256": "sha256:165c6b95ec3a1305e451c63830260cd4112909728d11d4846a738d53e745b69a"
+      }
+    },
+    {
+      "attack_id": "model_substitution",
+      "detected": true,
+      "evidence": [
+        {
+          "check": "qwen36_flagship_moe.model_identity_mismatch",
+          "expected_value": true,
+          "observed_value": false,
+          "reason": "model_identity_mismatch"
+        }
+      ],
+      "expected": "fail_closed",
+      "row_kind": "attack",
+      "row_sha256": "sha256:fa58f48674d83577c123264657374d106deb550cd386c3b63f1d8cbce90b11a3"
+    },
+    {
+      "attack_id": "cpu_substitution",
+      "detected": true,
+      "evidence": [
+        {
+          "check": "qwen36_flagship_moe.cuda_offload_missing",
+          "expected_value": true,
+          "observed_value": false,
+          "reason": "cuda_offload_missing"
+        }
+      ],
+      "expected": "fail_closed",
+      "row_kind": "attack",
+      "row_sha256": "sha256:33d6a6c0cd13424fc18673411c7b8c69692d24e53e20151b53dd553f6d4b5176"
+    },
+    {
+      "attack_id": "auto_tokenizer",
+      "detected": true,
+      "evidence": [
+        {
+          "check": "qwen36_flagship_moe.auto_tokenizer_used",
+          "expected_value": true,
+          "observed_value": false,
+          "reason": "auto_tokenizer_used"
+        }
+      ],
+      "expected": "fail_closed",
+      "row_kind": "attack",
+      "row_sha256": "sha256:785eec2947af4073e51b98b183e320ac19dab72414ff5ae8de810775d2b2a6e3"
+    },
+    {
+      "attack_id": "duplicate_family",
+      "detected": true,
+      "evidence": [
+        {
+          "check": "qwen36_flagship_moe",
+          "expected_value": true,
+          "observed_value": 2,
+          "reason": "duplicate_family_row"
+        },
+        {
+          "check": "gemma4_26b_middle_moe",
+          "expected_value": true,
+          "observed_value": null,
+          "reason": "missing_family_row"
+        }
+      ],
+      "expected": "fail_closed",
+      "row_kind": "attack",
+      "row_sha256": "sha256:94caa331d5eb098ec4adccefb066568f11bce0b98c0c5baaf6879e4e5b61cd0f"
+    },
+    {
+      "attack_id": "reused_process_identity",
+      "detected": true,
+      "evidence": [
+        {
+          "check": "gemma4_26b_middle_moe.model_process_not_owned_child",
+          "expected_value": true,
+          "observed_value": false,
+          "reason": "model_process_not_owned_child"
+        },
+        {
+          "check": "worker_process_identity",
+          "expected_value": true,
+          "observed_value": [
+            [
+              609688,
+              6911507
+            ],
+            [
+              609688,
+              6911507
+            ],
+            [
+              609934,
+              6914678
+            ]
+          ],
+          "reason": "reused_worker_identity"
+        }
+      ],
+      "expected": "fail_closed",
+      "row_kind": "attack",
+      "row_sha256": "sha256:19ffc4d35f2645273bb783ac8e0d186a096534dcaf5c7d2e60e7c09270d34004"
+    },
+    {
+      "attack_id": "empty_output",
+      "detected": true,
+      "evidence": [
+        {
+          "check": "qwen36_flagship_moe.output_empty",
+          "expected_value": true,
+          "observed_value": false,
+          "reason": "output_empty"
+        }
+      ],
+      "expected": "fail_closed",
+      "row_kind": "attack",
+      "row_sha256": "sha256:6b5be3596642cea9a92c0f336f88772273df105108bb8a81e50cd10163f98032"
+    },
+    {
+      "attack_id": "forged_device_uuid",
+      "detected": true,
+      "evidence": [
+        {
+          "check": "qwen36_flagship_moe.lease_owner_mismatch",
+          "expected_value": true,
+          "observed_value": false,
+          "reason": "lease_owner_mismatch"
+        },
+        {
+          "check": "qwen36_flagship_moe.lease_release_missing",
+          "expected_value": true,
+          "observed_value": false,
+          "reason": "lease_release_missing"
+        },
+        {
+          "check": "qwen36_flagship_moe.device_uuid_mismatch",
+          "expected_value": true,
+          "observed_value": false,
+          "reason": "device_uuid_mismatch"
+        }
+      ],
+      "expected": "fail_closed",
+      "row_kind": "attack",
+      "row_sha256": "sha256:454301b28b472234117a0375d95ec2c11320a5cf5f2361e4aeae504b0257878f"
+    },
+    {
+      "attack_id": "phase_omission",
+      "detected": true,
+      "evidence": [
+        {
+          "check": "qwen36_flagship_moe.phase_sequence_mismatch",
+          "expected_value": true,
+          "observed_value": false,
+          "reason": "phase_sequence_mismatch"
+        }
+      ],
+      "expected": "fail_closed",
+      "row_kind": "attack",
+      "row_sha256": "sha256:db72ceda31ddf7698ead6024a2513a204e17740ed0ad944d45a16f566b477670"
+    },
+    {
+      "attack_id": "missing_unload",
+      "detected": true,
+      "evidence": [
+        {
+          "check": "qwen36_flagship_moe.unload_missing",
+          "expected_value": true,
+          "observed_value": false,
+          "reason": "unload_missing"
+        }
+      ],
+      "expected": "fail_closed",
+      "row_kind": "attack",
+      "row_sha256": "sha256:5ff100bb17a0be1fd1993bb6409970e7927118fafd6ef273294f3d54b32e679a"
+    },
+    {
+      "attack_id": "aggregate_drift",
+      "detected": true,
+      "evidence": {
+        "recomputed": true,
+        "stored": false
+      },
+      "expected": "fail_closed",
+      "row_kind": "attack",
+      "row_sha256": "sha256:350b9944554ea9f5b6d207265a17cca9d8a5d9baefbfe39bcafb06822b7e4663"
+    },
+    {
+      "attack_id": "protected_file_mutation",
+      "detected": true,
+      "evidence": {
+        "all_unchanged": false
+      },
+      "expected": "fail_closed",
+      "row_kind": "attack",
+      "row_sha256": "sha256:b6ca859d1daf45f643b3e0fb8b0b300b033f090ea7366ee957d75a10d558945c"
+    }
+  ],
+  "preconditions_checked": {
+    "all_required_preconditions_available": true,
+    "auto_tokenizer_allowed": false,
+    "cache": [
+      {
+        "byte_count": 22134528992,
+        "device_index": 0,
+        "download_performed": false,
+        "family_id": "qwen36_flagship_moe",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "quantization": "Q4_K_M",
+        "resolution_method": "cached_sota_pair",
+        "resolved": true,
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "resolver_call": "cached_sota_pair(gpu_indices=(0, 1), model_indices=(0, 1))",
+        "role": "flagship_moe"
+      },
+      {
+        "byte_count": 16947539744,
+        "device_index": 1,
+        "download_performed": false,
+        "family_id": "gemma4_26b_middle_moe",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "quantization": "Q4_K_M",
+        "resolution_method": "cached_sota_pair",
+        "resolved": true,
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "resolver_call": "cached_sota_pair(gpu_indices=(0, 1), model_indices=(0, 1))",
+        "role": "middle_moe"
+      },
+      {
+        "byte_count": 18323731456,
+        "device_index": 0,
+        "download_performed": false,
+        "family_id": "gemma4_31b_flagship_dense",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "quantization": "Q4_K_M",
+        "resolution_method": "resolve_cached_gguf",
+        "resolved": true,
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "resolver_call": "resolve_cached_gguf('unsloth/gemma-4-31B-it-GGUF', 'Q4_K_M')",
+        "role": "flagship_dense"
+      }
+    ],
+    "checks": {
+      "llama_cpp_cuda": true,
+      "model_hashes": true,
+      "model_resolution": true,
+      "protected_hashes": true,
+      "resources": true,
+      "two_gpu_uuids": true,
+      "upstream_gate": true
+    },
+    "download_allowed": false,
+    "failed_preconditions": [],
+    "fixed_prompt_sha256": "sha256:03ad3e8204d219c6a993c3f8c8502a1ca88fbb802811f6a08ac4924610a064da",
+    "hardware": {
+      "gpu_uuid_count": 2,
+      "gpus": [
+        {
+          "driver_version": "610.57.04",
+          "index": 0,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "temperature_c": 43,
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        {
+          "driver_version": "610.57.04",
+          "index": 1,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "temperature_c": 44,
+          "utilization_pct": 0,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "nvidia_smi_path": "/usr/bin/nvidia-smi"
+    },
+    "launch_order_seed": 6648001,
+    "legacy_model_can_satisfy_admission": false,
+    "protected_hashes_before": {
+      "research-roadmap.yaml": "sha256:ff53e2fc388ee853f6db403c97c4bfae1fdbb8b58a6a377d294d2d093768432a",
+      "scripts/research_conductor.py": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
+    },
+    "resources": {
+      "cpu_architecture": "x86_64",
+      "cpu_count": 24,
+      "cpu_processor": "",
+      "disk_free_bytes": 1074001747968,
+      "disk_total_bytes": 3953289023488,
+      "ram_available_bytes": 125616402432,
+      "ram_bytes": 134304591872
+    },
+    "tools": {
+      "llama_cpp": {
+        "cuda_linked": true,
+        "dynamic_link": {
+          "command": [
+            "ldd",
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+          ],
+          "duration_s": 0.00593,
+          "exit_code": 0,
+          "stderr": "",
+          "stdout": "\tlinux-vdso.so.1 (0x00007f711f193000)\n\tlibllama-server-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so (0x00007f711e400000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007f711de00000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007f711f00e000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007f711da00000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007f711f000000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007f711d843000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007f7119e00000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007f711e329000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007f7113200000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007f711d729000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007f7112a00000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007f7112600000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007f71130f7000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f711efc9000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f7112200000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007f711f195000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007f711e2b9000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007f7111e00000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007f710e600000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007f70e9000000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007f711efc0000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007f711efbb000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007f711efb6000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007f711ef7a000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007f7112506000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007f711ef6a000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007f70e8e9f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007f711dddd000)\n"
+        },
+        "executable": true,
+        "exists": true,
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "version": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "--version"
+          ],
+          "duration_s": 0.103106,
+          "exit_code": 0,
+          "stderr": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64\n",
+          "stdout": ""
+        }
+      },
+      "python": {
+        "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "version": "3.12.13"
+      }
+    },
+    "upstream_gate": {
+      "absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6647_receipt_scoped_admission_boundary.json",
+      "expected_value": 1.0,
+      "field": "task_owned_admission_ready_score",
+      "observed_value": 1.0,
+      "passed": true,
+      "path": "results/experiment_6647_receipt_scoped_admission_boundary.json",
+      "sha256": "sha256:ad79510853e20772eeafee01d6f9a45dcba21d82f06ebaa4df155842d1e986b3",
+      "upstream_status": "complete_ready",
+      "validator_errors": []
+    },
+    "worker_runtime_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6648_three_family_gguf_canaries"
+  },
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "research-roadmap.yaml": "sha256:ff53e2fc388ee853f6db403c97c4bfae1fdbb8b58a6a377d294d2d093768432a",
+      "scripts/research_conductor.py": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
+    },
+    "all_unchanged": true,
+    "before_hashes": {
+      "research-roadmap.yaml": "sha256:ff53e2fc388ee853f6db403c97c4bfae1fdbb8b58a6a377d294d2d093768432a",
+      "scripts/research_conductor.py": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
+    },
+    "rows": [
+      {
+        "after_sha256": "sha256:ff53e2fc388ee853f6db403c97c4bfae1fdbb8b58a6a377d294d2d093768432a",
+        "before_sha256": "sha256:ff53e2fc388ee853f6db403c97c4bfae1fdbb8b58a6a377d294d2d093768432a",
+        "path": "research-roadmap.yaml",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+        "before_sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+        "path": "scripts/research_conductor.py",
+        "unchanged": true
+      }
+    ]
+  },
+  "random_seed": 6648001,
+  "reproducibility_checksum": "sha256:810c33e26df9dd3ab38438cd691216420a7a5b7e8d4a81fb33a8079d95265958",
+  "status": "complete_ready",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6648_three_family_gguf_canaries.py -q --no-cov -n 0",
+      "duration_s": 2.509641,
+      "exit_code": 0,
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "sha256:84b547cf8dd66b69676c89ea02b72c15ac1ed7a7de2634b6deffad08fa092db7",
+      "summary": "============================== 22 passed in 1.14s =============================="
+    },
+    {
+      "command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 COVERAGE_FILE=/tmp/carnot_exp6648.coverage .venv/bin/coverage run --include='*/experiment_6648_three_family_gguf_canaries.py' -m pytest --noconftest tests/python/test_experiment_6648_three_family_gguf_canaries.py -q -o addopts=",
+      "duration_s": 2.304689,
+      "exit_code": 0,
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "sha256:2910159a43055a0797dd7b8fa7772f3396689e5354197ae4ec41d024cddcce1c",
+      "summary": "22 passed in 1.82s"
+    },
+    {
+      "command": "COVERAGE_FILE=/tmp/carnot_exp6648.coverage .venv/bin/coverage report --include='*/experiment_6648_three_family_gguf_canaries.py' -m --fail-under=100",
+      "duration_s": 0.103313,
+      "exit_code": 0,
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "sha256:45c30852c3b24a5f9f62aba4dc11da17eecde3941d78d74d89e33c5f33b0a514",
+      "summary": "TOTAL                                                           484      0   100%"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6648_three_family_gguf_canaries.py",
+      "duration_s": 0.0307,
+      "exit_code": 0,
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "summary": "OK: All tests reference specification requirements."
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_6648_three_family_gguf_canaries.py tests/python/test_experiment_6648_three_family_gguf_canaries.py",
+      "duration_s": 0.016641,
+      "exit_code": 0,
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "summary": "All checks passed!"
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_6648_three_family_gguf_canaries.py tests/python/test_experiment_6648_three_family_gguf_canaries.py",
+      "duration_s": 0.014303,
+      "exit_code": 0,
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "sha256:3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938",
+      "summary": "2 files already formatted"
+    }
+  ],
+  "upstream_gate_receipt": {
+    "absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6647_receipt_scoped_admission_boundary.json",
+    "expected_value": 1.0,
+    "field": "task_owned_admission_ready_score",
+    "observed_value": 1.0,
+    "passed": true,
+    "path": "results/experiment_6647_receipt_scoped_admission_boundary.json",
+    "sha256": "sha256:ad79510853e20772eeafee01d6f9a45dcba21d82f06ebaa4df155842d1e986b3",
+    "upstream_status": "complete_ready",
+    "validator_errors": []
+  },
+  "verdict_class": null,
+  "verifier_is_oracle": false
+}

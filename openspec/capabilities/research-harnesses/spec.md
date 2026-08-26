@@ -9442,3 +9442,43 @@ failed check plus observed value appears in `gate_check_summary`.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-INFRA-6647 | Implemented (`python/carnot/experiment_6647_receipt_scoped_admission_boundary.py`) | Implemented (`tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py`; exact owned-receipt, fail-closed reduction, and fresh-path fixture coverage) |
+
+## REQ-INFRA-6648: Each Model Canary SHALL Own Its Process And Accelerator
+
+Exp6648 SHALL launch one fresh worker process for each mandated family. The
+worker SHALL acquire a `GpuLease` for the selected physical GPU UUID. The
+lease owner PID and start time SHALL identify the worker. The model process
+SHALL be a child of that worker. Its process identity, command, selected GPU,
+GPU UUID, and live `nvidia-smi` sample SHALL bind it to the lease.
+
+Each worker SHALL record `preflight`, `admitted`, `loading`, `resident`,
+`inferencing`, `unloading`, `validating`, and one terminal phase. It SHALL
+record VRAM before, resident, and after use. It SHALL record model exit,
+unload, lease release, and absence of both worker and model process after
+completion. A worker SHALL not kill or signal an unrelated process.
+
+Families MAY reuse a device only after the earlier worker has released its
+lease and both owned processes are absent. The controller SHALL start and wait
+for families in a fixed sequential order. A missing phase, owner mismatch,
+UUID mismatch, missing GPU residency, missing unload, unreleased lease, or
+live owned process after completion SHALL fail that family closed.
+
+### SCENARIO-INFRA-6648-INDEPENDENT-PROCESSES
+
+**Given** three resolved mandated models and two measured GPU UUIDs
+**When** the controller runs the fixed family order
+**Then** three distinct worker PIDs and start times own three complete lease
+journals, and no two family model processes overlap.
+
+### SCENARIO-INFRA-6648-LIFECYCLE-BLOCK
+
+**Given** a missing owner, phase, GPU-residency, exit, unload, release, or
+post-process-absence receipt
+**When** a family row is validated
+**Then** the family is not admitted and its exact failed check stays visible.
+
+## Implementation Status (REQ-INFRA-6648)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6648 | Implemented (`python/carnot/experiment_6648_three_family_gguf_canaries.py`) | Implemented (`tests/python/test_experiment_6648_three_family_gguf_canaries.py`; fresh-process, accelerator UUID, lease, phase, unload, and absence coverage) |
