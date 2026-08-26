@@ -14,8 +14,8 @@ card fits K=16 with room to spare.
 wrong. Both "Not measured" gaps below are now closed, and each one moved the answer.
 
 - Per-stream throughput FALLS hard with K. It does not hold steady.
-- Aggregate throughput reaches about 4x at K=16, not 16x. Most of that gain arrives
-  by K=6.
+- Aggregate throughput reaches about 4x at K=16, not 16x. Half of that gain is
+  already there at K=6, and the K=6 to K=10 band is unstable.
 - This model is a HYBRID. It carries a fixed 149.6 MiB of recurrent state PER SLOT
   that no term in this note accounted for.
 - K=24 does NOT fit. It overshoots the card by 6.3 GiB.
@@ -32,7 +32,7 @@ new recommendation.** It wins on memory and on throughput at the same time. Read
 | prompt tokens | median 9,051, max 10,799 | completion log, both runs, identical |
 | decode tokens | median 65,507, cap 84,144 | completion log, `eval time` lines only |
 | per-stream throughput | ~30-31 tok/s | live run |
-| weights | ~~~16.1 GiB ESTIMATE~~ **15.26 GiB on the GPU** | MEASURED 2026-08-25 |
+| weights | ~~16.1 GiB, ESTIMATE~~ **15.26 GiB on the GPU** | MEASURED 2026-08-25 |
 | recurrent state | **149.6 MiB per SLOT** | MEASURED 2026-08-25, new term |
 
 Do NOT derive the KV cost by subtracting an assumed weights size from `nvidia-smi`.
@@ -195,7 +195,48 @@ quantisation, so they carry to any card. The 307 MiB CUDA context and the comput
 geometry are properties of the driver and the kernels, so they may differ on the
 Blackwell card. Both are small. They cannot move a verdict by 6 GiB.
 
+## Aggregate throughput against K (measured 2026-08-25)
+
+The old projection assumed near-linear scaling. It does not hold.
+
+**Method.** One server on an RTX 3090, GPU 1, `--parallel 16`, `-c 32768`, so every K
+sees the same slot geometry. Only the number of simultaneous streams changes. Each
+stream decodes a fixed token count with `ignore_eos`, so aggregate is
+`total decoded / wall clock`. Prompts differ per stream, so the prompt cache cannot
+make a later stream cheap. Two repeats per point, agreeing within 1 percent.
+
+| K | aggregate | speedup vs K=1 | efficiency | per stream |
+|---|---|---|---|---|
+| 1 | 40.7 tok/s | 1.00x | 100% | 41.1 tok/s |
+| 2 | 65.9 tok/s | 1.62x | 81% | 33.5 tok/s |
+| 4 | 81.8 tok/s | 2.01x | 50% | 20.8 tok/s |
+| 6 | 89.5 tok/s | 2.20x | 37% | 15.2 tok/s |
+| 8 | 66.9 tok/s | 1.65x | 21% | 8.5 tok/s |
+| 12 | 158.2 tok/s | 3.89x | 32% | 13.6 tok/s |
+| 16 | **177.8 tok/s** | **4.37x** | 27% | 11.5 tok/s |
+
+**The headline: 4.4x at K=16, not 16x.** Concurrency still helps, and it is still the
+only lever. It buys about a quarter of what the old projection assumed.
+
+**There is an unstable band around K=6 to K=10.** Raising K there can LOWER aggregate
+throughput. K=8 measured below K=4 in two of three sweeps. The band is reproducible
+within a sweep (repeats agree within 1 percent) but its exact position moves with
+decode length: the dip sat at K=6 at 512 tokens and at K=8 at 1024 tokens.
+
+**The cause is NOT the prompt cache.** The server saves idle slot state to a host-RAM
+prompt cache, and each slot of this hybrid model holds 149.6 MiB of recurrent state,
+so slot-state shuffling was the obvious suspect. It is wrong. Re-running the whole
+sweep with `--cache-ram 0` reproduced the same dip and the same K=16 figure to within
+2 percent. Do not spend time on this suspect again. The cause is undetermined.
+
+**Do not choose a K in that band.** K=12 delivers 89 percent of K=16's aggregate for
+three quarters of the memory, and it fits under both reserves. K=16 is the maximum
+useful setting on this evidence, not a step toward K=24.
+
 ## What that buys
+
+SUPERSEDED 2026-08-25. Kept per never-prune. Its K=16 and K=32 rows assumed the
+near-linear scaling that the table above refutes.
 
 | setup | aggregate | inductions in 12h | per game, 25 games |
 |---|---|---|---|
@@ -203,8 +244,34 @@ Blackwell card. Both are small. They cannot move a verdict by 6 GiB.
 | K=16 | ~500 tok/s | 330 | 13.2 |
 | K=32 | ~1000 tok/s | 660 | 26.4 |
 
+Corrected, using the measured speedups against the same 30 tok/s live baseline:
+
+| setup | aggregate | inductions in 12h | per game, 25 games |
+|---|---|---|---|
+| local, 1 stream | 30 tok/s | 20 | 0.8 |
+| K=12 | ~117 tok/s | 77 | 3.1 |
+| K=16 | ~131 tok/s | 86 | **3.5** |
+| K=24, K=32 | not available | — | does not fit the card |
+
 A local single-stream run is not a slow version of the scored eval. At 0.8 inductions
 per game it is a different activity, and results from it do not transfer.
+
+That paragraph stands, and it now cuts closer. K=16 buys 3.5 inductions per game, not
+13.2. That is a real gain over 0.8, but it does not reach the budget the old table
+implied. Plan against 3.5.
+
+**How far to trust these numbers off this card.** The SHAPE is the transferable part,
+not the absolute rate. Three caveats, all stated rather than corrected for:
+
+- Different card. The 3090 has roughly half the memory bandwidth of the scored
+  Blackwell card. The Blackwell may scale better. Nothing local can show that.
+- Much shorter context. Slots held 2,048 tokens here against 93,195 on the scored
+  card. Longer context makes each decode step read more KV, which normally makes
+  concurrency scale WORSE. So this measurement most likely flatters the scored path.
+- Shorter decode. 512 and 1,024 tokens per stream, against a live median near 65,000.
+
+The single-stream rate here is 41 tok/s against the live run's 30-31 tok/s, and the
+short context is why. Use the speedup column, not the absolute column.
 
 ## How to raise K
 
@@ -232,10 +299,43 @@ binding number, and `exp6199` measured think-off as WORSE for induction quality
 
 ## Not measured
 
-- Whether aggregate throughput scales linearly to K=16 on that card. Memory bandwidth
-  may cap it below 500 tok/s.
-- The weights size. 16.1 GiB is an estimate and shifts every total by about a GiB.
+Both original bullets were closed on 2026-08-25. They are kept here, struck, with the
+answer under each, because both answers changed a decision this note had already made.
+
+- ~~Whether aggregate throughput scales linearly to K=16 on that card. Memory
+  bandwidth may cap it below 500 tok/s.~~
+  **MEASURED. It does not scale linearly.** K=16 gives 4.4x, not 16x. The projection
+  was wrong by about 4x. See "Aggregate throughput against K".
+- ~~The weights size. 16.1 GiB is an estimate and shifts every total by about a GiB.~~
+  **MEASURED. Weights are 15.26 GiB on the GPU, 15.63 GiB with fixed overhead.** The
+  estimate was good to about 0.5 GiB. It was not the real error bar. The real error was
+  a MISSING TERM: 149.6 MiB of recurrent state per slot, plus a 5.00 KiB/token compute
+  buffer. K=24 does not fit.
 - What compaction would actually save, since it has never been enabled on a live run.
+  Still not measured.
+
+Newly open, from this pass:
+
+- Why aggregate throughput dips in the K=6 to K=10 band. Reproducible, and NOT the
+  prompt cache. Worth a profiler, not another guess.
+- Whether that dip and the 4.4x ceiling reproduce on the Blackwell card. Only the
+  scored card can answer this.
+- Which per-stream reserve the scored run should use, 93,195 or 153,424. That is an
+  operator call about truncation risk. It moves the K ceiling from 22 to 13.
+
+## How this was measured (2026-08-25)
+
+Reproduce with the pinned binary
+`~/.cache/llama.cpp-master/build/bin/llama-server` and the full GGUF path, on GPU 1
+only, `CUDA_VISIBLE_DEVICES=1`. Confirm placement by joining PID to GPU UUID through
+`nvidia-smi --query-compute-apps`, never by trusting the env var. Confirm the server
+is on the NVIDIA card, not the AMD iGPU, by checking it holds nvidia fds and zero
+`/dev/dri` fds.
+
+VRAM terms come from llama.cpp's own `-v` buffer reports: `CUDA0 model buffer size`,
+`llama_kv_cache: size`, `llama_memory_recurrent: size`, `CUDA0 compute buffer size`.
+Per-PID `nvidia-smi` is the independent cross-check on their sum. Do not read a
+weights figure off `nvidia-smi` alone; it also carries the CUDA context.
 
 ## Cross-references
 
