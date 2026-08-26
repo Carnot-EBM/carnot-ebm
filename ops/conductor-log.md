@@ -16576,3 +16576,5 @@ code |
 | 2026-08-26 22:48 UTC | Twin-prefix verifier discrimination map | OK | 118 passed, 1 warning in 18.66s |
 | 2026-08-26 22:50 UTC | Failure-localized suffix regeneration A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6649-exact-certificate-proposal-corpus. |
 | 2026-08-26 22:52 UTC | Failure-localized suffix regeneration A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6649-exact-certificate-proposal-corpus. |
+| 2026-08-26 22:54 UTC | Failure-localized suffix regeneration A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6649-exact-certificate-proposal-corpus. |
+| 2026-08-26 22:56 UTC | Constraint intervention independent row audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6651-failure-localized-suffix-regeneratio |
