@@ -37537,3 +37537,119 @@ abstain. They may not certify their own output.
   level solve claim.
 
 <!-- V578-PLANNER-REFRESH-20260826-END -->
+
+## V579 planner refresh - 2026-08-26
+
+<!-- V579-PLANNER-REFRESH-20260826-START -->
+
+This refresh follows the terminal V578 activation failure. It searched the
+requested 2025-2026 topics on arXiv and checked OpenReview, Hugging Face Papers,
+Semantic Scholar, GitHub, Extropic, and Logical Intelligence. The milestone
+uses exact executable checks as release authority. Learned signals may propose,
+rank, route, or abstain. They may not certify their own outputs.
+
+### Promising findings selected for V579
+
+- **When "Must" Becomes "Maybe": Constraint Weakening in LLM Agent
+  Workflows** - arXiv:2608.24569, https://arxiv.org/abs/2608.24569;
+  submitted 2026-08-25. In 1,296 controlled episodes, ordinary handoff
+  transformations often retained a blocker as text but weakened its effect on
+  action. A four-field form with prerequisite, authority, fallback, and
+  consequence restored operational preservation in the reported study. Carnot
+  hook: test memory and supervisor handoffs for action binding, not semantic
+  mention. Carry all four fields and measure forbidden actions per episode.
+- **More Rejective, Not More Discriminative: The Unit of Verification in
+  Pre-Execution LLM Oversight** - arXiv:2608.23941,
+  https://arxiv.org/abs/2608.23941; submitted 2026-08-25. Its twin-prefix
+  instrument changes only the number of reviewed actions and pairs every error
+  with a clean control. The reported informedness peaks at one or two actions;
+  longer units increase catches and false rejections together. Carnot hook:
+  preregister verification unit, report catch and false-reject rates together,
+  and use exact twin labels as authority.
+- **Exact autoregressive sampling of planar Ising spin glasses via the
+  Kac--Ward theory** - arXiv:2608.24382,
+  https://arxiv.org/abs/2608.24382; submitted 2026-08-25. The paper constructs
+  independent exact Boltzmann samples with normalized likelihoods for planar
+  zero-field Ising instances at O(N^(5/2)) cost. Carnot hook: use a small exact
+  planar implementation as an independent reference for stationary,
+  transition, likelihood, and effective-sample-size checks before any spectral
+  sampler speed claim.
+- **SkillForge: Evolving Verifiable Skills for Reinforcement Learning Agents**
+  - arXiv:2608.24747, https://arxiv.org/abs/2608.24747; submitted 2026-08-25.
+  SkillForge makes skill invocation explicit and verifies stored skills through
+  environment interaction instead of keeping an append-only bank. Carnot hook:
+  log retrieval and influence, require exact evidence before a patch, and allow
+  revise or retire transitions as well as append.
+- **CAFE: Self-Improving Search Agents Need Co-Evolving Feedback** -
+  arXiv:2608.24794, https://arxiv.org/abs/2608.24794; submitted 2026-08-25. CAFE
+  learns when to request feedback and alternates agent and critic improvement.
+  Its call-versus-skip comparison is useful, but its shared-model critic is not
+  independent release authority. Carnot hook: compare call and skip at fixed
+  budgets while exact environment outcomes admit updates.
+- **Memory Is Not Always Needed: Characterizing Conditional Memory in
+  Scientific Reasoning** - arXiv:2608.23982,
+  https://arxiv.org/abs/2608.23982; submitted 2026-08-25. The reported benefit
+  depends on the input and injection site, and a pre-generation router reduces
+  memory-induced regressions. Carnot hook: retain frozen and context-only
+  controls, route before generation from task-visible features, and measure
+  both benefit and regression per event.
+- **When Do Supervised UQ Ensembles Improve LLM Hallucination Detection? A
+  Robustness Study** - arXiv:2608.24492,
+  https://arxiv.org/abs/2608.24492; submitted 2026-08-25. The study reports
+  robust gains from small supervised black-box scorer ensembles, but the method
+  still needs labeled domain data. Carnot hook: keep this as a later detection
+  comparator. Do not substitute it for exact authorization in V579.
+
+### Requested secondary and product checks
+
+- **OpenReview:** ICLR 2026 records on causal energy minimization, verifier
+  robustness, and dual-side optimization verification reinforce iterative
+  energy views and independent structure-versus-solution checks. They do not
+  provide a matching-base EBT or ARM-EBM checkpoint, and withdrawn or rejected
+  submissions remain research leads rather than evidence.
+- **Hugging Face Papers:** current pages highlight symbolic best-of-k selection,
+  source-grounded neurosymbolic verification, workflow-state verifiers, and
+  verifier-confirmed reusable execution traces. These support fixed candidate
+  pools, exact checkers, and provenance-aware memory. They do not justify
+  learned self-grading as release authority.
+- **Semantic Scholar:** unauthenticated API requests for EBT
+  (`2507.02092`) and ARM-EBM (`2512.15605`) returned HTTP 429 on 2026-08-26.
+  Retain V578's dated discovery receipt of 35 visible EBT citations and eight
+  ARM-EBM citations. Do not invent a new count. No new public matching-base
+  checkpoint was authenticated.
+- **GitHub discovery:** current EBM topic and trending searches found public
+  2026 code for energy-guided planning and energy-based fine-tuning, but no
+  repository for the new Kac--Ward, SkillForge, or CAFE papers and no dependency
+  that supersedes Carnot's pinned local stack. Implement the bounded contracts
+  locally and vendor nothing for novelty alone.
+- **Extropic:** the current hardware page still schedules Z1 Stick and Z1 Card
+  early access for 2027. The current software page exposes Torx and THRML for
+  hardware-agnostic stochastic programs and simulation. Carnot has no
+  authenticated TSU runner. V579 makes no TSU latency, power, or availability
+  claim.
+- **Logical Intelligence:** the current Kona 1.0 page describes a constraint
+  layer that evaluates allowed states, but still publishes no weights,
+  reproducible training recipe, or local runner. Kona remains a product
+  comparator, not an executable baseline.
+- **KAN and attached FPGA tracks:** the search found no KAN result that closes
+  Carnot's current execution, exact-authority, or live-policy gaps. No changed
+  KV260, GateMate, or PolarFire receipt exists. Keep attached boards out of the
+  milestone.
+
+### V579 planning impact
+
+- Prevalidate one 14-task document/YAML contract. Do not make activation a
+  runtime science gate.
+- Build a task-scoped dual-RTX-3090 lease and admit all three mandated GGUF
+  families with independent identity, process, phase, and accelerator receipts.
+- Require complete direct-headroom rows before delayed two-level decoding. Use
+  twin clean/error controls to separate verifier discrimination from rejection.
+- Add an exact planar-Ising reference before replaying the spectral sampler on
+  CPU, Rust, and RTX paths. Keep all hardware claims local to measured paths.
+- Preserve operational state across memory handoffs. Credit only live-policy
+  retrieval and action influence on held-out ARC transitions.
+- Run continuous self-learning prospectively across task orders. Compare frozen,
+  context-only, and verified-memory arms. Admit updates only after exact source
+  repair, held-anchor retention, and recoverable-support checks.
+
+<!-- V579-PLANNER-REFRESH-20260826-END -->

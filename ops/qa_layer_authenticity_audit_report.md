@@ -14,31 +14,29 @@ Scanned 5 of 20 selected unit(s) with codex as the hostile reviewer. Guards (17)
 | `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 4 |
+| `SILENT_NON_FIRING` | 5 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
-| `UNKNOWN` | 1 |
+| `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `arc_artifact_lint.py` — results/experiment_20260826.json` containing `target_game: "ARC-AGI-2"` and `prediction`, with `inference_substrate: "live_llm_inference"` and `honest_verdict: "partial: 3 of 4 tasks solved"`.
-- `arc_count_integrity_lint.py` — A duplicate `sc25` registry row with `levels_reproduced: 5`, accompanied by `reproducible_total_levels: 10`.
-- `arc_llm_on_liveness_lint.py` — llm_on_row_valid: false` with `llm.calls: 10`, `llm.responses: 8`, `llm.errors: 2`, `generator_healthy_after: true`, and `server_storm_suspected: false`.
-- `verifier_authenticity_lint.py` — A verifier containing `time.sleep(padding_s)`, one intervening logging or metrics statement, and then `duration_s = padding_s`.
+- `arc_orphan_solver_lint.py` — python/carnot/agentic/arc_agi3_lp85_solver.py` with solver entrypoints `plan_bfs` and `attempt_solve`.
+- `tracked_results_guard.py` — ../results/experiment_1938_nrgpt_loss_probe.json` from the repository’s `scripts/` directory.
+- `research_complete_ledger_lint.py` — A newly completed task containing `result: OK` with `deliverable: ""` or no `deliverable` field at all.
+- `mutation_marker_lint.py` — scripts/test_suite_mutation_check.py` containing `pass # MUTATED M99` in executable guard logic.
+- `audit_findings_ledger.py` — python/carnot/verify/arm_ebm_soft_value_diagnostic.py` with verdict `ADVERSARIAL_GAMING` in `ops/verifier_authenticity_audit_report.md`.
 
 ### FLAGGED — operator action recommended
-- `arc_artifact_lint.py` — **SILENT_NON_FIRING**
-- `arc_count_integrity_lint.py` — **SILENT_NON_FIRING**
-- `arc_llm_on_liveness_lint.py` — **SILENT_NON_FIRING**
-- `verifier_authenticity_lint.py` — **SILENT_NON_FIRING**
+- `arc_orphan_solver_lint.py` — **SILENT_NON_FIRING**
+- `tracked_results_guard.py` — **SILENT_NON_FIRING**
+- `research_complete_ledger_lint.py` — **SILENT_NON_FIRING**
+- `mutation_marker_lint.py` — **SILENT_NON_FIRING**
+- `audit_findings_ledger.py` — **SILENT_NON_FIRING**
 
 ---
 
-## artifact_freshness_lint.py
-
-(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
-
-## arc_artifact_lint.py
+## arc_orphan_solver_lint.py
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -46,54 +44,45 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CONCEPT
-Prevent ARC solve/scoring result artifacts from making unverified substrate, duration, live-LLM, or non-terminal verdict claims.
+Prevent off-path ARC solving, world-model, and engine-gating work from landing without becoming usable by the live agent or receiving an explicit documented exemption.
 
 ## FINDINGS
-1. L187 silently narrows ARC-artifact recognition to a fixed evidence-key sample: `_looks_like_arc_solve_payload` returns `isinstance(target_game, str) and any(key in payload for key in ARC_SOLVE_EVIDENCE_KEYS)`. An ARC payload with `target_game` but different evidence fields is not discovered; when passed explicitly, L95 reaches `continue` without validation.
+1. The guard’s concept is broader than its recognizers: it claims to detect solver-like modules, but `_is_solver_like` recognizes only a few naming and API shapes.
 
-2. Pattern audit: `PATH_MARKERS` is a sample, omitting evaluation, benchmark, prediction, inference, and the expanded Abstraction and Reasoning Corpus name. `METADATA_KEYS` is a sample, omitting `target_game`, benchmark, dataset, run name, and description fields. `ARC_SOLVE_EVIDENCE_KEYS` is a sample, omitting prediction, task results, output grids, accuracy, score, and solved-task counts. The `("honest_verdict", "verdict")` and `("partial:", "partial_")` tuples define only the special partial-verdict relabeling; other non-terminal spellings remain rejected by the preceding `NON_TERMINAL_HONEST_VERDICT` issue. The `experiment_*.json` glob and `r"[^a-z0-9]+|_"` token delimiter are scope/tokenization definitions, not samples.
+2. A real violation already exists. python/carnot/agentic/arc_agi3_lp85_solver.py defines plan_bfs and attempt_solve, is imported only by an experiment and tests, is absent from both the live closure and `ALLOWLIST`, yet the guard prints OK. Lines 145–163 omit both functions; line 174 executes `return None`; lines 184–185 treat `reason is None` as `continue`.
 
-3. Scope is limited to files below `results` named `experiment_*.json`; other directories, JSON filenames, JSONL/YAML artifacts, deleted files, and rename sources are invisible. Repository pre-commit wiring is narrower still: it passes only filenames containing arc, solve, config_rule, or world_model, omitting scoring and making metadata-only discovery unreachable during ordinary commits. This file contains no fallback coverage.
+3. The pattern inventory is dangerously sample-based. `ENTRYPOINTS` defines the two declared live roots, and `ALLOWLIST` defines explicit exceptions. Conversely, `AGENTIC.glob("arc_*.py")`, `"world_model"`, `"escalating_deepen"`, `"go_explore_solve"`, `"plan_in_model"`, `"validate_engine_code"`, `"repair_prompt_block"`, `"engine"`, `"is_lethal"`, `"nav_world_model"`, `"HazardAwareNavWorldModel"`, and `"InducedNavWorldModel"` are samples of an open-ended domain. Existing omitted members include plan_bfs, attempt_solve, best_first_search, solve_navigation, hierarchical_best_first_search, choose_verified_candidate, and solver filenames containing solver, planner, search, or reinduction.
 
-4. Ordinary bypasses include choosing a neutral experiment filename, storing identifying metadata in a nested mapping that `_value_marks_candidate` rejects, running from a directory where the default `results` does not exist, invoking `main()` against working-tree content instead of the staged blob, or using --no-verify. A malformed metadata-only artifact also disappears before validation.
+4. Scope is limited to flat files matching `AGENTIC.glob("arc_*.py")`. It ignores non-arc-prefixed agentic modules, nested packages, non-Python implementations, and `scripts/experiments/*`; renamed files can escape by losing the prefix, and deleted files disappear before inspection. It analyzes the checkout rather than added/deleted/renamed diff semantics, and no compensating coverage appears in this guard.
 
-5. Existing tests cover arc/config-rule discovery, tags, partial-colon verdicts, live allowlisting, and primary validator failures. They do not isolate scoring, world-model, or solve-only path recognition; most `METADATA_KEYS`; any individual evidence key as the sole discriminator; malformed JSON; or non-object JSON. The `token == "arc"` clause is completely deletable because `token.startswith("arc") and not token.startswith("archive")` already accepts the same token; scoring/world-model marker removal and individual evidence-key removal would also leave the current suite green.
+5. Reachability is syntactic rather than live. Because line 87 walks every node with `ast.walk(tree)`, an import under TYPE_CHECKING, a false conditional, or a never-called helper marks a module reachable; line 186 then accepts `path.stem in closure`. Ordinary typing-only imports or superficial wiring therefore defeat the guard without malicious intent; `--no-verify` also bypasses the hook entirely.
 
-6. No absolute path or write target is baked into this guard. Its relative `"results"` default is nevertheless CWD-dependent, so invocation from the wrong directory produces a clean result for the wrong tree.
+6. Repository search finds only five dedicated tests, all of which pass while the existing solver remains invisible. Only the `"validate_engine_code"` recognizer and its current import path are meaningfully pinned. Deleting `"repair_prompt_block"`, the `"world_model"` filename rule, any of the three solver-function tokens, the class-pair rule, or the NavWorldModel-import rule would leave the suite green; relative-import, bare-import, dead-branch, parse-error, deletion, and rename behavior are untested. Either individual entry in `ENTRYPOINTS` can also currently be removed while all recognized modules remain covered by the other entrypoint.
 
-7. Errors fail open. L60 uses `return []` when the results directory is absent. L221 catches `except (OSError, json.JSONDecodeError)` and L222 uses `return {}`; a metadata-only candidate then becomes a non-candidate and reports no issue. Non-dictionary JSON receives the same fallback. `_read_allow_live_files` also swallows `OSError` with `continue`, although that particular failure makes live-artifact handling stricter.
+7. No hardcoded absolute filesystem target exists: `REPO` is derived from `Path(__file__)`. The guard performs no writes, so neither wrong-tree writing consequence applies.
 
-8. The default-disabled-check branch is L187 returning false followed by L95’s `continue`: an unrecognized ARC evidence shape means no check, not an unrecognized-artifact failure. This file performs no inline measurement, but `validate_arc_solve_artifact` receives a serialized duration claim with no timing provenance, so this guard cannot distinguish real work from a producer-supplied constant.
+8. Errors fail open in both analysis stages. `_imports_of` uses `except (OSError, SyntaxError):` followed by `return out`, silently substituting an empty import set. `_is_solver_like` uses the same exception followed by `return None`, causing unreadable or malformed non-world-model candidates to be skipped; if the agentic directory is absent, the empty glob reaches `return 0`.
 
-9. The guard itself is read-only apart from reporting to stdout. Its tests write artifacts only beneath temporary directories and merely read committed results, specs, configuration, and allowlist files; no tracked-state mutation was found.
+9. The default branch disabling the check is line 174’s `return None`. Its caller treats every unrecognized solver API or filename as “not solver-like” and skips it, rather than reporting an unclassified module; the existing BFS solver is exactly this exempted input class.
+
+10. No duration, work count, or size metric is consumed. `len(closure)` is computed after closure construction and is diagnostic only, so no pre-work measurement defect is present.
+
+11. The guard and its dedicated tests are read-only. They parse source and print diagnostics but do not write tracked results, specifications, outputs, operations documents, or operator-curated documentation.
 
 ## COUNTEREXAMPLE
-`results/experiment_20260826.json`:
-
-```json
-{
-  "target_game": "ARC-AGI-2",
-  "prediction": [[1, 0], [0, 1]],
-  "score": 0.75,
-  "inference_substrate": "live_llm_inference",
-  "honest_verdict": "partial: 3 of 4 tasks solved",
-  "duration_s": 0.0001
-}
-```
-
-The filename has no recognized marker, none of the selected metadata fields marks it, and `prediction` is absent from the evidence-key tuple. The artifact therefore receives zero validation despite violating live allowlisting, duration, and terminal-verdict rules.
+`python/carnot/agentic/arc_agi3_lp85_solver.py` defines `plan_bfs()` and `attempt_solve()`, but its only consumers are `scripts/experiments/experiment_3954_second_game_solve.py` and `tests/python/agentic/test_arc_agi3_lp85_solver.py`. It is neither live-reachable nor allowlisted, while `python3 scripts/arc_orphan_solver_lint.py` exits successfully.
 
 ## MISSED INPUT
-`results/experiment_20260826.json` containing `target_game: "ARC-AGI-2"` and `prediction`, with `inference_substrate: "live_llm_inference"` and `honest_verdict: "partial: 3 of 4 tasks solved"`.
+`python/carnot/agentic/arc_agi3_lp85_solver.py` with solver entrypoints `plan_bfs` and `attempt_solve`.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-A real ARC artifact can carry explicit game identity and multiple discipline violations yet never reach validation because candidate recognition is an allowlist of familiar shapes. Malformed inputs and missing roots also become zero issues, while the pre-commit filename filter is narrower than the guard itself. Unrecognized or unreadable candidates must produce a refusal, not permission to skip.
+This is a demonstrated silent non-fire: an existing, explicitly named solver is off the live path and unallowlisted while the shipped guard returns success. The exact-name classifier and syntax-only import closure both mistake samples for the concept, so token additions alone cannot protect against the next solver name or runtime-dead import.
 
 
-## arc_count_integrity_lint.py
+## tracked_results_guard.py
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -101,52 +90,97 @@ A real ARC artifact can carry explicit game identity and multiple discipline vio
 SILENT_NON_FIRING
 
 ## CONCEPT
-Prevent ARC reproduced-level totals and submission-package claims from exceeding uniquely replayable, properly evidenced results.
+Prevent tests from mutating or removing any Git-tracked evidence file beneath the repository’s results tree.
 
 ## FINDINGS
-1. Duplicate games are counted independently. The line `expected_total = sum(_as_int(entry.get("levels_reproduced")) for entry in entries)` sums duplicate registry rows without enforcing unique games; similarly, `valid_total += counted` double-counts duplicate package rows. Two identical, individually replayable rows therefore inflate the aggregate while producing no issue.
+1. Lines 96–97 reject paths through `_looks_like_results_path` before `Path(path).resolve(strict=False)` canonicalizes them. Parent-relative paths, writes after changing into the results directory, symlink aliases without a literal results component, and descriptor-relative paths can resolve to tracked evidence while returning `None`. Independently, lines 236–242 inspect only `args[1]`, so renaming or moving a tracked source to an untracked destination silently removes evidence.
 
-2. Registry loading fails open. `_read_yaml_mapping` returns `return {}` on missing, unreadable, or malformed YAML, after which both calculated totals become zero and there are no replay entries. A missing or syntactically broken registry can therefore report success. Invalid counts also become zero through `_as_int`, allowing malformed values and missing fields to disappear rather than fail validation.
+2. Pattern classification: `"wxa+"` is a definition of Python text-open write modes; `os.O_WRONLY | os.O_RDWR | os.O_APPEND | os.O_CREAT | os.O_TRUNC` is substantially a definition of ordinary descriptor write intent. The path-prefix expression on line 90 is only a sample of equivalent results paths; it omits parent-relative, changed-CWD, symlink-alias, hard-link-alias, and real dir-fd forms. The event tuples on lines 236 and 244 are samples, not a complete mutation definition: omitted operations include link creation, symlink replacement, metadata changes, recursive deletion, descriptor writes, and tracked-source relocation. `["git", "ls-files", "results"]` is the inventory definition, but only at import time.
 
-3. The two filename constants and their schema field names appear to define the two canonical artifact formats, not sample an open-ended corpus; no omitted schema synonym can safely be inferred from this file. The `{"ops", "results"}` set is only a repository-root recognizer. The `"sc25"` marker is narrower than the general provisional-count concept, but it only controls a specialized diagnostic: the preceding total-mismatch rule still refuses equivalent inflation for other games. There are no regex or prefix lists.
+3. Scope holes: `_TRACKED_RESULTS` is a one-time snapshot, so files staged after import are invisible. The hook cannot observe writes before `install()`, writes in another process, inherited writable descriptors, hard-link aliases, or unlisted audit events; it also deliberately says nothing about docs, openspec, output, ops, or untracked results files. Direct recognized deletion and rename onto a tracked destination are covered, but rename away is not; this file contains no post-run tree comparison or subprocess propagation fallback.
 
-4. `lint_paths` examines only paths whose basename matches the two constants. Renamed artifacts, alternate submission packages, other results files, documentation claims, and arbitrary ARC registries are silently ignored by the unmatched dispatch branch. Deleted files may be absent from pre-commit arguments; even when the registry deletion is passed explicitly, its read failure passes. Registry replay checks also cover only `DEFAULT_REGISTRY_REPLAY_SPOT_CHECK = 3` entries by default. No coverage for these holes is visible in this file.
+4. Ordinary bypasses include changing CWD before using a parent-relative output path, relocating an existing result into a quarantine/output directory with rename, running a writer in a child process, or running tests through an entry point that never calls `install()`. None requires hostile intent.
 
-5. Ordinary automation can bypass replay verification with `--skip-replay`, a zero or negative replay limit, or a replay callback returning no result. For registry replay, `if replay is None:` leads directly to `continue`. For package replay, `replay_ok = metadata_ok` remains true when `if replay is not None:` is false. A fourth registry claim outside the default three-row sample is also accepted solely from metadata.
+5. The focused tests exercise violation handling for `open`, `os.replace`, and `os.remove`, but not the individual `os.rename`, `shutil.move`, `shutil.copyfile`, `shutil.copy2`, `os.unlink`, or `os.truncate` markers. Those six markers appear deletable with the focused suite still green. Several are decorative on CPython: actual replace reports the rename audit event, unlink reports the remove event, and copy2 delegates through copyfile.
 
-6. Actual test coverage cannot be established because no tests were supplied. Behaviorally, `PROVISIONAL_INFLATION` only changes the kind of an already-detected total mismatch, and `SC25_PROVISIONAL_COUNTED_AS_REPRODUCED` is always accompanied by that broader mismatch, so neither is necessary for binary refusal. The production default makes `SUBMISSION_ACTION_SEQUENCE_MISMATCH` effectively decorative: `result["expected_action_sequence"] = list(sequence)` copies the submitted sequence itself, guaranteeing equality with the later comparison. An injected callback could still make that branch testable.
+6. No hardcoded absolute path exists. `_REPO_ROOT` is derived with `Path(__file__).resolve().parents[3]`, and redirected writes are resolved through an environment-controlled helper.
 
-7. No hardcoded absolute filesystem path appears. `REPO_ROOT` is derived from `Path(__file__)`. However, `_infer_repo_root` falls back to `REPO_ROOT` when it cannot recognize the supplied tree, so an artifact from an incomplete or unusual checkout can be replayed against a different checkout without an explicit error.
+7. Discovery fails open: lines 46–47 use `except Exception:` followed by `return frozenset()`. `_TRACKED_RESULTS` then remains empty for the process, making every attempted mutation appear permissible. Resolution errors similarly become `return None` at lines 100–101; installation and redirect-resolution errors themselves propagate.
 
-8. Replay exceptions fail closed by producing `REGISTRY_REPLAY_EXCEPTION` or `SUBMISSION_REPLAY_EXCEPTION`, and malformed package JSON fails closed through the required package-field checks. Malformed or missing registry YAML fails open through `return {}`. The no-result replay branches also default to permission rather than “unverified,” and the CLI permits replay budgets that disable checks without error. No duration or other pre-work metric is present, but the expected action sequence is self-derived rather than obtained from the replay plan.
+8. The default recognizer branch disables checking: line 97 returns `None` for every path spelling not recognized by the textual prefix test, and callers treat that as permission. Unlisted audit events also fall through silently. No duration, count, or size metric is computed before measured work; the import-time inventory snapshot is stale-state risk, not an 8c timing bug.
 
-9. This file contains no explicit tracked-state writes and has no fixed output path. Its default replay path invokes `arc_solver_kit.reproduce`; whether that external operation mutates tracked state cannot be determined from this code.
+9. The guard itself does not write tracked artifacts or operator-curated documents. It records only in memory and redirects compatible caller writes through the configured artifact root; no fixed committed fixture target is written successfully by its focused tests.
+
+## COUNTEREXAMPLE
+After changing CWD to the repository’s `scripts/` directory, `open("../results/experiment_1938_nrgpt_loss_probe.json", "w")` resolves to a tracked artifact. The compatibility recognizer rejects the parent-relative spelling, `_violation_for` returns `None` at line 97, and the real open proceeds.
+
+## MISSED INPUT
+`../results/experiment_1938_nrgpt_loss_probe.json` from the repository’s `scripts/` directory.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The guard converts both equivalent path spellings and failed Git discovery into permission through `return None` and `return frozenset()`. A tracked artifact can consequently be overwritten or moved away without an exception or ledger entry, so widening one token is insufficient.
+
+
+## research_complete_ledger_lint.py
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CONCEPT
+The guard is supposed to prevent new ledger entries from duplicating milestone IDs or recording task results that claim evidence-derived success without valid deliverable evidence.
+
+## FINDINGS
+1. The enforcement concept is broader than the implementation: it promises evidence-derived results and duplicate prevention, but actually recognizes only one retired result literal and one success prefix.
+
+2. A post-cutoff task with an OK result and no deliverable passes. `deliverable = str(task.get("deliverable", "") or "").strip()` produces an empty string, and although `if result.startswith("OK") and result != "OK_NO_DELIVERABLE":` is entered, `if deliverable and not (root / deliverable).exists():` short-circuits without recording a violation. This directly contradicts Rule 3’s statement that an OK result names an existing deliverable.
+
+3. `CUTOFF = "2026-08-22"` is a policy definition, but it trusts an entry-controlled date rather than the diff’s addition date. `RETIRED_LITERAL = "OK (conductor)"` defines the known historical stamp but is only a sample of the broader class of non-evidence-derived results. Likewise, `result.startswith("OK")` and `result != "OK_NO_DELIVERABLE"` are samples of an open-ended vocabulary: the source itself names `FLAGGED` and an ellipsis of additional statuses, yet neither missing results nor those other statuses receive evidence validation. `default=["research-complete.yaml"]` is a target definition. The historical counters use diagnostic-text samples—`"duplicate milestone entry" in v`, `f"retired literal '{RETIRED_LITERAL}'" in v`, and `"does not exist" in v`—so changing or adding diagnostics can silently make report counts incomplete.
+
+4. Scope holes are substantial. `return str(completed) >= CUTOFF` exempts a newly appended duplicate carrying an older completion date. The guard reads `ledger_path.read_text()` from the working tree and tests `(root / deliverable).exists()`, not the staged snapshot, so an untracked, unstaged, external absolute, symlinked, or merely local deliverable can validate a committed claim. It silently ignores non-dictionary milestones and tasks through `isinstance` filtering and `continue`, examines no conductor implementation, and checks only paths with which it is invoked. Deletion coverage depends on hook configuration not present here; no other coverage is visible in this file.
+
+5. Ordinary bypasses include omitting the deliverable field, leaving the named deliverable untracked, appending a copied pre-cutoff entry, supplying parseable YAML with the wrong container shapes, invoking `--report-historical` when enforcement was intended, or bypassing pre-commit with --no-verify. None requires adversarial intent.
+
+6. No enforcement rule is provably decorative: duplicate detection, the retired-literal branch, cutoff handling, and deliverable checking each have behavior not fully covered by a neighboring rule. Test files were not supplied, so it cannot be determined whether deleting any would fail the suite. The loader fallback is explicitly marked `# pragma: no cover`; on a libyaml-equipped test environment, deleting that branch could leave tests green while breaking installations without the C loader.
+
+7. There is no hardcoded absolute write target. `Path(raw)` comes from an argument or relative default, deliverable resolution uses `ledger_path.resolve().parent`, and the guard performs no writes.
+
+8. Missing files, YAML parser failures, and top-level objects lacking a callable mapping interface fail closed through `except Exception as exc:` followed by `return 1`. Parseable schema corruption fails open: `yaml.load(ledger_path.read_text(), Loader=_LOADER) or {}` treats an empty ledger as an empty mapping, `milestones = data.get("milestones") or []` treats a missing or null collection as no work, `_collect` drops non-dictionary milestones, and non-dictionary tasks are skipped. All of those paths can return clean without checking a valid ledger structure.
+
+8b. There is no substrate-style recognizer chain ending in a terminal no-check default. The malformed-schema filtering and empty-collection fallbacks nevertheless have the same permission-by-skipping effect and are covered under finding 8.
+
+8c. The guard consumes no duration or other metric measured around an operation, so no pre-work measurement defect is present.
+
+9. The guard itself is read-only and supports isolated fixtures by resolving deliverables relative to the supplied ledger. No tests were provided, so fixture side effects cannot be audited, but nothing in this source requires writing to tracked state or a fixed historical path.
 
 ## COUNTEREXAMPLE
 ```yaml
-# ops/arc_solve_registry.yaml
-reproducible_total_levels: 10
-games:
-  - game: sc25
-    levels_reproduced: 5
-    levels_live_recorded: 5
-  - game: sc25
-    levels_reproduced: 5
-    levels_live_recorded: 5
+milestones:
+  - id: 2026.08.999
+    completed: 2026-08-22
+    tasks:
+      - id: archive-results
+        result: OK
+        deliverable: ""
 ```
-If the replay reaches level 5, both rows pass, the calculated total is 10, and the guard returns success even though only five unique game levels were reproduced.
+
+This produces no duplicate, is not the retired literal, and the empty deliverable makes the existence condition false, so the guard returns success.
 
 ## MISSED INPUT
-A duplicate `sc25` registry row with `levels_reproduced: 5`, accompanied by `reproducible_total_levels: 10`.
+A newly completed task containing `result: OK` with `deliverable: ""` or no `deliverable` field at all.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The guard silently accepts duplicate evidence as independent evidence and treats an unreadable registry as an empty, valid registry. It also treats absent replay results and unsampled rows as approved, while its production action-sequence comparison compares submitted data to a copy of itself.
+The primary success-evidence rule silently exempts exactly the absence it claims to reject. Fixing that condition alone is insufficient because the guard also trusts self-reported dates, local filesystem existence, and schema-filtering defaults instead of validating the staged ledger and its tracked deliverables.
 
 
-## arc_llm_on_liveness_lint.py
+## mutation_marker_lint.py
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -154,61 +188,54 @@ The guard silently accepts duplicate evidence as independent evidence and treats
 SILENT_NON_FIRING
 
 ## CONCEPT
-Refuse ARC rows presented as LLM-on evidence when their primitive instrumentation shows that the generator was unavailable, unproductive, contradictory, or otherwise unable to support that claim.
+Prevent a temporary, marked mutation-proof edit from entering a commit merely because it remains valid Python and passes ordinary checks.
 
 ## FINDINGS
-1. The false-stamp disagreement gate silently fails whenever any WARN already exists. The line `if stamp is False and not findings:` tests for zero findings, not zero FAIL findings, so `GENERATOR_PARTIAL_FAILURES` suppresses `STAMP_FALSE_UNEXPLAINED`; the counterexample below returns one WARN, zero FAILs, and exits 0.
+1. The concept is correctly aimed at marked mutation-proof edits reaching committed Python.
 
-2. Two early returns mask independently conclusive failures. `if sentinel or witness_error:` immediately returns `WITNESS_UNAVAILABLE`, preventing later `DEAD_GENERATOR`, `NO_COMPLETIONS`, or `SERVER_STORM` checks; the `WITNESS_MISSING` return similarly occurs before those primitive checks.
+2. Silent non-firing: line 140 applies `rel in ALLOWLIST` to the entire file. A live mutation added anywhere in `scripts/test_suite_mutation_check.py` is skipped before `_read` or `pattern.search` runs; lines 177–178 then return success through `if not hits`.
 
-3. The hardcoded registries are narrower than their apparent concept. `FAIL_CODES` and `WARN_CODES` are unused, and `WARN_CODES` omits the emitted `STAMP_FALSE_UNAUDITABLE` code. The row-marker chain in `_is_row` is only a sample of historical shapes: its terminal `return False` omits rows identified solely by `llm_tier_operational`, `llm_on_row_valid`, generator-health fields, or an `llm` witness—even though `_claims_llm_on` explicitly understands `llm_tier_operational`. The sentinel tuple `(calls, responses, errors)` also omits the count field `content_failures`. `ORIGIN_DEAD_CELLS` and `ORIGIN_CONTROL_CELLS` are correctly samples, but therefore prove only their historical shapes.
+3. Pattern lists:
+   - `ALLOWLIST` is intended as the exact definition/test exception set, but whole-file immunity is broader than that concept. No omitted filename is evident; the omitted distinction is between legitimate marker-definition lines and unrelated executable lines inside each listed file.
+   - `\b{re.escape(marker)}` uses the canonical imported marker and is a definition, not a sample. No omitted canonical spelling was found.
+   - The `.py` filters define the expressly declared staged-Python scope.
+   - `--diff-filter=ACMR` covers additions, copies, modifications, and renames but omits type changes.
+   - The two Git-error substrings are samples of missing-index diagnostics. Unrecognized errors refuse, so no silent omission was established there.
 
-4. Scope is limited to recursively matched `"*.json"` files under explicitly supplied directories, defaulting to `results`. The script does not inspect Git state or staged blobs, so unstaged rewrites, non-JSON artifacts, other directories, and runs that never invoke the hook are outside its reach. Deleted or missing paths become unreadable inputs and are admitted. The only other path described in this file is advisory conductor logging, not enforcement.
+4. Scope: every directory is eligible, but only `.py` files outside the four-file allowlist are scanned. Deleted files are excluded harmlessly; type-changed files are excluded from no-argument discovery. Any nonempty `args.files` list completely replaces staged-file discovery, so an incomplete caller-supplied list leaves other staged Python unchecked. Nothing in this file covers non-Python executables, allowlisted-file internals, or hook-skipping commits.
 
-5. Baseline identity is only `(file, json_path, code)`. Re-running a fixed-path experiment can replace a grandfathered historical row with a different invalid run at the same location carrying the same failure code, and `_finding_key` still exempts it. Ordinary use of `--warn-only`, `--write-baseline`, no-verify commits, or invocation from the wrong working directory also defeats enforcement without modifying the checker.
+5. Ordinary bypasses include `--no-verify`, explicitly acknowledged by the docstring; invoking the script with only a harmless explicit filename; and cleanup that removes the marker comment while accidentally leaving the semantic mutation. `git add -A` alone is caught unless hooks are skipped.
 
-6. The visible self-test leaves material branches untested. It does not exercise `WITNESS_UNAVAILABLE`, `STAMP_FALSE_UNAUDITABLE`, either pre-instrumentation `_is_row` recognizer, the `llm_tier_operational` override, unreadable JSON, baseline loading or exemption identity, write-baseline behavior, or the false-stamp-plus-WARN interaction. Deleting `FAIL_CODES`, `WARN_CODES`, the unavailable-witness branch, the unauditable-false-stamp branch, or the shape-2 recognizers leaves the shown self-test green; the first two are wholly decorative at runtime.
+6. Untested/decorative behavior:
+   - No test inserts a marker into an unrelated executable line of an allowlisted file; the exact-set test instead preserves the blind spot.
+   - The C, M, and R memberships in `--diff-filter=ACMR` are not behaviorally exercised; replacing that filter with addition-only discovery would leave the inspected tests green.
+   - The explicit-filename test stages the same victim, so ignoring its explicit argument and using staged discovery would still pass that test.
+   - The marker boundary, suffix behavior, allowlist membership, index reading, decoding failures, Git failures, and refusal paths are individually covered.
 
-7. No hardcoded absolute filesystem path appears. However, `DEFAULT_BASELINE = os.path.join("ops", "arc_llm_on_liveness_baseline.json")` and `args.paths or ["results"]` are working-directory-relative rather than derived from the source location, so invocation elsewhere silently scans the wrong place; unlike the specified absolute-path defect, it does not redirect writes into a particular operator checkout.
+7. No hardcoded absolute filesystem target exists. `REPO` and `_SCRIPTS` derive from `Path(__file__)`, and this guard performs no writes.
 
-8. Result-file I/O and JSON errors fail open. `except Exception:` performs `unreadable.append(f)` followed by `continue`; unreadability contributes no FAIL, and `return 0 if (args.warn_only or blocking == 0) else 1` therefore reports success when every requested file was missing or malformed. Baseline read errors instead clear the exemption set and fail closed.
+8. Machinery failures fail closed. `except LintError as exc` returns 1, while uncaught import, subprocess-launch, or unexpected parsing exceptions terminate nonzero rather than reaching `return 0`.
 
-9. There are two default-branch disabling paths. `_is_row` ends in `return False`, silently exempting unrecognized row schemas, including the operational marker understood by the next-stage classifier. `_claims_llm_on` also returns `return False` for an operational-false stamp unless positive calls or responses exist, ignoring contradictory errors, content failures, dead-health, storm, and invalidity primitives.
+9. No recognizer chain ending in a no-check default exists. The internal `source` selector does treat every value other than `source == "index"` as worktree mode without validation, but production `main` uses the index default.
 
-10. No metric-before-work defect can be established from this source. The guard consumes recorded counts but neither computes them nor exposes when their producer measured them.
+10. No duration, count, or size metric is consumed or computed.
 
-11. Normal scans and `self_test` do not write tracked state. The explicit `--write-baseline` path does overwrite the fixed relative ops manifest via `with open(args.write_baseline, "w") as fh:` and exits 0; although documented as an operator action, any test using its default target would mutate tracked policy state and must supply an isolated temporary path.
+11. Neither the guard nor its tests write tracked project state. Test writes are confined to temporary repositories; the production guard is read-only.
 
 ## COUNTEREXAMPLE
-```json
-{
-  "llm_enabled": true,
-  "llm_tier_operational": true,
-  "llm": {
-    "calls": 10,
-    "responses": 8,
-    "errors": 2,
-    "content_failures": 0
-  },
-  "generator_healthy_after": true,
-  "server_storm_suspected": false,
-  "llm_on_row_valid": false
-}
-```
-
-This produces only a `GENERATOR_PARTIAL_FAILURES` WARN. Because that WARN makes `findings` nonempty, the false-stamp disagreement branch does not execute; the guard records zero FAILs and exits 0.
+Stage a change to `scripts/test_suite_mutation_check.py` that replaces live `cmd_gate` logic with `pass  # MUTATED M99`. The path matches the whole-file allowlist, so `scan` returns no hits and `main` exits 0.
 
 ## MISSED INPUT
-`llm_on_row_valid: false` with `llm.calls: 10`, `llm.responses: 8`, `llm.errors: 2`, `generator_healthy_after: true`, and `server_storm_suspected: false`.
+`scripts/test_suite_mutation_check.py` containing `pass  # MUTATED M99` in executable guard logic.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-A currently recognized, well-typed row whose producer declares it invalid is admitted because an unrelated warning suppresses the disagreement failure. Early warning returns, fail-open parsing, incomplete row recognition, and coordinate-only baseline exemptions create additional independent silent paths. Fixing one token or field name would not close this guard’s failure surface.
+The fail-closed machinery is solid, but the file-level exception creates a complete blind spot inside the protected class. A marked live mutation in the session guard is approved because exemption occurs before the staged blob is read. Replace whole-file immunity with line- or context-specific exemptions and add an allowlisted-file mutation regression test.
 
 
-## verifier_authenticity_lint.py
+## audit_findings_ledger.py
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -216,60 +243,44 @@ A currently recognized, well-typed row whose producer declares it invalid is adm
 SILENT_NON_FIRING
 
 ## CONCEPT
-This guard is supposed to reject verifier implementations that fabricate data or metrics, pad runtimes, or otherwise game Carnot’s adversarial-verification safeguards.
+Every flagged finding emitted by a milestone-close audit must enter a durable human-disposition ledger, and unresolved or unreadable rows must not age silently.
 
 ## FINDINGS
-1. The concept is verifier authenticity, but `PATTERNS` recognizes only seven narrow textual signatures rather than determining whether reported metrics and evaluation data are genuine.
+1. The implementation is narrower than that concept: `SOURCES` contains only the claim and QA-layer audits. The current verifier-authenticity report contains three flagged findings, but lines 274–285 omit that audit and line 483 selects only registered sources, so none reaches the ledger.
 
-2. Silent non-firing: rule 1 promises detection when sleep and duration assignment are within five lines, but source line 85, containing `r"time\.sleep\([^)]+\)[^\n]*\n[^\n]*duration_s\s*="`, permits exactly one newline. One intervening statement prevents a match, after which `if not flagged:` reaches `return 0`.
+2. This is not hypothetical: ops/verifier_authenticity_audit_report.md currently flags python/carnot/verify/arm_ebm_soft_value_diagnostic.py as ADVERSARIAL_GAMING, while no corresponding ledger row exists. Listing `verifier_authenticity_audit.py` in `EXCLUDED_SOURCES` merely documents the non-firing; that dictionary is never ingested by `run`.
 
-3. Pattern-list audit:
+3. Pattern inventory: imported per-audit flagged sets are definitions; `_OPEN` and `_CLOSED_DISPOSITIONS` are definitions. `SOURCES` is only a sample of audit findings, omitting `verifier_authenticity_audit.py` and `artifact_convention_audit.py`, both of which currently emit actionable verdicts. The report regexes are samples of current Markdown formatting: they omit spaced claim-artifact names, verdict tokens containing digits, indented ledger rows, and semantically invalid calendar dates. The discovery regex also omits audit filenames containing uppercase letters or hyphens.
 
-   - `ALLOWLIST` defines legitimate token-reference exceptions, but lines 126–127 apply it to the entire guard. Those files are consequently exempt from every rule, including random-data evaluation and hardcoded duration.
-   - `SLEEP_PADDING_DURATION` is a sample. It omits gaps of two through five lines, imported or aliased sleep calls, asynchronous sleep, and same-line assignments.
-   - `SCORE_CAP_TO_99` and `SCORE_FLOOR_AT_01` are samples. They omit reversed operands, nested expressions, named constants, equivalent fractions, clipping functions, and conditional clamps.
-   - `DODGE_TOKEN_REFERENCE` is a sample of adversarial-check awareness. It omits lowercase, hyphenated, concatenated, paraphrased, and future check names.
-   - `RANDOM_DATA_EVAL` is a sample. It omits neutral, random, dummy, or generated variable names; annotations between the name and assignment; RNG aliases; helper functions; and random generators from Torch, JAX, sklearn, or the standard library.
-   - `DURATION_S_HARDCODED` is a sample. It omits single-digit values, five-digit values, exponent notation, numeric separators, negative values, constant expressions, named constants, and dictionary-key forms.
-   - `MOCK_SLEEP_PARAMETER` is a sample. It omits padding, delay, wait, cooldown, configuration, and keyword-container equivalents.
-   - The `*.py` globs define the selected file type but are only a sample of where verifier logic can reside.
+4. Scope holes: only two Markdown reports are inspected; excluded audit reports, dynamically invoked audits, stdout-only findings, deleted or overwritten reports, staged diffs, commits, and unstaged run mutations are invisible. The file claims another receipt or fabrication mechanism covers some cases, but it performs no such verification itself.
 
-4. Scope holes: `VERIFY_DIR.glob("*.py")` and `PIPELINE_DIR.glob("*.py")` are non-recursive and ignore subpackages, notebooks, generated modules, verifier scripts elsewhere, and files renamed outside those two directories. The guard reads the working-tree files rather than staged blobs, so it does not independently prove that the content being committed is what it scanned; no compensating coverage is visible in this file.
+5. Accidental bypasses include passing an empty `report_paths` map, deleting or renaming a report, changing report formatting, or producing a second finding with the same audit/artifact/verdict tuple. `_identity` omits the finding text, missed input, and occurrence, so line 375 permanently suppresses a later distinct finding carrying the same verdict—even after the original row was closed. `_normalize_artifact` also conflates distinct files in different directories when their basenames match.
 
-5. Ordinary bypasses include adding one logging statement between sleep and duration assignment, moving a verifier into a subdirectory, using an RNG alias, renaming a gaming parameter, or placing the violation in an allowlisted audit file. An incomplete checkout also bypasses everything because `if not VERIFY_DIR.exists():` prints `verify dir not found at {VERIFY_DIR}; skipping` and returns success, even if pipeline files remain available.
+6. Test gaps: impossible calendar dates, leading-space ledger rows, repeated distinct findings with the same identity, basename collisions, production selection through `report_paths is None`, `dry_run`, and failed module-load restoration are untested. Removing `ACCEPTED` or `WONTFIX` from `_CLOSED_DISPOSITIONS` leaves the dedicated suite green; only `FIXED` is exercised. The `experiment_claim_audit.py` and `qa_layer_authenticity_audit.py` entries in `EXCLUDED_SOURCES` are decorative because `SOURCES` already classifies them, and the explicit `"---"` header check is double-covered by the following all-hyphen rule.
 
-6. No tests are included, so deletion coverage cannot be established honestly. At exit-code level, `SCORE_CAP_TO_99` and `SCORE_FLOOR_AT_01` are redundant for their documented “alongside” case because `DODGE_TOKEN_REFERENCE` already hard-fails the required accompanying token; the four allowlisted script paths are unreachable through `main()` because only verifier and pipeline files are enumerated. Whether tests assert their individual violation kinds cannot be determined.
+7. No hardcoded absolute filesystem path appears in this guard. `REPO` is correctly derived from `Path(__file__)`.
 
-7. There is no hardcoded absolute filesystem target: `PROJECT_ROOT = Path(__file__).resolve().parent.parent` derives the checkout correctly. The guard performs no writes.
+8. Most machinery errors fail closed because module loads and file reads propagate exceptions. Two important paths fail open: a missing report executes `continue` at line 492 and still returns success, while conductor discovery catches `OSError` and executes `return set()` at line 301. Worse, 2026-02-30 passes the date regex at line 324, then the `ValueError` branch at lines 421–422 silently executes `continue`; the row is neither malformed nor escalated.
 
-8. It fails open on two machinery errors. `except Exception:` followed by `return []` treats unreadable or undecodable source as violation-free, while a missing verifier directory returns `return 0`; a missing pipeline directory is silently represented by an empty glob.
+9. There is no literal recognizer chain ending in a terminal no-check return. The source registry has the equivalent behavior: any audit outside `SOURCES` is treated as nonexistent rather than unrecognized, and an empty explicit source map performs zero ingest checks successfully.
 
-9. There is no explicit recognizer ending in `return None`, but the equivalent permissive default is `if not flagged:` followed by `return 0`. Any authenticity violation not matching the seven regexes is classified as clean rather than unrecognized.
+10. No duration, count, or size measurement is computed before the work it describes.
 
-10. The guard does not compute a metric itself, but it cannot detect a duration evaluated before the work it claims to measure. `DURATION_S_HARDCODED` accepts any nonliteral expression, including a subtraction evaluated as a call argument before the callee performs the actual work.
-
-11. The guard only uses `path.read_text()` and `print`, so it does not mutate tracked state. No test or fixture code was provided, so test-side mutations cannot be assessed.
+11. Normal execution intentionally writes fixed paths under `ops/`: the ledger, conductor log, and state receipt. The dedicated tests redirect these paths, but calling `run` or `main` with defaults from a test mutates tracked operator state; even a clean run rewrites the state receipt. Supplying only `--ledger` does not isolate the other write targets.
 
 ## COUNTEREXAMPLE
-```python
-# python/carnot/verify/padded_eval.py
-import time
+The current `ops/verifier_authenticity_audit_report.md` contains:
 
-def verify(padding_s):
-    time.sleep(padding_s)
-    metrics = compute_empty_metrics()
-    duration_s = padding_s
-    return {"duration_s": duration_s, **metrics}
-```
+`- python/carnot/verify/arm_ebm_soft_value_diagnostic.py — ADVERSARIAL_GAMING`
 
-The sleep and fabricated duration are within the promised five-line window, but the intervening metrics statement prevents the sleep regex from matching; none of the other patterns match.
+That report is excluded from `SOURCES`, so the finding produces no ledger row and no alarm.
 
 ## MISSED INPUT
-A verifier containing `time.sleep(padding_s)`, one intervening logging or metrics statement, and then `duration_s = padding_s`.
+`python/carnot/verify/arm_ebm_soft_value_diagnostic.py` with verdict `ADVERSARIAL_GAMING` in `ops/verifier_authenticity_audit_report.md`.
 
 ## RECOMMENDATION
-NEEDS_REDESIGN
+WIDEN_PATTERN_TO_CONCEPT
 
 ## RATIONALE
-The documented five-line `SLEEP_PADDING_DURATION` rule is implemented as a one-newline regex, creating a direct silent bypass. Additionally, `except Exception:` followed by `return []` converts an inability to inspect verifier code into approval. The whole-file `ALLOWLIST` exemption and permissive no-hit path make widening a single token insufficient.
+The guard currently has real flagged audit findings in its checkout that never enter the ledger, solely because `SOURCES` is narrower than the stated concept. Its malformed-date fallback and coarse finding identity create additional silent skips even for registered sources. Every actionable audit needs a structured adapter, count reconciliation, and identity that distinguishes separate findings.
 
