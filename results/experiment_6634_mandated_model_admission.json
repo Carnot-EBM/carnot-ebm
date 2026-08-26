@@ -1,0 +1,51 @@
+{
+  "experiment": 6634,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-26",
+  "started_at": "2026-08-26T11:06:59.811032+00:00",
+  "finished_at": "2026-08-26T11:06:59.811032+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Independent admission of all mandated GGUF families",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0.0 == expected=1.0",
+  "failed_upstream": "exp6633-gpu-lease-phase-journal",
+  "failed_field": "gpu_lease_scheduler_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1.0,
+  "failed_expected_type": "float",
+  "failed_observed": 0.0,
+  "failed_observed_type": "float",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6633_gpu_lease_phase_journal.json",
+  "failed_evidence_sha256": "sha256:f57473ad44f9416c6e9517c91353ff4d47d58ecfb73d2b5c9c670e5bcfa92750",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0.0 == expected=1.0",
+    "failed_upstream": "exp6633-gpu-lease-phase-journal",
+    "failed_field": "gpu_lease_scheduler_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1.0,
+    "failed_expected_type": "float",
+    "failed_observed": 0.0,
+    "failed_observed_type": "float",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6633_gpu_lease_phase_journal.json",
+    "failed_evidence_sha256": "sha256:f57473ad44f9416c6e9517c91353ff4d47d58ecfb73d2b5c9c670e5bcfa92750"
+  },
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6633-gpu-lease-phase-journal.gpu_lease_scheduler_ready_score (actual=0.0 == expected=1.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6633-gpu-lease-phase-journal",
+      "artifact_field": "gpu_lease_scheduler_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "expected_type": "float",
+      "actual": 0.0,
+      "actual_type": "float",
+      "passed": false,
+      "reason": "actual=0.0 == expected=1.0",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6633_gpu_lease_phase_journal.json",
+      "artifact_sha256": "sha256:f57473ad44f9416c6e9517c91353ff4d47d58ecfb73d2b5c9c670e5bcfa92750"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
