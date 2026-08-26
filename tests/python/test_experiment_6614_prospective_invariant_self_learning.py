@@ -246,7 +246,7 @@ def test_attack_matrix_contains_every_required_fail_closed_attack(tmp_path: Path
     [
         (True, False, "circular_positive", 1.0),
         (False, False, "null", 0.0),
-        (False, True, "blocked_upstream", 0.0),
+        (False, True, "blocked", 0.0),
     ],
 )
 def test_verdict_never_upgrades_row_completion(
@@ -301,7 +301,7 @@ def test_failed_upstream_gate_produces_named_block_with_exact_value(tmp_path: Pa
     )
 
     assert artifact["status"] == "blocked_upstream"
-    assert artifact["verdict_class"] == "blocked_upstream"
+    assert artifact["verdict_class"] == "blocked"
     assert artifact["continuous_self_learning_ready_score"] == 0.0
     assert artifact["gate_check_summary"]["failed_gate"] == (
         "exp6613_invariant_memory_ready_score"

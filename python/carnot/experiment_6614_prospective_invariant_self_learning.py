@@ -1256,7 +1256,7 @@ def status_and_verdict(gates: Sequence[Mapping[str, Any]]) -> tuple[str, str, st
         return (
             block_class,
             f"{block_class}: failed {blocking[0]['gate_id']} with observed={blocking[0].get('observed')}",
-            block_class,
+            "blocked",
             0.0,
         )
     benefit = all(
@@ -1667,7 +1667,7 @@ def build_blocked_artifact(
         "date": planning_date,
         "status": "blocked_upstream",
         "honest_verdict": f"blocked_upstream: {gate_name} expected={expected} observed={observed}",
-        "verdict_class": "blocked_upstream",
+        "verdict_class": "blocked",
         "gate_check_summary": {
             "blocked": True,
             "failed_gate": gate_name,
@@ -1755,6 +1755,8 @@ def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
         errors.append("inference_substrate mismatch")
     if payload["verifier_is_oracle"] is not True:
         errors.append("verifier_is_oracle must be bare true")
+    if payload["verdict_class"] not in {"blocked", "circular_positive", "null"}:
+        errors.append("verdict_class is outside the closed enum")
     if set(payload["field_provenance"]) != set(REQUIRED_ARTIFACT_FIELDS):
         errors.append("field_provenance does not cover every required field")
     for field in (
@@ -1766,7 +1768,7 @@ def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
     ):
         if any(row.get("row_hash") != row_hash(row) for row in payload[field]):
             errors.append(f"{field} row_hash mismatch")
-    blocked = str(payload["verdict_class"]).startswith("blocked_")
+    blocked = payload["verdict_class"] == "blocked"
     if not blocked:
         recomputed = recompute_aggregates_from_rows(
             payload["per_unit_rows"], payload["memory_transition_rows"]
