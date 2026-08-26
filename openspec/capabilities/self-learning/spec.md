@@ -28708,3 +28708,97 @@ or level solve claim.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-6614 | Implemented (`python/carnot/experiment_6614_prospective_invariant_self_learning.py`, `results/experiment_6614_prospective_invariant_self_learning.json`) | Implemented (`tests/python/test_experiment_6614_prospective_invariant_self_learning.py`) |
+
+---
+
+## REQ-LEARN-6653: State-Grounded Repair Memory Fixture
+
+Carnot SHALL build a deterministic repair-memory fixture from existing exact
+event artifacts. It SHALL not invoke an LLM or claim that memory improves a
+future outcome. The fixture SHALL keep verified `WorkingState` separate from
+`ExperientialRepair`. Each event SHALL bind visible state, one exact violated
+constraint, one exact witness, one candidate repair operator, one task-visible
+applicability key, support, provenance, version, checksum, and chronology.
+
+The fixture SHALL contain at least 36 unique chronological events from more
+than one constraint family. Source, validation, held-anchor, and future
+partitions SHALL freeze before repair derivation. Lookup keys SHALL exclude
+future outcomes, exact targets, held labels, and mutable evidence. Every patch
+SHALL modify one typed experiential component. Every accepted forward patch
+SHALL carry a byte-exact inverse that restores the prior canonical state.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `source_artifact_receipts`, `memory_schema`,
+`frozen_partition_manifest`, `event_rows`, `transition_fixture_rows`,
+`attack_rows`, `rollback_receipts`, `memory_fixture_ready`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`. A ready fixture SHALL use `verdict_class=null`.
+Any blocked result SHALL name the failed check and observed value.
+The fixture SHALL use
+`inference_substrate=deterministic_exact_repair_memory_fixture_no_llm`.
+
+### SCENARIO-LEARN-6653-SEPARATION: Working State And Experience Stay Separate
+
+**Given** one exact source event
+**When** Exp6653 creates its typed row
+**Then** `WorkingState` contains only task-visible verified state and
+`ExperientialRepair` contains only repair memory, evidence, lifecycle, and
+rollback fields.
+
+### SCENARIO-LEARN-6653-LOOKUP: Lookup Uses Only Task-Visible State
+
+**Given** frozen source, validation, held-anchor, and future partitions
+**When** Exp6653 derives an applicability key
+**Then** the key uses only visible task fields and excludes exact outcomes,
+targets, witnesses, held labels, future labels, and chronological successors.
+
+### SCENARIO-LEARN-6653-LOCALITY: One Patch Changes One Typed Component
+
+**Given** a proposed experiential repair
+**When** Exp6653 compares its before and after values
+**Then** exactly one declared component changes and its applicability has
+nonempty exact support.
+
+### SCENARIO-LEARN-6653-EVIDENCE: Versions And Checksums Bind Exact Support
+
+**Given** an event and its proposed repair
+**When** Exp6653 records evidence
+**Then** source hashes, exact witness hashes, support event IDs, version, and
+canonical component checksums bind the row without trusting path metadata.
+
+### SCENARIO-LEARN-6653-PARTITIONS: Splits Freeze Before Repair Derivation
+
+**Given** the accepted exact event source and fixed seed
+**When** Exp6653 freezes partitions
+**Then** each event belongs to exactly one partition and each partition has an
+ordered event-ID hash before any candidate patch exists.
+
+### SCENARIO-LEARN-6653-ROLLBACK: Forward And Inverse Patches Are Byte Exact
+
+**Given** append, revise, retire, commit, reject, and rollback examples
+**When** an accepted forward patch and its inverse run
+**Then** the inverse restores canonical prior bytes exactly, while a rejected
+patch leaves state unchanged.
+
+### SCENARIO-LEARN-6653-ATTACKS: Invalid Fixture Inputs Fail Closed
+
+**Given** duplicate IDs, conflicting witnesses, unsupported applicability,
+future leakage, checksum corruption, or stale versions
+**When** the fixture validator receives the attack
+**Then** it detects the named fault and the attack cannot open readiness.
+
+### SCENARIO-LEARN-6653-READY: Rows Own Null Readiness
+
+**Given** all event, transition, rollback, attack, source, partition, and
+protected-file rows
+**When** Exp6653 recomputes aggregate checks
+**Then** `memory_fixture_ready=true` only if every fixture gate passes,
+`verdict_class=null`, and the verdict makes no future-benefit claim.
+
+## Implementation Status (REQ-LEARN-6653)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-6653 and SCENARIO-LEARN-6653-* | Implemented (`python/carnot/experiment_6653_state_grounded_repair_memory_fixture.py`; terminal evidence in `results/experiment_6653_state_grounded_repair_memory_fixture.json`) | Implemented (`tests/python/test_experiment_6653_state_grounded_repair_memory_fixture.py`; 14 focused cases and 100% scoped statement coverage) |
