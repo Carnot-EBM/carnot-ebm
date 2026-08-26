@@ -11,96 +11,8 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 1 |
+| CLAIM_REFUTED_BY_OWN_DATA | 1 |
 | NO_CLAIM | 7 |
-
-## experiment_6615_v576_independent_capstone.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The available evidence supports blocked decoding, null live projection, software-only partial sampler evidence, conformant lifecycle behavior without utility, and zero prospective self-learning benefit.
-
-## WHAT WOULD REFUTE IT
-A positive `held_future_benefit_over_static` for governed online memory on the prospective held-future pairs would refute the headline’s zero-benefit claim.
-
-## WAS THAT CHECKED
-Yes. `continuous_learning_replay` compares four arms across 36 held-future pairs, including the serious `static_projector` and `no_learning` baselines; it reports exactly zero benefit. Predictions preceded observations, and the disqualified source verdict was retained rather than promoted. The oracle was used for adjudication, but no positive verifier-value claim was made.
-
-## EVIDENCE
-`held_future_benefit_over_static` `0.0`; `held_future_benefit_over_shuffled` `0.0`; `held_future_pairs` `36`; `governed_online_memory` `88`; `no_learning` `88`; `static_projector` `88`; `all_predictions_before_observations` `true`; `scientific_verdict_class` `null`; `selected_minus_no_projection_mean_error` `0.0`; `selected_minus_random_mean_error` `0.0`; `oracle_defined_win_promoted_to_positive` `false`; `verifier_is_oracle` `true`; `verdict_class` `partial`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6616_v577_execution_contract.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No scientific or comparative claim is made; treating the blocked contract status as the operational assertion, it would be refuted if all 13 expected YAML task contracts were present and the contract checks passed.
-
-## WAS THAT CHECKED
-Yes. The exact task-set and model-policy checks could have passed, but recorded missing tasks and failed checks.
-
-## EVIDENCE
-`honest_verdict` `blocked_roadmap_contract_incomplete: expected Exp6616-Exp6628 YAML contracts are not all present` `execution_contract_ready_score` `0.0` `all_passed` `false` `expected_task_count` `13` `yaml_task_count` `3` `verdict_class` `blocked` `verifier_is_oracle` `true` `The verdict reports contract readiness without claiming scientific benefit.`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6617_gpu_lease_phase_receipts.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable; the artifact is a blocked-gate receipt and makes no substantive or comparative claim about GPU lease or task-phase performance.
-
-## WAS THAT CHECKED
-No. The experiment did not run; it stopped at `conductor_pre_gate` after its sole readiness gate failed.
-
-## EVIDENCE
-`"schema"`: `"blocked_gate_check_v1"`; `"status"`: `"blocked"`; `"honest_verdict"`: `"blocked_gate_check_failed"`; `"duration_s"`: `0.0`; `"gate_check_summary"`: `"1 of 1 gate(s) failed; first failure: exp6616-v577-execution-contract.execution_contract_ready_score (actual=0.0 == expected=1.0)"`; `"passed"`: `false`; `"blocked_at_layer"`: `"conductor_pre_gate"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6619_v578_activation_contract.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-For the operational blocked status, both YAML sources containing the complete Exp6619–Exp6632 contract with matching tasks, gates, models, hardware, and deliverables would refute it.
-
-## WAS THAT CHECKED
-Yes. The document-to-YAML checks explicitly compared the expected contract against both active and pre-staged sources and found four missing tasks.
-
-## EVIDENCE
-`activation_contract_ready_score`: `0.0`; `all_passed`: `false`; `active_task_count`: `10`; `expected_task_count`: `14`; `missing_task_ids`: `["exp6629-live-memory-actionability", "exp6630-error-independent-memory-patch-gate", "exp6631-prospective-support-preserving-csl", "exp6632-v578-independent-capstone"]`; `honest_verdict`: `blocked_v578_activation_contract_incomplete: document promises Exp6619-Exp6632 but both YAML sources contain only Exp6619-Exp6628`; `The verdict reports contract readiness without claiming scientific benefit.`
-
-## RECOMMENDATION
-KEEP
 
 ## experiment_6620_gpu_lease_phase_receipts.json
 
@@ -113,13 +25,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No falsifier applies because this is a blocked-gate receipt, not a result claiming implementation success or comparative value.
+Not applicable; this is a blocked-gate receipt and asserts no experimental outcome or comparative value.
 
 ## WAS THAT CHECKED
-No; the method was never evaluated because execution stopped at the upstream gate. The prerequisite itself was checked and failed.
+No; the experiment never proceeded past the upstream gate.
 
 ## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_observed`: `0.0`; `failed_expected`: `1.0`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`
+`schema` `blocked_gate_check_v1` `status` `blocked` `honest_verdict` `blocked_gate_check_failed` `passed` `false` `blocked_at_layer` `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
@@ -135,13 +47,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Nothing can falsify a performance or direct-headroom claim because no result was produced or asserted.
+There is no falsifiable headline claim; the artifact is only a blocked gate-check receipt.
 
 ## WAS THAT CHECKED
-No; execution stopped at the pre-gate because the required upstream artifact was unavailable.
+No. Execution stopped at the pre-gate because the required upstream artifact was unavailable, so no method outcome or success criterion was evaluated.
 
 ## EVIDENCE
-`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"actual": null`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
+`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
@@ -157,13 +69,17 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: the artifact reports a blocked gate check and makes no empirical or comparative claim.
+Not applicable; the artifact reports a blocked prerequisite gate and makes no experimental or comparative claim.
 
 ## WAS THAT CHECKED
-No; execution stopped at `conductor_pre_gate`, before any method outputs, comparator results, or scored rows were produced.
+No; the experiment stopped at `conductor_pre_gate`, before any method, success criterion, or comparator was evaluated.
 
 ## EVIDENCE
-`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"duration_s": 0.0`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
+`status` `blocked`  
+`honest_verdict` `blocked_gate_check_failed`  
+`blocked_reason` `upstream artifact not found for task id 'exp6623-headroom-support-reducer'`  
+`passed` `false`  
+`blocked_at_layer` `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
@@ -179,13 +95,101 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No falsifying observation applies because this is a blocked-gate receipt and reports no result about sampler integrity or repair.
+No substantive performance claim is made; refutation would require a stated claim and method-result rows that could contradict it.
 
 ## WAS THAT CHECKED
-No; execution stopped at the upstream gate before the experiment ran.
+No. The artifact only records a failed upstream gate; the experiment never reached execution or evaluation.
 
 ## EVIDENCE
-`status` is `blocked`; `honest_verdict` is `blocked_gate_check_failed`; `passed` is `false`; `blocked_at_layer` is `conductor_pre_gate`.
+`status` `blocked`; `honest_verdict` `blocked_gate_check_failed`; `passed` `false`; `blocked_at_layer` `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6633_gpu_lease_phase_journal.json
+
+**CLAIM_REFUTED_BY_OWN_DATA**
+
+## VERDICT
+CLAIM_REFUTED_BY_OWN_DATA
+
+## THE HEADLINE CLAIM
+The GPU lease scheduler was not ready because infrastructure checks failed.
+
+## WHAT WOULD REFUTE IT
+The infrastructure check identified as failing—focused tests—passing successfully.
+
+## WAS THAT CHECKED
+Yes. The sole `gate_check_summary` entry marks focused tests as failed, while `tests_run` records the focused-test command exiting successfully.
+
+## EVIDENCE
+The headline reports `blocked_gpu_lease_scheduler_not_ready` and `infrastructure checks failed`. The gate names `focused_tests` with `expected` `true` and `observed` `false`. But `tests_run` records `exit_code` `0` and `summary` `focused tests passed` for the focused-test command.
+
+## RECOMMENDATION
+CORRECT_THE_RECORD
+
+## experiment_6634_mandated_model_admission.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+An attempted independent-admission test in which at least one mandated GGUF family failed admission.
+
+## WAS THAT CHECKED
+No. Execution stopped at the conductor pre-gate because the upstream readiness score was 0.0 rather than 1.0; no GGUF-family admission rows were produced.
+
+## EVIDENCE
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_field": "gpu_lease_scheduler_ready_score"`; `"failed_expected": 1.0`; `"failed_observed": 0.0`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6636_delayed_two_level_decoding.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no substantive performance or value claim to falsify; this is only a blocked-gate receipt.
+
+## WAS THAT CHECKED
+No; the method was not run. Only the prerequisite gate was checked, and it failed because the upstream artifact was unavailable.
+
+## EVIDENCE
+`status` `blocked` `honest_verdict` `blocked_gate_check_failed` `blocked_reason` `upstream artifact not found for task id 'exp6635-matched-direct-headroom'` `failed_observed` `null` `passed` `false` `blocked_at_layer` `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6605_qwen36_direct_headroom.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative or value claim is made. The operational block would be overturned by authentic GPU-process receipts and a complete integrity recomputation.
+
+## WAS THAT CHECKED
+Yes, for the operational block: the GPU-process receipt and integrity gates were evaluated and failed. No method-value comparison was attempted.
+
+## EVIDENCE
+`honest_verdict` is `blocked_gpu_process_receipts: direct baseline integrity did not complete`; `all_sessions_authentic` is `false`; `complete` is `false`; `failed_checks` contains `gpu_process_receipts`; the artifact describes `baseline qualification alone is null infrastructure.`
 
 ## RECOMMENDATION
 KEEP

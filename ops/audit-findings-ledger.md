@@ -36,3 +36,7 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-08-26 | qa_layer_authenticity_audit | research_complete_ledger_lint.py | SILENT_NON_FIRING | OPEN | |
 | 2026-08-26 | qa_layer_authenticity_audit | mutation_marker_lint.py | SILENT_NON_FIRING | OPEN | |
 | 2026-08-26 | qa_layer_authenticity_audit | audit_findings_ledger.py | SILENT_NON_FIRING | OPEN | |
+| 2026-08-26 | experiment_claim_audit | experiment_6633_gpu_lease_phase_journal.json | CLAIM_REFUTED_BY_OWN_DATA | OPEN | |
+| 2026-08-26 | qa_layer_authenticity_audit | run_stop_authority.py | SILENT_NON_FIRING | OPEN | |
+| 2026-08-26 | qa_layer_authenticity_audit | in_process_doc_reconcile.py | SILENT_NON_FIRING | OPEN | |
+| 2026-08-26 | qa_layer_authenticity_audit | adversarial_verify.py::check_terminal_artifact_readiness | SILENT_NON_FIRING | OPEN | |
