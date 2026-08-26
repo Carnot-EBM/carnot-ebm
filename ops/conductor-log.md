@@ -16486,3 +16486,18 @@ code |
 | 2026-08-25 22:18 UTC | Verifier-governed invariant-memory lifecycle confo | OK | 102 passed, 1 warning in 10.75s |
 | 2026-08-25 23:41 UTC | Prospective chronological invariant continuous sel | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ay(
 +        [ |
+| 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/substrate_alias_evidence_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIR |
+| 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/test_suite_mutation_check.py age-week 0: OPEN 1 days: SILENT_NON_FIRING  |
+| 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/operator_curated_docs_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING |
+| 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | commit 288ea485f9 (REQ-ARC-WMTE-6710) age-week 0: OPEN 1 days: PREVALENCE_FIGURE |
+| 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6587_v573_constraint_first_method_contract.json age-week 0: OPEN 1 da |
+| 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/operator_curated_doc_guard.py age-week 0: OPEN 1 days: SILENT_NON_FIRING |
+| 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/child_results_guard.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on scr |
+| 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/artifact_freshness_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on |
+| 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/arc_artifact_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on scrip |
+| 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | operator_curated_doc_guard.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on oper |
+| 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | child_results_guard.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on child_resul |
+| 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | artifact_freshness_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on artifac |
+| 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_artifact_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on arc_artifact_ |
+| 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | determination_preservation_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on |
+| 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6596_convergeflow_feasible_token_canary.json age-week 0: OPEN 1 days: |
