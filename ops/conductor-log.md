@@ -16527,3 +16527,5 @@ code |
 | 2026-08-26 07:02 UTC | Independent mandated-model CUDA admission canaries | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6620-gpu-lease-phase-receipts) |
 | 2026-08-26 07:02 UTC | Bounded Qwen3.6 direct-headroom requalification | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6621-mandated-model-admission.qwen_admi |
 | 2026-08-26 07:04 UTC | Independent direct-headroom and recoverable-suppor | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6622-qwen36-direct-headroom) |
+| 2026-08-26 07:04 UTC | Headroom-gated delayed two-level constrained decod | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6623-headroom-support-reducer.constrain |
+| 2026-08-26 07:06 UTC | Independent direct-headroom and recoverable-suppor | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6622-qwen36-direct-headroom) |
