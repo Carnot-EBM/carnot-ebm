@@ -16565,3 +16565,5 @@ code |
 | 2026-08-26 14:05 UTC | Cold-context verifier unit calibration | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6634-mandated-model-admission, exp6634-ma |
 | 2026-08-26 14:05 UTC | Independent exact decoding authority audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6636-delayed-two-level-decoding) |
 | 2026-08-26 15:27 UTC | Kac-Ward exact planar-Ising reference | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: repository wri |
+| 2026-08-26 16:51 UTC | Plan milestone 2026.08.580 | OK | 13 tasks proposed |
+| 2026-08-26 16:54 UTC | Milestone 2026.08.580 activated | OK | 13 tasks queued |

@@ -1,504 +1,974 @@
-milestone: "2026.08.579"
-milestone_title: "Executable Constraints and Verified Skill Evolution"
+milestone: "2026.08.580"
+milestone_title: "Receipt-Bound Verification and Prospective Memory"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-  - id: exp6633-gpu-lease-phase-journal
-    milestone: "2026.08.579"
-    deliverable: results/experiment_6633_gpu_lease_phase_journal.json
-    title: "Task-scoped GPU lease and phase journal"
+  - id: exp6647-receipt-scoped-admission-boundary
+    milestone: "2026.08.580"
+    deliverable: results/experiment_6647_receipt_scoped_admission_boundary.json
+    title: "Receipt-scoped model admission boundary"
     priority: critical
     track: execution-integrity
     requires_gpu: false
+    per_unit_rows: true
     max_turns: 100
-    estimated_wall_time_min: 150
+    estimated_wall_time_min: 90
     model: opus
     prior_failures:
-      - experiment_id: exp6617-gpu-lease-phase-receipts
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "V579 starts with the implementation itself after the full 14-task contract was prevalidated, so no missing activation task can gate the lease."
-        retire_if_same_verdict: true
-      - experiment_id: exp6620-gpu-lease-phase-receipts
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "The lease now has no runtime roadmap gate and must prove ownership with bounded process fixtures before any model task runs."
+      - experiment_id: exp6633-gpu-lease-phase-journal
+        verdict: "blocked_gpu_lease_scheduler_not_ready: infrastructure checks failed; no model-quality claim"
+        addressed_by: "This attempt does not rebuild the lease; it preregisters a task-owned receipt reducer and records the unrelated repo-wide xdist/CWD baseline separately as non-gating evidence."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT
-      V577 and V578 planned a task-scoped GPU lease but never reached its implementation because their roadmap contracts failed first. V579 prevalidates its document and YAML before execution. This task starts the executable chain directly. Work at {project_root}. The planning date is {date}.
+      CONTEXT:
+      V579 Exp6633 implemented and passed owner, race, recovery, and tamper fixtures, but its final reducer folded an unrelated repo-wide xdist/CWD failure into focused_tests and emitted readiness zero. This task changes the reduction boundary, not the lease mechanism. Work at {project_root}. The planning date is {date}.
 
-      EXISTING CODE TO READ FIRST
+      EXISTING CODE TO READ FIRST:
       - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
-      - Exp6605, Exp6607, Exp6617, Exp6620, and current conductor-log evidence
-      - current lease, PID-start, heartbeat, cache-lock, checkpoint, atomic-write, model-admission, and protected-file helpers plus focused tests
-      - {project_root}/python/carnot/inference/sota_models.py, {project_root}/python/carnot/pipeline/gemma4_quantized_loader.py, and {project_root}/scripts/experiment_template.py
-      - relevant execution, model-tier, evidence, research-reporting, safety, and training-inference specs; traceability; status; changelog; and E2E plan
+      - {project_root}/results/experiment_6633_gpu_lease_phase_journal.json and the V579 rows in {project_root}/ops/conductor-log.md
+      - {project_root}/python/carnot/gpu_lease_phase_journal.py, {project_root}/python/carnot/experiment_6633_gpu_lease_phase_journal.py, and their focused tests
+      - {project_root}/python/carnot/testing/child_results_guard.py, {project_root}/python/carnot/testing/tracked_results_guard.py, and the current isolated/full-suite truth records
+      - relevant execution-integrity and research-reporting specs, {project_root}/_bmad/traceability.md, and {project_root}/ops/e2e-test-plan.md
 
-      TASK
-      Implement a reusable task-scoped GPU lease and phase journal outside scripts/research_conductor.py. Prove ownership, phase, recovery, atomic evidence, and tamper behavior with bounded subprocess fixtures. Do not load an LLM.
+      TASK:
+      Implement a receipt-scoped admission reducer that enumerates task-owned checks before execution, replays them, and computes readiness only from those checks. Preserve the full repo-wide suite result as a separate diagnostic. Do not edit the working lease implementation unless a focused red test proves a task-owned defect. Do not load an LLM or make a model-quality claim.
 
-      CONCRETE STEPS
-      0. PRECONDITIONS: hash protected files; record existing helpers, process APIs, CUDA and nvidia-smi as diagnostics only, runtime paths, Python, CPU, RAM, disk, and the no-LLM substrate.
-      1. Add REQ-* and SCENARIO-* anchors for atomic lease acquisition, device UUID, opaque token, PID start, heartbeat, expiry, model identity, VRAM, allowed phases, unload, recovery, atomic journals, and fail-closed status. Write focused tests first.
-      2. Implement phases preflight, admitted, loading, resident, inferencing, unloading, validating, terminal_complete, and terminal_blocked. Reject skips, reversals, second terminals, and non-owner writes.
-      3. Bind the journal to task ID, token, device UUID, PID and start time, executable and argv digest, expected model, acquisition and expiry, heartbeat, phase, VRAM before/resident/after, exit, unload, and checksum.
-      4. Test same-device races, independent devices, PID reuse, owner crash, stale heartbeat, wrong token, wrong device, wrong model, timeout, missing unload, partial write, tamper, and restart recovery. Never kill or steal another process.
-      5. Set gpu_lease_scheduler_ready_score=1.0 only when ownership, transitions, recovery, focused tests, and protected hashes pass. Write the artifact atomically and run relevant unit, spec, artifact, adversarial, and E2E checks.
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash research-roadmap.yaml and scripts/research_conductor.py; record Exp6633 artifact hash, task-owned fixture inventory, current global-suite receipt, Python, CPU, RAM, disk, and the no-LLM substrate.
+      1. Add REQ-* and SCENARIO-* anchors for preregistered task-owned readiness, diagnostic-only global-suite truth, exact field ownership, and fail-closed missing receipts. Write focused tests first.
+      2. Freeze the owned gate set: acquisition, same-device exclusion, independent-device allowance, token/PID-start/device binding, heartbeat, phase transitions, unload/release, crash recovery, tamper detection, atomic artifact write, focused tests, spec coverage, and applicable E2E checks.
+      3. Replay every owned fixture in fresh temporary paths. Emit one row per check with expected value, observed value, source, command, exit, and receipt hash. Never coerce missing or null to zero.
+      4. Record the repo-wide pytest/xDist/CWD result in global_suite_diagnostic with explicit non-gating rationale and known-issue linkage. Do not hide or relabel it.
+      5. Set task_owned_admission_ready_score=1.0 only when every preregistered owned check passes. A ready result is verdict_class=null. Any block starts blocked_ and names its failed owned check and observed value in gate_check_summary.
+      6. Write the artifact atomically; run focused tests, 100% scoped coverage, spec coverage, row-consistency lint, adversarial verification, relevant E2E checks, and git status. Reconcile only specs/traceability/status/changelog changed by this task.
 
-      Required deliverable: {project_root}/results/experiment_6633_gpu_lease_phase_journal.json.
+      Required deliverable: {project_root}/results/experiment_6647_receipt_scoped_admission_boundary.json.
       REQUIRED ARTIFACT FIELDS:
         status: terminal state
-        honest_verdict: infrastructure verdict with no model-quality claim
-        verdict_class: closed enum; ready infrastructure is null
-        gate_check_summary: failed check and observed value for every blocked result
-        lease_api_receipts: owner-bound acquire, heartbeat, release, timeout, and recovery evidence
-        phase_transition_rows: allowed and rejected transition rows
-        process_fixture_rows: replayable race, reuse, crash, stale, tamper, and restart fixtures
-        accelerator_receipt_examples: device, PID start, model, VRAM, exit, and unload evidence
-        gpu_lease_scheduler_ready_score: exact binary field owned by this task
-        attack_rows: every fail-closed attack and outcome
+        honest_verdict: receipt-bound infrastructure conclusion with no model-quality claim
+        verdict_class: one of positive|circular_positive|null|blocked|disqualified|partial; ready infrastructure is null
+        gate_check_summary: failed owned check and observed value for every blocked result
+        prior_failure_receipt: Exp6633 verdict, artifact hash, exact failed reduction field, and changed boundary
+        preregistered_task_owned_checks: immutable ordered gate definitions
+        task_owned_check_rows: one expected/observed/source/hash row per gate
+        global_suite_diagnostic: full-suite command, exit, summary, known-issue link, and non-gating status
+        reducer_contract: exact inclusion and exclusion rules
+        task_owned_admission_ready_score: exact binary field owned by this task
+        per_unit_rows: every owned check and diagnostic row
+        aggregate_row_recomputation: readiness rebuilt from rows
         preconditions_checked: inputs, tools, resources, and hashes
         protected_files_unchanged: hashes for research-roadmap.yaml and scripts/research_conductor.py
-        inference_substrate: task_scoped_gpu_lease_process_fixtures_no_llm
-        verifier_is_oracle: true because this is null infrastructure evidence
+        inference_substrate: receipt_scoped_gpu_lease_reducer_no_llm
+        verifier_is_oracle: true because fixture expectations define null infrastructure readiness
         field_provenance: source path, parser, function, hash, and schema per field
+        random_seed: deterministic fixture order seed
         duration_s: monotonic runtime
         tests_run: commands, exits, and summaries
         reproducibility_checksum: final content hash
-      A ready result uses verdict_class=null. A genuine block uses blocked_* and gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6633_gpu_lease_phase_journal --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6647_receipt_scoped_admission_boundary --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6634-mandated-model-admission
-    milestone: "2026.08.579"
-    deliverable: results/experiment_6634_mandated_model_admission.json
-    title: "Independent admission of all mandated GGUF families"
+  - id: exp6648-three-family-gguf-canaries
+    milestone: "2026.08.580"
+    deliverable: results/experiment_6648_three_family_gguf_canaries.json
+    title: "Three-family GGUF accelerator canaries"
     priority: critical
     track: model-admission
+    requires:
+      - exp6647-receipt-scoped-admission-boundary
     requires_gpu: true
     per_unit_rows: true
     max_turns: 100
     estimated_wall_time_min: 150
     model: opus
     gated_on:
-      - upstream: exp6633-gpu-lease-phase-journal
-        artifact_field: gpu_lease_scheduler_ready_score
+      - upstream: exp6647-receipt-scoped-admission-boundary
+        artifact_field: task_owned_admission_ready_score
         op: "=="
         value: 1.0
     prior_failures:
-      - experiment_id: exp6618-mandated-model-admission
-        verdict: "blocked_upstream_retired"
-        addressed_by: "The implemented ungated V579 lease now precedes three independent fresh-process admission canaries."
+      - experiment_id: exp6634-mandated-model-admission
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The new upstream field is produced by a task-owned receipt reducer rather than the V579 global-suite-coupled readiness score."
         retire_if_same_verdict: true
       - experiment_id: exp6605-qwen36-direct-headroom
         verdict: "blocked_gpu_process_receipts: direct baseline integrity did not complete"
-        addressed_by: "A bounded canary now proves Qwen identity, lease, process, phase, residency, and unload before benchmark rows."
-        retire_if_same_verdict: true
-      - experiment_id: exp6606-gemma4-31b-direct-headroom
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Gemma 31B admission is independent and preserves its own terminal receipts even if another family fails."
+        addressed_by: "Each canary now runs in its own owner-bound process with model hash, PID-start, device UUID, phase, VRAM, unload, and release receipts before any quality corpus is attempted."
         retire_if_same_verdict: true
       - experiment_id: exp6607-gemma4-26b-a4b-direct-headroom
         verdict: "blocked_gpu_ownership: expected True, observed False"
-        addressed_by: "The same lease owner now records device UUID, PID start, model hash, residency, inference, and unload."
+        addressed_by: "The middle-MoE canary now uses the shipped lease journal and an independently verified fresh process instead of inferred GPU ownership."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT
-      Exp6633 owns the task-scoped execution envelope. This task validates actual local CUDA execution for each mandated family before science. One family may fail without erasing terminal evidence for the others. Work at {project_root}. The planning date is {date}.
+      CONTEXT:
+      Exp6647 owns the narrow admission gate. This task admits the three mandated SOTA local GGUF families independently and makes no performance claim. Work at {project_root}. The planning date is {date}.
 
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V579 roadmap, and Exp6633 implementation, artifact, and tests
-      - Exp6605-Exp6607 and Exp6618 artifacts, checkpoints, and conductor receipts
-      - {project_root}/python/carnot/inference/sota_models.py, {project_root}/python/carnot/pipeline/gemma4_quantized_loader.py, and {project_root}/scripts/experiment_template.py
-      - local GGUF cache discovery, llama.cpp or binding metadata, chat templates, GPU helpers, atomic evidence, and relevant specs and E2E checks
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/scripts/experiment_template.py, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_6647_receipt_scoped_admission_boundary.json
+      - {project_root}/python/carnot/inference/sota_models.py, {project_root}/python/carnot/pipeline/gemma4_quantized_loader.py, and {project_root}/python/carnot/gpu_lease_phase_journal.py
+      - Exp6605, Exp6606, Exp6607, Exp6633, and Exp6634 modules, artifacts, and focused tests
+      - relevant model-tier, inference, execution-integrity, evidence, safety, and reporting specs plus {project_root}/ops/e2e-test-plan.md
 
-      TASK
-      Run one deterministic fresh-process CUDA canary per mandated model under its own lease. Admit each family only from complete identity, process, phase, output, and unload evidence. Do not benchmark reasoning quality.
+      TASK:
+      Run independent fresh-process admission canaries for all three mandated GGUF families. Resolve the flagship MoE and middle MoE with cached_sota_pair(), resolve the dense flagship with resolve_cached_gguf(), and use only the embedded llama.cpp GGUF tokenizer path. Admission requires real local inference and owner-bound accelerator receipts; it is not a quality comparison.
 
-      CONCRETE STEPS
-      0. PRECONDITIONS: verify Exp6633's structured gate; hash protected files; record exact cache paths, sizes, SHA-256, GGUF metadata, tokenizer and chat template, backend version, CUDA runtime, device UUIDs, free VRAM, CPU, RAM, disk, and time budget.
-      1. Declare MODEL_SPECS with exactly these repo IDs: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Resolve one local file per repo and forbid substitutions, shared receipts, silent fallback, and legacy headline models.
-      2. In three fresh processes, acquire a lease, load the expected file, prove CUDA residency and offload, run one deterministic machine-checkable canary, unload, release, and record residual VRAM. Keep partial terminal rows when a family blocks.
-      3. Attack wrong repo, wrong hash, wrong tokenizer, CPU-only execution, second-process inference, stale journal, missing unload, malformed output, and cross-family receipt reuse.
-      4. Set qwen36_admitted_score, gemma4_31b_admitted_score, and gemma4_26b_admitted_score independently to 1.0 only for complete passing rows. Write atomically and run focused, model-tier, artifact, adversarial, spec, and applicable E2E checks.
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify the structured upstream gate; hash protected files; record cache paths, exact GGUF hashes, CUDA/nvidia-smi, llama.cpp, CPU, RAM, disk, and both GPU UUIDs.
+      1. Add REQ-* and SCENARIO-* anchors for independent per-family process admission and write focused tests first.
+      2. Define MODEL_SPECS with exactly unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF, and unsloth/gemma-4-31B-it-GGUF. Resolve Qwen plus middle MoE through cached_sota_pair(gpu_indices=(0,1), model_indices=(0,1)); resolve dense Gemma through resolve_cached_gguf().
+      3. For each family, acquire an owned device, launch a fresh process, check the embedded tokenizer, load the exact GGUF, run a fixed short prompt, and record non-empty output plus token counts. Run families sequentially when a device must be reused.
+      4. Emit identity, file hash, PID/start, executable/argv, device UUID, phases, VRAM before/resident/after, prompt/output hashes, exit, unload, release, and post-process absence per family. A legacy model may be a labeled CPU smoke row only and cannot satisfy admission.
+      5. Set all_mandated_models_admitted=true only when all three independent canaries pass. A ready admission uses verdict_class=null. Any block starts blocked_ and populates gate_check_summary.
+      6. Write atomically; run focused tests, scoped coverage, spec coverage, artifact/row/adversarial checks, model-load E2E, and git status. Reconcile only changed specs and ops docs.
 
-      Required deliverable: {project_root}/results/experiment_6634_mandated_model_admission.json.
+      Required deliverable: {project_root}/results/experiment_6648_three_family_gguf_canaries.json.
       REQUIRED ARTIFACT FIELDS:
         status: terminal state
-        honest_verdict: per-family admission verdict with no quality claim
-        verdict_class: closed enum; admission is null infrastructure
-        gate_check_summary: failed upstream or family check and observed value for every block
-        model_specs: exact three mandated repo IDs and roles
-        per_model_rows: one row per family with identity, process, device, phase, output, and unload evidence
-        qwen36_admitted_score: exact binary Qwen gate field
-        gemma4_31b_admitted_score: exact binary dense-Gemma gate field
-        gemma4_26b_admitted_score: exact binary MoE-Gemma gate field
-        lease_receipts: owner-bound lease and phase references
-        attack_rows: identity, fallback, process, residency, output, and unload attacks
-        preconditions_checked: cache, backend, resources, time, and hashes
-        protected_files_unchanged: protected-file hashes
-        inference_substrate: mandated_gguf_fresh_process_dual_rtx3090_canaries
-        verifier_is_oracle: true because this is null execution admission
-        field_provenance: source and method per field
+        honest_verdict: three-family admission conclusion without model-quality language
+        verdict_class: closed enum; successful admission is null infrastructure evidence
+        gate_check_summary: exact failed upstream or per-family check and observed value for blocked results
+        upstream_gate_receipt: Exp6647 path, hash, field, expected value, and observed value
+        defined_model_specs: exact three mandated hub IDs, roles, quantizations, and devices
+        model_resolution_receipts: cached_sota_pair and dense resolve_cached_gguf results
+        model_admission_rows: one complete identity/process/phase/accelerator/output row per family
+        embedded_tokenizer_rows: llama.cpp GGUF tokenizer evidence; no AutoTokenizer
+        lease_and_unload_receipts: acquisition through release and process absence
+        all_mandated_models_admitted: boolean field owned by this task
+        per_unit_rows: every family and attack row
+        aggregate_row_recomputation: admission rebuilt from the three rows
+        preconditions_checked: cache, hardware, tools, resources, and hashes
+        protected_files_unchanged: protected path hashes
+        inference_substrate: fresh_process_llama_cpp_cuda_gguf_canaries
+        verifier_is_oracle: false
+        field_provenance: source/hash/reducer lineage for every field
+        random_seed: fixed prompt and launch order seed
         duration_s: monotonic runtime
-        tests_run: commands and exits
+        tests_run: commands, exits, and summaries
         reproducibility_checksum: final content hash
-      A ready family can coexist with a blocked family. A genuine block uses blocked_* and gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6634_mandated_model_admission --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6648_three_family_gguf_canaries --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6635-matched-direct-headroom
-    milestone: "2026.08.579"
-    deliverable: results/experiment_6635_matched_direct_headroom.json
-    title: "Matched direct-headroom baselines"
+  - id: exp6649-exact-certificate-proposal-corpus
+    milestone: "2026.08.580"
+    deliverable: results/experiment_6649_exact_certificate_proposal_corpus.json
+    title: "Exact certificate proposal corpus"
     priority: critical
-    track: constrained-generation
+    track: verification-headroom
+    requires:
+      - exp6648-three-family-gguf-canaries
     requires_gpu: true
     per_unit_rows: true
     max_turns: 50
     estimated_wall_time_min: 180
     gated_on:
-      - upstream: exp6634-mandated-model-admission
-        artifact_field: qwen36_admitted_score
+      - upstream: exp6648-three-family-gguf-canaries
+        artifact_field: all_mandated_models_admitted
         op: "=="
-        value: 1.0
-      - upstream: exp6634-mandated-model-admission
-        artifact_field: gemma4_26b_admitted_score
-        op: "=="
-        value: 1.0
+        value: true
     prior_failures:
+      - experiment_id: exp6635-matched-direct-headroom
+        verdict: "no_terminal_artifact_after_upstream_admission_block"
+        addressed_by: "This attempt uses the newly admitted process path and separates row completeness from the measured amount of regeneration headroom."
+        retire_if_same_verdict: true
       - experiment_id: exp6605-qwen36-direct-headroom
         verdict: "blocked_gpu_process_receipts: direct baseline integrity did not complete"
-        addressed_by: "Qwen now runs only after a successful independent admission with the implemented task-scoped lease."
-        retire_if_same_verdict: true
-      - experiment_id: exp6607-gemma4-26b-a4b-direct-headroom
-        verdict: "blocked_gpu_ownership: expected True, observed False"
-        addressed_by: "Gemma 26B now uses the same owner-bound admission and phase journal before candidate generation."
-        retire_if_same_verdict: true
-      - experiment_id: exp6622-qwen36-direct-headroom
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "The new gate points to an existing upstream task and identically declared per-family admission fields."
+        addressed_by: "Exp6648 must independently admit the exact Qwen and Gemma processes before this fixed corpus can collect any headline row."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT
-      The constrained-decoding treatment needs complete direct rows and real error headroom. Prior attempts lacked owned GPU process evidence. This task creates the frozen baseline pool and does not apply constraints. Work at {project_root}. The planning date is {date}.
+      CONTEXT:
+      The exact two-level plan compiler exists, but no complete real-SOTA direct corpus survived the V576-V579 admission failures. This task creates a smaller fixed corpus whose completeness is independent of whether repair headroom is favorable. Work at {project_root}. The planning date is {date}.
 
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V579 roadmap, and Exp6633-Exp6634 artifacts and code
-      - Exp6604-Exp6609 and Exp6622-Exp6624 artifacts, corpora, prompts, checkpoints, and reducers
-      - {project_root}/scripts/experiment_template.py, SOTA loaders, exact task verifiers, candidate-row schemas, atomic checkpoint helpers, and relevant specs
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/scripts/experiment_template.py, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_6648_three_family_gguf_canaries.json
+      - {project_root}/python/carnot/experiment_6604_exact_two_level_plan_corpus.py and its result/tests
+      - Exp6590/6591 constraint-first stream code and Exp6605/6607 direct-headroom code, artifacts, and tests
+      - {project_root}/python/carnot/inference/sota_models.py, GGUF loader helpers, exact plan compiler/checker, and artifact writers
+      - relevant verification, inference, model-tier, evidence, and reporting specs plus the E2E plan
 
-      TASK
-      Run matched deterministic direct baselines on Qwen3.6-35B-A3B and Gemma-4-26B-A4B. Freeze the corpus, prompts, seeds, budgets, parser, and exact checker. Emit every candidate row and qualify headroom without claiming a treatment benefit.
+      TASK:
+      Build a frozen exact-certificate proposal corpus on at least 24 preregistered tasks using the flagship Qwen MoE and middle Gemma MoE. Preserve every raw and parsed row, identify the first exact failing step and valid prefix, and measure regeneration headroom without attempting repair.
 
-      CONCRETE STEPS
-      0. PRECONDITIONS: verify both structured admission gates; record corpus and prompt hashes, exact MODEL_SPECS, model files and hashes, lease owner, backend, device, seeds, budgets, parser, checker, RAM, disk, and timeout.
-      1. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF and unsloth/gemma-4-26B-A4B-it-GGUF. No substitute or legacy model may emit a headline row.
-      2. Freeze eligible units before inference. Use fresh leased processes, exact chat templates, deterministic sampling, incremental checkpoints, and fail-closed parsing.
-      3. Emit one per_candidate_rows entry for every unit, model, seed, and candidate. Include raw-output hash, parse status, exact validity, violation type, diversity key, latency, token counts, process and phase IDs, and error text.
-      4. Compute complete-row and headroom gates only from rows. Set direct_rows_complete_score=1.0 only with all planned rows terminal. Set headroom_ready_score=1.0 only if preregistered invalid-candidate and recoverable-support floors pass for both families.
-      5. Attack missing rows, duplicate candidates, parser drift, wrong model, CPU fallback, receipt reuse, aggregate-row mismatch, and checkpoint resume. Write atomically and run relevant tests and validation.
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify all_mandated_models_admitted=true; hash inputs/protected files; record hardware, cache, task manifest, compiler/checker identity, and randomization plan.
+      1. Add REQ-* and SCENARIO-* anchors for immutable corpus selection, raw-output retention, exact first-failure localization, and completeness independent of success rate. Write tests first.
+      2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF and unsloth/gemma-4-26B-A4B-it-GGUF, resolved by cached_sota_pair(gpu_indices=(0,1), model_indices=(0,1)). Legacy models are smoke-only and excluded from headline rows.
+      3. Freeze at least 24 task IDs, prompts, exact targets, seeds, decoding parameters, parser version, and checker hashes before generation. Use identical tasks and comparable budgets for both models.
+      4. For every model-task unit, record raw output/hash, parsed plan or explicit parse failure, exact final validity, per-step exact outcomes, first failing step, valid-prefix length, prompt/generated tokens, latency, process/accelerator receipt, and lineage.
+      5. Set candidate_corpus_complete=true only if all expected headline rows exist and independently recheck. Set regeneration_headroom_count to the number of invalid rows with a non-empty exact-valid prefix and at least one remaining step. Do not equate missing parses with invalid zeroes.
+      6. Emit honest model-level and pooled direct rates with uncertainty, but make no repair claim. Write atomically and run focused tests, coverage, spec, row, artifact, adversarial, model-tier, and applicable E2E checks.
 
-      Required deliverable: {project_root}/results/experiment_6635_matched_direct_headroom.json.
+      Required deliverable: {project_root}/results/experiment_6649_exact_certificate_proposal_corpus.json.
       REQUIRED ARTIFACT FIELDS:
         status: terminal state
-        honest_verdict: baseline headroom verdict with no treatment claim
-        verdict_class: closed enum
-        gate_check_summary: failed gate or execution check and observed value for every block
-        model_specs: exact mandated repo IDs, files, hashes, and roles
-        corpus_manifest: frozen units, prompts, seeds, budgets, parser, and checker hashes
-        per_candidate_rows: every planned unit-model-seed-candidate row
-        direct_rows_complete_score: exact binary completeness field
-        headroom_ready_score: exact binary treatment-eligibility field
-        headroom_metrics: invalid rate, valid support, diversity, and confidence intervals by family
-        accelerator_receipts: owner-bound process and phase evidence
-        attack_rows: completeness, identity, parser, resume, and fallback attacks
-        preconditions_checked: gates, inputs, resources, and hashes
-        protected_files_unchanged: protected-file hashes
-        inference_substrate: qwen36_and_gemma4_26b_gguf_dual_rtx3090_direct_generation
-        verifier_is_oracle: false because exact checkers are independent of the proposal models
-        field_provenance: source and method per field
+        honest_verdict: complete direct-corpus and measured-headroom conclusion
+        verdict_class: closed enum based on authentic complete rows and measured direct evidence
+        gate_check_summary: failed upstream, identity, row, parser, or checker value for blocked results
+        upstream_gate_receipt: exact Exp6648 field and hash
+        defined_model_specs: exact Qwen and middle-MoE GGUF specs
+        frozen_task_manifest: immutable task/prompt/target/seed/parameter hashes
+        candidate_rows: raw, parsed, exact, prefix, token, timing, and receipt row per model-task unit
+        parse_failure_rows: explicit failures with no zero coercion
+        model_level_metrics: row-derived rates and uncertainty
+        regeneration_headroom_rows: exact prefix-repairable subset with reasons
+        candidate_corpus_complete: boolean completeness field owned by this task
+        regeneration_headroom_count: integer field owned by this task
+        per_unit_rows: every expected model-task unit
+        aggregate_row_recomputation: all counts and rates rebuilt from rows
+        preconditions_checked: inputs, models, hardware, tools, and hashes
+        protected_files_unchanged: protected path hashes
+        inference_substrate: local_llama_cpp_cuda_direct_exact_certificate_generation
+        verifier_is_oracle: false because exact checking evaluates a separate proposal model and no intervention occurs
+        field_provenance: source/hash/reducer lineage
+        random_seed: task and generation seed schedule
         duration_s: monotonic runtime
-        tests_run: commands and exits
+        tests_run: commands, exits, and summaries
         reproducibility_checksum: final content hash
-      Positive headroom is eligibility, not a decoding win. A genuine block uses blocked_* and gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6635_matched_direct_headroom --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6649_exact_certificate_proposal_corpus --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6636-delayed-two-level-decoding
-    milestone: "2026.08.579"
-    deliverable: results/experiment_6636_delayed_two_level_decoding.json
-    title: "Delayed two-level constrained decoding"
-    priority: critical
-    track: constrained-generation
-    requires_gpu: true
-    per_unit_rows: true
-    max_turns: 50
-    estimated_wall_time_min: 240
-    gated_on:
-      - upstream: exp6635-matched-direct-headroom
-        artifact_field: headroom_ready_score
-        op: "=="
-        value: 1.0
-    prior_failures:
-      - experiment_id: exp6609-two-level-constrained-decoding
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "The treatment now starts only after complete owned flagship rows prove model-specific headroom."
-        retire_if_same_verdict: true
-      - experiment_id: exp6624-delayed-two-level-decoding
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "The gate now names an existing upstream headroom field and the task compares all arms on one frozen candidate contract."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Exp6635 owns a complete direct pool with qualified headroom. This task tests whether syntax constraints followed by delayed semantic constraints improve exact validity without collapsing candidate support. Work at {project_root}. The planning date is {date}.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V579 roadmap, and Exp6635 artifact, rows, prompts, checkpoints, and verifier code
-      - Exp6604, Exp6608, Exp6609, and Exp6624 artifacts and two-level decoding implementations
-      - Meta-Ctrl and verifier-support references in research-references.md
-      - SOTA loaders, logits or grammar hooks, exact checkers, support metrics, atomic evidence, and relevant specs and E2E checks
-
-      TASK
-      Compare direct, syntax-only, and delayed syntax-plus-semantic decoding under matched models, units, seeds, and budgets. Preserve an unconstrained reasoning region. Exact checkers own validity and support accounting.
-
-      CONCRETE STEPS
-      0. PRECONDITIONS: verify the headroom gate; freeze Exp6635 row eligibility, MODEL_SPECS, prompt and corpus hashes, seeds, budgets, lease receipts, constraint activation point, syntax grammar, semantic atoms, exact checkers, resources, and timeout.
-      1. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF and unsloth/gemma-4-26B-A4B-it-GGUF. Use the admitted files only and forbid silent fallback.
-      2. Reuse the direct rows or replay only under a preregistered byte-identical need. Generate matched syntax-only and delayed two-level candidates. Log when each constraint activates and which token or structured choice it changes.
-      3. Emit one per_candidate_rows entry per arm, unit, family, seed, and candidate with validity, violation type, best-at-k support, diversity, energy or score, latency, tokens, activation, process, and phase evidence.
-      4. Report validity and support together. Reject a headline if validity rises while valid best-at-k support or diversity breaches the preregistered floor. Set decoding_rows_complete_score=1.0 only when all planned arms are terminal.
-      5. Attack early semantic forcing, inert constraints, shared candidates, missing rejected-valid rows, mismatched budgets, parser drift, wrong model, receipt reuse, and aggregate inconsistency. Write atomically and validate.
-
-      Required deliverable: {project_root}/results/experiment_6636_delayed_two_level_decoding.json.
-      REQUIRED ARTIFACT FIELDS:
-        status: terminal state
-        honest_verdict: comparative validity-and-support verdict
-        verdict_class: closed enum
-        gate_check_summary: failed gate, row, model, support, or execution check and observed value
-        model_specs: exact mandated models and admitted files
-        treatment_contract: arms, activation points, units, seeds, budgets, and thresholds
-        per_candidate_rows: every direct, syntax-only, and delayed row
-        arm_metrics: validity, support, diversity, latency, and confidence intervals by model
-        constraint_activation_rows: activation and changed-choice evidence
-        decoding_rows_complete_score: exact binary completeness field
-        acceptance_gate_validity_and_support: preregistered joint gate and observed values
-        accelerator_receipts: owner-bound model process and phase evidence
-        attack_rows: activation, support, completeness, identity, and aggregate attacks
-        preconditions_checked: gate, inputs, methods, resources, and hashes
-        protected_files_unchanged: protected-file hashes
-        inference_substrate: qwen36_and_gemma4_26b_gguf_dual_rtx3090_delayed_constraint_decoding
-        verifier_is_oracle: false because exact checkers are independent of candidate generation
-        field_provenance: source and method per field
-        duration_s: monotonic runtime
-        tests_run: commands and exits
-        reproducibility_checksum: final content hash
-      A positive verdict requires the joint gate. A genuine block uses blocked_* and gate_check_summary.
-
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6636_delayed_two_level_decoding --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6637-verifier-unit-calibration
-    milestone: "2026.08.579"
-    deliverable: results/experiment_6637_verifier_unit_calibration.json
-    title: "Cold-context verifier unit calibration"
+  - id: exp6650-twin-prefix-verifier-map
+    milestone: "2026.08.580"
+    deliverable: results/experiment_6650_twin_prefix_verifier_map.json
+    title: "Twin-prefix verifier discrimination map"
     priority: high
-    track: verification
+    track: verification-calibration
+    requires:
+      - exp6649-exact-certificate-proposal-corpus
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 75
+    gated_on:
+      - upstream: exp6649-exact-certificate-proposal-corpus
+        artifact_field: candidate_corpus_complete
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp6637-verifier-unit-calibration
+        verdict: "no_terminal_artifact_after_upstream_candidate_corpus_block"
+        addressed_by: "The exact candidate producer now owns and declares candidate_corpus_complete, and this task runs only on frozen rows with no model-generation dependency."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      V579 selected a verifier-unit calibration question but never produced the required candidate artifact. Exp6649 now owns a complete frozen corpus field. Recent twin-unit work warns that longer verification can be more rejective without becoming more discriminative. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-references.md, and the V580 roadmap doc
+      - {project_root}/results/experiment_6649_exact_certificate_proposal_corpus.json
+      - existing process/formal-step/draft-conditioned verifier modules and calibration utilities under {project_root}/python/carnot/pipeline and {project_root}/python/carnot/verify
+      - Exp6593/6594 independent reducers, verifier calibration artifacts, row lint, and adversarial verifier
+      - relevant verification, evidence, and reporting specs plus {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      On frozen exact-labeled candidate rows, build byte-matched clean/error twins and compare one-step, two-step, and full-remaining-suffix verification units. Separate discrimination from raw rejection. Do not invoke an LLM and do not let a learned signal authorize output.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: validate candidate_corpus_complete, artifact hash, row count, exact checker identity, protected hashes, resources, and no-LLM substrate.
+      1. Add REQ-* and SCENARIO-* anchors for twin construction, unit preregistration, catch/false-reject pairing, abstention, and exact-label authority. Write tests first.
+      2. Construct clean/error twins that differ only at the localized step while preserving prefix, suffix length, task, and formatting. Reject non-pairable units explicitly.
+      3. Freeze unit definitions and thresholds before scoring: one action/step, two steps, and full remaining suffix. Use the same scorer and rows for every unit.
+      4. Emit per-twin predictions, scores, abstentions, latency, exact labels, catches, false rejects, and hash lineage. Report informedness, balanced accuracy, AUROC/AUPRC where defined, calibration, coverage, and rejection rate with uncertainty.
+      5. Recommend a unit only if discrimination improves without an unsupported false-reject increase; otherwise emit a null or partial result. Exact labels remain release authority.
+      6. Write atomically and run focused tests, scoped coverage, spec coverage, row consistency, adversarial checks, and applicable verifier E2E tests.
+
+      Required deliverable: {project_root}/results/experiment_6650_twin_prefix_verifier_map.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal state
+        honest_verdict: discrimination-versus-rejection conclusion
+        verdict_class: closed enum
+        gate_check_summary: failed gate/check and observed value for blocked results
+        upstream_gate_receipt: Exp6649 field, value, path, and hash
+        twin_construction_contract: pairability and byte-difference rules
+        verifier_unit_preregistration: frozen unit definitions and thresholds
+        twin_rows: exact label and per-unit score/decision/latency per clean-error pair
+        unit_metric_rows: catch, false reject, informedness, calibration, coverage, and uncertainty
+        recommended_verifier_unit: selected unit or explicit no-selection
+        authority_boundary: learned scorer measures/routes; exact checker authorizes
+        per_unit_rows: every twin, unit, and rejected-pair row
+        aggregate_row_recomputation: metrics rebuilt from rows
+        preconditions_checked: inputs, tools, resources, and hashes
+        protected_files_unchanged: protected path hashes
+        inference_substrate: frozen_candidate_verifier_unit_replay_no_llm
+        verifier_is_oracle: false
+        field_provenance: source/hash/reducer lineage
+        random_seed: deterministic twin and bootstrap seed
+        duration_s: monotonic runtime
+        tests_run: commands, exits, and summaries
+        reproducibility_checksum: final content hash
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6650_twin_prefix_verifier_map --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6651-failure-localized-suffix-regeneration
+    milestone: "2026.08.580"
+    deliverable: results/experiment_6651_failure_localized_suffix_regeneration.json
+    title: "Failure-localized suffix regeneration A/B"
+    priority: critical
+    track: constrained-repair
+    requires:
+      - exp6649-exact-certificate-proposal-corpus
     requires_gpu: true
     per_unit_rows: true
     max_turns: 50
-    estimated_wall_time_min: 180
+    estimated_wall_time_min: 210
     gated_on:
-      - upstream: exp6634-mandated-model-admission
-        artifact_field: qwen36_admitted_score
+      - upstream: exp6649-exact-certificate-proposal-corpus
+        artifact_field: candidate_corpus_complete
         op: "=="
-        value: 1.0
-      - upstream: exp6634-mandated-model-admission
-        artifact_field: gemma4_31b_admitted_score
-        op: "=="
-        value: 1.0
+        value: true
+      - upstream: exp6649-exact-certificate-proposal-corpus
+        artifact_field: regeneration_headroom_count
+        op: ">="
+        value: 8
     prior_failures:
-      - experiment_id: exp6625-cold-context-verifier
-        verdict: "blocked_upstream_retired"
-        addressed_by: "The verifier study now has direct per-family admission gates and a twin-prefix design that measures discrimination and rejection separately."
+      - experiment_id: exp6636-delayed-two-level-decoding
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The method changes from two-level token masking to exact-checker-localized suffix regeneration over a completed frozen candidate corpus, with full retry at a matched proposal-token budget."
+        retire_if_same_verdict: true
+      - experiment_id: exp6609-two-level-constrained-decoding
+        verdict: "blocked_headroom_gate"
+        addressed_by: "Exp6649 directly owns a complete headroom count and this task forbids the retired finite-ID generated-answer transport mechanism."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT
-      Recent work shows that prior repair context can shift a verifier threshold and that longer review units can raise catches and false rejections together. Carnot needs a calibrated verifier signal, not a catch-only score. Work at {project_root}. The planning date is {date}.
+      CONTEXT:
+      Selective Regenerative Decoding suggests preserving useful prefixes and regenerating only degraded suffixes. Carnot can localize exact plan failures, but prior two-level token-constrained paths never reached valid evidence and finite-ID generated-answer transport is retired. This task tests a different post-prefix repair mechanism. Work at {project_root}. The planning date is {date}.
 
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V579 roadmap, Exp6634 admission evidence, and current verifier modules and corpora
-      - Exp6186 calibration patterns, Exp6603 scorer evidence, and any Exp6625 conductor receipt
-      - arXiv:2608.23941 and arXiv:2608.16003 entries in research-references.md
-      - exact trace validators, signal-detection metrics, SOTA loaders, row lints, atomic evidence, and relevant specs
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-references.md, and the V580 roadmap doc
+      - {project_root}/results/experiment_6649_exact_certificate_proposal_corpus.json
+      - {project_root}/python/carnot/experiment_6604_exact_two_level_plan_corpus.py, exact compiler/checker code, and tests
+      - {project_root}/python/carnot/pipeline/certificate_repair_executor.py, repair ladder/search helpers, and Exp5910 verification-guided repair
+      - Exp6609 and Exp6636 code/artifacts plus the finite-ID generated-answer retirement record in {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/python/carnot/inference/sota_models.py, GGUF loader, lease journal, and artifact writers
+      - relevant verification, inference, constraint, safety, and reporting specs plus the E2E plan
 
-      TASK
-      Build byte-matched clean/error twin prefixes. Vary only the reviewed action unit and prior context. Measure catch, false rejection, informedness, criterion, and discrimination with exact labels as authority.
+      TASK:
+      Compare direct candidates, full retry, and exact-failure-localized suffix regeneration on the fixed headroom rows. Preserve valid prefixes, match total generated proposal-token budgets per row, and keep exact checking authoritative. Do not implement token masking, answer-ID forcing, or semantic grammar transport.
 
-      CONCRETE STEPS
-      0. PRECONDITIONS: verify both admission gates; freeze MODEL_SPECS, twin corpus, injected error, exact labels, five nested units, fresh/prior-repair/length-control contexts, prompts, seeds, budgets, model hashes, lease receipts, and time budget.
-      1. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF and unsloth/gemma-4-31B-it-GGUF. Use admitted local files only.
-      2. Prove each clean/error pair differs in one preregistered action and that unit boundaries alone change across nested conditions. Reject label leakage and non-byte-matched controls.
-      3. Run every model, pair, context, and unit in fresh qualified processes. Emit per_twin_rows with both judgments and exact labels.
-      4. Compute catch, false rejection, informedness, criterion, and d-prime by family, context, and unit. Select a unit only from discrimination plus a preregistered usefulness floor, never catch alone.
-      5. Attack reject-all, accept-all, label leak, shuffled twins, changed observations, prior-context contamination, aggregate-row mismatch, wrong model, and missing rows. Write atomically and validate.
+      CONCRETE STEPS:
+      0. PRECONDITIONS: validate both structured gates, freeze selected headroom row IDs, hash checker/compiler/protected files, and record hardware/cache/lease resources.
+      1. Add REQ-* and SCENARIO-* anchors for accepted-prefix proof, first-failure localization, matched proposal-token budgets, independent fresh processes, forbidden transport paths, and circularity labeling. Write tests first.
+      2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF and unsloth/gemma-4-31B-it-GGUF. Resolve cached Qwen and dense Gemma locally; no legacy model may enter headline rows.
+      3. Freeze three arms per model-task unit: original direct row, full retry from the original prompt, and suffix regeneration from the exact-valid prefix plus localized failure receipt. Allocate the same total generated proposal tokens to full retry and suffix regeneration.
+      4. Run fresh owned processes and record raw outputs, prefix hashes, first edited position, generated tokens, exact step/final outcomes, attempts, latency, and accelerator receipts. Reject any suffix arm that changes the accepted prefix.
+      5. Report exact-valid yield, solved-within-budget, preserved-prefix rate, tokens per valid result, latency, and failure taxonomy per model and pooled. A favorable result is verifier_is_oracle=true and verdict_class=circular_positive because the same exact checker localizes intervention.
+      6. Set repair_comparison_complete=true only when every selected unit has all arms, budget parity, identity, exact labels, and raw lineage. Blocks start blocked_ with gate_check_summary.
+      7. Write atomically and run focused tests, coverage, spec, row, artifact, model-tier, exclusion, adversarial, and applicable GGUF/E2E checks.
 
-      Required deliverable: {project_root}/results/experiment_6637_verifier_unit_calibration.json.
+      Required deliverable: {project_root}/results/experiment_6651_failure_localized_suffix_regeneration.json.
       REQUIRED ARTIFACT FIELDS:
         status: terminal state
-        honest_verdict: calibration verdict without release authority
-        verdict_class: closed enum
-        gate_check_summary: failed gate, corpus, execution, or calibration check and observed value
-        model_specs: exact Qwen and dense-Gemma identities
-        twin_corpus_manifest: byte hashes, labels, injections, contexts, units, and controls
-        per_twin_rows: every clean and error judgment per model-context-unit
-        signal_detection_metrics: catch, false rejection, informedness, criterion, and d-prime
-        selected_verification_unit: preregistered selection result or null
-        context_shift_rows: fresh, prior-repair, and length-control comparisons
-        acceptance_gate_discrimination: gate and observed values
-        accelerator_receipts: owner-bound process and phase evidence
-        attack_rows: reject-all, leak, boundary, context, identity, and row attacks
-        preconditions_checked: gates, inputs, methods, resources, and hashes
-        protected_files_unchanged: protected-file hashes
-        inference_substrate: qwen36_and_gemma4_31b_gguf_dual_rtx3090_twin_prefix_verification
-        verifier_is_oracle: false because exact twin labels are independent authority
-        field_provenance: source and method per field
+        honest_verdict: matched-budget suffix-regeneration conclusion with explicit oracle assistance
+        verdict_class: circular_positive for a favorable oracle-localized result; otherwise null|blocked|disqualified|partial as supported
+        gate_check_summary: exact failed gate/check and observed value for blocked results
+        upstream_gate_receipts: both Exp6649 fields, values, path, and hash
+        defined_model_specs: exact Qwen and dense-Gemma GGUF specs
+        frozen_headroom_manifest: selected row IDs, prefixes, failures, budgets, and hashes
+        arm_preregistration: direct, full_retry, and localized_suffix definitions
+        comparison_rows: per model-task-arm raw output, prefix, tokens, exact outcome, timing, and process receipts
+        budget_parity_receipts: row-level generated proposal-token equality or explicit exclusion
+        prefix_preservation_receipts: accepted prefix before/after hashes and first edit
+        model_level_metrics: row-derived validity, budget, token, and latency metrics
+        repair_comparison_complete: boolean field owned by this task
+        circularity_receipt: exact checker use and allowed claim boundary
+        forbidden_transport_audit: no finite-ID, answer-mask, semantic grammar, or retired path
+        per_unit_rows: every model-task-arm and exclusion row
+        aggregate_row_recomputation: all headlines rebuilt from rows
+        preconditions_checked: inputs, models, hardware, tools, and hashes
+        protected_files_unchanged: protected path hashes
+        inference_substrate: local_llama_cpp_cuda_exact_failure_localized_regeneration
+        verifier_is_oracle: true
+        field_provenance: source/hash/reducer lineage
+        random_seed: fixed retry/regeneration seed schedule
         duration_s: monotonic runtime
-        tests_run: commands and exits
+        tests_run: commands, exits, and summaries
         reproducibility_checksum: final content hash
-      A learned verifier remains advisory. A genuine block uses blocked_* and gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6637_verifier_unit_calibration --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6651_failure_localized_suffix_regeneration --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6638-exact-decoding-authority-audit
-    milestone: "2026.08.579"
-    deliverable: results/experiment_6638_exact_decoding_authority_audit.json
-    title: "Independent exact decoding authority audit"
+  - id: exp6652-constraint-intervention-audit
+    milestone: "2026.08.580"
+    deliverable: results/experiment_6652_constraint_intervention_audit.json
+    title: "Constraint intervention independent row audit"
+    priority: high
+    track: independent-audit
+    requires:
+      - exp6651-failure-localized-suffix-regeneration
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 75
+    gated_on:
+      - upstream: exp6651-failure-localized-suffix-regeneration
+        artifact_field: repair_comparison_complete
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp6638-exact-constraint-authority-audit
+        verdict: "no_terminal_artifact_after_upstream_verifier_calibration_block"
+        addressed_by: "This audit gates directly on the producer-owned repair_comparison_complete field and replays frozen raw rows without depending on a separate calibration task."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      A localized repair claim is only as strong as its raw rows, exact replay, budget accounting, and model receipts. This task is an independent reducer/auditor and cannot upgrade oracle-assisted evidence to an independent positive result. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, and the V580 roadmap doc
+      - {project_root}/results/experiment_6649_exact_certificate_proposal_corpus.json and {project_root}/results/experiment_6651_failure_localized_suffix_regeneration.json
+      - exact compiler/checker code, artifact schemas, row reducers, {project_root}/scripts/verdict_row_consistency_lint.py, and {project_root}/scripts/adversarial_verify.py
+      - Exp6594/6610 authority audits and their tests
+      - relevant verification, evidence, safety, and reporting specs plus the E2E plan
+
+      TASK:
+      Independently recompute every Exp6651 validity, prefix, budget, token-efficiency, latency, identity, and completeness claim from raw rows and blinded exact task inputs. Attack leakage, duplicates, parser nulls, unequal compute, receipt mismatch, and circularity. Do not invoke an LLM.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify repair_comparison_complete; hash both upstream artifacts, raw inputs, checker/compiler, and protected files; record no-LLM resources.
+      1. Add REQ-* and SCENARIO-* anchors for blinded replay, aggregate reconstruction, model/process receipt cross-checking, token-budget validation, and non-promotion of circular evidence. Write tests first.
+      2. Re-run exact checks from task inputs without trusting stored outcomes. Recompute valid-prefix length and compare accepted-prefix hashes.
+      3. Recompute generated proposal-token budgets, attempt counts, valid yield, tokens per valid result, latency summaries, and uncertainty from raw rows.
+      4. Cross-check GGUF IDs/hashes, PIDs/start times, GPU UUIDs, phases, and unload receipts against Exp6648/6649. Reject duplicates and missing lineage explicitly.
+      5. Run attacks for task/answer leakage, parser-null zero coercion, unequal budget, selective row omission, impossible prefix preservation, aggregate sign flip, and oracle-positive laundering.
+      6. Emit audit_pass only for factual row consistency; preserve circular_positive or downgrade it. Write atomically and run focused tests, coverage, spec, row, artifact, adversarial, and E2E checks.
+
+      Required deliverable: {project_root}/results/experiment_6652_constraint_intervention_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal audit state
+        honest_verdict: independent factual audit conclusion and preserved circularity
+        verdict_class: closed enum; never positive solely because the oracle-assisted producer won
+        gate_check_summary: failed gate/audit and observed value for blocked results
+        upstream_gate_receipt: Exp6651 field, value, path, and hash
+        artifact_and_code_hashes: upstream, checker, compiler, schema, and auditor identities
+        blinded_exact_replay_rows: stored-versus-recomputed outcomes per unit
+        identity_process_accelerator_rows: model and execution cross-checks
+        budget_and_prefix_rows: recomputed token parity and prefix preservation
+        attack_rows: every leakage, omission, coercion, duplication, sign, and circularity attack
+        aggregate_recomputation: all producer metrics rebuilt independently
+        audit_pass: boolean factual-consistency field
+        claim_disposition: preserve, narrow, block, or disqualify each producer claim
+        per_unit_rows: every replay and attack row
+        preconditions_checked: inputs, tools, resources, and hashes
+        protected_files_unchanged: protected path hashes
+        inference_substrate: blinded_exact_constraint_audit_no_llm
+        verifier_is_oracle: false because the auditor is separate from generation/intervention
+        field_provenance: source/hash/reducer lineage
+        random_seed: deterministic replay/attack order seed
+        duration_s: monotonic runtime
+        tests_run: commands, exits, and summaries
+        reproducibility_checksum: final content hash
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6652_constraint_intervention_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6653-state-grounded-repair-memory-fixture
+    milestone: "2026.08.580"
+    deliverable: results/experiment_6653_state_grounded_repair_memory_fixture.json
+    title: "State-grounded repair memory fixture"
     priority: critical
-    track: verification
+    track: continuous-self-learning
     requires_gpu: false
     per_unit_rows: true
     max_turns: 30
     estimated_wall_time_min: 90
-    gated_on:
-      - upstream: exp6636-delayed-two-level-decoding
-        artifact_field: decoding_rows_complete_score
-        op: "=="
-        value: 1.0
-    prior_failures:
-      - experiment_id: exp6626-exact-authority-audit
-        verdict: "blocked_upstream_retired"
-        addressed_by: "The audit now gates only on a complete candidate-row field owned by an existing upstream treatment task."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Exp6636 writes complete frozen candidate rows. This task is an independent exact reducer. It must recompute claims without importing treatment aggregates or using a learned verifier as authority. Work at {project_root}. The planning date is {date}.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V579 roadmap, and Exp6635-Exp6637 artifacts and row schemas
-      - exact task checkers, support reducers, row-consistency lint, artifact schema, field provenance helpers, and relevant specs
-      - verifier-support-reshaping and contract-grade-verifier entries in research-references.md
-
-      TASK
-      Recompute Exp6636 validity, support, diversity, and release gates from raw frozen rows. Audit learned routing against exact outcomes and retain every rejected valid candidate in support accounting. Do not run an LLM.
-
-      CONCRETE STEPS
-      0. PRECONDITIONS: verify the complete-row gate; hash the upstream artifact, raw outputs, corpus, prompts, parsers, exact checkers, schemas, and protected files; record the no-LLM substrate.
-      1. Add or update REQ-* and SCENARIO-* anchors for independent reduction, rejected-valid retention, support accounting, gate recomputation, provenance, and fail-closed release. Write focused tests first.
-      2. Parse raw rows through independent exact checkers. Emit one audit_rows entry per upstream row with source hash, recomputed fields, original fields, differences, and eligibility.
-      3. Recompute arm metrics and the joint validity-support gate. Compare learned signals only as predictions. Never let them alter exact labels or candidate membership.
-      4. Attack aggregate tamper, omitted rejected-valid rows, duplicate IDs, changed parser, wrong corpus, circular import, null rows, and checksum mutation.
-      5. Set exact_decoding_release_score=1.0 only if independent rows reproduce the preregistered positive gate and all integrity checks pass. Write atomically and run focused, artifact, row, adversarial, spec, and E2E checks.
-
-      Required deliverable: {project_root}/results/experiment_6638_exact_decoding_authority_audit.json.
-      REQUIRED ARTIFACT FIELDS:
-        status: terminal state
-        honest_verdict: independent release verdict
-        verdict_class: closed enum
-        gate_check_summary: failed upstream, integrity, exactness, or release check and observed value
-        upstream_manifest: source files and hashes
-        audit_rows: one independent row for every treatment row
-        aggregate_recomputations: original and recomputed arm metrics
-        learned_signal_diagnostics: advisory signal versus exact outcomes
-        support_retention_audit: all valid, rejected-valid, and missing candidates
-        exact_decoding_release_score: exact binary release field
-        acceptance_gate_independent_release: gate and observed values
-        attack_rows: omission, tamper, parser, circularity, null, and checksum attacks
-        preconditions_checked: gate, inputs, tools, and hashes
-        protected_files_unchanged: protected-file hashes
-        inference_substrate: independent_exact_cpu_decoding_reducer_no_llm
-        verifier_is_oracle: false because this audit is independent of candidate generation
-        field_provenance: source and method per field
-        duration_s: monotonic runtime
-        tests_run: commands and exits
-        reproducibility_checksum: final content hash
-      A positive release requires independent row agreement. A genuine block uses blocked_* and gate_check_summary.
-
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6638_exact_decoding_authority_audit --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6639-kac-ward-planar-reference
-    milestone: "2026.08.579"
-    deliverable: results/experiment_6639_kac_ward_planar_reference.json
-    title: "Kac-Ward exact planar-Ising reference"
-    priority: high
-    track: sampling
-    requires_gpu: false
-    per_unit_rows: true
-    max_turns: 50
-    estimated_wall_time_min: 180
     agent_type: codex
     model: gpt-5.6-sol
     prior_failures:
-      - experiment_id: exp6612-spectral-k-block-scale-rust-parity
-        verdict: "blocked_reference_parity_cost_or_protection: stationary, transition, wall, and parity conclusions are withheld; CPU software only"
-        addressed_by: "This task replaces the disputed internal reference with an independent Kac-Ward exact sampler cross-checked against full enumeration on bounded planar instances."
+      - experiment_id: exp5913-transactional-constraint-memory-fixture
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "This fixture is ungated, uses already completed exact-event artifacts, and adds explicit WorkingState/ExperientialRepair separation plus inverse rollback rather than waiting on the old synthesis chain."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT
-      The spectral branch lacks an independent exact reference. arXiv:2608.24382 gives a Kac--Ward autoregressive construction for planar zero-field Ising models. V579 uses a bounded implementation to qualify reference rows, not to claim the paper's full scale. Work at {project_root}. The planning date is {date}.
+      CONTEXT:
+      Recuris separates verified working state from experiential skill memory and admits localized patches on held-out evidence. Carnot already has transactional, revocable, and verifier-bounded repair-memory primitives, but V580 needs a deterministic state-grounded fixture before a prospective comparison. Work at {project_root}. The planning date is {date}.
 
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V579 roadmap, and the arXiv:2608.24382 entry in research-references.md
-      - Exp6560, Exp6574, Exp6589, Exp6612, and Exp6627 artifacts and sampler code
-      - current Ising instance schemas, enumeration references, Rust or Python linear algebra, RNG, stationary metrics, and relevant specs and tests
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, {project_root}/research-references.md, and the V580 roadmap doc
+      - {project_root}/python/carnot/memory/revocable_atomic_repair.py, {project_root}/python/carnot/experiment_6290_revocable_atomic_repair_memory.py, and tests
+      - {project_root}/python/carnot/experiment_5924_transactional_constraint_memory_v2.py, {project_root}/python/carnot/experiment_6468_unique_event_verifier_bounded_csl.py, and their artifacts/tests
+      - {project_root}/python/carnot/experiment_6604_exact_two_level_plan_corpus.py and existing exact constraint-event artifacts
+      - relevant continuous-learning, memory, verification, evidence, and reporting specs plus the E2E plan
 
-      TASK
-      Implement a small exact autoregressive Kac--Ward reference for zero-field planar Ising instances. Cross-check every normalized likelihood and moment against full enumeration before emitting reference samples. Do not run an LLM or make a hardware claim.
+      TASK:
+      Build a deterministic fixture and schema that separates WorkingState from ExperientialRepair memory, localizes each patch to one component, binds it to exact evidence, and carries an inverse rollback. Use only existing exact event artifacts; do not generate new LLM data and do not claim future benefit.
 
-      CONCRETE STEPS
-      0. PRECONDITIONS: freeze planar graph fixtures, couplings, temperatures, spin order, precision, seeds, enumeration limit, tolerances, package versions, CPU, RAM, disk, and protected hashes.
-      1. Add REQ-* and SCENARIO-* anchors for planarity, zero field, auxiliary-spin construction, determinant conditioning, normalized likelihood, independent RNG, enumeration parity, precision failure, and atomic evidence. Write tests first.
-      2. Implement the bounded conditional partition and autoregressive sample path. Reject nonplanar, nonzero-field, singular, ill-conditioned, unsupported-size, and nonfinite inputs.
-      3. On tiny fixtures, enumerate all states and compare partition function, state probabilities, conditionals, moments, and normalization. Emit one per_instance_rows entry for each graph-temperature-seed case.
-      4. Generate a sealed reference sample bank only for passing instances. Include sample hashes, normalized likelihoods, independence assumptions, setup cost, and wall time.
-      5. Attack edge orientation, coupling sign, auxiliary spin, determinant branch, precision, graph permutation, RNG reuse, and enumeration mismatch.
-      6. Set kac_ward_reference_ready_score=1.0 only if every required parity and attack check passes. Write atomically and run focused Python/Rust, spec, artifact, adversarial, and applicable E2E checks.
+      CONCRETE STEPS:
+      0. PRECONDITIONS: inventory source artifacts and exact labels; reject missing or circular sources; hash protected files; record no-LLM resources and split seed.
+      1. Add REQ-* and SCENARIO-* anchors for working/experiential separation, task-visible lookup keys, targeted patch locality, version/checksum, support, held anchors, and inverse rollback. Write tests first.
+      2. Materialize at least 36 unique events across constraint families. Each event records visible working state, violated constraint, exact witness, candidate repair/operator, applicability key, support, provenance, and chronological index.
+      3. Freeze source, validation, held-anchor, and future partitions before any patch derivation. Prove no future outcome or target appears in lookup keys.
+      4. Define append, revise, retire, commit, reject, and rollback transitions. Every proposed patch must modify one typed component and carry a byte-exact inverse.
+      5. Emit positive and negative fixtures for duplicate IDs, conflicting witnesses, unsupported applicability, future leakage, checksum corruption, and stale versions.
+      6. Set memory_fixture_ready=true only if schema, partitions, uniqueness, locality, support, leakage, and rollback checks pass. Ready fixture evidence uses verdict_class=null.
+      7. Write atomically and run focused tests, 100% scoped coverage, spec coverage, row/artifact/adversarial checks, memory E2E, and git status.
 
-      Required deliverable: {project_root}/results/experiment_6639_kac_ward_planar_reference.json.
+      Required deliverable: {project_root}/results/experiment_6653_state_grounded_repair_memory_fixture.json.
       REQUIRED ARTIFACT FIELDS:
-        status: terminal state
-        honest_verdict: bounded exact-reference verdict
-        verdict_class: closed enum
-        gate_check_summary: failed math, parity, precision, test, or protection check and observed value
-        method_contract: supported graph, field, size, precision, and complexity scope
-        fixture_manifest: graph, coupling, temperature, order, seed, and hashes
-        per_instance_rows: enumeration and Kac-Ward values per fixture
-        reference_sample_manifest: passing sample-bank paths, hashes, and likelihoods
-        parity_metrics: partition, probability, conditional, moment, and normalization errors
-        kac_ward_reference_ready_score: exact binary reference field
-        attack_rows: planarity, sign, orientation, determinant, precision, permutation, and RNG attacks
-        preconditions_checked: fixtures, packages, resources, limits, and hashes
-        protected_files_unchanged: protected-file hashes
-        inference_substrate: bounded_cpu_kac_ward_and_full_enumeration_no_llm
-        verifier_is_oracle: false because full enumeration independently checks the new sampler
-        field_provenance: source and method per field
+        status: terminal fixture state
+        honest_verdict: state-grounded fixture readiness with no future-benefit claim
+        verdict_class: closed enum; ready fixture is null
+        gate_check_summary: failed fixture check and observed value for blocked results
+        source_artifact_receipts: paths, hashes, exact-label authority, and accepted/rejected status
+        memory_schema: WorkingState and ExperientialRepair fields and invariants
+        frozen_partition_manifest: source, validation, held-anchor, and future event IDs/hashes
+        event_rows: one complete typed row per unique chronological event
+        transition_fixture_rows: append, revise, retire, commit, reject, and rollback examples
+        attack_rows: duplicate, conflict, leakage, checksum, version, and support attacks
+        rollback_receipts: forward/inverse hashes and restored-state equality
+        memory_fixture_ready: boolean field owned by this task
+        per_unit_rows: every event, transition, and attack row
+        aggregate_row_recomputation: counts and readiness rebuilt from rows
+        preconditions_checked: inputs, tools, resources, and hashes
+        protected_files_unchanged: protected path hashes
+        inference_substrate: deterministic_exact_repair_memory_fixture_no_llm
+        verifier_is_oracle: true because exact fixture labels define null readiness only
+        field_provenance: source/hash/reducer lineage
+        random_seed: frozen partition and order seed
         duration_s: monotonic runtime
-        tests_run: commands and exits
+        tests_run: commands, exits, and summaries
         reproducibility_checksum: final content hash
-      Scope all conclusions to passing bounded planar fixtures. A genuine block uses blocked_* and gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6639_kac_ward_planar_reference --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6653_state_grounded_repair_memory_fixture --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6654-prospective-repair-memory-evolution
+    milestone: "2026.08.580"
+    deliverable: results/experiment_6654_prospective_repair_memory_evolution.json
+    title: "Prospective experiential repair evolution"
+    priority: critical
+    track: continuous-self-learning
+    requires:
+      - exp6653-state-grounded-repair-memory-fixture
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    gated_on:
+      - upstream: exp6653-state-grounded-repair-memory-fixture
+        artifact_field: memory_fixture_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp6614-prospective-invariant-self-learning
+        verdict: "blocked_tests: failed tests with observed=False"
+        addressed_by: "This attempt changes from invariant projection to typed exact repair-operator memory, uses an independent deterministic fixture, and preregisters frozen/context-only controls plus held-support admission."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This is V580's required Continuous Self-Learning experiment. It tests Tier-1 rule/memory evolution on an exact deterministic substrate, not LLM self-grading. The method separates working state from experiential repair memory, admits targeted patches on held evidence, and evaluates future events prequentially. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, {project_root}/research-references.md, and the V580 roadmap doc
+      - {project_root}/results/experiment_6653_state_grounded_repair_memory_fixture.json
+      - {project_root}/python/carnot/memory/revocable_atomic_repair.py and transactional/revocable memory tests
+      - {project_root}/python/carnot/experiment_6455_prospective_verifier_bounded_factor_weight_csl.py and Exp6468 code/artifacts/tests
+      - Exp6613/6614 invariant-memory lifecycle/self-learning artifacts and tests
+      - relevant continuous-learning, memory, verification, safety, evidence, and reporting specs plus the E2E plan
+
+      TASK:
+      Run a prospective multi-order comparison of frozen, context-only, and validation-gated experiential-memory arms over identical exact repair-operator candidates. Credit a memory only when it is retrieved and changes the chosen action. Admit each patch only after source repair, held-anchor non-regression, and recoverable-support checks.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify memory_fixture_ready; hash fixture/schema/protected files; freeze at least three task orders, arm seeds, patch thresholds, support floor, tie rules, and rollback policy.
+      1. Add REQ-* and SCENARIO-* anchors for prequential information, matched arms, retrieval/influence receipts, targeted validation-gated patches, forgetting/support, and rollback. Write tests first.
+      2. For each order, run frozen, context-only, and verified-memory arms over the same event/operator candidates. Event t may use only commits before t; state and memory reset per arm/order as preregistered.
+      3. Propose only localized append/revise/retire patches. Admit a patch only if its source event repairs, paired held anchors do not regress, and fixed-budget recoverable support stays above the frozen floor.
+      4. Record every retrieval, candidate ranking, selected operator, action change, exact outcome, patch decision, support change, restart checkpoint, and rollback. A stored item with no action influence receives no credit.
+      5. Report prequential exact yield, regret, future-event delta, forgetting, support, retrieval precision, action influence, update acceptance, and order sensitivity with uncertainty. Do not use same-policy or learned self-grades.
+      6. Set prospective_memory_comparison_complete=true when all arms/orders/rows and exact outcomes are complete, regardless of sign. A positive class requires future exact improvement and all safety gates; null is a valid result.
+      7. Write atomically and run focused tests, scoped coverage, spec coverage, row, artifact, adversarial, memory-restart, and E2E checks.
+
+      Required deliverable: {project_root}/results/experiment_6654_prospective_repair_memory_evolution.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal experiment state
+        honest_verdict: prospective multi-order continuous-learning conclusion
+        verdict_class: closed enum
+        gate_check_summary: failed gate/check and observed value for blocked results
+        upstream_gate_receipt: Exp6653 field, value, path, and hash
+        preregistration: arm definitions, orders, thresholds, support floor, ties, and rollback
+        arm_order_event_rows: per order/arm/event state, retrieval, action, outcome, and update data
+        retrieval_and_influence_rows: whether memory was retrieved and changed the live decision
+        patch_decision_rows: proposed component, source repair, held anchors, support, admit/reject/retire
+        memory_state_receipts: version, checksum, checkpoint, restart, and rollback lineage
+        prospective_metrics: row-derived future yield, regret, forgetting, support, influence, and uncertainty
+        recoverable_support_rows: fixed-budget support before and after every accepted patch
+        prospective_memory_comparison_complete: boolean field owned by this task
+        per_unit_rows: every order-arm-event and patch unit
+        aggregate_row_recomputation: all arm/order deltas rebuilt from rows
+        preconditions_checked: inputs, tools, resources, and hashes
+        protected_files_unchanged: protected path hashes
+        inference_substrate: exact_repair_operator_prequential_memory_no_llm
+        verifier_is_oracle: false because the memory policy is distinct from exact future-outcome evaluation
+        field_provenance: source/hash/reducer lineage
+        random_seed: frozen order, arm, and tie seed schedule
+        duration_s: monotonic runtime
+        tests_run: commands, exits, and summaries
+        reproducibility_checksum: final content hash
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6654_prospective_repair_memory_evolution --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6655-repair-memory-safety-audit
+    milestone: "2026.08.580"
+    deliverable: results/experiment_6655_repair_memory_safety_audit.json
+    title: "Adversarial durability of repair memory"
+    priority: high
+    track: continuous-self-learning-audit
+    requires:
+      - exp6654-prospective-repair-memory-evolution
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 75
+    prior_failures:
+      - experiment_id: exp6290-revocable-atomic-repair-memory
+        verdict: "complete_null: revocable memory ran, but a recorded test command failed"
+        addressed_by: "This attempt is an independent adversarial durability audit over the new prospective multi-order artifact and requires focused test, restart, and rollback receipts before any claim survives."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6654-prospective-repair-memory-evolution
+        artifact_field: prospective_memory_comparison_complete
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT:
+      Prospective gains are not deployable if corrupted, duplicated, unsupported, or harmful memory survives restart or cannot roll back exactly. This audit replays Exp6654 from artifacts and attacks the update boundary. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, and the V580 roadmap doc
+      - {project_root}/results/experiment_6653_state_grounded_repair_memory_fixture.json and {project_root}/results/experiment_6654_prospective_repair_memory_evolution.json
+      - {project_root}/python/carnot/memory/revocable_atomic_repair.py, transactional memory, atomic artifact, and restart helpers
+      - prior memory poison/interference/audit experiments and tests, especially Exp6431 and Exp6457
+      - relevant continuous-learning, memory, safety, evidence, and reporting specs plus the E2E plan
+
+      TASK:
+      Independently recompute Exp6654 and attack memory with conflicting witnesses, duplicate events, low-support patches, future leakage, stale versions, checksum corruption, interrupted commits, restart, and rollback. Verify exact prior-state restoration and preserve a null or negative scientific result honestly. Do not invoke an LLM.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: validate the structured gate; hash upstream artifacts, memory schema/code, and protected files; record no-LLM resources.
+      1. Add REQ-* and SCENARIO-* anchors for independent recomputation, poison/conflict rejection, atomic restart, byte-exact rollback, and claim downgrade. Write tests first.
+      2. Recompute every arm/order/event metric from raw rows and reproduce the stored patch ledger from the empty initial state.
+      3. Inject duplicate IDs, conflicting exact witnesses, unsupported applicability, poisoned high-reward/low-validity patches, future-label leakage, stale versions, and checksum changes. All must fail closed with named reasons.
+      4. Interrupt writes at each phase, restart from disk, and prove either the old or fully committed new state is present—never a partial mix.
+      5. Roll back every accepted patch individually and in reverse sequence; require byte-exact state, version, support, and decision restoration.
+      6. Recompute the continuous-learning claim after excluding any failed attack. Emit claim_disposition and retirement recommendation without manufacturing a positive result.
+      7. Write atomically and run focused tests, coverage, spec, row, artifact, adversarial, restart, and E2E checks.
+
+      Required deliverable: {project_root}/results/experiment_6655_repair_memory_safety_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal audit state
+        honest_verdict: safety and recomputation conclusion
+        verdict_class: closed enum
+        gate_check_summary: failed gate/audit and observed value for blocked results
+        upstream_gate_receipt: Exp6654 field, value, path, and hash
+        independent_recomputation_rows: stored-versus-rebuilt metrics per order and arm
+        poison_attack_rows: duplicate, conflict, support, reward, and leakage attacks
+        restart_rows: interruption point, recovered state, checksum, and atomicity result
+        rollback_rows: patch/inverse IDs and byte-exact restored-state evidence
+        support_and_anchor_recheck: independent before/after floors and regressions
+        claim_disposition: preserve, narrow, nullify, block, disqualify, or retire
+        per_unit_rows: every recomputation, attack, restart, and rollback unit
+        aggregate_row_recomputation: audit totals rebuilt from rows
+        preconditions_checked: inputs, tools, resources, and hashes
+        protected_files_unchanged: protected path hashes
+        inference_substrate: independent_repair_memory_safety_replay_no_llm
+        verifier_is_oracle: false
+        field_provenance: source/hash/reducer lineage
+        random_seed: deterministic attack and restart order seed
+        duration_s: monotonic runtime
+        tests_run: commands, exits, and summaries
+        reproducibility_checksum: final content hash
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6655_repair_memory_safety_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6656-arc-trace-automaton-live-loo
+    milestone: "2026.08.580"
+    deliverable: results/experiment_6656_arc_trace_automaton_live_loo.json
+    title: "Trace-automaton ARC live supervisor LOO A/B"
+    priority: critical
+    track: arc-generalization
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 150
+    prior_failures:
+      - experiment_id: exp6524-arc-supervisor-redirect-generalization
+        verdict: "blocked: missing outcome-bearing live trajectory-supervisor receipts"
+        addressed_by: "This attempt creates prospective paired supervisor-off/on live E3 cells with next-outcome linkage and learns only a frozen game-agnostic FSM from disjoint archived live traces."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The live trajectory-supervisor receipt path is reachable, but earlier selection replay lacked enough outcome-bearing firings. Automata-from-traces suggests a compact game-agnostic behavioral topology. This task must improve only the canonical live E3 policy path and makes no game or level solve claim. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the ARC discipline sections, and the V580 roadmap doc
+      - {project_root}/python/carnot/agentic/arc_trajectory_supervisor.py and the supervisor wiring in {project_root}/python/carnot/agentic/arc_competition_agent.py
+      - {project_root}/python/carnot/experiment_6524_arc_supervisor_redirect_generalization.py and {project_root}/python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py with artifacts/tests
+      - {project_root}/ops/arc_solve_registry.yaml, {project_root}/ops/arc_bench_latest.json, ARC provenance helpers, and live-path lints
+      - relevant ARC world-model/trust/energy, evidence, safety, and reporting specs plus the E2E plan
+
+      TASK:
+      Derive a compact finite-state supervisor from policy-visible archived live E3 traces, freeze it before evaluation, and run paired supervisor-off/on cells through make_carnot_agent/E3AgentPolicy on held-out game families. Measure actual action influence, valid-action blocking, violations prevented, and exact observed progress. Do not read game source, use per-game adapters, run offline ground-truth BFS, or claim a solve.
+
+      CONCRETE STEPS:
+      0. REGISTRY PRECHECK: inspect the solve registry and declare no target game/level solve. Hash canonical entrypoints, supervisor code, trace inputs, protected files, and resource receipts.
+      1. Add REQ-* and SCENARIO-* anchors for policy-visible FSM features, train/held-family isolation, topology freeze, live reachability, action influence, false intervention, next-outcome linkage, and no-solve provenance. Write tests first.
+      2. Accept only archived receipts from make_carnot_agent/E3AgentPolicy. Deduplicate by run/action identity and reject source-reading, adapter, outer-loop, missing-outcome, or shadow-only evidence.
+      3. Learn a small deterministic FSM from training families using only fields available before action. Freeze states, transitions, thresholds, redirect arms, and tie rules before held-family execution.
+      4. Run paired off/on live E3 cells across at least three held-out game families and three seeds with identical budgets and isolated state. The on arm must actually apply redirects; shadow recommendations do not count as influence.
+      5. Record every state, firing, pre/post action, valid-action block, prevented violation, exact next outcome, actions to observed progress, budget, and receipt lineage. Report both benefits and blocked-valid actions.
+      6. Attack family leakage, future outcomes, game IDs, source/adapters, duplicate receipts, one-row promotion, post-hoc thresholds, off-path code, and solve-credit inflation. A null/no-firing result is valid.
+      7. Write atomically and run focused tests, coverage, spec, row, ARC artifact/count/orphan/level-up lints, adversarial verification, canonical live-path E2E, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6656_arc_trace_automaton_live_loo.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal ARC experiment state
+        honest_verdict: live-policy held-family supervisor conclusion with explicit no-solve claim
+        verdict_class: closed enum
+        gate_check_summary: failed live-path, receipt, support, or safety check and observed value for blocked results
+        prior_failure_receipt: Exp6524 verdict, hash, missing evidence, and changed prospective path
+        registry_precheck: registry hash, duplicate-target check, and no target solve
+        canonical_entrypoint_receipt: make_carnot_agent/E3AgentPolicy source and runtime identity
+        accepted_training_trace_rows: deduplicated policy-visible live receipts and provenance
+        frozen_fsm: states, transitions, features, thresholds, arms, ties, and hash before evaluation
+        held_family_manifest: disjoint families, seeds, budgets, and freeze receipt
+        paired_live_rows: per family/seed/off-on state, firing, action, outcome, progress, and budget data
+        action_influence_rows: recommendations versus actual changed actions
+        benefit_and_false_intervention_rows: prevented violations and blocked-valid actions
+        attack_rows: leakage, future, game-ID, source, adapter, duplicate, post-hoc, off-path, and solve-credit attacks
+        no_solve_and_no_source_receipt: explicit no game/level solve, source read, adapter, or offline BFS
+        arc_generalization_slot_complete_score: one for a valid held-family live experiment even when null
+        per_unit_rows: every family-seed-arm action and attack row
+        aggregate_row_recomputation: all influence/progress/safety metrics rebuilt from rows
+        preconditions_checked: inputs, runtime, tools, resources, and hashes
+        protected_files_unchanged: protected path hashes
+        inference_substrate: canonical_live_e3_trace_fsm_supervisor_no_llm
+        verifier_is_oracle: false
+        field_provenance: source/hash/reducer lineage
+        random_seed: frozen train/held and paired-run seed schedule
+        duration_s: monotonic runtime
+        tests_run: commands, exits, and summaries
+        reproducibility_checksum: final content hash
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6656_arc_trace_automaton_live_loo --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6657-bounded-treewidth-ising-reference
+    milestone: "2026.08.580"
+    deliverable: results/experiment_6657_bounded_treewidth_ising_reference.json
+    title: "Bounded-treewidth exact Ising reference"
+    priority: high
+    track: exact-sampling-reference
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    agent_type: codex
+    model: gpt-5.6-sol
+    prior_failures:
+      - experiment_id: exp6639-kac-ward-planar-reference
+        verdict: "no_terminal_artifact_after_three_hard_wall_clock_caps"
+        addressed_by: "The technique changes from a broad Kac-Ward planar implementation to a bounded-treewidth junction-tree dynamic program with at most treewidth four and brute-force small-n fixtures."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      V579's Kac-Ward exact planar reference exhausted three agent hard caps without an artifact. V580 changes technique and sharply bounds scope: a junction-tree/dynamic-programming reference on graphs of treewidth at most four, verified against brute-force enumeration. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-references.md, and the V580 roadmap doc
+      - {project_root}/python/carnot/experiment_6639_kac_ward_planar_reference.py and its tests only for failure/scope lessons; do not continue that implementation
+      - {project_root}/python/carnot/samplers/spectral_k_block.py, {project_root}/python/carnot/experiment_6597_spectral_k_block_ising_canary.py, and exact enumeration utilities
+      - Ising model/verify modules under {project_root}/python/carnot/models and {project_root}/python/carnot/verify
+      - relevant sampling, exact-reference, evidence, safety, and reporting specs plus the E2E plan
+
+      TASK:
+      Implement a small exact junction-tree/dynamic-programming reference for preregistered Ising graphs with certified treewidth at most four. Produce partition functions, normalized likelihoods, marginals, and independent samples; verify them against brute-force enumeration at small n. Reject unsupported graphs explicitly and make no speed claim.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash protected files; inventory existing graph/energy conventions; freeze supported spin encoding, field/coupling conventions, graph limits, fixture manifest, tolerances, and CPU resources.
+      1. Add REQ-* and SCENARIO-* anchors for tree decomposition validation, exact factor elimination, normalized probability, exact ancestral sampling, unsupported-graph rejection, and brute-force parity. Write tests first.
+      2. Implement or reuse a deterministic tree-decomposition path, validate running intersection and width, and fail closed above width four or on malformed graphs.
+      3. Implement exact message/factor elimination for log partition, configuration log probability, node/edge marginals, and independent ancestral samples using a fixed RNG.
+      4. Build at least 12 fixtures spanning trees, cycles with bounded decompositions, fields, ferromagnetic/antiferromagnetic/frustrated couplings where supported, and explicit unsupported cases.
+      5. Compare partition, likelihood, marginals, and sample frequencies to brute-force enumeration on small n with preregistered tolerances. Record setup and sample wall time separately but make no performance headline.
+      6. Set ising_reference_ready=true only if decomposition, exact parity, normalized mass, sampling, and rejection tests pass. Ready reference uses verdict_class=null and verifier_is_oracle=true.
+      7. Write atomically and run focused tests, 100% scoped coverage, spec coverage, row/artifact/adversarial checks, sampling E2E, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6657_bounded_treewidth_ising_reference.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal reference state
+        honest_verdict: bounded exact-reference readiness without speed claim
+        verdict_class: closed enum; ready reference is null
+        gate_check_summary: failed decomposition/parity/normalization/sampling check and observed value for blocked results
+        prior_failure_receipt: Exp6639 conductor terminal record and changed technique/scope
+        supported_domain_contract: spin, energy, fields, couplings, width, size, and rejection rules
+        fixture_manifest: graph/coupling/field/decomposition seeds and hashes
+        decomposition_rows: width, bags, running-intersection checks, and rejection status
+        exact_parity_rows: DP versus brute-force partition, likelihood, and marginal errors
+        exact_sample_rows: graph/seed/sample configuration, likelihood, and frequency checks
+        normalized_mass_receipts: probability mass and tolerance per fixture
+        timing_rows: setup and sampling wall time recorded without a speed claim
+        ising_reference_ready: boolean field owned by this task
+        per_unit_rows: every graph, parity, sample, and rejection unit
+        aggregate_row_recomputation: readiness and error summaries rebuilt from rows
+        preconditions_checked: inputs, tools, resources, and hashes
+        protected_files_unchanged: protected path hashes
+        inference_substrate: cpu_bounded_treewidth_junction_tree_exact_sampling_no_llm
+        verifier_is_oracle: true
+        field_provenance: source/hash/reducer lineage
+        random_seed: fixed decomposition and sampling seed schedule
+        duration_s: monotonic runtime
+        tests_run: commands, exits, and summaries
+        reproducibility_checksum: final content hash
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6657_bounded_treewidth_ising_reference --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6658-thermodynamic-schedule-ab
+    milestone: "2026.08.580"
+    deliverable: results/experiment_6658_thermodynamic_schedule_ab.json
+    title: "Autocorrelation-aware thermodynamic schedule A/B"
+    priority: high
+    track: sampling-efficiency
+    requires:
+      - exp6657-bounded-treewidth-ising-reference
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 150
+    agent_type: codex
+    model: gpt-5.6-sol
+    gated_on:
+      - upstream: exp6657-bounded-treewidth-ising-reference
+        artifact_field: ising_reference_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp6612-spectral-k-block-scale-rust-parity
+        verdict: "blocked_reference_parity_cost_or_protection: stationary, transition, wall, and parity conclusions are withheld; CPU software only"
+        addressed_by: "This attempt drops Rust/GPU parity and scale claims, uses the new independent bounded-treewidth reference, and asks only whether a preregistered autocorrelation-aware schedule improves effective samples per measured wall-second on bounded software fixtures."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Spectral k-block software ran, but V576 withheld stationary, transition, wall, and parity conclusions because no independent exact reference existed. Scaling Up Thermodynamic AI Models emphasizes inference schedules and autocorrelation cost. This task uses Exp6657 and makes only bounded local-software claims. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-references.md, and the V580 roadmap doc
+      - {project_root}/results/experiment_6657_bounded_treewidth_ising_reference.json
+      - {project_root}/python/carnot/samplers/spectral_k_block.py, {project_root}/python/carnot/experiment_6597_spectral_k_block_ising_canary.py, and Exp6612 code/artifact/tests
+      - existing ESS, autocorrelation, energy, timing, and exact-enumeration helpers
+      - relevant sampling, hardware-boundary, evidence, safety, and reporting specs plus the E2E plan
+
+      TASK:
+      Compare fixed-transition, fixed-temperature-ladder, and autocorrelation-aware schedules on bounded-treewidth graphs and seeds using the independent exact reference. Measure stationary quality and effective samples per measured wall-second with setup, transition, and end-to-end time separated. Make no TSU, FPGA, asymptotic, or energy-efficiency claim.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: validate ising_reference_ready; hash reference/sampler/protected files; freeze graphs, seeds, schedules, transition budgets, burn-in, ESS/autocorrelation estimators, tolerances, and CPU/JAX substrate.
+      1. Add REQ-* and SCENARIO-* anchors for matched transitions, preregistered schedules, exact stationary comparison, ESS/IAT, separated timing, support/failure rows, and bounded claim language. Write tests first.
+      2. Define three arms: fixed transitions at target temperature, a fixed preregistered temperature ladder, and an autocorrelation-aware schedule that may adapt only from prior observed chain statistics.
+      3. Run at least 12 graph-seed units per arm with identical transition budgets and isolated RNG/state. Record every schedule decision from information available at that time.
+      4. Compare energy distribution, node/edge marginals, normalized-likelihood diagnostics, support coverage, and failure rates to Exp6657 exact values. Compute ESS and integrated autocorrelation time with uncertainty.
+      5. Record setup, transition-only, and end-to-end wall time separately. Report effective samples per measured transition-second and end-to-end second; do not infer physical energy or hardware scaling.
+      6. Emit positive only if the autocorrelation-aware arm improves a preregistered primary metric without breaching quality/support gates. Null or partial is valid; any block starts blocked_ with gate_check_summary.
+      7. Write atomically and run focused tests, coverage, spec, row, artifact, adversarial, sampling E2E, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6658_thermodynamic_schedule_ab.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal experiment state
+        honest_verdict: bounded schedule quality/ESS/wall-time conclusion
+        verdict_class: closed enum
+        gate_check_summary: failed upstream, quality, support, timing, or estimator check and observed value for blocked results
+        upstream_gate_receipt: Exp6657 field, value, path, and hash
+        schedule_preregistration: arm rules, graph/seed manifest, budgets, burn-in, metrics, and gates
+        schedule_decision_rows: time-ordered decisions and available prior statistics
+        chain_rows: per graph/seed/arm energy, marginals, likelihood, support, ESS, IAT, failures, and timing
+        exact_comparison_rows: sampler versus Exp6657 values and tolerances
+        timing_decomposition_rows: setup, transition-only, and end-to-end wall time
+        effective_sample_metrics: ESS per transition-second and end-to-end second with uncertainty
+        claim_boundary: CPU/JAX or local CUDA software only; no TSU/FPGA/asymptotic/energy claim
+        per_unit_rows: every graph-seed-arm and failure unit
+        aggregate_row_recomputation: all quality and efficiency metrics rebuilt from rows
+        preconditions_checked: inputs, substrate, tools, resources, and hashes
+        protected_files_unchanged: protected path hashes
+        inference_substrate: bounded_treewidth_local_software_thermodynamic_schedule_no_llm
+        verifier_is_oracle: false because the exact reference is independent of the sampler under test
+        field_provenance: source/hash/reducer lineage
+        random_seed: fixed graph, chain, and bootstrap seed schedule
+        duration_s: monotonic runtime
+        tests_run: commands, exits, and summaries
+        reproducibility_checksum: final content hash
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6658_thermodynamic_schedule_ab --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6659-v580-capstone
+    milestone: "2026.08.580"
+    deliverable: results/experiment_6659_v580_capstone.json
+    title: "V580 evidence synthesis"
+    priority: critical
+    track: capstone
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 100
+    estimated_wall_time_min: 120
+    model: opus
+    prompt: |
+      CONTEXT:
+      This terminal task reconciles V580 regardless of wins, nulls, blocks, disqualifications, missing artifacts, or hard-cap failures. It must preserve circularity, no-solve boundaries, and independent branch status instead of manufacturing a pooled success score. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, {project_root}/_bmad/prd.md, {project_root}/_bmad/architecture.md, and the V580 roadmap doc
+      - every available result from Exp6647 through Exp6658 and their schemas/tests
+      - {project_root}/research-complete.yaml, {project_root}/ops/conductor-log.md, {project_root}/ops/exclusion_manifest.yaml, and prior capstone artifacts
+      - {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/adversarial_verify.py, gate/audit utilities, and artifact conventions
+      - relevant capability specs, {project_root}/_bmad/traceability.md, {project_root}/ops/status.md, {project_root}/ops/changelog.md, and {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Aggregate every available V580 artifact, recompute gates and headline metrics from rows, classify each claim, carry circularity and no-solve provenance forward, identify retirement outcomes, and reconcile specs/traceability/status/changelog with only the code and evidence actually produced. Do not require a positive result for terminal completion.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: enumerate all 12 expected upstream IDs and deliverables; record present/missing/blocked/hard-cap states without converting absence to zero; hash protected files and source artifacts.
+      1. Add or update REQ-* and SCENARIO-* anchors for capstone availability aggregation, closed verdict classes, row-derived gates, circularity preservation, independent-branch reporting, and terminal completion. Write tests first.
+      2. Validate every artifact schema and hash. Recompute every structured gate from the exact upstream field with identical spelling and record any broken contract.
+      3. Recompute admission, corpus, verifier-unit, suffix-regeneration, memory, ARC, exact-reference, and schedule metrics from per-unit rows. Flag contradictions, null-only rows, missing denominators, parser failures, and sign flips.
+      4. Assign each claim one closed class: positive, circular_positive, null, blocked, disqualified, or partial. Never promote verifier_is_oracle=true evidence to positive and never credit an ARC solve.
+      5. Apply prior-failure retirement mechanics when a task repeats the same verdict and record exclusion-manifest recommendations; do not modify a retired upstream dependency into existence.
+      6. Produce a PRD-gap matrix, architecture disposition, hardware claim boundary, next-action list, and branch-specific lessons. Update relevant capability specs, _bmad/traceability.md, ops/status.md, and ops/changelog.md to match evidence. Preserve research-roadmap.yaml and conductor.
+      7. Write atomically and run focused tests, coverage, spec coverage, row/artifact/adversarial checks, applicable E2E checks, docs/traceability audits, YAML validation, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6659_v580_capstone.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal capstone state
+        honest_verdict: V580 evidence synthesis with no forced-positive language
+        verdict_class: closed enum for the capstone's supported overall disposition
+        gate_check_summary: failed capstone input/contract check and observed value for blocked results
+        expected_task_manifest: all Exp6647-Exp6658 IDs, titles, paths, and expected gates
+        artifact_availability_rows: present, missing, blocked, hard-cap, hash, and schema state per task
+        gate_recomputation_rows: exact upstream field/value/op and recomputed result per structured gate
+        claim_classification_rows: claim, evidence, circularity, provenance, and closed verdict class
+        branch_summary_rows: admission/verification, memory, ARC, and Ising outcomes kept separate
+        headline_recomputation: all available comparative metrics rebuilt from per-unit rows
+        prior_failure_retirement_rows: same/different verdict and retirement disposition
+        prd_gap_matrix: evidence-backed movement on the three largest gaps
+        architecture_disposition: adopt, keep experimental, narrow, retire, or defer each component
+        hardware_claim_boundary: measured local paths and explicitly unsupported hardware claims
+        reconciliation_receipts: specs, traceability, status, changelog, and audit command receipts
+        next_actions: bounded follow-ups based only on V580 evidence
+        per_unit_rows: every task, gate, claim, and branch unit
+        preconditions_checked: inputs, tools, resources, and hashes
+        protected_files_unchanged: research-roadmap.yaml and scripts/research_conductor.py hashes
+        inference_substrate: artifact_only_v580_capstone_no_llm
+        verifier_is_oracle: false
+        field_provenance: source/hash/reducer lineage
+        random_seed: deterministic artifact and audit order seed
+        duration_s: monotonic runtime
+        tests_run: commands, exits, and summaries
+        reproducibility_checksum: final content hash
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6659_v580_capstone --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
