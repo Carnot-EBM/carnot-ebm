@@ -1,0 +1,4402 @@
+{
+  "activation_contract_ready_score": 0.0,
+  "attack_rows": [
+    {
+      "attack_id": "missing_task",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "document_task_order",
+          "expected": [
+            6619,
+            6620,
+            6621,
+            6622,
+            6623,
+            6624,
+            6625,
+            6626,
+            6627,
+            6628,
+            6629,
+            6630,
+            6631,
+            6632
+          ],
+          "observed": {
+            "active": [
+              6619,
+              6620,
+              6621,
+              6622,
+              6623,
+              6624,
+              6625,
+              6626,
+              6627,
+              6628,
+              6629,
+              6630,
+              6631
+            ],
+            "pre_staged": [
+              6619,
+              6620,
+              6621,
+              6622,
+              6623,
+              6624,
+              6625,
+              6626,
+              6627,
+              6628,
+              6629,
+              6630,
+              6631
+            ]
+          }
+        },
+        {
+          "check": "document_dependency_tasks",
+          "expected": [
+            6619,
+            6620,
+            6621,
+            6622,
+            6623,
+            6624,
+            6625,
+            6626,
+            6627,
+            6628,
+            6629,
+            6630,
+            6631,
+            6632
+          ],
+          "observed": {
+            "active": [
+              6619,
+              6620,
+              6621,
+              6622,
+              6623,
+              6624,
+              6625,
+              6626,
+              6627,
+              6628,
+              6629,
+              6630,
+              6631
+            ],
+            "pre_staged": [
+              6619,
+              6620,
+              6621,
+              6622,
+              6623,
+              6624,
+              6625,
+              6626,
+              6627,
+              6628,
+              6629,
+              6630,
+              6631
+            ]
+          }
+        },
+        {
+          "check": "document_deliverable_set",
+          "expected": {
+            "6619": "results/experiment_6619_v578_activation_contract.json",
+            "6620": "results/experiment_6620_gpu_lease_phase_receipts.json",
+            "6621": "results/experiment_6621_mandated_model_admission.json",
+            "6622": "results/experiment_6622_qwen36_direct_headroom.json",
+            "6623": "results/experiment_6623_headroom_support_reducer.json",
+            "6624": "results/experiment_6624_delayed_two_level_decoding.json",
+            "6625": "results/experiment_6625_cold_context_verifier_control.json",
+            "6626": "results/experiment_6626_constraint_authority_support_audit.json",
+            "6627": "results/experiment_6627_spectral_integrity_repair.json",
+            "6628": "results/experiment_6628_spectral_cpu_gpu_replay.json",
+            "6629": "results/experiment_6629_live_memory_actionability.json",
+            "6630": "results/experiment_6630_error_independent_memory_patch_gate.json",
+            "6631": "results/experiment_6631_prospective_support_preserving_csl.json",
+            "6632": "results/experiment_6632_v578_independent_capstone.json"
+          },
+          "observed": {
+            "active": {
+              "6619": "results/experiment_6619_v578_activation_contract.json",
+              "6620": "results/experiment_6620_gpu_lease_phase_receipts.json",
+              "6621": "results/experiment_6621_mandated_model_admission.json",
+              "6622": "results/experiment_6622_qwen36_direct_headroom.json",
+              "6623": "results/experiment_6623_headroom_support_reducer.json",
+              "6624": "results/experiment_6624_delayed_two_level_decoding.json",
+              "6625": "results/experiment_6625_cold_context_verifier_control.json",
+              "6626": "results/experiment_6626_constraint_authority_support_audit.json",
+              "6627": "results/experiment_6627_spectral_integrity_repair.json",
+              "6628": "results/experiment_6628_spectral_cpu_gpu_replay.json",
+              "6629": "results/experiment_6629_live_memory_actionability.json",
+              "6630": "results/experiment_6630_error_independent_memory_patch_gate.json",
+              "6631": "results/experiment_6631_prospective_support_preserving_csl.json"
+            },
+            "pre_staged": {
+              "6619": "results/experiment_6619_v578_activation_contract.json",
+              "6620": "results/experiment_6620_gpu_lease_phase_receipts.json",
+              "6621": "results/experiment_6621_mandated_model_admission.json",
+              "6622": "results/experiment_6622_qwen36_direct_headroom.json",
+              "6623": "results/experiment_6623_headroom_support_reducer.json",
+              "6624": "results/experiment_6624_delayed_two_level_decoding.json",
+              "6625": "results/experiment_6625_cold_context_verifier_control.json",
+              "6626": "results/experiment_6626_constraint_authority_support_audit.json",
+              "6627": "results/experiment_6627_spectral_integrity_repair.json",
+              "6628": "results/experiment_6628_spectral_cpu_gpu_replay.json",
+              "6629": "results/experiment_6629_live_memory_actionability.json",
+              "6630": "results/experiment_6630_error_independent_memory_patch_gate.json",
+              "6631": "results/experiment_6631_prospective_support_preserving_csl.json"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "attack_id": "missing_owner_field",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "gate_owner_contract",
+          "expected": true,
+          "observed": {
+            "artifact_field": "activation_contract_ready_score",
+            "downstream": "exp6620-gpu-lease-phase-receipts",
+            "expected_value": 1.0,
+            "op": "==",
+            "owner_declares_identical_field": false,
+            "owner_exists": true,
+            "owner_is_earlier": true,
+            "owner_not_retired": true,
+            "passed": false,
+            "upstream": "exp6619-v578-activation-contract"
+          },
+          "source": "pre_staged",
+          "task_id": "exp6620-gpu-lease-phase-receipts"
+        },
+        {
+          "check": "gate_owner_contract",
+          "expected": true,
+          "observed": {
+            "artifact_field": "activation_contract_ready_score",
+            "downstream": "exp6627-spectral-integrity-repair",
+            "expected_value": 1.0,
+            "op": "==",
+            "owner_declares_identical_field": false,
+            "owner_exists": true,
+            "owner_is_earlier": true,
+            "owner_not_retired": true,
+            "passed": false,
+            "upstream": "exp6619-v578-activation-contract"
+          },
+          "source": "pre_staged",
+          "task_id": "exp6627-spectral-integrity-repair"
+        },
+        {
+          "check": "gate_owner_contract",
+          "expected": true,
+          "observed": {
+            "artifact_field": "activation_contract_ready_score",
+            "downstream": "exp6620-gpu-lease-phase-receipts",
+            "expected_value": 1.0,
+            "op": "==",
+            "owner_declares_identical_field": false,
+            "owner_exists": true,
+            "owner_is_earlier": true,
+            "owner_not_retired": true,
+            "passed": false,
+            "upstream": "exp6619-v578-activation-contract"
+          },
+          "source": "active",
+          "task_id": "exp6620-gpu-lease-phase-receipts"
+        },
+        {
+          "check": "gate_owner_contract",
+          "expected": true,
+          "observed": {
+            "artifact_field": "activation_contract_ready_score",
+            "downstream": "exp6627-spectral-integrity-repair",
+            "expected_value": 1.0,
+            "op": "==",
+            "owner_declares_identical_field": false,
+            "owner_exists": true,
+            "owner_is_earlier": true,
+            "owner_not_retired": true,
+            "passed": false,
+            "upstream": "exp6619-v578-activation-contract"
+          },
+          "source": "active",
+          "task_id": "exp6627-spectral-integrity-repair"
+        }
+      ]
+    },
+    {
+      "attack_id": "duplicate_deliverable",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "duplicate_deliverable",
+          "expected": "unique",
+          "observed": [
+            "results/experiment_6619_v578_activation_contract.json",
+            "results/experiment_6620_gpu_lease_phase_receipts.json",
+            "results/experiment_6621_mandated_model_admission.json",
+            "results/experiment_6622_qwen36_direct_headroom.json",
+            "results/experiment_6623_headroom_support_reducer.json",
+            "results/experiment_6624_delayed_two_level_decoding.json",
+            "results/experiment_6625_cold_context_verifier_control.json",
+            "results/experiment_6626_constraint_authority_support_audit.json",
+            "results/experiment_6627_spectral_integrity_repair.json",
+            "results/experiment_6628_spectral_cpu_gpu_replay.json",
+            "results/experiment_6629_live_memory_actionability.json",
+            "results/experiment_6630_error_independent_memory_patch_gate.json",
+            "results/experiment_6631_prospective_support_preserving_csl.json",
+            "results/experiment_6619_v578_activation_contract.json"
+          ],
+          "source": "pre_staged"
+        },
+        {
+          "check": "task_deliverable_identity",
+          "expected": 6632,
+          "observed": 6619,
+          "source": "pre_staged",
+          "task_id": "exp6632-v578-independent-capstone"
+        },
+        {
+          "check": "duplicate_deliverable",
+          "expected": "unique",
+          "observed": [
+            "results/experiment_6619_v578_activation_contract.json",
+            "results/experiment_6620_gpu_lease_phase_receipts.json",
+            "results/experiment_6621_mandated_model_admission.json",
+            "results/experiment_6622_qwen36_direct_headroom.json",
+            "results/experiment_6623_headroom_support_reducer.json",
+            "results/experiment_6624_delayed_two_level_decoding.json",
+            "results/experiment_6625_cold_context_verifier_control.json",
+            "results/experiment_6626_constraint_authority_support_audit.json",
+            "results/experiment_6627_spectral_integrity_repair.json",
+            "results/experiment_6628_spectral_cpu_gpu_replay.json",
+            "results/experiment_6629_live_memory_actionability.json",
+            "results/experiment_6630_error_independent_memory_patch_gate.json",
+            "results/experiment_6631_prospective_support_preserving_csl.json",
+            "results/experiment_6619_v578_activation_contract.json"
+          ],
+          "source": "active"
+        },
+        {
+          "check": "task_deliverable_identity",
+          "expected": 6632,
+          "observed": 6619,
+          "source": "active",
+          "task_id": "exp6632-v578-independent-capstone"
+        },
+        {
+          "check": "document_deliverable_set",
+          "expected": {
+            "6619": "results/experiment_6619_v578_activation_contract.json",
+            "6620": "results/experiment_6620_gpu_lease_phase_receipts.json",
+            "6621": "results/experiment_6621_mandated_model_admission.json",
+            "6622": "results/experiment_6622_qwen36_direct_headroom.json",
+            "6623": "results/experiment_6623_headroom_support_reducer.json",
+            "6624": "results/experiment_6624_delayed_two_level_decoding.json",
+            "6625": "results/experiment_6625_cold_context_verifier_control.json",
+            "6626": "results/experiment_6626_constraint_authority_support_audit.json",
+            "6627": "results/experiment_6627_spectral_integrity_repair.json",
+            "6628": "results/experiment_6628_spectral_cpu_gpu_replay.json",
+            "6629": "results/experiment_6629_live_memory_actionability.json",
+            "6630": "results/experiment_6630_error_independent_memory_patch_gate.json",
+            "6631": "results/experiment_6631_prospective_support_preserving_csl.json",
+            "6632": "results/experiment_6632_v578_independent_capstone.json"
+          },
+          "observed": {
+            "active": {
+              "6619": "results/experiment_6619_v578_activation_contract.json",
+              "6620": "results/experiment_6620_gpu_lease_phase_receipts.json",
+              "6621": "results/experiment_6621_mandated_model_admission.json",
+              "6622": "results/experiment_6622_qwen36_direct_headroom.json",
+              "6623": "results/experiment_6623_headroom_support_reducer.json",
+              "6624": "results/experiment_6624_delayed_two_level_decoding.json",
+              "6625": "results/experiment_6625_cold_context_verifier_control.json",
+              "6626": "results/experiment_6626_constraint_authority_support_audit.json",
+              "6627": "results/experiment_6627_spectral_integrity_repair.json",
+              "6628": "results/experiment_6628_spectral_cpu_gpu_replay.json",
+              "6629": "results/experiment_6629_live_memory_actionability.json",
+              "6630": "results/experiment_6630_error_independent_memory_patch_gate.json",
+              "6631": "results/experiment_6631_prospective_support_preserving_csl.json",
+              "6632": "results/experiment_6619_v578_activation_contract.json"
+            },
+            "pre_staged": {
+              "6619": "results/experiment_6619_v578_activation_contract.json",
+              "6620": "results/experiment_6620_gpu_lease_phase_receipts.json",
+              "6621": "results/experiment_6621_mandated_model_admission.json",
+              "6622": "results/experiment_6622_qwen36_direct_headroom.json",
+              "6623": "results/experiment_6623_headroom_support_reducer.json",
+              "6624": "results/experiment_6624_delayed_two_level_decoding.json",
+              "6625": "results/experiment_6625_cold_context_verifier_control.json",
+              "6626": "results/experiment_6626_constraint_authority_support_audit.json",
+              "6627": "results/experiment_6627_spectral_integrity_repair.json",
+              "6628": "results/experiment_6628_spectral_cpu_gpu_replay.json",
+              "6629": "results/experiment_6629_live_memory_actionability.json",
+              "6630": "results/experiment_6630_error_independent_memory_patch_gate.json",
+              "6631": "results/experiment_6631_prospective_support_preserving_csl.json",
+              "6632": "results/experiment_6619_v578_activation_contract.json"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "attack_id": "bad_gate_op",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "gate_owner_contract",
+          "expected": true,
+          "observed": {
+            "artifact_field": "activation_contract_ready_score",
+            "downstream": "exp6620-gpu-lease-phase-receipts",
+            "expected_value": 1.0,
+            "op": "contains",
+            "owner_declares_identical_field": true,
+            "owner_exists": true,
+            "owner_is_earlier": true,
+            "owner_not_retired": true,
+            "passed": false,
+            "upstream": "exp6619-v578-activation-contract"
+          },
+          "source": "pre_staged",
+          "task_id": "exp6620-gpu-lease-phase-receipts"
+        },
+        {
+          "check": "gate_owner_contract",
+          "expected": true,
+          "observed": {
+            "artifact_field": "activation_contract_ready_score",
+            "downstream": "exp6620-gpu-lease-phase-receipts",
+            "expected_value": 1.0,
+            "op": "contains",
+            "owner_declares_identical_field": true,
+            "owner_exists": true,
+            "owner_is_earlier": true,
+            "owner_not_retired": true,
+            "passed": false,
+            "upstream": "exp6619-v578-activation-contract"
+          },
+          "source": "active",
+          "task_id": "exp6620-gpu-lease-phase-receipts"
+        },
+        {
+          "check": "document_gate_set",
+          "expected": {
+            "6620": [
+              {
+                "artifact_field": "activation_contract_ready_score",
+                "op": "==",
+                "upstream": 6619,
+                "value": 1.0
+              }
+            ],
+            "6621": [
+              {
+                "artifact_field": "gpu_lease_scheduler_ready_score",
+                "op": "==",
+                "upstream": 6620,
+                "value": 1.0
+              }
+            ],
+            "6622": [
+              {
+                "artifact_field": "qwen_admission_ready_score",
+                "op": "==",
+                "upstream": 6621,
+                "value": 1.0
+              }
+            ],
+            "6623": [
+              {
+                "artifact_field": "baseline_rows_complete_score",
+                "op": "==",
+                "upstream": 6622,
+                "value": 1.0
+              }
+            ],
+            "6624": [
+              {
+                "artifact_field": "constrained_decoding_ready_score",
+                "op": "==",
+                "upstream": 6623,
+                "value": 1.0
+              }
+            ],
+            "6625": [
+              {
+                "artifact_field": "qwen_admission_ready_score",
+                "op": "==",
+                "upstream": 6621,
+                "value": 1.0
+              }
+            ],
+            "6626": [
+              {
+                "artifact_field": "decoding_rows_ready_score",
+                "op": "==",
+                "upstream": 6624,
+                "value": 1.0
+              }
+            ],
+            "6627": [
+              {
+                "artifact_field": "activation_contract_ready_score",
+                "op": "==",
+                "upstream": 6619,
+                "value": 1.0
+              }
+            ],
+            "6628": [
+              {
+                "artifact_field": "sampler_integrity_ready_score",
+                "op": "==",
+                "upstream": 6627,
+                "value": 1.0
+              }
+            ],
+            "6629": [
+              {
+                "artifact_field": "qwen_admission_ready_score",
+                "op": "==",
+                "upstream": 6621,
+                "value": 1.0
+              }
+            ],
+            "6630": [
+              {
+                "artifact_field": "live_memory_activation_ready_score",
+                "op": "==",
+                "upstream": 6629,
+                "value": 1.0
+              }
+            ],
+            "6631": [
+              {
+                "artifact_field": "qwen_admission_ready_score",
+                "op": "==",
+                "upstream": 6621,
+                "value": 1.0
+              },
+              {
+                "artifact_field": "memory_patch_contract_ready_score",
+                "op": "==",
+                "upstream": 6630,
+                "value": 1.0
+              }
+            ]
+          },
+          "observed": {
+            "active": {
+              "6620": [
+                {
+                  "artifact_field": "activation_contract_ready_score",
+                  "op": "contains",
+                  "upstream": 6619,
+                  "value": 1.0
+                }
+              ],
+              "6621": [
+                {
+                  "artifact_field": "gpu_lease_scheduler_ready_score",
+                  "op": "==",
+                  "upstream": 6620,
+                  "value": 1.0
+                }
+              ],
+              "6622": [
+                {
+                  "artifact_field": "qwen_admission_ready_score",
+                  "op": "==",
+                  "upstream": 6621,
+                  "value": 1.0
+                }
+              ],
+              "6623": [
+                {
+                  "artifact_field": "baseline_rows_complete_score",
+                  "op": "==",
+                  "upstream": 6622,
+                  "value": 1.0
+                }
+              ],
+              "6624": [
+                {
+                  "artifact_field": "constrained_decoding_ready_score",
+                  "op": "==",
+                  "upstream": 6623,
+                  "value": 1.0
+                }
+              ],
+              "6625": [
+                {
+                  "artifact_field": "qwen_admission_ready_score",
+                  "op": "==",
+                  "upstream": 6621,
+                  "value": 1.0
+                }
+              ],
+              "6626": [
+                {
+                  "artifact_field": "decoding_rows_ready_score",
+                  "op": "==",
+                  "upstream": 6624,
+                  "value": 1.0
+                }
+              ],
+              "6627": [
+                {
+                  "artifact_field": "activation_contract_ready_score",
+                  "op": "==",
+                  "upstream": 6619,
+                  "value": 1.0
+                }
+              ],
+              "6628": [
+                {
+                  "artifact_field": "sampler_integrity_ready_score",
+                  "op": "==",
+                  "upstream": 6627,
+                  "value": 1.0
+                }
+              ],
+              "6629": [
+                {
+                  "artifact_field": "qwen_admission_ready_score",
+                  "op": "==",
+                  "upstream": 6621,
+                  "value": 1.0
+                }
+              ],
+              "6630": [
+                {
+                  "artifact_field": "live_memory_activation_ready_score",
+                  "op": "==",
+                  "upstream": 6629,
+                  "value": 1.0
+                }
+              ],
+              "6631": [
+                {
+                  "artifact_field": "qwen_admission_ready_score",
+                  "op": "==",
+                  "upstream": 6621,
+                  "value": 1.0
+                },
+                {
+                  "artifact_field": "memory_patch_contract_ready_score",
+                  "op": "==",
+                  "upstream": 6630,
+                  "value": 1.0
+                }
+              ]
+            },
+            "pre_staged": {
+              "6620": [
+                {
+                  "artifact_field": "activation_contract_ready_score",
+                  "op": "contains",
+                  "upstream": 6619,
+                  "value": 1.0
+                }
+              ],
+              "6621": [
+                {
+                  "artifact_field": "gpu_lease_scheduler_ready_score",
+                  "op": "==",
+                  "upstream": 6620,
+                  "value": 1.0
+                }
+              ],
+              "6622": [
+                {
+                  "artifact_field": "qwen_admission_ready_score",
+                  "op": "==",
+                  "upstream": 6621,
+                  "value": 1.0
+                }
+              ],
+              "6623": [
+                {
+                  "artifact_field": "baseline_rows_complete_score",
+                  "op": "==",
+                  "upstream": 6622,
+                  "value": 1.0
+                }
+              ],
+              "6624": [
+                {
+                  "artifact_field": "constrained_decoding_ready_score",
+                  "op": "==",
+                  "upstream": 6623,
+                  "value": 1.0
+                }
+              ],
+              "6625": [
+                {
+                  "artifact_field": "qwen_admission_ready_score",
+                  "op": "==",
+                  "upstream": 6621,
+                  "value": 1.0
+                }
+              ],
+              "6626": [
+                {
+                  "artifact_field": "decoding_rows_ready_score",
+                  "op": "==",
+                  "upstream": 6624,
+                  "value": 1.0
+                }
+              ],
+              "6627": [
+                {
+                  "artifact_field": "activation_contract_ready_score",
+                  "op": "==",
+                  "upstream": 6619,
+                  "value": 1.0
+                }
+              ],
+              "6628": [
+                {
+                  "artifact_field": "sampler_integrity_ready_score",
+                  "op": "==",
+                  "upstream": 6627,
+                  "value": 1.0
+                }
+              ],
+              "6629": [
+                {
+                  "artifact_field": "qwen_admission_ready_score",
+                  "op": "==",
+                  "upstream": 6621,
+                  "value": 1.0
+                }
+              ],
+              "6630": [
+                {
+                  "artifact_field": "live_memory_activation_ready_score",
+                  "op": "==",
+                  "upstream": 6629,
+                  "value": 1.0
+                }
+              ],
+              "6631": [
+                {
+                  "artifact_field": "qwen_admission_ready_score",
+                  "op": "==",
+                  "upstream": 6621,
+                  "value": 1.0
+                },
+                {
+                  "artifact_field": "memory_patch_contract_ready_score",
+                  "op": "==",
+                  "upstream": 6630,
+                  "value": 1.0
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "attack_id": "wrong_model_id",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "document_model_set",
+          "expected": {
+            "6621": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "unsloth/gemma-4-31B-it-GGUF",
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ],
+            "6622": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "6624": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "6625": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ],
+            "6629": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "6631": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ]
+          },
+          "observed": {
+            "active": {
+              "6621": [
+                "unsloth/gemma-4-31B-it-GGUF",
+                "unsloth/gemma-4-26B-A4B-it-GGUF"
+              ],
+              "6622": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF"
+              ],
+              "6624": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF"
+              ],
+              "6625": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF",
+                "unsloth/gemma-4-26B-A4B-it-GGUF"
+              ],
+              "6629": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF"
+              ],
+              "6631": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF"
+              ]
+            },
+            "pre_staged": {
+              "6621": [
+                "unsloth/gemma-4-31B-it-GGUF",
+                "unsloth/gemma-4-26B-A4B-it-GGUF"
+              ],
+              "6622": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF"
+              ],
+              "6624": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF"
+              ],
+              "6625": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF",
+                "unsloth/gemma-4-26B-A4B-it-GGUF"
+              ],
+              "6629": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF"
+              ],
+              "6631": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF"
+              ]
+            }
+          }
+        },
+        {
+          "check": "model_policy",
+          "expected": true,
+          "observed": {
+            "checks": {
+              "gguf_metadata_tokenizer_behavior": true,
+              "identity_and_hash_receipts": true,
+              "legacy_smoke_only": true,
+              "mandated_repo_ids_present": false,
+              "model_specs_declared": true,
+              "no_silent_fallback": true
+            },
+            "legacy_models_present": [
+              "Qwen3.5-0.8B",
+              "Gemma-4-E4B-it"
+            ],
+            "passed": false,
+            "present_models": [
+              "unsloth/gemma-4-31B-it-GGUF",
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ],
+            "required_models": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "unsloth/gemma-4-31B-it-GGUF",
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ],
+            "task_id": "exp6621-mandated-model-admission",
+            "task_present": true
+          },
+          "source": "active",
+          "task_id": "exp6621-mandated-model-admission"
+        }
+      ]
+    },
+    {
+      "attack_id": "incomplete_prior_failure",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "prior_failure_completeness",
+          "expected": true,
+          "observed": {
+            "addressed_by": "retry",
+            "experiment_id": "",
+            "retire_if_same_verdict": false,
+            "verdict": ""
+          },
+          "source": "pre_staged",
+          "task_id": "exp6619-v578-activation-contract"
+        },
+        {
+          "check": "prior_failure_completeness",
+          "expected": true,
+          "observed": {
+            "addressed_by": "retry",
+            "experiment_id": "",
+            "retire_if_same_verdict": false,
+            "verdict": ""
+          },
+          "source": "active",
+          "task_id": "exp6619-v578-activation-contract"
+        }
+      ]
+    },
+    {
+      "attack_id": "missing_principle",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "required_field_principles",
+          "expected": "all fields principled",
+          "observed": [
+            "status"
+          ],
+          "source": "pre_staged",
+          "task_id": "exp6619-v578-activation-contract"
+        },
+        {
+          "check": "required_field_principles",
+          "expected": "all fields principled",
+          "observed": [
+            "status"
+          ],
+          "source": "active",
+          "task_id": "exp6619-v578-activation-contract"
+        }
+      ]
+    },
+    {
+      "attack_id": "missing_prompt_ending",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "prompt_terminator",
+          "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+          "observed": "}\nSet inference_substrate=fixture\nDo NOT push. Do NOT modify scripts/research_conductor.py.\ntrailing",
+          "source": "pre_staged",
+          "task_id": "exp6619-v578-activation-contract"
+        },
+        {
+          "check": "prompt_terminator",
+          "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+          "observed": "}\nSet inference_substrate=fixture\nDo NOT push. Do NOT modify scripts/research_conductor.py.\ntrailing",
+          "source": "active",
+          "task_id": "exp6619-v578-activation-contract"
+        }
+      ]
+    },
+    {
+      "attack_id": "protected_file_mutation",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "protected_files",
+          "expected": "sha256:before",
+          "observed": "sha256:after"
+        }
+      ]
+    }
+  ],
+  "document_yaml_diff": {
+    "active_deliverables": {
+      "6619": "results/experiment_6619_v578_activation_contract.json",
+      "6620": "results/experiment_6620_gpu_lease_phase_receipts.json",
+      "6621": "results/experiment_6621_mandated_model_admission.json",
+      "6622": "results/experiment_6622_qwen36_direct_headroom.json",
+      "6623": "results/experiment_6623_headroom_support_reducer.json",
+      "6624": "results/experiment_6624_delayed_two_level_decoding.json",
+      "6625": "results/experiment_6625_cold_context_verifier_control.json",
+      "6626": "results/experiment_6626_constraint_authority_support_audit.json",
+      "6627": "results/experiment_6627_spectral_integrity_repair.json",
+      "6628": "results/experiment_6628_spectral_cpu_gpu_replay.json"
+    },
+    "active_gates": {
+      "6620": [
+        {
+          "artifact_field": "activation_contract_ready_score",
+          "op": "==",
+          "upstream": 6619,
+          "value": 1.0
+        }
+      ],
+      "6621": [
+        {
+          "artifact_field": "gpu_lease_scheduler_ready_score",
+          "op": "==",
+          "upstream": 6620,
+          "value": 1.0
+        }
+      ],
+      "6622": [
+        {
+          "artifact_field": "qwen_admission_ready_score",
+          "op": "==",
+          "upstream": 6621,
+          "value": 1.0
+        }
+      ],
+      "6623": [
+        {
+          "artifact_field": "baseline_rows_complete_score",
+          "op": "==",
+          "upstream": 6622,
+          "value": 1.0
+        }
+      ],
+      "6624": [
+        {
+          "artifact_field": "constrained_decoding_ready_score",
+          "op": "==",
+          "upstream": 6623,
+          "value": 1.0
+        }
+      ],
+      "6625": [
+        {
+          "artifact_field": "qwen_admission_ready_score",
+          "op": "==",
+          "upstream": 6621,
+          "value": 1.0
+        },
+        {
+          "artifact_field": "gemma26_admission_ready_score",
+          "op": "==",
+          "upstream": 6621,
+          "value": 1.0
+        }
+      ],
+      "6626": [
+        {
+          "artifact_field": "decoding_rows_ready_score",
+          "op": "==",
+          "upstream": 6624,
+          "value": 1.0
+        }
+      ],
+      "6627": [
+        {
+          "artifact_field": "activation_contract_ready_score",
+          "op": "==",
+          "upstream": 6619,
+          "value": 1.0
+        }
+      ],
+      "6628": [
+        {
+          "artifact_field": "sampler_integrity_ready_score",
+          "op": "==",
+          "upstream": 6627,
+          "value": 1.0
+        }
+      ]
+    },
+    "active_gpu_task_numbers": [
+      6621,
+      6622,
+      6624,
+      6625,
+      6628
+    ],
+    "active_models": {
+      "6621": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "6622": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "6624": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "6625": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ]
+    },
+    "active_task_numbers": [
+      6619,
+      6620,
+      6621,
+      6622,
+      6623,
+      6624,
+      6625,
+      6626,
+      6627,
+      6628
+    ],
+    "document_task_numbers": [
+      6619,
+      6620,
+      6621,
+      6622,
+      6623,
+      6624,
+      6625,
+      6626,
+      6627,
+      6628,
+      6629,
+      6630,
+      6631,
+      6632
+    ],
+    "expected_deliverables": {
+      "6619": "results/experiment_6619_v578_activation_contract.json",
+      "6620": "results/experiment_6620_gpu_lease_phase_receipts.json",
+      "6621": "results/experiment_6621_mandated_model_admission.json",
+      "6622": "results/experiment_6622_qwen36_direct_headroom.json",
+      "6623": "results/experiment_6623_headroom_support_reducer.json",
+      "6624": "results/experiment_6624_delayed_two_level_decoding.json",
+      "6625": "results/experiment_6625_cold_context_verifier_control.json",
+      "6626": "results/experiment_6626_constraint_authority_support_audit.json",
+      "6627": "results/experiment_6627_spectral_integrity_repair.json",
+      "6628": "results/experiment_6628_spectral_cpu_gpu_replay.json",
+      "6629": "results/experiment_6629_live_memory_actionability.json",
+      "6630": "results/experiment_6630_error_independent_memory_patch_gate.json",
+      "6631": "results/experiment_6631_prospective_support_preserving_csl.json",
+      "6632": "results/experiment_6632_v578_independent_capstone.json"
+    },
+    "expected_gates": {
+      "6620": [
+        {
+          "artifact_field": "activation_contract_ready_score",
+          "op": "==",
+          "upstream": 6619,
+          "value": 1.0
+        }
+      ],
+      "6621": [
+        {
+          "artifact_field": "gpu_lease_scheduler_ready_score",
+          "op": "==",
+          "upstream": 6620,
+          "value": 1.0
+        }
+      ],
+      "6622": [
+        {
+          "artifact_field": "qwen_admission_ready_score",
+          "op": "==",
+          "upstream": 6621,
+          "value": 1.0
+        }
+      ],
+      "6623": [
+        {
+          "artifact_field": "baseline_rows_complete_score",
+          "op": "==",
+          "upstream": 6622,
+          "value": 1.0
+        }
+      ],
+      "6624": [
+        {
+          "artifact_field": "constrained_decoding_ready_score",
+          "op": "==",
+          "upstream": 6623,
+          "value": 1.0
+        }
+      ],
+      "6625": [
+        {
+          "artifact_field": "qwen_admission_ready_score",
+          "op": "==",
+          "upstream": 6621,
+          "value": 1.0
+        }
+      ],
+      "6626": [
+        {
+          "artifact_field": "decoding_rows_ready_score",
+          "op": "==",
+          "upstream": 6624,
+          "value": 1.0
+        }
+      ],
+      "6627": [
+        {
+          "artifact_field": "activation_contract_ready_score",
+          "op": "==",
+          "upstream": 6619,
+          "value": 1.0
+        }
+      ],
+      "6628": [
+        {
+          "artifact_field": "sampler_integrity_ready_score",
+          "op": "==",
+          "upstream": 6627,
+          "value": 1.0
+        }
+      ],
+      "6629": [
+        {
+          "artifact_field": "qwen_admission_ready_score",
+          "op": "==",
+          "upstream": 6621,
+          "value": 1.0
+        }
+      ],
+      "6630": [
+        {
+          "artifact_field": "live_memory_activation_ready_score",
+          "op": "==",
+          "upstream": 6629,
+          "value": 1.0
+        }
+      ],
+      "6631": [
+        {
+          "artifact_field": "qwen_admission_ready_score",
+          "op": "==",
+          "upstream": 6621,
+          "value": 1.0
+        },
+        {
+          "artifact_field": "memory_patch_contract_ready_score",
+          "op": "==",
+          "upstream": 6630,
+          "value": 1.0
+        }
+      ]
+    },
+    "expected_gpu_task_numbers": [
+      6621,
+      6622,
+      6624,
+      6625,
+      6628,
+      6629,
+      6631
+    ],
+    "expected_models": {
+      "6621": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "6622": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "6624": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "6625": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "6629": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "6631": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ]
+    },
+    "matches": {
+      "deliverables": false,
+      "dependency_tasks": false,
+      "gates": false,
+      "hardware": false,
+      "milestone": true,
+      "models": false,
+      "task_order": false
+    },
+    "missing_active_task_numbers": [
+      6629,
+      6630,
+      6631,
+      6632
+    ],
+    "missing_pre_staged_task_numbers": [
+      6629,
+      6630,
+      6631,
+      6632
+    ],
+    "pre_staged_deliverables": {
+      "6619": "results/experiment_6619_v578_activation_contract.json",
+      "6620": "results/experiment_6620_gpu_lease_phase_receipts.json",
+      "6621": "results/experiment_6621_mandated_model_admission.json",
+      "6622": "results/experiment_6622_qwen36_direct_headroom.json",
+      "6623": "results/experiment_6623_headroom_support_reducer.json",
+      "6624": "results/experiment_6624_delayed_two_level_decoding.json",
+      "6625": "results/experiment_6625_cold_context_verifier_control.json",
+      "6626": "results/experiment_6626_constraint_authority_support_audit.json",
+      "6627": "results/experiment_6627_spectral_integrity_repair.json",
+      "6628": "results/experiment_6628_spectral_cpu_gpu_replay.json"
+    },
+    "pre_staged_gates": {
+      "6620": [
+        {
+          "artifact_field": "activation_contract_ready_score",
+          "op": "==",
+          "upstream": 6619,
+          "value": 1.0
+        }
+      ],
+      "6621": [
+        {
+          "artifact_field": "gpu_lease_scheduler_ready_score",
+          "op": "==",
+          "upstream": 6620,
+          "value": 1.0
+        }
+      ],
+      "6622": [
+        {
+          "artifact_field": "qwen_admission_ready_score",
+          "op": "==",
+          "upstream": 6621,
+          "value": 1.0
+        }
+      ],
+      "6623": [
+        {
+          "artifact_field": "baseline_rows_complete_score",
+          "op": "==",
+          "upstream": 6622,
+          "value": 1.0
+        }
+      ],
+      "6624": [
+        {
+          "artifact_field": "constrained_decoding_ready_score",
+          "op": "==",
+          "upstream": 6623,
+          "value": 1.0
+        }
+      ],
+      "6625": [
+        {
+          "artifact_field": "qwen_admission_ready_score",
+          "op": "==",
+          "upstream": 6621,
+          "value": 1.0
+        },
+        {
+          "artifact_field": "gemma26_admission_ready_score",
+          "op": "==",
+          "upstream": 6621,
+          "value": 1.0
+        }
+      ],
+      "6626": [
+        {
+          "artifact_field": "decoding_rows_ready_score",
+          "op": "==",
+          "upstream": 6624,
+          "value": 1.0
+        }
+      ],
+      "6627": [
+        {
+          "artifact_field": "activation_contract_ready_score",
+          "op": "==",
+          "upstream": 6619,
+          "value": 1.0
+        }
+      ],
+      "6628": [
+        {
+          "artifact_field": "sampler_integrity_ready_score",
+          "op": "==",
+          "upstream": 6627,
+          "value": 1.0
+        }
+      ]
+    },
+    "pre_staged_gpu_task_numbers": [
+      6621,
+      6622,
+      6624,
+      6625,
+      6628
+    ],
+    "pre_staged_models": {
+      "6621": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "6622": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "6624": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "6625": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ]
+    },
+    "pre_staged_task_numbers": [
+      6619,
+      6620,
+      6621,
+      6622,
+      6623,
+      6624,
+      6625,
+      6626,
+      6627,
+      6628
+    ],
+    "unexpected_active_task_numbers": [],
+    "unexpected_pre_staged_task_numbers": []
+  },
+  "duration_s": 0.055454,
+  "field_provenance": {
+    "activation_contract_ready_score": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "This binary field opens Exp6620 and Exp6627 only after the full unit passes.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "attack_rows": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "Omission, identity, gate, model, history, principle, ending, and mutation attacks fail closed.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "document_yaml_diff": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "Document and YAML task, gate, model, hardware, and deliverable sets are exact.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "duration_s": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "Monotonic duration covers replay, attacks, validation, and writing.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "field_provenance": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "Every field names source paths, hashes, parsers, and validation functions.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "gate_check_summary": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "A blocked result names each failed contract check and observed value.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "gate_owner_rows": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "Each gate binds an earlier owner and an identically spelled required field.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "honest_verdict": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "The verdict reports contract readiness without claiming scientific benefit.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "inference_substrate": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "The task performs roadmap and evidence validation without an LLM.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "model_policy_receipts": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "Every LLM task binds mandated GGUF identity and forbids headline fallback.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "preconditions_checked": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "Roadmaps, document, prior evidence, schemas, versions, resources, and hashes are explicit.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "prior_failure_dispositions": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "Each rerun retains its prior verdict, changed condition, and retirement signal.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "protected_files_unchanged": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "The active roadmap and conductor retain their original hashes.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "reproducibility_checksum": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "A final content hash detects artifact mutation.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "status": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "The task ends terminally and never hides an activation block.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "task_contract_rows": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "Every Exp6619-Exp6632 task keeps one replayable contract row.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "tests_run": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "Focused, roadmap, gate, spec, artifact, adversarial, and E2E commands retain exits.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "validation_receipts": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "Schema, exclusion, gate, milestone, prompt, principle, and protection checks retain exits.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "verdict_class": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "A ready activation contract is null infrastructure, not positive science.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    },
+    "verifier_is_oracle": {
+      "parsers": [
+        "yaml.safe_load",
+        "parse_document_contract",
+        "json.loads"
+      ],
+      "principle": "Exact contract checks are authoritative and evaluate no science.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6616_v577_execution_contract.json",
+        "scripts/roadmap_schema.py",
+        "scripts/validate_prior_failures.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/conductor_gates.py"
+      ],
+      "validators": [
+        "validate_activation_contract",
+        "reconcile_prior_failures",
+        "validate_artifact"
+      ]
+    }
+  },
+  "gate_check_summary": {
+    "all_passed": false,
+    "failed_checks": [
+      {
+        "check": "document_task_order",
+        "expected": [
+          6619,
+          6620,
+          6621,
+          6622,
+          6623,
+          6624,
+          6625,
+          6626,
+          6627,
+          6628,
+          6629,
+          6630,
+          6631,
+          6632
+        ],
+        "observed": {
+          "active": [
+            6619,
+            6620,
+            6621,
+            6622,
+            6623,
+            6624,
+            6625,
+            6626,
+            6627,
+            6628
+          ],
+          "pre_staged": [
+            6619,
+            6620,
+            6621,
+            6622,
+            6623,
+            6624,
+            6625,
+            6626,
+            6627,
+            6628
+          ]
+        }
+      },
+      {
+        "check": "document_dependency_tasks",
+        "expected": [
+          6619,
+          6620,
+          6621,
+          6622,
+          6623,
+          6624,
+          6626,
+          6625,
+          6629,
+          6630,
+          6631,
+          6627,
+          6628,
+          6632
+        ],
+        "observed": {
+          "active": [
+            6619,
+            6620,
+            6621,
+            6622,
+            6623,
+            6624,
+            6625,
+            6626,
+            6627,
+            6628
+          ],
+          "pre_staged": [
+            6619,
+            6620,
+            6621,
+            6622,
+            6623,
+            6624,
+            6625,
+            6626,
+            6627,
+            6628
+          ]
+        }
+      },
+      {
+        "check": "document_deliverable_set",
+        "expected": {
+          "6619": "results/experiment_6619_v578_activation_contract.json",
+          "6620": "results/experiment_6620_gpu_lease_phase_receipts.json",
+          "6621": "results/experiment_6621_mandated_model_admission.json",
+          "6622": "results/experiment_6622_qwen36_direct_headroom.json",
+          "6623": "results/experiment_6623_headroom_support_reducer.json",
+          "6624": "results/experiment_6624_delayed_two_level_decoding.json",
+          "6625": "results/experiment_6625_cold_context_verifier_control.json",
+          "6626": "results/experiment_6626_constraint_authority_support_audit.json",
+          "6627": "results/experiment_6627_spectral_integrity_repair.json",
+          "6628": "results/experiment_6628_spectral_cpu_gpu_replay.json",
+          "6629": "results/experiment_6629_live_memory_actionability.json",
+          "6630": "results/experiment_6630_error_independent_memory_patch_gate.json",
+          "6631": "results/experiment_6631_prospective_support_preserving_csl.json",
+          "6632": "results/experiment_6632_v578_independent_capstone.json"
+        },
+        "observed": {
+          "active": {
+            "6619": "results/experiment_6619_v578_activation_contract.json",
+            "6620": "results/experiment_6620_gpu_lease_phase_receipts.json",
+            "6621": "results/experiment_6621_mandated_model_admission.json",
+            "6622": "results/experiment_6622_qwen36_direct_headroom.json",
+            "6623": "results/experiment_6623_headroom_support_reducer.json",
+            "6624": "results/experiment_6624_delayed_two_level_decoding.json",
+            "6625": "results/experiment_6625_cold_context_verifier_control.json",
+            "6626": "results/experiment_6626_constraint_authority_support_audit.json",
+            "6627": "results/experiment_6627_spectral_integrity_repair.json",
+            "6628": "results/experiment_6628_spectral_cpu_gpu_replay.json"
+          },
+          "pre_staged": {
+            "6619": "results/experiment_6619_v578_activation_contract.json",
+            "6620": "results/experiment_6620_gpu_lease_phase_receipts.json",
+            "6621": "results/experiment_6621_mandated_model_admission.json",
+            "6622": "results/experiment_6622_qwen36_direct_headroom.json",
+            "6623": "results/experiment_6623_headroom_support_reducer.json",
+            "6624": "results/experiment_6624_delayed_two_level_decoding.json",
+            "6625": "results/experiment_6625_cold_context_verifier_control.json",
+            "6626": "results/experiment_6626_constraint_authority_support_audit.json",
+            "6627": "results/experiment_6627_spectral_integrity_repair.json",
+            "6628": "results/experiment_6628_spectral_cpu_gpu_replay.json"
+          }
+        }
+      },
+      {
+        "check": "document_gate_set",
+        "expected": {
+          "6620": [
+            {
+              "artifact_field": "activation_contract_ready_score",
+              "op": "==",
+              "upstream": 6619,
+              "value": 1.0
+            }
+          ],
+          "6621": [
+            {
+              "artifact_field": "gpu_lease_scheduler_ready_score",
+              "op": "==",
+              "upstream": 6620,
+              "value": 1.0
+            }
+          ],
+          "6622": [
+            {
+              "artifact_field": "qwen_admission_ready_score",
+              "op": "==",
+              "upstream": 6621,
+              "value": 1.0
+            }
+          ],
+          "6623": [
+            {
+              "artifact_field": "baseline_rows_complete_score",
+              "op": "==",
+              "upstream": 6622,
+              "value": 1.0
+            }
+          ],
+          "6624": [
+            {
+              "artifact_field": "constrained_decoding_ready_score",
+              "op": "==",
+              "upstream": 6623,
+              "value": 1.0
+            }
+          ],
+          "6625": [
+            {
+              "artifact_field": "qwen_admission_ready_score",
+              "op": "==",
+              "upstream": 6621,
+              "value": 1.0
+            }
+          ],
+          "6626": [
+            {
+              "artifact_field": "decoding_rows_ready_score",
+              "op": "==",
+              "upstream": 6624,
+              "value": 1.0
+            }
+          ],
+          "6627": [
+            {
+              "artifact_field": "activation_contract_ready_score",
+              "op": "==",
+              "upstream": 6619,
+              "value": 1.0
+            }
+          ],
+          "6628": [
+            {
+              "artifact_field": "sampler_integrity_ready_score",
+              "op": "==",
+              "upstream": 6627,
+              "value": 1.0
+            }
+          ],
+          "6629": [
+            {
+              "artifact_field": "qwen_admission_ready_score",
+              "op": "==",
+              "upstream": 6621,
+              "value": 1.0
+            }
+          ],
+          "6630": [
+            {
+              "artifact_field": "live_memory_activation_ready_score",
+              "op": "==",
+              "upstream": 6629,
+              "value": 1.0
+            }
+          ],
+          "6631": [
+            {
+              "artifact_field": "qwen_admission_ready_score",
+              "op": "==",
+              "upstream": 6621,
+              "value": 1.0
+            },
+            {
+              "artifact_field": "memory_patch_contract_ready_score",
+              "op": "==",
+              "upstream": 6630,
+              "value": 1.0
+            }
+          ]
+        },
+        "observed": {
+          "active": {
+            "6620": [
+              {
+                "artifact_field": "activation_contract_ready_score",
+                "op": "==",
+                "upstream": 6619,
+                "value": 1.0
+              }
+            ],
+            "6621": [
+              {
+                "artifact_field": "gpu_lease_scheduler_ready_score",
+                "op": "==",
+                "upstream": 6620,
+                "value": 1.0
+              }
+            ],
+            "6622": [
+              {
+                "artifact_field": "qwen_admission_ready_score",
+                "op": "==",
+                "upstream": 6621,
+                "value": 1.0
+              }
+            ],
+            "6623": [
+              {
+                "artifact_field": "baseline_rows_complete_score",
+                "op": "==",
+                "upstream": 6622,
+                "value": 1.0
+              }
+            ],
+            "6624": [
+              {
+                "artifact_field": "constrained_decoding_ready_score",
+                "op": "==",
+                "upstream": 6623,
+                "value": 1.0
+              }
+            ],
+            "6625": [
+              {
+                "artifact_field": "qwen_admission_ready_score",
+                "op": "==",
+                "upstream": 6621,
+                "value": 1.0
+              },
+              {
+                "artifact_field": "gemma26_admission_ready_score",
+                "op": "==",
+                "upstream": 6621,
+                "value": 1.0
+              }
+            ],
+            "6626": [
+              {
+                "artifact_field": "decoding_rows_ready_score",
+                "op": "==",
+                "upstream": 6624,
+                "value": 1.0
+              }
+            ],
+            "6627": [
+              {
+                "artifact_field": "activation_contract_ready_score",
+                "op": "==",
+                "upstream": 6619,
+                "value": 1.0
+              }
+            ],
+            "6628": [
+              {
+                "artifact_field": "sampler_integrity_ready_score",
+                "op": "==",
+                "upstream": 6627,
+                "value": 1.0
+              }
+            ]
+          },
+          "pre_staged": {
+            "6620": [
+              {
+                "artifact_field": "activation_contract_ready_score",
+                "op": "==",
+                "upstream": 6619,
+                "value": 1.0
+              }
+            ],
+            "6621": [
+              {
+                "artifact_field": "gpu_lease_scheduler_ready_score",
+                "op": "==",
+                "upstream": 6620,
+                "value": 1.0
+              }
+            ],
+            "6622": [
+              {
+                "artifact_field": "qwen_admission_ready_score",
+                "op": "==",
+                "upstream": 6621,
+                "value": 1.0
+              }
+            ],
+            "6623": [
+              {
+                "artifact_field": "baseline_rows_complete_score",
+                "op": "==",
+                "upstream": 6622,
+                "value": 1.0
+              }
+            ],
+            "6624": [
+              {
+                "artifact_field": "constrained_decoding_ready_score",
+                "op": "==",
+                "upstream": 6623,
+                "value": 1.0
+              }
+            ],
+            "6625": [
+              {
+                "artifact_field": "qwen_admission_ready_score",
+                "op": "==",
+                "upstream": 6621,
+                "value": 1.0
+              },
+              {
+                "artifact_field": "gemma26_admission_ready_score",
+                "op": "==",
+                "upstream": 6621,
+                "value": 1.0
+              }
+            ],
+            "6626": [
+              {
+                "artifact_field": "decoding_rows_ready_score",
+                "op": "==",
+                "upstream": 6624,
+                "value": 1.0
+              }
+            ],
+            "6627": [
+              {
+                "artifact_field": "activation_contract_ready_score",
+                "op": "==",
+                "upstream": 6619,
+                "value": 1.0
+              }
+            ],
+            "6628": [
+              {
+                "artifact_field": "sampler_integrity_ready_score",
+                "op": "==",
+                "upstream": 6627,
+                "value": 1.0
+              }
+            ]
+          }
+        }
+      },
+      {
+        "check": "document_model_set",
+        "expected": {
+          "6621": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-31B-it-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "6622": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF"
+          ],
+          "6624": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF"
+          ],
+          "6625": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "6629": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF"
+          ],
+          "6631": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF"
+          ]
+        },
+        "observed": {
+          "active": {
+            "6621": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "unsloth/gemma-4-31B-it-GGUF",
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ],
+            "6622": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "6624": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "6625": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ]
+          },
+          "pre_staged": {
+            "6621": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "unsloth/gemma-4-31B-it-GGUF",
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ],
+            "6622": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "6624": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "6625": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ]
+          }
+        }
+      },
+      {
+        "check": "document_hardware_set",
+        "expected": [
+          6621,
+          6622,
+          6624,
+          6625,
+          6628,
+          6629,
+          6631
+        ],
+        "observed": {
+          "active": [
+            6621,
+            6622,
+            6624,
+            6625,
+            6628
+          ],
+          "pre_staged": [
+            6621,
+            6622,
+            6624,
+            6625,
+            6628
+          ]
+        }
+      },
+      {
+        "check": "model_policy",
+        "expected": true,
+        "observed": {
+          "checks": {
+            "gguf_metadata_tokenizer_behavior": true,
+            "identity_and_hash_receipts": true,
+            "legacy_smoke_only": false,
+            "mandated_repo_ids_present": true,
+            "model_specs_declared": true,
+            "no_silent_fallback": true
+          },
+          "legacy_models_present": [],
+          "passed": false,
+          "present_models": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF"
+          ],
+          "required_models": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF"
+          ],
+          "task_id": "exp6622-qwen36-direct-headroom",
+          "task_present": true
+        },
+        "source": "active",
+        "task_id": "exp6622-qwen36-direct-headroom"
+      },
+      {
+        "check": "model_policy",
+        "expected": true,
+        "observed": {
+          "checks": {
+            "gguf_metadata_tokenizer_behavior": true,
+            "identity_and_hash_receipts": true,
+            "legacy_smoke_only": false,
+            "mandated_repo_ids_present": true,
+            "model_specs_declared": true,
+            "no_silent_fallback": true
+          },
+          "legacy_models_present": [],
+          "passed": false,
+          "present_models": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF"
+          ],
+          "required_models": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF"
+          ],
+          "task_id": "exp6624-delayed-two-level-decoding",
+          "task_present": true
+        },
+        "source": "active",
+        "task_id": "exp6624-delayed-two-level-decoding"
+      },
+      {
+        "check": "model_policy",
+        "expected": true,
+        "observed": {
+          "checks": {
+            "gguf_metadata_tokenizer_behavior": false,
+            "identity_and_hash_receipts": true,
+            "legacy_smoke_only": false,
+            "mandated_repo_ids_present": true,
+            "model_specs_declared": true,
+            "no_silent_fallback": true
+          },
+          "legacy_models_present": [],
+          "passed": false,
+          "present_models": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "required_models": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "task_id": "exp6625-cold-context-verifier-control",
+          "task_present": true
+        },
+        "source": "active",
+        "task_id": "exp6625-cold-context-verifier-control"
+      },
+      {
+        "check": "model_policy",
+        "expected": true,
+        "observed": {
+          "checks": {
+            "gguf_metadata_tokenizer_behavior": false,
+            "identity_and_hash_receipts": false,
+            "legacy_smoke_only": false,
+            "mandated_repo_ids_present": false,
+            "model_specs_declared": false,
+            "no_silent_fallback": false
+          },
+          "legacy_models_present": [],
+          "passed": false,
+          "present_models": [],
+          "required_models": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF"
+          ],
+          "task_id": "exp6629-live-memory-actionability",
+          "task_present": false
+        },
+        "source": "active",
+        "task_id": "exp6629-live-memory-actionability"
+      },
+      {
+        "check": "model_policy",
+        "expected": true,
+        "observed": {
+          "checks": {
+            "gguf_metadata_tokenizer_behavior": false,
+            "identity_and_hash_receipts": false,
+            "legacy_smoke_only": false,
+            "mandated_repo_ids_present": false,
+            "model_specs_declared": false,
+            "no_silent_fallback": false
+          },
+          "legacy_models_present": [],
+          "passed": false,
+          "present_models": [],
+          "required_models": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF"
+          ],
+          "task_id": "exp6631-prospective-support-preserving-csl",
+          "task_present": false
+        },
+        "source": "active",
+        "task_id": "exp6631-prospective-support-preserving-csl"
+      },
+      {
+        "check": "prior_failure_source",
+        "expected": "stored artifact",
+        "experiment_number": 6618,
+        "observed": "missing",
+        "task_id": "exp6621-mandated-model-admission"
+      },
+      {
+        "check": "tests",
+        "expected": "at least one passing receipt",
+        "observed": []
+      }
+    ],
+    "observed": {
+      "active_task_count": 10,
+      "expected_task_count": 14,
+      "failed_validation_count": 0,
+      "gate_count": 10,
+      "missing_task_ids": [
+        "exp6629-live-memory-actionability",
+        "exp6630-error-independent-memory-patch-gate",
+        "exp6631-prospective-support-preserving-csl",
+        "exp6632-v578-independent-capstone"
+      ],
+      "pre_staged_task_count": 10,
+      "prior_failure_count": 12
+    }
+  },
+  "gate_owner_rows": [
+    {
+      "artifact_field": "activation_contract_ready_score",
+      "downstream": "exp6620-gpu-lease-phase-receipts",
+      "expected_value": 1.0,
+      "op": "==",
+      "owner_declares_identical_field": true,
+      "owner_exists": true,
+      "owner_is_earlier": true,
+      "owner_not_retired": true,
+      "passed": true,
+      "upstream": "exp6619-v578-activation-contract"
+    },
+    {
+      "artifact_field": "gpu_lease_scheduler_ready_score",
+      "downstream": "exp6621-mandated-model-admission",
+      "expected_value": 1.0,
+      "op": "==",
+      "owner_declares_identical_field": true,
+      "owner_exists": true,
+      "owner_is_earlier": true,
+      "owner_not_retired": true,
+      "passed": true,
+      "upstream": "exp6620-gpu-lease-phase-receipts"
+    },
+    {
+      "artifact_field": "qwen_admission_ready_score",
+      "downstream": "exp6622-qwen36-direct-headroom",
+      "expected_value": 1.0,
+      "op": "==",
+      "owner_declares_identical_field": true,
+      "owner_exists": true,
+      "owner_is_earlier": true,
+      "owner_not_retired": true,
+      "passed": true,
+      "upstream": "exp6621-mandated-model-admission"
+    },
+    {
+      "artifact_field": "baseline_rows_complete_score",
+      "downstream": "exp6623-headroom-support-reducer",
+      "expected_value": 1.0,
+      "op": "==",
+      "owner_declares_identical_field": true,
+      "owner_exists": true,
+      "owner_is_earlier": true,
+      "owner_not_retired": true,
+      "passed": true,
+      "upstream": "exp6622-qwen36-direct-headroom"
+    },
+    {
+      "artifact_field": "constrained_decoding_ready_score",
+      "downstream": "exp6624-delayed-two-level-decoding",
+      "expected_value": 1.0,
+      "op": "==",
+      "owner_declares_identical_field": true,
+      "owner_exists": true,
+      "owner_is_earlier": true,
+      "owner_not_retired": true,
+      "passed": true,
+      "upstream": "exp6623-headroom-support-reducer"
+    },
+    {
+      "artifact_field": "qwen_admission_ready_score",
+      "downstream": "exp6625-cold-context-verifier-control",
+      "expected_value": 1.0,
+      "op": "==",
+      "owner_declares_identical_field": true,
+      "owner_exists": true,
+      "owner_is_earlier": true,
+      "owner_not_retired": true,
+      "passed": true,
+      "upstream": "exp6621-mandated-model-admission"
+    },
+    {
+      "artifact_field": "gemma26_admission_ready_score",
+      "downstream": "exp6625-cold-context-verifier-control",
+      "expected_value": 1.0,
+      "op": "==",
+      "owner_declares_identical_field": true,
+      "owner_exists": true,
+      "owner_is_earlier": true,
+      "owner_not_retired": true,
+      "passed": true,
+      "upstream": "exp6621-mandated-model-admission"
+    },
+    {
+      "artifact_field": "decoding_rows_ready_score",
+      "downstream": "exp6626-constraint-authority-support-audit",
+      "expected_value": 1.0,
+      "op": "==",
+      "owner_declares_identical_field": true,
+      "owner_exists": true,
+      "owner_is_earlier": true,
+      "owner_not_retired": true,
+      "passed": true,
+      "upstream": "exp6624-delayed-two-level-decoding"
+    },
+    {
+      "artifact_field": "activation_contract_ready_score",
+      "downstream": "exp6627-spectral-integrity-repair",
+      "expected_value": 1.0,
+      "op": "==",
+      "owner_declares_identical_field": true,
+      "owner_exists": true,
+      "owner_is_earlier": true,
+      "owner_not_retired": true,
+      "passed": true,
+      "upstream": "exp6619-v578-activation-contract"
+    },
+    {
+      "artifact_field": "sampler_integrity_ready_score",
+      "downstream": "exp6628-spectral-cpu-gpu-replay",
+      "expected_value": 1.0,
+      "op": "==",
+      "owner_declares_identical_field": true,
+      "owner_exists": true,
+      "owner_is_earlier": true,
+      "owner_not_retired": true,
+      "passed": true,
+      "upstream": "exp6627-spectral-integrity-repair"
+    }
+  ],
+  "honest_verdict": "blocked_v578_activation_contract_incomplete: document promises Exp6619-Exp6632 but both YAML sources contain only Exp6619-Exp6628",
+  "inference_substrate": "v578_complete_activation_contract_no_llm",
+  "model_policy_receipts": [
+    {
+      "checks": {
+        "gguf_metadata_tokenizer_behavior": true,
+        "identity_and_hash_receipts": true,
+        "legacy_smoke_only": true,
+        "mandated_repo_ids_present": true,
+        "model_specs_declared": true,
+        "no_silent_fallback": true
+      },
+      "legacy_models_present": [
+        "Qwen3.5-0.8B",
+        "Gemma-4-E4B-it"
+      ],
+      "passed": true,
+      "present_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "required_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "task_id": "exp6621-mandated-model-admission",
+      "task_present": true
+    },
+    {
+      "checks": {
+        "gguf_metadata_tokenizer_behavior": true,
+        "identity_and_hash_receipts": true,
+        "legacy_smoke_only": false,
+        "mandated_repo_ids_present": true,
+        "model_specs_declared": true,
+        "no_silent_fallback": true
+      },
+      "legacy_models_present": [],
+      "passed": false,
+      "present_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "required_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "task_id": "exp6622-qwen36-direct-headroom",
+      "task_present": true
+    },
+    {
+      "checks": {
+        "gguf_metadata_tokenizer_behavior": true,
+        "identity_and_hash_receipts": true,
+        "legacy_smoke_only": false,
+        "mandated_repo_ids_present": true,
+        "model_specs_declared": true,
+        "no_silent_fallback": true
+      },
+      "legacy_models_present": [],
+      "passed": false,
+      "present_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "required_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "task_id": "exp6624-delayed-two-level-decoding",
+      "task_present": true
+    },
+    {
+      "checks": {
+        "gguf_metadata_tokenizer_behavior": false,
+        "identity_and_hash_receipts": true,
+        "legacy_smoke_only": false,
+        "mandated_repo_ids_present": true,
+        "model_specs_declared": true,
+        "no_silent_fallback": true
+      },
+      "legacy_models_present": [],
+      "passed": false,
+      "present_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "required_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "task_id": "exp6625-cold-context-verifier-control",
+      "task_present": true
+    },
+    {
+      "checks": {
+        "gguf_metadata_tokenizer_behavior": false,
+        "identity_and_hash_receipts": false,
+        "legacy_smoke_only": false,
+        "mandated_repo_ids_present": false,
+        "model_specs_declared": false,
+        "no_silent_fallback": false
+      },
+      "legacy_models_present": [],
+      "passed": false,
+      "present_models": [],
+      "required_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "task_id": "exp6629-live-memory-actionability",
+      "task_present": false
+    },
+    {
+      "checks": {
+        "gguf_metadata_tokenizer_behavior": false,
+        "identity_and_hash_receipts": false,
+        "legacy_smoke_only": false,
+        "mandated_repo_ids_present": false,
+        "model_specs_declared": false,
+        "no_silent_fallback": false
+      },
+      "legacy_models_present": [],
+      "passed": false,
+      "present_models": [],
+      "required_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "task_id": "exp6631-prospective-support-preserving-csl",
+      "task_present": false
+    }
+  ],
+  "preconditions_checked": {
+    "dirty_worktree_state_before": [
+      " M openspec/capabilities/research-reporting/spec.md",
+      "?? python/carnot/experiment_6619_v578_activation_contract.py",
+      "?? tests/python/test_experiment_6619_v578_activation_contract.py"
+    ],
+    "llm_invocation_count": 0,
+    "no_llm_substrate": "v578_complete_activation_contract_no_llm",
+    "planning_date": "20260826",
+    "protected_paths": [
+      "research-roadmap.yaml",
+      "scripts/research_conductor.py"
+    ],
+    "resources_and_versions": {
+      "cpu_count": 24,
+      "cpu_model": "AMD Ryzen AI 9 HX 370 w/ Radeon 890M",
+      "disk_free_bytes": 1075544043520,
+      "disk_total_bytes": 3953289023488,
+      "platform": "Linux-7.2.0-1-cachyos-x86_64-with-glibc2.44",
+      "pydantic": "2.13.4",
+      "python": "3.12.13",
+      "pyyaml": "6.0.3",
+      "ram_total_bytes": 134304591872
+    },
+    "roadmap_sources": {
+      "active": {
+        "git_commit": null,
+        "path": "research-roadmap.yaml",
+        "sha256": "sha256:8070bcf74c6451efa600c256febd540d78efc0dc3e667da8fb2b6e2ef59731fc",
+        "source_state": "working_tree"
+      },
+      "pre_staged": {
+        "git_commit": "cc5155402b1b1ea450208d5bdf1ef303d53fe266",
+        "path": "research-roadmap-next.yaml",
+        "sha256": "sha256:8070bcf74c6451efa600c256febd540d78efc0dc3e667da8fb2b6e2ef59731fc",
+        "source_state": "historical_git_blob"
+      }
+    },
+    "source_hashes": [
+      {
+        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "present": true,
+        "sha256": "sha256:8e6d28690630a3b07c4bc048d5ed286d51d21aa37dd3ee54f1f8f821e73314b8",
+        "source_state": "working_tree"
+      },
+      {
+        "path": "results/experiment_6616_v577_execution_contract.json",
+        "present": true,
+        "sha256": "sha256:d53d001311028ccf55fa05d9bec9d0de34029c9572d3c56445c1415c90c4dd71",
+        "source_state": "working_tree"
+      },
+      {
+        "path": "scripts/roadmap_schema.py",
+        "present": true,
+        "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+        "source_state": "working_tree"
+      },
+      {
+        "path": "scripts/validate_prior_failures.py",
+        "present": true,
+        "sha256": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
+        "source_state": "working_tree"
+      },
+      {
+        "path": "scripts/exclusion_manifest_lint.py",
+        "present": true,
+        "sha256": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+        "source_state": "working_tree"
+      },
+      {
+        "path": "scripts/conductor_gates.py",
+        "present": true,
+        "sha256": "sha256:fbbcb1eb324f8dfae835ba694c4a665c6d4a512f021e7165b387ec4518ce37fd",
+        "source_state": "working_tree"
+      },
+      {
+        "path": "ops/exclusion_manifest.yaml",
+        "present": true,
+        "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "source_state": "working_tree"
+      },
+      {
+        "path": "research-complete.yaml",
+        "present": true,
+        "sha256": "sha256:c343d45ee44ba3a7facdbf8f9c907a4f84ed1080d109ad6d9f64fd0e2ca04e79",
+        "source_state": "working_tree"
+      },
+      {
+        "path": "ops/conductor-log.md",
+        "present": true,
+        "sha256": "sha256:1d14f97229ae5b72780ed4a780ad84cb0f620f254cd0187adb334f0db9f8765c",
+        "source_state": "working_tree"
+      },
+      {
+        "path": "ops/known-issues.md",
+        "present": true,
+        "sha256": "sha256:a30ad54528ac8f120d6aa3cf37e2ae92d6daf7de0364ede0d70436f6f1438f9f",
+        "source_state": "working_tree"
+      },
+      {
+        "path": "research-references.md",
+        "present": true,
+        "sha256": "sha256:d7ac57075994c81e566801125f54ff6ee177796984b4d5171ce1855fb29a5bb5",
+        "source_state": "working_tree"
+      },
+      {
+        "path": "openspec/capabilities/research-reporting/spec.md",
+        "present": true,
+        "sha256": "sha256:b86d56ca6d486c2c41e7107951d0ef0c7887ee67053e03cc5a58003881b617eb",
+        "source_state": "working_tree"
+      },
+      {
+        "path": "research-roadmap.yaml",
+        "present": true,
+        "sha256": "sha256:8070bcf74c6451efa600c256febd540d78efc0dc3e667da8fb2b6e2ef59731fc",
+        "source_state": "working_tree"
+      },
+      {
+        "path": "scripts/research_conductor.py",
+        "present": true,
+        "sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+        "source_state": "working_tree"
+      },
+      {
+        "git_commit": "cc5155402b1b1ea450208d5bdf1ef303d53fe266",
+        "path": "research-roadmap-next.yaml",
+        "present": true,
+        "sha256": "sha256:8070bcf74c6451efa600c256febd540d78efc0dc3e667da8fb2b6e2ef59731fc",
+        "source_state": "historical_git_blob"
+      }
+    ]
+  },
+  "prior_failure_dispositions": [
+    {
+      "changed_condition": "V578 pre-stages all Exp6619-Exp6632 YAML contracts before this task runs and validates document-to-YAML equality as the activation root.",
+      "changed_condition_concrete": true,
+      "declared_by_task": "exp6619-v578-activation-contract",
+      "declared_verdict": "blocked_roadmap_contract_incomplete: expected Exp6616-Exp6628 YAML contracts are not all present",
+      "experiment_id": "exp6616-v577-execution-contract",
+      "experiment_number": 6616,
+      "retire_if_same_verdict": true,
+      "source_path": "results/experiment_6616_v577_execution_contract.json",
+      "source_sha256": "sha256:d53d001311028ccf55fa05d9bec9d0de34029c9572d3c56445c1415c90c4dd71",
+      "source_state": "present",
+      "stored_honest_verdict": "blocked_roadmap_contract_incomplete: expected Exp6616-Exp6628 YAML contracts are not all present",
+      "verdict_matches": true
+    },
+    {
+      "changed_condition": "The complete V578 activation root now exists in the same roadmap, so the implementation can run instead of failing on the missing V577 contract.",
+      "changed_condition_concrete": true,
+      "declared_by_task": "exp6620-gpu-lease-phase-receipts",
+      "declared_verdict": "blocked_gate_check_failed",
+      "experiment_id": "exp6617-gpu-lease-phase-receipts",
+      "experiment_number": 6617,
+      "retire_if_same_verdict": true,
+      "source_path": "results/experiment_6617_gpu_lease_phase_receipts.json",
+      "source_sha256": "sha256:0d1ab8d90896af0b5755598b848cdf061bc53842cd17a911dbab87ebbb57f304",
+      "source_state": "present",
+      "stored_honest_verdict": "blocked_gate_check_failed",
+      "verdict_matches": true
+    },
+    {
+      "changed_condition": "The V578 activation contract and implemented lease now precede three independent fresh-process canaries in the same roadmap.",
+      "changed_condition_concrete": true,
+      "declared_by_task": "exp6621-mandated-model-admission",
+      "declared_verdict": "blocked_upstream_retired",
+      "experiment_id": "exp6618-mandated-model-admission",
+      "experiment_number": 6618,
+      "retire_if_same_verdict": true,
+      "source_path": null,
+      "source_sha256": null,
+      "source_state": "missing",
+      "stored_honest_verdict": null,
+      "verdict_matches": null
+    },
+    {
+      "changed_condition": "This bounded canary proves lease, process, phase, model, and unload identity before any benchmark rows are attempted.",
+      "changed_condition_concrete": true,
+      "declared_by_task": "exp6621-mandated-model-admission",
+      "declared_verdict": "blocked_gpu_process_receipts: direct baseline integrity did not complete",
+      "experiment_id": "exp6605-qwen36-direct-headroom",
+      "experiment_number": 6605,
+      "retire_if_same_verdict": true,
+      "source_path": "results/experiment_6605_qwen36_direct_headroom.json",
+      "source_sha256": "sha256:a52f92667200db339b4519acdf30b2ec59eec18aa9d24e3ebd93fbcb659b096a",
+      "source_state": "present",
+      "stored_honest_verdict": "blocked_gpu_process_receipts: direct baseline integrity did not complete",
+      "verdict_matches": true
+    },
+    {
+      "changed_condition": "The canary includes complete prior-failure metadata and reports Gemma 31B readiness independently of other families.",
+      "changed_condition_concrete": true,
+      "declared_by_task": "exp6621-mandated-model-admission",
+      "declared_verdict": "blocked_gate_check_failed",
+      "experiment_id": "exp6606-gemma4-31b-direct-headroom",
+      "experiment_number": 6606,
+      "retire_if_same_verdict": true,
+      "source_path": "results/experiment_6606_gemma4_31b_direct_headroom.json",
+      "source_sha256": "sha256:d68fd386f007d1a44182d1562da124f4c4589f5c7fd6a0e4577b13159003dedc",
+      "source_state": "present",
+      "stored_honest_verdict": "blocked_gate_check_failed",
+      "verdict_matches": true
+    },
+    {
+      "changed_condition": "Device and process ownership are established before load and unload evidence is written by the same lease owner.",
+      "changed_condition_concrete": true,
+      "declared_by_task": "exp6621-mandated-model-admission",
+      "declared_verdict": "blocked_gpu_ownership: expected True, observed False",
+      "experiment_id": "exp6607-gemma4-26b-direct-headroom",
+      "experiment_number": 6607,
+      "retire_if_same_verdict": true,
+      "source_path": "results/experiment_6607_gemma4_26b_direct_headroom.json",
+      "source_sha256": "sha256:c428c38a8544b22cfec528155f103dfcd38cd555023a5db5c2e3056561c2052a",
+      "source_state": "present",
+      "stored_honest_verdict": "blocked_gpu_ownership: expected True, observed False",
+      "verdict_matches": true
+    },
+    {
+      "changed_condition": "Exp6622 runs only after a task-scoped lease and independent Qwen admission canary, preserving phase and unload receipts beside every raw row.",
+      "changed_condition_concrete": true,
+      "declared_by_task": "exp6622-qwen36-direct-headroom",
+      "declared_verdict": "blocked_gpu_process_receipts: direct baseline integrity did not complete",
+      "experiment_id": "exp6605-qwen36-direct-headroom",
+      "experiment_number": 6605,
+      "retire_if_same_verdict": true,
+      "source_path": "results/experiment_6605_qwen36_direct_headroom.json",
+      "source_sha256": "sha256:a52f92667200db339b4519acdf30b2ec59eec18aa9d24e3ebd93fbcb659b096a",
+      "source_state": "present",
+      "stored_honest_verdict": "blocked_gpu_process_receipts: direct baseline integrity did not complete",
+      "verdict_matches": true
+    },
+    {
+      "changed_condition": "The reducer now consumes one execution-qualified Qwen family with complete raw rows and adds fixed-budget recoverable support to the eligibility rule.",
+      "changed_condition_concrete": true,
+      "declared_by_task": "exp6623-headroom-support-reducer",
+      "declared_verdict": "blocked_family_baseline_evidence: no family has complete replayable baseline rows; eligibility is frozen empty and no treatment benefit is claimed",
+      "experiment_id": "exp6608-family-headroom-reducer",
+      "experiment_number": 6608,
+      "retire_if_same_verdict": true,
+      "source_path": "results/experiment_6608_family_headroom_reducer.json",
+      "source_sha256": "sha256:85da1e31b22992fa981a4aa5616e7cb9689803d398a1084c7c746c177c4a2d10",
+      "source_state": "present",
+      "stored_honest_verdict": "blocked_family_baseline_evidence: no family has complete replayable baseline rows; eligibility is frozen empty and no treatment benefit is claimed",
+      "verdict_matches": true
+    },
+    {
+      "changed_condition": "The treatment now starts only after one execution-qualified Qwen baseline has complete rows and independently reduced positive headroom; it also delays constraints until structured output begins.",
+      "changed_condition_concrete": true,
+      "declared_by_task": "exp6624-delayed-two-level-decoding",
+      "declared_verdict": "blocked_gate_check_failed",
+      "experiment_id": "exp6609-two-level-constrained-decoding",
+      "experiment_number": 6609,
+      "retire_if_same_verdict": true,
+      "source_path": "results/experiment_6609_two_level_constrained_decoding.json",
+      "source_sha256": "sha256:ef2b87112aedc45b53793d06bbff1dceff7fb091f4bde0141b0800df9edb8b2a",
+      "source_state": "present",
+      "stored_honest_verdict": "blocked_gate_check_failed",
+      "verdict_matches": true
+    },
+    {
+      "changed_condition": "This is an independent exact replay and adversarial audit of newly completed treatment rows, with budget-indexed support and no LLM inference.",
+      "changed_condition_concrete": true,
+      "declared_by_task": "exp6626-constraint-authority-support-audit",
+      "declared_verdict": "blocked_gate_check_failed",
+      "experiment_id": "exp6609-two-level-constrained-decoding",
+      "experiment_number": 6609,
+      "retire_if_same_verdict": true,
+      "source_path": "results/experiment_6609_two_level_constrained_decoding.json",
+      "source_sha256": "sha256:ef2b87112aedc45b53793d06bbff1dceff7fb091f4bde0141b0800df9edb8b2a",
+      "source_state": "present",
+      "stored_honest_verdict": "blocked_gate_check_failed",
+      "verdict_matches": true
+    },
+    {
+      "changed_condition": "This attempt repairs the exact parity, cost decomposition, focused tests, and protected-file receipts before any scale or accelerator claim is reopened.",
+      "changed_condition_concrete": true,
+      "declared_by_task": "exp6627-spectral-integrity-repair",
+      "declared_verdict": "blocked_reference_parity_cost_or_protection: stationary, transition, wall, and parity conclusions are withheld; CPU software only",
+      "experiment_id": "exp6612-spectral-k-block-scale-rust-parity",
+      "experiment_number": 6612,
+      "retire_if_same_verdict": true,
+      "source_path": "results/experiment_6612_spectral_k_block_scale_rust_parity.json",
+      "source_sha256": "sha256:c49aaee1d2ac5318b2ea680c009719e770d4b30993eff9934cc6a864f335dbf0",
+      "source_state": "present",
+      "stored_honest_verdict": "blocked_reference_parity_cost_or_protection: stationary, transition, wall, and parity conclusions are withheld; CPU software only",
+      "verdict_matches": true
+    },
+    {
+      "changed_condition": "The independent replay is gated on repaired parity and cost evidence, adds a separate batched RTX implementation, and accounts for host-device transfer and setup end to end.",
+      "changed_condition_concrete": true,
+      "declared_by_task": "exp6628-spectral-cpu-gpu-replay",
+      "declared_verdict": "blocked_reference_parity_cost_or_protection: stationary, transition, wall, and parity conclusions are withheld; CPU software only",
+      "experiment_id": "exp6612-spectral-k-block-scale-rust-parity",
+      "experiment_number": 6612,
+      "retire_if_same_verdict": true,
+      "source_path": "results/experiment_6612_spectral_k_block_scale_rust_parity.json",
+      "source_sha256": "sha256:c49aaee1d2ac5318b2ea680c009719e770d4b30993eff9934cc6a864f335dbf0",
+      "source_state": "present",
+      "stored_honest_verdict": "blocked_reference_parity_cost_or_protection: stationary, transition, wall, and parity conclusions are withheld; CPU software only",
+      "verdict_matches": true
+    }
+  ],
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "rows": [
+      {
+        "after_sha256": "sha256:8070bcf74c6451efa600c256febd540d78efc0dc3e667da8fb2b6e2ef59731fc",
+        "before_sha256": "sha256:8070bcf74c6451efa600c256febd540d78efc0dc3e667da8fb2b6e2ef59731fc",
+        "path": "research-roadmap.yaml",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+        "before_sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+        "path": "scripts/research_conductor.py",
+        "unchanged": true
+      }
+    ]
+  },
+  "reproducibility_checksum": "sha256:078df67a240ae3bdaca7e101c0ee93ffb29484b348d61f46d2b7eeefcbac5860",
+  "status": "blocked_v578_activation_contract_incomplete",
+  "task_contract_rows": [
+    {
+      "active_present": true,
+      "deliverable": "results/experiment_6619_v578_activation_contract.json",
+      "document_title": "complete V578 activation and gate-ownership contract",
+      "expected_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "task_contract_rows",
+        "document_yaml_diff",
+        "gate_owner_rows",
+        "prior_failure_dispositions",
+        "model_policy_receipts",
+        "validation_receipts",
+        "activation_contract_ready_score",
+        "attack_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "experiment_number": 6619,
+      "gate_owners": [],
+      "gates": [],
+      "id": "exp6619-v578-activation-contract",
+      "model_routing": {
+        "agent_type": null,
+        "model": "opus"
+      },
+      "order": 1,
+      "pre_staged_present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "V578 pre-stages all Exp6619-Exp6632 YAML contracts before this task runs and validates document-to-YAML equality as the activation root.",
+          "experiment_id": "exp6616-v577-execution-contract",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_roadmap_contract_incomplete: expected Exp6616-Exp6628 YAML contracts are not all present"
+        }
+      ],
+      "prompt_terminator": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "requires_gpu": false,
+      "title": "Complete V578 activation and gate-ownership contract",
+      "track": "execution-integrity"
+    },
+    {
+      "active_present": true,
+      "deliverable": "results/experiment_6620_gpu_lease_phase_receipts.json",
+      "document_title": "task-scoped GPU lease and phase receipts",
+      "expected_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "lease_api_receipts",
+        "phase_transition_rows",
+        "process_fixture_rows",
+        "accelerator_receipt_examples",
+        "gpu_lease_scheduler_ready_score",
+        "attack_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "experiment_number": 6620,
+      "gate_owners": [
+        "exp6619-v578-activation-contract"
+      ],
+      "gates": [
+        {
+          "artifact_field": "activation_contract_ready_score",
+          "op": "==",
+          "upstream": "exp6619-v578-activation-contract",
+          "value": 1.0
+        }
+      ],
+      "id": "exp6620-gpu-lease-phase-receipts",
+      "model_routing": {
+        "agent_type": null,
+        "model": "opus"
+      },
+      "order": 2,
+      "pre_staged_present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "The complete V578 activation root now exists in the same roadmap, so the implementation can run instead of failing on the missing V577 contract.",
+          "experiment_id": "exp6617-gpu-lease-phase-receipts",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        }
+      ],
+      "prompt_terminator": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "requires_gpu": false,
+      "title": "Task-scoped GPU lease and phase receipt implementation",
+      "track": "execution-integrity"
+    },
+    {
+      "active_present": true,
+      "deliverable": "results/experiment_6621_mandated_model_admission.json",
+      "document_title": "independent mandated-model admission canaries",
+      "expected_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "rows",
+        "model_specs",
+        "qwen_admission_ready_score",
+        "gemma31_admission_ready_score",
+        "gemma26_admission_ready_score",
+        "attack_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "experiment_number": 6621,
+      "gate_owners": [
+        "exp6620-gpu-lease-phase-receipts"
+      ],
+      "gates": [
+        {
+          "artifact_field": "gpu_lease_scheduler_ready_score",
+          "op": "==",
+          "upstream": "exp6620-gpu-lease-phase-receipts",
+          "value": 1.0
+        }
+      ],
+      "id": "exp6621-mandated-model-admission",
+      "model_routing": {
+        "agent_type": null,
+        "model": "opus"
+      },
+      "order": 3,
+      "pre_staged_present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "The V578 activation contract and implemented lease now precede three independent fresh-process canaries in the same roadmap.",
+          "experiment_id": "exp6618-mandated-model-admission",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_upstream_retired"
+        },
+        {
+          "addressed_by": "This bounded canary proves lease, process, phase, model, and unload identity before any benchmark rows are attempted.",
+          "experiment_id": "exp6605-qwen36-direct-headroom",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gpu_process_receipts: direct baseline integrity did not complete"
+        },
+        {
+          "addressed_by": "The canary includes complete prior-failure metadata and reports Gemma 31B readiness independently of other families.",
+          "experiment_id": "exp6606-gemma4-31b-direct-headroom",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Device and process ownership are established before load and unload evidence is written by the same lease owner.",
+          "experiment_id": "exp6607-gemma4-26b-direct-headroom",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gpu_ownership: expected True, observed False"
+        }
+      ],
+      "prompt_terminator": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "requires_gpu": true,
+      "title": "Independent mandated-model CUDA admission canaries",
+      "track": "model-admission"
+    },
+    {
+      "active_present": true,
+      "deliverable": "results/experiment_6622_qwen36_direct_headroom.json",
+      "document_title": "bounded Qwen3.6 direct-headroom requalification",
+      "expected_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "rows",
+        "model_specs",
+        "baseline_metrics",
+        "baseline_rows_complete_score",
+        "attack_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "experiment_number": 6622,
+      "gate_owners": [
+        "exp6621-mandated-model-admission"
+      ],
+      "gates": [
+        {
+          "artifact_field": "qwen_admission_ready_score",
+          "op": "==",
+          "upstream": "exp6621-mandated-model-admission",
+          "value": 1.0
+        }
+      ],
+      "id": "exp6622-qwen36-direct-headroom",
+      "model_routing": {
+        "agent_type": null,
+        "model": null
+      },
+      "order": 4,
+      "pre_staged_present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "Exp6622 runs only after a task-scoped lease and independent Qwen admission canary, preserving phase and unload receipts beside every raw row.",
+          "experiment_id": "exp6605-qwen36-direct-headroom",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gpu_process_receipts: direct baseline integrity did not complete"
+        }
+      ],
+      "prompt_terminator": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "requires_gpu": true,
+      "title": "Bounded Qwen3.6 direct-headroom requalification",
+      "track": "constrained-decoding"
+    },
+    {
+      "active_present": true,
+      "deliverable": "results/experiment_6623_headroom_support_reducer.json",
+      "document_title": "independent headroom and support reducer",
+      "expected_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "rows",
+        "recomputed_metrics",
+        "eligibility_decision",
+        "constrained_decoding_ready_score",
+        "attack_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "experiment_number": 6623,
+      "gate_owners": [
+        "exp6622-qwen36-direct-headroom"
+      ],
+      "gates": [
+        {
+          "artifact_field": "baseline_rows_complete_score",
+          "op": "==",
+          "upstream": "exp6622-qwen36-direct-headroom",
+          "value": 1.0
+        }
+      ],
+      "id": "exp6623-headroom-support-reducer",
+      "model_routing": {
+        "agent_type": null,
+        "model": null
+      },
+      "order": 5,
+      "pre_staged_present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "The reducer now consumes one execution-qualified Qwen family with complete raw rows and adds fixed-budget recoverable support to the eligibility rule.",
+          "experiment_id": "exp6608-family-headroom-reducer",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_family_baseline_evidence: no family has complete replayable baseline rows; eligibility is frozen empty and no treatment benefit is claimed"
+        }
+      ],
+      "prompt_terminator": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "requires_gpu": false,
+      "title": "Independent direct-headroom and recoverable-support reducer",
+      "track": "constrained-decoding"
+    },
+    {
+      "active_present": true,
+      "deliverable": "results/experiment_6624_delayed_two_level_decoding.json",
+      "document_title": "delayed two-level constrained decoding",
+      "expected_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "rows",
+        "model_specs",
+        "arm_metrics",
+        "support_preservation_receipts",
+        "decoding_rows_ready_score",
+        "attack_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "experiment_number": 6624,
+      "gate_owners": [
+        "exp6623-headroom-support-reducer"
+      ],
+      "gates": [
+        {
+          "artifact_field": "constrained_decoding_ready_score",
+          "op": "==",
+          "upstream": "exp6623-headroom-support-reducer",
+          "value": 1.0
+        }
+      ],
+      "id": "exp6624-delayed-two-level-decoding",
+      "model_routing": {
+        "agent_type": null,
+        "model": null
+      },
+      "order": 6,
+      "pre_staged_present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "The treatment now starts only after one execution-qualified Qwen baseline has complete rows and independently reduced positive headroom; it also delays constraints until structured output begins.",
+          "experiment_id": "exp6609-two-level-constrained-decoding",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        }
+      ],
+      "prompt_terminator": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "requires_gpu": true,
+      "title": "Headroom-gated delayed two-level constrained decoding",
+      "track": "constrained-decoding"
+    },
+    {
+      "active_present": true,
+      "deliverable": "results/experiment_6625_cold_context_verifier_control.json",
+      "document_title": "cold-context verifier criterion control",
+      "expected_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "rows",
+        "model_specs",
+        "signal_detection_metrics",
+        "byte_identity_receipts",
+        "cold_context_verifier_ready_score",
+        "attack_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "experiment_number": 6625,
+      "gate_owners": [
+        "exp6621-mandated-model-admission",
+        "exp6621-mandated-model-admission"
+      ],
+      "gates": [
+        {
+          "artifact_field": "qwen_admission_ready_score",
+          "op": "==",
+          "upstream": "exp6621-mandated-model-admission",
+          "value": 1.0
+        },
+        {
+          "artifact_field": "gemma26_admission_ready_score",
+          "op": "==",
+          "upstream": "exp6621-mandated-model-admission",
+          "value": 1.0
+        }
+      ],
+      "id": "exp6625-cold-context-verifier-control",
+      "model_routing": {
+        "agent_type": null,
+        "model": null
+      },
+      "order": 7,
+      "pre_staged_present": true,
+      "prior_failures": [],
+      "prompt_terminator": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "requires_gpu": true,
+      "title": "Cold-context verifier criterion-shift control",
+      "track": "verifier-safety"
+    },
+    {
+      "active_present": true,
+      "deliverable": "results/experiment_6626_constraint_authority_support_audit.json",
+      "document_title": "exact constraint authority and support audit",
+      "expected_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "rows",
+        "recomputed_metrics",
+        "authority_boundary_receipts",
+        "authority_audit_passed_score",
+        "attack_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "experiment_number": 6626,
+      "gate_owners": [
+        "exp6624-delayed-two-level-decoding"
+      ],
+      "gates": [
+        {
+          "artifact_field": "decoding_rows_ready_score",
+          "op": "==",
+          "upstream": "exp6624-delayed-two-level-decoding",
+          "value": 1.0
+        }
+      ],
+      "id": "exp6626-constraint-authority-support-audit",
+      "model_routing": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "order": 8,
+      "pre_staged_present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "This is an independent exact replay and adversarial audit of newly completed treatment rows, with budget-indexed support and no LLM inference.",
+          "experiment_id": "exp6609-two-level-constrained-decoding",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        }
+      ],
+      "prompt_terminator": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "requires_gpu": false,
+      "title": "Exact constraint-authority and support-preservation audit",
+      "track": "verifier-safety"
+    },
+    {
+      "active_present": true,
+      "deliverable": "results/experiment_6627_spectral_integrity_repair.json",
+      "document_title": "spectral integrity and reference repair",
+      "expected_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "rows",
+        "failure_reproduction_rows",
+        "parity_metrics",
+        "cost_breakdown",
+        "sampler_integrity_ready_score",
+        "attack_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "experiment_number": 6627,
+      "gate_owners": [
+        "exp6619-v578-activation-contract"
+      ],
+      "gates": [
+        {
+          "artifact_field": "activation_contract_ready_score",
+          "op": "==",
+          "upstream": "exp6619-v578-activation-contract",
+          "value": 1.0
+        }
+      ],
+      "id": "exp6627-spectral-integrity-repair",
+      "model_routing": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "order": 9,
+      "pre_staged_present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "This attempt repairs the exact parity, cost decomposition, focused tests, and protected-file receipts before any scale or accelerator claim is reopened.",
+          "experiment_id": "exp6612-spectral-k-block-scale-rust-parity",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_reference_parity_cost_or_protection: stationary, transition, wall, and parity conclusions are withheld; CPU software only"
+        }
+      ],
+      "prompt_terminator": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "requires_gpu": false,
+      "title": "Spectral k-block sampler integrity and reference repair",
+      "track": "energy-sampling"
+    },
+    {
+      "active_present": true,
+      "deliverable": "results/experiment_6628_spectral_cpu_gpu_replay.json",
+      "document_title": "independent CPU/GPU spectral replay",
+      "expected_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "rows",
+        "correctness_metrics",
+        "performance_metrics",
+        "cost_breakdown",
+        "portability_record",
+        "attack_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "experiment_number": 6628,
+      "gate_owners": [
+        "exp6627-spectral-integrity-repair"
+      ],
+      "gates": [
+        {
+          "artifact_field": "sampler_integrity_ready_score",
+          "op": "==",
+          "upstream": "exp6627-spectral-integrity-repair",
+          "value": 1.0
+        }
+      ],
+      "id": "exp6628-spectral-cpu-gpu-replay",
+      "model_routing": {
+        "agent_type": null,
+        "model": "opus"
+      },
+      "order": 10,
+      "pre_staged_present": true,
+      "prior_failures": [
+        {
+          "addressed_by": "The independent replay is gated on repaired parity and cost evidence, adds a separate batched RTX implementation, and accounts for host-device transfer and setup end to end.",
+          "experiment_id": "exp6612-spectral-k-block-scale-rust-parity",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_reference_parity_cost_or_protection: stationary, transition, wall, and parity conclusions are withheld; CPU software only"
+        }
+      ],
+      "prompt_terminator": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "requires_gpu": true,
+      "title": "Independent spectral CPU and RTX GPU cost replay",
+      "track": "hardware-acceleration"
+    },
+    {
+      "active_present": false,
+      "deliverable": null,
+      "document_title": "held-out live memory actionability canary",
+      "expected_fields": [],
+      "experiment_number": 6629,
+      "gate_owners": null,
+      "gates": null,
+      "id": "exp6629-live-memory-actionability",
+      "model_routing": null,
+      "order": 11,
+      "pre_staged_present": false,
+      "prior_failures": null,
+      "prompt_terminator": null,
+      "requires_gpu": null,
+      "title": null,
+      "track": null
+    },
+    {
+      "active_present": false,
+      "deliverable": null,
+      "document_title": "error-independent component patch gate",
+      "expected_fields": [],
+      "experiment_number": 6630,
+      "gate_owners": null,
+      "gates": null,
+      "id": "exp6630-error-independent-memory-patch-gate",
+      "model_routing": null,
+      "order": 12,
+      "pre_staged_present": false,
+      "prior_failures": null,
+      "prompt_terminator": null,
+      "requires_gpu": null,
+      "title": null,
+      "track": null
+    },
+    {
+      "active_present": false,
+      "deliverable": null,
+      "document_title": "prospective multi-order continuous self-learning",
+      "expected_fields": [],
+      "experiment_number": 6631,
+      "gate_owners": null,
+      "gates": null,
+      "id": "exp6631-prospective-support-preserving-csl",
+      "model_routing": null,
+      "order": 13,
+      "pre_staged_present": false,
+      "prior_failures": null,
+      "prompt_terminator": null,
+      "requires_gpu": null,
+      "title": null,
+      "track": null
+    },
+    {
+      "active_present": false,
+      "deliverable": null,
+      "document_title": "independent capstone and architecture reconciliation",
+      "expected_fields": [],
+      "experiment_number": 6632,
+      "gate_owners": null,
+      "gates": null,
+      "id": "exp6632-v578-independent-capstone",
+      "model_routing": null,
+      "order": 14,
+      "pre_staged_present": false,
+      "prior_failures": null,
+      "prompt_terminator": null,
+      "requires_gpu": null,
+      "title": null,
+      "track": null
+    }
+  ],
+  "tests_run": [],
+  "validation_receipts": [
+    {
+      "command": "internal:validate_activation_contract:schema",
+      "duration_s": 0.0,
+      "exit_code": 0,
+      "observed": [],
+      "scope": "schema"
+    },
+    {
+      "command": "internal:validate_activation_contract:milestone",
+      "duration_s": 0.0,
+      "exit_code": 0,
+      "observed": [],
+      "scope": "milestone"
+    },
+    {
+      "command": "internal:validate_activation_contract:identity",
+      "duration_s": 0.0,
+      "exit_code": 1,
+      "observed": [
+        {
+          "check": "document_task_order",
+          "expected": [
+            6619,
+            6620,
+            6621,
+            6622,
+            6623,
+            6624,
+            6625,
+            6626,
+            6627,
+            6628,
+            6629,
+            6630,
+            6631,
+            6632
+          ],
+          "observed": {
+            "active": [
+              6619,
+              6620,
+              6621,
+              6622,
+              6623,
+              6624,
+              6625,
+              6626,
+              6627,
+              6628
+            ],
+            "pre_staged": [
+              6619,
+              6620,
+              6621,
+              6622,
+              6623,
+              6624,
+              6625,
+              6626,
+              6627,
+              6628
+            ]
+          }
+        },
+        {
+          "check": "document_deliverable_set",
+          "expected": {
+            "6619": "results/experiment_6619_v578_activation_contract.json",
+            "6620": "results/experiment_6620_gpu_lease_phase_receipts.json",
+            "6621": "results/experiment_6621_mandated_model_admission.json",
+            "6622": "results/experiment_6622_qwen36_direct_headroom.json",
+            "6623": "results/experiment_6623_headroom_support_reducer.json",
+            "6624": "results/experiment_6624_delayed_two_level_decoding.json",
+            "6625": "results/experiment_6625_cold_context_verifier_control.json",
+            "6626": "results/experiment_6626_constraint_authority_support_audit.json",
+            "6627": "results/experiment_6627_spectral_integrity_repair.json",
+            "6628": "results/experiment_6628_spectral_cpu_gpu_replay.json",
+            "6629": "results/experiment_6629_live_memory_actionability.json",
+            "6630": "results/experiment_6630_error_independent_memory_patch_gate.json",
+            "6631": "results/experiment_6631_prospective_support_preserving_csl.json",
+            "6632": "results/experiment_6632_v578_independent_capstone.json"
+          },
+          "observed": {
+            "active": {
+              "6619": "results/experiment_6619_v578_activation_contract.json",
+              "6620": "results/experiment_6620_gpu_lease_phase_receipts.json",
+              "6621": "results/experiment_6621_mandated_model_admission.json",
+              "6622": "results/experiment_6622_qwen36_direct_headroom.json",
+              "6623": "results/experiment_6623_headroom_support_reducer.json",
+              "6624": "results/experiment_6624_delayed_two_level_decoding.json",
+              "6625": "results/experiment_6625_cold_context_verifier_control.json",
+              "6626": "results/experiment_6626_constraint_authority_support_audit.json",
+              "6627": "results/experiment_6627_spectral_integrity_repair.json",
+              "6628": "results/experiment_6628_spectral_cpu_gpu_replay.json"
+            },
+            "pre_staged": {
+              "6619": "results/experiment_6619_v578_activation_contract.json",
+              "6620": "results/experiment_6620_gpu_lease_phase_receipts.json",
+              "6621": "results/experiment_6621_mandated_model_admission.json",
+              "6622": "results/experiment_6622_qwen36_direct_headroom.json",
+              "6623": "results/experiment_6623_headroom_support_reducer.json",
+              "6624": "results/experiment_6624_delayed_two_level_decoding.json",
+              "6625": "results/experiment_6625_cold_context_verifier_control.json",
+              "6626": "results/experiment_6626_constraint_authority_support_audit.json",
+              "6627": "results/experiment_6627_spectral_integrity_repair.json",
+              "6628": "results/experiment_6628_spectral_cpu_gpu_replay.json"
+            }
+          }
+        }
+      ],
+      "scope": "identity"
+    },
+    {
+      "command": "internal:validate_activation_contract:gate",
+      "duration_s": 0.0,
+      "exit_code": 1,
+      "observed": [
+        {
+          "check": "document_gate_set",
+          "expected": {
+            "6620": [
+              {
+                "artifact_field": "activation_contract_ready_score",
+                "op": "==",
+                "upstream": 6619,
+                "value": 1.0
+              }
+            ],
+            "6621": [
+              {
+                "artifact_field": "gpu_lease_scheduler_ready_score",
+                "op": "==",
+                "upstream": 6620,
+                "value": 1.0
+              }
+            ],
+            "6622": [
+              {
+                "artifact_field": "qwen_admission_ready_score",
+                "op": "==",
+                "upstream": 6621,
+                "value": 1.0
+              }
+            ],
+            "6623": [
+              {
+                "artifact_field": "baseline_rows_complete_score",
+                "op": "==",
+                "upstream": 6622,
+                "value": 1.0
+              }
+            ],
+            "6624": [
+              {
+                "artifact_field": "constrained_decoding_ready_score",
+                "op": "==",
+                "upstream": 6623,
+                "value": 1.0
+              }
+            ],
+            "6625": [
+              {
+                "artifact_field": "qwen_admission_ready_score",
+                "op": "==",
+                "upstream": 6621,
+                "value": 1.0
+              }
+            ],
+            "6626": [
+              {
+                "artifact_field": "decoding_rows_ready_score",
+                "op": "==",
+                "upstream": 6624,
+                "value": 1.0
+              }
+            ],
+            "6627": [
+              {
+                "artifact_field": "activation_contract_ready_score",
+                "op": "==",
+                "upstream": 6619,
+                "value": 1.0
+              }
+            ],
+            "6628": [
+              {
+                "artifact_field": "sampler_integrity_ready_score",
+                "op": "==",
+                "upstream": 6627,
+                "value": 1.0
+              }
+            ],
+            "6629": [
+              {
+                "artifact_field": "qwen_admission_ready_score",
+                "op": "==",
+                "upstream": 6621,
+                "value": 1.0
+              }
+            ],
+            "6630": [
+              {
+                "artifact_field": "live_memory_activation_ready_score",
+                "op": "==",
+                "upstream": 6629,
+                "value": 1.0
+              }
+            ],
+            "6631": [
+              {
+                "artifact_field": "qwen_admission_ready_score",
+                "op": "==",
+                "upstream": 6621,
+                "value": 1.0
+              },
+              {
+                "artifact_field": "memory_patch_contract_ready_score",
+                "op": "==",
+                "upstream": 6630,
+                "value": 1.0
+              }
+            ]
+          },
+          "observed": {
+            "active": {
+              "6620": [
+                {
+                  "artifact_field": "activation_contract_ready_score",
+                  "op": "==",
+                  "upstream": 6619,
+                  "value": 1.0
+                }
+              ],
+              "6621": [
+                {
+                  "artifact_field": "gpu_lease_scheduler_ready_score",
+                  "op": "==",
+                  "upstream": 6620,
+                  "value": 1.0
+                }
+              ],
+              "6622": [
+                {
+                  "artifact_field": "qwen_admission_ready_score",
+                  "op": "==",
+                  "upstream": 6621,
+                  "value": 1.0
+                }
+              ],
+              "6623": [
+                {
+                  "artifact_field": "baseline_rows_complete_score",
+                  "op": "==",
+                  "upstream": 6622,
+                  "value": 1.0
+                }
+              ],
+              "6624": [
+                {
+                  "artifact_field": "constrained_decoding_ready_score",
+                  "op": "==",
+                  "upstream": 6623,
+                  "value": 1.0
+                }
+              ],
+              "6625": [
+                {
+                  "artifact_field": "qwen_admission_ready_score",
+                  "op": "==",
+                  "upstream": 6621,
+                  "value": 1.0
+                },
+                {
+                  "artifact_field": "gemma26_admission_ready_score",
+                  "op": "==",
+                  "upstream": 6621,
+                  "value": 1.0
+                }
+              ],
+              "6626": [
+                {
+                  "artifact_field": "decoding_rows_ready_score",
+                  "op": "==",
+                  "upstream": 6624,
+                  "value": 1.0
+                }
+              ],
+              "6627": [
+                {
+                  "artifact_field": "activation_contract_ready_score",
+                  "op": "==",
+                  "upstream": 6619,
+                  "value": 1.0
+                }
+              ],
+              "6628": [
+                {
+                  "artifact_field": "sampler_integrity_ready_score",
+                  "op": "==",
+                  "upstream": 6627,
+                  "value": 1.0
+                }
+              ]
+            },
+            "pre_staged": {
+              "6620": [
+                {
+                  "artifact_field": "activation_contract_ready_score",
+                  "op": "==",
+                  "upstream": 6619,
+                  "value": 1.0
+                }
+              ],
+              "6621": [
+                {
+                  "artifact_field": "gpu_lease_scheduler_ready_score",
+                  "op": "==",
+                  "upstream": 6620,
+                  "value": 1.0
+                }
+              ],
+              "6622": [
+                {
+                  "artifact_field": "qwen_admission_ready_score",
+                  "op": "==",
+                  "upstream": 6621,
+                  "value": 1.0
+                }
+              ],
+              "6623": [
+                {
+                  "artifact_field": "baseline_rows_complete_score",
+                  "op": "==",
+                  "upstream": 6622,
+                  "value": 1.0
+                }
+              ],
+              "6624": [
+                {
+                  "artifact_field": "constrained_decoding_ready_score",
+                  "op": "==",
+                  "upstream": 6623,
+                  "value": 1.0
+                }
+              ],
+              "6625": [
+                {
+                  "artifact_field": "qwen_admission_ready_score",
+                  "op": "==",
+                  "upstream": 6621,
+                  "value": 1.0
+                },
+                {
+                  "artifact_field": "gemma26_admission_ready_score",
+                  "op": "==",
+                  "upstream": 6621,
+                  "value": 1.0
+                }
+              ],
+              "6626": [
+                {
+                  "artifact_field": "decoding_rows_ready_score",
+                  "op": "==",
+                  "upstream": 6624,
+                  "value": 1.0
+                }
+              ],
+              "6627": [
+                {
+                  "artifact_field": "activation_contract_ready_score",
+                  "op": "==",
+                  "upstream": 6619,
+                  "value": 1.0
+                }
+              ],
+              "6628": [
+                {
+                  "artifact_field": "sampler_integrity_ready_score",
+                  "op": "==",
+                  "upstream": 6627,
+                  "value": 1.0
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "scope": "gate"
+    },
+    {
+      "command": "internal:validate_activation_contract:model",
+      "duration_s": 0.0,
+      "exit_code": 1,
+      "observed": [
+        {
+          "check": "document_model_set",
+          "expected": {
+            "6621": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "unsloth/gemma-4-31B-it-GGUF",
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ],
+            "6622": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "6624": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "6625": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ],
+            "6629": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "6631": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ]
+          },
+          "observed": {
+            "active": {
+              "6621": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF",
+                "unsloth/gemma-4-31B-it-GGUF",
+                "unsloth/gemma-4-26B-A4B-it-GGUF"
+              ],
+              "6622": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF"
+              ],
+              "6624": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF"
+              ],
+              "6625": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF",
+                "unsloth/gemma-4-26B-A4B-it-GGUF"
+              ]
+            },
+            "pre_staged": {
+              "6621": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF",
+                "unsloth/gemma-4-31B-it-GGUF",
+                "unsloth/gemma-4-26B-A4B-it-GGUF"
+              ],
+              "6622": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF"
+              ],
+              "6624": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF"
+              ],
+              "6625": [
+                "unsloth/Qwen3.6-35B-A3B-GGUF",
+                "unsloth/gemma-4-26B-A4B-it-GGUF"
+              ]
+            }
+          }
+        },
+        {
+          "check": "document_hardware_set",
+          "expected": [
+            6621,
+            6622,
+            6624,
+            6625,
+            6628,
+            6629,
+            6631
+          ],
+          "observed": {
+            "active": [
+              6621,
+              6622,
+              6624,
+              6625,
+              6628
+            ],
+            "pre_staged": [
+              6621,
+              6622,
+              6624,
+              6625,
+              6628
+            ]
+          }
+        },
+        {
+          "check": "model_policy",
+          "expected": true,
+          "observed": {
+            "checks": {
+              "gguf_metadata_tokenizer_behavior": true,
+              "identity_and_hash_receipts": true,
+              "legacy_smoke_only": false,
+              "mandated_repo_ids_present": true,
+              "model_specs_declared": true,
+              "no_silent_fallback": true
+            },
+            "legacy_models_present": [],
+            "passed": false,
+            "present_models": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "required_models": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "task_id": "exp6622-qwen36-direct-headroom",
+            "task_present": true
+          },
+          "source": "active",
+          "task_id": "exp6622-qwen36-direct-headroom"
+        },
+        {
+          "check": "model_policy",
+          "expected": true,
+          "observed": {
+            "checks": {
+              "gguf_metadata_tokenizer_behavior": true,
+              "identity_and_hash_receipts": true,
+              "legacy_smoke_only": false,
+              "mandated_repo_ids_present": true,
+              "model_specs_declared": true,
+              "no_silent_fallback": true
+            },
+            "legacy_models_present": [],
+            "passed": false,
+            "present_models": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "required_models": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "task_id": "exp6624-delayed-two-level-decoding",
+            "task_present": true
+          },
+          "source": "active",
+          "task_id": "exp6624-delayed-two-level-decoding"
+        },
+        {
+          "check": "model_policy",
+          "expected": true,
+          "observed": {
+            "checks": {
+              "gguf_metadata_tokenizer_behavior": false,
+              "identity_and_hash_receipts": true,
+              "legacy_smoke_only": false,
+              "mandated_repo_ids_present": true,
+              "model_specs_declared": true,
+              "no_silent_fallback": true
+            },
+            "legacy_models_present": [],
+            "passed": false,
+            "present_models": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ],
+            "required_models": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ],
+            "task_id": "exp6625-cold-context-verifier-control",
+            "task_present": true
+          },
+          "source": "active",
+          "task_id": "exp6625-cold-context-verifier-control"
+        },
+        {
+          "check": "model_policy",
+          "expected": true,
+          "observed": {
+            "checks": {
+              "gguf_metadata_tokenizer_behavior": false,
+              "identity_and_hash_receipts": false,
+              "legacy_smoke_only": false,
+              "mandated_repo_ids_present": false,
+              "model_specs_declared": false,
+              "no_silent_fallback": false
+            },
+            "legacy_models_present": [],
+            "passed": false,
+            "present_models": [],
+            "required_models": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "task_id": "exp6629-live-memory-actionability",
+            "task_present": false
+          },
+          "source": "active",
+          "task_id": "exp6629-live-memory-actionability"
+        },
+        {
+          "check": "model_policy",
+          "expected": true,
+          "observed": {
+            "checks": {
+              "gguf_metadata_tokenizer_behavior": false,
+              "identity_and_hash_receipts": false,
+              "legacy_smoke_only": false,
+              "mandated_repo_ids_present": false,
+              "model_specs_declared": false,
+              "no_silent_fallback": false
+            },
+            "legacy_models_present": [],
+            "passed": false,
+            "present_models": [],
+            "required_models": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "task_id": "exp6631-prospective-support-preserving-csl",
+            "task_present": false
+          },
+          "source": "active",
+          "task_id": "exp6631-prospective-support-preserving-csl"
+        }
+      ],
+      "scope": "model"
+    },
+    {
+      "command": "internal:validate_activation_contract:prompt",
+      "duration_s": 0.0,
+      "exit_code": 1,
+      "observed": [
+        {
+          "check": "document_dependency_tasks",
+          "expected": [
+            6619,
+            6620,
+            6621,
+            6622,
+            6623,
+            6624,
+            6626,
+            6625,
+            6629,
+            6630,
+            6631,
+            6627,
+            6628,
+            6632
+          ],
+          "observed": {
+            "active": [
+              6619,
+              6620,
+              6621,
+              6622,
+              6623,
+              6624,
+              6625,
+              6626,
+              6627,
+              6628
+            ],
+            "pre_staged": [
+              6619,
+              6620,
+              6621,
+              6622,
+              6623,
+              6624,
+              6625,
+              6626,
+              6627,
+              6628
+            ]
+          }
+        }
+      ],
+      "scope": "prompt"
+    },
+    {
+      "command": "internal:validate_activation_contract:principle",
+      "duration_s": 0.0,
+      "exit_code": 0,
+      "observed": [],
+      "scope": "principle"
+    },
+    {
+      "command": "internal:protected_file_receipts",
+      "duration_s": 0.0,
+      "exit_code": 0,
+      "observed": {
+        "all_unchanged": true,
+        "rows": [
+          {
+            "after_sha256": "sha256:8070bcf74c6451efa600c256febd540d78efc0dc3e667da8fb2b6e2ef59731fc",
+            "before_sha256": "sha256:8070bcf74c6451efa600c256febd540d78efc0dc3e667da8fb2b6e2ef59731fc",
+            "path": "research-roadmap.yaml",
+            "unchanged": true
+          },
+          {
+            "after_sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+            "before_sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+            "path": "scripts/research_conductor.py",
+            "unchanged": true
+          }
+        ]
+      },
+      "scope": "protection"
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}

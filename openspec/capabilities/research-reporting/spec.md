@@ -57739,3 +57739,119 @@ replays, and no partial final file is visible.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6616 | Implemented (`python/carnot/experiment_6616_v577_execution_contract.py`) | Implemented (`tests/python/test_experiment_6616_v577_execution_contract.py`) |
+
+### REQ-REPORT-6619: V578 Activation SHALL Be One Complete Fail-Closed Unit
+
+Carnot SHALL validate the V578 roadmap document, pre-staged YAML, and active
+YAML without model inference. It SHALL not reconstruct a missing task from
+prose, treat activation as proof of completeness, or claim scientific benefit.
+
+- REQ-REPORT-6619-COMPLETE-ACTIVATION: The activation unit SHALL contain
+  exactly one ordered contract row for every task from Exp6619 through Exp6632.
+  Each row SHALL retain order, ID, title, deliverable, track, GPU need, agent
+  routing, prior failures, gates, gate owners, expected artifact fields, and the
+  exact prompt terminator.
+- REQ-REPORT-6619-DOCUMENT-YAML: The document experiment list, dependency task
+  set, structured gate table, deliverables, mandated-model list, and hardware
+  flags SHALL equal both YAML sources. Omissions, extras, stale milestone
+  values, or order drift SHALL fail readiness.
+- REQ-REPORT-6619-UNIQUE-IDENTITY: Task IDs and deliverables SHALL be unique.
+  Every ID number SHALL equal its deliverable experiment number. Duplicate or
+  mismatched identity SHALL fail closed.
+- REQ-REPORT-6619-GATE-OWNERSHIP: Every gate SHALL use a supported operator and
+  name an owner earlier in the same roadmap. The owner SHALL declare the
+  identically spelled bare artifact field with a principle. Forward, circular,
+  missing, misspelled, and retired-upstream gates SHALL fail readiness.
+- REQ-REPORT-6619-PRIOR-FAILURES: Every prior-failure declaration SHALL retain
+  `experiment_id`, the exact stored honest verdict, a concrete changed
+  condition, and `retire_if_same_verdict=true`. Schema, prior-failure, and
+  exclusion-manifest validation exits SHALL remain in the artifact.
+- REQ-REPORT-6619-MODEL-POLICY: Every LLM task SHALL declare `MODEL_SPECS` with
+  at least one mandated repository ID. Its prompt SHALL require exact model and
+  quant hashes, tokenizer and chat-template behavior from GGUF metadata, no
+  silent fallback, and smoke-only legacy models that cannot satisfy readiness.
+- REQ-REPORT-6619-ARTIFACT-CONTRACT: Every task SHALL declare principled fields
+  for terminal status, honest verdict, closed verdict class, blocked gate
+  diagnostics, preconditions, protected hashes, inference substrate, oracle
+  status, field provenance, duration, tests, and checksum. A comparative task
+  SHALL also set `per_unit_rows=true` and declare a row-list field.
+- REQ-REPORT-6619-PROMPT-ENDINGS: Every task prompt SHALL end exactly with
+  `Do NOT push. Do NOT modify scripts/research_conductor.py.` Missing, changed,
+  or trailing instructions SHALL fail readiness.
+- REQ-REPORT-6619-PROTECTION-ATOMIC: The producer SHALL hash
+  `research-roadmap.yaml` and `scripts/research_conductor.py` before work,
+  reject changed hashes, and write the result with file sync, atomic
+  replacement, directory sync, and a checksum that excludes only itself.
+- REQ-REPORT-6619-FAIL-CLOSED: `activation_contract_ready_score` SHALL equal
+  `1.0` only when every source, contract, validation, attack, test, and
+  protection check passes. A ready contract SHALL use `verdict_class=null`.
+  Otherwise the score SHALL equal `0.0`, status and honest verdict SHALL start
+  with `blocked_`, and `gate_check_summary` SHALL name failed checks with their
+  observed values.
+
+The artifact SHALL set
+`inference_substrate=v578_complete_activation_contract_no_llm` and
+`verifier_is_oracle=true`. It SHALL include `status`, `honest_verdict`,
+`verdict_class`, `gate_check_summary`, `task_contract_rows`,
+`document_yaml_diff`, `gate_owner_rows`, `prior_failure_dispositions`,
+`model_policy_receipts`, `validation_receipts`,
+`activation_contract_ready_score`, `attack_rows`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6619-COMPLETE-ACTIVATION: Missing Tasks Stay Missing
+
+**Given** a document that orders Exp6619 through Exp6632 and a YAML with fewer
+tasks
+**When** the activation contract builds its task rows
+**Then** all fourteen expected rows remain visible, omitted YAML contracts are
+marked missing, and readiness stays zero.
+
+#### SCENARIO-REPORT-6619-DOCUMENT-YAML: Every Declared Set Agrees
+
+**Given** the milestone document and both YAML sources
+**When** task, graph, gate, deliverable, model, and hardware sets are compared
+**Then** every difference retains expected and observed values and any
+difference blocks activation.
+
+#### SCENARIO-REPORT-6619-GATE-OWNERS: Owners Define Exact Earlier Fields
+
+**Given** every V578 `gated_on` entry
+**When** its owner and field are resolved
+**Then** the owner is earlier, active, and declares the identical principled
+field, or the gate fails closed.
+
+#### SCENARIO-REPORT-6619-PRIOR-FAILURES: Reruns Preserve Honest History
+
+**Given** every V578 prior-failure declaration
+**When** its stored predecessor is replayed
+**Then** verdict, changed condition, and retirement signal agree exactly or the
+activation contract blocks.
+
+#### SCENARIO-REPORT-6619-MODELS-AND-FIELDS: Prompts Bind Execution Evidence
+
+**Given** an LLM or comparative task
+**When** its prompt and artifact contract are parsed
+**Then** mandated model identity, GGUF behavior, no fallback, legacy treatment,
+principles, common fields, row declarations, and exact terminator all pass.
+
+#### SCENARIO-REPORT-6619-ATTACKS: Contract Mutations Cannot Open Readiness
+
+**Given** missing-task, owner-field, duplicate-deliverable, gate-op, model-ID,
+prior-failure, principle, prompt-ending, and protected-file mutations
+**When** each mutation is validated
+**Then** every mutation fails closed and none can set readiness to one.
+
+#### SCENARIO-REPORT-6619-ATOMIC-BLOCK: A Block Is A Valid Terminal Artifact
+
+**Given** incomplete activation input and unchanged protected files
+**When** the producer writes its result
+**Then** the blocked artifact has all required fields, exact diagnostics, a
+replayable checksum, and no visible partial file.
+
+## Implementation Status (REQ-REPORT-6619)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6619 | Implemented (`python/carnot/experiment_6619_v578_activation_contract.py`) | Implemented (`tests/python/test_experiment_6619_v578_activation_contract.py`; 10 focused cases and 100% scoped statement coverage) |
