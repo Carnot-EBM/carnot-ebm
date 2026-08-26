@@ -16517,3 +16517,4 @@ code |
 | 2026-08-26 06:28 UTC | Independent mandated-model accelerator admission c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6617-gpu-lease-phase-receipts) |
 | 2026-08-26 06:29 UTC | Milestone 2026.08.578 activated | OK | 10 tasks queued |
 | 2026-08-26 06:50 UTC | Complete V578 activation and gate-ownership contra | OK | 91 passed, 1 warning in 11.92s |
+| 2026-08-26 06:52 UTC | Task-scoped GPU lease and phase receipt implementa | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6619-v578-activation-contract.activatio |
