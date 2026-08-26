@@ -6360,3 +6360,10 @@ The critical path for milestone .250:
 - theme: mixed baseline and synthesis execution exposed gaps in phase timing and cross-experiment scheduling evidence
 - key result: the active accelerator was engaged during the compute tail; no data available this milestone explains the phase costs or reveals concurrent model loading and a runner-selection error
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.577
+
+- exp_range: no data available this milestone
+- theme: zero-resolution compute receipts exposed accelerator-engagement and observability gaps
+- key result: both compute-bound tasks tied at 0 minutes and compute-task GPU idle is true; phase causes and any parallel multi-model DualGPURunner miss have no data available this milestone
+- acceptance: no data available this milestone

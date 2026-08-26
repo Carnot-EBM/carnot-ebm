@@ -1,0 +1,42 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.577",
+  "generated_at": "2026-08-26T05:13:51.905Z",
+  "retro_type": "operational_in_progress",
+  "summary": "The milestone recorded 2 compute-bound experiments and 0.0 minutes of wall time; both listed experiments tied at 0 minutes. The compute-bound GPU-idle assessment is true, while causal phase timing and model-concurrency evidence are unavailable.",
+  "total_wall_time_minutes": 0.0,
+  "experiments_completed": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "V577 phase-receipt and retirement contract",
+      "duration_minutes": 0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Readiness-aware GPU lease and task phase receipts",
+      "duration_minutes": 0,
+      "compute_bound": true
+    }
+  ],
+  "bottlenecks_identified": [
+    "Both listed compute-bound experiments tie at 0 minutes, and no data available this milestone explains their elapsed-time causes; disk-mtime reconstruction cannot distinguish their execution phases.",
+    "The GPU snapshot shows idle accelerators while compute-bound work is present, so accelerator engagement was inefficient.",
+    "Loaded-model concurrency and runner-selection receipts are unavailable, preventing a determination of whether any parallel multi-model task should have used DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Add a compute-task GPU engagement preflight and task-window watchdog that fails or requeues work when required accelerator utilization remains idle.",
+    "Replace minute-rounded disk-mtime reconstruction with monotonic task and phase receipts covering model load, inference, validation, and artifact writing.",
+    "Record loaded-model count and runner choice at launch, selecting DualGPURunner only when multiple models are intentionally loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Gate compute-task execution on verified GPU engagement.",
+    "Emit monotonic task and phase timing receipts.",
+    "Persist loaded-model count and runner-selection evidence."
+  ],
+  "compute_bound_experiments_count": 2,
+  "gpu_idle_on_compute_bound_tasks": true,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The inputs identify an accelerator-engagement defect but do not quantify its time cost because every recorded duration is 0 minutes. A nonzero savings estimate, a phase-level duration explanation, and a DualGPURunner compliance judgment are therefore unsupported.",
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false
+}

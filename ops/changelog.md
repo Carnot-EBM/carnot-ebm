@@ -17873,3 +17873,13 @@ Concurrent model loading and DualGPURunner eligibility cannot be determined
 from the supplied records. The next tooling priority is a readiness-aware GPU
 scheduler paired with task-scoped phase and accelerator receipts.
 - 2026-08-26: V577 phase-receipt and retirement contract (⚠️ Blocked) — honest_verdict=blocked_roadmap_contract_incomplete: expected Exp6616-Exp6628 YAML contracts are not all present; results/experiment_6616_v577_execution_contract.json
+
+## 2026-08-26 — Milestone 2026.08.577 operational retrospective
+
+Recorded 2 compute-bound experiments in 0.0 minutes; both entries tied at the
+0-minute reconstruction floor, with no data available this milestone explaining
+their phase costs. Both GPUs were at 0% utilization, so compute-task GPU idle is
+flagged as an execution bottleneck. No data available this milestone establishes
+a parallel multi-model launch or missed DualGPURunner use. The next tooling
+priority is a GPU-engagement launch gate backed by task-scoped phase receipts and
+explicit model-count and runner-selection evidence.
