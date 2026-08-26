@@ -1,0 +1,1869 @@
+{
+  "accelerator_receipt_schema": {
+    "extends": "v577.phase_receipt.v1",
+    "pid_binding_rule": "pid_start_time equals process_identity.pid_start_time",
+    "required_extension_fields": [
+      "device_uuid",
+      "pid_start_time",
+      "model_hash",
+      "vram_before_mib",
+      "vram_after_mib",
+      "offload_layers",
+      "unload_evidence",
+      "lease_token"
+    ],
+    "schema_id": "v577.accelerator_receipt.v1",
+    "unload_rule": "unload_evidence.completed is true",
+    "validator": "validate_accelerator_receipt"
+  },
+  "attack_rows": [
+    {
+      "attack_id": "duplicate_id",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "duplicate_task_id",
+          "expected": "unique",
+          "observed": [
+            "exp6616-v577-execution-contract",
+            "exp6617-gpu-lease-phase-receipts",
+            "exp6618-mandated-model-admission",
+            "exp6619-qwen36-bounded-headroom",
+            "exp6620-headroom-reducer",
+            "exp6621-two-level-decoding",
+            "exp6622-decoding-safety-audit",
+            "exp6623-spectral-integrity-repair",
+            "exp6624-spectral-scale-replay",
+            "exp6625-arc-live-memory-actionability",
+            "exp6626-working-memory-patch-gate",
+            "exp6627-prospective-state-grounded-learning",
+            "exp6616-v577-execution-contract"
+          ]
+        },
+        {
+          "check": "exact_task_set",
+          "expected": [
+            "exp6616-v577-execution-contract",
+            "exp6617-gpu-lease-phase-receipts",
+            "exp6618-mandated-model-admission",
+            "exp6619-qwen36-bounded-headroom",
+            "exp6620-headroom-reducer",
+            "exp6621-two-level-decoding",
+            "exp6622-decoding-safety-audit",
+            "exp6623-spectral-integrity-repair",
+            "exp6624-spectral-scale-replay",
+            "exp6625-arc-live-memory-actionability",
+            "exp6626-working-memory-patch-gate",
+            "exp6627-prospective-state-grounded-learning",
+            "exp6628-v577-independent-capstone"
+          ],
+          "observed": {
+            "missing": [
+              "exp6628-v577-independent-capstone"
+            ],
+            "present": [
+              "exp6616-v577-execution-contract",
+              "exp6617-gpu-lease-phase-receipts",
+              "exp6618-mandated-model-admission",
+              "exp6619-qwen36-bounded-headroom",
+              "exp6620-headroom-reducer",
+              "exp6621-two-level-decoding",
+              "exp6622-decoding-safety-audit",
+              "exp6623-spectral-integrity-repair",
+              "exp6624-spectral-scale-replay",
+              "exp6625-arc-live-memory-actionability",
+              "exp6626-working-memory-patch-gate",
+              "exp6627-prospective-state-grounded-learning",
+              "exp6616-v577-execution-contract"
+            ],
+            "unexpected": []
+          }
+        },
+        {
+          "check": "task_deliverable",
+          "expected": "results/experiment_6616_v577_execution_contract.json",
+          "observed": "results/experiment_6628_v577_independent_capstone.json",
+          "task_id": "exp6616-v577-execution-contract"
+        },
+        {
+          "check": "gate_owner_contract",
+          "expected": true,
+          "observed": {
+            "artifact_field": "execution_contract_ready_score",
+            "downstream": "exp6617-gpu-lease-phase-receipts",
+            "expected_value": 1.0,
+            "op": "==",
+            "owner_declares_identical_field": false,
+            "owner_exists": true,
+            "owner_is_earlier": false,
+            "owner_not_retired": true,
+            "passed": false,
+            "upstream": "exp6616-v577-execution-contract"
+          },
+          "task_id": "exp6617-gpu-lease-phase-receipts"
+        }
+      ]
+    },
+    {
+      "attack_id": "duplicate_deliverable",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "duplicate_deliverable",
+          "expected": "unique",
+          "observed": [
+            "results/experiment_6616_v577_execution_contract.json",
+            "results/experiment_6617_gpu_lease_phase_receipts.json",
+            "results/experiment_6618_mandated_model_admission.json",
+            "results/experiment_6619_qwen36_bounded_headroom.json",
+            "results/experiment_6620_headroom_reducer.json",
+            "results/experiment_6621_two_level_decoding.json",
+            "results/experiment_6622_decoding_safety_audit.json",
+            "results/experiment_6623_spectral_integrity_repair.json",
+            "results/experiment_6624_spectral_scale_replay.json",
+            "results/experiment_6625_arc_live_memory_actionability.json",
+            "results/experiment_6626_working_memory_patch_gate.json",
+            "results/experiment_6627_prospective_state_grounded_learning.json",
+            "results/experiment_6616_v577_execution_contract.json"
+          ]
+        },
+        {
+          "check": "task_deliverable",
+          "expected": "results/experiment_6628_v577_independent_capstone.json",
+          "observed": "results/experiment_6616_v577_execution_contract.json",
+          "task_id": "exp6628-v577-independent-capstone"
+        }
+      ]
+    },
+    {
+      "attack_id": "stale_milestone",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "task_milestone",
+          "expected": "2026.08.577",
+          "observed": "2026.08.576",
+          "task_id": "exp6616-v577-execution-contract"
+        }
+      ]
+    },
+    {
+      "attack_id": "missing_principle",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "required_field_principles",
+          "expected": "all declared fields have principles",
+          "observed": {
+            "field_count": 5,
+            "missing": [
+              "status"
+            ]
+          },
+          "task_id": "exp6616-v577-execution-contract"
+        }
+      ]
+    },
+    {
+      "attack_id": "unsupported_gate_op",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "exact_gate_contract",
+          "expected": [
+            {
+              "artifact_field": "execution_contract_ready_score",
+              "op": "==",
+              "upstream": "exp6616-v577-execution-contract",
+              "value": 1.0
+            }
+          ],
+          "observed": [
+            {
+              "artifact_field": "execution_contract_ready_score",
+              "op": "contains",
+              "upstream": "exp6616-v577-execution-contract",
+              "value": 1.0
+            }
+          ],
+          "task_id": "exp6617-gpu-lease-phase-receipts"
+        },
+        {
+          "check": "gate_owner_contract",
+          "expected": true,
+          "observed": {
+            "artifact_field": "execution_contract_ready_score",
+            "downstream": "exp6617-gpu-lease-phase-receipts",
+            "expected_value": 1.0,
+            "op": "contains",
+            "owner_declares_identical_field": true,
+            "owner_exists": true,
+            "owner_is_earlier": true,
+            "owner_not_retired": true,
+            "passed": false,
+            "upstream": "exp6616-v577-execution-contract"
+          },
+          "task_id": "exp6617-gpu-lease-phase-receipts"
+        }
+      ]
+    },
+    {
+      "attack_id": "missing_gate_field",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "exact_gate_contract",
+          "expected": [
+            {
+              "artifact_field": "execution_contract_ready_score",
+              "op": "==",
+              "upstream": "exp6616-v577-execution-contract",
+              "value": 1.0
+            }
+          ],
+          "observed": [
+            {
+              "artifact_field": "missing_ready_score",
+              "op": "==",
+              "upstream": "exp6616-v577-execution-contract",
+              "value": 1.0
+            }
+          ],
+          "task_id": "exp6617-gpu-lease-phase-receipts"
+        },
+        {
+          "check": "gate_owner_contract",
+          "expected": true,
+          "observed": {
+            "artifact_field": "missing_ready_score",
+            "downstream": "exp6617-gpu-lease-phase-receipts",
+            "expected_value": 1.0,
+            "op": "==",
+            "owner_declares_identical_field": false,
+            "owner_exists": true,
+            "owner_is_earlier": true,
+            "owner_not_retired": true,
+            "passed": false,
+            "upstream": "exp6616-v577-execution-contract"
+          },
+          "task_id": "exp6617-gpu-lease-phase-receipts"
+        }
+      ]
+    },
+    {
+      "attack_id": "wrong_model_id",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "model_policy",
+          "expected": true,
+          "observed": {
+            "legacy_models_present": [
+              "Qwen3.5-0.8B"
+            ],
+            "legacy_smoke_only": false,
+            "passed": false,
+            "present_models": [
+              "unsloth/gemma-4-31B-it-GGUF",
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ],
+            "required_models": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "unsloth/gemma-4-31B-it-GGUF",
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ],
+            "task_id": "exp6618-mandated-model-admission",
+            "task_present": true
+          },
+          "task_id": "exp6618-mandated-model-admission"
+        }
+      ]
+    },
+    {
+      "attack_id": "absent_blocked_diagnostic",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        "absent blocked diagnostic"
+      ]
+    },
+    {
+      "attack_id": "nonterminal_verdict",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        "nonterminal verdict"
+      ]
+    },
+    {
+      "attack_id": "phase_timestamp_reversal",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        "phase timestamp reversal"
+      ]
+    },
+    {
+      "attack_id": "pid_reuse",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        "PID start time is after phase start"
+      ]
+    },
+    {
+      "attack_id": "checksum_tampering",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        "checksum mismatch"
+      ]
+    },
+    {
+      "attack_id": "retired_upstream",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        {
+          "check": "gate_owner_contract",
+          "expected": true,
+          "observed": {
+            "artifact_field": "execution_contract_ready_score",
+            "downstream": "exp6617-gpu-lease-phase-receipts",
+            "expected_value": 1.0,
+            "op": "==",
+            "owner_declares_identical_field": true,
+            "owner_exists": true,
+            "owner_is_earlier": true,
+            "owner_not_retired": false,
+            "passed": false,
+            "upstream": "exp6616-v577-execution-contract"
+          },
+          "task_id": "exp6617-gpu-lease-phase-receipts"
+        }
+      ]
+    },
+    {
+      "attack_id": "protected_file_mutation",
+      "fail_closed": true,
+      "mutation_applied": true,
+      "observed_errors": [
+        "protected file mutation"
+      ]
+    }
+  ],
+  "duration_s": 0.00085,
+  "execution_contract_ready_score": 0.0,
+  "field_provenance": {
+    "accelerator_receipt_schema": {
+      "principle": "Accelerator identity, memory, lease, and unload extend phase evidence.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "attack_rows": {
+      "principle": "Identity, gate, model, verdict, receipt, retirement, and mutation attacks fail closed.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "duration_s": {
+      "principle": "Monotonic duration covers source replay, attacks, and validation.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "execution_contract_ready_score": {
+      "principle": "The exact binary field opens Exp6617 only after full replay.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every field names its sources, hashes, parsers, and validation functions.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "gate_check_summary": {
+      "principle": "A block names the failed contract check and observed value.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "gate_owner_rows": {
+      "principle": "Each gate binds an earlier owner and an identical declared field.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The verdict reports contract readiness without claiming scientific benefit.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "The task validates roadmap and evidence without an LLM.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "model_policy_receipts": {
+      "principle": "Model tasks bind mandated models and keep legacy models smoke-only.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "phase_receipt_schema": {
+      "principle": "Phase state, time, process, resources, hashes, and checksum are explicit.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Sources, versions, resources, hashes, and protected files are explicit.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "prior_failure_dispositions": {
+      "principle": "Prior verdicts, changed conditions, and retirement remain explicit.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "The active roadmap and conductor retain their original hashes.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A final content hash detects contract mutation.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "roadmap_validation_receipts": {
+      "principle": "Roadmap checks retain commands, exits, and observations.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "status": {
+      "principle": "The contract task ends terminally and does not hide a schema or evidence block.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "task_contract_rows": {
+      "principle": "Every expected V577 task has one exact contract disposition row.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "tests_run": {
+      "principle": "Focused, roadmap, exclusion, gate, spec, artifact, adversarial, and E2E checks retain exits.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "verdict_class": {
+      "principle": "Use the closed verdict enum; a ready contract is null.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "Exact schema and artifact checks are authoritative without a science claim.",
+      "sources": [
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "results/experiment_6604_* through results/experiment_6615_*"
+      ],
+      "validators": [
+        "validate_roadmap_contract",
+        "reconcile_prior_failures",
+        "validate_phase_receipt",
+        "validate_accelerator_receipt",
+        "validate_artifact"
+      ]
+    }
+  },
+  "gate_check_summary": {
+    "all_passed": false,
+    "failed_checks": [
+      {
+        "check": "exact_task_set",
+        "expected": [
+          "exp6616-v577-execution-contract",
+          "exp6617-gpu-lease-phase-receipts",
+          "exp6618-mandated-model-admission",
+          "exp6619-qwen36-bounded-headroom",
+          "exp6620-headroom-reducer",
+          "exp6621-two-level-decoding",
+          "exp6622-decoding-safety-audit",
+          "exp6623-spectral-integrity-repair",
+          "exp6624-spectral-scale-replay",
+          "exp6625-arc-live-memory-actionability",
+          "exp6626-working-memory-patch-gate",
+          "exp6627-prospective-state-grounded-learning",
+          "exp6628-v577-independent-capstone"
+        ],
+        "observed": {
+          "missing": [
+            "exp6619-qwen36-bounded-headroom",
+            "exp6620-headroom-reducer",
+            "exp6621-two-level-decoding",
+            "exp6622-decoding-safety-audit",
+            "exp6623-spectral-integrity-repair",
+            "exp6624-spectral-scale-replay",
+            "exp6625-arc-live-memory-actionability",
+            "exp6626-working-memory-patch-gate",
+            "exp6627-prospective-state-grounded-learning",
+            "exp6628-v577-independent-capstone"
+          ],
+          "present": [
+            "exp6616-v577-execution-contract",
+            "exp6617-gpu-lease-phase-receipts",
+            "exp6618-mandated-model-admission"
+          ],
+          "unexpected": []
+        }
+      },
+      {
+        "check": "model_policy",
+        "expected": true,
+        "observed": {
+          "legacy_models_present": [],
+          "legacy_smoke_only": true,
+          "passed": false,
+          "present_models": [],
+          "required_models": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF"
+          ],
+          "task_id": "exp6619-qwen36-bounded-headroom",
+          "task_present": false
+        },
+        "task_id": "exp6619-qwen36-bounded-headroom"
+      },
+      {
+        "check": "model_policy",
+        "expected": true,
+        "observed": {
+          "legacy_models_present": [],
+          "legacy_smoke_only": true,
+          "passed": false,
+          "present_models": [],
+          "required_models": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF"
+          ],
+          "task_id": "exp6621-two-level-decoding",
+          "task_present": false
+        },
+        "task_id": "exp6621-two-level-decoding"
+      },
+      {
+        "check": "model_policy",
+        "expected": true,
+        "observed": {
+          "legacy_models_present": [],
+          "legacy_smoke_only": true,
+          "passed": false,
+          "present_models": [],
+          "required_models": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF"
+          ],
+          "task_id": "exp6627-prospective-state-grounded-learning",
+          "task_present": false
+        },
+        "task_id": "exp6627-prospective-state-grounded-learning"
+      }
+    ],
+    "observed": {
+      "expected_task_count": 13,
+      "failed_test_count": 0,
+      "gate_count": 2,
+      "missing_task_ids": [
+        "exp6619-qwen36-bounded-headroom",
+        "exp6620-headroom-reducer",
+        "exp6621-two-level-decoding",
+        "exp6622-decoding-safety-audit",
+        "exp6623-spectral-integrity-repair",
+        "exp6624-spectral-scale-replay",
+        "exp6625-arc-live-memory-actionability",
+        "exp6626-working-memory-patch-gate",
+        "exp6627-prospective-state-grounded-learning",
+        "exp6628-v577-independent-capstone"
+      ],
+      "prior_declaration_count": 5,
+      "yaml_task_count": 3
+    }
+  },
+  "gate_owner_rows": [
+    {
+      "artifact_field": "execution_contract_ready_score",
+      "downstream": "exp6617-gpu-lease-phase-receipts",
+      "expected_value": 1.0,
+      "op": "==",
+      "owner_declares_identical_field": true,
+      "owner_exists": true,
+      "owner_is_earlier": true,
+      "owner_not_retired": true,
+      "passed": true,
+      "upstream": "exp6616-v577-execution-contract"
+    },
+    {
+      "artifact_field": "gpu_lease_scheduler_ready_score",
+      "downstream": "exp6618-mandated-model-admission",
+      "expected_value": 1.0,
+      "op": "==",
+      "owner_declares_identical_field": true,
+      "owner_exists": true,
+      "owner_is_earlier": true,
+      "owner_not_retired": true,
+      "passed": true,
+      "upstream": "exp6617-gpu-lease-phase-receipts"
+    }
+  ],
+  "honest_verdict": "blocked_roadmap_contract_incomplete: expected Exp6616-Exp6628 YAML contracts are not all present",
+  "inference_substrate": "v577_roadmap_evidence_and_phase_receipt_contract_no_llm",
+  "model_policy_receipts": [
+    {
+      "legacy_models_present": [
+        "Qwen3.5-0.8B",
+        "Gemma E4B"
+      ],
+      "legacy_smoke_only": true,
+      "passed": true,
+      "present_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "required_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "task_id": "exp6618-mandated-model-admission",
+      "task_present": true
+    },
+    {
+      "legacy_models_present": [],
+      "legacy_smoke_only": true,
+      "passed": false,
+      "present_models": [],
+      "required_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "task_id": "exp6619-qwen36-bounded-headroom",
+      "task_present": false
+    },
+    {
+      "legacy_models_present": [],
+      "legacy_smoke_only": true,
+      "passed": false,
+      "present_models": [],
+      "required_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "task_id": "exp6621-two-level-decoding",
+      "task_present": false
+    },
+    {
+      "legacy_models_present": [],
+      "legacy_smoke_only": true,
+      "passed": false,
+      "present_models": [],
+      "required_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "task_id": "exp6627-prospective-state-grounded-learning",
+      "task_present": false
+    }
+  ],
+  "phase_receipt_schema": {
+    "checksum_rule": "sha256 of canonical JSON excluding checksum",
+    "process_identity_fields": [
+      "pid",
+      "pid_start_time"
+    ],
+    "required_fields": [
+      "task_id",
+      "phase_name",
+      "state",
+      "monotonic_started_s",
+      "monotonic_ended_s",
+      "process_identity",
+      "resource_owner",
+      "input_hashes",
+      "output_hashes",
+      "heartbeat_monotonic_s",
+      "terminal_reason",
+      "checksum"
+    ],
+    "schema_id": "v577.phase_receipt.v1",
+    "terminal_states": [
+      "terminal_blocked",
+      "terminal_complete"
+    ],
+    "timestamp_rule": "monotonic_started_s <= heartbeat_monotonic_s <= monotonic_ended_s",
+    "validator": "validate_phase_receipt"
+  },
+  "preconditions_checked": {
+    "dirty_worktree_state": [
+      " M openspec/capabilities/research-reporting/spec.md",
+      " M ops/.audit_findings_ledger_state.json",
+      " M ops/.run_sentinel_state.json",
+      " M ops/.stop_authority_state.json",
+      "?? python/carnot/experiment_6616_v577_execution_contract.py",
+      "?? tests/python/test_experiment_6616_v577_execution_contract.py"
+    ],
+    "llm_invocation_count": 0,
+    "no_llm_substrate": "v577_roadmap_evidence_and_phase_receipt_contract_no_llm",
+    "planning_date": "20260826",
+    "pre_staged_roadmap": {
+      "git_commit": "4052897bf02677f39f47afe163b853f1d7fdb8fb",
+      "path": "research-roadmap-next.yaml",
+      "sha256": "sha256:fdee14aa857a8847442b5dfc7f3cfd1a7d292791e7fce7b2c1386a83ded249b7",
+      "source_state": "historical_git_blob"
+    },
+    "protected_paths": [
+      "research-roadmap.yaml",
+      "scripts/research_conductor.py"
+    ],
+    "resources_and_versions": {
+      "cpu_count": 24,
+      "cpu_model": "x86_64",
+      "disk_free_bytes": 1075553632256,
+      "disk_total_bytes": 3953289023488,
+      "platform": "Linux-7.2.0-1-cachyos-x86_64-with-glibc2.44",
+      "pydantic": "2.13.4",
+      "python": "3.12.13",
+      "pyyaml": "6.0.3",
+      "ram_total_bytes": 134304591872
+    },
+    "source_hashes": [
+      {
+        "path": "research-roadmap.yaml",
+        "present": true,
+        "sha256": "sha256:fdee14aa857a8847442b5dfc7f3cfd1a7d292791e7fce7b2c1386a83ded249b7"
+      },
+      {
+        "path": "scripts/research_conductor.py",
+        "present": true,
+        "sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
+      },
+      {
+        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "present": true,
+        "sha256": "sha256:284ca8406253a801e929e088647cbf8af67c1ca59608a43e6e223ed8f909efb5"
+      },
+      {
+        "path": "ops/exclusion_manifest.yaml",
+        "present": true,
+        "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+      },
+      {
+        "path": "scripts/roadmap_schema.py",
+        "present": true,
+        "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7"
+      },
+      {
+        "path": "scripts/validate_prior_failures.py",
+        "present": true,
+        "sha256": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519"
+      },
+      {
+        "path": "scripts/exclusion_manifest_lint.py",
+        "present": true,
+        "sha256": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042"
+      },
+      {
+        "path": "scripts/conductor_gates.py",
+        "present": true,
+        "sha256": "sha256:fbbcb1eb324f8dfae835ba694c4a665c6d4a512f021e7165b387ec4518ce37fd"
+      },
+      {
+        "path": "openspec/capabilities/research-reporting/spec.md",
+        "present": true,
+        "sha256": "sha256:f9dd849db2e6da71b64747967a0f17f989e63be83df00061d3259ce87bd08b81"
+      },
+      {
+        "path": "results/experiment_6604_exact_two_level_plan_corpus.json",
+        "present": true,
+        "sha256": "sha256:fc5ed4d0ec8e1355e8732fc7dc2d9c6f81c23a3e8677728f3dfa1161c9c948d0"
+      },
+      {
+        "path": "results/experiment_6605_qwen36_direct_headroom.json",
+        "present": true,
+        "sha256": "sha256:a52f92667200db339b4519acdf30b2ec59eec18aa9d24e3ebd93fbcb659b096a"
+      },
+      {
+        "path": "results/experiment_6606_gemma4_31b_direct_headroom.json",
+        "present": true,
+        "sha256": "sha256:d68fd386f007d1a44182d1562da124f4c4589f5c7fd6a0e4577b13159003dedc"
+      },
+      {
+        "path": "results/experiment_6607_gemma4_26b_direct_headroom.json",
+        "present": true,
+        "sha256": "sha256:c428c38a8544b22cfec528155f103dfcd38cd555023a5db5c2e3056561c2052a"
+      },
+      {
+        "path": "results/experiment_6608_family_headroom_reducer.json",
+        "present": true,
+        "sha256": "sha256:85da1e31b22992fa981a4aa5616e7cb9689803d398a1084c7c746c177c4a2d10"
+      },
+      {
+        "path": "results/experiment_6609_two_level_constrained_decoding.json",
+        "present": true,
+        "sha256": "sha256:ef2b87112aedc45b53793d06bbff1dceff7fb091f4bde0141b0800df9edb8b2a"
+      },
+      {
+        "path": "results/experiment_6611_live_arc_invariant_projection.json",
+        "present": true,
+        "sha256": "sha256:8d8a975e545887cd313ef444c710ca7cc1318840047ca0e4256045eec587ec51"
+      },
+      {
+        "path": "results/experiment_6612_spectral_k_block_scale_rust_parity.json",
+        "present": true,
+        "sha256": "sha256:c49aaee1d2ac5318b2ea680c009719e770d4b30993eff9934cc6a864f335dbf0"
+      },
+      {
+        "path": "results/experiment_6613_invariant_memory_lifecycle.json",
+        "present": true,
+        "sha256": "sha256:7b0437efcd78ae3c082d7dc9ec8c8e81bdd8724a05246e367b3079f6036a856c"
+      },
+      {
+        "path": "results/experiment_6614_prospective_invariant_self_learning.json",
+        "present": true,
+        "sha256": "sha256:051c2401b7d79ad9d9f69d6ba9661ffdf053e516a125fe2c28959956cff848b9"
+      },
+      {
+        "path": "results/experiment_6615_v576_independent_capstone.json",
+        "present": true,
+        "sha256": "sha256:d4784a45935a9ca8b34adebc9427adfa4e303c799f0d94239ea33b6bd6f591e5"
+      }
+    ]
+  },
+  "prior_failure_dispositions": [
+    {
+      "changed_condition": null,
+      "changed_condition_concrete": null,
+      "contract_disposition": "null",
+      "declared_by_task": null,
+      "declared_experiment_id": null,
+      "declared_verdict": null,
+      "experiment_number": 6604,
+      "retire_if_same_verdict": null,
+      "source_honest_verdict": "complete: exact two-level plan corpus and oracle-distinct executor are ready; this is null infrastructure and no model benefit was measured",
+      "source_path": "results/experiment_6604_exact_two_level_plan_corpus.json",
+      "source_sha256": "sha256:fc5ed4d0ec8e1355e8732fc7dc2d9c6f81c23a3e8677728f3dfa1161c9c948d0",
+      "source_state": "present",
+      "source_status": "complete",
+      "source_verdict_class": "null",
+      "verdict_matches": null
+    },
+    {
+      "changed_condition": "V577 implements task-scoped leases and phase receipts with PID-start, model, device, VRAM, heartbeat, and unload ownership before any baseline retries.",
+      "changed_condition_concrete": true,
+      "contract_disposition": "blocked",
+      "declared_by_task": "exp6617-gpu-lease-phase-receipts",
+      "declared_experiment_id": "exp6605-qwen36-direct-headroom",
+      "declared_verdict": "blocked_gpu_process_receipts: direct baseline integrity did not complete",
+      "experiment_number": 6605,
+      "retire_if_same_verdict": true,
+      "source_honest_verdict": "blocked_gpu_process_receipts: direct baseline integrity did not complete",
+      "source_path": "results/experiment_6605_qwen36_direct_headroom.json",
+      "source_sha256": "sha256:a52f92667200db339b4519acdf30b2ec59eec18aa9d24e3ebd93fbcb659b096a",
+      "source_state": "present",
+      "source_status": "blocked_gpu_process_receipts",
+      "source_verdict_class": "blocked",
+      "verdict_matches": true
+    },
+    {
+      "changed_condition": "The canary uses the new task-scoped lease, one short fresh process, and per-family readiness instead of attempting baseline science.",
+      "changed_condition_concrete": true,
+      "contract_disposition": "blocked",
+      "declared_by_task": "exp6618-mandated-model-admission",
+      "declared_experiment_id": "exp6605-qwen36-direct-headroom",
+      "declared_verdict": "blocked_gpu_process_receipts: direct baseline integrity did not complete",
+      "experiment_number": 6605,
+      "retire_if_same_verdict": true,
+      "source_honest_verdict": "blocked_gpu_process_receipts: direct baseline integrity did not complete",
+      "source_path": "results/experiment_6605_qwen36_direct_headroom.json",
+      "source_sha256": "sha256:a52f92667200db339b4519acdf30b2ec59eec18aa9d24e3ebd93fbcb659b096a",
+      "source_state": "present",
+      "source_status": "blocked_gpu_process_receipts",
+      "source_verdict_class": "blocked",
+      "verdict_matches": true
+    },
+    {
+      "changed_condition": "All prior-failure metadata is now present and this scope is a bounded admission canary, not the failed full baseline.",
+      "changed_condition_concrete": true,
+      "contract_disposition": "missing_verdict_class",
+      "declared_by_task": "exp6618-mandated-model-admission",
+      "declared_experiment_id": "exp6606-gemma4-31b-direct-headroom",
+      "declared_verdict": "blocked_gate_check_failed",
+      "experiment_number": 6606,
+      "retire_if_same_verdict": true,
+      "source_honest_verdict": "blocked_gate_check_failed",
+      "source_path": "results/experiment_6606_gemma4_31b_direct_headroom.json",
+      "source_sha256": "sha256:d68fd386f007d1a44182d1562da124f4c4589f5c7fd6a0e4577b13159003dedc",
+      "source_state": "present",
+      "source_status": "blocked",
+      "source_verdict_class": null,
+      "verdict_matches": true
+    },
+    {
+      "changed_condition": "The scheduler now makes accelerator ownership an atomic prerequisite rather than reconstructing it after inference.",
+      "changed_condition_concrete": true,
+      "contract_disposition": "blocked",
+      "declared_by_task": "exp6617-gpu-lease-phase-receipts",
+      "declared_experiment_id": "exp6607-gemma4-26b-direct-headroom",
+      "declared_verdict": "blocked_gpu_ownership: expected True, observed False",
+      "experiment_number": 6607,
+      "retire_if_same_verdict": true,
+      "source_honest_verdict": "blocked_gpu_ownership: expected True, observed False",
+      "source_path": "results/experiment_6607_gemma4_26b_direct_headroom.json",
+      "source_sha256": "sha256:c428c38a8544b22cfec528155f103dfcd38cd555023a5db5c2e3056561c2052a",
+      "source_state": "present",
+      "source_status": "blocked_gpu_ownership",
+      "source_verdict_class": "blocked",
+      "verdict_matches": true
+    },
+    {
+      "changed_condition": "The new lease establishes device and process ownership before model load and records unload in the same journal.",
+      "changed_condition_concrete": true,
+      "contract_disposition": "blocked",
+      "declared_by_task": "exp6618-mandated-model-admission",
+      "declared_experiment_id": "exp6607-gemma4-26b-direct-headroom",
+      "declared_verdict": "blocked_gpu_ownership: expected True, observed False",
+      "experiment_number": 6607,
+      "retire_if_same_verdict": true,
+      "source_honest_verdict": "blocked_gpu_ownership: expected True, observed False",
+      "source_path": "results/experiment_6607_gemma4_26b_direct_headroom.json",
+      "source_sha256": "sha256:c428c38a8544b22cfec528155f103dfcd38cd555023a5db5c2e3056561c2052a",
+      "source_state": "present",
+      "source_status": "blocked_gpu_ownership",
+      "source_verdict_class": "blocked",
+      "verdict_matches": true
+    },
+    {
+      "changed_condition": null,
+      "changed_condition_concrete": null,
+      "contract_disposition": "blocked",
+      "declared_by_task": null,
+      "declared_experiment_id": null,
+      "declared_verdict": null,
+      "experiment_number": 6608,
+      "retire_if_same_verdict": null,
+      "source_honest_verdict": "blocked_family_baseline_evidence: no family has complete replayable baseline rows; eligibility is frozen empty and no treatment benefit is claimed",
+      "source_path": "results/experiment_6608_family_headroom_reducer.json",
+      "source_sha256": "sha256:85da1e31b22992fa981a4aa5616e7cb9689803d398a1084c7c746c177c4a2d10",
+      "source_state": "present",
+      "source_status": "blocked_family_baseline_evidence",
+      "source_verdict_class": "blocked",
+      "verdict_matches": null
+    },
+    {
+      "changed_condition": null,
+      "changed_condition_concrete": null,
+      "contract_disposition": "missing_verdict_class",
+      "declared_by_task": null,
+      "declared_experiment_id": null,
+      "declared_verdict": null,
+      "experiment_number": 6609,
+      "retire_if_same_verdict": null,
+      "source_honest_verdict": "blocked_gate_check_failed",
+      "source_path": "results/experiment_6609_two_level_constrained_decoding.json",
+      "source_sha256": "sha256:ef2b87112aedc45b53793d06bbff1dceff7fb091f4bde0141b0800df9edb8b2a",
+      "source_state": "present",
+      "source_status": "blocked",
+      "source_verdict_class": null,
+      "verdict_matches": null
+    },
+    {
+      "changed_condition": null,
+      "changed_condition_concrete": null,
+      "contract_disposition": "missing_source",
+      "declared_by_task": null,
+      "declared_experiment_id": null,
+      "declared_verdict": null,
+      "experiment_number": 6610,
+      "retire_if_same_verdict": null,
+      "source_honest_verdict": null,
+      "source_path": null,
+      "source_sha256": null,
+      "source_state": "missing",
+      "source_status": null,
+      "source_verdict_class": null,
+      "verdict_matches": null
+    },
+    {
+      "changed_condition": null,
+      "changed_condition_concrete": null,
+      "contract_disposition": "null",
+      "declared_by_task": null,
+      "declared_experiment_id": null,
+      "declared_verdict": null,
+      "experiment_number": 6611,
+      "retire_if_same_verdict": null,
+      "source_honest_verdict": "complete_held_world_model_prediction_projection_no_effect_no_solve_claim",
+      "source_path": "results/experiment_6611_live_arc_invariant_projection.json",
+      "source_sha256": "sha256:8d8a975e545887cd313ef444c710ca7cc1318840047ca0e4256045eec587ec51",
+      "source_state": "present",
+      "source_status": "complete_live_reachable_comparison",
+      "source_verdict_class": "null",
+      "verdict_matches": null
+    },
+    {
+      "changed_condition": null,
+      "changed_condition_concrete": null,
+      "contract_disposition": "blocked",
+      "declared_by_task": null,
+      "declared_experiment_id": null,
+      "declared_verdict": null,
+      "experiment_number": 6612,
+      "retire_if_same_verdict": null,
+      "source_honest_verdict": "blocked_reference_parity_cost_or_protection: stationary, transition, wall, and parity conclusions are withheld; CPU software only",
+      "source_path": "results/experiment_6612_spectral_k_block_scale_rust_parity.json",
+      "source_sha256": "sha256:c49aaee1d2ac5318b2ea680c009719e770d4b30993eff9934cc6a864f335dbf0",
+      "source_state": "present",
+      "source_status": "blocked_reference_parity_cost_or_protection",
+      "source_verdict_class": "blocked",
+      "verdict_matches": null
+    },
+    {
+      "changed_condition": null,
+      "changed_condition_concrete": null,
+      "contract_disposition": "missing_verdict_class",
+      "declared_by_task": null,
+      "declared_experiment_id": null,
+      "declared_verdict": null,
+      "experiment_number": 6613,
+      "retire_if_same_verdict": null,
+      "source_honest_verdict": "complete_invariant_memory_lifecycle_conformance_no_utility_claim",
+      "source_path": "results/experiment_6613_invariant_memory_lifecycle.json",
+      "source_sha256": "sha256:7b0437efcd78ae3c082d7dc9ec8c8e81bdd8724a05246e367b3079f6036a856c",
+      "source_state": "present",
+      "source_status": "complete_invariant_memory_lifecycle_conformance",
+      "source_verdict_class": null,
+      "verdict_matches": null
+    },
+    {
+      "changed_condition": null,
+      "changed_condition_concrete": null,
+      "contract_disposition": "invalid_verdict_class",
+      "declared_by_task": null,
+      "declared_experiment_id": null,
+      "declared_verdict": null,
+      "experiment_number": 6614,
+      "retire_if_same_verdict": null,
+      "source_honest_verdict": "blocked_tests: failed tests with observed=False",
+      "source_path": "results/experiment_6614_prospective_invariant_self_learning.json",
+      "source_sha256": "sha256:051c2401b7d79ad9d9f69d6ba9661ffdf053e516a125fe2c28959956cff848b9",
+      "source_state": "present",
+      "source_status": "blocked_tests",
+      "source_verdict_class": "blocked_tests",
+      "verdict_matches": null
+    },
+    {
+      "changed_condition": null,
+      "changed_condition_concrete": null,
+      "contract_disposition": "partial",
+      "declared_by_task": null,
+      "declared_experiment_id": null,
+      "declared_verdict": null,
+      "experiment_number": 6615,
+      "retire_if_same_verdict": null,
+      "source_honest_verdict": "complete_partial: all available V576 evidence was independently replayed; decoding remains blocked, live projection is null, sampler evidence is partial and software-only, lifecycle is conformant without utility, and prospective self-learning has zero benefit with a disqualified source verdict field",
+      "source_path": "results/experiment_6615_v576_independent_capstone.json",
+      "source_sha256": "sha256:d4784a45935a9ca8b34adebc9427adfa4e303c799f0d94239ea33b6bd6f591e5",
+      "source_state": "present",
+      "source_status": "complete_partial_v576_independent_capstone",
+      "source_verdict_class": "partial",
+      "verdict_matches": null
+    }
+  ],
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "rows": [
+      {
+        "after_sha256": "sha256:fdee14aa857a8847442b5dfc7f3cfd1a7d292791e7fce7b2c1386a83ded249b7",
+        "before_sha256": "sha256:fdee14aa857a8847442b5dfc7f3cfd1a7d292791e7fce7b2c1386a83ded249b7",
+        "path": "research-roadmap.yaml",
+        "unchanged": true
+      },
+      {
+        "after_sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+        "before_sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+        "path": "scripts/research_conductor.py",
+        "unchanged": true
+      }
+    ]
+  },
+  "reproducibility_checksum": "sha256:caa6ad93b52c7519721a59e7fd51ed3ca8b17454ea87e0f6443540d546d58a6d",
+  "roadmap_validation_receipts": [
+    {
+      "check": "schema",
+      "command": "internal:validate_roadmap_contract:schema",
+      "duration_s": 0.0,
+      "exit_code": 0,
+      "observed": []
+    },
+    {
+      "check": "exclusion",
+      "command": "internal:validate_roadmap_contract:exclusion",
+      "duration_s": 0.0,
+      "exit_code": 0,
+      "observed": []
+    },
+    {
+      "check": "prior_failure",
+      "command": "internal:validate_roadmap_contract:prior_failure",
+      "duration_s": 0.0,
+      "exit_code": 0,
+      "observed": []
+    },
+    {
+      "check": "milestone",
+      "command": "internal:validate_roadmap_contract:milestone",
+      "duration_s": 0.0,
+      "exit_code": 0,
+      "observed": []
+    },
+    {
+      "check": "id",
+      "command": "internal:validate_roadmap_contract:id",
+      "duration_s": 0.0,
+      "exit_code": 1,
+      "observed": [
+        {
+          "check": "exact_task_set",
+          "expected": [
+            "exp6616-v577-execution-contract",
+            "exp6617-gpu-lease-phase-receipts",
+            "exp6618-mandated-model-admission",
+            "exp6619-qwen36-bounded-headroom",
+            "exp6620-headroom-reducer",
+            "exp6621-two-level-decoding",
+            "exp6622-decoding-safety-audit",
+            "exp6623-spectral-integrity-repair",
+            "exp6624-spectral-scale-replay",
+            "exp6625-arc-live-memory-actionability",
+            "exp6626-working-memory-patch-gate",
+            "exp6627-prospective-state-grounded-learning",
+            "exp6628-v577-independent-capstone"
+          ],
+          "observed": {
+            "missing": [
+              "exp6619-qwen36-bounded-headroom",
+              "exp6620-headroom-reducer",
+              "exp6621-two-level-decoding",
+              "exp6622-decoding-safety-audit",
+              "exp6623-spectral-integrity-repair",
+              "exp6624-spectral-scale-replay",
+              "exp6625-arc-live-memory-actionability",
+              "exp6626-working-memory-patch-gate",
+              "exp6627-prospective-state-grounded-learning",
+              "exp6628-v577-independent-capstone"
+            ],
+            "present": [
+              "exp6616-v577-execution-contract",
+              "exp6617-gpu-lease-phase-receipts",
+              "exp6618-mandated-model-admission"
+            ],
+            "unexpected": []
+          }
+        }
+      ]
+    },
+    {
+      "check": "deliverable",
+      "command": "internal:validate_roadmap_contract:deliverable",
+      "duration_s": 0.0,
+      "exit_code": 0,
+      "observed": []
+    },
+    {
+      "check": "prompt",
+      "command": "internal:validate_roadmap_contract:prompt",
+      "duration_s": 0.0,
+      "exit_code": 1,
+      "observed": [
+        {
+          "check": "model_policy",
+          "expected": true,
+          "observed": {
+            "legacy_models_present": [],
+            "legacy_smoke_only": true,
+            "passed": false,
+            "present_models": [],
+            "required_models": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "task_id": "exp6619-qwen36-bounded-headroom",
+            "task_present": false
+          },
+          "task_id": "exp6619-qwen36-bounded-headroom"
+        },
+        {
+          "check": "model_policy",
+          "expected": true,
+          "observed": {
+            "legacy_models_present": [],
+            "legacy_smoke_only": true,
+            "passed": false,
+            "present_models": [],
+            "required_models": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "task_id": "exp6621-two-level-decoding",
+            "task_present": false
+          },
+          "task_id": "exp6621-two-level-decoding"
+        },
+        {
+          "check": "model_policy",
+          "expected": true,
+          "observed": {
+            "legacy_models_present": [],
+            "legacy_smoke_only": true,
+            "passed": false,
+            "present_models": [],
+            "required_models": [
+              "unsloth/Qwen3.6-35B-A3B-GGUF"
+            ],
+            "task_id": "exp6627-prospective-state-grounded-learning",
+            "task_present": false
+          },
+          "task_id": "exp6627-prospective-state-grounded-learning"
+        }
+      ]
+    }
+  ],
+  "status": "blocked_roadmap_contract_incomplete",
+  "task_contract_rows": [
+    {
+      "agent_model": "opus",
+      "contract_complete": true,
+      "deliverable": "results/experiment_6616_v577_execution_contract.json",
+      "expected_deliverable": "results/experiment_6616_v577_execution_contract.json",
+      "expected_requires_gpu": false,
+      "field_principles": {
+        "accelerator_receipt_schema": "Device, PID start, model, VRAM, offload, lease, and unload evidence extend the phase receipt.",
+        "attack_rows": "Identity, gate, model, verdict, receipt, time, PID, checksum, retirement, and mutation attacks fail closed.",
+        "duration_s": "Monotonic duration covers source replay, attacks, and validation.",
+        "execution_contract_ready_score": "This exact binary field gates Exp6617 only when the full execution contract replays.",
+        "field_provenance": "Every field names source files, artifacts, hashes, parsers, schemas, and validation functions.",
+        "gate_check_summary": "Any blocked outcome names the failed roadmap, prior-failure, gate, model, receipt, hash, protection, or test check and observed value.",
+        "gate_owner_rows": "Every downstream gate binds an existing upstream owner and identically spelled required field.",
+        "honest_verdict": "The verdict reports contract readiness without claiming scientific benefit.",
+        "inference_substrate": "The task declares roadmap and evidence validation with no LLM.",
+        "model_policy_receipts": "Every LLM task binds at least one mandated model and labels legacy models smoke-only.",
+        "phase_receipt_schema": "Task phase states, times, processes, resources, hashes, heartbeats, reasons, and checksums are explicit.",
+        "preconditions_checked": "Source artifacts, roadmap, schemas, manifests, resources, versions, hashes, and protected files are explicit.",
+        "prior_failure_dispositions": "Every declared predecessor retains its honest verdict, changed condition, and retirement signal.",
+        "protected_files_unchanged": "research-roadmap.yaml and scripts/research_conductor.py retain original hashes.",
+        "reproducibility_checksum": "A final content hash detects contract mutation.",
+        "roadmap_validation_receipts": "Schema, exclusion, prior-failure, milestone, ID, deliverable, and prompt checks have commands and exits.",
+        "status": "The contract task ends terminally and does not hide a schema or evidence block.",
+        "task_contract_rows": "Every V577 task has one exact ID, deliverable, phase, resource, model, gate, and artifact contract row.",
+        "tests_run": "Named focused, roadmap, exclusion, gate, spec, artifact, adversarial, and E2E commands include exits and durations.",
+        "verdict_class": "Use positive, circular_positive, null, blocked, disqualified, or partial; a ready contract is null.",
+        "verifier_is_oracle": "Exact schema and artifact checks are authoritative; the task makes no science claim."
+      },
+      "gates": [],
+      "model_policy": [],
+      "phase": "phase_i_execution_truth_and_bounded_headroom",
+      "prior_failures": [],
+      "requires_gpu": false,
+      "resource": "cpu",
+      "task_id": "exp6616-v577-execution-contract",
+      "terminal_artifact_expectations": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "task_contract_rows",
+        "roadmap_validation_receipts",
+        "gate_owner_rows",
+        "prior_failure_dispositions",
+        "phase_receipt_schema",
+        "accelerator_receipt_schema",
+        "model_policy_receipts",
+        "execution_contract_ready_score",
+        "attack_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "yaml_present": true
+    },
+    {
+      "agent_model": "opus",
+      "contract_complete": true,
+      "deliverable": "results/experiment_6617_gpu_lease_phase_receipts.json",
+      "expected_deliverable": "results/experiment_6617_gpu_lease_phase_receipts.json",
+      "expected_requires_gpu": false,
+      "field_principles": {
+        "accelerator_receipt_examples": "Device, process, model, VRAM, offload, heartbeat, exit, and unload evidence conform to Exp6616.",
+        "attack_rows": "Race, reuse, theft, stale, token, model, device, unload, timeout, partial-write, tamper, and mutation attacks fail closed.",
+        "duration_s": "Monotonic duration covers implementation, fixtures, attacks, and tests.",
+        "field_provenance": "Every field points to schemas, journals, process fixtures, hashes, and validation functions.",
+        "gate_check_summary": "Any block names the failed upstream, process, lease, phase, recovery, test, hash, or protection check and observed value.",
+        "gpu_lease_scheduler_ready_score": "This exact binary field gates Exp6618 only when ownership, phases, recovery, tests, and protection pass.",
+        "honest_verdict": "The verdict distinguishes execution readiness from model or science evidence.",
+        "inference_substrate": "The task declares synthetic and bounded subprocess lease validation with no LLM.",
+        "lease_api_receipts": "Acquire, heartbeat, status, release, timeout, and recovery interfaces bind owner, token, device, PID start, and time.",
+        "phase_transition_rows": "Every allowed and rejected phase transition has expected and observed state.",
+        "preconditions_checked": "Upstream contract, helpers, process APIs, diagnostic CUDA state, resources, versions, paths, and protected files are explicit.",
+        "process_fixture_rows": "Race, device independence, PID reuse, crash, stale, wrong token, wrong model, timeout, and unload fixtures are retained.",
+        "protected_files_unchanged": "research-roadmap.yaml and scripts/research_conductor.py retain original hashes.",
+        "reproducibility_checksum": "A final content hash detects scheduler evidence mutation.",
+        "restart_recovery_receipts": "Restart reconstructs valid leases and fails closed on ambiguous ownership without killing processes.",
+        "status": "The scheduler task terminates with a validated implementation or a named block.",
+        "tests_run": "Named focused, lint, type, spec, artifact, adversarial, and E2E commands include exits and durations.",
+        "verdict_class": "Use the closed enum; a ready scheduler is null infrastructure.",
+        "verifier_is_oracle": "Process and receipt invariants are authoritative; no model quality is evaluated."
+      },
+      "gates": [
+        {
+          "artifact_field": "execution_contract_ready_score",
+          "op": "==",
+          "upstream": "exp6616-v577-execution-contract",
+          "value": 1.0
+        }
+      ],
+      "model_policy": [],
+      "phase": "phase_i_execution_truth_and_bounded_headroom",
+      "prior_failures": [
+        {
+          "addressed_by": "V577 implements task-scoped leases and phase receipts with PID-start, model, device, VRAM, heartbeat, and unload ownership before any baseline retries.",
+          "experiment_id": "exp6605-qwen36-direct-headroom",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gpu_process_receipts: direct baseline integrity did not complete"
+        },
+        {
+          "addressed_by": "The scheduler now makes accelerator ownership an atomic prerequisite rather than reconstructing it after inference.",
+          "experiment_id": "exp6607-gemma4-26b-direct-headroom",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gpu_ownership: expected True, observed False"
+        }
+      ],
+      "requires_gpu": false,
+      "resource": "cpu",
+      "task_id": "exp6617-gpu-lease-phase-receipts",
+      "terminal_artifact_expectations": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "lease_api_receipts",
+        "phase_transition_rows",
+        "process_fixture_rows",
+        "accelerator_receipt_examples",
+        "restart_recovery_receipts",
+        "gpu_lease_scheduler_ready_score",
+        "attack_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "yaml_present": true
+    },
+    {
+      "agent_model": "opus",
+      "contract_complete": true,
+      "deliverable": "results/experiment_6618_mandated_model_admission.json",
+      "expected_deliverable": "results/experiment_6618_mandated_model_admission.json",
+      "expected_requires_gpu": true,
+      "field_principles": {
+        "attack_rows": "Identity, metadata, PID, device, ownership, fallback, lease, reuse, unload, failure, aggregate, and mutation attacks fail closed.",
+        "duration_s": "Monotonic duration is consistent with three fresh model load, inference, and unload attempts.",
+        "failure_rows": "Family-specific precondition, load, inference, timeout, and unload failures remain visible.",
+        "family_gpu_process_receipts": "Lease, device, PID start, VRAM, CUDA offload, timing, exit, and unload prove execution per family.",
+        "family_model_identity_receipts": "Shard hashes, quantization, tokenizer, template, context, and runtime are bound per family.",
+        "field_provenance": "Every field points to model files, raw bytes, lease journals, processes, devices, and reducers.",
+        "gate_check_summary": "Any task or family block names the failed upstream, cache, GPU, lease, model, tokenizer, output, unload, test, or protection check and observed value.",
+        "gemma26_admission_ready_score": "Gemma 26B-A4B readiness is independent and cannot change Qwen readiness.",
+        "gemma31_admission_ready_score": "Gemma 31B readiness is independent and cannot change Qwen readiness.",
+        "honest_verdict": "The verdict reports per-family execution readiness and makes no quality claim.",
+        "inference_substrate": "The task declares three independent live local GGUF CUDA llama.cpp canaries.",
+        "model_specs": "All three mandated hub IDs resolve to exact local GGUF files and embedded metadata.",
+        "per_unit_rows": "Each mandated family has one complete identity, lease, process, output, timing, unload, and failure row.",
+        "preconditions_checked": "Gate, GPUs, processes, cache, models, metadata, runtime, resources, timeouts, and protected files are explicit.",
+        "protected_files_unchanged": "research-roadmap.yaml and scripts/research_conductor.py retain original hashes.",
+        "qwen_admission_ready_score": "This exact binary owner field gates Exp6619 and Exp6627 only when Qwen execution replays.",
+        "raw_model_receipts": "One immutable raw response and prompt hash exist for every attempted family.",
+        "reproducibility_checksum": "A final content hash detects canary mutation.",
+        "status": "The canary task is terminal while preserving independent family blocks.",
+        "tests_run": "Named focused, lint, spec, artifact, row-consistency, adversarial, and E2E commands include exits and durations.",
+        "verdict_class": "Use the closed enum; complete admission is null infrastructure.",
+        "verifier_is_oracle": "Receipt invariants determine admission; no output correctness claim is made."
+      },
+      "gates": [
+        {
+          "artifact_field": "gpu_lease_scheduler_ready_score",
+          "op": "==",
+          "upstream": "exp6617-gpu-lease-phase-receipts",
+          "value": 1.0
+        }
+      ],
+      "model_policy": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "phase": "phase_i_execution_truth_and_bounded_headroom",
+      "prior_failures": [
+        {
+          "addressed_by": "The canary uses the new task-scoped lease, one short fresh process, and per-family readiness instead of attempting baseline science.",
+          "experiment_id": "exp6605-qwen36-direct-headroom",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gpu_process_receipts: direct baseline integrity did not complete"
+        },
+        {
+          "addressed_by": "All prior-failure metadata is now present and this scope is a bounded admission canary, not the failed full baseline.",
+          "experiment_id": "exp6606-gemma4-31b-direct-headroom",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "The new lease establishes device and process ownership before model load and records unload in the same journal.",
+          "experiment_id": "exp6607-gemma4-26b-direct-headroom",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gpu_ownership: expected True, observed False"
+        }
+      ],
+      "requires_gpu": true,
+      "resource": "accelerator",
+      "task_id": "exp6618-mandated-model-admission",
+      "terminal_artifact_expectations": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "per_unit_rows",
+        "model_specs",
+        "family_model_identity_receipts",
+        "family_gpu_process_receipts",
+        "raw_model_receipts",
+        "failure_rows",
+        "qwen_admission_ready_score",
+        "gemma31_admission_ready_score",
+        "gemma26_admission_ready_score",
+        "attack_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "yaml_present": true
+    },
+    {
+      "agent_model": null,
+      "contract_complete": false,
+      "deliverable": null,
+      "expected_deliverable": "results/experiment_6619_qwen36_bounded_headroom.json",
+      "expected_requires_gpu": true,
+      "field_principles": {},
+      "gates": null,
+      "model_policy": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "phase": "phase_i_execution_truth_and_bounded_headroom",
+      "prior_failures": null,
+      "requires_gpu": null,
+      "resource": "accelerator",
+      "task_id": "exp6619-qwen36-bounded-headroom",
+      "terminal_artifact_expectations": [],
+      "yaml_present": false
+    },
+    {
+      "agent_model": null,
+      "contract_complete": false,
+      "deliverable": null,
+      "expected_deliverable": "results/experiment_6620_headroom_reducer.json",
+      "expected_requires_gpu": false,
+      "field_principles": {},
+      "gates": null,
+      "model_policy": [],
+      "phase": "phase_i_execution_truth_and_bounded_headroom",
+      "prior_failures": null,
+      "requires_gpu": null,
+      "resource": "cpu",
+      "task_id": "exp6620-headroom-reducer",
+      "terminal_artifact_expectations": [],
+      "yaml_present": false
+    },
+    {
+      "agent_model": null,
+      "contract_complete": false,
+      "deliverable": null,
+      "expected_deliverable": "results/experiment_6621_two_level_decoding.json",
+      "expected_requires_gpu": true,
+      "field_principles": {},
+      "gates": null,
+      "model_policy": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "phase": "phase_ii_two_level_constraint_search_and_safety",
+      "prior_failures": null,
+      "requires_gpu": null,
+      "resource": "accelerator",
+      "task_id": "exp6621-two-level-decoding",
+      "terminal_artifact_expectations": [],
+      "yaml_present": false
+    },
+    {
+      "agent_model": null,
+      "contract_complete": false,
+      "deliverable": null,
+      "expected_deliverable": "results/experiment_6622_decoding_safety_audit.json",
+      "expected_requires_gpu": false,
+      "field_principles": {},
+      "gates": null,
+      "model_policy": [],
+      "phase": "phase_ii_two_level_constraint_search_and_safety",
+      "prior_failures": null,
+      "requires_gpu": null,
+      "resource": "cpu",
+      "task_id": "exp6622-decoding-safety-audit",
+      "terminal_artifact_expectations": [],
+      "yaml_present": false
+    },
+    {
+      "agent_model": null,
+      "contract_complete": false,
+      "deliverable": null,
+      "expected_deliverable": "results/experiment_6623_spectral_integrity_repair.json",
+      "expected_requires_gpu": false,
+      "field_principles": {},
+      "gates": null,
+      "model_policy": [],
+      "phase": "phase_iii_spectral_sampler_evidence_recovery",
+      "prior_failures": null,
+      "requires_gpu": null,
+      "resource": "cpu",
+      "task_id": "exp6623-spectral-integrity-repair",
+      "terminal_artifact_expectations": [],
+      "yaml_present": false
+    },
+    {
+      "agent_model": null,
+      "contract_complete": false,
+      "deliverable": null,
+      "expected_deliverable": "results/experiment_6624_spectral_scale_replay.json",
+      "expected_requires_gpu": false,
+      "field_principles": {},
+      "gates": null,
+      "model_policy": [],
+      "phase": "phase_iii_spectral_sampler_evidence_recovery",
+      "prior_failures": null,
+      "requires_gpu": null,
+      "resource": "cpu",
+      "task_id": "exp6624-spectral-scale-replay",
+      "terminal_artifact_expectations": [],
+      "yaml_present": false
+    },
+    {
+      "agent_model": null,
+      "contract_complete": false,
+      "deliverable": null,
+      "expected_deliverable": "results/experiment_6625_arc_live_memory_actionability.json",
+      "expected_requires_gpu": false,
+      "field_principles": {},
+      "gates": null,
+      "model_policy": [],
+      "phase": "phase_iv_live_actionability_and_continuous_self_learning",
+      "prior_failures": null,
+      "requires_gpu": null,
+      "resource": "cpu",
+      "task_id": "exp6625-arc-live-memory-actionability",
+      "terminal_artifact_expectations": [],
+      "yaml_present": false
+    },
+    {
+      "agent_model": null,
+      "contract_complete": false,
+      "deliverable": null,
+      "expected_deliverable": "results/experiment_6626_working_memory_patch_gate.json",
+      "expected_requires_gpu": false,
+      "field_principles": {},
+      "gates": null,
+      "model_policy": [],
+      "phase": "phase_iv_live_actionability_and_continuous_self_learning",
+      "prior_failures": null,
+      "requires_gpu": null,
+      "resource": "cpu",
+      "task_id": "exp6626-working-memory-patch-gate",
+      "terminal_artifact_expectations": [],
+      "yaml_present": false
+    },
+    {
+      "agent_model": null,
+      "contract_complete": false,
+      "deliverable": null,
+      "expected_deliverable": "results/experiment_6627_prospective_state_grounded_learning.json",
+      "expected_requires_gpu": true,
+      "field_principles": {},
+      "gates": null,
+      "model_policy": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "phase": "phase_iv_live_actionability_and_continuous_self_learning",
+      "prior_failures": null,
+      "requires_gpu": null,
+      "resource": "accelerator",
+      "task_id": "exp6627-prospective-state-grounded-learning",
+      "terminal_artifact_expectations": [],
+      "yaml_present": false
+    },
+    {
+      "agent_model": null,
+      "contract_complete": false,
+      "deliverable": null,
+      "expected_deliverable": "results/experiment_6628_v577_independent_capstone.json",
+      "expected_requires_gpu": false,
+      "field_principles": {},
+      "gates": null,
+      "model_policy": [],
+      "phase": "phase_iv_live_actionability_and_continuous_self_learning",
+      "prior_failures": null,
+      "requires_gpu": null,
+      "resource": "cpu",
+      "task_id": "exp6628-v577-independent-capstone",
+      "terminal_artifact_expectations": [],
+      "yaml_present": false
+    }
+  ],
+  "tests_run": [],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}
