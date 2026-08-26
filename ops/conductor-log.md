@@ -16503,3 +16503,5 @@ code |
 | 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6596_convergeflow_feasible_token_canary.json age-week 0: OPEN 1 days: |
 | 2026-08-26 02:25 UTC | Prospective chronological invariant continuous sel | FLAGGED | adversarial_verify CRITICAL: VERDICT_CLASS_MISMATCH — result quarantined, not a  |
 | 2026-08-26 02:54 UTC | V576 independent capstone and architecture reconci | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6615_v576_in |
+| 2026-08-26 03:01 UTC | V576 independent capstone and architecture reconci | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6615_v576_in |
+| 2026-08-26 03:03 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 37365 (port 8801) reparented to init, no live process references its p |
