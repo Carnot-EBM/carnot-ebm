@@ -16570,3 +16570,4 @@ code |
 | 2026-08-26 18:17 UTC | Receipt-scoped model admission boundary | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output:     assert pre |
 | 2026-08-26 19:40 UTC | Receipt-scoped model admission boundary | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: receipt and wi |
 | 2026-08-26 20:21 UTC | Receipt-scoped model admission boundary | OK | 90 passed, 1 warning in 9.85s |
+| 2026-08-26 20:53 UTC | Three-family GGUF accelerator canaries | OK | 103 passed, 1 warning in 9.33s |
