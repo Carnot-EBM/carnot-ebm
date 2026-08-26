@@ -17922,3 +17922,4 @@ models in parallel or a missed DualGPURunner dispatch. The next tooling priority
 is task-scoped monotonic phase timing joined to accelerator, model-concurrency,
 and runner-selection receipts. Estimated time savings is 0% because the supplied
 data identifies no measured avoidable duration.
+- 2026-08-26: Receipt-scoped model admission boundary (✅ Complete) — honest_verdict=complete: preregistered task-owned GPU lease receipts support infrastructure admission; the global suite remains diagnostic; no model-quality claim; results/experiment_6647_receipt_scoped_admission_boundary.json
