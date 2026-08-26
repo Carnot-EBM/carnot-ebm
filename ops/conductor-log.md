@@ -16534,3 +16534,6 @@ code |
 | 2026-08-26 07:09 UTC | Headroom-gated delayed two-level constrained decod | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6623-headroom-support-reducer.constrain |
 | 2026-08-26 07:11 UTC | Cold-context verifier criterion-shift control | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6621-mandated-model-admission, exp6621-ma |
 | 2026-08-26 07:11 UTC | Exact constraint-authority and support-preservatio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6624-delayed-two-level-decoding) |
+| 2026-08-26 07:11 UTC | Spectral k-block sampler integrity and reference r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6619-v578-activation-contract.activatio |
+| 2026-08-26 07:13 UTC | Cold-context verifier criterion-shift control | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6621-mandated-model-admission, exp6621-ma |
+| 2026-08-26 07:13 UTC | Exact constraint-authority and support-preservatio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6624-delayed-two-level-decoding) |
