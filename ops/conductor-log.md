@@ -16511,3 +16511,5 @@ code |
 | 2026-08-26 05:01 UTC | V577 phase-receipt and retirement contract | OK | 93 passed, 1 warning in 8.78s |
 | 2026-08-26 05:03 UTC | Readiness-aware GPU lease and task phase receipts | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6616-v577-execution-contract.execution_ |
 | 2026-08-26 05:05 UTC | Readiness-aware GPU lease and task phase receipts | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6616-v577-execution-contract.execution_ |
+| 2026-08-26 05:07 UTC | Readiness-aware GPU lease and task phase receipts | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6616-v577-execution-contract.execution_ |
+| 2026-08-26 05:09 UTC | Independent mandated-model accelerator admission c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6617-gpu-lease-phase-receipts) |
