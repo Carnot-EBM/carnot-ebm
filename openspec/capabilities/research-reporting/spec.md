@@ -58121,3 +58121,59 @@ an atomic reader never observes a partial final JSON document.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6649 and SCENARIO-REPORT-6649-* | Implemented (`python/carnot/experiment_6649_exact_certificate_proposal_corpus.py`) | Implemented (`tests/python/test_experiment_6649_exact_certificate_proposal_corpus.py`; 38 focused cases and 100% scoped statement coverage) |
+
+### REQ-REPORT-6650: Twin Verifier Evidence SHALL Recompute From Rows
+
+Exp6650 SHALL bind the Exp6649 `candidate_corpus_complete=true` field, source
+path, source SHA-256 hash, expected row count, exact checker identity, and
+checker hashes. Preconditions SHALL also record protected hashes, host
+resources, required tools, and the no-LLM substrate.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `upstream_gate_receipt`,
+`twin_construction_contract`, `verifier_unit_preregistration`, `twin_rows`,
+`unit_metric_rows`, `recommended_verifier_unit`, `authority_boundary`,
+`per_unit_rows`, `aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+`per_unit_rows` SHALL contain each accepted twin-unit row and each rejected
+source-pair row. Aggregate values SHALL rebuild only from accepted twin-unit
+rows. The artifact SHALL use
+`inference_substrate=frozen_candidate_verifier_unit_replay_no_llm` and
+`verifier_is_oracle=false`. It SHALL use a closed verdict class. A blocked
+result SHALL start its status and verdict with `blocked_` and SHALL name the
+failed check plus its observed value.
+
+Exp6650 SHALL write one JSON document with a complete temporary write, file
+sync, atomic replacement, and directory sync. The final checksum SHALL bind
+every field except itself. Protected hashes SHALL prove that
+`research-roadmap.yaml` and `scripts/research_conductor.py` did not change.
+
+#### SCENARIO-REPORT-6650-COMPLETE-ROWS
+
+**Given** a passing upstream gate and at least one pairable twin
+**When** Exp6650 builds the report
+**Then** every accepted and rejected source row is present and all metrics
+recompute from accepted twin-unit rows.
+
+#### SCENARIO-REPORT-6650-BLOCKED-GATE
+
+**Given** a false or missing corpus gate, changed source hash, row-count drift,
+checker-identity drift, or protected-file change
+**When** Exp6650 finalizes
+**Then** it emits a named blocked result without invented twins or zero metrics.
+
+#### SCENARIO-REPORT-6650-ATOMIC-CHECKSUM
+
+**Given** a complete or blocked report
+**When** Exp6650 writes and validates it
+**Then** readers see one complete JSON object and any content mutation breaks
+the checksum or row recomputation.
+
+## Implementation Status (REQ-REPORT-6650)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6650 and SCENARIO-REPORT-6650-* | Implemented (`python/carnot/experiment_6650_twin_prefix_verifier_map.py`) | Implemented (`tests/python/test_experiment_6650_twin_prefix_verifier_map.py`; preconditions, recomputation, blocked gates, checksum, and atomic-write coverage) |

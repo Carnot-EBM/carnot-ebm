@@ -1286,3 +1286,44 @@ failure step or a zero-length invalid plan.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6649 and SCENARIO-CONSTRAINT-6649-* | Implemented (`python/carnot/experiment_6649_exact_certificate_proposal_corpus.py`) | Implemented (`tests/python/test_experiment_6649_exact_certificate_proposal_corpus.py`; exact localization, parse-failure, mutation, and replay coverage) |
+
+### REQ-CONSTRAINT-6650: Exact Twins SHALL Change One Localized Step Only
+
+Exp6650 SHALL construct twins only from Exp6649 rows with a boolean exact
+label and an exact-valid clean plan. Each error twin SHALL replace one complete
+step with a different canonical task action. The replacement SHALL keep the
+same UTF-8 byte count. The clean and error plans SHALL keep identical prefix
+bytes, suffix bytes, line count, task, and formatting outside that step.
+
+The Exp6649 independent exact executor SHALL replay both twins. It SHALL label
+the clean plan valid and the error plan invalid at the changed step. A parse
+failure, an already-invalid candidate, a final-step mutation, or a row without
+a byte-matched semantic mutation SHALL produce an explicit rejected-pair row.
+It SHALL not disappear from `per_unit_rows`.
+
+#### SCENARIO-CONSTRAINT-6650-PAIRABLE-TWIN
+
+**Given** an exact-valid candidate with a byte-matched canonical action that
+fails at one non-final step
+**When** Exp6650 constructs the twin
+**Then** only that step differs and exact replay assigns clean and error labels.
+
+#### SCENARIO-CONSTRAINT-6650-NON-PAIRABLE
+
+**Given** a parse failure, an invalid candidate, or no safe byte-matched
+replacement
+**When** Exp6650 evaluates pairability
+**Then** it emits a rejected-pair row with the source row ID and reason.
+
+#### SCENARIO-CONSTRAINT-6650-EXACT-AUTHORITY
+
+**Given** any advisory verifier score or decision
+**When** Exp6650 records a twin outcome
+**Then** only the frozen exact executor supplies the clean or error label and
+no advisory result authorizes output.
+
+## Implementation Status (REQ-CONSTRAINT-6650)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6650 and SCENARIO-CONSTRAINT-6650-* | Implemented (`python/carnot/experiment_6650_twin_prefix_verifier_map.py`) | Implemented (`tests/python/test_experiment_6650_twin_prefix_verifier_map.py`; byte-local semantic twins, exact authority, and rejection coverage) |
