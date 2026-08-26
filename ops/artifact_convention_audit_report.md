@@ -9,11 +9,43 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 4 |
+| CHECKABLE | 3 |
 | AGGREGATE_ONLY | 3 |
-| CANNOT_DETERMINE | 1 |
+| CANNOT_DETERMINE | 2 |
 
-## experiment_6590_qwen36_constraint_first_stream.json
+## experiment_6608_family_headroom_reducer.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The benchmark is blocked because no model family has complete replayable baseline rows, leaving zero eligible families and no treatment-benefit claim.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6609_two_level_constrained_decoding.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because `headroom_benchmark_ready_score` was 0.0 instead of the required 1.0.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6611_live_arc_invariant_projection.json
 
 **CANNOT_DETERMINE**
 
@@ -21,47 +53,15 @@ evidence the reviewer could not have read -- do NOT act on them.
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-no identifiable headline claim because the artifact is truncated mid-record
+The selected invariant projection had no effect on held exact-next-frame prediction error compared with no projection and random projection.
 
 ## WHAT IS MISSING
-The remainder of `"exact_checker_receipts"`, the closing structure, and any final verdict/status or aggregate claim fields; present fields include `"attack_rows"`, `"checkpoint_receipts"`, and per-unit `"exact_checker_receipts"`.
+The complete `"per_unit_rows"` array: `"held_arm_summary"` reports 52 rows per arm, but the artifact ends partway through the first recorded row, before the remaining games, transitions, seeds, and arms can be inspected.
 
 ## THE CHECK A READER CANNOT DO
-Did the completed artifact ultimately declare a comparative gate met or the task blocked, and—if blocked—record which check failed and its observed value?
+Did every held unit have identical `"charged_exact_mismatch"` across all three arms, or do the equal pooled means conceal offsetting wins, losses, outliers, or no-headroom cases?
 
-## experiment_6591_gemma4_31b_constraint_first_stream.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-All recorded attacks passed because each `candidate_ready_score` matched its `expected_ready_score` at 0.0.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6592_v575_terminal_intake_and_method_lock.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-All recorded adversarial attacks passed by failing closed with `candidate_acceptance_score` equal to `expected_acceptance_score` at 0.0.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6593_cfr_independent_row_reducer.json
+## experiment_6612_spectral_k_block_scale_rust_parity.json
 
 **AGGREGATE_ONLY**
 
@@ -69,15 +69,15 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The CFR candidates showed no exact-success improvement over direct control, while reporting aggregate latency and token differences, and the reducer was declared ready.
+`spectral_k_block_rust` beat `sequential_gibbs`, qualifying as a software win with positive transition-efficiency and wall-time gains.
 
 ## WHAT IS MISSING
-The actual `"per_unit_rows"` containing each unit’s control and candidate outcomes, headroom, tokens, latency, and failures; only aggregate `"family_effect_rows"`, `"acceptance_gate_rows"`, `"constraint_quality_summary"`, and references to `"Exp6590.per_unit_rows"` and `"Exp6591.per_unit_rows"` in `"field_provenance"` are present.
+The actual `per_unit_rows` containing each size, fixture, seed, arm, and metric value; only aggregate `efficiency_summary.arm_means`, `efficiency_summary.rows`, `matched_row_count`, and `sample_size` values are shown, while `field_provenance.per_unit_rows` merely asserts that the rows exist.
 
 ## THE CHECK A READER CANNOT DO
-Were the reported mean latency and token differences broad across individual units or driven by a few outliers?
+Were the reported gains broad across the 60 matched units, or driven by a few outliers or degenerate control rows?
 
-## experiment_6594_cfr_counterfactual_authority_audit.json
+## experiment_6613_invariant_memory_lifecycle.json
 
 **CHECKABLE**
 
@@ -85,7 +85,7 @@ Were the reported mean latency and token differences broad across individual uni
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The tested attacks passed by triggering their expected detectors, with exact-checker removal or substitution causing release to be blocked for each recorded unit.
+The invariant-memory lifecycle passed its conformance gate and is ready, while making no utility claim.
 
 ## WHAT IS MISSING
 nothing
@@ -93,7 +93,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6595_invariant_projection_world_model_canary.json
+## experiment_6614_prospective_invariant_self_learning.json
 
 **AGGREGATE_ONLY**
 
@@ -101,15 +101,31 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The learned invariant projection met all acceptance gates by improving conservative held rollout error over no projection, separating from the norm-matched random control, remaining stable, and showing no false damped benefit.
+The governed online-memory arm failed to outperform the static and shuffled controls, so continuous self-learning was not ready.
 
 ## WHAT IS MISSING
-The actual `"per_unit_rows"` containing each fixture/seed/arm’s rollout-error and convergence outcomes are missing; only `"acceptance_gate_rows"` and `"arm_summary_rows"` aggregates are present, despite `"source": "per_unit_rows"` and provenance assertions that such rows exist.
+Actual `"per_unit_rows"` containing each event/seed/arm’s held-future metric are missing; only aggregate booleans appear in `"acceptance_gate_rows"` for `"held_future_over_static"` and `"held_future_over_shuffled"`, while `"field_provenance"` merely references `"per_unit_rows"`.
 
 ## THE CHECK A READER CANNOT DO
-Did the conservative improvement occur broadly across the 30 paired units, or was the positive interval and pooled mean driven by a few outliers or units with unusual headroom?
+Were both failed benefit comparisons broad across units, or driven by a few outliers, degenerate controls, or units with no headroom?
 
-## experiment_6596_convergeflow_feasible_token_canary.json
+## experiment_6605_qwen36_direct_headroom.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+no identifiable headline claim in the visible fragment
+
+## WHAT IS MISSING
+The completed artifact, including any top-level verdict or gate result; the JSON truncates inside `"failure_rows"`, although `"attack_rows"`, `"failed_checks"`, and `"failed_closed"` are present.
+
+## THE CHECK A READER CANNOT DO
+Did the experiment’s final gate pass, fail, or become blocked, and on what recorded value?
+
+## experiment_6615_v576_independent_capstone.json
 
 **AGGREGATE_ONLY**
 
@@ -117,26 +133,10 @@ Did the conservative improvement occur broadly across the 30 paired units, or wa
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The headline claim is that the comparative three-arm experiment is canary-ready, reported as `"convergeflow_canary_ready_score": 1.0`.
+Live projection had zero effect versus both controls, and prospective self-learning had zero held-future benefit versus static and shuffled controls.
 
 ## WHAT IS MISSING
-Per-unit outcome rows keyed by geometry, error, seed, and arm, including `endpoint_distortion`, `path_length`, convergence/failure status, and charged work; `"distortion_and_cost_summary"` contains only pooled means, totals, and counts, while `"perturbation_rows"` and `"start_rows"` record inputs rather than outcomes.
+Actual per-game and per-pair metric rows; `"arm_summaries"`, `"row_count_by_arm"`, and `"row_store_counts"` provide only aggregates or row counts, while the top-level `"per_unit_rows"` contains task/comparative-group receipts rather than unit-level measurements.
 
 ## THE CHECK A READER CANNOT DO
-Did the apparent arm-level performance difference occur broadly across geometries and seeds, or was it driven by a few outliers or degenerate units?
-
-## experiment_6597_spectral_k_block_ising_canary.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The spectral block arms passed all acceptance gates, showing stationary-distribution noninferiority and positive ESS-per-transition effects across fixtures, block sizes, and matched seeds.
-
-## WHAT IS MISSING
-nothing; per-unit metrics are recorded in `"effective_sample_size_summary.rows"` and `"exact_distribution_comparison"`, keyed by `"row_id"`, `"seed"`, `"arm"`, `"fixture_id"`, and `"block_size"`.
-
-## THE CHECK A READER CANNOT DO
-none
+Were the reported zero effects consistent across games and held-future pairs, or produced by degenerate, pinned, or offsetting unit-level outcomes?

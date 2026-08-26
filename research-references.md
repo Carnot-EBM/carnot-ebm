@@ -37318,3 +37318,115 @@ abstain. They may not certify their own output.
   memory score may reduce work, but only the exact checker may release output.
 
 <!-- V576-PLANNER-REFRESH-20260825-END -->
+
+## V577 planner refresh - 2026-08-26
+
+<!-- V577-PLANNER-REFRESH-20260826-START -->
+
+This refresh follows all twelve terminal V576 tasks. It searched the requested
+2025-2026 arXiv topics and checked OpenReview, Hugging Face Papers, Semantic
+Scholar, GitHub, Extropic, and Logical Intelligence. Exact executable checks
+remain release authority. Learned methods may propose, route, patch, or abstain.
+They may not certify their own output.
+
+### Promising findings selected for V577
+
+- **Recursive Experiential-Working Memory Evolution for Long-Horizon Agent
+  Harnesses** - arXiv:2608.24876,
+  https://arxiv.org/abs/2608.24876; code:
+  https://github.com/Gen-Verse/Recuris; submitted 2026-08-25. Recuris couples a
+  compact working state to experiential-memory invocation, records the exact
+  state, skill, action, observation, proposed update, and checker decision, and
+  localizes a failed trajectory to one of four memory-control components. It
+  applies component-scoped patches and admits them only after the source failure
+  is repaired without regression on held-out anchor tasks. Carnot hook: replace
+  V576's behaviorally inert memory treatment with a state-grounded invocation
+  and activation preflight. Preserve a structured influence trace for every
+  retrieved constraint. Patch only the implicated record, state field,
+  invocation rule, or checker. Keep the generator and outer loop frozen. Require
+  exact prospective benefit and held-anchor nonregression before commit.
+- **On the Fragility of Self-Improving Agents: Variance, Task Order, and
+  Underspecification** - arXiv:2608.18066,
+  https://arxiv.org/abs/2608.18066; submitted 2026-08-18. The paper finds that
+  memory-based self-improvement can amplify run variance and depend strongly on
+  task order. More explicit rubrics and environment feedback only partly close
+  the gap. Carnot hook: preregister multiple seeds and at least three task
+  orders, including chronological and shuffled controls. Report order effects,
+  variance, activation, retention, and future support per event. A single lucky
+  curriculum is not a continuous-learning result.
+
+### Cataloged findings retained as execution inputs
+
+- **Meta-Ctrl** - arXiv:2608.22149. Its syntax-versus-semantics factorization
+  remains the right constrained-decoding treatment. V576 did not test it because
+  no flagship baseline produced complete replayable rows. V577 must first fix
+  task-scoped GPU admission and process receipts, then qualify one bounded model
+  family before reopening the treatment.
+- **Spectral Partitioning for k-Block Averaging Markov Chains** -
+  arXiv:2608.21466. V576's Rust rows showed promising transition and wall-time
+  gains over sequential Gibbs, but the artifact was blocked by test and
+  protection receipts. V577 should repair evidence integrity first and then run
+  an independent replay. This remains CPU software evidence, not a board or TSU
+  claim.
+- **Scaling Up Thermodynamic AI Models** - arXiv:2607.00170, and
+  **Decomposing Large-Scale Ising Problems on FPGAs** - arXiv:2602.15985.
+  These papers support explicit autocorrelation, schedule, decomposition, setup,
+  and communication accounting. They do not authorize a hardware headline from
+  a Rust benchmark or a simulator.
+
+### Requested secondary and product checks
+
+- **OpenReview:** current 2026 EBM and constraint records continue to support
+  explicit feasibility checks, iterative energy minimization, and symbolic
+  release authority. No new record supplies a public matching-base EBT or
+  ARM-EBM checkpoint or repairs V576's local execution contract.
+- **Hugging Face Papers:** the 2026-08-25 feed surfaced Recuris as the clearest
+  new verification-gated self-learning result. Current verifier pages continue
+  to support stepwise evidence, criteria decomposition, and exact tool checks;
+  none justifies an LLM judge as release authority.
+- **Semantic Scholar:** unauthenticated API requests for both EBT
+  (`2507.02092`) and ARM-EBM (`2512.15605`) returned HTTP 429 on 2026-08-26.
+  Retain V576's dated discovery receipt of 35 visible EBT citations and eight
+  ARM-EBM citations. Do not invent a new count. No new public matching-base
+  checkpoint was authenticated.
+- **GitHub discovery:** Recuris publishes a repository that is useful as a
+  contract reference. Targeted current EBM, constrained-decoding, Ising, and KAN
+  searches found no dependency that supersedes Carnot's pinned local stack.
+  V577 should implement the bounded contract locally and vendor nothing for
+  novelty alone.
+- **Extropic:** https://extropic.ai/writing still lists the 2026-08-03/04 Torx,
+  Thermalizers, and Z1 material as the latest technical update. Z1 is taped out,
+  early access remains planned for 2027, and Carnot has no authenticated TSU
+  runner. Schedule no TSU execution, latency, power, or availability claim.
+- **Logical Intelligence:**
+  https://logicalintelligence.com/kona-ebms-energy-based-models still describes
+  Kona 1.0 as an EBM constraint layer without public weights, a reproducible
+  training recipe, or a documented local runner. Kona remains a product
+  comparator only.
+- **KAN, FPGA, and attached-board tracks:** recent KAN verification work remains
+  cataloged but does not address V576's binding execution gaps. FPGA Ising
+  decomposition remains a co-design reference, not a compatible bitstream for
+  Carnot's KV260, GateMate, or PolarFire boards. Keep board work on changed-state
+  receipts only.
+
+### V577 planning impact
+
+- Make task-scoped GPU leases, model identity, phase receipts, and accelerator
+  ownership a prerequisite for any new flagship baseline. Validate the contract
+  with short mandated-model canaries before scientific inference.
+- Qualify one bounded family at a time and freeze eligibility through an
+  independent reducer. Reopen two-level decoding only when complete direct rows
+  demonstrate preregistered headroom.
+- Repair the spectral sampler's test and protection evidence separately, then
+  replay its Rust gain in an independent process with setup, transition,
+  effective-sample-size, wall-time, and autocorrelation rows.
+- Replace passive invariant memory with state-grounded invocation and explicit
+  treatment-activation receipts. Localize updates to one memory-control
+  component and gate commits on exact source repair plus held-anchor retention.
+- Evaluate continuous self-learning prospectively across multiple seeds and
+  task orders. Keep all model weights frozen, preserve restart and rollback,
+  and require future benefit rather than same-event adaptation.
+- Improve ARC only through a held-out, game-agnostic live-agent path. Make no
+  game or level solve claim.
+
+<!-- V577-PLANNER-REFRESH-20260826-END -->
