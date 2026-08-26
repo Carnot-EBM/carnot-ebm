@@ -16542,3 +16542,6 @@ code |
 | 2026-08-26 07:15 UTC | Exact constraint-authority and support-preservatio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6624-delayed-two-level-decoding) |
 | 2026-08-26 07:15 UTC | Spectral k-block sampler integrity and reference r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6619-v578-activation-contract.activatio |
 | 2026-08-26 07:17 UTC | Independent spectral CPU and RTX GPU cost replay | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6627-spectral-integrity-repair) |
+| 2026-08-26 08:38 UTC | Plan milestone 2026.08.579 | OK | 7 tasks proposed |
+| 2026-08-26 08:40 UTC | Independent spectral CPU and RTX GPU cost replay | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6627-spectral-integrity-repair) |
+| 2026-08-26 08:41 UTC | Milestone 2026.08.579 activated | OK | 7 tasks queued |
