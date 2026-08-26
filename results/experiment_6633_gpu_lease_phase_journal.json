@@ -1,0 +1,1185 @@
+{
+  "accelerator_receipt_examples": [
+    {
+      "device_uuid": "GPU-fixture-race",
+      "exit_code": 0,
+      "expected_model": "fixture/model.gguf",
+      "pid": 332146,
+      "pid_start_ticks": 3377798,
+      "token_digest": "sha256:fda09d5f601477504e7d30394051d7f1c396689ab354bd2e9d73ceebdbc40591",
+      "unload_observed": true,
+      "vram_mb": {
+        "after": 4,
+        "before": 4,
+        "resident": 1028
+      }
+    }
+  ],
+  "attack_rows": [
+    {
+      "accepted": false,
+      "attack_id": "same_device_race",
+      "fail_closed": true,
+      "outcome": "LeaseBusy",
+      "reason": "device_busy:GPU-attack-same_device_race",
+      "signals_sent": []
+    },
+    {
+      "accepted": false,
+      "attack_id": "phase_skip",
+      "fail_closed": true,
+      "outcome": "TransitionError",
+      "reason": "transition_not_allowed:preflight->loading",
+      "signals_sent": []
+    },
+    {
+      "accepted": false,
+      "attack_id": "phase_reversal",
+      "fail_closed": true,
+      "outcome": "TransitionError",
+      "reason": "transition_not_allowed:admitted->preflight",
+      "signals_sent": []
+    },
+    {
+      "accepted": false,
+      "attack_id": "second_terminal",
+      "fail_closed": true,
+      "outcome": "TransitionError",
+      "reason": "terminal_already_set",
+      "signals_sent": []
+    },
+    {
+      "accepted": false,
+      "attack_id": "pid_reuse",
+      "fail_closed": true,
+      "outcome": "OwnershipError",
+      "reason": "pid_start_mismatch",
+      "signals_sent": []
+    },
+    {
+      "accepted": false,
+      "attack_id": "stale_heartbeat",
+      "fail_closed": true,
+      "outcome": "LeaseExpired",
+      "reason": "lease_expired_stale_heartbeat",
+      "signals_sent": []
+    },
+    {
+      "accepted": false,
+      "attack_id": "wrong_token",
+      "fail_closed": true,
+      "outcome": "OwnershipError",
+      "reason": "wrong_token",
+      "signals_sent": []
+    },
+    {
+      "accepted": false,
+      "attack_id": "wrong_device",
+      "fail_closed": true,
+      "outcome": "OwnershipError",
+      "reason": "wrong_device",
+      "signals_sent": []
+    },
+    {
+      "accepted": false,
+      "attack_id": "wrong_model",
+      "fail_closed": true,
+      "outcome": "OwnershipError",
+      "reason": "wrong_model",
+      "signals_sent": []
+    },
+    {
+      "accepted": false,
+      "attack_id": "timeout",
+      "fail_closed": true,
+      "outcome": "LeaseExpired",
+      "reason": "lease_expired_stale_heartbeat",
+      "signals_sent": []
+    },
+    {
+      "accepted": false,
+      "attack_id": "missing_unload",
+      "fail_closed": true,
+      "outcome": "TransitionError",
+      "reason": "missing_unload_evidence",
+      "signals_sent": []
+    },
+    {
+      "accepted": false,
+      "attack_id": "partial_write",
+      "fail_closed": true,
+      "outcome": "OSError",
+      "reason": "replace failed",
+      "signals_sent": []
+    },
+    {
+      "accepted": false,
+      "attack_id": "tamper",
+      "fail_closed": true,
+      "outcome": "JournalError",
+      "reason": "checksum_mismatch",
+      "signals_sent": []
+    },
+    {
+      "accepted": false,
+      "attack_id": "live_owner_recovery",
+      "fail_closed": true,
+      "outcome": "RecoveryError",
+      "reason": "recorded_owner_still_live",
+      "signals_sent": []
+    }
+  ],
+  "duration_s": 20.054345,
+  "field_provenance": {
+    "accelerator_receipt_examples": {
+      "function": "build_artifact",
+      "hash": "sha256:e27976a014aa9feab43208d6fbf4ebbaa75eb73ec1836e8a49164a013200f8fc",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "Device, process, model, VRAM, exit, and unload fields share one owner.",
+      "schema": "carnot.experiment_6633.field.accelerator_receipt_examples.v1",
+      "source_path": "python/carnot/gpu_lease_phase_journal.py"
+    },
+    "attack_rows": {
+      "function": "build_artifact",
+      "hash": "sha256:0989fd4e7c13605d04ed7908abc4ea5e28eef67387a68e1c8df915dbdf1486bd",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "Each named ownership or evidence attack must fail closed.",
+      "schema": "carnot.experiment_6633.field.attack_rows.v1",
+      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
+    },
+    "duration_s": {
+      "function": "build_artifact",
+      "hash": "sha256:e1e96debe519bd90c1f1ce96bd0f1743adc789ace95af65a3e390840864a0205",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "A monotonic duration proves that bounded fixtures executed.",
+      "schema": "carnot.experiment_6633.field.duration_s.v1",
+      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
+    },
+    "field_provenance": {
+      "function": "_field_provenance",
+      "hash": "sha256:9d1f19e5ac9670b89c1c9a801ea81161cb41ebab25e5066972c33c02624b60ea",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "Every field names its parser, producer, source, schema, and hash.",
+      "schema": "carnot.experiment_6633.field.field_provenance.v1",
+      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
+    },
+    "gate_check_summary": {
+      "function": "build_artifact",
+      "hash": "sha256:39ca3a0548135c21dafafc916dfcb0db97cbd4186624f54842523b024ab48f73",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "Every block names its failed check and observed value.",
+      "schema": "carnot.experiment_6633.field.gate_check_summary.v1",
+      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
+    },
+    "gpu_lease_scheduler_ready_score": {
+      "function": "build_artifact",
+      "hash": "sha256:8aed642bf5118b9d3c859bd4be35ecac75b6e873cce34e7b6f554b06f75550d7",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "One exact binary field gates later model admission.",
+      "schema": "carnot.experiment_6633.field.gpu_lease_scheduler_ready_score.v1",
+      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
+    },
+    "honest_verdict": {
+      "function": "build_artifact",
+      "hash": "sha256:37bf3d5746d5f7ece3f0c4d8412b94e4e059162607ebc413f5b156d01098a20c",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "The verdict reports infrastructure only and makes no model-quality claim.",
+      "schema": "carnot.experiment_6633.field.honest_verdict.v1",
+      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
+    },
+    "inference_substrate": {
+      "function": "build_artifact",
+      "hash": "sha256:7adbfc7092f8540a87d61d5cd082e8fed2c23778f023c9c5860b19f72ce8029b",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "The declared substrate prevents fixture evidence from becoming an inference claim.",
+      "schema": "carnot.experiment_6633.field.inference_substrate.v1",
+      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
+    },
+    "lease_api_receipts": {
+      "function": "build_artifact",
+      "hash": "sha256:c39159b4ebaaa5b1eaf5285bcbd9bb2069ce1e78fddf95dc4c77c672291eefac",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "Acquire, heartbeat, release, timeout, and recovery remain owner-bound.",
+      "schema": "carnot.experiment_6633.field.lease_api_receipts.v1",
+      "source_path": "python/carnot/gpu_lease_phase_journal.py"
+    },
+    "phase_transition_rows": {
+      "function": "build_artifact",
+      "hash": "sha256:76db6bc2b276df5ff7236084fc45f8baca59d41739f3a88a808f1c5f23ead397",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "Allowed and rejected changes make the phase state machine replayable.",
+      "schema": "carnot.experiment_6633.field.phase_transition_rows.v1",
+      "source_path": "python/carnot/gpu_lease_phase_journal.py"
+    },
+    "preconditions_checked": {
+      "function": "collect_preconditions",
+      "hash": "sha256:b61655decd7ae57aa1950a3ea6fb4084f767048d33a52759fb0986f4b20ba510",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "Inputs, helpers, tools, host resources, and the no-LLM boundary are explicit.",
+      "schema": "carnot.experiment_6633.field.preconditions_checked.v1",
+      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
+    },
+    "process_fixture_rows": {
+      "function": "build_artifact",
+      "hash": "sha256:6b362d26d0cfba002fd2bd75e0955bc0315c661d3df261b5c7f73aec66f399ec",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "Bounded child processes prove races, crashes, stale owners, and recovery.",
+      "schema": "carnot.experiment_6633.field.process_fixture_rows.v1",
+      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
+    },
+    "protected_files_unchanged": {
+      "function": "_protected_receipt",
+      "hash": "sha256:bd40c672b8573261426e8f4c232a886a8155b33c397d1cea18b506bb90da7470",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "Roadmap and conductor hashes must remain byte-identical.",
+      "schema": "carnot.experiment_6633.field.protected_files_unchanged.v1",
+      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
+    },
+    "reproducibility_checksum": {
+      "function": "payload_checksum",
+      "hash": "self_excluded_from_content_hash",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "A final content hash detects artifact mutation.",
+      "schema": "carnot.experiment_6633.field.reproducibility_checksum.v1",
+      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
+    },
+    "status": {
+      "function": "build_artifact",
+      "hash": "sha256:3400f1b8aa0df0f2640bb6afe3e6612ef75ac3fe53cf096703c77bec931fa52f",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "The infrastructure run closes in one explicit terminal state.",
+      "schema": "carnot.experiment_6633.field.status.v1",
+      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
+    },
+    "tests_run": {
+      "function": "build_artifact",
+      "hash": "sha256:7255af935b3dcd990f50584b725bca0420d6c2bec01032843591f27b31515ced",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "Command exits and summaries show focused, coverage, suite, lint, and E2E checks.",
+      "schema": "carnot.experiment_6633.field.tests_run.v1",
+      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
+    },
+    "verdict_class": {
+      "function": "build_artifact",
+      "hash": "sha256:7b92de7d08814ff2863dbd0239cdcb3cd107364ebf588b5d95693527f066f106",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "Ready infrastructure is null; a failed gate is blocked.",
+      "schema": "carnot.experiment_6633.field.verdict_class.v1",
+      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
+    },
+    "verifier_is_oracle": {
+      "function": "build_artifact",
+      "hash": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+      "parser": "json.loads_and_structural_validation",
+      "principle": "This executable infrastructure checker is the null-result oracle.",
+      "schema": "carnot.experiment_6633.field.verifier_is_oracle.v1",
+      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
+    }
+  },
+  "gate_check_summary": [
+    {
+      "check": "focused_tests",
+      "expected": true,
+      "observed": false
+    }
+  ],
+  "gpu_lease_scheduler_ready_score": 0.0,
+  "honest_verdict": "blocked_gpu_lease_scheduler_not_ready: infrastructure checks failed; no model-quality claim",
+  "inference_substrate": "task_scoped_gpu_lease_process_fixtures_no_llm",
+  "lease_api_receipts": {
+    "acquire": {
+      "acquired_monotonic_ns": 33797214479820,
+      "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
+      "device_uuid": "GPU-lease-api-receipt",
+      "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+      "expected_model": "fixture/model.gguf",
+      "expires_monotonic_ns": 33827214479820,
+      "pid": 332096,
+      "pid_start_ticks": 3377747,
+      "recovery": {
+        "performed": false,
+        "signals_sent": []
+      },
+      "signals_sent": [],
+      "task_id": "lease-api-receipt",
+      "token_digest": "sha256:259b5a9e04324270d0b190946c88a325208488ab4ebcb3bf5c9e1fa3936fddeb",
+      "token_length": 43,
+      "token_opaque": true
+    },
+    "all_owner_bound": true,
+    "heartbeat": {
+      "checksum": "sha256:a55226deb16e67c1ce4d489e7c57a13e84d986762c215cc45a3464a72423fa0c",
+      "expires_monotonic_ns": 33827411167868,
+      "heartbeat_monotonic_ns": 33797411167868,
+      "owner_verified": true
+    },
+    "recovery": {
+      "performed": true,
+      "previous_checksum": "sha256:3e5029fda95a9bfbde2bbd7b0188855544be2583394b84117220a608a25ad0cd",
+      "previous_pid": 332246,
+      "previous_pid_start_ticks": 3378325,
+      "previous_task_id": "crash-owner",
+      "reason": "recorded_owner_absent_or_pid_reused",
+      "signals_sent": []
+    },
+    "release": {
+      "checksum": "sha256:84966c1f1ab856bcd6a690eaf4bf1bda9cb1dda416da638d0645470ad5f90df8",
+      "device_uuid": "GPU-lease-api-receipt",
+      "phase": "terminal_blocked",
+      "pid": 332096,
+      "pid_start_ticks": 3377747,
+      "released": true,
+      "signals_sent": []
+    },
+    "timeout": {
+      "outcome": "fail_closed",
+      "owner_bound": true,
+      "source": "attack_rows.timeout"
+    }
+  },
+  "phase_transition_rows": [
+    {
+      "accepted": true,
+      "case": "initial_acquire",
+      "from_phase": null,
+      "reason": "atomic_acquire",
+      "to_phase": "preflight"
+    },
+    {
+      "accepted": true,
+      "case": "allowed",
+      "event_checksum": "sha256:e747e6449fd7e8c0a5350e31116512a68c3147d279f5c9139895d16e6ad2b0fc",
+      "from_phase": "preflight",
+      "journal_checksum": "sha256:9468471b6ae821ee0c3b515bfea079b4842a3f9860c23f22fa405fbfa8debb7d",
+      "reason": "allowed",
+      "to_phase": "admitted"
+    },
+    {
+      "accepted": true,
+      "case": "allowed",
+      "event_checksum": "sha256:1827e098cd5d27fc654e81d11d4a05fb0d6502d4f5a92f8804cdda91b3d03c47",
+      "from_phase": "admitted",
+      "journal_checksum": "sha256:76683110155813e8e0d0179a06dff8679f5c3a6876d70e48218a2be1321f624c",
+      "reason": "allowed",
+      "to_phase": "loading"
+    },
+    {
+      "accepted": true,
+      "case": "allowed",
+      "event_checksum": "sha256:a38f096a02682402724f1bb622fc8598d95cbb4ed192728676a521291ac40834",
+      "from_phase": "loading",
+      "journal_checksum": "sha256:63f9a65dc44bd88f71f55eef3f6e3a95ffd95bb4d2f0d05842ec8828d89f3695",
+      "reason": "allowed",
+      "to_phase": "resident"
+    },
+    {
+      "accepted": true,
+      "case": "allowed",
+      "event_checksum": "sha256:4f0bb1d9fc8ee7c0625a398a22f3aca562346987fe2e703df0b638319cb7e7d9",
+      "from_phase": "resident",
+      "journal_checksum": "sha256:6920b10fe01ed306e6de80e5f8849bd10252c4ec68673a10c0fc998d28f17827",
+      "reason": "allowed",
+      "to_phase": "inferencing"
+    },
+    {
+      "accepted": true,
+      "case": "allowed",
+      "event_checksum": "sha256:f406b45eb48b0b859722b1f9cfb0af0bd44aad07df591da340db5e125d24a371",
+      "from_phase": "inferencing",
+      "journal_checksum": "sha256:e53dfa016905b52c50ab7690644224964483865cde927088b8bef6ae363ba5e7",
+      "reason": "allowed",
+      "to_phase": "unloading"
+    },
+    {
+      "accepted": true,
+      "case": "allowed",
+      "event_checksum": "sha256:f58239ed5fd5c43774801fded0e4fe3c5d1b17e228fd34a36c3b698582b83782",
+      "from_phase": "unloading",
+      "journal_checksum": "sha256:33b69770f39a743568831882d79aaf92e86d2af7ee8d9dc87735ff119e5a097c",
+      "reason": "allowed",
+      "to_phase": "validating"
+    },
+    {
+      "accepted": true,
+      "case": "allowed",
+      "event_checksum": "sha256:c06b0487aa0a7fd63e44a5979aa0b058aba1fb73e93de8c555020321de46e6e1",
+      "from_phase": "validating",
+      "journal_checksum": "sha256:8350fb49fa7f7c7dab8c0393a7f07563a01e49b909695f4145ba3dce075b067f",
+      "reason": "allowed",
+      "to_phase": "terminal_complete"
+    },
+    {
+      "accepted": false,
+      "case": "skip",
+      "from_phase": "preflight",
+      "reason": "transition_not_allowed:preflight->loading",
+      "to_phase": "loading"
+    },
+    {
+      "accepted": false,
+      "case": "reversal",
+      "from_phase": "admitted",
+      "reason": "transition_not_allowed:admitted->preflight",
+      "to_phase": "preflight"
+    },
+    {
+      "accepted": false,
+      "case": "second_terminal",
+      "from_phase": "terminal_blocked",
+      "reason": "terminal_already_set",
+      "to_phase": "terminal_complete"
+    }
+  ],
+  "preconditions_checked": {
+    "accelerator_diagnostics": {
+      "cuda_initialized": false,
+      "nvidia_smi": {
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,uuid,name,memory.total,memory.used",
+          "--format=csv,noheader,nounits"
+        ],
+        "diagnostic_only": true,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 24576, 4\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 24576, 4"
+      },
+      "used_as_gate": false
+    },
+    "helpers": [
+      {
+        "exists": true,
+        "path": "python/carnot/gpu_lease_phase_journal.py",
+        "sha256": "sha256:b2bf64903fe4927f956025b01e099a010a9ddf36131a89b8f048a247312c43e0"
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/inference/llama_server_supervisor.py",
+        "sha256": "sha256:dd60ca8ce2abbbc6bef0da6b70ec1f1fcbbd95a957114878a9ac15d64d03f8c9"
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/phase_concurrency_receipts.py",
+        "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/task_runtime_receipts.py",
+        "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/pipeline/atomic_writer.py",
+        "sha256": "sha256:34d31d117f6d454f59b9983e1864fdec76d0380601769ea90a054bd39008ce6e"
+      },
+      {
+        "exists": true,
+        "path": "scripts/experiment_template.py",
+        "sha256": "sha256:dae91dd5b37a1597684aea1c2a433cce62f409eb90b1d098bdb8cded063db2e0"
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/inference/sota_models.py",
+        "sha256": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab"
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/pipeline/gemma4_quantized_loader.py",
+        "sha256": "sha256:4a7a0d38209af457821531f3f3941cfd73e3d16aa14a99802a19e6664671c16d"
+      }
+    ],
+    "host_resources": {
+      "cpu_count": 24,
+      "disk_free_bytes": 1074733199360,
+      "disk_total_bytes": 3953289023488,
+      "ram_bytes": 134304591872
+    },
+    "inputs": {
+      "core_sha256": "sha256:b2bf64903fe4927f956025b01e099a010a9ddf36131a89b8f048a247312c43e0",
+      "module_sha256": "sha256:776f679af3262244e44cf5df96fa9a1fae03db382a10787f1c54f90cb096ce04",
+      "planning_date": "20260826",
+      "root": "/home/ianblenke/github.com/ianblenke/carnot",
+      "spec_sha256": "sha256:4fe74a61146deda6fbd0fbea92613a3fedad9fc1624632757b35586aae73cf69"
+    },
+    "no_llm": {
+      "generation_attempt_count": 0,
+      "inference_substrate": "task_scoped_gpu_lease_process_fixtures_no_llm",
+      "llm_import_required": false,
+      "model_load_attempt_count": 0
+    },
+    "process_apis": {
+      "directory_fsync": true,
+      "fcntl_flock": true,
+      "file_fsync": true,
+      "os_replace": true,
+      "proc_stat": true
+    },
+    "protected_hashes_before": {
+      "research-roadmap.yaml": "sha256:5e5bcd585422afce545a67d09516e3d0c1ef82af621d3102feee8fedf74fd621",
+      "scripts/research_conductor.py": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
+    },
+    "python": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "implementation": "CPython",
+      "version": "3.12.13"
+    },
+    "runtime_paths": {
+      "fixture_root": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729",
+      "journal_path_pattern": "device-<sha256(device_uuid)>.journal.json",
+      "lease_path_pattern": "device-<sha256(device_uuid)>.lock"
+    },
+    "schema": "carnot.experiment_6633.preconditions.v1"
+  },
+  "process_fixture_rows": [
+    {
+      "acquired_count": 1,
+      "bounded": true,
+      "busy_count": 1,
+      "commands": [
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.gpu_lease_phase_journal",
+          "--runtime-dir",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/same-device-race",
+          "--task-id",
+          "race-owner",
+          "--device-uuid",
+          "GPU-fixture-race",
+          "--behavior",
+          "hold_complete",
+          "--hold-s",
+          "1.5",
+          "--ttl-s",
+          "5.0",
+          "--exit-code",
+          "23"
+        ],
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.gpu_lease_phase_journal",
+          "--runtime-dir",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/same-device-race",
+          "--task-id",
+          "race-contender",
+          "--device-uuid",
+          "GPU-fixture-race",
+          "--behavior",
+          "complete",
+          "--hold-s",
+          "0.0",
+          "--ttl-s",
+          "5.0",
+          "--exit-code",
+          "23"
+        ]
+      ],
+      "contender_exit_code": 3,
+      "fixture_id": "same_device_race",
+      "holder_exit_code": 0,
+      "holder_terminal_rows": [
+        {
+          "outcome": "released",
+          "release": {
+            "checksum": "sha256:28eaeecf48b3dbda7fb7032aa78c2f5966d5228ae1429829377ef4331e341bfe",
+            "device_uuid": "GPU-fixture-race",
+            "phase": "terminal_complete",
+            "pid": 332146,
+            "pid_start_ticks": 3377798,
+            "released": true,
+            "signals_sent": []
+          }
+        }
+      ],
+      "owner": {
+        "acquired_monotonic_ns": 33778379147455,
+        "argv_digest": "sha256:a00017b90040f7a85007dc2a508e37f09fae6f65f277c01c9939473b06bcfc08",
+        "device_uuid": "GPU-fixture-race",
+        "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+        "expected_model": "fixture/model.gguf",
+        "expires_monotonic_ns": 33783379147455,
+        "pid": 332146,
+        "pid_start_ticks": 3377798,
+        "recovery": {
+          "performed": false,
+          "signals_sent": []
+        },
+        "signals_sent": [],
+        "task_id": "race-owner",
+        "token_digest": "sha256:fda09d5f601477504e7d30394051d7f1c396689ab354bd2e9d73ceebdbc40591",
+        "token_length": 43,
+        "token_opaque": true
+      },
+      "passed": true,
+      "signals_sent": [],
+      "timeout_s": 5.0
+    },
+    {
+      "acquired_count": 2,
+      "bounded": true,
+      "commands": [
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.gpu_lease_phase_journal",
+          "--runtime-dir",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices",
+          "--task-id",
+          "independent-0",
+          "--device-uuid",
+          "GPU-fixture-independent-0",
+          "--behavior",
+          "hold_complete",
+          "--hold-s",
+          "0.15",
+          "--ttl-s",
+          "5.0",
+          "--exit-code",
+          "23"
+        ],
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.gpu_lease_phase_journal",
+          "--runtime-dir",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices",
+          "--task-id",
+          "independent-1",
+          "--device-uuid",
+          "GPU-fixture-independent-1",
+          "--behavior",
+          "hold_complete",
+          "--hold-s",
+          "0.15",
+          "--ttl-s",
+          "5.0",
+          "--exit-code",
+          "23"
+        ]
+      ],
+      "exit_codes": [
+        0,
+        0
+      ],
+      "fixture_id": "independent_devices",
+      "owners": [
+        {
+          "acquired_monotonic_ns": 33781448769199,
+          "argv_digest": "sha256:cc429a652eb0819e027b6c18f998ac72efe6896261ac6da493f1a98cb9af395c",
+          "device_uuid": "GPU-fixture-independent-0",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "fixture/model.gguf",
+          "expires_monotonic_ns": 33786448769199,
+          "pid": 332198,
+          "pid_start_ticks": 3378093,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "independent-0",
+          "token_digest": "sha256:e4ccd30b0618299ec5552c1fa4c4aff63e13c08003554ef474f26aeaf15a764a",
+          "token_length": 43,
+          "token_opaque": true
+        },
+        {
+          "acquired_monotonic_ns": 33781457714049,
+          "argv_digest": "sha256:4b7e6e4bb703b69305462e830fe1214cfa6fc399de6b06a1c7c282325b94f72b",
+          "device_uuid": "GPU-fixture-independent-1",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "fixture/model.gguf",
+          "expires_monotonic_ns": 33786457714049,
+          "pid": 332199,
+          "pid_start_ticks": 3378093,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "independent-1",
+          "token_digest": "sha256:e898a491f8205beca94f2957fd23e6553d3df1342392860ae797831e22fa87c6",
+          "token_length": 43,
+          "token_opaque": true
+        }
+      ],
+      "passed": true,
+      "signals_sent": [],
+      "timeout_s": 5.0
+    },
+    {
+      "bounded": true,
+      "commands": [
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.gpu_lease_phase_journal",
+          "--runtime-dir",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery",
+          "--task-id",
+          "crash-owner",
+          "--device-uuid",
+          "GPU-fixture-crash",
+          "--behavior",
+          "crash",
+          "--hold-s",
+          "0.0",
+          "--ttl-s",
+          "5.0",
+          "--exit-code",
+          "23"
+        ],
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.gpu_lease_phase_journal",
+          "--runtime-dir",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery",
+          "--task-id",
+          "recovery-owner",
+          "--device-uuid",
+          "GPU-fixture-crash",
+          "--behavior",
+          "recover_complete",
+          "--hold-s",
+          "0.0",
+          "--ttl-s",
+          "5.0",
+          "--exit-code",
+          "23"
+        ]
+      ],
+      "crash_exit_code": 23,
+      "crash_rows": [
+        {
+          "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery/device-d871d91814595322471c6e11dcd008a8601b3f1286e7099707f93f431d6b1e78.journal.json",
+          "outcome": "acquired",
+          "owner": {
+            "acquired_monotonic_ns": 33783676060609,
+            "argv_digest": "sha256:f44b86e24d17392073a502d202126e81eceb4744e787eff8147f28552975c9c2",
+            "device_uuid": "GPU-fixture-crash",
+            "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+            "expected_model": "fixture/model.gguf",
+            "expires_monotonic_ns": 33788676060609,
+            "pid": 332246,
+            "pid_start_ticks": 3378325,
+            "recovery": {
+              "performed": false,
+              "signals_sent": []
+            },
+            "signals_sent": [],
+            "task_id": "crash-owner",
+            "token_digest": "sha256:316af33e1247697da8ebe8e22d3c7093ef799554e45ab623a12b77aa5afc5bf4",
+            "token_length": 43,
+            "token_opaque": true
+          }
+        }
+      ],
+      "fixture_id": "owner_crash",
+      "passed": true,
+      "recovery_exit_code": 0,
+      "signals_sent": [],
+      "timeout_s": 5.0
+    },
+    {
+      "bounded": true,
+      "commands": [
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.gpu_lease_phase_journal",
+          "--runtime-dir",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery",
+          "--task-id",
+          "crash-owner",
+          "--device-uuid",
+          "GPU-fixture-crash",
+          "--behavior",
+          "crash",
+          "--hold-s",
+          "0.0",
+          "--ttl-s",
+          "5.0",
+          "--exit-code",
+          "23"
+        ],
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.gpu_lease_phase_journal",
+          "--runtime-dir",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery",
+          "--task-id",
+          "recovery-owner",
+          "--device-uuid",
+          "GPU-fixture-crash",
+          "--behavior",
+          "recover_complete",
+          "--hold-s",
+          "0.0",
+          "--ttl-s",
+          "5.0",
+          "--exit-code",
+          "23"
+        ]
+      ],
+      "fixture_id": "restart_recovery",
+      "new_token_digest": "sha256:466857d05c2fdb805917f38bafb845bfd4a9e4913b17ce637d6db9c5757e7c30",
+      "passed": true,
+      "recovery": {
+        "performed": true,
+        "previous_checksum": "sha256:3e5029fda95a9bfbde2bbd7b0188855544be2583394b84117220a608a25ad0cd",
+        "previous_pid": 332246,
+        "previous_pid_start_ticks": 3378325,
+        "previous_task_id": "crash-owner",
+        "reason": "recorded_owner_absent_or_pid_reused",
+        "signals_sent": []
+      },
+      "recovery_performed": true,
+      "signals_sent": [],
+      "timeout_s": 5.0
+    },
+    {
+      "bounded": true,
+      "commands": [
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.gpu_lease_phase_journal",
+          "--runtime-dir",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat",
+          "--task-id",
+          "stale-owner",
+          "--device-uuid",
+          "GPU-fixture-stale",
+          "--behavior",
+          "stale",
+          "--hold-s",
+          "1.5",
+          "--ttl-s",
+          "0.05",
+          "--exit-code",
+          "24"
+        ],
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.gpu_lease_phase_journal",
+          "--runtime-dir",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat",
+          "--task-id",
+          "stale-contender",
+          "--device-uuid",
+          "GPU-fixture-stale",
+          "--behavior",
+          "complete",
+          "--hold-s",
+          "0.0",
+          "--ttl-s",
+          "5.0",
+          "--exit-code",
+          "23"
+        ],
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.gpu_lease_phase_journal",
+          "--runtime-dir",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat",
+          "--task-id",
+          "stale-recovery",
+          "--device-uuid",
+          "GPU-fixture-stale",
+          "--behavior",
+          "recover_complete",
+          "--hold-s",
+          "0.0",
+          "--ttl-s",
+          "5.0",
+          "--exit-code",
+          "23"
+        ]
+      ],
+      "fixture_id": "stale_heartbeat",
+      "live_contender_exit_code": 3,
+      "live_contender_outcome": "busy",
+      "owner": {
+        "acquired_monotonic_ns": 33785602065202,
+        "argv_digest": "sha256:fa3e12b68ede1c22eac71fb62823ff79677ccec9d12b59f75b368da4dc6ac7eb",
+        "device_uuid": "GPU-fixture-stale",
+        "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+        "expected_model": "fixture/model.gguf",
+        "expires_monotonic_ns": 33785652065202,
+        "pid": 332298,
+        "pid_start_ticks": 3378515,
+        "recovery": {
+          "performed": false,
+          "signals_sent": []
+        },
+        "signals_sent": [],
+        "task_id": "stale-owner",
+        "token_digest": "sha256:ed04094334d225466c2ac0cde6787ba121acefd339ec086b5951b17ce3c787a0",
+        "token_length": 43,
+        "token_opaque": true
+      },
+      "passed": true,
+      "recovery_exit_code": 0,
+      "recovery_rows": [
+        {
+          "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat/device-202df990edcb623f689bddba8d4ea1a251979e0cc6dcbb2a8eeae94b2eba196c.journal.json",
+          "outcome": "acquired",
+          "owner": {
+            "acquired_monotonic_ns": 33787682271313,
+            "argv_digest": "sha256:ccb31aa0ee45f453432c4f0f01b187264a73f464402a1d1a24b224ebb31f66a6",
+            "device_uuid": "GPU-fixture-stale",
+            "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+            "expected_model": "fixture/model.gguf",
+            "expires_monotonic_ns": 33792682271313,
+            "pid": 332346,
+            "pid_start_ticks": 3378725,
+            "recovery": {
+              "performed": true,
+              "previous_checksum": "sha256:7dfa5578876c8e4e778532337073af562ca4044224315f1c7715fb4db0dcb43c",
+              "previous_pid": 332298,
+              "previous_pid_start_ticks": 3378515,
+              "previous_task_id": "stale-owner",
+              "reason": "recorded_owner_absent_or_pid_reused",
+              "signals_sent": []
+            },
+            "signals_sent": [],
+            "task_id": "stale-recovery",
+            "token_digest": "sha256:1d2927c6f6efec4096eb89e3ba1fb59fe7bceb0556f1b49ce7a271b6f13bc246",
+            "token_length": 43,
+            "token_opaque": true
+          }
+        },
+        {
+          "outcome": "released",
+          "release": {
+            "checksum": "sha256:a5c764032ee0ad5e37ae2d82d6aa2ae867dcd077ada0a7cb377281057078cb93",
+            "device_uuid": "GPU-fixture-stale",
+            "phase": "terminal_complete",
+            "pid": 332346,
+            "pid_start_ticks": 3378725,
+            "released": true,
+            "signals_sent": []
+          }
+        }
+      ],
+      "signals_sent": [],
+      "stale_owner_exit_code": 24,
+      "timeout_s": 5.0
+    },
+    {
+      "bounded": true,
+      "commands": [
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.gpu_lease_phase_journal",
+          "--runtime-dir",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery",
+          "--task-id",
+          "recovery-owner",
+          "--device-uuid",
+          "GPU-fixture-crash",
+          "--behavior",
+          "recover_complete",
+          "--hold-s",
+          "0.0",
+          "--ttl-s",
+          "5.0",
+          "--exit-code",
+          "23"
+        ]
+      ],
+      "errors": [
+        "pid_start_mismatch"
+      ],
+      "fixture_id": "pid_reuse",
+      "outcome": "fail_closed",
+      "passed": true,
+      "recorded_pid": 332270,
+      "recorded_start_ticks": 3378384,
+      "replayed_start_ticks": 3378385,
+      "signals_sent": [],
+      "timeout_s": 5.0
+    },
+    {
+      "bounded": true,
+      "commands": [
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.gpu_lease_phase_journal",
+          "--runtime-dir",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write",
+          "--task-id",
+          "partial-owner",
+          "--device-uuid",
+          "GPU-fixture-partial",
+          "--behavior",
+          "complete",
+          "--hold-s",
+          "0.0",
+          "--ttl-s",
+          "5.0",
+          "--exit-code",
+          "23"
+        ],
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-c",
+          "from pathlib import Path; import sys; Path(sys.argv[1] + '.partial.tmp').write_text('{\\\"phase\\\":')",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write/device-602546ed34f4638d5bce18560420f2a10f272b0a9587d026d37fef51e279850d.journal.json"
+        ]
+      ],
+      "final_checksum_after": "sha256:57c9624dfd03308321f24b9a6aae24cf437a6e0f03efc178a7efcaebfb405cdd",
+      "final_checksum_before": "sha256:57c9624dfd03308321f24b9a6aae24cf437a6e0f03efc178a7efcaebfb405cdd",
+      "final_checksum_unchanged": true,
+      "fixture_id": "partial_write",
+      "owner_exit_code": 0,
+      "passed": true,
+      "signals_sent": [],
+      "timeout_s": 5.0,
+      "writer_exit_code": 0
+    },
+    {
+      "bounded": true,
+      "commands": [
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.gpu_lease_phase_journal",
+          "--runtime-dir",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/tamper",
+          "--task-id",
+          "tamper-owner",
+          "--device-uuid",
+          "GPU-fixture-tamper",
+          "--behavior",
+          "complete",
+          "--hold-s",
+          "0.0",
+          "--ttl-s",
+          "5.0",
+          "--exit-code",
+          "23"
+        ],
+        [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.gpu_lease_phase_journal",
+          "--runtime-dir",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/tamper",
+          "--task-id",
+          "tamper-contender",
+          "--device-uuid",
+          "GPU-fixture-tamper",
+          "--behavior",
+          "complete",
+          "--hold-s",
+          "0.0",
+          "--ttl-s",
+          "5.0",
+          "--exit-code",
+          "23"
+        ]
+      ],
+      "contender_exit_code": 4,
+      "errors": [
+        {
+          "outcome": "fail_closed",
+          "reason": "checksum_mismatch",
+          "signals_sent": []
+        }
+      ],
+      "fixture_id": "tamper",
+      "outcome": "fail_closed",
+      "owner_exit_code": 0,
+      "passed": true,
+      "signals_sent": [],
+      "timeout_s": 5.0
+    }
+  ],
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "research-roadmap.yaml": "sha256:5e5bcd585422afce545a67d09516e3d0c1ef82af621d3102feee8fedf74fd621",
+      "scripts/research_conductor.py": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
+    },
+    "all_unchanged": true,
+    "before_hashes": {
+      "research-roadmap.yaml": "sha256:5e5bcd585422afce545a67d09516e3d0c1ef82af621d3102feee8fedf74fd621",
+      "scripts/research_conductor.py": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
+    },
+    "files": {
+      "research-roadmap.yaml": {
+        "after": "sha256:5e5bcd585422afce545a67d09516e3d0c1ef82af621d3102feee8fedf74fd621",
+        "before": "sha256:5e5bcd585422afce545a67d09516e3d0c1ef82af621d3102feee8fedf74fd621",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+        "before": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+        "unchanged": true
+      }
+    },
+    "schema": "carnot.experiment_6633.protected_files.v1"
+  },
+  "reproducibility_checksum": "sha256:ba660ae2f7c3cdcbcfa348636dddf01811d42a033ab29e5903b48fbea9cece81",
+  "status": "blocked_gpu_lease_scheduler_not_ready",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "summary": "focused tests passed"
+    },
+    {
+      "command": "JAX_PLATFORMS=cpu PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/coverage run --branch --include='*/gpu_lease_phase_journal.py,*/experiment_6633_gpu_lease_phase_journal.py' -m pytest -c /dev/null --noconftest tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py -q",
+      "exit_code": 0,
+      "summary": "scoped coverage run passed"
+    },
+    {
+      "command": ".venv/bin/coverage report -m --fail-under=100",
+      "exit_code": 0,
+      "summary": "new modules have 100% scoped line and branch coverage"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 3,
+      "summary": "1037 failed, 34797 passed, 103 skipped, 140 warnings in 2310.03s; pytest/xdist stopped at 62% after an existing test removed its worker CWD, raising FileNotFoundError"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py",
+      "exit_code": 0,
+      "summary": "focused spec coverage passed"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/gpu_lease_phase_journal.py python/carnot/experiment_6633_gpu_lease_phase_journal.py tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py",
+      "exit_code": 0,
+      "summary": "focused lint passed"
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/gpu_lease_phase_journal.py python/carnot/experiment_6633_gpu_lease_phase_journal.py tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py",
+      "exit_code": 0,
+      "summary": "focused format check passed"
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6633_gpu_lease_phase_journal --validate",
+      "exit_code": 0,
+      "summary": "artifact validation passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6633_gpu_lease_phase_journal.json",
+      "exit_code": 0,
+      "summary": "no critical adversarial finding"
+    },
+    {
+      "command": "Exp6633 E2E: bounded process race, crash, stale owner, tamper, and restart recovery",
+      "exit_code": 0,
+      "summary": "all bounded process fixtures passed without LLM load"
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}

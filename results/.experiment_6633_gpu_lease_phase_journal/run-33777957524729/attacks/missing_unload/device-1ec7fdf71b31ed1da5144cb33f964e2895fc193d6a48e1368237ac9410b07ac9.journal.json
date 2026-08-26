@@ -1,0 +1,91 @@
+{
+  "acquired_monotonic_ns": 33796203984002,
+  "checksum": "sha256:00d3d89cd3c3b4f5d7c3ee9349d17ce656e733e1bde74381d46b55eb947cbca8",
+  "device_uuid": "GPU-attack-missing_unload",
+  "exit_evidence": {
+    "exit_code": null,
+    "observed_monotonic_ns": null
+  },
+  "expected_model": "fixture/model.gguf",
+  "expires_monotonic_ns": 33801203984002,
+  "heartbeat_monotonic_ns": 33796203984002,
+  "lease_generation": 1,
+  "owner": {
+    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
+    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+    "pid": 332096,
+    "pid_start_ticks": 3377747,
+    "token_digest": "sha256:0f7e3fcd39704b4d24e6d5b9c66d5e29f1fbe14b2d1784ca248d4bde67f38c57"
+  },
+  "phase": "unloading",
+  "phase_history": [
+    {
+      "details": {
+        "recovery_performed": false
+      },
+      "event_checksum": "sha256:bc843d8cabbbf68b8529570daed6593f6573fa0916f6cf872fdd435cffffb5ea",
+      "monotonic_ns": 33796203984002,
+      "owner_token_digest": "sha256:0f7e3fcd39704b4d24e6d5b9c66d5e29f1fbe14b2d1784ca248d4bde67f38c57",
+      "phase": "preflight",
+      "previous_event_checksum": null,
+      "previous_phase": null
+    },
+    {
+      "details": {},
+      "event_checksum": "sha256:a486e7c094299da5f0b025bf32f78c9bbe19588f077b0e66e0c2f0744f768fe6",
+      "monotonic_ns": 33796205595958,
+      "owner_token_digest": "sha256:0f7e3fcd39704b4d24e6d5b9c66d5e29f1fbe14b2d1784ca248d4bde67f38c57",
+      "phase": "admitted",
+      "previous_event_checksum": "sha256:bc843d8cabbbf68b8529570daed6593f6573fa0916f6cf872fdd435cffffb5ea",
+      "previous_phase": "preflight"
+    },
+    {
+      "details": {},
+      "event_checksum": "sha256:afebcef0355198cda8c9f94f95eacee7da4324c504c77bc10f359a687b3d6e0b",
+      "monotonic_ns": 33796404562793,
+      "owner_token_digest": "sha256:0f7e3fcd39704b4d24e6d5b9c66d5e29f1fbe14b2d1784ca248d4bde67f38c57",
+      "phase": "loading",
+      "previous_event_checksum": "sha256:a486e7c094299da5f0b025bf32f78c9bbe19588f077b0e66e0c2f0744f768fe6",
+      "previous_phase": "admitted"
+    },
+    {
+      "details": {
+        "vram_resident_mb": 800
+      },
+      "event_checksum": "sha256:d09761cb40f748a708685ee095f2bd3d73dcf0f59270f8952ece146ee5d4fb9d",
+      "monotonic_ns": 33796406256412,
+      "owner_token_digest": "sha256:0f7e3fcd39704b4d24e6d5b9c66d5e29f1fbe14b2d1784ca248d4bde67f38c57",
+      "phase": "resident",
+      "previous_event_checksum": "sha256:afebcef0355198cda8c9f94f95eacee7da4324c504c77bc10f359a687b3d6e0b",
+      "previous_phase": "loading"
+    },
+    {
+      "details": {},
+      "event_checksum": "sha256:0f1395c4f9d15fb2fb3e639737f2385815911e2f21e081e714184da67adbf2c0",
+      "monotonic_ns": 33796605574659,
+      "owner_token_digest": "sha256:0f7e3fcd39704b4d24e6d5b9c66d5e29f1fbe14b2d1784ca248d4bde67f38c57",
+      "phase": "unloading",
+      "previous_event_checksum": "sha256:d09761cb40f748a708685ee095f2bd3d73dcf0f59270f8952ece146ee5d4fb9d",
+      "previous_phase": "resident"
+    }
+  ],
+  "recovery": {
+    "performed": false,
+    "signals_sent": []
+  },
+  "released": false,
+  "released_monotonic_ns": null,
+  "schema": "carnot.gpu_lease_phase_journal.v1",
+  "task_id": "attack-missing_unload",
+  "ttl_ns": 5000000000,
+  "unload_evidence": {
+    "observed": false,
+    "observed_monotonic_ns": null,
+    "required": true
+  },
+  "vram_mb": {
+    "after": null,
+    "before": 4,
+    "resident": 800
+  }
+}
