@@ -17872,3 +17872,4 @@ device at 99% utilization, so the locked compute-idle flag remains false.
 Concurrent model loading and DualGPURunner eligibility cannot be determined
 from the supplied records. The next tooling priority is a readiness-aware GPU
 scheduler paired with task-scoped phase and accelerator receipts.
+- 2026-08-26: V577 phase-receipt and retirement contract (⚠️ Blocked) — honest_verdict=blocked_roadmap_contract_incomplete: expected Exp6616-Exp6628 YAML contracts are not all present; results/experiment_6616_v577_execution_contract.json
