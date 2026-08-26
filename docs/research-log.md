@@ -6374,3 +6374,10 @@ The critical path for milestone .250:
 - theme: mixed compute and synthesis execution exposed the limits of modification-time reconstruction
 - key result: all listed tasks tied at the timing floor, leaving compute-phase causes, task-window GPU efficiency, and parallel-model runner applicability unresolved
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.579
+
+- exp_range: no data available this milestone
+- theme: compute-only execution exposed gaps in phase timing and task-level accelerator attribution
+- key result: the longest compute task was identified, but its cause and any concurrent-model runner miss have no data available this milestone
+- acceptance: no data available this milestone

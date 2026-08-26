@@ -17896,3 +17896,15 @@ is task-scoped monotonic phase timing joined to accelerator, model-count, and
 runner-selection receipts; estimated time savings is 0% because the supplied
 clock has no measurable duration to reclaim.
 - 2026-08-26: Task-scoped GPU lease and phase journal (⚠️ Blocked) — honest_verdict=blocked_gpu_lease_scheduler_not_ready: infrastructure checks failed; no model-quality claim; results/experiment_6633_gpu_lease_phase_journal.json
+
+## 2026-08-26 — Milestone 2026.08.579 operational retrospective
+
+The milestone completed 3 compute-bound experiments in 0.3 minutes.
+Task-scoped GPU lease and phase journal was the longest entry at 0.33 minutes.
+The supplied data does not explain its phase-level cost. The locked compute-task
+GPU-idle classification is false, so this retrospective records no GPU-idle
+bottleneck. No data available this milestone establishes a task with 2 or more
+models in parallel or a missed DualGPURunner dispatch. The next tooling priority
+is task-scoped monotonic phase timing joined to accelerator, model-concurrency,
+and runner-selection receipts. Estimated time savings is 0% because the supplied
+data identifies no measured avoidable duration.

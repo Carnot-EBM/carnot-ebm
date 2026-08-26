@@ -1,0 +1,47 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.579",
+  "generated_at": "2026-08-26T15:34:04Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.3,
+  "experiments_completed": 3,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Task-scoped GPU lease and phase journal",
+      "duration_minutes": 0.33,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independent admission of all mandated GGUF families",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Delayed two-level constrained decoding",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 3 compute-bound experiments in 0.3 minutes. Task-scoped GPU lease and phase journal was the slowest entry at 0.33 minutes, but the supplied data does not explain its phase-level cost. The locked classification does not identify GPU idle on compute-bound work, and no data establishes a parallel multi-model launch.",
+  "bottlenecks_identified": [
+    "Disk modification-time reconstruction and zero-duration entries prevent reliable phase-level comparison.",
+    "The records do not join accelerator samples to compute-task phases, model concurrency, or runner selection.",
+    "No causal data explains why Task-scoped GPU lease and phase journal was the longest entry."
+  ],
+  "improvements_suggested": [
+    "Record monotonic start, end, and phase timestamps for every experiment instead of relying on disk modification times.",
+    "Attach task-scoped accelerator samples, declared model concurrency, and runner selection to each compute receipt.",
+    "Select DualGPURunner only when a compute task declares multiple models for parallel loading."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Make task-scoped monotonic phase timing the primary timing source.",
+    "Correlate accelerator telemetry with each compute-task phase.",
+    "Add a concurrency-aware runner selector that uses DualGPURunner only for parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The bounded records identify the execution tail but do not explain it. The task-level GPU-idle classification is false, while missing phase and concurrency context prevents a stronger utilization or runner-efficiency conclusion."
+}
