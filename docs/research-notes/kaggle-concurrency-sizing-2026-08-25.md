@@ -10,23 +10,112 @@ Concurrency is the only speed lever we have. Per-stream throughput does not chan
 with K. Raising K raises aggregate throughput almost linearly, and the 96 GiB scored
 card fits K=16 with room to spare.
 
+**CORRECTION 2026-08-25 (same day, measured).** The second and third sentences are
+wrong. Both "Not measured" gaps below are now closed, and each one moved the answer.
+
+- Per-stream throughput FALLS hard with K. It does not hold steady.
+- Aggregate throughput reaches about 4x at K=16, not 16x. Most of that gain arrives
+  by K=6.
+- This model is a HYBRID. It carries a fixed 149.6 MiB of recurrent state PER SLOT
+  that no term in this note accounted for.
+- K=24 does NOT fit. It overshoots the card by 6.3 GiB.
+
+The first sentence stands: concurrency is still the only speed lever. **K=12 is the
+new recommendation.** It wins on memory and on throughput at the same time. Read
+"The measured VRAM model" and "Aggregate throughput against K" below.
+
 ## Measured inputs
 
 | Quantity | Value | How |
 |---|---|---|
-| KV cost | **36.11 KiB/token** | the server's own `prompt_save` lines, 12 samples, range 35.66-36.66 |
+| KV cost | ~~**36.11 KiB/token**~~ **34.00 KiB/token** | superseded 2026-08-25, see below |
 | prompt tokens | median 9,051, max 10,799 | completion log, both runs, identical |
 | decode tokens | median 65,507, cap 84,144 | completion log, `eval time` lines only |
 | per-stream throughput | ~30-31 tok/s | live run |
-| weights | ~16.1 GiB | ESTIMATE for Q4_K_M 27B, not measured |
+| weights | ~~~16.1 GiB ESTIMATE~~ **15.26 GiB on the GPU** | MEASURED 2026-08-25 |
+| recurrent state | **149.6 MiB per SLOT** | MEASURED 2026-08-25, new term |
 
 Do NOT derive the KV cost by subtracting an assumed weights size from `nvidia-smi`.
 That method gave 45.55 KiB/token here and was wrong by 26 percent.
+
+**The 36.11 figure is not a rate (corrected 2026-08-25).** It was read as
+`total state size / length` off the `prompt_save` lines. That divides a fixed cost
+by a variable length. The state has two parts, and only one of them scales:
+
+```
+prompt_save state (MiB) = 149.627 + 0.0332222 * length
+```
+
+That line is fitted on **309 `prompt_save` samples** from Qwen3.8-27B runs, lengths
+11 to 121,160. The worst residual over all 309 is **0.001 MiB**. The slope is
+34.02 KiB/token and the intercept is the per-slot recurrent state.
+
+Dividing the whole thing by length gives 37.4 KiB/token at length 45,000 and
+35.7 at length 93,000. The original 12 samples sat in that band, so they produced
+"36.11, range 35.66-36.66". The number was read correctly. It was the wrong
+quantity: a fixed per-slot cost had been smeared into a per-token rate.
+
+The two halves are confirmed independently, by a method that shares nothing with
+`prompt_save`. Fresh server launches on an RTX 3090 report
+`llama_kv_cache: size` of exactly 34.00 KiB/token and
+`llama_memory_recurrent: size` of exactly 149.625 MiB per slot. Slope agrees to
+0.06 percent. Intercept agrees to 0.00 percent.
 
 **Exclude `prompt eval time` lines when measuring decode.** A grep for
 `eval time = ... / N tokens` also matches inside `prompt eval time`, which pools 36
 prompt measurements with 36 completion measurements and halves the median. That error
 produced a published figure of 40k tokens per call when the real median is 65k.
+
+## The measured VRAM model (2026-08-25)
+
+Measured on an RTX 3090, GPU 1 only, with the scored launch shape: `-ngl 999`,
+`--cache-type-k q8_0 --cache-type-v q8_0`, no MTP. Five configurations. Each number
+below is llama.cpp's own buffer report, cross-checked against per-PID `nvidia-smi`.
+
+| Term | Value | Scales with |
+|---|---|---|
+| weights on GPU | 15,621.78 MiB | nothing |
+| CUDA context | 307 MiB | nothing |
+| compute-buffer floor | 80.28 MiB | nothing |
+| KV cache | 34.00 KiB/token | total context cells |
+| compute buffer | 5.00 KiB/token | total context cells |
+| recurrent state | 149.625 MiB | SLOTS, not tokens |
+
+So:
+
+```
+VRAM_MiB = 16,009  +  39.00 KiB/token * total_cells  +  149.625 MiB * K
+```
+
+The fixed 16,009 MiB is 15.63 GiB. That is the number the old "weights ~16.1 GiB"
+estimate was reaching for, and it was close. The estimate was not the problem.
+
+**Why the model has a per-slot term.** Qwen3.8-27B is a hybrid. It runs 16 attention
+layers with a KV cache and 64 recurrent layers with a fixed-size state. The recurrent
+state costs 149.625 MiB per slot and does NOT depend on context length. Measured at
+4 slots (598.50 MiB) and at 16 slots (2,394.00 MiB), which is the same rate twice.
+A model with only one per-token term cannot describe this card.
+
+**The accounting closes.** Subtracting llama.cpp's reported buffers from per-PID
+`nvidia-smi` leaves 305.9 to 307.4 MiB across all five configurations. That residual
+is the CUDA context, and it is constant. The model predicts every measured
+configuration to within 0.16 percent, and three of the five exactly:
+
+| n_ctx per seq | slots | total cells | predicted | measured | error |
+|---|---|---|---|---|---|
+| 4,096 | 4 | 4,096 | 16,764 | 16,790 | -0.16% |
+| 65,536 | 4 | 65,536 | 19,104 | 19,104 | 0.00% |
+| 131,072 | 4 | 131,072 | 21,600 | 21,600 | 0.00% |
+| 172,032 | 4 | 172,032 | 23,160 | 23,160 | 0.00% |
+| 2,048 | 16 | 32,768 | 19,651 | 19,620 | +0.16% |
+
+The 4,096 row misses because the compute buffer has a floor it has not yet cleared.
+That floor does not matter at the pool sizes this note is about.
+
+**Two checks worth keeping.** The auto-fitter (`-fit`, on by default) changed nothing:
+16,790 MiB with it on and 16,790 MiB with it off. And an explicit `--parallel 16` set
+`kv_unified = false` and `n_ctx_seq = n_ctx / 16`, which confirms the divide-the-pool
+warning in `_default_induce_n_ctx`.
 
 ## The admission rule
 
@@ -39,7 +128,23 @@ n_ctx >= K_concurrent * (prompt_tokens + max_tokens)
 It reserves against `max_tokens`, the CAP, not the observed median. Per stream today
 that is 9,051 + 84,144 = **93,195 tokens**.
 
+**Both halves of that 93,195 are local, not scored (found 2026-08-25).** Read the
+constants before you size the scored card on this number.
+
+- 84,144 is not a budget. It is `_pool_clamped_n_predict` clamping the request to
+  the LOCAL pool: `106,496 - 22,352 = 84,144`. The clamp is a no-op on a large pool.
+  The scored budget is `ARC_LIVE_GENERATOR_INDUCE_MAX_TOKENS_DEFAULT = 131,072`.
+- 9,051 is the OBSERVED prompt median. The formula in `_default_induce_n_ctx` uses
+  `_INDUCE_WORST_CASE_PROMPT_TOKENS = 22,352`, the worst case.
+
+So the reserve is circular as written: it sizes the pool from a clamp that the pool
+size produced. The code's own reserve is `22,352 + 131,072 = 153,424` tokens per
+stream, 1.65 times larger. Both are priced below, because which one to use is an
+operator decision about how much truncation risk to accept, not a measurement.
+
 ## What fits on 96 GiB
+
+SUPERSEDED 2026-08-25. Kept per never-prune. The corrected tables follow it.
 
 | K | KV at cap | plus weights | verdict |
 |---|---|---|---|
@@ -50,6 +155,45 @@ that is 9,051 + 84,144 = **93,195 tokens**.
 
 K=16 is the safe default. K=24 fits, but its margin is smaller than the error bar on
 the weights estimate, so pin the weights figure before choosing it.
+
+### Corrected, reserve A: this note's 93,195 tokens per stream
+
+| K | KV + compute | recurrent | fixed | total | margin | verdict |
+|---|---|---|---|---|---|---|
+| 8 | 27.7 GiB | 1.2 GiB | 15.6 GiB | 44.5 GiB | +51.5 | fits |
+| 12 | 41.6 GiB | 1.8 GiB | 15.6 GiB | **59.0 GiB** | +37.0 | fits |
+| 16 | 55.5 GiB | 2.3 GiB | 15.6 GiB | 73.4 GiB | +22.6 | fits |
+| 22 | 76.3 GiB | 3.2 GiB | 15.6 GiB | 95.1 GiB | +0.9 | fits, barely |
+| 24 | 83.2 GiB | 3.5 GiB | 15.6 GiB | 102.3 GiB | **-6.3** | does NOT fit |
+| 32 | 110.9 GiB | 4.7 GiB | 15.6 GiB | 131.2 GiB | -35.2 | does not fit |
+
+### Corrected, reserve B: the code's own 153,424 tokens per stream
+
+| K | KV + compute | recurrent | fixed | total | margin | verdict |
+|---|---|---|---|---|---|---|
+| 8 | 45.7 GiB | 1.2 GiB | 15.6 GiB | 62.5 GiB | +33.5 | fits |
+| 12 | 68.5 GiB | 1.8 GiB | 15.6 GiB | **85.9 GiB** | +10.1 | fits |
+| 13 | 74.2 GiB | 1.9 GiB | 15.6 GiB | 91.7 GiB | +4.3 | fits, barely |
+| 16 | 91.3 GiB | 2.3 GiB | 15.6 GiB | 109.3 GiB | **-13.3** | does NOT fit |
+| 24 | 137.0 GiB | 3.5 GiB | 15.6 GiB | 156.1 GiB | -60.1 | does not fit |
+
+**What changed and why.** The old table charged 36.11 KiB/token and no per-slot term.
+The correct charge is 39.00 KiB/token plus 149.6 MiB per slot. The per-token error
+grows with K, so the old table was most wrong exactly where the decision was tightest.
+
+**K=24 is out.** It was the one row whose margin (2.9 GiB) was smaller than the stated
+uncertainty. The measurement resolved that uncertainty against it. K=24 misses by
+6.3 GiB under reserve A, and by 60 GiB under reserve B.
+
+**K ceilings.** Reserve A allows K=22, or K=21 with the 1,500 MiB guard margin the code
+already uses. Reserve B allows K=13. Choose K=12 and both reserves are safe, with
+10 GiB of headroom even under the stricter one.
+
+**One caveat that no local run can remove.** These numbers come from an RTX 3090. The
+weights, the KV rate and the recurrent state are properties of the model and the KV
+quantisation, so they carry to any card. The 307 MiB CUDA context and the compute-buffer
+geometry are properties of the driver and the kernels, so they may differ on the
+Blackwell card. Both are small. They cannot move a verdict by 6 GiB.
 
 ## What that buys
 
