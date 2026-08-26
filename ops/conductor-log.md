@@ -16519,3 +16519,5 @@ code |
 | 2026-08-26 06:50 UTC | Complete V578 activation and gate-ownership contra | OK | 91 passed, 1 warning in 11.92s |
 | 2026-08-26 06:52 UTC | Task-scoped GPU lease and phase receipt implementa | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6619-v578-activation-contract.activatio |
 | 2026-08-26 06:54 UTC | Task-scoped GPU lease and phase receipt implementa | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6619-v578-activation-contract.activatio |
+| 2026-08-26 06:56 UTC | Task-scoped GPU lease and phase receipt implementa | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6619-v578-activation-contract.activatio |
+| 2026-08-26 06:58 UTC | Independent mandated-model CUDA admission canaries | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6620-gpu-lease-phase-receipts) |
