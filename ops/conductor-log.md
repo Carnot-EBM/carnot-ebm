@@ -16513,3 +16513,6 @@ code |
 | 2026-08-26 05:05 UTC | Readiness-aware GPU lease and task phase receipts | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6616-v577-execution-contract.execution_ |
 | 2026-08-26 05:07 UTC | Readiness-aware GPU lease and task phase receipts | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6616-v577-execution-contract.execution_ |
 | 2026-08-26 05:09 UTC | Independent mandated-model accelerator admission c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6617-gpu-lease-phase-receipts) |
+| 2026-08-26 06:26 UTC | Plan milestone 2026.08.578 | OK | 10 tasks proposed |
+| 2026-08-26 06:28 UTC | Independent mandated-model accelerator admission c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6617-gpu-lease-phase-receipts) |
+| 2026-08-26 06:29 UTC | Milestone 2026.08.578 activated | OK | 10 tasks queued |
