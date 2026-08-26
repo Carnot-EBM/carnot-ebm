@@ -57855,3 +57855,60 @@ replayable checksum, and no visible partial file.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6619 | Implemented (`python/carnot/experiment_6619_v578_activation_contract.py`) | Implemented (`tests/python/test_experiment_6619_v578_activation_contract.py`; 10 focused cases and 100% scoped statement coverage) |
+
+### REQ-REPORT-6633: GPU Lease Evidence SHALL Be Atomic And Fail Closed
+
+Exp6633 SHALL exercise `REQ-INFRA-6633` with bounded subprocess fixtures. It
+SHALL not load an LLM or make a model-quality claim. Fixtures SHALL cover a
+same-device race, independent devices, PID reuse, owner crash, stale heartbeat,
+wrong token, wrong device, wrong model, timeout, missing unload, partial write,
+tamper, and restart recovery.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `lease_api_receipts`, `phase_transition_rows`,
+`process_fixture_rows`, `accelerator_receipt_examples`,
+`gpu_lease_scheduler_ready_score`, `attack_rows`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+`field_provenance` SHALL give a source path, parser, function, hash, and schema
+for each artifact field. `protected_files_unchanged` SHALL carry before and
+after hashes for `research-roadmap.yaml` and
+`scripts/research_conductor.py`. The artifact SHALL set
+`inference_substrate=task_scoped_gpu_lease_process_fixtures_no_llm` and
+`verifier_is_oracle=true`.
+
+`gpu_lease_scheduler_ready_score` SHALL equal `1.0` only when ownership,
+transitions, crash recovery, all focused fixture checks, atomic evidence, and
+protected hashes pass. Otherwise it SHALL equal `0.0`. A ready result SHALL use
+`verdict_class=null`. A blocked result SHALL use `blocked_*` status and verdict,
+and `gate_check_summary` SHALL name every failed check and observed value.
+
+### SCENARIO-REPORT-6633-READY
+
+**Given** every ownership, transition, recovery, fixture, test, atomic-write,
+and protected-file check passes
+**When** Exp6633 writes its terminal artifact
+**Then** the readiness score is exactly one, the verdict class is null, and the
+verdict makes no model-quality claim.
+
+### SCENARIO-REPORT-6633-BLOCKED
+
+**Given** any required check fails
+**When** Exp6633 builds its terminal result
+**Then** readiness is zero, status and verdict start with `blocked_`, and every
+failed check records its expected and observed value.
+
+### SCENARIO-REPORT-6633-ATOMIC-EVIDENCE
+
+**Given** valid fixture rows and unchanged protected files
+**When** the artifact is written or its content is changed
+**Then** readers see one complete JSON document, the final checksum replays,
+and any content mutation fails validation.
+
+## Implementation Status (REQ-REPORT-6633)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6633 | Implemented (`python/carnot/experiment_6633_gpu_lease_phase_journal.py`) | Implemented (`tests/python/test_experiment_6633_gpu_lease_phase_journal.py`; bounded subprocess, artifact, adversarial, and CLI coverage) |

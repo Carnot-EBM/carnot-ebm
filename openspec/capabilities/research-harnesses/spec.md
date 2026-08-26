@@ -9322,3 +9322,76 @@ file.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-CONDUCTOR-FIXGATE-1 | Implemented (`scripts/research_conductor.py`: `_snapshot_task_edits` / `_detect_fix_erasure` / `_restore_erased`, gate wired between each fix attempt and the test rerun, prompt lists the forbidden repairs, self-edit revert rescues its diff to `ops/.conductor_selfedit_rescue/` with a durable WARN; active at the running conductor's next restart) | Implemented (`tests/python/test_conductor_fix_erasure_gate.py`, 9 tests incl. the live-specimen replay in a throwaway git repo; the suite itself caught a restore branch that deleted a tracked-clean test file before landing) |
+
+## REQ-INFRA-6633: Task GPU Leases SHALL Bind One Live Owner To One Device
+
+Carnot SHALL provide a reusable GPU lease and phase journal outside
+`scripts/research_conductor.py`. The lease SHALL use an atomic, non-blocking,
+device-scoped operating-system lock. A same-device contender SHALL fail without
+killing, signaling, or replacing the owner. Different device UUIDs SHALL remain
+independent.
+
+The lease SHALL bind the task ID, an opaque random token, device UUID, PID,
+Linux PID start time, executable, argument digest, expected model identity,
+acquisition time, expiry, heartbeat, and VRAM before use. The journal SHALL
+store only the token digest. Owner operations SHALL prove the original token,
+device, PID start time, and model identity.
+
+The only phases SHALL be `preflight`, `admitted`, `loading`, `resident`,
+`inferencing`, `unloading`, `validating`, `terminal_complete`, and
+`terminal_blocked`. The journal SHALL reject phase skips, reversals, a second
+terminal state, and non-owner writes. A resident model SHALL record resident
+VRAM, exit evidence, unload evidence, and after-use VRAM before a terminal
+state can pass validation.
+
+Each heartbeat and phase change SHALL use file sync, atomic replacement, and
+directory sync. The journal and each history event SHALL have a content
+checksum. A partial write, malformed document, checksum change, stale
+heartbeat, expired lease, wrong token, wrong device, wrong model, changed PID
+start time, or missing unload SHALL fail closed.
+
+Recovery SHALL first acquire the same device lock. It SHALL refuse a live
+recorded owner even if that process no longer holds the lock. It MAY replace a
+nonterminal journal only when the recorded PID and start time no longer name a
+live process. Recovery SHALL preserve the prior journal checksum and reason.
+It SHALL never kill or signal the old PID.
+
+### SCENARIO-INFRA-6633-ATOMIC-RACE
+
+**Given** two bounded processes contend for one device UUID
+**When** both request a lease
+**Then** exactly one owns it, the other reports busy, and no process receives a
+signal from the lease API.
+
+### SCENARIO-INFRA-6633-INDEPENDENT-DEVICES
+
+**Given** two bounded processes request different device UUIDs
+**When** their ownership intervals overlap
+**Then** both leases succeed and retain different lock and journal paths.
+
+### SCENARIO-INFRA-6633-OWNER-AND-PHASES
+
+**Given** one valid lease owner
+**When** it heartbeats and follows the allowed phase sequence
+**Then** every journal write retains owner, device, model, VRAM, exit, unload,
+history, and checksum evidence.
+
+### SCENARIO-INFRA-6633-FAIL-CLOSED
+
+**Given** a skip, reversal, second terminal, wrong token, wrong device, wrong
+model, PID reuse, timeout, missing unload, partial write, or checksum mutation
+**When** the API validates or updates the journal
+**Then** it rejects the operation and preserves the last valid final path.
+
+### SCENARIO-INFRA-6633-CRASH-RECOVERY
+
+**Given** an owner crashes after atomic acquisition
+**When** a new process acquires the released kernel lock
+**Then** it confirms the old PID start identity is absent, records recovery,
+uses a new opaque token, and never kills or signals another process.
+
+## Implementation Status (REQ-INFRA-6633)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6633 | Implemented (`python/carnot/gpu_lease_phase_journal.py`) | Implemented (`tests/python/test_gpu_lease_phase_journal.py`; focused ownership, recovery, evidence, and mutation coverage) |
