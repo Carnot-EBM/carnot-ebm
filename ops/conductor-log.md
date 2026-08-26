@@ -16531,3 +16531,6 @@ code |
 | 2026-08-26 07:06 UTC | Independent direct-headroom and recoverable-suppor | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6622-qwen36-direct-headroom) |
 | 2026-08-26 07:06 UTC | Headroom-gated delayed two-level constrained decod | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6623-headroom-support-reducer.constrain |
 | 2026-08-26 07:08 UTC | Independent direct-headroom and recoverable-suppor | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6622-qwen36-direct-headroom) |
+| 2026-08-26 07:09 UTC | Headroom-gated delayed two-level constrained decod | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6623-headroom-support-reducer.constrain |
+| 2026-08-26 07:11 UTC | Cold-context verifier criterion-shift control | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6621-mandated-model-admission, exp6621-ma |
+| 2026-08-26 07:11 UTC | Exact constraint-authority and support-preservatio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6624-delayed-two-level-decoding) |
