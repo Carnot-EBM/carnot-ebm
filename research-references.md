@@ -37430,3 +37430,110 @@ They may not certify their own output.
   game or level solve claim.
 
 <!-- V577-PLANNER-REFRESH-20260826-END -->
+
+## V578 planner refresh - 2026-08-26
+
+<!-- V578-PLANNER-REFRESH-20260826-START -->
+
+This refresh follows the terminal V577 execution-contract milestone. It searched
+the requested 2025-2026 arXiv topics and checked OpenReview, Hugging Face Papers,
+Semantic Scholar, GitHub, Extropic, and Logical Intelligence. Exact executable
+checks remain release authority. Learned verifiers may measure, route, or
+abstain. They may not certify their own output.
+
+### Promising findings selected for V578
+
+- **Prior Audit-Repair Context Shifts LLM Verifier Thresholds Toward Leniency** -
+  arXiv:2608.16003, https://arxiv.org/abs/2608.16003; submitted 2026-08-17.
+  With the current item held byte-identical, a prior audit-repair episode reduced
+  false alarms in all 15 tested model-by-wording settings relative to a
+  length-matched control. The measured change was a criterion shift, not a
+  discrimination gain. Carnot hook: evaluate learned verifier signals in a
+  fresh context. Compare fresh, prior-repair, and length-matched contexts. Use
+  exact labels as authority and report threshold and discrimination separately.
+- **Memory Reward Inflation in Self-Improving LLM Agents** - arXiv:2608.00017,
+  https://arxiv.org/abs/2608.00017; submitted 2026-07-31. The paper identifies an
+  Echo Gap: memories can improve the same model's self-evaluation while worsening
+  external task quality. It proposes error-independence analysis and LUCID, which
+  uses decomposed, externally checkable criteria. Carnot hook: forbid same-model
+  self-grades from admitting memory updates. Measure update-signal error
+  dependence against exact checker errors before prospective credit.
+- **Verifier-Induced Support Reshaping in On-Policy Optimization** -
+  arXiv:2608.00220, https://arxiv.org/abs/2608.00220; code:
+  https://github.com/sylvain-wei/verifier-induced-support-reshaping; submitted
+  2026-07-31. The paper reports that a higher pass-at-one endpoint can coexist
+  with lower best-at-k and fewer rewardable trajectories for a later objective.
+  Carnot hook: continuous self-learning must report fixed-budget recoverable
+  support before and after each accepted patch. Reject updates that improve the
+  current objective but collapse held-future or cross-constraint support.
+- **ContinualSkillBench: Can LLM Agents Truly Evolve Their Capabilities?** -
+  arXiv:2608.03874, https://arxiv.org/abs/2608.03874; submitted 2026-08-05. The
+  benchmark finds that explicit skill memory is selective and that ordinary
+  in-context adaptation can be competitive. Carnot hook: every prospective
+  memory claim needs a frozen context-only control and per-event retrieval and
+  influence receipts. Do not credit stored state that the live policy did not
+  use.
+- **A Contract-Grade Verifier for LLM-Generated GPU Kernels, and a Native
+  Blackwell Backward for the Gated-Linear-Recurrence Family** -
+  arXiv:2608.12700, https://arxiv.org/abs/2608.12700; submitted 2026-08-13. Its
+  adversarial verifier applies twelve independent gates and found failures that
+  ordinary tolerance checks missed. Carnot hook: keep model identity, process,
+  phase, row completeness, exact output, and protection receipts independent.
+  A successful process exit is not a scientific pass.
+
+### Requested secondary and product checks
+
+- **OpenReview:** current 2026 records include verifier-guided backtracking,
+  symbolic CSP verification, and constraint-guided planning. They reinforce
+  distinct proposal and exact-check paths. No record supplies a public
+  matching-base EBT or ARM-EBM checkpoint for Carnot's local stack.
+- **Hugging Face Papers:** the feed surfaced verifier-induced support reshaping,
+  delayed or draft-conditioned constrained decoding, and lossy-verification
+  failure analysis. V578 should preserve an unconstrained reasoning region,
+  apply structural and semantic constraints separately, and measure candidate
+  support across budgets rather than report validity alone.
+- **Semantic Scholar:** the public citation API returned 35 visible EBT
+  (`2507.02092`) citations and eight ARM-EBM (`2512.15605`) citations on this
+  date. No discovered citation supplied a reproducible matching-base local
+  checkpoint. Counts are discovery receipts, not reproducibility evidence.
+- **GitHub discovery:** the verifier-induced-support repository and existing
+  Recuris implementation are useful contract references. Targeted current EBM,
+  constrained-decoding, Ising, and KAN searches found no dependency that
+  supersedes Carnot's pinned local stack. Vendor no package for novelty alone.
+- **Extropic:** the summer 2026 update,
+  https://extropic.ai/writing/from-one-to-one-billion, reports open-source Torx,
+  a live early-access GPU simulator API, a Thermalizers preview, and a taped-out
+  Z1 with 269,568 pbits, 16-neighbor sparse connectivity, chromatic Gibbs
+  sampling above 50 MHz, and claimed power below one watt. Z1 systems remain
+  planned for 2027 early access. Carnot has no authenticated TSU runner. Treat
+  Torx and THRML as portability references only; make no TSU latency, power, or
+  availability claim.
+- **Logical Intelligence:** the public Kona 1.0 page still describes an EBM
+  constraint layer without public weights, a reproducible training recipe, or
+  a documented local runner. Kona remains a product comparator only.
+- **KAN and attached FPGA tracks:** recent KAN work does not close Carnot's
+  model-binding or exact-authority gaps. KV260, GateMate, and PolarFire remain
+  changed-state-only paths. Do not schedule board work without a new receipt.
+
+### V578 planning impact
+
+- Repair the roadmap-to-conductor contract before scientific work. The complete
+  YAML task set, artifact fields, gates, model policy, and deliverables must be
+  machine-checked as one activation unit.
+- Establish task-scoped dual-RTX-3090 leases and independent canaries for all
+  three mandated GGUF families. Admit headline inference only after identity,
+  process, phase, and accelerator receipts pass.
+- Demonstrate complete direct-headroom rows before constrained decoding. Compare
+  direct, syntax-only, and delayed two-level semantic constraints. Audit release
+  decisions with exact checkers and learned signals in cold contexts.
+- Repair spectral sampler evidence and replay it on CPU and GPU paths with setup,
+  transition, wall-time, effective-sample-size, and autocorrelation rows. This is
+  local accelerator evidence, not TSU evidence.
+- Make continuous self-learning state-grounded, error-independent, and
+  prospective. Compare memory against context-only control across multiple task
+  orders. Preserve fixed-budget recoverable support, held anchors, restart, and
+  rollback before committing an update.
+- Improve ARC only through game-agnostic live-policy influence. Make no game or
+  level solve claim.
+
+<!-- V578-PLANNER-REFRESH-20260826-END -->

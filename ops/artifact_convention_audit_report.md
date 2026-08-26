@@ -9,41 +9,9 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 3 |
-| AGGREGATE_ONLY | 3 |
+| CHECKABLE | 4 |
+| AGGREGATE_ONLY | 2 |
 | CANNOT_DETERMINE | 2 |
-
-## experiment_6608_family_headroom_reducer.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The benchmark is blocked because no model family has complete replayable baseline rows, leaving zero eligible families and no treatment-benefit claim.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6609_two_level_constrained_decoding.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because `headroom_benchmark_ready_score` was 0.0 instead of the required 1.0.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
 
 ## experiment_6611_live_arc_invariant_projection.json
 
@@ -53,13 +21,13 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The selected invariant projection had no effect on held exact-next-frame prediction error compared with no projection and random projection.
+Selected invariant projection had no effect on held exact-next-frame prediction, with no solve claim.
 
 ## WHAT IS MISSING
-The complete `"per_unit_rows"` array: `"held_arm_summary"` reports 52 rows per arm, but the artifact ends partway through the first recorded row, before the remaining games, transitions, seeds, and arms can be inspected.
+Complete `"per_unit_rows"` for every game, transition, seed, and arm; the artifact truncates during the first `"no_projection"` row, while `"held_arm_summary"` contains only aggregates. `"gate_check_summary"` is present and says `"blocked": false`.
 
 ## THE CHECK A READER CANNOT DO
-Did every held unit have identical `"charged_exact_mismatch"` across all three arms, or do the equal pooled means conceal offsetting wins, losses, outliers, or no-headroom cases?
+Were errors identical row-by-row across all three arms, or did improvements and regressions cancel to produce equal aggregate means?
 
 ## experiment_6612_spectral_k_block_scale_rust_parity.json
 
@@ -69,13 +37,13 @@ Did every held unit have identical `"charged_exact_mismatch"` across all three a
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-`spectral_k_block_rust` beat `sequential_gibbs`, qualifying as a software win with positive transition-efficiency and wall-time gains.
+`spectral_k_block_rust` beat `sequential_gibbs`, qualifying as a `software_win` with positive transition-efficiency and wall/charged-time gains.
 
 ## WHAT IS MISSING
-The actual `per_unit_rows` containing each size, fixture, seed, arm, and metric value; only aggregate `efficiency_summary.arm_means`, `efficiency_summary.rows`, `matched_row_count`, and `sample_size` values are shown, while `field_provenance.per_unit_rows` merely asserts that the rows exist.
+The actual `per_unit_rows` containing metrics for every fixture, seed, and arm are missing; only aggregate `efficiency_summary.arm_means` and `efficiency_summary.rows` are present, despite references to `per_unit_rows` in `reducer`, `field_principles`, and `field_provenance`.
 
 ## THE CHECK A READER CANNOT DO
-Were the reported gains broad across the 60 matched units, or driven by a few outliers or degenerate control rows?
+Did the Rust arm improve broadly across the 60 matched units, or was the reported mean gain driven by a few extreme rows?
 
 ## experiment_6613_invariant_memory_lifecycle.json
 
@@ -85,7 +53,7 @@ Were the reported gains broad across the 60 matched units, or driven by a few ou
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The invariant-memory lifecycle passed its conformance gate and is ready, while making no utility claim.
+The invariant-memory lifecycle passed its conformance checks and is ready, while making no utility claim.
 
 ## WHAT IS MISSING
 nothing
@@ -95,35 +63,35 @@ none
 
 ## experiment_6614_prospective_invariant_self_learning.json
 
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-The governed online-memory arm failed to outperform the static and shuffled controls, so continuous self-learning was not ready.
-
-## WHAT IS MISSING
-Actual `"per_unit_rows"` containing each event/seed/arm’s held-future metric are missing; only aggregate booleans appear in `"acceptance_gate_rows"` for `"held_future_over_static"` and `"held_future_over_shuffled"`, while `"field_provenance"` merely references `"per_unit_rows"`.
-
-## THE CHECK A READER CANNOT DO
-Were both failed benefit comparisons broad across units, or driven by a few outliers, degenerate controls, or units with no headroom?
-
-## experiment_6605_qwen36_direct_headroom.json
-
 **CANNOT_DETERMINE**
 
 ## VERDICT
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-no identifiable headline claim in the visible fragment
+The artifact claims continuous self-learning is not ready because held-future benefit gates and the tests gate failed.
 
 ## WHAT IS MISSING
-The completed artifact, including any top-level verdict or gate result; the JSON truncates inside `"failure_rows"`, although `"attack_rows"`, `"failed_checks"`, and `"failed_closed"` are present.
+The artifact is truncated mid-record, so the referenced `"per_unit_rows"`, `"gate_check_summary"`, `"honest_verdict"`, and `"status"` fields cannot be found or confirmed; the visible `"acceptance_gate_rows"` does diagnose the tests failure as `"expected": true`, `"observed": false`, `"passed": false`.
 
 ## THE CHECK A READER CANNOT DO
-Did the experiment’s final gate pass, fail, or become blocked, and on what recorded value?
+Did governed online memory broadly fail to outperform both controls across individual events and seeds, or was each failed benefit gate driven by only a few units?
+
+## experiment_6605_qwen36_direct_headroom.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+All ten attack conditions failed closed with a `candidate_integrity_ready_score` of 0.0, matching the `expected_integrity_ready_score` of 0.0.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
 
 ## experiment_6615_v576_independent_capstone.json
 
@@ -133,10 +101,42 @@ Did the experiment’s final gate pass, fail, or become blocked, and on what rec
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-Live projection had zero effect versus both controls, and prospective self-learning had zero held-future benefit versus static and shuffled controls.
+The capstone claims live projection and prospective self-learning produced zero benefit versus their controls, while decoding remained blocked.
 
 ## WHAT IS MISSING
-Actual per-game and per-pair metric rows; `"arm_summaries"`, `"row_count_by_arm"`, and `"row_store_counts"` provide only aggregates or row counts, while the top-level `"per_unit_rows"` contains task/comparative-group receipts rather than unit-level measurements.
+Actual metric-bearing experimental rows are missing: `"per_unit_rows"` contains only task/comparative-group receipts and `"row_store_counts"`, while `"live_projection_replay.arm_summaries"` and `"continuous_learning_replay.held_future_benefit_over_static"`/`"held_future_benefit_over_shuffled"` provide only aggregates.
 
 ## THE CHECK A READER CANNOT DO
-Were the reported zero effects consistent across games and held-future pairs, or produced by degenerate, pinned, or offsetting unit-level outcomes?
+Were the reported zero comparative effects consistent across games and held-future pairs, or produced by offsetting wins, losses, outliers, or units with no headroom?
+
+## experiment_6616_v577_execution_contract.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The execution contract is blocked because the expected Exp6616–Exp6628 YAML task contracts are not all present.
+
+## WHAT IS MISSING
+nothing; `"gate_check_summary.failed_checks"` records the failed `"exact_task_set"` and `"model_policy"` checks with their `"expected"` and `"observed"` values, including the missing task IDs.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6617_gpu_lease_phase_receipts.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because `execution_contract_ready_score` was 0.0 instead of the required 1.0.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
