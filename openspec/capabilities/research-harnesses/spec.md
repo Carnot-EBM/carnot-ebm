@@ -9395,3 +9395,50 @@ uses a new opaque token, and never kills or signals another process.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-INFRA-6633 | Implemented (`python/carnot/gpu_lease_phase_journal.py`) | Implemented (`tests/python/test_gpu_lease_phase_journal.py`; focused ownership, recovery, evidence, and mutation coverage) |
+
+## REQ-INFRA-6647: Admission SHALL Use A Preregistered Task-Owned Receipt Set
+
+Exp6647 SHALL freeze an ordered gate set before it runs any fixture. The set
+SHALL contain acquisition, same-device exclusion, independent-device allowance,
+token/PID-start/device binding, heartbeat, phase transitions, unload/release,
+crash recovery, tamper detection, atomic artifact write, focused tests, spec
+coverage, and applicable end-to-end checks. Each definition SHALL name its
+expected value, source, command, and receipt schema.
+
+Each task-owned fixture SHALL use a fresh temporary path. The reducer SHALL emit
+one row per definition. Each row SHALL contain the expected value, observed
+value, source, command, exit code, and receipt hash. A missing receipt, null
+observed value, duplicate check, reordered check, or changed definition SHALL
+fail closed. The reducer SHALL never convert a missing or null value to zero.
+
+The global Python suite does not belong to this gate set. Its receipt SHALL stay
+visible as a diagnostic. Its result SHALL not change a task-owned row or the
+task-owned readiness score.
+
+### SCENARIO-INFRA-6647-PREREGISTERED-OWNERSHIP
+
+**Given** the immutable ordered definitions exist before fixture execution
+**When** every task-owned check is replayed in a fresh path
+**Then** each definition has exactly one matching hashed row and no global-suite
+field is included.
+
+### SCENARIO-INFRA-6647-EXACT-FIELD-OWNERSHIP
+
+**Given** a task-owned row and a global-suite diagnostic
+**When** the reducer computes readiness
+**Then** only the ordered task-owned rows can change
+`task_owned_admission_ready_score`.
+
+### SCENARIO-INFRA-6647-MISSING-RECEIPT
+
+**Given** a missing, null, duplicate, reordered, or schema-invalid task-owned
+receipt
+**When** the reducer recomputes the aggregate
+**Then** readiness is blocked, the missing value stays missing or null, and the
+failed check plus observed value appears in `gate_check_summary`.
+
+## Implementation Status (REQ-INFRA-6647)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6647 | Planned (`python/carnot/experiment_6647_receipt_scoped_admission_boundary.py`) | Planned (`tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py`) |
