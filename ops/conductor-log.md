@@ -16574,3 +16574,4 @@ code |
 | 2026-08-26 22:16 UTC | Exact certificate proposal corpus | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: x": 0, "uuid": |
 | 2026-08-26 22:25 UTC | Exact certificate proposal corpus | OK | cache hit: 119 passed, 1 warning in 8.85s |
 | 2026-08-26 22:48 UTC | Twin-prefix verifier discrimination map | OK | 118 passed, 1 warning in 18.66s |
+| 2026-08-26 22:50 UTC | Failure-localized suffix regeneration A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6649-exact-certificate-proposal-corpus. |
