@@ -1,0 +1,289 @@
+milestone: "2026.08.577"
+milestone_title: "Execution-Qualified Constraint Search and State-Grounded Self-Learning"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+  - id: exp6616-v577-execution-contract
+    milestone: "2026.08.577"
+    deliverable: results/experiment_6616_v577_execution_contract.json
+    title: "V577 phase-receipt and retirement contract"
+    priority: critical
+    track: execution-integrity
+    requires_gpu: false
+    max_turns: 100
+    estimated_wall_time_min: 90
+    model: opus
+    prompt: |
+      CONTEXT
+      V576 produced a valid exact corpus but no execution-qualified flagship baseline. Qwen blocked on process receipts, Gemma 31B blocked on missing rerun metadata, Gemma 26B blocked on GPU ownership, the reducer froze no eligible family, and the capstone remained partial. V577 must freeze an exact task, gate, failure, model, and phase-receipt contract before implementation starts. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, {project_root}/_bmad/prd.md, {project_root}/_bmad/architecture.md, and the V577 roadmap document
+      - {project_root}/results/experiment_6604_exact_two_level_plan_corpus.json through every available V576 artifact, especially Exp6605-Exp6609, Exp6611-Exp6615
+      - {project_root}/research-complete.yaml, {project_root}/ops/conductor-log.md, {project_root}/ops/exclusion_manifest.yaml, {project_root}/ops/known-issues.md, and the V577 section of research-references.md
+      - {project_root}/scripts/roadmap_schema.py, {project_root}/scripts/validate_prior_failures.py, {project_root}/scripts/exclusion_manifest_lint.py, {project_root}/scripts/conductor_gates.py, and current phase, resource, protected-file, artifact, and atomic-write helpers plus tests
+      - relevant research-reporting, evidence, model-tier, training-inference, llm-ebm-inference, verifiable-reasoning, and safety capability specs; _bmad/traceability.md; ops/status.md; ops/changelog.md; and ops/e2e-test-plan.md
+
+      TASK
+      Freeze and validate the V577 execution contract. Define task-scoped phase and accelerator receipt schemas, exact gate-field ownership, prior-failure dispositions, model requirements, protected files, expected deliverables, and terminal verdict rules. Do not implement the GPU scheduler and do not run an LLM.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record hashes for research-roadmap.yaml, scripts/research_conductor.py, research-roadmap-next.yaml, the V577 roadmap document, all V576 source artifacts, exclusion manifest, and relevant schemas; record dirty-worktree state, Python and YAML/Pydantic versions, CPU, RAM, disk, and the no-LLM substrate.
+      1. Add REQ-* and SCENARIO-* anchors for task-scoped phase receipts, accelerator receipts, exact gate owners, prior-failure completeness, closed verdict classes, blocked diagnostics, protected files, and atomic artifacts. Write focused tests first.
+      2. Parse research-roadmap-next.yaml and emit one task_contract_rows entry for each Exp6616-Exp6628 task with its exact ID, deliverable, phase, GPU need, model policy, prior failures, gate owner, gate field, and terminal artifact expectations.
+      3. Validate that every gated_on upstream exists in this roadmap and that the owner prompt declares the identically spelled artifact field. Reject missing, misspelled, circular, retired-upstream, and forward gates.
+      4. Validate every prior_failures entry has experiment_id, the prior honest verdict, a concrete changed condition, and retire_if_same_verdict=true. Preserve retired scope and refuse undeclared matching reruns.
+      5. Define a phase receipt schema with task_id, phase_name, state, monotonic timestamps, process identity, resource owner, input hashes, output hashes, heartbeat, terminal reason, and checksum. Define an accelerator extension with device UUID, PID start time, model hash, VRAM before/after, offload layers, unload evidence, and lease token.
+      6. Validate model tasks: Exp6618 lists all three mandated GGUF families; Exp6619, Exp6621, and Exp6627 list Qwen3.6. Legacy models are smoke-only and cannot satisfy readiness fields.
+      7. Reconcile the exact V576 terminal verdicts and mark which new tasks change technique or prerequisite. Do not relabel blocked, null, partial, or invalid verdict classes.
+      8. Attack duplicate IDs and deliverables, stale milestone values, missing principles, unsupported gate ops, missing gate fields, wrong model IDs, absent blocked diagnostics, nonterminal verdicts, phase timestamp reversal, PID reuse, checksum tampering, retired upstream references, and protected-file mutation.
+      9. Set execution_contract_ready_score=1.0 only when roadmap schema, exclusion manifest, prior failures, gate ownership, model policy, receipt schemas, attacks, and tests all pass. This is null infrastructure.
+      10. Write atomically. Run focused tests, roadmap schema and prior-failure validation, exclusion-manifest lint, gate audit, spec coverage, artifact convention and adversarial verification, applicable E2E checks, and final git status.
+
+      Required deliverable: {project_root}/results/experiment_6616_v577_execution_contract.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The contract task ends terminally and does not hide a schema or evidence block."
+        honest_verdict:
+          principle: "The verdict reports contract readiness without claiming scientific benefit."
+        verdict_class:
+          principle: "Use positive, circular_positive, null, blocked, disqualified, or partial; a ready contract is null."
+        gate_check_summary:
+          principle: "Any blocked outcome names the failed roadmap, prior-failure, gate, model, receipt, hash, protection, or test check and observed value."
+        task_contract_rows:
+          principle: "Every V577 task has one exact ID, deliverable, phase, resource, model, gate, and artifact contract row."
+        roadmap_validation_receipts:
+          principle: "Schema, exclusion, prior-failure, milestone, ID, deliverable, and prompt checks have commands and exits."
+        gate_owner_rows:
+          principle: "Every downstream gate binds an existing upstream owner and identically spelled required field."
+        prior_failure_dispositions:
+          principle: "Every declared predecessor retains its honest verdict, changed condition, and retirement signal."
+        phase_receipt_schema:
+          principle: "Task phase states, times, processes, resources, hashes, heartbeats, reasons, and checksums are explicit."
+        accelerator_receipt_schema:
+          principle: "Device, PID start, model, VRAM, offload, lease, and unload evidence extend the phase receipt."
+        model_policy_receipts:
+          principle: "Every LLM task binds at least one mandated model and labels legacy models smoke-only."
+        execution_contract_ready_score:
+          principle: "This exact binary field gates Exp6617 only when the full execution contract replays."
+        attack_rows:
+          principle: "Identity, gate, model, verdict, receipt, time, PID, checksum, retirement, and mutation attacks fail closed."
+        preconditions_checked:
+          principle: "Source artifacts, roadmap, schemas, manifests, resources, versions, hashes, and protected files are explicit."
+        protected_files_unchanged:
+          principle: "research-roadmap.yaml and scripts/research_conductor.py retain original hashes."
+        inference_substrate:
+          principle: "The task declares roadmap and evidence validation with no LLM."
+        verifier_is_oracle:
+          principle: "Exact schema and artifact checks are authoritative; the task makes no science claim."
+        field_provenance:
+          principle: "Every field names source files, artifacts, hashes, parsers, schemas, and validation functions."
+        duration_s:
+          principle: "Monotonic duration covers source replay, attacks, and validation."
+        tests_run:
+          principle: "Named focused, roadmap, exclusion, gate, spec, artifact, adversarial, and E2E commands include exits and durations."
+        reproducibility_checksum:
+          principle: "A final content hash detects contract mutation."
+      Set inference_substrate=v577_roadmap_evidence_and_phase_receipt_contract_no_llm and verifier_is_oracle=true. A ready contract uses verdict_class=null. A genuine block uses blocked_* and populates gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6616_v577_execution_contract --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6617-gpu-lease-phase-receipts
+    milestone: "2026.08.577"
+    deliverable: results/experiment_6617_gpu_lease_phase_receipts.json
+    title: "Readiness-aware GPU lease and task phase receipts"
+    priority: critical
+    track: execution-integrity
+    requires_gpu: false
+    max_turns: 100
+    estimated_wall_time_min: 150
+    model: opus
+    gated_on:
+      - upstream: exp6616-v577-execution-contract
+        artifact_field: execution_contract_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp6605-qwen36-direct-headroom
+        verdict: "blocked_gpu_process_receipts: direct baseline integrity did not complete"
+        addressed_by: "V577 implements task-scoped leases and phase receipts with PID-start, model, device, VRAM, heartbeat, and unload ownership before any baseline retries."
+        retire_if_same_verdict: true
+      - experiment_id: exp6607-gemma4-26b-direct-headroom
+        verdict: "blocked_gpu_ownership: expected True, observed False"
+        addressed_by: "The scheduler now makes accelerator ownership an atomic prerequisite rather than reconstructing it after inference."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6616 owns the V577 phase and accelerator receipt schemas. V576 showed that model work cannot be trusted when GPU ownership, process identity, and phase transitions are inferred after the fact. This task implements the reusable execution substrate with synthetic and process-fixture validation only. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V577 roadmap document, and Exp6616's artifact and schemas
+      - Exp6605, Exp6607, and Exp6615 artifacts plus their process, GPU, gate, test, and protection failures
+      - current GPU admission, process ownership, checkpoint, heartbeat, timeout, phase receipt, cache lock, atomic write, and protected-file helpers plus tests
+      - {project_root}/python/carnot/inference/sota_models.py, {project_root}/python/carnot/pipeline/gemma4_quantized_loader.py, and {project_root}/scripts/experiment_template.py
+      - relevant execution, model-tier, training-inference, evidence, research-reporting, and safety capability specs; traceability; status; changelog; and E2E plan
+
+      TASK
+      Implement a readiness-aware task-scoped GPU lease and phase receipt system around the existing local llama.cpp CUDA runtime. Prove ownership and failure behavior with mocks and bounded subprocess fixtures. Do not load an LLM and do not edit the conductor.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: verify the Exp6616 structured gate; record protected hashes, existing lease and process helpers, CUDA and nvidia-smi availability as diagnostic context, Python and OS process APIs, writable runtime directories, CPU, RAM, disk, and the no-LLM substrate.
+      1. Add REQ-* and SCENARIO-* anchors for atomic lease acquire/release, device UUID binding, PID start-time defense, phase transitions, heartbeats, timeouts, stale-owner diagnosis, model hashes, VRAM receipts, unload, failure preservation, and atomic journals. Write focused tests first.
+      2. Implement a reusable lease API outside scripts/research_conductor.py. A lease binds task ID, opaque token, device UUID, PID and start time, expected model identity, acquisition time, expiry, heartbeat, and journal checksum.
+      3. Implement allowed phase transitions such as preflight, admitted, loading, resident, inferencing, unloading, validating, terminal_complete, and terminal_blocked. Reject skips, reversals, second terminal states, and writes from a non-owner.
+      4. Add pre-acquire readiness checks for process ownership, free VRAM threshold, conflicting CUDA process, stale receipt, expected model files, time budget, disk, and protected hashes. Diagnostic observation must not steal or kill an unrelated process.
+      5. Add task-scoped process evidence: executable, argv digest, environment allowlist digest, PID start time, parent task, device, VRAM before/resident/after, CUDA offload, model file hashes, heartbeat, unload request, exit, and remaining VRAM.
+      6. Test two tasks racing for one device, independent tasks on different devices, PID reuse, owner crash, stale heartbeat, wrong token, wrong model, wrong device, missing unload, timeout, disk failure, partial journal, checksum tamper, and restart recovery.
+      7. Add a read-only status API that reports unavailable, available, owned, stale_needs_operator, or inconsistent without mutating another task's state.
+      8. Set gpu_lease_scheduler_ready_score=1.0 only when all ownership, phase, recovery, tamper, focused-test, repository-test, and protected-file checks pass. A ready scheduler is null infrastructure.
+      9. Write the artifact atomically. Run focused tests, lint, type checks if configured, spec coverage, artifact convention, adversarial verification, applicable execution E2E checks, and final git status.
+
+      Required deliverable: {project_root}/results/experiment_6617_gpu_lease_phase_receipts.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The scheduler task terminates with a validated implementation or a named block."
+        honest_verdict:
+          principle: "The verdict distinguishes execution readiness from model or science evidence."
+        verdict_class:
+          principle: "Use the closed enum; a ready scheduler is null infrastructure."
+        gate_check_summary:
+          principle: "Any block names the failed upstream, process, lease, phase, recovery, test, hash, or protection check and observed value."
+        lease_api_receipts:
+          principle: "Acquire, heartbeat, status, release, timeout, and recovery interfaces bind owner, token, device, PID start, and time."
+        phase_transition_rows:
+          principle: "Every allowed and rejected phase transition has expected and observed state."
+        process_fixture_rows:
+          principle: "Race, device independence, PID reuse, crash, stale, wrong token, wrong model, timeout, and unload fixtures are retained."
+        accelerator_receipt_examples:
+          principle: "Device, process, model, VRAM, offload, heartbeat, exit, and unload evidence conform to Exp6616."
+        restart_recovery_receipts:
+          principle: "Restart reconstructs valid leases and fails closed on ambiguous ownership without killing processes."
+        gpu_lease_scheduler_ready_score:
+          principle: "This exact binary field gates Exp6618 only when ownership, phases, recovery, tests, and protection pass."
+        attack_rows:
+          principle: "Race, reuse, theft, stale, token, model, device, unload, timeout, partial-write, tamper, and mutation attacks fail closed."
+        preconditions_checked:
+          principle: "Upstream contract, helpers, process APIs, diagnostic CUDA state, resources, versions, paths, and protected files are explicit."
+        protected_files_unchanged:
+          principle: "research-roadmap.yaml and scripts/research_conductor.py retain original hashes."
+        inference_substrate:
+          principle: "The task declares synthetic and bounded subprocess lease validation with no LLM."
+        verifier_is_oracle:
+          principle: "Process and receipt invariants are authoritative; no model quality is evaluated."
+        field_provenance:
+          principle: "Every field points to schemas, journals, process fixtures, hashes, and validation functions."
+        duration_s:
+          principle: "Monotonic duration covers implementation, fixtures, attacks, and tests."
+        tests_run:
+          principle: "Named focused, lint, type, spec, artifact, adversarial, and E2E commands include exits and durations."
+        reproducibility_checksum:
+          principle: "A final content hash detects scheduler evidence mutation."
+      Set inference_substrate=task_scoped_gpu_lease_and_phase_receipt_process_fixtures_no_llm and verifier_is_oracle=true. A ready implementation uses verdict_class=null. A genuine block uses blocked_* and gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6617_gpu_lease_phase_receipts --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6618-mandated-model-admission
+    milestone: "2026.08.577"
+    deliverable: results/experiment_6618_mandated_model_admission.json
+    title: "Independent mandated-model accelerator admission canaries"
+    priority: critical
+    track: execution-integrity
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 100
+    estimated_wall_time_min: 90
+    model: opus
+    gated_on:
+      - upstream: exp6617-gpu-lease-phase-receipts
+        artifact_field: gpu_lease_scheduler_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp6605-qwen36-direct-headroom
+        verdict: "blocked_gpu_process_receipts: direct baseline integrity did not complete"
+        addressed_by: "The canary uses the new task-scoped lease, one short fresh process, and per-family readiness instead of attempting baseline science."
+        retire_if_same_verdict: true
+      - experiment_id: exp6606-gemma4-31b-direct-headroom
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "All prior-failure metadata is now present and this scope is a bounded admission canary, not the failed full baseline."
+        retire_if_same_verdict: true
+      - experiment_id: exp6607-gemma4-26b-direct-headroom
+        verdict: "blocked_gpu_ownership: expected True, observed False"
+        addressed_by: "The new lease establishes device and process ownership before model load and records unload in the same journal."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6617 owns the readiness-aware lease. This task validates actual local execution independently for each mandated family before any scientific workload. A Gemma failure must not erase a ready Qwen path, and a Qwen failure must not be papered over by another family. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V577 roadmap document, Exp6616 and Exp6617 artifacts, schemas, implementation, and focused tests
+      - Exp6605-Exp6607 artifacts and raw process/model receipts
+      - {project_root}/scripts/experiment_template.py and cached_sota_pair(); {project_root}/python/carnot/inference/sota_models.py; {project_root}/python/carnot/pipeline/gemma4_quantized_loader.py
+      - current GGUF resolver, tokenizer, chat-template, CUDA llama.cpp, model identity, GPU lease, timeout, raw output, failure retention, checkpoint, unload, atomic-write, and protected-file helpers plus tests
+      - relevant model-tier, training-inference, evidence, research-reporting, and safety specs; traceability; status; changelog; and E2E plan
+
+      TASK
+      Run one short fresh-process local CUDA admission canary for each mandated GGUF family. Bind every canary to a task-scoped lease and emit independent per-family readiness. Do not perform benchmark science or compare model quality.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: verify the Exp6617 gate; record protected hashes, both GPU UUIDs and free VRAM, conflicting processes, exact cache paths and space, CUDA llama.cpp identity, per-family GGUF shards and hashes, embedded tokenizer and chat-template identity, timeout, RAM, disk, and unload capability. Terminal-block only the affected family when a family-specific precondition fails.
+      1. Add REQ-* and SCENARIO-* anchors for independent family admission, fresh processes, lease ownership, exact identity, embedded tokenizer and template use, CUDA offload, bounded generation, raw receipts, failure retention, unload, and atomic output. Write focused tests first.
+      2. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF with resolved local model_path values. Legacy Qwen3.5-0.8B or Gemma E4B may run only as labeled CPU smoke and cannot set readiness.
+      3. Use a byte-frozen deterministic prompt that requests a short parseable response. Start a new leased process per family, load only the declared model, generate once with fixed seed and token cap, persist raw bytes, unload, release the lease, and verify post-unload VRAM.
+      4. Emit one per_unit_rows entry per family with hub ID, shard hashes, tokenizer, template, quantization, context, task ID, lease token digest, device UUID, PID start, VRAM trajectory, offload layers, prompt hash, raw bytes hash, finish reason, latency, unload, and failure.
+      5. Validate response usability only as nonempty bounded bytes that replay through the declared tokenizer. Do not score correctness or rank families.
+      6. Set qwen_admission_ready_score, gemma31_admission_ready_score, and gemma26_admission_ready_score independently. A score is 1.0 only when that family's identity, lease, load, CUDA offload, output, and unload receipts all pass.
+      7. Attack wrong-model residency, shard substitution, tokenizer or template substitution, shared PID, wrong device, unowned process, CPU fallback, stale lease, response reuse, missing unload, dropped failure, aggregate-only reporting, and protected-file mutation.
+      8. Write checkpoints and terminal artifact atomically. Run focused tests, lint, spec coverage, artifact and verdict-row consistency checks, adversarial verification, applicable local-inference E2E checks, and final git status.
+
+      Required deliverable: {project_root}/results/experiment_6618_mandated_model_admission.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "The canary task is terminal while preserving independent family blocks."
+        honest_verdict:
+          principle: "The verdict reports per-family execution readiness and makes no quality claim."
+        verdict_class:
+          principle: "Use the closed enum; complete admission is null infrastructure."
+        gate_check_summary:
+          principle: "Any task or family block names the failed upstream, cache, GPU, lease, model, tokenizer, output, unload, test, or protection check and observed value."
+        per_unit_rows:
+          principle: "Each mandated family has one complete identity, lease, process, output, timing, unload, and failure row."
+        model_specs:
+          principle: "All three mandated hub IDs resolve to exact local GGUF files and embedded metadata."
+        family_model_identity_receipts:
+          principle: "Shard hashes, quantization, tokenizer, template, context, and runtime are bound per family."
+        family_gpu_process_receipts:
+          principle: "Lease, device, PID start, VRAM, CUDA offload, timing, exit, and unload prove execution per family."
+        raw_model_receipts:
+          principle: "One immutable raw response and prompt hash exist for every attempted family."
+        failure_rows:
+          principle: "Family-specific precondition, load, inference, timeout, and unload failures remain visible."
+        qwen_admission_ready_score:
+          principle: "This exact binary owner field gates Exp6619 and Exp6627 only when Qwen execution replays."
+        gemma31_admission_ready_score:
+          principle: "Gemma 31B readiness is independent and cannot change Qwen readiness."
+        gemma26_admission_ready_score:
+          principle: "Gemma 26B-A4B readiness is independent and cannot change Qwen readiness."
+        attack_rows:
+          principle: "Identity, metadata, PID, device, ownership, fallback, lease, reuse, unload, failure, aggregate, and mutation attacks fail closed."
+        preconditions_checked:
+          principle: "Gate, GPUs, processes, cache, models, metadata, runtime, resources, timeouts, and protected files are explicit."
+        protected_files_unchanged:
+          principle: "research-roadmap.yaml and scripts/research_conductor.py retain original hashes."
+        inference_substrate:
+          principle: "The task declares three independent live local GGUF CUDA llama.cpp canaries."
+        verifier_is_oracle:
+          principle: "Receipt invariants determine admission; no output correctness claim is made."
+        field_provenance:
+          principle: "Every field points to model files, raw bytes, lease journals, processes, devices, and reducers."
+        duration_s:
+          principle: "Monotonic duration is consistent with three fresh model load, inference, and unload attempts."
+        tests_run:
+          principle: "Named focused, lint, spec, artifact, row-consistency, adversarial, and E2E commands include exits and durations."
+        reproducibility_checksum:
+          principle: "A final content hash detects canary mutation."
+      Set inference_substrate=independent_mandated_local_gguf_cuda_llamacpp_admission_canaries and verifier_is_oracle=true. Complete canaries use verdict_class=null. A genuine block uses blocked_* and gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6618_mandated_model_admission --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.

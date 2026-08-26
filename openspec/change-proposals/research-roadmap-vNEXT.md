@@ -1,476 +1,493 @@
-# Research Roadmap vNEXT - Milestone 2026.08.576
+# Research Roadmap vNEXT - Milestone 2026.08.577
 
-**Milestone:** `2026.08.576`
-**Title:** Verifier-Governed Constraint Decoding and Reversible Live Learning
+**Milestone:** `2026.08.577`
+**Title:** Execution-Qualified Constraint Search and State-Grounded Self-Learning
 **Status:** Proposed
-**Planned experiments:** 12 across 4 phases
-**Planning date:** 2026-08-25
+**Planned experiments:** 13 across 4 phases
+**Planning date:** 2026-08-26
 
-## What milestone 2026.08.575 proved
+## What milestone 2026.08.576 proved
 
-Milestone 575 completed the six tasks in the active roadmap. The longer draft
-roadmap listed later memory and hardware tasks, but those tasks were not in the
-activated YAML and did not run.
+Milestone 576 reached a terminal disposition for every activated task. Its most
+important result was an evidence-boundary result: the execution substrate failed
+before the flagship-model hypothesis could be tested.
 
-1. **CFR had no measurable opportunity.** Exp6593 replayed the Qwen3.6 and
-   Gemma 4 31B direct and constraint-first rows. Every exact-success delta was
-   `0.0` because the direct arms already had 100% exact success. Exp6594 found a
-   clean authority chain but no CFR effect. Exp6593's stored artifact is
-   adversarial-flagged for its original duration receipt, so its null science
-   result is useful as a planning constraint, not a clean headline.
-2. **Invariant projection worked on its bounded target.** Exp6595 found that a
-   held selected invariant reduced rollout error on frozen conservative
-   fixtures. The random control was worse and damped dynamics removed the
-   effect. This is positive local mechanism evidence, not a live ARC result.
-3. **Feasible-token flow remained a toy result.** Exp6596 proved its local
-   convex-hull and endpoint checks on fixed embeddings. Its result is
-   `circular_positive` and does not establish language-model training or useful
-   decoding.
-4. **Spectral block sampling improved transition efficiency.** Exp6597 found
-   stationary-distribution noninferiority and effective-sample-size gains per
-   transition on exact-enumerable six-spin fixtures. Charged wall time was not
-   better. No Rust, FPGA, TSU, or larger frustrated-system claim exists.
-5. **Continuous self-learning remains unproved.** No active V575 task executed
-   the planned Gene or prospective learning chain. Earlier chronological
-   learning either had no held-future benefit or blocked before live evidence.
+1. **The exact benchmark exists.** Exp6604 produced 72 frozen two-level plan
+   tasks with calibration and held splits, separate syntax and semantic
+   compilers, and an independent exact executor. This is null infrastructure,
+   not evidence that constrained decoding helps.
+2. **None of the three flagship baselines became eligible.** Exp6605 blocked on
+   Qwen process receipts, Exp6606 blocked on rerun-discipline metadata, and
+   Exp6607 blocked on GPU ownership. Exp6608 therefore froze an empty eligible
+   family set. Exp6609 and Exp6610 were correctly skipped before treatment and
+   safety work consumed model time.
+3. **The live ARC projection was reachable but inert.** Exp6611 traversed the
+   actual `make_carnot_agent -> E3AgentPolicy` path. Selected, random, and
+   no-projection arms had identical exact next-frame mismatch. No game or level
+   solve was claimed.
+4. **The Rust spectral sampler is promising but not yet claim-eligible.**
+   Exp6612 retained 60 matched rows and reported large transition and wall-time
+   gains over sequential Gibbs for the Rust arm. The artifact remained blocked
+   because repository test and protection receipts failed. The result is CPU
+   software only.
+5. **Memory conformance did not become learning.** Exp6613 passed lifecycle,
+   poison, restart, rollback, and quarantine checks without a utility claim.
+   Exp6614 then found zero held-future benefit across 36 later events because the
+   memory treatment never changed a prediction. Its invalid `blocked_tests`
+   verdict class also disqualified the source artifact from a positive claim.
+6. **The capstone correctly remained partial.** Exp6615 preserved the blocked
+   decoding path, null ARC result, partial sampler evidence, lifecycle-only
+   memory result, and zero-benefit continuous-learning result.
 
-The honest V575 conclusion is narrow: Carnot has two promising local
-mechanisms, but no headroom-bearing flagship decoding result, no reachable
-live-world-model projection result, and no eligible continuous self-learning
-benefit.
+The honest V576 conclusion is that Carnot now has the right exact fixtures and
+two promising mechanisms, but it does not yet have execution-qualified flagship
+science or an active continuous-learning mechanism.
 
 ## The three biggest gaps to the PRD vision
 
-### Gap 1: exact constraints are not yet improving flagship generation
+### Gap 1: experiment execution is not a trustworthy scientific substrate
 
-FR-12 calls for verifiable reasoning, but the latest flagship comparison had
-zero baseline headroom. Carnot cannot learn anything about constrained decoding
-from a treatment applied to rows that are already all correct.
+FR-12 and the model-tier requirements assume that the selected local model ran
+under an owned accelerator process. V576 instead exposed wrong-model residency,
+missing process receipts, non-owned GPU state, and a monolithic family reducer
+with no complete rows. A result cannot be scientific when model identity and
+accelerator ownership are unresolved.
 
-V576 response:
+V577 response:
 
-1. Build a fixed exact-executable plan corpus with calibration and held splits.
-2. Separate token syntax from action-level preconditions, goals, and ordering.
-3. Qualify headroom independently for Qwen3.6 35B-A3B, Gemma 4 31B, and Gemma 4
-   26B-A4B.
-4. Compare direct, syntax-only, and two-level constrained decoding only on
-   family-level held splits with preregistered headroom.
-5. Keep the exact simulator outside the decoding automata so an incomplete
-   encoding cannot certify itself.
+1. Define task-scoped phase and accelerator receipts before changing the runner.
+2. Add a readiness-aware GPU lease with model, device, PID, VRAM, phase, start,
+   unload, and failure evidence.
+3. Validate the lease with short independent canaries for all three mandated
+   GGUF families.
+4. Requalify only Qwen3.6 on a bounded frozen subset. Do not recreate the failed
+   all-family prerequisite.
+5. Let an independent no-model reducer freeze whether usable headroom exists.
 
-### Gap 2: positive energy mechanisms are not reusable runtime primitives
+### Gap 2: promising constraint and sampler mechanisms lack eligible evidence
 
-Exp6595 and Exp6597 are experiment modules. The invariant result is not reachable
-from `E3AgentPolicy`. The sampler result is limited to tiny Python fixtures and
-loses on wall time. This leaves the PRD's live reasoning and hardware paths
-unserved.
+The two-level decoder never ran, while the spectral sampler's rows were trapped
+behind test and protection failures. The PRD vision requires both useful
+verification and a path to efficient energy search, not merely implemented
+interfaces.
 
-V576 response:
+V577 response:
 
-1. Move invariant projection into a default-off, game-agnostic live
-   world-model path.
-2. Replay archived live-agent world-model transitions through the actual
-   `E3AgentPolicy` import closure. Make no game or level solve claim.
-3. Move spectral k-block sampling into the reusable sampler interface, scale to
-   frustrated `n=16` and `n=32` systems, and add Rust/Python parity.
-4. Separate setup cost, transitions, effective sample size, and wall time.
-5. Stop at a software portability receipt. Attached boards remain
-   changed-state-only, and Extropic remains unavailable.
+1. Run direct, syntax-only, and two-level semantic decoding only after an
+   independent headroom gate opens.
+2. Keep the exact executor distinct from the decoding automata and audit false
+   accepts across candidate budgets.
+3. Repair spectral evidence integrity separately from the sampler algorithm.
+4. Reproduce sampler scale gains in a fresh process with exact/reference parity,
+   autocorrelation, setup, transition, ESS, and wall-time rows.
+5. Keep every sampler statement software-only. Do not infer FPGA or TSU speed.
 
-### Gap 3: continuous self-learning has no prospective held-future win
+### Gap 3: continuous self-learning stores state but does not alter behavior
 
 FR-11 requires autonomous directed self-learning with immutable validation,
-rollback, and timeouts. Exp6496 was row-complete but failed held-future benefit.
-Exp6552 found no benefit from conflict hysteresis. Exp6553 blocked on the GPU
-and restart contracts before a prospective SOTA result existed.
+chronology, retention, rollback, and timeouts. V576 satisfied much of the safety
+contract, but the learned records did not influence future predictions. A
+well-governed no-op is not learning.
 
-V576 response:
+V577 response:
 
-1. Persist exact verifier evidence with every candidate invariant record.
-2. Use provisional, active, quarantined, and archived lifecycle states.
-3. Keep world-model and generator weights immutable.
-4. Predict before observing each next frame, then use the observed frame for an
-   exact post-event admission decision.
-5. Compare no learning, a static projector, verifier-governed online memory,
-   and a matched shuffled control in chronological order.
-6. Require held-future benefit, retention, recoverable support, poison safety,
-   restart equality, and exact rollback before any default-off shadow consumer
-   can be considered.
+1. Use Recuris-style verified working state to decide when and what memory is
+   invoked.
+2. Require a positive-control influence trace before prospective evaluation.
+3. Localize each failure to a record, state field, invocation rule, or checker;
+   patch only the implicated component.
+4. Admit a patch only when it repairs the source failure and preserves held
+   anchor tasks.
+5. Evaluate multiple seeds and chronological plus shuffled task orders to expose
+   variance and hidden curricula.
+6. Keep generator weights frozen. Commit only exact-verified external state.
+7. Include a held-out, game-agnostic ARC live-path test without solve credit.
 
 ## Research inputs added before planning
 
-The V576 source refresh is in `research-references.md`.
+The V577 source refresh is recorded in `research-references.md`.
 
-- **MemGuard, arXiv:2608.21867** motivates persistent verifier metadata and
-  explicit memory lifecycle states. Carnot will reproduce the contract, not
-  import the paper's benchmark claims.
-- **Safety Hacking, arXiv:2608.22915** requires false-accept and
-  candidate-budget curves. A learned feasible-set filter cannot be release
-  authority.
-- **Meta-Ctrl, arXiv:2608.22149** motivates the token/action factorization in
-  the headroom benchmark and decoder.
-- **Prime Agent, arXiv:2608.23552** motivates immutable base policy,
-  evidence-backed side-state changes, snapshots, and rollback.
-- **Verifier-Induced Support Reshaping, arXiv:2608.00220** remains the reason to
-  measure future recoverable support, not only immediate success.
-- Current OpenReview, Hugging Face, GitHub, Extropic, and Kona checks do not
-  change exact authority or provide an authenticated new hardware runner.
+- **Recuris, arXiv:2608.24876** motivates verified working-state invocation,
+  structured influence traces, component-scoped patching, and held-anchor
+  admission gates.
+- **On the Fragility of Self-Improving Agents, arXiv:2608.18066** requires
+  multiple runs, shuffled-order controls, and explicit environment feedback.
+  One chronological run is not sufficient evidence.
+- **Meta-Ctrl, arXiv:2608.22149** remains the treatment design for separating
+  token syntax from semantic plan constraints. V576 did not execute it.
+- **Spectral Partitioning for k-Block Averaging Markov Chains,
+  arXiv:2608.21466** remains the sampler method, but V577 first repairs the
+  evidence contract and then performs independent replay.
+- **Scaling Up Thermodynamic AI Models, arXiv:2607.00170**, and the FPGA Ising
+  decomposition work, arXiv:2602.15985, motivate schedule, autocorrelation,
+  setup, and communication accounting. They do not authorize hardware claims.
+- Current OpenReview, Hugging Face, GitHub, Extropic, Kona, KAN, and hardware
+  checks supplied no public checkpoint or authenticated runner that changes
+  Carnot's exact-authority or hardware-access boundaries.
 
 ## Milestone thesis
 
-The milestone asks two linked questions:
+The milestone asks three ordered questions:
 
-1. Can exact constraints improve local flagship generation when a frozen held
-   benchmark has real headroom?
-2. Can a positive energy correction become a reversible live-path learning
-   primitive without losing safety, retention, or future support?
+1. Can Carnot prove that the intended model ran in an owned task-scoped GPU
+   lease and produce a complete headroom-bearing baseline?
+2. Given that prerequisite, do exact syntax and semantic constraints improve
+   Qwen3.6 plan generation without increasing exact false accepts?
+3. Can verified external memory demonstrably change future decisions and improve
+   held outcomes across seeds and task orders without regression?
 
-The sampler work is a parallel substrate question: can Exp6597's algorithmic
-gain survive scale and a reusable Rust boundary before hardware is discussed?
+The spectral branch asks a parallel substrate question: does V576's Rust gain
+survive a clean independent replay after evidence integrity is repaired?
 
 ## Target architecture
 
 ```text
-                     EXACT-CONSTRAINT GENERATION PATH
+                         EXECUTION CONTROL PLANE
 
- fixed plan generator + exact simulator
-                 |
-                 v
- calibration split + frozen held split
-                 |
-       +---------+----------+----------------+
-       |                    |                |
-       v                    v                v
- Qwen3.6 direct       Gemma 4 31B      Gemma 4 26B-A4B
-       |                    |                |
-       +--------- immutable baseline rows --+
-                              |
-                              v
-                     independent headroom gate
-                              |
-                              v
-       direct control <-- token DFA <-- action semantic automaton
-              \               |               /
-               +---------- local GGUF --------+
-                              |
-                              v
-                     independent exact simulator
-                              |
-                              v
-                 row replay + safety-hacking audit
+ roadmap task -> phase receipt -> readiness-aware GPU lease -> model-bound PID
+      |               |                    |                     |
+      |               +-- start/end -------+-- VRAM/device ------+
+      |                                                        unload
+      v
+ all-family short canaries -- per-family readiness --+
+                                                     |
+                                      Qwen-ready only v
+ frozen Exp6604 subset -> direct Qwen rows -> independent headroom reducer
+                                                     |
+                                        headroom > 0 v
 
-                        LIVE LEARNING PATH
+                         CONSTRAINT SEARCH PATH
 
- make_carnot_agent -> E3AgentPolicy -> executable world-model proposal
-                                         |
-                                         v
-                          default-off invariant projector
-                                         |
-                           +-------------+-------------+
-                           |                           |
-                           v                           v
-                    predicted next frame       exact observed frame
-                           |                           |
-                           +-------- exact error ------+
-                                         |
-                                         v
-                verifier-governed invariant lifecycle memory
-                   provisional -> active -> quarantine/archive
-                                         |
-                              chronological retrieval
-                                         |
-                                         +----> next prediction
+ direct control <--- token syntax DFA <--- semantic action automaton
+       \                    |                       /
+        +------------- Qwen3.6 candidate search ---+
+                              |
+                              v
+                    independent exact executor
+                              |
+                              v
+                   row replay + false-accept audit
+
+                      STATE-GROUNDED LEARNING PATH
+
+ make_carnot_agent -> E3AgentPolicy -> verified working state
+                                          |
+                                          v
+                  event-triggered constraint/skill invocation
+                                          |
+                                          v
+                       candidate ranking or action selection
+                                          |
+                                          v
+                       exact environment observation
+                                          |
+                                          v
+ state + invoked item + action + observation + checker decision
+                                          |
+                                          v
+          failure localization: record | state | router | checker
+                                          |
+                                          v
+              component-scoped patch -> held-anchor gate
+                                          |
+                          accepted patch affects future events
 
                          SAMPLING SUBSTRATE
 
- Exp6597 spectral partition -> reusable Python sampler -> Rust parity
-             |                         |                    |
-             +-- Gibbs controls -------+---- n=16/n=32 -----+
-                                                      |
-                                      future FPGA/TSU cost receipt only
+ Exp6612 retained rows -> evidence/test repair -> clean reference parity
+             |                                         |
+             +-- Python Gibbs / Rust Gibbs controls ---+
+                                                       |
+                                      independent scale replay
+                                                       |
+                         software schedule/cost receipt only
 
- All three paths end at exact checks and independent row replay.
- Learned scores, automata, projectors, and memory records never release output.
+ Every path ends at exact checks and independently replayable rows.
+ Learned memory, model scores, decoding automata, and sampler diagnostics do not
+ grant release authority. No path in V577 claims a game solve or hardware speed.
 ```
 
-## Phase I: exact headroom and family qualification
+## Phase I: execution truth and bounded headroom
 
-### Exp6604 - exact two-level plan corpus and compiler contract
+### Exp6616 - V577 phase-receipt and retirement contract
 
-Create a deterministic plan-task generator with calibration and held splits.
-Each task has a grounded action vocabulary, token grammar, action-level
-preconditions, ordering rules, goals, and an independent exact executor. Add a
-two-level compiler that factors token syntax from semantic action state. Create
-mutations that pass one layer but fail the exact executor.
+Freeze the milestone task graph, prior-failure declarations, exact gate-field
+owners, model policy, protected-file hashes, and a schema for phase and
+accelerator receipts. Reconcile the actual V576 terminal evidence without
+relabeling blocks as nulls.
 
-**Acceptance:** all fixtures and split hashes are deterministic; the exact
-executor has hand-checked and mutation-tested authority; at least one
-automaton-accepted candidate is rejected by exact execution; no LLM runs; and
-`headroom_fixture_ready_score=1.0` only when all contracts replay.
+**Acceptance:** every task, deliverable, gate owner, verdict class, prior failure,
+model requirement, and protected file validates; `execution_contract_ready_score`
+is `1.0` only for a replayable contract. This is null infrastructure.
 
-**Deliverable:**
-`results/experiment_6604_exact_two_level_plan_corpus.json`
+**Deliverable:** `results/experiment_6616_v577_execution_contract.json`
 
-### Exp6605 - Qwen3.6 direct baseline headroom
+### Exp6617 - readiness-aware GPU lease and phase receipts
 
-Run the frozen direct prompt on
-`unsloth/Qwen3.6-35B-A3B-GGUF`. Preserve raw bytes, exact model identity,
-embedded GGUF chat-template and tokenizer receipts, CUDA offload evidence,
-seeds, failures, tokens, and exact results for every calibration and held unit.
+Implement a reusable task-scoped lease around the existing local llama.cpp CUDA
+path. Bind a task ID, model identity, device, PID, process start, VRAM delta,
+phase transitions, heartbeat, timeout, unload, and terminal failure to one
+atomic receipt. Use mocks and process fixtures; do not run a model.
 
-**Acceptance:** every expected row is present and exact-replayable. This task
-does not need to find headroom to complete. It sets
-`qwen_headroom_ready_score=1.0` only when held direct exact success is inside the
+**Acceptance:** concurrent claims on one device fail closed; stale leases are
+diagnosed but not silently stolen; wrong model, PID reuse, missing unload, and
+receipt tampering fail; `gpu_lease_scheduler_ready_score=1.0` only when focused
+and repository protection tests pass.
+
+**Deliverable:** `results/experiment_6617_gpu_lease_phase_receipts.json`
+
+### Exp6618 - mandated-model accelerator admission canary
+
+Use the lease to run one bounded fresh-process canary for Qwen3.6 35B-A3B,
+Gemma 4 31B, and Gemma 4 26B-A4B. Each family gets an independent readiness
+field, so one failure does not recreate a monolithic family gate.
+
+**Acceptance:** each ready family has exact GGUF, tokenizer, chat template,
+device, PID, VRAM, CUDA-offload, raw-output, timing, and unload evidence.
+`qwen_admission_ready_score` is owned here and gates later Qwen work.
+
+**Deliverable:** `results/experiment_6618_mandated_model_admission.json`
+
+### Exp6619 - bounded Qwen3.6 direct headroom requalification
+
+Run the frozen direct prompt on a preregistered 12-calibration/12-held subset of
+Exp6604 with two seeds. Use Qwen3.6 only, preserve every failure, and do not run a
+constraint treatment.
+
+**Acceptance:** all 48 rows replay from raw output through the independent exact
+executor; `qwen_headroom_rows_ready_score=1.0` records complete evidence;
+`qwen_headroom_ready_score=1.0` only when held direct exact success is in the
 preregistered 20%-80% interval.
 
-**Deliverable:** `results/experiment_6605_qwen36_direct_headroom.json`
+**Deliverable:** `results/experiment_6619_qwen36_bounded_headroom.json`
 
-### Exp6606 - Gemma 4 31B direct baseline headroom
+### Exp6620 - independent bounded-headroom reducer
 
-Repeat the byte-frozen baseline independently with
-`unsloth/gemma-4-31B-it-GGUF`. Do not read Qwen outputs or tune task wording from
-another family.
+Replay Exp6619 without a model. Validate lease ownership, model identity, raw
+rows, failures, subset hashes, exact outcomes, and aggregate agreement. Freeze
+eligibility before a treatment runs.
 
-**Acceptance:** same row, identity, failure, and exact-replay gates as Exp6605.
-Set `gemma31_headroom_ready_score=1.0` only for held direct exact success in the
-20%-80% interval.
+**Acceptance:** blocked or incomplete source evidence remains blocked;
+`v577_headroom_ready_score=1.0` only for independently complete Qwen rows with
+held exact success in the 20%-80% interval.
 
-**Deliverable:** `results/experiment_6606_gemma4_31b_direct_headroom.json`
+**Deliverable:** `results/experiment_6620_headroom_reducer.json`
 
-### Exp6607 - Gemma 4 26B-A4B direct baseline headroom
+## Phase II: two-level constraint search and safety
 
-Repeat the byte-frozen baseline independently with
-`unsloth/gemma-4-26B-A4B-it-GGUF`. This is a headline-capable middle MoE, not a
-legacy smoke model.
+### Exp6621 - headroom-gated two-level constrained decoding
 
-**Acceptance:** same row, identity, failure, and exact-replay gates as Exp6605.
-Set `gemma26_headroom_ready_score=1.0` only for held direct exact success in the
-20%-80% interval.
+When Exp6620 opens the gate, compare direct, syntax-only, and syntax-plus-semantic
+search on the same frozen held tasks and seeds with Qwen3.6. Preserve direct rows
+unchanged, charge every generation and failure, and use the independent executor
+as final authority.
 
-**Deliverable:** `results/experiment_6607_gemma4_26b_direct_headroom.json`
+**Acceptance:** paired per-unit rows reproduce; direct rows match Exp6619;
+automata cannot certify themselves; `decoding_rows_ready_score=1.0` records a
+complete comparison. Positive science additionally requires a preregistered
+paired exact-success gain, no false-accept increase, and cost accounting.
 
-## Phase II: two-level decoding and independent safety
+**Deliverable:** `results/experiment_6621_two_level_decoding.json`
 
-### Exp6608 - independent family headroom reducer
+### Exp6622 - independent decoding authority and safety audit
 
-Replay Exp6605-Exp6607 without loading a model. Fix the eligible family list
-before any constrained treatment runs. Preserve incomplete or blocked families
-instead of making eligibility depend on treatment output.
+Replay Exp6621 without a model. Recompute paired effects, syntax and semantic
+violations, exact false accepts, candidate-budget curves, and total charged cost.
+Attack omitted obligations and contaminated learned feasible sets.
 
-**Acceptance:** at least one complete family has held direct exact success in
-the 20%-80% interval; all eligible family and unit hashes are frozen; no held
-unit is selected by its individual outcome; and
-`headroom_benchmark_ready_score=1.0` only under those conditions.
+**Acceptance:** every unit and budget recomputes; exact execution remains release
+authority; any oracle-defined or circular result is classified accordingly.
 
-**Deliverable:** `results/experiment_6608_family_headroom_reducer.json`
+**Deliverable:** `results/experiment_6622_decoding_safety_audit.json`
 
-### Exp6609 - local GGUF two-level constrained decoding comparison
+## Phase III: spectral sampler evidence recovery
 
-For every eligible family, reuse the direct rows and run syntax-only and
-two-level syntax-plus-semantic decoding on the same held task bytes. Use the
-existing llama.cpp GGUF loader and reviewed grammar adapters. Preserve reasoning
-before the structured plan boundary. Do not use a prompt-only fallback as the
-constrained treatment.
+### Exp6623 - spectral sampler integrity and reference repair
 
-**Acceptance:** the treatment is a real token-mask/action-state intervention;
-all arms are dose- and seed-accounted; exact execution decides success; and a
-candidate win requires a positive paired exact-success delta, a nonnegative
-paired lower bound, no unsafe-release increase, and the frozen cost limit. Any
-eligible win is `circular_positive` because exact constraints define the target.
-`two_level_decoder_comparison_ready_score` reports row-complete comparison, not
-benefit.
+Repair the failed repository-test and protected-file evidence around Exp6612.
+Build a clean exact-enumerable reference suite and independently bind Python and
+Rust implementations, seeds, compiler flags, binaries, and stationary checks.
 
-**Deliverable:**
-`results/experiment_6609_two_level_constrained_decoding.json`
+**Acceptance:** clean tests and protection checks pass; Python and Rust Gibbs
+controls match the reference; spectral partitions are deterministic;
+`sampler_integrity_ready_score=1.0` is a null readiness result.
 
-### Exp6610 - independent safety-hacking and authority audit
+**Deliverable:** `results/experiment_6623_spectral_integrity_repair.json`
 
-Replay Exp6609 from raw rows. Vary candidate budget without new model inference
-when stored candidates suffice. Inject high-score candidates that pass an
-incomplete automaton but fail the exact executor. Test grammar removal,
-semantic-state corruption, family swaps, source tamper, and exact-authority
-substitution.
+### Exp6624 - independent spectral scale replay and cost envelope
 
-**Acceptance:** false accepts never release; contamination and false-accept
-curves are reported by candidate budget; every source and authority mutation
-fails closed; and `constraint_safety_audit_ready_score=1.0` only when all
-eligible rows and attacks replay.
+In a fresh process, replay sequential Gibbs, Python spectral, and Rust spectral
+arms on preregistered frustrated `n=16`, `n=32`, and `n=64` fixtures. Report setup,
+transitions, autocorrelation, ESS, wall time, and charged end-to-end cost.
 
-**Deliverable:**
-`results/experiment_6610_constraint_safety_hacking_audit.json`
+**Acceptance:** exact/reference quality is noninferior, rows are complete, binary
+identity is bound, and any gain survives bootstrap intervals and setup charges.
+All conclusions say CPU software only. FPGA and TSU values are analytical
+portability descriptors, not performance evidence.
 
-## Phase III: live projection and scalable sampling
+**Deliverable:** `results/experiment_6624_spectral_scale_replay.json`
 
-### Exp6611 - live-path invariant projection replay
+## Phase IV: live actionability and continuous self-learning
 
-Extract the bounded projector from Exp6595 into a reusable, default-off module.
-Wire it through `make_carnot_agent` and `E3AgentPolicy` so the scored path can
-reach it without a per-game adapter. Replay immutable archived live-agent
-world-model transitions on held-out games with game-identity-blind features.
-Compare no projection, selected invariant projection, and norm-matched random
-projection.
+### Exp6625 - held-out ARC live-path memory actionability canary
 
-**Acceptance:** the actual live import closure reaches the projector; calibration
-and held games are disjoint; no source code, outer-loop search, or offline
-ground-truth solver is used; exact observed next frames decide prediction error;
-and a candidate win requires lower held error, random-control separation, no
-runtime-validity loss, and bounded cost. This task makes no solve, level, or
-leaderboard claim.
+Add a game-agnostic verified working-state and event-triggered constraint
+invocation to the actual `E3AgentPolicy` path. Use disjoint development and
+held-game archives. Compare static, invoked, and matched sham arms on exact
+next-action or next-frame criteria. This is an actionability test, not a solve.
 
-**Deliverable:**
-`results/experiment_6611_live_arc_invariant_projection.json`
+**Acceptance:** the scored import closure reaches the new path; a seeded positive
+control changes ranking or action; held rows remain game-blind and row-complete;
+`live_memory_activation_ready_score=1.0` requires observable influence, not
+outcome benefit. No game or level solve is claimed.
 
-### Exp6612 - frustrated spectral k-block scale and Rust parity
+**Deliverable:** `results/experiment_6625_arc_live_memory_actionability.json`
 
-Move Exp6597's spectral partition sampler into the reusable sampler interface.
-Compare sequential Gibbs, random k-block, and spectral k-block arms on fixed
-frustrated `n=16` and `n=32` systems. Add Rust/Python parity and a software-only
-hardware cost envelope.
+### Exp6626 - verified working-memory patch gate
 
-**Acceptance:** reference moments or independent long-chain intervals are
-declared before comparison; stationary quality is noninferior; parity matches
-within tolerance; setup, transition, and wall costs are separate; and a win
-requires either charged wall-time or ESS-per-wall-time gain. This distinct
-block-averaging kernel does not reopen retired Phase-3 homotopy argmin, PIMI,
-FPGA execution, or TSU scopes.
+Implement structured traces and component-scoped patching for external memory.
+Localize failures to the constraint record, working-state field, invocation
+policy, or checker. Admit a patch only when it repairs its source event and does
+not regress held anchors. Preserve lifecycle, poison, restart, and rollback.
 
-**Prior-failure discipline:** Exp5646 never reached Rust parity because its
-two-axis tempering quality gate reported two material regressions. Exp6612
-instead continues completed Exp6597, has no dependency on the failed tempering
-gate, adds a random-block control, and retires if it repeats the blocked verdict.
+**Acceptance:** localization fixtures cover all four components; whole-memory
+rewrites fail closed; accepted and rejected patches replay;
+`memory_patch_contract_ready_score=1.0` requires activation, exact repair,
+anchor retention, and recovery equality. This remains null infrastructure.
 
-**Deliverable:**
-`results/experiment_6612_spectral_k_block_scale_rust_parity.json`
+**Deliverable:** `results/experiment_6626_working_memory_patch_gate.json`
 
-## Phase IV: verifier-governed continuous self-learning
+### Exp6627 - prospective multi-order continuous self-learning
 
-### Exp6613 - invariant-memory lifecycle conformance
+Use a frozen Qwen3.6 candidate pool and the verified external memory-control
+layer. Predict or select before observing each outcome, then localize and gate a
+component patch for later events. Compare no-update, static memory,
+state-grounded learning, and shuffled-update controls across at least three
+seeds and three preregistered task orders.
 
-Implement typed invariant records with exact verifier descriptors, source and
-model hashes, uncertainty, lifecycle state, occupancy bounds, conflict rules,
-restart journals, and rollback snapshots. Memory records are data, never
-instructions. Revalidation occurs at admission and retrieval.
+**Acceptance:** generator hashes never change; treatment activation is nonzero;
+held-future exact success improves over static and shuffled controls with a
+paired interval excluding zero; held anchors, recoverable support, poison,
+restart, rollback, and bounded occupancy pass. Otherwise the honest result is
+null, partial, blocked, or disqualified.
 
-**Acceptance:** unsupported, stale, command-bearing, duplicated, poisoned, and
-conflicting records cannot become active; restart and rollback are byte-equal;
-the base policy and model weights remain immutable; the compact projection and
-lookup arithmetic has a Rust/CPU hardware path; and
-`invariant_memory_ready_score=1.0` only when every lifecycle mutation closes.
+**Deliverable:** `results/experiment_6627_prospective_state_grounded_learning.json`
 
-**Deliverable:**
-`results/experiment_6613_invariant_memory_lifecycle.json`
+### Exp6628 - V577 independent capstone and architecture reconciliation
 
-### Exp6614 - prospective chronological invariant self-learning
+Always run. Replay every available task and gate, preserve missing and blocked
+branches, recompute comparative claims from rows, and reconcile relevant specs,
+traceability, architecture, status, and changelog to terminal evidence.
 
-This is the milestone's mandatory continuous self-learning task. Process
-held live world-model transitions in chronological order. Each arm predicts
-before the next frame is revealed. Compare no learning, the frozen static
-projector, verifier-governed online memory, and a matched shuffled-admission
-control. Commit side-state only after exact post-event verification.
+**Acceptance:** all 12 upstream task dispositions are explicit; gate fields bind
+their owner declarations exactly; no block becomes null, no software result
+becomes hardware, no archive replay becomes an ARC solve, and FR-11/FR-12 move
+only on eligible evidence. The capstone is `null` or `partial`, never positive.
 
-**Acceptance:** generator and world-model hashes stay fixed; every opportunity
-has every arm; no held-future or game-identity leakage occurs; unsafe commits
-are zero; restart and rollback replay exactly; retention and future recoverable
-support are noninferior; and the online arm has preregistered positive
-held-future benefit over both static and shuffled controls.
-`continuous_self_learning_task=true`. A win is `circular_positive` because the
-exact observed frame governs admission and evaluation.
-
-**Deliverable:**
-`results/experiment_6614_prospective_invariant_self_learning.json`
-
-### Exp6615 - independent milestone audit and architecture reconciliation
-
-Always run. Recompute the decoding, safety, projection, sampler, and
-self-learning claims from per-unit rows. Test gate-field spelling, missing and
-blocked inputs, exact authority, model identity, chronology, rollback, support,
-and non-claims. Reconcile capability specs, traceability, status, changelog, and
-architecture only to evidence that exists.
-
-**Acceptance:** every result has an independent disposition of positive,
-circular-positive, null, blocked, disqualified, or partial; no blocked branch is
-reported as null; no toy, archive replay, or software parity result becomes a
-live or hardware claim; and all changed specs and operations documents agree.
-
-**Deliverable:** `results/experiment_6615_v576_independent_capstone.json`
+**Deliverable:** `results/experiment_6628_v577_independent_capstone.json`
 
 ## Dependency graph
 
 ```text
-Exp6604 exact corpus/compiler
-   +--> Exp6605 Qwen baseline -------+
-   +--> Exp6606 Gemma 31B baseline --+--> Exp6608 headroom reducer
-   +--> Exp6607 Gemma 26B baseline --+             |
-                                                   v
-                                      Exp6609 two-level decoding
-                                                   |
-                                                   v
-                                      Exp6610 safety/authority audit
+Exp6616 execution contract
+   |
+   +--> Exp6617 GPU lease + phase receipts
+   |       |
+   |       +--> Exp6618 mandated-model admission
+   |               |
+   |               +--> Exp6619 bounded Qwen baseline
+   |               |       |
+   |               |       +--> Exp6620 independent reducer
+   |               |               |
+   |               |               +-- gate: headroom == 1 --> Exp6621 decoder
+   |               |                                             |
+   |               |                                             +--> Exp6622 audit
+   |               |
+   |               +-------------------------------------------> Exp6627 learning
+   |
+   +--> Exp6623 sampler integrity
+   |       |
+   |       +-- gate: integrity == 1 --> Exp6624 scale replay
+   |
+   +--> Exp6625 ARC live actionability
+           |
+           +-- gate: activation == 1 --> Exp6626 patch gate
+                                               |
+                                               +--> Exp6627 learning
 
-Exp6595 positive local projection --> Exp6611 live-path projection
-                                                   |
-                                                   +--> Exp6613 memory contract
-                                                            |
-                                                            v
-                                             Exp6614 continuous self-learning
-
-Exp6597 positive tiny sampler ------> Exp6612 scale + Rust parity
-
-Exp6604-Exp6614 ----------------------------------> Exp6615 capstone
+Exp6628 capstone reads every available Exp6616-Exp6627 artifact and always runs.
 ```
 
-Structured conductor gates exist only between tasks in the V576 YAML. Prior
-milestone artifacts are immutable preconditions, not `gated_on` targets.
-Independent reducers and the capstone always preserve missing or blocked
-inputs.
+Structured gates use fields declared by their owner tasks:
 
-## Hardware requirements
+| Downstream | Upstream field | Condition |
+|---|---|---|
+| Exp6617 | `exp6616.execution_contract_ready_score` | `== 1.0` |
+| Exp6618 | `exp6617.gpu_lease_scheduler_ready_score` | `== 1.0` |
+| Exp6619 | `exp6618.qwen_admission_ready_score` | `== 1.0` |
+| Exp6621 | `exp6620.v577_headroom_ready_score` | `== 1.0` |
+| Exp6622 | `exp6621.decoding_rows_ready_score` | `== 1.0` |
+| Exp6624 | `exp6623.sampler_integrity_ready_score` | `== 1.0` |
+| Exp6626 | `exp6625.live_memory_activation_ready_score` | `== 1.0` |
+| Exp6627 | `exp6618.qwen_admission_ready_score` and `exp6626.memory_patch_contract_ready_score` | both `== 1.0` |
 
-### Required and available
+## Hardware requirements and boundaries
 
-- **Two RTX 3090 GPUs:** use the reviewed ownership and reaper protections.
-  Run one family per task. Record per-device free VRAM, process ownership,
-  loaded model hash, CUDA layer offload, tokens per second, and unload receipt.
-- **Cached GGUFs:**
-  `unsloth/Qwen3.6-35B-A3B-GGUF`,
-  `unsloth/gemma-4-31B-it-GGUF`, and
-  `unsloth/gemma-4-26B-A4B-it-GGUF`. Resolve through `cached_sota_pair()` and
-  content-derived cache identity. Do not download during a task.
-- **CPU and RAM:** exact plan execution, automata, archive replay, lifecycle
-  tests, and independent reducers are CPU paths.
-- **Rust toolchain:** required for sampler parity and the compact
-  projection/memory portability receipt.
-
-### Optional and explicitly out of scope
-
-- **KV260:** no command is scheduled without a changed physical or bitstream
-  state. A later task may map the proven sampler kernel through authenticated
-  SSH, `xmutil`, and UIO receipts.
-- **GateMate and PolarFire:** no repeated detection or unchanged continuity
-  command. Preserve their existing terminal state.
-- **Extropic X0/Z1:** Carnot has no authenticated runner. Torx and
-  Thermalizers remain future compiler references. No latency, power, or
-  availability claim is allowed.
+| Resource | Tasks | Requirement and boundary |
+|---|---|---|
+| Dual RTX 3090 CUDA GPUs | Exp6618, Exp6619, Exp6621, Exp6627 | Use task-scoped leases. One task owns a device and model process at a time. Record exact GGUF identity, PID, VRAM, offload, heartbeat, unload, and failures. No silent CPU fallback in headline rows. |
+| Local GGUF cache | Exp6618, Exp6619, Exp6621, Exp6627 | Required models are `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`. Verify shards, tokenizer, and chat template before inference. |
+| CPU and Rust toolchain | Exp6617, Exp6620, Exp6622-Exp6626, Exp6628 | Needed for exact execution, independent replay, sampler builds, tests, and audits. Exp6624 reports CPU software only. |
+| RAM and disk | all tasks | Retain raw responses, model and process receipts, checkpoints, per-unit rows, Rust binaries, fixture hashes, and atomic artifacts. Check capacity before compute. |
+| KV260, GateMate, PolarFire | none scheduled for execution | Preserve existing changed-state-only continuity. Do not repeat unchanged board probes. No V577 board latency or speed claim. |
+| Extropic XTR-0/Z1 | none | No authenticated runner. Z1 early access remains planned for 2027. No TSU execution, power, latency, or availability claim. |
 
 ## Model policy
 
-Every live LLM task names at least one mandated headline GGUF in `MODEL_SPECS`.
-Exp6605, Exp6606, and Exp6607 each isolate one family. Exp6609 may load only
-families frozen as eligible by Exp6608, but its declared model registry includes
-all three mandated IDs. The embedded GGUF tokenizer and chat template are part
-of model identity. Legacy Qwen3.5-0.8B and Gemma 4 E4B may be used only for a
-clearly labeled CPU smoke test and can never supply a milestone result.
+Every task that performs LLM inference includes at least one mandated model in
+its `MODEL_SPECS`:
 
-## Claim boundaries
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-- The exact executor is oracle for the plan benchmark. Any decoding win is
-  `circular_positive`, not a general positive verification claim.
-- The live projection and self-learning tasks do not claim an ARC game solve,
-  level solve, or leaderboard gain.
-- The sampler task does not reopen retired homotopy argmin or PIMI and makes no
-  attached-hardware claim.
-- A complete infrastructure task normally has `verdict_class=null`.
-- Every comparative task emits per-unit rows. Every blocked verdict emits
-  `gate_check_summary` with the failed check and observed value.
-- No task edits `research-roadmap.yaml` or
-  `scripts/research_conductor.py`, and no task pushes.
+Exp6618 uses all three. Exp6619, Exp6621, and Exp6627 use Qwen3.6. Legacy
+Qwen3.5-0.8B and Gemma E4B models may appear only as labeled CPU smoke tests;
+they cannot supply a headline row, replace a failed flagship run, or satisfy a
+gate.
+
+## Claim and safety boundaries
+
+1. Exact deterministic checks remain release authority. A learned score,
+   memory gate, decoding automaton, or sampler diagnostic cannot certify itself.
+2. Infrastructure readiness uses `verdict_class=null`. It is not positive
+   science.
+3. Every comparative task emits per-unit rows. Aggregates are recomputed from
+   those rows and preserve failures.
+4. Every genuine blocked verdict begins with `blocked_*` and includes the exact
+   `gate_check_summary` field with observed values.
+5. Oracle-defined or self-certified gains cannot use `verdict_class=positive`.
+6. Exp6625 makes no game or level solve claim. It does not read game source,
+   build per-game adapters, run offline ground-truth BFS, or update the ARC solve
+   registry.
+7. Exp6624 is a CPU software result. Analytical FPGA or TSU descriptors are not
+   measured hardware evidence.
+8. Exp6627 keeps model weights and the outer improvement procedure immutable.
+   Only typed external state can change, and every accepted patch is journaled,
+   reversible, and exact-gated.
+9. A self-learning claim requires nonzero treatment activation, prospective
+   held-future benefit, multi-order robustness, retention, support, poison,
+   restart, rollback, and bounded occupancy.
+10. `research-roadmap.yaml` and `scripts/research_conductor.py` are protected and
+    must remain byte-identical throughout the milestone.
+
+## Decentralization implications
+
+V577 strengthens the boundary between proposal and authority. Local models can
+generate plans and a local memory layer can adapt routing, but every admission,
+release, and scientific claim remains reconstructible from local immutable
+evidence. Task-scoped GPU leases prevent one worker's model process from
+silently becoming another worker's evidence. Component-scoped memory patches
+avoid an opaque central rewrite and keep each change attributable to a verified
+failure. The resulting artifacts can be replayed by an independent node without
+trusting the original model process, reducer, or planner.
