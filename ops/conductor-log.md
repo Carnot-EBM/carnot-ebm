@@ -16508,3 +16508,4 @@ code |
 | 2026-08-26 03:12 UTC | V576 independent capstone and architecture reconci | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6615_v576_in |
 | 2026-08-26 04:39 UTC | Plan milestone 2026.08.577 | OK | 3 tasks proposed |
 | 2026-08-26 04:41 UTC | Milestone 2026.08.577 activated | OK | 3 tasks queued |
+| 2026-08-26 05:01 UTC | V577 phase-receipt and retirement contract | OK | 93 passed, 1 warning in 8.78s |

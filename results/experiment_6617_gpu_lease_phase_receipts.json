@@ -1,0 +1,51 @@
+{
+  "experiment": 6617,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-26",
+  "started_at": "2026-08-26T05:03:05.841183+00:00",
+  "finished_at": "2026-08-26T05:03:05.841183+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Readiness-aware GPU lease and task phase receipts",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0.0 == expected=1.0",
+  "failed_upstream": "exp6616-v577-execution-contract",
+  "failed_field": "execution_contract_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1.0,
+  "failed_expected_type": "float",
+  "failed_observed": 0.0,
+  "failed_observed_type": "float",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6616_v577_execution_contract.json",
+  "failed_evidence_sha256": "sha256:d53d001311028ccf55fa05d9bec9d0de34029c9572d3c56445c1415c90c4dd71",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0.0 == expected=1.0",
+    "failed_upstream": "exp6616-v577-execution-contract",
+    "failed_field": "execution_contract_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1.0,
+    "failed_expected_type": "float",
+    "failed_observed": 0.0,
+    "failed_observed_type": "float",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6616_v577_execution_contract.json",
+    "failed_evidence_sha256": "sha256:d53d001311028ccf55fa05d9bec9d0de34029c9572d3c56445c1415c90c4dd71"
+  },
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6616-v577-execution-contract.execution_contract_ready_score (actual=0.0 == expected=1.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6616-v577-execution-contract",
+      "artifact_field": "execution_contract_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "expected_type": "float",
+      "actual": 0.0,
+      "actual_type": "float",
+      "passed": false,
+      "reason": "actual=0.0 == expected=1.0",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6616_v577_execution_contract.json",
+      "artifact_sha256": "sha256:d53d001311028ccf55fa05d9bec9d0de34029c9572d3c56445c1415c90c4dd71"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
