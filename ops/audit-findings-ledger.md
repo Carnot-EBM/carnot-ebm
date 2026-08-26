@@ -28,3 +28,6 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-08-25 | qa_layer_authenticity_audit | arc_artifact_lint.py | SILENT_NON_FIRING | OPEN | |
 | 2026-08-25 | qa_layer_authenticity_audit | determination_preservation_lint.py | SILENT_NON_FIRING | OPEN | |
 | 2026-08-25 | experiment_claim_audit | experiment_6596_convergeflow_feasible_token_canary.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-08-26 | qa_layer_authenticity_audit | arc_count_integrity_lint.py | SILENT_NON_FIRING | OPEN | |
+| 2026-08-26 | qa_layer_authenticity_audit | arc_llm_on_liveness_lint.py | SILENT_NON_FIRING | OPEN | |
+| 2026-08-26 | qa_layer_authenticity_audit | verifier_authenticity_lint.py | SILENT_NON_FIRING | OPEN | |
