@@ -57624,4 +57624,4 @@ checksum replays, and no partial terminal file remains.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-REPORT-6615 | Planned (`python/carnot/experiment_6615_v576_independent_capstone.py`) | Planned (`tests/python/test_experiment_6615_v576_independent_capstone.py`) |
+| REQ-REPORT-6615 | Implemented (`python/carnot/experiment_6615_v576_independent_capstone.py`; terminal evidence in `results/experiment_6615_v576_independent_capstone.json`) | Implemented (`tests/python/test_experiment_6615_v576_independent_capstone.py`) |

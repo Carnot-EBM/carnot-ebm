@@ -247,6 +247,9 @@ def test_req_report_6615_provenance_protection_and_reconciliation(
     reconciliation = {row["path"]: row for row in artifact["reconciliation_receipts"]}
     assert reconciliation["_bmad/architecture.md"]["former_evidence_date"] == "2026-07-03"
     assert reconciliation["_bmad/architecture.md"]["new_evidence_date"] == "2026-08-26"
+    architecture = (REPO / mod.ARCHITECTURE_RELATIVE_PATH).read_text(encoding="utf-8")
+    assert "V576 Independent Capstone Evidence (2026-08-26)" in architecture
+    assert "**Former evidence date:** 2026-07-03" in architecture
     for deferred in (
         "_bmad/traceability.md",
         "ops/status.md",

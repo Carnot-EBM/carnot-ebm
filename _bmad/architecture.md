@@ -1,6 +1,6 @@
 # Carnot — Architecture
 
-**Last Reconciled:** 2026-07-03
+**Last Reconciled:** 2026-08-26
 
 ## Overview
 
@@ -413,3 +413,28 @@ parallel chains on FPGA; $k=15$ acceptable on Extropic / photonic.
 - `docs/research-notes/phase6-ensemble-thetaF-deep-think-results.md`
 - `docs/research-notes/phase7-continuum-memory-deep-think-prompt.md` (capstone, pending)
 - `docs/research-notes/nested-learning-hope-relevance.md`
+
+## V576 Independent Capstone Evidence (2026-08-26)
+
+**Former evidence date:** 2026-07-03. The architecture record was stale before
+this reconciliation. Exp6615 now binds it to the terminal V576 row evidence.
+
+The capstone uses a CPU-only artifact replay. It does not call an LLM. It does
+not repeat a scientific experiment. Exact verifiers adjudicate source claims,
+but audit completion does not create a positive science claim.
+
+- The two-level decoding path is blocked. No eligible family reached a
+  row-complete treatment comparison.
+- The live invariant projector is reachable through the stored live import
+  path. Its exact next-frame effect is null against both controls. This is not
+  an ARC game, level, or leaderboard solve.
+- The spectral k-block sampler has partial CPU software evidence and Python/Rust
+  parity. It has no FPGA, TSU, PIMI, SpecAnn, or hardware-performance evidence.
+- The invariant-memory lifecycle passes its stored conformance checks. The
+  prospective online arm has zero held-future benefit against both controls.
+  The source verdict field is disqualified because it is outside the closed
+  verdict enum.
+
+The architecture keeps oracle, archive, toy, software, hardware, and
+publication boundaries separate. The Exp6615 artifact preserves missing and
+blocked branches and records all same-roadmap gate contracts.
