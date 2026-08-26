@@ -57625,3 +57625,117 @@ checksum replays, and no partial terminal file remains.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6615 | Implemented (`python/carnot/experiment_6615_v576_independent_capstone.py`; terminal evidence in `results/experiment_6615_v576_independent_capstone.json`) | Implemented (`tests/python/test_experiment_6615_v576_independent_capstone.py`) |
+
+### REQ-REPORT-6616: V577 Execution Contract SHALL Fail Closed On Roadmap Drift
+
+Carnot SHALL build the V577 execution contract without model inference. The
+contract SHALL compare the pre-staged roadmap, active roadmap, and V577 roadmap
+document. It SHALL not invent missing YAML task contracts from roadmap prose.
+
+- REQ-REPORT-6616-TASKS: The contract SHALL require exactly one YAML task for
+  every experiment from Exp6616 through Exp6628. Each row SHALL bind the exact
+  task ID, deliverable, milestone phase, GPU need, model policy, prior failures,
+  gate owner, gate field, and terminal artifact fields. Duplicate IDs,
+  duplicate deliverables, missing tasks, and stale milestone values SHALL fail
+  readiness.
+- REQ-REPORT-6616-GATES: Every gate SHALL use a supported operator. Its owner
+  SHALL exist earlier in the same roadmap. The owner's required artifact block
+  SHALL declare the identically spelled field. Missing owners, forward gates,
+  circular gates, retired owners, and spelling drift SHALL fail readiness.
+- REQ-REPORT-6616-PRIOR-FAILURES: Every declared prior failure SHALL retain its
+  experiment ID and exact prior honest verdict. It SHALL name one concrete
+  changed condition and set `retire_if_same_verdict=true`. A matching rerun
+  without a declaration, or a reference that reopens retired scope without
+  authority, SHALL fail readiness.
+- REQ-REPORT-6616-PHASE-RECEIPT: The contract SHALL define required fields for
+  task ID, phase name, state, monotonic start and end times, process identity,
+  resource owner, input hashes, output hashes, heartbeat, terminal reason, and
+  checksum. It SHALL reject a nonterminal final state, reversed time, PID reuse,
+  or checksum tampering.
+- REQ-REPORT-6616-ACCELERATOR-RECEIPT: The accelerator extension SHALL require
+  device UUID, PID start time, model hash, VRAM before and after, offload layers,
+  unload evidence, and lease token. These fields extend a valid phase receipt.
+- REQ-REPORT-6616-MODELS: Exp6618 SHALL declare all three mandated GGUF family
+  IDs. Exp6619, Exp6621, and Exp6627 SHALL declare Qwen3.6. Legacy Qwen3.5-0.8B
+  and Gemma E4B models SHALL be smoke-only and SHALL not satisfy readiness.
+- REQ-REPORT-6616-VERDICTS: `verdict_class` SHALL use only `positive`,
+  `circular_positive`, `null`, `blocked`, `disqualified`, or `partial`. A ready
+  contract SHALL use `null`. A block SHALL use a `blocked_*` status and honest
+  verdict. Its `gate_check_summary` SHALL name each failed check and observed
+  value. V576 blocked, null, partial, missing, and invalid verdicts SHALL retain
+  their terminal dispositions.
+- REQ-REPORT-6616-PROTECTION: The contract SHALL hash
+  `research-roadmap.yaml` and `scripts/research_conductor.py` before work. It
+  SHALL reject changed hashes and SHALL write its final artifact with file
+  sync, atomic replacement, directory sync, and a content checksum that excludes
+  only the checksum field.
+- REQ-REPORT-6616-ATTACKS: Duplicate identity, duplicate deliverable, stale
+  milestone, missing principle, unsupported gate operation, missing gate field,
+  wrong model, absent blocked diagnostic, nonterminal verdict, reversed phase
+  time, PID reuse, checksum tampering, retired upstream, and protected-file
+  mutation attacks SHALL fail closed.
+- REQ-REPORT-6616-READY: The bare field `execution_contract_ready_score` SHALL
+  equal `1.0` only when roadmap schema, exclusion, prior-failure, exact task,
+  gate ownership, model policy, receipt schema, attack, test, and protected-file
+  checks all pass. Otherwise it SHALL equal `0.0`. This readiness field is null
+  infrastructure and makes no scientific claim.
+
+The artifact SHALL set
+`inference_substrate=v577_roadmap_evidence_and_phase_receipt_contract_no_llm`
+and `verifier_is_oracle=true`. It SHALL include `status`, `honest_verdict`,
+`verdict_class`, `gate_check_summary`, `task_contract_rows`,
+`roadmap_validation_receipts`, `gate_owner_rows`,
+`prior_failure_dispositions`, `phase_receipt_schema`,
+`accelerator_receipt_schema`, `model_policy_receipts`,
+`execution_contract_ready_score`, `attack_rows`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6616-EXACT-TASKS: Missing YAML Tasks Stay Missing
+
+**Given** a V577 document that names Exp6616 through Exp6628
+**When** the pre-staged or active YAML omits any named task
+**Then** the contract emits all expected task dispositions, marks omitted YAML
+contracts missing, reports the exact missing IDs, and keeps readiness zero.
+
+#### SCENARIO-REPORT-6616-GATE-OWNERS: Owners Define Exact Fields
+
+**Given** one gate on a V577 task
+**When** the contract resolves its upstream owner
+**Then** the owner is earlier in the same YAML, is not retired, and declares the
+identically spelled required artifact field with a principle.
+
+#### SCENARIO-REPORT-6616-PRIOR-FAILURES: Reruns Change A Named Condition
+
+**Given** a task that declares prior failed scope
+**When** the contract validates its disposition
+**Then** the prior artifact verdict matches exactly, the changed condition is
+concrete, retirement is true, and an undeclared matching rerun fails closed.
+
+#### SCENARIO-REPORT-6616-RECEIPTS: Process And Accelerator Identity Is Stable
+
+**Given** phase and accelerator receipt candidates
+**When** time reverses, a PID start time changes, a lease or device differs, an
+unload receipt is absent, or a checksum changes
+**Then** the receipt is invalid and cannot support task readiness.
+
+#### SCENARIO-REPORT-6616-CLOSED-VERDICTS: Contract Readiness Is Not Science
+
+**Given** complete validation results or a genuine contract block
+**When** the terminal artifact is built
+**Then** a ready result uses class `null`; a block uses class `blocked`, names
+failed checks and observed values, and never relabels V576 source verdicts.
+
+#### SCENARIO-REPORT-6616-ATOMIC: Mutations Cannot Open The Gate
+
+**Given** every declared attack and both protected-file hashes
+**When** the contract validates and writes the artifact
+**Then** each mutation fails closed, protected hashes match, the checksum
+replays, and no partial final file is visible.
+
+## Implementation Status (REQ-REPORT-6616)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6616 | Implemented (`python/carnot/experiment_6616_v577_execution_contract.py`) | Implemented (`tests/python/test_experiment_6616_v577_execution_contract.py`) |
