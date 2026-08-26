@@ -17883,3 +17883,4 @@ flagged as an execution bottleneck. No data available this milestone establishes
 a parallel multi-model launch or missed DualGPURunner use. The next tooling
 priority is a GPU-engagement launch gate backed by task-scoped phase receipts and
 explicit model-count and runner-selection evidence.
+- 2026-08-26: Complete V578 activation and gate-ownership contract (⚠️ Blocked) — honest_verdict=blocked_v578_activation_contract_incomplete: document promises Exp6619-Exp6632 but both YAML sources contain only Exp6619-Exp6628; results/experiment_6619_v578_activation_contract.json
