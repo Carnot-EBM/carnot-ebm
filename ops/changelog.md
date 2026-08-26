@@ -17895,3 +17895,4 @@ multi-model launch or missed DualGPURunner engagement. The next tooling priority
 is task-scoped monotonic phase timing joined to accelerator, model-count, and
 runner-selection receipts; estimated time savings is 0% because the supplied
 clock has no measurable duration to reclaim.
+- 2026-08-26: Task-scoped GPU lease and phase journal (⚠️ Blocked) — honest_verdict=blocked_gpu_lease_scheduler_not_ready: infrastructure checks failed; no model-quality claim; results/experiment_6633_gpu_lease_phase_journal.json
