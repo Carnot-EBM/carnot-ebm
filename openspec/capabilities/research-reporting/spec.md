@@ -57490,3 +57490,138 @@ replays, and no partial terminal file remains.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6608 | Planned (`python/carnot/experiment_6608_family_headroom_reducer.py`) | Planned (`tests/python/test_experiment_6608_family_headroom_reducer.py`) |
+
+### REQ-REPORT-6615: V576 Independent Capstone SHALL Replay Every Milestone Branch
+
+Carnot SHALL independently replay the V576 milestone from stored artifacts and
+per-unit rows. The capstone SHALL run without model inference or a repeated
+scientific experiment. It SHALL finish even when a source branch is missing,
+blocked, disqualified, or null. Audit completion SHALL not become a positive
+scientific claim.
+
+- REQ-REPORT-6615-PRECONDITIONS: The capstone SHALL record expected task IDs,
+  deliverables, present and missing source paths and hashes, roadmap gates,
+  owner fields, the model registry, exact authorities, the ARC non-claim
+  boundary, sampler references, chronology and recovery contracts, document
+  hashes, protected hashes, and the CPU-only replay substrate.
+- REQ-REPORT-6615-SOURCES: Source receipts SHALL preserve every expected,
+  present, missing, blocked, and flagged V576 artifact. They SHALL also retain
+  Exp6593 through Exp6597 and the named continuous-learning prior-failure
+  evidence used by the replay.
+- REQ-REPORT-6615-ROWS: `per_unit_rows` SHALL contain one disposition for every
+  expected V576 source task and every comparative unit group. Each row SHALL
+  retain source hashes, row counts, status, honest verdict, closed verdict
+  class, gate summary, adversarial flags, discrepancies, and missing evidence.
+- REQ-REPORT-6615-GATES: Every `gated_on` edge SHALL name a task in V576. Its
+  `artifact_field` SHALL match the bare field declared by the owner task. A
+  pre-gated skip SHALL retain the conductor gate summary and SHALL not become a
+  scientific null.
+- REQ-REPORT-6615-DECODING: The constrained-decoding replay SHALL recompute
+  identity, headroom, direct and treatment arms, exact success, paired effects,
+  failures, safety curves, cost, and exact authority from available rows. It
+  SHALL preserve blocked arms and SHALL not convert an oracle-defined win into
+  a positive scientific claim.
+- REQ-REPORT-6615-LIVE: The live-projection replay SHALL recompute import
+  reachability, disjoint splits, game-blind features, control-arm effects,
+  exact next-frame timing, and the no-solve boundary. It SHALL reject outer
+  loops, source reads, per-game tuning, and ARC leaderboard promotion.
+- REQ-REPORT-6615-SAMPLER: The sampler replay SHALL recompute independent
+  references, stationary quality, ESS, transitions, wall time, and Python/Rust
+  parity. Its scope SHALL remain software-only and SHALL reject SpecAnn, PIMI,
+  FPGA, TSU, and hardware-performance promotion.
+- REQ-REPORT-6615-LEARNING: The continuous-learning replay SHALL recompute
+  lifecycle transitions, prediction-before-observation chronology, matched
+  dose, held-future benefit, retention, support, safety, occupancy, journal,
+  restart, rollback, and frozen-weight hashes. Missing recovery evidence SHALL
+  remain missing and zero benefit SHALL remain null.
+- REQ-REPORT-6615-VERDICTS: Every task and milestone question SHALL receive one
+  class from `positive`, `circular_positive`, `null`, `blocked`,
+  `disqualified`, or `partial`. The capstone SHALL use `null` or `partial`,
+  never `positive`.
+- REQ-REPORT-6615-BOUNDARIES: Claim rows SHALL keep oracle, ARC, toy, archive,
+  software, hardware, and publication boundaries explicit. PRD gaps SHALL move
+  only when eligible row evidence supports the change.
+- REQ-REPORT-6615-RECONCILIATION: Reconciliation receipts SHALL name the
+  capability spec and architecture evidence date. They SHALL record the former
+  architecture staleness and defer status, changelog, and traceability files to
+  the conductor reconciliation step when that workflow owns those files.
+- REQ-REPORT-6615-ATTACKS: Aggregate-only claims, missing-row erasure,
+  block-to-null conversion, gate spelling drift, model substitution, exact
+  authority substitution, circular-to-positive conversion, ARC solve
+  inflation, software-to-hardware inflation, chronology leakage, rollback
+  invention, and protected-file mutation SHALL each fail closed.
+- REQ-REPORT-6615-ATOMIC: The producer SHALL preserve
+  `research-roadmap.yaml` and `scripts/research_conductor.py`. It SHALL write
+  `results/experiment_6615_v576_independent_capstone.json` through file sync,
+  atomic replacement, and directory sync. The content checksum SHALL exclude
+  only its own field.
+
+The artifact SHALL set
+`inference_substrate=v576_independent_artifact_row_and_architecture_replay_no_llm`
+and `verifier_is_oracle=true`. It SHALL include every field declared by the
+V576 Exp6615 task.
+
+The required fields are `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `per_unit_rows`, `source_artifact_receipts`,
+`roadmap_gate_contract_rows`, `constrained_decoding_replay`,
+`live_projection_replay`, `sampler_replay`, `continuous_learning_replay`,
+`task_disposition_rows`, `prd_gap_disposition`, `claim_boundary_rows`,
+`reconciliation_receipts`, `attack_rows`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6615-MISSING-AND-BLOCKED: Terminal Audit Preserves Every Branch
+
+**Given** a missing source, a blocked source, and a row-complete source
+**When** the capstone builds its source and task matrices
+**Then** every expected task remains present, missing and blocked states retain
+their reasons, and capstone completion does not upgrade source science.
+
+#### SCENARIO-REPORT-6615-GATE-SPELLING: Roadmap Owners Define Bare Fields
+
+**Given** every V576 `gated_on` edge
+**When** the capstone compares the edge with the owner declaration
+**Then** the owner task exists, spelling is identical, observed values remain
+separate from contract validity, and failed gates preserve conductor summaries.
+
+#### SCENARIO-REPORT-6615-ROW-REPLAY: Per-Unit Evidence Owns Comparative Claims
+
+**Given** an available direct, projection, sampler, or learning row store
+**When** the capstone recomputes its comparisons
+**Then** row counts, failures, timing, effects, costs, and hashes agree or the
+affected claim is blocked or disqualified with the discrepancy recorded.
+
+#### SCENARIO-REPORT-6615-CLOSED-VERDICTS: Completion Is Not Positive Science
+
+**Given** all task and milestone question rows
+**When** their dispositions are assigned
+**Then** every class is in the closed enum, source blocks remain blocked,
+critical defects are disqualified, and the capstone is null or partial.
+
+#### SCENARIO-REPORT-6615-CLAIM-BOUNDARIES: Narrow Evidence Cannot Inflate Scope
+
+**Given** oracle, ARC, software sampler, lifecycle, and prospective evidence
+**When** the capstone writes claim boundaries
+**Then** exact adjudication is not mechanism science, ARC work is not a solve,
+software metrics are not hardware performance, and no publication claim grows.
+
+#### SCENARIO-REPORT-6615-DOCUMENT-RECONCILIATION: Documents Follow Evidence
+
+**Given** the previous architecture reconciliation date and terminal V576 rows
+**When** the capstone records reconciliation receipts
+**Then** the architecture names its former staleness and 2026-08-26 evidence
+date while conductor-owned operational documents remain untouched.
+
+#### SCENARIO-REPORT-6615-ATOMIC: Attacks Fail Before Terminal Replacement
+
+**Given** one mutation for every required attack and the protected pre-hashes
+**When** the capstone validates and writes its report
+**Then** all attacks fail closed, both protected hashes still match, the final
+checksum replays, and no partial terminal file remains.
+
+## Implementation Status (REQ-REPORT-6615)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6615 | Planned (`python/carnot/experiment_6615_v576_independent_capstone.py`) | Planned (`tests/python/test_experiment_6615_v576_independent_capstone.py`) |

@@ -1,0 +1,3598 @@
+{
+  "attack_rows": [
+    {
+      "attack_id": "aggregate_only_claim",
+      "detector": "require nonzero source row stores before accepting an aggregate",
+      "fail_closed": true,
+      "mutation": "attempted aggregate only claim",
+      "mutation_applied": true,
+      "observed": 3976,
+      "promotion_allowed": false
+    },
+    {
+      "attack_id": "missing_row_erasure",
+      "detector": "compare the expected task matrix with retained task rows",
+      "fail_closed": true,
+      "mutation": "attempted missing row erasure",
+      "mutation_applied": true,
+      "observed": {
+        "expected": 11,
+        "missing": [
+          "exp6610-constraint-safety-hacking-audit"
+        ]
+      },
+      "promotion_allowed": false
+    },
+    {
+      "attack_id": "block_to_null_conversion",
+      "detector": "classify blocked status before null inference",
+      "fail_closed": true,
+      "mutation": "attempted block to null conversion",
+      "mutation_applied": true,
+      "observed": [
+        "exp6605-qwen36-direct-headroom",
+        "exp6606-gemma4-31b-direct-headroom",
+        "exp6607-gemma4-26b-a4b-direct-headroom",
+        "exp6608-family-headroom-reducer",
+        "exp6609-two-level-constrained-decoding",
+        "exp6610-constraint-safety-hacking-audit",
+        "exp6612-spectral-k-block-scale-rust-parity"
+      ],
+      "promotion_allowed": false
+    },
+    {
+      "attack_id": "gate_spelling_drift",
+      "detector": "compare each artifact_field with the owner REQUIRED ARTIFACT FIELDS block",
+      "fail_closed": true,
+      "mutation": "attempted gate spelling drift",
+      "mutation_applied": true,
+      "observed": true,
+      "promotion_allowed": false
+    },
+    {
+      "attack_id": "model_substitution",
+      "detector": "compare observed repository IDs with the frozen model registry",
+      "fail_closed": true,
+      "mutation": "attempted model substitution",
+      "mutation_applied": true,
+      "observed": {
+        "exp6605-qwen36-direct-headroom": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "exp6606-gemma4-31b-direct-headroom": "unsloth/gemma-4-31b-it-GGUF",
+        "exp6607-gemma4-26b-a4b-direct-headroom": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "promotion_allowed": false
+    },
+    {
+      "attack_id": "exact_authority_substitution",
+      "detector": "bind release authority to the Exp6604 independent executor hash",
+      "fail_closed": true,
+      "mutation": "attempted exact authority substitution",
+      "mutation_applied": true,
+      "observed": "carnot.independent_exact_plan_executor.v1",
+      "promotion_allowed": false
+    },
+    {
+      "attack_id": "circular_to_positive_conversion",
+      "detector": "forbid positive capstone science from oracle-adjudicated source outcomes",
+      "fail_closed": true,
+      "mutation": "attempted circular to positive conversion",
+      "mutation_applied": true,
+      "observed": "capstone_partial_only",
+      "promotion_allowed": false
+    },
+    {
+      "attack_id": "arc_solve_inflation",
+      "detector": "enforce source no-solve fields",
+      "fail_closed": true,
+      "mutation": "attempted arc solve inflation",
+      "mutation_applied": true,
+      "observed": true,
+      "promotion_allowed": false
+    },
+    {
+      "attack_id": "software_to_hardware_inflation",
+      "detector": "enforce CPU software-only sampler scope",
+      "fail_closed": true,
+      "mutation": "attempted software to hardware inflation",
+      "mutation_applied": true,
+      "observed": "cpu_software_only",
+      "promotion_allowed": false
+    },
+    {
+      "attack_id": "chronology_leakage",
+      "detector": "compare prediction completion with observation-open times for every row",
+      "fail_closed": true,
+      "mutation": "attempted chronology leakage",
+      "mutation_applied": true,
+      "observed": true,
+      "promotion_allowed": false
+    },
+    {
+      "attack_id": "rollback_invention",
+      "detector": "require stored restart and rollback byte-equality receipts",
+      "fail_closed": true,
+      "mutation": "attempted rollback invention",
+      "mutation_applied": true,
+      "observed": {
+        "restart": true,
+        "rollback": true
+      },
+      "promotion_allowed": false
+    },
+    {
+      "attack_id": "protected_file_mutation",
+      "detector": "compare current hashes with precondition hashes",
+      "fail_closed": true,
+      "mutation": "attempted protected file mutation",
+      "mutation_applied": true,
+      "observed": true,
+      "promotion_allowed": false
+    }
+  ],
+  "claim_boundary_rows": [
+    {
+      "boundary": "oracle",
+      "evidence_scope": "exact source-claim adjudication",
+      "promotion_allowed": false,
+      "reason": "oracle-defined outcomes are not independent mechanism science"
+    },
+    {
+      "boundary": "arc",
+      "evidence_scope": "archived exact-next-frame transitions",
+      "promotion_allowed": false,
+      "reason": "no game, level, leaderboard, or outer-loop solve claim"
+    },
+    {
+      "boundary": "toy",
+      "evidence_scope": "bounded exact plan and Ising fixtures",
+      "promotion_allowed": false,
+      "reason": "fixture evidence does not establish general capability"
+    },
+    {
+      "boundary": "archive",
+      "evidence_scope": "immutable read-only transition corpus",
+      "promotion_allowed": false,
+      "reason": "archive replay is not fresh environment interaction"
+    },
+    {
+      "boundary": "software",
+      "evidence_scope": "CPU Python and Rust measurements",
+      "promotion_allowed": true,
+      "reason": "only the observed software metrics remain eligible"
+    },
+    {
+      "boundary": "hardware",
+      "evidence_scope": "no attached accelerator execution",
+      "promotion_allowed": false,
+      "reason": "no FPGA, TSU, power, energy, or hardware-performance evidence"
+    },
+    {
+      "boundary": "publication",
+      "evidence_scope": "internal terminal audit",
+      "promotion_allowed": false,
+      "reason": "no public publication asset or claim is changed"
+    }
+  ],
+  "constrained_decoding_replay": {
+    "direct_arms": {
+      "exp6605-qwen36-direct-headroom": {
+        "calibration_exact_success": 14,
+        "calibration_row_count": 108,
+        "charged_failure_count": 174,
+        "expected_model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "expected_row_count": 216,
+        "failure_class_counts": {
+          "None": 42,
+          "invalid_generation": 23,
+          "semantic_failure": 56,
+          "syntax_failure": 95
+        },
+        "gate_check_summary": {
+          "all_passed": false,
+          "expected": true,
+          "failed_condition": "gpu_process_receipts",
+          "observed": false,
+          "upstream": {
+            "headroom_fixture_ready_score": 1.0,
+            "path": "results/experiment_6604_exact_two_level_plan_corpus.json",
+            "task_count": 72
+          }
+        },
+        "gpu_sessions_authentic": false,
+        "headroom_eligible": false,
+        "held_exact_success": 28,
+        "held_exact_success_rate": 0.25925925925925924,
+        "held_rate_in_closed_interval": true,
+        "held_row_count": 108,
+        "identity_match": true,
+        "observed_model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "row_count": 216,
+        "row_hash_replay": {
+          "checked": 216,
+          "mismatch_count": 0,
+          "mismatches": []
+        },
+        "source_state": "present"
+      },
+      "exp6606-gemma4-31b-direct-headroom": {
+        "calibration_exact_success": 0,
+        "calibration_row_count": 0,
+        "charged_failure_count": 0,
+        "expected_model": "unsloth/gemma-4-31b-it-GGUF",
+        "expected_row_count": 216,
+        "failure_class_counts": {},
+        "gate_check_summary": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+        "gpu_sessions_authentic": false,
+        "headroom_eligible": false,
+        "held_exact_success": 0,
+        "held_exact_success_rate": null,
+        "held_rate_in_closed_interval": false,
+        "held_row_count": 0,
+        "identity_match": false,
+        "observed_model": null,
+        "row_count": 0,
+        "row_hash_replay": {
+          "checked": 0,
+          "mismatch_count": 0,
+          "mismatches": []
+        },
+        "source_state": "present"
+      },
+      "exp6607-gemma4-26b-a4b-direct-headroom": {
+        "calibration_exact_success": 0,
+        "calibration_row_count": 0,
+        "charged_failure_count": 0,
+        "expected_model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "expected_row_count": 216,
+        "failure_class_counts": {},
+        "gate_check_summary": {
+          "all_passed": false,
+          "expected": true,
+          "failed_condition": "gpu_ownership",
+          "observed": false
+        },
+        "gpu_sessions_authentic": false,
+        "headroom_eligible": false,
+        "held_exact_success": 0,
+        "held_exact_success_rate": null,
+        "held_rate_in_closed_interval": false,
+        "held_row_count": 0,
+        "identity_match": true,
+        "observed_model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "row_count": 0,
+        "row_hash_replay": {
+          "checked": 0,
+          "mismatch_count": 0,
+          "mismatches": []
+        },
+        "source_state": "present"
+      }
+    },
+    "exact_release_authority": {
+      "compiler_acceptance_input_used": false,
+      "executor_version": "carnot.independent_exact_plan_executor.v1",
+      "module_sha256": "b5256b27c497cf5298979f4ef09fe2d2f8359bb252e6ae00c7824e17db2ed77a",
+      "oracle_distinct": true
+    },
+    "family_reducer": {
+      "eligible_model_count": 0,
+      "ready_score": 0.0,
+      "row_count": 648
+    },
+    "oracle_defined_win_promoted_to_positive": false,
+    "reason": "no eligible family reached a row-complete treatment comparison",
+    "treatment_arms": {
+      "exp6609-two-level-constrained-decoding": {
+        "charged_cost": 0,
+        "failures_retained": 0,
+        "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6608-family-headroom-reducer.headroom_benchmark_ready_score (actual=0.0 == expected=1.0)",
+        "missing_evidence": [
+          "treatment per-unit rows"
+        ],
+        "paired_effects": "unavailable",
+        "row_count": 0,
+        "safety_hacking_curve": "unavailable",
+        "source_state": "present"
+      },
+      "exp6610-constraint-safety-hacking-audit": {
+        "charged_cost": 0,
+        "failures_retained": 0,
+        "gate_check_summary": null,
+        "missing_evidence": [
+          "treatment per-unit rows"
+        ],
+        "paired_effects": "unavailable",
+        "row_count": 0,
+        "safety_hacking_curve": "unavailable",
+        "source_state": "missing"
+      }
+    },
+    "verdict_class": "blocked"
+  },
+  "continuous_learning_replay": {
+    "all_lifecycle_transitions_passed": true,
+    "all_predictions_before_observations": true,
+    "all_restart_equal": true,
+    "all_rollback_equal": true,
+    "archive_restore_equal": true,
+    "commit_count": 0,
+    "corrupt_journal_failed_closed": true,
+    "failure_count": 8,
+    "frozen_weights_unchanged": true,
+    "held_future_benefit_over_shuffled": 0.0,
+    "held_future_benefit_over_static": 0.0,
+    "held_future_pairs": 36,
+    "interrupted_write_recovered": true,
+    "journal_check_count": 7,
+    "journal_checks_passed": true,
+    "lifecycle_base_policy_unchanged": true,
+    "lifecycle_row_hash_replay": {
+      "checked": 0,
+      "mismatch_count": 0,
+      "mismatches": []
+    },
+    "lifecycle_source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6613_invariant_memory_lifecycle.json",
+    "lifecycle_transition_count": 27,
+    "matched_dose": true,
+    "maximum_occupancy": 0,
+    "memory_transition_count": 144,
+    "memory_transition_hash_replay": {
+      "checked": 144,
+      "mismatch_count": 0,
+      "mismatches": []
+    },
+    "model_weight_mutation_count": 0,
+    "prediction_timing_hash_replay": {
+      "checked": 352,
+      "mismatch_count": 0,
+      "mismatches": []
+    },
+    "prediction_timing_row_count": 352,
+    "prospective_row_count": 352,
+    "prospective_row_hash_replay": {
+      "checked": 352,
+      "mismatch_count": 0,
+      "mismatches": []
+    },
+    "prospective_source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6614_prospective_invariant_self_learning.json",
+    "retention_noninferior": true,
+    "row_count_by_arm": {
+      "governed_online_memory": 88,
+      "no_learning": 88,
+      "shuffled_admission_control": 88,
+      "static_projector": 88
+    },
+    "scientific_reason": "held-future benefit is exactly zero against both controls",
+    "scientific_verdict_class": "null",
+    "source_artifact_reason": "the stored verdict class is outside the closed enum and current adversarial verification marks it critical",
+    "source_artifact_verdict_class": "disqualified",
+    "support_noninferior": true,
+    "unsafe_commit_count": 0
+  },
+  "duration_s": 1.265496,
+  "experiment_id": "exp6615-v576-independent-capstone",
+  "field_provenance": {
+    "attack_rows": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Aggregate, erasure, conversion, gate, identity, authority, circularity, ARC, hardware, chronology, recovery, and mutation attacks fail closed.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    },
+    "claim_boundary_rows": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Oracle, ARC, toy, archive, software, hardware, and publication boundaries remain explicit.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    },
+    "constrained_decoding_replay": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Headroom, arms, paired effects, failures, safety curves, cost, identity, and exact authority replay from rows.",
+      "replay_function": "replay_constrained_decoding",
+      "sources": "Exp6604-Exp6610 artifacts and embedded rows",
+      "spec": "REQ-REPORT-6615"
+    },
+    "continuous_learning_replay": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Lifecycle, chronology, dose, benefit, retention, support, safety, recovery, and immutable weights replay.",
+      "replay_function": "replay_continuous_learning",
+      "sources": "Exp6613-Exp6614 artifacts and embedded rows",
+      "spec": "REQ-REPORT-6615"
+    },
+    "duration_s": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Monotonic duration covers every available task, attack, reconciliation, and test.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    },
+    "field_provenance": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Every field names artifacts, raw rows, hashes, replay functions, specs, and documents.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    },
+    "gate_check_summary": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Any capstone block names the failed source, row, gate, hash, authority, replay, document, or test and observed value.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    },
+    "honest_verdict": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "The verdict states independent milestone dispositions without upgrading completeness to science.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    },
+    "inference_substrate": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "The task declares independent artifact and row replay with no LLM.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    },
+    "live_projection_replay": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Live reachability, splits, features, controls, errors, timing, and no-solve boundary replay independently.",
+      "replay_function": "replay_live_projection",
+      "sources": "Exp6611 artifact and embedded rows",
+      "spec": "REQ-REPORT-6615"
+    },
+    "per_unit_rows": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Every expected task and comparative unit group has an independent source, row, verdict, and discrepancy disposition.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    },
+    "prd_gap_disposition": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "FR-11, FR-12, live-path, and hardware gaps are updated only from eligible evidence.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    },
+    "preconditions_checked": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Tasks, artifacts, gates, models, authorities, registries, references, chronology, documents, and protected files are explicit.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    },
+    "protected_files_unchanged": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "research-roadmap.yaml and scripts/research_conductor.py retain original hashes.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "precondition SHA-256 hashes and current file bytes",
+      "spec": "REQ-REPORT-6615"
+    },
+    "reconciliation_receipts": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Specs, traceability, architecture, status, and changelog name changed files, evidence, and checks.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "capability spec, architecture, and conductor-owned documents",
+      "spec": "REQ-REPORT-6615"
+    },
+    "reproducibility_checksum": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "A final content hash protects the independent capstone.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    },
+    "roadmap_gate_contract_rows": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Every same-roadmap gate binds an existing owner task and identically spelled required field.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "research-roadmap.yaml task prompts and gated_on edges",
+      "spec": "REQ-REPORT-6615"
+    },
+    "sampler_replay": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "References, stationary metrics, ESS, cost, parity, and software-only scope replay from rows.",
+      "replay_function": "replay_sampler",
+      "sources": "Exp6597 and Exp6612 artifacts and embedded rows",
+      "spec": "REQ-REPORT-6615"
+    },
+    "source_artifact_receipts": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "All expected, present, missing, blocked, and flagged artifacts retain paths, hashes, and terminal states.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    },
+    "status": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "The capstone is terminal even when scientific branches are missing or blocked.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    },
+    "task_disposition_rows": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Every task receives one closed verdict class with evidence and blocker reasons.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    },
+    "tests_run": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Named focused, lint, spec, roadmap, gate, artifact, adversarial, and E2E commands include exits and durations.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "named command receipts supplied by the executing capstone workflow",
+      "spec": "REQ-REPORT-6615"
+    },
+    "verdict_class": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Use the closed enum; the capstone itself is null or partial, never positive.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    },
+    "verifier_is_oracle": {
+      "documents": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "_bmad/architecture.md"
+      ],
+      "principle": "Exact checks adjudicate source claims, while the capstone makes no positive science claim.",
+      "replay_function": "build_artifact or validate_artifact",
+      "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
+      "spec": "REQ-REPORT-6615"
+    }
+  },
+  "gate_check_summary": {
+    "all_roadmap_gate_contracts_valid": true,
+    "capstone_blocked": false,
+    "capstone_terminal": true,
+    "critical_adversarial_sources": [
+      "exp6614-prospective-invariant-self-learning"
+    ],
+    "failed_source_branches": [
+      {
+        "observed": {
+          "all_passed": false,
+          "expected": true,
+          "failed_condition": "gpu_process_receipts",
+          "observed": false,
+          "upstream": {
+            "headroom_fixture_ready_score": 1.0,
+            "path": "results/experiment_6604_exact_two_level_plan_corpus.json",
+            "task_count": 72
+          }
+        },
+        "status": "blocked_gpu_process_receipts",
+        "task_id": "exp6605-qwen36-direct-headroom",
+        "verdict_class": "blocked"
+      },
+      {
+        "observed": [
+          "source verdict_class is missing"
+        ],
+        "status": "blocked",
+        "task_id": "exp6606-gemma4-31b-direct-headroom",
+        "verdict_class": "blocked"
+      },
+      {
+        "observed": {
+          "all_passed": false,
+          "expected": true,
+          "failed_condition": "gpu_ownership",
+          "observed": false
+        },
+        "status": "blocked_gpu_ownership",
+        "task_id": "exp6607-gemma4-26b-a4b-direct-headroom",
+        "verdict_class": "blocked"
+      },
+      {
+        "observed": {
+          "all_passed": false,
+          "checks": [
+            {
+              "check": "qwen36.source_complete",
+              "details": [
+                "upstream_blocked:blocked_gpu_ownership",
+                "missing_rows:216",
+                "row_order_mismatch",
+                "invalid_rows:216",
+                "process_identity_invalid"
+              ],
+              "expected": true,
+              "observed": false,
+              "passed": false
+            },
+            {
+              "check": "gemma31.source_complete",
+              "details": [
+                "upstream_blocked:blocked",
+                "source_checksum_mismatch",
+                "missing_rows:216",
+                "row_order_mismatch",
+                "invalid_rows:216",
+                "model_identity_invalid",
+                "process_identity_invalid",
+                "reported_aggregate_mismatch"
+              ],
+              "expected": true,
+              "observed": false,
+              "passed": false
+            },
+            {
+              "check": "gemma26.source_complete",
+              "details": [
+                "upstream_blocked:blocked_gpu_ownership",
+                "missing_rows:216",
+                "row_order_mismatch",
+                "invalid_rows:216",
+                "process_identity_invalid"
+              ],
+              "expected": true,
+              "observed": false,
+              "passed": false
+            },
+            {
+              "check": "eligible_family_count",
+              "details": [],
+              "expected": ">=1",
+              "observed": 0,
+              "passed": false
+            },
+            {
+              "check": "selected_contracts_immutable",
+              "details": [],
+              "expected": true,
+              "observed": true,
+              "passed": true
+            }
+          ],
+          "failed_checks": [
+            {
+              "check": "qwen36.source_complete",
+              "details": [
+                "upstream_blocked:blocked_gpu_ownership",
+                "missing_rows:216",
+                "row_order_mismatch",
+                "invalid_rows:216",
+                "process_identity_invalid"
+              ],
+              "expected": true,
+              "observed": false,
+              "passed": false
+            },
+            {
+              "check": "gemma31.source_complete",
+              "details": [
+                "upstream_blocked:blocked",
+                "source_checksum_mismatch",
+                "missing_rows:216",
+                "row_order_mismatch",
+                "invalid_rows:216",
+                "model_identity_invalid",
+                "process_identity_invalid",
+                "reported_aggregate_mismatch"
+              ],
+              "expected": true,
+              "observed": false,
+              "passed": false
+            },
+            {
+              "check": "gemma26.source_complete",
+              "details": [
+                "upstream_blocked:blocked_gpu_ownership",
+                "missing_rows:216",
+                "row_order_mismatch",
+                "invalid_rows:216",
+                "process_identity_invalid"
+              ],
+              "expected": true,
+              "observed": false,
+              "passed": false
+            },
+            {
+              "check": "eligible_family_count",
+              "details": [],
+              "expected": ">=1",
+              "observed": 0,
+              "passed": false
+            }
+          ]
+        },
+        "status": "blocked_family_baseline_evidence",
+        "task_id": "exp6608-family-headroom-reducer",
+        "verdict_class": "blocked"
+      },
+      {
+        "observed": [
+          "source verdict_class is missing"
+        ],
+        "status": "blocked",
+        "task_id": "exp6609-two-level-constrained-decoding",
+        "verdict_class": "blocked"
+      },
+      {
+        "observed": [
+          "results/experiment_6610_constraint_safety_hacking_audit.json"
+        ],
+        "status": "missing",
+        "task_id": "exp6610-constraint-safety-hacking-audit",
+        "verdict_class": "blocked"
+      },
+      {
+        "observed": [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "exit_code": 3,
+            "gate": "toolchain_or_test_failure"
+          }
+        ],
+        "status": "blocked_reference_parity_cost_or_protection",
+        "task_id": "exp6612-spectral-k-block-scale-rust-parity",
+        "verdict_class": "blocked"
+      },
+      {
+        "observed": [
+          "current adversarial verification found a critical defect"
+        ],
+        "status": "blocked_tests",
+        "task_id": "exp6614-prospective-invariant-self-learning",
+        "verdict_class": "disqualified"
+      }
+    ],
+    "missing_source_paths": [
+      "results/experiment_6610_constraint_safety_hacking_audit.json"
+    ],
+    "observed_upstream_gate_count": 8,
+    "observed_upstream_gates_passed": 6
+  },
+  "honest_verdict": "complete_partial: all available V576 evidence was independently replayed; decoding remains blocked, live projection is null, sampler evidence is partial and software-only, lifecycle is conformant without utility, and prospective self-learning has zero benefit with a disqualified source verdict field",
+  "inference_substrate": "v576_independent_artifact_row_and_architecture_replay_no_llm",
+  "live_projection_replay": {
+    "all_predictions_before_observations": true,
+    "arc_solve_claim": false,
+    "arm_summaries": {
+      "no_projection": {
+        "failure_count": 2,
+        "mean": 180.30769230769232,
+        "row_count": 52,
+        "sum": 9376.0
+      },
+      "norm_matched_random_projection": {
+        "failure_count": 2,
+        "mean": 180.30769230769232,
+        "row_count": 52,
+        "sum": 9376.0
+      },
+      "selected_invariant_projection": {
+        "failure_count": 2,
+        "mean": 180.30769230769232,
+        "row_count": 52,
+        "sum": 9376.0
+      }
+    },
+    "calibration_games": [
+      "cd82",
+      "cn04",
+      "dc22",
+      "g50t",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "re86",
+      "s5i5",
+      "sb26",
+      "su15",
+      "vc33"
+    ],
+    "calibration_held_disjoint": true,
+    "default_enabled": false,
+    "game_blind_features": true,
+    "held_games": [
+      "ar25",
+      "bp35",
+      "ft09",
+      "ka59",
+      "lf52",
+      "lp85",
+      "sc25",
+      "sk48",
+      "sp80",
+      "tn36",
+      "tr87",
+      "tu93",
+      "wa30"
+    ],
+    "live_import_reachable": true,
+    "outer_loop_claim": false,
+    "per_game_promotion": false,
+    "reason": "selected projection had zero exact-error effect versus both controls",
+    "row_count": 156,
+    "row_hash_replay": {
+      "checked": 0,
+      "mismatch_count": 0,
+      "mismatches": []
+    },
+    "selected_minus_no_projection_mean_error": 0.0,
+    "selected_minus_random_mean_error": 0.0,
+    "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6611_live_arc_invariant_projection.json",
+    "verdict_class": "null"
+  },
+  "per_unit_rows": [
+    {
+      "adversarial_flags": [
+        {
+          "detail": "inference_substrate='deterministic_two_level_plan_fixture_and_exact_executor_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.",
+          "kind": "SUBSTRATE_NO_LLM_BY_NAME",
+          "severity": "warn"
+        }
+      ],
+      "discrepancies": [],
+      "experiment_number": 6604,
+      "gate_check_summary": {
+        "all_passed": true,
+        "checks": [
+          {
+            "gate": "corpus",
+            "observed": {
+              "errors": [],
+              "passed": true
+            },
+            "passed": true
+          },
+          {
+            "gate": "task_count",
+            "observed": 72,
+            "passed": true
+          },
+          {
+            "gate": "split_counts",
+            "observed": 36,
+            "passed": true
+          },
+          {
+            "gate": "token_compiler",
+            "observed": 72,
+            "passed": true
+          },
+          {
+            "gate": "semantic_compiler",
+            "observed": 72,
+            "passed": true
+          },
+          {
+            "gate": "executor_oracle_distinct",
+            "observed": true,
+            "passed": true
+          },
+          {
+            "gate": "mutations",
+            "observed": 373,
+            "passed": true
+          },
+          {
+            "gate": "omitted_encoding",
+            "observed": [
+              {
+                "both_encoded_automata_accept": true,
+                "candidate_plan": "OPEN(crate_c00)\nPICK(parcel_c00)\nCHECK(parcel_c00)\nPLACE(parcel_c00,crate_c00)\nCLOSE(crate_c00)\nSHIP(crate_c00,dock_c00)",
+                "candidate_sha256": "3f59b27fe9eff92d544147f2eb6cfb96dce00e2cc74750b48bd6d8eb92a8c453",
+                "exact_reason": "precondition_violation",
+                "exact_valid": false,
+                "failed_as_expected": true,
+                "mutation_id": "plan-calibration-00:omitted_obligation",
+                "mutation_type": "omitted_obligation",
+                "omitted_obligation_id": "audit_before_ship",
+                "semantic_accept": true,
+                "split": "calibration",
+                "syntax_accept": true,
+                "task_id": "plan-calibration-00"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "gate": "attacks",
+            "observed": 9,
+            "passed": true
+          },
+          {
+            "gate": "tests",
+            "observed": [
+              {
+                "command": ".venv/bin/pytest tests/python/test_pipeline_extract.py tests/python/test_docs.py tests/python/test_experiment_6604_exact_two_level_plan_corpus.py -q --no-header -n 0 --no-cov -o addopts=",
+                "duration_s": 14.94,
+                "exit_code": 0
+              },
+              {
+                "command": "pytest focused Exp6604 with scoped coverage plus coverage report --fail-under=100",
+                "duration_s": 10.8,
+                "exit_code": 0
+              },
+              {
+                "command": "ruff check and format --check Exp6604 module and tests",
+                "duration_s": 0.3,
+                "exit_code": 0
+              },
+              {
+                "command": "mypy python/carnot/experiment_6604_exact_two_level_plan_corpus.py",
+                "duration_s": 0.3,
+                "exit_code": 0
+              },
+              {
+                "command": "python scripts/check_spec_coverage.py tests/python/test_experiment_6604_exact_two_level_plan_corpus.py",
+                "duration_s": 0.1,
+                "exit_code": 0
+              },
+              {
+                "command": "pytest tests/python/test_conductor_fix_erasure_gate.py --no-cov",
+                "duration_s": 1.21,
+                "exit_code": 0
+              }
+            ],
+            "passed": true
+          },
+          {
+            "gate": "protected_files",
+            "observed": true,
+            "passed": true
+          }
+        ],
+        "failed_checks": []
+      },
+      "honest_verdict": "complete: exact two-level plan corpus and oracle-distinct executor are ready; this is null infrastructure and no model benefit was measured",
+      "missing_evidence": [],
+      "row_kind": "task",
+      "row_store_counts": {
+        "mutation_rows": 373,
+        "plan_fixture_rows": 72
+      },
+      "source_hashes": [
+        "sha256:fc5ed4d0ec8e1355e8732fc7dc2d9c6f81c23a3e8677728f3dfa1161c9c948d0"
+      ],
+      "source_path": "results/experiment_6604_exact_two_level_plan_corpus.json",
+      "source_state": "present",
+      "status": "complete",
+      "unit_id": "exp6604-exact-two-level-plan-corpus",
+      "verdict_class": "null"
+    },
+    {
+      "adversarial_flags": [],
+      "discrepancies": [],
+      "experiment_number": 6605,
+      "gate_check_summary": {
+        "all_passed": false,
+        "expected": true,
+        "failed_condition": "gpu_process_receipts",
+        "observed": false,
+        "upstream": {
+          "headroom_fixture_ready_score": 1.0,
+          "path": "results/experiment_6604_exact_two_level_plan_corpus.json",
+          "task_count": 72
+        }
+      },
+      "honest_verdict": "blocked_gpu_process_receipts: direct baseline integrity did not complete",
+      "missing_evidence": [],
+      "row_kind": "task",
+      "row_store_counts": {
+        "per_unit_rows": 216
+      },
+      "source_hashes": [
+        "sha256:a52f92667200db339b4519acdf30b2ec59eec18aa9d24e3ebd93fbcb659b096a"
+      ],
+      "source_path": "results/experiment_6605_qwen36_direct_headroom.json",
+      "source_state": "present",
+      "status": "blocked_gpu_process_receipts",
+      "unit_id": "exp6605-qwen36-direct-headroom",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flags": [],
+      "discrepancies": [
+        "source verdict_class is missing"
+      ],
+      "experiment_number": 6606,
+      "gate_check_summary": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+      "honest_verdict": "blocked_gate_check_failed",
+      "missing_evidence": [],
+      "row_kind": "task",
+      "row_store_counts": {},
+      "source_hashes": [
+        "sha256:d68fd386f007d1a44182d1562da124f4c4589f5c7fd6a0e4577b13159003dedc"
+      ],
+      "source_path": "results/experiment_6606_gemma4_31b_direct_headroom.json",
+      "source_state": "present",
+      "status": "blocked",
+      "unit_id": "exp6606-gemma4-31b-direct-headroom",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flags": [],
+      "discrepancies": [],
+      "experiment_number": 6607,
+      "gate_check_summary": {
+        "all_passed": false,
+        "expected": true,
+        "failed_condition": "gpu_ownership",
+        "observed": false
+      },
+      "honest_verdict": "blocked_gpu_ownership: expected True, observed False",
+      "missing_evidence": [],
+      "row_kind": "task",
+      "row_store_counts": {
+        "per_unit_rows": 0
+      },
+      "source_hashes": [
+        "sha256:c428c38a8544b22cfec528155f103dfcd38cd555023a5db5c2e3056561c2052a"
+      ],
+      "source_path": "results/experiment_6607_gemma4_26b_direct_headroom.json",
+      "source_state": "present",
+      "status": "blocked_gpu_ownership",
+      "unit_id": "exp6607-gemma4-26b-a4b-direct-headroom",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flags": [],
+      "discrepancies": [],
+      "experiment_number": 6608,
+      "gate_check_summary": {
+        "all_passed": false,
+        "checks": [
+          {
+            "check": "qwen36.source_complete",
+            "details": [
+              "upstream_blocked:blocked_gpu_ownership",
+              "missing_rows:216",
+              "row_order_mismatch",
+              "invalid_rows:216",
+              "process_identity_invalid"
+            ],
+            "expected": true,
+            "observed": false,
+            "passed": false
+          },
+          {
+            "check": "gemma31.source_complete",
+            "details": [
+              "upstream_blocked:blocked",
+              "source_checksum_mismatch",
+              "missing_rows:216",
+              "row_order_mismatch",
+              "invalid_rows:216",
+              "model_identity_invalid",
+              "process_identity_invalid",
+              "reported_aggregate_mismatch"
+            ],
+            "expected": true,
+            "observed": false,
+            "passed": false
+          },
+          {
+            "check": "gemma26.source_complete",
+            "details": [
+              "upstream_blocked:blocked_gpu_ownership",
+              "missing_rows:216",
+              "row_order_mismatch",
+              "invalid_rows:216",
+              "process_identity_invalid"
+            ],
+            "expected": true,
+            "observed": false,
+            "passed": false
+          },
+          {
+            "check": "eligible_family_count",
+            "details": [],
+            "expected": ">=1",
+            "observed": 0,
+            "passed": false
+          },
+          {
+            "check": "selected_contracts_immutable",
+            "details": [],
+            "expected": true,
+            "observed": true,
+            "passed": true
+          }
+        ],
+        "failed_checks": [
+          {
+            "check": "qwen36.source_complete",
+            "details": [
+              "upstream_blocked:blocked_gpu_ownership",
+              "missing_rows:216",
+              "row_order_mismatch",
+              "invalid_rows:216",
+              "process_identity_invalid"
+            ],
+            "expected": true,
+            "observed": false,
+            "passed": false
+          },
+          {
+            "check": "gemma31.source_complete",
+            "details": [
+              "upstream_blocked:blocked",
+              "source_checksum_mismatch",
+              "missing_rows:216",
+              "row_order_mismatch",
+              "invalid_rows:216",
+              "model_identity_invalid",
+              "process_identity_invalid",
+              "reported_aggregate_mismatch"
+            ],
+            "expected": true,
+            "observed": false,
+            "passed": false
+          },
+          {
+            "check": "gemma26.source_complete",
+            "details": [
+              "upstream_blocked:blocked_gpu_ownership",
+              "missing_rows:216",
+              "row_order_mismatch",
+              "invalid_rows:216",
+              "process_identity_invalid"
+            ],
+            "expected": true,
+            "observed": false,
+            "passed": false
+          },
+          {
+            "check": "eligible_family_count",
+            "details": [],
+            "expected": ">=1",
+            "observed": 0,
+            "passed": false
+          }
+        ]
+      },
+      "honest_verdict": "blocked_family_baseline_evidence: no family has complete replayable baseline rows; eligibility is frozen empty and no treatment benefit is claimed",
+      "missing_evidence": [],
+      "row_kind": "task",
+      "row_store_counts": {
+        "family_replay_rows": 3,
+        "per_unit_rows": 648
+      },
+      "source_hashes": [
+        "sha256:85da1e31b22992fa981a4aa5616e7cb9689803d398a1084c7c746c177c4a2d10"
+      ],
+      "source_path": "results/experiment_6608_family_headroom_reducer.json",
+      "source_state": "present",
+      "status": "blocked_family_baseline_evidence",
+      "unit_id": "exp6608-family-headroom-reducer",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flags": [],
+      "discrepancies": [
+        "source verdict_class is missing"
+      ],
+      "experiment_number": 6609,
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6608-family-headroom-reducer.headroom_benchmark_ready_score (actual=0.0 == expected=1.0)",
+      "honest_verdict": "blocked_gate_check_failed",
+      "missing_evidence": [],
+      "row_kind": "task",
+      "row_store_counts": {},
+      "source_hashes": [
+        "sha256:ef2b87112aedc45b53793d06bbff1dceff7fb091f4bde0141b0800df9edb8b2a"
+      ],
+      "source_path": "results/experiment_6609_two_level_constrained_decoding.json",
+      "source_state": "present",
+      "status": "blocked",
+      "unit_id": "exp6609-two-level-constrained-decoding",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flags": [],
+      "discrepancies": [
+        "source artifact is missing"
+      ],
+      "experiment_number": 6610,
+      "gate_check_summary": {
+        "blocked": true,
+        "reason": "expected source artifact is missing"
+      },
+      "honest_verdict": "missing artifact",
+      "missing_evidence": [
+        "results/experiment_6610_constraint_safety_hacking_audit.json"
+      ],
+      "row_kind": "task",
+      "row_store_counts": {},
+      "source_hashes": [],
+      "source_path": "results/experiment_6610_constraint_safety_hacking_audit.json",
+      "source_state": "missing",
+      "status": "missing",
+      "unit_id": "exp6610-constraint-safety-hacking-audit",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flags": [],
+      "discrepancies": [],
+      "experiment_number": 6611,
+      "gate_check_summary": {
+        "blocked": false,
+        "bounded_cost": true,
+        "candidate_held_win": false,
+        "failed_checks": [],
+        "game_disjoint": true,
+        "no_runtime_validity_loss": true,
+        "separated_from_random_projection": false,
+        "strictly_lower_than_no_projection": false
+      },
+      "honest_verdict": "complete_held_world_model_prediction_projection_no_effect_no_solve_claim",
+      "missing_evidence": [],
+      "row_kind": "task",
+      "row_store_counts": {
+        "per_unit_rows": 156
+      },
+      "source_hashes": [
+        "sha256:8d8a975e545887cd313ef444c710ca7cc1318840047ca0e4256045eec587ec51"
+      ],
+      "source_path": "results/experiment_6611_live_arc_invariant_projection.json",
+      "source_state": "present",
+      "status": "complete_live_reachable_comparison",
+      "unit_id": "exp6611-live-arc-invariant-projection",
+      "verdict_class": "null"
+    },
+    {
+      "adversarial_flags": [],
+      "discrepancies": [],
+      "experiment_number": 6612,
+      "gate_check_summary": [
+        {
+          "command": ".venv/bin/pytest tests/python -q",
+          "exit_code": 3,
+          "gate": "toolchain_or_test_failure"
+        }
+      ],
+      "honest_verdict": "blocked_reference_parity_cost_or_protection: stationary, transition, wall, and parity conclusions are withheld; CPU software only",
+      "missing_evidence": [],
+      "row_kind": "task",
+      "row_store_counts": {
+        "per_unit_rows": 240,
+        "rust_python_parity_rows": 60
+      },
+      "source_hashes": [
+        "sha256:c49aaee1d2ac5318b2ea680c009719e770d4b30993eff9934cc6a864f335dbf0"
+      ],
+      "source_path": "results/experiment_6612_spectral_k_block_scale_rust_parity.json",
+      "source_state": "present",
+      "status": "blocked_reference_parity_cost_or_protection",
+      "unit_id": "exp6612-spectral-k-block-scale-rust-parity",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flags": [
+        {
+          "detail": "inference_substrate='deterministic_verifier_governed_invariant_memory_lifecycle_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.",
+          "kind": "SUBSTRATE_NO_LLM_BY_NAME",
+          "severity": "warn"
+        },
+        {
+          "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "discrepancies": [
+        "source verdict_class is missing"
+      ],
+      "experiment_number": 6613,
+      "gate_check_summary": {
+        "blocked": false,
+        "blocked_value": null,
+        "failed_checks": [],
+        "hash": true,
+        "journal": true,
+        "lifecycle": true,
+        "no_utility_claim": true,
+        "non_gating_test_failures": [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "disposition": "pre_existing_suite_failure",
+            "exit_code": 130
+          }
+        ],
+        "occupancy": true,
+        "poison": true,
+        "protection": true,
+        "ready": true,
+        "resource": true,
+        "restart": true,
+        "rollback": true,
+        "schema": true,
+        "tests": true,
+        "upstream": true
+      },
+      "honest_verdict": "complete_invariant_memory_lifecycle_conformance_no_utility_claim",
+      "missing_evidence": [],
+      "row_kind": "task",
+      "row_store_counts": {
+        "lifecycle_transition_rows": 27
+      },
+      "source_hashes": [
+        "sha256:7b0437efcd78ae3c082d7dc9ec8c8e81bdd8724a05246e367b3079f6036a856c"
+      ],
+      "source_path": "results/experiment_6613_invariant_memory_lifecycle.json",
+      "source_state": "present",
+      "status": "complete_invariant_memory_lifecycle_conformance",
+      "unit_id": "exp6613-invariant-memory-lifecycle",
+      "verdict_class": "null"
+    },
+    {
+      "adversarial_flags": [
+        {
+          "detail": "verdict_class='blocked_tests' is outside the closed enum ['blocked', 'circular_positive', 'disqualified', 'null', 'partial', 'positive']. The enum is closed on purpose — extending it per-artifact recreates the drifting-token-list problem this field replaces. Pick the nearest class and put the nuance in honest_verdict.",
+          "kind": "VERDICT_CLASS_MISMATCH",
+          "severity": "critical"
+        }
+      ],
+      "discrepancies": [
+        "current adversarial verification found a critical defect"
+      ],
+      "experiment_number": 6614,
+      "gate_check_summary": {
+        "all_gates_passed": false,
+        "blocked": true,
+        "candidate_win": false,
+        "failed_blocking_gates": [
+          "tests"
+        ],
+        "failed_gates": [
+          "held_future_over_static",
+          "held_future_over_shuffled",
+          "tests"
+        ],
+        "rows_recomputed": true
+      },
+      "honest_verdict": "blocked_tests: failed tests with observed=False",
+      "missing_evidence": [],
+      "row_kind": "task",
+      "row_store_counts": {
+        "memory_transition_rows": 144,
+        "per_unit_rows": 352,
+        "prediction_before_observation_rows": 352
+      },
+      "source_hashes": [
+        "sha256:051c2401b7d79ad9d9f69d6ba9661ffdf053e516a125fe2c28959956cff848b9"
+      ],
+      "source_path": "results/experiment_6614_prospective_invariant_self_learning.json",
+      "source_state": "present",
+      "status": "blocked_tests",
+      "unit_id": "exp6614-prospective-invariant-self-learning",
+      "verdict_class": "disqualified"
+    },
+    {
+      "adversarial_flags": [],
+      "discrepancies": [
+        "source verdict_class is missing"
+      ],
+      "experiment_number": null,
+      "gate_check_summary": [
+        {
+          "all_passed": false,
+          "expected": true,
+          "failed_condition": "gpu_process_receipts",
+          "observed": false,
+          "upstream": {
+            "headroom_fixture_ready_score": 1.0,
+            "path": "results/experiment_6604_exact_two_level_plan_corpus.json",
+            "task_count": 72
+          }
+        },
+        "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+        {
+          "all_passed": false,
+          "expected": true,
+          "failed_condition": "gpu_ownership",
+          "observed": false
+        },
+        {
+          "all_passed": false,
+          "checks": [
+            {
+              "check": "qwen36.source_complete",
+              "details": [
+                "upstream_blocked:blocked_gpu_ownership",
+                "missing_rows:216",
+                "row_order_mismatch",
+                "invalid_rows:216",
+                "process_identity_invalid"
+              ],
+              "expected": true,
+              "observed": false,
+              "passed": false
+            },
+            {
+              "check": "gemma31.source_complete",
+              "details": [
+                "upstream_blocked:blocked",
+                "source_checksum_mismatch",
+                "missing_rows:216",
+                "row_order_mismatch",
+                "invalid_rows:216",
+                "model_identity_invalid",
+                "process_identity_invalid",
+                "reported_aggregate_mismatch"
+              ],
+              "expected": true,
+              "observed": false,
+              "passed": false
+            },
+            {
+              "check": "gemma26.source_complete",
+              "details": [
+                "upstream_blocked:blocked_gpu_ownership",
+                "missing_rows:216",
+                "row_order_mismatch",
+                "invalid_rows:216",
+                "process_identity_invalid"
+              ],
+              "expected": true,
+              "observed": false,
+              "passed": false
+            },
+            {
+              "check": "eligible_family_count",
+              "details": [],
+              "expected": ">=1",
+              "observed": 0,
+              "passed": false
+            },
+            {
+              "check": "selected_contracts_immutable",
+              "details": [],
+              "expected": true,
+              "observed": true,
+              "passed": true
+            }
+          ],
+          "failed_checks": [
+            {
+              "check": "qwen36.source_complete",
+              "details": [
+                "upstream_blocked:blocked_gpu_ownership",
+                "missing_rows:216",
+                "row_order_mismatch",
+                "invalid_rows:216",
+                "process_identity_invalid"
+              ],
+              "expected": true,
+              "observed": false,
+              "passed": false
+            },
+            {
+              "check": "gemma31.source_complete",
+              "details": [
+                "upstream_blocked:blocked",
+                "source_checksum_mismatch",
+                "missing_rows:216",
+                "row_order_mismatch",
+                "invalid_rows:216",
+                "model_identity_invalid",
+                "process_identity_invalid",
+                "reported_aggregate_mismatch"
+              ],
+              "expected": true,
+              "observed": false,
+              "passed": false
+            },
+            {
+              "check": "gemma26.source_complete",
+              "details": [
+                "upstream_blocked:blocked_gpu_ownership",
+                "missing_rows:216",
+                "row_order_mismatch",
+                "invalid_rows:216",
+                "process_identity_invalid"
+              ],
+              "expected": true,
+              "observed": false,
+              "passed": false
+            },
+            {
+              "check": "eligible_family_count",
+              "details": [],
+              "expected": ">=1",
+              "observed": 0,
+              "passed": false
+            }
+          ]
+        }
+      ],
+      "honest_verdict": "blocked: per-unit comparative replay",
+      "missing_evidence": [],
+      "row_kind": "comparative_group",
+      "row_store_counts": [
+        {
+          "per_unit_rows": 216
+        },
+        {},
+        {
+          "per_unit_rows": 0
+        },
+        {
+          "family_replay_rows": 3,
+          "per_unit_rows": 648
+        }
+      ],
+      "source_hashes": [
+        "sha256:a52f92667200db339b4519acdf30b2ec59eec18aa9d24e3ebd93fbcb659b096a",
+        "sha256:d68fd386f007d1a44182d1562da124f4c4589f5c7fd6a0e4577b13159003dedc",
+        "sha256:c428c38a8544b22cfec528155f103dfcd38cd555023a5db5c2e3056561c2052a",
+        "sha256:85da1e31b22992fa981a4aa5616e7cb9689803d398a1084c7c746c177c4a2d10"
+      ],
+      "source_path": [
+        "results/experiment_6605_qwen36_direct_headroom.json",
+        "results/experiment_6606_gemma4_31b_direct_headroom.json",
+        "results/experiment_6607_gemma4_26b_direct_headroom.json",
+        "results/experiment_6608_family_headroom_reducer.json"
+      ],
+      "source_state": "present",
+      "status": "independently_replayed",
+      "unit_id": "decoding_identity_headroom",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flags": [],
+      "discrepancies": [
+        "source verdict_class is missing"
+      ],
+      "experiment_number": null,
+      "gate_check_summary": [
+        "1 of 1 gate(s) failed; first failure: exp6608-family-headroom-reducer.headroom_benchmark_ready_score (actual=0.0 == expected=1.0)"
+      ],
+      "honest_verdict": "blocked: per-unit comparative replay",
+      "missing_evidence": [],
+      "row_kind": "comparative_group",
+      "row_store_counts": [
+        {}
+      ],
+      "source_hashes": [
+        "sha256:ef2b87112aedc45b53793d06bbff1dceff7fb091f4bde0141b0800df9edb8b2a"
+      ],
+      "source_path": [
+        "results/experiment_6609_two_level_constrained_decoding.json"
+      ],
+      "source_state": "present",
+      "status": "independently_replayed",
+      "unit_id": "decoding_treatment_effects",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flags": [],
+      "discrepancies": [
+        "source artifact is missing"
+      ],
+      "experiment_number": null,
+      "gate_check_summary": [
+        {
+          "blocked": true,
+          "reason": "expected source artifact is missing"
+        }
+      ],
+      "honest_verdict": "blocked: per-unit comparative replay",
+      "missing_evidence": [
+        "results/experiment_6610_constraint_safety_hacking_audit.json"
+      ],
+      "row_kind": "comparative_group",
+      "row_store_counts": [
+        {}
+      ],
+      "source_hashes": [],
+      "source_path": [
+        "results/experiment_6610_constraint_safety_hacking_audit.json"
+      ],
+      "source_state": "missing",
+      "status": "independently_replayed",
+      "unit_id": "decoding_safety_curves",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flags": [],
+      "discrepancies": [],
+      "experiment_number": null,
+      "gate_check_summary": [
+        {
+          "blocked": false,
+          "bounded_cost": true,
+          "candidate_held_win": false,
+          "failed_checks": [],
+          "game_disjoint": true,
+          "no_runtime_validity_loss": true,
+          "separated_from_random_projection": false,
+          "strictly_lower_than_no_projection": false
+        }
+      ],
+      "honest_verdict": "null: per-unit comparative replay",
+      "missing_evidence": [],
+      "row_kind": "comparative_group",
+      "row_store_counts": [
+        {
+          "per_unit_rows": 156
+        }
+      ],
+      "source_hashes": [
+        "sha256:8d8a975e545887cd313ef444c710ca7cc1318840047ca0e4256045eec587ec51"
+      ],
+      "source_path": [
+        "results/experiment_6611_live_arc_invariant_projection.json"
+      ],
+      "source_state": "present",
+      "status": "independently_replayed",
+      "unit_id": "live_projection_arm_effects",
+      "verdict_class": "null"
+    },
+    {
+      "adversarial_flags": [],
+      "discrepancies": [],
+      "experiment_number": null,
+      "gate_check_summary": [
+        {
+          "blocked": false,
+          "bounded_cost": true,
+          "candidate_held_win": false,
+          "failed_checks": [],
+          "game_disjoint": true,
+          "no_runtime_validity_loss": true,
+          "separated_from_random_projection": false,
+          "strictly_lower_than_no_projection": false
+        }
+      ],
+      "honest_verdict": "null: per-unit comparative replay",
+      "missing_evidence": [],
+      "row_kind": "comparative_group",
+      "row_store_counts": [
+        {
+          "per_unit_rows": 156
+        }
+      ],
+      "source_hashes": [
+        "sha256:8d8a975e545887cd313ef444c710ca7cc1318840047ca0e4256045eec587ec51"
+      ],
+      "source_path": [
+        "results/experiment_6611_live_arc_invariant_projection.json"
+      ],
+      "source_state": "present",
+      "status": "independently_replayed",
+      "unit_id": "live_projection_timing_scope",
+      "verdict_class": "null"
+    },
+    {
+      "adversarial_flags": [],
+      "discrepancies": [],
+      "experiment_number": null,
+      "gate_check_summary": [
+        [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "exit_code": 3,
+            "gate": "toolchain_or_test_failure"
+          }
+        ]
+      ],
+      "honest_verdict": "partial: per-unit comparative replay",
+      "missing_evidence": [],
+      "row_kind": "comparative_group",
+      "row_store_counts": [
+        {
+          "per_unit_rows": 240,
+          "rust_python_parity_rows": 60
+        }
+      ],
+      "source_hashes": [
+        "sha256:c49aaee1d2ac5318b2ea680c009719e770d4b30993eff9934cc6a864f335dbf0"
+      ],
+      "source_path": [
+        "results/experiment_6612_spectral_k_block_scale_rust_parity.json"
+      ],
+      "source_state": "present",
+      "status": "independently_replayed",
+      "unit_id": "sampler_stationary_efficiency",
+      "verdict_class": "partial"
+    },
+    {
+      "adversarial_flags": [],
+      "discrepancies": [],
+      "experiment_number": null,
+      "gate_check_summary": [
+        [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "exit_code": 3,
+            "gate": "toolchain_or_test_failure"
+          }
+        ]
+      ],
+      "honest_verdict": "partial: per-unit comparative replay",
+      "missing_evidence": [],
+      "row_kind": "comparative_group",
+      "row_store_counts": [
+        {
+          "per_unit_rows": 240,
+          "rust_python_parity_rows": 60
+        }
+      ],
+      "source_hashes": [
+        "sha256:c49aaee1d2ac5318b2ea680c009719e770d4b30993eff9934cc6a864f335dbf0"
+      ],
+      "source_path": [
+        "results/experiment_6612_spectral_k_block_scale_rust_parity.json"
+      ],
+      "source_state": "present",
+      "status": "independently_replayed",
+      "unit_id": "sampler_parity_software_scope",
+      "verdict_class": "partial"
+    },
+    {
+      "adversarial_flags": [
+        {
+          "detail": "inference_substrate='deterministic_verifier_governed_invariant_memory_lifecycle_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.",
+          "kind": "SUBSTRATE_NO_LLM_BY_NAME",
+          "severity": "warn"
+        },
+        {
+          "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "discrepancies": [
+        "source verdict_class is missing"
+      ],
+      "experiment_number": null,
+      "gate_check_summary": [
+        {
+          "blocked": false,
+          "blocked_value": null,
+          "failed_checks": [],
+          "hash": true,
+          "journal": true,
+          "lifecycle": true,
+          "no_utility_claim": true,
+          "non_gating_test_failures": [
+            {
+              "command": ".venv/bin/pytest tests/python -q",
+              "disposition": "pre_existing_suite_failure",
+              "exit_code": 130
+            }
+          ],
+          "occupancy": true,
+          "poison": true,
+          "protection": true,
+          "ready": true,
+          "resource": true,
+          "restart": true,
+          "rollback": true,
+          "schema": true,
+          "tests": true,
+          "upstream": true
+        }
+      ],
+      "honest_verdict": "null: per-unit comparative replay",
+      "missing_evidence": [],
+      "row_kind": "comparative_group",
+      "row_store_counts": [
+        {
+          "lifecycle_transition_rows": 27
+        }
+      ],
+      "source_hashes": [
+        "sha256:7b0437efcd78ae3c082d7dc9ec8c8e81bdd8724a05246e367b3079f6036a856c"
+      ],
+      "source_path": [
+        "results/experiment_6613_invariant_memory_lifecycle.json"
+      ],
+      "source_state": "present",
+      "status": "independently_replayed",
+      "unit_id": "memory_lifecycle_recovery",
+      "verdict_class": "null"
+    },
+    {
+      "adversarial_flags": [
+        {
+          "detail": "verdict_class='blocked_tests' is outside the closed enum ['blocked', 'circular_positive', 'disqualified', 'null', 'partial', 'positive']. The enum is closed on purpose — extending it per-artifact recreates the drifting-token-list problem this field replaces. Pick the nearest class and put the nuance in honest_verdict.",
+          "kind": "VERDICT_CLASS_MISMATCH",
+          "severity": "critical"
+        }
+      ],
+      "discrepancies": [
+        "current adversarial verification found a critical defect"
+      ],
+      "experiment_number": null,
+      "gate_check_summary": [
+        {
+          "all_gates_passed": false,
+          "blocked": true,
+          "candidate_win": false,
+          "failed_blocking_gates": [
+            "tests"
+          ],
+          "failed_gates": [
+            "held_future_over_static",
+            "held_future_over_shuffled",
+            "tests"
+          ],
+          "rows_recomputed": true
+        }
+      ],
+      "honest_verdict": "null: per-unit comparative replay",
+      "missing_evidence": [],
+      "row_kind": "comparative_group",
+      "row_store_counts": [
+        {
+          "memory_transition_rows": 144,
+          "per_unit_rows": 352,
+          "prediction_before_observation_rows": 352
+        }
+      ],
+      "source_hashes": [
+        "sha256:051c2401b7d79ad9d9f69d6ba9661ffdf053e516a125fe2c28959956cff848b9"
+      ],
+      "source_path": [
+        "results/experiment_6614_prospective_invariant_self_learning.json"
+      ],
+      "source_state": "present",
+      "status": "independently_replayed",
+      "unit_id": "prospective_learning_benefit",
+      "verdict_class": "null"
+    },
+    {
+      "adversarial_flags": [
+        {
+          "detail": "verdict_class='blocked_tests' is outside the closed enum ['blocked', 'circular_positive', 'disqualified', 'null', 'partial', 'positive']. The enum is closed on purpose — extending it per-artifact recreates the drifting-token-list problem this field replaces. Pick the nearest class and put the nuance in honest_verdict.",
+          "kind": "VERDICT_CLASS_MISMATCH",
+          "severity": "critical"
+        }
+      ],
+      "discrepancies": [
+        "current adversarial verification found a critical defect"
+      ],
+      "experiment_number": null,
+      "gate_check_summary": [
+        {
+          "all_gates_passed": false,
+          "blocked": true,
+          "candidate_win": false,
+          "failed_blocking_gates": [
+            "tests"
+          ],
+          "failed_gates": [
+            "held_future_over_static",
+            "held_future_over_shuffled",
+            "tests"
+          ],
+          "rows_recomputed": true
+        }
+      ],
+      "honest_verdict": "disqualified: per-unit comparative replay",
+      "missing_evidence": [],
+      "row_kind": "comparative_group",
+      "row_store_counts": [
+        {
+          "memory_transition_rows": 144,
+          "per_unit_rows": 352,
+          "prediction_before_observation_rows": 352
+        }
+      ],
+      "source_hashes": [
+        "sha256:051c2401b7d79ad9d9f69d6ba9661ffdf053e516a125fe2c28959956cff848b9"
+      ],
+      "source_path": [
+        "results/experiment_6614_prospective_invariant_self_learning.json"
+      ],
+      "source_state": "present",
+      "status": "independently_replayed",
+      "unit_id": "prospective_artifact_integrity",
+      "verdict_class": "disqualified"
+    }
+  ],
+  "prd_gap_disposition": [
+    {
+      "disposition": "not_advanced",
+      "gap": "FR-11",
+      "reason": "lifecycle conformance passed, but held-future benefit was zero",
+      "verdict_class": "null"
+    },
+    {
+      "disposition": "infrastructure_only",
+      "gap": "FR-12",
+      "reason": "exact authorities replay; decoding comparison remains blocked",
+      "verdict_class": "partial"
+    },
+    {
+      "disposition": "reachable_without_solve",
+      "gap": "live_path",
+      "reason": "live import path replays with zero projection effect",
+      "verdict_class": "null"
+    },
+    {
+      "disposition": "unchanged",
+      "gap": "hardware",
+      "reason": "sampler evidence is CPU software only",
+      "verdict_class": "blocked"
+    }
+  ],
+  "preconditions_checked": {
+    "all_gate_owners_and_fields_valid": true,
+    "arc_registry": {
+      "non_claim_boundary": "no V576 game, level, or leaderboard solve claim",
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947"
+    },
+    "chronology_contract": {
+      "chronology_sha256": "sha256:5320410425ba1a4114829514da9c4ce81ab0c8f36638d80b012671bd380e3189",
+      "observed_frame_fields_in_manifest": 0,
+      "prediction_before_observation_required": true,
+      "source_disjoint": true
+    },
+    "cpu": "x86_64",
+    "cpu_only_substrate": true,
+    "declared_gate_count": 8,
+    "documents": [
+      {
+        "path": "research-program.md",
+        "present": true,
+        "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+      },
+      {
+        "path": "_bmad/prd.md",
+        "present": true,
+        "sha256": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a"
+      },
+      {
+        "path": "_bmad/architecture.md",
+        "present": true,
+        "sha256": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8"
+      },
+      {
+        "path": "openspec/capabilities/research-reporting/spec.md",
+        "present": true,
+        "sha256": "sha256:a05b5e2e68ca2b8183d829a2343456a19dfef65783dbf953d14bf2bc392aba33"
+      },
+      {
+        "path": "_bmad/traceability.md",
+        "present": true,
+        "sha256": "sha256:b31539332e9c80437b718266f578a6a4c1c0956169c918c3d80f388b035be90a"
+      },
+      {
+        "path": "ops/status.md",
+        "present": true,
+        "sha256": "sha256:c5867bc4c4571dc964a1b443f1dbd704866fe00d59bbaac06ea5500cf055c9fa"
+      },
+      {
+        "path": "ops/changelog.md",
+        "present": true,
+        "sha256": "sha256:2ec577452d1ca73c10adc2e0d9b2478d092d389a8d8f8b4eac9638b01c0b9493"
+      },
+      {
+        "path": "ops/e2e-test-plan.md",
+        "present": true,
+        "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+      },
+      {
+        "path": "ops/exclusion_manifest.yaml",
+        "present": true,
+        "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+      },
+      {
+        "path": "ops/known-issues.md",
+        "present": true,
+        "sha256": "sha256:a30ad54528ac8f120d6aa3cf37e2ae92d6daf7de0364ede0d70436f6f1438f9f"
+      }
+    ],
+    "exact_authorities": {
+      "executor_version": "carnot.independent_exact_plan_executor.v1",
+      "module_sha256": "b5256b27c497cf5298979f4ef09fe2d2f8359bb252e6ae00c7824e17db2ed77a",
+      "oracle_distinct": true
+    },
+    "expected_deliverables": [
+      "results/experiment_6604_exact_two_level_plan_corpus.json",
+      "results/experiment_6605_qwen36_direct_headroom.json",
+      "results/experiment_6606_gemma4_31b_direct_headroom.json",
+      "results/experiment_6607_gemma4_26b_direct_headroom.json",
+      "results/experiment_6608_family_headroom_reducer.json",
+      "results/experiment_6609_two_level_constrained_decoding.json",
+      "results/experiment_6610_constraint_safety_hacking_audit.json",
+      "results/experiment_6611_live_arc_invariant_projection.json",
+      "results/experiment_6612_spectral_k_block_scale_rust_parity.json",
+      "results/experiment_6613_invariant_memory_lifecycle.json",
+      "results/experiment_6614_prospective_invariant_self_learning.json"
+    ],
+    "expected_task_ids": [
+      "exp6604-exact-two-level-plan-corpus",
+      "exp6605-qwen36-direct-headroom",
+      "exp6606-gemma4-31b-direct-headroom",
+      "exp6607-gemma4-26b-a4b-direct-headroom",
+      "exp6608-family-headroom-reducer",
+      "exp6609-two-level-constrained-decoding",
+      "exp6610-constraint-safety-hacking-audit",
+      "exp6611-live-arc-invariant-projection",
+      "exp6612-spectral-k-block-scale-rust-parity",
+      "exp6613-invariant-memory-lifecycle",
+      "exp6614-prospective-invariant-self-learning"
+    ],
+    "inference_substrate": "v576_independent_artifact_row_and_architecture_replay_no_llm",
+    "llm_loaded_or_called": false,
+    "missing_artifact_paths": [
+      "results/experiment_6610_constraint_safety_hacking_audit.json"
+    ],
+    "model_registry": {
+      "exp6605-qwen36-direct-headroom": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "exp6606-gemma4-31b-direct-headroom": "unsloth/gemma-4-31b-it-GGUF",
+      "exp6607-gemma4-26b-a4b-direct-headroom": "unsloth/gemma-4-26B-A4B-it-GGUF"
+    },
+    "planning_date": "20260826",
+    "platform": "Linux-7.2.0-1-cachyos-x86_64-with-glibc2.44",
+    "present_artifact_paths": [
+      "results/experiment_6604_exact_two_level_plan_corpus.json",
+      "results/experiment_6605_qwen36_direct_headroom.json",
+      "results/experiment_6606_gemma4_31b_direct_headroom.json",
+      "results/experiment_6607_gemma4_26b_direct_headroom.json",
+      "results/experiment_6608_family_headroom_reducer.json",
+      "results/experiment_6609_two_level_constrained_decoding.json",
+      "results/experiment_6611_live_arc_invariant_projection.json",
+      "results/experiment_6612_spectral_k_block_scale_rust_parity.json",
+      "results/experiment_6613_invariant_memory_lifecycle.json",
+      "results/experiment_6614_prospective_invariant_self_learning.json"
+    ],
+    "protected_hashes": {
+      "all_unchanged": true,
+      "rows": [
+        {
+          "expected_sha256": "sha256:753df27210a62a5572e19e9ede78ee2b1af5e4a11cb83063e62b69367ef33270",
+          "observed_sha256": "sha256:753df27210a62a5572e19e9ede78ee2b1af5e4a11cb83063e62b69367ef33270",
+          "path": "research-roadmap.yaml",
+          "unchanged": true
+        },
+        {
+          "expected_sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+          "observed_sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+          "path": "scripts/research_conductor.py",
+          "unchanged": true
+        }
+      ]
+    },
+    "recovery_contract": {
+      "all_restart_equal": true,
+      "all_rollback_equal": true,
+      "receipt_row_count": 8
+    },
+    "sampler_references": {
+      "count": 12,
+      "methods": {
+        "exact_enumeration": 6,
+        "independent_long_chains": 6
+      },
+      "prior_exp6597": {
+        "category": "v575_context",
+        "experiment_number": 6597,
+        "honest_verdict": "complete: charged CPU software exact-enumerable fixtures support every spectral k-block arm; no FPGA, TSU, PIMI, or general hardware claim",
+        "missing_evidence": [],
+        "path": "results/experiment_6597_spectral_k_block_ising_canary.json",
+        "present": true,
+        "row_store_counts": {
+          "per_unit_rows": 45
+        },
+        "sha256": "sha256:c6d8be8af1984b733b37460eec9c77ab564c1318c1e68438545531ef26b6a3ab",
+        "source_state": "present",
+        "source_verdict_class": "positive",
+        "status": "complete",
+        "task_id": "exp6597"
+      }
+    },
+    "scientific_experiment_repeated": false
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "rows": [
+      {
+        "expected_sha256": "sha256:753df27210a62a5572e19e9ede78ee2b1af5e4a11cb83063e62b69367ef33270",
+        "observed_sha256": "sha256:753df27210a62a5572e19e9ede78ee2b1af5e4a11cb83063e62b69367ef33270",
+        "path": "research-roadmap.yaml",
+        "unchanged": true
+      },
+      {
+        "expected_sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+        "observed_sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+        "path": "scripts/research_conductor.py",
+        "unchanged": true
+      }
+    ]
+  },
+  "reconciliation_receipts": [
+    {
+      "action": "updated_exp6615_contract",
+      "evidence": "Exp6604-Exp6614 independent row replay",
+      "former_evidence_date": null,
+      "new_evidence_date": "20260826",
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "present": true,
+      "sha256": "sha256:a05b5e2e68ca2b8183d829a2343456a19dfef65783dbf953d14bf2bc392aba33"
+    },
+    {
+      "action": "updated_exp6615_evidence",
+      "evidence": "Exp6604-Exp6614 independent row replay",
+      "former_evidence_date": "2026-07-03",
+      "new_evidence_date": "2026-08-26",
+      "path": "_bmad/architecture.md",
+      "present": true,
+      "sha256": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8"
+    },
+    {
+      "action": "deferred_to_conductor",
+      "evidence": "Exp6604-Exp6614 independent row replay",
+      "former_evidence_date": null,
+      "new_evidence_date": "20260826",
+      "path": "_bmad/traceability.md",
+      "present": true,
+      "sha256": "sha256:b31539332e9c80437b718266f578a6a4c1c0956169c918c3d80f388b035be90a"
+    },
+    {
+      "action": "deferred_to_conductor",
+      "evidence": "Exp6604-Exp6614 independent row replay",
+      "former_evidence_date": null,
+      "new_evidence_date": "20260826",
+      "path": "ops/status.md",
+      "present": true,
+      "sha256": "sha256:c5867bc4c4571dc964a1b443f1dbd704866fe00d59bbaac06ea5500cf055c9fa"
+    },
+    {
+      "action": "deferred_to_conductor",
+      "evidence": "Exp6604-Exp6614 independent row replay",
+      "former_evidence_date": null,
+      "new_evidence_date": "20260826",
+      "path": "ops/changelog.md",
+      "present": true,
+      "sha256": "sha256:2ec577452d1ca73c10adc2e0d9b2478d092d389a8d8f8b4eac9638b01c0b9493"
+    }
+  ],
+  "reproducibility_checksum": "sha256:aaae927144275b81854e35de8a64bb2b01f84b5ce5b3b2feebf96b885b08b044",
+  "roadmap_gate_contract_rows": [
+    {
+      "actual": 1.0,
+      "artifact_field": "headroom_fixture_ready_score",
+      "consumer": "exp6605-qwen36-direct-headroom",
+      "contract_valid": true,
+      "expected": 1.0,
+      "gate_id": "exp6605-qwen36-direct-headroom:gate:0",
+      "observed_gate_passed": true,
+      "operator": "==",
+      "owner_declared_fields": [
+        "action_semantic_compiler_receipts",
+        "attack_rows",
+        "duration_s",
+        "field_provenance",
+        "fixture_and_split_receipts",
+        "gate_check_summary",
+        "headroom_fixture_ready_score",
+        "honest_verdict",
+        "independent_exact_executor_receipts",
+        "inference_substrate",
+        "mutation_rows",
+        "plan_fixture_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "reproducibility_checksum",
+        "status",
+        "tests_run",
+        "token_syntax_compiler_receipts",
+        "verdict_class",
+        "verifier_is_oracle"
+      ],
+      "owner_declares_identical_field": true,
+      "source_artifact_present": true,
+      "upstream": "exp6604-exact-two-level-plan-corpus",
+      "upstream_exists": true
+    },
+    {
+      "actual": 1.0,
+      "artifact_field": "headroom_fixture_ready_score",
+      "consumer": "exp6606-gemma4-31b-direct-headroom",
+      "contract_valid": true,
+      "expected": 1.0,
+      "gate_id": "exp6606-gemma4-31b-direct-headroom:gate:0",
+      "observed_gate_passed": true,
+      "operator": "==",
+      "owner_declared_fields": [
+        "action_semantic_compiler_receipts",
+        "attack_rows",
+        "duration_s",
+        "field_provenance",
+        "fixture_and_split_receipts",
+        "gate_check_summary",
+        "headroom_fixture_ready_score",
+        "honest_verdict",
+        "independent_exact_executor_receipts",
+        "inference_substrate",
+        "mutation_rows",
+        "plan_fixture_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "reproducibility_checksum",
+        "status",
+        "tests_run",
+        "token_syntax_compiler_receipts",
+        "verdict_class",
+        "verifier_is_oracle"
+      ],
+      "owner_declares_identical_field": true,
+      "source_artifact_present": true,
+      "upstream": "exp6604-exact-two-level-plan-corpus",
+      "upstream_exists": true
+    },
+    {
+      "actual": 1.0,
+      "artifact_field": "headroom_fixture_ready_score",
+      "consumer": "exp6607-gemma4-26b-a4b-direct-headroom",
+      "contract_valid": true,
+      "expected": 1.0,
+      "gate_id": "exp6607-gemma4-26b-a4b-direct-headroom:gate:0",
+      "observed_gate_passed": true,
+      "operator": "==",
+      "owner_declared_fields": [
+        "action_semantic_compiler_receipts",
+        "attack_rows",
+        "duration_s",
+        "field_provenance",
+        "fixture_and_split_receipts",
+        "gate_check_summary",
+        "headroom_fixture_ready_score",
+        "honest_verdict",
+        "independent_exact_executor_receipts",
+        "inference_substrate",
+        "mutation_rows",
+        "plan_fixture_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "reproducibility_checksum",
+        "status",
+        "tests_run",
+        "token_syntax_compiler_receipts",
+        "verdict_class",
+        "verifier_is_oracle"
+      ],
+      "owner_declares_identical_field": true,
+      "source_artifact_present": true,
+      "upstream": "exp6604-exact-two-level-plan-corpus",
+      "upstream_exists": true
+    },
+    {
+      "actual": 0.0,
+      "artifact_field": "headroom_benchmark_ready_score",
+      "consumer": "exp6609-two-level-constrained-decoding",
+      "contract_valid": true,
+      "expected": 1.0,
+      "gate_id": "exp6609-two-level-constrained-decoding:gate:0",
+      "observed_gate_passed": false,
+      "operator": "==",
+      "owner_declared_fields": [
+        "attack_rows",
+        "duration_s",
+        "eligible_model_specs",
+        "family_headroom_rows",
+        "family_replay_rows",
+        "field_provenance",
+        "frozen_held_unit_hashes",
+        "gate_check_summary",
+        "headroom_benchmark_ready_score",
+        "honest_verdict",
+        "inference_substrate",
+        "per_unit_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "reproducibility_checksum",
+        "source_artifact_receipts",
+        "status",
+        "tests_run",
+        "verdict_class",
+        "verifier_is_oracle"
+      ],
+      "owner_declares_identical_field": true,
+      "source_artifact_present": true,
+      "upstream": "exp6608-family-headroom-reducer",
+      "upstream_exists": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "two_level_decoder_comparison_ready_score",
+      "consumer": "exp6610-constraint-safety-hacking-audit",
+      "contract_valid": true,
+      "expected": 1.0,
+      "gate_id": "exp6610-constraint-safety-hacking-audit:gate:0",
+      "observed_gate_passed": false,
+      "operator": "==",
+      "owner_declared_fields": [
+        "acceptance_gate_rows",
+        "action_semantic_intervention_receipts",
+        "attack_rows",
+        "direct_control_receipts",
+        "duration_s",
+        "eligible_model_and_source_receipts",
+        "family_effect_rows",
+        "field_provenance",
+        "gate_check_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "model_spec_and_identity_rows",
+        "per_unit_rows",
+        "pooled_effect_summary",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "raw_candidate_banks",
+        "reproducibility_checksum",
+        "safety_and_cost_summary",
+        "status",
+        "tests_run",
+        "token_syntax_intervention_receipts",
+        "two_level_decoder_comparison_ready_score",
+        "verdict_class",
+        "verifier_is_oracle"
+      ],
+      "owner_declares_identical_field": true,
+      "source_artifact_present": true,
+      "upstream": "exp6609-two-level-constrained-decoding",
+      "upstream_exists": true
+    },
+    {
+      "actual": 1.0,
+      "artifact_field": "live_projection_contract_ready_score",
+      "consumer": "exp6613-invariant-memory-lifecycle",
+      "contract_valid": true,
+      "expected": 1.0,
+      "gate_id": "exp6613-invariant-memory-lifecycle:gate:0",
+      "observed_gate_passed": true,
+      "operator": "==",
+      "owner_declared_fields": [
+        "arc_registry_precheck",
+        "arc_scope_and_non_claims",
+        "archive_and_split_receipts",
+        "attack_rows",
+        "duration_s",
+        "field_provenance",
+        "gate_check_summary",
+        "held_arm_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "invariant_selection_rows",
+        "live_import_reachability_receipts",
+        "live_projection_contract_ready_score",
+        "per_unit_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "reproducibility_checksum",
+        "runtime_validity_and_cost_summary",
+        "status",
+        "tests_run",
+        "verdict_class",
+        "verifier_is_oracle",
+        "world_model_and_projector_hashes"
+      ],
+      "owner_declares_identical_field": true,
+      "source_artifact_present": true,
+      "upstream": "exp6611-live-arc-invariant-projection",
+      "upstream_exists": true
+    },
+    {
+      "actual": 1.0,
+      "artifact_field": "live_projection_contract_ready_score",
+      "consumer": "exp6614-prospective-invariant-self-learning",
+      "contract_valid": true,
+      "expected": 1.0,
+      "gate_id": "exp6614-prospective-invariant-self-learning:gate:0",
+      "observed_gate_passed": true,
+      "operator": "==",
+      "owner_declared_fields": [
+        "arc_registry_precheck",
+        "arc_scope_and_non_claims",
+        "archive_and_split_receipts",
+        "attack_rows",
+        "duration_s",
+        "field_provenance",
+        "gate_check_summary",
+        "held_arm_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "invariant_selection_rows",
+        "live_import_reachability_receipts",
+        "live_projection_contract_ready_score",
+        "per_unit_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "reproducibility_checksum",
+        "runtime_validity_and_cost_summary",
+        "status",
+        "tests_run",
+        "verdict_class",
+        "verifier_is_oracle",
+        "world_model_and_projector_hashes"
+      ],
+      "owner_declares_identical_field": true,
+      "source_artifact_present": true,
+      "upstream": "exp6611-live-arc-invariant-projection",
+      "upstream_exists": true
+    },
+    {
+      "actual": 1.0,
+      "artifact_field": "invariant_memory_ready_score",
+      "consumer": "exp6614-prospective-invariant-self-learning",
+      "contract_valid": true,
+      "expected": 1.0,
+      "gate_id": "exp6614-prospective-invariant-self-learning:gate:1",
+      "observed_gate_passed": true,
+      "operator": "==",
+      "owner_declared_fields": [
+        "attack_rows",
+        "base_policy_immutability_receipts",
+        "duration_s",
+        "field_provenance",
+        "gate_check_summary",
+        "hardware_path_receipt",
+        "honest_verdict",
+        "inference_substrate",
+        "invariant_memory_ready_score",
+        "invariant_record_schema_receipts",
+        "journal_snapshot_restart_rows",
+        "lifecycle_transition_rows",
+        "occupancy_and_conflict_rows",
+        "poison_and_injection_rows",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "reproducibility_checksum",
+        "status",
+        "tests_run",
+        "verdict_class",
+        "verifier_descriptor_rows",
+        "verifier_is_oracle"
+      ],
+      "owner_declares_identical_field": true,
+      "source_artifact_present": true,
+      "upstream": "exp6613-invariant-memory-lifecycle",
+      "upstream_exists": true
+    }
+  ],
+  "run_date": "20260826",
+  "sampler_replay": {
+    "all_python_rust_parity": true,
+    "all_references_independent": true,
+    "hardware_promotion": false,
+    "python_rust_parity_count": 60,
+    "reason": "row evidence replays, but the source artifact is terminally test-blocked",
+    "reference_count": 12,
+    "reference_method_counts": {
+      "exact_enumeration": 6,
+      "independent_long_chains": 6
+    },
+    "retired_method_used": false,
+    "row_count": 240,
+    "row_hash_replay": {
+      "checked": 0,
+      "mismatch_count": 0,
+      "mismatches": []
+    },
+    "scope": "cpu_software_only",
+    "software_claim_only": true,
+    "source_gate_check_summary": [
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "exit_code": 3,
+        "gate": "toolchain_or_test_failure"
+      }
+    ],
+    "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6612_spectral_k_block_scale_rust_parity.json",
+    "source_status": "blocked_reference_parity_cost_or_protection",
+    "stationary_and_efficiency_by_arm": {
+      "random_k_block": {
+        "ess_per_transition_mean": 0.008545784619836015,
+        "ess_per_wall_second_mean": 56.373055225315056,
+        "failure_count": 0,
+        "row_count": 60,
+        "stationary_error_mean": 0.18527673480711832,
+        "transition_count": 660000,
+        "wall_time_s": 131.22168600047007
+      },
+      "sequential_gibbs": {
+        "ess_per_transition_mean": 0.0017739914392768197,
+        "ess_per_wall_second_mean": 189.79501609744392,
+        "failure_count": 0,
+        "row_count": 60,
+        "stationary_error_mean": 0.3440330732713685,
+        "transition_count": 660000,
+        "wall_time_s": 8.165571562945843
+      },
+      "spectral_k_block_python": {
+        "ess_per_transition_mean": 0.016881869341641726,
+        "ess_per_wall_second_mean": 114.36460169646612,
+        "failure_count": 0,
+        "row_count": 60,
+        "stationary_error_mean": 0.15387080298827305,
+        "transition_count": 660000,
+        "wall_time_s": 130.01181422220543
+      },
+      "spectral_k_block_rust": {
+        "ess_per_transition_mean": 0.016881869341641726,
+        "ess_per_wall_second_mean": 9281.443846860942,
+        "failure_count": 0,
+        "row_count": 60,
+        "stationary_error_mean": 0.15387080298827305,
+        "transition_count": 660000,
+        "wall_time_s": 2.237776244059205
+      }
+    },
+    "verdict_class": "partial"
+  },
+  "schema": "carnot.v576.independent_capstone.v1",
+  "source_artifact_receipts": [
+    {
+      "adversarial_flagged": true,
+      "adversarial_flags": [
+        {
+          "detail": "inference_substrate='deterministic_two_level_plan_fixture_and_exact_executor_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.",
+          "kind": "SUBSTRATE_NO_LLM_BY_NAME",
+          "severity": "warn"
+        }
+      ],
+      "adversarial_sidecar": {
+        "path": "results/experiment_6604_exact_two_level_plan_corpus.json.adversarial.json",
+        "present": false,
+        "sha256": null
+      },
+      "category": "v576_expected",
+      "discrepancies": [],
+      "experiment_number": 6604,
+      "external_receipts": [],
+      "gate_check_summary": {
+        "all_passed": true,
+        "checks": [
+          {
+            "gate": "corpus",
+            "observed": {
+              "errors": [],
+              "passed": true
+            },
+            "passed": true
+          },
+          {
+            "gate": "task_count",
+            "observed": 72,
+            "passed": true
+          },
+          {
+            "gate": "split_counts",
+            "observed": 36,
+            "passed": true
+          },
+          {
+            "gate": "token_compiler",
+            "observed": 72,
+            "passed": true
+          },
+          {
+            "gate": "semantic_compiler",
+            "observed": 72,
+            "passed": true
+          },
+          {
+            "gate": "executor_oracle_distinct",
+            "observed": true,
+            "passed": true
+          },
+          {
+            "gate": "mutations",
+            "observed": 373,
+            "passed": true
+          },
+          {
+            "gate": "omitted_encoding",
+            "observed": [
+              {
+                "both_encoded_automata_accept": true,
+                "candidate_plan": "OPEN(crate_c00)\nPICK(parcel_c00)\nCHECK(parcel_c00)\nPLACE(parcel_c00,crate_c00)\nCLOSE(crate_c00)\nSHIP(crate_c00,dock_c00)",
+                "candidate_sha256": "3f59b27fe9eff92d544147f2eb6cfb96dce00e2cc74750b48bd6d8eb92a8c453",
+                "exact_reason": "precondition_violation",
+                "exact_valid": false,
+                "failed_as_expected": true,
+                "mutation_id": "plan-calibration-00:omitted_obligation",
+                "mutation_type": "omitted_obligation",
+                "omitted_obligation_id": "audit_before_ship",
+                "semantic_accept": true,
+                "split": "calibration",
+                "syntax_accept": true,
+                "task_id": "plan-calibration-00"
+              }
+            ],
+            "passed": true
+          },
+          {
+            "gate": "attacks",
+            "observed": 9,
+            "passed": true
+          },
+          {
+            "gate": "tests",
+            "observed": [
+              {
+                "command": ".venv/bin/pytest tests/python/test_pipeline_extract.py tests/python/test_docs.py tests/python/test_experiment_6604_exact_two_level_plan_corpus.py -q --no-header -n 0 --no-cov -o addopts=",
+                "duration_s": 14.94,
+                "exit_code": 0
+              },
+              {
+                "command": "pytest focused Exp6604 with scoped coverage plus coverage report --fail-under=100",
+                "duration_s": 10.8,
+                "exit_code": 0
+              },
+              {
+                "command": "ruff check and format --check Exp6604 module and tests",
+                "duration_s": 0.3,
+                "exit_code": 0
+              },
+              {
+                "command": "mypy python/carnot/experiment_6604_exact_two_level_plan_corpus.py",
+                "duration_s": 0.3,
+                "exit_code": 0
+              },
+              {
+                "command": "python scripts/check_spec_coverage.py tests/python/test_experiment_6604_exact_two_level_plan_corpus.py",
+                "duration_s": 0.1,
+                "exit_code": 0
+              },
+              {
+                "command": "pytest tests/python/test_conductor_fix_erasure_gate.py --no-cov",
+                "duration_s": 1.21,
+                "exit_code": 0
+              }
+            ],
+            "passed": true
+          },
+          {
+            "gate": "protected_files",
+            "observed": true,
+            "passed": true
+          }
+        ],
+        "failed_checks": []
+      },
+      "honest_verdict": "complete: exact two-level plan corpus and oracle-distinct executor are ready; this is null infrastructure and no model benefit was measured",
+      "missing_evidence": [],
+      "path": "results/experiment_6604_exact_two_level_plan_corpus.json",
+      "present": true,
+      "row_hash_receipts": {
+        "mutation_rows": {
+          "checked": 0,
+          "mismatch_count": 0,
+          "mismatches": []
+        },
+        "plan_fixture_rows": {
+          "checked": 0,
+          "mismatch_count": 0,
+          "mismatches": []
+        }
+      },
+      "row_store_counts": {
+        "mutation_rows": 373,
+        "plan_fixture_rows": 72
+      },
+      "sha256": "sha256:fc5ed4d0ec8e1355e8732fc7dc2d9c6f81c23a3e8677728f3dfa1161c9c948d0",
+      "source_state": "present",
+      "source_verdict_class": "null",
+      "status": "complete",
+      "task_id": "exp6604-exact-two-level-plan-corpus",
+      "verdict_class": "null"
+    },
+    {
+      "adversarial_flagged": false,
+      "adversarial_flags": [],
+      "adversarial_sidecar": {
+        "path": "results/experiment_6605_qwen36_direct_headroom.json.adversarial.json",
+        "present": false,
+        "sha256": null
+      },
+      "category": "v576_expected",
+      "discrepancies": [],
+      "experiment_number": 6605,
+      "external_receipts": [
+        {
+          "kind": "checkpoint_receipts",
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6605_qwen36_direct_headroom/checkpoint.json",
+          "present": true,
+          "sha256": "sha256:a43c3969320430b4b0c59a3c8517d41bc6e6bba8c134c45fcb423e43af9f5231"
+        }
+      ],
+      "gate_check_summary": {
+        "all_passed": false,
+        "expected": true,
+        "failed_condition": "gpu_process_receipts",
+        "observed": false,
+        "upstream": {
+          "headroom_fixture_ready_score": 1.0,
+          "path": "results/experiment_6604_exact_two_level_plan_corpus.json",
+          "task_count": 72
+        }
+      },
+      "honest_verdict": "blocked_gpu_process_receipts: direct baseline integrity did not complete",
+      "missing_evidence": [],
+      "path": "results/experiment_6605_qwen36_direct_headroom.json",
+      "present": true,
+      "row_hash_receipts": {
+        "per_unit_rows": {
+          "checked": 216,
+          "mismatch_count": 0,
+          "mismatches": []
+        }
+      },
+      "row_store_counts": {
+        "per_unit_rows": 216
+      },
+      "sha256": "sha256:a52f92667200db339b4519acdf30b2ec59eec18aa9d24e3ebd93fbcb659b096a",
+      "source_state": "present",
+      "source_verdict_class": "blocked",
+      "status": "blocked_gpu_process_receipts",
+      "task_id": "exp6605-qwen36-direct-headroom",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flagged": false,
+      "adversarial_flags": [],
+      "adversarial_sidecar": {
+        "path": "results/experiment_6606_gemma4_31b_direct_headroom.json.adversarial.json",
+        "present": false,
+        "sha256": null
+      },
+      "category": "v576_expected",
+      "discrepancies": [
+        "source verdict_class is missing"
+      ],
+      "experiment_number": 6606,
+      "external_receipts": [],
+      "gate_check_summary": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+      "honest_verdict": "blocked_gate_check_failed",
+      "missing_evidence": [],
+      "path": "results/experiment_6606_gemma4_31b_direct_headroom.json",
+      "present": true,
+      "row_hash_receipts": {},
+      "row_store_counts": {},
+      "sha256": "sha256:d68fd386f007d1a44182d1562da124f4c4589f5c7fd6a0e4577b13159003dedc",
+      "source_state": "present",
+      "source_verdict_class": null,
+      "status": "blocked",
+      "task_id": "exp6606-gemma4-31b-direct-headroom",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flagged": false,
+      "adversarial_flags": [],
+      "adversarial_sidecar": {
+        "path": "results/experiment_6607_gemma4_26b_direct_headroom.json.adversarial.json",
+        "present": false,
+        "sha256": null
+      },
+      "category": "v576_expected",
+      "discrepancies": [],
+      "experiment_number": 6607,
+      "external_receipts": [],
+      "gate_check_summary": {
+        "all_passed": false,
+        "expected": true,
+        "failed_condition": "gpu_ownership",
+        "observed": false
+      },
+      "honest_verdict": "blocked_gpu_ownership: expected True, observed False",
+      "missing_evidence": [],
+      "path": "results/experiment_6607_gemma4_26b_direct_headroom.json",
+      "present": true,
+      "row_hash_receipts": {
+        "per_unit_rows": {
+          "checked": 0,
+          "mismatch_count": 0,
+          "mismatches": []
+        }
+      },
+      "row_store_counts": {
+        "per_unit_rows": 0
+      },
+      "sha256": "sha256:c428c38a8544b22cfec528155f103dfcd38cd555023a5db5c2e3056561c2052a",
+      "source_state": "present",
+      "source_verdict_class": "blocked",
+      "status": "blocked_gpu_ownership",
+      "task_id": "exp6607-gemma4-26b-a4b-direct-headroom",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flagged": false,
+      "adversarial_flags": [],
+      "adversarial_sidecar": {
+        "path": "results/experiment_6608_family_headroom_reducer.json.adversarial.json",
+        "present": false,
+        "sha256": null
+      },
+      "category": "v576_expected",
+      "discrepancies": [],
+      "experiment_number": 6608,
+      "external_receipts": [],
+      "gate_check_summary": {
+        "all_passed": false,
+        "checks": [
+          {
+            "check": "qwen36.source_complete",
+            "details": [
+              "upstream_blocked:blocked_gpu_ownership",
+              "missing_rows:216",
+              "row_order_mismatch",
+              "invalid_rows:216",
+              "process_identity_invalid"
+            ],
+            "expected": true,
+            "observed": false,
+            "passed": false
+          },
+          {
+            "check": "gemma31.source_complete",
+            "details": [
+              "upstream_blocked:blocked",
+              "source_checksum_mismatch",
+              "missing_rows:216",
+              "row_order_mismatch",
+              "invalid_rows:216",
+              "model_identity_invalid",
+              "process_identity_invalid",
+              "reported_aggregate_mismatch"
+            ],
+            "expected": true,
+            "observed": false,
+            "passed": false
+          },
+          {
+            "check": "gemma26.source_complete",
+            "details": [
+              "upstream_blocked:blocked_gpu_ownership",
+              "missing_rows:216",
+              "row_order_mismatch",
+              "invalid_rows:216",
+              "process_identity_invalid"
+            ],
+            "expected": true,
+            "observed": false,
+            "passed": false
+          },
+          {
+            "check": "eligible_family_count",
+            "details": [],
+            "expected": ">=1",
+            "observed": 0,
+            "passed": false
+          },
+          {
+            "check": "selected_contracts_immutable",
+            "details": [],
+            "expected": true,
+            "observed": true,
+            "passed": true
+          }
+        ],
+        "failed_checks": [
+          {
+            "check": "qwen36.source_complete",
+            "details": [
+              "upstream_blocked:blocked_gpu_ownership",
+              "missing_rows:216",
+              "row_order_mismatch",
+              "invalid_rows:216",
+              "process_identity_invalid"
+            ],
+            "expected": true,
+            "observed": false,
+            "passed": false
+          },
+          {
+            "check": "gemma31.source_complete",
+            "details": [
+              "upstream_blocked:blocked",
+              "source_checksum_mismatch",
+              "missing_rows:216",
+              "row_order_mismatch",
+              "invalid_rows:216",
+              "model_identity_invalid",
+              "process_identity_invalid",
+              "reported_aggregate_mismatch"
+            ],
+            "expected": true,
+            "observed": false,
+            "passed": false
+          },
+          {
+            "check": "gemma26.source_complete",
+            "details": [
+              "upstream_blocked:blocked_gpu_ownership",
+              "missing_rows:216",
+              "row_order_mismatch",
+              "invalid_rows:216",
+              "process_identity_invalid"
+            ],
+            "expected": true,
+            "observed": false,
+            "passed": false
+          },
+          {
+            "check": "eligible_family_count",
+            "details": [],
+            "expected": ">=1",
+            "observed": 0,
+            "passed": false
+          }
+        ]
+      },
+      "honest_verdict": "blocked_family_baseline_evidence: no family has complete replayable baseline rows; eligibility is frozen empty and no treatment benefit is claimed",
+      "missing_evidence": [],
+      "path": "results/experiment_6608_family_headroom_reducer.json",
+      "present": true,
+      "row_hash_receipts": {
+        "family_replay_rows": {
+          "checked": 0,
+          "mismatch_count": 0,
+          "mismatches": []
+        },
+        "per_unit_rows": {
+          "checked": 648,
+          "mismatch_count": 0,
+          "mismatches": []
+        }
+      },
+      "row_store_counts": {
+        "family_replay_rows": 3,
+        "per_unit_rows": 648
+      },
+      "sha256": "sha256:85da1e31b22992fa981a4aa5616e7cb9689803d398a1084c7c746c177c4a2d10",
+      "source_state": "present",
+      "source_verdict_class": "blocked",
+      "status": "blocked_family_baseline_evidence",
+      "task_id": "exp6608-family-headroom-reducer",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flagged": false,
+      "adversarial_flags": [],
+      "adversarial_sidecar": {
+        "path": "results/experiment_6609_two_level_constrained_decoding.json.adversarial.json",
+        "present": false,
+        "sha256": null
+      },
+      "category": "v576_expected",
+      "discrepancies": [
+        "source verdict_class is missing"
+      ],
+      "experiment_number": 6609,
+      "external_receipts": [],
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6608-family-headroom-reducer.headroom_benchmark_ready_score (actual=0.0 == expected=1.0)",
+      "honest_verdict": "blocked_gate_check_failed",
+      "missing_evidence": [],
+      "path": "results/experiment_6609_two_level_constrained_decoding.json",
+      "present": true,
+      "row_hash_receipts": {},
+      "row_store_counts": {},
+      "sha256": "sha256:ef2b87112aedc45b53793d06bbff1dceff7fb091f4bde0141b0800df9edb8b2a",
+      "source_state": "present",
+      "source_verdict_class": null,
+      "status": "blocked",
+      "task_id": "exp6609-two-level-constrained-decoding",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flagged": false,
+      "adversarial_flags": [],
+      "adversarial_sidecar": {
+        "path": "results/experiment_6610_constraint_safety_hacking_audit.json.adversarial.json",
+        "present": false,
+        "sha256": null
+      },
+      "category": "v576_expected",
+      "discrepancies": [
+        "source artifact is missing"
+      ],
+      "experiment_number": 6610,
+      "external_receipts": [],
+      "gate_check_summary": {
+        "blocked": true,
+        "reason": "expected source artifact is missing"
+      },
+      "honest_verdict": "missing artifact",
+      "missing_evidence": [
+        "results/experiment_6610_constraint_safety_hacking_audit.json"
+      ],
+      "path": "results/experiment_6610_constraint_safety_hacking_audit.json",
+      "present": false,
+      "row_hash_receipts": {},
+      "row_store_counts": {},
+      "sha256": null,
+      "source_state": "missing",
+      "source_verdict_class": null,
+      "status": "missing",
+      "task_id": "exp6610-constraint-safety-hacking-audit",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flagged": false,
+      "adversarial_flags": [],
+      "adversarial_sidecar": {
+        "path": "results/experiment_6611_live_arc_invariant_projection.json.adversarial.json",
+        "present": false,
+        "sha256": null
+      },
+      "category": "v576_expected",
+      "discrepancies": [],
+      "experiment_number": 6611,
+      "external_receipts": [],
+      "gate_check_summary": {
+        "blocked": false,
+        "bounded_cost": true,
+        "candidate_held_win": false,
+        "failed_checks": [],
+        "game_disjoint": true,
+        "no_runtime_validity_loss": true,
+        "separated_from_random_projection": false,
+        "strictly_lower_than_no_projection": false
+      },
+      "honest_verdict": "complete_held_world_model_prediction_projection_no_effect_no_solve_claim",
+      "missing_evidence": [],
+      "path": "results/experiment_6611_live_arc_invariant_projection.json",
+      "present": true,
+      "row_hash_receipts": {
+        "per_unit_rows": {
+          "checked": 0,
+          "mismatch_count": 0,
+          "mismatches": []
+        }
+      },
+      "row_store_counts": {
+        "per_unit_rows": 156
+      },
+      "sha256": "sha256:8d8a975e545887cd313ef444c710ca7cc1318840047ca0e4256045eec587ec51",
+      "source_state": "present",
+      "source_verdict_class": "null",
+      "status": "complete_live_reachable_comparison",
+      "task_id": "exp6611-live-arc-invariant-projection",
+      "verdict_class": "null"
+    },
+    {
+      "adversarial_flagged": false,
+      "adversarial_flags": [],
+      "adversarial_sidecar": {
+        "path": "results/experiment_6612_spectral_k_block_scale_rust_parity.json.adversarial.json",
+        "present": false,
+        "sha256": null
+      },
+      "category": "v576_expected",
+      "discrepancies": [],
+      "experiment_number": 6612,
+      "external_receipts": [],
+      "gate_check_summary": [
+        {
+          "command": ".venv/bin/pytest tests/python -q",
+          "exit_code": 3,
+          "gate": "toolchain_or_test_failure"
+        }
+      ],
+      "honest_verdict": "blocked_reference_parity_cost_or_protection: stationary, transition, wall, and parity conclusions are withheld; CPU software only",
+      "missing_evidence": [],
+      "path": "results/experiment_6612_spectral_k_block_scale_rust_parity.json",
+      "present": true,
+      "row_hash_receipts": {
+        "per_unit_rows": {
+          "checked": 0,
+          "mismatch_count": 0,
+          "mismatches": []
+        },
+        "rust_python_parity_rows": {
+          "checked": 0,
+          "mismatch_count": 0,
+          "mismatches": []
+        }
+      },
+      "row_store_counts": {
+        "per_unit_rows": 240,
+        "rust_python_parity_rows": 60
+      },
+      "sha256": "sha256:c49aaee1d2ac5318b2ea680c009719e770d4b30993eff9934cc6a864f335dbf0",
+      "source_state": "present",
+      "source_verdict_class": "blocked",
+      "status": "blocked_reference_parity_cost_or_protection",
+      "task_id": "exp6612-spectral-k-block-scale-rust-parity",
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_flagged": true,
+      "adversarial_flags": [
+        {
+          "detail": "inference_substrate='deterministic_verifier_governed_invariant_memory_lifecycle_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.",
+          "kind": "SUBSTRATE_NO_LLM_BY_NAME",
+          "severity": "warn"
+        },
+        {
+          "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "adversarial_sidecar": {
+        "path": "results/experiment_6613_invariant_memory_lifecycle.json.adversarial.json",
+        "present": false,
+        "sha256": null
+      },
+      "category": "v576_expected",
+      "discrepancies": [
+        "source verdict_class is missing"
+      ],
+      "experiment_number": 6613,
+      "external_receipts": [],
+      "gate_check_summary": {
+        "blocked": false,
+        "blocked_value": null,
+        "failed_checks": [],
+        "hash": true,
+        "journal": true,
+        "lifecycle": true,
+        "no_utility_claim": true,
+        "non_gating_test_failures": [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "disposition": "pre_existing_suite_failure",
+            "exit_code": 130
+          }
+        ],
+        "occupancy": true,
+        "poison": true,
+        "protection": true,
+        "ready": true,
+        "resource": true,
+        "restart": true,
+        "rollback": true,
+        "schema": true,
+        "tests": true,
+        "upstream": true
+      },
+      "honest_verdict": "complete_invariant_memory_lifecycle_conformance_no_utility_claim",
+      "missing_evidence": [],
+      "path": "results/experiment_6613_invariant_memory_lifecycle.json",
+      "present": true,
+      "row_hash_receipts": {
+        "lifecycle_transition_rows": {
+          "checked": 0,
+          "mismatch_count": 0,
+          "mismatches": []
+        }
+      },
+      "row_store_counts": {
+        "lifecycle_transition_rows": 27
+      },
+      "sha256": "sha256:7b0437efcd78ae3c082d7dc9ec8c8e81bdd8724a05246e367b3079f6036a856c",
+      "source_state": "present",
+      "source_verdict_class": null,
+      "status": "complete_invariant_memory_lifecycle_conformance",
+      "task_id": "exp6613-invariant-memory-lifecycle",
+      "verdict_class": "null"
+    },
+    {
+      "adversarial_flagged": true,
+      "adversarial_flags": [
+        {
+          "detail": "verdict_class='blocked_tests' is outside the closed enum ['blocked', 'circular_positive', 'disqualified', 'null', 'partial', 'positive']. The enum is closed on purpose — extending it per-artifact recreates the drifting-token-list problem this field replaces. Pick the nearest class and put the nuance in honest_verdict.",
+          "kind": "VERDICT_CLASS_MISMATCH",
+          "severity": "critical"
+        }
+      ],
+      "adversarial_sidecar": {
+        "path": "results/experiment_6614_prospective_invariant_self_learning.json.adversarial.json",
+        "present": false,
+        "sha256": null
+      },
+      "category": "v576_expected",
+      "discrepancies": [
+        "current adversarial verification found a critical defect"
+      ],
+      "experiment_number": 6614,
+      "external_receipts": [],
+      "gate_check_summary": {
+        "all_gates_passed": false,
+        "blocked": true,
+        "candidate_win": false,
+        "failed_blocking_gates": [
+          "tests"
+        ],
+        "failed_gates": [
+          "held_future_over_static",
+          "held_future_over_shuffled",
+          "tests"
+        ],
+        "rows_recomputed": true
+      },
+      "honest_verdict": "blocked_tests: failed tests with observed=False",
+      "missing_evidence": [],
+      "path": "results/experiment_6614_prospective_invariant_self_learning.json",
+      "present": true,
+      "row_hash_receipts": {
+        "memory_transition_rows": {
+          "checked": 144,
+          "mismatch_count": 0,
+          "mismatches": []
+        },
+        "per_unit_rows": {
+          "checked": 352,
+          "mismatch_count": 0,
+          "mismatches": []
+        },
+        "prediction_before_observation_rows": {
+          "checked": 352,
+          "mismatch_count": 0,
+          "mismatches": []
+        }
+      },
+      "row_store_counts": {
+        "memory_transition_rows": 144,
+        "per_unit_rows": 352,
+        "prediction_before_observation_rows": 352
+      },
+      "sha256": "sha256:051c2401b7d79ad9d9f69d6ba9661ffdf053e516a125fe2c28959956cff848b9",
+      "source_state": "present",
+      "source_verdict_class": "blocked_tests",
+      "status": "blocked_tests",
+      "task_id": "exp6614-prospective-invariant-self-learning",
+      "verdict_class": "disqualified"
+    },
+    {
+      "category": "v575_context",
+      "experiment_number": 6593,
+      "honest_verdict": "complete: Qwen, Gemma, and pooled CFR effects replayed; every exact-success delta is 0.0 with zero direct headroom, so no CFR benefit is eligible",
+      "missing_evidence": [],
+      "path": "results/experiment_6593_cfr_independent_row_reducer.json",
+      "present": true,
+      "row_store_counts": {
+        "per_unit_rows": 120
+      },
+      "sha256": "sha256:8edf843e26deb2cf3de60a065d9699cca1b68906d8cc8ae4a4671eb83b434ab0",
+      "source_state": "present",
+      "source_verdict_class": null,
+      "status": "complete_cfr_independent_row_reducer_null",
+      "task_id": "exp6593"
+    },
+    {
+      "category": "v575_context",
+      "experiment_number": 6594,
+      "honest_verdict": "complete: clean CFR replay and every applicable source, constraint, stage, family, tamper, leakage, and exact-authority attack behaved as preregistered; the CFR scientific effect remains null",
+      "missing_evidence": [],
+      "path": "results/experiment_6594_cfr_counterfactual_authority_audit.json",
+      "present": true,
+      "row_store_counts": {
+        "per_unit_rows": 440
+      },
+      "sha256": "sha256:d7302616c99e7e32b247467a00ee2a04d8dd7f2f2a0b44324cb5bc80828a29ea",
+      "source_state": "present",
+      "source_verdict_class": null,
+      "status": "complete_cfr_counterfactual_authority_audit",
+      "task_id": "exp6594"
+    },
+    {
+      "category": "v575_context",
+      "experiment_number": 6595,
+      "honest_verdict": "complete: learned invariant projection improved held conservative frozen local rollouts over no projection and norm-matched random constraints; random projection was harmful; damped controls selected no comparable invariant and showed null learned benefit; the exact arm is diagnostic only",
+      "missing_evidence": [],
+      "path": "results/experiment_6595_invariant_projection_world_model_canary.json",
+      "present": true,
+      "row_store_counts": {
+        "per_unit_rows": 240
+      },
+      "sha256": "sha256:9224fdbe2bfa6610e6ed6040f25c0272ee68923c39197ab65845d80c7d22ceb1",
+      "source_state": "present",
+      "source_verdict_class": "positive",
+      "status": "complete_held_comparative_evidence",
+      "task_id": "exp6595"
+    },
+    {
+      "category": "v575_context",
+      "experiment_number": 6596,
+      "honest_verdict": "complete: the toy convex-hull feasible-token flow canary replayed all fixtures, controls, held errors, exact checks, distortion, and charged cost; exact-set validity is circular and this does not reproduce a language model",
+      "missing_evidence": [],
+      "path": "results/experiment_6596_convergeflow_feasible_token_canary.json",
+      "present": true,
+      "row_store_counts": {
+        "per_unit_rows": 180
+      },
+      "sha256": "sha256:5fd3455653dd7b803809d239117d3a8a453fbcadab2312fb0fab710b14c13cd3",
+      "source_state": "present",
+      "source_verdict_class": "circular_positive",
+      "status": "complete_fixture_evidence",
+      "task_id": "exp6596"
+    },
+    {
+      "category": "v575_context",
+      "experiment_number": 6597,
+      "honest_verdict": "complete: charged CPU software exact-enumerable fixtures support every spectral k-block arm; no FPGA, TSU, PIMI, or general hardware claim",
+      "missing_evidence": [],
+      "path": "results/experiment_6597_spectral_k_block_ising_canary.json",
+      "present": true,
+      "row_store_counts": {
+        "per_unit_rows": 45
+      },
+      "sha256": "sha256:c6d8be8af1984b733b37460eec9c77ab564c1318c1e68438545531ef26b6a3ab",
+      "source_state": "present",
+      "source_verdict_class": "positive",
+      "status": "complete",
+      "task_id": "exp6597"
+    },
+    {
+      "category": "capstone_prior_failure",
+      "experiment_number": 6498,
+      "honest_verdict": "complete_independent_audit: row replay validated; continuous-learning claim remains ineligible because held_future_benefit failed",
+      "missing_evidence": [],
+      "path": "results/experiment_6498_csl_independent_audit.json",
+      "present": true,
+      "row_store_counts": {
+        "per_unit_rows": 308
+      },
+      "sha256": "sha256:a0c32960b4b6646bf1c4ebf0804eb6f180128e427cd9fac143176b04901423d8",
+      "source_state": "present",
+      "source_verdict_class": null,
+      "status": "complete_independent_audit",
+      "task_id": "exp6498"
+    },
+    {
+      "category": "capstone_prior_failure",
+      "experiment_number": 6554,
+      "honest_verdict": "blocked: receipt, safety, retention, support, and scientific disposition are blocked by missing live evidence: all_mandated_models_loaded,checkpoint_receipts,exp6553_memory_transition_rows,exp6553_per_unit_rows,fresh_local_inference_performed,journal_receipts,raw_model_receipts,upstream:all_mandated_models_loaded,upstream:gpu_vram_contract,upstream:restart_rollback_equal,upstream:retention_noninferior,upstream_verdict_blocked",
+      "missing_evidence": [],
+      "path": "results/experiment_6554_continuous_self_learning_independent_audit.json",
+      "present": true,
+      "row_store_counts": {
+        "per_unit_rows": 0
+      },
+      "sha256": "sha256:337756fe25fb1639e3fc5456fde6eabc166f141853cfa089ec8e8ce8fde83447",
+      "source_state": "present",
+      "source_verdict_class": "blocked",
+      "status": "blocked_continuous_self_learning_audit_missing_inputs",
+      "task_id": "exp6554"
+    }
+  ],
+  "status": "complete_partial_v576_independent_capstone",
+  "task_disposition_rows": [
+    {
+      "blocker_reasons": [],
+      "evidence": [
+        "sha256:fc5ed4d0ec8e1355e8732fc7dc2d9c6f81c23a3e8677728f3dfa1161c9c948d0"
+      ],
+      "row_kind": "task",
+      "unit_id": "exp6604-exact-two-level-plan-corpus",
+      "verdict_class": "null"
+    },
+    {
+      "blocker_reasons": [],
+      "evidence": [
+        "sha256:a52f92667200db339b4519acdf30b2ec59eec18aa9d24e3ebd93fbcb659b096a"
+      ],
+      "row_kind": "task",
+      "unit_id": "exp6605-qwen36-direct-headroom",
+      "verdict_class": "blocked"
+    },
+    {
+      "blocker_reasons": [
+        "source verdict_class is missing"
+      ],
+      "evidence": [
+        "sha256:d68fd386f007d1a44182d1562da124f4c4589f5c7fd6a0e4577b13159003dedc"
+      ],
+      "row_kind": "task",
+      "unit_id": "exp6606-gemma4-31b-direct-headroom",
+      "verdict_class": "blocked"
+    },
+    {
+      "blocker_reasons": [],
+      "evidence": [
+        "sha256:c428c38a8544b22cfec528155f103dfcd38cd555023a5db5c2e3056561c2052a"
+      ],
+      "row_kind": "task",
+      "unit_id": "exp6607-gemma4-26b-a4b-direct-headroom",
+      "verdict_class": "blocked"
+    },
+    {
+      "blocker_reasons": [],
+      "evidence": [
+        "sha256:85da1e31b22992fa981a4aa5616e7cb9689803d398a1084c7c746c177c4a2d10"
+      ],
+      "row_kind": "task",
+      "unit_id": "exp6608-family-headroom-reducer",
+      "verdict_class": "blocked"
+    },
+    {
+      "blocker_reasons": [
+        "source verdict_class is missing"
+      ],
+      "evidence": [
+        "sha256:ef2b87112aedc45b53793d06bbff1dceff7fb091f4bde0141b0800df9edb8b2a"
+      ],
+      "row_kind": "task",
+      "unit_id": "exp6609-two-level-constrained-decoding",
+      "verdict_class": "blocked"
+    },
+    {
+      "blocker_reasons": [
+        "results/experiment_6610_constraint_safety_hacking_audit.json",
+        "source artifact is missing"
+      ],
+      "evidence": [],
+      "row_kind": "task",
+      "unit_id": "exp6610-constraint-safety-hacking-audit",
+      "verdict_class": "blocked"
+    },
+    {
+      "blocker_reasons": [],
+      "evidence": [
+        "sha256:8d8a975e545887cd313ef444c710ca7cc1318840047ca0e4256045eec587ec51"
+      ],
+      "row_kind": "task",
+      "unit_id": "exp6611-live-arc-invariant-projection",
+      "verdict_class": "null"
+    },
+    {
+      "blocker_reasons": [],
+      "evidence": [
+        "sha256:c49aaee1d2ac5318b2ea680c009719e770d4b30993eff9934cc6a864f335dbf0"
+      ],
+      "row_kind": "task",
+      "unit_id": "exp6612-spectral-k-block-scale-rust-parity",
+      "verdict_class": "blocked"
+    },
+    {
+      "blocker_reasons": [
+        "source verdict_class is missing"
+      ],
+      "evidence": [
+        "sha256:7b0437efcd78ae3c082d7dc9ec8c8e81bdd8724a05246e367b3079f6036a856c"
+      ],
+      "row_kind": "task",
+      "unit_id": "exp6613-invariant-memory-lifecycle",
+      "verdict_class": "null"
+    },
+    {
+      "blocker_reasons": [
+        "current adversarial verification found a critical defect"
+      ],
+      "evidence": [
+        "sha256:051c2401b7d79ad9d9f69d6ba9661ffdf053e516a125fe2c28959956cff848b9"
+      ],
+      "row_kind": "task",
+      "unit_id": "exp6614-prospective-invariant-self-learning",
+      "verdict_class": "disqualified"
+    },
+    {
+      "blocker_reasons": [
+        "no eligible family treatment comparison"
+      ],
+      "evidence": [
+        "Exp6605-Exp6610 row and gate replay"
+      ],
+      "row_kind": "milestone_question",
+      "unit_id": "headroom_qualified_two_level_decoding",
+      "verdict_class": "blocked"
+    },
+    {
+      "blocker_reasons": [
+        "zero effect versus both controls"
+      ],
+      "evidence": [
+        "Exp6611 156-row three-arm replay"
+      ],
+      "row_kind": "milestone_question",
+      "unit_id": "live_invariant_projection",
+      "verdict_class": "null"
+    },
+    {
+      "blocker_reasons": [
+        "source terminal test block; software scope only"
+      ],
+      "evidence": [
+        "Exp6612 240 rows and 60 parity rows"
+      ],
+      "row_kind": "milestone_question",
+      "unit_id": "scaled_spectral_k_block_sampling",
+      "verdict_class": "partial"
+    },
+    {
+      "blocker_reasons": [
+        "zero held-future benefit; Exp6614 artifact integrity disqualified"
+      ],
+      "evidence": [
+        "Exp6613 lifecycle and Exp6614 prospective replay"
+      ],
+      "row_kind": "milestone_question",
+      "unit_id": "continuous_self_learning",
+      "verdict_class": "null"
+    }
+  ],
+  "tests_run": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6604_exact_two_level_plan_corpus.json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6605_qwen36_direct_headroom.json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6606_gemma4_31b_direct_headroom.json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6607_gemma4_26b_direct_headroom.json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6608_family_headroom_reducer.json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6609_two_level_constrained_decoding.json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6611_live_arc_invariant_projection.json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6612_spectral_k_block_scale_rust_parity.json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6613_invariant_memory_lifecycle.json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_6614_prospective_invariant_self_learning.json",
+      "duration_s": 1.158105,
+      "exit_code": 1,
+      "expected_nonzero_due_to_preserved_findings": true,
+      "flagged_artifact_count": 3,
+      "scope": "adversarial_verification_all_present_v576_sources"
+    },
+    {
+      "command": "internal: Exp6615 artifact, row, gate, verdict, attack, and checksum validation",
+      "duration_s": 1.265492,
+      "exit_code": 0,
+      "scope": "artifact_row_gate_and_claim_replay"
+    }
+  ],
+  "verdict_class": "partial",
+  "verifier_is_oracle": true
+}
