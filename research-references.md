@@ -37653,3 +37653,113 @@ rank, route, or abstain. They may not certify their own outputs.
   repair, held-anchor retention, and recoverable-support checks.
 
 <!-- V579-PLANNER-REFRESH-20260826-END -->
+
+## V580 planner refresh - 2026-08-26
+
+<!-- V580-PLANNER-REFRESH-20260826-START -->
+
+This refresh follows the terminal V579 admission cascade. It searched the
+requested 2025-2026 topics on arXiv and checked OpenReview, Hugging Face Papers,
+Semantic Scholar, GitHub, Extropic, and Logical Intelligence. Exact executable
+checks remain release authority. Learned energies, verifiers, memories, and
+trace monitors may propose, rank, route, or abstain; they may not certify their
+own outputs.
+
+### Promising findings selected for V580
+
+- **Recursive Experiential-Working Memory Evolution for Long-Horizon Agent
+  Harnesses** - arXiv:2608.24876,
+  https://arxiv.org/abs/2608.24876; code:
+  https://github.com/Gen-Verse/Recuris; submitted 2026-08-25. Recuris separates
+  verified working state from experiential skill memory, localizes failures to
+  a memory component, and admits targeted patches with paired held-out
+  validation. The released implementation also distinguishes fixed memory from
+  between-attempt adaptation and reports negative transfer honestly. Carnot
+  hook: evolve typed constraint-repair memory with exact checker receipts,
+  frozen/context-only controls, prospective task orders, and rollback rather
+  than treating a larger prompt as learning.
+- **Selective Regenerative Decoding: Trajectory-Level Intervention for
+  Inference-Time Reasoning** - arXiv:2608.24338,
+  https://arxiv.org/abs/2608.24338; submitted 2026-08-25. SRD keeps a useful
+  prefix and regenerates only a degraded suffix instead of accepting or
+  discarding a full trajectory. Carnot hook: test exact-checker-localized suffix
+  repair on a frozen candidate pool. Compare direct candidates, full retry, and
+  localized regeneration at matched proposal-token budgets; keep the exact
+  verifier authoritative and report repair locality per row.
+- **AutoSaddler: Automatic Harness Optimization with Durable Updates from Agent
+  Execution Traces** - arXiv:2608.23041,
+  https://arxiv.org/abs/2608.23041; code:
+  https://github.com/microsoft/AutoSaddler; submitted 2026-08-24. AutoSaddler
+  combines failure-trace diagnosis, targeted structured patches, and
+  generalization-aware update selection. Carnot hook: repair the V579
+  admission contract from the specific failing receipt instead of rewriting
+  the lease stack, and validate task-owned readiness separately from the known
+  unrelated repo-wide xdist/CWD baseline.
+- **Automata from Agent Traces: Failure and Next-Step Prediction** -
+  arXiv:2608.23670, https://arxiv.org/abs/2608.23670; submitted 2026-08-24.
+  The paper compresses cross-run agent traces into small finite-state machines
+  and reports held-out next-step and failure prediction. Carnot hook: derive a
+  game-agnostic supervisor state machine from archived live E3 transitions,
+  then measure held-out forbidden-action avoidance and actual live-policy
+  influence. This is a routing primitive, not an ARC solve oracle.
+- **StepGuard: Learning Step-Level Guardrails with Scalable Supervision and
+  Safety-Utility Balancing** - arXiv:2608.24777,
+  https://arxiv.org/abs/2608.24777; submitted 2026-08-25. Its paired safe/unsafe
+  action construction and pre-execution decision point reinforce the need for
+  twin controls and false-intervention accounting. Carnot hook: report both
+  prevented violations and blocked-valid actions for any pre-action supervisor;
+  a more rejective guard is not automatically a more discriminative one.
+
+### Requested secondary and product checks
+
+- **OpenReview:** 2026 records on selective value-filtered decoding,
+  tool-augmented verifiers, and graph-structured reasoning verification support
+  bounded intervention and independent executable authority. They do not
+  provide a matching-base public EBT or ARM-EBM checkpoint. Rejected,
+  withdrawn, and workshop submissions remain design leads, not Carnot evidence.
+- **Hugging Face Papers:** the 2026-08-26 feed highlights Recuris, AutoSaddler,
+  and trace-derived automata. The common useful contract is targeted updates
+  admitted on held-out evidence. V580 should not import their benchmark claims
+  or LLM judges as release authority.
+- **Semantic Scholar:** the public citation API returned 35 visible EBT
+  (`2507.02092`) citations and eight ARM-EBM (`2512.15605`) citations on
+  2026-08-26. The newest directly relevant EBT trail remains the already indexed
+  Solver-Hard diagnostic (`2607.17047`); the ARM-EBM trail adds no reproducible
+  matching-base local checkpoint. Counts are discovery receipts only.
+- **GitHub discovery:** Recuris and AutoSaddler publish executable reference
+  implementations. Current trending and EBM-topic checks found no new local
+  dependency that supersedes Carnot's pinned stack. Reuse their evidence
+  contracts conceptually; vendor no package for novelty alone.
+- **Extropic:** the current hardware page still schedules Z1 Stick and Z1 Card
+  early access for 2027. Carnot has no authenticated TSU runner. V580 makes no
+  TSU latency, power, or hardware-availability claim.
+- **Logical Intelligence:** the current Kona page describes a non-generative
+  constraint layer, while the January and June 2026 architecture posts describe
+  whole/partial-trace energies and Spec-Code-Proof alignment. No public Kona
+  weights, reproducible training recipe, or documented local runner were found.
+  Kona and Aleph remain product comparators, not executable baselines.
+- **KAN and attached FPGA tracks:** no newly found KAN result closes Carnot's
+  current model-binding or exact-authority gap. No changed KV260, GateMate, or
+  PolarFire receipt exists, so attached boards remain outside this milestone.
+
+### V580 planning impact
+
+- Replace the V579 all-or-nothing admission gate with a narrow receipt reducer:
+  task-owned lease/process/identity tests determine model admission, while the
+  unrelated repo-wide test baseline remains visible but non-gating.
+- Establish complete direct headroom before intervention. Then compare exact
+  failure-localized suffix regeneration against full retry at matched token and
+  candidate budgets; never reuse the retired finite-ID generated-answer
+  transport mechanism.
+- Make continuous self-learning prospective and state-grounded. Admit targeted
+  memory patches only when exact source repair, held-anchor retention,
+  recoverable support, restart, and rollback all pass across task orders.
+- Use a trace-derived, game-agnostic FSM only as an ARC live-policy supervisor.
+  Measure retrieval and action influence on held-out transitions and make no
+  level-solve claim.
+- Replace the failed Kac-Ward implementation attempt with a bounded,
+  treewidth-exact Boltzmann reference and test temperature schedules using
+  likelihood, autocorrelation, and effective-sample-size rows before any
+  sampler efficiency claim.
+
+<!-- V580-PLANNER-REFRESH-20260826-END -->
