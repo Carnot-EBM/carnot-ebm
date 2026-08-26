@@ -57986,3 +57986,69 @@ the final content checksum detects the change.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6647 | Implemented (`python/carnot/experiment_6647_receipt_scoped_admission_boundary.py`) | Implemented (`tests/python/test_experiment_6647_receipt_scoped_admission_boundary.py`; terminal-ready classification, diagnostic isolation, provenance, and atomic artifact coverage) |
+
+### REQ-REPORT-6648: Three-Family Admission SHALL Recompute From Complete Rows
+
+Exp6648 SHALL write
+`results/experiment_6648_three_family_gguf_canaries.json` atomically. The
+artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `upstream_gate_receipt`, `defined_model_specs`,
+`model_resolution_receipts`, `model_admission_rows`,
+`embedded_tokenizer_rows`, `lease_and_unload_receipts`,
+`all_mandated_models_admitted`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+The upstream receipt SHALL bind the Exp6647 path, SHA-256 hash,
+`task_owned_admission_ready_score`, expected value `1.0`, and observed value.
+Each model row SHALL bind exact hub identity, role, quantization, file path and
+hash, worker PID/start/executable/arguments, model PID/start/executable/arguments,
+device UUID, phase history, VRAM before/resident/after, prompt/output hashes,
+token counts, exit, unload, release, and post-process absence.
+
+`all_mandated_models_admitted` SHALL be true only when exactly one valid row
+exists for each of the three defined families. The aggregate SHALL recompute
+from those rows. A successful admission SHALL use `status=complete_ready`,
+`verdict_class=null`, and no model-quality language. Any block SHALL use a
+`blocked_` status and verdict, set `verdict_class=blocked`, keep the aggregate
+false, and populate `gate_check_summary` with each failed check and observed
+value. The artifact SHALL use
+`inference_substrate=fresh_process_llama_cpp_cuda_gguf_canaries` and
+`verifier_is_oracle=false`.
+
+`field_provenance` SHALL give source, hash, reducer, and schema lineage for
+every top-level field. The final checksum SHALL exclude only itself. Protected
+hashes SHALL prove that `research-roadmap.yaml` and
+`scripts/research_conductor.py` did not change.
+
+#### SCENARIO-REPORT-6648-READY
+
+**Given** the upstream gate and all three independent family rows pass
+**When** the artifact recomputes admission
+**Then** admission is true, the verdict class is null, all required evidence
+rows are present, and the verdict makes no performance or quality claim.
+
+#### SCENARIO-REPORT-6648-BLOCKED
+
+**Given** the upstream gate fails or any family row fails an identity,
+tokenizer, process, accelerator, output, unload, or release check
+**When** the artifact is finalized
+**Then** admission is false and `gate_check_summary` records the exact check,
+expected value, and observed value without converting missing data to zero.
+
+#### SCENARIO-REPORT-6648-ATTACKS-AND-ATOMIC
+
+**Given** model substitution, CPU substitution, `AutoTokenizer`, duplicate
+family, reused process identity, missing output, forged UUID, phase omission,
+missing unload, aggregate drift, protected-file mutation, or content mutation
+**When** the artifact validator runs
+**Then** every attack fails closed and an atomic reader never observes a
+partial final file.
+
+## Implementation Status (REQ-REPORT-6648)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6648 | Implemented (`python/carnot/experiment_6648_three_family_gguf_canaries.py`) | Implemented (`tests/python/test_experiment_6648_three_family_gguf_canaries.py`; ready/blocked reduction, adversarial rows, provenance, checksum, and atomic-write coverage) |

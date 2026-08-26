@@ -2784,3 +2784,41 @@ The output SHALL be saved to `results/experiment_3412_vgs_override_decoder.json`
 **When** evaluated with VGSTextualConstraintLogitsProcessor
 **Then** probabilities disagreeing with constraints are penalized
 **And** hallucination avoidance statistics are reported in `results/experiment_3412_vgs_override_decoder.json`.
+
+### REQ-INFER-SOTA-6648: Three Mandated GGUF Families SHALL Pass Independent Canaries
+
+Exp6648 SHALL define exactly these three model repositories:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-26B-A4B-it-GGUF`, and
+`unsloth/gemma-4-31B-it-GGUF`. It SHALL resolve Qwen and the middle MoE with
+`cached_sota_pair(gpu_indices=(0, 1), model_indices=(0, 1))`. It SHALL resolve
+the dense flagship with `resolve_cached_gguf()`. It SHALL not download a model
+or use a legacy model to satisfy admission.
+
+Each family SHALL run in a separate fresh process. The process SHALL use the
+embedded llama.cpp GGUF tokenizer, load the exact hashed file with CUDA
+offload, and run the same fixed short prompt. A family passes only when the
+output is non-empty and input and output token counts are positive. The run
+SHALL use no `AutoTokenizer` or Hugging Face tokenizer path.
+
+#### SCENARIO-INFER-SOTA-6648-ALL-FAMILIES
+
+**Given** the Exp6647 structured gate is ready and all three exact cached GGUF
+files, embedded tokenizers, CUDA devices, and llama.cpp runtime are available
+**When** Exp6648 runs its fixed canaries in launch-order sequence
+**Then** each family emits one independent non-empty CUDA inference row and
+`all_mandated_models_admitted` is true.
+
+#### SCENARIO-INFER-SOTA-6648-NO-SUBSTITUTION
+
+**Given** one mandated model, embedded tokenizer, exact file hash, CUDA
+receipt, or output receipt is missing or substituted
+**When** admission is reduced
+**Then** that family fails, the aggregate stays false, and no legacy or CPU
+smoke row can satisfy the missing family.
+
+## Implementation Status (REQ-INFER-SOTA-6648)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFER-SOTA-6648 | Implemented (`python/carnot/experiment_6648_three_family_gguf_canaries.py`) | Implemented (`tests/python/test_experiment_6648_three_family_gguf_canaries.py`; exact resolver, embedded-tokenizer, identity, and inference-row coverage) |
