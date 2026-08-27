@@ -226,6 +226,20 @@ def _source(
     return payload
 
 
+def _all_families_blocked() -> dict[str, dict[str, object]]:
+    """Give every family a blocked upstream artifact.
+
+    Reading the real `results/` files bound these tests to whatever state the
+    upstream experiments happened to be in, so repairing an upstream turned them
+    red. The blocked path is what they mean to exercise, so state it directly.
+    """
+
+    return {
+        family: {"status": "blocked_upstream_fixture", "verdict_class": "blocked"}
+        for family in mod.FAMILY_REGISTRY
+    }
+
+
 def _report(held_successes: int = 1) -> dict[str, object]:
     fixture = _fixture()
     registry = _registry()
@@ -373,7 +387,15 @@ def test_required_fields_validate_and_atomic_writer_replaces(tmp_path: Path) -> 
 
 # REQ-REPORT-6608-PARTIAL and SCENARIO-REPORT-6608-GATE-OWNERSHIP.
 def test_checked_in_blocked_upstreams_emit_648_rows_and_named_gate() -> None:
-    report = mod.build_report(REPO, "20260825", tests_run=[])
+    # Inject three absent families rather than reading `results/`. Those files are
+    # evidence and change when an upstream is repaired, so binding this test to
+    # their current contents made it assert that the repository stays broken.
+    report = mod.build_report(
+        REPO,
+        "20260825",
+        sources=_all_families_blocked(),
+        tests_run=[],
+    )
     assert len(report["per_unit_rows"]) == 648
     assert {row["replay_state"] for row in report["per_unit_rows"]} == {"blocked_upstream"}
     assert report["eligible_model_specs"] == []
@@ -382,6 +404,20 @@ def test_checked_in_blocked_upstreams_emit_648_rows_and_named_gate() -> None:
     assert report["verdict_class"] == "blocked"
     assert report["gate_check_summary"]["failed_checks"]
     assert mod.validate_report(report) == []
+
+    # Load the real upstream files too, but assert only what holds whatever state
+    # they are in. The reducer must always emit the full matrix and legal states.
+    # It cannot assert a clean report today: with a repaired upstream the writer
+    # reports `reducer_checks_failed:row_replay`, an open defect recorded in
+    # ops/known-issues.md 2026-08-27 (reduced rows drop `finish_reason`).
+    on_disk = mod.build_report(REPO, "20260825", tests_run=[])
+    assert len(on_disk["per_unit_rows"]) == 648
+    assert {row["replay_state"] for row in on_disk["per_unit_rows"]} <= {
+        "replayed",
+        "blocked_upstream",
+        "missing_artifact",
+        "missing_row",
+    }
 
 
 # REQ-REPORT-6608-REPLAY and SCENARIO-REPORT-6608-INDEPENDENT-REPLAY.
@@ -477,9 +513,7 @@ def test_loader_and_reduced_row_defenses_return_false(tmp_path: Path) -> None:
     assert mod._load_json(malformed) == {}
     report = _report(1)
     row = report["per_unit_rows"][0]
-    task_map = {
-        item["task_id"]: item for item in report["preconditions_checked"]["fixture_tasks"]
-    }
+    task_map = {item["task_id"]: item for item in report["preconditions_checked"]["fixture_tasks"]}
     bad_hash = deepcopy(row)
     bad_hash["row_hash"] = "sha256:" + "0" * 64
     assert mod._reduced_row_valid(bad_hash, task_map) is False
@@ -530,7 +564,12 @@ def test_validator_names_each_terminal_contract_failure(tmp_path: Path) -> None:
     no_headroom["reproducibility_checksum"] = mod.artifact_checksum(no_headroom)
     assert "no_headroom_disposition_mismatch" in mod.validate_report(no_headroom)
 
-    blocked = mod.build_report(REPO, "20260825", tests_run=[])
+    blocked = mod.build_report(
+        REPO,
+        "20260825",
+        sources=_all_families_blocked(),
+        tests_run=[],
+    )
     blocked["status"] = "complete_wrong"
     blocked["verdict_class"] = "null"
     blocked["reproducibility_checksum"] = mod.artifact_checksum(blocked)

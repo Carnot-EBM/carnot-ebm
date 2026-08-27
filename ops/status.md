@@ -12,6 +12,23 @@ tests pass; 8 mutations each RED in a PYTHONPATH-pinned worktree with the
 import file verified, baseline restored GREEN. Next: re-run the tool after
 the in-flight supwindow ar25 cells land, and on every future supervised run.)
 
+**Also 2026-08-27 (Exp6605/Exp6607 GPU receipt load-phase stage):** the one
+failing authenticity criterion, `worker_pid_present all during`, was the FIRST
+TWO samples of the run, taken 0.1 s and 1.3 s after the server started. The
+worker holds no CUDA context until model load finishes, so it was genuinely not
+on the card yet; card memory climbs 266 -> 470 -> 21111 MB across those three
+samples. The sampler now labels the load phase `load`; serving samples keep
+`during` and stay under the full check. The predicate got STRICTER in the same
+change: a `during` sample must show the worker PID in its own recorded process
+list, not just carry a True flag. Live re-runs: Exp6605 `complete`, 216 rows,
+readiness 1.0; Exp6607 `complete`, 216 rows, readiness 0.0 (measured, not
+blocked: held exact success 0.1667 is below the frozen 0.20 floor). Next:
+Exp6608 still refuses to write with `reducer_checks_failed:row_replay` — a
+separate pre-existing defect where reduced rows drop `finish_reason`, so 23
+truncated Exp6605 rows re-derive as `syntax_failure` instead of
+`invalid_generation`. Exp6606 remains blocked at the conductor gate for a
+missing `prior_failures` field, which needs a roadmap edit.
+
 Prior: 2026-08-26 (Exp6647 terminal-ready regression repaired by
 making the receipt reducer emit and validate `status=complete_ready`, while the
 single non-critical no-LLM substrate warning remains visible and non-gating.

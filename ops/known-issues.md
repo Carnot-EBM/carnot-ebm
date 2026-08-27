@@ -18711,3 +18711,177 @@ registers.
 Cross-references: `python/carnot/experiment_6605_qwen36_direct_headroom.py`
 (`_gpu_receipts_ready`, ~line 546); CLAUDE.md "Adversarial Artifact Verification"; the
 2026-08-25 driver-mismatch incident that produced the reboot.
+
+### 2026-08-27 — Two capstone modules validate their milestone against the LIVE roadmap, and both are red
+
+**What is broken.** `tests/python/test_experiment_6659_v580_capstone.py` and
+`tests/python/test_experiment_6615_v576_independent_capstone.py` both fail today.
+6659 fails at COLLECTION (it calls `build_artifact` at module scope, so the whole file
+aborts); 6615 fails as 8 fixture errors plus 1 test failure. Both raise the same error:
+`ValueError: expected roadmap milestone 2026.08.580` (and `.576`). The live
+`research-roadmap.yaml` is at `2026.08.582`.
+
+**Why it rots by construction.** `experiment_6659_v580_capstone.py:220` and
+`experiment_6615_v576_independent_capstone.py:231` compare a hardcoded `MILESTONE`
+constant against the milestone read from the LIVE roadmap file. The roadmap advances every
+milestone. So each of these tests is green only during its own milestone and red forever
+after. Nothing warns when it flips.
+
+**This is a regression from a correct precedent, not a design question.** 25 capstone
+modules carry a milestone check. The other 23 — going back to v469 — compare
+`artifact["milestone"] != MILESTONE`, that is, the artifact's OWN milestone against the
+constant. That is self-consistent and never rots. Spot-checked v491, v504 and v530: 17
+tests, all passing. Only the two newest capstones, committed 2026-08-25 and 2026-08-27,
+read the live roadmap instead. The correct pattern already exists in the repo and was
+followed 23 times before being dropped twice in three days.
+
+**Recommended fix.** Change both to compare against the artifact's own milestone, matching
+the 23 precedents. Separately, move 6659's module-scope `build_artifact` call into a
+fixture, as 6615 already does — building at import turns any runtime failure into a
+collection error that takes the whole file down.
+
+**Step 6, the check that would have caught it.** A capstone module must not compare its
+hardcoded `MILESTONE` against `research-roadmap.yaml`. That is a narrow, non-fuzzy lint
+with an established correct pattern to point at, and it fires on exactly these two files
+today. Recommended, not yet built.
+
+**Related, from the same review.** `tests/python/test_experiment_5762_*.py:394` and
+`test_experiment_5763_*.py:356` call `pytest.skip` when their artifact is absent. That is a
+standing violation of the "Tests Must Run and Assert" rule and has not been flagged before.
+
+Found by the replay-eight review, 2026-08-27, and sharpened here after measuring the 23
+precedents. See also commit `df85981bd7` (KAN receipt adoption) from the same review.
+
+### RESOLVED 2026-08-27 — the failing samples were the load phase, not a gap
+
+Both failing `during` samples were the FIRST two, taken 0.1 s and 1.3 s after
+`Popen`. Neither is a gap in the run and neither is a query race.
+
+```
+sample 1  15:34:17.58  mem_used 266 MB   util 0%   compute pids: {harness}
+sample 2  15:34:18.77  mem_used 470 MB   util 7%   compute pids: {harness}
+sample 3  15:34:19.85  mem_used 21111 MB util 100% compute pids: {harness, 459483}
+```
+
+The worker holds no CUDA context until model load completes. `nvidia-smi`
+reported the card correctly at every step: at samples 1 and 2 the worker was
+genuinely not on the card yet, because it was still reading the GGUF. Memory
+climbs 266 -> 470 -> 21111 MB across the three samples, which is the load
+itself. So the sampler was asking a question the worker could not yet answer,
+and the predicate was right to say False.
+
+**The fix is in the sampler, not the predicate.** The load loop now labels its
+samples `load`. Samples taken while the server actually serves rows keep the
+`during` label and stay under the full check. Exp6607 carried the identical
+defect and got the identical fix; its block had a different cause (it lost the
+card to Exp6605, see below), so the defect was latent there.
+
+**The predicate got STRICTER, not looser, in the same change.** It no longer
+trusts the `worker_pid_present` flag on its own. It now also requires the
+session's worker PID to appear in that same sample's recorded process list, so
+a flag written without matching evidence fails closed. A session that relabels
+its serving samples as `load` to dodge the check fails the two-sample `during`
+floor instead. Both cases are regression-tested.
+
+Verified against the recorded evidence and then live:
+
+- The recorded session, judged by the new predicate: still False.
+- The same session with its load phase labelled correctly: True, 28 `during`.
+- The same session with the worker removed from every process list: False.
+- The same session with the flag forced True but no process on the card: False.
+- Live re-run of Exp6605 on GPU 0: `complete`, 216 rows, readiness 1.0,
+  `all_sessions_authentic: true`, stages `{before 1, load 11, during 19,
+  after 1}`, zero failing `during` samples.
+- Live re-run of Exp6607 on GPU 0: `complete`, 216 rows,
+  `all_sessions_authentic: true`, stages `{before 1, load 9, during 19,
+  after 1}`. Its readiness is 0.0, which is a measured finding and not a
+  block: held exact success is 0.1667, below the frozen 0.20 floor.
+
+Exp6607's original `blocked_gpu_ownership` was GPU contention, not this defect.
+Its receipt shows 21313 MB in use on card 0 and 21498 MB on card 1 at its
+precondition check, so it ran while Exp6605 still held a card.
+
+**The cascade is PARTLY unblocked. Two of three families are clean; Exp6608 is
+not.** Exp6608 now clears `blocked_family_baseline_evidence` and builds
+`complete_frozen_eligibility` with readiness 1.0, but its writer still refuses
+with `reducer_checks_failed:row_replay`. That is a SEPARATE, pre-existing
+defect that only became reachable once a family produced replayable rows:
+
+- 23 Exp6605 rows have `finish_reason: length` and are correctly charged
+  `invalid_generation` upstream (the generation hit the token cap).
+- `experiment_6608_family_headroom_reducer.py:_failure_from_replay` reads
+  `row.get("finish_reason")`, but the REDUCED row it is given does not carry
+  that field. It therefore re-derives `syntax_failure` for exactly those 23
+  rows, and `row_replay` fails.
+- The reducer consults the field, so its absence reads as an omission in the
+  reduced-row builder rather than a deliberate choice. Left unfixed here: it
+  changes another experiment's failure taxonomy, and whether a truncated plan
+  is `invalid_generation` or `syntax_failure` is an owner's call, not a
+  side effect of this task.
+
+Exp6606 remains blocked upstream of all of this, at the conductor gate, with
+`blocked_gate_check_failed: no prior_failures field on task`. That needs a
+roadmap edit, which is an operator decision.
+
+No artifact was hand-edited. Both re-runs went through the experiment modules.
+The prior blocked artifacts and the stale-label checkpoint are preserved under
+the job scratch tree.
+
+### 2026-08-27 — The anomaly escalator treats every False precondition as an infra block
+
+**What fires.** `ops/anomaly-escalations.md` currently carries "method may not have genuinely
+run (a precondition was False (method may have been infra-blocked))" against exp6607, exp6615
+and exp6676, among others.
+
+**Why it is wrong for exp6607.** `scripts/anomaly_escalation.py:61` does
+`any(v is False for v in pc.values())` — a flat scan over every key in `preconditions_checked`.
+exp6607's only top-level False is `auto_tokenizer_allowed: False`. That value is not a
+failure. CLAUDE.md's GGUF tokenizer rule REQUIRES it: `AutoTokenizer.from_pretrained` cannot
+work on a GGUF-only repo, and calling it is the documented `.310/.311` blocker. So a run that
+is correctly configured is escalated as possibly infra-blocked.
+
+**exp6607 did run, and its negative is honest.** 188.5s against a 60s floor; substrate
+`live_local_gemma4_26b_a4b_gguf_direct_plan_baseline_cuda_llamacpp`;
+`gpu_process_receipts.all_sessions_authentic: True` with a real gemma-4 llama-server command;
+216 rows in 188s is about 0.87s per row, which is plausible for 41-byte plan responses on a
+26B MoE. `all_required_preconditions_available` is True and every entry of the artifact's own
+`checks` sub-dict is True. The verdict — exact success 0.1667, outside the frozen interval —
+is a real measured negative.
+
+**The defect class.** This is a guard whose pattern is BROADER than its concept: it means
+"a required resource was missing" and it matches "any boolean in this dict is False". The
+artifact already carries the right signal in two places the scan ignores —
+`all_required_preconditions_available`, and the `checks` sub-dict of actual availability
+checks.
+
+**Why not to just silence it.** The current failure direction is toward over-escalating,
+which is the safe direction. A careless narrowing turns this into a guard that is trusted and
+silent, which the QA-Layer Authenticity Discipline names as the worst state. The minimal safe
+change is to scan the `checks` sub-dict when present, and to honour an explicitly-True
+`all_required_preconditions_available`, rather than to allowlist key names by hand — a
+hand-list would rot the same way. Any change needs the deletion test: remove the new
+condition and confirm a genuinely infra-blocked artifact still escalates.
+
+**Operator decision, not applied.** Left as-is pending that call.
+
+**Separately, a benign alarm from the same window.** `OPERATOR-ATTENTION: WRONG_MODEL_LOADED`
+at 13:52Z named pid 1148452 serving `Qwen3.6-35B-A3B-UD-Q4_K_M.gguf` against the live ARC pin
+`Qwen3.8-27B`. That process was exp6605's own server — the experiment is
+`qwen36_direct_headroom` and Qwen3.6-35B-A3B is on CLAUDE.md's approved SOTA list. The check
+compares every server against the ARC live pin, including servers belonging to non-ARC work.
+The process is gone and no llama-server is running now.
+
+**Mutation-gate markers retired deliberately, 2026-08-27.** Two pending markers
+under `ops/.test_suite_mutation_runs/` blocked the commit. Both are the
+over-report the discipline documents, and neither names damage from a test:
+
+- `e56de79d…` was armed by this task's Exp6608 pytest run and names one file,
+  `results/experiment_1822_rtl_synth.log`, which that suite does not touch. The
+  diff is a yosys re-run changing only timings and peak memory. It is another
+  workflow's write. It was left unstaged and unreverted for its owner.
+- `f7d0c843…` was armed by an `test_experiment_6678_constraint_family_stream.py`
+  run this task did not launch. It names conductor state files plus the Exp6605
+  artifact and checkpoint, which this task wrote deliberately by running the
+  experiment module, inside that marker's window.
+
+No `git checkout --` was run over either list.

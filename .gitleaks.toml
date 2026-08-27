@@ -194,3 +194,34 @@ description = "Regression probes for this config deliberately contain fake secre
 # never the pattern itself.
 stopwords = []
 paths = ['''tests/python/test_gitleaks_config\.py''']
+
+# ---------------------------------------------------------------------------
+# 2026-08-27. HuggingFace cache blob keys in direct-baseline result artifacts.
+#
+# These artifacts record where the local GGUF came from, through a
+# `cache_provenance` block whose `blob_key` is the HuggingFace cache blob name.
+# That name IS the file's SHA-256 content hash. It is public, it is the same
+# value the artifact also stores as `trusted_sha256`, and it is the field the
+# integrity check compares against. It is not a credential.
+#
+# The field name `blob_key` plus a 64-hex value is the same textbook
+# generic-api-key false positive as the detector-cache class above.
+#
+# It is entropy-dependent, which is why this is scoped by path rather than left
+# to chance: Exp6605's blob key passes the entropy floor and Exp6607's does not,
+# for two artifacts written by the same code path on the same day. Whether a
+# commit is refused should not depend on which hash the model file happened to
+# have.
+#
+# Path-only, per this file's own ATTEMPTED AND REJECTED note: adding `regexes`
+# would apply repo-wide because gitleaks ORs allowlist conditions, and a bare
+# 64-hex allowlist repo-wide would blind the scanner to a leaked Kaggle key.
+# Only `generic-api-key` is exempted, so a real `sk-ant-`, `ghp_`, `AKIA`, or
+# PEM landing in one of these artifacts still trips its own rule.
+[[allowlists]]
+description = "HuggingFace cache blob content-hashes in direct-baseline artifacts"
+stopwords = []
+paths = [
+    '''results/experiment_660[567]_[a-z0-9_]+_direct_headroom\.json''',
+]
+targetRules = ["generic-api-key"]

@@ -191,6 +191,47 @@ class TestBenignClassesAreSuppressed:
         )
         assert hits == {}, f"detector cache files should be allowlisted, got {hits}"
 
+    def test_direct_baseline_blob_keys_are_allowlisted(self, tmp_path: Path) -> None:
+        """REQ-SEC-002: a HuggingFace cache blob key is a content hash, not a secret.
+
+        The direct-baseline artifacts record model provenance as
+        `blob_key: <sha256>`, which is the same value they store as
+        `trusted_sha256`. Whether it trips the entropy floor is luck: Exp6605's
+        key clears it and Exp6607's does not, from one code path on one day.
+        """
+
+        body = (
+            '{"cache_provenance": {"blob_key": '
+            '"34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35"}}\n'
+        )
+        hits = _scan(
+            tmp_path,
+            {
+                "results/experiment_6607_gemma4_26b_direct_headroom.json": body,
+                "results/experiment_6605_qwen36_direct_headroom.json": body,
+            },
+        )
+        assert hits == {}, f"direct-baseline blob keys should be allowlisted, got {hits}"
+
+    def test_direct_baseline_allowlist_does_not_hide_a_real_key(self, tmp_path: Path) -> None:
+        """REQ-SEC-002: the allowlist exempts one rule, not the whole file.
+
+        A path-scoped allowlist is only safe while a real provider key landing
+        in the same file still trips its own rule.
+        """
+
+        hits = _scan(
+            tmp_path,
+            {
+                "results/experiment_6607_gemma4_26b_direct_headroom.json": (
+                    '{"note": "ghp_A9fK2mQ7zX4vB1nR6tY8wE3sD5gH0jL7pC2x"}\n'
+                )
+            },
+        )
+        assert any(
+            name == "results/experiment_6607_gemma4_26b_direct_headroom.json" for name, _ in hits
+        ), f"a real token inside an allowlisted artifact must still be reported, got {hits}"
+
     def test_sk_ant_test_fixture_is_not_a_false_positive(self, tmp_path: Path) -> None:
         """`sk-ant-access-secret` is a real fixture in test_agent_plan_usage.py.
 
