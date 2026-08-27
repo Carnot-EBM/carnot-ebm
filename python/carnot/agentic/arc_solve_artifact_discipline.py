@@ -17,11 +17,12 @@ AGGREGATION_SUBSTRATE = "aggregation_from_upstream_artifacts"
 VERIFIER_SCORING_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
 ARC_LIVE_AGENT_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
 ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_filters_no_new_llm"
-ARC_SUPERVISOR_RECEIPT_REPLAY_SUBSTRATE = (
-    "live_arc_trajectory_supervisor_receipt_replay_no_llm"
-)
+ARC_SUPERVISOR_RECEIPT_REPLAY_SUBSTRATE = "live_arc_trajectory_supervisor_receipt_replay_no_llm"
 ARC_LIVE_E3_ARCHIVE_PROJECTION_SUBSTRATE = (
     "live_e3_world_model_archived_transition_invariant_projection_no_new_llm"
+)
+ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE = (
+    "canonical_live_e3_environment_outcome_transport_no_new_llm"
 )
 LIVE_LLM_SUBSTRATE = "live_llm_inference"
 
@@ -32,6 +33,7 @@ SUBSTRATE_DURATION_FLOORS = {
     ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE: 0.01,
     ARC_SUPERVISOR_RECEIPT_REPLAY_SUBSTRATE: 0.01,
     ARC_LIVE_E3_ARCHIVE_PROJECTION_SUBSTRATE: 0.01,
+    ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE: 0.01,
     LIVE_LLM_SUBSTRATE: 60.0,
 }
 
@@ -78,6 +80,8 @@ FIELD_PRINCIPLES = {
         "live_arc_trajectory_supervisor_receipt_replay_no_llm"
         "; live E3 archived transition projection uses "
         "live_e3_world_model_archived_transition_invariant_projection_no_new_llm"
+        "; canonical live E3 outcome transport uses "
+        "canonical_live_e3_environment_outcome_transport_no_new_llm"
     ),
     "duration_s": "bare float; must meet the selected substrate floor",
     "template_shipped": "bare bool: the helper + lint + tests landed green",
@@ -237,6 +241,7 @@ def _sha256(value: Any) -> str:
 
 __all__ = [
     "AGGREGATION_SUBSTRATE",
+    "ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE",
     "ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE",
     "ARC_LIVE_AGENT_NO_LLM_SUBSTRATE",
     "ARC_SUPERVISOR_RECEIPT_REPLAY_SUBSTRATE",

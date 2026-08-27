@@ -7,6 +7,7 @@ from enum import Enum
 import importlib.metadata
 import json
 from pathlib import Path
+import sys
 from types import SimpleNamespace
 
 import numpy as np
@@ -148,6 +149,54 @@ def test_scenario_6681_exact_return_keeps_absent_and_present_rewards():
     assert absent_rows[0]["observation_after"]["levels_completed"] == 0
 
 
+def test_scenario_6681_canonical_step_preserves_raw_return_before_conversion(monkeypatch):
+    """SCENARIO-ARC-WMTE-6681-EXACT-RETURN records raw SDK-only fields."""
+
+    class _RawFrame(_Frame):
+        def __init__(self) -> None:
+            super().__init__(7)
+            self.action_input = {"id": 1, "data": {"x": 2, "y": 3}}
+
+    class _Env:
+        def step(self, action, data=None, reasoning=None):
+            del action, data, reasoning
+            return _RawFrame()
+
+    class _Base:
+        def __init__(self, *args, **kwargs) -> None:
+            del args
+            self.game_id = kwargs["game_id"]
+            self.arc_env = kwargs["arc_env"]
+
+        def _convert_raw_frame_data(self, raw):
+            return _Frame(raw.frame[0][0][0], level=raw.levels_completed, state=raw.state)
+
+        def do_action_request(self, action):
+            data = action.action_data.model_dump()
+            raw = self.arc_env.step(action, data=data, reasoning=None)
+            return self._convert_raw_frame_data(raw)
+
+    monkeypatch.setenv("CARNOT_ARC_DISABLE_INDUCTION", "1")
+    agent = make_carnot_agent(_Base)(game_id="held-a-live", arc_env=_Env())
+    transport = E3OutcomeTransport(
+        family="held-a", attempt=8, episode_seed=6681008, episode_id="raw-return"
+    )
+    agent._policy.install_outcome_transport(transport)
+    agent._policy.plan = [{"action": 1, "data": None}]
+    agent._policy.phase = "execute"
+    agent._policy.induced = True
+
+    action = agent.choose_action([_Frame(0)], _Frame(0))
+    converted = agent.do_action_request(action)
+    rows, _audit = join_outcome_events(transport.events())
+
+    assert not hasattr(converted, "action_input")
+    assert rows[0]["observation_after"]["action_input"] == {
+        "id": 1,
+        "data": {"x": 2, "y": 3},
+    }
+
+
 def test_scenario_6681_missing_outcome_and_duplicate_ids_fail_closed():
     """SCENARIO-ARC-WMTE-6681-MISSING-OUTCOME rejects ambiguous children."""
 
@@ -163,6 +212,43 @@ def test_scenario_6681_missing_outcome_and_duplicate_ids_fail_closed():
     duplicated["outcomes"].append(copy.deepcopy(duplicated["outcomes"][0]))
     with pytest.raises(OutcomeLineageError, match="duplicate outcome_id"):
         join_outcome_events(duplicated)
+
+    second_child = copy.deepcopy(events)
+    extra_outcome = copy.deepcopy(second_child["outcomes"][0])
+    extra_outcome["outcome_id"] = exp.sha256_json({"second_child": extra_outcome})
+    second_child["outcomes"].append(extra_outcome)
+    rows, audit = join_outcome_events(second_child)
+    assert rows == []
+    assert audit["ready"] is False
+    assert audit["issues"][0]["observed"] == 2
+
+
+@pytest.mark.parametrize(
+    ("table", "parent_key"),
+    [
+        ("applications", "proposal_id"),
+        ("environment_steps", "application_id"),
+        ("outcomes", "environment_step_id"),
+    ],
+)
+def test_scenario_6681_orphan_children_fail_closed(table, parent_key):
+    """SCENARIO-ARC-WMTE-6681-MISSING-OUTCOME rejects every missing parent."""
+
+    events = _one_transport(redirect=True).events()
+    orphan = copy.deepcopy(events[table][0])
+    orphan[parent_key] = "sha256:missing-parent"
+    identity_key = {
+        "applications": "application_id",
+        "environment_steps": "environment_step_id",
+        "outcomes": "outcome_id",
+    }[table]
+    orphan[identity_key] = exp.sha256_json({"orphan": table})
+    events[table].append(orphan)
+
+    _rows, audit = join_outcome_events(events)
+
+    assert audit["ready"] is False
+    assert any(issue["reason"] == f"orphan_{table.removesuffix('s')}" for issue in audit["issues"])
 
 
 def test_scenario_6681_attacks_cover_required_ambiguities():
@@ -201,7 +287,11 @@ def test_scenario_6681_canonical_agent_step_joins_redirect_and_control(monkeypat
 
         def do_action_request(self, action):
             data = action.action_data.model_dump()
-            return self.arc_env.step(action, data=data, reasoning=None)
+            raw = self.arc_env.step(action, data=data, reasoning=None)
+            return self._convert_raw_frame_data(raw)
+
+        def _convert_raw_frame_data(self, raw):
+            return raw
 
     monkeypatch.setenv("CARNOT_ARC_DISABLE_INDUCTION", "1")
     agent_cls = make_carnot_agent(_Base)
@@ -315,6 +405,10 @@ def test_scenario_6681_artifact_recomputes_ready_rows_and_no_solve(tmp_path):
     assert len(artifact["redirect_outcome_rows"]) == 30
     assert len(artifact["non_redirect_control_rows"]) == 30
     assert artifact["solve_claim_scope"] == "none"
+    assert artifact["random_seed"]["online_environment_seed_effective"] is False
+    assert artifact["canonical_path_receipt"]["environment_step_seam"] == (
+        "CarnotAgent.do_action_request->arc_env.step(raw)->Agent._convert_raw_frame_data"
+    )
     assert artifact["verdict_class"] == "null"
     assert artifact["aggregate_row_recomputation"] == exp.recompute_aggregate_rows(
         artifact["redirect_outcome_rows"],
@@ -394,9 +488,44 @@ def test_scenario_6681_helpers_handle_atomic_paths_and_live_runner_failure(tmp_p
     assert artifact["arc_outcome_transport_ready"] is False
     assert artifact["gate_check_summary"]["failed_check"] == "live_access"
 
+    def raise_live_path_error(**kwargs):
+        del kwargs
+        raise RuntimeError("base agent unavailable")
+
+    monkeypatch.setattr(exp, "run_live_held_family_episodes", raise_live_path_error)
+    artifact = exp.build_artifact(write=False, duration_s=0.1)
+    assert artifact["status"] == "blocked_live_path"
+    assert artifact["gate_check_summary"]["failed_check"] == "live_path"
+    assert "base agent unavailable" in artifact["gate_check_summary"]["observed"]
+
     output = tmp_path / "invalid.json"
     output.write_text("{}", encoding="utf-8")
     assert exp.main(["--validate", "--result-path", str(output)]) == 1
+
+
+def test_scenario_6681_framework_loader_skips_optional_templates(tmp_path, monkeypatch):
+    """SCENARIO-ARC-WMTE-6681-ARTIFACT loads only the canonical base agent."""
+
+    package = tmp_path / "agents"
+    package.mkdir()
+    (package / "__init__.py").write_text("raise RuntimeError('template import')\n")
+    (package / "recorder.py").write_text("class Recorder: pass\n")
+    (package / "tracing.py").write_text("def trace_agent_session(function):\n    return function\n")
+    (package / "agent.py").write_text(
+        "from .recorder import Recorder\n"
+        "from .tracing import trace_agent_session\n"
+        "class Agent:\n    pass\n"
+    )
+    monkeypatch.setattr(exp, "FRAMEWORK_ROOT", tmp_path)
+    monkeypatch.setattr(exp, "FRAMEWORK_AGENT_PATH", package / "agent.py")
+    for name in list(sys.modules):
+        if name.startswith("_carnot_arc_runtime"):
+            monkeypatch.delitem(sys.modules, name)
+
+    loaded = exp._load_framework_agent()
+
+    assert loaded.__name__ == "Agent"
+    assert "agents" not in loaded.__module__
 
 
 def test_scenario_6681_normalizers_and_transport_defenses_fail_closed():

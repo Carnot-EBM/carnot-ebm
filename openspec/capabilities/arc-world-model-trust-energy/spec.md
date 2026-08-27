@@ -27784,15 +27784,24 @@ use, for the reason given in rule 4.
 Exp6681 SHALL instrument only the scored path created by
 `make_carnot_agent` with `E3AgentPolicy`. The agent adapter SHALL bind each
 policy proposal to the applied `GameAction`. Its `do_action_request` seam SHALL
-then bind that application to the exact return from `arc_env.step`. The
+then bind that application to the exact, pre-conversion return from
+`arc_env.step`. The transport SHALL preserve public `FrameDataRaw` fields that
+the framework's `FrameData` conversion does not retain, including
+`action_input`. The caller SHALL still receive the framework's normal converted
+return. The
 instrument stays inactive unless a caller installs it before an episode.
+The experiment SHALL load the framework's base `Agent` without importing
+unrelated optional agent templates. A missing template-only dependency SHALL
+not block the canonical base-agent path.
 
 The transport SHALL use four explicit identities: `proposal_id`,
 `application_id`, `environment_step_id`, and `outcome_id`. Each child event
 SHALL carry its parent identity. A join SHALL use these identities. It SHALL
 not use list position or time as a key. Duplicate identities, missing parents,
 multiple children, action mismatches, and observation mismatches SHALL reject
-the affected lineage.
+the affected lineage. An orphan child or a second child with a different valid
+identity SHALL also make the transport unready. Extra events SHALL not be
+ignored merely because every redirect can otherwise be joined.
 
 Each joined row SHALL record the state hash, proposed action, policy-selected
 action, applied action, redirect reason, observations before and after, exact
@@ -27811,6 +27820,18 @@ runtime state. It SHALL not read game source, run an offline ground-truth BFS,
 load a per-game adapter, or make a game, level, leaderboard, or solve claim.
 Archived rows MAY test schema compatibility. They SHALL not count as live
 outcome rows.
+
+The artifact SHALL distinguish the runner's requested episode seed from an
+effective environment seed. The online SDK wrapper does not transmit its
+`seed` argument to the remote environment. The artifact SHALL record this
+limit and SHALL not claim deterministic remote layouts.
+
+The artifact SHALL declare
+`canonical_live_e3_environment_outcome_transport_no_new_llm`. The shared ARC
+artifact discipline and adversarial verifier SHALL recognize that exact value
+as reviewed live ARC environment stepping without a new LLM invocation, with
+the canonical 0.01-second no-LLM duration floor. They SHALL not admit it only
+through the generic name-shape fallback.
 
 `arc_outcome_transport_ready` SHALL be true only when every applied redirect
 has exactly one successful live outcome. `eligible_redirect_outcome_rows`
@@ -27840,6 +27861,9 @@ the active V582 task contract.
 - GIVEN a live ARC SDK step return
 - THEN the joined row stores the complete observation, exact state,
   level-change indicator, and exact reward presence
+- AND the stored observation preserves `FrameDataRaw.action_input` before the
+  framework converts the return to `FrameData`
+- AND the agent caller still receives that normal converted `FrameData`
 - AND a missing SDK reward stays `null` instead of becoming a synthetic
   level-change reward.
 
@@ -27854,6 +27878,8 @@ the active V582 task contract.
 - GIVEN an applied redirect with zero or more than one matching outcomes
 - THEN readiness is false
 - AND the gate summary names the exact identity and observed child count.
+- GIVEN an application, environment step, or outcome with a missing parent
+- THEN readiness is false even when all redirect proposals otherwise join.
 
 #### SCENARIO-ARC-WMTE-6681-ATTACKS
 
@@ -27875,9 +27901,16 @@ the active V582 task contract.
 - THEN Exp6681 writes one atomic artifact with the required V582 fields
 - AND its aggregate count and readiness value recompute from raw events
 - AND at least 30 joined redirects are required for the downstream row gate.
+- AND its seed receipt states that online environment seeding is not effective.
+- AND its exact inference substrate passes the ARC artifact lint and is
+  classified through a reviewed no-LLM allowlist rather than a name suffix.
+- GIVEN a framework package whose optional template imports are unavailable
+- THEN the live runner still loads its base `Agent` module and no template.
+- GIVEN the scoped no-JAX coverage runner is collected in a larger pytest process
+- THEN its temporary import guard is restored before any later test imports JAX.
 
 ## Implementation Status (REQ-ARC-WMTE-6681)
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-ARC-WMTE-6681 | `python/carnot/agentic/arc_e3_outcome_transport.py`; canonical opt-in seams in `python/carnot/agentic/arc_competition_agent.py`; `python/carnot/experiment_6681_arc_post_redirect_outcomes.py`. | `tests/python/test_experiment_6681_arc_post_redirect_outcomes.py` (`SCENARIO-ARC-WMTE-6681-LINEAGE`, `EXACT-RETURN`, `CONTROLS-AND-TAGS`, `MISSING-OUTCOME`, `ATTACKS`, `NO-SOLVE`, `ARTIFACT`). |
+| REQ-ARC-WMTE-6681 | `python/carnot/agentic/arc_e3_outcome_transport.py`; canonical opt-in seams in `python/carnot/agentic/arc_competition_agent.py`; reviewed substrate registration in `python/carnot/agentic/arc_solve_artifact_discipline.py` and `scripts/adversarial_verify.py`; `python/carnot/experiment_6681_arc_post_redirect_outcomes.py`. | `tests/python/test_experiment_6681_arc_post_redirect_outcomes.py` (`SCENARIO-ARC-WMTE-6681-LINEAGE`, `EXACT-RETURN`, `CONTROLS-AND-TAGS`, `MISSING-OUTCOME`, `ATTACKS`, `NO-SOLVE`, `ARTIFACT`); `tests/python/coverage_experiment_6681.py`; `tests/python/test_arc_competition_agent_adapter.py`; `tests/python/test_arc_solve_artifact_discipline.py`; `tests/python/test_arc_artifact_lint.py`; `tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py`. |

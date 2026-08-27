@@ -13,6 +13,7 @@ import argparse
 from collections.abc import Mapping, Sequence
 import hashlib
 import importlib.metadata
+import importlib.util
 import json
 import logging
 import os
@@ -21,7 +22,7 @@ import platform
 import shutil
 import sys
 import time
-from types import SimpleNamespace
+from types import ModuleType, SimpleNamespace
 from typing import Any
 
 import requests
@@ -33,6 +34,9 @@ from carnot.agentic.arc_e3_outcome_transport import (
     join_outcome_events,
     run_lineage_attacks,
     sha256_json,
+)
+from carnot.agentic.arc_solve_artifact_discipline import (
+    ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE,
 )
 from carnot.agentic.arc_competition_agent import E3AgentPolicy, make_carnot_agent
 from carnot.agentic.arc_trajectory_supervisor import TraceAutomatonSupervisor
@@ -48,7 +52,7 @@ EPISODE_SEEDS = (6681001, 6681002, 6681003)
 HELD_FAMILIES = ("tn36", "tr87", "vc33")
 ACTION_BUDGET = 120
 MIN_ELIGIBLE_REDIRECT_ROWS = 30
-INFERENCE_SUBSTRATE = "canonical_live_e3_environment_outcome_transport_no_new_llm"
+INFERENCE_SUBSTRATE = ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE
 RESULT_RELATIVE_PATH = Path("results/experiment_6681_arc_post_redirect_outcomes.json")
 PRIOR_RESULT_RELATIVE_PATH = Path("results/experiment_6656_arc_trace_automaton_live_loo.json")
 REGISTRY_RELATIVE_PATH = Path("ops/arc_solve_registry.yaml")
@@ -316,12 +320,29 @@ def _preconditions(root: Path, *, live_metadata: Mapping[str, Any]) -> JsonDict:
 def _load_framework_agent() -> Any:  # pragma: no cover - live framework boundary
     if not FRAMEWORK_AGENT_PATH.is_file():
         raise FileNotFoundError(f"ARC agent framework missing: {FRAMEWORK_AGENT_PATH}")
-    root_text = str(FRAMEWORK_ROOT)
-    if root_text not in sys.path:
-        sys.path.insert(0, root_text)
-    from agents.agent import Agent
+    package_dir = FRAMEWORK_AGENT_PATH.parent.resolve()
+    package_suffix = hashlib.sha256(str(package_dir).encode("utf-8")).hexdigest()[:12]
+    package_name = f"_carnot_arc_runtime_{package_suffix}"
+    module_name = f"{package_name}.agent"
+    if module_name in sys.modules:
+        return sys.modules[module_name].Agent
 
-    return Agent
+    package = ModuleType(package_name)
+    package.__package__ = package_name
+    package.__path__ = [str(package_dir)]
+    sys.modules[package_name] = package
+    spec = importlib.util.spec_from_file_location(module_name, FRAMEWORK_AGENT_PATH)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot load ARC base agent: {FRAMEWORK_AGENT_PATH}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    try:
+        spec.loader.exec_module(module)
+    except Exception:
+        sys.modules.pop(module_name, None)
+        sys.modules.pop(package_name, None)
+        raise
+    return module.Agent
 
 
 def _catalog_game_id(arcade: Any, family: str) -> str:  # pragma: no cover - live boundary
@@ -374,6 +395,8 @@ def run_live_held_family_episodes(
     bundles: list[dict[str, list[JsonDict]]] = []
     episode_rows: list[JsonDict] = []
     total_redirects = 0
+    scorecard_closed = False
+    scorecard_close_error = None
     previous_disable = os.environ.get("CARNOT_ARC_DISABLE_INDUCTION")
     os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = "1"
     try:
@@ -430,6 +453,12 @@ def run_live_held_family_episodes(
                     agent.append_frame(frame)
                     agent.action_counter += 1
                     actions += 1
+                    current_rows, _current_audit = join_outcome_events(transport.events())
+                    current_redirects = sum(
+                        int(row["redirect_applied"] and row["fully_joined"]) for row in current_rows
+                    )
+                    if total_redirects + current_redirects >= minimum_redirects:
+                        break
                 events = transport.events()
                 joined, audit = join_outcome_events(events)
                 redirects = sum(
@@ -461,6 +490,11 @@ def run_live_held_family_episodes(
             os.environ.pop("CARNOT_ARC_DISABLE_INDUCTION", None)
         else:
             os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = previous_disable
+        try:
+            arcade.close_scorecard(scorecard_id)
+            scorecard_closed = True
+        except Exception as exc:
+            scorecard_close_error = f"{type(exc).__name__}: {exc}"
 
     return merge_episode_events(bundles), {
         "error": None,
@@ -477,7 +511,8 @@ def run_live_held_family_episodes(
         },
         "scorecard": {
             "opened": True,
-            "closed": False,
+            "closed": scorecard_closed,
+            "close_error": scorecard_close_error,
             "submitted_to_leaderboard": False,
             "scorecard_id": str(scorecard_id),
         },
@@ -656,7 +691,14 @@ def build_artifact(
     }
     live_metadata: JsonDict = {}
     if episode_events is None:
-        events, live_metadata = run_live_held_family_episodes()
+        try:
+            events, live_metadata = run_live_held_family_episodes()
+        except Exception as exc:
+            events = {key: [] for key in EVENT_KEYS}
+            live_metadata = {
+                "error": f"{type(exc).__name__}: {exc}",
+                "error_kind": "live_path",
+            }
     else:
         events = {key: [dict(row) for row in episode_events.get(key, [])] for key in EVENT_KEYS}
     try:
@@ -685,13 +727,18 @@ def build_artifact(
     eligible = int(aggregate["eligible_redirect_outcome_rows"])
     live_error = live_metadata.get("error")
     if live_error:
-        status = "blocked_live_access"
+        failed_check = str(live_metadata.get("error_kind") or "live_access")
+        status = f"blocked_{failed_check}"
         verdict_class = "blocked"
-        honest_verdict = f"blocked_live_access: {live_error}; no game or level solve is claimed"
+        honest_verdict = f"blocked_{failed_check}: {live_error}; no game or level solve is claimed"
         gate = {
             "passed": False,
-            "failed_check": "live_access",
-            "expected": "reachable official live environment",
+            "failed_check": failed_check,
+            "expected": (
+                "reachable official live environment"
+                if failed_check == "live_access"
+                else "runtime-reachable canonical make_carnot_agent path"
+            ),
             "observed": live_error,
         }
     elif not transport_ready:
@@ -755,7 +802,9 @@ def build_artifact(
             "policy": f"{E3AgentPolicy.__module__}.{E3AgentPolicy.__qualname__}",
             "policy_action_seam": "E3AgentPolicy.next_move",
             "adapter_application_seam": "CarnotAgent.choose_action",
-            "environment_step_seam": "CarnotAgent.do_action_request->Agent.do_action_request->arc_env.step",
+            "environment_step_seam": (
+                "CarnotAgent.do_action_request->arc_env.step(raw)->Agent._convert_raw_frame_data"
+            ),
             "supervisor": "TraceAutomatonSupervisor.select_action",
             "hashes": _hash_receipt(root),
             "runtime_reachable": bool(events.get("proposals")),
@@ -824,7 +873,9 @@ def build_artifact(
             for field in REQUIRED_ARTIFACT_FIELDS
         },
         "random_seed": {
-            "episode_seeds": list(EPISODE_SEEDS),
+            "episode_seeds_requested": list(EPISODE_SEEDS),
+            "online_environment_seed_effective": False,
+            "online_seed_limit": "Arcade ONLINE does not transmit make(seed=...) to the remote wrapper",
             "attack_order_seed": ATTACK_ORDER_SEED,
             "held_families": list(HELD_FAMILIES),
         },

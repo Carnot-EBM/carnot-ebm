@@ -372,8 +372,8 @@ def join_outcome_events(
 
     tables = {key: list(events.get(key) or []) for key in EVENT_KEYS}
     proposals = _unique_index(tables["proposals"], "proposal_id")
-    _unique_index(tables["applications"], "application_id")
-    _unique_index(tables["environment_steps"], "environment_step_id")
+    application_index = _unique_index(tables["applications"], "application_id")
+    step_index = _unique_index(tables["environment_steps"], "environment_step_id")
     _unique_index(tables["outcomes"], "outcome_id")
     applications = _children(tables["applications"], "proposal_id")
     steps = _children(tables["environment_steps"], "application_id")
@@ -500,6 +500,28 @@ def join_outcome_events(
             }
         )
 
+    parent_contracts = (
+        ("application", tables["applications"], "proposal_id", proposals),
+        (
+            "environment_step",
+            tables["environment_steps"],
+            "application_id",
+            application_index,
+        ),
+        ("outcome", tables["outcomes"], "environment_step_id", step_index),
+    )
+    for child_kind, child_rows, parent_key, parent_index in parent_contracts:
+        for child in child_rows:
+            parent_id = str(child.get(parent_key) or "")
+            if parent_id not in parent_index:
+                issues.append(
+                    {
+                        "reason": f"orphan_{child_kind}",
+                        "parent_key": parent_key,
+                        "parent_id": parent_id,
+                    }
+                )
+
     redirect_proposals = sum(
         int(
             bool((proposal.get("supervisor_decision") or {}).get("fired"))
@@ -511,7 +533,7 @@ def join_outcome_events(
         int(row["redirect_applied"] and row["fully_joined"] and row["family_role"] == "held")
         for row in joined
     )
-    ready = bool(redirect_proposals > 0 and eligible_redirects == redirect_proposals)
+    ready = bool(redirect_proposals > 0 and eligible_redirects == redirect_proposals and not issues)
     return joined, {
         "ready": ready,
         "proposal_count": len(proposals),

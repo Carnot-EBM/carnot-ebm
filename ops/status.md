@@ -9004,3 +9004,28 @@ reaching 7,505 passes and 7 skips: the stale Exp5901 repository hash artifact
 and two legacy artifact-path tests that conflict with the suite-wide artifact
 root redirect. No test was skipped, weakened, deleted, or reverted, and
 `scripts/research_conductor.py` was not changed.
+
+## 2026-08-27 — Exp6681 test and artifact-gate repair
+
+Exp6681's optional outcome instrument no longer breaks minimal policy adapters:
+when the policy does not expose an outcome-transport hook, action selection and
+environment requests continue through the unchanged framework path. Its exact
+`canonical_live_e3_environment_outcome_transport_no_new_llm` substrate is now
+reviewed by both the ARC artifact discipline and adversarial verifier instead
+of being admitted only through a generic name suffix.
+
+Verification is green: conductor-equivalent smart subset `163 passed` (one
+existing deprecation warning), impacted adapter set `106 passed`, Exp6681
+scoped coverage `526/526` statements, and ARC artifact-discipline coverage
+`81/81` statements. Artifact validation, row consistency, ARC artifact lint,
+adversarial verification, spec coverage, Ruff, format, mypy, and diff checks
+pass. The E2E plan has no applicable training, binding, serialization,
+packaged-verifier, or hardware scenario for this deterministic adapter repair.
+`scripts/research_conductor.py` remains unchanged.
+
+Follow-up test-gate repair: the Exp6681 scoped coverage runner now restores its
+temporary `builtins.__import__` no-JAX guard in `finally`. Previously, explicit
+pytest collection leaked that guard into the core pipeline tests, producing the
+exact `1 failed, 171 passed, 12 errors` gate result. The combined gate is green
+after the repair, and scoped Exp6681 coverage remains `526/526` statements.
+No test was skipped, weakened, deleted, or reverted.
