@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.580",
+  "generated_at": "2026-08-27T05:08:25Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 3.2,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Exact certificate proposal corpus",
+      "duration_minutes": 1.62,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Three-family GGUF accelerator canaries",
+      "duration_minutes": 1.3,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Receipt-scoped model admission boundary",
+      "duration_minutes": 0.16,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Trace-automaton ARC live supervisor LOO A/B",
+      "duration_minutes": 0.04,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V580 evidence synthesis",
+      "duration_minutes": 0.03,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 12 experiments in 3.2 minutes, including 4 compute-bound experiments. Exact certificate proposal corpus at 1.62 minutes and Three-family GGUF accelerator canaries at 1.3 minutes were the longest compute-bound entries. No data available this milestone explains their phase-level duration, and compute-task GPU idle was not flagged.",
+  "bottlenecks_identified": [
+    "Disk-modification-time reconstruction does not provide phase-level timing, so the causes of the longest compute-bound durations cannot be identified.",
+    "The GPU report is a global snapshot without task ownership, batch size, model-concurrency, or runner-selection receipts; compute-task efficiency and DualGPURunner eligibility cannot be audited per experiment.",
+    "At the monitor snapshot, only one Python inference process was present; the tooling did not expose whether independent questions could be batched."
+  ],
+  "improvements_suggested": [
+    "Record monotonic phase timings and task-scoped GPU utilization in each compute-bound artifact.",
+    "Record task ownership, batch size, concurrent model count, and selected runner so DualGPURunner eligibility is auditable.",
+    "Batch 8-16 questions per forward pass when the workload permits.",
+    "Add a GPU-aware scheduler that routes independent single-model tasks to available devices and reserves DualGPURunner for tasks that load 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add task-scoped phase timing and accelerator receipts.",
+    "Batch 8-16 questions per forward pass when the workload permits.",
+    "Schedule independent single-model work across available devices while recording model count and runner choice."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The data supports separating accelerator engagement from scheduler capacity: the active device had high utilization, while the locked compute-task idle field remained false. Because timing came from disk modification times and the GPU data is one snapshot, no data available this milestone attributes the slowest tasks to a phase or establishes a multi-model DualGPURunner miss."
+}
