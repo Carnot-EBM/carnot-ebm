@@ -20312,6 +20312,10 @@ without claiming a solve, the helper SHALL also accept
 floor. Blocked no-solve artifacts are terminal governance records, so
 `blocked:` and `blocked_` SHALL be accepted terminal verdict prefixes while
 `partial:` remains non-terminal for ARC solve/scoring lint purposes.
+For canonical live E3 environment-outcome transport that invokes no new LLM,
+the helper SHALL also accept
+`canonical_live_e3_environment_outcome_transport_no_new_llm` with a 0.01s
+duration floor.
 
 The lint SHALL scan candidate `results/experiment_*.json` artifacts whose path
 or artifact metadata marks them as ARC, solve, scoring, or config-rule work, and
@@ -20339,8 +20343,9 @@ seconds, when the helper builds or validates it, then it accepts only
 `inference_substrate=aggregation_from_upstream_artifacts`,
 `offline_arcade_live_agent_runtime_self_discovery_no_llm`, or
 `verifier_ensemble_against_cached_candidates`, or
-`live_arc_trajectory_supervisor_receipt_replay_no_llm` with the appropriate
-duration floor and a terminal-prefixed verdict. Given the lint scans ARC solve/config
+`live_arc_trajectory_supervisor_receipt_replay_no_llm`, or
+`canonical_live_e3_environment_outcome_transport_no_new_llm` with the
+appropriate duration floor and a terminal-prefixed verdict. Given the lint scans ARC solve/config
 artifacts under `results`, when an artifact lacks `inference_substrate` or emits
 `honest_verdict=partial: ...`, then it reports a failing issue. Given an artifact
 declares `live_llm_inference`, when that artifact path is not allow-listed, then
@@ -20351,7 +20356,7 @@ the duration is at least 60 seconds, then the lint accepts it.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-VERIFY-4437 | Implemented (`python/carnot/agentic/arc_solve_artifact_discipline.py`, `scripts/arc_artifact_lint.py`, `results/experiment_4437_arc_artifact_discipline_template.json`) | Implemented (`tests/python/test_arc_solve_artifact_discipline.py`, `tests/python/test_arc_artifact_lint.py`) |
+| REQ-VERIFY-4437 | Implemented (`python/carnot/agentic/arc_solve_artifact_discipline.py`, `scripts/arc_artifact_lint.py`, reviewed no-LLM classification in `scripts/adversarial_verify.py`, `results/experiment_4437_arc_artifact_discipline_template.json`) | Implemented (`tests/python/test_arc_solve_artifact_discipline.py`, `tests/python/test_arc_artifact_lint.py`, `tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py`) |
 
 ### REQ-VERIFY-4450: ARC Inference-Substrate Emission Guard
 

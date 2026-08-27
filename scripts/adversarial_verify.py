@@ -310,6 +310,9 @@ ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_filters
 ARC_LIVE_E3_ARCHIVE_PROJECTION_SUBSTRATE = (
     "live_e3_world_model_archived_transition_invariant_projection_no_new_llm"
 )
+ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE = (
+    "canonical_live_e3_environment_outcome_transport_no_new_llm"
+)
 ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S = (
     0.01  # 10ms/action-scale floor; still nonzero-fabrication-proof
 )
@@ -465,6 +468,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     ARC_SUBMITTED_KERNEL_OFFLINE_FROZEN_POLICY_REPLAY_SUBSTRATE,
     ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE,
     ARC_LIVE_E3_ARCHIVE_PROJECTION_SUBSTRATE,
+    ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE,
     LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE,
     WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE,
     SOURCE_RECEIPTS_METHOD_PREREGISTRATION_NO_LLM_SUBSTRATE,
@@ -2497,6 +2501,7 @@ def _is_arc_live_agent_no_llm(d: dict[str, Any]) -> bool:
         or _inference_substrate_matches(
             d, ARC_SUBMITTED_KERNEL_OFFLINE_FROZEN_POLICY_REPLAY_SUBSTRATE
         )
+        or _inference_substrate_matches(d, ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE)
     )
 
 

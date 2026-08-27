@@ -31,6 +31,9 @@ class _FakeBase:
     def __init__(self, *a, **k) -> None:
         self.game_id = "lp85"
 
+    def do_action_request(self, action):
+        return ("framework", action)
+
 
 class _StubPolicy:
     def __init__(self, moves):
@@ -59,7 +62,9 @@ def _harness_consume(action):
 
 
 def test_click_action_returns_enum_not_complexaction():
-    # REQ: choose_action must return the GameAction ENUM so the harness can read
+    # REQ-ARC-WMTE-6681: optional instrumentation must stay inactive when the
+    # policy does not expose its outcome-transport hook, while choose_action
+    # still returns the GameAction ENUM so the harness can read
     # action.action_data — returning set_data()'s ComplexAction crashes the harness.
     agent = _agent_with_moves([(6, {"x": 3, "y": 4})])
     act = agent.choose_action([], None)
@@ -81,6 +86,14 @@ def test_reset_and_bare_actions_consumable():
 def test_none_kind_falls_back_to_reset():
     agent = _agent_with_moves([(None, None)])
     assert agent.choose_action([], None) is GameAction.RESET
+
+
+def test_missing_optional_transport_hook_uses_framework_step():
+    """REQ-ARC-WMTE-6681 keeps an uninstrumented adapter on the base seam."""
+
+    agent = _agent_with_moves([])
+    action = object()
+    assert agent.do_action_request(action) == ("framework", action)
 
 
 def test_max_actions_overrides_framework_default():

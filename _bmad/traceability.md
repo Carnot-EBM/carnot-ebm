@@ -1,6 +1,29 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-08-26
+**Last Updated:** 2026-08-27
+
+**Operational Note:** 2026-08-27 Exp6681 failure repair reconciled
+`REQ-ARC-WMTE-6681` and `REQ-VERIFY-4437`. The scored adapter now treats both
+outcome-transport policy hooks as optional, preserving the framework action
+and step paths when the instrument is not installed. The exact Exp6681
+substrate is registered as reviewed no-new-LLM live ARC environment stepping
+in both artifact gates. The conductor-equivalent smart subset passes (`163
+passed`, one existing warning); the broader impacted adapter set passes (`106
+passed`); Exp6681 and ARC artifact-discipline scoped statement coverage are
+each 100% (`526/526` and `81/81`). Focused spec coverage, artifact validation,
+ARC artifact lint, adversarial verification, Ruff, format, mypy, and diff
+checks pass. No applicable model-training, PyO3, serialization,
+packaged-verifier, or hardware E2E path changed. `scripts/research_conductor.py`
+was not modified.
+
+**Operational Note:** 2026-08-27 Exp6681 coverage-runner isolation repair
+closed the exact conductor regression (`1 failed, 171 passed, 12 errors`).
+`tests/python/coverage_experiment_6681.py` now restores its temporary no-JAX
+import guard in `finally`, including when loading or executing a scoped test
+fails. The conductor-equivalent combined gate passes, and the Exp6681 modules
+retain 100% scoped statement coverage (`526/526`). No test was skipped,
+weakened, deleted, or reverted, and `scripts/research_conductor.py` was not
+modified.
 
 **Operational Note:** 2026-08-26 Exp6647 terminal-ready test repair reconciled
 `REQ-INFRA-6647` and `REQ-REPORT-6647` by making the reducer's ready status

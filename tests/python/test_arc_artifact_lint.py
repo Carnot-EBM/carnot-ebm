@@ -127,6 +127,24 @@ def test_req_verify_4437_lint_accepts_arc_live_agent_no_llm_substrate(
     assert lint.lint_paths([artifact]) == []
 
 
+def test_req_arc_wmte_6681_lint_accepts_canonical_outcome_transport_substrate(
+    tmp_path: Path,
+) -> None:
+    """REQ-ARC-WMTE-6681: canonical live outcome transport passes ARC lint."""
+
+    artifact = _write_json(
+        tmp_path / "results" / "experiment_6681_arc_post_redirect_outcomes.json",
+        {
+            "honest_verdict": "complete: exact live outcomes joined",
+            "duration_s": 0.02,
+            "inference_substrate": (discipline.ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE),
+            "solve_claim_scope": "none",
+        },
+    )
+
+    assert lint.lint_paths([artifact]) == []
+
+
 def test_req_verify_4437_lint_accepts_arc_supervisor_receipt_replay_substrate(
     tmp_path: Path,
 ) -> None:

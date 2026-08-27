@@ -18019,3 +18019,23 @@ savings remain 0%.
 - 2026-08-27: Three-family delayed syntax-tail A/B (⚠️ Blocked) — honest_verdict=blocked_no_conflicting_workload: expected True, observed False; results/experiment_6676_three_family_triggered_tail_ab.json
 - 2026-08-27: Exp6605/Exp6607 GPU receipt load-phase stage fix (✅ Complete) — the two failing `during` samples were the first two, taken before the worker held a CUDA context; the sampler now labels the load phase `load` while serving samples keep `during` and the full check. The predicate also got stricter: a `during` sample must show the worker PID in its own recorded process list, not just its flag. Live re-runs: Exp6605 `complete`, readiness 1.0, 216 rows; Exp6607 `complete`, 216 rows, readiness 0.0 (measured, held exact success 0.1667 below the 0.20 floor). Exp6608 clears its family-evidence block but hits a separate pre-existing `row_replay` defect (reduced rows drop `finish_reason`, so 23 truncated rows re-derive as `syntax_failure`). Triggered by an operator-directed task to fix the one failing authenticity criterion; results/experiment_6605_qwen36_direct_headroom.json, results/experiment_6607_gemma4_26b_direct_headroom.json
 - 2026-08-27: Independent constraint-family prequential stream (⚠️ Blocked) — honest_verdict=blocked_fixture_gate: exact constraint-family stream is not ready; results/experiment_6678_constraint_family_stream.json
+
+## 2026-08-27 — Exp6681 optional-instrumentation repair
+
+- Made the `make_carnot_agent` outcome-transport callbacks truly opt-in, so
+  minimal or uninstrumented policies retain normal action and framework-step
+  behavior.
+- Registered Exp6681's exact live no-new-LLM outcome-transport substrate in the
+  shared ARC artifact discipline and adversarial verifier at the 0.01-second
+  live ARC no-LLM floor.
+- Added adapter passthrough and reviewed-substrate regressions. Verification:
+  smart subset `163 passed`, impacted adapter set `106 passed`, Exp6681 scoped
+  coverage `526/526`, artifact-discipline coverage `81/81`, with artifact,
+  adversarial, spec, lint, format, type, and diff gates green.
+- No applicable E2E scenario in `ops/e2e-test-plan.md` changed, and
+  `scripts/research_conductor.py` was not modified.
+- Repaired the scoped coverage runner's process-global import leak. Its no-JAX
+  guard is now restored in `finally`, so collecting the runner alongside the
+  core pipeline no longer causes `1 failed` plus `12` JAX import errors. The
+  combined gate and `526/526` scoped statement coverage are green without
+  skipping, weakening, deleting, or reverting tests.

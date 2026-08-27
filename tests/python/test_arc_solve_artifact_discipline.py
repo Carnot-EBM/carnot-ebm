@@ -32,6 +32,7 @@ def test_req_verify_4437_spec_declares_template_lint_and_floors() -> None:
         "verifier_ensemble_against_cached_candidates",
         "offline_arcade_live_agent_runtime_self_discovery_no_llm",
         "live_arc_trajectory_supervisor_receipt_replay_no_llm",
+        "canonical_live_e3_environment_outcome_transport_no_new_llm",
         "live_llm_inference",
         "blocked:",
         "experiment_4437_arc_artifact_discipline_template.json",
@@ -110,6 +111,22 @@ def test_req_verify_4437_helper_accepts_supervisor_receipt_replay_substrate() ->
     assert [issue.kind for issue in discipline.validate_arc_solve_artifact(too_short)] == [
         "DURATION_BELOW_SUBSTRATE_FLOOR"
     ]
+
+
+def test_req_arc_wmte_6681_helper_accepts_canonical_outcome_transport_substrate() -> None:
+    """REQ-ARC-WMTE-6681 registers its exact live no-new-LLM substrate."""
+
+    substrate = discipline.ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE
+    artifact = {
+        "honest_verdict": "complete: exact live outcomes joined",
+        "duration_s": 0.02,
+        "inference_substrate": substrate,
+    }
+
+    assert substrate == "canonical_live_e3_environment_outcome_transport_no_new_llm"
+    assert discipline.duration_floor_s(substrate) == 0.01
+    assert discipline.validate_arc_solve_artifact(artifact) == []
+    assert substrate in discipline.FIELD_PRINCIPLES["inference_substrate"]
 
 
 def test_scenario_verify_4437_helper_rejects_missing_short_and_nonterminal_cases() -> None:

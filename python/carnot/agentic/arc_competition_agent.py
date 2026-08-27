@@ -9432,24 +9432,31 @@ def make_carnot_agent(
                     # coordinate/click action against the real harness. game_id is a required
                     # ComplexAction field (Playback injects it too), so carry it through.
                     act.set_data({"game_id": getattr(self, "game_id", ""), **data})
-            self._policy.record_outcome_transport_application(act)
+            record_application = getattr(self._policy, "record_outcome_transport_application", None)
+            if record_application is not None:
+                record_application(act)
             return act
 
         def do_action_request(self, action):
             """Join the adapter action to the exact canonical environment return.
 
-            The framework owns this environment seam. Calling ``super`` keeps
-            its request and conversion behavior intact. The opt-in transport
-            observes the value returned by that same call and records failures
-            before re-raising them.
+            The framework normally converts ``FrameDataRaw`` before it returns.
+            The opt-in branch performs the same request and conversion in two
+            visible steps. This lets the receipt preserve the raw environment
+            value without changing the frame that the agent receives.
             """
 
-            transport = self._policy.outcome_transport()
+            get_transport = getattr(self._policy, "outcome_transport", None)
+            transport = get_transport() if get_transport is not None else None
             if transport is None:
                 return super().do_action_request(action)
+            data = action.action_data.model_dump()
+            reasoning = getattr(action, "reasoning", None)
+            if reasoning is not None and not isinstance(reasoning, dict):
+                reasoning = {"text": str(reasoning)}
             step_id = transport.begin_environment_step(action)
             try:
-                returned = super().do_action_request(action)
+                returned = self.arc_env.step(action, data=data, reasoning=reasoning)
             except TimeoutError as exc:
                 transport.record_environment_failure(
                     step_id, status="timeout", error=f"{type(exc).__name__}: {exc}"
@@ -9462,7 +9469,14 @@ def make_carnot_agent(
                     error=f"{type(exc).__name__}: {exc}",
                 )
                 raise
+            if returned is None:
+                transport.record_environment_failure(
+                    step_id,
+                    status="environment_error",
+                    error="environment step returned None",
+                )
+                return self._convert_raw_frame_data(returned)
             transport.record_environment_return(step_id, returned)
-            return returned
+            return self._convert_raw_frame_data(returned)
 
     return CarnotAgent
