@@ -105,13 +105,18 @@ DEFAULT_TESTS_RUN = [
     },
     {
         "command": ".venv/bin/pytest tests/python -q",
+        "exit_code": 3,
+        "summary": "full suite aborted at 62%: 1123 failed, 34581 passed, 103 skipped, 32 errors; xdist worker cwd vanished",
+    },
+    {
+        "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6659_v580_capstone.py",
         "exit_code": 0,
-        "summary": "full Python suite passed once for this task",
+        "summary": "Exp6659 tests have REQ and SCENARIO coverage",
     },
     {
         "command": ".venv/bin/python scripts/check_spec_coverage.py",
-        "exit_code": 0,
-        "summary": "spec coverage passed",
+        "exit_code": 1,
+        "summary": "whole-repository audit found pre-existing tests without requirement references",
     },
     {
         "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6659_v580_capstone.json",
@@ -120,8 +125,53 @@ DEFAULT_TESTS_RUN = [
     },
     {
         "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6659_v580_capstone.json",
+        "exit_code": 1,
+        "summary": "two noncritical warnings: required substrate not allowlisted and terminal-partial prefix/class tension",
+    },
+    {
+        "command": ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+        "exit_code": 1,
+        "summary": "protected roadmap has three pre-existing model-coherence findings for gpt-5.6-sol",
+    },
+    {
+        "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
         "exit_code": 0,
-        "summary": "adversarial verification passed",
+        "summary": "roadmap schema and prior-failure declarations passed",
+    },
+    {
+        "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+        "exit_code": 0,
+        "summary": "roadmap has no exclusion-manifest conflicts",
+    },
+    {
+        "command": ".venv/bin/python scripts/harness_fit_lint.py research-roadmap.yaml",
+        "exit_code": 1,
+        "summary": "protected roadmap has seven pre-existing exact-Boolean gate warnings",
+    },
+    {
+        "command": ".venv/bin/python -c \"from pathlib import Path; import yaml; from scripts.roadmap_schema import Roadmap; Roadmap.model_validate(yaml.safe_load(Path('research-roadmap.yaml').read_text())); [yaml.safe_load(Path(path).read_text()) for path in ('research-complete.yaml', 'ops/exclusion_manifest.yaml')]; print('YAML validation passed')\"",
+        "exit_code": 0,
+        "summary": "roadmap schema and all required YAML inputs parsed",
+    },
+    {
+        "command": "scripts/validate-reconciliation.sh",
+        "exit_code": 1,
+        "summary": "reconciliation audit inherited the pre-existing whole-repository spec-coverage finding",
+    },
+    {
+        "command": ".venv/bin/python -m carnot.experiment_6659_v580_capstone --date 20260827",
+        "exit_code": 0,
+        "summary": "required end-to-end capstone command wrote the terminal artifact",
+    },
+    {
+        "command": ".venv/bin/python -m carnot.experiment_6659_v580_capstone --validate --output results/experiment_6659_v580_capstone.json",
+        "exit_code": 0,
+        "summary": "stored capstone passed schema and checksum validation",
+    },
+    {
+        "command": "git status --short",
+        "exit_code": 0,
+        "summary": "worktree inspection completed after tests",
     },
 ]
 

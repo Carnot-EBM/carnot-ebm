@@ -181,6 +181,7 @@ def test_scenario_report_6659_keeps_closed_claims_and_branches_independent(
     assert by_id["ising_schedule"]["verdict_class"] == "blocked"
     assert artifact["verdict_class"] == "partial"
     assert artifact["status"] == "complete_terminal_partial"
+    assert artifact["honest_verdict"].startswith("complete_partial:")
     assert "pooled" not in artifact
 
     branches = {row["branch"]: row for row in artifact["branch_summary_rows"]}
@@ -294,6 +295,24 @@ def test_req_report_6659_provenance_reconciliation_and_protection(
     assert artifact["preconditions_checked"]["missing_upstream_ids"] == [
         "exp6652-constraint-intervention-audit"
     ]
+
+    command_receipts = {row["command"]: row for row in mod.DEFAULT_TESTS_RUN}
+    required_command_fragments = {
+        ".venv/bin/pytest tests/python -q": 3,
+        "scripts/audit_roadmap_gates.py research-roadmap.yaml": 1,
+        "scripts/validate_prior_failures.py research-roadmap.yaml": 0,
+        "scripts/exclusion_manifest_lint.py research-roadmap.yaml": 0,
+        "scripts/harness_fit_lint.py research-roadmap.yaml": 1,
+        "Roadmap.model_validate": 0,
+        "scripts/validate-reconciliation.sh": 1,
+        "carnot.experiment_6659_v580_capstone --date 20260827": 0,
+        "carnot.experiment_6659_v580_capstone --validate": 0,
+        "git status --short": 0,
+    }
+    for fragment, expected_exit in required_command_fragments.items():
+        matches = [row for command, row in command_receipts.items() if fragment in command]
+        assert len(matches) == 1
+        assert matches[0]["exit_code"] == expected_exit
 
 
 def test_req_report_6659_validation_checksum_and_atomic_write(
