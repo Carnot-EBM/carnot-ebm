@@ -1,0 +1,51 @@
+{
+  "experiment": 6658,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-27",
+  "started_at": "2026-08-27T01:47:47.676464+00:00",
+  "finished_at": "2026-08-27T01:47:47.676464+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Autocorrelation-aware thermodynamic schedule A/B",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=False == expected=True",
+  "failed_upstream": "exp6657-bounded-treewidth-ising-reference",
+  "failed_field": "ising_reference_ready",
+  "failed_operator": "==",
+  "failed_expected": true,
+  "failed_expected_type": "bool",
+  "failed_observed": false,
+  "failed_observed_type": "bool",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6657_bounded_treewidth_ising_reference.json",
+  "failed_evidence_sha256": "sha256:d00fd130f8006eeb583439edf7ea8a83f2b595011e4193894e2a42e3f4850c64",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=False == expected=True",
+    "failed_upstream": "exp6657-bounded-treewidth-ising-reference",
+    "failed_field": "ising_reference_ready",
+    "failed_operator": "==",
+    "failed_expected": true,
+    "failed_expected_type": "bool",
+    "failed_observed": false,
+    "failed_observed_type": "bool",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6657_bounded_treewidth_ising_reference.json",
+    "failed_evidence_sha256": "sha256:d00fd130f8006eeb583439edf7ea8a83f2b595011e4193894e2a42e3f4850c64"
+  },
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6657-bounded-treewidth-ising-reference.ising_reference_ready (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6657-bounded-treewidth-ising-reference",
+      "artifact_field": "ising_reference_ready",
+      "op": "==",
+      "expected": true,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": false,
+      "reason": "actual=False == expected=True",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6657_bounded_treewidth_ising_reference.json",
+      "artifact_sha256": "sha256:d00fd130f8006eeb583439edf7ea8a83f2b595011e4193894e2a42e3f4850c64"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
