@@ -27639,3 +27639,142 @@ atomically replaced artifact with the required principle-bearing fields,
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6611 | Implemented: `python/carnot/agentic/arc_invariant_projector.py`, `python/carnot/agentic/arc_competition_agent.py`, and `python/carnot/experiment_6611_live_arc_invariant_projection.py`. | Implemented: `tests/python/test_experiment_6611_live_arc_invariant_projection.py` (12 focused tests; 100% statement coverage on both added modules). |
+
+### REQ-ARC-WMTE-6720: Unattended Cross-Run Supervisor Refinement Keeps A Durable Ledger And Only Recommends
+
+Origin: 2026-08-27 operator-directed follow-up to REQ-ARC-WMTE-6640. The
+window fix (`CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW=120`) produced the first
+live redirect outcomes. The Generalization-Testing Floor activity 4
+(CLAUDE.md) needs a step that runs BETWEEN runs, unattended, and turns those
+outcomes into a durable record plus a recommendation. Exp6524
+(REQ-ARC-WMTE-6650) is a one-shot experiment reducer; this requirement is the
+standing tool. Its support floor supersedes Exp6524's floor of 2 for standing
+use, for the reason given in rule 4.
+
+`python/carnot/agentic/arc_supervisor_refinement.py` (CLI:
+`scripts/arc_supervisor_refine.py`) SHALL:
+
+1. **Ingest only applied live receipts.** The ingest unit is one harness row
+   (a dict with a `trajectory_supervisor` value) from a rows document (a JSON
+   list of rows, or an object with a `rows` list). A row is redirect evidence
+   only when its receipt is a dict with `mode: "applied"`, `enabled: true`,
+   and a `redirects` list. Shadow receipts (`mode: "shadow"`,
+   `would_have_redirects`) record counterfactuals that were never applied.
+   The tool SHALL count them as observed and SHALL NOT ingest them as
+   redirect evidence. Error markers (`{"error": ...}`) are counted and
+   skipped.
+2. **Keep a durable, deduplicated cross-run ledger** at
+   `ops/arc_supervisor_refinement_ledger.json`. The entry id is the SHA-256
+   of the canonical JSON of the full source row. A byte-identical row (a file
+   copy) ingests once. A re-run of the same cell differs in measured fields
+   (wall time, frames), so it ingests as new evidence. The ledger stores the
+   extracted receipt evidence itself, so deleting the scratch source after
+   ingest loses nothing. Derived experiment artifacts that EMBED receipts
+   (for example `results/experiment_6558_*.json`) are not rows documents and
+   SHALL NOT be ingested; ingesting both a rows file and its derived artifact
+   would double-count.
+3. **Prune nested repository clones on directory scans.** A directory scan
+   collects files named `rows.json` and SHALL skip any directory that
+   contains a `.git` entry. This encodes the 2026-08-25 incident where a
+   recursive glob swept two byte-identical repo clones under job scratch and
+   inflated a corpus from 86 rows to 2,212.
+4. **Apply a precommitted evidence contract.** Constants, frozen in code:
+   `MIN_FIRED_PER_ARM = 10`; Wilson score interval with
+   `z = 1.6448536269514722` (one-sided 95 percent). Rules:
+   - `retire_candidate`: an arm with `fired >= 10` and `helped == 0`.
+     Justification for 10: the outcome metric shares credit generously (rule
+     5), so a zero is strong. If the true follow rate were 0.25, ten firings
+     record zero credits with probability 0.75^10 = 0.056. Ten is the
+     smallest count where an all-zero record rejects even a modest follow
+     rate near the 5 percent level. At Exp6524's floor of 2, a coin flip
+     passes; the current live data (2 firings per arm) must read as noise.
+   - `raise_priority_candidate`: an arm with `fired >= 10`, pooled other
+     arms with `fired >= 10`, and the arm's Wilson lower bound strictly
+     above the pooled others' Wilson upper bound. The rule is comparative
+     because the post-hoc metric inflates every arm by the same base rate
+     of in-budget level-ups; only relative differences under the same bias
+     are interpretable.
+   - `new_arm_specification`: at least one receipt where every arm in
+     `ARM_ORDER` appears in `redirects` and `stagnations_unredirected > 0`.
+     The output is a written specification for a human. The tool SHALL NOT
+     generate an arm implementation (arm growth stays human; see
+     docs/research-notes/avo-adaptation-for-local-generator-2026-08-21.md).
+5. **State the post-hoc limit on every output.** `resolved_by_levelup`
+   records that a level-up FOLLOWED a redirect inside the same
+   progress-free span. It does not record cause. One level-up credits every
+   redirect still pending since the last progress (observed live 2026-08-27:
+   two arms credited by the same level-up at action 353). The recommendation
+   block SHALL carry `recommendation_only: true` and a `causal_caveat`
+   string. The tool SHALL NOT mutate `ARM_ORDER`, the supervisor source, or
+   any file other than its own ledger.
+6. **Terminal statuses, anti-churn, and exit codes.** Exactly one of:
+   `no_receipts_ingested` (nothing found — honest empty),
+   `no_firings_nothing_to_refine` (receipts exist, zero redirects — this
+   report SATISFIES the floor slot), `insufficient_evidence` (firings exist,
+   no rule crosses its floor — said loudly, with the per-arm table), or
+   `recommendation_available`. Every terminal status exits 0. IO or schema
+   errors exit non-zero: the tool must fail loud, never return clean without
+   reading its inputs.
+
+#### SCENARIO-ARC-WMTE-6720-1 (applied-only evidence filter)
+
+- GIVEN a rows document with an applied receipt with redirects, an applied
+  receipt with zero redirects, a shadow receipt with
+  `would_have_redirects`, an error marker, and a row with no receipt
+- WHEN the tool ingests it
+- THEN only the applied receipts become ledger entries, the shadow and error
+  rows are counted but contribute no redirect evidence, and no shadow
+  counterfactual row appears in the redirect pool.
+
+#### SCENARIO-ARC-WMTE-6720-2 (dedupe and durability)
+
+- GIVEN the same rows file ingested twice
+- THEN the ledger holds one entry per row.
+- GIVEN the source file is deleted after ingest
+- THEN re-evaluation from the ledger alone reproduces the same totals.
+
+#### SCENARIO-ARC-WMTE-6720-3 (insufficient evidence is loud)
+
+- GIVEN the current live shape — three arms, each fired 2 and helped 1
+- THEN the status is `insufficient_evidence`, no per-arm recommendation is
+  emitted, and the report names the floor each arm failed to reach.
+
+#### SCENARIO-ARC-WMTE-6720-4 (retire floor is exact)
+
+- GIVEN an arm with fired 10 and helped 0
+- THEN `retire_candidate` is recommended with its evidence.
+- GIVEN fired 9 and helped 0
+- THEN no recommendation is emitted for that arm.
+
+#### SCENARIO-ARC-WMTE-6720-5 (promotion needs interval separation)
+
+- GIVEN an arm whose Wilson lower bound exceeds the pooled others' upper
+  bound at the floor
+- THEN `raise_priority_candidate` is recommended.
+- GIVEN overlapping intervals at the same counts
+- THEN it is not, and every recommendation output carries
+  `recommendation_only: true` and the causal caveat.
+
+#### SCENARIO-ARC-WMTE-6720-6 (new-arm specification stays human)
+
+- GIVEN a receipt where all three arms fired and stagnation continued
+  (`stagnations_unredirected > 0`)
+- THEN the output contains a written new-arm specification naming the cells
+  and counts, and contains no arm implementation.
+
+#### SCENARIO-ARC-WMTE-6720-7 (anti-churn and clone pruning)
+
+- GIVEN receipts with zero redirects
+- THEN the status is `no_firings_nothing_to_refine` and exits 0.
+- GIVEN an empty ledger and no inputs
+- THEN the status is `no_receipts_ingested` and exits 0.
+- GIVEN a scan directory containing a nested repo clone (a `.git` entry)
+  with a `rows.json` inside
+- THEN the nested file is skipped and a sibling `rows.json` outside the
+  clone is ingested.
+
+## Implementation Status (REQ-ARC-WMTE-6720)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6720 | `python/carnot/agentic/arc_supervisor_refinement.py` (evidence filter, ledger merge, Wilson bounds, contract rules, report, CLI `main`); `scripts/arc_supervisor_refine.py` (thin wrapper). Ledger: `ops/arc_supervisor_refinement_ledger.json`. | `tests/python/test_arc_supervisor_refinement.py` (SCENARIO-ARC-WMTE-6720-1..7; mutations M1-M8 each RED then restored, run in a PYTHONPATH-pinned worktree with import-file verification). |
