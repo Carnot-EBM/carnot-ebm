@@ -28802,3 +28802,156 @@ protected-file rows
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-6653 and SCENARIO-LEARN-6653-* | Implemented (`python/carnot/experiment_6653_state_grounded_repair_memory_fixture.py`; terminal evidence in `results/experiment_6653_state_grounded_repair_memory_fixture.json`) | Implemented (`tests/python/test_experiment_6653_state_grounded_repair_memory_fixture.py`; 14 focused cases and 100% scoped statement coverage) |
+
+---
+
+## REQ-LEARN-6654: Prospective Repair Memory Evolution
+
+Carnot SHALL compare `frozen`, `context_only`, and `verified_memory` arms on
+the exact Exp6653 repair fixture. The comparison SHALL use at least three task
+orders. Every arm in one order SHALL receive the same events and exact repair
+operator candidates. Each arm and order SHALL start from its registered empty
+state. Event `t` MAY use only task-visible input and memory committed before
+`t`. The exact outcome SHALL open only after the live action is fixed.
+
+The `context_only` arm SHALL use task-visible state without cross-event memory.
+The `verified_memory` arm SHALL use the same context policy plus eligible
+experiential memory. A retrieved item earns credit only when it changes the
+selected live action. The `frozen` arm SHALL use one read-only ranking policy.
+No arm MAY use a future outcome, an exact target, or a same-event pending write
+to rank candidates.
+
+The memory arm SHALL propose only localized `append`, `revise`, or `retire`
+patches. One patch SHALL target one typed memory component. A patch MAY become
+active only when it repairs its source event, does not regress the paired held
+anchors, and keeps fixed-budget recoverable support at or above the frozen
+floor. Every accepted patch SHALL record support before and after the update.
+Every patch SHALL bind its exact evidence, version, checksum, checkpoint, and
+rollback target.
+
+The artifact SHALL derive all yields, regret, future-event deltas, forgetting,
+support, retrieval precision, action influence, update acceptance, uncertainty,
+and order sensitivity from event and patch rows. Same-policy scores and learned
+self-grades SHALL have no authority. The memory policy is distinct from exact
+future-outcome evaluation, so `verifier_is_oracle` SHALL be bare `false`.
+`inference_substrate` SHALL equal
+`exact_repair_operator_prequential_memory_no_llm`.
+
+`prospective_memory_comparison_complete` SHALL be bare `true` when every
+registered order, arm, event, patch, and exact outcome is complete. Its value
+does not depend on the sign of the result. A positive verdict SHALL require a
+row-derived future exact improvement and every safety gate. A complete result
+without future improvement SHALL use `verdict_class=null`. A precondition or
+integrity failure SHALL use `verdict_class=blocked` and name the failed check
+and observed value.
+
+### REQ-LEARN-6654 Sub-requirements
+
+- REQ-LEARN-6654-PRECONDITIONS: Exp6653 `memory_fixture_ready` SHALL be true.
+  The fixture, schema, protected files, task orders, arm seeds, thresholds,
+  support floor, tie rules, restart points, and rollback policy SHALL freeze
+  before the first action.
+- REQ-LEARN-6654-PREQUENTIAL: Each row SHALL bind the pre-event state and
+  visible commit set before ranking. The exact outcome and same-event update
+  SHALL become visible only after action commitment.
+- REQ-LEARN-6654-MATCHED: Every arm SHALL receive the same ordered events and
+  candidate pool bytes. State and memory SHALL reset for every arm and order.
+- REQ-LEARN-6654-INFLUENCE: Every lookup SHALL record retrieval and action
+  influence separately. Retrieval without an action change SHALL receive zero
+  credit.
+- REQ-LEARN-6654-PATCHES: Every proposal SHALL name one component, operation,
+  source repair result, paired anchor results, support result, decision,
+  version, checksum, and exact evidence receipt.
+- REQ-LEARN-6654-SUPPORT: Accepted patches SHALL preserve the registered
+  fixed-budget recovery path. Forgetting SHALL count prior exact actions that
+  a later memory influence changes into exact failures.
+- REQ-LEARN-6654-RECOVERY: Registered checkpoints SHALL survive a fresh
+  restart. The rollback policy SHALL restore the exact checkpoint bytes after
+  any failed post-commit gate.
+- REQ-LEARN-6654-ROWS: `per_unit_rows` SHALL contain every order-arm-event unit
+  and every patch unit. Aggregate rows SHALL recompute from those source rows.
+- REQ-LEARN-6654-ATOMIC: The terminal artifact SHALL use atomic replacement.
+  Its checksum SHALL cover every final field except itself.
+
+### SCENARIO-LEARN-6654-PREQUENTIAL: Future Evidence Cannot Select An Action
+
+**Given** one registered order and all arm pre-event states
+**When** an event ranks the matched repair candidates
+**Then** the action commits before exact evaluation, and only commits from
+earlier events can affect the ranking.
+
+### SCENARIO-LEARN-6654-MATCHED-ARMS: Orders And Candidate Pools Match
+
+**Given** the frozen, context-only, and verified-memory arms
+**When** the comparison runs across all registered orders
+**Then** every arm receives every ordered event and the same candidate pool,
+and each arm-order state starts from the registered empty checksum.
+
+### SCENARIO-LEARN-6654-INFLUENCE: Retrieval Credit Requires Live Influence
+
+**Given** a stored memory item that matches the visible applicability key
+**When** the memory arm ranks the live candidates
+**Then** the row records retrieval, action change, and credit separately, and
+credit is true only when retrieval changes the selected operator.
+
+### SCENARIO-LEARN-6654-PATCH-GATES: Targeted Patches Need Three Exact Gates
+
+**Given** an append, revise, or retire proposal for one typed component
+**When** the memory arm evaluates the update
+**Then** it admits the patch only if source repair, paired held-anchor
+non-regression, and recoverable-support checks all pass.
+
+### SCENARIO-LEARN-6654-FORGETTING-SUPPORT: Safety Metrics Come From Rows
+
+**Given** completed event and accepted-patch rows
+**When** the reducer measures forgetting and recoverable support
+**Then** it counts action-level exact losses and rebuilds support before and
+after every accepted patch under the frozen candidate budget.
+
+### SCENARIO-LEARN-6654-RECOVERY: Restart And Rollback Preserve Exact State
+
+**Given** a registered checkpoint and its canonical state bytes
+**When** a fresh state restarts or a failed post-commit gate triggers rollback
+**Then** the restored version, checksum, active items, and lineage match the
+checkpoint exactly.
+
+### SCENARIO-LEARN-6654-VERDICT: Completion Does Not Depend On Sign
+
+**Given** all arms, orders, rows, exact outcomes, safety gates, and test receipts
+**When** Exp6654 recomputes its terminal result
+**Then** comparison completion is true for either a positive or null result,
+while a positive class also requires future exact improvement and all safety
+gates.
+
+### Required Artifact Fields And Principles
+
+- `status`: The terminal state distinguishes positive, null, and named blocks.
+- `honest_verdict`: The conclusion states the prospective result and its safety boundary.
+- `verdict_class`: The closed enum is `positive`, null, or `blocked`.
+- `gate_check_summary`: A blocked result names the failed check and observed value.
+- `upstream_gate_receipt`: The Exp6653 field, value, path, and file hash bind admission.
+- `preregistration`: Arms, orders, thresholds, support, ties, restart, and rollback freeze first.
+- `arm_order_event_rows`: Every live decision records state, retrieval, ranking, action, exact outcome, and update.
+- `retrieval_and_influence_rows`: Retrieval and live action influence remain separate.
+- `patch_decision_rows`: Source repair, held anchors, support, and patch disposition are explicit.
+- `memory_state_receipts`: Versions, checksums, checkpoints, restarts, and rollback lineage bind state.
+- `prospective_metrics`: Row-derived yield, regret, future delta, forgetting, support, influence, and uncertainty are explicit.
+- `recoverable_support_rows`: Fixed-budget support appears before and after every accepted patch.
+- `prospective_memory_comparison_complete`: Bare completion does not depend on result sign.
+- `per_unit_rows`: Every order-arm-event and patch unit has a stable row hash.
+- `aggregate_row_recomputation`: Every arm-order delta rebuilds from rows.
+- `preconditions_checked`: Inputs, tools, resources, fixture schema, and hashes are explicit.
+- `protected_files_unchanged`: Registered protected paths retain their initial hashes.
+- `inference_substrate`: The exact no-LLM prequential substrate is named.
+- `verifier_is_oracle`: Bare false separates the memory policy from future exact evaluation.
+- `field_provenance`: Every field names its source hash and reducer lineage.
+- `random_seed`: The order, arm, and tie seed schedule is frozen.
+- `duration_s`: Monotonic duration covers the comparison and checks.
+- `tests_run`: Focused, coverage, spec, row, artifact, adversarial, restart, E2E, and full-suite receipts are explicit.
+- `reproducibility_checksum`: The final content hash detects drift.
+
+## Implementation Status (REQ-LEARN-6654)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-6654 and SCENARIO-LEARN-6654-* | Planned (`python/carnot/experiment_6654_prospective_repair_memory_evolution.py`; terminal evidence in `results/experiment_6654_prospective_repair_memory_evolution.json`) | Planned (`tests/python/test_experiment_6654_prospective_repair_memory_evolution.py`) |
