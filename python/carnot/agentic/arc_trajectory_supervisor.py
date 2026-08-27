@@ -12,7 +12,9 @@ See docs/research-notes/avo-adaptation-for-local-generator-2026-08-21.md.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
+from typing import Any
 
 # The closed arm vocabulary, in firing order. Order is a diagnosis ladder:
 # an installed goal bias that survived a whole stagnant window is steering
@@ -182,4 +184,132 @@ class TrajectorySupervisor:
             "redirects": list(self._redirects),
             "arm_outcomes": arm_outcomes,
             "stagnations_unredirected": self._stagnations_unredirected,
+        }
+
+
+class TraceAutomatonSupervisor:
+    """Apply one frozen, game-blind action redirect on the live policy seam.
+
+    The object sees only outcomes that the policy already observed before the
+    next action. It never sees a game ID or a future frame. A reset redirect is
+    intentionally conservative because reset needs no game-specific payload.
+    The caller must opt in by installing an instance on one E3 policy.
+    """
+
+    def __init__(self, frozen_fsm: Mapping[str, Any]) -> None:
+        if frozen_fsm.get("schema") != "carnot.arc.trace_fsm.v1":
+            raise ValueError("unsupported trace automaton schema")
+        thresholds = frozen_fsm.get("thresholds") or {}
+        self.same_action_threshold = max(1, int(thresholds["same_action_run"]))
+        self.stagnation_threshold = max(1, int(thresholds["actions_since_observed_change"]))
+        self.overhead_threshold = max(1, int(thresholds.get("consecutive_navigation_or_replay", 2)))
+        self.frozen_fsm = dict(frozen_fsm)
+        self._last_action_key: str | None = None
+        self._same_action_run = 0
+        self._actions_since_change = 0
+        self._overhead_run = 0
+        self._rows: list[dict[str, Any]] = []
+
+    @staticmethod
+    def _action_key(move: Any) -> str:
+        kind, data = move if isinstance(move, tuple) and len(move) == 2 else (None, None)
+        if isinstance(data, Mapping):
+            data_key = tuple(sorted((str(key), repr(value)) for key, value in data.items()))
+        else:
+            data_key = repr(data)
+        return repr((kind, data_key))
+
+    def select_action(
+        self,
+        proposed_action: Any,
+        *,
+        previous_frame_changed: bool | None,
+        level_progress_since_previous_action: bool,
+        action_role_is_overhead: bool = False,
+    ) -> Any:
+        """Return the selected action and retain a next-outcome-linked receipt."""
+
+        if self._rows and self._rows[-1]["next_outcome"] is None:
+            self._rows[-1]["next_outcome"] = {
+                "observed": previous_frame_changed is not None,
+                "frame_changed": previous_frame_changed,
+                "level_progress": bool(level_progress_since_previous_action),
+            }
+        if level_progress_since_previous_action or previous_frame_changed is True:
+            self._actions_since_change = 0
+        elif previous_frame_changed is False:
+            self._actions_since_change += 1
+
+        action_key = self._action_key(proposed_action)
+        if action_key == self._last_action_key:
+            self._same_action_run += 1
+        else:
+            self._last_action_key = action_key
+            self._same_action_run = 1
+        self._overhead_run = self._overhead_run + 1 if action_role_is_overhead else 0
+
+        if not self._rows:
+            state = "bootstrap"
+        elif (
+            self._same_action_run >= self.same_action_threshold
+            and self._actions_since_change >= self.stagnation_threshold
+        ) or self._overhead_run >= self.overhead_threshold:
+            state = "stagnant_repeat"
+        elif level_progress_since_previous_action or previous_frame_changed is True:
+            state = "productive"
+        else:
+            state = "observing"
+
+        fired = state == "stagnant_repeat"
+        selected_action = ("RESET", None) if fired else proposed_action
+        influenced = selected_action != proposed_action
+        self._rows.append(
+            {
+                "action_index": len(self._rows),
+                "state": state,
+                "fired": fired,
+                "arm": "reset_after_stagnant_repeat" if fired else None,
+                "pre_action_features": {
+                    "previous_frame_changed": previous_frame_changed,
+                    "same_action_run": self._same_action_run,
+                    "actions_since_observed_change": self._actions_since_change,
+                    "level_progress_since_previous_action": bool(
+                        level_progress_since_previous_action
+                    ),
+                    "action_role_is_overhead": bool(action_role_is_overhead),
+                    "consecutive_navigation_or_replay": self._overhead_run,
+                },
+                "proposed_action": proposed_action,
+                "selected_action": selected_action,
+                "action_influenced": influenced,
+                "blocked_valid_action": influenced,
+                "next_outcome": None,
+            }
+        )
+        return selected_action
+
+    def finalize(self) -> None:
+        """Close the final row without inventing an outcome after the run ends."""
+
+        if self._rows and self._rows[-1]["next_outcome"] is None:
+            self._rows[-1]["next_outcome"] = {
+                "observed": False,
+                "frame_changed": None,
+                "level_progress": False,
+            }
+
+    def receipt(self) -> dict[str, Any]:
+        """Return action, firing, influence, and exact-outcome accounting."""
+
+        firings = sum(int(row["fired"]) for row in self._rows)
+        influences = sum(int(row["action_influenced"]) for row in self._rows)
+        return {
+            "enabled": True,
+            "schema": "carnot.arc.trace_fsm.receipt.v1",
+            "fsm_schema": self.frozen_fsm["schema"],
+            "actions_observed": len(self._rows),
+            "firings": firings,
+            "action_influences": influences,
+            "blocked_valid_actions": sum(int(row["blocked_valid_action"]) for row in self._rows),
+            "rows": list(self._rows),
         }
