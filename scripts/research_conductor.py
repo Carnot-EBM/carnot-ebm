@@ -299,6 +299,121 @@ def _restore_dropped_determinations() -> None:
         logger.debug("determination restore pass skipped: %s", exc)
 
 
+#: Run ids of scope declarations that belong to the conductor itself, and so must never be
+#: treated as another session's claim. See `_stage_all_except_claimed`.
+CONDUCTOR_SCOPE_IDS = {
+    os.environ.get("CARNOT_CONDUCTOR_SCOPE_ID", "conductor-standing"),
+}
+
+
+def claimed_by_other_sessions(staged: list[str], claims: dict[str, list[str]]) -> dict[str, str]:
+    """Which staged paths another session has declared, as {path: run_id}.
+
+    The decision rule is a pure function so it can be tested without a git fixture, following
+    the precedent set by `determination_damage`. A directory pattern with no glob characters
+    means "that directory and everything under it", which is what a person means when they
+    type one -- matching `_matches` in scripts/harness_integrity_lint.py, deliberately, since
+    the two must agree about what a declaration covers.
+    """
+    import fnmatch as _fnmatch
+
+    claimed: dict[str, str] = {}
+    for path in staged:
+        for run_id, patterns in claims.items():
+            for pat in patterns:
+                literal_dir = not any(ch in pat for ch in "*?[")
+                if _fnmatch.fnmatch(path, pat) or (
+                    literal_dir and path.startswith(f"{pat.rstrip('/')}/")
+                ):
+                    claimed[path] = run_id
+                    break
+            if path in claimed:
+                break
+    return claimed
+
+
+def _stage_all_except_claimed() -> None:
+    """`git add -A`, then unstage whatever another session has declared it is working on.
+
+    WHY THIS EXISTS (2026-08-27). The conductor commits with `git add -A` for a good reason --
+    it preserves in-flight work rather than losing it, which is the standing "commit-first,
+    never revert" discipline. But it also sweeps OTHER sessions' uncommitted work into
+    conductor-attributed commits. That happened four times in one day, once to a guard while
+    it was being written, and it produced a false "your work was destroyed" report from an
+    agent that then offered to rewrite work which had in fact survived.
+
+    THE NARROWING IS BY CLAIM, NOT BY PATHSPEC, AND THAT IS THE WHOLE DESIGN. A fixed pathspec
+    would be the dangerous version: agent-authored files outside it -- new tests, spec edits,
+    experiment modules -- would never be committed by anyone and would sit exposed to the next
+    checkout. So this still stages EVERYTHING first. It then unstages only paths that another
+    session has explicitly declared via scripts/harness_integrity_lint.py, which by definition
+    means some other session is going to commit them. Work nobody has claimed is still swept
+    up exactly as before, so this cannot strand anything.
+
+    SAFETY VALVE. If the exclusions would leave nothing staged, they are abandoned and the
+    full sweep proceeds. A commit that preserves work matters more than clean attribution, and
+    a session that declared `--scope '*'` must not be able to turn the conductor's checkpoint
+    into a no-op.
+
+    FAIL-OPEN, deliberately and for the same reason as `_restore_dropped_determinations`: any
+    error here leaves the plain `git add -A` behaviour in place. Narrowing is an improvement,
+    not a precondition for committing.
+    """
+    _restore_dropped_determinations()
+    run_cmd(["git", "add", "-A"])
+    try:
+        import json as _json
+
+        scopes_dir = PROJECT_ROOT / "ops" / ".agent_scopes"
+        if not scopes_dir.is_dir():
+            return
+        claims: dict[str, list[str]] = {}
+        for scope_file in sorted(scopes_dir.glob("*.scope.json")):
+            try:
+                record = _json.loads(scope_file.read_text())
+            except Exception:  # noqa: BLE001 - an unreadable claim is not a claim
+                continue
+            run_id = str(record.get("run_id") or scope_file.stem)
+            if run_id in CONDUCTOR_SCOPE_IDS:
+                continue  # the conductor's own standing declaration claims nothing from it
+            patterns = [p for p in (record.get("scope") or []) if isinstance(p, str)]
+            if patterns:
+                claims[run_id] = patterns
+        if not claims:
+            return
+
+        rc, staged_out, _ = run_cmd(["git", "diff", "--cached", "--name-only"])
+        if rc != 0:
+            return
+        staged = [line.strip() for line in staged_out.splitlines() if line.strip()]
+        if not staged:
+            return
+
+        claimed = claimed_by_other_sessions(staged, claims)
+        if not claimed:
+            return
+        if len(claimed) == len(staged):
+            logger.warning(
+                "Scope narrowing SKIPPED: every staged path is claimed by another session "
+                "(%s). Committing all %d rather than producing an empty checkpoint.",
+                ",".join(sorted(set(claimed.values()))),
+                len(staged),
+            )
+            return
+
+        run_cmd(["git", "restore", "--staged", "--", *sorted(claimed)])
+        for run_id in sorted(set(claimed.values())):
+            owned = sorted(p for p, r in claimed.items() if r == run_id)
+            logger.info(
+                "Left %d path(s) for session %s to commit: %s",
+                len(owned),
+                run_id,
+                ", ".join(owned[:8]) + (" ..." if len(owned) > 8 else ""),
+            )
+    except Exception as exc:  # noqa: BLE001 - fail-open per docstring
+        logger.debug("scope narrowing skipped: %s", exc)
+
+
 def with_agent_signature(message: str) -> str:
     """Append the configured agent signature to a commit message."""
     return message.strip() + AGENT_SIGNATURE
@@ -1729,8 +1844,7 @@ def git_commit_and_push(message: str, push: bool = True) -> bool:
     """
     full_message = with_agent_signature(message)
 
-    _restore_dropped_determinations()
-    run_cmd(["git", "add", "-A"])
+    _stage_all_except_claimed()
     rc, _, stderr = run_cmd(["git", "commit", "--no-verify", "-m", full_message])
     if rc != 0:
         logger.warning("Commit failed: %s", stderr[:200])
@@ -3480,7 +3594,7 @@ def _update_docs_before_planning(push: bool = True) -> bool:
     success, output = run_agent(doc_prompt, max_turns=20, timeout=480)
 
     if success and git_has_changes():
-        run_cmd(["git", "add", "-A"])
+        _stage_all_except_claimed()
         msg = with_agent_signature(
             "[conductor] Update docs before planning — sync with latest results"
         )
@@ -4241,7 +4355,7 @@ continuations", 2026-05-29):
                 logger.warning("Planning agent modified %s — reverting", guarded)
                 run_cmd(["git", "checkout", "--", guarded])
 
-        run_cmd(["git", "add", "-A"])
+        _stage_all_except_claimed()
         msg = (
             f"[conductor] Plan next milestone: {next_milestone}\n\n"
             f"Planning agent proposed {len(next_tasks)} experiments.\n"
@@ -5142,7 +5256,7 @@ def _plan_next_milestone(push: bool = True, replan_context: str = "") -> bool:
                 logger.warning("Planning agent modified %s — reverting", guarded)
                 run_cmd(["git", "checkout", "--", guarded])
 
-        run_cmd(["git", "add", "-A"])
+        _stage_all_except_claimed()
         msg = (
             f"[conductor] Plan next milestone: {next_milestone}\n\n"
             f"Planning agent proposed {len(next_tasks)} experiments.\n"
@@ -6807,7 +6921,7 @@ def research_step(
         # Commit the broken state as a checkpoint instead of reverting.
         # This preserves experiment deliverables even when tests fail.
         if git_has_changes():
-            run_cmd(["git", "add", "-A"])
+            _stage_all_except_claimed()
             msg = with_agent_signature(f"[conductor] Checkpoint (tests failing): {task['title']}")
             run_cmd(["git", "commit", "-m", msg])
         log_step(task["title"], "FAIL", f"Post-tests failed: {test_summary}")
