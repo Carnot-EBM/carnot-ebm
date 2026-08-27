@@ -27914,3 +27914,141 @@ the active V582 task contract.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6681 | `python/carnot/agentic/arc_e3_outcome_transport.py`; canonical opt-in seams in `python/carnot/agentic/arc_competition_agent.py`; reviewed substrate registration in `python/carnot/agentic/arc_solve_artifact_discipline.py` and `scripts/adversarial_verify.py`; `python/carnot/experiment_6681_arc_post_redirect_outcomes.py`. | `tests/python/test_experiment_6681_arc_post_redirect_outcomes.py` (`SCENARIO-ARC-WMTE-6681-LINEAGE`, `EXACT-RETURN`, `CONTROLS-AND-TAGS`, `MISSING-OUTCOME`, `ATTACKS`, `NO-SOLVE`, `ARTIFACT`); `tests/python/coverage_experiment_6681.py`; `tests/python/test_arc_competition_agent_adapter.py`; `tests/python/test_arc_solve_artifact_discipline.py`; `tests/python/test_arc_artifact_lint.py`; `tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py`. |
+
+### REQ-ARC-WMTE-6682: Frozen Held-Family Live Supervisor Outcome A/B
+
+Exp6682 SHALL run only after the Exp6681 artifact validates,
+`arc_outcome_transport_ready` is true, and
+`eligible_redirect_outcome_rows >= 30`. Before any live action it SHALL hash
+the solve registry, active V582 roadmap, conductor, canonical E3 policy,
+outcome transport, trace supervisor source, and the exact frozen FSM from
+Exp6656. It SHALL verify the installed ARC SDK, anonymous live access, held
+family catalog entries, positive matched episode and action budgets, CPU, RAM,
+disk, and writable atomic output. Any failed precondition SHALL produce one
+terminal blocked artifact and SHALL prevent live episode execution.
+
+The run manifest SHALL be frozen before outcomes. It SHALL declare held
+families, matched episode IDs, requested seeds, deterministic arm order, fresh
+policy state per arm, equal per-arm action budgets, stopping rules, frozen FSM
+and policy hashes, the exact transition-utility definition, the legal-action
+and forbidden-action rules, the missing-row rule, and the paired analysis
+plan. The online ARC wrapper does not transmit requested seeds to the remote
+environment; therefore an off/on unit SHALL be matched only when its normalized
+initial public observation is byte-identical after removing receipt-only GUID,
+game ID, and action-input fields. A requested seed label alone SHALL not prove
+a match.
+
+Both arms SHALL run through `make_carnot_agent -> E3AgentPolicy ->
+arc_env.step`. The off arm SHALL install no trace automaton. The on arm SHALL
+install exactly the frozen Exp6656 `TraceAutomatonSupervisor`. Every action row
+SHALL retain the arm, matched-unit ID, family, episode seed, action index,
+proposal and applied action, supervisor decision and intervention reason,
+complete observations before and after, exact reward presence and value,
+termination, exact transition utility, proposal and application validity,
+forbidden-action result, valid-action block, action cost, and the four Exp6681
+lineage identities. No row may read a game label into the supervisor, use an
+adapter, read source, run offline BFS, or make a game or level solve claim.
+
+The frozen legal-action checker SHALL classify RESET as a public SDK control
+and a numbered action as legal only when its ID occurs in the public
+`observation_before.available_actions`. ACTION6 additionally requires integer
+`x` and `y` inside the public frame bounds. A forbidden applied action is the
+exact negation of this rule. A valid-action block occurs when the on arm changes
+a legal proposal. For ARC returns without a scalar reward, transition utility
+SHALL be the exact signed public transition
+`levels_completed_after - levels_completed_before`, minus one only when the
+returned state is `GAME_OVER`; no pixel, frame-change, registry, goal, or solve
+proxy may enter the value. When a scalar environment reward is present, that
+exact numeric reward SHALL be the utility. This utility is an evaluation
+oracle read only after the supervisor decision is sealed.
+
+Paired episode rows SHALL be built only from one complete off arm and one
+complete on arm with identical matched-unit fields, normalized initial
+observation, action budget, stopping rules, policy hash, and requested seed.
+They SHALL report on-minus-off transition utility, forbidden-action count,
+valid-action blocks, false interventions, actions, and action cost. A false
+intervention is every on-arm valid-action block in a paired episode whose exact
+episode utility does not exceed the off arm. Episode and held-family summaries
+SHALL report wins, losses, ties, no-headroom rows, and fixed-seed paired 95%
+intervals. Missing outcomes, unmatched arms, unequal budgets, duplicate
+actions or lineage IDs, post-outcome supervisor decisions, and incomplete raw
+receipts SHALL remain explicit and SHALL make readiness false.
+
+The experiment SHALL attack label leakage, unmatched episodes, duplicate
+actions, missing outcomes, unequal budgets, post-outcome decisions,
+game-specific rules, and archive substitution. Every attack SHALL fail closed.
+`arc_supervisor_ab_ready` SHALL be true only when all preregistered units and
+raw receipts are complete, all attacks pass, every headline recomputes from
+rows, and protected files remain unchanged. A more rejective supervisor SHALL
+not receive a positive verdict without a strict exact transition-utility or
+forbidden-action improvement. The closed verdict classes are `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, and `partial`; because
+environment outcomes define utility, any ready positive SHALL be
+`circular_positive` and `verifier_is_oracle` SHALL be true.
+
+Exp6682 SHALL write one durable atomic artifact at
+`results/experiment_6682_arc_held_family_supervisor_ab.json` with every field
+required by the active V582 task, field-level source/function/hash provenance,
+the exact substrate
+`canonical_live_e3_supervisor_ab_no_new_llm`, measured monotonic duration,
+test receipts, and a canonical checksum excluding only itself. It SHALL leave
+the active roadmap, conductor, and solve registry byte-identical.
+
+#### SCENARIO-ARC-WMTE-6682-PRECONDITIONS-AND-FREEZE
+
+- GIVEN a valid Exp6681 artifact and the installed live substrate
+- WHEN Exp6682 freezes its run manifest
+- THEN all gates, hashes, resources, budgets, rules, seeds, arms, and stopping
+  conditions are recorded before the first outcome.
+- GIVEN any failed gate
+- THEN a blocked artifact is written and the live runner is not called.
+
+#### SCENARIO-ARC-WMTE-6682-EXACT-ROW-AND-UTILITY
+
+- GIVEN a canonical live action return
+- THEN the unit row retains the proposal, application, exact outcome, validity,
+  forbidden state, action cost, and four-part lineage.
+- AND utility is computed only from an exact scalar reward or the preregistered
+  public level/state transition after the decision was sealed.
+
+#### SCENARIO-ARC-WMTE-6682-MATCHED-PAIRS-AND-INTERVENTIONS
+
+- GIVEN complete off/on arms with the same normalized start and budgets
+- WHEN paired rows are reduced
+- THEN episode and family deltas, wins, losses, ties, no-headroom counts,
+  intervals, valid-action blocks, and false interventions recompute exactly.
+- GIVEN a valid baseline proposal changed by the on arm with no episode utility
+  benefit
+- THEN the intervention appears in `false_intervention_rows`.
+
+#### SCENARIO-ARC-WMTE-6682-ATTACKS-FAIL-CLOSED
+
+- GIVEN label leakage, an unmatched arm, duplicate action or lineage identity,
+  missing outcome, unequal budget, decision timestamp after outcome, game rule,
+  or archived substitute
+- WHEN validation runs
+- THEN the corresponding attack row passes only by rejecting the mutation and
+  readiness remains false for contaminated evidence.
+
+#### SCENARIO-ARC-WMTE-6682-VERDICT-AND-NO-SOLVE
+
+- GIVEN a ready A/B whose on arm only blocks more valid actions
+- THEN the verdict is not positive without strict utility or forbidden-action
+  benefit.
+- AND every terminal result declares `solve_claim_scope=none`, uses no new LLM,
+  reads no source, runs no offline solve, loads no adapter, and leaves the solve
+  registry unchanged.
+
+#### SCENARIO-ARC-WMTE-6682-ATOMIC-RECOMPUTATION
+
+- GIVEN complete raw rows, paired rows, family rows, attacks, hashes, and tests
+- WHEN the required command writes and validates the artifact
+- THEN every required V582 field is present, all summaries rebuild from raw
+  rows, a partial final document is never observable, and any content mutation
+  breaks the checksum or validation.
+
+## Implementation Status (REQ-ARC-WMTE-6682)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6682 | `python/carnot/experiment_6682_arc_held_family_supervisor_ab.py` (frozen manifest, live E3 off/on runner, exact public utility and validity checks, paired/family reductions, attacks, atomic artifact, and validator). | `tests/python/test_experiment_6682_arc_held_family_supervisor_ab.py` (`SCENARIO-ARC-WMTE-6682-PRECONDITIONS-AND-FREEZE`, `EXACT-ROW-AND-UTILITY`, `MATCHED-PAIRS-AND-INTERVENTIONS`, `ATTACKS-FAIL-CLOSED`, `VERDICT-AND-NO-SOLVE`, and `ATOMIC-RECOMPUTATION`; scoped 100% new-module statement coverage). |

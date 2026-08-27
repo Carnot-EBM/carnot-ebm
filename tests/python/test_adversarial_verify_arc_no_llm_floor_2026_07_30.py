@@ -117,6 +117,28 @@ def test_req_arc_wmte_6681_outcome_transport_uses_reviewed_no_llm_classification
     assert warning_flags == []
 
 
+def test_req_arc_wmte_6682_supervisor_ab_uses_reviewed_no_llm_classification() -> None:
+    """REQ-ARC-WMTE-6682 must not rely on the generic no-LLM name fallback."""
+
+    payload = {
+        "inference_substrate": AV.ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE,
+        "duration_s": 0.02,
+    }
+    classification = AV._classify_inference_substrate(payload)
+    warning_flags: list = []
+    AV._emit_no_llm_by_name_warning(payload, warning_flags)
+
+    assert classification == {
+        "kind": AV.SUBSTRATE_KIND_NO_LLM,
+        "declared_value": AV.ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE,
+        "matched_value": AV.ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE,
+        "source": "top_level_inference_substrate",
+    }
+    assert AV._is_arc_live_agent_no_llm(payload) is True
+    assert AV.duration_floor_for_artifact(payload)["reason"] == "arc_live_agent_no_llm"
+    assert warning_flags == []
+
+
 def test_clean_no_llm_artifact_below_floor_is_flagged_without_any_vestigial_marker() -> None:
     """THE REGRESSION. This is the exact input that was silently passing before 2026-07-30.
 

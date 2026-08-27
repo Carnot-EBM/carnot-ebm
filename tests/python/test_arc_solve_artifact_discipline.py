@@ -129,6 +129,22 @@ def test_req_arc_wmte_6681_helper_accepts_canonical_outcome_transport_substrate(
     assert substrate in discipline.FIELD_PRINCIPLES["inference_substrate"]
 
 
+def test_req_arc_wmte_6682_helper_accepts_supervisor_ab_substrate() -> None:
+    """REQ-ARC-WMTE-6682 registers its exact live no-new-LLM substrate."""
+
+    substrate = discipline.ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE
+    artifact = {
+        "honest_verdict": "complete: held-family supervisor comparison measured",
+        "duration_s": 0.02,
+        "inference_substrate": substrate,
+    }
+
+    assert substrate == "canonical_live_e3_supervisor_ab_no_new_llm"
+    assert discipline.duration_floor_s(substrate) == 0.01
+    assert discipline.validate_arc_solve_artifact(artifact) == []
+    assert substrate in discipline.FIELD_PRINCIPLES["inference_substrate"]
+
+
 def test_scenario_verify_4437_helper_rejects_missing_short_and_nonterminal_cases() -> None:
     """SCENARIO-VERIFY-4437: helper validation reports every required failure."""
 
