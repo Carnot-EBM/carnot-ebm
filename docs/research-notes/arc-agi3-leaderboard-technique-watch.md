@@ -212,3 +212,7 @@ CHECK_TIMED_OUT
 
 - **New top-five entrant:** **Tony G** (`junvalue`) is now **#5 at 3.17**. No submission-linked public code, notebook, dataset, discussion, repository, or writeup was found. **Exploit/general-purpose classification: unknown**; no Carnot lever can be assigned. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [Kaggle code profile](https://www.kaggle.com/junvalue/code)
 
+## 2026-08-27 13:39 UTC -- NEW
+
+- **New top-five entrant:** **rfbr** (`romainfabre`) is now **#5 at 3.37**, displacing Tony G to #6. No attributable public code, notebook, discussion, repository, or technique writeup was found. **Exploit/general-purpose classification: unknown**; no **POSSIBLE CARNOT LEVER** can be assigned. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [Kaggle code profile](https://www.kaggle.com/romainfabre/code)
+

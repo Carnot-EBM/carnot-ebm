@@ -16620,3 +16620,4 @@ code |
 | 2026-08-27 10:58 UTC | V582 document-to-manifest parity contract | OK | 91 passed, 1 warning in 47.59s |
 | 2026-08-27 12:05 UTC | Triggered-tail task-owned verification receipt | OK | 130 passed, 1 warning in 10.85s |
 | 2026-08-27 13:28 UTC | Three-family delayed syntax-tail A/B | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output:  changed["gate |
+| 2026-08-27 13:39 UTC | Three-family delayed syntax-tail A/B | OK | 115 passed, 1 warning in 10.60s |
