@@ -17957,3 +17957,4 @@ model load, which leaves DualGPURunner applicability unknown. The next milestone
 needs monotonic phase receipts, capacity-aware dispatch for separate GPU jobs,
 and batched inference requests. With no measurable elapsed interval, projected
 savings remain 0%.
+- 2026-08-27: V582 document-to-manifest parity contract (⚠️ Research Finding) — honest_verdict=complete: V582 design and active manifest have exact activation parity; no scientific claim; results/experiment_6674_v582_manifest_parity_contract.json
