@@ -1,0 +1,39 @@
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index 2e8f9110e8..ba153a38b2 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -390,6 +390,34 @@ def _stage_all_except_claimed() -> None:
+             return
+ 
+         claimed = claimed_by_other_sessions(staged, claims)
++
++        # NEVER unstage a file that does not exist at HEAD. An untracked file has no other
++        # copy anywhere: unstage it and the only thing standing between it and deletion is
++        # its owner committing in time. A tracked file's content is recoverable from HEAD, so
++        # excluding it costs nothing but attribution.
++        #
++        # Learned 2026-08-27, the hard way. An outer-loop note was written, claimed, and left
++        # unstaged by this narrowing to prove the feature worked. Within the hour it was gone
++        # from disk, never committed. The deletion was NOT attributed to this code -- the
++        # checkpoint path stages file-by-file and bypasses this helper entirely, so it would
++        # have swept the note up if the note had still existed -- but the episode showed the
++        # premise "a declared path has an owner who will commit it" is only true if the owner
++        # commits BEFORE anything else touches the tree, and nothing enforces that.
++        if claimed:
++            rc_head, head_files, _ = run_cmd(["git", "ls-tree", "-r", "--name-only", "HEAD"])
++            if rc_head != 0:
++                return  # cannot tell tracked from new: keep everything staged
++            tracked_at_head = {line.strip() for line in head_files.splitlines() if line.strip()}
++            kept_new = [p for p in claimed if p not in tracked_at_head]
++            for path in kept_new:
++                del claimed[path]
++            if kept_new:
++                logger.info(
++                    "Keeping %d NEW file(s) despite another session's claim (an untracked "
++                    "file has no other copy): %s",
++                    len(kept_new),
++                    ", ".join(sorted(kept_new)[:5]),
++                )
+         if not claimed:
+             return
+         if len(claimed) == len(staged):
