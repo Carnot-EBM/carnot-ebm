@@ -16598,3 +16598,4 @@ code |
 | 2026-08-27 01:02 UTC | Trace-automaton ARC live supervisor LOO A/B | OK | 110 passed, 1 warning in 28.44s |
 | 2026-08-27 01:45 UTC | Bounded-treewidth exact Ising reference | OK | 135 passed, 1 warning in 9.10s |
 | 2026-08-27 01:47 UTC | Autocorrelation-aware thermodynamic schedule A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6657-bounded-treewidth-ising-reference. |
+| 2026-08-27 01:49 UTC | Autocorrelation-aware thermodynamic schedule A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6657-bounded-treewidth-ising-reference. |
