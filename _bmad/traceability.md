@@ -2,6 +2,19 @@
 
 **Last Updated:** 2026-08-27
 
+**Operational Note:** 2026-08-27 Exp6615 durable-replay repair reconciled
+`REQ-REPORT-6615-DURABLE-REPLAY`. Once the V576 capstone has landed, its
+roadmap, evidence, context, protected files, and reconciliation documents now
+resolve against the capstone add commit; first-time authoring still reads the
+working tree. This preserves the closed V576 `headroom_eligible=false` result
+and original protected hashes after the roadmap advanced to V582 and Exp6605
+was rerun. The exact failing conductor shard passes (`117 passed`, one existing
+warning); Exp6615 plus Exp6687 scoped coverage is 100% (`805` statements, `0`
+missing); the applicable Python/JAX training-and-sampling E2E passes (`5
+passed`); focused spec coverage, Ruff, format, mypy, and diff checks pass. No
+test was skipped, weakened, deleted, or reverted, and
+`scripts/research_conductor.py` was not modified.
+
 **Operational Note:** 2026-08-27 Exp6681 failure repair reconciled
 `REQ-ARC-WMTE-6681` and `REQ-VERIFY-4437`. The scored adapter now treats both
 outcome-transport policy hooks as optional, preserving the framework action

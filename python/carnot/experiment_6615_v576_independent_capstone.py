@@ -24,6 +24,8 @@ from typing import Any, Iterable, Mapping, Sequence
 
 import yaml
 
+from carnot.provenance_receipts import receipt_bytes, receipt_exists
+
 
 JsonDict = dict[str, Any]
 MILESTONE = "2026.08.576"
@@ -206,85 +208,71 @@ def canonical_json(value: Any) -> bytes:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
 
 
-def sha256_file(path: Path) -> str:
-    """Hash a file in bounded chunks."""
+def _replay_bytes(repo_root: Path, path: Path, *, evidence: bool = False) -> bytes:
+    """Read one input at the commit that closed the V576 capstone.
 
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return f"sha256:{digest.hexdigest()}"
+    Evidence pinning is deliberate here: Exp6615 is a replay of a closed
+    milestone, so a later source rerun must not rewrite its terminal result.
+    When the capstone has not landed yet, the shared receipt helper preserves
+    its authoring behavior and reads the working tree.
+    """
+
+    return receipt_bytes(
+        path,
+        artifact_relative_path=RESULT_RELATIVE_PATH,
+        root=repo_root,
+        allow_evidence_pin=evidence,
+    )
 
 
-def _read_json(path: Path) -> JsonDict:
-    payload = json.loads(path.read_text(encoding="utf-8"))
+def _replay_exists(repo_root: Path, path: Path, *, evidence: bool = False) -> bool:
+    """Return whether a replay input existed when the capstone landed."""
+
+    return receipt_exists(
+        path,
+        artifact_relative_path=RESULT_RELATIVE_PATH,
+        root=repo_root,
+        allow_evidence_pin=evidence,
+    )
+
+
+def _replay_sha256(repo_root: Path, path: Path, *, evidence: bool = False) -> str:
+    """Hash the exact bytes used by the durable replay."""
+
+    return f"sha256:{hashlib.sha256(_replay_bytes(repo_root, path, evidence=evidence)).hexdigest()}"
+
+
+def _decode_json(data: bytes, path: Path) -> JsonDict:
+    """Decode one JSON object from already-resolved replay bytes."""
+
+    payload = json.loads(data)
     if not isinstance(payload, dict):
         raise ValueError(f"artifact root must be an object: {path}")
     return payload
 
 
+def _read_json(path: Path) -> JsonDict:
+    return _decode_json(path.read_bytes(), path)
+
+
 def _roadmap_payload_for_milestone(repo_root: Path) -> JsonDict:
-    """The roadmap AS IT WAS for this capstone's milestone.
+    """Load the roadmap bytes from the commit that closed this milestone.
 
-    WHY THIS IS NOT JUST A FILE READ (2026-08-27). This module froze MILESTONE and compared it
-    against the LIVE research-roadmap.yaml, which advances every milestone. So the capstone --
-    and its tests -- worked only while its own milestone was active and broke permanently
-    afterwards. 23 earlier capstones do not have this defect: they compare the milestone
-    recorded in the ARTIFACT they are building, which is self-consistent and never rots.
-
-    That was not a local annoyance. The v580 test built its artifact at MODULE scope, so the
-    raise landed during COLLECTION, and pytest answers a collection error by aborting the
-    whole run -- 57,917 collected tests interrupted by one file. Every conductor task that
-    shells out to `pytest tests/python` then failed, exp6682's `verification_failure` among
-    them.
-
-    The live file is used unchanged while it still holds this milestone, so behaviour during
-    the capstone's own milestone is bit-identical. Afterwards the content is recovered from
-    git history, which is deterministic and always available in a checkout. The search is
-    bounded and raises a clear error rather than silently substituting a different milestone.
+    Before the capstone artifact lands, the receipt helper reads the working
+    tree so first-time authoring keeps the normal live-input behavior.
     """
 
     path = repo_root / ROADMAP_RELATIVE_PATH
-    payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+    payload = yaml.safe_load(_replay_bytes(repo_root, path).decode("utf-8"))
     if isinstance(payload, dict) and payload.get("milestone") == MILESTONE:
         return payload
-
-    rel = ROADMAP_RELATIVE_PATH.as_posix()
-    log = subprocess.run(
-        ["git", "-C", str(repo_root), "log", "--format=%H", "-n", "400", "--", rel],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if log.returncode == 0:
-        for commit in log.stdout.split():
-            blob = subprocess.run(
-                ["git", "-C", str(repo_root), "show", f"{commit}:{rel}"],
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-            if blob.returncode != 0:
-                continue
-            try:
-                archived = yaml.safe_load(blob.stdout)
-            except yaml.YAMLError:
-                continue
-            if isinstance(archived, dict) and archived.get("milestone") == MILESTONE:
-                return archived
-
-    raise ValueError(
-        f"expected roadmap milestone {MILESTONE}; the live roadmap has moved on and no "
-        f"commit in the last 400 touching {rel} still holds it"
-    )
+    raise ValueError(f"expected roadmap milestone {MILESTONE}")
 
 
 def load_v576_tasks(repo_root: Path) -> list[JsonDict]:
     """Load and validate the V576 roadmap task list."""
 
     payload = _roadmap_payload_for_milestone(repo_root)
-    if payload.get("milestone") != MILESTONE:
-        raise ValueError(f"expected roadmap milestone {MILESTONE}")
     tasks = payload.get("tasks")
     if not isinstance(tasks, list):
         raise ValueError("roadmap tasks must be a list")
@@ -312,13 +300,14 @@ def load_source_artifacts(repo_root: Path, tasks: Sequence[JsonDict]) -> dict[st
         if number not in SOURCE_EXPERIMENT_NUMBERS:
             continue
         path = repo_root / str(task["deliverable"])
-        present = path.is_file()
+        present = _replay_exists(repo_root, path, evidence=True)
+        data = _replay_bytes(repo_root, path, evidence=True) if present else None
         sources[str(task["id"])] = {
             "task": task,
             "path": path,
             "present": present,
-            "sha256": sha256_file(path) if present else None,
-            "payload": _read_json(path) if present else None,
+            "sha256": (f"sha256:{hashlib.sha256(data).hexdigest()}" if data is not None else None),
+            "payload": _decode_json(data, path) if data is not None else None,
         }
     return sources
 
@@ -420,12 +409,17 @@ def _normalized_external_receipts(repo_root: Path, payload: Mapping[str, Any]) -
                 continue
             path = Path(value["path"])
             resolved = path if path.is_absolute() else repo_root / path
+            present = _replay_exists(repo_root, resolved, evidence=True)
             rows.append(
                 {
                     "kind": field,
                     "path": str(path),
-                    "present": resolved.is_file(),
-                    "sha256": sha256_file(resolved) if resolved.is_file() else value.get("sha256"),
+                    "present": present,
+                    "sha256": (
+                        _replay_sha256(repo_root, resolved, evidence=True)
+                        if present
+                        else value.get("sha256")
+                    ),
                 }
             )
     return rows
@@ -481,6 +475,7 @@ def _source_receipt(
         }
     )
     sidecar = Path(f"{source['path']}.adversarial.json")
+    sidecar_present = _replay_exists(repo_root, sidecar, evidence=True)
     return {
         "task_id": task["id"],
         "experiment_number": number,
@@ -505,8 +500,10 @@ def _source_receipt(
         "adversarial_flagged": bool(flags),
         "adversarial_sidecar": {
             "path": str(sidecar.relative_to(repo_root)),
-            "present": sidecar.is_file(),
-            "sha256": sha256_file(sidecar) if sidecar.is_file() else None,
+            "present": sidecar_present,
+            "sha256": (
+                _replay_sha256(repo_root, sidecar, evidence=True) if sidecar_present else None
+            ),
         },
         "discrepancies": discrepancies,
         "missing_evidence": [] if source["present"] else [str(task["deliverable"])],
@@ -518,7 +515,9 @@ def _context_source_receipts(repo_root: Path) -> list[JsonDict]:
     prior_failure_numbers = {6498, 6554}
     for number in CONTEXT_EXPERIMENT_NUMBERS:
         path = _artifact_path_for_number(repo_root, number)
-        payload = _read_json(path) if path else None
+        present = bool(path and _replay_exists(repo_root, path, evidence=True))
+        data = _replay_bytes(repo_root, path, evidence=True) if path and present else None
+        payload = _decode_json(data, path) if path and data is not None else None
         rows.append(
             {
                 "task_id": f"exp{number}",
@@ -529,9 +528,11 @@ def _context_source_receipts(repo_root: Path) -> list[JsonDict]:
                 "path": str(path.relative_to(repo_root))
                 if path
                 else f"results/experiment_{number}_*.json",
-                "present": path is not None,
-                "source_state": "present" if path else "missing",
-                "sha256": sha256_file(path) if path else None,
+                "present": present,
+                "source_state": "present" if present else "missing",
+                "sha256": (
+                    f"sha256:{hashlib.sha256(data).hexdigest()}" if data is not None else None
+                ),
                 "status": unwrap_value(payload.get("status")) if payload else "missing",
                 "honest_verdict": (
                     unwrap_value(payload.get("honest_verdict")) if payload else "missing artifact"
@@ -540,7 +541,7 @@ def _context_source_receipts(repo_root: Path) -> list[JsonDict]:
                     unwrap_value(payload.get("verdict_class")) if payload else None
                 ),
                 "row_store_counts": _row_store_counts(payload),
-                "missing_evidence": [] if path else [f"experiment_{number} artifact"],
+                "missing_evidence": [] if present else [f"experiment_{number} artifact"],
             }
         )
     return rows
@@ -1071,7 +1072,7 @@ def _prd_gaps() -> list[JsonDict]:
 def _protected_receipts(repo_root: Path) -> JsonDict:
     rows: list[JsonDict] = []
     for relative in PROTECTED_RELATIVE_PATHS:
-        observed = sha256_file(repo_root / relative)
+        observed = _replay_sha256(repo_root, repo_root / relative)
         expected = EXPECTED_PROTECTED_HASHES[relative.as_posix()]
         rows.append(
             {
@@ -1105,8 +1106,12 @@ def _reconciliation_receipts(repo_root: Path, run_date: str) -> list[JsonDict]:
     return [
         {
             "path": path.as_posix(),
-            "present": (repo_root / path).is_file(),
-            "sha256": sha256_file(repo_root / path) if (repo_root / path).is_file() else None,
+            "present": _replay_exists(repo_root, repo_root / path),
+            "sha256": (
+                _replay_sha256(repo_root, repo_root / path)
+                if _replay_exists(repo_root, repo_root / path)
+                else None
+            ),
             "action": action,
             "former_evidence_date": former,
             "new_evidence_date": new,
@@ -1213,6 +1218,7 @@ def _preconditions(
     chronology = unwrap_value(prospective.get("chronology_and_split_receipts")) or {}
     recovery = unwrap_value(prospective.get("restart_and_rollback_receipts")) or {}
     arc_registry_path = repo_root / "ops/arc_solve_registry.yaml"
+    arc_registry_present = _replay_exists(repo_root, arc_registry_path)
     docs = (
         Path("research-program.md"),
         Path("_bmad/prd.md"),
@@ -1250,8 +1256,10 @@ def _preconditions(
         },
         "arc_registry": {
             "path": "ops/arc_solve_registry.yaml",
-            "present": arc_registry_path.is_file(),
-            "sha256": sha256_file(arc_registry_path) if arc_registry_path.is_file() else None,
+            "present": arc_registry_present,
+            "sha256": (
+                _replay_sha256(repo_root, arc_registry_path) if arc_registry_present else None
+            ),
             "non_claim_boundary": "no V576 game, level, or leaderboard solve claim",
         },
         "sampler_references": {
@@ -1277,8 +1285,12 @@ def _preconditions(
         "documents": [
             {
                 "path": path.as_posix(),
-                "present": (repo_root / path).is_file(),
-                "sha256": sha256_file(repo_root / path) if (repo_root / path).is_file() else None,
+                "present": _replay_exists(repo_root, repo_root / path),
+                "sha256": (
+                    _replay_sha256(repo_root, repo_root / path)
+                    if _replay_exists(repo_root, repo_root / path)
+                    else None
+                ),
             }
             for path in docs
         ],

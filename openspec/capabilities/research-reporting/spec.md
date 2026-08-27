@@ -57603,6 +57603,17 @@ scientific claim.
   `results/experiment_6615_v576_independent_capstone.json` through file sync,
   atomic replacement, and directory sync. The content checksum SHALL exclude
   only its own field.
+- REQ-REPORT-6615-DURABLE-REPLAY: After the terminal Exp6615 artifact has
+  landed, its deterministic replay SHALL resolve the V576 roadmap, V576 source
+  artifacts, context artifacts, protected files, and reconciliation documents
+  from the commit that added the capstone artifact. Repository evidence paths
+  SHALL use the explicit `allow_evidence_pin=True` exception because this is a
+  replay of a closed milestone, not a live receipt over an active experiment.
+  Before the capstone artifact has landed, authoring SHALL continue to read the
+  working tree. A later roadmap activation, source-artifact rerun, gate stamp,
+  or documentation append SHALL not silently rewrite the closed V576 result;
+  those live changes remain owned by their source artifacts and current
+  milestone reports.
 
 The artifact SHALL set
 `inference_substrate=v576_independent_artifact_row_and_architecture_replay_no_llm`
@@ -57668,11 +57679,20 @@ date while conductor-owned operational documents remain untouched.
 **Then** all attacks fail closed, both protected hashes still match, the final
 checksum replays, and no partial terminal file remains.
 
+#### SCENARIO-REPORT-6615-DURABLE-REPLAY: Later Milestones Do Not Rewrite V576
+
+**Given** the terminal Exp6615 artifact has landed and later work advances the
+roadmap, reruns a V576 source artifact, and edits shared documents
+**When** Exp6615 rebuilds its row and protected-file conclusions
+**Then** it reads the bytes at the capstone's add commit, preserves the original
+headroom eligibility and protected hashes, and validates the same closed V576
+claim boundaries.
+
 ## Implementation Status (REQ-REPORT-6615)
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-REPORT-6615 | Implemented (`python/carnot/experiment_6615_v576_independent_capstone.py`; terminal evidence in `results/experiment_6615_v576_independent_capstone.json`) | Implemented (`tests/python/test_experiment_6615_v576_independent_capstone.py`) |
+| REQ-REPORT-6615, including REQ-REPORT-6615-DURABLE-REPLAY | Implemented (`python/carnot/experiment_6615_v576_independent_capstone.py`; commit-resolved closed-milestone inputs via `python/carnot/provenance_receipts.py`; terminal evidence in `results/experiment_6615_v576_independent_capstone.json`) | Implemented (`tests/python/test_experiment_6615_v576_independent_capstone.py`; later-roadmap and rerun regression, protected receipts, row replay, validation, and atomic write) |
 
 ### REQ-REPORT-6616: V577 Execution Contract SHALL Fail Closed On Roadmap Drift
 
@@ -58746,3 +58766,107 @@ remain in `gate_check_summary`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6684 and SCENARIO-REPORT-6684-* | Implemented (`python/carnot/experiment_6684_torx_typed_factor_parity.py`, `results/experiment_6684_torx_typed_factor_parity.json`) | Implemented (`tests/python/test_experiment_6684_torx_typed_factor_parity.py`; ready/block reduction, atomic publication, mutation validation, and 100% scoped statement coverage) |
+
+### REQ-REPORT-6687: V582 Synthesis SHALL Preserve Independent Branch States
+
+Exp6687 SHALL synthesize the active V582 milestone from local artifacts, raw
+stores, and conductor records without an LLM. It SHALL load the fourteen tasks
+from Exp6674 through Exp6687 in roadmap order. It SHALL retain the declared
+deliverable, expected branch, artifact state, latest conductor state, artifact
+hash, verdict, closed verdict class, duration, and gate diagnostic for every
+task. A missing artifact SHALL remain missing. A conductor-only terminal block
+SHALL not become a numeric result or a fabricated artifact.
+
+The synthesis SHALL recompute branch metrics from retained unit rows when those
+rows exist. Output transport SHALL report exact success, parse yield, and
+harmful flips. Continuous self-learning SHALL report future exact yield,
+order-level uncertainty, retention, restart, rollback, and audit state. ARC
+SHALL report outcome transport, transition utility, forbidden-action change,
+false interventions, and action use. Stochastic portability SHALL report exact
+reference state, Torx parity errors, likelihood error, autocorrelation,
+integrated autocorrelation time, and effective sample size. A metric with no
+eligible rows SHALL have a null value, a zero denominator, and an explicit
+unavailable cause. It SHALL not become measured zero.
+
+The synthesis SHALL write one row for execution integrity, output transport,
+continuous self-learning, live ARC outcomes, and stochastic portability. Each
+row SHALL contain evidence, one closed class, the claim boundary, promotion
+gate, and exact next action. The milestone SHALL have no pooled success score.
+Exact checkers, exact Ising probabilities, and live environment outcomes SHALL
+remain validity authorities. They SHALL not support an oracle-distinct learned
+verifier claim. `verifier_is_oracle` SHALL declare `mixed_by_branch` and list
+the value for all five branches.
+
+Every available artifact SHALL receive row-consistency, verdict-class,
+owner-schema, adversarial, recurring-blocker, and deterministic claim-boundary
+checks. Each validation row SHALL retain the validator, target, exit, finding,
+severity, and result hash. A missing artifact or missing owner validator SHALL
+produce an explicit missing-input row. Validator absence SHALL not be reported
+as a clean pass.
+
+The artifact SHALL contain `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `planned_task_rows`, `terminal_task_rows`,
+`missing_artifact_rows`, `output_transport_branch`,
+`continuous_self_learning_branch`, `live_arc_outcome_branch`,
+`stochastic_portability_branch`, `branch_rows`, `validation_rows`,
+`documentation_reconciliation_rows`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`. It SHALL use
+`inference_substrate=artifact_row_and_document_synthesis_no_llm`. A mixed V582
+record with blocked, missing, or partial branches SHALL use
+`status=complete_terminal_partial`, a `complete_partial:` verdict, and
+`verdict_class=partial`.
+
+Exp6687 SHALL hash every available V582 artifact and raw store. It SHALL also
+hash the active roadmap, V582 design, relevant specifications, traceability,
+status, changelog, completed record, conductor log, and conductor source. It
+SHALL record Python, CPU, RAM, disk, available validators, and the no-LLM
+substrate. It SHALL prove before-and-after identity for the active roadmap and
+conductor. It SHALL write one complete JSON document with file sync, atomic
+replacement, and directory sync. The canonical checksum SHALL exclude only
+its own value.
+
+#### SCENARIO-REPORT-6687-TERMINAL-TASKS
+
+**Given** eleven available V582 artifacts and two conductor-only skipped tasks
+**When** Exp6687 reconciles all thirteen source tasks
+**Then** every task has one terminal row, missing paths stay explicit, and no
+missing result enters a metric denominator.
+
+#### SCENARIO-REPORT-6687-ROW-RECOMPUTATION
+
+**Given** complete, empty, partial, and blocked branch row sets
+**When** Exp6687 rebuilds each headline
+**Then** available metrics match source rows exactly
+**And** exact, parse, future-yield, likelihood, ACF, IAT, and ESS metrics with
+no eligible rows remain null with their cause.
+
+#### SCENARIO-REPORT-6687-BRANCH-CLASSIFICATION
+
+**Given** infrastructure receipts, blocked branches, a partial ARC comparison,
+and exact authorities
+**When** branch rows are classified
+**Then** each branch uses one closed class, no pooled success is emitted, and
+oracle-backed evidence is never promoted to oracle-distinct positive evidence.
+
+#### SCENARIO-REPORT-6687-VALIDATION
+
+**Given** every available artifact and every missing audit input
+**When** row, class, schema, adversarial, blocker, and claim checks run
+**Then** each check has a reproducible receipt
+**And** missing owner validators and source artifacts remain explicit findings.
+
+#### SCENARIO-REPORT-6687-ATOMIC-PROTECTION
+
+**Given** complete task, branch, validation, provenance, resource, and hash rows
+**When** Exp6687 validates and writes the synthesis
+**Then** readers see one complete JSON object, protected hashes match, and any
+content mutation breaks validation.
+
+## Implementation Status (REQ-REPORT-6687)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6687 and SCENARIO-REPORT-6687-* | Implemented (`python/carnot/experiment_6687_v582_branch_synthesis.py`, `results/experiment_6687_v582_branch_synthesis.json`) | Implemented (`tests/python/test_experiment_6687_v582_branch_synthesis.py`; row recomputation, missing-state preservation, atomic validation, and 100% scoped statement coverage) |
