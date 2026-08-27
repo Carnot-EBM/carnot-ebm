@@ -28955,3 +28955,129 @@ gates.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-6654 and SCENARIO-LEARN-6654-* | Planned (`python/carnot/experiment_6654_prospective_repair_memory_evolution.py`; terminal evidence in `results/experiment_6654_prospective_repair_memory_evolution.json`) | Planned (`tests/python/test_experiment_6654_prospective_repair_memory_evolution.py`) |
+
+---
+
+## REQ-LEARN-6655: Independent Repair Memory Safety Audit
+
+Carnot SHALL audit Exp6654 from the stored Exp6653 and Exp6654 artifacts. The
+audit SHALL not import Exp6654 reducers or use an LLM. It SHALL rebuild every
+order-arm metric from raw event rows. It SHALL replay every admitted patch from
+the registered empty state. Each replay step SHALL verify the stored state,
+version, support, evidence, decision, and checksum receipts.
+
+The audit SHALL inject duplicate event IDs, conflicting exact witnesses,
+unsupported applicability, low support, high reward with invalid exact
+evidence, future-label leakage, stale versions, and checksum corruption. Each
+attack SHALL reject before the candidate becomes active. Each rejection SHALL
+record one or more stable reason names.
+
+The audit SHALL interrupt durable writes before and after each write, sync, and
+replace boundary. A restart SHALL recover either the complete old state or the
+complete new state. It SHALL never recover a partial mix. The audit SHALL roll
+back every admitted patch from its immediate post-patch state. It SHALL also
+roll back each order in reverse sequence. Each inverse SHALL restore canonical
+bytes, memory version, support, and decision history exactly.
+
+The terminal claim SHALL depend on independent row evidence and all safety
+attacks. A failed attack, restart, rollback, checksum, or protected-file check
+SHALL block the Exp6654 gain claim. A positive point estimate with an interval
+that includes zero SHALL be narrowed to an observed fixture effect. The audit
+SHALL not manufacture a positive result. `claim_disposition` SHALL use only
+`preserve`, `narrow`, `nullify`, `block`, `disqualify`, or `retire`.
+
+The artifact SHALL set `inference_substrate` to
+`independent_repair_memory_safety_replay_no_llm`. It SHALL set
+`verifier_is_oracle` to bare `false`. It SHALL write the terminal JSON with file
+sync, atomic replacement, directory sync, and a checksum that excludes only
+the checksum field.
+
+### REQ-LEARN-6655 Sub-requirements
+
+- REQ-LEARN-6655-PRECONDITIONS: Exp6654
+  `prospective_memory_comparison_complete` SHALL be true. The audit SHALL hash
+  both upstream artifacts, the memory schema, memory code, specs, and protected
+  files before semantic reduction.
+- REQ-LEARN-6655-RECOMPUTE: Raw event rows SHALL own every event, order, arm,
+  yield, regret, and delta result. Raw patch rows SHALL own the replayed ledger.
+- REQ-LEARN-6655-ATTACKS: Every registered poison or integrity attack SHALL
+  reject with a named reason and SHALL leave active state unchanged.
+- REQ-LEARN-6655-RESTART: Interrupted commits SHALL recover only a verified old
+  or verified new state from disk.
+- REQ-LEARN-6655-ROLLBACK: Individual and reverse-order inverses SHALL restore
+  state, version, support, and decision bytes exactly.
+- REQ-LEARN-6655-CLAIM: Claim disposition SHALL follow recomputation,
+  uncertainty, and safety evidence. Safety success alone SHALL not become a
+  positive scientific result.
+- REQ-LEARN-6655-ROWS: `per_unit_rows` SHALL include every event
+  recomputation, patch replay, attack, restart, and rollback unit.
+- REQ-LEARN-6655-ATOMIC: The final artifact SHALL use durable atomic
+  replacement. Its checksum SHALL cover every final field except itself.
+
+### SCENARIO-LEARN-6655-RECOMPUTATION: Independent Rows Rebuild Exp6654
+
+**Given** the stored Exp6653 and Exp6654 artifacts
+**When** Exp6655 reads raw event and patch rows without upstream reducers
+**Then** every event result, order-arm metric, aggregate, and patch-ledger state
+matches its stored receipt or records a named mismatch.
+
+### SCENARIO-LEARN-6655-POISON-CONFLICT: Unsafe Memory Fails Closed
+
+**Given** duplicate, conflict, support, reward-validity, leakage, version, and
+checksum attacks
+**When** each candidate crosses the update boundary
+**Then** the candidate is rejected with named reasons and active state bytes do
+not change.
+
+### SCENARIO-LEARN-6655-ATOMIC-RESTART: Disk Recovery Is Old Or New
+
+**Given** a complete old state and one complete proposed new state
+**When** a write is interrupted at each registered phase and the process
+restarts from disk
+**Then** recovery returns the verified old state before replacement or the
+verified new state after replacement, never a partial mix.
+
+### SCENARIO-LEARN-6655-BYTE-ROLLBACK: Every Inverse Restores Exact State
+
+**Given** every admitted patch and its immediate prior checkpoint
+**When** the audit rolls back patches individually and in reverse order
+**Then** canonical state bytes, version, support, and decision history equal the
+prior checkpoint exactly.
+
+### SCENARIO-LEARN-6655-CLAIM-DOWNGRADE: Safety Cannot Manufacture Benefit
+
+**Given** independently rebuilt point estimates, uncertainty, and attack rows
+**When** the audit assigns the terminal claim
+**Then** failed safety blocks the claim, nonpositive evidence nullifies it, and
+an interval that includes zero narrows a positive point estimate.
+
+### Required Artifact Fields And Principles
+
+- `status`: The terminal audit state is explicit.
+- `honest_verdict`: The verdict states both safety and scientific limits.
+- `verdict_class`: The closed enum is `positive`, `null`, `blocked`, or `disqualified`.
+- `gate_check_summary`: A blocked result names its first failed audit and observed value.
+- `upstream_gate_receipt`: The Exp6654 gate field, value, path, and file hash bind admission.
+- `independent_recomputation_rows`: Stored and rebuilt metrics appear per order and arm.
+- `poison_attack_rows`: Duplicate, conflict, support, reward, leakage, version, and checksum attacks are explicit.
+- `restart_rows`: Each interruption phase records disk recovery and atomicity.
+- `rollback_rows`: Patch and inverse IDs bind byte-exact restoration evidence.
+- `support_and_anchor_recheck`: Independent support floors and anchor regressions remain visible.
+- `claim_disposition`: The audit preserves, narrows, nullifies, blocks, disqualifies, or retires the claim.
+- `per_unit_rows`: Every audit unit has a stable row checksum.
+- `aggregate_row_recomputation`: Totals rebuild from the audit rows.
+- `preconditions_checked`: Inputs, tools, no-LLM resources, and hashes are explicit.
+- `protected_files_unchanged`: Protected paths retain their initial hashes.
+- `inference_substrate`: The independent no-LLM replay substrate is named.
+- `verifier_is_oracle`: Bare false keeps the audit policy separate from exact outcomes.
+- `field_provenance`: Every field names its source hash and reducer lineage.
+- `random_seed`: Attack and interruption order is deterministic.
+- `duration_s`: Monotonic duration covers replay and checks.
+- `tests_run`: Focused, coverage, spec, row, artifact, adversarial, restart, E2E, and full-suite receipts are explicit.
+- `reproducibility_checksum`: The final content hash detects drift.
+
+## Implementation Status (REQ-LEARN-6655)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-6655 and SCENARIO-LEARN-6655-* | Implemented (`python/carnot/experiment_6655_repair_memory_safety_audit.py`; terminal evidence in `results/experiment_6655_repair_memory_safety_audit.json`) | Implemented (`tests/python/test_experiment_6655_repair_memory_safety_audit.py`) |
