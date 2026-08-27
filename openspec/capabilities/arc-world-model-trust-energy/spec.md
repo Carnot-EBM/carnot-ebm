@@ -27148,6 +27148,75 @@ with `verifier_is_oracle=false`.
 |---|---|---|
 | REQ-ARC-WMTE-6680 | `python/carnot/experiment_6558_arc_live_redirect_ledger_reachability.py` (live receipt reachability, redirect-to-next-outcome reducer, no-firing run closure, three-firing support replay, fail-closed attack matrix, CLI writer/validator). | `tests/python/test_experiment_6558_arc_live_redirect_ledger_reachability.py` (SCENARIO-ARC-WMTE-6680-LIVE-REACHABILITY, NEXT-OUTCOME-LINKAGE, NO-FIRING-CLOSURE, SELECTION-SUPPORT, FAIL-CLOSED-ATTACKS, SCHEMA-AND-CLI). |
 
+### REQ-ARC-WMTE-6656: Frozen Policy-Visible Trace Automaton Live A/B
+
+Exp6656 SHALL accept only archived action receipts emitted by the canonical
+`make_carnot_agent` or `E3AgentPolicy` path. It SHALL deduplicate actions by
+run and action identity. It SHALL reject source access, per-game adapters,
+outer-loop solvers, offline BFS, shadow-only rows, and actions without an exact
+observed next outcome.
+
+The learner SHALL use only fields that the policy has before action selection.
+It SHALL not use a game ID, family label, future outcome, or held-family row as
+an input feature. It SHALL freeze states, transitions, thresholds, redirect
+arms, and tie rules before held-family evaluation. The frozen receipt SHALL
+include a content hash and disjoint train and held family sets.
+
+The canonical E3 policy SHALL expose an opt-in action-supervision seam. The
+default path SHALL stay unchanged. The seam SHALL record the automaton state,
+firing, proposed action, selected action, valid-action block, and exact next
+outcome when that outcome is observed. A recommendation that does not change
+the selected action SHALL not count as action influence.
+
+Exp6656 SHALL create isolated paired supervisor-off and supervisor-on cells for
+at least three held families and three seeds. Each cell SHALL use the same
+budget and frozen input schedule. The report SHALL derive action influence,
+prevented violations, blocked-valid actions, and actions to exact observed
+progress from per-action rows. If a changed action has no exact next outcome,
+the experiment SHALL block the live conclusion and SHALL not infer benefit.
+
+The artifact SHALL attack family leakage, future outcomes, game IDs, source
+access, adapters, duplicate receipts, one-row promotion, post-hoc thresholds,
+off-path code, and solve-credit inflation. It SHALL make no game or level solve
+claim. A null or no-firing result is valid. A replay-only or missing-outcome
+result SHALL remain blocked and SHALL name the observed failed value.
+
+#### SCENARIO-ARC-WMTE-6656-RECEIPT-ADMISSION
+
+Given mixed archived rows, the collector accepts only deduplicated canonical
+live E3 actions with exact next outcomes. It rejects forbidden, shadow-only,
+duplicate, and missing-outcome evidence with named reasons.
+
+#### SCENARIO-ARC-WMTE-6656-FREEZE-AND-ISOLATION
+
+Given disjoint training and held families, the learner freezes a deterministic
+game-blind topology before evaluation. Three held families and three seeds use
+the same hash, budgets, tie rules, and isolated supervisor state.
+
+#### SCENARIO-ARC-WMTE-6656-LIVE-INFLUENCE-AND-OUTCOME
+
+Given the opt-in E3 seam and a firing state, the on arm applies the redirect.
+The receipt counts influence only when the selected action differs. It links
+the next exact observed outcome to that action or blocks the causal conclusion.
+
+#### SCENARIO-ARC-WMTE-6656-SAFETY-AND-PROGRESS-ROWS
+
+Given paired rows, all prevented violations, blocked-valid actions, and exact
+progress distances recompute from action rows. Benefits and false interventions
+remain visible together. Missing counterfactual outcomes never become benefit.
+
+#### SCENARIO-ARC-WMTE-6656-ATTACKS-AND-NO-SOLVE
+
+Given any required attack, the validator proves that the shortcut fails closed.
+The artifact records no source read, adapter, offline BFS, game solve, level
+solve, leaderboard promotion, or oracle verifier claim.
+
+#### SCENARIO-ARC-WMTE-6656-ARTIFACT-AND-CLI
+
+Given the required command, Exp6656 writes one atomic JSON document with every
+required field. All aggregates recompute from rows, protected hashes remain
+stable, and the final checksum binds all content except its own field.
+
 ### REQ-ARC-WMTE-6690: Every Induced World Model Is Archived At Write Time (Per-Attempt Retention)
 
 The live engine store (`E3_DIR/<game>/world_model.py`) is keyed by game only.

@@ -5462,6 +5462,12 @@ class E3AgentPolicy:
             _make_trajectory_supervisor()
         )
         self._trajectory_supervisor_errors = 0
+        # REQ-ARC-WMTE-6656: default-inert action supervision. An experiment
+        # installs one frozen, game-blind automaton before a run starts.
+        self._trace_automaton_supervisor = None
+        self._trace_automaton_previous_frame_key: str | None = None
+        self._trace_automaton_previous_level: int | None = None
+        self._trace_automaton_errors = 0
         self.root_grid = None  # the reset-state logical grid; plan_in_model starts here
         self.world_model_trust_selection = None
         self._active_probe_controller: Any = None
@@ -6674,10 +6680,90 @@ class E3AgentPolicy:
             move = self._next_move_routed(frames, latest)
         else:
             move = self._next_move_recorded(frames, latest)
+        supervised_move = self._maybe_apply_trace_automaton_action(move, latest)
         return self.record_target_licensed_route_shadow(
-            move,
+            supervised_move,
             latest_level=_level_of(latest) if latest is not None else None,
+            prospective_move=move if supervised_move != move else None,
         )
+
+    def install_trace_automaton_supervisor(self, supervisor: Any) -> None:
+        """Install one pre-frozen supervisor before an isolated evaluation run."""
+
+        self._trace_automaton_supervisor = supervisor
+
+    def supervise_policy_visible_action(
+        self,
+        move: Any,
+        *,
+        previous_frame_changed: bool | None,
+        level_progress_since_previous_action: bool,
+        action_role_is_overhead: bool = False,
+    ) -> Any:
+        """Apply the opt-in supervisor using only fields visible before action."""
+
+        supervisor = self._trace_automaton_supervisor
+        if supervisor is None:
+            return move
+        return supervisor.select_action(
+            move,
+            previous_frame_changed=previous_frame_changed,
+            level_progress_since_previous_action=level_progress_since_previous_action,
+            action_role_is_overhead=action_role_is_overhead,
+        )
+
+    def _maybe_apply_trace_automaton_action(self, move: Any, latest: Any) -> Any:
+        """Connect the frozen automaton to every action from the canonical E3 path."""
+
+        if self._trace_automaton_supervisor is None:
+            return move
+        try:
+            from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of
+
+            current_key = frame_hash(grid_of(latest)) if latest is not None else None
+            current_level = _level_of(latest) if latest is not None else None
+            previous_changed = (
+                None
+                if self._trace_automaton_previous_frame_key is None or current_key is None
+                else current_key != self._trace_automaton_previous_frame_key
+            )
+            level_progress = bool(
+                self._trace_automaton_previous_level is not None
+                and current_level is not None
+                and current_level > self._trace_automaton_previous_level
+            )
+            selected = self.supervise_policy_visible_action(
+                move,
+                previous_frame_changed=previous_changed,
+                level_progress_since_previous_action=level_progress,
+                action_role_is_overhead=(
+                    getattr(getattr(self, "explorer", None), "_prov_serve_kind", None)
+                    in {"navigation", "reset"}
+                ),
+            )
+            self._trace_automaton_previous_frame_key = current_key
+            self._trace_automaton_previous_level = current_level
+            return selected
+        except Exception:
+            self._trace_automaton_errors += 1
+            return move
+
+    def finalize_trace_automaton_supervisor(self) -> None:
+        """Mark the last action outcome missing when the live run has ended."""
+
+        supervisor = self._trace_automaton_supervisor
+        if supervisor is not None:
+            supervisor.finalize()
+
+    def trace_automaton_supervisor_diagnostics(self) -> dict[str, Any]:
+        """Return the opt-in receipt without making the scorer depend on it."""
+
+        supervisor = self._trace_automaton_supervisor
+        if supervisor is None:
+            return {"enabled": False, "errors": self._trace_automaton_errors, "rows": []}
+        receipt = dict(supervisor.receipt())
+        receipt["errors"] = self._trace_automaton_errors
+        return receipt
 
     def target_licensed_route_shadow(self) -> TargetLicensedRouteShadowLedger | None:
         """Return the target-license shadow ledger, or None on the submitted default."""
