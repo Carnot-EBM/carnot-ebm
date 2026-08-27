@@ -592,3 +592,48 @@ were present in the working tree and were left untouched.
 
 All line numbers in this report were read against that working tree on 2026-08-24. Tasks #77–79 are
 actively editing two of those files, so line numbers may drift; the identifiers are stable.
+
+---
+
+## CORRECTION 2026-08-27 (append-only; the text above is left as written)
+
+**The rejection-cause distribution in this note was measured through a MASKED field
+and understates dynamics failure by roughly an order of magnitude.**
+
+This note reports that the goal predicate is the named cause in nearly every skip and
+that dynamics quality is named about once in eighteen. That reading was correct for the
+data available at the time. It was the wrong data.
+
+`no_reachable_plan_after_refinement` is assigned as a fall-through DEFAULT before the
+refinement loop runs (`arc_llm_reinduction.py:1649`). Two genuinely diagnosed causes
+wrote only to the per-round record and never to the outer variable, so
+`heldout_transition_verification_failed` — a DYNAMICS failure — was reported to every
+reader under a PLANNING label. REQ-ARC-WMTE-6710 (commit `288ea485f9`, 2026-08-25)
+widened the two sites and shipped `induction_round_records` so the per-round diagnosis
+survives to the row.
+
+Re-measured 2026-08-27 across the three instrumented runs, 33 skip records:
+
+| n | cause |
+|---|---|
+| 12 | `goal_unreached_within_budget` |
+| **10** | **`heldout_transition_verification_failed`** — was masked |
+| 6 | `no_reachable_plan_after_refinement` — the fall-through default |
+| 3 | `degenerate_goal_predicate` |
+| 1 | `exception` |
+| 1 | `world_model_accuracy_below_threshold` |
+
+So dynamics is about 30 percent of failures, not 1 in 18. Goal-side causes
+(`goal_unreached_within_budget` + `degenerate_goal_predicate`) remain the largest single
+group at 15 of 33, so the goal-induction seam is real. But the conclusion that the
+generator writes competent dynamics and fails only on goals is NOT supported. Both
+layers fail.
+
+**The reusable lesson is about the measurement, not the ratio.** A field that carries a
+default for its unknown case cannot report the prevalence of that case. Any rate read
+from `induction_skipped` before 2026-08-25 inherits this bias. The denominators also
+need care: `induction_skipped` counts ATTEMPTS, not rows, and `skipped` and `planned`
+are not mutually exclusive.
+
+Cross-references: REQ-ARC-WMTE-6710 · commit `288ea485f9` · `ops/audit-findings-ledger.md`
+· CLAUDE.md "QA-Layer Authenticity Discipline" (pattern narrower than its concept).
