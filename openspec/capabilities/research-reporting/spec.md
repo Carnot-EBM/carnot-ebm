@@ -58690,3 +58690,59 @@ content mutation breaks validation.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6683 and SCENARIO-REPORT-6683-* | Planned (`python/carnot/experiment_6683_ising_reference_scope_receipt.py`) | Planned (`tests/python/test_experiment_6683_ising_reference_scope_receipt.py`) |
+
+### REQ-REPORT-6684: Torx Parity Evidence SHALL Recompute From Rows
+
+Exp6684 SHALL atomically write
+`results/experiment_6684_torx_typed_factor_parity.json`. The artifact SHALL
+contain every field required by the V582 Exp6684 task contract. It SHALL retain
+one row for each factor, state, unsupported input, and adversarial attack.
+
+The runtime receipt SHALL bind the installed version, import path, required API
+symbols, JAX CPU backend, processor, and package hash. The frozen mapping SHALL
+bind spin encoding, factor signs, temperature, binary64 precision, factor order,
+fixture update order, tolerances, Exp6683 hash, fixture hashes, exact-function
+hashes, and Torx package hash.
+
+`torx_factor_parity_ready` SHALL be true only when the Exp6683 gate passes,
+the required Torx API is present, every supported comparison passes both error
+limits, every unsupported case rejects, every attack passes, all row hashes
+recompute, and protected files stay unchanged. Ready infrastructure SHALL use
+`status=complete_ready`, a terminal `complete:` verdict, and
+`verdict_class=circular_positive`. A blocked artifact SHALL use
+`verdict_class=blocked` and SHALL name expected and observed failed checks.
+
+The artifact SHALL set
+`claim_scope=installed_torx_cpu_software_only`,
+`inference_substrate=installed_torx_cpu_typed_factors_no_llm`, and
+`verifier_is_oracle=true`. Field provenance SHALL state the fixture, Exp6683
+field or exact function, Torx call, numeric path, principle, and content hash.
+The final write SHALL use file sync, atomic replacement, and directory sync.
+The reproducibility checksum SHALL exclude only itself.
+
+#### SCENARIO-REPORT-6684-READY
+
+**Given** complete passing factor, state, rejection, attack, test, and hash rows
+**When** Exp6684 recomputes its aggregate
+**Then** readiness is true and the verdict preserves exact-reference circularity
+**And** the claim scope remains installed CPU software only.
+
+#### SCENARIO-REPORT-6684-BLOCKED
+
+**Given** an upstream, API, parity, rejection, attack, test, or integrity failure
+**When** Exp6684 finalizes the artifact
+**Then** readiness is false and the exact failed expected and observed values
+remain in `gate_check_summary`.
+
+#### SCENARIO-REPORT-6684-ATOMIC-PROVENANCE
+
+**Given** one complete or blocked artifact
+**When** Exp6684 writes and validates it
+**Then** readers see one complete JSON object
+**And** a row or top-level mutation breaks recomputation or the checksum.
+
+## Implementation Status (REQ-REPORT-6684)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6684 and SCENARIO-REPORT-6684-* | Implemented (`python/carnot/experiment_6684_torx_typed_factor_parity.py`, `results/experiment_6684_torx_typed_factor_parity.json`) | Implemented (`tests/python/test_experiment_6684_torx_typed_factor_parity.py`; ready/block reduction, atomic publication, mutation validation, and 100% scoped statement coverage) |

@@ -4917,3 +4917,68 @@ value, an oversized graph, or a malformed supplied decomposition
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-6657 and SCENARIO-SAMPLER-6657-* | Implemented (`python/carnot/experiment_6657_bounded_treewidth_ising_reference.py`) | Implemented (`tests/python/test_experiment_6657_bounded_treewidth_ising_reference.py`; exact parity, rejection, sampling, artifact validation, and 100% scoped statement coverage) |
+
+### REQ-SAMPLER-6684: Installed Torx Typed-Factor Parity
+
+Carnot SHALL map every supported Exp6683 Ising fixture to the installed
+`extro-torx==0.0.1` CPU API. The mapping SHALL use `torx.psc.PISING` factors.
+It SHALL not install, vendor, or substitute another Torx implementation.
+
+- REQ-SAMPLER-6684-WIRES: A Torx binary wire value of `0` SHALL mean spin
+  `-1`. A wire value of `1` SHALL mean spin `+1`. Other values SHALL fail
+  before energy evaluation.
+- REQ-SAMPLER-6684-FACTORS: Each coupling SHALL map to one PISING factor with
+  energy `-J*s_i*s_j`. Each bias SHALL map to one PISING factor with energy
+  `-h_i*s_i`. A bias factor SHALL use a pinned, energy-neutral second binary
+  wire because Torx 0.0.1 exposes a two-wire Ising factor.
+- REQ-SAMPLER-6684-TEMPERATURE: Factor energies SHALL not include temperature.
+  The state log weight SHALL equal `-E/T`. The PISING inverse-temperature
+  parameter SHALL equal `1/T` for the frozen typed factor.
+- REQ-SAMPLER-6684-PRECISION: Coefficients and energy accumulation SHALL use
+  IEEE-754 binary64. Every field SHALL have preregistered absolute and relative
+  tolerances. Null, nonfinite, overflow, and underflow values SHALL remain
+  visible and SHALL block readiness.
+- REQ-SAMPLER-6684-COMPOSITION: Couplings SHALL keep fixture source order.
+  Biases SHALL follow in vertex order. The fixture update order SHALL equal the
+  Exp6683 deterministic min-fill order. Each coupling and bias SHALL have one
+  factor row with per-state energy comparisons.
+- REQ-SAMPLER-6684-PARITY: For every supported fixture and enumerated state,
+  Torx factor energy, total energy, log weight, normalized probability, node
+  marginal, and pair correlation SHALL match Exp6683 within tolerance.
+- REQ-SAMPLER-6684-REJECTION: The adapter SHALL reject invalid binary values,
+  malformed state width, nonfinite coefficients, nonpositive temperature,
+  self-loops, duplicate edges, and graphs above the Exp6683 width limit.
+- REQ-SAMPLER-6684-API: The task SHALL fail closed when the installed module,
+  version, PISING class, or PISING energy method is absent. No fallback SHALL
+  compute a replacement value.
+- REQ-SAMPLER-6684-BOUNDARY: The conclusion SHALL apply only to the installed
+  Torx CPU software path. It SHALL make no TSU, FPGA, power, throughput,
+  thermalization, schedule-quality, or asymptotic claim.
+
+### SCENARIO-SAMPLER-6684-EXACT-PARITY
+
+**Given** the ready Exp6683 artifact and every supported frozen fixture
+**When** the typed PISING factors evaluate every enumerated state
+**Then** each factor and composed field passes its absolute and relative limits
+**And** the probabilities normalize before marginals and correlations reduce.
+
+### SCENARIO-SAMPLER-6684-FAIL-CLOSED
+
+**Given** an unsupported model, state, coefficient, temperature, width, or API
+**When** the Torx adapter validates the input
+**Then** it records the expected and observed failure
+**And** no fallback row can enter a ready aggregate.
+
+### SCENARIO-SAMPLER-6684-ADVERSARIAL-MAPPING
+
+**Given** the frozen mapping contract
+**When** sign, encoding, temperature, bias, duplication, precision, order,
+topology, width, and fallback attacks run
+**Then** each semantic drift is detected or rejected
+**And** disconnected supported components still match the exact reference.
+
+## Implementation Status (REQ-SAMPLER-6684)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-6684 and SCENARIO-SAMPLER-6684-* | Implemented (`python/carnot/experiment_6684_torx_typed_factor_parity.py`) | Implemented (`tests/python/test_experiment_6684_torx_typed_factor_parity.py`; exact parity, rejection, adversarial mapping, artifact validation, and 100% scoped statement coverage) |
