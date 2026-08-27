@@ -16603,3 +16603,5 @@ code |
 | 2026-08-27 03:15 UTC | V580 evidence synthesis | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output:    ) == "block |
 | 2026-08-27 04:17 UTC | V580 evidence synthesis | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6659_v580_ca |
 | 2026-08-27 05:03 UTC | V580 evidence synthesis | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6659_v580_ca |
+| 2026-08-27 06:24 UTC | Plan milestone 2026.08.581 | OK | 4 tasks proposed |
+| 2026-08-27 06:26 UTC | Milestone 2026.08.581 activated | OK | 4 tasks queued |
