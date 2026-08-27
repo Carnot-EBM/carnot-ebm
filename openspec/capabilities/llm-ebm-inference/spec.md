@@ -2857,3 +2857,39 @@ without retry, repair, or regeneration.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFER-SOTA-6649 | Implemented (`python/carnot/experiment_6649_exact_certificate_proposal_corpus.py`) | Implemented (`tests/python/test_experiment_6649_exact_certificate_proposal_corpus.py`; exact model pair, comparable row, and no-intervention coverage) |
+
+### REQ-INFER-SOTA-6676: Three Mandated GGUF Families SHALL Run Matched Transport Units
+
+Exp6676 SHALL use `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL resolve the cached pair with
+`cached_sota_pair()` and the remaining file with `resolve_cached_gguf()`.
+Every file SHALL have valid GGUF magic, a SHA-256 hash, and a loadable embedded
+tokenizer before inference. A legacy or CPU row SHALL not satisfy a mandated
+unit.
+
+Every model SHALL run the same ordered task-arm matrix with frozen seeds,
+proposal-token limits, sampling settings, stop rules, and one request per unit.
+Each completed row SHALL retain input and output token counts, latency, raw
+response bytes, and its model process receipt.
+
+#### SCENARIO-INFER-SOTA-6676-COMPLETE-MATRIX
+
+**Given** all three cached models can run with CUDA offload
+**When** Exp6676 runs the frozen matrix
+**Then** every model-task-arm identity has one completed or explicitly missing
+row and all completed headline rows name a mandated hub ID.
+
+#### SCENARIO-INFER-SOTA-6676-CUDA-BLOCK
+
+**Given** one mandated model cannot resolve, tokenize, or become resident on
+its assigned CUDA device
+**When** preflight or model launch runs
+**Then** Exp6676 writes a terminal blocked artifact and does not substitute a
+CPU or legacy model.
+
+## Implementation Status (REQ-INFER-SOTA-6676)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFER-SOTA-6676 and SCENARIO-INFER-SOTA-6676-* | Planned (`python/carnot/experiment_6676_three_family_triggered_tail_ab.py`) | Planned (`tests/python/test_experiment_6676_three_family_triggered_tail_ab.py`) |

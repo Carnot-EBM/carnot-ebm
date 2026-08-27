@@ -58507,3 +58507,54 @@ validation.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6675 and SCENARIO-REPORT-6675-* | Planned (`python/carnot/experiment_6675_triggered_tail_scope_receipt.py`) | Planned (`tests/python/test_experiment_6675_triggered_tail_scope_receipt.py`) |
+
+### REQ-REPORT-6676: Triggered-Tail Headlines SHALL Recompute From Raw Unit Rows
+
+Exp6676 SHALL write
+`results/experiment_6676_three_family_triggered_tail_ab.json` atomically. The
+artifact SHALL contain every field required by the V582 Exp6676 task contract.
+It SHALL retain one row for every preregistered model-task-arm unit, including
+explicitly missing units with a cause. Each completed row SHALL contain raw
+output, reasoning, trigger position, tail, parse outcome, exact outcome, token
+counts, latency, process link, accelerator link, seed, and content hash.
+
+`triggered_tail_ab_ready` SHALL be true only when the upstream Exp6675 field is
+true, all inputs match their frozen hashes, every expected unit is completed or
+explicitly missing, every raw output and process receipt exists, protected files
+are unchanged, and all aggregate fields recompute from rows. A runtime blocker
+SHALL produce a terminal artifact with `verdict_class=blocked` and a
+`gate_check_summary` entry that records expected and observed values.
+
+The artifact SHALL set
+`inference_substrate=local_llamacpp_cuda_mandated_gguf_three_family` and
+`verifier_is_oracle=true`. Its verdict class SHALL use the closed V582 enum.
+It SHALL include source, parser, checker, function, and hash provenance. Its
+canonical checksum SHALL exclude only `reproducibility_checksum`.
+
+#### SCENARIO-REPORT-6676-COMPLETE-ROWS
+
+**Given** all three model sessions and every frozen unit row
+**When** Exp6676 rebuilds aggregates
+**Then** exact, parse, held-family, paired, harmful-flip, missing, and readiness
+headlines match the retained rows exactly.
+
+#### SCENARIO-REPORT-6676-BLOCKED-ARTIFACT
+
+**Given** an upstream, cache, GGUF, tokenizer, CUDA, lease, port, resource, or
+process precondition fails
+**When** Exp6676 stops
+**Then** it atomically writes a valid blocked artifact with the exact failed
+check and no fabricated model row.
+
+#### SCENARIO-REPORT-6676-ATOMIC-PROVENANCE
+
+**Given** a terminal complete or blocked artifact
+**When** validation runs
+**Then** required fields, protected hashes, row hashes, process links, source
+provenance, and canonical checksum all validate or fail closed.
+
+## Implementation Status (REQ-REPORT-6676)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-6676 and SCENARIO-REPORT-6676-* | Planned (`python/carnot/experiment_6676_three_family_triggered_tail_ab.py`) | Planned (`tests/python/test_experiment_6676_three_family_triggered_tail_ab.py`) |

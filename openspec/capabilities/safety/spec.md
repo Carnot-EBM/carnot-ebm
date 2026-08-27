@@ -2034,3 +2034,34 @@ a wiring defect that behavioural tests alone would not catch.
 | REQ-SEC-001 | Implemented | 2026-07-31 audit: carnot.serialization_safety confines pickle/torch code-executing loads |
 | REQ-SEC-002 | Implemented | 2026-07-31 audit: gitleaks allowlists + custom anthropic/openai rules, probe-tested |
 | REQ-SEC-003 | Implemented | 2026-07-31 audit: orchestrator routed through execute_hypothesis; CARNOT_REQUIRE_SANDBOX fails closed |
+
+### REQ-SAFE-6676: Constrained Transports SHALL Retain Every Harmful Flip
+
+Exp6676 SHALL compare each constrained arm with the matched natural row. A
+harmful flip occurs only when natural extraction is exact-correct and the
+constrained arm is exact-wrong. Every harmful flip SHALL retain the model,
+task, family, both raw row links, parse states, exact states, and checker hash.
+
+A transport SHALL not receive a positive semantic verdict from higher parse
+yield alone. A result with an exact executable oracle SHALL use
+`verifier_is_oracle=true` and SHALL not use the independent-positive class.
+
+#### SCENARIO-SAFE-6676-HARMFUL-FLIP
+
+**Given** a natural exact success and a matched constrained exact failure
+**When** safety rows are reduced
+**Then** one harmful-flip row is retained and all related summary counts
+recompute from that row.
+
+#### SCENARIO-SAFE-6676-NO-SEMANTIC-PROMOTION
+
+**Given** a constrained arm parses more outputs without an exact-success gain
+**When** the verdict is classified
+**Then** the result is reported as transport-only or null and is not promoted
+to independent positive evidence.
+
+## Implementation Status (REQ-SAFE-6676)
+
+| Requirement | Status | Notes |
+|---|---|---|
+| REQ-SAFE-6676 and SCENARIO-SAFE-6676-* | Planned | `python/carnot/experiment_6676_three_family_triggered_tail_ab.py`; `tests/python/test_experiment_6676_three_family_triggered_tail_ab.py` |

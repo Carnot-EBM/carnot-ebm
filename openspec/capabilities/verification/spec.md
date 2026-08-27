@@ -38392,3 +38392,35 @@ reject increase.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6650 and SCENARIO-VERIFY-6650-* | Implemented (`python/carnot/experiment_6650_twin_prefix_verifier_map.py`) | Implemented (`tests/python/test_experiment_6650_twin_prefix_verifier_map.py`; fixed units, paired metrics, abstention, and recommendation coverage) |
+
+### REQ-VERIFY-6676: Transport Evidence SHALL Separate Parsing From Exact Success
+
+Exp6676 SHALL retain parse success and exact checker success as separate fields.
+It SHALL report exact and parse counts overall, per model, and per held family.
+For immediate JSON and triggered tail, it SHALL pair every task with natural
+extraction. It SHALL report wins, losses, ties, no-headroom rows, paired rate
+deltas, and deterministic 95 percent intervals.
+
+Missing rows SHALL stay missing with a cause. They SHALL not become failures or
+zeros inside a rate denominator. Aggregate rows SHALL rebuild every reported
+count and delta from unique preregistered unit identities.
+
+#### SCENARIO-VERIFY-6676-PAIRED-EVIDENCE
+
+**Given** complete rows for one model and task
+**When** constrained and natural arms are paired
+**Then** the result records an exact win, loss, or tie and keeps parse-only
+improvement separate from semantic improvement.
+
+#### SCENARIO-VERIFY-6676-MISSING-IS-MISSING
+
+**Given** a preregistered unit without a usable response
+**When** aggregates are recomputed
+**Then** the row names its cause, remains outside success-rate denominators,
+and appears in completeness accounting.
+
+## Implementation Status (REQ-VERIFY-6676)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6676 and SCENARIO-VERIFY-6676-* | Planned (`python/carnot/experiment_6676_three_family_triggered_tail_ab.py`) | Planned (`tests/python/test_experiment_6676_three_family_triggered_tail_ab.py`) |

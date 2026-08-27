@@ -9482,3 +9482,37 @@ post-process-absence receipt
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-INFRA-6648 | Implemented (`python/carnot/experiment_6648_three_family_gguf_canaries.py`) | Implemented (`tests/python/test_experiment_6648_three_family_gguf_canaries.py`; fresh-process, accelerator UUID, lease, phase, unload, and absence coverage) |
+
+## REQ-INFRA-6676: Each Transport Session SHALL Own Its CUDA Process And Lease
+
+Exp6676 SHALL launch a fresh llama.cpp server for each mandated model. One
+owner-bound `GpuLease` SHALL bind the worker PID and start time, opaque owner
+token, physical CUDA UUID, expected model path, model hash, and selected port.
+The server SHALL be an owned child process. The port SHALL be free before launch
+and owned by that process while it serves requests.
+
+The receipt SHALL record preflight, load, resident, inference, unload,
+validation, terminal, and release evidence. It SHALL include VRAM before,
+during, and after residence, CUDA offload, inference count, process exit, port
+release, model absence, VRAM recovery, and lease release. Exp6676 SHALL not
+signal or stop an unrelated process.
+
+#### SCENARIO-INFRA-6676-OWNER-BOUND-SESSION
+
+**Given** one admitted mandated model and a free assigned port
+**When** its transport matrix runs
+**Then** every unit links to one live owner-bound process receipt and the
+receipt's inference count equals the model's completed request rows.
+
+#### SCENARIO-INFRA-6676-CLEAN-RELEASE
+
+**Given** a completed, failed, or interrupted model session
+**When** cleanup runs
+**Then** the owned server exits, its port closes, VRAM is measured, and the
+lease reaches a terminal release state before another session reuses the GPU.
+
+## Implementation Status (REQ-INFRA-6676)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6676 and SCENARIO-INFRA-6676-* | Planned (`python/carnot/experiment_6676_three_family_triggered_tail_ab.py`) | Planned (`tests/python/test_experiment_6676_three_family_triggered_tail_ab.py`) |
