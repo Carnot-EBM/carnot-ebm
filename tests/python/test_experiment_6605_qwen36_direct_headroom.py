@@ -98,16 +98,25 @@ def _gpu_receipts(row_count: int) -> dict:
                 "samples": [
                     {"stage": "before", "memory_used_mb": 4, "utilization_pct": 0},
                     {
+                        "stage": "load",
+                        "memory_used_mb": 470,
+                        "utilization_pct": 7,
+                        "worker_pid_present": False,
+                        "compute_processes": [],
+                    },
+                    {
                         "stage": "during",
                         "memory_used_mb": 21_000,
                         "utilization_pct": 70,
                         "worker_pid_present": True,
+                        "compute_processes": [{"pid": 777, "used_memory_mb": 20_800}],
                     },
                     {
                         "stage": "during",
                         "memory_used_mb": 21_010,
                         "utilization_pct": 72,
                         "worker_pid_present": True,
+                        "compute_processes": [{"pid": 777, "used_memory_mb": 20_810}],
                     },
                     {"stage": "after", "memory_used_mb": 4, "utilization_pct": 0},
                 ],
@@ -592,3 +601,39 @@ def test_req_report_6605_validation_reports_every_schema_class(corpus: dict) -> 
         "blocked_gate_condition_missing",
         "blocked_ready_score_nonzero",
     } <= set(errors)
+
+
+def test_req_report_6605_loadstage_gates_serving_samples_only() -> None:
+    """REQ-REPORT-6605-LOADSTAGE gates `during` samples and never trusts a bare flag."""
+
+    clean = _gpu_receipts(1)
+    assert mod._gpu_receipts_ready(clean, 1) is True
+
+    # A load-phase sample without the worker is expected and must not block.
+    load_only = deepcopy(clean)
+    load_only["sessions"][0]["samples"][1]["worker_pid_present"] = False
+    assert mod._gpu_receipts_ready(load_only, 1) is True
+
+    # A serving sample that did not observe the worker still fails closed.
+    absent_during = deepcopy(clean)
+    absent_during["sessions"][0]["samples"][2]["worker_pid_present"] = False
+    assert mod._gpu_receipts_ready(absent_during, 1) is False
+
+    # A flag with no matching process in the same sample fails closed.
+    flag_only = deepcopy(clean)
+    flag_only["sessions"][0]["samples"][2]["compute_processes"] = [{"pid": 4}]
+    assert mod._gpu_receipts_ready(flag_only, 1) is False
+
+    # Relabelling serving samples as load cannot buy a pass: the floor bites.
+    relabelled = deepcopy(clean)
+    for sample in relabelled["sessions"][0]["samples"]:
+        if sample["stage"] == "during":
+            sample["stage"] = "load"
+    assert mod._gpu_receipts_ready(relabelled, 1) is False
+
+    # A run with no worker on the card at any point fails closed.
+    never_on_card = deepcopy(clean)
+    for sample in never_on_card["sessions"][0]["samples"]:
+        sample["worker_pid_present"] = False
+        sample["compute_processes"] = []
+    assert mod._gpu_receipts_ready(never_on_card, 1) is False
