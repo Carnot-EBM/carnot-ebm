@@ -18041,3 +18041,4 @@ savings remain 0%.
   skipping, weakening, deleting, or reverting tests.
 - 2026-08-27: Held-family ARC supervisor outcome A/B (⚠️ Research Finding) — honest_verdict=blocked: held-family supervisor A/B is partial because verification_failure; no transition benefit or solve is claimed; results/experiment_6682_arc_held_family_supervisor_ab.json
 - 2026-08-27: Held-family ARC supervisor outcome A/B (⚠️ Research Finding) — honest_verdict=blocked: held-family supervisor A/B is partial because verification_failure; no transition benefit or solve is claimed; results/experiment_6682_arc_held_family_supervisor_ab.json
+- 2026-08-27: Bounded-treewidth Ising task-owned receipt (✅ Complete) — honest_verdict=complete: bounded-treewidth exact Ising reference is ready under task-owned evidence; results/experiment_6683_ising_reference_scope_receipt.json
