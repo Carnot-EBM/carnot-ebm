@@ -16,6 +16,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes, receipt_exists
 
 
 JsonDict = dict[str, Any]
@@ -698,9 +699,17 @@ def _load_json(path: Path) -> JsonDict:
 
 
 def _sha256_if_exists(path: Path) -> str | None:
-    if not path.exists():
+    # Resolve at the artifact's own commit so a later append to the shared
+    # KAN spec does not stale this receipt (REQ-REPORT-6610; the 2026-08-25
+    # adoption sweep, commit 64846b5430, missed this module).
+    if not receipt_exists(path, artifact_relative_path=RESULT_RELATIVE_PATH):
         return None
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _require(condition: bool, message: str) -> None:

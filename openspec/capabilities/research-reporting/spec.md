@@ -57123,6 +57123,23 @@ a fabrication-gate stamp the module never writes (3 tests); derived content read
 out of a shared high-churn file (8 tests, REQ-REPORT-6610-SCOPE); live machine
 state recorded in the artifact, such as `cpu_count` and `disk_free_mb` (1 test);
 and a module validator that rejects its own checked-in artifact (1 test).
+
+Adoption correction 2026-08-27, appended per never-prune: the completeness
+sweep above had a population gap. "Every replay-tested module" was enumerated
+by matching the literal assertion `result == replay`. Four KAN certificate
+tests (Exp5412, Exp5425, Exp5438, Exp5451) assert `checked_in == replay`, so
+their modules sat outside the enumerated population. They were never adopted,
+and they were absent from the residual-red accounting above. Their recorded
+spec receipts went stale when the shared KAN spec last changed (2026-07-14).
+That is the exact churn cause this requirement removes. The gap is the
+pattern-narrower-than-concept bug class, inside the sweep that existed to close
+that class. The four modules now route `_sha256_if_exists` through
+`receipt_bytes` / `receipt_exists`. Verified in an isolated worktree with the
+import path checked by module file: the four replay tests were RED before
+adoption and GREEN after. Three named provenance breaks were each proved RED
+on the adopted Exp5412: a tampered recorded hash, a dropped dependency key,
+and a fabrication-gate stamp added to the upstream `results/` artifact (the
+EVIDENCE-LIVE working-tree read survived adoption).
 ### REQ-REPORT-6605: Qwen Direct Plan Baseline SHALL Preserve Frozen Rows And Local Identity
 
 Carnot SHALL run the byte-frozen Exp6604 direct plan prompt with only
