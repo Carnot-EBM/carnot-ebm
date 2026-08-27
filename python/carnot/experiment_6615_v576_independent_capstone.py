@@ -223,10 +223,66 @@ def _read_json(path: Path) -> JsonDict:
     return payload
 
 
+def _roadmap_payload_for_milestone(repo_root: Path) -> JsonDict:
+    """The roadmap AS IT WAS for this capstone's milestone.
+
+    WHY THIS IS NOT JUST A FILE READ (2026-08-27). This module froze MILESTONE and compared it
+    against the LIVE research-roadmap.yaml, which advances every milestone. So the capstone --
+    and its tests -- worked only while its own milestone was active and broke permanently
+    afterwards. 23 earlier capstones do not have this defect: they compare the milestone
+    recorded in the ARTIFACT they are building, which is self-consistent and never rots.
+
+    That was not a local annoyance. The v580 test built its artifact at MODULE scope, so the
+    raise landed during COLLECTION, and pytest answers a collection error by aborting the
+    whole run -- 57,917 collected tests interrupted by one file. Every conductor task that
+    shells out to `pytest tests/python` then failed, exp6682's `verification_failure` among
+    them.
+
+    The live file is used unchanged while it still holds this milestone, so behaviour during
+    the capstone's own milestone is bit-identical. Afterwards the content is recovered from
+    git history, which is deterministic and always available in a checkout. The search is
+    bounded and raises a clear error rather than silently substituting a different milestone.
+    """
+
+    path = repo_root / ROADMAP_RELATIVE_PATH
+    payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if isinstance(payload, dict) and payload.get("milestone") == MILESTONE:
+        return payload
+
+    rel = ROADMAP_RELATIVE_PATH.as_posix()
+    log = subprocess.run(
+        ["git", "-C", str(repo_root), "log", "--format=%H", "-n", "400", "--", rel],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if log.returncode == 0:
+        for commit in log.stdout.split():
+            blob = subprocess.run(
+                ["git", "-C", str(repo_root), "show", f"{commit}:{rel}"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            if blob.returncode != 0:
+                continue
+            try:
+                archived = yaml.safe_load(blob.stdout)
+            except yaml.YAMLError:
+                continue
+            if isinstance(archived, dict) and archived.get("milestone") == MILESTONE:
+                return archived
+
+    raise ValueError(
+        f"expected roadmap milestone {MILESTONE}; the live roadmap has moved on and no "
+        f"commit in the last 400 touching {rel} still holds it"
+    )
+
+
 def load_v576_tasks(repo_root: Path) -> list[JsonDict]:
     """Load and validate the V576 roadmap task list."""
 
-    payload = yaml.safe_load((repo_root / ROADMAP_RELATIVE_PATH).read_text(encoding="utf-8"))
+    payload = _roadmap_payload_for_milestone(repo_root)
     if payload.get("milestone") != MILESTONE:
         raise ValueError(f"expected roadmap milestone {MILESTONE}")
     tasks = payload.get("tasks")
