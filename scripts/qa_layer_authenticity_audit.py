@@ -163,6 +163,14 @@ WHOLE_FILE_TARGETS = (
 # ---------------------------------------------------------------------------------------
 GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
     (
+        PROJECT_ROOT / "scripts" / "harness_integrity_lint.py",
+        "decides whether a commit may stage a path its session never declared, and whether "
+        "a sealed harness file may change -- so a silent non-firing here lets an agent edit "
+        "the fabrication gate or the record-preservation lints while working on something "
+        "else, which is how a change makes itself pass; note it reads the WORKING TREE for "
+        "seals rather than the index, so its blind spots are not the usual staged-diff ones",
+    ),
+    (
         PROJECT_ROOT / "scripts" / "substrate_alias_evidence_lint.py",
         "decides whether a commit may WIDEN adversarial_verify's no-LLM allowlist, and "
         "every name added there exempts artifacts from the fabrication gate's duration "

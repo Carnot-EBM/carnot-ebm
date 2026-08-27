@@ -4793,3 +4793,107 @@ rows, blocked checks name expected and observed values, and the checksum
 detects mutation after the verdict.
 
 **Spec traces:** REQ-PIPELINE-6563
+
+### REQ-INFRA-6800: A Declared Scope MUST Bound What a Commit May Stage
+
+**Statement:** A session MAY declare, before doing the work, the set of path globs it
+intends to touch. While that declaration is active, any staged path outside it MUST refuse
+the commit. The declaration MUST NOT be staged by the commit it governs. With no
+declaration the check MUST be inert.
+
+**Rationale:** Nothing in this repository recorded what an agent said it was going to
+touch, so nothing could tell an intended edit from a stray one. On 2026-08-27 `git add -A`
+swept another agent's staged file into an unrelated commit twice, and two agents
+independently invented "commit with an explicit pathspec" as the fix while under pressure.
+A pathspec typed by hand is forgotten exactly when it matters; a declaration cannot be.
+
+The declaration is made BEFORE the work so it cannot be widened afterwards to cover
+something inconvenient. That is why a scope file staged in its own commit is refused: an
+agent that can edit its own scope in the commit it governs has no scope at all.
+
+Inert-without-a-declaration is deliberate and is what makes this shippable. The conductor
+commits with `git add -A` every few minutes and declares nothing; a check that refused by
+default would wedge the research loop on its first day. The honest limit is stated in the
+implementation: this cannot stop an agent that never declares a scope. It stops one that
+declared a scope from quietly growing it, which is the failure that actually occurred.
+
+**Implementation:** `scripts/harness_integrity_lint.py` (`check`, `_matches`,
+`_scope_self_staged`), pre-commit hook `harness-integrity-lint`.
+
+**Spec traces:** REQ-INFRA-6800
+
+### REQ-INFRA-6801: Harness Files MUST Be Sealed Against Unnamed Modification
+
+**Statement:** A scope declaration MUST record a SHA-256 of every path in `SEALED_PATHS`
+at declaration time, and the check MUST refuse the commit if any of those files differs in
+the WORKING TREE at commit time. A sealed path MUST be exempted only by naming it exactly
+in the declaration; a glob MUST NEVER unseal a path. Appearance and deletion of a sealed
+path both count as drift.
+
+**Rationale:** The sealed set is not a list of important files. It is the list of files
+whose modification changes the VERDICT on other files — the fabrication gate, the
+record-preservation lints, the gate config, the test infrastructure. Editing one while
+working on something else is how a change makes itself pass.
+
+The check reads the working tree rather than the index, and that is the whole point: an
+agent that weakens a test file so its own change passes does not need to stage it, because
+the suite reads the working tree. A staged-diff check cannot see that case at all.
+
+A glob never unseals, because widening a glob is cheap and is what an agent under pressure
+does, whereas typing the name of the fabrication gate is a deliberate act that leaves the
+intent in the record.
+
+**Implementation:** `scripts/harness_integrity_lint.py` (`SEALED_PATHS`, `declare`,
+`check`).
+
+**Spec traces:** REQ-INFRA-6801
+
+### SCENARIO-INFRA-6802: No Declaration Leaves the Conductor Untouched
+
+**Given** no scope declaration exists
+**When** the pre-commit gate runs on any staged set
+**Then** it exits 0 without inspecting the index.
+
+**Spec traces:** REQ-INFRA-6800
+
+### SCENARIO-INFRA-6803: A Swept-In File Outside the Scope Refuses the Commit
+
+**Given** a session declared `scripts/foo.py`
+**When** the index also contains `ops/known-issues.md`
+**Then** the commit is refused and both the offending path and the declared scope are named.
+
+**Spec traces:** REQ-INFRA-6800
+
+### SCENARIO-INFRA-6804: A Sealed File Edited but Never Staged Refuses the Commit
+
+**Given** a session declared a scope that does not name the fabrication gate
+**And** the gate file is modified in the working tree and never staged
+**When** the pre-commit gate runs
+**Then** the commit is refused and the drifted path is named.
+
+**Spec traces:** REQ-INFRA-6801
+
+### SCENARIO-INFRA-6805: An Explicitly Named Sealed Path May Be Edited
+
+**Given** a session declared the scope and named the sealed path with `--unseal`
+**When** that sealed file is modified
+**Then** the commit is permitted.
+
+**Spec traces:** REQ-INFRA-6801
+
+### SCENARIO-INFRA-6806: A Scope Staged in Its Own Commit Refuses
+
+**Given** a session's declaration file is itself in the index
+**When** the pre-commit gate runs
+**Then** the commit is refused, because a scope edited in the commit it governs proves
+nothing.
+
+**Spec traces:** REQ-INFRA-6800
+
+### SCENARIO-INFRA-6807: An Unreadable Declaration Refuses Rather Than Passes
+
+**Given** a scope file that cannot be parsed
+**When** the pre-commit gate runs
+**Then** the commit is refused, because unreadable is not the same as absent.
+
+**Spec traces:** REQ-INFRA-6800

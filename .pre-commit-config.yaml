@@ -388,6 +388,31 @@ repos:
         always_run: true
         pass_filenames: false
 
+      - id: harness-integrity-lint
+        name: A commit stays inside the scope its session declared
+        entry: python3 scripts/harness_integrity_lint.py --check
+        language: system
+        # WHY THIS IS WIRED (2026-08-27). Nothing recorded what an agent said it was going
+        # to touch, so nothing could tell an intended edit from a stray one. `git add -A`
+        # swept another agent's staged file into an unrelated commit twice in one day, and
+        # two agents independently invented "commit with an explicit pathspec" as the fix
+        # while under pressure -- which is exactly when a hand-typed pathspec is forgotten.
+        #
+        # INERT WITHOUT A DECLARATION, AND THAT IS LOAD-BEARING, NOT LAZINESS. The conductor
+        # commits with `git add -A` every few minutes and declares no scope. A hook that
+        # refused by default would wedge the research loop on the day it landed. Inside a
+        # declaration it is fail-closed: an unreadable scope file refuses rather than passes,
+        # and a git failure refuses rather than reporting clean.
+        #
+        # always_run + pass_filenames false because the check is a git diff against the index
+        # plus a working-tree hash of the sealed set, not a per-file scan. always_run also
+        # matters for the same reason it does on determination-preservation-lint: pre-commit
+        # builds its staged-file list with --diff-filter excluding deletions, so a
+        # delete-only commit would never invoke a `files:`-gated hook at all, and a deletion
+        # is as much an out-of-scope change as an edit.
+        always_run: true
+        pass_filenames: false
+
       - id: test-suite-mutation-gate
         name: A test run that rewrote tracked files may not be committed unresolved
         entry: python3 scripts/test_suite_mutation_check.py --gate

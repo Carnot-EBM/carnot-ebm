@@ -307,3 +307,8 @@ results/experiment_5852_three_family_paired_embeddings.rows.jsonl
 # measurements, not the research record, so they stay out of git.
 results/arc_live_oracle_gap_runs/
 results/arc_leaderboard_eval_runs/
+
+# Per-session scope declarations for scripts/harness_integrity_lint.py. These are local
+# state, like the mutation-check run files. A committed scope would become active for every
+# session in every checkout and refuse commits nobody could explain.
+ops/.agent_scopes/
