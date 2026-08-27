@@ -145,9 +145,7 @@ def test_sealed_file_appearing_is_drift(guard, monkeypatch, capsys):
 def test_scenario_infra_6806_scope_staged_in_its_own_commit_refuses(guard, monkeypatch, capsys):
     """SCENARIO-INFRA-6806: a scope edited in the commit it governs proves nothing."""
     _declare(guard, "ops/.agent_scopes/test-run.scope.json")
-    monkeypatch.setattr(
-        guard, "_staged_paths", lambda: ["ops/.agent_scopes/test-run.scope.json"]
-    )
+    monkeypatch.setattr(guard, "_staged_paths", lambda: ["ops/.agent_scopes/test-run.scope.json"])
     assert guard.check() == 1
     assert "proves nothing" in capsys.readouterr().out
 
@@ -241,3 +239,103 @@ def test_main_dispatches_each_mode(guard, monkeypatch):
     assert guard.main(["--list"]) == 0
     assert guard.main(["--check"]) == 0
     assert guard.main(["--release", "--run-id", "cli-run"]) == 0
+
+
+# --- HEAD-anchored seals (REQ-INFRA-6801) -------------------------------------------------
+# A standing declaration -- one that outlives many commits, like the conductor's -- cannot use
+# a declaration-time hash: the first legitimate commit of a harness file would make the seal
+# stale and refuse every commit afterwards until a human noticed. Anchored to HEAD, a
+# committed change moves the baseline with it and only UNCOMMITTED edits refuse.
+
+
+def _declare_head(module, *globs, run_id="head-run"):
+    assert module.declare(list(globs), [], run_id, "head") == 0
+
+
+def test_head_anchor_records_the_sentinel_not_a_hash(guard):
+    _declare_head(guard, "scripts/foo.py")
+    record = json.loads((guard.SCOPES / "head-run.scope.json").read_text())
+    assert record["seal_anchor"] == "head"
+    assert set(record["seals"].values()) == {guard.HEAD_ANCHOR}
+
+
+def test_head_anchor_passes_when_worktree_matches_head(guard, monkeypatch):
+    _declare_head(guard, "scripts/foo.py")
+    monkeypatch.setattr(guard, "_head_blob", lambda rel: ("abc123", True))
+    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: ("abc123", True))
+    assert guard.check() == 0
+
+
+def test_head_anchor_refuses_an_uncommitted_harness_edit(guard, monkeypatch, capsys):
+    """The case that matters: a harness file edited but not yet committed."""
+    _declare_head(guard, "scripts/foo.py")
+    monkeypatch.setattr(guard, "_head_blob", lambda rel: ("committed", True))
+    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: ("edited", True))
+    assert guard.check() == 1
+    assert "modified, uncommitted" in capsys.readouterr().out
+
+
+def test_head_anchor_survives_a_committed_harness_change(guard, monkeypatch):
+    """A legitimate commit moves the baseline; the standing declaration does not go stale."""
+    _declare_head(guard, "scripts/foo.py")
+    # Both sides move together, which is what committing does.
+    monkeypatch.setattr(guard, "_head_blob", lambda rel: ("v2", True))
+    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: ("v2", True))
+    assert guard.check() == 0
+
+
+def test_head_anchor_refuses_a_file_absent_from_head(guard, monkeypatch, capsys):
+    _declare_head(guard, "scripts/foo.py")
+    monkeypatch.setattr(guard, "_head_blob", lambda rel: (None, True))
+    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: ("new", True))
+    assert guard.check() == 1
+    assert "not in HEAD" in capsys.readouterr().out
+
+
+def test_head_anchor_refuses_an_uncommitted_deletion(guard, monkeypatch, capsys):
+    _declare_head(guard, "scripts/foo.py")
+    monkeypatch.setattr(guard, "_head_blob", lambda rel: ("committed", True))
+    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: (None, True))
+    assert guard.check() == 1
+    assert "deleted uncommitted" in capsys.readouterr().out
+
+
+def test_head_anchor_refuses_when_git_cannot_be_asked(guard, monkeypatch, capsys):
+    """Fail-closed: an unanswerable git is not evidence the harness is intact."""
+    _declare_head(guard, "scripts/foo.py")
+    monkeypatch.setattr(guard, "_head_blob", lambda rel: (None, False))
+    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: ("x", True))
+    assert guard.check() == 1
+    assert "refusing rather than guessing" in capsys.readouterr().out
+
+
+def test_an_explicit_unseal_in_one_scope_lifts_a_standing_seal(guard, monkeypatch):
+    """A standing declaration must not deadlock the person fixing the file it seals.
+
+    The conductor's scope is long-lived and seals the record-preservation lints. Without
+    this, an agent legitimately repairing one of them could not commit: its own --unseal
+    does not reach the conductor's seal, so it would have to release someone else's scope --
+    the exact move the refusal text tells it not to make.
+    """
+    _declare_head(guard, "*", run_id="standing")
+    guard._sealed_file.write_text("# a deliberate repair\n")
+    monkeypatch.setattr(guard, "_head_blob", lambda rel: ("committed", True))
+    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: ("edited", True))
+    assert guard.check() == 1  # the standing seal refuses on its own
+    _declare(
+        guard,
+        "scripts/adversarial_verify.py",
+        unseal=("scripts/adversarial_verify.py",),
+        run_id="repair",
+    )
+    assert guard.check() == 0  # the named path lifts it
+
+
+def test_a_glob_still_never_lifts_a_standing_seal(guard, monkeypatch, capsys):
+    """The bypass costs a typed path name. A wide glob does not buy it."""
+    _declare_head(guard, "*", run_id="standing")
+    monkeypatch.setattr(guard, "_head_blob", lambda rel: ("committed", True))
+    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: ("edited", True))
+    _declare(guard, "scripts/*", run_id="wide")
+    assert guard.check() == 1
+    assert "sealed harness file" in capsys.readouterr().out

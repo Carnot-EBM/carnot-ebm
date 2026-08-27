@@ -145,6 +145,39 @@ def _sha256(path: Path) -> str | None:
         return None
 
 
+#: Stored in place of a hash when a declaration is anchored to HEAD instead of to the moment
+#: it was made. See `--seal-anchor head`.
+HEAD_ANCHOR = "@HEAD"
+
+
+def _head_blob(rel: str) -> tuple[str | None, bool]:
+    """(blob id at HEAD, ok). `ok` is False when git could not answer at all.
+
+    `git ls-tree` is used rather than `rev-parse HEAD:<path>` because rev-parse exits
+    non-zero both when git is broken and when the path simply is not in HEAD -- and those
+    must not be confused. ls-tree exits 0 either way and prints nothing for an absent path.
+    """
+    out = _git("ls-tree", "HEAD", "--", rel)
+    if out == "":
+        # Empty means "absent at HEAD" only if git is answering at all; ask once more.
+        if _git("rev-parse", "--git-dir") == "":
+            return None, False
+        return None, True
+    fields = out.split()
+    return (fields[2] if len(fields) >= 3 else None), True
+
+
+def _worktree_blob(rel: str) -> tuple[str | None, bool]:
+    """(blob id the working-tree file would hash to, ok). None with ok=True means absent."""
+    path = REPO / rel
+    if not path.exists():
+        return None, True
+    out = _git("hash-object", "--", rel)
+    if out == "":
+        return None, False
+    return out.strip(), True
+
+
 def _auto_run_id() -> str:
     """An id containing the parent PID and a timestamp.
 
@@ -197,7 +230,11 @@ def _matches(path: str, patterns: list[str]) -> bool:
             return True
         # `--scope docs/notes` is read as "that directory and everything in it", which is what
         # people mean when they type a directory and is otherwise a common false refusal.
-        if pattern and not any(ch in pattern for ch in "*?[") and path.startswith(f"{pattern.rstrip('/')}/"):
+        if (
+            pattern
+            and not any(ch in pattern for ch in "*?[")
+            and path.startswith(f"{pattern.rstrip('/')}/")
+        ):
             return True
     return False
 
@@ -215,8 +252,16 @@ def _scope_self_staged(scope_path: Path, staged: list[str]) -> bool:
     return rel in staged
 
 
-def declare(globs: list[str], unseal: list[str], run_id: str) -> int:
-    """Record the intended blast radius and the seal, before the work starts."""
+def declare(globs: list[str], unseal: list[str], run_id: str, anchor: str = "declaration") -> int:
+    """Record the intended blast radius and the seal, before the work starts.
+
+    `anchor` chooses what the seal is measured against. "declaration" hashes each sealed file
+    now, which is right for a short scoped task. "head" records a sentinel and compares the
+    working tree to HEAD at check time, which is right for a STANDING declaration that will
+    outlive many commits -- a declaration-time hash would go stale the first time anyone
+    legitimately committed a harness change and then refuse every commit until a human
+    noticed.
+    """
     if not globs:
         print("harness-integrity: --declare needs at least one --scope pattern.")
         return 1
@@ -237,6 +282,9 @@ def declare(globs: list[str], unseal: list[str], run_id: str) -> int:
     for rel in SEALED_PATHS:
         if rel in unseal:
             continue
+        if anchor == "head":
+            seals[rel] = HEAD_ANCHOR
+            continue
         digest = _sha256(REPO / rel)
         # A sealed path that does not exist is recorded as absent, so its later APPEARANCE is
         # itself drift -- adding a conftest.py is as much a harness change as editing one.
@@ -249,6 +297,7 @@ def declare(globs: list[str], unseal: list[str], run_id: str) -> int:
         "pid": os.getpid(),
         "scope": list(globs),
         "unsealed": sorted(unseal),
+        "seal_anchor": anchor,
         "seals": seals,
         "why_this_blocks_commits": (
             "This session declared the paths it intended to touch. A staged path outside that "
@@ -264,8 +313,10 @@ def declare(globs: list[str], unseal: list[str], run_id: str) -> int:
         print(f"  scope   {pattern}")
     for path in sorted(unseal):
         print(f"  unseal  {path}")
-    print(f"  sealed  {len(seals)} harness file(s)")
-    print(f"\nRelease it when the work is done:\n  python3 {Path(__file__).name} --release --run-id {run_id}")
+    print(f"  sealed  {len(seals)} harness file(s), anchored to {anchor}")
+    print(
+        f"\nRelease it when the work is done:\n  python3 {Path(__file__).name} --release --run-id {run_id}"
+    )
     return 0
 
 
@@ -280,6 +331,23 @@ def check() -> int:
         print("harness-integrity: REFUSING -- could not read the index (git failed).")
         print("  A guard that reports clean when git is broken is worse than no guard.")
         return 1
+
+    # A path explicitly named by ANY active declaration is unsealed for this commit.
+    #
+    # Without this, a STANDING declaration (the conductor's) deadlocks harness work: it seals
+    # the record-preservation lints, and the person legitimately fixing one cannot unseal it,
+    # because their own --unseal does not reach another declaration's seal. They would have to
+    # release someone else's scope to commit, which is exactly the "release it to get past
+    # this" move the refusal text warns against.
+    #
+    # This does let an agent bypass a standing seal by naming the path. That is deliberate and
+    # consistent with the rest of the design: a glob still never unseals, so the bypass costs
+    # a typed path name and leaves the intent in the record, which is the bar the seal sets.
+    explicitly_unsealed: set[str] = set()
+    for scope_path in scopes:
+        record = _load_scope(scope_path)
+        if record:
+            explicitly_unsealed.update(record.get("unsealed") or [])
 
     failures: list[str] = []
     for scope_path in scopes:
@@ -315,6 +383,26 @@ def check() -> int:
         seals = record.get("seals") or {}
         drifted = []
         for rel, expected in seals.items():
+            if rel in explicitly_unsealed:
+                continue
+            if expected == HEAD_ANCHOR:
+                # Anchored to HEAD, not to the declaration. A standing declaration -- one that
+                # outlives many commits, like the conductor's -- would otherwise go stale the
+                # first time anyone legitimately commits a harness change, and then refuse
+                # every commit until a human noticed. Anchored here, a committed change moves
+                # the baseline with it and only UNCOMMITTED harness edits refuse.
+                head, ok_head = _head_blob(rel)
+                work, ok_work = _worktree_blob(rel)
+                if not (ok_head and ok_work):
+                    drifted.append(f"{rel} (git could not be asked; refusing rather than guessing)")
+                elif head != work:
+                    if head is None:
+                        drifted.append(f"{rel} (not in HEAD, present uncommitted)")
+                    elif work is None:
+                        drifted.append(f"{rel} (in HEAD, deleted uncommitted)")
+                    else:
+                        drifted.append(f"{rel} (modified, uncommitted)")
+                continue
             actual = _sha256(REPO / rel)
             if actual != expected:
                 if expected is None:
@@ -402,14 +490,23 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument("--list", action="store_true", help="show active declarations")
     parser.add_argument("--scope", action="append", default=[], help="a glob the commit may touch")
     parser.add_argument(
-        "--unseal", action="append", default=[],
+        "--unseal",
+        action="append",
+        default=[],
         help="a sealed harness path this scope is permitted to change (exact path, no globs)",
+    )
+    parser.add_argument(
+        "--seal-anchor",
+        choices=("declaration", "head"),
+        default="declaration",
+        help="measure seals against the moment of declaration (default) or against HEAD "
+        "(for a standing declaration that will outlive many commits)",
     )
     parser.add_argument("--run-id", default=None)
     args = parser.parse_args(argv)
 
     if args.declare:
-        return declare(args.scope, args.unseal, _resolve_run_id(args.run_id))
+        return declare(args.scope, args.unseal, _resolve_run_id(args.run_id), args.seal_anchor)
     if args.check:
         return check()
     if args.release:
