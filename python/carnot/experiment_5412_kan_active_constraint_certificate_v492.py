@@ -17,6 +17,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes, receipt_exists
 
 from carnot import experiment_5406_active_constraint_warmstart_guidance_v492 as exp5406
 
@@ -25,9 +26,7 @@ JsonDict = dict[str, Any]
 JsonList = list[JsonDict]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5412_kan_active_constraint_certificate_v492.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5412_kan_active_constraint_certificate_v492.json")
 EXP5406_RESULT_RELATIVE_PATH = exp5406.RESULT_RELATIVE_PATH
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/kan/spec.md")
 MODULE_RELATIVE_PATH = Path(
@@ -83,13 +82,9 @@ def build_certificate_records(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
     """Build explicit false-property regions and true-property controls."""
 
     row_list = [dict(row) for row in rows]
-    false_rows = [
-        row for row in row_list if row["hint_mode"] in {"stale_hint", "adversarial_hint"}
-    ]
+    false_rows = [row for row in row_list if row["hint_mode"] in {"stale_hint", "adversarial_hint"}]
     false_checks = [_false_property_check(row) for row in false_rows]
-    regions = [
-        _counterexample_region(row, check) for row, check in zip(false_rows, false_checks)
-    ]
+    regions = [_counterexample_region(row, check) for row, check in zip(false_rows, false_checks)]
     true_checks = _true_property_checks(row_list)
     return {
         "false_property_checks": false_checks,
@@ -215,16 +210,34 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     _require(_verdict_is_bounded(str(artifact.get("honest_verdict"))), "honest_verdict")
     _require(artifact.get("deterministic_verifier_passed") is True, "deterministic_verifier_passed")
     _require(artifact.get("false_property_rejection_rate") == 1.0, "false_property_rejection_rate")
-    _require(artifact.get("true_property_preservation_rate") == 1.0, "true_property_preservation_rate")
-    _require(artifact.get("counterexample_region_count") == len(artifact["counterexample_regions"]), "counterexample_region_count")
+    _require(
+        artifact.get("true_property_preservation_rate") == 1.0, "true_property_preservation_rate"
+    )
+    _require(
+        artifact.get("counterexample_region_count") == len(artifact["counterexample_regions"]),
+        "counterexample_region_count",
+    )
     _require(artifact.get("counterexample_region_count", 0) > 0, "counterexample_region_count")
-    _require(artifact.get("certificate_size_bytes") == certificate_size_bytes(artifact["certificate_records"]), "certificate_size_bytes")
+    _require(
+        artifact.get("certificate_size_bytes")
+        == certificate_size_bytes(artifact["certificate_records"]),
+        "certificate_size_bytes",
+    )
     _require(artifact.get("certificate_size_bytes", 0) > 0, "certificate_size_bytes")
     _require(_claim_limits_explicit(artifact.get("claim_limits", ())), "claim_limits")
-    _require(all(row["rejected"] for row in artifact["false_property_checks"]), "false_property_checks")
-    _require(all(row["preserved"] for row in artifact["true_property_checks"]), "true_property_checks")
-    _require(all(row["deterministic_check_passed"] for row in artifact["counterexample_regions"]), "counterexample_regions")
-    _require(artifact.get("reproducibility_checksum") == _checksum(artifact), "reproducibility_checksum")
+    _require(
+        all(row["rejected"] for row in artifact["false_property_checks"]), "false_property_checks"
+    )
+    _require(
+        all(row["preserved"] for row in artifact["true_property_checks"]), "true_property_checks"
+    )
+    _require(
+        all(row["deterministic_check_passed"] for row in artifact["counterexample_regions"]),
+        "counterexample_regions",
+    )
+    _require(
+        artifact.get("reproducibility_checksum") == _checksum(artifact), "reproducibility_checksum"
+    )
     if artifact.get("kan_active_constraint_certificate_ready") is True:
         _require(artifact.get("status") == "complete", "status")
         _require(artifact.get("readiness_blockers") == [], "readiness_blockers")
@@ -321,7 +334,10 @@ def _true_property_checks(rows: Sequence[Mapping[str, Any]]) -> JsonList:
         _true_check(
             "no_hint_solver_baseline_remains_valid",
             no_hint_rows,
-            all(_route_for_row(row) == "baseline_solver" and row["final_valid"] is True for row in no_hint_rows),
+            all(
+                _route_for_row(row) == "baseline_solver" and row["final_valid"] is True
+                for row in no_hint_rows
+            ),
         ),
         _true_check(
             "solver_authority_and_final_validity_preserved",
@@ -371,9 +387,18 @@ def _front_overlap(predicted: Sequence[str], truth: Sequence[str]) -> float:
 
 def _deterministic_verifier_passed(records: Mapping[str, Any]) -> bool:
     return (
-        all(check["rejected"] and check["deterministic_check_passed"] for check in records["false_property_checks"])
-        and all(check["preserved"] and check["deterministic_check_passed"] for check in records["true_property_checks"])
-        and all(region["rejects_false_property"] and region["bounded_fixture_only"] for region in records["counterexample_regions"])
+        all(
+            check["rejected"] and check["deterministic_check_passed"]
+            for check in records["false_property_checks"]
+        )
+        and all(
+            check["preserved"] and check["deterministic_check_passed"]
+            for check in records["true_property_checks"]
+        )
+        and all(
+            region["rejects_false_property"] and region["bounded_fixture_only"]
+            for region in records["counterexample_regions"]
+        )
     )
 
 
@@ -434,7 +459,9 @@ def _scope_is_bounded(value: Any) -> bool:
 
 def _verdict_is_bounded(value: str) -> bool:
     lowered = value.lower()
-    broad_positive = "broad kan verification" in lowered and "no broad kan verification claim" not in lowered
+    broad_positive = (
+        "broad kan verification" in lowered and "no broad kan verification claim" not in lowered
+    )
     return value.startswith(TERMINAL_PREFIXES) and not broad_positive
 
 
@@ -454,7 +481,17 @@ def _checksum(payload: Mapping[str, Any]) -> str:
 
 
 def _sha256_if_exists(path: Path) -> str | None:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
+    # Resolve at the artifact's own commit so a later append to the shared
+    # KAN spec does not stale this receipt (REQ-REPORT-6610; the 2026-08-25
+    # adoption sweep, commit 64846b5430, missed this module).
+    if not receipt_exists(path, artifact_relative_path=RESULT_RELATIVE_PATH):
+        return None
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _require(condition: bool, message: str) -> None:

@@ -17,6 +17,7 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from carnot.provenance_receipts import receipt_bytes, receipt_exists
 
 from carnot import experiment_5412_kan_active_constraint_certificate_v492 as exp5412
 
@@ -25,9 +26,7 @@ JsonDict = dict[str, Any]
 JsonList = list[JsonDict]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5425_kan_measurement_access_certificate_v493.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5425_kan_measurement_access_certificate_v493.json")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/kan/spec.md")
 MODULE_RELATIVE_PATH = Path(
     "python/carnot/experiment_5425_kan_measurement_access_certificate_v493.py"
@@ -148,9 +147,7 @@ def evaluate_measurement_access_certificate() -> JsonDict:
             row for row in false_controls if row["classification"] == "observable_false"
         ],
         "missing_evidence_controls": [
-            row
-            for row in false_controls
-            if row["classification"] == "missing_evidence_unsupported"
+            row for row in false_controls if row["classification"] == "missing_evidence_unsupported"
         ],
         "false_property_rejection_rate": _rate(
             sum(row["rejected"] for row in false_controls),
@@ -252,7 +249,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     _require(artifact.get("certificate_count") == len(controls), "certificate_count")
     _require(artifact.get("certificate_count", 0) > 0, "certificate_count")
     _require(artifact.get("false_property_rejection_rate") == 1.0, "false_property_rejection_rate")
-    _require(artifact.get("true_property_preservation_rate") == 1.0, "true_property_preservation_rate")
+    _require(
+        artifact.get("true_property_preservation_rate") == 1.0, "true_property_preservation_rate"
+    )
     _require(bool(artifact.get("row_checksums")), "row_checksums")
     _require(
         all(str(item).startswith("sha256:") for item in artifact.get("row_checksums", ())),
@@ -278,7 +277,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
         _control_provenance_is_consistent(controls, artifact.get("row_checksums", ())),
         "measurement_access_controls",
     )
-    _require(artifact.get("reproducibility_checksum") == _checksum(artifact), "reproducibility_checksum")
+    _require(
+        artifact.get("reproducibility_checksum") == _checksum(artifact), "reproducibility_checksum"
+    )
     if artifact.get("kan_measurement_access_certificate_ready") is True:
         _require(artifact.get("status") == "complete", "status")
         _require(artifact.get("readiness_blockers") == [], "readiness_blockers")
@@ -575,8 +576,7 @@ def _scope_is_bounded(value: Any) -> bool:
 def _verdict_is_bounded(value: str) -> bool:
     lowered = value.lower()
     broad_positive = (
-        "broad kan verification" in lowered
-        and "no broad kan verification claim" not in lowered
+        "broad kan verification" in lowered and "no broad kan verification claim" not in lowered
     )
     return value.startswith(TERMINAL_PREFIXES) and not broad_positive
 
@@ -615,7 +615,17 @@ def _checksum(payload: Mapping[str, Any]) -> str:
 
 
 def _sha256_if_exists(path: Path) -> str | None:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
+    # Resolve at the artifact's own commit so a later append to the shared
+    # KAN spec does not stale this receipt (REQ-REPORT-6610; the 2026-08-25
+    # adoption sweep, commit 64846b5430, missed this module).
+    if not receipt_exists(path, artifact_relative_path=RESULT_RELATIVE_PATH):
+        return None
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            receipt_bytes(path, artifact_relative_path=RESULT_RELATIVE_PATH)
+        ).hexdigest()
+    )
 
 
 def _require(condition: bool, message: str) -> None:

@@ -1,5 +1,31 @@
 # Carnot — Changelog
 
+## 2026-08-27 — Four KAN modules adopt commit-resolved receipts (REQ-REPORT-6610)
+
+- Reviewed the eight remaining `-k repository_artifact_matches_deterministic_replay`
+  failures on team-lead instruction. Only three are the fabrication-gate-stamp
+  cause (Exp5342/5368/5383). Four (Exp5412/5425/5438/5451) were stale-receipt
+  residue: the 2026-08-25 adoption sweep enumerated "replay-tested modules" by
+  the literal `result == replay`, and these four tests assert
+  `checked_in == replay`, so their modules kept hashing the shared KAN spec
+  from the working tree. The eighth (Exp5736) records live machine state
+  (`disk_free_mb`), the residual cause 64846b5430 already named.
+- Adopted `receipt_bytes` / `receipt_exists` in the four modules and appended
+  the population-gap correction to the REQ-REPORT-6610 Implementation Status.
+  The `-k` selection moved 8 failed / 49 passed to 4 failed / 53 passed.
+- Proofs in a PYTHONPATH-pinned worktree with the import file verified:
+  RED before adoption, GREEN after (33/33 in the four files); tampered
+  recorded hash RED; dropped dependency key RED; gate stamp added to the
+  upstream `results/` artifact RED (EVIDENCE-LIVE survived adoption). A
+  dropped or true-to-false-flipped `flagged_adversarial` on Exp5342 is
+  refused by `determination_preservation_lint.py` (both proved RED staged).
+- Not changed, escalation stands: the cause-A trio and Exp5736 assert a
+  contract the fabrication-gate discipline forbids from holding; changing
+  those REQs is an operator call. The `test_experiment_6659_v580_capstone.py`
+  errors are a live-roadmap coupling (`expected roadmap milestone
+  2026.08.580`; the roadmap is at `.582`) — the REQ-REPORT-6610-SCOPE
+  parsed-content class recurring in a new capstone, not one of the eight.
+
 ## 2026-08-27 — Unattended supervisor refinement (REQ-ARC-WMTE-6720)
 
 - Built the between-runs refinement step for the live agent's trajectory
