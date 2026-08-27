@@ -543,6 +543,18 @@ def _model_identity_ready(identity: Mapping[str, Any]) -> bool:
     )
 
 
+def _worker_on_card(sample: Mapping[str, Any], worker_pid: int) -> bool:
+    """Confirm the sample's own process list holds the worker, not just its flag.
+
+    A self-declared boolean can be written by anyone. Reading the recorded
+    process list back makes the claim answer to evidence in the same sample.
+    """
+
+    processes = [row for row in sample.get("compute_processes", []) if isinstance(row, Mapping)]
+    observed = {int(row.get("pid", 0) or 0) for row in processes}
+    return sample.get("worker_pid_present") is True and worker_pid > 1 and worker_pid in observed
+
+
 def _gpu_receipts_ready(receipts: Mapping[str, Any], expected_rows: int) -> bool:
     sessions = [row for row in receipts.get("sessions", []) if isinstance(row, Mapping)]
     if not sessions or sum(int(row.get("row_count", 0)) for row in sessions) != expected_rows:
@@ -550,8 +562,11 @@ def _gpu_receipts_ready(receipts: Mapping[str, Any], expected_rows: int) -> bool
     for session in sessions:
         samples = [row for row in session.get("samples", []) if isinstance(row, Mapping)]
         before = [row for row in samples if row.get("stage") == "before"]
+        # Load-phase samples predate the worker's CUDA context, so they are recorded
+        # but not gated. Serving samples stay under the full check.
         during = [row for row in samples if row.get("stage") == "during"]
         after = [row for row in samples if row.get("stage") == "after"]
+        worker_pid = int(session.get("pid", 0) or 0)
         if not (
             session.get("owned_child") is True
             and session.get("repository_id") == QWEN_HUB_ID
@@ -565,7 +580,7 @@ def _gpu_receipts_ready(receipts: Mapping[str, Any], expected_rows: int) -> bool
             and before
             and len(during) >= 2
             and after
-            and all(row.get("worker_pid_present") is True for row in during)
+            and all(_worker_on_card(row, worker_pid) for row in during)
             and session.get("shutdown_requested") is True
             and session.get("normal_shutdown") is True
             and session.get("worker_absent_after_exit") is True
@@ -1791,10 +1806,13 @@ def _run_live_rows(
             while time.monotonic() < load_deadline:
                 if process.poll() is not None:
                     raise RuntimeError(f"llama-server exited during load with {process.returncode}")
+                # The worker holds no CUDA context until model load finishes, so a
+                # sample taken here cannot see it on the card. Label the load phase
+                # `load` and gate only `during`. See REQ-REPORT-6605-LOADSTAGE.
                 sample = runtime_helpers._live_gpu_sample(  # noqa: SLF001
                     repository_id=QWEN_HUB_ID,
                     worker_pid=process.pid,
-                    stage="during",
+                    stage="load",
                     sample_index=sample_index,
                     selected_gpu=gpu,
                     model_paths=[model_path],
@@ -1851,9 +1869,13 @@ def _run_live_rows(
             error = f"{type(exc).__name__}: {exc}"
             healthy = False
 
+        first_served_row = len(rows)
         for index, job in enumerate(jobs[len(rows) :], start=len(rows)):
             alive = healthy and process is not None and process.poll() is None
-            if alive and index % TELEMETRY_EVERY_ROWS == 0:
+            # Sample on the first row this session serves as well as on the cadence.
+            # A resumed session can start mid-cadence, and the gate needs two
+            # `during` samples from its own work. See REQ-REPORT-6605-LOADSTAGE.
+            if alive and (index == first_served_row or index % TELEMETRY_EVERY_ROWS == 0):
                 samples_raw.append(
                     runtime_helpers._live_gpu_sample(  # noqa: SLF001
                         repository_id=QWEN_HUB_ID,
