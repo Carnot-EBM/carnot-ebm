@@ -16628,3 +16628,5 @@ code |
 | 2026-08-27 15:00 UTC | Independent constraint-family prequential stream | OK | 102 passed, 1 warning in 8.21s |
 | 2026-08-27 15:02 UTC | Prequential cross-family continuous self-learning  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6678-constraint-family-stream.constrain |
 | 2026-08-27 15:04 UTC | Prequential cross-family continuous self-learning  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6678-constraint-family-stream.constrain |
+| 2026-08-27 15:06 UTC | Prequential cross-family continuous self-learning  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6678-constraint-family-stream.constrain |
+| 2026-08-27 15:08 UTC | Cross-family CSL chronological durability audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6679-prequential-cross-family-csl-ab) |
