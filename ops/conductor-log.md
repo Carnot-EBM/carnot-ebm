@@ -16608,3 +16608,5 @@ code |
 | 2026-08-27 06:28 UTC | V581 evidence and retirement contract | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
 | 2026-08-27 06:30 UTC | V581 evidence and retirement contract | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
 | 2026-08-27 06:33 UTC | V581 evidence and retirement contract | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
+| 2026-08-27 07:55 UTC | Trigger-switched structured-tail fixture | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output:   row = mod._d |
+| 2026-08-27 07:57 UTC | Trigger-switched structured-tail fixture | OK | Deliverable already exists in repo |

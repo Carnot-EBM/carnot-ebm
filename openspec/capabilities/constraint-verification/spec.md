@@ -1327,3 +1327,98 @@ no advisory result authorizes output.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6650 and SCENARIO-CONSTRAINT-6650-* | Implemented (`python/carnot/experiment_6650_twin_prefix_verifier_map.py`) | Implemented (`tests/python/test_experiment_6650_twin_prefix_verifier_map.py`; byte-local semantic twins, exact authority, and rejection coverage) |
+
+### REQ-CONSTRAINT-6661: Triggered Tails SHALL Enforce Syntax Without Answer Semantics
+
+Exp6661 SHALL freeze at least 18 tasks across scheduling, graph constraints,
+and arithmetic or logic certificates. Each task SHALL have a directly
+executable exact checker. The output contract SHALL transport a certificate,
+not a finite answer identifier.
+
+Exp6661 SHALL define natural extraction, immediate JSON, and triggered-tail
+arms before later model execution. The triggered arm SHALL allow free reasoning
+before one fixed trigger. It SHALL apply a short syntax grammar only after that
+trigger. All arms SHALL use fixed token budgets and versioned fail-closed
+parsers.
+
+The grammar MAY fix field names and primitive JSON types. It SHALL NOT contain
+task IDs, labels, targets, candidate answers, answer enums, or checker logic.
+Grammar-only generation SHALL not recover a correct certificate. Syntax-only
+mutations SHALL not change an exact checker label.
+
+The frozen manifest SHALL record each task, family, visible prompt, target,
+checker identity, seed, and content hashes. It SHALL bind the three arm
+contracts, parser versions, grammar hash, checker hashes, and token budgets
+before any model run.
+
+Each task-arm pair SHALL retain rows for answer permutation, label renaming,
+task-ID removal, grammar-only generation, trigger collision, premature trigger,
+missing trigger, malformed tail, unknown fields, and a semantically wrong but
+syntactically valid tail. Missing, malformed, duplicate, or unknown parser data
+SHALL fail closed. The exact checker SHALL remain the only semantic authority.
+
+Exp6661 SHALL write
+`results/experiment_6661_triggered_tail_fixture.json` atomically. It SHALL set
+`inference_substrate` to `cpu_fixture_and_exact_checker_no_llm` and
+`verifier_is_oracle` to `true`. A ready fixture SHALL use `verdict_class=null`
+and SHALL make no model-quality claim.
+
+`triggered_tail_fixture_ready` SHALL be true only when all expected task,
+arm, checker-control, and attack rows exist. Every positive and negative
+checker control SHALL pass. Every parser result SHALL match its frozen
+expectation. No semantic leakage SHALL be present. Otherwise readiness SHALL
+be false, and `gate_check_summary` SHALL name the first failed check and its
+observed value.
+
+### SCENARIO-CONSTRAINT-6661-DELAYED-SYNTAX: Grammar Starts After One Trigger
+
+**Given** a response with non-empty free reasoning, one frozen trigger, and a
+schema-valid tail
+**When** the triggered-tail parser runs
+**Then** only the bytes after the trigger use the syntax grammar and the exact
+checker decides certificate validity.
+
+**Spec traces:** REQ-CONSTRAINT-6661
+
+### SCENARIO-CONSTRAINT-6661-SEMANTIC-FREE-GRAMMAR: Grammar Cannot Carry The Answer
+
+**Given** any frozen task, target, label renaming, or answer permutation
+**When** the grammar receipt and grammar-only sample are inspected
+**Then** the grammar hash is unchanged, no task semantic appears, and the
+grammar-only sample does not pass the exact checker.
+
+**Spec traces:** REQ-CONSTRAINT-6661
+
+### SCENARIO-CONSTRAINT-6661-IMMUTABLE-MANIFEST: Tasks And Arms Freeze Before Execution
+
+**Given** the fixed task and attack seeds
+**When** Exp6661 builds the fixture twice
+**Then** task order, prompts, targets, checker identities, arm contracts,
+budgets, parser versions, grammar bytes, and hashes are identical.
+
+**Spec traces:** REQ-CONSTRAINT-6661
+
+### SCENARIO-CONSTRAINT-6661-FAIL-CLOSED-PARSERS: Invalid Transport Never Becomes A Label
+
+**Given** duplicate triggers, premature or missing triggers, malformed tails,
+unknown fields, duplicate JSON fields, or wrong primitive types
+**When** the applicable arm parser runs
+**Then** it returns a named parse failure and does not invoke or invent a
+semantic success.
+
+**Spec traces:** REQ-CONSTRAINT-6661
+
+### SCENARIO-CONSTRAINT-6661-ATTACK-AND-READINESS: Complete Rows Own The Gate
+
+**Given** every frozen task, arm, checker control, and required attack
+**When** readiness is recomputed only from retained rows
+**Then** readiness is true only for complete expected row keys, passing
+controls, matching expected parser outcomes, and zero leakage findings.
+
+**Spec traces:** REQ-CONSTRAINT-6661
+
+## Implementation Status (REQ-CONSTRAINT-6661)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6661 and SCENARIO-CONSTRAINT-6661-* | Implemented (`python/carnot/experiment_6661_triggered_tail_fixture.py`) | Implemented (`tests/python/test_experiment_6661_triggered_tail_fixture.py`; 32 focused tests; 100% scoped statement coverage) |
