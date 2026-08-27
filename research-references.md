@@ -37867,3 +37867,112 @@ reprompt.
   exact likelihood, autocorrelation, and effective-sample-size rows.
 
 <!-- V581-PLANNER-REFRESH-20260827-END -->
+
+## V582 planner refresh - 2026-08-27
+
+<!-- V582-PLANNER-REFRESH-20260827-START -->
+
+This refresh follows the terminal V581 conductor state. It searched the
+requested 2025-2026 topics on arXiv. It also checked OpenReview, Hugging Face
+Papers, Semantic Scholar, GitHub, Extropic, and Logical Intelligence. V581 did
+not run its documented science plan. Its active YAML contained only four tasks.
+The first task failed on an unavailable Gemini route. The fixture task then
+passed all task-owned checks but blocked on the known-red repository suite.
+
+### Promising findings selected for V582
+
+- **On the Generalization Gap in LLM Planning: Tests and Verifier-Reward RL** -
+  arXiv:2601.14456, https://arxiv.org/abs/2601.14456. The paper reports 82.9%
+  valid plans in trained domains and 0% validity on two unseen domains.
+  Verifier-reward training improved convergence speed but did not repair this
+  cross-domain collapse. Carnot hook: make family-held-out exact validity the
+  primary transport and memory metric. Do not treat pooled or in-family gains
+  as transferable constraint reasoning.
+- **Memoir: Should a Model Write to Its Memory While It Thinks?** -
+  arXiv:2607.20792, https://arxiv.org/abs/2607.20792. Coupled memory writes
+  reduced fixed-budget recall by 13.54 points against a read-only pondering
+  control, although both arms later saturated. Carnot hook: separate reasoning
+  from memory admission. Stage exact-checker-approved updates between events,
+  and measure learning speed before ceiling saturation.
+- **Self-Trained Verification for Training- and Test-Time Self-Improvement** -
+  arXiv:2605.30290, https://arxiv.org/abs/2605.30290. The work trains a verifier
+  to imitate a reference-informed version of itself. It reports that ordinary
+  verifier-revision loops can inflate scores while task accuracy remains flat.
+  Carnot hook: use executable references as the teacher and release authority.
+  Keep learned energy or model scores as proposal and routing signals only.
+- **AREX: Towards a Recursively Self-Improving Agent for Deep Research** -
+  arXiv:2607.21461, https://arxiv.org/abs/2607.21461. AREX alternates research
+  with constraint-wise audits and compresses verified evidence plus unresolved
+  constraints into a persistent state. Carnot hook: store checked repair
+  obligations and unresolved failures, not full free-form traces. Require every
+  retained item to point to an exact checker receipt.
+- **Constrained Decoding for Diffusion Language Models via Efficient Inference
+  over Finite Automata** - arXiv:2607.07026,
+  https://arxiv.org/abs/2607.07026. The method performs exact finite-automaton
+  inference for non-autoregressive diffusion decoding. It guarantees syntax
+  satisfaction without encoding task answers. Carnot hook: use its
+  semantic-free automaton contract as an audit model for triggered tails. Do
+  not claim direct method parity because Carnot's mandated GGUF models are
+  autoregressive.
+- **A scalable and resource-efficient pipelined p-computer for probabilistic
+  Ising machines** - arXiv:2607.21077,
+  https://arxiv.org/abs/2607.21077. The paper identifies pipeline depth and
+  coupling-memory bandwidth as the main dense-Ising design variables. Carnot
+  hook: preserve update-order, coefficient-width, and correlation receipts in
+  the software reference so later FPGA or TSU work can compare the same
+  semantics. Do not infer hardware speed from software runs.
+
+### Requested secondary and product checks
+
+- **OpenReview:** *From Accuracy to Robustness* reports that rule verifiers can
+  reject equivalent answers, while model verifiers can be reward-hacked during
+  training: https://openreview.net/forum?id=ZBhZT307xx. *Training as
+  Computation* formalizes a resource-bounded generator-executor-verifier-buffer
+  loop: https://openreview.net/forum?id=uKrcWZ2V0F. These records support exact
+  normalization tests, immutable validation, and explicit resource budgets.
+  They do not make self-verification release authority.
+- **Hugging Face Papers:** current pages for AREX, selective verification, and
+  the Verification Horizon support targeted intervention and explicit harmful
+  flip counts. Carnot must report fixed initial-answer preservation, repair
+  yield, false intervention, and token cost per row.
+- **Semantic Scholar:** the 2026-08-27 EBT citation request returned HTTP 429 on
+  paper metadata but exposed recent citation rows. The useful rows include
+  Memoir and Solver-Hard. The ARM-EBM citation rows include Distributional EBM
+  and false-first-step planning. No reproducible matching-base checkpoint was
+  found. Treat the rows as discovery evidence, not a citation count.
+- **GitHub discovery:** `microsoft/interwhen` exposes verification during
+  generation with asynchronous verifier intervention. `uiuc-focal-lab/Beaver`
+  exposes grammar-aware deterministic verification. `StanfordLeanClub/lean-ebm`
+  remains an early theorem-proving prototype. These repositories provide
+  interface patterns only. Vendor no dependency for novelty alone.
+- **Extropic:** the first-party August update still reports taped-out Z1,
+  open-source Torx, a Thermalizers preview, and planned 2027 early access:
+  https://extropic.ai/writing/from-one-to-one-billion. Carnot has no
+  authenticated TSU device. Make no Z1 latency, power, or availability claim.
+- **Logical Intelligence:** the June 2026 formal-verification post adds a public
+  Spec-Code-Proof product direction:
+  https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation.
+  Kona still provides no public weights, reproducible training recipe, or local
+  runner. Keep Kona and Aleph as product comparators.
+- **KAN and attached boards:** the current executable KAN verification lead
+  remains arXiv:2602.06737. It does not close V582's exact-output, prospective
+  memory, or live outcome gaps. No changed KV260, GateMate, or PolarFire receipt
+  exists. Keep attached boards opportunistic and outside the task graph.
+
+### V582 planning impact
+
+- Add a manifest-parity preflight. It must compare the design document and YAML
+  task sets before activation.
+- Promote the existing triggered-tail fixture through task-owned verification.
+  Do not rerun or gate on the known-red repository suite.
+- Measure triggered tails on all three mandated GGUF families with
+  family-held-out exact validity, harmful flips, parse yield, and token cost.
+- Run continuous self-learning as a prequential stream. Separate read-only
+  reasoning from between-event memory writes. Admit and roll back state through
+  executable checks.
+- Carry exact post-action outcomes through the canonical ARC redirect seam
+  before another supervisor comparison. Make no game-level solve claim.
+- Close the bounded-treewidth exact Ising reference before schedule or Torx
+  comparisons. Preserve correlation, update-order, and coefficient receipts.
+
+<!-- V582-PLANNER-REFRESH-20260827-END -->

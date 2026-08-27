@@ -46,3 +46,6 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-08-27 | qa_layer_authenticity_audit | adversarial_verify.py::_is_count_field | SILENT_NON_FIRING | OPEN | |
 | 2026-08-27 | qa_layer_authenticity_audit | adversarial_verify.py::_is_chance_floor_score | SILENT_NON_FIRING | OPEN | |
 | 2026-08-27 | qa_layer_authenticity_audit | adversarial_verify.py::_is_identifier_field | SILENT_NON_FIRING | OPEN | |
+| 2026-08-27 | experiment_claim_audit | experiment_6654_prospective_repair_memory_evolution.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-08-27 | qa_layer_authenticity_audit | adversarial_verify.py::_is_reference_field | SILENT_NON_FIRING | OPEN | |
+| 2026-08-27 | qa_layer_authenticity_audit | adversarial_verify.py::_is_verified_arithmetic_delta | SILENT_NON_FIRING | OPEN | |
