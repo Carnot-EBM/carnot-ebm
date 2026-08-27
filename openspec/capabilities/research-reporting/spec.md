@@ -58335,3 +58335,84 @@ the protected hashes match, and a content mutation breaks validation.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6659 and SCENARIO-REPORT-6659-* | Implemented (`python/carnot/experiment_6659_v580_capstone.py`) | Implemented (`tests/python/test_experiment_6659_v580_capstone.py`; availability, exact gates, row recomputation, closed verdicts, branch isolation, retirement, protected hashes, atomic write, checksum, and CLI validation) |
+
+### REQ-REPORT-6674: V582 Activation SHALL Match Its Design Contract
+
+Exp6674 SHALL audit the active V582 roadmap without changing the roadmap,
+conductor, validators, or exclusion manifest. It SHALL parse the ordered design
+table and the active YAML. Both sources SHALL contain exactly 14 unique tasks,
+from Exp6674 through Exp6687. Each task SHALL have one unique JSON deliverable
+under `results/`.
+
+The audit SHALL compare each task's title, branch track, GPU flag, dependency,
+structured gate, execution route, prior-failure block, producer-owned gate
+field, and run command. Each structured gate SHALL name a V582 producer. The
+producer prompt SHALL declare the exact field spelling in `REQUIRED ARTIFACT
+FIELDS`. A dependency on a retired task SHALL block readiness. A retired task
+MAY appear only as a prior-failure record with a changed condition and a
+retirement signal.
+
+The audit SHALL run YAML parsing, roadmap schema validation, prior-failure
+validation, gate-contract validation, and exclusion-manifest validation in
+read-only mode. It SHALL record command, exit code, output, classification, and
+content hash for each validator. The dated gate-audit rule that requires Codex
+`gpt-5.5` SHALL be recorded as a non-blocking validator mismatch when the only
+observed difference is the operator-required `gpt-5.6-sol` route. The audit
+SHALL not suppress or edit that mismatch.
+
+The audit SHALL write
+`results/experiment_6674_v582_manifest_parity_contract.json`. The artifact
+SHALL contain `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `design_task_rows`, `manifest_task_rows`,
+`producer_consumer_rows`, `prior_failure_rows`, `validator_rows`,
+`validator_mismatch_rows`, `v582_manifest_parity_ready`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`. It SHALL use
+`inference_substrate=artifact_and_manifest_audit_no_llm` and
+`verifier_is_oracle=true`. Ready infrastructure SHALL use verdict class `null`.
+
+The artifact SHALL hash the design, active and optional next roadmaps,
+conductor, exclusion manifest, completed record, and every available V581
+artifact. It SHALL record Python, CPU, RAM, disk, and missing V581 artifacts.
+It SHALL prove before-and-after identity for both roadmap paths and the
+conductor. It SHALL write one complete JSON document with file sync, atomic
+replacement, and directory sync. The checksum SHALL exclude only itself.
+
+#### SCENARIO-REPORT-6674-EXACT-PARITY
+
+**Given** the V582 design and active 14-task YAML
+**When** the audit compares every declared field and gate
+**Then** all ordered task rows match, every producer field exists with exact
+spelling, all commands and paths match, and readiness is true.
+
+#### SCENARIO-REPORT-6674-FAIL-CLOSED
+
+**Given** a missing, reordered, duplicated, retired-upstream, misspelled-field,
+changed-route, changed-command, or invalid-validator row
+**When** the reducer recomputes readiness
+**Then** readiness is false and `gate_check_summary` records the exact expected
+and observed values without converting absence to zero.
+
+#### SCENARIO-REPORT-6674-VALIDATOR-MISMATCH
+
+**Given** the gate auditor rejects only Codex `gpt-5.6-sol` because its dated
+rule still requires `gpt-5.5`
+**When** Exp6674 classifies validator output
+**Then** it preserves one mismatch row per affected task and does not classify
+those rows as activation-hard task defects.
+
+#### SCENARIO-REPORT-6674-ATOMIC-PROVENANCE
+
+**Given** complete task, gate, prior, validator, resource, and hash rows
+**When** Exp6674 writes and validates its artifact
+**Then** readers see one complete JSON object, all required fields have source
+and parser provenance, protected hashes match, and any content mutation breaks
+validation.
+
+## Implementation Status (REQ-REPORT-6674)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6674 and SCENARIO-REPORT-6674-* | Implemented (`python/carnot/experiment_6674_v582_manifest_parity_contract.py`) | Implemented (`tests/python/test_experiment_6674_v582_manifest_parity_contract.py`; exact parity, gates, prior lineage, mismatch classification, fail-closed reduction, atomic write, provenance, CLI, and 100% scoped coverage) |
