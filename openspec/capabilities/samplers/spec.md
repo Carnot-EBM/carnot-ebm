@@ -4844,3 +4844,76 @@ probabilities, setup cost, sampling wall time, and content hashes
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-6639 | Planned (`python/carnot/experiment_6639_kac_ward_planar_reference.py`, `results/experiment_6639_kac_ward_planar_reference.json`) | Planned (`tests/python/test_experiment_6639_kac_ward_planar_reference.py`) |
+
+### REQ-SAMPLER-6657: Bounded-Treewidth Exact Ising Reference
+
+Carnot SHALL provide a CPU-only exact Ising reference at
+`python/carnot/experiment_6657_bounded_treewidth_ising_reference.py`.
+The reference SHALL use deterministic variable elimination on simple finite
+graphs. It SHALL support only `{-1,+1}` spins, the energy
+`E(s) = -sum_(i,j) J_ij s_i s_j - sum_i h_i s_i`, positive temperature,
+at most ten spins, and a validated tree-decomposition width of at most four.
+It SHALL make no speed or hardware claim.
+
+- REQ-SAMPLER-6657-DECOMPOSITION: The reference SHALL construct a
+  deterministic min-fill elimination order and derived bags. It SHALL validate
+  bag vertices, tree structure, vertex and edge coverage, width, and the
+  running-intersection property before inference.
+- REQ-SAMPLER-6657-ELIMINATION: The reference SHALL compute the log partition
+  with log-space factor elimination. Each undirected coupling SHALL enter the
+  energy once. Fields and couplings SHALL follow the shared Carnot Ising
+  convention.
+- REQ-SAMPLER-6657-NORMALIZATION: The reference SHALL return configuration log
+  probabilities and probabilities from the factor-elimination partition. The
+  complete supported state space SHALL sum to one within the frozen tolerance.
+- REQ-SAMPLER-6657-MARGINALS: The reference SHALL return exact node and edge
+  marginals. It SHALL compare them with an independent scalar brute-force
+  enumeration on every supported fixture.
+- REQ-SAMPLER-6657-SAMPLING: The reference SHALL draw independent ancestral
+  samples from the stored elimination conditionals. A fixed NumPy PCG64 stream
+  SHALL reproduce sample bytes. Sample likelihood and frequency checks SHALL
+  use frozen seeds, counts, and tolerances.
+- REQ-SAMPLER-6657-REJECTION: The reference SHALL reject malformed graphs,
+  malformed decompositions, nonfinite model values, unsupported sizes, and
+  graphs whose deterministic certified width exceeds four. Rejected fixtures
+  SHALL not enter exact or sampling aggregates.
+- REQ-SAMPLER-6657-PARITY: At least twelve supported fixtures SHALL cover
+  trees, bounded cycles, nonzero fields, ferromagnetic, antiferromagnetic, and
+  frustrated couplings. Partition, every configuration likelihood, node
+  marginals, and edge marginals SHALL match brute force within frozen
+  tolerances. Explicit unsupported fixtures SHALL also run.
+- REQ-SAMPLER-6657-READINESS: `ising_reference_ready` SHALL be true only when
+  decomposition, parity, normalized mass, sampling, rejection, test, and
+  protected-file checks pass. A ready artifact SHALL use `verdict_class=null`,
+  `verifier_is_oracle=true`, and
+  `inference_substrate=cpu_bounded_treewidth_junction_tree_exact_sampling_no_llm`.
+  A blocked artifact SHALL name each failed check and observed value.
+
+### SCENARIO-SAMPLER-6657-EXACT-PARITY
+
+**Given** the frozen supported Ising fixtures and deterministic decompositions
+**When** factor elimination computes partitions, probabilities, and marginals
+**Then** every value matches independent brute-force enumeration
+**And** each complete probability table has unit mass within tolerance.
+
+### SCENARIO-SAMPLER-6657-ANCESTRAL-SAMPLING
+
+**Given** one validated elimination trace and a fixed PCG64 seed
+**When** the reference draws complete states in reverse elimination order
+**Then** each draw is independent of prior chain state
+**And** replay produces the same sample hash
+**And** empirical state, node, and edge frequencies pass frozen checks.
+
+### SCENARIO-SAMPLER-6657-FAIL-CLOSED
+
+**Given** a graph above width four, a self-loop, a duplicate edge, a nonfinite
+value, an oversized graph, or a malformed supplied decomposition
+**When** validation runs
+**Then** the instance is rejected before it can enter a ready aggregate
+**And** the rejection row records the expected rule and observed error.
+
+## Implementation Status (REQ-SAMPLER-6657)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-6657 and SCENARIO-SAMPLER-6657-* | Implemented (`python/carnot/experiment_6657_bounded_treewidth_ising_reference.py`) | Implemented (`tests/python/test_experiment_6657_bounded_treewidth_ising_reference.py`; exact parity, rejection, sampling, artifact validation, and 100% scoped statement coverage) |
