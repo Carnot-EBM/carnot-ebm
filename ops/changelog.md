@@ -17946,3 +17946,14 @@ parallel or a missed DualGPURunner dispatch. The next tooling priorities are
 task-scoped phase and accelerator receipts, inference batching, and GPU-aware
 cross-experiment scheduling. Estimated time savings is 0% because the supplied
 data identifies no measured avoidable duration.
+
+## 2026-08-27 — Milestone 2026.08.581 operational retrospective
+
+Modification-time reconstruction assigned both compute jobs the same 0.0-minute
+value. The available clock cannot order the pair or locate time inside either
+execution. The locked classification rejects compute-task GPU idleness, and the
+monitor shows work on the active device. The blocks do not describe a concurrent
+model load, which leaves DualGPURunner applicability unknown. The next milestone
+needs monotonic phase receipts, capacity-aware dispatch for separate GPU jobs,
+and batched inference requests. With no measurable elapsed interval, projected
+savings remain 0%.

@@ -1,0 +1,43 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.581",
+  "generated_at": "2026-08-27T08:06:10Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.0,
+  "experiments_completed": 2,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Trigger-switched structured-tail fixture",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Three-family trigger-switched structured-tail A/B",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The fallback clock assigns the same 0.0-minute duration to each compute-bound entry, so it cannot rank them or attribute phase costs. The locked GPU classification indicates no idle defect during compute work; the snapshot instead shows one device doing work while the other can accept a separate task.",
+  "bottlenecks_identified": [
+    "Modification timestamps collapse the milestone to a shared 0.0-minute reading, which removes the detail needed for causal performance analysis.",
+    "Receipts omit task phases, accelerator activity, batch size, model concurrency, and runner choice; this prevents attribution and a runner audit.",
+    "The monitor saw only one Python inference process; the supplied timing cannot show whether request batching would reduce elapsed time."
+  ],
+  "improvements_suggested": [
+    "Write monotonic task start, task end, and phase timestamps instead of relying on disk modification times.",
+    "Add task-scoped accelerator samples, model count, batch size, and runner choice to each execution receipt.",
+    "Schedule separate compute-bound experiments across available GPUs when the tasks are independent and each model fits on one device.",
+    "Batch multiple questions per forward pass on single-process inference paths."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Replace disk-mtime timing fallback with task-scoped monotonic phase receipts.",
+    "Add GPU-aware scheduling for independent compute-bound experiments.",
+    "Batch inference requests and record the batch size in the task receipt."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "With no elapsed minutes recorded, any positive savings percentage would be invented. The blocks do not say that multiple models ran together, so they cannot reveal a DualGPURunner miss."
+}

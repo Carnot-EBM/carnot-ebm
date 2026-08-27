@@ -6388,3 +6388,10 @@ The critical path for milestone .250:
 - theme: short mixed execution exposed phase-timing and task-level accelerator attribution gaps
 - key result: 12 experiments finished in 3.2 minutes with 4 compute-bound; compute-task GPU idle was false, while duration causes and concurrent-model runner eligibility have no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.581
+
+- exp_range: no data available this milestone
+- theme: modification-time reconstruction concealed the execution shape of the trigger-switched fixture pair
+- key result: the compute entries share the 0.0-minute timing floor and the locked idle test is negative; the sources do not expose phase causality or a simultaneous-model launch
+- acceptance: no data available this milestone
