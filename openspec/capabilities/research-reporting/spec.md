@@ -57287,6 +57287,7 @@ the two-sample floor.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6605 | Implemented (`python/carnot/experiment_6605_qwen36_direct_headroom.py`; terminal artifact `results/experiment_6605_qwen36_direct_headroom.json`) | Implemented (`tests/python/test_experiment_6605_qwen36_direct_headroom.py`; 21 focused cases and 100% scoped statement coverage) |
+| REQ-REPORT-6605-LOADSTAGE | Implemented 2026-08-27 (`_run_live_rows` labels the load loop `load`; `_gpu_receipts_ready` gates `during` only and confirms the worker PID against the sample's own process list through `_worker_on_card`) | Implemented (`test_req_report_6605_loadstage_gates_serving_samples_only`; five cases including flag-without-evidence and relabel-to-dodge) |
 
 ### REQ-REPORT-6607: Gemma 4 26B-A4B Direct Baseline SHALL Preserve Isolated Frozen Rows
 
@@ -57433,7 +57434,8 @@ the two-sample floor.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-REPORT-6607 | Planned (`python/carnot/experiment_6607_gemma4_26b_direct_headroom.py`) | Planned (`tests/python/test_experiment_6607_gemma4_26b_direct_headroom.py`) |
+| REQ-REPORT-6607 | Implemented (`python/carnot/experiment_6607_gemma4_26b_direct_headroom.py`; terminal artifact `results/experiment_6607_gemma4_26b_direct_headroom.json`, `complete` with 216 rows on 2026-08-27) | Implemented (`tests/python/test_experiment_6607_gemma4_26b_direct_headroom.py`; 100% scoped statement coverage) |
+| REQ-REPORT-6607-LOADSTAGE | Implemented 2026-08-27 (same load-phase labelling and `_worker_on_card` process-list confirmation as Exp6605) | Implemented (`test_req_report_6607_loadstage_gates_serving_samples_only`) |
 
 ### REQ-REPORT-6608: Family Headroom Reducer SHALL Freeze Complete Family Evidence
 
