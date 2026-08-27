@@ -18669,3 +18669,45 @@ earlier the same day. The outer loop read that write-up and repeated the error
 within hours. Prose did not prevent it; the scorer's own nested-clone refusal
 (REQ-ARC-WMTE-6700) would have. Any new corpus scan over the scratch tree must
 exclude nested clones explicitly or reuse a scanner that already does.
+
+## 2026-08-27 — exp6605 `gpu_process_receipts`: one criterion blocks a nine-task cascade
+
+`experiment_6605_qwen36_direct_headroom` blocks with
+`blocked_gpu_process_receipts: direct baseline integrity did not complete` while every
+precondition passes. It is the root of a cascade: `exp6608` blocks with
+`upstream_blocked:blocked_gpu_ownership` and `missing_rows: 216`, and nine further tasks
+fail their gate check only with "upstream artifact not found".
+
+**Two causes, one fixed and one open.**
+
+FIXED 2026-08-27 (commit 12415d1ceb). The receipt carried two sessions. One was the
+conductor's llama-server, pid 675677, killed when the operator rebooted to recover a
+driver-mismatched GPU. `_gpu_receipts_ready` requires per session
+`shutdown_requested`, `normal_shutdown`, `worker_absent_after_exit`, `port_closed` and
+`memory_recovered`, over an AND across all sessions. A reboot-killed session is a
+permanent False, and `process_sessions` in the checkpoint re-attached it on every retry.
+Discarding the checkpoint cleared it; the poisoned copy is preserved under the job
+scratch tree rather than deleted.
+
+OPEN. With one clean session covering all 216 rows and every shutdown field True,
+`all_sessions_authentic` is still False. Walking the full nineteen-part predicate leaves
+exactly one failing criterion:
+
+```
+worker_pid_present all during     FALSE
+samples: 32   stages: {before: 1, during: 30, after: 1}
+```
+
+Sampling is not the problem — 30 `during` samples against a `>= 2` requirement. At least
+one of them did not observe the worker pid on the GPU. So something briefly made the
+model process invisible to a GPU sample during a run that otherwise shut down cleanly.
+
+**Do not "fix" this by relaxing the predicate.** It is a fabrication gate, and
+"ignore samples that did not see the worker" is the shape an attacker would want. The
+question to answer first is WHICH sample failed and WHY — a transient `nvidia-smi` query
+race, a genuine gap in the process, or a sampling window that starts before the worker
+registers.
+
+Cross-references: `python/carnot/experiment_6605_qwen36_direct_headroom.py`
+(`_gpu_receipts_ready`, ~line 546); CLAUDE.md "Adversarial Artifact Verification"; the
+2026-08-25 driver-mismatch incident that produced the reboot.
