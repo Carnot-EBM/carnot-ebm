@@ -404,3 +404,71 @@ history per never-prune. See `[[incident_concurrent_agents_destroy_work]]` and
 - `python/carnot/agentic/arc_competition_agent.py:7925-7935`, `:8355` — the fall-through to a
   plan, and the caller-side relabel
 - `ops/verifier_gaps.md:4708` GAP-6260 — root-liveness, open
+
+## CORRECTION 2026-08-27 (adversarial review, appended — the analysis above is not edited)
+
+An independent reviewer re-derived every number in this note from the raw rows and the
+source. Most of the arithmetic reproduces exactly, including all of section 3, the section 2
+pooled tally, both Fisher tests, the character split to the digit, and the SIGTERM
+reconstruction. Two substantive claims break, and they break in the direction that matters.
+
+**1. The held-out block size is fully determined. Section 7 was wrong to call it
+undeterminable, and section 8's "cheapest next measurement" buys nothing.**
+`_split_prefix_heldout` (`arc_world_model_trust_energy.py:382-392`) holds out the LAST
+`max(1, round(N/3))` rows, and `N == real_n` because `refinement_corpus` is the same full
+transition list (REQ-6090 defaults OFF, `arc_llm_reinduction.py:1627-1634`). The predicted
+sizes fit every recorded accuracy as an exact fraction: `real_n` 25 gives a block of 8
+(0.5 = 4/8, 0.75 = 6/8); 214 gives 71 (0.830986 = 59/71); 234 gives 78 (0.282051 = 22/78).
+Independently re-checked against the code and the arithmetic. Adding a `heldout_n` field
+would record something already derivable.
+
+**2. Class A is memorisation, not a threshold artefact. This inverts section 4's headline
+for the largest failure class.** With the block size right, "1 or 2 rows of a 4-row block"
+becomes a 17-row prefix and an 8-row held-out set. Splitting the mismatches:
+
+| cell | prefix (17 rows) | held-out (8 rows) |
+|---|---|---|
+| supshadow tu93/24 a0 | 17/17 = 1.00 | 4/8 = 0.50 |
+| supshadow tu93/25 a0 | 15/17 = 0.88 | 6/8 = 0.75 |
+| supshadow tu93/26 a0 | 17/17 = 1.00 | 6/8 = 0.75 |
+| supshadow ar25/26 a0 | 17/17 = 1.00 | 4/8 = 0.50 |
+| supwindow tu93/24 a0 | 17/17 = 1.00 | 6/8 = 0.75 |
+| supwindow tu93/26 a0 | 17/17 = 1.00 | 6/8 = 0.75 |
+
+In five of six the engine is perfect on every row it was shown and wrong on a quarter to a
+half of the rows it was not. The pooled "84-92% accurate on the real corpus" hides that
+split. The gate demanding 1.0 is catching an overfitting model, not being strict on a tiny
+sample. Section 8 item 1 carries the same error.
+
+**3. Two denominators are wrong.** "The planner is `False` zero times in 25 rounds" reads as
+0/25; the planner was REACHED five times, so the evidence is 0/5. And "20 failing attempts"
+is not an attempt-failure count: `induction_planned` is 11 of 26 attempts while 21 carry a
+non-empty `skipped`, so six attempts are BOTH — the bounded loop falls through to a
+single-shot path that sets `planned=True` while `skipped` keeps the loop's cause
+(`arc_competition_agent.py:7925-7935`). Attempts ending with no plan at all are 15, not 20.
+Every share in sections 4 and 8 is over "the reinduction round did not itself yield a plan".
+
+**4. Smaller corrections.** `plan_reaches_goal` is written only after `plan_in_model` returns
+(`arc_llm_reinduction.py:2258`), so a raising planner leaves it absent rather than `False`;
+this does not bite here, since all 20 `None` rounds exit before the planner, but the stated
+three-way semantics is not what the code guarantees. Class B's `real_n=1` is a single-row
+CORPUS, not a single-row held-out block. Section 2 says supon's six are a "mixture" and then
+concludes they "are the pre-fix mask itself" — the weaker sentence is right, because line
+:2462 still emits that label legitimately. The section 1 table's "round records 6 / 4" counts
+rows carrying records, not records (13 and 12), which cannot be reconciled with "25 rounds".
+The 97.6% figure is characters, not the generation budget in tokens. And "process 689528"
+appears in no log in the run directory.
+
+**5. A pooling rule the note states and then breaks.** Section 6 says "I do not pool for
+anything a redirect could move", then section 4 pools both runs for the three-class taxonomy.
+All five members of the single-row and wipeout classes are supwindow, four of them non-first
+attempts, and its `allow_reinduction` arm — which forces induction on transitions the model
+has not seen — fired in three of four cells. That is a plausible manufacturer of a 1-row or a
+234-row corpus. The Fisher p=0.238 licenses pooling for the cause mix only.
+
+**What survives.** The goal-reachability finding is untouched: seven cases, all
+`budget_exhausted` at exactly `max_nodes`, all with a non-empty frontier, all on a world
+model that had just passed verification. That remains the clearest actionable result, and
+raising `max_nodes` remains the cheapest experiment. What changes is the ranking beside it:
+the dynamics failures are mostly real, so the model is genuinely not earning trust, and the
+first read's recommendation to relax the reading of that class should not be acted on.
