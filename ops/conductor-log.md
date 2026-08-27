@@ -16580,3 +16580,15 @@ code |
 | 2026-08-26 22:56 UTC | Constraint intervention independent row audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6651-failure-localized-suffix-regeneratio |
 | 2026-08-26 23:46 UTC | State-grounded repair memory fixture | OK | 95 passed, 1 warning in 8.37s |
 | 2026-08-26 23:48 UTC | Constraint intervention independent row audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6651-failure-localized-suffix-regeneratio |
+| 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_count_integrity_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on arc_co |
+| 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_llm_on_liveness_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on arc_ll |
+| 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | verifier_authenticity_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on veri |
+| 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_orphan_solver_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on arc_orph |
+| 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | tracked_results_guard.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on tracked_r |
+| 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | research_complete_ledger_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on r |
+| 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | mutation_marker_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on mutation_m |
+| 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | audit_findings_ledger.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on audit_fin |
+| 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6633_gpu_lease_phase_journal.json age-week 0: OPEN 1 days: CLAIM_REFU |
+| 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | run_stop_authority.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on run_stop_aut |
+| 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | in_process_doc_reconcile.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on in_pro |
+| 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_terminal_artifact_readiness age-week 0: OPEN 1 days |
