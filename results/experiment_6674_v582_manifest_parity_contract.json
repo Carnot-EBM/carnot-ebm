@@ -1,0 +1,4140 @@
+{
+  "experiment": 6674,
+  "schema": "carnot.experiment_6674.v1",
+  "run_date": "2026-08-27",
+  "title": "V582 document-to-manifest parity contract",
+  "status": "complete_ready",
+  "honest_verdict": "complete: V582 design and active manifest have exact activation parity; no scientific claim",
+  "verdict_class": "null",
+  "gate_check_summary": [],
+  "design_task_rows": [
+    {
+      "order": 1,
+      "task_id": "exp6674-v582-manifest-parity-contract",
+      "title": "V582 document-to-manifest parity contract",
+      "deliverable": "results/experiment_6674_v582_manifest_parity_contract.json",
+      "track": "execution-integrity",
+      "requires_gpu": false,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "claude",
+        "model": "opus"
+      },
+      "prior_failure_ids": [
+        "exp6660-v581-evidence-contract"
+      ],
+      "required_artifact_fields": [],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6674_v582_manifest_parity_contract --date {date}",
+      "declaration_source": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "order": 2,
+      "task_id": "exp6675-triggered-tail-scope-receipt",
+      "title": "Triggered-tail task-owned verification receipt",
+      "deliverable": "results/experiment_6675_triggered_tail_scope_receipt.json",
+      "track": "verification-transport",
+      "requires_gpu": false,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "prior_failure_ids": [
+        "exp6661-triggered-tail-fixture"
+      ],
+      "required_artifact_fields": [
+        "triggered_tail_fixture_ready"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6675_triggered_tail_scope_receipt --date {date}",
+      "declaration_source": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "order": 3,
+      "task_id": "exp6676-three-family-triggered-tail-ab",
+      "title": "Three-family delayed syntax-tail A/B",
+      "deliverable": "results/experiment_6676_three_family_triggered_tail_ab.json",
+      "track": "verification-transport",
+      "requires_gpu": true,
+      "dependencies": [
+        "exp6675-triggered-tail-scope-receipt"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6675-triggered-tail-scope-receipt",
+          "artifact_field": "triggered_tail_fixture_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failure_ids": [
+        "exp5923-sota-schema-supported-constraintir-ab",
+        "exp6662-triggered-structured-tail-ab"
+      ],
+      "required_artifact_fields": [
+        "triggered_tail_ab_ready"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6676_three_family_triggered_tail_ab --date {date}",
+      "declaration_source": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "order": 4,
+      "task_id": "exp6677-triggered-tail-independent-audit",
+      "title": "Delayed syntax-tail blinded row audit",
+      "deliverable": "results/experiment_6677_triggered_tail_independent_audit.json",
+      "track": "verification-transport",
+      "requires_gpu": false,
+      "dependencies": [
+        "exp6676-three-family-triggered-tail-ab"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6676-three-family-triggered-tail-ab",
+          "artifact_field": "triggered_tail_ab_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failure_ids": [
+        "exp6652-constraint-intervention-audit",
+        "exp6663-structured-tail-independent-audit"
+      ],
+      "required_artifact_fields": [],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6677_triggered_tail_independent_audit --date {date}",
+      "declaration_source": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "order": 5,
+      "task_id": "exp6678-constraint-family-stream",
+      "title": "Independent constraint-family prequential stream",
+      "deliverable": "results/experiment_6678_constraint_family_stream.json",
+      "track": "continuous-self-learning",
+      "requires_gpu": false,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "prior_failure_ids": [
+        "exp5709-fr11-prospective-shadow-stream",
+        "exp5786-sota-hardness-controlled-constraint-stream"
+      ],
+      "required_artifact_fields": [
+        "constraint_family_stream_ready"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6678_constraint_family_stream --date {date}",
+      "declaration_source": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "order": 6,
+      "task_id": "exp6679-prequential-cross-family-csl-ab",
+      "title": "Prequential cross-family continuous self-learning A/B",
+      "deliverable": "results/experiment_6679_prequential_cross_family_csl_ab.json",
+      "track": "continuous-self-learning",
+      "requires_gpu": true,
+      "dependencies": [
+        "exp6678-constraint-family-stream"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6678-constraint-family-stream",
+          "artifact_field": "constraint_family_stream_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failure_ids": [
+        "exp6655-repair-memory-safety-audit"
+      ],
+      "required_artifact_fields": [
+        "prequential_csl_ab_ready"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6679_prequential_cross_family_csl_ab --date {date}",
+      "declaration_source": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "order": 7,
+      "task_id": "exp6680-csl-durability-audit",
+      "title": "Cross-family CSL chronological durability audit",
+      "deliverable": "results/experiment_6680_csl_durability_audit.json",
+      "track": "continuous-self-learning",
+      "requires_gpu": false,
+      "dependencies": [
+        "exp6679-prequential-cross-family-csl-ab"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6679-prequential-cross-family-csl-ab",
+          "artifact_field": "prequential_csl_ab_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failure_ids": [
+        "exp6655-repair-memory-safety-audit"
+      ],
+      "required_artifact_fields": [],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6680_csl_durability_audit --date {date}",
+      "declaration_source": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "order": 8,
+      "task_id": "exp6681-arc-post-redirect-outcomes",
+      "title": "Canonical ARC post-redirect outcome transport",
+      "deliverable": "results/experiment_6681_arc_post_redirect_outcomes.json",
+      "track": "live-arc-outcomes",
+      "requires_gpu": false,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failure_ids": [
+        "exp6656-arc-trace-automaton-live-loo"
+      ],
+      "required_artifact_fields": [
+        "arc_outcome_transport_ready",
+        "eligible_redirect_outcome_rows"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6681_arc_post_redirect_outcomes --date {date}",
+      "declaration_source": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "order": 9,
+      "task_id": "exp6682-arc-held-family-supervisor-ab",
+      "title": "Held-family ARC supervisor outcome A/B",
+      "deliverable": "results/experiment_6682_arc_held_family_supervisor_ab.json",
+      "track": "live-arc-outcomes",
+      "requires_gpu": false,
+      "dependencies": [
+        "exp6681-arc-post-redirect-outcomes"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6681-arc-post-redirect-outcomes",
+          "artifact_field": "arc_outcome_transport_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        },
+        {
+          "upstream": "exp6681-arc-post-redirect-outcomes",
+          "artifact_field": "eligible_redirect_outcome_rows",
+          "op": ">=",
+          "value": 30
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failure_ids": [
+        "exp6656-arc-trace-automaton-live-loo"
+      ],
+      "required_artifact_fields": [],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6682_arc_held_family_supervisor_ab --date {date}",
+      "declaration_source": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "order": 10,
+      "task_id": "exp6683-ising-reference-scope-receipt",
+      "title": "Bounded-treewidth Ising task-owned receipt",
+      "deliverable": "results/experiment_6683_ising_reference_scope_receipt.json",
+      "track": "stochastic-portability",
+      "requires_gpu": false,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "prior_failure_ids": [
+        "exp6657-bounded-treewidth-ising-reference"
+      ],
+      "required_artifact_fields": [
+        "ising_reference_ready",
+        "ising_reference_ready"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6683_ising_reference_scope_receipt --date {date}",
+      "declaration_source": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "order": 11,
+      "task_id": "exp6684-torx-typed-factor-parity",
+      "title": "Torx energy-distribution conformance",
+      "deliverable": "results/experiment_6684_torx_typed_factor_parity.json",
+      "track": "stochastic-portability",
+      "requires_gpu": false,
+      "dependencies": [
+        "exp6683-ising-reference-scope-receipt"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6683-ising-reference-scope-receipt",
+          "artifact_field": "ising_reference_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "prior_failure_ids": [],
+      "required_artifact_fields": [
+        "torx_factor_parity_ready"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6684_torx_typed_factor_parity --date {date}",
+      "declaration_source": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "order": 12,
+      "task_id": "exp6685-autocorrelation-schedule-ab",
+      "title": "Autocorrelation-aware stochastic schedule A/B",
+      "deliverable": "results/experiment_6685_autocorrelation_schedule_ab.json",
+      "track": "stochastic-portability",
+      "requires_gpu": false,
+      "dependencies": [
+        "exp6683-ising-reference-scope-receipt",
+        "exp6684-torx-typed-factor-parity"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6683-ising-reference-scope-receipt",
+          "artifact_field": "ising_reference_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        },
+        {
+          "upstream": "exp6684-torx-typed-factor-parity",
+          "artifact_field": "torx_factor_parity_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "prior_failure_ids": [
+        "exp6658-thermodynamic-schedule-ab"
+      ],
+      "required_artifact_fields": [
+        "schedule_ab_ready"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6685_autocorrelation_schedule_ab --date {date}",
+      "declaration_source": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "order": 13,
+      "task_id": "exp6686-stochastic-portability-audit",
+      "title": "Cold exact and raw-chain review",
+      "deliverable": "results/experiment_6686_stochastic_portability_audit.json",
+      "track": "stochastic-portability",
+      "requires_gpu": false,
+      "dependencies": [
+        "exp6685-autocorrelation-schedule-ab"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6685-autocorrelation-schedule-ab",
+          "artifact_field": "schedule_ab_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failure_ids": [],
+      "required_artifact_fields": [],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6686_stochastic_portability_audit --date {date}",
+      "declaration_source": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "order": 14,
+      "task_id": "exp6687-v582-branch-synthesis",
+      "title": "V582 five-branch disposition",
+      "deliverable": "results/experiment_6687_v582_branch_synthesis.json",
+      "track": "milestone-synthesis",
+      "requires_gpu": false,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failure_ids": [],
+      "required_artifact_fields": [],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6687_v582_branch_synthesis --date {date}",
+      "declaration_source": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    }
+  ],
+  "manifest_task_rows": [
+    {
+      "order": 1,
+      "task_id": "exp6674-v582-manifest-parity-contract",
+      "title": "V582 document-to-manifest parity contract",
+      "deliverable": "results/experiment_6674_v582_manifest_parity_contract.json",
+      "track": "execution-integrity",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "claude",
+        "model": "opus"
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6660-v581-evidence-contract",
+          "verdict": "missing_terminal_artifact: three Gemini dispatch attempts failed before experiment execution",
+          "addressed_by": "This attempt uses an executable Claude Opus preflight and compares the exact design and YAML task sets; it does not depend on Gemini metadata.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "design_task_rows",
+        "manifest_task_rows",
+        "producer_consumer_rows",
+        "prior_failure_rows",
+        "validator_rows",
+        "validator_mismatch_rows",
+        "v582_manifest_parity_ready",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6674_v582_manifest_parity_contract --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "order": 2,
+      "task_id": "exp6675-triggered-tail-scope-receipt",
+      "title": "Triggered-tail task-owned verification receipt",
+      "deliverable": "results/experiment_6675_triggered_tail_scope_receipt.json",
+      "track": "verification-transport",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6661-triggered-tail-fixture",
+          "verdict": "blocked_triggered_tail_fixture: tests failed",
+          "addressed_by": "The fixture already passes every owned check; this task uses the approved task-owned verification scope and keeps the unrelated full-suite failure diagnostic.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "frozen_input_receipts",
+        "owned_test_rows",
+        "global_suite_diagnostic",
+        "exact_checker_rows",
+        "leakage_attack_rows",
+        "triggered_tail_fixture_ready",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6675_triggered_tail_scope_receipt --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "order": 3,
+      "task_id": "exp6676-three-family-triggered-tail-ab",
+      "title": "Three-family delayed syntax-tail A/B",
+      "deliverable": "results/experiment_6676_three_family_triggered_tail_ab.json",
+      "track": "verification-transport",
+      "requires_gpu": true,
+      "requires": null,
+      "dependencies": [
+        "exp6675-triggered-tail-scope-receipt"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6675-triggered-tail-scope-receipt",
+          "artifact_field": "triggered_tail_fixture_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
+          "verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+          "addressed_by": "The treatment preserves free reasoning and constrains only a short semantic-free tail; immediate JSON is a control and no answer-ID transport is used.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp6662-triggered-structured-tail-ab",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "Exp6675 replaces the false global-suite readiness gate with an owned-scope receipt before this comparison runs.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "model_specs",
+        "models_used",
+        "frozen_run_manifest",
+        "per_model_process_receipts",
+        "per_unit_rows",
+        "held_family_rows",
+        "harmful_flip_rows",
+        "exact_success_summary",
+        "parse_transport_summary",
+        "triggered_tail_ab_ready",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6676_three_family_triggered_tail_ab --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "order": 4,
+      "task_id": "exp6677-triggered-tail-independent-audit",
+      "title": "Delayed syntax-tail blinded row audit",
+      "deliverable": "results/experiment_6677_triggered_tail_independent_audit.json",
+      "track": "verification-transport",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [
+        "exp6676-three-family-triggered-tail-ab"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6676-three-family-triggered-tail-ab",
+          "artifact_field": "triggered_tail_ab_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6652-constraint-intervention-audit",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "This audit consumes a complete fixed-arm row set instead of the retired suffix-regeneration headroom chain.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp6663-structured-tail-independent-audit",
+          "verdict": "preemptive_skip: upstream gate chain terminated before a terminal artifact was produced",
+          "addressed_by": "Exp6676 now owns an explicit completeness field and this audit is gated on that exact producer field.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "blinding_receipt",
+        "row_coverage_rows",
+        "cold_checker_rows",
+        "leakage_attack_rows",
+        "budget_equality_rows",
+        "harmful_flip_rows",
+        "reported_vs_recomputed",
+        "independent_audit_passed",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6677_triggered_tail_independent_audit --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "order": 5,
+      "task_id": "exp6678-constraint-family-stream",
+      "title": "Independent constraint-family prequential stream",
+      "deliverable": "results/experiment_6678_constraint_family_stream.json",
+      "track": "continuous-self-learning",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp5709-fr11-prospective-shadow-stream",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "This attempt builds a sealed no-LLM multi-family fixture before any prospective run and owns its exact stream-readiness field in the same roadmap.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp5786-sota-hardness-controlled-constraint-stream",
+          "verdict": "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold",
+          "addressed_by": "This task emits exact-checkable event definitions without model responses, so parser failure cannot suppress fixture readiness.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "family_manifest",
+        "event_order_manifests",
+        "typed_repair_schema",
+        "exact_checker_rows",
+        "isolation_attack_rows",
+        "restart_rollback_rows",
+        "constraint_family_stream_ready",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6678_constraint_family_stream --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "order": 6,
+      "task_id": "exp6679-prequential-cross-family-csl-ab",
+      "title": "Prequential cross-family continuous self-learning A/B",
+      "deliverable": "results/experiment_6679_prequential_cross_family_csl_ab.json",
+      "track": "continuous-self-learning",
+      "requires_gpu": true,
+      "requires": null,
+      "dependencies": [
+        "exp6678-constraint-family-stream"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6678-constraint-family-stream",
+          "artifact_field": "constraint_family_stream_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6655-repair-memory-safety-audit",
+          "verdict": "complete_null: safety replay passed and point estimates reproduced, but the order-level interval includes zero; narrow the result to this fixture",
+          "addressed_by": "This attempt uses four independent families, held-family transfer, five prospective orders, and between-event writes instead of one-fixture pooled evidence.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "model_specs",
+        "models_used",
+        "frozen_run_manifest",
+        "per_model_process_receipts",
+        "initial_state_receipts",
+        "per_unit_rows",
+        "patch_ledger_rows",
+        "held_family_rows",
+        "order_level_statistics",
+        "future_exact_yield_summary",
+        "restart_and_rollback_receipts",
+        "prequential_csl_ab_ready",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6679_prequential_cross_family_csl_ab --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "order": 7,
+      "task_id": "exp6680-csl-durability-audit",
+      "title": "Cross-family CSL chronological durability audit",
+      "deliverable": "results/experiment_6680_csl_durability_audit.json",
+      "track": "continuous-self-learning",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [
+        "exp6679-prequential-cross-family-csl-ab"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6679-prequential-cross-family-csl-ab",
+          "artifact_field": "prequential_csl_ab_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6655-repair-memory-safety-audit",
+          "verdict": "complete_null: safety replay passed and point estimates reproduced, but the order-level interval includes zero; narrow the result to this fixture",
+          "addressed_by": "The audit now replays independent families and sealed chronological orders, and it tests between-event isolation plus held-family transfer.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "sealed_state_rows",
+        "chronological_replay_rows",
+        "order_level_recomputation",
+        "family_level_recomputation",
+        "poison_and_leakage_rows",
+        "support_anchor_rows",
+        "restart_rollback_rows",
+        "reported_vs_recomputed",
+        "csl_durability_audit_passed",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6680_csl_durability_audit --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "order": 8,
+      "task_id": "exp6681-arc-post-redirect-outcomes",
+      "title": "Canonical ARC post-redirect outcome transport",
+      "deliverable": "results/experiment_6681_arc_post_redirect_outcomes.json",
+      "track": "live-arc-outcomes",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6656-arc-trace-automaton-live-loo",
+          "verdict": "blocked: the canonical E3 action seam applied held-family redirects, but the archived transport has no exact outcomes after changed actions; no live-policy benefit, game solve, or level solve is claimed",
+          "addressed_by": "This task instruments the canonical live environment step so each applied redirect receives its own exact next observation, reward, and termination receipt.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "registry_precheck",
+        "canonical_path_receipt",
+        "outcome_schema",
+        "redirect_outcome_rows",
+        "non_redirect_control_rows",
+        "lineage_attack_rows",
+        "arc_outcome_transport_ready",
+        "eligible_redirect_outcome_rows",
+        "solve_claim_scope",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6681_arc_post_redirect_outcomes --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "order": 9,
+      "task_id": "exp6682-arc-held-family-supervisor-ab",
+      "title": "Held-family ARC supervisor outcome A/B",
+      "deliverable": "results/experiment_6682_arc_held_family_supervisor_ab.json",
+      "track": "live-arc-outcomes",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [
+        "exp6681-arc-post-redirect-outcomes"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6681-arc-post-redirect-outcomes",
+          "artifact_field": "arc_outcome_transport_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        },
+        {
+          "upstream": "exp6681-arc-post-redirect-outcomes",
+          "artifact_field": "eligible_redirect_outcome_rows",
+          "op": ">=",
+          "value": 30
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6656-arc-trace-automaton-live-loo",
+          "verdict": "blocked: the canonical E3 action seam applied held-family redirects, but the archived transport has no exact outcomes after changed actions; no live-policy benefit, game solve, or level solve is claimed",
+          "addressed_by": "Exp6681 supplies exact live post-redirect outcomes and a minimum eligible-row gate before this frozen supervisor comparison runs.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "registry_precheck",
+        "frozen_run_manifest",
+        "canonical_path_receipts",
+        "per_unit_rows",
+        "paired_episode_rows",
+        "held_family_rows",
+        "false_intervention_rows",
+        "forbidden_action_summary",
+        "transition_utility_summary",
+        "action_efficiency_summary",
+        "arc_supervisor_ab_ready",
+        "solve_claim_scope",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6682_arc_held_family_supervisor_ab --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "order": 10,
+      "task_id": "exp6683-ising-reference-scope-receipt",
+      "title": "Bounded-treewidth Ising task-owned receipt",
+      "deliverable": "results/experiment_6683_ising_reference_scope_receipt.json",
+      "track": "stochastic-portability",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6657-bounded-treewidth-ising-reference",
+          "verdict": "blocked_tests_check_failed: bounded exact-reference readiness was not established",
+          "addressed_by": "The exact algorithm rows already pass; this task applies task-owned verification scope, fixes only owned defects, and preserves the global-suite state as diagnostic.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "frozen_fixture_manifest",
+        "decomposition_rows",
+        "exact_probability_rows",
+        "rejection_rows",
+        "numeric_contract",
+        "owned_test_rows",
+        "global_suite_diagnostic",
+        "attack_rows",
+        "ising_reference_ready",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6683_ising_reference_scope_receipt --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "order": 11,
+      "task_id": "exp6684-torx-typed-factor-parity",
+      "title": "Torx energy-distribution conformance",
+      "deliverable": "results/experiment_6684_torx_typed_factor_parity.json",
+      "track": "stochastic-portability",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [
+        "exp6683-ising-reference-scope-receipt"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6683-ising-reference-scope-receipt",
+          "artifact_field": "ising_reference_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "prior_failures": [],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "torx_runtime_receipt",
+        "frozen_mapping_contract",
+        "factor_rows",
+        "state_parity_rows",
+        "rejection_rows",
+        "attack_rows",
+        "torx_factor_parity_ready",
+        "claim_scope",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6684_torx_typed_factor_parity --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "order": 12,
+      "task_id": "exp6685-autocorrelation-schedule-ab",
+      "title": "Autocorrelation-aware stochastic schedule A/B",
+      "deliverable": "results/experiment_6685_autocorrelation_schedule_ab.json",
+      "track": "stochastic-portability",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [
+        "exp6683-ising-reference-scope-receipt",
+        "exp6684-torx-typed-factor-parity"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6683-ising-reference-scope-receipt",
+          "artifact_field": "ising_reference_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        },
+        {
+          "upstream": "exp6684-torx-typed-factor-parity",
+          "artifact_field": "torx_factor_parity_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6658-thermodynamic-schedule-ab",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "The comparison now runs only after producer-owned exact-reference and Torx-parity fields pass, with task-owned receipts and chain-level evidence.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "frozen_run_manifest",
+        "sampler_runtime_receipts",
+        "per_unit_rows",
+        "raw_chain_receipts",
+        "likelihood_rows",
+        "autocorrelation_rows",
+        "effective_sample_rows",
+        "paired_seed_rows",
+        "sensitivity_rows",
+        "attack_rows",
+        "schedule_ab_ready",
+        "claim_scope",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6685_autocorrelation_schedule_ab --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "order": 13,
+      "task_id": "exp6686-stochastic-portability-audit",
+      "title": "Cold exact and raw-chain review",
+      "deliverable": "results/experiment_6686_stochastic_portability_audit.json",
+      "track": "stochastic-portability",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [
+        "exp6685-autocorrelation-schedule-ab"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6685-autocorrelation-schedule-ab",
+          "artifact_field": "schedule_ab_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "blinding_receipt",
+        "coverage_rows",
+        "cold_exact_rows",
+        "parity_recomputation_rows",
+        "chain_recomputation_rows",
+        "independence_rows",
+        "attack_rows",
+        "reported_vs_recomputed",
+        "stochastic_portability_audit_passed",
+        "claim_scope",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6686_stochastic_portability_audit --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "order": 14,
+      "task_id": "exp6687-v582-branch-synthesis",
+      "title": "V582 five-branch disposition",
+      "deliverable": "results/experiment_6687_v582_branch_synthesis.json",
+      "track": "milestone-synthesis",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "planned_task_rows",
+        "terminal_task_rows",
+        "missing_artifact_rows",
+        "output_transport_branch",
+        "continuous_self_learning_branch",
+        "live_arc_outcome_branch",
+        "stochastic_portability_branch",
+        "branch_rows",
+        "validation_rows",
+        "documentation_reconciliation_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6687_v582_branch_synthesis --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    }
+  ],
+  "producer_consumer_rows": [
+    {
+      "producer": "exp6675-triggered-tail-scope-receipt",
+      "artifact_field": "triggered_tail_fixture_ready",
+      "consumer": "exp6676-three-family-triggered-tail-ab",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:52a928258b46bb2898013d88a948fb08a2a58dd6f2fae8e73452920e9e642a61"
+    },
+    {
+      "producer": "exp6676-three-family-triggered-tail-ab",
+      "artifact_field": "triggered_tail_ab_ready",
+      "consumer": "exp6677-triggered-tail-independent-audit",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:c64837ede8a84e3f74702c88d5022b15b8ece798fcee0636f422ce796a9b74bf"
+    },
+    {
+      "producer": "exp6678-constraint-family-stream",
+      "artifact_field": "constraint_family_stream_ready",
+      "consumer": "exp6679-prequential-cross-family-csl-ab",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:e8a4e545a3cdfc701cc501899f97da37de1a5e7b6ad2d2175dd4bd51012d8e6b"
+    },
+    {
+      "producer": "exp6679-prequential-cross-family-csl-ab",
+      "artifact_field": "prequential_csl_ab_ready",
+      "consumer": "exp6680-csl-durability-audit",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:5cd6781dd50eb61780c01e7e25762c99fec2525bc97335939d90f48783b20d96"
+    },
+    {
+      "producer": "exp6681-arc-post-redirect-outcomes",
+      "artifact_field": "arc_outcome_transport_ready",
+      "consumer": "exp6682-arc-held-family-supervisor-ab",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:3b95d2d699ff82d9552ab94a7bfcb3014b6e251f7d2b303d41fb4477394ba92b"
+    },
+    {
+      "producer": "exp6681-arc-post-redirect-outcomes",
+      "artifact_field": "eligible_redirect_outcome_rows",
+      "consumer": "exp6682-arc-held-family-supervisor-ab",
+      "operator": ">=",
+      "value": 30,
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:3b95d2d699ff82d9552ab94a7bfcb3014b6e251f7d2b303d41fb4477394ba92b"
+    },
+    {
+      "producer": "exp6683-ising-reference-scope-receipt",
+      "artifact_field": "ising_reference_ready",
+      "consumer": "exp6684-torx-typed-factor-parity",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:66509af51752c111279952c65d77dd6f1a105dbd266dd1006073da57729acd6d"
+    },
+    {
+      "producer": "exp6683-ising-reference-scope-receipt",
+      "artifact_field": "ising_reference_ready",
+      "consumer": "exp6685-autocorrelation-schedule-ab",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:66509af51752c111279952c65d77dd6f1a105dbd266dd1006073da57729acd6d"
+    },
+    {
+      "producer": "exp6684-torx-typed-factor-parity",
+      "artifact_field": "torx_factor_parity_ready",
+      "consumer": "exp6685-autocorrelation-schedule-ab",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:8d4e227381f798817f6328fc5fe2a4d6e990e5a1d895d94581bccfb4d717b787"
+    },
+    {
+      "producer": "exp6685-autocorrelation-schedule-ab",
+      "artifact_field": "schedule_ab_ready",
+      "consumer": "exp6686-stochastic-portability-audit",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:a22b5df0330e3f09f9b50429c55150c27c13ac05e1675be2961f77fc78d47e9a"
+    }
+  ],
+  "prior_failure_rows": [
+    {
+      "consumer_task_id": "exp6674-v582-manifest-parity-contract",
+      "prior_experiment_id": "exp6660-v581-evidence-contract",
+      "prior_scope": "V581 evidence and retirement contract",
+      "verdict": "missing_terminal_artifact: three Gemini dispatch attempts failed before experiment execution",
+      "changed_condition": "This attempt uses an executable Claude Opus preflight and compares the exact design and YAML task sets; it does not depend on Gemini metadata.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.581",
+        "title": "V581 evidence and retirement contract",
+        "deliverable": "results/experiment_6660_v581_evidence_contract.json",
+        "result": "SKIPPED (3-fail)"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "consumer_task_id": "exp6675-triggered-tail-scope-receipt",
+      "prior_experiment_id": "exp6661-triggered-tail-fixture",
+      "prior_scope": "Trigger-switched structured-tail fixture",
+      "verdict": "blocked_triggered_tail_fixture: tests failed",
+      "changed_condition": "The fixture already passes every owned check; this task uses the approved task-owned verification scope and keeps the unrelated full-suite failure diagnostic.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.581",
+        "title": "Trigger-switched structured-tail fixture",
+        "deliverable": "results/experiment_6661_triggered_tail_fixture.json",
+        "result": "OK"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "consumer_task_id": "exp6676-three-family-triggered-tail-ab",
+      "prior_experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
+      "prior_scope": "Gated on Exp5922 ready: all-three-model schema-supported ConstraintIR A/B",
+      "verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+      "changed_condition": "The treatment preserves free reasoning and constrains only a short semantic-free tail; immediate JSON is a control and no answer-ID transport is used.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.07.526",
+        "title": "Gated on Exp5922 ready: all-three-model schema-supported ConstraintIR A/B",
+        "deliverable": "results/experiment_5923_sota_schema_supported_constraintir_ab.json",
+        "result": "OK (conductor)"
+      },
+      "exclusion_manifest_match": true,
+      "exclusion_manifest_entries": [
+        {
+          "section": "retired_extras",
+          "id": "exp5923_schema_supported_constraintir_zero_exact_semantics_retired_v526",
+          "reason": "retire_if_same_verdict: Exp5923 replayed the ready schema/tokenizer support through all three mandated GGUF families and still produced zero exact semantic success, so this exact schema-supported reprompt mechanism is retired. Open structural compiler, tokenizer bridge, exact executor, CSL memory, and unrelated constraint mechanisms remain separate."
+        }
+      ],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "consumer_task_id": "exp6676-three-family-triggered-tail-ab",
+      "prior_experiment_id": "exp6662-triggered-structured-tail-ab",
+      "prior_scope": "Three-family trigger-switched structured-tail A/B",
+      "verdict": "blocked_gate_check_failed",
+      "changed_condition": "Exp6675 replaces the false global-suite readiness gate with an owned-scope receipt before this comparison runs.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.581",
+        "title": "Three-family trigger-switched structured-tail A/B",
+        "deliverable": "results/experiment_6662_triggered_structured_tail_ab.json",
+        "result": "OK_DELIVERABLE_ONLY"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "consumer_task_id": "exp6677-triggered-tail-independent-audit",
+      "prior_experiment_id": "exp6652-constraint-intervention-audit",
+      "prior_scope": "Constraint intervention independent row audit",
+      "verdict": "blocked_gate_check_failed",
+      "changed_condition": "This audit consumes a complete fixed-arm row set instead of the retired suffix-regeneration headroom chain.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.580",
+        "title": "Constraint intervention independent row audit",
+        "deliverable": "results/experiment_6652_constraint_intervention_audit.json",
+        "result": "GATE_BLOCKED"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "consumer_task_id": "exp6677-triggered-tail-independent-audit",
+      "prior_experiment_id": "exp6663-structured-tail-independent-audit",
+      "prior_scope": "Structured-tail independent row audit",
+      "verdict": "preemptive_skip: upstream gate chain terminated before a terminal artifact was produced",
+      "changed_condition": "Exp6676 now owns an explicit completeness field and this audit is gated on that exact producer field.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.581",
+        "title": "Structured-tail independent row audit",
+        "deliverable": "results/experiment_6663_structured_tail_independent_audit.json",
+        "result": "GATE_BLOCKED"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "consumer_task_id": "exp6678-constraint-family-stream",
+      "prior_experiment_id": "exp5709-fr11-prospective-shadow-stream",
+      "prior_scope": "Gated on Exp5708 exact canary: prospective prequential FR-11 shadow stream",
+      "verdict": "blocked_gate_check_failed",
+      "changed_condition": "This attempt builds a sealed no-LLM multi-family fixture before any prospective run and owns its exact stream-readiness field in the same roadmap.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.07.510",
+        "title": "Gated on Exp5708 exact canary: prospective prequential FR-11 shadow stream",
+        "deliverable": "results/experiment_5709_fr11_prospective_shadow_stream.json",
+        "result": "OK (conductor)"
+      },
+      "exclusion_manifest_match": true,
+      "exclusion_manifest_entries": [
+        {
+          "section": "retired_extras",
+          "id": "exp5709_fr11_prospective_shadow_stream_retired_v511",
+          "reason": "Exp5709 gate-blocked because Exp5708 authenticated CUDA but produced a parse-failed exact stream: 21 truncations, 26 missing-answer rows, 3 parses, and zero validator disagreements. Preserve future clean prospective streams and generic lifecycle learning."
+        }
+      ],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "consumer_task_id": "exp6678-constraint-family-stream",
+      "prior_experiment_id": "exp5786-sota-hardness-controlled-constraint-stream",
+      "prior_scope": "Gated on Exp5785 fixture readiness: run the three-family prospective exact constraint stream",
+      "verdict": "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold",
+      "changed_condition": "This task emits exact-checkable event definitions without model responses, so parser failure cannot suppress fixture readiness.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.07.516",
+        "title": "Gated on Exp5785 fixture readiness: run the three-family prospective exact constraint stream",
+        "deliverable": "results/experiment_5786_sota_constraint_stream.json",
+        "result": "OK (conductor)"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "consumer_task_id": "exp6679-prequential-cross-family-csl-ab",
+      "prior_experiment_id": "exp6655-repair-memory-safety-audit",
+      "prior_scope": "Adversarial durability of repair memory",
+      "verdict": "complete_null: safety replay passed and point estimates reproduced, but the order-level interval includes zero; narrow the result to this fixture",
+      "changed_condition": "This attempt uses four independent families, held-family transfer, five prospective orders, and between-event writes instead of one-fixture pooled evidence.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.580",
+        "title": "Adversarial durability of repair memory",
+        "deliverable": "results/experiment_6655_repair_memory_safety_audit.json",
+        "result": "OK"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "consumer_task_id": "exp6680-csl-durability-audit",
+      "prior_experiment_id": "exp6655-repair-memory-safety-audit",
+      "prior_scope": "Adversarial durability of repair memory",
+      "verdict": "complete_null: safety replay passed and point estimates reproduced, but the order-level interval includes zero; narrow the result to this fixture",
+      "changed_condition": "The audit now replays independent families and sealed chronological orders, and it tests between-event isolation plus held-family transfer.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.580",
+        "title": "Adversarial durability of repair memory",
+        "deliverable": "results/experiment_6655_repair_memory_safety_audit.json",
+        "result": "OK"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "consumer_task_id": "exp6681-arc-post-redirect-outcomes",
+      "prior_experiment_id": "exp6656-arc-trace-automaton-live-loo",
+      "prior_scope": "Trace-automaton ARC live supervisor LOO A/B",
+      "verdict": "blocked: the canonical E3 action seam applied held-family redirects, but the archived transport has no exact outcomes after changed actions; no live-policy benefit, game solve, or level solve is claimed",
+      "changed_condition": "This task instruments the canonical live environment step so each applied redirect receives its own exact next observation, reward, and termination receipt.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.580",
+        "title": "Trace-automaton ARC live supervisor LOO A/B",
+        "deliverable": "results/experiment_6656_arc_trace_automaton_live_loo.json",
+        "result": "OK"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "consumer_task_id": "exp6682-arc-held-family-supervisor-ab",
+      "prior_experiment_id": "exp6656-arc-trace-automaton-live-loo",
+      "prior_scope": "Trace-automaton ARC live supervisor LOO A/B",
+      "verdict": "blocked: the canonical E3 action seam applied held-family redirects, but the archived transport has no exact outcomes after changed actions; no live-policy benefit, game solve, or level solve is claimed",
+      "changed_condition": "Exp6681 supplies exact live post-redirect outcomes and a minimum eligible-row gate before this frozen supervisor comparison runs.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.580",
+        "title": "Trace-automaton ARC live supervisor LOO A/B",
+        "deliverable": "results/experiment_6656_arc_trace_automaton_live_loo.json",
+        "result": "OK"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "consumer_task_id": "exp6683-ising-reference-scope-receipt",
+      "prior_experiment_id": "exp6657-bounded-treewidth-ising-reference",
+      "prior_scope": "Bounded-treewidth exact Ising reference",
+      "verdict": "blocked_tests_check_failed: bounded exact-reference readiness was not established",
+      "changed_condition": "The exact algorithm rows already pass; this task applies task-owned verification scope, fixes only owned defects, and preserves the global-suite state as diagnostic.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.580",
+        "title": "Bounded-treewidth exact Ising reference",
+        "deliverable": "results/experiment_6657_bounded_treewidth_ising_reference.json",
+        "result": "OK"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "consumer_task_id": "exp6685-autocorrelation-schedule-ab",
+      "prior_experiment_id": "exp6658-thermodynamic-schedule-ab",
+      "prior_scope": "Autocorrelation-aware thermodynamic schedule A/B",
+      "verdict": "blocked_gate_check_failed",
+      "changed_condition": "The comparison now runs only after producer-owned exact-reference and Torx-parity fields pass, with task-owned receipts and chain-level evidence.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.580",
+        "title": "Autocorrelation-aware thermodynamic schedule A/B",
+        "deliverable": "results/experiment_6658_thermodynamic_schedule_ab.json",
+        "result": "OK_DELIVERABLE_ONLY"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    }
+  ],
+  "validator_rows": [
+    {
+      "validator": "yaml_parse",
+      "command": ".venv/bin/python -c \"from pathlib import Path; import yaml; data=yaml.safe_load(Path('research-roadmap.yaml').read_text()); assert isinstance(data, dict); print('YAML parse passed:', data['milestone'], len(data['tasks']))\"",
+      "exit": 0,
+      "output": "YAML parse passed: 2026.08.582 14",
+      "classification": "passed",
+      "hash": "sha256:1760c52fbc0d8bbb78fc97909bd460727d7f5f57cfb229a0c22fd3e4b02d1980"
+    },
+    {
+      "validator": "roadmap_schema",
+      "command": ".venv/bin/python -c \"from pathlib import Path; import yaml; from scripts.roadmap_schema import Roadmap; r=Roadmap.model_validate(yaml.safe_load(Path('research-roadmap.yaml').read_text())); print('Roadmap schema passed:', r.milestone, len(r.tasks))\"",
+      "exit": 0,
+      "output": "Roadmap schema passed: 2026.08.582 14",
+      "classification": "passed",
+      "hash": "sha256:a24c4bd3fec0beb3c169915aa8d059331de23376048ccb6ffc0591f3ac64ce57"
+    },
+    {
+      "validator": "prior_failures",
+      "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+      "exit": 0,
+      "output": "[OK] research-roadmap.yaml — no schema errors, no prior_failures violations",
+      "classification": "passed",
+      "hash": "sha256:f2ddd8c76ed9699803de3ece1e31033b5e05ffe06c6cdcfb70f08c5b8f5c8a02"
+    },
+    {
+      "validator": "gate_contract",
+      "command": ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+      "exit": 1,
+      "output": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [\n    \"MODEL_AGENT_COHERENCE exp6675-triggered-tail-scope-receipt: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol\",\n    \"MODEL_AGENT_COHERENCE exp6678-constraint-family-stream: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol\",\n    \"MODEL_AGENT_COHERENCE exp6683-ising-reference-scope-receipt: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol\",\n    \"MODEL_AGENT_COHERENCE exp6684-torx-typed-factor-parity: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol\",\n    \"MODEL_AGENT_COHERENCE exp6685-autocorrelation-schedule-ab: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol\"\n  ],\n  \"honest_verdict\": \"model_agent_incoherence_found\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 10,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 5,\n  \"n_prior_failures_checks\": 14,\n  \"n_prior_failures_missing\": 0,\n  \"n_tasks_audited\": 14,\n  \"roadmap_gate_audit_passed\": false,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"research-roadmap.yaml\"\n}",
+      "classification": "validator_mismatch_nonblocking",
+      "hash": "sha256:baed6eccb12552d40282fdbf08c88e27bb1cbc57b40fe56dac985df8b2874bfe"
+    },
+    {
+      "validator": "exclusion_manifest",
+      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+      "exit": 0,
+      "output": "Exclusion-manifest lint clean: research-roadmap.yaml",
+      "classification": "passed",
+      "hash": "sha256:aefc25e8774ee4159d21a7d028537e9a5c2c2c1ae9de1c5356835b14d45b5250"
+    }
+  ],
+  "validator_mismatch_rows": [
+    {
+      "conflict_date": "2026-08-27",
+      "validator": "gate_contract",
+      "task_id": "exp6675-triggered-tail-scope-receipt",
+      "validator_rule": "Codex routes require gpt-5.5",
+      "validator_model": "gpt-5.5",
+      "operator_requirement": "Codex routes use gpt-5.6-sol",
+      "operator_model": "gpt-5.6-sol",
+      "classification": "dated_validator_mismatch_not_task_defect",
+      "detail": "MODEL_AGENT_COHERENCE exp6675-triggered-tail-scope-receipt: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol"
+    },
+    {
+      "conflict_date": "2026-08-27",
+      "validator": "gate_contract",
+      "task_id": "exp6678-constraint-family-stream",
+      "validator_rule": "Codex routes require gpt-5.5",
+      "validator_model": "gpt-5.5",
+      "operator_requirement": "Codex routes use gpt-5.6-sol",
+      "operator_model": "gpt-5.6-sol",
+      "classification": "dated_validator_mismatch_not_task_defect",
+      "detail": "MODEL_AGENT_COHERENCE exp6678-constraint-family-stream: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol"
+    },
+    {
+      "conflict_date": "2026-08-27",
+      "validator": "gate_contract",
+      "task_id": "exp6683-ising-reference-scope-receipt",
+      "validator_rule": "Codex routes require gpt-5.5",
+      "validator_model": "gpt-5.5",
+      "operator_requirement": "Codex routes use gpt-5.6-sol",
+      "operator_model": "gpt-5.6-sol",
+      "classification": "dated_validator_mismatch_not_task_defect",
+      "detail": "MODEL_AGENT_COHERENCE exp6683-ising-reference-scope-receipt: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol"
+    },
+    {
+      "conflict_date": "2026-08-27",
+      "validator": "gate_contract",
+      "task_id": "exp6684-torx-typed-factor-parity",
+      "validator_rule": "Codex routes require gpt-5.5",
+      "validator_model": "gpt-5.5",
+      "operator_requirement": "Codex routes use gpt-5.6-sol",
+      "operator_model": "gpt-5.6-sol",
+      "classification": "dated_validator_mismatch_not_task_defect",
+      "detail": "MODEL_AGENT_COHERENCE exp6684-torx-typed-factor-parity: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol"
+    },
+    {
+      "conflict_date": "2026-08-27",
+      "validator": "gate_contract",
+      "task_id": "exp6685-autocorrelation-schedule-ab",
+      "validator_rule": "Codex routes require gpt-5.5",
+      "validator_model": "gpt-5.5",
+      "operator_requirement": "Codex routes use gpt-5.6-sol",
+      "operator_model": "gpt-5.6-sol",
+      "classification": "dated_validator_mismatch_not_task_defect",
+      "detail": "MODEL_AGENT_COHERENCE exp6685-autocorrelation-schedule-ab: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol"
+    }
+  ],
+  "v582_manifest_parity_ready": true,
+  "per_unit_rows": [
+    {
+      "row_kind": "task",
+      "order": 1,
+      "task_id": "exp6674-v582-manifest-parity-contract",
+      "title": "V582 document-to-manifest parity contract",
+      "deliverable": "results/experiment_6674_v582_manifest_parity_contract.json",
+      "track": "execution-integrity",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "claude",
+        "model": "opus"
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6660-v581-evidence-contract",
+          "verdict": "missing_terminal_artifact: three Gemini dispatch attempts failed before experiment execution",
+          "addressed_by": "This attempt uses an executable Claude Opus preflight and compares the exact design and YAML task sets; it does not depend on Gemini metadata.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "design_task_rows",
+        "manifest_task_rows",
+        "producer_consumer_rows",
+        "prior_failure_rows",
+        "validator_rows",
+        "validator_mismatch_rows",
+        "v582_manifest_parity_ready",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6674_v582_manifest_parity_contract --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "row_kind": "task",
+      "order": 2,
+      "task_id": "exp6675-triggered-tail-scope-receipt",
+      "title": "Triggered-tail task-owned verification receipt",
+      "deliverable": "results/experiment_6675_triggered_tail_scope_receipt.json",
+      "track": "verification-transport",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6661-triggered-tail-fixture",
+          "verdict": "blocked_triggered_tail_fixture: tests failed",
+          "addressed_by": "The fixture already passes every owned check; this task uses the approved task-owned verification scope and keeps the unrelated full-suite failure diagnostic.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "frozen_input_receipts",
+        "owned_test_rows",
+        "global_suite_diagnostic",
+        "exact_checker_rows",
+        "leakage_attack_rows",
+        "triggered_tail_fixture_ready",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6675_triggered_tail_scope_receipt --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "row_kind": "task",
+      "order": 3,
+      "task_id": "exp6676-three-family-triggered-tail-ab",
+      "title": "Three-family delayed syntax-tail A/B",
+      "deliverable": "results/experiment_6676_three_family_triggered_tail_ab.json",
+      "track": "verification-transport",
+      "requires_gpu": true,
+      "requires": null,
+      "dependencies": [
+        "exp6675-triggered-tail-scope-receipt"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6675-triggered-tail-scope-receipt",
+          "artifact_field": "triggered_tail_fixture_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
+          "verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+          "addressed_by": "The treatment preserves free reasoning and constrains only a short semantic-free tail; immediate JSON is a control and no answer-ID transport is used.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp6662-triggered-structured-tail-ab",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "Exp6675 replaces the false global-suite readiness gate with an owned-scope receipt before this comparison runs.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "model_specs",
+        "models_used",
+        "frozen_run_manifest",
+        "per_model_process_receipts",
+        "per_unit_rows",
+        "held_family_rows",
+        "harmful_flip_rows",
+        "exact_success_summary",
+        "parse_transport_summary",
+        "triggered_tail_ab_ready",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6676_three_family_triggered_tail_ab --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "row_kind": "task",
+      "order": 4,
+      "task_id": "exp6677-triggered-tail-independent-audit",
+      "title": "Delayed syntax-tail blinded row audit",
+      "deliverable": "results/experiment_6677_triggered_tail_independent_audit.json",
+      "track": "verification-transport",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [
+        "exp6676-three-family-triggered-tail-ab"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6676-three-family-triggered-tail-ab",
+          "artifact_field": "triggered_tail_ab_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6652-constraint-intervention-audit",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "This audit consumes a complete fixed-arm row set instead of the retired suffix-regeneration headroom chain.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp6663-structured-tail-independent-audit",
+          "verdict": "preemptive_skip: upstream gate chain terminated before a terminal artifact was produced",
+          "addressed_by": "Exp6676 now owns an explicit completeness field and this audit is gated on that exact producer field.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "blinding_receipt",
+        "row_coverage_rows",
+        "cold_checker_rows",
+        "leakage_attack_rows",
+        "budget_equality_rows",
+        "harmful_flip_rows",
+        "reported_vs_recomputed",
+        "independent_audit_passed",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6677_triggered_tail_independent_audit --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "row_kind": "task",
+      "order": 5,
+      "task_id": "exp6678-constraint-family-stream",
+      "title": "Independent constraint-family prequential stream",
+      "deliverable": "results/experiment_6678_constraint_family_stream.json",
+      "track": "continuous-self-learning",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp5709-fr11-prospective-shadow-stream",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "This attempt builds a sealed no-LLM multi-family fixture before any prospective run and owns its exact stream-readiness field in the same roadmap.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp5786-sota-hardness-controlled-constraint-stream",
+          "verdict": "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold",
+          "addressed_by": "This task emits exact-checkable event definitions without model responses, so parser failure cannot suppress fixture readiness.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "family_manifest",
+        "event_order_manifests",
+        "typed_repair_schema",
+        "exact_checker_rows",
+        "isolation_attack_rows",
+        "restart_rollback_rows",
+        "constraint_family_stream_ready",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6678_constraint_family_stream --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "row_kind": "task",
+      "order": 6,
+      "task_id": "exp6679-prequential-cross-family-csl-ab",
+      "title": "Prequential cross-family continuous self-learning A/B",
+      "deliverable": "results/experiment_6679_prequential_cross_family_csl_ab.json",
+      "track": "continuous-self-learning",
+      "requires_gpu": true,
+      "requires": null,
+      "dependencies": [
+        "exp6678-constraint-family-stream"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6678-constraint-family-stream",
+          "artifact_field": "constraint_family_stream_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6655-repair-memory-safety-audit",
+          "verdict": "complete_null: safety replay passed and point estimates reproduced, but the order-level interval includes zero; narrow the result to this fixture",
+          "addressed_by": "This attempt uses four independent families, held-family transfer, five prospective orders, and between-event writes instead of one-fixture pooled evidence.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "model_specs",
+        "models_used",
+        "frozen_run_manifest",
+        "per_model_process_receipts",
+        "initial_state_receipts",
+        "per_unit_rows",
+        "patch_ledger_rows",
+        "held_family_rows",
+        "order_level_statistics",
+        "future_exact_yield_summary",
+        "restart_and_rollback_receipts",
+        "prequential_csl_ab_ready",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6679_prequential_cross_family_csl_ab --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "row_kind": "task",
+      "order": 7,
+      "task_id": "exp6680-csl-durability-audit",
+      "title": "Cross-family CSL chronological durability audit",
+      "deliverable": "results/experiment_6680_csl_durability_audit.json",
+      "track": "continuous-self-learning",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [
+        "exp6679-prequential-cross-family-csl-ab"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6679-prequential-cross-family-csl-ab",
+          "artifact_field": "prequential_csl_ab_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6655-repair-memory-safety-audit",
+          "verdict": "complete_null: safety replay passed and point estimates reproduced, but the order-level interval includes zero; narrow the result to this fixture",
+          "addressed_by": "The audit now replays independent families and sealed chronological orders, and it tests between-event isolation plus held-family transfer.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "sealed_state_rows",
+        "chronological_replay_rows",
+        "order_level_recomputation",
+        "family_level_recomputation",
+        "poison_and_leakage_rows",
+        "support_anchor_rows",
+        "restart_rollback_rows",
+        "reported_vs_recomputed",
+        "csl_durability_audit_passed",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6680_csl_durability_audit --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "row_kind": "task",
+      "order": 8,
+      "task_id": "exp6681-arc-post-redirect-outcomes",
+      "title": "Canonical ARC post-redirect outcome transport",
+      "deliverable": "results/experiment_6681_arc_post_redirect_outcomes.json",
+      "track": "live-arc-outcomes",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6656-arc-trace-automaton-live-loo",
+          "verdict": "blocked: the canonical E3 action seam applied held-family redirects, but the archived transport has no exact outcomes after changed actions; no live-policy benefit, game solve, or level solve is claimed",
+          "addressed_by": "This task instruments the canonical live environment step so each applied redirect receives its own exact next observation, reward, and termination receipt.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "registry_precheck",
+        "canonical_path_receipt",
+        "outcome_schema",
+        "redirect_outcome_rows",
+        "non_redirect_control_rows",
+        "lineage_attack_rows",
+        "arc_outcome_transport_ready",
+        "eligible_redirect_outcome_rows",
+        "solve_claim_scope",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6681_arc_post_redirect_outcomes --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "row_kind": "task",
+      "order": 9,
+      "task_id": "exp6682-arc-held-family-supervisor-ab",
+      "title": "Held-family ARC supervisor outcome A/B",
+      "deliverable": "results/experiment_6682_arc_held_family_supervisor_ab.json",
+      "track": "live-arc-outcomes",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [
+        "exp6681-arc-post-redirect-outcomes"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6681-arc-post-redirect-outcomes",
+          "artifact_field": "arc_outcome_transport_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        },
+        {
+          "upstream": "exp6681-arc-post-redirect-outcomes",
+          "artifact_field": "eligible_redirect_outcome_rows",
+          "op": ">=",
+          "value": 30
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6656-arc-trace-automaton-live-loo",
+          "verdict": "blocked: the canonical E3 action seam applied held-family redirects, but the archived transport has no exact outcomes after changed actions; no live-policy benefit, game solve, or level solve is claimed",
+          "addressed_by": "Exp6681 supplies exact live post-redirect outcomes and a minimum eligible-row gate before this frozen supervisor comparison runs.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "registry_precheck",
+        "frozen_run_manifest",
+        "canonical_path_receipts",
+        "per_unit_rows",
+        "paired_episode_rows",
+        "held_family_rows",
+        "false_intervention_rows",
+        "forbidden_action_summary",
+        "transition_utility_summary",
+        "action_efficiency_summary",
+        "arc_supervisor_ab_ready",
+        "solve_claim_scope",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6682_arc_held_family_supervisor_ab --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "row_kind": "task",
+      "order": 10,
+      "task_id": "exp6683-ising-reference-scope-receipt",
+      "title": "Bounded-treewidth Ising task-owned receipt",
+      "deliverable": "results/experiment_6683_ising_reference_scope_receipt.json",
+      "track": "stochastic-portability",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6657-bounded-treewidth-ising-reference",
+          "verdict": "blocked_tests_check_failed: bounded exact-reference readiness was not established",
+          "addressed_by": "The exact algorithm rows already pass; this task applies task-owned verification scope, fixes only owned defects, and preserves the global-suite state as diagnostic.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "frozen_fixture_manifest",
+        "decomposition_rows",
+        "exact_probability_rows",
+        "rejection_rows",
+        "numeric_contract",
+        "owned_test_rows",
+        "global_suite_diagnostic",
+        "attack_rows",
+        "ising_reference_ready",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6683_ising_reference_scope_receipt --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "row_kind": "task",
+      "order": 11,
+      "task_id": "exp6684-torx-typed-factor-parity",
+      "title": "Torx energy-distribution conformance",
+      "deliverable": "results/experiment_6684_torx_typed_factor_parity.json",
+      "track": "stochastic-portability",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [
+        "exp6683-ising-reference-scope-receipt"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6683-ising-reference-scope-receipt",
+          "artifact_field": "ising_reference_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "prior_failures": [],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "torx_runtime_receipt",
+        "frozen_mapping_contract",
+        "factor_rows",
+        "state_parity_rows",
+        "rejection_rows",
+        "attack_rows",
+        "torx_factor_parity_ready",
+        "claim_scope",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6684_torx_typed_factor_parity --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "row_kind": "task",
+      "order": 12,
+      "task_id": "exp6685-autocorrelation-schedule-ab",
+      "title": "Autocorrelation-aware stochastic schedule A/B",
+      "deliverable": "results/experiment_6685_autocorrelation_schedule_ab.json",
+      "track": "stochastic-portability",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [
+        "exp6683-ising-reference-scope-receipt",
+        "exp6684-torx-typed-factor-parity"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6683-ising-reference-scope-receipt",
+          "artifact_field": "ising_reference_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        },
+        {
+          "upstream": "exp6684-torx-typed-factor-parity",
+          "artifact_field": "torx_factor_parity_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol"
+      },
+      "prior_failures": [
+        {
+          "experiment_id": "exp6658-thermodynamic-schedule-ab",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "The comparison now runs only after producer-owned exact-reference and Torx-parity fields pass, with task-owned receipts and chain-level evidence.",
+          "retire_if_same_verdict": true
+        }
+      ],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "frozen_run_manifest",
+        "sampler_runtime_receipts",
+        "per_unit_rows",
+        "raw_chain_receipts",
+        "likelihood_rows",
+        "autocorrelation_rows",
+        "effective_sample_rows",
+        "paired_seed_rows",
+        "sensitivity_rows",
+        "attack_rows",
+        "schedule_ab_ready",
+        "claim_scope",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6685_autocorrelation_schedule_ab --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "row_kind": "task",
+      "order": 13,
+      "task_id": "exp6686-stochastic-portability-audit",
+      "title": "Cold exact and raw-chain review",
+      "deliverable": "results/experiment_6686_stochastic_portability_audit.json",
+      "track": "stochastic-portability",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [
+        "exp6685-autocorrelation-schedule-ab"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6685-autocorrelation-schedule-ab",
+          "artifact_field": "schedule_ab_ready",
+          "op": "in",
+          "value": [
+            true
+          ]
+        }
+      ],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "blinding_receipt",
+        "coverage_rows",
+        "cold_exact_rows",
+        "parity_recomputation_rows",
+        "chain_recomputation_rows",
+        "independence_rows",
+        "attack_rows",
+        "reported_vs_recomputed",
+        "stochastic_portability_audit_passed",
+        "claim_scope",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6686_stochastic_portability_audit --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "row_kind": "task",
+      "order": 14,
+      "task_id": "exp6687-v582-branch-synthesis",
+      "title": "V582 five-branch disposition",
+      "deliverable": "results/experiment_6687_v582_branch_synthesis.json",
+      "track": "milestone-synthesis",
+      "requires_gpu": false,
+      "requires": null,
+      "dependencies": [],
+      "gated_on": [],
+      "route": {
+        "agent_type": "claude",
+        "model": null
+      },
+      "prior_failures": [],
+      "required_artifact_fields": [
+        "status",
+        "honest_verdict",
+        "verdict_class",
+        "gate_check_summary",
+        "planned_task_rows",
+        "terminal_task_rows",
+        "missing_artifact_rows",
+        "output_transport_branch",
+        "continuous_self_learning_branch",
+        "live_arc_outcome_branch",
+        "stochastic_portability_branch",
+        "branch_rows",
+        "validation_rows",
+        "documentation_reconciliation_rows",
+        "per_unit_rows",
+        "aggregate_row_recomputation",
+        "preconditions_checked",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "random_seed",
+        "duration_s",
+        "tests_run",
+        "reproducibility_checksum"
+      ],
+      "run_command": "cd {project_root} && .venv/bin/python -m carnot.experiment_6687_v582_branch_synthesis --date {date}",
+      "field_checks": {
+        "title": true,
+        "deliverable": true,
+        "track": true,
+        "requires_gpu": true,
+        "dependency": true,
+        "gate": true,
+        "route": true,
+        "prior_failure_block": true,
+        "required_artifact_field": true,
+        "run_command": true
+      },
+      "field_differences": {},
+      "source_path": "research-roadmap.yaml",
+      "source_hash": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+    },
+    {
+      "row_kind": "gate",
+      "producer": "exp6675-triggered-tail-scope-receipt",
+      "artifact_field": "triggered_tail_fixture_ready",
+      "consumer": "exp6676-three-family-triggered-tail-ab",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:52a928258b46bb2898013d88a948fb08a2a58dd6f2fae8e73452920e9e642a61"
+    },
+    {
+      "row_kind": "gate",
+      "producer": "exp6676-three-family-triggered-tail-ab",
+      "artifact_field": "triggered_tail_ab_ready",
+      "consumer": "exp6677-triggered-tail-independent-audit",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:c64837ede8a84e3f74702c88d5022b15b8ece798fcee0636f422ce796a9b74bf"
+    },
+    {
+      "row_kind": "gate",
+      "producer": "exp6678-constraint-family-stream",
+      "artifact_field": "constraint_family_stream_ready",
+      "consumer": "exp6679-prequential-cross-family-csl-ab",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:e8a4e545a3cdfc701cc501899f97da37de1a5e7b6ad2d2175dd4bd51012d8e6b"
+    },
+    {
+      "row_kind": "gate",
+      "producer": "exp6679-prequential-cross-family-csl-ab",
+      "artifact_field": "prequential_csl_ab_ready",
+      "consumer": "exp6680-csl-durability-audit",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:5cd6781dd50eb61780c01e7e25762c99fec2525bc97335939d90f48783b20d96"
+    },
+    {
+      "row_kind": "gate",
+      "producer": "exp6681-arc-post-redirect-outcomes",
+      "artifact_field": "arc_outcome_transport_ready",
+      "consumer": "exp6682-arc-held-family-supervisor-ab",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:3b95d2d699ff82d9552ab94a7bfcb3014b6e251f7d2b303d41fb4477394ba92b"
+    },
+    {
+      "row_kind": "gate",
+      "producer": "exp6681-arc-post-redirect-outcomes",
+      "artifact_field": "eligible_redirect_outcome_rows",
+      "consumer": "exp6682-arc-held-family-supervisor-ab",
+      "operator": ">=",
+      "value": 30,
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:3b95d2d699ff82d9552ab94a7bfcb3014b6e251f7d2b303d41fb4477394ba92b"
+    },
+    {
+      "row_kind": "gate",
+      "producer": "exp6683-ising-reference-scope-receipt",
+      "artifact_field": "ising_reference_ready",
+      "consumer": "exp6684-torx-typed-factor-parity",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:66509af51752c111279952c65d77dd6f1a105dbd266dd1006073da57729acd6d"
+    },
+    {
+      "row_kind": "gate",
+      "producer": "exp6683-ising-reference-scope-receipt",
+      "artifact_field": "ising_reference_ready",
+      "consumer": "exp6685-autocorrelation-schedule-ab",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:66509af51752c111279952c65d77dd6f1a105dbd266dd1006073da57729acd6d"
+    },
+    {
+      "row_kind": "gate",
+      "producer": "exp6684-torx-typed-factor-parity",
+      "artifact_field": "torx_factor_parity_ready",
+      "consumer": "exp6685-autocorrelation-schedule-ab",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:8d4e227381f798817f6328fc5fe2a4d6e990e5a1d895d94581bccfb4d717b787"
+    },
+    {
+      "row_kind": "gate",
+      "producer": "exp6685-autocorrelation-schedule-ab",
+      "artifact_field": "schedule_ab_ready",
+      "consumer": "exp6686-stochastic-portability-audit",
+      "operator": "in",
+      "value": [
+        true
+      ],
+      "upstream_exists": true,
+      "producer_declares_exact_field": true,
+      "matches_design": true,
+      "upstream_retired": false,
+      "producer_required_artifact_fields_hash": "sha256:a22b5df0330e3f09f9b50429c55150c27c13ac05e1675be2961f77fc78d47e9a"
+    },
+    {
+      "row_kind": "prior_failure",
+      "consumer_task_id": "exp6674-v582-manifest-parity-contract",
+      "prior_experiment_id": "exp6660-v581-evidence-contract",
+      "prior_scope": "V581 evidence and retirement contract",
+      "verdict": "missing_terminal_artifact: three Gemini dispatch attempts failed before experiment execution",
+      "changed_condition": "This attempt uses an executable Claude Opus preflight and compares the exact design and YAML task sets; it does not depend on Gemini metadata.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.581",
+        "title": "V581 evidence and retirement contract",
+        "deliverable": "results/experiment_6660_v581_evidence_contract.json",
+        "result": "SKIPPED (3-fail)"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "row_kind": "prior_failure",
+      "consumer_task_id": "exp6675-triggered-tail-scope-receipt",
+      "prior_experiment_id": "exp6661-triggered-tail-fixture",
+      "prior_scope": "Trigger-switched structured-tail fixture",
+      "verdict": "blocked_triggered_tail_fixture: tests failed",
+      "changed_condition": "The fixture already passes every owned check; this task uses the approved task-owned verification scope and keeps the unrelated full-suite failure diagnostic.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.581",
+        "title": "Trigger-switched structured-tail fixture",
+        "deliverable": "results/experiment_6661_triggered_tail_fixture.json",
+        "result": "OK"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "row_kind": "prior_failure",
+      "consumer_task_id": "exp6676-three-family-triggered-tail-ab",
+      "prior_experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
+      "prior_scope": "Gated on Exp5922 ready: all-three-model schema-supported ConstraintIR A/B",
+      "verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+      "changed_condition": "The treatment preserves free reasoning and constrains only a short semantic-free tail; immediate JSON is a control and no answer-ID transport is used.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.07.526",
+        "title": "Gated on Exp5922 ready: all-three-model schema-supported ConstraintIR A/B",
+        "deliverable": "results/experiment_5923_sota_schema_supported_constraintir_ab.json",
+        "result": "OK (conductor)"
+      },
+      "exclusion_manifest_match": true,
+      "exclusion_manifest_entries": [
+        {
+          "section": "retired_extras",
+          "id": "exp5923_schema_supported_constraintir_zero_exact_semantics_retired_v526",
+          "reason": "retire_if_same_verdict: Exp5923 replayed the ready schema/tokenizer support through all three mandated GGUF families and still produced zero exact semantic success, so this exact schema-supported reprompt mechanism is retired. Open structural compiler, tokenizer bridge, exact executor, CSL memory, and unrelated constraint mechanisms remain separate."
+        }
+      ],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "row_kind": "prior_failure",
+      "consumer_task_id": "exp6676-three-family-triggered-tail-ab",
+      "prior_experiment_id": "exp6662-triggered-structured-tail-ab",
+      "prior_scope": "Three-family trigger-switched structured-tail A/B",
+      "verdict": "blocked_gate_check_failed",
+      "changed_condition": "Exp6675 replaces the false global-suite readiness gate with an owned-scope receipt before this comparison runs.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.581",
+        "title": "Three-family trigger-switched structured-tail A/B",
+        "deliverable": "results/experiment_6662_triggered_structured_tail_ab.json",
+        "result": "OK_DELIVERABLE_ONLY"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "row_kind": "prior_failure",
+      "consumer_task_id": "exp6677-triggered-tail-independent-audit",
+      "prior_experiment_id": "exp6652-constraint-intervention-audit",
+      "prior_scope": "Constraint intervention independent row audit",
+      "verdict": "blocked_gate_check_failed",
+      "changed_condition": "This audit consumes a complete fixed-arm row set instead of the retired suffix-regeneration headroom chain.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.580",
+        "title": "Constraint intervention independent row audit",
+        "deliverable": "results/experiment_6652_constraint_intervention_audit.json",
+        "result": "GATE_BLOCKED"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "row_kind": "prior_failure",
+      "consumer_task_id": "exp6677-triggered-tail-independent-audit",
+      "prior_experiment_id": "exp6663-structured-tail-independent-audit",
+      "prior_scope": "Structured-tail independent row audit",
+      "verdict": "preemptive_skip: upstream gate chain terminated before a terminal artifact was produced",
+      "changed_condition": "Exp6676 now owns an explicit completeness field and this audit is gated on that exact producer field.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.581",
+        "title": "Structured-tail independent row audit",
+        "deliverable": "results/experiment_6663_structured_tail_independent_audit.json",
+        "result": "GATE_BLOCKED"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "row_kind": "prior_failure",
+      "consumer_task_id": "exp6678-constraint-family-stream",
+      "prior_experiment_id": "exp5709-fr11-prospective-shadow-stream",
+      "prior_scope": "Gated on Exp5708 exact canary: prospective prequential FR-11 shadow stream",
+      "verdict": "blocked_gate_check_failed",
+      "changed_condition": "This attempt builds a sealed no-LLM multi-family fixture before any prospective run and owns its exact stream-readiness field in the same roadmap.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.07.510",
+        "title": "Gated on Exp5708 exact canary: prospective prequential FR-11 shadow stream",
+        "deliverable": "results/experiment_5709_fr11_prospective_shadow_stream.json",
+        "result": "OK (conductor)"
+      },
+      "exclusion_manifest_match": true,
+      "exclusion_manifest_entries": [
+        {
+          "section": "retired_extras",
+          "id": "exp5709_fr11_prospective_shadow_stream_retired_v511",
+          "reason": "Exp5709 gate-blocked because Exp5708 authenticated CUDA but produced a parse-failed exact stream: 21 truncations, 26 missing-answer rows, 3 parses, and zero validator disagreements. Preserve future clean prospective streams and generic lifecycle learning."
+        }
+      ],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "row_kind": "prior_failure",
+      "consumer_task_id": "exp6678-constraint-family-stream",
+      "prior_experiment_id": "exp5786-sota-hardness-controlled-constraint-stream",
+      "prior_scope": "Gated on Exp5785 fixture readiness: run the three-family prospective exact constraint stream",
+      "verdict": "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold",
+      "changed_condition": "This task emits exact-checkable event definitions without model responses, so parser failure cannot suppress fixture readiness.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.07.516",
+        "title": "Gated on Exp5785 fixture readiness: run the three-family prospective exact constraint stream",
+        "deliverable": "results/experiment_5786_sota_constraint_stream.json",
+        "result": "OK (conductor)"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "row_kind": "prior_failure",
+      "consumer_task_id": "exp6679-prequential-cross-family-csl-ab",
+      "prior_experiment_id": "exp6655-repair-memory-safety-audit",
+      "prior_scope": "Adversarial durability of repair memory",
+      "verdict": "complete_null: safety replay passed and point estimates reproduced, but the order-level interval includes zero; narrow the result to this fixture",
+      "changed_condition": "This attempt uses four independent families, held-family transfer, five prospective orders, and between-event writes instead of one-fixture pooled evidence.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.580",
+        "title": "Adversarial durability of repair memory",
+        "deliverable": "results/experiment_6655_repair_memory_safety_audit.json",
+        "result": "OK"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "row_kind": "prior_failure",
+      "consumer_task_id": "exp6680-csl-durability-audit",
+      "prior_experiment_id": "exp6655-repair-memory-safety-audit",
+      "prior_scope": "Adversarial durability of repair memory",
+      "verdict": "complete_null: safety replay passed and point estimates reproduced, but the order-level interval includes zero; narrow the result to this fixture",
+      "changed_condition": "The audit now replays independent families and sealed chronological orders, and it tests between-event isolation plus held-family transfer.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.580",
+        "title": "Adversarial durability of repair memory",
+        "deliverable": "results/experiment_6655_repair_memory_safety_audit.json",
+        "result": "OK"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "row_kind": "prior_failure",
+      "consumer_task_id": "exp6681-arc-post-redirect-outcomes",
+      "prior_experiment_id": "exp6656-arc-trace-automaton-live-loo",
+      "prior_scope": "Trace-automaton ARC live supervisor LOO A/B",
+      "verdict": "blocked: the canonical E3 action seam applied held-family redirects, but the archived transport has no exact outcomes after changed actions; no live-policy benefit, game solve, or level solve is claimed",
+      "changed_condition": "This task instruments the canonical live environment step so each applied redirect receives its own exact next observation, reward, and termination receipt.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.580",
+        "title": "Trace-automaton ARC live supervisor LOO A/B",
+        "deliverable": "results/experiment_6656_arc_trace_automaton_live_loo.json",
+        "result": "OK"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "row_kind": "prior_failure",
+      "consumer_task_id": "exp6682-arc-held-family-supervisor-ab",
+      "prior_experiment_id": "exp6656-arc-trace-automaton-live-loo",
+      "prior_scope": "Trace-automaton ARC live supervisor LOO A/B",
+      "verdict": "blocked: the canonical E3 action seam applied held-family redirects, but the archived transport has no exact outcomes after changed actions; no live-policy benefit, game solve, or level solve is claimed",
+      "changed_condition": "Exp6681 supplies exact live post-redirect outcomes and a minimum eligible-row gate before this frozen supervisor comparison runs.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.580",
+        "title": "Trace-automaton ARC live supervisor LOO A/B",
+        "deliverable": "results/experiment_6656_arc_trace_automaton_live_loo.json",
+        "result": "OK"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "row_kind": "prior_failure",
+      "consumer_task_id": "exp6683-ising-reference-scope-receipt",
+      "prior_experiment_id": "exp6657-bounded-treewidth-ising-reference",
+      "prior_scope": "Bounded-treewidth exact Ising reference",
+      "verdict": "blocked_tests_check_failed: bounded exact-reference readiness was not established",
+      "changed_condition": "The exact algorithm rows already pass; this task applies task-owned verification scope, fixes only owned defects, and preserves the global-suite state as diagnostic.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.580",
+        "title": "Bounded-treewidth exact Ising reference",
+        "deliverable": "results/experiment_6657_bounded_treewidth_ising_reference.json",
+        "result": "OK"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "row_kind": "prior_failure",
+      "consumer_task_id": "exp6685-autocorrelation-schedule-ab",
+      "prior_experiment_id": "exp6658-thermodynamic-schedule-ab",
+      "prior_scope": "Autocorrelation-aware thermodynamic schedule A/B",
+      "verdict": "blocked_gate_check_failed",
+      "changed_condition": "The comparison now runs only after producer-owned exact-reference and Torx-parity fields pass, with task-owned receipts and chain-level evidence.",
+      "retirement_signal": true,
+      "completed_record_found": true,
+      "completed_record": {
+        "milestone": "2026.08.580",
+        "title": "Autocorrelation-aware thermodynamic schedule A/B",
+        "deliverable": "results/experiment_6658_thermodynamic_schedule_ab.json",
+        "result": "OK_DELIVERABLE_ONLY"
+      },
+      "exclusion_manifest_match": false,
+      "exclusion_manifest_entries": [],
+      "reference_role": "prior_failure",
+      "retired_upstream_reference": false,
+      "passed": true
+    },
+    {
+      "row_kind": "validator",
+      "validator": "yaml_parse",
+      "command": ".venv/bin/python -c \"from pathlib import Path; import yaml; data=yaml.safe_load(Path('research-roadmap.yaml').read_text()); assert isinstance(data, dict); print('YAML parse passed:', data['milestone'], len(data['tasks']))\"",
+      "exit": 0,
+      "output": "YAML parse passed: 2026.08.582 14",
+      "classification": "passed",
+      "hash": "sha256:1760c52fbc0d8bbb78fc97909bd460727d7f5f57cfb229a0c22fd3e4b02d1980"
+    },
+    {
+      "row_kind": "validator",
+      "validator": "roadmap_schema",
+      "command": ".venv/bin/python -c \"from pathlib import Path; import yaml; from scripts.roadmap_schema import Roadmap; r=Roadmap.model_validate(yaml.safe_load(Path('research-roadmap.yaml').read_text())); print('Roadmap schema passed:', r.milestone, len(r.tasks))\"",
+      "exit": 0,
+      "output": "Roadmap schema passed: 2026.08.582 14",
+      "classification": "passed",
+      "hash": "sha256:a24c4bd3fec0beb3c169915aa8d059331de23376048ccb6ffc0591f3ac64ce57"
+    },
+    {
+      "row_kind": "validator",
+      "validator": "prior_failures",
+      "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+      "exit": 0,
+      "output": "[OK] research-roadmap.yaml — no schema errors, no prior_failures violations",
+      "classification": "passed",
+      "hash": "sha256:f2ddd8c76ed9699803de3ece1e31033b5e05ffe06c6cdcfb70f08c5b8f5c8a02"
+    },
+    {
+      "row_kind": "validator",
+      "validator": "gate_contract",
+      "command": ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+      "exit": 1,
+      "output": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [\n    \"MODEL_AGENT_COHERENCE exp6675-triggered-tail-scope-receipt: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol\",\n    \"MODEL_AGENT_COHERENCE exp6678-constraint-family-stream: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol\",\n    \"MODEL_AGENT_COHERENCE exp6683-ising-reference-scope-receipt: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol\",\n    \"MODEL_AGENT_COHERENCE exp6684-torx-typed-factor-parity: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol\",\n    \"MODEL_AGENT_COHERENCE exp6685-autocorrelation-schedule-ab: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol\"\n  ],\n  \"honest_verdict\": \"model_agent_incoherence_found\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 10,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 5,\n  \"n_prior_failures_checks\": 14,\n  \"n_prior_failures_missing\": 0,\n  \"n_tasks_audited\": 14,\n  \"roadmap_gate_audit_passed\": false,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"research-roadmap.yaml\"\n}",
+      "classification": "validator_mismatch_nonblocking",
+      "hash": "sha256:baed6eccb12552d40282fdbf08c88e27bb1cbc57b40fe56dac985df8b2874bfe"
+    },
+    {
+      "row_kind": "validator",
+      "validator": "exclusion_manifest",
+      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+      "exit": 0,
+      "output": "Exclusion-manifest lint clean: research-roadmap.yaml",
+      "classification": "passed",
+      "hash": "sha256:aefc25e8774ee4159d21a7d028537e9a5c2c2c1ae9de1c5356835b14d45b5250"
+    }
+  ],
+  "aggregate_row_recomputation": {
+    "expected_task_ids": [
+      "exp6674-v582-manifest-parity-contract",
+      "exp6675-triggered-tail-scope-receipt",
+      "exp6676-three-family-triggered-tail-ab",
+      "exp6677-triggered-tail-independent-audit",
+      "exp6678-constraint-family-stream",
+      "exp6679-prequential-cross-family-csl-ab",
+      "exp6680-csl-durability-audit",
+      "exp6681-arc-post-redirect-outcomes",
+      "exp6682-arc-held-family-supervisor-ab",
+      "exp6683-ising-reference-scope-receipt",
+      "exp6684-torx-typed-factor-parity",
+      "exp6685-autocorrelation-schedule-ab",
+      "exp6686-stochastic-portability-audit",
+      "exp6687-v582-branch-synthesis"
+    ],
+    "design_task_ids": [
+      "exp6674-v582-manifest-parity-contract",
+      "exp6675-triggered-tail-scope-receipt",
+      "exp6676-three-family-triggered-tail-ab",
+      "exp6677-triggered-tail-independent-audit",
+      "exp6678-constraint-family-stream",
+      "exp6679-prequential-cross-family-csl-ab",
+      "exp6680-csl-durability-audit",
+      "exp6681-arc-post-redirect-outcomes",
+      "exp6682-arc-held-family-supervisor-ab",
+      "exp6683-ising-reference-scope-receipt",
+      "exp6684-torx-typed-factor-parity",
+      "exp6685-autocorrelation-schedule-ab",
+      "exp6686-stochastic-portability-audit",
+      "exp6687-v582-branch-synthesis"
+    ],
+    "manifest_task_ids": [
+      "exp6674-v582-manifest-parity-contract",
+      "exp6675-triggered-tail-scope-receipt",
+      "exp6676-three-family-triggered-tail-ab",
+      "exp6677-triggered-tail-independent-audit",
+      "exp6678-constraint-family-stream",
+      "exp6679-prequential-cross-family-csl-ab",
+      "exp6680-csl-durability-audit",
+      "exp6681-arc-post-redirect-outcomes",
+      "exp6682-arc-held-family-supervisor-ab",
+      "exp6683-ising-reference-scope-receipt",
+      "exp6684-torx-typed-factor-parity",
+      "exp6685-autocorrelation-schedule-ab",
+      "exp6686-stochastic-portability-audit",
+      "exp6687-v582-branch-synthesis"
+    ],
+    "task_count": 14,
+    "gate_count": 10,
+    "prior_failure_count": 14,
+    "validator_count": 5,
+    "protected_file_count": 3,
+    "failed_check_count": 0,
+    "activation_hard_validator_count": 0,
+    "recomputed_ready": true
+  },
+  "preconditions_checked": {
+    "inputs": [
+      {
+        "path": "research-roadmap.yaml",
+        "state": "present",
+        "sha256": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8"
+      },
+      {
+        "path": "research-roadmap-next.yaml",
+        "state": "missing",
+        "sha256": "missing"
+      },
+      {
+        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "state": "present",
+        "sha256": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a"
+      },
+      {
+        "path": "scripts/research_conductor.py",
+        "state": "present",
+        "sha256": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
+      },
+      {
+        "path": "ops/exclusion_manifest.yaml",
+        "state": "present",
+        "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+      },
+      {
+        "path": "research-complete.yaml",
+        "state": "present",
+        "sha256": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514"
+      },
+      {
+        "path": "ops/conductor-log.md",
+        "state": "present",
+        "sha256": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    ],
+    "resources": {
+      "python_version": "3.12.13",
+      "python_implementation": "CPython",
+      "cpu_model": "x86_64",
+      "cpu_logical_count": 24,
+      "ram_bytes": 134304591872,
+      "disk_total_bytes": 3953289023488,
+      "disk_used_bytes": 2877987586048,
+      "disk_free_bytes": 1075301437440
+    },
+    "v581_records": [
+      {
+        "experiment_number": 6660,
+        "task_id": "exp6660-v581-evidence-contract",
+        "path": "results/experiment_6660_v581_evidence_contract.json",
+        "state": "missing",
+        "sha256": "missing",
+        "completed_record": {
+          "milestone": "2026.08.581",
+          "title": "V581 evidence and retirement contract",
+          "deliverable": "results/experiment_6660_v581_evidence_contract.json",
+          "result": "SKIPPED (3-fail)"
+        },
+        "completed_record_hash": "sha256:d515f9bab4738520d34f4d7eebc0b4b0ac0782067ef20c0844bb045ee924960f"
+      },
+      {
+        "experiment_number": 6661,
+        "task_id": "exp6661-triggered-tail-fixture",
+        "path": "results/experiment_6661_triggered_tail_fixture.json",
+        "state": "present",
+        "sha256": "sha256:1881af50f3881d9bf3123f153fb4b4c99fbc3c381db62eb58792a1e7cf3c66c4",
+        "completed_record": {
+          "milestone": "2026.08.581",
+          "title": "Trigger-switched structured-tail fixture",
+          "deliverable": "results/experiment_6661_triggered_tail_fixture.json",
+          "result": "OK"
+        },
+        "completed_record_hash": "sha256:4fcb037caf0307f3a4a1d2796345df284fe20de7fc34e47aec22443183405234"
+      },
+      {
+        "experiment_number": 6662,
+        "task_id": "exp6662-triggered-structured-tail-ab",
+        "path": "results/experiment_6662_triggered_structured_tail_ab.json",
+        "state": "present",
+        "sha256": "sha256:eff923561df93b03a5bfc26d3e25e5964c0db0217f04717329201a46635ee99c",
+        "completed_record": {
+          "milestone": "2026.08.581",
+          "title": "Three-family trigger-switched structured-tail A/B",
+          "deliverable": "results/experiment_6662_triggered_structured_tail_ab.json",
+          "result": "OK_DELIVERABLE_ONLY"
+        },
+        "completed_record_hash": "sha256:0168273ac1b1f8b1ef94589e42eef05fb157fc3c01dc1a711d12ff1acf7dce08"
+      },
+      {
+        "experiment_number": 6663,
+        "task_id": "exp6663-structured-tail-independent-audit",
+        "path": "results/experiment_6663_structured_tail_independent_audit.json",
+        "state": "missing",
+        "sha256": "missing",
+        "completed_record": {
+          "milestone": "2026.08.581",
+          "title": "Structured-tail independent row audit",
+          "deliverable": "results/experiment_6663_structured_tail_independent_audit.json",
+          "result": "GATE_BLOCKED"
+        },
+        "completed_record_hash": "sha256:1569474f100eab508dcb96233cd34e3cebbd530dd46f2fd29c3d2ea42ff34d9d"
+      }
+    ],
+    "v581_conductor_rows": [
+      "| 2026-08-27 06:26 UTC | Milestone 2026.08.581 activated | OK | 4 tasks queued |",
+      "| 2026-08-27 06:28 UTC | V581 evidence and retirement contract | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |",
+      "| 2026-08-27 06:30 UTC | V581 evidence and retirement contract | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |",
+      "| 2026-08-27 06:33 UTC | V581 evidence and retirement contract | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |",
+      "| 2026-08-27 07:55 UTC | Trigger-switched structured-tail fixture | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output:   row = mod._d |",
+      "| 2026-08-27 07:57 UTC | Trigger-switched structured-tail fixture | OK | Deliverable already exists in repo |",
+      "| 2026-08-27 07:57 UTC | Three-family trigger-switched structured-tail A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6661-triggered-tail-fixture.triggered_t |",
+      "| 2026-08-27 07:59 UTC | Three-family trigger-switched structured-tail A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6661-triggered-tail-fixture.triggered_t |",
+      "| 2026-08-27 08:01 UTC | Three-family trigger-switched structured-tail A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6661-triggered-tail-fixture.triggered_t |",
+      "| 2026-08-27 08:03 UTC | Structured-tail independent row audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6662-triggered-structured-tail-ab) |",
+      "| 2026-08-27 09:38 UTC | Structured-tail independent row audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6662-triggered-structured-tail-ab) |"
+    ],
+    "v581_conductor_rows_hash": "sha256:0658629dc5b404f84590bf9418513d68c20a0bd3a5f055c812e54dd7f566aa3d",
+    "inference_substrate": "artifact_and_manifest_audit_no_llm",
+    "llm_calls": 0
+  },
+  "protected_files_unchanged": [
+    {
+      "path": "research-roadmap.yaml",
+      "before": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+      "after": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+      "unchanged": true
+    },
+    {
+      "path": "research-roadmap-next.yaml",
+      "before": "missing",
+      "after": "missing",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "before": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+      "after": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+      "unchanged": true
+    }
+  ],
+  "inference_substrate": "artifact_and_manifest_audit_no_llm",
+  "verifier_is_oracle": true,
+  "field_provenance": {
+    "status": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "honest_verdict": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "verdict_class": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "gate_check_summary": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "design_task_rows": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "manifest_task_rows": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "producer_consumer_rows": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "prior_failure_rows": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "validator_rows": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "validator_mismatch_rows": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "v582_manifest_parity_ready": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "per_unit_rows": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "aggregate_row_recomputation": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "preconditions_checked": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "protected_files_unchanged": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "inference_substrate": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "verifier_is_oracle": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "field_provenance": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "random_seed": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "duration_s": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "tests_run": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    },
+    "reproducibility_checksum": {
+      "source_paths": [
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-complete.yaml",
+        "ops/exclusion_manifest.yaml",
+        "ops/conductor-log.md"
+      ],
+      "parser": "yaml.safe_load+markdown_contract_regex+json.loads",
+      "function": "carnot.experiment_6674_v582_manifest_parity_contract.build_artifact",
+      "source_hashes": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:46fdf3b9e2423527a422ba3e1c57796a82dfca2ce459790d780fd86ca2cfab3a",
+        "research-roadmap.yaml": "sha256:909556709a2c3e60e41a697643b98205d399c94abf5a2b921e83c3bcf7bb9ee8",
+        "research-complete.yaml": "sha256:84a3780bff61e981ab0db43a94ba2612ff419c9e6173e23fe56240a615fee514",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/conductor-log.md": "sha256:75b4dac24f025db49cf3d827f62641a76cee17f9554b3787aa5d319adb1fff31"
+      }
+    }
+  },
+  "random_seed": 6674,
+  "duration_s": 12.444747686007759,
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest -o addopts='' tests/python/test_experiment_6674_v582_manifest_parity_contract.py -q",
+      "exit": 0,
+      "summary": "focused Exp6674 tests passed"
+    },
+    {
+      "command": "COVERAGE_FILE=/tmp/carnot_exp6674.coverage .venv/bin/coverage run --include='*/experiment_6674_v582_manifest_parity_contract.py' -m pytest --noconftest -o addopts='' tests/python/test_experiment_6674_v582_manifest_parity_contract.py -q && COVERAGE_FILE=/tmp/carnot_exp6674.coverage .venv/bin/coverage report --include='*/experiment_6674_v582_manifest_parity_contract.py' --show-missing --fail-under=100",
+      "exit": 0,
+      "summary": "new Exp6674 module reached 100% statement coverage"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit": 1,
+      "summary": "1120 failed, 34350 passed, 103 skipped, 141 warnings, and 4 errors in 2939.84s; xdist stopped at 61% after a worker CWD was removed"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6674_v582_manifest_parity_contract.py",
+      "exit": 0,
+      "summary": "focused spec coverage passed"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_6674_v582_manifest_parity_contract.py tests/python/test_experiment_6674_v582_manifest_parity_contract.py",
+      "exit": 0,
+      "summary": "focused Ruff lint passed"
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_6674_v582_manifest_parity_contract.py tests/python/test_experiment_6674_v582_manifest_parity_contract.py",
+      "exit": 0,
+      "summary": "focused format check passed"
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6674_v582_manifest_parity_contract --date 20260827",
+      "exit": 0,
+      "summary": "required end-to-end command atomically wrote a ready artifact"
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6674_v582_manifest_parity_contract --validate --output results/experiment_6674_v582_manifest_parity_contract.json",
+      "exit": 0,
+      "summary": "stored artifact passed schema, reduction, protection, and checksum validation"
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6674_v582_manifest_parity_contract.json",
+      "exit": 0,
+      "summary": "row consistency reported no row/verdict contradiction"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6674_v582_manifest_parity_contract.json",
+      "exit": 1,
+      "summary": "one non-critical SUBSTRATE_NO_LLM_BY_NAME warning because the required no-LLM substrate is not allowlisted; no critical finding"
+    },
+    {
+      "command": "git status --short",
+      "exit": 0,
+      "summary": "worktree inspection found only the intended spec, module, test, and artifact changes"
+    }
+  ],
+  "reproducibility_checksum": "sha256:a2329857aa10ac42f0207fb02c89a2f7a05447e72b872897aab9cb8c5b0c6303"
+}
