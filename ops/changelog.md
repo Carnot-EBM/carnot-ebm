@@ -1,5 +1,36 @@
 # Carnot — Changelog
 
+## 2026-08-27 — Unattended supervisor refinement (REQ-ARC-WMTE-6720)
+
+- Built the between-runs refinement step for the live agent's trajectory
+  supervisor: `python/carnot/agentic/arc_supervisor_refinement.py` plus the
+  CLI `scripts/arc_supervisor_refine.py`. It ingests APPLIED receipts only
+  (shadow counterfactuals and error markers are counted, never ingested)
+  from `rows.json` files or scan directories, with nested repo clones pruned
+  by their `.git` entry — the 2026-08-25 corpus-inflation trap.
+- The durable ledger lives at `ops/arc_supervisor_refinement_ledger.json`.
+  The entry id hashes the full source row, so file copies dedupe and genuine
+  re-runs count. The ledger stores the evidence itself; scratch deletion
+  after ingest loses nothing.
+- The evidence contract is frozen in code: floor 10 firings per arm
+  (0.75^10 = 0.056 — the smallest all-zero count that rejects a modest 25%
+  follow rate near the 5% level), Wilson 90% bounds, three rules: retire
+  (fired >= 10, helped == 0), raise priority (interval separation against the
+  pooled other arms), and a written new-arm specification for a human when
+  every arm fired and stagnation continued. The tool never mutates
+  `ARM_ORDER`; every output carries `recommendation_only: true` and the
+  post-hoc causal caveat (one level-up credits every pending redirect —
+  observed live: two arms credited by the same level-up at action 353).
+- Against the current live data (9 applied receipts, 6 redirects, every arm
+  at 2 fired / 1 helped) the status is `insufficient_evidence`, said loudly.
+  A no-firings ledger reports `no_firings_nothing_to_refine`, which satisfies
+  the generalization-floor slot per CLAUDE.md activity 4.
+- Verification: 15 tests (SCENARIO-ARC-WMTE-6720-1..7) pass with `--no-cov`;
+  8 mutations (filter, dedupe, floor, retire, promote comparison, new-arm
+  boundary, no-firings status, clone pruning) each went RED in a
+  PYTHONPATH-pinned git worktree with the interpreter's import file verified
+  against the worktree, then restored byte-identical to GREEN.
+
 ## 2026-08-26 — Exp6647 terminal-ready test repair
 
 - Fixed the Exp6647 producer and validator to use the canonical

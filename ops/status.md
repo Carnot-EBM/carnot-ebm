@@ -1,6 +1,18 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-08-26 (Exp6647 terminal-ready regression repaired by
+**Last Updated:** 2026-08-27 (REQ-ARC-WMTE-6720: unattended cross-run
+supervisor refinement shipped. `scripts/arc_supervisor_refine.py` ingests
+applied trajectory-supervisor receipts into a durable deduplicated ledger at
+`ops/arc_supervisor_refinement_ledger.json`, then applies a frozen evidence
+contract (floor 10 firings per arm; Wilson bounds; retire / raise /
+new-arm-specification rules) that only RECOMMENDS — a human applies. Against
+the current live data (9 receipts, 6 redirects, each arm 2 fired / 1 helped)
+it reports INSUFFICIENT EVIDENCE, which is the honest answer. 15 focused
+tests pass; 8 mutations each RED in a PYTHONPATH-pinned worktree with the
+import file verified, baseline restored GREEN. Next: re-run the tool after
+the in-flight supwindow ar25 cells land, and on every future supervised run.)
+
+Prior: 2026-08-26 (Exp6647 terminal-ready regression repaired by
 making the receipt reducer emit and validate `status=complete_ready`, while the
 single non-critical no-LLM substrate warning remains visible and non-gating.
 The exact conductor smart subset passes 90 tests with one existing warning;
