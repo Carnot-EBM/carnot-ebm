@@ -16594,3 +16594,4 @@ code |
 | 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_terminal_artifact_readiness age-week 0: OPEN 1 days |
 | 2026-08-27 00:12 UTC | Prospective experiential repair evolution | OK | 101 passed, 1 warning in 15.73s |
 | 2026-08-27 00:14 UTC | Constraint intervention independent row audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6651-failure-localized-suffix-regeneratio |
+| 2026-08-27 00:39 UTC | Adversarial durability of repair memory | OK | 94 passed, 1 warning in 17.15s |
