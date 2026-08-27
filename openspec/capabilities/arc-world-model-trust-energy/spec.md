@@ -27778,3 +27778,106 @@ use, for the reason given in rule 4.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6720 | `python/carnot/agentic/arc_supervisor_refinement.py` (evidence filter, ledger merge, Wilson bounds, contract rules, report, CLI `main`); `scripts/arc_supervisor_refine.py` (thin wrapper). Ledger: `ops/arc_supervisor_refinement_ledger.json`. | `tests/python/test_arc_supervisor_refinement.py` (SCENARIO-ARC-WMTE-6720-1..7; mutations M1-M8 each RED then restored, run in a PYTHONPATH-pinned worktree with import-file verification). |
+
+### REQ-ARC-WMTE-6681: Canonical E3 Redirects Carry Exact Live Outcomes
+
+Exp6681 SHALL instrument only the scored path created by
+`make_carnot_agent` with `E3AgentPolicy`. The agent adapter SHALL bind each
+policy proposal to the applied `GameAction`. Its `do_action_request` seam SHALL
+then bind that application to the exact return from `arc_env.step`. The
+instrument stays inactive unless a caller installs it before an episode.
+
+The transport SHALL use four explicit identities: `proposal_id`,
+`application_id`, `environment_step_id`, and `outcome_id`. Each child event
+SHALL carry its parent identity. A join SHALL use these identities. It SHALL
+not use list position or time as a key. Duplicate identities, missing parents,
+multiple children, action mismatches, and observation mismatches SHALL reject
+the affected lineage.
+
+Each joined row SHALL record the state hash, proposed action, policy-selected
+action, applied action, redirect reason, observations before and after, exact
+reward, termination, level change, family, attempt, action cost, and all four
+identities. The reward field SHALL copy a reward from the step return when the
+return schema provides one. The ARC SDK `FrameDataRaw` schema provides no
+scalar reward. For that schema, the row SHALL record an exact absence as
+`present=false` and `value=null`. It SHALL name the SDK schema as the source.
+The transport SHALL never derive a reward from pixels, level change, or score.
+Termination SHALL copy a returned termination value when present. For the ARC
+SDK schema, it SHALL map only the exact returned `GameState` value.
+
+The experiment SHALL run held-family episodes with the existing frozen,
+game-blind trace automaton. It SHALL use the live agent's observations and
+runtime state. It SHALL not read game source, run an offline ground-truth BFS,
+load a per-game adapter, or make a game, level, leaderboard, or solve claim.
+Archived rows MAY test schema compatibility. They SHALL not count as live
+outcome rows.
+
+`arc_outcome_transport_ready` SHALL be true only when every applied redirect
+has exactly one successful live outcome. `eligible_redirect_outcome_rows`
+SHALL equal the number of fully joined held-family redirect rows. Downstream
+utility work requires at least 30 such rows. Matched non-redirect live actions
+SHALL remain visible as controls. Missing, timed-out, errored, or ambiguous
+redirect outcomes SHALL fail the readiness reduction closed.
+
+The artifact SHALL attack duplicate identities, missing outcomes, reordered
+events, stale observations, mismatched actions, synthetic rewards, timeouts,
+environment errors, and partial writes. Reordering SHALL remain valid because
+the join uses identities. Every other ambiguity SHALL be rejected. The module
+SHALL write one atomic, checksummed
+`results/experiment_6681_arc_post_redirect_outcomes.json` with all fields in
+the active V582 task contract.
+
+#### SCENARIO-ARC-WMTE-6681-LINEAGE
+
+- GIVEN one policy proposal, one adapter application, one environment step,
+  and one live return
+- WHEN the event lists are reordered
+- THEN the reducer joins them through the four explicit identities
+- AND it produces the same row without using position or time.
+
+#### SCENARIO-ARC-WMTE-6681-EXACT-RETURN
+
+- GIVEN a live ARC SDK step return
+- THEN the joined row stores the complete observation, exact state,
+  level-change indicator, and exact reward presence
+- AND a missing SDK reward stays `null` instead of becoming a synthetic
+  level-change reward.
+
+#### SCENARIO-ARC-WMTE-6681-CONTROLS-AND-TAGS
+
+- GIVEN held-family actions with and without a redirect
+- THEN redirect rows and matched non-redirect controls carry family, attempt,
+  state hash, action cost, and full receipt lineage.
+
+#### SCENARIO-ARC-WMTE-6681-MISSING-OUTCOME
+
+- GIVEN an applied redirect with zero or more than one matching outcomes
+- THEN readiness is false
+- AND the gate summary names the exact identity and observed child count.
+
+#### SCENARIO-ARC-WMTE-6681-ATTACKS
+
+- GIVEN duplicate, missing, stale, mismatched, synthetic, timeout, error, or
+  partial-write events
+- THEN each ambiguity fails closed and appears in `lineage_attack_rows`
+- AND reordered valid events still join by identity.
+
+#### SCENARIO-ARC-WMTE-6681-NO-SOLVE
+
+- GIVEN any complete or blocked transport run
+- THEN `solve_claim_scope` is `none`
+- AND the run does not read game source, use an offline BFS, load an adapter,
+  update the solve registry, or claim a game or level solve.
+
+#### SCENARIO-ARC-WMTE-6681-ARTIFACT
+
+- GIVEN the required command
+- THEN Exp6681 writes one atomic artifact with the required V582 fields
+- AND its aggregate count and readiness value recompute from raw events
+- AND at least 30 joined redirects are required for the downstream row gate.
+
+## Implementation Status (REQ-ARC-WMTE-6681)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6681 | `python/carnot/agentic/arc_e3_outcome_transport.py`; canonical opt-in seams in `python/carnot/agentic/arc_competition_agent.py`; `python/carnot/experiment_6681_arc_post_redirect_outcomes.py`. | `tests/python/test_experiment_6681_arc_post_redirect_outcomes.py` (`SCENARIO-ARC-WMTE-6681-LINEAGE`, `EXACT-RETURN`, `CONTROLS-AND-TAGS`, `MISSING-OUTCOME`, `ATTACKS`, `NO-SOLVE`, `ARTIFACT`). |
