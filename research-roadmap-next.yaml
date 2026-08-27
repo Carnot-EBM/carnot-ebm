@@ -1,0 +1,1013 @@
+milestone: "2026.08.582"
+milestone_title: "Exact Transport and Prospective Adaptation"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+  - id: exp6674-v582-manifest-parity-contract
+    milestone: "2026.08.582"
+    deliverable: results/experiment_6674_v582_manifest_parity_contract.json
+    title: "V582 document-to-manifest parity contract"
+    priority: critical
+    track: execution-integrity
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 100
+    estimated_wall_time_min: 45
+    agent_type: claude
+    model: opus
+    prior_failures:
+      - experiment_id: exp6660-v581-evidence-contract
+        verdict: "missing_terminal_artifact: three Gemini dispatch attempts failed before experiment execution"
+        addressed_by: "This attempt uses an executable Claude Opus preflight and compares the exact design and YAML task sets; it does not depend on Gemini metadata."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      V581 reached a terminal conductor state with only four active YAML tasks even though its design document declared fourteen. Its first task failed on unavailable Gemini metadata. V582 must prove that the active execution contract matches the design before scientific work proceeds. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/research-roadmap.yaml and {project_root}/research-roadmap-next.yaml when present
+      - {project_root}/research-complete.yaml, {project_root}/ops/conductor-log.md, {project_root}/ops/exclusion_manifest.yaml, and all available Exp6660-Exp6663 records
+      - {project_root}/scripts/roadmap_schema.py, {project_root}/scripts/validate_prior_failures.py, {project_root}/scripts/audit_roadmap_gates.py, {project_root}/scripts/exclusion_manifest_lint.py, and {project_root}/scripts/conductor_gates.py
+      - relevant evidence, reporting, and pipeline specs plus {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Audit the complete V582 execution contract. Confirm exact document-to-YAML task-set parity, conductor order, deliverables, dependencies, structured gates, producer field spelling, prior-failure entries, routes, and run commands. Do not patch the roadmap, validators, exclusion manifest, conductor, or implementation code.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash the active and next roadmaps when present, the V582 design, the conductor, the exclusion manifest, and the V581 records; record Python, CPU, RAM, disk, and the no-LLM substrate.
+      1. Parse the V582 design and manifest. Require exactly exp6674 through exp6687 in identical order with one unique JSON deliverable each.
+      2. Compare title, track, resource flag, dependency, gate, route, prior-failure block, required artifact field, and run command for every task.
+      3. For every gate, prove that the upstream task exists in V582 and declares the artifact_field with identical spelling in its own REQUIRED ARTIFACT FIELDS.
+      4. Check each dependency and prior experiment against the exclusion manifest and completed record. Reject a reference to a retired upstream task.
+      5. Run YAML parse, roadmap schema, prior-failure, gate-contract, and exclusion-manifest checks in read-only mode. Record the stale audit rule that pins Codex to gpt-5.5 as a validator mismatch because this operator plan requires gpt-5.6-sol; do not silently treat it as a task defect and do not patch it.
+      6. Set v582_manifest_parity_ready=true only if task sets, order, fields, gates, paths, and commands match and there is no activation-hard violation.
+      7. Write atomically. Run focused validation, row consistency, artifact validation, adversarial verification, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6674_v582_manifest_parity_contract.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal task state. Principle: deterministic process evidence.
+        honest_verdict: parity conclusion with no scientific claim. Principle: measured evidence only.
+        verdict_class: one of positive|circular_positive|null|blocked|disqualified|partial; ready infrastructure is null. Principle: closed classification.
+        gate_check_summary: exact failed check, expected value, and observed value for any blocked result. Principle: deterministic failure localization.
+        design_task_rows: ordered task IDs and declared fields from the design. Principle: raw contract evidence.
+        manifest_task_rows: ordered task IDs and declared fields from YAML. Principle: raw execution evidence.
+        producer_consumer_rows: gate producer, field, consumer, operator, and value. Principle: deterministic cross-reference evidence.
+        prior_failure_rows: prior scope, verdict, changed condition, and retirement signal. Principle: traceable lineage.
+        validator_rows: command, exit, output, classification, and hash. Principle: reproducible verification.
+        validator_mismatch_rows: dated operator-schema conflicts with no silent suppression. Principle: honest tool-boundary evidence.
+        v582_manifest_parity_ready: boolean owned by this task. Principle: deterministic reduction from complete rows.
+        per_unit_rows: every task, gate, prior, and validator row. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: readiness rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: inputs, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: before and after hashes for both roadmaps and the conductor. Principle: deterministic integrity.
+        inference_substrate: artifact_and_manifest_audit_no_llm. Principle: measured substrate identity.
+        verifier_is_oracle: true for this infrastructure contract. Principle: explicit circularity boundary.
+        field_provenance: source path, parser, function, and hash per field. Principle: traceable evidence.
+        random_seed: deterministic audit-order seed. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6674_v582_manifest_parity_contract --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6675-triggered-tail-scope-receipt
+    milestone: "2026.08.582"
+    deliverable: results/experiment_6675_triggered_tail_scope_receipt.json
+    title: "Triggered-tail task-owned verification receipt"
+    priority: critical
+    track: verification-transport
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 60
+    agent_type: codex
+    model: gpt-5.6-sol
+    prior_failures:
+      - experiment_id: exp6661-triggered-tail-fixture
+        verdict: "blocked_triggered_tail_fixture: tests failed"
+        addressed_by: "The fixture already passes every owned check; this task uses the approved task-owned verification scope and keeps the unrelated full-suite failure diagnostic."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp6661 built the frozen triggered-tail fixture. Its 33 focused tests, scoped coverage, lint, format, and spec coverage passed. Readiness was false only because the task also required the known-red repository-wide suite, whose 3,923 cached failures contained zero Exp6661 nodes. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V582 roadmap doc, and the V582 research-reference refresh
+      - {project_root}/results/experiment_6661_triggered_tail_fixture.json and {project_root}/results/experiment_6662_triggered_structured_tail_ab.json
+      - {project_root}/python/carnot/experiment_6661_triggered_tail_fixture.py and {project_root}/tests/python/test_experiment_6661_triggered_tail_fixture.py
+      - {project_root}/ops/known-issues.md entries on the red repository suite and verification scope
+      - relevant verification, evidence, reporting, and pipeline specs plus the E2E plan
+
+      TASK:
+      Qualify the existing fixture with task-owned evidence. Do not rebuild the corpus. Do not remove or hide the repository-wide suite diagnostic. If an owned check fails, diagnose and fix only the owned defect under spec-first and tests-first discipline.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash Exp6661 inputs, module, tests, specs, active roadmap, conductor, and global-suite diagnostic; record CPU, RAM, disk, and the no-LLM substrate.
+      1. Recompute the frozen manifest, arm contracts, semantic-free grammar receipt, exact positive and negative controls, leakage attacks, and all row counts from Exp6661.
+      2. Run the 33 focused tests, 100% scoped coverage, ruff check, format check, and spec coverage with the commands recorded in Exp6661.
+      3. Attribute every failing node to owned or unrelated scope. The readiness reducer may use only owned nodes. Record the full-suite failure count and cache hash as a non-gating diagnostic.
+      4. Attack answer permutation, label renaming, grammar-only recovery, trigger collision, premature trigger, missing trigger, malformed tail, unknown fields, and syntactically valid wrong answers.
+      5. Set triggered_tail_fixture_ready=true only if every owned check and attack passes and the frozen input hashes match.
+      6. If an owned defect exists, add or update REQ-* and SCENARIO-* anchors, write the focused failing test first, fix only that defect, and rerun all owned checks.
+      7. Write atomically. Run row consistency, artifact validation, adversarial verification, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6675_triggered_tail_scope_receipt.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal task state. Principle: deterministic process evidence.
+        honest_verdict: owned-scope readiness or exact blocker. Principle: measured evidence only.
+        verdict_class: closed enum; a ready fixture is null infrastructure. Principle: deterministic classification.
+        gate_check_summary: failed owned check and observed value for blocked results. Principle: deterministic failure localization.
+        frozen_input_receipts: Exp6661 artifact, source, test, spec, parser, grammar, and checker hashes. Principle: immutable provenance.
+        owned_test_rows: command, node set, exit, coverage, and duration. Principle: task-scoped verification.
+        global_suite_diagnostic: command, failure count, Exp6661-owned failure count, and cache hash. Principle: visible non-gating repository state.
+        exact_checker_rows: positive and negative controls per family. Principle: executable authority.
+        leakage_attack_rows: attack, expected result, observed result, and receipt. Principle: adversarial evidence.
+        triggered_tail_fixture_ready: boolean owned by this task. Principle: deterministic reduction from owned checks.
+        per_unit_rows: every test, checker, task, and attack row. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: readiness rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: inputs, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: cpu_fixture_receipt_and_exact_checks_no_llm. Principle: measured substrate identity.
+        verifier_is_oracle: true because exact fixtures define readiness. Principle: explicit circularity boundary.
+        field_provenance: source path, function, and hash per field. Principle: traceable evidence.
+        random_seed: deterministic attack-order seed. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6675_triggered_tail_scope_receipt --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6676-three-family-triggered-tail-ab
+    milestone: "2026.08.582"
+    deliverable: results/experiment_6676_three_family_triggered_tail_ab.json
+    title: "Three-family delayed syntax-tail A/B"
+    priority: critical
+    track: verification-transport
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 240
+    gated_on:
+      - upstream: exp6675-triggered-tail-scope-receipt
+        artifact_field: triggered_tail_fixture_ready
+        op: in
+        value: [true]
+    prior_failures:
+      - experiment_id: exp5923-sota-schema-supported-constraintir-ab
+        verdict: "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates"
+        addressed_by: "The treatment preserves free reasoning and constrains only a short semantic-free tail; immediate JSON is a control and no answer-ID transport is used."
+        retire_if_same_verdict: true
+      - experiment_id: exp6662-triggered-structured-tail-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp6675 replaces the false global-suite readiness gate with an owned-scope receipt before this comparison runs."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      V580 parsed 10 of 48 direct exact-certificate rows. V581's A/B never ran because its valid fixture was held behind an unrelated global-suite failure. This task now compares three output transports on the same frozen exact corpus. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/scripts/experiment_template.py, and the V582 roadmap doc
+      - {project_root}/results/experiment_6675_triggered_tail_scope_receipt.json, Exp6661, Exp6648, Exp6649, Exp6650, and Exp5923 artifacts
+      - {project_root}/python/carnot/inference/sota_models.py, GGUF loaders, embedded-tokenizer helpers, and lease/process receipt code
+      - exact corpus, parser, compiler, checker, evidence, inference, safety, and reporting specs plus the E2E plan
+
+      TASK:
+      Compare natural extraction, immediate JSON, and free reasoning followed by a trigger-switched semantic-free syntax tail on all three mandated local GGUF families. Exact executable checkers remain the only semantic authority.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: resolve all model files from the local cache; verify GGUF magic, hashes, embedded tokenizers, CUDA visibility, VRAM, disk, RAM, lease ownership, port ownership, and no conflicting workload. If a mandated model cannot run on CUDA, write a blocked artifact and stop.
+      1. Use MODEL_SPECS containing unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Resolve through cached_sota_pair() and resolve_cached_gguf(). Legacy small models may run CPU smoke tests only and cannot satisfy a headline row.
+      2. Freeze tasks, prompts, three arm contracts, seeds, generation settings, proposal-token budgets, stopping rules, parsers, grammar hash, checker hashes, model order, and missing-row policy before inference.
+      3. Launch fresh owner-bound llama.cpp CUDA processes. Run matched model-task-arm units. Record raw text, reasoning text, trigger position, tail, parse outcome, exact outcome, harmful flip, token counts, latency, process identity, and accelerator evidence.
+      4. Keep one planned generation per unit. Do not use suffix regeneration, answer IDs, hidden gold fields, solver-generated answers in prompts, or grammar alternatives that encode the answer.
+      5. Compute exact success and parse yield overall, per model, and per held family. Report paired deltas, intervals, wins, losses, ties, harmful flips, missing rows, and no-headroom rows.
+      6. Set triggered_tail_ab_ready=true only when every preregistered unit is present or explicitly missing with cause, all raw outputs and receipts exist, and aggregates recompute from rows.
+      7. Write atomically. Cleanly unload servers and release leases. Run focused tests, scoped coverage, spec coverage, row/artifact/adversarial checks, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6676_three_family_triggered_tail_ab.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal task state. Principle: deterministic process evidence.
+        honest_verdict: exact transport result or precise blocker. Principle: measured evidence only.
+        verdict_class: closed enum; verifier_is_oracle=true forbids independent positive. Principle: deterministic classification.
+        gate_check_summary: upstream or runtime failed check with expected and observed values. Principle: deterministic failure localization.
+        model_specs: exact hub IDs, paths, hashes, tokenizer sources, quantization, GPU assignments, and roles. Principle: substrate identity.
+        models_used: exact mandated hub IDs that completed rows. Principle: measured model provenance.
+        frozen_run_manifest: tasks, arms, seeds, budgets, settings, order, parsers, grammar, and checker hashes. Principle: preregistered comparison.
+        per_model_process_receipts: PID/start, port, owner token, model hash, phase, CUDA UUID, VRAM, inference count, unload, and release. Principle: authentic accelerator use.
+        per_unit_rows: every model-task-arm unit with raw output, trigger, parse, exact result, tokens, latency, and receipt links. Principle: recheckable comparative evidence.
+        held_family_rows: per-family exact outcomes and paired arm deltas. Principle: transfer evidence.
+        harmful_flip_rows: baseline-correct units made wrong by a constrained arm. Principle: safety accounting.
+        exact_success_summary: exact counts, rates, paired deltas, and intervals rebuilt from rows. Principle: deterministic aggregation.
+        parse_transport_summary: parse counts and rates separated from semantic success. Principle: claim separation.
+        triggered_tail_ab_ready: boolean owned by this task. Principle: completeness reduction from rows.
+        aggregate_row_recomputation: all headlines rebuilt from per-unit rows. Principle: deterministic aggregation.
+        preconditions_checked: cache, CUDA, lease, process, memory, disk, and input receipts. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: local_llamacpp_cuda_mandated_gguf_three_family. Principle: measured substrate identity.
+        verifier_is_oracle: true because executable task checkers define correctness. Principle: explicit circularity boundary.
+        field_provenance: raw source, parser, checker, function, and hash per field. Principle: traceable evidence.
+        random_seed: base and per-unit seeds. Principle: reproducibility.
+        duration_s: total monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6676_three_family_triggered_tail_ab --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6677-triggered-tail-independent-audit
+    milestone: "2026.08.582"
+    deliverable: results/experiment_6677_triggered_tail_independent_audit.json
+    title: "Delayed syntax-tail blinded row audit"
+    priority: high
+    track: verification-transport
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 40
+    estimated_wall_time_min: 90
+    gated_on:
+      - upstream: exp6676-three-family-triggered-tail-ab
+        artifact_field: triggered_tail_ab_ready
+        op: in
+        value: [true]
+    prior_failures:
+      - experiment_id: exp6652-constraint-intervention-audit
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "This audit consumes a complete fixed-arm row set instead of the retired suffix-regeneration headroom chain."
+        retire_if_same_verdict: true
+      - experiment_id: exp6663-structured-tail-independent-audit
+        verdict: "preemptive_skip: upstream gate chain terminated before a terminal artifact was produced"
+        addressed_by: "Exp6676 now owns an explicit completeness field and this audit is gated on that exact producer field."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp6676 makes a comparative claim over three models and three output transports. This task must reproduce that claim from blinded raw rows and test whether the delayed grammar contains answer information. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V582 roadmap doc, and the V582 reference refresh
+      - {project_root}/results/experiment_6676_three_family_triggered_tail_ab.json, Exp6675, Exp6661, Exp6652, and Exp5923 artifacts
+      - exact checker, parser, GGUF receipt, row-consistency, artifact-validation, and adversarial-verification code and tests
+      - relevant verification, evidence, reporting, safety, and inference specs plus the E2E plan
+
+      TASK:
+      Blind model and arm labels, rerun exact checkers in cold processes, rebuild all aggregates, and attack syntax leakage, parser coercion, missing-row handling, duplicates, and budget equality. Do not generate new model answers.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash Exp6676, raw output stores, frozen manifest, checkers, parsers, grammar, active roadmap, and conductor; record CPU, RAM, disk, and the no-new-LLM substrate.
+      1. Freeze a deterministic blinding map. Verify one-to-one coverage of every preregistered model-task-arm unit.
+      2. Rerun exact executable checks from raw output bytes in isolated cold processes. Recompute parse yield, exact success, paired deltas, intervals, harmful flips, and held-family results.
+      3. Attack answer permutation, label renaming, grammar-only recovery, trigger collision, tail removal, malformed JSON, unknown fields, parser coercion, duplicate rows, dropped failures, unequal budgets, and model-receipt substitution.
+      4. Compare reported and recomputed fields. Missing values remain missing. A parse gain without exact gain remains a transport-only result.
+      5. Set independent_audit_passed=true only if row coverage, cold checks, aggregates, budgets, receipts, and leakage tests all pass.
+      6. Classify any result with executable-oracle correctness as circular_positive at most. Do not promote it to an oracle-distinct verifier claim.
+      7. Write atomically. Run focused tests, scoped coverage, spec coverage, row/artifact/adversarial checks, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6677_triggered_tail_independent_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal audit state. Principle: deterministic process evidence.
+        honest_verdict: reproduced, corrected, null, or blocked conclusion. Principle: measured evidence only.
+        verdict_class: closed enum with oracle circularity preserved. Principle: deterministic classification.
+        gate_check_summary: failed upstream or audit check with expected and observed values. Principle: deterministic failure localization.
+        blinding_receipt: sealed label map hash and reveal procedure. Principle: independent evaluation.
+        row_coverage_rows: expected and observed unit identities. Principle: completeness evidence.
+        cold_checker_rows: raw-output hash, checker identity, expected field, and recomputed result per unit. Principle: executable authority.
+        leakage_attack_rows: attack, expected result, observed result, and implicated field. Principle: adversarial evidence.
+        budget_equality_rows: matched token and generation budgets per paired unit. Principle: fair comparison.
+        harmful_flip_rows: all correct-to-wrong interventions. Principle: safety accounting.
+        reported_vs_recomputed: field-level differences and corrections. Principle: deterministic audit.
+        independent_audit_passed: boolean owned by this task. Principle: deterministic reduction from audit checks.
+        per_unit_rows: every unit, check, attack, and comparison. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: all audited headlines rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: inputs, tools, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: cold_exact_replay_no_new_llm. Principle: measured substrate identity.
+        verifier_is_oracle: true. Principle: explicit circularity boundary.
+        field_provenance: source bytes, parser, checker, function, and hash per field. Principle: traceable evidence.
+        random_seed: blinding and attack-order seeds. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6677_triggered_tail_independent_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6678-constraint-family-stream
+    milestone: "2026.08.582"
+    deliverable: results/experiment_6678_constraint_family_stream.json
+    title: "Independent constraint-family prequential stream"
+    priority: critical
+    track: continuous-self-learning
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    agent_type: codex
+    model: gpt-5.6-sol
+    prior_failures:
+      - experiment_id: exp5709-fr11-prospective-shadow-stream
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "This attempt builds a sealed no-LLM multi-family fixture before any prospective run and owns its exact stream-readiness field in the same roadmap."
+        retire_if_same_verdict: true
+      - experiment_id: exp5786-sota-hardness-controlled-constraint-stream
+        verdict: "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold"
+        addressed_by: "This task emits exact-checkable event definitions without model responses, so parser failure cannot suppress fixture readiness."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      V580's repair memory was safe and reversible, but all evidence came from one fixture. The next continuous-learning test needs independent constraint families, sealed order manifests, and exact event authority before any model run. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md Continuous Self-Learning section, and the V582 roadmap doc
+      - {project_root}/results/experiment_6653_state_grounded_repair_memory_fixture.json, Exp6654, Exp6655, Exp6675, and Exp6661 artifacts
+      - repair-memory stores, atomic state writers, inverse-patch code, exact scheduling, graph, logic, plan-state checkers, and their tests
+      - relevant self-learning, verification, constraint-compiler, evidence, safety, and reporting specs plus the E2E plan
+
+      TASK:
+      Build a frozen prequential stream across at least four independent exact-checkable constraint families. Define a family-blind typed repair record, held-family partitions, five or more event orders, and byte-exact restart and rollback fixtures. Do not run an LLM.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash all source corpora, checkers, repair-memory modules, state schemas, active roadmap, and conductor; record CPU, RAM, disk, writable state path, and the no-LLM substrate.
+      1. Add REQ-* and SCENARIO-* anchors for prequential ordering, between-event admission, family-blind keys, exact validation, retirement, restart, and inverse-patch rollback. Write focused tests first.
+      2. Build scheduling, graph, arithmetic or logic, and plan-state event families. Each family needs executable positive and negative controls and at least one transferable repair operator.
+      3. Freeze calibration and held-family partitions plus at least five event orders. Prevent task identity, family label, future outcome, hidden gold, and future state from entering retrieval keys.
+      4. Define each event with visible pre-event state, exact violation witness, candidate operator, applicability key, support, anchors, version, provenance, and inverse patch.
+      5. Attack future leakage, family-specific keys, duplicate events, shuffled timestamps, poison patches, support collapse, anchor regression, partial writes, restart corruption, and non-invertible rollback.
+      6. Set constraint_family_stream_ready=true only if every family, order, checker control, isolation test, restart test, and rollback test passes.
+      7. Write atomically. Run focused tests, 100% scoped coverage, lint, format, spec coverage, row/artifact/adversarial checks, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6678_constraint_family_stream.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal fixture state. Principle: deterministic process evidence.
+        honest_verdict: stream readiness or exact blocker with no benefit claim. Principle: measured evidence only.
+        verdict_class: closed enum; a ready stream is null infrastructure. Principle: deterministic classification.
+        gate_check_summary: failed family, checker, isolation, state, or test check with observed value. Principle: deterministic failure localization.
+        family_manifest: family definitions, sources, checkers, operators, partitions, counts, and hashes. Principle: immutable family evidence.
+        event_order_manifests: ordered event IDs, timestamps, split roles, seeds, and hashes. Principle: prospective evaluation.
+        typed_repair_schema: visible fields, excluded fields, version, provenance, and inverse patch. Principle: deterministic memory contract.
+        exact_checker_rows: positive and negative controls per family. Principle: executable authority.
+        isolation_attack_rows: future, family, identity, duplicate, poison, and ordering attacks. Principle: adversarial evidence.
+        restart_rollback_rows: atomic write, restart, inverse patch, and byte equality per case. Principle: recoverability evidence.
+        constraint_family_stream_ready: boolean owned by this task. Principle: deterministic reduction from complete rows.
+        per_unit_rows: every event, family, order, checker, and attack row. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: readiness and counts rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: inputs, tools, state path, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: cpu_stream_fixture_and_exact_checkers_no_llm. Principle: measured substrate identity.
+        verifier_is_oracle: true because exact family checkers define validity. Principle: explicit circularity boundary.
+        field_provenance: source path, checker, function, and hash per field. Principle: traceable evidence.
+        random_seed: base, family, and order seeds. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6678_constraint_family_stream --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6679-prequential-cross-family-csl-ab
+    milestone: "2026.08.582"
+    deliverable: results/experiment_6679_prequential_cross_family_csl_ab.json
+    title: "Prequential cross-family continuous self-learning A/B"
+    priority: critical
+    track: continuous-self-learning
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 300
+    gated_on:
+      - upstream: exp6678-constraint-family-stream
+        artifact_field: constraint_family_stream_ready
+        op: in
+        value: [true]
+    prior_failures:
+      - experiment_id: exp6655-repair-memory-safety-audit
+        verdict: "complete_null: safety replay passed and point estimates reproduced, but the order-level interval includes zero; narrow the result to this fixture"
+        addressed_by: "This attempt uses four independent families, held-family transfer, five prospective orders, and between-event writes instead of one-fixture pooled evidence."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      FR-11 requires an autonomous loop that lowers future held-out energy or exact error under immutable validation and rollback. V580 memory was safe but independently null on one fixture. Recent Memoir evidence also warns that writing memory during reasoning can slow fixed-budget learning. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, the V582 roadmap doc, and the V582 reference refresh
+      - {project_root}/results/experiment_6678_constraint_family_stream.json, Exp6653, Exp6654, and Exp6655 artifacts
+      - {project_root}/scripts/experiment_template.py, {project_root}/python/carnot/inference/sota_models.py, repair-memory modules, exact checkers, and atomic state code
+      - relevant self-learning, verification, inference, evidence, safety, and reporting specs plus the E2E plan
+
+      TASK:
+      Run frozen, context-only, and exact-checker-admitted memory arms prospectively across the sealed event orders and held families. Keep reasoning read-only. Commit or retire memory patches only between events. Measure future exact outcomes, not self-scores.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: resolve at least unsloth/Qwen3.6-35B-A3B-GGUF from the local cache; verify GGUF magic, hash, embedded tokenizer, CUDA, VRAM, lease and port ownership, RAM, disk, state path, and no conflicting workload. If the mandated headline model cannot run on CUDA, write a blocked artifact and stop.
+      1. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF. Add unsloth/gemma-4-31B-it-GGUF and unsloth/gemma-4-26B-A4B-it-GGUF when the preregistered resource plan supports complete matched rows. Legacy small models may run CPU smoke tests only.
+      2. Freeze arm definitions, event orders, model settings, candidate repair operators, retrieval policy, admission rules, retirement rules, token budgets, state paths, seeds, and missing-event policy.
+      3. Start every arm and order from the same sealed state. Frozen cannot retain state. Context-only receives matched visible history without a persistent store. Verified memory reads only state committed before event t.
+      4. Run model reasoning read-only for each event. Stage any proposed patch outside the active store. Admit it between events only after exact source repair, held-anchor non-regression, recoverable support, schema, atomic-write, restart, and inverse-patch checks.
+      5. Emit every event-arm-order-family row with retrieval, influence, proposal, admission or rejection reason, exact outcome, energy or violation count, tokens, latency, state version, support, and receipt lineage.
+      6. Compute future exact yield, cumulative regret, held-family transfer, forgetting, negative transfer, patch survival, retirement, and order-level intervals. Do not pool events as independent replicates.
+      7. Set prequential_csl_ab_ready=true only when every preregistered event has an explicit row, all state transitions replay, and aggregates recompute. Write atomically, unload the model, release leases, and run focused tests, scoped coverage, spec coverage, row/artifact/adversarial checks, E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6679_prequential_cross_family_csl_ab.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal experiment state. Principle: deterministic process evidence.
+        honest_verdict: prospective CSL result or precise blocker. Principle: measured evidence only.
+        verdict_class: closed enum with oracle circularity preserved. Principle: deterministic classification.
+        gate_check_summary: failed upstream, model, state, or acceptance check with expected and observed values. Principle: deterministic failure localization.
+        model_specs: mandated hub IDs, paths, hashes, tokenizer sources, quantization, GPU assignments, and roles. Principle: substrate identity.
+        models_used: exact hub IDs that completed headline rows. Principle: measured model provenance.
+        frozen_run_manifest: arms, orders, families, settings, policies, budgets, paths, seeds, and hashes. Principle: preregistered comparison.
+        per_model_process_receipts: PID/start, port, owner, model hash, CUDA UUID, VRAM, phase, inference count, unload, and release. Principle: authentic accelerator use.
+        initial_state_receipts: sealed state bytes and hashes per arm-order pair. Principle: matched starts.
+        per_unit_rows: every event-arm-order-family row with visible state, retrieval, influence, patch decision, exact outcome, cost, and lineage. Principle: recheckable comparative evidence.
+        patch_ledger_rows: proposal, exact admission checks, version, support, survival, retirement, and inverse patch. Principle: inspectable learning state.
+        held_family_rows: future exact outcomes and deltas for families excluded from memory construction. Principle: transfer evidence.
+        order_level_statistics: paired effects and intervals with order as the independent unit. Principle: valid uncertainty.
+        future_exact_yield_summary: exact yield, regret, forgetting, negative transfer, and retention rebuilt from rows. Principle: deterministic aggregation.
+        restart_and_rollback_receipts: atomic restart and byte-exact inverse patches. Principle: recoverability evidence.
+        prequential_csl_ab_ready: boolean owned by this task. Principle: completeness reduction from raw rows.
+        aggregate_row_recomputation: all headlines rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: cache, CUDA, lease, process, state, memory, disk, and input receipts. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: local_llamacpp_cuda_mandated_gguf_prequential_memory. Principle: measured substrate identity.
+        verifier_is_oracle: true because exact checkers admit patches and score outcomes. Principle: explicit circularity boundary.
+        field_provenance: event, model output, parser, checker, state function, and hash per field. Principle: traceable evidence.
+        random_seed: base, model, event, and order seeds. Principle: reproducibility.
+        duration_s: total monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6679_prequential_cross_family_csl_ab --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6680-csl-durability-audit
+    milestone: "2026.08.582"
+    deliverable: results/experiment_6680_csl_durability_audit.json
+    title: "Cross-family CSL chronological durability audit"
+    priority: high
+    track: continuous-self-learning
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    gated_on:
+      - upstream: exp6679-prequential-cross-family-csl-ab
+        artifact_field: prequential_csl_ab_ready
+        op: in
+        value: [true]
+    prior_failures:
+      - experiment_id: exp6655-repair-memory-safety-audit
+        verdict: "complete_null: safety replay passed and point estimates reproduced, but the order-level interval includes zero; narrow the result to this fixture"
+        addressed_by: "The audit now replays independent families and sealed chronological orders, and it tests between-event isolation plus held-family transfer."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp6679 makes the milestone's continuous self-learning claim. This task must reproduce it from sealed initial state and raw chronological rows. It must also test leakage, poisoning, atomicity, restart, rollback, support, and held-family transfer. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V582 roadmap doc, and the FR-11 requirements
+      - {project_root}/results/experiment_6679_prequential_cross_family_csl_ab.json, Exp6678, Exp6655, and their state stores and raw rows
+      - atomic writer, inverse patch, memory retrieval, retirement, exact checker, statistics, row consistency, and artifact verification code and tests
+      - relevant self-learning, verification, evidence, safety, and reporting specs plus the E2E plan
+
+      TASK:
+      Replay every arm and order chronologically from sealed state. Recompute all outcomes and uncertainty. Attack future leakage, family keys, poison patches, duplicates, support collapse, anchor regression, non-atomic state, restart, and rollback. Do not run new LLM inference.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash Exp6678, Exp6679, raw outputs, state bytes, checkers, policies, active roadmap, and conductor; record CPU, RAM, disk, and the no-new-LLM substrate.
+      1. Verify each arm-order initial-state hash. Replay events in timestamp order using only state committed before each event.
+      2. Recompute retrieval, influence, admission, retirement, exact outcome, future yield, regret, forgetting, negative transfer, support, and held-family transfer from source rows and exact checks.
+      3. Recompute paired order-level and family-level intervals. Do not treat events from one order as independent replicates. An interval that includes zero is null.
+      4. Attack future outcomes in keys, family and task labels in keys, duplicate events, deleted failures, reordered timestamps, poison patches, invalid inverse patches, anchor regression, support collapse, torn writes, restart drift, and rollback mismatch.
+      5. Verify that no learned or model-generated score admitted a patch without exact checks. Preserve rejected patches and reasons.
+      6. Set csl_durability_audit_passed=true only if replay, statistics, leakage, poison, support, restart, rollback, and row coverage checks pass.
+      7. Write atomically. Run focused tests, scoped coverage, spec coverage, row/artifact/adversarial checks, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6680_csl_durability_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal audit state. Principle: deterministic process evidence.
+        honest_verdict: reproduced, corrected, null, disqualified, or blocked CSL conclusion. Principle: measured evidence only.
+        verdict_class: closed enum with oracle circularity preserved. Principle: deterministic classification.
+        gate_check_summary: failed upstream or audit check with expected and observed values. Principle: deterministic failure localization.
+        sealed_state_rows: initial and final state hashes per arm and order. Principle: matched chronological replay.
+        chronological_replay_rows: event state-in, retrieval, patch decision, exact result, and state-out. Principle: prospective evidence.
+        order_level_recomputation: paired effects and intervals by order. Principle: valid uncertainty.
+        family_level_recomputation: held and observed family effects. Principle: transfer evidence.
+        poison_and_leakage_rows: every attack and observed result. Principle: adversarial evidence.
+        support_anchor_rows: support, anchors, regression, survival, and retirement. Principle: safe learning evidence.
+        restart_rollback_rows: atomic restart, torn-write rejection, inverse patch, and byte equality. Principle: recoverability evidence.
+        reported_vs_recomputed: field-level differences and corrections. Principle: deterministic audit.
+        csl_durability_audit_passed: boolean owned by this task. Principle: deterministic reduction from audit checks.
+        per_unit_rows: every event, order, family, patch, and attack row. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: all audited headlines rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: inputs, tools, state, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: chronological_exact_replay_no_new_llm. Principle: measured substrate identity.
+        verifier_is_oracle: true. Principle: explicit circularity boundary.
+        field_provenance: source row, state function, checker, statistic, and hash per field. Principle: traceable evidence.
+        random_seed: replay and attack-order seeds. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6680_csl_durability_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6681-arc-post-redirect-outcomes
+    milestone: "2026.08.582"
+    deliverable: results/experiment_6681_arc_post_redirect_outcomes.json
+    title: "Canonical ARC post-redirect outcome transport"
+    priority: critical
+    track: live-arc-outcomes
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 180
+    prior_failures:
+      - experiment_id: exp6656-arc-trace-automaton-live-loo
+        verdict: "blocked: the canonical E3 action seam applied held-family redirects, but the archived transport has no exact outcomes after changed actions; no live-policy benefit, game solve, or level solve is claimed"
+        addressed_by: "This task instruments the canonical live environment step so each applied redirect receives its own exact next observation, reward, and termination receipt."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp6656 proved that the game-agnostic supervisor can change actions at the canonical E3 seam, but 2,067 eligible archived rows had no exact outcome after the changed action. A benefit comparison is invalid until the live environment return value is joined to the redirect receipt. This task improves the live path and makes no solve claim. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md ARC framing and live-path rules, the V582 roadmap doc, and {project_root}/ops/north-star.md
+      - {project_root}/results/experiment_6656_arc_trace_automaton_live_loo.json and its raw rows
+      - {project_root}/python/carnot/arc_competition_agent.py, E3AgentPolicy, make_carnot_agent, environment wrappers, action receipts, and trace-supervisor modules and tests
+      - {project_root}/ops/arc_solve_registry.yaml and relevant ARC, evidence, safety, reporting, and pipeline specs plus the E2E plan
+
+      TASK:
+      Instrument the canonical live E3 environment step so every supervisor decision and applied redirect is joined to the exact next observation, reward, termination state, and lineage. Use the live agent's own attempts and runtime state. Do not read game source, use an offline ground-truth BFS, build a per-game adapter, or claim a game or level solve.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: registry-precheck all public levels, hash the canonical agent, policy, environment, supervisor, trace schemas, active roadmap, and conductor; record SDK version, network/access state, CPU, RAM, disk, and the live-environment no-new-LLM instrumentation substrate.
+      1. Add REQ-* and SCENARIO-* anchors for proposal-to-application-to-outcome lineage, exact environment returns, held-family tags, non-redirect controls, missing-outcome rejection, and no-solve claim scope. Write focused tests first.
+      2. Instrument only the canonical path reached through make_carnot_agent and E3AgentPolicy. Join proposal ID, applied action ID, environment step ID, and outcome ID without a positional or timestamp-only join.
+      3. Record state hash, proposed action, applied action, redirect reason, observation before and after, exact reward, termination, level-change indicator, family, attempt, action cost, and receipt lineage for redirect and matched non-redirect rows.
+      4. Run held-family live episodes with the existing game-agnostic policy. Do not add game-specific knowledge. Archived replay may test schema compatibility only and cannot satisfy live outcome rows.
+      5. Attack duplicated IDs, dropped outcomes, reordered events, stale observations, mismatched actions, synthetic rewards, timeout, environment error, and partial writes. Fail closed on ambiguous lineage.
+      6. Set arc_outcome_transport_ready=true only when every applied redirect has exactly one live next-outcome row. Set eligible_redirect_outcome_rows to the exact count of fully joined held-family rows and require at least 30 for downstream utility work.
+      7. Write atomically. Run focused tests, 100% scoped coverage, lint, format, spec coverage, row/artifact/adversarial checks, applicable live E2E checks, and git status. Do not modify the ARC solve registry.
+
+      Required deliverable: {project_root}/results/experiment_6681_arc_post_redirect_outcomes.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal transport state. Principle: deterministic process evidence.
+        honest_verdict: live outcome readiness or exact blocker with no solve claim. Principle: measured evidence only.
+        verdict_class: closed enum; ready transport is null infrastructure. Principle: deterministic classification.
+        gate_check_summary: failed registry, access, join, live-path, row-count, or test check with observed value. Principle: deterministic failure localization.
+        registry_precheck: current solve registry hash and duplicate-solve exclusion result. Principle: live-path discipline.
+        canonical_path_receipt: make_carnot_agent, E3AgentPolicy, environment step, supervisor, and hashes. Principle: runtime reachability.
+        outcome_schema: proposal, application, environment, and outcome identity contract. Principle: deterministic transport.
+        redirect_outcome_rows: every live redirect joined to exact next outcome. Principle: outcome-bearing raw evidence.
+        non_redirect_control_rows: matched live actions without intervention. Principle: control evidence.
+        lineage_attack_rows: duplicate, missing, reordered, stale, synthetic, timeout, and partial-write attacks. Principle: adversarial evidence.
+        arc_outcome_transport_ready: boolean owned by this task. Principle: exact one-to-one live join reduction.
+        eligible_redirect_outcome_rows: integer owned by this task. Principle: measured downstream sample size.
+        solve_claim_scope: none. Principle: explicit non-solve boundary.
+        per_unit_rows: every episode, action, redirect, outcome, control, and attack row. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: readiness and counts rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: registry, access, SDK, path, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap, conductor, and solve registry hashes before and after. Principle: deterministic integrity.
+        inference_substrate: canonical_live_e3_environment_outcome_transport_no_new_llm. Principle: measured substrate identity.
+        verifier_is_oracle: true because environment outcomes define utility. Principle: explicit circularity boundary.
+        field_provenance: live return, wrapper, function, receipt ID, and hash per field. Principle: traceable evidence.
+        random_seed: episode and attack-order seeds. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6681_arc_post_redirect_outcomes --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6682-arc-held-family-supervisor-ab
+    milestone: "2026.08.582"
+    deliverable: results/experiment_6682_arc_held_family_supervisor_ab.json
+    title: "Held-family ARC supervisor outcome A/B"
+    priority: high
+    track: live-arc-outcomes
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 240
+    gated_on:
+      - upstream: exp6681-arc-post-redirect-outcomes
+        artifact_field: arc_outcome_transport_ready
+        op: in
+        value: [true]
+      - upstream: exp6681-arc-post-redirect-outcomes
+        artifact_field: eligible_redirect_outcome_rows
+        op: ">="
+        value: 30
+    prior_failures:
+      - experiment_id: exp6656-arc-trace-automaton-live-loo
+        verdict: "blocked: the canonical E3 action seam applied held-family redirects, but the archived transport has no exact outcomes after changed actions; no live-policy benefit, game solve, or level solve is claimed"
+        addressed_by: "Exp6681 supplies exact live post-redirect outcomes and a minimum eligible-row gate before this frozen supervisor comparison runs."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The existing game-agnostic trace supervisor changed canonical live-policy actions but lacked exact outcomes. Exp6681 now owns the live transport and eligible-row fields. This task asks only whether the frozen supervisor changes exact transition utility or forbidden actions on held families. It makes no game or level solve claim. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md ARC live-path rules, the V582 roadmap doc, and {project_root}/ops/north-star.md
+      - {project_root}/results/experiment_6681_arc_post_redirect_outcomes.json and Exp6656
+      - canonical E3 policy, environment step, trace supervisor, forbidden-action checker, action-cost accounting, and live receipt code and tests
+      - {project_root}/ops/arc_solve_registry.yaml and relevant ARC, evidence, reporting, statistics, and safety specs plus the E2E plan
+
+      TASK:
+      Freeze the game-agnostic supervisor and compare supervisor-off with supervisor-on on matched held-family live episodes. Measure exact next-transition outcomes, forbidden actions, false interventions, valid-action blocks, and action cost. Do not add game-specific knowledge or run an offline solve.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify Exp6681 gates, registry state, SDK and live access, frozen supervisor hash, canonical policy hash, episode budget, CPU, RAM, disk, active roadmap, and conductor. Stop with a blocked artifact on any failed gate.
+      1. Freeze held-family episodes, seeds, policy state, action budgets, stopping rules, supervisor hash, outcome definitions, forbidden-action rules, missing-row policy, and analysis plan.
+      2. Run matched supervisor-off and supervisor-on episodes through the canonical live E3 path. Use the agent's own attempts and runtime state. Do not read game source, use per-game adapters, or use outer-loop BFS.
+      3. Emit every proposal and applied action with intervention reason, before and after observations, exact reward or transition utility, termination, forbidden-action result, false-intervention result, action cost, family, and receipt lineage.
+      4. Compute paired forbidden-action delta, exact transition-utility delta, valid-action block delta, false interventions, actions spent, and intervals at episode and family levels. Report wins, losses, ties, and no-headroom rows.
+      5. Attack label leakage, unmatched episodes, duplicate actions, missing outcomes, unequal budgets, post-outcome supervisor decisions, game-specific rules, and archive substitution.
+      6. Set arc_supervisor_ab_ready=true only when every matched unit and raw receipt is complete and all aggregates recompute. A more rejective supervisor is not a positive result without exact utility or forbidden-action benefit.
+      7. Write atomically. Run focused tests, scoped coverage, spec coverage, row/artifact/adversarial checks, applicable live E2E checks, and git status. Do not modify the solve registry.
+
+      Required deliverable: {project_root}/results/experiment_6682_arc_held_family_supervisor_ab.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal experiment state. Principle: deterministic process evidence.
+        honest_verdict: held-family transition result or precise blocker with no solve claim. Principle: measured evidence only.
+        verdict_class: closed enum with environment-oracle circularity preserved. Principle: deterministic classification.
+        gate_check_summary: failed upstream, live-path, row, or analysis check with expected and observed values. Principle: deterministic failure localization.
+        registry_precheck: solve registry hash and no-duplicate-solve result. Principle: live-path discipline.
+        frozen_run_manifest: held families, episodes, arms, seeds, policy, supervisor, budgets, rules, and hashes. Principle: preregistered comparison.
+        canonical_path_receipts: policy, supervisor, environment, and exact outcome identities. Principle: runtime reachability.
+        per_unit_rows: every episode-action-arm row with proposal, intervention, outcome, forbidden state, validity, cost, and lineage. Principle: recheckable comparative evidence.
+        paired_episode_rows: off/on exact outcome and action deltas per episode. Principle: matched comparison.
+        held_family_rows: family-level deltas and intervals. Principle: generalization evidence.
+        false_intervention_rows: every valid baseline action blocked or changed without benefit. Principle: safety accounting.
+        forbidden_action_summary: paired counts, deltas, wins, losses, ties, and intervals. Principle: deterministic aggregation.
+        transition_utility_summary: paired exact outcome deltas and intervals. Principle: outcome evidence.
+        action_efficiency_summary: action and cost deltas without solve-rate claims. Principle: north-star efficiency evidence.
+        arc_supervisor_ab_ready: boolean owned by this task. Principle: completeness reduction from raw rows.
+        solve_claim_scope: none. Principle: explicit non-solve boundary.
+        aggregate_row_recomputation: all headlines rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: gates, registry, access, policies, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap, conductor, and solve registry hashes before and after. Principle: deterministic integrity.
+        inference_substrate: canonical_live_e3_supervisor_ab_no_new_llm. Principle: measured substrate identity.
+        verifier_is_oracle: true because live environment outcomes define utility. Principle: explicit circularity boundary.
+        field_provenance: live return, wrapper, checker, statistic, and hash per field. Principle: traceable evidence.
+        random_seed: episode, arm-order, and attack seeds. Principle: reproducibility.
+        duration_s: total monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6682_arc_held_family_supervisor_ab --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6683-ising-reference-scope-receipt
+    milestone: "2026.08.582"
+    deliverable: results/experiment_6683_ising_reference_scope_receipt.json
+    title: "Bounded-treewidth Ising task-owned receipt"
+    priority: critical
+    track: stochastic-portability
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 90
+    agent_type: codex
+    model: gpt-5.6-sol
+    prior_failures:
+      - experiment_id: exp6657-bounded-treewidth-ising-reference
+        verdict: "blocked_tests_check_failed: bounded exact-reference readiness was not established"
+        addressed_by: "The exact algorithm rows already pass; this task applies task-owned verification scope, fixes only owned defects, and preserves the global-suite state as diagnostic."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp6657 passed exact algorithm rows on twelve supported fixtures. Its readiness was false because the reducer mixed those rows with a failing full repository suite and spec-coverage receipt. The same verification-scope defect blocked Exp6658. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V582 roadmap doc, and the V582 reference refresh
+      - {project_root}/results/experiment_6657_bounded_treewidth_ising_reference.json, Exp6658, and Exp6639 artifacts
+      - bounded-treewidth decomposition, exact partition function, marginals, correlations, sampler, update-order, coefficient, and rejection code and tests
+      - {project_root}/ops/known-issues.md verification-scope entries and relevant sampling, hardware, evidence, reporting, and pipeline specs plus the E2E plan
+
+      TASK:
+      Qualify the existing bounded-treewidth exact Ising reference with task-owned algorithm and verification receipts. Preserve the known repository-suite state as a non-gating diagnostic. Fix only an owned defect, with spec-first and tests-first discipline, if one exists.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash Exp6657, reference source, tests, fixtures, specs, active roadmap, conductor, and global-suite diagnostic; record Python, CPU, RAM, disk, numeric libraries, and the no-LLM substrate.
+      1. Recompute fixture support, tree decomposition validity, width bounds, coefficient precision, update order, exact enumeration references, and unsupported-input expectations.
+      2. Replay partition functions, normalized probabilities, marginals, pair correlations, energies, exact samples on degenerate cases, and deterministic rejection rows.
+      3. Run focused tests, 100% scoped coverage, ruff, format, and task-owned spec coverage. Attribute failures to owned or unrelated scope. Keep the full-suite result visible but non-gating.
+      4. Attack disconnected graphs, repeated edges, sign changes, field terms, extreme temperatures, zero temperature, invalid decompositions, unsupported width, precision truncation, update-order drift, and missing normalization.
+      5. Set ising_reference_ready=true only if every supported fixture, exact field, rejection, owned test, coverage, and attack passes.
+      6. If an owned defect exists, add or update REQ-* and SCENARIO-* anchors, write the focused failing test first, fix only the defect, and rerun all owned checks.
+      7. Write atomically. Run row consistency, artifact validation, adversarial verification, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6683_ising_reference_scope_receipt.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal reference state. Principle: deterministic process evidence.
+        honest_verdict: exact-reference readiness or precise blocker. Principle: measured evidence only.
+        verdict_class: closed enum; a ready reference is null infrastructure. Principle: deterministic classification.
+        gate_check_summary: failed fixture, exact field, rejection, owned test, or attack with observed value. Principle: deterministic failure localization.
+        frozen_fixture_manifest: graph, width, couplings, biases, temperature, precision, update order, seed, and hash per fixture. Principle: immutable test evidence.
+        decomposition_rows: width, bags, separators, running-intersection result, and hash. Principle: exact structural evidence.
+        exact_probability_rows: state, energy, unnormalized weight, partition function, normalized probability, marginal, and correlation. Principle: exact authority.
+        rejection_rows: unsupported or invalid input with expected and observed failure. Principle: fail-closed boundary.
+        numeric_contract: coefficient type, precision, tolerance, accumulation, and update order. Principle: portable semantics.
+        owned_test_rows: command, nodes, exit, coverage, spec anchors, and duration. Principle: task-scoped verification.
+        global_suite_diagnostic: failure state and owned-node count without readiness influence. Principle: visible repository state.
+        attack_rows: topology, temperature, precision, normalization, and order attacks. Principle: adversarial evidence.
+        ising_reference_ready: boolean owned by this task. Principle: deterministic reduction from complete exact rows.
+        per_unit_rows: every fixture, state, marginal, correlation, rejection, test, and attack row. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: readiness and exact summaries rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: inputs, tools, libraries, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: cpu_bounded_treewidth_exact_inference_no_llm. Principle: measured substrate identity.
+        verifier_is_oracle: true because exact inference defines the reference. Principle: explicit circularity boundary.
+        field_provenance: fixture, exact function, numeric path, and hash per field. Principle: traceable evidence.
+        random_seed: fixture and attack-order seeds. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6683_ising_reference_scope_receipt --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6684-torx-typed-factor-parity
+    milestone: "2026.08.582"
+    deliverable: results/experiment_6684_torx_typed_factor_parity.json
+    title: "Torx energy-distribution conformance"
+    priority: high
+    track: stochastic-portability
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 150
+    agent_type: codex
+    model: gpt-5.6-sol
+    gated_on:
+      - upstream: exp6683-ising-reference-scope-receipt
+        artifact_field: ising_reference_ready
+        op: in
+        value: [true]
+    prompt: |
+      CONTEXT:
+      V582 needs a software portability contract before schedule or future hardware work. The local environment exposes Torx 0.0.1. Thermalizing Stochastic Programs motivates typed factors, but Carnot must first prove energy and probability parity on the installed CPU path. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V582 roadmap doc, and the V582 reference refresh
+      - {project_root}/results/experiment_6683_ising_reference_scope_receipt.json and Exp6657
+      - installed Torx package, local Torx probes or adapters, THRML references, exact Ising fixtures, energy functions, and numeric tests
+      - relevant sampling, hardware, verification, evidence, safety, and reporting specs plus the E2E plan
+
+      TASK:
+      Map supported exact Ising fixtures to typed Torx factors and compare factor energy, total energy, log weight, normalized probability, marginals, and rejection behavior on CPU. Do not claim TSU, FPGA, power, throughput, or asymptotic performance.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify the Exp6683 gate, import Torx and record exact version and API symbols, hash fixtures and exact functions, record CPU, RAM, disk, numeric libraries, active roadmap, and conductor. Block on a missing declared API; do not install or vendor a replacement.
+      1. Add REQ-* and SCENARIO-* anchors for typed binary wires, coupling and bias factors, temperature, numeric precision, factor composition, exact parity, unsupported inputs, and software-only claim scope. Write focused tests first.
+      2. Freeze the mapping from spin values, couplings, biases, temperature, coefficient precision, and update order to Torx binary variables and factors. Record one factor row per coupling and bias.
+      3. For every supported fixture and enumerated state, compare each factor energy, total energy, log weight, partition-normalized probability, marginals, and correlations with Exp6683.
+      4. Attack sign convention, spin encoding, temperature scaling, missing bias, duplicated factor, coefficient truncation, update-order mismatch, disconnected components, unsupported width, and API fallback.
+      5. Record absolute and relative errors per state and field. Do not hide null, NaN, overflow, underflow, or unsupported rows.
+      6. Set torx_factor_parity_ready=true only if every supported field meets preregistered tolerance, every unsupported case rejects, and all rows recompute.
+      7. Write atomically. Run focused tests, 100% scoped coverage, lint, format, spec coverage, row/artifact/adversarial checks, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6684_torx_typed_factor_parity.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal parity state. Principle: deterministic process evidence.
+        honest_verdict: exact parity conclusion or precise blocker. Principle: measured evidence only.
+        verdict_class: closed enum with exact-reference circularity preserved. Principle: deterministic classification.
+        gate_check_summary: failed upstream, API, parity, rejection, or test check with expected and observed values. Principle: deterministic failure localization.
+        torx_runtime_receipt: version, import path, symbols, backend, CPU, and package hash. Principle: measured software identity.
+        frozen_mapping_contract: spin encoding, factors, signs, temperature, precision, order, tolerance, and hashes. Principle: deterministic portability contract.
+        factor_rows: fixture, factor, inputs, exact energy, Torx energy, errors, and hash. Principle: local semantic evidence.
+        state_parity_rows: state, total energy, log weight, probability, marginal, correlation, errors, and validity. Principle: exact comparative evidence.
+        rejection_rows: unsupported input with expected and observed failure. Principle: fail-closed boundary.
+        attack_rows: sign, encoding, scale, bias, duplicate, precision, order, topology, and fallback attacks. Principle: adversarial evidence.
+        torx_factor_parity_ready: boolean owned by this task. Principle: deterministic reduction from complete parity rows.
+        claim_scope: installed_torx_cpu_software_only. Principle: explicit hardware boundary.
+        per_unit_rows: every factor, state, field, rejection, and attack row. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: readiness and error summaries rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: gate, package, API, fixtures, libraries, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: installed_torx_cpu_typed_factors_no_llm. Principle: measured substrate identity.
+        verifier_is_oracle: true because Exp6683 exact probabilities define parity. Principle: explicit circularity boundary.
+        field_provenance: fixture, exact function, Torx call, numeric path, and hash per field. Principle: traceable evidence.
+        random_seed: fixture and attack-order seeds. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6684_torx_typed_factor_parity --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6685-autocorrelation-schedule-ab
+    milestone: "2026.08.582"
+    deliverable: results/experiment_6685_autocorrelation_schedule_ab.json
+    title: "Autocorrelation-aware stochastic schedule A/B"
+    priority: high
+    track: stochastic-portability
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 210
+    agent_type: codex
+    model: gpt-5.6-sol
+    gated_on:
+      - upstream: exp6683-ising-reference-scope-receipt
+        artifact_field: ising_reference_ready
+        op: in
+        value: [true]
+      - upstream: exp6684-torx-typed-factor-parity
+        artifact_field: torx_factor_parity_ready
+        op: in
+        value: [true]
+    prior_failures:
+      - experiment_id: exp6658-thermodynamic-schedule-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The comparison now runs only after producer-owned exact-reference and Torx-parity fields pass, with task-owned receipts and chain-level evidence."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp6658 never ran because its exact-reference readiness gate was false. Exp6683 and Exp6684 now provide exact probabilities and typed software parity. This task compares schedules as samplers, not as optimizers. Energy minimum alone is not a quality metric. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V582 roadmap doc, and the V582 reference refresh
+      - {project_root}/results/experiment_6683_ising_reference_scope_receipt.json, Exp6684, Exp6658, Exp6597, and relevant sampler artifacts
+      - fixed-temperature Gibbs, preregistered thermodynamic schedule, Torx typed factors, chain statistics, autocorrelation, ESS, likelihood, and exact-reference code and tests
+      - relevant sampling, hardware, verification, evidence, statistics, and reporting specs plus the E2E plan
+
+      TASK:
+      Compare fixed-temperature Gibbs with the preregistered autocorrelation-aware schedule on exact supported fixtures at matched update budgets. Measure distribution fidelity and effective independent samples from raw chains. Make software-only bounded-fixture claims.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify both structured gates, exact fixture hashes, Torx runtime, sampler APIs, CPU, RAM, disk, numeric libraries, active roadmap, and conductor. Stop with a blocked artifact on any failed gate.
+      1. Freeze fixtures, baseline and treatment schedules, temperatures, burn-in, chain length, update count, scan order, coefficient precision, seeds, stopping rules, tolerances, and missing-chain policy.
+      2. Add or update REQ-* and SCENARIO-* anchors for matched-update comparison, raw-chain retention, likelihood error, state-frequency error, autocorrelation, integrated autocorrelation time, ESS, wall time, and rejection. Write focused tests first.
+      3. Run independent chains for every fixture-arm-seed unit. Retain state, energy, transition, temperature, update count, and monotonic time for every recorded step.
+      4. Compare empirical state probabilities, log-likelihood error, marginal error, correlation error, lag autocorrelation, integrated autocorrelation time, ESS, ESS per update, ESS per second, and wall time against exact references.
+      5. Report per-fixture and paired-seed deltas, intervals, wins, losses, ties, no-headroom cases, invalid chains, burn-in sensitivity, and precision sensitivity. Do not pool correlated samples as independent units.
+      6. Attack seed reuse, chain truncation, post-hoc burn-in, early stopping, selective fixture omission, temperature relabeling, update-order drift, coefficient truncation, and ESS inflation.
+      7. Set schedule_ab_ready=true only if every preregistered chain is present or explicitly invalid with cause, raw chains are retained, and aggregates recompute. Write atomically and run focused tests, scoped coverage, spec coverage, row/artifact/adversarial checks, E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6685_autocorrelation_schedule_ab.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal experiment state. Principle: deterministic process evidence.
+        honest_verdict: sampling comparison or precise blocker. Principle: measured evidence only.
+        verdict_class: closed enum with exact-reference circularity preserved. Principle: deterministic classification.
+        gate_check_summary: failed upstream, chain, statistic, or test check with expected and observed values. Principle: deterministic failure localization.
+        frozen_run_manifest: fixtures, arms, schedules, budgets, burn-in, lengths, order, precision, seeds, rules, and hashes. Principle: preregistered comparison.
+        sampler_runtime_receipts: implementation, Torx version, backend, process, CPU, precision, and hashes. Principle: measured substrate identity.
+        per_unit_rows: every fixture-arm-seed chain with validity, exact and empirical metrics, ACF, IAT, ESS, updates, and time. Principle: recheckable comparative evidence.
+        raw_chain_receipts: chain path, row count, first and last state, step schema, and hash. Principle: inspectable sampling evidence.
+        likelihood_rows: exact and empirical state probabilities and errors. Principle: distribution fidelity.
+        autocorrelation_rows: lag, ACF, truncation rule, IAT, and receipt per chain. Principle: dependence evidence.
+        effective_sample_rows: ESS, ESS per update, ESS per second, and method per chain. Principle: efficiency evidence.
+        paired_seed_rows: arm deltas, wins, losses, ties, and headroom per fixture-seed. Principle: matched comparison.
+        sensitivity_rows: burn-in, precision, and update-order variations. Principle: robustness evidence.
+        attack_rows: seed, truncation, burn-in, omission, relabeling, order, precision, and ESS attacks. Principle: adversarial evidence.
+        schedule_ab_ready: boolean owned by this task. Principle: completeness reduction from raw chains.
+        claim_scope: bounded_exact_fixtures_software_sampling_only. Principle: explicit hardware and asymptotic boundary.
+        aggregate_row_recomputation: all headlines rebuilt from per-unit rows. Principle: deterministic aggregation.
+        preconditions_checked: gates, fixtures, runtime, APIs, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: cpu_exact_reference_and_installed_torx_sampling_no_llm. Principle: measured substrate identity.
+        verifier_is_oracle: true because exact probabilities define sampler quality. Principle: explicit circularity boundary.
+        field_provenance: chain, exact function, statistic, runtime call, and hash per field. Principle: traceable evidence.
+        random_seed: base and chain seeds. Principle: reproducibility.
+        duration_s: total monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6685_autocorrelation_schedule_ab --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6686-stochastic-portability-audit
+    milestone: "2026.08.582"
+    deliverable: results/experiment_6686_stochastic_portability_audit.json
+    title: "Cold exact and raw-chain review"
+    priority: high
+    track: stochastic-portability
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    gated_on:
+      - upstream: exp6685-autocorrelation-schedule-ab
+        artifact_field: schedule_ab_ready
+        op: in
+        value: [true]
+    prompt: |
+      CONTEXT:
+      Exp6684 and Exp6685 make exact parity and sampler-comparison claims. This task independently recomputes them from frozen fixtures and raw chains. It must detect hidden filtering, correlated-sample inflation, precision drift, and update-order drift. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V582 roadmap doc, and the sampling claim rules
+      - {project_root}/results/experiment_6683_ising_reference_scope_receipt.json, Exp6684, Exp6685, and all raw chain stores
+      - exact enumerator, Torx mapping, chain parser, ACF, IAT, ESS, likelihood, row consistency, artifact validation, and adversarial verification code and tests
+      - relevant sampling, hardware, verification, evidence, statistics, safety, and reporting specs plus the E2E plan
+
+      TASK:
+      Rerun exact probabilities in a cold path and recompute every Torx parity and schedule metric from raw chain bytes. Audit fixture coverage, chain independence, budgets, precision, update order, statistics, and claim scope. Do not generate new chains unless a deterministic audit fixture requires it.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify the Exp6685 gate; hash Exp6683-Exp6685, fixtures, raw chains, exact code, statistics code, active roadmap, and conductor; record CPU, RAM, disk, and the no-new-sampling substrate.
+      1. Freeze deterministic audit and blinding maps. Verify one-to-one coverage of every expected fixture-factor-state and fixture-arm-seed chain.
+      2. Recompute exact energies, partition functions, probabilities, marginals, and correlations independently of the Torx adapter.
+      3. Recompute factor parity, empirical probabilities, likelihood error, marginal and correlation error, ACF, IAT, ESS, ESS per update, ESS per second, paired deltas, intervals, wins, losses, and ties from raw bytes.
+      4. Verify distinct chain seeds and state histories. Do not count within-chain samples as independent experimental units.
+      5. Attack fixture omission, row duplication, seed reuse, identical chains, truncation, post-hoc burn-in, temperature relabeling, unsupported graph inclusion, precision drift, update-order drift, runtime substitution, and ESS inflation.
+      6. Set stochastic_portability_audit_passed=true only if coverage, cold exact checks, parity, raw-chain statistics, budgets, attacks, and claim boundaries pass.
+      7. Write atomically. Run focused tests, scoped coverage, spec coverage, row/artifact/adversarial checks, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6686_stochastic_portability_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal audit state. Principle: deterministic process evidence.
+        honest_verdict: reproduced, corrected, null, disqualified, or blocked conclusion. Principle: measured evidence only.
+        verdict_class: closed enum with exact-reference circularity preserved. Principle: deterministic classification.
+        gate_check_summary: failed upstream or audit check with expected and observed values. Principle: deterministic failure localization.
+        blinding_receipt: factor, state, fixture, arm, seed map hash and reveal procedure. Principle: independent evaluation.
+        coverage_rows: expected and observed factor, state, and chain identities. Principle: completeness evidence.
+        cold_exact_rows: recomputed energy, partition, probability, marginal, correlation, and hashes. Principle: independent exact authority.
+        parity_recomputation_rows: reported and recomputed Torx fields and errors. Principle: deterministic audit.
+        chain_recomputation_rows: reported and recomputed likelihood, ACF, IAT, ESS, budgets, and time. Principle: raw-chain audit.
+        independence_rows: seed, chain hash, overlap, and independence-unit classification. Principle: valid uncertainty.
+        attack_rows: omission, duplicate, seed, chain, truncation, burn-in, relabeling, topology, precision, order, runtime, and ESS attacks. Principle: adversarial evidence.
+        reported_vs_recomputed: field-level differences and corrections. Principle: deterministic audit.
+        stochastic_portability_audit_passed: boolean owned by this task. Principle: deterministic reduction from audit checks.
+        claim_scope: installed_software_and_bounded_exact_fixtures_only. Principle: explicit hardware boundary.
+        per_unit_rows: every factor, state, chain, statistic, comparison, and attack row. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: all audited headlines rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: gates, inputs, tools, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: cold_exact_and_raw_chain_audit_no_new_sampling_no_llm. Principle: measured substrate identity.
+        verifier_is_oracle: true. Principle: explicit circularity boundary.
+        field_provenance: raw chain, exact function, statistic, runtime receipt, and hash per field. Principle: traceable evidence.
+        random_seed: blinding and attack-order seeds. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6686_stochastic_portability_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6687-v582-branch-synthesis
+    milestone: "2026.08.582"
+    deliverable: results/experiment_6687_v582_branch_synthesis.json
+    title: "V582 five-branch disposition"
+    priority: high
+    track: milestone-synthesis
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    prompt: |
+      CONTEXT:
+      V582 has four independent execution branches: manifest integrity, exact output transport, continuous self-learning, live ARC outcomes, and stochastic portability. This close task is deliberately ungated so it can record blocked and missing branches without turning them into zeros or pooled success. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, the V582 roadmap doc, and the V582 research-reference refresh
+      - every available Exp6674-Exp6686 artifact, raw row store, test receipt, and adversarial-verification record
+      - {project_root}/research-roadmap.yaml, {project_root}/research-complete.yaml, {project_root}/ops/conductor-log.md, {project_root}/ops/status.md, {project_root}/ops/changelog.md, and {project_root}/_bmad/traceability.md
+      - relevant output, self-learning, ARC, sampling, evidence, reporting, and pipeline specs plus the E2E plan
+
+      TASK:
+      Synthesize V582 at branch level. Recompute each headline from raw rows. Classify every task and branch. Reconcile specifications and operations documents only to measured evidence. Preserve missing, blocked, circular, null, disqualified, and partial states without coercion.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash all available V582 artifacts and raw stores, active roadmap, design doc, specs, traceability, status, changelog, research-complete, conductor, CPU, RAM, disk, and the no-LLM substrate.
+      1. Enumerate all 14 planned task IDs and record terminal artifact, conductor-only terminal state, missing state, deliverable hash, honest_verdict, verdict_class, duration, and gate diagnostics.
+      2. Recompute output exact success, parse yield, harmful flips, CSL future yield and order-level intervals, ARC outcome and false-intervention deltas, Torx parity, likelihood error, ACF, IAT, and ESS from per-unit rows when available.
+      3. Preserve oracle circularity. Exact checkers and live environments authorize validity but cannot support an oracle-distinct learned-verifier claim.
+      4. Run row consistency, verdict-class consistency, artifact validation, adversarial verification, recurring-blocker checks, and claim audits on every available artifact. Record missing audit inputs explicitly.
+      5. Write one branch row for execution integrity, output transport, CSL, ARC, and stochastic portability. Each row states evidence, class, claim boundary, promotion gate, and exact next action.
+      6. Reconcile the V582 change proposal, relevant capability specs, _bmad/traceability.md, ops/status.md, ops/changelog.md, and research-complete.yaml after the synthesis artifact exists. Do not erase previous content. Do not edit ops/north-star.md.
+      7. Write atomically. Run focused tests, spec coverage, row/artifact/adversarial checks, applicable end-to-end checks, roadmap-protection checks, and git status. Confirm no active-roadmap or conductor change.
+
+      Required deliverable: {project_root}/results/experiment_6687_v582_branch_synthesis.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal synthesis state. Principle: deterministic process evidence.
+        honest_verdict: branch-level V582 conclusion with no pooled success claim. Principle: measured evidence only.
+        verdict_class: one of positive|circular_positive|null|blocked|disqualified|partial. Principle: closed classification.
+        gate_check_summary: exact missing or failed synthesis check with observed value for blocked results. Principle: deterministic failure localization.
+        planned_task_rows: all fourteen task IDs, paths, expected branches, and order. Principle: complete contract evidence.
+        terminal_task_rows: artifact or conductor state, verdict, class, duration, hash, and diagnostic per task. Principle: raw milestone evidence.
+        missing_artifact_rows: every missing path, last conductor state, and consequence. Principle: no missing-to-zero coercion.
+        output_transport_branch: row-derived exact, parse, harmful-flip, audit, and claim-boundary result. Principle: branch evidence.
+        continuous_self_learning_branch: row-derived future yield, uncertainty, retention, restart, rollback, audit, and claim-boundary result. Principle: FR-11 evidence.
+        live_arc_outcome_branch: transport, utility, false-intervention, action, audit, and no-solve boundary. Principle: live-path evidence.
+        stochastic_portability_branch: exact reference, Torx parity, likelihood, ACF, IAT, ESS, audit, and software-only boundary. Principle: sampling evidence.
+        branch_rows: evidence, class, gate, claim boundary, and next action per branch. Principle: non-pooled synthesis.
+        validation_rows: validator, target, exit, finding, severity, and hash. Principle: reproducible verification.
+        documentation_reconciliation_rows: file, section, evidence source, change, and hash. Principle: traceable project state.
+        per_unit_rows: every planned task, terminal state, branch, metric recomputation, and validation row. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: all branch conclusions rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: inputs, tools, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: artifact_row_and_document_synthesis_no_llm. Principle: measured substrate identity.
+        verifier_is_oracle: mixed_by_branch with explicit branch values. Principle: explicit circularity boundary.
+        field_provenance: artifact, raw row, reducer, function, and hash per field. Principle: traceable evidence.
+        random_seed: deterministic audit-order seed. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6687_v582_branch_synthesis --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.

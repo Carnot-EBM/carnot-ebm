@@ -11,74 +11,49 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 4 |
+| CLAIM_SUPPORTED | 3 |
+| CLAIM_OVERSTATED | 1 |
 | NO_CLAIM | 4 |
-
-## experiment_6651_failure_localized_suffix_regeneration.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative result to falsify. Had the artifact claimed that failure-localized suffix regeneration outperformed its A/B rival, a tie or win by that rival would refute it.
-
-## WAS THAT CHECKED
-No. Execution stopped at the pre-gate before any A/B outcomes were produced.
-
-## EVIDENCE
-`status` `blocked` `honest_verdict` `blocked_gate_check_failed` `regeneration_headroom_count` `expected` `8` `actual` `2` `passed` `false` `blocked_at_layer` `conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6653_state_grounded_repair_memory_fixture.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No comparative or future-benefit claim is made; for the limited readiness receipt, a failed gate, undetected seeded attack, non-reversible transition, or malformed fixture row would refute readiness.
-
-## WAS THAT CHECKED
-Yes. Readiness was checked through aggregate gates, six adversarial attack rows, schema and partition checks, checksums, and rollback receipts. No future-benefit comparison or serious baseline was checked because none was claimed.
-
-## EVIDENCE
-`"honest_verdict"`: `"complete: state-grounded repair-memory fixture is ready; no future benefit was measured or claimed"`; `"memory_fixture_ready"`: `true`; `"all_checks_passed"`: `true`; `"attack_count"`: `6`; `"detected"`: `true`; `"failed_closed"`: `true`; `"restored_state_equal"`: `true`; `"inference_substrate"`: `"deterministic_exact_repair_memory_fixture_no_llm"`
-
-## RECOMMENDATION
-KEEP
 
 ## experiment_6654_prospective_repair_memory_evolution.json
 
-**CLAIM_SUPPORTED**
+**CLAIM_OVERSTATED**
 
 ## VERDICT
-CLAIM_SUPPORTED
+CLAIM_OVERSTATED
 
 ## THE HEADLINE CLAIM
-Validation-gated repair memory improved future exact outcomes over matched non-memory controls without observed forgetting or recoverable-support collapse.
+Validation-gated repair memory adds value by improving future exact outcomes without forgetting or support collapse.
 
 ## WHAT WOULD REFUTE IT
-A matched `context_only` arm tying or beating `verified_memory` on future exact yield, any preregistered order showing a non-positive memory delta, an influential retrieval producing an incorrect outcome, a positive forgetting count, or a support collapse would falsify the headline.
+An ungated accept-all repair-memory arm receiving the same proposals and tying or beating `verified_memory` would refute the validation gate’s added value.
 
 ## WAS THAT CHECKED
-Yes. The artifact compares matched arms on prequentially committed actions, reports future-event results, reports positive deltas for all three preregistered orders, credits only action-changing retrievals, and separately measures forgetting and recoverable support. Exact outcomes were opened after action commitment, so failure remained possible.
+No. The artifact compares only `frozen`, `context_only`, and `verified_memory`; it lacks an ungated memory arm. Moreover, every proposed update was admitted, so the gate never changed the memory trajectory and an accept-all arm would necessarily tie under the stated method. The artifact did genuinely check memory against no-memory arms, future-label isolation, forgetting, and support collapse—but not the contribution implied by “validation-gated.”
 
 ## EVIDENCE
-`"exact_outcome_opening": "after_live_action_commit"`; `"verified_memory_minus_context_only": 0.6666666666666667`; `"exact_success_count": 9`; `"exact_success_count": 3`; `"minimum_delta": 0.02777777777777779`; `"maximum_delta": 0.08333333333333333`; `"influential_count": 6`; `"credited_exact_count": 6`; `"count": 0`; `"collapse_count": 0`; `"matched_arms": true`; `"all_recomputations_match": true`; `"verifier_is_oracle": false`
+`honest_verdict`: `complete: validation-gated repair memory improved future exact outcomes with no forgetting or support collapse`
+
+`verified_memory`: `the context-only ranking plus admitted earlier repair memory`
+
+`acceptance_rate`: `1.0`
+
+`accepted_count`: `108`
+
+`proposed_count`: `108`
+
+`rejected_count`: `0`
+
+`verified_memory_minus_context_only`: `0.6666666666666667`
+
+`count`: `0`
+
+`collapse_count`: `0`
+
+`verifier_is_oracle`: `false`
 
 ## RECOMMENDATION
-KEEP
+ADD_MISSING_CONTROL
 
 ## experiment_6655_repair_memory_safety_audit.json
 
@@ -88,16 +63,16 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The independent safety replay passed and reproduced the point estimates, but the order-level uncertainty includes zero, so the result is limited to this fixture.
+Safety replay and point-estimate recomputation passed, but the order-level effect remains compatible with zero and should be limited to this fixture.
 
 ## WHAT WOULD REFUTE IT
-An order-level 95% interval wholly above or below zero would refute the null conclusion; any metric mismatch, unsafe poison acceptance, non-atomic restart, or inexact rollback would refute the audit-passed claim.
+An independently recomputed order-level 95% interval that excluded zero—or a failed safety or recomputation unit—would falsify the headline.
 
 ## WAS THAT CHECKED
-Yes. The artifact reports independent event and metric recomputation, adversarial poison tests, restart tests, rollback checks, and an order-level interval spanning negative and positive values. These checks could have failed, and the verifier was not the correctness oracle.
+Yes. The aggregate recomputation reports the order-level interval, and the audit includes event and metric recomputation, poison attacks, restart atomicity, rollback exactness, and unit-hash checks.
 
 ## EVIDENCE
-`honest_verdict`: `complete_null: safety replay passed and point estimates reproduced, but the order-level interval includes zero; narrow the result to this fixture`; `order_delta_mean_95_interval`: `-0.013448269770851111`, `0.12455938088196222`; `all_audit_units_pass`: `true`; `stored_matches_rebuilt`: `true`; `failed_closed`: `true`; `atomicity_result`: `old_or_new_complete`; `byte_exact_restoration`: `true`; `verifier_is_oracle`: `false`; `claim_disposition`: `narrow`; `verdict_class`: `null`
+`"status": "complete_null"`; `"claim_disposition": "narrow"`; `"all_audit_units_pass": true`; `"order_delta_mean_95_interval": [-0.013448269770851111, 0.12455938088196222]`; `"event_recomputation": true`; `"metric_recomputation": true`; `"poison_attacks": true`; `"restart_atomicity": true`; `"rollback_exactness": true`; `"verifier_is_oracle": false`; `"recommendation": "do_not_deploy_and_collect_independent_orders"`
 
 ## RECOMMENDATION
 KEEP
@@ -113,13 +88,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No value claim is made; a future benefit claim would be refuted by exact post-redirect outcomes showing the on arm ties or underperforms the off arm on progress or solves.
+There is no comparative value claim to falsify. The stated blocker would be refuted by exact post-redirect outcomes for changed actions, allowing the on/off arms to be compared for live-policy benefit.
 
 ## WAS THAT CHECKED
-No. Changed on-arm actions lack exact subsequent outcomes, so the artifact cannot compare their consequences with the off arm.
+No. The artifact checked whether such outcomes existed, but the archived replay transport could not generate them after actions diverged; therefore benefit was not genuinely tested.
 
 ## EVIDENCE
-`"verdict_class": "blocked"`; `"status": "blocked_archived_transport_lacks_redirect_outcomes"`; `"failed_check": "exact_live_next_outcome_after_applied_redirect"`; `"passed": false`; `"missing_exact_on_outcome_count": 2067`; `"benefit_claim_allowed": false`; `"prevented_violation_measurable": false`; `"claimed_game_or_level_solve": false`; `"no live-policy benefit, game solve, or level solve is claimed"`
+`honest_verdict` = `blocked: the canonical E3 action seam applied held-family redirects, but the archived transport has no exact outcomes after changed actions; no live-policy benefit, game solve, or level solve is claimed`; `transport_observed` = `archived_live_e3_action_receipt_replay`; `failed_check` = `exact_live_next_outcome_after_applied_redirect`; `missing_exact_on_outcome_count` = `2067`; `benefit_claim_allowed` = `false`; `verdict_class` = `blocked`
 
 ## RECOMMENDATION
 KEEP
@@ -132,16 +107,16 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Bounded exact-reference readiness was not established because required test checks failed.
+Bounded exact-reference readiness was not established because required test gates failed or were missing.
 
 ## WHAT WOULD REFUTE IT
-All required test scopes—including the full Python suite and spec coverage—passing, with the aggregate readiness gate reporting true and no failed checks.
+All required readiness gates passing, with no missing test scopes and `ising_reference_ready` becoming true, would refute the claim.
 
 ## WAS THAT CHECKED
-Yes. The aggregate readiness recomputation and gate summary checked the required test category, while the test receipts show the full Python suite failed. The oracle defines correctness, but the artifact makes no positive claim about the verifier’s added value.
+Yes. The readiness reducer checked the required test scopes and recorded a failing full Python suite plus missing full-suite/spec-coverage gates, making a positive readiness result genuinely possible but absent.
 
 ## EVIDENCE
-`honest_verdict`: `blocked_tests_check_failed: bounded exact-reference readiness was not established`; `ready`: `false`; `tests_all_passed`: `false`; `missing_test_scopes`: `full_python_suite`, `spec_coverage`; `failed_checks`; `check`: `tests`; `passed`: `false`; `exit_code`: `2`; `summary`: `interrupted after baseline failure was established: 710 failed, 20674 passed, 65 skipped, 118 warnings in 1041.10s`; `ising_reference_ready`: `false`; `verdict_class`: `blocked`; `verifier_is_oracle`: `true`
+`honest_verdict`: `blocked_tests_check_failed: bounded exact-reference readiness was not established`; `ising_reference_ready`: `false`; `tests_all_passed`: `false`; `ready`: `false`; `missing_test_scopes`: `full_python_suite`, `spec_coverage`; `exit_code`: `2`; `verdict_class`: `blocked`
 
 ## RECOMMENDATION
 KEEP
@@ -157,13 +132,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative claim was made to falsify; an A/B result showing the autocorrelation-aware schedule tying or losing to a serious baseline would refute a positive value claim if one existed.
+No scientific outcome is claimed; the blocking diagnosis would be falsified if the prerequisite gate had observed `true` or passed.
 
 ## WAS THAT CHECKED
-No. The experiment stopped at `conductor_pre_gate` because its sole upstream gate failed, before any A/B data was produced.
+Yes, in `gates_evaluated`; the sole prerequisite gate was evaluated and failed before the experiment ran.
 
 ## EVIDENCE
-`"status"`: `"blocked"`; `"honest_verdict"`: `"blocked_gate_check_failed"`; `"failed_field"`: `"ising_reference_ready"`; `"failed_expected"`: `true`; `"failed_observed"`: `false`; `"passed"`: `false`; `"blocked_at_layer"`: `"conductor_pre_gate"`
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_field": "ising_reference_ready"`; `"failed_expected": true`; `"failed_observed": false`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`; `"duration_s": 0.0`
 
 ## RECOMMENDATION
 KEEP
@@ -176,50 +151,60 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-V580 provides authentic admission, direct-corpus, and bounded two-step verifier evidence, while memory benefit remains null and the ARC, repair, and Ising conclusions remain blocked or unclaimed.
+V580 provides bounded admission, direct-corpus, and verifier-unit evidence, while memory benefit is null and the ARC, repair, and scheduling branches remain blocked or unsupported.
 
 ## WHAT WOULD REFUTE IT
-A valid frozen pair on which the two-step verifier missed the paired error or falsely rejected the clean member would refute the positive verifier component; admission failure, an independent memory interval excluding zero, or completed exact ARC/Ising outcomes would likewise contradict other headline components.
+Valid recomputed rows showing fewer than 3 of 3 model families admitted, a direct-exact result other than 8 of 48, fewer than 8 of 8 two-step catches or any two-step false rejects, a memory interval excluding zero, exact ARC outcomes supporting solve credit, or completed repair/schedule comparisons would refute the corresponding headline assertions.
 
 ## WAS THAT CHECKED
-Yes. The frozen verifier comparison reports catches and false rejects for one-step, two-step, and full-suffix arms; admission gates were recomputed; memory was evaluated with an independent interval; and the blocked branches record missing denominators and failed readiness gates. The missing audit and failed full suite are explicitly disclosed rather than counted as positive evidence.
+Yes. The artifact recomputes the admission, corpus, verifier, memory, ARC, suffix-regeneration, reference, and schedule results in `headline_recomputation`; it also reports gate validity and field presence. The missing audit artifact and failed full-suite receipt are explicitly disclosed and are not converted into positive claims.
 
 ## EVIDENCE
-`complete_partial: V580 has authentic admission, direct-corpus, and bounded verifier-unit evidence; memory general benefit is null under independent uncertainty; ARC and Ising branches are blocked; one audit artifact is missing; no pooled success, ARC solve, repair win, or hardware speedup is claimed`
+`complete_partial: V580 has authentic admission, direct-corpus, and bounded verifier-unit evidence; memory general benefit is null under independent uncertainty; ARC and Ising branches are blocked; one audit artifact is missing; no pooled success, ARC solve, repair win, or hardware speedup is claimed`; `mandated_model_families_admitted` `3`; `mandated_model_families_total` `3`; `direct_exact_success_count` `8`; `candidate_row_count` `48`; `unit_id` `two_steps`; `catch_count` `8`; `pair_count` `8`; `false_reject_count` `0`; `interval_includes_zero` `true`; `arc_solve_credit` `0`; `changed_action_exact_outcome_count` `0`; `status` `blocked_headroom_gate`; `status` `blocked_reference_gate`; `verifier_is_oracle` `false`; `stored_metric_mismatches` `[]`
 
-`catch_count` `8`
+## RECOMMENDATION
+KEEP
 
-`false_reject_count` `0`
+## experiment_6661_triggered_tail_fixture.json
 
-`unit_id` `two_steps`
+**NO_CLAIM**
 
-`unit_id` `one_step`
+## VERDICT
+NO_CLAIM
 
-`catch_count` `0`
+## THE HEADLINE CLAIM
+no claim
 
-`unit_id` `full_remaining_suffix`
+## WHAT WOULD REFUTE IT
+Not applicable: the artifact reports fixture readiness and test status, not model quality or comparative value.
 
-`false_reject_count` `2`
+## WAS THAT CHECKED
+No; no model inference or comparative evaluation was attempted.
 
-`independent_order_delta_interval_95`
+## EVIDENCE
+`honest_verdict`: `blocked_triggered_tail_fixture: tests failed`; `inference_substrate`: `cpu_fixture_and_exact_checker_no_llm`; `verifier_is_oracle`: `true`; `tests`: `false`; `The verdict reports fixture readiness and makes no model-quality claim.`
 
-`-0.013448269773437542`
+## RECOMMENDATION
+KEEP
 
-`0.12455938088454865`
+## experiment_6662_triggered_structured_tail_ab.json
 
-`interval_includes_zero` `true`
+**NO_CLAIM**
 
-`arc_solve_credit` `0`
+## VERDICT
+NO_CLAIM
 
-`changed_action_exact_outcome_count` `0`
+## THE HEADLINE CLAIM
+no claim
 
-`status` `blocked_headroom_gate`
+## WHAT WOULD REFUTE IT
+No result claim exists to falsify; a completed A/B run with comparative outcome rows would be required before refutation is possible.
 
-`status` `blocked_reference_gate`
+## WAS THAT CHECKED
+No. The experiment stopped at the pre-gate, so the method, success criterion, and comparator were never evaluated.
 
-`field_present` `true`
-
-`contract_state` `valid`
+## EVIDENCE
+`status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_observed`: `false`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
