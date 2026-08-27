@@ -58416,3 +58416,94 @@ validation.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6674 and SCENARIO-REPORT-6674-* | Implemented (`python/carnot/experiment_6674_v582_manifest_parity_contract.py`) | Implemented (`tests/python/test_experiment_6674_v582_manifest_parity_contract.py`; exact parity, gates, prior lineage, mismatch classification, fail-closed reduction, atomic write, provenance, CLI, and 100% scoped coverage) |
+
+### REQ-REPORT-6675: Triggered-Tail Readiness SHALL Use Only Task-Owned Evidence
+
+Exp6675 SHALL qualify the existing Exp6661 fixture without changing or
+rebuilding its corpus. It SHALL recompute the 18-task manifest, three arm
+contracts, syntax-only grammar receipt, 36 exact checker controls, and 540
+leakage attack rows through the Exp6661 implementation. The recomputed hashes,
+row keys, counts, and outcomes SHALL match the frozen fixture.
+
+The task-owned gate SHALL contain the recorded Exp6661 focused test, scoped
+coverage, Ruff check, Ruff format check, and spec-coverage commands. The focused
+test receipt SHALL identify all 33 collected nodes. New Exp6675 verification
+MAY be present in `tests_run`, but it SHALL not replace or weaken the Exp6661
+owned rows.
+
+The repository-wide Python suite SHALL remain a visible non-gating diagnostic.
+The diagnostic SHALL include its exact command, exit code, failure count,
+Exp6661-owned failure count, complete owned and unrelated node sets, cache path,
+and cache hash. Only Exp6661-owned failed nodes MAY block fixture readiness.
+Unrelated nodes SHALL not enter the owned reducer.
+
+The attack rows SHALL include answer permutation, label renaming, grammar-only
+recovery, trigger collision, premature trigger, missing trigger, malformed
+tail, unknown fields, and a syntactically valid wrong answer. The exact checker
+SHALL remain the only semantic authority. Every attack SHALL retain its expected
+result, observed result, pass state, leakage state, and content receipt.
+
+The artifact SHALL contain `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `frozen_input_receipts`, `owned_test_rows`,
+`global_suite_diagnostic`, `exact_checker_rows`, `leakage_attack_rows`,
+`triggered_tail_fixture_ready`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`. Each required field SHALL have a principle and
+field provenance with a source path, function, and content hash.
+
+`triggered_tail_fixture_ready` SHALL be true only when all task-owned commands,
+all exact controls, all required attacks, row completeness, recomputed frozen
+contracts, input hash stability, and protected-file checks pass. A blocked
+artifact SHALL name each failed owned check and its observed value.
+`verdict_class` SHALL be `null` for ready infrastructure and `blocked` otherwise.
+The artifact SHALL use
+`inference_substrate=cpu_fixture_receipt_and_exact_checks_no_llm` and
+`verifier_is_oracle=true`. It SHALL make no model-quality claim.
+
+Exp6675 SHALL hash the Exp6661 artifact, source, test, constraint spec, parser
+source, grammar, checker functions, V582 design, active roadmap, conductor, and
+global-suite cache before reduction. It SHALL record CPU, RAM, disk, Python,
+and the no-LLM path. It SHALL prove before-and-after identity for the active
+roadmap, conductor, and every frozen Exp6661 input. The final write SHALL use
+file sync, atomic replacement, and directory sync. The checksum SHALL exclude
+only itself.
+
+#### SCENARIO-REPORT-6675-OWNED-READY
+
+**Given** the 33 focused nodes and all other task-owned commands pass
+**When** exact controls, attacks, frozen hashes, and rows recompute cleanly
+**Then** fixture readiness is true, the verdict class is null, and the global
+suite remains visible without entering the reducer.
+
+#### SCENARIO-REPORT-6675-GLOBAL-DIAGNOSTIC
+
+**Given** the repository-wide failure cache contains unrelated failures and no
+Exp6661-owned node
+**When** Exp6675 attributes every cached node by exact test-file ownership
+**Then** it records the full failure count and cache hash, reports zero owned
+failures, and does not change fixture readiness.
+
+#### SCENARIO-REPORT-6675-FAIL-CLOSED
+
+**Given** an owned command, exact control, attack, row key, frozen input, or
+protected file fails or changes
+**When** Exp6675 reduces the retained rows
+**Then** fixture readiness is false and `gate_check_summary` records each failed
+check with its exact observed value.
+
+#### SCENARIO-REPORT-6675-ATOMIC-PROVENANCE
+
+**Given** complete test, task, checker, attack, diagnostic, resource, and hash
+rows
+**When** Exp6675 writes and validates its artifact
+**Then** readers see one complete JSON object, every required field has
+traceable provenance, protected hashes match, and any content mutation breaks
+validation.
+
+## Implementation Status (REQ-REPORT-6675)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6675 and SCENARIO-REPORT-6675-* | Planned (`python/carnot/experiment_6675_triggered_tail_scope_receipt.py`) | Planned (`tests/python/test_experiment_6675_triggered_tail_scope_receipt.py`) |
