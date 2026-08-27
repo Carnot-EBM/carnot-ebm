@@ -58606,3 +58606,87 @@ provenance, and canonical checksum all validate or fail closed.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-6676 and SCENARIO-REPORT-6676-* | Planned (`python/carnot/experiment_6676_three_family_triggered_tail_ab.py`) | Planned (`tests/python/test_experiment_6676_three_family_triggered_tail_ab.py`) |
+
+### REQ-REPORT-6683: Exact Ising Readiness SHALL Use Task-Owned Evidence
+
+Exp6683 SHALL qualify the existing Exp6657 bounded-treewidth Ising reference.
+It SHALL replay the frozen fixtures through the existing decomposition, factor
+elimination, enumeration, marginal, correlation, probability, sampling, and
+rejection functions. It SHALL not rebuild or weaken the reference algorithm.
+
+The task-owned gate SHALL include focused Exp6657 and Exp6683 tests, 100%
+scoped statement coverage for both modules, Ruff, Ruff format, and focused spec
+coverage. Each command receipt SHALL record its exact node set, exit code,
+coverage when applicable, spec anchors, duration, output summary, and content
+hash. The repository-wide suite state SHALL remain visible as a non-gating
+diagnostic. It SHALL not enter `ising_reference_ready`.
+
+Each frozen fixture row SHALL bind its graph, certified width, couplings,
+biases, temperature, coefficient precision, update order, seed, and content
+hash. Each decomposition row SHALL retain bags, separators, certified width,
+the running-intersection result, and a content hash. Each supported state row
+SHALL retain energy, unnormalized weight, partition function, normalized
+probability, node marginals, pair correlations, the algorithm comparison, and
+a content hash. Rejection rows SHALL retain expected and observed failures.
+
+The numeric contract SHALL state binary64 coefficients, tolerances, log-space
+accumulation, deterministic min-fill elimination, reverse ancestral sampling,
+and NumPy PCG64 replay. Attack rows SHALL cover disconnected topology,
+repeated edges, coupling sign changes, field terms, low and high positive
+temperatures, zero temperature, invalid decompositions, unsupported width,
+precision truncation, update-order drift, missing normalization, and exact
+sampling on a degenerate distribution.
+
+The artifact SHALL contain `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `frozen_fixture_manifest`, `decomposition_rows`,
+`exact_probability_rows`, `rejection_rows`, `numeric_contract`,
+`owned_test_rows`, `global_suite_diagnostic`, `attack_rows`,
+`ising_reference_ready`, `per_unit_rows`, `aggregate_row_recomputation`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. Each field SHALL have a stated
+principle and provenance with its fixture, exact function, numeric path, and
+hash when applicable.
+
+`ising_reference_ready` SHALL be true only when every supported fixture,
+state, exact field, rejection, owned command, coverage row, and attack passes.
+Ready infrastructure SHALL use `verdict_class=null`. A blocked artifact SHALL
+name each failed owned check and its observed value. The artifact SHALL use
+`inference_substrate=cpu_bounded_treewidth_exact_inference_no_llm` and
+`verifier_is_oracle=true`. The final write SHALL use file sync, atomic replace,
+and directory sync. The checksum SHALL exclude only itself.
+
+#### SCENARIO-REPORT-6683-OWNED-READY
+
+**Given** all frozen exact rows and task-owned commands pass
+**When** Exp6683 recomputes readiness from retained rows
+**Then** readiness is true, the verdict class is null, and the global suite
+diagnostic does not enter the reducer.
+
+#### SCENARIO-REPORT-6683-GLOBAL-DIAGNOSTIC
+
+**Given** the repository-wide suite has known unrelated failures
+**When** Exp6683 records the suite receipt and cached node attribution
+**Then** the failure state and Exp6657-owned node count remain visible and
+non-gating.
+
+#### SCENARIO-REPORT-6683-FAIL-CLOSED
+
+**Given** a fixture, state, exact field, rejection, owned command, coverage
+row, attack, frozen hash, or protected file fails or changes
+**When** Exp6683 reduces the retained rows
+**Then** readiness is false and the gate summary records the exact failed check
+and observed value.
+
+#### SCENARIO-REPORT-6683-ATOMIC-PROVENANCE
+
+**Given** complete exact, test, attack, resource, and provenance rows
+**When** Exp6683 writes and validates the artifact
+**Then** readers see one complete JSON object, protected hashes match, and any
+content mutation breaks validation.
+
+## Implementation Status (REQ-REPORT-6683)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6683 and SCENARIO-REPORT-6683-* | Planned (`python/carnot/experiment_6683_ising_reference_scope_receipt.py`) | Planned (`tests/python/test_experiment_6683_ising_reference_scope_receipt.py`) |
