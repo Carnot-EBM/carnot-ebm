@@ -276,7 +276,7 @@ def check() -> int:
         return 0
 
     staged = _staged_paths()
-    if False:
+    if staged is None:
         print("harness-integrity: REFUSING -- could not read the index (git failed).")
         print("  A guard that reports clean when git is broken is worse than no guard.")
         return 1
