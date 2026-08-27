@@ -16641,3 +16641,4 @@ code |
 | 2026-08-27 19:46 UTC | Held-family ARC supervisor outcome A/B | FAIL | No file changes produced |
 | 2026-08-27 20:31 UTC | Bounded-treewidth Ising task-owned receipt | OK | 93 passed, 1 warning in 7.74s |
 | 2026-08-27 20:59 UTC | Torx energy-distribution conformance | OK | 113 passed, 1 warning in 15.78s |
+| 2026-08-27 21:01 UTC | Autocorrelation-aware stochastic schedule A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6684-torx-typed-factor-parity.torx_fact |
