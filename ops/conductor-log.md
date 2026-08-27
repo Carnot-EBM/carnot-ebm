@@ -16612,3 +16612,5 @@ code |
 | 2026-08-27 07:57 UTC | Trigger-switched structured-tail fixture | OK | Deliverable already exists in repo |
 | 2026-08-27 07:57 UTC | Three-family trigger-switched structured-tail A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6661-triggered-tail-fixture.triggered_t |
 | 2026-08-27 07:59 UTC | Three-family trigger-switched structured-tail A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6661-triggered-tail-fixture.triggered_t |
+| 2026-08-27 08:01 UTC | Three-family trigger-switched structured-tail A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6661-triggered-tail-fixture.triggered_t |
+| 2026-08-27 08:03 UTC | Structured-tail independent row audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6662-triggered-structured-tail-ab) |
