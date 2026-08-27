@@ -58226,3 +58226,112 @@ the checksum or row recomputation.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6657 and SCENARIO-REPORT-6657-* | Implemented (`python/carnot/experiment_6657_bounded_treewidth_ising_reference.py`) | Implemented (`tests/python/test_experiment_6657_bounded_treewidth_ising_reference.py`; row recomputation, atomic write, checksum, blocked gates, and provenance coverage) |
+
+### REQ-REPORT-6659: V580 Capstone SHALL Finish Without A Forced Positive
+
+Exp6659 SHALL reconcile all twelve V580 upstream tasks from Exp6647 through
+Exp6658. It SHALL finish when inputs are positive, circular, null, blocked,
+missing, disqualified, partial, or stopped by a hard cap. It SHALL not replace
+missing values with zero. It SHALL not pool independent branch outcomes into a
+success score.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `expected_task_manifest`,
+`artifact_availability_rows`, `gate_recomputation_rows`,
+`claim_classification_rows`, `branch_summary_rows`,
+`headline_recomputation`, `prior_failure_retirement_rows`, `prd_gap_matrix`,
+`architecture_disposition`, `hardware_claim_boundary`,
+`reconciliation_receipts`, `next_actions`, `per_unit_rows`,
+`preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`random_seed`, `duration_s`, `tests_run`, and `reproducibility_checksum`.
+
+- REQ-REPORT-6659-PRECONDITIONS: The capstone SHALL list each expected ID,
+  title, deliverable, and structured gate. Each availability row SHALL record
+  present, missing, blocked, and hard-cap state separately. Present inputs,
+  protected files, specs, schemas, and source rows SHALL have SHA-256 receipts.
+- REQ-REPORT-6659-SCHEMAS: The capstone SHALL run the owner validator for each
+  full source artifact. It SHALL validate conductor gate-block artifacts
+  against their exact diagnostic contract. A missing validator or invalid
+  source SHALL remain visible and SHALL not stop terminal reconciliation.
+- REQ-REPORT-6659-GATES: Every roadmap gate SHALL be recomputed from the exact
+  upstream field spelling, value, operator, and expected value. Missing fields
+  SHALL remain missing. Each row SHALL distinguish a broken owner contract from
+  a valid contract whose observed value does not pass.
+- REQ-REPORT-6659-ROWS: Admission, proposal-corpus, verifier-unit,
+  suffix-regeneration, memory, ARC, exact-reference, and schedule metrics SHALL
+  be rebuilt from source rows. The reducer SHALL report parser failures,
+  null-only measurements, missing denominators, sign changes, and stored-value
+  contradictions.
+- REQ-REPORT-6659-VERDICTS: Every claim SHALL receive exactly one class from
+  `positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+  `partial`. Evidence with `verifier_is_oracle=true` SHALL not become
+  `positive`. ARC evidence SHALL not become a game, level, or leaderboard solve.
+- REQ-REPORT-6659-BRANCHES: Admission and verification, memory, ARC, and Ising
+  SHALL keep independent status, evidence, and claim boundaries. Capstone
+  completion SHALL use `partial` when branch outcomes remain mixed or missing.
+- REQ-REPORT-6659-RETIREMENT: Every roadmap prior failure SHALL be compared
+  with the current task outcome. Repeated verdicts SHALL produce an exclusion
+  manifest recommendation. Exp6659 SHALL not create, edit, or revive an
+  upstream dependency.
+- REQ-REPORT-6659-DISPOSITION: The artifact SHALL give evidence-bound PRD gap,
+  architecture, hardware, next-action, and branch-lesson dispositions. Local
+  CPU or CUDA evidence SHALL not support FPGA, TSU, photonic, production
+  speedup, ARC solve, or publication claims.
+- REQ-REPORT-6659-RECONCILIATION: Receipts SHALL name the capability spec,
+  traceability, status, changelog, architecture, exclusion manifest, and audit
+  commands. Traceability and ops documents MAY be deferred when the conductor
+  owns the immediate reconciliation step.
+- REQ-REPORT-6659-ATOMIC: Exp6659 SHALL preserve `research-roadmap.yaml` and
+  `scripts/research_conductor.py`. It SHALL use
+  `inference_substrate=artifact_only_v580_capstone_no_llm`,
+  `verifier_is_oracle=false`, deterministic order seed `6659`, and an atomic
+  write for `results/experiment_6659_v580_capstone.json`. The checksum SHALL
+  exclude only its own field.
+
+#### SCENARIO-REPORT-6659-AVAILABILITY
+
+**Given** a mixture of present, missing, blocked, and hard-cap task records
+**When** Exp6659 builds the task matrix
+**Then** all twelve tasks remain visible and no absent value becomes numeric.
+
+#### SCENARIO-REPORT-6659-EXACT-GATES
+
+**Given** the V580 roadmap and available upstream artifacts
+**When** each structured gate is replayed
+**Then** exact field spelling, observed value, operator, expected value,
+contract state, and pass state are recorded independently.
+
+#### SCENARIO-REPORT-6659-ROW-RECOMPUTATION
+
+**Given** available per-unit source rows
+**When** the capstone rebuilds headline metrics
+**Then** each numerator and denominator traces to its branch rows and every
+stored contradiction, parser failure, null-only group, or sign change is shown.
+
+#### SCENARIO-REPORT-6659-CLOSED-CLAIMS
+
+**Given** circular, oracle-distinct, null, blocked, and incomplete evidence
+**When** claims are classified
+**Then** each claim has one closed class, circularity remains explicit, no ARC
+solve is credited, and the capstone does not manufacture a pooled positive.
+
+#### SCENARIO-REPORT-6659-RETIREMENT-AND-BOUNDARIES
+
+**Given** roadmap prior failures and branch-specific evidence
+**When** dispositions are produced
+**Then** repeated verdicts receive bounded retirement recommendations and local
+measurements do not cross software, hardware, ARC, or publication boundaries.
+
+#### SCENARIO-REPORT-6659-ATOMIC-TERMINAL
+
+**Given** complete reconciliation rows and protected hashes
+**When** Exp6659 validates and writes the capstone
+**Then** one terminal JSON document exists, every required field has lineage,
+the protected hashes match, and a content mutation breaks validation.
+
+## Implementation Status (REQ-REPORT-6659)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6659 and SCENARIO-REPORT-6659-* | Implemented (`python/carnot/experiment_6659_v580_capstone.py`) | Implemented (`tests/python/test_experiment_6659_v580_capstone.py`; availability, exact gates, row recomputation, closed verdicts, branch isolation, retirement, protected hashes, atomic write, checksum, and CLI validation) |

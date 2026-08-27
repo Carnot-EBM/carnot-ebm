@@ -16600,3 +16600,4 @@ code |
 | 2026-08-27 01:47 UTC | Autocorrelation-aware thermodynamic schedule A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6657-bounded-treewidth-ising-reference. |
 | 2026-08-27 01:49 UTC | Autocorrelation-aware thermodynamic schedule A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6657-bounded-treewidth-ising-reference. |
 | 2026-08-27 01:51 UTC | Autocorrelation-aware thermodynamic schedule A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6657-bounded-treewidth-ising-reference. |
+| 2026-08-27 03:15 UTC | V580 evidence synthesis | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output:    ) == "block |
