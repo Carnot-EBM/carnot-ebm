@@ -5468,6 +5468,10 @@ class E3AgentPolicy:
         self._trace_automaton_previous_frame_key: str | None = None
         self._trace_automaton_previous_level: int | None = None
         self._trace_automaton_errors = 0
+        # REQ-ARC-WMTE-6681: this is an explicit experiment-only instrument.
+        # The default stays None, so the submitted action path does no hashing,
+        # allocation, or I/O unless a live outcome run installs the transport.
+        self._outcome_transport = None
         self.root_grid = None  # the reset-state logical grid; plan_in_model starts here
         self.world_model_trust_selection = None
         self._active_probe_controller: Any = None
@@ -6681,16 +6685,63 @@ class E3AgentPolicy:
         else:
             move = self._next_move_recorded(frames, latest)
         supervised_move = self._maybe_apply_trace_automaton_action(move, latest)
-        return self.record_target_licensed_route_shadow(
+        selected_move = self.record_target_licensed_route_shadow(
             supervised_move,
             latest_level=_level_of(latest) if latest is not None else None,
             prospective_move=move if supervised_move != move else None,
         )
+        self._record_outcome_transport_proposal(move, selected_move, latest)
+        return selected_move
 
     def install_trace_automaton_supervisor(self, supervisor: Any) -> None:
         """Install one pre-frozen supervisor before an isolated evaluation run."""
 
         self._trace_automaton_supervisor = supervisor
+
+    def install_outcome_transport(self, transport: Any) -> None:
+        """Install the opt-in exact environment-return transport for one episode."""
+
+        self._outcome_transport = transport
+
+    def outcome_transport(self) -> Any:
+        """Return the installed transport without constructing one implicitly."""
+
+        return self._outcome_transport
+
+    def _record_outcome_transport_proposal(
+        self, proposed_move: Any, selected_move: Any, latest: Any
+    ) -> None:
+        """Bind the supervisor decision to the observation used for selection."""
+
+        transport = self._outcome_transport
+        if transport is None:
+            return
+        decision: dict[str, Any] = {}
+        supervisor = self._trace_automaton_supervisor
+        if supervisor is not None:
+            receipt = supervisor.receipt()
+            rows = receipt.get("rows") or []
+            if rows:
+                row = rows[-1]
+                decision = {
+                    "fired": bool(row.get("fired")),
+                    "state": row.get("state"),
+                    "arm": row.get("arm"),
+                    "pre_action_features": row.get("pre_action_features"),
+                }
+        transport.record_proposal(
+            proposed_action=proposed_move,
+            policy_selected_action=selected_move,
+            observation_before=latest,
+            supervisor_decision=decision,
+        )
+
+    def record_outcome_transport_application(self, action: Any) -> None:
+        """Bind the adapter's concrete GameAction to the pending proposal."""
+
+        transport = self._outcome_transport
+        if transport is not None:
+            transport.record_application(action)
 
     def supervise_policy_visible_action(
         self,
@@ -9369,17 +9420,49 @@ def make_carnot_agent(
 
             kind, data = self._policy.next_move(frames, latest_frame)
             if kind == "RESET" or kind is None:
-                return GameAction.RESET
-            act = getattr(GameAction, f"ACTION{kind}")
-            if data:
-                # CRITICAL: GameAction.set_data() RETURNS the inner ComplexAction, NOT
-                # the enum member. The framework's do_action_request reads
-                # `action.action_data` off the object choose_action returns, so we must
-                # mutate the enum in place and return the ENUM. Returning set_data()'s
-                # result (a ComplexAction, which has no .action_data) crashes every
-                # coordinate/click action against the real harness. game_id is a required
-                # ComplexAction field (Playback injects it too), so carry it through.
-                act.set_data({"game_id": getattr(self, "game_id", ""), **data})
+                act = GameAction.RESET
+            else:
+                act = getattr(GameAction, f"ACTION{kind}")
+                if data:
+                    # CRITICAL: GameAction.set_data() RETURNS the inner ComplexAction, NOT
+                    # the enum member. The framework's do_action_request reads
+                    # `action.action_data` off the object choose_action returns, so we must
+                    # mutate the enum in place and return the ENUM. Returning set_data()'s
+                    # result (a ComplexAction, which has no .action_data) crashes every
+                    # coordinate/click action against the real harness. game_id is a required
+                    # ComplexAction field (Playback injects it too), so carry it through.
+                    act.set_data({"game_id": getattr(self, "game_id", ""), **data})
+            self._policy.record_outcome_transport_application(act)
             return act
+
+        def do_action_request(self, action):
+            """Join the adapter action to the exact canonical environment return.
+
+            The framework owns this environment seam. Calling ``super`` keeps
+            its request and conversion behavior intact. The opt-in transport
+            observes the value returned by that same call and records failures
+            before re-raising them.
+            """
+
+            transport = self._policy.outcome_transport()
+            if transport is None:
+                return super().do_action_request(action)
+            step_id = transport.begin_environment_step(action)
+            try:
+                returned = super().do_action_request(action)
+            except TimeoutError as exc:
+                transport.record_environment_failure(
+                    step_id, status="timeout", error=f"{type(exc).__name__}: {exc}"
+                )
+                raise
+            except Exception as exc:
+                transport.record_environment_failure(
+                    step_id,
+                    status="environment_error",
+                    error=f"{type(exc).__name__}: {exc}",
+                )
+                raise
+            transport.record_environment_return(step_id, returned)
+            return returned
 
     return CarnotAgent

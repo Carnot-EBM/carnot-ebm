@@ -16630,3 +16630,5 @@ code |
 | 2026-08-27 15:04 UTC | Prequential cross-family continuous self-learning  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6678-constraint-family-stream.constrain |
 | 2026-08-27 15:06 UTC | Prequential cross-family continuous self-learning  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6678-constraint-family-stream.constrain |
 | 2026-08-27 15:08 UTC | Cross-family CSL chronological durability audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6679-prequential-cross-family-csl-ab) |
+| 2026-08-27 16:29 UTC | Canonical ARC post-redirect outcome transport | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: {"action": Non |
+| 2026-08-27 16:31 UTC | Cross-family CSL chronological durability audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6679-prequential-cross-family-csl-ab) |
