@@ -16614,3 +16614,6 @@ code |
 | 2026-08-27 07:59 UTC | Three-family trigger-switched structured-tail A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6661-triggered-tail-fixture.triggered_t |
 | 2026-08-27 08:01 UTC | Three-family trigger-switched structured-tail A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6661-triggered-tail-fixture.triggered_t |
 | 2026-08-27 08:03 UTC | Structured-tail independent row audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6662-triggered-structured-tail-ab) |
+| 2026-08-27 09:36 UTC | Plan milestone 2026.08.582 | OK | 14 tasks proposed |
+| 2026-08-27 09:38 UTC | Structured-tail independent row audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6662-triggered-structured-tail-ab) |
+| 2026-08-27 09:38 UTC | Milestone 2026.08.582 activated | OK | 14 tasks queued |
