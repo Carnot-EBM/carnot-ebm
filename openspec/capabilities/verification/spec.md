@@ -20316,6 +20316,10 @@ For canonical live E3 environment-outcome transport that invokes no new LLM,
 the helper SHALL also accept
 `canonical_live_e3_environment_outcome_transport_no_new_llm` with a 0.01s
 duration floor.
+For the frozen held-family live E3 supervisor A/B that invokes no new LLM, the
+helper SHALL also accept `canonical_live_e3_supervisor_ab_no_new_llm` with a
+0.01s duration floor and SHALL classify it through the reviewed no-LLM
+allowlist rather than the generic name fallback.
 
 The lint SHALL scan candidate `results/experiment_*.json` artifacts whose path
 or artifact metadata marks them as ARC, solve, scoring, or config-rule work, and
@@ -20344,7 +20348,8 @@ seconds, when the helper builds or validates it, then it accepts only
 `offline_arcade_live_agent_runtime_self_discovery_no_llm`, or
 `verifier_ensemble_against_cached_candidates`, or
 `live_arc_trajectory_supervisor_receipt_replay_no_llm`, or
-`canonical_live_e3_environment_outcome_transport_no_new_llm` with the
+`canonical_live_e3_environment_outcome_transport_no_new_llm`, or
+`canonical_live_e3_supervisor_ab_no_new_llm` with the
 appropriate duration floor and a terminal-prefixed verdict. Given the lint scans ARC solve/config
 artifacts under `results`, when an artifact lacks `inference_substrate` or emits
 `honest_verdict=partial: ...`, then it reports a failing issue. Given an artifact

@@ -145,6 +145,22 @@ def test_req_arc_wmte_6681_lint_accepts_canonical_outcome_transport_substrate(
     assert lint.lint_paths([artifact]) == []
 
 
+def test_req_arc_wmte_6682_lint_accepts_supervisor_ab_substrate(tmp_path: Path) -> None:
+    """REQ-ARC-WMTE-6682: held-family supervisor A/B passes ARC lint."""
+
+    artifact = _write_json(
+        tmp_path / "results" / "experiment_6682_arc_held_family_supervisor_ab.json",
+        {
+            "honest_verdict": "complete: exact held-family comparison measured",
+            "duration_s": 0.02,
+            "inference_substrate": discipline.ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE,
+            "solve_claim_scope": "none",
+        },
+    )
+
+    assert lint.lint_paths([artifact]) == []
+
+
 def test_req_verify_4437_lint_accepts_arc_supervisor_receipt_replay_substrate(
     tmp_path: Path,
 ) -> None:

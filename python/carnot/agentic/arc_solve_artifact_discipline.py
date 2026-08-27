@@ -24,6 +24,7 @@ ARC_LIVE_E3_ARCHIVE_PROJECTION_SUBSTRATE = (
 ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE = (
     "canonical_live_e3_environment_outcome_transport_no_new_llm"
 )
+ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE = "canonical_live_e3_supervisor_ab_no_new_llm"
 LIVE_LLM_SUBSTRATE = "live_llm_inference"
 
 SUBSTRATE_DURATION_FLOORS = {
@@ -34,6 +35,7 @@ SUBSTRATE_DURATION_FLOORS = {
     ARC_SUPERVISOR_RECEIPT_REPLAY_SUBSTRATE: 0.01,
     ARC_LIVE_E3_ARCHIVE_PROJECTION_SUBSTRATE: 0.01,
     ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE: 0.01,
+    ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE: 0.01,
     LIVE_LLM_SUBSTRATE: 60.0,
 }
 
@@ -82,6 +84,8 @@ FIELD_PRINCIPLES = {
         "live_e3_world_model_archived_transition_invariant_projection_no_new_llm"
         "; canonical live E3 outcome transport uses "
         "canonical_live_e3_environment_outcome_transport_no_new_llm"
+        "; canonical live E3 held-family supervisor A/B uses "
+        "canonical_live_e3_supervisor_ab_no_new_llm"
     ),
     "duration_s": "bare float; must meet the selected substrate floor",
     "template_shipped": "bare bool: the helper + lint + tests landed green",
@@ -244,6 +248,7 @@ __all__ = [
     "ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE",
     "ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE",
     "ARC_LIVE_AGENT_NO_LLM_SUBSTRATE",
+    "ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE",
     "ARC_SUPERVISOR_RECEIPT_REPLAY_SUBSTRATE",
     "ArtifactDisciplineIssue",
     "FIELD_PRINCIPLES",
