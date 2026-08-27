@@ -37763,3 +37763,107 @@ own outputs.
   sampler efficiency claim.
 
 <!-- V580-PLANNER-REFRESH-20260826-END -->
+
+## V581 planner refresh - 2026-08-27
+
+<!-- V581-PLANNER-REFRESH-20260827-START -->
+
+This refresh follows the terminal V580 evidence. It searched the requested
+2025-2026 topics on arXiv and checked OpenReview, Hugging Face Papers, Semantic
+Scholar, GitHub, Extropic, and Logical Intelligence. V580 produced 48 direct
+SOTA rows, but only 10 parsed and only two had exact repair headroom. The next
+verification experiment therefore changes the output transport. It does not
+repeat suffix regeneration or the retired schema-supported ConstraintIR
+reprompt.
+
+### Promising findings selected for V581
+
+- **Thinking Before Constraining: A Unified Decoding Framework for Large
+  Language Models** - arXiv:2601.07525,
+  https://arxiv.org/abs/2601.07525; OpenReview:
+  https://openreview.net/forum?id=fsgYB42b1V. The method lets a model reason in
+  free text and applies syntax constraints only after a trigger. The paper
+  reports a small structured tail and separates reasoning from formatting.
+  Carnot hook: compare natural extraction, immediate JSON, and a
+  trigger-switched syntax-only tail on the same exact tasks and all three
+  mandated GGUF families. The exact checker remains external authority. The
+  grammar must not carry answer semantics.
+- **Thermalizing Stochastic Programs** - arXiv:2608.01615,
+  https://arxiv.org/abs/2608.01615. The paper represents a stochastic program as
+  a directed factor graph, compiles each factor to a hardware-native EBM, and
+  tracks how local approximation error accumulates through the graph. Carnot
+  hook: after the bounded exact Ising reference is ready, map the same fixtures
+  to typed factors and report per-factor plus end-to-end error. This is a
+  software portability contract, not a TSU performance claim.
+- **A Framework for Stochastic Differentiable Programming** -
+  arXiv:2608.01612, https://arxiv.org/abs/2608.01612. The paper introduces
+  Parametrized Stochastic Circuits and Torx with explicit binary, categorical,
+  and continuous wires. Carnot's local environment exposes Torx 0.0.1. Carnot
+  hook: test binary Ising factor and log-probability parity through the installed
+  CPU path before any compiler or hardware claim.
+- **Continual Harness: Online Adaptation for Self-Improving Foundation Agents**
+  - arXiv:2605.09998, https://arxiv.org/abs/2605.09998. It studies reset-free
+  adaptation from a persistent trajectory stream and distinguishes harness
+  updates from model updates. Carnot hook: keep the model frozen, commit only
+  exact-checker-approved memory patches, and evaluate prequentially without
+  resetting state between events.
+- **ISM: Self-Improving Strategy Memory for Continual Mathematical Reasoning**
+  - arXiv:2606.31191, https://arxiv.org/abs/2606.31191. It maintains a compact
+  strategy bank under episodic isolation and uses symbolic checks to admit
+  intermediate steps and final answers. Carnot hook: replicate repair memory on
+  several independent constraint families and measure schema retention,
+  retirement, negative transfer, and exact future yield.
+- **Learning to Continually Learn via Meta-learning Agentic Memory Designs** -
+  arXiv:2602.07755, https://arxiv.org/abs/2602.07755. ALMA searches over memory
+  schemas and retrieval/update mechanisms. Carnot hook: do not launch open-ended
+  schema search yet. First test whether one typed repair schema transfers across
+  held-out families under exact admission and rollback.
+
+### Requested secondary and product checks
+
+- **OpenReview:** the current record for Thinking Before Constraining supports
+  delayed syntax enforcement. Current ICLR 2026 EBM and reasoning records add no
+  matching-base local EBT or ARM-EBM checkpoint. Workshop, rejected, and
+  withdrawn records remain design leads only.
+- **Hugging Face Papers:** current verification pages continue to favor atomic
+  step checks, pairwise verification, and explicit generation-versus-verification
+  budget accounting. These support row-level exact audits. They do not make a
+  learned verifier independent release authority.
+- **Semantic Scholar:** the 2026-08-27 EBT citation query exposed 35 visible
+  records. Its useful recent trail remains the already indexed Memoir,
+  Solver-Hard, fixed-point, and distributional-energy work. The ARM-EBM query
+  returned HTTP 429, so retain the dated V580 receipt of eight visible citations
+  and invent no new count. Neither trail exposes a reproducible matching-base
+  local checkpoint.
+- **GitHub:** the current monthly Python trending page and EBM, Ising, and KAN
+  topic pages expose no dependency that supersedes Carnot's pinned local stack.
+  Torx is already present locally. Vendor no repository for novelty alone.
+- **Extropic:** the August 2026 release adds open Torx, a Thermalizers preview,
+  and a taped-out Z1 with 269,568 pbits, 16-neighbor connectivity, chromatic
+  Gibbs sampling above 50 MHz, and claimed power below one watt. Public Z1
+  systems remain scheduled for 2027 access. Carnot has no authenticated TSU
+  runner and must make no latency, power, or hardware-availability claim.
+- **Logical Intelligence:** Kona 1.0 still presents a non-generative constraint
+  layer and published product measurements, but no public weights, reproducible
+  training recipe, or local runner were found. Kona remains a product
+  comparator.
+- **KAN and attached boards:** the current KAN verification reference remains
+  arXiv:2602.06737. No new KAN result closes the immediate transport, memory, or
+  sampler-reference gaps. No changed KV260, GateMate, or PolarFire receipt
+  exists.
+
+### V581 planning impact
+
+- Replace repair-headroom gating with a syntax-only trigger-switched tail. Test
+  all three mandated GGUF families on the same fixed exact corpus.
+- Replicate continuous repair memory across independent constraint families and
+  prospective task orders. Keep frozen and context-only controls. Admit updates
+  only through exact checks and byte-exact rollback.
+- Add the missing exact post-redirect outcome at the canonical live ARC seam
+  before another supervisor utility comparison. Make no game or level solve
+  claim.
+- Close the bounded-treewidth reference with task-owned receipts, map the ready
+  fixtures to Torx typed stochastic factors, then measure sampler schedules with
+  exact likelihood, autocorrelation, and effective-sample-size rows.
+
+<!-- V581-PLANNER-REFRESH-20260827-END -->

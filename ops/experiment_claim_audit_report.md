@@ -11,10 +11,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_REFUTED_BY_OWN_DATA | 1 |
-| NO_CLAIM | 7 |
+| CLAIM_SUPPORTED | 4 |
+| NO_CLAIM | 4 |
 
-## experiment_6620_gpu_lease_phase_receipts.json
+## experiment_6651_failure_localized_suffix_regeneration.json
 
 **NO_CLAIM**
 
@@ -25,18 +25,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable; this is a blocked-gate receipt and asserts no experimental outcome or comparative value.
+There is no comparative result to falsify. Had the artifact claimed that failure-localized suffix regeneration outperformed its A/B rival, a tie or win by that rival would refute it.
 
 ## WAS THAT CHECKED
-No; the experiment never proceeded past the upstream gate.
+No. Execution stopped at the pre-gate before any A/B outcomes were produced.
 
 ## EVIDENCE
-`schema` `blocked_gate_check_v1` `status` `blocked` `honest_verdict` `blocked_gate_check_failed` `passed` `false` `blocked_at_layer` `conductor_pre_gate`
+`status` `blocked` `honest_verdict` `blocked_gate_check_failed` `regeneration_headroom_count` `expected` `8` `actual` `2` `passed` `false` `blocked_at_layer` `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6622_qwen36_direct_headroom.json
+## experiment_6653_state_grounded_repair_memory_fixture.json
 
 **NO_CLAIM**
 
@@ -47,88 +47,62 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no falsifiable headline claim; the artifact is only a blocked gate-check receipt.
+No comparative or future-benefit claim is made; for the limited readiness receipt, a failed gate, undetected seeded attack, non-reversible transition, or malformed fixture row would refute readiness.
 
 ## WAS THAT CHECKED
-No. Execution stopped at the pre-gate because the required upstream artifact was unavailable, so no method outcome or success criterion was evaluated.
+Yes. Readiness was checked through aggregate gates, six adversarial attack rows, schema and partition checks, checksums, and rollback receipts. No future-benefit comparison or serious baseline was checked because none was claimed.
 
 ## EVIDENCE
-`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
+`"honest_verdict"`: `"complete: state-grounded repair-memory fixture is ready; no future benefit was measured or claimed"`; `"memory_fixture_ready"`: `true`; `"all_checks_passed"`: `true`; `"attack_count"`: `6`; `"detected"`: `true`; `"failed_closed"`: `true`; `"restored_state_equal"`: `true`; `"inference_substrate"`: `"deterministic_exact_repair_memory_fixture_no_llm"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6624_delayed_two_level_decoding.json
+## experiment_6654_prospective_repair_memory_evolution.json
 
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+Validation-gated repair memory improved future exact outcomes over matched non-memory controls without observed forgetting or recoverable-support collapse.
 
 ## WHAT WOULD REFUTE IT
-Not applicable; the artifact reports a blocked prerequisite gate and makes no experimental or comparative claim.
+A matched `context_only` arm tying or beating `verified_memory` on future exact yield, any preregistered order showing a non-positive memory delta, an influential retrieval producing an incorrect outcome, a positive forgetting count, or a support collapse would falsify the headline.
 
 ## WAS THAT CHECKED
-No; the experiment stopped at `conductor_pre_gate`, before any method, success criterion, or comparator was evaluated.
+Yes. The artifact compares matched arms on prequentially committed actions, reports future-event results, reports positive deltas for all three preregistered orders, credits only action-changing retrievals, and separately measures forgetting and recoverable support. Exact outcomes were opened after action commitment, so failure remained possible.
 
 ## EVIDENCE
-`status` `blocked`  
-`honest_verdict` `blocked_gate_check_failed`  
-`blocked_reason` `upstream artifact not found for task id 'exp6623-headroom-support-reducer'`  
-`passed` `false`  
-`blocked_at_layer` `conductor_pre_gate`
+`"exact_outcome_opening": "after_live_action_commit"`; `"verified_memory_minus_context_only": 0.6666666666666667`; `"exact_success_count": 9`; `"exact_success_count": 3`; `"minimum_delta": 0.02777777777777779`; `"maximum_delta": 0.08333333333333333`; `"influential_count": 6`; `"credited_exact_count": 6`; `"count": 0`; `"collapse_count": 0`; `"matched_arms": true`; `"all_recomputations_match": true`; `"verifier_is_oracle": false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6627_spectral_integrity_repair.json
+## experiment_6655_repair_memory_safety_audit.json
 
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+The independent safety replay passed and reproduced the point estimates, but the order-level uncertainty includes zero, so the result is limited to this fixture.
 
 ## WHAT WOULD REFUTE IT
-No substantive performance claim is made; refutation would require a stated claim and method-result rows that could contradict it.
+An order-level 95% interval wholly above or below zero would refute the null conclusion; any metric mismatch, unsafe poison acceptance, non-atomic restart, or inexact rollback would refute the audit-passed claim.
 
 ## WAS THAT CHECKED
-No. The artifact only records a failed upstream gate; the experiment never reached execution or evaluation.
+Yes. The artifact reports independent event and metric recomputation, adversarial poison tests, restart tests, rollback checks, and an order-level interval spanning negative and positive values. These checks could have failed, and the verifier was not the correctness oracle.
 
 ## EVIDENCE
-`status` `blocked`; `honest_verdict` `blocked_gate_check_failed`; `passed` `false`; `blocked_at_layer` `conductor_pre_gate`
+`honest_verdict`: `complete_null: safety replay passed and point estimates reproduced, but the order-level interval includes zero; narrow the result to this fixture`; `order_delta_mean_95_interval`: `-0.013448269770851111`, `0.12455938088196222`; `all_audit_units_pass`: `true`; `stored_matches_rebuilt`: `true`; `failed_closed`: `true`; `atomicity_result`: `old_or_new_complete`; `byte_exact_restoration`: `true`; `verifier_is_oracle`: `false`; `claim_disposition`: `narrow`; `verdict_class`: `null`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6633_gpu_lease_phase_journal.json
-
-**CLAIM_REFUTED_BY_OWN_DATA**
-
-## VERDICT
-CLAIM_REFUTED_BY_OWN_DATA
-
-## THE HEADLINE CLAIM
-The GPU lease scheduler was not ready because infrastructure checks failed.
-
-## WHAT WOULD REFUTE IT
-The infrastructure check identified as failing—focused tests—passing successfully.
-
-## WAS THAT CHECKED
-Yes. The sole `gate_check_summary` entry marks focused tests as failed, while `tests_run` records the focused-test command exiting successfully.
-
-## EVIDENCE
-The headline reports `blocked_gpu_lease_scheduler_not_ready` and `infrastructure checks failed`. The gate names `focused_tests` with `expected` `true` and `observed` `false`. But `tests_run` records `exit_code` `0` and `summary` `focused tests passed` for the focused-test command.
-
-## RECOMMENDATION
-CORRECT_THE_RECORD
-
-## experiment_6634_mandated_model_admission.json
+## experiment_6656_arc_trace_automaton_live_loo.json
 
 **NO_CLAIM**
 
@@ -139,40 +113,40 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-An attempted independent-admission test in which at least one mandated GGUF family failed admission.
+No value claim is made; a future benefit claim would be refuted by exact post-redirect outcomes showing the on arm ties or underperforms the off arm on progress or solves.
 
 ## WAS THAT CHECKED
-No. Execution stopped at the conductor pre-gate because the upstream readiness score was 0.0 rather than 1.0; no GGUF-family admission rows were produced.
+No. Changed on-arm actions lack exact subsequent outcomes, so the artifact cannot compare their consequences with the off arm.
 
 ## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_field": "gpu_lease_scheduler_ready_score"`; `"failed_expected": 1.0`; `"failed_observed": 0.0`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
+`"verdict_class": "blocked"`; `"status": "blocked_archived_transport_lacks_redirect_outcomes"`; `"failed_check": "exact_live_next_outcome_after_applied_redirect"`; `"passed": false`; `"missing_exact_on_outcome_count": 2067`; `"benefit_claim_allowed": false`; `"prevented_violation_measurable": false`; `"claimed_game_or_level_solve": false`; `"no live-policy benefit, game solve, or level solve is claimed"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6636_delayed_two_level_decoding.json
+## experiment_6657_bounded_treewidth_ising_reference.json
 
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+Bounded exact-reference readiness was not established because required test checks failed.
 
 ## WHAT WOULD REFUTE IT
-There is no substantive performance or value claim to falsify; this is only a blocked-gate receipt.
+All required test scopes—including the full Python suite and spec coverage—passing, with the aggregate readiness gate reporting true and no failed checks.
 
 ## WAS THAT CHECKED
-No; the method was not run. Only the prerequisite gate was checked, and it failed because the upstream artifact was unavailable.
+Yes. The aggregate readiness recomputation and gate summary checked the required test category, while the test receipts show the full Python suite failed. The oracle defines correctness, but the artifact makes no positive claim about the verifier’s added value.
 
 ## EVIDENCE
-`status` `blocked` `honest_verdict` `blocked_gate_check_failed` `blocked_reason` `upstream artifact not found for task id 'exp6635-matched-direct-headroom'` `failed_observed` `null` `passed` `false` `blocked_at_layer` `conductor_pre_gate`
+`honest_verdict`: `blocked_tests_check_failed: bounded exact-reference readiness was not established`; `ready`: `false`; `tests_all_passed`: `false`; `missing_test_scopes`: `full_python_suite`, `spec_coverage`; `failed_checks`; `check`: `tests`; `passed`: `false`; `exit_code`: `2`; `summary`: `interrupted after baseline failure was established: 710 failed, 20674 passed, 65 skipped, 118 warnings in 1041.10s`; `ising_reference_ready`: `false`; `verdict_class`: `blocked`; `verifier_is_oracle`: `true`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6605_qwen36_direct_headroom.json
+## experiment_6658_thermodynamic_schedule_ab.json
 
 **NO_CLAIM**
 
@@ -183,13 +157,69 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative or value claim is made. The operational block would be overturned by authentic GPU-process receipts and a complete integrity recomputation.
+No comparative claim was made to falsify; an A/B result showing the autocorrelation-aware schedule tying or losing to a serious baseline would refute a positive value claim if one existed.
 
 ## WAS THAT CHECKED
-Yes, for the operational block: the GPU-process receipt and integrity gates were evaluated and failed. No method-value comparison was attempted.
+No. The experiment stopped at `conductor_pre_gate` because its sole upstream gate failed, before any A/B data was produced.
 
 ## EVIDENCE
-`honest_verdict` is `blocked_gpu_process_receipts: direct baseline integrity did not complete`; `all_sessions_authentic` is `false`; `complete` is `false`; `failed_checks` contains `gpu_process_receipts`; the artifact describes `baseline qualification alone is null infrastructure.`
+`"status"`: `"blocked"`; `"honest_verdict"`: `"blocked_gate_check_failed"`; `"failed_field"`: `"ising_reference_ready"`; `"failed_expected"`: `true`; `"failed_observed"`: `false`; `"passed"`: `false`; `"blocked_at_layer"`: `"conductor_pre_gate"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6659_v580_capstone.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+V580 provides authentic admission, direct-corpus, and bounded two-step verifier evidence, while memory benefit remains null and the ARC, repair, and Ising conclusions remain blocked or unclaimed.
+
+## WHAT WOULD REFUTE IT
+A valid frozen pair on which the two-step verifier missed the paired error or falsely rejected the clean member would refute the positive verifier component; admission failure, an independent memory interval excluding zero, or completed exact ARC/Ising outcomes would likewise contradict other headline components.
+
+## WAS THAT CHECKED
+Yes. The frozen verifier comparison reports catches and false rejects for one-step, two-step, and full-suffix arms; admission gates were recomputed; memory was evaluated with an independent interval; and the blocked branches record missing denominators and failed readiness gates. The missing audit and failed full suite are explicitly disclosed rather than counted as positive evidence.
+
+## EVIDENCE
+`complete_partial: V580 has authentic admission, direct-corpus, and bounded verifier-unit evidence; memory general benefit is null under independent uncertainty; ARC and Ising branches are blocked; one audit artifact is missing; no pooled success, ARC solve, repair win, or hardware speedup is claimed`
+
+`catch_count` `8`
+
+`false_reject_count` `0`
+
+`unit_id` `two_steps`
+
+`unit_id` `one_step`
+
+`catch_count` `0`
+
+`unit_id` `full_remaining_suffix`
+
+`false_reject_count` `2`
+
+`independent_order_delta_interval_95`
+
+`-0.013448269773437542`
+
+`0.12455938088454865`
+
+`interval_includes_zero` `true`
+
+`arc_solve_credit` `0`
+
+`changed_action_exact_outcome_count` `0`
+
+`status` `blocked_headroom_gate`
+
+`status` `blocked_reference_gate`
+
+`field_present` `true`
+
+`contract_state` `valid`
 
 ## RECOMMENDATION
 KEEP

@@ -1,468 +1,464 @@
-# Carnot Research Roadmap vNEXT — V580: Receipt-Bound Verification and Prospective Memory
+# Carnot Research Roadmap vNEXT — V581: Typed Outcome Transport and Cross-Family Adaptation
 
 **Status:** Proposed  
-**Planning date:** 2026-08-26  
-**Milestone:** `2026.08.580`  
+**Planning date:** 2026-08-27  
+**Milestone:** `2026.08.581`  
 **Execution manifest:** `research-roadmap-next.yaml`  
-**Task contract:** 13 tasks, `exp6647` through `exp6659`, in conductor order
+**Task contract:** 14 tasks, `exp6660` through `exp6673`, in conductor order
 
 ## Executive decision
 
-V580 separates infrastructure admission from scientific conclusions and gives
-three independent research branches their own execution paths. One narrow
-receipt reducer repairs the V579 admission contract; it does not rewrite the
-working lease implementation and it does not make model-quality claims. The
-verification branch then establishes real SOTA direct headroom before trying
-failure-localized suffix regeneration. The continuous-learning, ARC, and Ising
-branches do not depend on that GPU chain, so an admission block cannot erase the
-whole milestone again.
+V580 established the local SOTA execution path, but it exposed three transport
+problems between working components. The three mandated GGUF families can run on
+the owned CUDA path. The direct proof corpus did not reach the exact verifier
+reliably because 38 of 48 rows failed to parse. Repair memory produced a small
+point improvement, but its independent interval included zero because all rows
+came from one fixture. The ARC supervisor changed live-policy actions, but the
+archive did not carry the exact outcomes after those changes. The bounded
+treewidth Ising reference passed its task-owned algorithm rows, but its readiness
+receipt mixed those rows with a failing global test and spec-coverage result.
+
+V581 changes the transport at each boundary. It does not retry the retired suffix
+repair, schema-supported ConstraintIR reprompt, archived ARC replay, or
+unqualified sampler schedule.
 
 The milestone asks four bounded questions:
 
-1. Can the three mandated local GGUF families be admitted with task-owned
-   identity, process, phase, accelerator, and unload receipts without treating
-   the unrelated repo-wide test baseline as a model failure?
-2. On a frozen exact-checkable constraint corpus, does exact failure-localized
-   suffix regeneration beat full retry at a matched proposal-token budget?
-3. Can state-grounded, validation-gated repair memory improve future exact
-   outcomes across prospective task orders while preserving held anchors,
-   recoverable support, restart, and rollback?
-4. Do a game-agnostic trace automaton and an independent bounded-treewidth Ising
-   reference produce useful live-policy and sampler evidence without a solve,
-   hardware, or asymptotic claim?
+1. Does a trigger-switched, syntax-only structured tail improve parseability and
+   exact semantic success over natural extraction and immediate JSON across all
+   three mandated GGUF families?
+2. Does exact-checker-admitted repair memory improve future outcomes across
+   independent constraint families and prospective task orders?
+3. Can the canonical live ARC seam record exact post-redirect outcomes, and do
+   those outcomes support a held-family supervisor utility claim without a game
+   or level solve claim?
+4. Can a task-owned bounded-treewidth reference and a typed Torx factor graph
+   support an autocorrelation-aware schedule comparison without a TSU, FPGA, or
+   asymptotic speed claim?
 
-## What V579 actually proved
+## What V580 proved
 
-V579 reached terminal conductor outcomes, but it did not answer its scientific
-questions.
-
-| V579 scope | Terminal evidence | What is proved | V580 consequence |
+| V580 scope | Terminal evidence | What is proved | V581 consequence |
 |---|---|---|---|
-| Exp6633 task-scoped lease journal | The artifact reports `blocked_gpu_lease_scheduler_not_ready`; owner/race/recovery/tamper fixtures and focused checks passed, while an unrelated repo-wide xdist/CWD failure made `focused_tests` false in the reducer. | The lease mechanism is substantially implemented; the admission reduction boundary is wrong. | Recompute readiness from preregistered task-owned receipts and record the global baseline separately. Do not rebuild the lease. |
-| Exp6634 mandated-model admission | `blocked_gate_check_failed` on Exp6633's zero score. | No GGUF family was scientifically admitted. | Repeat only after the changed receipt reducer, with all three mandated families and independent fresh processes. |
-| Exp6635 direct headroom | No terminal artifact after the admission block. | No direct-headroom conclusion exists. | Create a smaller exact-certificate proposal corpus after admission. |
-| Exp6636 delayed two-level decoding | `blocked_gate_check_failed`; its expected upstream artifact did not exist. | No constrained-generation conclusion exists. | Replace token masking with SRD-inspired post-prefix suffix regeneration. This is not the retired finite-ID transport mechanism. |
-| Exp6637/6638 verifier calibration and audit | No terminal artifacts after the upstream cascade. | No verifier-unit or independent-audit conclusion exists. | Use the completed candidate corpus as the only gate field and spell that field identically in producer and consumers. |
-| Exp6639 Kac-Ward reference | Three consecutive hard wall-clock caps and no artifact. | The proposed implementation scope was too broad for one task; no exact-reference result exists. | Change technique to a bounded-treewidth junction-tree reference, with a separate schedule experiment. |
-
-Two contract lessons are load-bearing. First, the active V579 YAML contained
-seven tasks (`exp6633`-`exp6639`) while its prior design document described
-fourteen (`exp6633`-`exp6646`). V580's document and YAML therefore declare the
-same 13 IDs, titles, deliverables, order, and gates. Second, a task-owned
-readiness field must be based on task-owned evidence. A known global regression
-is still recorded honestly, but it cannot silently relabel passing lease
-fixtures as a failed model.
+| Exp6647 receipt boundary | All 13 preregistered task-owned checks passed. The known global suite result stayed diagnostic. | Model admission can depend on owned receipts without hiding the repository-wide test state. | Reuse the boundary. Do not rebuild admission infrastructure. |
+| Exp6648 mandated GGUF canaries | Qwen3.6-35B-A3B, Gemma-4-31B, and Gemma-4-26B-A4B all loaded and inferred on CUDA in independent owned processes. | The three required model families are available for headline work. | Run one three-family comparison with canonical `model_specs` and fresh per-run receipts. |
+| Exp6649 direct proposal corpus | 48 rows completed; 10 parsed, 8 were exact successes, 38 were parse failures, and only two rows had repair headroom. | The live proposal path is real, but answer transport is the dominant bottleneck. | Change to a delayed syntax-only tail. Do not rerun suffix repair. |
+| Exp6650 verifier-unit map | On eight exact semantic twin pairs, one- and two-step checks caught 8/8 errors with zero false rejects. Full suffix checks caught 8/8 but falsely rejected two clean twins. | Short exact verification units are a useful bounded primitive on this small set. | Keep exact step checks as authority and audit the new transport independently. |
+| Exp6651/6652 intervention chain | Exp6651 gate-blocked at two headroom rows versus eight required. Exp6652 produced no terminal artifact. | No suffix-regeneration benefit or independent audit claim exists. | Retire that attempt. Use a predeclared output mode that does not require repair headroom. |
+| Exp6653-6655 repair memory | Frozen, context-only, and verified-memory arms produced 18/108, 16/108, and 22/108 exact outcomes. The independent order-level interval included zero; safety, restart, and rollback passed. | The memory mechanism is safe on one fixture, but broad benefit is not established. | Replicate across independent families with leave-one-family-out and order-level inference. |
+| Exp6656 ARC supervisor | The canonical E3 action seam applied 551 redirects, but 2,067 eligible rows lacked an exact outcome after the changed action. | Policy influence is real. Benefit is not measurable from the archived transport. | Add exact post-redirect outcome transport before another A/B. |
+| Exp6657/6658 sampler chain | Exact reference algorithm rows passed on 12 supported fixtures. Readiness was false because the full suite and spec coverage receipt failed. Exp6658 gate-blocked. | The reference algorithm is promising; schedule evidence does not exist. | Close task-owned receipts, add Torx PSC parity, then run the schedule comparison. |
+| Exp6659 capstone | The milestone was partial. It made no suffix win, general memory, ARC solve, schedule, or hardware claim. | The branch boundaries and next actions are explicit. | Preserve the branch separation and retire same-verdict reruns mechanically. |
 
 ## Three largest gaps to the PRD vision
 
-| Rank | Gap | Current evidence | V580 closure attempt |
+| Rank | Gap | Current evidence | V581 closure attempt |
 |---:|---|---|---|
-| 1 | No trustworthy local-SOTA path from proposal through exact intervention evidence | The exact two-level corpus exists, but V579 admitted no mandated model and produced no direct or intervention rows. External generated-text verifier scoring is retired. | Receipt-scoped admission, a complete exact-certificate proposal corpus, twin verifier-unit calibration, SRD-style suffix regeneration, and independent row audit. |
-| 2 | FR-11 continuous self-learning is not yet prospective, state-grounded, and rollback-safe in the current method chain | Revocable and verifier-bounded memory primitives exist, while V576's invariant-memory path had zero prospective benefit and its self-learning task blocked on tests. | Recuris-inspired working/experiential memory separation, targeted patch admission, frozen and context-only controls, multiple task orders, support checks, restart, poison, and rollback attacks. |
-| 3 | Transferable reasoning and sampling primitives lack fresh independent evidence | ARC's live supervisor path is reachable but lacks enough outcome-bearing selection evidence; spectral k-block scaling lacks an independent exact reference; attached boards have no changed-state receipts. | A trace-derived game-agnostic FSM tested through the live E3 policy and a bounded-treewidth exact Boltzmann reference followed by autocorrelation-aware schedule comparisons. |
+| 1 | FR-12 lacks a trustworthy local-SOTA path from free reasoning to exact, machine-checkable semantics. | All mandated models run, but 38/48 V580 direct rows did not parse and repair headroom was only 2. Retired answer-ID and ConstraintIR reprompt paths cannot be reused. | Build a syntax-only triggered tail and compare natural, immediate-JSON, and delayed-tail arms across all three mandated models. Audit syntax leakage and every exact row independently. |
+| 2 | FR-11 continuous self-learning lacks independent cross-family evidence. | Verified memory beat frozen by 4/108 on one fixture, but the independent interval included zero. | Build four independent exact constraint families. Run frozen, context-only, and verified-memory arms prospectively over at least five orders with leave-one-family-out transfer, retirement, restart, and rollback. |
+| 3 | Live reasoning and accelerator portability lack outcome-bearing reference contracts. | ARC redirects reach the live policy but lack post-action outcomes. The Ising reference has passing algorithm rows but no clean readiness receipt, and no typed Torx parity result exists. | Add the missing live ARC outcome seam. Separately qualify the exact reference, map it to Torx PSC factors, and measure schedules against exact likelihood, ESS, and autocorrelation. |
 
 ## External research incorporated
 
-The dated findings and product checks are recorded in
-`research-references.md` under “V580 planner refresh.” The experiments use the
-following ideas:
+The dated source record is in `research-references.md` under “V581 planner
+refresh.” V581 uses these ideas:
 
-- **Recuris (arXiv:2608.24876):** separate verified working state from
-  experiential memory; localize updates; admit them only on paired held-out
-  evidence.
-- **Selective Regenerative Decoding (arXiv:2608.24338):** preserve useful
-  prefixes and regenerate only degraded suffixes, measured against full retry
-  at a fixed compute budget.
-- **AutoSaddler (arXiv:2608.23041):** diagnose the concrete failing receipt and
-  make targeted, validation-selected harness changes instead of broad rewrites.
-- **Automata from Agent Traces (arXiv:2608.23670):** derive a compact behavioral
-  state machine from cross-run traces and test it on held-out live-policy paths.
-- **StepGuard (arXiv:2608.24777) and V579 verifier-unit work:** pair unsafe
-  actions with clean twins and report prevented violations together with
-  blocked-valid actions.
-- **Scaling Up Thermodynamic AI Models (arXiv:2607.00170):** make schedule and
-  autocorrelation cost explicit; do not equate raw transitions with independent
-  samples.
+- **Thinking Before Constraining (arXiv:2601.07525):** let the model reason
+  freely, then switch to a short syntax-constrained tail. V581 constrains syntax
+  only and keeps the exact checker independent.
+- **Thermalizing Stochastic Programs (arXiv:2608.01615):** express stochastic
+  programs as directed factor graphs and account for local-to-global
+  approximation error.
+- **A Framework for Stochastic Differentiable Programming
+  (arXiv:2608.01612):** use typed Parametrized Stochastic Circuit wires and Torx
+  factors as a software portability boundary.
+- **Continual Harness (arXiv:2605.09998):** adapt on a persistent stream without
+  episode resets and distinguish harness state from model weights.
+- **ISM (arXiv:2606.31191):** keep a compact verified strategy memory and use
+  symbolic checks to admit updates.
+- **ALMA (arXiv:2602.07755):** treat memory schema, retrieval, and update policy as
+  separate design choices. V581 tests one fixed typed schema before any open-ended
+  schema search.
 
-OpenReview and Hugging Face reinforce selective intervention and independent
-executable checking, but supply no matching-base local EBT/ARM-EBM checkpoint.
-Semantic Scholar returned the same dated discovery counts—35 visible EBT
-citations and eight ARM-EBM citations—and no reproducible matching-base local
-checkpoint. Extropic still schedules Z1 access for 2027. Kona describes
-whole/partial-trace energy reasoning and Spec-Code-Proof alignment but exposes
-no public weights or local runner. None is an executable V580 baseline.
+OpenReview and Hugging Face reinforce delayed syntax enforcement, atomic checks,
+pairwise verification, and explicit compute accounting. Semantic Scholar adds
+no reproducible matching-base EBT or ARM-EBM checkpoint. GitHub discovery adds
+no required dependency; Torx 0.0.1 is already present locally. Extropic reports
+a taped-out Z1 and a 2027 access path, but Carnot has no authenticated TSU
+runner. Logical Intelligence still exposes no public Kona weights or local
+runner. KAN verification remains relevant background, but it does not close the
+three immediate gaps. No attached board has a changed-state receipt.
 
 ## Target architecture
 
 ```text
-                       PHASE A — RECEIPT-BOUND ADMISSION
+                    PHASE A — EXACT OUTPUT TRANSPORT
 
-  Exp6633 artifact + task-owned fixtures + known global-suite receipt
-                              |
-                              v
-                 [6647 admission-boundary reducer]
-                              |
-                     task_owned_admission_ready_score == 1
-                              v
-               [6648 three-family GGUF canaries]
-                              |
-                    all_mandated_models_admitted == true
-                              v
-               [6649 exact proposal/headroom corpus]
-                         /                     \
-                        v                       v
-        PHASE B — VERIFICATION                  regeneration_headroom >= 8
-        [6650 twin verifier-unit map]            |
-                                                  v
-                                 [6651 failure-localized suffix A/B]
-                                                  |
-                                                  v
-                                 [6652 independent row/claim audit]
+ [6660 V581 evidence/retirement contract]       existing exact task families
+                                                        |
+                                                        v
+                                           [6661 triggered-tail fixture]
+                                                        |
+                                  triggered_tail_fixture_ready == true
+                                                        v
+                      three mandated GGUFs -> [6662 three-arm output A/B]
+                                                        |
+                              structured_tail_comparison_complete == true
+                                                        v
+                                           [6663 independent audit]
 
-        PHASE C — INDEPENDENT ADAPTATION AND ARC
+                    PHASE B — CONTINUOUS SELF-LEARNING
 
-  existing exact repair events              archived live E3 traces
-              |                                      |
-              v                                      v
-  [6653 state-grounded memory fixture]    [6656 trace-FSM live LOO A/B]
-              |
-              v
-  [6654 prospective memory evolution]
-              |
-              v
-  [6655 poison/restart/rollback audit]
+  independent exact families -> [6664 cross-family memory fixture]
+                                         |
+                       cross_family_memory_fixture_ready == true
+                                         v
+                              [6665 prospective memory A/B]
+                                         |
+                    cross_family_memory_comparison_complete == true
+                                         v
+                              [6666 independent safety audit]
 
-        PHASE D — INDEPENDENT SAMPLING AND SYNTHESIS
+                    PHASE C — LIVE ARC OUTCOME TRANSPORT
 
-  bounded-treewidth Ising fixtures
-              |
-              v
-  [6657 exact junction-tree reference]
-              |
-              v
-  [6658 autocorrelation-aware schedule A/B]
+ canonical make_carnot_agent / E3AgentPolicy seam
+                         |
+                         v
+              [6667 exact post-redirect outcome transport]
+                         |
+       arc_live_outcome_transport_ready == true AND rows >= 30
+                         v
+              [6668 held-family live supervisor A/B]
+                         |
+              no game or level solve claim
 
-  all terminal artifacts, including honest blocks/nulls
-              |
-              v
-  [6659 V580 capstone and claim reconciliation]
+                    PHASE D — EXACT SAMPLING PORTABILITY
+
+ Exp6657 passing algorithm rows -> [6669 reference receipt closure]
+                                              |
+                                ising_reference_ready == true
+                                              v
+                                   [6670 Torx PSC parity]
+                                              |
+                                  torx_psc_parity_ready == true
+                                              v
+                              [6671 schedule A/B v2]
+                                              |
+                           schedule_comparison_complete == true
+                                              v
+                              [6672 independent sampler audit]
+
+ all terminal artifacts, including nulls, blocks, and missing rows
+                         |
+                         v
+                 [6673 V581 capstone]
 ```
 
-The three independent roots—Exp6647, Exp6653/6656, and Exp6657—prevent a
-single missing GPU receipt from blocking continuous self-learning, the required
-ARC generalization slot, or the sampling reference.
+The verification, memory, ARC, and sampling roots are independent. A blocked
+GPU comparison cannot suppress continuous self-learning, ARC instrumentation,
+or sampler-reference work. The capstone has no positive-result gate.
 
-## Phase A — Receipt-bound admission and direct evidence
+## Phase A — Exact output transport
 
-### Exp6647 — Receipt-scoped model admission boundary
+### Exp6660 — V581 evidence and retirement contract
 
-**Question:** Can V579's passing task-owned lease receipts be reduced
-independently of the unrelated repo-wide xdist/CWD baseline?
+**Question:** Does every V581 branch have a non-retired scope, an exact field
+owner, and a valid same-verdict retirement rule before implementation begins?
 
-**Deliverable:** `results/experiment_6647_receipt_scoped_admission_boundary.json`
+**Deliverable:** `results/experiment_6660_v581_evidence_contract.json`
 
-This is a changed rerun of Exp6633's terminal block, not a lease rewrite. It
-must replay owner, race, PID-start, heartbeat, phase, unload, recovery, and
-tamper fixtures; enumerate the exact task-owned gate set before execution; and
-record the repo-wide suite result under a separate non-gating field. It may set
-`task_owned_admission_ready_score=1.0` only if every preregistered owned check
-passes. Ready infrastructure uses `verdict_class=null`; no model-quality claim
-is allowed.
+This is the first reserved infrastructure task. It performs a long-context
+audit over V580 artifacts, the failure ledger, the exclusion manifest, and the
+new roadmap. It records scope differences and exact producer/consumer field
+contracts. It does not change the active roadmap, exclusion manifest, conductor,
+or implementation.
 
-### Exp6648 — Three-family GGUF accelerator canaries
+### Exp6661 — Trigger-switched structured-tail fixture
 
-**Question:** Are all three mandated GGUF families loadable and inferencing in
-independent owned processes on the measured RTX path?
+**Question:** Can a fixed exact-checkable corpus express a syntax-only delayed
+tail without embedding answer semantics in a grammar, prompt, task ID, or lookup?
 
-**Deliverable:** `results/experiment_6648_three_family_gguf_canaries.json`
+**Deliverable:** `results/experiment_6661_triggered_tail_fixture.json`
 
-The task resolves the Qwen/middle-Gemma pair through `cached_sota_pair()` and
-the dense Gemma through `resolve_cached_gguf()`. Each family gets its own fresh
-process and owner-bound receipt: exact model ID and file hash, embedded GGUF
-tokenizer probe, PID/start, device UUID, phase transitions, VRAM before/resident/
-after, prompt hash, non-empty output, exit, unload, and release. The task is
-infrastructure admission, not a quality comparison.
+Build at least 18 tasks across scheduling, graph constraints, and arithmetic or
+logic certificates. Freeze three output arms: natural extraction, immediate
+JSON, and free reasoning followed by a trigger-switched structured tail. Store
+separate prompt, parser, grammar, checker, and leakage-attack hashes. A task is
+ready only when syntax mutations cannot change exact labels and the grammar
+cannot enumerate the correct answer.
 
-### Exp6649 — Exact certificate proposal corpus
+### Exp6662 — Three-family trigger-switched structured-tail A/B
 
-**Question:** On preregistered exact-checkable tasks, do the flagship MoE and
-middle MoE produce a complete direct candidate corpus with enough
-prefix-repairable failures to test localized regeneration?
+**Question:** At matched task, seed, and proposal-token budgets, does the delayed
+syntax-only tail improve exact semantic success without reducing reasoning
+quality?
 
-**Deliverable:** `results/experiment_6649_exact_certificate_proposal_corpus.json`
+**Deliverable:** `results/experiment_6662_triggered_structured_tail_ab.json`
 
-Use at least 24 fixed tasks and both
-`unsloth/Qwen3.6-35B-A3B-GGUF` and
-`unsloth/gemma-4-26B-A4B-it-GGUF`. Every row stores task, prompt, model, seed,
-raw output hash, parsed plan, exact outcome, first failing step, valid-prefix
-length, token count, and receipt lineage. `candidate_corpus_complete` depends on
-row completeness and exact recheckability, not on whether headroom exists.
-`regeneration_headroom_count` is a separate measured field.
-
-## Phase B — Verification unit and localized regeneration
-
-### Exp6650 — Twin-prefix verifier discrimination map
-
-**Question:** Which verification unit—one step, two steps, or full remaining
-suffix—best separates paired clean/error candidates without merely rejecting
-more valid work?
-
-**Deliverable:** `results/experiment_6650_twin_prefix_verifier_map.json`
-
-Build byte-matched clean/error twins from Exp6649 rows. Report catch rate,
-false-reject rate, informedness, AUROC/AUPRC where defined, abstention, and
-latency per unit. Exact labels remain authority; learned signals only measure or
-route. This task runs on frozen rows and invokes no new LLM.
-
-### Exp6651 — Failure-localized suffix regeneration A/B
-
-**Question:** When an exact checker identifies the first invalid step, does
-preserving the valid prefix and regenerating only the suffix outperform a full
-retry at the same proposal-token budget?
-
-**Deliverable:** `results/experiment_6651_failure_localized_suffix_regeneration.json`
-
-Use the fixed invalid/headroom rows and both
-`unsloth/Qwen3.6-35B-A3B-GGUF` and
-`unsloth/gemma-4-31B-it-GGUF`. Compare direct candidate, full retry, and
-localized suffix regeneration. The method may prompt from an accepted prefix
-plus exact failure information; it may not mask finite answer IDs, force a
-grammar carrying answer semantics, or reuse the retired generated-answer
-transport path. Match total generated proposal tokens per row. Because the same
-exact checker localizes the intervention, any favorable intervention result is
-`circular_positive`, not an independent positive claim.
-
-### Exp6652 — Constraint intervention independent row audit
-
-**Question:** Do the raw rows support the claimed validity, token-budget,
-prefix-preservation, and model-identity aggregates?
-
-**Deliverable:** `results/experiment_6652_constraint_intervention_audit.json`
-
-Recompute every headline from raw rows, rerun exact checks from blinded task
-inputs, verify model/process/accelerator receipts, and attack leakage, duplicate
-rows, unequal budgets, parser nulls, impossible prefix claims, and oracle
-circularity. The audit cannot upgrade an oracle-assisted result to independent
-positive evidence.
-
-## Phase C — Continuous self-learning and ARC generalization
-
-### Exp6653 — State-grounded repair memory fixture
-
-**Question:** Can exact repair events be represented as separate working-state
-and experiential-repair records with targeted, revocable updates?
-
-**Deliverable:** `results/experiment_6653_state_grounded_repair_memory_fixture.json`
-
-Build a deterministic fixture from existing exact constraint/repair artifacts,
-not from new LLM generation. Each event records the visible state, violated
-constraint, exact witness, candidate repair, applicability key, support before
-and after, held-anchor split, provenance, version, and inverse rollback patch.
-No future outcome may enter a lookup key. This is data/schema readiness and uses
-`verdict_class=null` when ready.
-
-### Exp6654 — Prospective experiential repair evolution
-
-**Question:** Across at least three preregistered task orders, does
-validation-gated experiential memory improve future exact outcomes relative to
-frozen and context-only controls without collapsing recoverable support?
-
-**Deliverable:** `results/experiment_6654_prospective_repair_memory_evolution.json`
-
-Run frozen, context-only, and verified-memory arms over identical exact repair
-operator candidates. Patches may change only one typed memory component and are
-admitted only after source-event repair, paired held-anchor non-regression, and
-support-floor checks. Evaluation is prequential: event `t` may use only
-information committed before `t`. Report per-event retrieval and action
-influence, retained/retired patches, regret, future exact yield, forgetting,
-support, and order sensitivity. This is V580's required Continuous
-Self-Learning experiment and invokes no LLM.
-
-### Exp6655 — Adversarial durability of repair memory
-
-**Question:** Does the prospective memory result survive corruption, duplicate,
-unsupported-update, restart, and rollback attacks?
-
-**Deliverable:** `results/experiment_6655_repair_memory_safety_audit.json`
-
-Replay artifacts from disk, inject conflicting and low-support events, verify
-checksum and version failures close, and prove that rejected or harmful patches
-restore the exact prior state. Recompute all multi-order arm deltas from rows.
-No same-policy self-grade may authorize a memory update.
-
-### Exp6656 — Trace-automaton ARC live supervisor LOO A/B
-
-**Question:** Can a game-agnostic finite-state supervisor learned from archived
-live E3 traces reduce held-family unproductive or forbidden actions when it is
-actually reachable by the scored `make_carnot_agent`/`E3AgentPolicy` path?
-
-**Deliverable:** `results/experiment_6656_arc_trace_automaton_live_loo.json`
-
-Derive a compact FSM only from policy-visible trace fields. Freeze topology and
-thresholds before held-family evaluation. Run paired supervisor-off/on cells
-through the actual live E3 path across at least three held-out game families
-and three seeds, recording redirect firings, actual action changes, valid-action
-blocks, violations prevented, actions to exact observed progress, and receipt
-lineage. Do not read game source, use per-game adapters, run offline BFS, or
-claim any game or level solve. The reusable primitive and held-family design
-satisfy the ARC generalization floor even if the result is null.
-
-## Phase D — Exact Ising reference, schedule test, and capstone
-
-### Exp6657 — Bounded-treewidth exact Ising reference
-
-**Question:** Can a small junction-tree/dynamic-programming implementation
-produce normalized likelihoods and independent exact samples on preregistered
-bounded-treewidth Ising graphs?
-
-**Deliverable:** `results/experiment_6657_bounded_treewidth_ising_reference.json`
-
-This changes technique from the failed Kac-Ward attempt. Use at least 12 graph
-fixtures with treewidth at most four, including fields and frustration where
-the representation supports them. Compare partition function, marginals,
-likelihoods, and samples against brute-force enumeration at small `n`. Reject
-unsupported graphs explicitly. A ready reference is null infrastructure
-evidence, not a sampler speed claim.
-
-### Exp6658 — Autocorrelation-aware thermodynamic schedule A/B
-
-**Question:** Relative to the independent exact reference, does an
-autocorrelation-aware temperature/transition schedule improve effective samples
-per measured wall-second over fixed schedules on bounded graphs?
-
-**Deliverable:** `results/experiment_6658_thermodynamic_schedule_ab.json`
-
-Compare fixed-transition, fixed-temperature-ladder, and
-autocorrelation-aware schedules across graph and seed rows. Report setup,
-transition, and end-to-end wall time separately; energy and marginal error;
-normalized-likelihood diagnostics; ESS; integrated autocorrelation time; and
-failure/support rows. This is CPU/JAX or local CUDA software evidence only—no
-TSU, FPGA, asymptotic, or energy-efficiency claim.
-
-### Exp6659 — V580 evidence synthesis
-
-**Question:** Which V580 claims are positive, circular-positive, null, blocked,
-disqualified, or partial after independent row recomputation?
-
-**Deliverable:** `results/experiment_6659_v580_capstone.json`
-
-Aggregate every available artifact without inventing missing zeros. Recompute
-gates and comparisons from rows, preserve circularity and solve provenance,
-list retired reruns, and update only the relevant capability specs,
-`_bmad/traceability.md`, `ops/status.md`, and `ops/changelog.md`. A terminal
-capstone must run even when an upstream branch blocks.
-
-## Dependency graph and conductor order
-
-```text
-6647
-  └─6648 [task_owned_admission_ready_score == 1.0]
-      └─6649 [all_mandated_models_admitted == true]
-          ├─6650 [candidate_corpus_complete == true]
-          └─6651 [candidate_corpus_complete == true AND regeneration_headroom_count >= 8]
-              └─6652 [repair_comparison_complete == true]
-
-6653
-  └─6654 [memory_fixture_ready == true]
-      └─6655 [prospective_memory_comparison_complete == true]
-
-6656  (independent ARC root)
-
-6657
-  └─6658 [ising_reference_ready == true]
-
-6659  (last in YAML; aggregates all terminal/available artifacts, no science gate)
-```
-
-All structured gate fields above are declared with the identical spelling in
-the upstream task's required artifact fields. No task requires a retired
-experiment ID. Prior failures are documentary inputs only.
-
-## Experimental model policy
-
-Only three tasks invoke an LLM. Their `MODEL_SPECS` are mandatory and explicit.
-
-| Task | Experimental models | Resolution contract | Headline use |
-|---|---|---|---|
-| Exp6648 | Qwen3.6-35B-A3B, Gemma-4-31B-it, Gemma-4-26B-A4B-it | `cached_sota_pair()` for Qwen + middle MoE; `resolve_cached_gguf()` for dense Gemma; embedded GGUF tokenizer | Admission only |
-| Exp6649 | Qwen3.6-35B-A3B + Gemma-4-26B-A4B-it | `cached_sota_pair(gpu_indices=(0,1), model_indices=(0,1))` | Direct proposal/headroom rows |
-| Exp6651 | Qwen3.6-35B-A3B + Gemma-4-31B-it | cached Qwen plus `resolve_cached_gguf()` dense path | Matched-budget repair comparison |
-
-Full hub IDs:
+Run all three mandated models:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF`
 - `unsloth/gemma-4-31B-it-GGUF`
 - `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-Legacy `Qwen/Qwen3.5-0.8B` and `google/gemma-4-E4B-it` may run only as labeled
-CPU smoke tests. Their rows cannot satisfy admission, headroom, repair, or
-headline gates. No experiment may call Hugging Face `AutoTokenizer` on a GGUF
-repository; the tokenizer is embedded in the GGUF and must be checked through
-the llama.cpp-backed path.
+Use `cached_sota_pair()` for Qwen plus the middle MoE and
+`resolve_cached_gguf()` for the dense flagship. Use only the embedded GGUF
+tokenizer. Emit every model-task-arm row, including raw text, trigger position,
+tail, parse state, exact outcome, token count, latency, and process receipt. The
+primary comparison is exact semantic success. Parse rate is a secondary
+transport metric. Immediate JSON is a control, not a reopened retired claim.
+
+### Exp6663 — Structured-tail independent audit
+
+**Question:** Do blinded raw rows reproduce the reported parse and exact-semantic
+comparisons, and is the delayed grammar truly syntax-only?
+
+**Deliverable:** `results/experiment_6663_structured_tail_independent_audit.json`
+
+Rebuild aggregates from raw rows, rerun exact checkers in a cold process, verify
+all model and accelerator receipts, and attack answer leakage, trigger leakage,
+parser coercion, missing-row coercion, unequal budgets, and duplicate tasks.
+This audit cannot promote a circular result to independent positive evidence.
+
+## Phase B — Continuous self-learning
+
+### Exp6664 — Cross-family repair-memory fixture
+
+**Question:** Can one typed repair-memory contract cover at least four independent
+constraint families while preserving family-blind retrieval and exact rollback?
+
+**Deliverable:** `results/experiment_6664_cross_family_repair_fixture.json`
+
+Create independent scheduling, graph, arithmetic/logic, and plan-state families.
+Each event contains only visible pre-event state, exact violation witnesses,
+candidate repairs, applicability keys, support, anchors, version, provenance,
+and an inverse patch. Freeze train/held-family partitions and at least five task
+orders. Future outcomes may not enter retrieval keys.
+
+### Exp6665 — Prospective cross-family repair-memory evolution
+
+**Question:** Does exact-checker-admitted memory improve future exact outcomes
+over frozen and context-only controls across task orders and held families?
+
+**Deliverable:** `results/experiment_6665_prospective_cross_family_memory.json`
+
+Run frozen, context-only, and verified-memory arms over identical candidate
+repair operators. Event `t` can use only state committed before `t`. A patch is
+admitted only after exact source repair, held-anchor non-regression, support
+retention, and rollback checks. Report per-event retrieval, influence, exact
+yield, regret, forgetting, support, patch retirement, and order sensitivity.
+This is the required Continuous Self-Learning experiment.
+
+### Exp6666 — Cross-family memory independent audit
+
+**Question:** Does the cross-family memory claim survive chronological replay,
+poison attacks, restart, rollback, and row-level uncertainty analysis?
+
+**Deliverable:** `results/experiment_6666_cross_family_memory_independent_audit.json`
+
+Replay every order from a sealed initial state, recompute intervals at the order
+and family level, and test future-outcome leakage, family labels in keys,
+duplicate events, poison patches, atomic restart, byte-exact rollback, anchor
+regression, and support collapse. A positive point estimate with an interval
+that includes zero is `null`.
+
+## Phase C — Live ARC outcome transport
+
+### Exp6667 — Canonical live ARC outcome transport
+
+**Question:** Can the canonical live E3 action seam attach the exact next
+environment outcome to every applied supervisor redirect?
+
+**Deliverable:** `results/experiment_6667_arc_live_outcome_transport.json`
+
+Instrument `make_carnot_agent` and `E3AgentPolicy` at the live environment seam.
+Record state hash, proposed action, applied action, redirect reason, observation
+before and after, exact reward/outcome, termination, family, attempt, and receipt
+lineage. Validate on held-family live episodes. Archived replay may be a
+diagnostic only. This task makes no game or level solve claim.
+
+### Exp6668 — Held-family live ARC supervisor A/B
+
+**Question:** With exact post-redirect outcomes present, does the existing
+game-agnostic trace automaton reduce forbidden actions or improve exact
+transition outcomes without blocking valid actions?
+
+**Deliverable:** `results/experiment_6668_arc_supervisor_live_ab.json`
+
+Compare baseline and supervisor through the canonical live policy on held
+families with matched seeds, budgets, and rosters. Report every attempted and
+changed action, exact next outcome, prevented violation, false intervention,
+latency, and policy influence. The task does not claim a game or level solve and
+does not update the solve registry.
+
+## Phase D — Exact sampling portability and synthesis
+
+### Exp6669 — Bounded-treewidth reference receipt closure
+
+**Question:** Do Exp6657's passing algorithm rows satisfy a task-owned readiness
+contract when global suite and spec diagnostics are recorded separately?
+
+**Deliverable:** `results/experiment_6669_bounded_treewidth_reference_receipt.json`
+
+Do not rewrite the reference algorithm unless a focused red test proves an
+algorithm defect. Replay exact enumeration, decomposition, normalization,
+parity, sampling, rejection, and checksum fixtures. Compute readiness from the
+preregistered task-owned checks. Record global diagnostics separately and
+honestly.
+
+### Exp6670 — Torx PSC Ising portability parity
+
+**Question:** Does the installed Torx 0.0.1 CPU path represent the qualified
+binary Ising fixtures with matching factor energies, normalized probabilities,
+and sampled marginals?
+
+**Deliverable:** `results/experiment_6670_torx_psc_portability_parity.json`
+
+Map the exact fixtures to typed binary ports and directed factors. Compare local
+Carnot, Torx, and exact-reference values per state and fixture. Track per-factor
+and end-to-end error. This is software compatibility evidence only. It makes no
+Thermalizers compiler, TSU, Z1, latency, power, or hardware claim.
+
+### Exp6671 — Autocorrelation-aware schedule A/B v2
+
+**Question:** With exact and Torx parity references ready, does an
+autocorrelation-aware temperature schedule improve effective independent
+samples per second or exact distribution fit over the fixed checkerboard
+schedule?
+
+**Deliverable:** `results/experiment_6671_autocorrelation_schedule_ab_v2.json`
+
+Compare fixed and adaptive schedules at matched transition and wall-time budgets
+on fixed bounded-treewidth and frustrated fixtures. Report exact likelihood,
+KL/TV, energy, ESS, ESS/s, integrated autocorrelation, burn-in, transition count,
+wall time, and confidence intervals per chain and seed. CPU software is the
+headline substrate.
+
+### Exp6672 — Sampler portability independent audit
+
+**Question:** Do the exact-reference, Torx parity, and schedule claims reproduce
+from sealed fixtures and raw chains without hidden hardware or independence
+claims?
+
+**Deliverable:** `results/experiment_6672_sampler_portability_independent_audit.json`
+
+Recompute all distributions and chain statistics, verify factor-graph hashes,
+check seed independence and burn-in, attack cherry-picked chains and denominator
+changes, and enforce the no-hardware boundary. Report the accumulated
+per-factor-to-end-to-end error separately from sampling error.
+
+### Exp6673 — V581 evidence synthesis
+
+**Question:** What did V581 prove, which branches remain experimental, and which
+same-verdict attempts must retire?
+
+**Deliverable:** `results/experiment_6673_v581_capstone.json`
+
+This is the second reserved infrastructure task. It runs regardless of positive,
+null, blocked, disqualified, missing, or hard-cap outcomes. It validates every
+artifact and gate, recomputes headline claims from rows, preserves circularity
+and no-solve boundaries, applies retirement mechanics, and reconciles only the
+specs and ops documents supported by the completed work.
+
+## Dependency graph
+
+```text
+6660                                      (independent evidence contract)
+
+6661 -> 6662 -> 6663                      (output transport)
+
+6664 -> 6665 -> 6666                      (continuous self-learning)
+
+6667 -> 6668                              (live ARC outcomes)
+
+6669 -> 6670 -> 6671 -> 6672              (exact sampling portability)
+  |                  ^
+  +------------------+
+
+6660, 6661-6672 terminal states -> 6673   (ungated capstone)
+```
+
+Structured gates use only producer-owned fields:
+
+| Consumer | Producer field | Condition |
+|---|---|---|
+| Exp6662 | `exp6661.triggered_tail_fixture_ready` | `== true` |
+| Exp6663 | `exp6662.structured_tail_comparison_complete` | `== true` |
+| Exp6665 | `exp6664.cross_family_memory_fixture_ready` | `== true` |
+| Exp6666 | `exp6665.cross_family_memory_comparison_complete` | `== true` |
+| Exp6668 | `exp6667.arc_live_outcome_transport_ready` | `== true` |
+| Exp6668 | `exp6667.eligible_held_family_outcome_rows` | `>= 30` |
+| Exp6670 | `exp6669.ising_reference_ready` | `== true` |
+| Exp6671 | `exp6669.ising_reference_ready` | `== true` |
+| Exp6671 | `exp6670.torx_psc_parity_ready` | `== true` |
+| Exp6672 | `exp6671.schedule_comparison_complete` | `== true` |
+
+Every field above appears with the identical spelling in its producer's required
+artifact fields. A blocked artifact must use `gate_check_summary` and record the
+failed check, expected value, and observed value.
+
+## Failed-scope and retirement boundaries
+
+- The retired schema-supported ConstraintIR reprompt may appear only as the
+  immediate-JSON control. The treatment delays syntax enforcement and does not
+  encode answer semantics.
+- Exp6651's suffix-regeneration scope is not reopened. Exp6662 makes one planned
+  generation per arm and has no repair-headroom gate.
+- Exp6655's one-fixture memory conclusion is not promoted. Exp6664-6666 require
+  independent families and leave-one-family-out evidence. A repeated null retires
+  this fixed-schema replication scope.
+- Exp6656's archived ARC transport is not reused for a benefit claim. Exp6667
+  must produce exact outcomes at the live environment seam first.
+- Exp6658's schedule comparison can run only after Exp6669 and Exp6670 produce
+  the exact named readiness fields. A repeated gate block retires the schedule
+  scope as proposed.
+- No task references a retired upstream task in `requires` or `gated_on`.
 
 ## Hardware requirements
 
 | Resource | Tasks | Requirement and claim boundary |
 |---|---|---|
-| Dual RTX 3090, 24 GB each | Exp6648, Exp6649, Exp6651 | Required for independent local GGUF processes. Record GPU UUID, PID/start, model hash, phase, VRAM, exit, unload, and lease release. Do not infer quality from accelerator admission. |
-| Host CPU and RAM | All; especially Exp6647, Exp6650, Exp6652-6658 | Current host is sufficient for reducers, exact checks, memory streams, ARC fixtures, and bounded-treewidth graphs. Record measured resources in each artifact. |
-| Local disk/model cache | Exp6648, Exp6649, Exp6651 | All mandated Q4_K_M GGUFs must resolve locally. No download is part of the experiment. |
-| ARC/Arcade runtime | Exp6656 | Use only canonical live E3 entrypoints and policy-visible observations. No game source or per-game adapter. |
-| KV260, GateMate, PolarFire | None | No changed-state receipt exists. Repetitive continuity or bitstream redesign is outside V580. |
-| Extropic TSU/Z1 | None | No authenticated runner; 2027 early-access statements are not hardware evidence. |
+| Dual RTX 3090, 24 GB each | Exp6662 | Run the three mandated GGUF families through fresh owner-bound llama.cpp CUDA processes. Sequential reuse is allowed. Record UUID, PID/start, model hash, phases, VRAM, unload, and release. No legacy model can satisfy a headline row. |
+| Local GGUF cache | Exp6662 | Qwen plus middle MoE resolve through `cached_sota_pair()`. Dense Gemma resolves through `resolve_cached_gguf()`. Use embedded GGUF tokenizers only. |
+| CPU and system RAM | Exp6660-6661, Exp6663-6673 | Exact checkers, memory replay, live ARC orchestration, bounded-treewidth reference, Torx CPU parity, chain statistics, audits, and capstone. Record actual CPU, RAM, and runtime. |
+| Torx 0.0.1 | Exp6670-6672 | Use the installed software path. If the declared API is absent, block with the exact missing symbol. Do not install or vendor a replacement during the experiment. |
+| Extropic TSU/Z1 | None | No authenticated runner is available. Make no latency, throughput, power, availability, or hardware-execution claim. |
+| KV260, GateMate, PolarFire | None | No changed-state receipt exists. The hardware-continuity rule keeps these boards out of V581. |
+| AMD iGPU/ROCm | None required | Do not use the known unstable THRML/ROCm path as a headline substrate. |
 
-## Artifact and evidence contract
+## Measurement and claim rules
 
-Every task must:
+- Every comparative task emits one per-unit row for every arm, task, family,
+  seed, chain, or condition. Aggregate-only claims are invalid.
+- Every runtime LLM row uses at least one mandated model; Exp6662 uses all three.
+- Exact executable checkers authorize semantic validity and memory updates.
+  Learned or model-generated scores may propose, route, rank, or abstain only.
+- Positive verification claims require blinded recomputation from raw rows.
+- Missing parses, outcomes, chains, or artifacts remain missing. They are not
+  coerced to zero.
+- `verdict_class` is always one of `positive`, `circular_positive`, `null`,
+  `blocked`, `disqualified`, or `partial`.
+- Any `blocked_*` verdict records `gate_check_summary` with the exact check and
+  observed value.
+- ARC tasks make no game or level solve claim, so they do not modify
+  `ops/arc_solve_registry.yaml` and do not use development-proxy credit.
+- Hardware claims remain local to measured software, CPU, or CUDA paths.
 
-- write exactly one declared JSON deliverable atomically;
-- declare `honest_verdict` and closed `verdict_class` in
-  `{positive, circular_positive, null, blocked, disqualified, partial}`;
-- make any blocked verdict start `blocked_` and populate
-  `gate_check_summary` with the failed check and observed value;
-- emit `per_unit_rows` for every compared model, arm, task, graph, seed,
-  condition, task order, or attack;
-- recompute aggregates from rows and record provenance, hashes, seed, duration,
-  commands, exit codes, and inference substrate;
-- preserve `research-roadmap.yaml` and `scripts/research_conductor.py` byte-for-byte;
-- run focused unit tests, spec coverage, row consistency, adversarial
-  verification, and the applicable checks in `ops/e2e-test-plan.md`;
-- update the relevant `openspec/capabilities/*/spec.md` before implementation
-  and reconcile traceability/status/changelog only for code actually changed;
-- never translate a missing artifact, null row, parser failure, or unavailable
-  denominator into zero.
+## Milestone success criteria
 
-ARC Exp6656 makes no level-solve claim, so it must record a no-solve receipt and
-must not populate a credited solve. If any implementation unexpectedly adds a
-level-solve claim, it must add `solve_provenance` and only
-`live_agent_self_discovery` can receive credit.
+V581 is complete when all 14 tasks have terminal artifacts or explicit
+conductor terminal states, and the capstone reconciles them honestly. The
+milestone does not require a positive scientific result. Branch-specific
+promotion requires:
 
-## Failed-experiment discipline
-
-The YAML carries `prior_failures` for every materially overlapping terminal or
-failed scope: Exp6633, Exp6634, Exp6635, Exp6636, Exp6637, Exp6638, Exp5913,
-Exp6614, Exp6290, Exp6524, Exp6639, and Exp6612. Each entry records the observed terminal result,
-the changed technique or newly shipped prerequisite, and
-`retire_if_same_verdict: true`. V580 reuses none of those experiment IDs and
-requires none as a conductor dependency. No operator override is needed.
-
-## Milestone acceptance boundary
-
-V580 is successful as a research milestone if it produces honest terminal
-evidence for all independent branches, not only if every method wins.
-
-- Phase A succeeds when task-owned admission is either proven or blocked with a
-  named owned check; global-suite truth remains visible.
-- Phase B succeeds when complete raw candidate rows support either a bounded
-  regeneration comparison or an honest no-headroom closure.
-- Phase C succeeds when the memory experiment runs prospectively across task
-  orders and the live E3 ARC primitive records real policy influence or an
-  honest null/no-firing result.
-- Phase D succeeds when the exact Ising reference is independently checked and
-  the schedule task reports ESS/autocorrelation or an explicit unsupported
-  boundary.
-- Exp6659 reconciles all claims and does not promote circular-positive, blocked,
-  missing, or off-path evidence.
-
-The conductor must execute `research-roadmap-next.yaml`; it must not modify or
-activate `research-roadmap.yaml` as part of this planning task.
+- output transport: complete rows for every preregistered model-task-arm unit,
+  independent exact recomputation, and no syntax-to-answer leakage;
+- continuous self-learning: prospective cross-family rows, order-level
+  uncertainty, no held-anchor regression, support retention, restart, and
+  byte-exact rollback;
+- ARC: exact post-redirect outcomes through the canonical live seam before any
+  supervisor utility claim;
+- sampling: task-owned exact-reference readiness, Torx factor parity, and raw
+  chain evidence for likelihood, autocorrelation, and effective sample size;
+- process integrity: the active `research-roadmap.yaml` and
+  `scripts/research_conductor.py` remain unchanged, and no push occurs.
