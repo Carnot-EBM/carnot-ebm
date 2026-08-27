@@ -1,5 +1,23 @@
 # Carnot — Changelog
 
+## 2026-08-27 — Exp6615 closed-milestone replay stays closed
+
+- Fixed the four Exp6615 regressions without changing their tests. The capstone
+  had recovered its V576 roadmap from history but still read its evidence,
+  protected files, and documents from the live V582 working tree. A later
+  clean Exp6605 rerun therefore changed `headroom_eligible` from the retained
+  V576 `false` to `true`, while ordinary roadmap/conductor evolution made the
+  original protected receipts report false.
+- Added `REQ-REPORT-6615-DURABLE-REPLAY` and routed landed Exp6615 replay inputs
+  through the capstone artifact's add commit. Evidence pinning is explicit for
+  this closed milestone; an artifact that has never landed retains the normal
+  authoring behavior and reads the working tree.
+- Verification: exact conductor shard `117 passed, 1 warning`; focused
+  Exp6615+Exp6687 tests `27 passed`; scoped coverage `805/805` statements
+  (100%); applicable Python/JAX E2E `5 passed`; focused spec coverage, Ruff,
+  format, mypy, and diff checks pass. No test was skipped, weakened, deleted,
+  or reverted, and `scripts/research_conductor.py` was not modified.
+
 ## 2026-08-27 — Four KAN modules adopt commit-resolved receipts (REQ-REPORT-6610)
 
 - Reviewed the eight remaining `-k repository_artifact_matches_deterministic_replay`

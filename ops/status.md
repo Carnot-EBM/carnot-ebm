@@ -12,6 +12,16 @@ tests pass; 8 mutations each RED in a PYTHONPATH-pinned worktree with the
 import file verified, baseline restored GREEN. Next: re-run the tool after
 the in-flight supwindow ar25 cells land, and on every future supervised run.)
 
+**Also 2026-08-27 (Exp6615 durable replay):** the four failing Exp6615 tests
+were caused by replaying a closed V576 capstone from mutable V582-era inputs:
+the active roadmap and protected files had legitimately advanced, and Exp6605
+had been rerun with a repaired GPU receipt. Exp6615 now deliberately resolves
+closed-milestone logic and evidence from the commit that added its artifact,
+while first-time authoring continues to read the working tree. The exact
+conductor shard is green (`117 passed`, one existing warning), combined
+Exp6615/Exp6687 statement coverage is 100% (`805/805`), and the applicable
+Python/JAX E2E is green (`5 passed`). No test or conductor source was changed.
+
 **Also 2026-08-27 (Exp6605/Exp6607 GPU receipt load-phase stage):** the one
 failing authenticity criterion, `worker_pid_present all during`, was the FIRST
 TWO samples of the run, taken 0.1 s and 1.3 s after the server started. The
