@@ -306,19 +306,38 @@ CONDUCTOR_SCOPE_IDS = {
 }
 
 
-def claimed_by_other_sessions(staged: list[str], claims: dict[str, list[str]]) -> dict[str, str]:
-    """Which staged paths another session has declared, as {path: run_id}.
+def claimed_by_other_sessions(
+    staged: list[str],
+    claims: dict[str, list[str]],
+    tracked_at_head: set[str] | None = None,
+) -> dict[str, str]:
+    """Which staged paths may be left for another session, as {path: run_id}.
 
     The decision rule is a pure function so it can be tested without a git fixture, following
     the precedent set by `determination_damage`. A directory pattern with no glob characters
     means "that directory and everything under it", which is what a person means when they
     type one -- matching `_matches` in scripts/harness_integrity_lint.py, deliberately, since
     the two must agree about what a declaration covers.
+
+    A path absent from `tracked_at_head` is NEVER returned, however well it matches a claim.
+    An untracked file has no other copy anywhere: unstage it and the only thing between it and
+    deletion is its owner committing in time. A tracked file's content is recoverable from
+    HEAD, so leaving that one costs attribution and nothing else.
+
+    Learned 2026-08-27. An outer-loop note was written, claimed, and left unstaged to prove
+    this narrowing worked. Within the hour it was gone from disk, never committed. The
+    deletion was never attributed to this code -- the checkpoint path stages file-by-file and
+    bypasses the caller entirely, so it would have swept the note up had the note still
+    existed -- but it showed the premise "a declared path has an owner who will commit it"
+    holds only if that owner commits before anything else touches the tree, and nothing
+    enforces that. Passing None keeps the old behaviour and is for tests only.
     """
     import fnmatch as _fnmatch
 
     claimed: dict[str, str] = {}
     for path in staged:
+        if tracked_at_head is not None and path not in tracked_at_head:
+            continue
         for run_id, patterns in claims.items():
             for pat in patterns:
                 literal_dir = not any(ch in pat for ch in "*?[")
@@ -389,7 +408,23 @@ def _stage_all_except_claimed() -> None:
         if not staged:
             return
 
-        claimed = claimed_by_other_sessions(staged, claims)
+        # Read what HEAD tracks so a NEW file is never left unstaged -- see
+        # claimed_by_other_sessions. If HEAD cannot be read we cannot tell a new file from a
+        # tracked one, so everything stays staged: the fail-open direction is always
+        # "preserve the work".
+        rc_head, head_files, _ = run_cmd(["git", "ls-tree", "-r", "--name-only", "HEAD"])
+        if rc_head != 0:
+            return
+        tracked_at_head = {line.strip() for line in head_files.splitlines() if line.strip()}
+        claimed = claimed_by_other_sessions(staged, claims, tracked_at_head)
+        kept_new = [p for p in staged if p not in tracked_at_head]
+        if kept_new:
+            logger.debug(
+                "Keeping %d NEW file(s) regardless of any claim (an untracked file has no "
+                "other copy): %s",
+                len(kept_new),
+                ", ".join(sorted(kept_new)[:5]),
+            )
         if not claimed:
             return
         if len(claimed) == len(staged):

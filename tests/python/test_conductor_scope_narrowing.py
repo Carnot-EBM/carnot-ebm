@@ -95,3 +95,36 @@ def test_a_claim_never_matches_a_partial_directory_name() -> None:
     """`docs/note` must not claim `docs/notes/a.md`."""
     claimed = claimed_by_other_sessions(["docs/notes/a.md"], {"peer": ["docs/note"]})
     assert claimed == {}
+
+
+# --- A NEW file is never left for someone else (2026-08-27) --------------------------------
+# An untracked file has no other copy anywhere. Unstage it and the only thing between it and
+# deletion is its owner committing in time -- and nothing enforces that. A tracked file's
+# content is recoverable from HEAD, so leaving that one costs attribution and nothing else.
+
+
+def test_a_new_file_is_kept_even_when_claimed() -> None:
+    """The correction. A claimed path absent from HEAD stays staged."""
+    claimed = claimed_by_other_sessions(
+        ["docs/notes/brand-new.md"],
+        {"peer": ["docs/notes/brand-new.md"]},
+        tracked_at_head=set(),
+    )
+    assert claimed == {}
+
+
+def test_a_tracked_file_is_still_left_for_its_owner() -> None:
+    """The narrowing still works for the case where it is safe."""
+    claimed = claimed_by_other_sessions(
+        ["scripts/foo.py"], {"peer": ["scripts/foo.py"]}, tracked_at_head={"scripts/foo.py"}
+    )
+    assert claimed == {"scripts/foo.py": "peer"}
+
+
+def test_new_and_tracked_claims_are_separated_in_one_pass() -> None:
+    claimed = claimed_by_other_sessions(
+        ["scripts/old.py", "scripts/new.py"],
+        {"peer": ["scripts/*.py"]},
+        tracked_at_head={"scripts/old.py"},
+    )
+    assert claimed == {"scripts/old.py": "peer"}
