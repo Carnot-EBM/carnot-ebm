@@ -507,6 +507,33 @@ def test_req_infra_6676_server_command_binds_cuda_port_and_model(tmp_path: Path)
     assert command[command.index("--parallel") + 1] == "1"
 
 
+def test_scenario_infra_6676_self_tokenizer_probe_is_not_a_conflict() -> None:
+    """SCENARIO-INFRA-6676-SELF-PROBE-IS-NOT-A-CONFLICT."""
+
+    device_uuid = "GPU-assigned"
+    rows = [
+        {
+            "gpu_uuid": device_uuid,
+            "pid": 123,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256,
+        },
+        {
+            "gpu_uuid": device_uuid,
+            "pid": 456,
+            "process_name": "llama-server",
+            "used_memory_mb": 2048,
+        },
+        {
+            "gpu_uuid": "GPU-unassigned",
+            "pid": 789,
+            "process_name": "other",
+            "used_memory_mb": 1024,
+        },
+    ]
+    assert mod._conflicting_compute_rows(rows, {device_uuid}, owner_pid=123) == [rows[1]]
+
+
 def test_req_report_6676_complete_artifact_recomputes_and_validates(tmp_path: Path) -> None:
     """REQ-REPORT-6676 and SCENARIO-REPORT-6676-COMPLETE-ROWS."""
 

@@ -9511,6 +9511,14 @@ receipt's inference count equals the model's completed request rows.
 **Then** the owned server exits, its port closes, VRAM is measured, and the
 lease reaches a terminal release state before another session reuses the GPU.
 
+#### SCENARIO-INFRA-6676-SELF-PROBE-IS-NOT-A-CONFLICT
+
+**Given** the experiment process loaded embedded GGUF tokenizers during preflight
+and CUDA reports bookkeeping allocations for that same process
+**When** Exp6676 checks for a conflicting workload
+**Then** it excludes only its own PID and still blocks on every other process on
+an assigned CUDA device.
+
 ## Implementation Status (REQ-INFRA-6676)
 
 | REQ | Implementation | Tests |
