@@ -338,7 +338,10 @@ def check() -> int:
         return 0
 
     print("harness-integrity: REFUSING THE COMMIT.")
-    print(f"  {len(failures)} declared scope(s) were violated.\n")
+    # Count VIOLATIONS, not scopes: one declaration can break several rules at once, and
+    # "2 scopes were violated" when only one exists sends the reader looking for a second
+    # session that is not there.
+    print(f"  {len(failures)} violation(s) across {len(scopes)} declared scope(s).\n")
     for item in failures:
         print(f"  - {item}\n")
     print("  Fix: stage only what you declared, or re-declare with the wider scope BEFORE")
