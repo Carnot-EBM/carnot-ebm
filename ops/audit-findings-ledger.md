@@ -40,3 +40,9 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-08-26 | qa_layer_authenticity_audit | run_stop_authority.py | SILENT_NON_FIRING | OPEN | |
 | 2026-08-26 | qa_layer_authenticity_audit | in_process_doc_reconcile.py | SILENT_NON_FIRING | OPEN | |
 | 2026-08-26 | qa_layer_authenticity_audit | adversarial_verify.py::check_terminal_artifact_readiness | SILENT_NON_FIRING | OPEN | |
+| 2026-08-27 | qa_layer_authenticity_audit | adversarial_verify.py::_is_finite_number | SILENT_NON_FIRING | OPEN | |
+| 2026-08-27 | qa_layer_authenticity_audit | adversarial_verify.py::_numeric_pairs | SILENT_NON_FIRING | OPEN | |
+| 2026-08-27 | qa_layer_authenticity_audit | adversarial_verify.py::_name_tokens | SILENT_NON_FIRING | OPEN | |
+| 2026-08-27 | qa_layer_authenticity_audit | adversarial_verify.py::_is_count_field | SILENT_NON_FIRING | OPEN | |
+| 2026-08-27 | qa_layer_authenticity_audit | adversarial_verify.py::_is_chance_floor_score | SILENT_NON_FIRING | OPEN | |
+| 2026-08-27 | qa_layer_authenticity_audit | adversarial_verify.py::_is_identifier_field | SILENT_NON_FIRING | OPEN | |
