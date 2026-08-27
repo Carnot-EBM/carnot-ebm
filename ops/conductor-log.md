@@ -16647,3 +16647,5 @@ code |
 | 2026-08-27 21:08 UTC | Cold exact and raw-chain review | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6685-autocorrelation-schedule-ab) |
 | 2026-08-27 22:21 UTC | V582 five-branch disposition | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6687_v582_br |
 | 2026-08-27 22:23 UTC | Cold exact and raw-chain review | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6685-autocorrelation-schedule-ab) |
+| 2026-08-27 23:44 UTC | V582 five-branch disposition | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output:  still active. |
+| 2026-08-27 23:46 UTC | Cold exact and raw-chain review | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6685-autocorrelation-schedule-ab) |
