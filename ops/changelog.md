@@ -17990,3 +17990,4 @@ and batched inference requests. With no measurable elapsed interval, projected
 savings remain 0%.
 - 2026-08-27: V582 document-to-manifest parity contract (⚠️ Research Finding) — honest_verdict=complete: V582 design and active manifest have exact activation parity; no scientific claim; results/experiment_6674_v582_manifest_parity_contract.json
 - 2026-08-27: Triggered-tail task-owned verification receipt (⚠️ Research Finding) — honest_verdict=complete: triggered-tail fixture is ready under task-owned checks; the repository-suite failures remain a non-gating diagnostic; results/experiment_6675_triggered_tail_scope_receipt.json
+- 2026-08-27: Three-family delayed syntax-tail A/B (⚠️ Blocked) — honest_verdict=blocked_no_conflicting_workload: expected True, observed False; results/experiment_6676_three_family_triggered_tail_ab.json
