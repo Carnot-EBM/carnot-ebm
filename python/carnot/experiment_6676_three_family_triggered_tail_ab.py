@@ -1399,6 +1399,26 @@ def _input_receipts(
     }
 
 
+def _conflicting_compute_rows(
+    rows: Sequence[Mapping[str, Any]],
+    relevant_uuids: set[str],
+    *,
+    owner_pid: int,
+) -> list[JsonDict]:
+    """Return assigned-GPU workloads that are not this preflight process.
+
+    Loading a GGUF tokenizer can create a small CUDA bookkeeping allocation.
+    That allocation belongs to this experiment, so it is not a competing job.
+    Every other PID on an assigned GPU remains a fail-closed conflict.
+    """
+
+    return [
+        deepcopy(dict(row))
+        for row in rows
+        if str(row.get("gpu_uuid")) in relevant_uuids and row.get("pid") != owner_pid
+    ]
+
+
 def collect_preconditions(
     *,
     root: Path,
@@ -1420,7 +1440,8 @@ def collect_preconditions(
     relevant_uuids = {
         str(gpu_by_index[index].get("uuid")) for index in relevant_devices if index in gpu_by_index
     }
-    conflicts = [row for row in compute if str(row.get("gpu_uuid")) in relevant_uuids]
+    owner_pid = os.getpid()
+    conflicts = _conflicting_compute_rows(compute, relevant_uuids, owner_pid=owner_pid)
     lock_ok, lock_rows = _lease_locks_available(
         runtime_dir, [gpu_by_index[i] for i in relevant_devices if i in gpu_by_index]
     )
@@ -1487,6 +1508,7 @@ def collect_preconditions(
         "hardware": {
             "gpus": gpus,
             "compute_processes": compute,
+            "self_process_pid_excluded_from_conflicts": owner_pid,
             "conflicting_workload_rows": conflicts,
             "nvidia_smi_path": shutil.which("nvidia-smi"),
         },
