@@ -16607,3 +16607,4 @@ code |
 | 2026-08-27 06:26 UTC | Milestone 2026.08.581 activated | OK | 4 tasks queued |
 | 2026-08-27 06:28 UTC | V581 evidence and retirement contract | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
 | 2026-08-27 06:30 UTC | V581 evidence and retirement contract | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
+| 2026-08-27 06:33 UTC | V581 evidence and retirement contract | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
