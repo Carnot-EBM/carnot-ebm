@@ -16592,3 +16592,5 @@ code |
 | 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | run_stop_authority.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on run_stop_aut |
 | 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | in_process_doc_reconcile.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on in_pro |
 | 2026-08-27 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_terminal_artifact_readiness age-week 0: OPEN 1 days |
+| 2026-08-27 00:12 UTC | Prospective experiential repair evolution | OK | 101 passed, 1 warning in 15.73s |
+| 2026-08-27 00:14 UTC | Constraint intervention independent row audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6651-failure-localized-suffix-regeneratio |
