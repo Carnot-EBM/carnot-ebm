@@ -1,0 +1,72 @@
+{
+  "experiment": 6685,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-27",
+  "started_at": "2026-08-27T21:01:56.663332+00:00",
+  "finished_at": "2026-08-27T21:01:56.663332+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Autocorrelation-aware stochastic schedule A/B",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=False in expected=[True]",
+  "failed_upstream": "exp6684-torx-typed-factor-parity",
+  "failed_field": "torx_factor_parity_ready",
+  "failed_operator": "in",
+  "failed_expected": [
+    true
+  ],
+  "failed_expected_type": "list",
+  "failed_observed": false,
+  "failed_observed_type": "bool",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6684_torx_typed_factor_parity.json",
+  "failed_evidence_sha256": "sha256:5e80a4e56ed4f49aa3c374cad9f8125a43b522e0a7163c8a8f57628ab2127ec1",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=False in expected=[True]",
+    "failed_upstream": "exp6684-torx-typed-factor-parity",
+    "failed_field": "torx_factor_parity_ready",
+    "failed_operator": "in",
+    "failed_expected": [
+      true
+    ],
+    "failed_expected_type": "list",
+    "failed_observed": false,
+    "failed_observed_type": "bool",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6684_torx_typed_factor_parity.json",
+    "failed_evidence_sha256": "sha256:5e80a4e56ed4f49aa3c374cad9f8125a43b522e0a7163c8a8f57628ab2127ec1"
+  },
+  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp6684-torx-typed-factor-parity.torx_factor_parity_ready (actual=False in expected=[True])",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6683-ising-reference-scope-receipt",
+      "artifact_field": "ising_reference_ready",
+      "op": "in",
+      "expected": [
+        true
+      ],
+      "expected_type": "list",
+      "actual": true,
+      "actual_type": "bool",
+      "passed": true,
+      "reason": "actual=True in expected=[True]",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6683_ising_reference_scope_receipt.json",
+      "artifact_sha256": "sha256:6acd769d219e258102ec7494dbf780b1a1aee4f94d238a3adf594da047abc656"
+    },
+    {
+      "upstream": "exp6684-torx-typed-factor-parity",
+      "artifact_field": "torx_factor_parity_ready",
+      "op": "in",
+      "expected": [
+        true
+      ],
+      "expected_type": "list",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": false,
+      "reason": "actual=False in expected=[True]",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6684_torx_typed_factor_parity.json",
+      "artifact_sha256": "sha256:5e80a4e56ed4f49aa3c374cad9f8125a43b522e0a7163c8a8f57628ab2127ec1"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
