@@ -384,6 +384,15 @@ Recorded rather than quietly patched, per the error-lifecycle discipline.
    move, then pooled the taxonomy. Classes B, C and D are supwindow-only.
 6. **Character/token slippage** in the headline, and an unsourced pid.
 
+**Provenance of this file, recorded because it is itself an instance of a known hazard.**
+This note was written in a checkout shared with concurrently-committing agents. Its
+uncorrected first draft was swept into `518b10d2b2` (a conductor `git add -A` commit about a
+blinded row audit). The corrected text was then swept into `df85981bd7` (another agent's
+commit about KAN receipts) from the shared index. Neither commit message describes this note.
+A reader tracing its history should read this section, not `git log`. Both drafts are left in
+history per never-prune. See `[[incident_concurrent_agents_destroy_work]]` and
+`[[incident_conductor_git_add_A_determination_drops]]`.
+
 ## Cross-references
 
 - REQ-ARC-WMTE-6710 — `openspec/capabilities/arc-world-model-trust-energy/spec.md`
