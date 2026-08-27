@@ -6381,3 +6381,10 @@ The critical path for milestone .250:
 - theme: compute-only execution exposed gaps in phase timing and task-level accelerator attribution
 - key result: the longest compute task was identified, but its cause and any concurrent-model runner miss have no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.580
+
+- exp_range: no data available this milestone
+- theme: short mixed execution exposed phase-timing and task-level accelerator attribution gaps
+- key result: 12 experiments finished in 3.2 minutes with 4 compute-bound; compute-task GPU idle was false, while duration causes and concurrent-model runner eligibility have no data available this milestone
+- acceptance: no data available this milestone

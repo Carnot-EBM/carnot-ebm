@@ -17933,3 +17933,16 @@ data identifies no measured avoidable duration.
 - 2026-08-27: Bounded-treewidth exact Ising reference (⚠️ Blocked) — honest_verdict=blocked_tests_check_failed: bounded exact-reference readiness was not established; results/experiment_6657_bounded_treewidth_ising_reference.json
 - 2026-08-27: V580 evidence synthesis (⚠️ Research Finding) — honest_verdict=complete_partial: V580 has authentic admission, direct-corpus, and bounded verifier-unit evidence; memory general benefit is null under independent uncertainty; ARC and Ising branches are blocked; one audit artifact is missing; no pooled success, ARC solve, repair win, or hardware speedup is claimed; results/experiment_6659_v580_capstone.json
 - 2026-08-27: V580 evidence synthesis (⚠️ Research Finding) — honest_verdict=complete_partial: V580 has authentic admission, direct-corpus, and bounded verifier-unit evidence; memory general benefit is null under independent uncertainty; ARC and Ising branches are blocked; one audit artifact is missing; no pooled success, ARC solve, repair win, or hardware speedup is claimed; results/experiment_6659_v580_capstone.json
+
+## 2026-08-27 — Milestone 2026.08.580 operational retrospective
+
+The milestone completed 12 experiments in 3.2 minutes, including 4
+compute-bound experiments. Exact certificate proposal corpus was the longest
+compute entry at 1.62 minutes, followed by Three-family GGUF accelerator
+canaries at 1.3 minutes. No data available this milestone explains their
+phase-level costs. The locked compute-task GPU-idle classification is false.
+No data available this milestone establishes a task with 2 or more models in
+parallel or a missed DualGPURunner dispatch. The next tooling priorities are
+task-scoped phase and accelerator receipts, inference batching, and GPU-aware
+cross-experiment scheduling. Estimated time savings is 0% because the supplied
+data identifies no measured avoidable duration.
