@@ -170,8 +170,8 @@ PRODUCTION_TEST_RESULTS = {
     FULL_TEST_COMMAND: {
         "exit_code": 3,
         "summary": (
-            "963 failed, 31535 passed, 103 skipped, 845 errors in 2314.96s; "
-            "xdist internal error after a worker cwd was deleted"
+            "1075 failed, 33533 passed, 103 skipped, 38 errors in 2427.47s; "
+            "xdist internal error after the experiment_5770 worker cwd was deleted"
         ),
     }
 }
