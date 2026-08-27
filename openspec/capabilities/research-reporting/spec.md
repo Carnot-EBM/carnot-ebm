@@ -57183,6 +57183,14 @@ grammar, semantic mask, repair, or other model family can affect generation.
   timing, shutdown, absent orphan process, and recovered memory. CPU fallback or
   a requested offload without measured offload SHALL not authenticate headline
   rows.
+- REQ-REPORT-6605-LOADSTAGE (added 2026-08-27): A GPU sample taken before the
+  worker's first healthy response SHALL carry stage `load`, not `during`. The
+  worker has no CUDA context until model load completes, so a load-phase
+  sample cannot show the worker PID. The authenticity predicate SHALL keep
+  requiring the worker PID in every `during` sample, SHALL keep the floor of
+  two `during` samples, and SHALL record at least one `during` sample on the
+  first row a session serves, so a resumed session still meets the floor and
+  relabeling samples as `load` cannot satisfy the gate.
 - REQ-REPORT-6605-ATTACKS: Prompt drift, split leakage, omitted failures, CPU
   fallback, fake CUDA offload, wrong family, tokenizer substitution, response
   regeneration, aggregate disagreement, and protected-file mutation SHALL each
@@ -57248,6 +57256,14 @@ bytes fail closed, and no failed exact outcome is regenerated.
 **When** the row reducer and terminal writer run
 **Then** each mutation yields readiness zero, aggregate disagreement is visible,
 both protected hashes match, and the final artifact is atomic and checksummed.
+
+#### SCENARIO-REPORT-6605-LOADSTAGE: Load-Phase Samples Cannot Pass Or Dodge The Gate
+
+**Given** a session whose pre-health samples predate the worker's CUDA context
+**When** `_gpu_receipts_ready` evaluates the session
+**Then** `load` samples are recorded but not gated, every `during` sample must
+still show the worker PID, and relabeling all `during` samples as `load` fails
+the two-sample floor.
 
 ## Implementation Status (REQ-REPORT-6605)
 
@@ -57317,6 +57333,11 @@ any constrained treatment or other family output can affect generation.
   timing, shutdown, absent orphan process, and recovered memory. CPU fallback
   or requested offload without measured offload SHALL not authenticate
   headline rows.
+- REQ-REPORT-6607-LOADSTAGE (added 2026-08-27): Exp6607 SHALL apply
+  REQ-REPORT-6605-LOADSTAGE without change. Its sampler shares the same load
+  loop, so a pre-health sample SHALL carry stage `load`, the worker PID SHALL
+  stay required in every `during` sample, and the two-sample `during` floor
+  SHALL stay in force.
 - REQ-REPORT-6607-ATTACKS: Cross-family tuning, prompt and seed drift, leakage,
   failure dropping, CPU fallback, fake CUDA offload, wrong model, tokenizer
   substitution, answer regeneration, aggregate disagreement, and protected-file
@@ -57382,6 +57403,14 @@ bytes fail closed, and no failed exact outcome is regenerated.
 **When** the row reducer and terminal writer run
 **Then** each mutation yields readiness zero, aggregate disagreement is visible,
 both protected hashes match, and the final artifact is atomic and checksummed.
+
+#### SCENARIO-REPORT-6607-LOADSTAGE: Load-Phase Samples Cannot Pass Or Dodge The Gate
+
+**Given** a session whose pre-health samples predate the worker's CUDA context
+**When** `_gpu_receipts_ready` evaluates the session
+**Then** `load` samples are recorded but not gated, every `during` sample must
+still show the worker PID, and relabeling all `during` samples as `load` fails
+the two-sample floor.
 
 ## Implementation Status (REQ-REPORT-6607)
 

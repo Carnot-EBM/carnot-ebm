@@ -16622,3 +16622,4 @@ code |
 | 2026-08-27 13:28 UTC | Three-family delayed syntax-tail A/B | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output:  changed["gate |
 | 2026-08-27 13:39 UTC | Three-family delayed syntax-tail A/B | OK | 115 passed, 1 warning in 10.60s |
 | 2026-08-27 13:41 UTC | Delayed syntax-tail blinded row audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6676-three-family-triggered-tail-ab.tri |
+| 2026-08-27 13:43 UTC | Delayed syntax-tail blinded row audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6676-three-family-triggered-tail-ab.tri |
