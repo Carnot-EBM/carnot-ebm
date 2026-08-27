@@ -16624,3 +16624,4 @@ code |
 | 2026-08-27 13:41 UTC | Delayed syntax-tail blinded row audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6676-three-family-triggered-tail-ab.tri |
 | 2026-08-27 13:43 UTC | Delayed syntax-tail blinded row audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6676-three-family-triggered-tail-ab.tri |
 | 2026-08-27 13:45 UTC | Delayed syntax-tail blinded row audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6676-three-family-triggered-tail-ab.tri |
+| 2026-08-27 13:52 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 1148452 serves 'Qwen3.6-35B-A3B-UD-Q4_K_M.gguf', live pin is 'Qwen3.8- |

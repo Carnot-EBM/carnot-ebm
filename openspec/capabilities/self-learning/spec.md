@@ -29081,3 +29081,100 @@ an interval that includes zero narrows a positive point estimate.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-6655 and SCENARIO-LEARN-6655-* | Implemented (`python/carnot/experiment_6655_repair_memory_safety_audit.py`; terminal evidence in `results/experiment_6655_repair_memory_safety_audit.json`) | Implemented (`tests/python/test_experiment_6655_repair_memory_safety_audit.py`) |
+
+---
+
+## REQ-LEARN-6678: Independent Constraint-Family Stream
+
+Carnot SHALL build a frozen prequential stream with scheduling, graph, logic,
+and plan-state families. Each family SHALL have an executable exact checker,
+one positive control, one negative control, and a transferable repair operator.
+The producer SHALL not invoke an LLM or claim a learning benefit.
+
+The producer SHALL freeze calibration and held-family partitions before it
+builds repair records. It SHALL freeze at least five complete event orders.
+Each event SHALL expose its pre-event state, exact violation witness, candidate
+operator, family-blind applicability key, support, anchors, version,
+provenance, and byte-exact inverse patch. Retrieval keys SHALL exclude task
+identity, family labels, outcomes, hidden gold, witnesses, and future state.
+
+An event SHALL read only commits admitted before that event. Admission SHALL
+occur only between events after exact source repair, support, and anchor checks.
+Retired records SHALL not enter later retrieval. Exact family checkers define
+validity and SHALL remain the sole oracle.
+
+The producer SHALL attack future leakage, family-specific keys, task identity,
+duplicate events, timestamp disorder, poison patches, support collapse, anchor
+regression, partial writes, restart corruption, and non-invertible rollback.
+Restart SHALL recover a complete old or new state. Each inverse SHALL restore
+the prior canonical bytes exactly. The terminal artifact SHALL use file sync,
+atomic replacement, directory sync, and a checksum that excludes only itself.
+
+`constraint_family_stream_ready` SHALL be true only when every family, order,
+checker control, isolation attack, restart case, rollback case, protected hash,
+and task-owned verification command passes. Repository-wide failures outside
+the Exp6678 module SHALL remain diagnostic and SHALL not own fixture readiness.
+Ready infrastructure SHALL use a null `verdict_class`. A failed task-owned gate
+SHALL name its row and observed value.
+The producer SHALL write
+`results/experiment_6678_constraint_family_stream.json` as its terminal artifact.
+
+### SCENARIO-LEARN-6678-PREQUENTIAL: Admission Happens Between Events
+
+**Given** a frozen event order and its sealed initial state
+**When** event `t` selects a candidate repair
+**Then** it can read only commits from events before `t`, and its own patch can
+become visible only after exact evaluation finishes.
+
+### SCENARIO-LEARN-6678-FAMILY-BLIND: Retrieval Keys Carry No Answer Identity
+
+**Given** events from four independent families
+**When** the producer derives an applicability key
+**Then** the key contains only typed visible constraint features and excludes
+family, task, event, outcome, gold, witness, split, timestamp, and future data.
+
+### SCENARIO-LEARN-6678-EXACT: Each Family Has Executable Authority
+
+**Given** one known-valid and one known-invalid state for each family
+**When** the registered exact checker executes
+**Then** it accepts the positive control, rejects the negative control, and
+returns an exact witness without consulting a stored answer label.
+
+### SCENARIO-LEARN-6678-RETIREMENT: Unsafe Or Obsolete Repairs Leave Retrieval
+
+**Given** a repair with failed support, anchor, version, or exact evidence
+**When** the between-event admission gate evaluates it
+**Then** the repair is rejected or retired before the next event can retrieve it.
+
+### SCENARIO-LEARN-6678-ISOLATION: Leakage And Integrity Attacks Fail Closed
+
+**Given** each registered leakage, identity, duplicate, order, poison, support,
+anchor, write, restart, or inverse attack
+**When** the stream validator evaluates the mutated fixture
+**Then** it records a stable reason and the attack cannot open readiness.
+
+### SCENARIO-LEARN-6678-RESTART: Durable State Is Old Or New
+
+**Given** complete old and new canonical state bytes
+**When** a write stops before or after atomic replacement
+**Then** restart returns exactly the old or new bytes and never a partial mix.
+
+### SCENARIO-LEARN-6678-ROLLBACK: Inverse Patches Restore Exact Bytes
+
+**Given** one admitted repair from each family
+**When** its inverse patch runs from the immediate post-patch state
+**Then** version, records, lineage, and canonical bytes equal the prior state.
+
+### SCENARIO-LEARN-6678-READY: Complete Rows Own Null Readiness
+
+**Given** all family, event, order, checker, isolation, restart, rollback, test,
+and protected-file rows
+**When** the producer recomputes the terminal gate
+**Then** readiness is true only if every row passes and the verdict makes no
+model-quality or continuous-learning benefit claim.
+
+## Implementation Status (REQ-LEARN-6678)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-6678 and SCENARIO-LEARN-6678-* | Planned (`python/carnot/experiment_6678_constraint_family_stream.py`) | Planned (`tests/python/test_experiment_6678_constraint_family_stream.py`) |
