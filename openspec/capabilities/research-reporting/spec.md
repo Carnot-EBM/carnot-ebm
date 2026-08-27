@@ -58177,3 +58177,52 @@ the checksum or row recomputation.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6650 and SCENARIO-REPORT-6650-* | Implemented (`python/carnot/experiment_6650_twin_prefix_verifier_map.py`) | Implemented (`tests/python/test_experiment_6650_twin_prefix_verifier_map.py`; preconditions, recomputation, blocked gates, checksum, and atomic-write coverage) |
+
+### REQ-REPORT-6657: Exact Ising Reference Evidence SHALL Recompute From Rows
+
+Exp6657 SHALL atomically write
+`results/experiment_6657_bounded_treewidth_ising_reference.json`. The artifact
+SHALL include every field named in the V580 task contract. Its fixture manifest
+SHALL bind graph, coupling, field, decomposition, and sampling inputs by hash.
+Its decomposition, parity, normalized-mass, sample, timing, rejection, and
+per-unit rows SHALL remain visible.
+
+The aggregate SHALL rebuild readiness and maximum errors only from those rows.
+A ready result SHALL use `status=complete_bounded_treewidth_exact_reference_ready`,
+`honest_verdict` with a terminal `complete:` prefix, `verdict_class=null`, and
+`ising_reference_ready=true`. It SHALL state that setup and sample times are
+receipts, not a performance claim. A blocked result SHALL start its status and
+verdict with `blocked_`, use `verdict_class=blocked`, keep readiness false, and
+record each failed check plus its observed value in `gate_check_summary`.
+
+The prior-failure receipt SHALL bind the three Exp6639 conductor terminal
+records and explain the changed technique and scope. Field provenance SHALL
+name source, hash, reducer, and schema lineage. The final checksum SHALL bind
+all content except its own value. Protected hashes SHALL prove that the task did
+not change protected orchestration and operator records.
+
+#### SCENARIO-REPORT-6657-READY
+
+**Given** every supported and rejected fixture has a passing row
+**When** the artifact recomputes all gates
+**Then** readiness is true, the verdict class is null, and no speed claim exists.
+
+#### SCENARIO-REPORT-6657-BLOCKED
+
+**Given** any decomposition, parity, normalization, sampling, rejection, test,
+or protection check fails
+**When** the artifact finalizes
+**Then** readiness is false and the failed row and observed value remain visible.
+
+#### SCENARIO-REPORT-6657-ATOMIC-CHECKSUM
+
+**Given** a complete or blocked artifact
+**When** Exp6657 writes and validates it
+**Then** readers see one complete JSON document and any content mutation breaks
+the checksum or row recomputation.
+
+## Implementation Status (REQ-REPORT-6657)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6657 and SCENARIO-REPORT-6657-* | Implemented (`python/carnot/experiment_6657_bounded_treewidth_ising_reference.py`) | Implemented (`tests/python/test_experiment_6657_bounded_treewidth_ising_reference.py`; row recomputation, atomic write, checksum, blocked gates, and provenance coverage) |
