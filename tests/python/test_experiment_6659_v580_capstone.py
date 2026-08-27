@@ -27,21 +27,40 @@ from carnot import experiment_6659_v580_capstone as mod
 REPO = Path(__file__).resolve().parents[2]
 SPEC = REPO / mod.SPEC_RELATIVE_PATH
 
-# The ARC source is 20 MB and expands during JSON parsing. Build once during
-# collection so the per-test RSS guard measures test leaks, not fixture loading.
-STORED_ARTIFACT = mod.build_artifact(
-    REPO,
-    run_date="20260827",
-    duration_s=1.25,
-    tests_run=[{"command": "focused-exp6659", "exit_code": 0, "summary": "passed"}],
-)
+# The ARC source is 20 MB and expands during JSON parsing. It is built ONCE at import, so
+# the per-test RSS guard measures test leaks rather than fixture loading -- moving the build
+# into the fixture instead attributes ~798 MB to whichever test asks for it first, and the
+# guard errors at teardown.
+#
+# BUT THE IMPORT MUST NOT RAISE (2026-08-27). `build_artifact` reads the roadmap and can
+# fail. An exception at module scope is a COLLECTION error, and pytest answers one by
+# aborting the ENTIRE run: `Interrupted: 1 error during collection` against 57,917 collected
+# tests. One stale capstone therefore took down the whole repository suite, which failed
+# every conductor task shelling out to `pytest tests/python` -- exp6682's
+# `verification_failure` among them. So the build happens at import for the RSS reason, the
+# failure is captured rather than raised, and the fixture re-raises it. Both properties kept.
+_STORED_ARTIFACT: dict[str, object] | None = None
+_BUILD_ERROR: Exception | None = None
+
+try:
+    _STORED_ARTIFACT = mod.build_artifact(
+        REPO,
+        run_date="20260827",
+        duration_s=1.25,
+        tests_run=[{"command": "focused-exp6659", "exit_code": 0, "summary": "passed"}],
+    )
+except Exception as exc:  # noqa: BLE001 - confined to this file, re-raised in the fixture
+    _BUILD_ERROR = exc
 
 
 @pytest.fixture(scope="module")
 def artifact() -> dict[str, object]:
     """Build one deterministic report from the stored V580 evidence."""
 
-    return STORED_ARTIFACT
+    if _BUILD_ERROR is not None:
+        raise _BUILD_ERROR
+    assert _STORED_ARTIFACT is not None
+    return _STORED_ARTIFACT
 
 
 def test_req_report_6659_spec_declares_terminal_contract() -> None:
