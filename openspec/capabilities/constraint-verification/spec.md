@@ -1422,3 +1422,44 @@ controls, matching expected parser outcomes, and zero leakage findings.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6661 and SCENARIO-CONSTRAINT-6661-* | Implemented (`python/carnot/experiment_6661_triggered_tail_fixture.py`) | Implemented (`tests/python/test_experiment_6661_triggered_tail_fixture.py`; 32 focused tests; 100% scoped statement coverage) |
+
+### REQ-CONSTRAINT-6676: Three Output Transports SHALL Share One Frozen Exact Corpus
+
+Exp6676 SHALL use the qualified Exp6675 task manifest without changing task
+prompts, checker inputs, parser versions, arm contracts, or grammar bytes. It
+SHALL compare natural extraction, immediate JSON, and one lazy triggered-tail
+generation for every model-task unit. The lazy grammar SHALL start only after
+the exact frozen trigger. It SHALL contain JSON syntax only.
+
+Each arm SHALL make one planned generation. Exp6676 SHALL not regenerate a
+suffix, expose a target, use a finite answer ID, add solver output to a prompt,
+or use an answer-bearing grammar alternative. A parse failure SHALL stay a
+semantic failure. Only the frozen family-specific executable checker SHALL set
+the exact outcome.
+
+#### SCENARIO-CONSTRAINT-6676-ONE-GENERATION
+
+**Given** one frozen model-task-arm identity and seed
+**When** Exp6676 collects its output
+**Then** the row records one request, one raw response, the frozen parser, and
+one exact checker result with no repair or suffix regeneration.
+
+#### SCENARIO-CONSTRAINT-6676-LAZY-SYNTAX
+
+**Given** the triggered-tail arm
+**When** llama.cpp emits the frozen trigger
+**Then** the semantic-free GBNF activates after that trigger and the retained
+raw response separates reasoning, trigger position, and JSON tail bytes.
+
+#### SCENARIO-CONSTRAINT-6676-EXACT-AUTHORITY
+
+**Given** any parsed certificate from any arm
+**When** semantic success is reduced
+**Then** only the task's frozen executable checker decides success and grammar
+acceptance never becomes a semantic label.
+
+## Implementation Status (REQ-CONSTRAINT-6676)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6676 and SCENARIO-CONSTRAINT-6676-* | Planned (`python/carnot/experiment_6676_three_family_triggered_tail_ab.py`) | Planned (`tests/python/test_experiment_6676_three_family_triggered_tail_ab.py`) |
