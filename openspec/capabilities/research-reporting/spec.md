@@ -58964,3 +58964,51 @@ content mutation breaks validation.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6688 and SCENARIO-REPORT-6688-* | Implemented (`python/carnot/experiment_6688_v583_manifest_parity_contract.py`) | Implemented (`tests/python/test_experiment_6688_v583_manifest_parity_contract.py`; exact parity, design/manifest union gates and priors, fail-closed reduction, dated validator mismatch, atomic provenance, CLI checks, and 100% scoped statement coverage) |
+
+### REQ-REPORT-6702: Exact Planning Evidence SHALL Be Atomic And Recomputable
+
+Exp6702 SHALL write
+`results/experiment_6702_exact_planning_fixture_recovery.json` through a
+complete temporary write, file synchronization, atomic replacement, and
+directory synchronization. It SHALL retain every field required by the active
+V584 task. It SHALL include all instance, state-action, exact-solver, seal,
+metamorphic, mutation, test, and aggregate rows in `per_unit_rows`.
+
+The artifact SHALL hash the active roadmap and conductor before and after the
+run. It SHALL record CPU, RAM, disk, exact-solver dependencies, JSON artifact
+schema support, and the absence of a runtime parity gate. It SHALL use
+`inference_substrate=cpu_exact_dynamic_programming_no_llm` and
+`verifier_is_oracle=false`. The exact evaluator SHALL remain post-commit
+authority only. The canonical reproducibility checksum SHALL exclude only its
+own value and measured duration.
+
+The artifact SHALL use the closed verdict class. A ready infrastructure
+fixture SHALL use `status=complete_ready`, a terminal `complete:` verdict, and
+`verdict_class=null`. A real missing prerequisite SHALL still produce one
+terminal blocked artifact with the first expected and observed failure in
+`gate_check_summary`.
+
+#### SCENARIO-REPORT-6702-ATOMIC-PROVENANCE: One Complete Artifact Is Published
+
+**Given** complete fixture rows, test receipts, resource receipts, and protected
+hashes
+**When** Exp6702 validates and publishes its artifact
+**Then** readers observe one complete JSON object, the checksum replays, and the
+roadmap and conductor hashes remain unchanged.
+
+**Spec traces:** REQ-REPORT-6702
+
+#### SCENARIO-REPORT-6702-BLOCKED: A Missing Prerequisite Stays Measured
+
+**Given** a missing solver, schema dependency, resource, or root-task contract
+**When** Exp6702 checks preconditions
+**Then** it writes one blocked terminal artifact and does not fabricate fixture
+rows or readiness.
+
+**Spec traces:** REQ-REPORT-6702
+
+## Implementation Status (REQ-REPORT-6702)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6702 and SCENARIO-REPORT-6702-* | Implemented (`python/carnot/experiment_6702_exact_planning_fixture_recovery.py`) | Implemented (`tests/python/test_experiment_6702_exact_planning_fixture_recovery.py`; terminal blocked and complete artifacts, checksum and schema localization, atomic publication, CLI validation, and 100% scoped statement coverage) |

@@ -16697,3 +16697,4 @@ code |
 | 2026-08-28 08:11 UTC | Plan milestone 2026.08.584 | OK | 4 tasks proposed |
 | 2026-08-28 08:13 UTC | Cold prequential, retention, and rollback audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6696-prequential-online-energy-ab) |
 | 2026-08-28 08:13 UTC | Milestone 2026.08.584 activated | OK | 4 tasks queued |
+| 2026-08-28 09:36 UTC | Generated exact planning fixture recovery | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: put", str(tmp_ |

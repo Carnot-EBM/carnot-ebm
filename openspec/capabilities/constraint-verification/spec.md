@@ -1463,3 +1463,80 @@ acceptance never becomes a semantic label.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6676 and SCENARIO-CONSTRAINT-6676-* | Planned (`python/carnot/experiment_6676_three_family_triggered_tail_ab.py`) | Planned (`tests/python/test_experiment_6676_three_family_triggered_tail_ab.py`) |
+
+### REQ-CONSTRAINT-6702: Exact Finite-Horizon Planning Fixture
+
+Carnot SHALL provide Exp6702 as a deterministic finite-horizon planning
+fixture. It SHALL contain inventory, battery-dispatch, job-slot, and
+reservoir-control families. Each family SHALL have at least eight headline
+instances and separate development instances. Horizons SHALL not exceed eight.
+Action domains SHALL not exceed five actions.
+
+Each instance SHALL retain an answer-free natural-language prompt and a typed
+executable specification. The specification SHALL freeze its generator,
+parameters, split, seed, transition function, hard constraints, objective,
+tie policy, feasibility policy, and minimization convention. Exact dynamic
+programming SHALL retain every reachable state and every action result. Each
+result SHALL state legality, next state, immediate cost, exact future value,
+total value, action gap, and optimum membership. Each instance SHALL also
+retain its optimum action set, deterministic optimum plan, total optimum, tie
+flag, and feasibility flag.
+
+Exact labels SHALL use immutable seals. The live prompt API SHALL deny label
+access until it receives a valid prompt-bound commit receipt. Exact labels MAY
+authorize later evaluation. They SHALL not select a current-event action.
+
+An independent exhaustive solver SHALL replay a frozen task-owned subset. It
+SHALL compare every optimum and state-action value in that subset. Metamorphic
+checks SHALL cover action renaming, constant cost shifts, equivalent state
+encodings, and family-preserving prompt changes. Mutations SHALL cover bad
+transitions, infeasible actions, corrupted costs, label leakage, wrong tie
+metadata, and stale seals. Every mutation SHALL be detected.
+
+`planning_fixture_ready` SHALL be true only when coverage, exactness, sealing,
+split isolation, metamorphic checks, mutation detection, focused tests, scoped
+coverage, specification coverage, and applicable end-to-end checks pass. The
+reducer SHALL derive readiness only from retained per-unit rows. The fixture
+SHALL not depend on a runtime manifest-parity artifact.
+
+#### SCENARIO-CONSTRAINT-6702-EXACT-ROWS: Dynamic Programming Retains Every Value
+
+**Given** one frozen instance from each planning family
+**When** Exp6702 solves all reachable states
+**Then** every legal action has an exact immediate, future, total, and gap value
+**And** an independent exhaustive replay matches every checked value.
+
+**Spec traces:** REQ-CONSTRAINT-6702
+
+#### SCENARIO-CONSTRAINT-6702-SEALED-LABELS: Current Labels Need A Commit
+
+**Given** a live prompt whose exact labels exist in the sealed evaluator
+**When** a caller requests labels without a valid prompt-bound commit receipt
+**Then** access fails with a stable negative result
+**And** the same labels become readable only after a valid commit.
+
+**Spec traces:** REQ-CONSTRAINT-6702
+
+#### SCENARIO-CONSTRAINT-6702-ATTACKS: Representation Changes Hold And Mutations Fail
+
+**Given** the four required metamorphic transforms and six required mutations
+**When** Exp6702 replays its fixture checks
+**Then** each invariant holds and each mutation is detected by its named check.
+
+**Spec traces:** REQ-CONSTRAINT-6702
+
+#### SCENARIO-CONSTRAINT-6702-ROW-REDUCTION: Raw Units Own Readiness
+
+**Given** instance, state-action, solver, seal, metamorphic, mutation, and test
+rows
+**When** readiness is rebuilt
+**Then** every required unit is present and passing before readiness is true
+**And** removing or corrupting one required unit makes readiness false.
+
+**Spec traces:** REQ-CONSTRAINT-6702
+
+## Implementation Status (REQ-CONSTRAINT-6702)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6702 and SCENARIO-CONSTRAINT-6702-* | Implemented (`python/carnot/experiment_6702_exact_planning_fixture_recovery.py`) | Implemented (`tests/python/test_experiment_6702_exact_planning_fixture_recovery.py`; 11 focused tests; 100% scoped statement coverage) |
