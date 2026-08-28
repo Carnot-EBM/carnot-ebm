@@ -59110,3 +59110,34 @@ failure and does not fabricate enumeration or comparison rows.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6715 and SCENARIO-REPORT-6715-* | Implemented (`python/carnot/experiment_6715_bounded_exact_replay_audit.py`) | Implemented (`tests/python/test_experiment_6715_bounded_exact_replay_audit.py`; blocked and complete artifacts, atomic publication, checksum, provenance, CLI, and 100% scoped statement coverage) |
+### REQ-REPORT-6716: Bounded Seal Audit SHALL Be Atomic And Recomputable
+
+Exp6716 SHALL atomically write
+`results/experiment_6716_bounded_seal_attack_audit.json`. It SHALL retain every
+field required by the active V585 task. Field provenance SHALL name the prompt
+store, seal, scanner, attack runner, reducer, function, version, and field hash.
+
+The artifact SHALL hash Exp6702 and all embedded attack stores. It SHALL record
+resources, schema support, tools, roadmap, conductor, tests, scoped coverage,
+the applicable end-to-end check, row consistency, artifact validation, and
+adversarial verification. It SHALL use
+`inference_substrate=cpu_static_and_dynamic_attack_audit_no_llm` and
+`verifier_is_oracle=false`.
+
+#### SCENARIO-REPORT-6716-ATOMIC: Readers See One Complete Audit
+
+**Given** complete raw rows and verification receipts
+**When** Exp6716 validates and publishes the artifact
+**Then** the checksum replays and protected roadmap and conductor hashes match.
+
+**Spec traces:** REQ-REPORT-6716
+
+#### SCENARIO-REPORT-6716-BLOCKED: Missing Inputs Stay Localized
+
+**Given** a missing fixture, store, tool, resource, schema, roadmap, conductor,
+or hash
+**When** preconditions run
+**Then** Exp6716 writes one terminal blocked artifact with the failed expected
+and observed values and no invented attack rows.
+
+**Spec traces:** REQ-REPORT-6716

@@ -4955,3 +4955,26 @@ nothing.
 **Then** the commit is refused, because unreadable is not the same as absent.
 
 **Spec traces:** REQ-INFRA-6800
+### REQ-PIPELINE-6716: Raw Attack Rows Own The Seal Audit Gate
+
+Exp6716 SHALL reduce `seal_attack_audit_passed` from raw leakage, seal access,
+metamorphic, mutation, poison, precondition, budget, test, validation, and
+protected-file rows. Every frozen row SHALL exist exactly once. A missing,
+duplicate, malformed, over-budget, or failed row SHALL close the gate.
+
+### SCENARIO-PIPELINE-6716-ROW-REDUCTION: One Failure Closes The Gate
+
+**Given** the complete frozen attack manifest and raw audit rows
+**When** any expected case is absent, duplicated, or failing
+**Then** `seal_attack_audit_passed` is false and `gate_check_summary` records
+the expected and observed values for a localized check.
+
+**Spec traces:** REQ-PIPELINE-6716
+
+### SCENARIO-PIPELINE-6716-PER-UNIT: Every Attack Row Is Conserved
+
+**Given** leakage, seal, transform, mutation, poison, and reducer check rows
+**When** `per_unit_rows` is built
+**Then** it equals their typed union without a missing or extra row.
+
+**Spec traces:** REQ-PIPELINE-6716

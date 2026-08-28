@@ -2109,3 +2109,52 @@ from the producer's reported mutation aggregate.
 | Requirement | Status | Notes |
 |---|---|---|
 | REQ-SAFE-6703 and SCENARIO-SAFE-6703-* | Implemented | `python/carnot/experiment_6703_exact_planning_fixture_audit.py`; `tests/python/test_experiment_6703_exact_planning_fixture_audit.py`; all prompt, metadata, split, identity, seal, duplication, transform, and mutation checks are covered. |
+### REQ-SAFE-6716: Bounded Planning Fixture Seal And Attack Audit
+
+Exp6716 SHALL freeze every attack identity, count, input hash, version, and
+time budget before it reads an expected attack result. It SHALL scan all
+Exp6702 prompts and input metadata. The scan SHALL detect direct labels,
+label-bearing objective fields, identity shortcuts, duplicate identities,
+cross-split contamination, cross-family collisions, and stale hashes.
+
+Exp6716 SHALL test current-event label access through an independent access
+state machine. A valid prompt-bound commit receipt SHALL be required before
+one label read. Early access, receipt replay, stale tokens, reordered events,
+and partial receipts SHALL be denied. The audit SHALL replay all 16 frozen
+metamorphic cases without enumerating plan spaces or recomputing optima. It
+SHALL detect the six frozen mutations from raw rows.
+
+#### SCENARIO-SAFE-6716-LEAKAGE: Static Inputs Have No Shortcut
+
+**Given** all prompt, metadata, identity, split, family, and seal inputs
+**When** the bounded scanner checks their current bytes and canonical forms
+**Then** each check retains raw evidence and any shortcut closes the audit gate.
+
+**Spec traces:** REQ-SAFE-6716
+
+#### SCENARIO-SAFE-6716-SEAL-ACCESS: Current Labels Need A Commit
+
+**Given** a current event and its prompt-bound label seal
+**When** access occurs early, twice, with a stale token, out of order, or with
+an incomplete receipt
+**Then** access is denied and only one valid committed receipt permits one read.
+
+**Spec traces:** REQ-SAFE-6716
+
+#### SCENARIO-SAFE-6716-METAMORPHIC-MUTATION: Every Frozen Attack Replays
+
+**Given** 16 transform identities and six mutation identities frozen before
+their expected results are opened
+**When** Exp6716 replays each case from immutable Exp6702 rows
+**Then** every invariant holds and every mutation is detected within its fixed budget.
+
+**Spec traces:** REQ-SAFE-6716
+
+#### SCENARIO-SAFE-6716-MEMORY-POISON: Forward Probes Cannot Change Truth
+
+**Given** copied-record, relation-poison, provenance-loss, and
+tombstone-reappearance probes
+**When** each probe runs on an isolated memory copy
+**Then** the defect is detected and fixture truth and seal-state hashes do not change.
+
+**Spec traces:** REQ-SAFE-6716
