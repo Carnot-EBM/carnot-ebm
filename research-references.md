@@ -38167,3 +38167,131 @@ science graph and validate document-manifest parity before activation.
   semantics before any schedule comparison.
 
 <!-- V584-PLANNER-REFRESH-20260828-END -->
+
+## V585 planner refresh - 2026-08-28
+
+<!-- V585-PLANNER-REFRESH-20260828-START -->
+
+This refresh follows the terminal V584 conductor state. Exp6702 recovered the
+exact planning fixture and passed its task-owned checks. Exp6703 then reached
+the 80-minute hard cap three times. Exp6704 was preempted, and Exp6705
+gate-blocked. The search below focuses on methods that reduce audit scope,
+preserve experimental fidelity, and protect continual memory from unsafe
+writes.
+
+### Promising findings selected for V585
+
+- **Verify Smarter, Evolve Further: Efficient Harness Evolution through
+  Behavior-Aware Verification** - arXiv:2608.27311,
+  https://arxiv.org/abs/2608.27311; submitted 2026-08-27. HarnessLens maps each
+  candidate harness change to behavior-relevant tasks and uses attributable
+  evidence gates. It reports held-out gains with a lower verification budget
+  than fixed-suite evaluation. Carnot hook: split the failed planning-fixture
+  audit into exact-replay and adversarial-seal shards. Give each shard a fixed
+  row budget and named evidence owner. A small synthesis task may combine the
+  two receipts without rerunning either shard.
+- **Beyond Execution: Auditing Experimental Fidelity in LLM-Driven Scientific
+  Research** - arXiv:2608.26753,
+  https://arxiv.org/abs/2608.26753; submitted 2026-08-27. ABE-Ralph represents
+  claims, protocols, components, baselines, and metrics as structured
+  constraints. It audits method substitutions, reduced datasets, shortened
+  budgets, and oracle replacements. Carnot hook: make the cold audit compare a
+  frozen method contract with source, raw rows, and reported claims. Treat an
+  unreported lookup, exact-solver leak, or budget reduction as
+  `disqualified`, not as a weak positive.
+- **GraphMemix: Query-Aware Evidence Forests for Long-Term Multimodal Agent
+  Memory** - arXiv:2608.26983,
+  https://arxiv.org/abs/2608.26983; submitted 2026-08-27. The method separates
+  evidence utility from relation-verification cost, then selects a bounded
+  evidence forest for each query. Carnot hook: compare deterministic
+  similarity retrieval with a budgeted evidence-forest selector over typed
+  plan experiences. Exact receipts remain immutable. The selector may reduce
+  redundant context but may not write or revise evidence.
+- **EVOMAL: Self-Poisoning in Self-Evolving Coding Agents** -
+  arXiv:2608.25776, https://arxiv.org/abs/2608.25776; submitted 2026-08-26.
+  Retrieved malicious skills can be copied into new agent-authored skills and
+  persist after the original entry is removed. Carnot hook: add delayed-copy,
+  relation-poison, provenance-loss, and tombstone-reappearance attacks to the
+  experience-memory fixture. Admit a memory record only after exact checker,
+  provenance, retention, and rollback checks.
+
+### Useful watch items
+
+- **Prediction of Prediction: Inter-Layer Activation Fusion for Single-Pass
+  Hallucination Detection** - arXiv:2608.27165,
+  https://arxiv.org/abs/2608.27165. The preprint reports low-overhead
+  hidden-state hallucination signals. This is relevant to Carnot's white-box
+  verification frontier, but it is not a V585 task. The current GGUF execution
+  path lacks a frozen, replayed inter-layer extraction contract, and recent
+  hidden-state results do not justify another broad scorer attempt.
+- **BayesPO: Bayesian Prompt Optimization via Parallel-Tempered
+  Gradient-Guided Discrete MCMC** - arXiv:2607.16001,
+  https://arxiv.org/abs/2607.16001. Parallel tempering can explore discrete
+  prompt energies, but the reported method is expensive and can overfit small
+  optimization sets. Keep it as a future Tier-2 adaptation lead. V585 uses
+  exact-checker-admitted external memory and fixed prompts.
+- **VFScale: Intrinsic Reasoning through Verifier-Free Test-time Scalable
+  Diffusion Model** - ICLR 2026 OpenReview submission,
+  https://openreview.net/pdf/7e411f2d91ff69265fc93e4b2385980e421bb629.pdf.
+  Its monotonic energy training and hybrid search support explicit energy-order
+  tests. Its diffusion substrate does not match the mandated autoregressive
+  GGUF models, so V585 does not claim method parity.
+
+### Requested secondary and product checks
+
+- **OpenReview:** the current EBM reasoning result remains VFScale. Verifier
+  assistance and backtracking results still support prefix-level search only
+  after an independently measured energy-ordering gate. No public
+  matching-base checkpoint changes the local plan.
+- **Hugging Face Papers:** *When Must Becomes Maybe* (arXiv:2608.24569) shows
+  that multi-stage handoffs can preserve text while weakening a binding
+  constraint. *Prior Audit-Repair Context Shifts LLM Verifier Thresholds Toward
+  Leniency* (arXiv:2608.16003) shows that audit history can move a verifier's
+  threshold without improving discrimination. V585 therefore keeps the exact
+  checker out of model context, carries typed gates rather than prose alone,
+  and cold-replays audit rows in a fresh process. R3-Bench
+  (arXiv:2608.16033) reinforces matched shared-budget accounting.
+- **Semantic Scholar:** the public 2026-08-28 citation calls returned visible
+  EBT and ARM-EBM rows. The newest EBT rows remain tabular anomaly detection
+  and self-explainable latent reasoning. The ARM-EBM list remains eight visible
+  records led by path-measure dynamics, Distributional EBM, LoopUS, and
+  false-first-step planning. No reproducible matching-base local checkpoint or
+  new exact-authority mechanism was found.
+- **GitHub discovery:** current searches surfaced
+  `AI4Science-WestlakeU/t_scend` for energy-trained diffusion reasoning and
+  small verifier, KAN, and FPGA-Ising prototypes. None supersedes Carnot's
+  pinned exact solvers, GGUF stack, KAN code, or Torx path. Do not add a
+  dependency for novelty alone.
+- **Extropic:** the first-party writing page still leads with the 2026-08-03
+  Torx, Thermalizers, and Z1 update:
+  https://extropic.ai/writing/from-one-to-one-billion. Z1 access remains a 2027
+  prospect. V585 may test Torx software semantics only. It makes no TSU speed,
+  power, or availability claim.
+- **Logical Intelligence:** the public Kona page and July material still
+  describe complete-state energy scoring and a separate orchestration layer:
+  https://logicalintelligence.com/kona-ebms-energy-based-models. No public
+  weights, training recipe, or local runner were found. Kona remains a product
+  comparator.
+- **KAN and attached boards:** no new executable KAN verification result or
+  changed KV260, GateMate, or PolarFire receipt closes V585's three gaps. Keep
+  board work opportunistic and outside the blocking graph.
+
+### V585 planning impact
+
+- Preserve Exp6702 as the fixture root. Replace the failed monolithic Exp6703
+  audit with two bounded, behavior-specific shards and one receipt-only merge.
+- Generate one replayable proposal bank with all three required GGUF families.
+  Keep every failed and malformed row. Do not reopen generated-text energy
+  scoring.
+- Test typed structural energy before any prefix-search call. Compare complete
+  systems under matched model, token, candidate, verifier, and stop budgets.
+- Implement continuous self-learning as a guarded external experience forest.
+  Compare no memory, similarity retrieval, and budgeted evidence-forest
+  retrieval. Write only between events after exact admission checks.
+- Add self-poisoning, provenance, retention, restart, and rollback attacks to
+  the memory audit.
+- Keep live ARC outcome transport and Torx schedule evidence as independent
+  branches. No task may depend on a positive planning or memory result unless
+  the dependency is scientifically necessary.
+
+<!-- V585-PLANNER-REFRESH-20260828-END -->
