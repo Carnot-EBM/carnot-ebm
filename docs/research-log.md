@@ -6402,3 +6402,10 @@ The critical path for milestone .250:
 - theme: synthesis scheduling dominated a mixed milestone reconstructed from file modification times
 - key result: honest operational negative — synthesis-only work consumed nearly all elapsed time; compute-task GPU idle is false, while phase causality and parallel-model runner applicability have no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.583
+
+- exp_range: no data available this milestone
+- theme: mixed execution exposed gaps in sub-minute timing and task-scoped accelerator attribution
+- key result: honest operational negative — every listed task shares the zero-minute timing floor; compute-task GPU idle is false, while phase causality and parallel-model runner applicability have no data available this milestone
+- acceptance: no data available this milestone

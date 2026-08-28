@@ -1,0 +1,53 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.583",
+  "generated_at": "2026-08-28T06:59:18Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.0,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Cold exact planning fixture audit",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Oracle-distinct structural plan energy",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Cold search, budget, and leakage audit",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Prospective prequential online-energy A/B",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 4 experiments in 0.0 minutes, including 1 compute-bound experiment. The timing resolution does not distinguish the entries or explain their costs, and the locked compute-task GPU-idle classification is false.",
+  "bottlenecks_identified": [
+    "Minute-level reconstruction assigned every listed experiment 0.0 minutes, so the compute-bound entry cannot be ranked by elapsed time or diagnosed by phase.",
+    "The GPU snapshot is not task-scoped, so it cannot establish utilization during the compute-bound experiment.",
+    "No data available this milestone records model concurrency or runner selection, so DualGPURunner applicability cannot be audited."
+  ],
+  "improvements_suggested": [
+    "Record monotonic sub-minute phase timings for every experiment.",
+    "Attach task-scoped GPU utilization samples to each compute-bound experiment receipt.",
+    "Record loaded-model concurrency and the selected runner in each compute-bound experiment receipt.",
+    "Keep synthesis-only GPU idleness out of accelerator bottleneck alerts."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add monotonic sub-minute phase timing to milestone receipts.",
+    "Join task-scoped GPU samples to compute-bound experiment receipts.",
+    "Receipt model concurrency and runner selection before compute launch."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The data supports an observability retrospective, not a causal runtime diagnosis. No execution speedup can be quantified from the 0.0-minute reconstructed wall time, so the savings estimate remains 0%."
+}
