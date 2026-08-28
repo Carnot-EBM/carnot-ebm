@@ -16666,3 +16666,4 @@ code |
 | 2026-08-28 02:13 UTC | Plan milestone 2026.08.583 | OK | 10 tasks proposed |
 | 2026-08-28 02:15 UTC | Milestone 2026.08.583 activated | OK | 10 tasks queued |
 | 2026-08-28 03:39 UTC | V583 document-to-manifest parity contract | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: scenario_repor |
+| 2026-08-28 05:03 UTC | V583 document-to-manifest parity contract | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: l a single uni |
