@@ -16649,3 +16649,12 @@ code |
 | 2026-08-27 22:23 UTC | Cold exact and raw-chain review | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6685-autocorrelation-schedule-ab) |
 | 2026-08-27 23:44 UTC | V582 five-branch disposition | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output:  still active. |
 | 2026-08-27 23:46 UTC | Cold exact and raw-chain review | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6685-autocorrelation-schedule-ab) |
+| 2026-08-28 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_finite_number age-week 0: OPEN 1 days: SILENT_NON_FIR |
+| 2026-08-28 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_numeric_pairs age-week 0: OPEN 1 days: SILENT_NON_FIRING |
+| 2026-08-28 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_name_tokens age-week 0: OPEN 1 days: SILENT_NON_FIRING o |
+| 2026-08-28 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_count_field age-week 0: OPEN 1 days: SILENT_NON_FIRIN |
+| 2026-08-28 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_chance_floor_score age-week 0: OPEN 1 days: SILENT_NO |
+| 2026-08-28 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_identifier_field age-week 0: OPEN 1 days: SILENT_NON_ |
+| 2026-08-28 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6654_prospective_repair_memory_evolution.json age-week 0: OPEN 1 days |
+| 2026-08-28 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_reference_field age-week 0: OPEN 1 days: SILENT_NON_F |
+| 2026-08-28 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_verified_arithmetic_delta age-week 0: OPEN 1 days: SI |
