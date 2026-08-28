@@ -16676,3 +16676,5 @@ code |
 | 2026-08-28 06:32 UTC | Generated finite-horizon exact planning fixture | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6688-v583-manifest-parity-contract) |
 | 2026-08-28 06:32 UTC | Cold exact planning fixture audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6689-exact-planning-fixture.planning_fi |
 | 2026-08-28 06:34 UTC | Three-family SOTA planning proposal corpus | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6690-exact-planning-fixture-audit) |
+| 2026-08-28 06:34 UTC | Oracle-distinct structural plan energy | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6691-sota-planning-proposal-corpus.prop |
+| 2026-08-28 06:36 UTC | Three-family SOTA planning proposal corpus | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6690-exact-planning-fixture-audit) |
