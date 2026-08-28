@@ -96,20 +96,29 @@ def test_scenario_report_6688_cross_references_gates_priors_and_routes(
 
     design, manifest = source_rows
     gates = exp.build_producer_consumer_rows(design, manifest, set())
-    assert len(gates) == 9
-    assert all(row["upstream_exists"] for row in gates)
-    assert all(row["producer_declares_exact_field"] for row in gates)
+    assert len(gates) == 13
+    assert sum(row["declared_in_design"] for row in gates) == 12
+    assert sum(row["declared_in_manifest"] for row in gates) == 9
+    assert any(row["declared_in_design"] and not row["declared_in_manifest"] for row in gates)
+    assert any(row["declared_in_manifest"] and not row["declared_in_design"] for row in gates)
+    assert any(row["upstream_exists"] is False for row in gates)
+    assert any(row["producer_declares_exact_field"] is False for row in gates)
     assert all(row["upstream_retired"] is False for row in gates)
     assert any(row["matches_design"] is False for row in gates)
 
-    priors = exp.build_prior_failure_rows(REPO, manifest)
+    priors = exp.build_prior_failure_rows(REPO, design, manifest)
     assert {row["prior_experiment_id"] for row in priors} == {
         "exp5747-sota-exact-proposal-utility-panel",
         "exp5163",
         "exp6678-constraint-family-stream",
         "exp6679-prequential-cross-family-csl-ab",
         "exp6680-csl-durability-audit",
+        "exp6684",
+        "exp6685",
+        "exp6686",
     }
+    assert sum(row["declared_in_design"] for row in priors) == 6
+    assert sum(row["declared_in_manifest"] for row in priors) == 5
     assert all(
         row["completed_record_found"]
         or row["artifact_state"] == "present"
@@ -118,7 +127,8 @@ def test_scenario_report_6688_cross_references_gates_priors_and_routes(
     )
     assert all(row["retirement_signal"] is True for row in priors)
     assert all(row["retired_upstream_reference"] is False for row in priors)
-    assert all(row["passed"] for row in priors)
+    assert all(row["lineage_passed"] for row in priors)
+    assert any(row["passed"] is False for row in priors)
 
     routes = exp.build_route_rows(design, manifest)
     assert len(routes) == 14
@@ -206,6 +216,8 @@ def test_scenario_report_6688_validator_rejects_tampering(
     assert "blocked_verdict_class_mismatch" in errors_for(verdict_class="null")
     assert "blocked_honest_verdict_mismatch" in errors_for(honest_verdict="complete: wrong")
     assert "field_provenance_mismatch" in errors_for(field_provenance={})
+    assert "per_unit_rows_mismatch" in errors_for(per_unit_rows=[])
+    assert "protected_file_changed" in errors_for(protected_files_unchanged=[])
     assert "protected_file_changed" in errors_for(
         protected_files_unchanged=[
             {"path": "research-roadmap.yaml", "before": "a", "after": "b", "unchanged": False}
@@ -223,6 +235,13 @@ def test_scenario_report_6688_source_and_cli_edges(
 
     with pytest.raises(ValueError, match="fourteen task sections"):
         exp.parse_design_contract("# no V583 task sections")
+    malformed_prior = (
+        (REPO / exp.DESIGN_PATH)
+        .read_text(encoding="utf-8")
+        .replace("→ Exp6692", "without-arrow Exp6692", 1)
+    )
+    with pytest.raises(ValueError, match="invalid V583 prior-failure declaration"):
+        exp.parse_design_contract(malformed_prior)
     assert exp.extract_required_fields("no fields") == []
     assert exp.extract_run_command("no command") is None
 
@@ -255,6 +274,23 @@ def test_scenario_report_6688_source_and_cli_edges(
 
     monkeypatch.setattr(exp, "validate_artifact", lambda _payload: ["forced-invalid"])
     assert exp.main(["--date", "20260828", "--output", str(tmp_path / "bad.json")]) == 1
+
+
+def test_scenario_report_6688_unreadable_prior_artifact_stays_a_row(
+    source_rows: tuple[list[dict[str, object]], list[dict[str, object]]],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """SCENARIO-REPORT-6688-FAIL-CLOSED keeps corrupt artifact evidence explicit."""
+
+    design, manifest = source_rows
+
+    def reject_json(_text: str) -> object:
+        raise json.JSONDecodeError("corrupt", "{", 0)
+
+    monkeypatch.setattr(exp.json, "loads", reject_json)
+    rows = exp.build_prior_failure_rows(REPO, design, manifest)
+    assert len(rows) == 8
+    assert any(row["artifact_state"] == "present" for row in rows)
 
 
 def test_scenario_report_6688_validator_runner_retains_output(

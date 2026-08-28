@@ -166,7 +166,7 @@ DEFAULT_TESTS_RUN = (
         "summary": "focused Exp6688 tests passed",
     },
     {
-        "command": "COVERAGE_FILE=/tmp/carnot_exp6688.coverage .venv/bin/coverage run --source=carnot.experiment_6688_v583_manifest_parity_contract -m pytest -o addopts='' tests/python/test_experiment_6688_v583_manifest_parity_contract.py -q",
+        "command": "COVERAGE_FILE=/tmp/carnot_exp6688.coverage .venv/bin/coverage run --include='*/experiment_6688_v583_manifest_parity_contract.py' -m pytest -o addopts='' tests/python/test_experiment_6688_v583_manifest_parity_contract.py -q && COVERAGE_FILE=/tmp/carnot_exp6688.coverage .venv/bin/coverage report --include='*/experiment_6688_v583_manifest_parity_contract.py' --show-missing --fail-under=100",
         "exit": 0,
         "summary": "new Exp6688 module reached 100% statement coverage",
     },
@@ -285,12 +285,31 @@ def parse_design_contract(text: str) -> list[JsonDict]:
             re.MULTILINE,
         )
     }
-    prior_by_consumer: dict[int, list[str]] = {}
+    prior_by_consumer: dict[int, list[JsonDict]] = {}
     prior_section = text.split("## Prior-Failure Discipline", 1)[1].split("## Promotion Gates", 1)[
         0
     ]
-    for prior, consumer in re.findall(r"^- Exp(\d+).*?→ Exp(\d+)", prior_section, re.MULTILINE):
-        prior_by_consumer.setdefault(int(consumer), []).append(f"exp{prior}")
+    prior_bullets = re.findall(
+        r"^- Exp(?P<prior>\d+) (?P<body>.*?)(?=^- Exp\d+|^Every entry carries)",
+        prior_section,
+        re.MULTILINE | re.DOTALL,
+    )
+    for prior, body in prior_bullets:
+        normalized = " ".join(body.split()).rstrip(".")
+        declaration = re.fullmatch(
+            r"(?P<scope>.*?) → Exp(?P<consumer>\d+) (?P<changed>.*)", normalized
+        )
+        if declaration is None:
+            raise ValueError(f"invalid V583 prior-failure declaration for Exp{prior}")
+        consumer = int(declaration.group("consumer"))
+        prior_by_consumer.setdefault(consumer, []).append(
+            {
+                "experiment_id": f"exp{prior}",
+                "prior_scope": declaration.group("scope"),
+                "changed_condition": declaration.group("changed"),
+                "retire_if_same_verdict": True,
+            }
+        )
 
     rows: list[JsonDict] = []
     for number_text, title, body in sections:
@@ -312,7 +331,10 @@ def parse_design_contract(text: str) -> list[JsonDict]:
                 "route": route["route"],
                 "task_category": route["task_category"],
                 "estimated_wall_time_min": route["estimated_wall_time_min"],
-                "prior_failure_ids": prior_by_consumer.get(number, []),
+                "prior_failure_ids": [
+                    item["experiment_id"] for item in prior_by_consumer.get(number, [])
+                ],
+                "prior_failure_declarations": prior_by_consumer.get(number, []),
                 "required_artifact_fields": sorted(
                     {
                         field
@@ -462,48 +484,72 @@ def build_producer_consumer_rows(
     manifest_rows: Sequence[Mapping[str, Any]],
     retired_numbers: set[int],
 ) -> list[JsonDict]:
-    """Prove each gate names a present producer and an exact owned field."""
+    """Prove every design or manifest gate has one identical peer declaration."""
 
-    producers = {str(row["task_id"]): row for row in manifest_rows}
-    design_gates = {
-        (
-            str(row["task_id"]),
-            str(gate["upstream"]),
-            str(gate["artifact_field"]),
-            str(gate["op"]),
-            canonical_json(gate["value"]),
+    design_tasks = {str(row["task_id"]): row for row in design_rows}
+    manifest_tasks = {str(row["task_id"]): row for row in manifest_rows}
+
+    def gate_key(consumer: Mapping[str, Any], gate: Mapping[str, Any]) -> tuple[str, ...]:
+        return (
+            str(consumer.get("task_id")),
+            str(gate.get("upstream")),
+            str(gate.get("artifact_field")),
+            str(gate.get("op")),
+            canonical_json(gate.get("value")).decode("utf-8"),
         )
-        for row in design_rows
-        for gate in row.get("gated_on", [])
+
+    design_gates = {
+        gate_key(task, gate): dict(gate)
+        for task in design_rows
+        for gate in task.get("gated_on", [])
     }
+    manifest_gates = {
+        gate_key(task, gate): dict(gate)
+        for task in manifest_rows
+        for gate in task.get("gated_on", [])
+    }
+    order_by_task = {task_id: order for order, task_id in enumerate(EXPECTED_TASK_IDS, 1)}
     rows: list[JsonDict] = []
-    for consumer in manifest_rows:
-        for gate in consumer.get("gated_on", []):
-            producer_id = str(gate.get("upstream"))
-            producer = producers.get(producer_id)
-            fields = list(producer.get("required_artifact_fields", [])) if producer else []
-            key = (
-                str(consumer.get("task_id")),
-                producer_id,
-                str(gate.get("artifact_field")),
-                str(gate.get("op")),
-                canonical_json(gate.get("value")),
-            )
-            rows.append(
-                {
-                    "producer": producer_id,
-                    "field": gate.get("artifact_field"),
-                    "artifact_field": gate.get("artifact_field"),
-                    "consumer": consumer.get("task_id"),
-                    "operator": gate.get("op"),
-                    "value": gate.get("value"),
-                    "upstream_exists": producer is not None,
-                    "producer_declares_exact_field": gate.get("artifact_field") in fields,
-                    "matches_design": key in design_gates,
-                    "upstream_retired": _number(producer_id) in retired_numbers,
-                    "producer_required_artifact_fields_hash": value_hash(fields),
-                }
-            )
+    for key in sorted(
+        design_gates.keys() | manifest_gates.keys(),
+        key=lambda item: (order_by_task.get(item[0], 10**9), item),
+    ):
+        consumer_id, producer_id, artifact_field, operator, _value_text = key
+        gate = manifest_gates.get(key) or design_gates[key]
+        design_producer = design_tasks.get(producer_id)
+        manifest_producer = manifest_tasks.get(producer_id)
+        design_fields = (
+            list(design_producer.get("required_artifact_fields", [])) if design_producer else []
+        )
+        manifest_fields = (
+            list(manifest_producer.get("required_artifact_fields", [])) if manifest_producer else []
+        )
+        declared_in_design = key in design_gates
+        declared_in_manifest = key in manifest_gates
+        rows.append(
+            {
+                "producer": producer_id,
+                "field": artifact_field,
+                "artifact_field": artifact_field,
+                "consumer": consumer_id,
+                "operator": operator,
+                "value": gate.get("value"),
+                "declared_in_design": declared_in_design,
+                "declared_in_manifest": declared_in_manifest,
+                "upstream_exists_in_design": design_producer is not None,
+                "upstream_exists_in_manifest": manifest_producer is not None,
+                "upstream_exists": design_producer is not None and manifest_producer is not None,
+                "producer_declares_exact_field_in_design": artifact_field in design_fields,
+                "producer_declares_exact_field_in_manifest": artifact_field in manifest_fields,
+                "producer_declares_exact_field": artifact_field in design_fields
+                and artifact_field in manifest_fields,
+                "matches_design": declared_in_design and declared_in_manifest,
+                "upstream_retired": _number(producer_id) in retired_numbers,
+                "producer_required_artifact_fields_hash": value_hash(
+                    {"design": design_fields, "manifest": manifest_fields}
+                ),
+            }
+        )
     return rows
 
 
@@ -553,9 +599,11 @@ def _retirement_index(root: Path) -> dict[int, list[JsonDict]]:
 
 
 def build_prior_failure_rows(
-    root: Path, manifest_rows: Sequence[Mapping[str, Any]]
+    root: Path,
+    design_rows: Sequence[Mapping[str, Any]],
+    manifest_rows: Sequence[Mapping[str, Any]],
 ) -> list[JsonDict]:
-    """Bind each prior block to archive, artifact, conductor, and exclusion evidence."""
+    """Bind the union of design and manifest priors to durable lineage evidence."""
 
     completed = _completed_by_number(root)
     retired = _retirement_index(root)
@@ -565,68 +613,102 @@ def build_prior_failure_rows(
         for task in manifest_rows
         for gate in task.get("gated_on", [])
     }
+    design_priors = {
+        (str(task.get("task_id")), _number(str(prior.get("experiment_id")))): dict(prior)
+        for task in design_rows
+        for prior in task.get("prior_failure_declarations", [])
+    }
+    manifest_priors = {
+        (str(task.get("task_id")), _number(str(prior.get("experiment_id")))): dict(prior)
+        for task in manifest_rows
+        for prior in task.get("prior_failures", [])
+    }
+    order_by_task = {task_id: order for order, task_id in enumerate(EXPECTED_TASK_IDS, 1)}
     rows: list[JsonDict] = []
-    for task in manifest_rows:
-        for prior_value in task.get("prior_failures", []):
-            prior = dict(prior_value)
-            prior_id = str(prior.get("experiment_id"))
-            number = _number(prior_id)
-            record = completed.get(number)
-            fallback_artifacts = sorted((root / "results").glob(f"experiment_{number}_*.json"))
-            artifact_path = (
-                Path(str(record.get("deliverable")))
+    for key in sorted(
+        design_priors.keys() | manifest_priors.keys(),
+        key=lambda item: (order_by_task.get(item[0], 10**9), item[1]),
+    ):
+        consumer_id, number = key
+        design_prior = design_priors.get(key)
+        manifest_prior = manifest_priors.get(key)
+        prior_id = str(
+            (manifest_prior or {}).get("experiment_id") or (design_prior or {}).get("experiment_id")
+        )
+        record = completed.get(number)
+        fallback_artifacts = sorted((root / "results").glob(f"experiment_{number}_*.json"))
+        artifact_path = (
+            Path(str(record.get("deliverable")))
+            if record
+            else fallback_artifacts[0].relative_to(root)
+            if fallback_artifacts
+            else Path("")
+        )
+        artifact_hash = sha256_file(root / artifact_path) if artifact_path.name else "missing"
+        artifact_verdict: Any = None
+        if artifact_hash != "missing":
+            try:
+                artifact_payload = json.loads((root / artifact_path).read_text(encoding="utf-8"))
+                artifact_verdict = artifact_payload.get("honest_verdict")
+                if isinstance(artifact_verdict, Mapping) and "value" in artifact_verdict:
+                    artifact_verdict = artifact_verdict.get("value")
+            except (json.JSONDecodeError, OSError, AttributeError):
+                artifact_verdict = None
+        title = str(record.get("title", "")) if record else ""
+        conductor_rows = [
+            line
+            for line in conductor_lines
+            if prior_id.lower() in line.lower()
+            or f"exp{number}" in line.lower()
+            or (title and title.lower() in line.lower())
+        ]
+        exclusion_rows = retired.get(number, [])
+        row = {
+            "consumer_task_id": consumer_id,
+            "prior_experiment_id": prior_id,
+            "prior_scope": (
+                record.get("title")
                 if record
-                else fallback_artifacts[0].relative_to(root)
-                if fallback_artifacts
-                else Path("")
-            )
-            artifact_hash = sha256_file(root / artifact_path) if artifact_path.name else "missing"
-            title = str(record.get("title", "")) if record else ""
-            conductor_rows = [
-                line
-                for line in conductor_lines
-                if prior_id.lower() in line.lower()
-                or f"exp{number}" in line.lower()
-                or (title and title.lower() in line.lower())
-            ]
-            exclusion_rows = retired.get(number, [])
-            row = {
-                "consumer_task_id": task.get("task_id"),
-                "prior_experiment_id": prior_id,
-                "prior_scope": (
-                    record.get("title")
-                    if record
-                    else exclusion_rows[0].get("id")
-                    if exclusion_rows
-                    else None
-                ),
-                "verdict": prior.get("verdict"),
-                "changed_condition": prior.get("addressed_by"),
-                "retirement_signal": prior.get("retire_if_same_verdict"),
-                "completed_record_found": record is not None,
-                "completed_record": record,
-                "artifact_path": artifact_path.as_posix() if artifact_path.name else None,
-                "artifact_hash": artifact_hash,
-                "artifact_state": "present" if artifact_hash != "missing" else "missing",
-                "conductor_state_rows": conductor_rows,
-                "conductor_state_hash": value_hash(conductor_rows),
-                "exclusion_manifest_match": bool(exclusion_rows),
-                "exclusion_manifest_entries": exclusion_rows,
-                "reference_role": "prior_failure",
-                "retired_upstream_reference": number in upstream_numbers and bool(exclusion_rows),
-            }
-            row["passed"] = bool(
-                (
-                    row["completed_record_found"]
-                    or row["artifact_state"] == "present"
-                    or conductor_rows
-                )
-                and str(row["verdict"] or "").strip()
-                and str(row["changed_condition"] or "").strip()
-                and row["retirement_signal"] is True
-                and not row["retired_upstream_reference"]
-            )
-            rows.append(row)
+                else (design_prior or {}).get("prior_scope")
+                or (exclusion_rows[0].get("id") if exclusion_rows else None)
+            ),
+            "verdict": (manifest_prior or {}).get("verdict")
+            or artifact_verdict
+            or (record or {}).get("result"),
+            "changed_condition": (manifest_prior or {}).get("addressed_by")
+            or (design_prior or {}).get("changed_condition"),
+            "retirement_signal": (
+                (manifest_prior or {}).get("retire_if_same_verdict")
+                if manifest_prior
+                else (design_prior or {}).get("retire_if_same_verdict")
+            ),
+            "declared_in_design": design_prior is not None,
+            "declared_in_manifest": manifest_prior is not None,
+            "design_declaration": design_prior,
+            "manifest_declaration": manifest_prior,
+            "completed_record_found": record is not None,
+            "completed_record": record,
+            "artifact_path": artifact_path.as_posix() if artifact_path.name else None,
+            "artifact_hash": artifact_hash,
+            "artifact_state": "present" if artifact_hash != "missing" else "missing",
+            "conductor_state_rows": conductor_rows,
+            "conductor_state_hash": value_hash(conductor_rows),
+            "exclusion_manifest_match": bool(exclusion_rows),
+            "exclusion_manifest_entries": exclusion_rows,
+            "reference_role": "prior_failure",
+            "retired_upstream_reference": number in upstream_numbers and bool(exclusion_rows),
+        }
+        row["lineage_passed"] = bool(
+            (row["completed_record_found"] or row["artifact_state"] == "present" or conductor_rows)
+            and str(row["verdict"] or "").strip()
+            and str(row["changed_condition"] or "").strip()
+            and row["retirement_signal"] is True
+            and not row["retired_upstream_reference"]
+        )
+        row["passed"] = bool(
+            row["lineage_passed"] and row["declared_in_design"] and row["declared_in_manifest"]
+        )
+        rows.append(row)
     return rows
 
 
@@ -822,6 +904,22 @@ def reduce_readiness(
     manifest_ids = [row.get("task_id") for row in manifest_rows]
     manifest_deliverables = [row.get("deliverable") for row in manifest_rows]
     expected_deliverables = [row.get("deliverable") for row in design_rows]
+    design_deliverables_valid = bool(
+        len(expected_deliverables) == 14
+        and len(set(expected_deliverables)) == 14
+        and all(
+            isinstance(path, str) and path.startswith("results/") and path.endswith(".json")
+            for path in expected_deliverables
+        )
+    )
+    manifest_deliverables_valid = bool(
+        len(manifest_deliverables) == 14
+        and len(set(manifest_deliverables)) == 14
+        and all(
+            isinstance(path, str) and path.startswith("results/") and path.endswith(".json")
+            for path in manifest_deliverables
+        )
+    )
     checks: list[tuple[str, str, Any, Any, str]] = [
         (
             "design.task_order",
@@ -843,6 +941,20 @@ def reduce_readiness(
             expected_deliverables,
             manifest_deliverables,
             "unique_json_deliverable_contract_mismatch",
+        ),
+        (
+            "design.deliverable_shape",
+            "design",
+            True,
+            design_deliverables_valid,
+            "design_requires_fourteen_unique_json_deliverables",
+        ),
+        (
+            "manifest.deliverable_shape",
+            "manifest",
+            True,
+            manifest_deliverables_valid,
+            "manifest_requires_fourteen_unique_json_deliverables",
         ),
     ]
     checks.extend(
@@ -967,6 +1079,26 @@ def _field_provenance(root: Path) -> dict[str, JsonDict]:
     }
 
 
+def _per_unit_rows(
+    design_rows: Sequence[Mapping[str, Any]],
+    manifest_rows: Sequence[Mapping[str, Any]],
+    producer_rows: Sequence[Mapping[str, Any]],
+    prior_rows: Sequence[Mapping[str, Any]],
+    route_rows: Sequence[Mapping[str, Any]],
+    validator_rows: Sequence[Mapping[str, Any]],
+) -> list[JsonDict]:
+    """Project every contract unit once so readers can replay the reducer."""
+
+    return (
+        [{"row_kind": "design_task", **dict(row)} for row in design_rows]
+        + [{"row_kind": "manifest_task", **dict(row)} for row in manifest_rows]
+        + [{"row_kind": "gate", **dict(row)} for row in producer_rows]
+        + [{"row_kind": "prior_failure", **dict(row)} for row in prior_rows]
+        + [{"row_kind": "route", **dict(row)} for row in route_rows]
+        + [{"row_kind": "validator", **dict(row)} for row in validator_rows]
+    )
+
+
 def build_artifact(
     root: Path,
     *,
@@ -982,7 +1114,7 @@ def build_artifact(
     manifest_rows = load_manifest_rows(root, design_rows)
     retired = set(_retirement_index(root))
     producer_rows = build_producer_consumer_rows(design_rows, manifest_rows, retired)
-    prior_rows = build_prior_failure_rows(root, manifest_rows)
+    prior_rows = build_prior_failure_rows(root, design_rows, manifest_rows)
     route_rows = build_route_rows(design_rows, manifest_rows)
     protected_rows = _protected_rows(root, protected_before)
     aggregate, failures = reduce_readiness(
@@ -995,13 +1127,13 @@ def build_artifact(
         protected_rows,
     )
     ready = bool(aggregate["recomputed_ready"])
-    per_unit_rows = (
-        [{"row_kind": "design_task", **row} for row in design_rows]
-        + [{"row_kind": "manifest_task", **row} for row in manifest_rows]
-        + [{"row_kind": "gate", **row} for row in producer_rows]
-        + [{"row_kind": "prior_failure", **row} for row in prior_rows]
-        + [{"row_kind": "route", **row} for row in route_rows]
-        + [{"row_kind": "validator", **dict(row)} for row in validator_rows]
+    per_unit_rows = _per_unit_rows(
+        design_rows,
+        manifest_rows,
+        producer_rows,
+        prior_rows,
+        route_rows,
+        validator_rows,
     )
     artifact: JsonDict = {
         "experiment": 6688,
@@ -1048,6 +1180,15 @@ def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
         if field not in payload
     ]
     protected = payload.get("protected_files_unchanged", [])
+    expected_protected_paths = [path.as_posix() for path in PROTECTED_PATHS]
+    protected_valid = bool(
+        isinstance(protected, list)
+        and [row.get("path") for row in protected] == expected_protected_paths
+        and all(
+            row.get("unchanged") is True and row.get("before") == row.get("after")
+            for row in protected
+        )
+    )
     aggregate, failures = reduce_readiness(
         payload.get("design_task_rows", []),
         payload.get("manifest_task_rows", []),
@@ -1061,6 +1202,14 @@ def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
     expected_status = "complete_ready" if ready else "blocked_manifest_parity"
     expected_class = "null" if ready else "blocked"
     verdict_prefix = "complete:" if ready else "blocked_"
+    expected_per_unit_rows = _per_unit_rows(
+        payload.get("design_task_rows", []),
+        payload.get("manifest_task_rows", []),
+        payload.get("producer_consumer_rows", []),
+        payload.get("prior_failure_rows", []),
+        payload.get("route_rows", []),
+        payload.get("validator_rows", []),
+    )
     conditions = (
         (payload.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference_substrate_mismatch"),
         (payload.get("verifier_is_oracle") is True, "verifier_is_oracle_mismatch"),
@@ -1068,10 +1217,8 @@ def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
             set(payload.get("field_provenance", {})) == set(REQUIRED_ARTIFACT_FIELDS),
             "field_provenance_mismatch",
         ),
-        (
-            isinstance(protected, list) and all(row.get("unchanged") is True for row in protected),
-            "protected_file_changed",
-        ),
+        (protected_valid, "protected_file_changed"),
+        (payload.get("per_unit_rows") == expected_per_unit_rows, "per_unit_rows_mismatch"),
         (
             payload.get("aggregate_row_recomputation") == aggregate,
             "aggregate_row_recomputation_mismatch",
