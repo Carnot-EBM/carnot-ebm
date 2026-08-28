@@ -18085,3 +18085,4 @@ milestone establishes a task with 2 or more models in parallel or a missed
 DualGPURunner dispatch. The next tooling priority is sub-minute phase timing
 joined to task-scoped GPU, model-concurrency, and runner-selection receipts.
 Estimated time savings is 0% because no avoidable duration was measured.
+- 2026-08-28: Generated exact planning fixture recovery (⚠️ Research Finding) — honest_verdict=complete: exact finite-horizon planning fixture ready; results/experiment_6702_exact_planning_fixture_recovery.json
