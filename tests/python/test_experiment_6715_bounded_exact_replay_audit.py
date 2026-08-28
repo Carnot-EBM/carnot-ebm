@@ -154,10 +154,13 @@ def test_frozen_sample_has_exact_strata_hashes_caps_and_order() -> None:
     assert manifest["caps"] == exp.PREREGISTERED_CAPS
     assert manifest["manifest_hash"] == exp.manifest_checksum(manifest)
     assert manifest["frozen_before_reported_label_read"] is True
+    assert set(manifest["typed_specs"]) == EXPECTED_SAMPLE_IDS
     for family in exp.FAMILIES:
         family_rows = [row for row in manifest["instances"] if row["family"] == family]
         assert len(family_rows) == 2
         assert {row["selection_role"] for row in family_rows} == {"edge_probe", "contrast"}
+    for row in manifest["instances"]:
+        assert exp.sha256_json(manifest["typed_specs"][row["instance"]]) == row["spec_hash"]
 
     duplicate = public + [deepcopy(public[0])]
     with pytest.raises(ValueError, match="duplicate public instance"):
@@ -166,6 +169,13 @@ def test_frozen_sample_has_exact_strata_hashes_caps_and_order() -> None:
     contaminated[0]["ties"] = True
     with pytest.raises(ValueError, match="reported labels"):
         exp.freeze_sample(contaminated, stores)
+    corrupt_spec = deepcopy(public)
+    selected_public = next(
+        row for row in corrupt_spec if row["instance"] == "inventory-headline-01"
+    )
+    selected_public["typed_spec"]["parameters"]["stage_cost_shift"] = 1
+    with pytest.raises(ValueError, match="specification hash"):
+        exp.freeze_sample(corrupt_spec, stores)
     no_anchor = [row for row in public if row["instance"] != "inventory-headline-01"]
     with pytest.raises(ValueError, match="edge-probe"):
         exp.freeze_sample(no_anchor, stores)
@@ -244,7 +254,7 @@ def test_caps_abort_before_enumeration_or_sample_change(
     with pytest.raises(exp.CapExceeded, match="max_enumeration_per_instance"):
         exp.exhaustive_solve(tiny_spec("inventory"), low_enumeration_caps)
 
-    low_state_caps = {**exp.PREREGISTERED_CAPS, "max_state_count": 0}
+    low_state_caps = {**exp.PREREGISTERED_CAPS, "max_state_count": 1}
     with pytest.raises(exp.CapExceeded, match="max_state_count"):
         exp.exhaustive_solve(tiny_spec("inventory"), low_state_caps)
 
@@ -281,6 +291,11 @@ def test_infeasible_spec_and_missing_frozen_units_fail_explicitly() -> None:
     bad_manifest["selection_rule"] = "changed"
     with pytest.raises(ValueError, match="manifest hash"):
         exp.recompute_frozen_sample(upstream, bad_manifest)
+    bad_spec_manifest = deepcopy(manifest)
+    bad_spec_manifest["typed_specs"][manifest["reveal_order"][0]]["horizon"] = 99
+    bad_spec_manifest["manifest_hash"] = exp.manifest_checksum(bad_spec_manifest)
+    with pytest.raises(ValueError, match="frozen typed specification"):
+        exp.recompute_frozen_sample(upstream, bad_spec_manifest)
 
     missing = deepcopy(upstream)
     missing_id = manifest["reveal_order"][0]
@@ -314,6 +329,22 @@ def test_e2e_bounded_actual_replay_matches_every_exact_field() -> None:
     assert len(result["edge_rows"]) == 4
     assert all(row["passed"] for row in result["edge_rows"])
     assert result["total_enumeration_count"] == 42_530
+
+
+def test_solver_uses_frozen_specs_after_reported_labels_open() -> None:
+    """REQ-VERIFY-6715; SCENARIO-CONSTRAINT-6715-FROZEN-SAMPLE."""
+
+    upstream, manifest = frozen_actual()
+    changed_report = deepcopy(upstream)
+    selected = set(manifest["reveal_order"])
+    for row in changed_report["instance_rows"]:
+        if row["instance"] in selected:
+            row["typed_spec"]["parameters"]["stage_cost_shift"] = 10_000
+
+    result = exp.recompute_frozen_sample(changed_report, manifest)
+
+    assert len(result["enumeration_rows"]) == 8
+    assert all(row["disposition"] == "match" for row in result["reported_vs_recomputed_rows"])
 
 
 def test_missing_and_mismatched_values_remain_explicit_rows() -> None:

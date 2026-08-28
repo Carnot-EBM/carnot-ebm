@@ -293,6 +293,14 @@ def freeze_sample(
             ).hexdigest(),
         )
     ]
+    public_by_instance = {str(row["instance"]): row for row in public_rows}
+    typed_specs: JsonDict = {}
+    for row in selected:
+        instance = str(row["instance"])
+        typed_spec = deepcopy(public_by_instance[instance].get("typed_spec"))
+        if not isinstance(typed_spec, Mapping) or sha256_json(typed_spec) != row["spec_hash"]:
+            raise ValueError(f"public typed specification hash mismatch: {instance}")
+        typed_specs[instance] = typed_spec
     manifest: JsonDict = {
         "schema": "carnot.experiment_6715.frozen_sample_manifest.v1",
         "selection_rule": (
@@ -306,6 +314,8 @@ def freeze_sample(
         "expected_instance_count": 8,
         "instances": selected,
         "selection_hash": sha256_json(selected),
+        "typed_specs": typed_specs,
+        "typed_spec_store_hash": sha256_json(typed_specs),
         "reveal_order": reveal_order,
         "reveal_order_hash": sha256_json(reveal_order),
         "caps": deepcopy(PREREGISTERED_CAPS),
@@ -562,7 +572,7 @@ def exhaustive_solve(
                 if transition["legal"]:
                     following.add(int(transition["next_state"]))
         reachable[time_index + 1] = following
-        state_count = sum(len(reachable[index]) for index in range(time_index + 1))
+        state_count = sum(len(reachable[index]) for index in range(time_index + 2))
         if state_count > int(caps["max_state_count"]):
             _raise_cap("max_state_count", caps["max_state_count"], state_count, instance)
 
@@ -651,7 +661,7 @@ def exhaustive_solve(
                 row["receipt"] = sha256_json(row)
                 rows.append(row)
 
-    state_count = sum(len(reachable[index]) for index in range(horizon))
+    state_count = sum(len(reachable[index]) for index in range(horizon + 1))
     initial_rows = [row for row in rows if row["time_index"] == 0]
     result: JsonDict = {
         "instance": instance,
@@ -754,6 +764,19 @@ def recompute_frozen_sample(upstream: Mapping[str, Any], manifest: Mapping[str, 
 
     if manifest.get("manifest_hash") != manifest_checksum(manifest):
         raise ValueError("frozen sample manifest hash mismatch")
+    selected_hashes = {
+        str(row.get("instance")): row.get("spec_hash") for row in manifest.get("instances", [])
+    }
+    frozen_specs = manifest.get("typed_specs")
+    if (
+        not isinstance(frozen_specs, Mapping)
+        or set(frozen_specs) != set(selected_hashes)
+        or any(
+            sha256_json(frozen_specs[instance]) != spec_hash
+            for instance, spec_hash in selected_hashes.items()
+        )
+    ):
+        raise ValueError("frozen typed specification mismatch")
     reported_instances = {row["instance"]: row for row in upstream.get("instance_rows", [])}
     reported_actions: dict[str, list[Mapping[str, Any]]] = {
         instance: [
@@ -772,11 +795,8 @@ def recompute_frozen_sample(upstream: Mapping[str, Any], manifest: Mapping[str, 
 
     for instance in manifest["reveal_order"]:
         reported = reported_instances.get(instance)
-        if reported is None:
-            comparisons.append(comparison_row(instance, "instance", MISSING, instance))
-            continue
         solved = exhaustive_solve(
-            reported["typed_spec"],
+            frozen_specs[instance],
             manifest["caps"],
             budget=budget,
             audit_started=audit_started,
@@ -785,7 +805,9 @@ def recompute_frozen_sample(upstream: Mapping[str, Any], manifest: Mapping[str, 
             {key: deepcopy(value) for key, value in solved.items() if key != "state_action_rows"}
         )
         state_action_rows.extend(deepcopy(solved["state_action_rows"]))
-        comparisons.extend(_comparison_fields(instance, reported, solved))
+        if reported is None:
+            comparisons.append(comparison_row(instance, "instance", MISSING, instance))
+        comparisons.extend(_comparison_fields(instance, reported or {}, solved))
 
         reported_by_key = {
             (row.get("time_index"), canonical_json(row.get("state")), row.get("action")): row
@@ -828,12 +850,14 @@ def recompute_frozen_sample(upstream: Mapping[str, Any], manifest: Mapping[str, 
 
         if roles[instance] == "edge_probe":
             observed = {
-                "reported_ties": reported.get("ties", MISSING_VALUE),
-                "reported_feasibility": reported.get("feasibility", MISSING_VALUE),
+                "reported_ties": (reported or {}).get("ties", MISSING_VALUE),
+                "reported_feasibility": (reported or {}).get("feasibility", MISSING_VALUE),
                 "recomputed_ties": len(solved["tie_set"]) > 1,
                 "recomputed_feasibility": solved["feasible"],
             }
-            reported_edge = reported.get("ties") is True or reported.get("feasibility") is False
+            reported_edge = (reported or {}).get("ties") is True or (reported or {}).get(
+                "feasibility"
+            ) is False
             recomputed_edge = len(solved["tie_set"]) > 1 or solved["feasible"] is False
             edge_rows.append(
                 {
@@ -966,6 +990,19 @@ def recompute_aggregate(
     """Reduce the exact-replay gate from retained rows and receipts only."""
 
     selected = [row.get("instance") for row in manifest.get("instances", [])]
+    selected_spec_hashes = {
+        str(row.get("instance")): row.get("spec_hash") for row in manifest.get("instances", [])
+    }
+    frozen_specs = manifest.get("typed_specs")
+    frozen_specs_ok = (
+        isinstance(frozen_specs, Mapping)
+        and set(frozen_specs) == set(selected_spec_hashes)
+        and all(
+            sha256_json(frozen_specs[instance]) == spec_hash
+            for instance, spec_hash in selected_spec_hashes.items()
+        )
+        and manifest.get("typed_spec_store_hash") == sha256_json(frozen_specs)
+    )
     family_counts = {
         family: sum(row.get("family") == family for row in manifest.get("instances", []))
         for family in FAMILIES
@@ -976,6 +1013,7 @@ def recompute_aggregate(
         and all(count == 2 for count in family_counts.values())
         and manifest.get("caps") == PREREGISTERED_CAPS
         and manifest.get("manifest_hash") == manifest_checksum(manifest)
+        and frozen_specs_ok
     )
     enumeration_ids = [row.get("instance") for row in enumeration_rows]
     enumeration_ok = (

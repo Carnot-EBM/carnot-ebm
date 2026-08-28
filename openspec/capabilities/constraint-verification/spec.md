@@ -1612,11 +1612,18 @@ sequence. It SHALL recompute legal transitions, feasible plans, exact plan
 costs, optima, optimum plans, initial tie sets, every reachable state-action
 value, and every action gap.
 
+The frozen manifest SHALL retain one deep-copied typed specification for each
+selected identity. Each copy SHALL match its frozen specification hash. The
+audit solver SHALL read this frozen copy. It SHALL not read the typed
+specification from a row that also contains revealed labels.
+
 The fixed caps SHALL be maximum horizon 6, maximum action count 5, maximum
 reachable state count 128, maximum 15,625 complete paths per instance, maximum
 50,000 complete paths across the sample, and maximum 600 seconds for audit
 enumeration. The audit SHALL stop with a named cap row before it exceeds a cap.
 It SHALL not reduce a cap, widen the sample, or substitute a different method.
+The reachable state count SHALL include every time layer from the initial state
+through the terminal layer.
 
 #### SCENARIO-CONSTRAINT-6715-FROZEN-SAMPLE: Eight Identities Precede Label Reveal
 
@@ -1624,6 +1631,7 @@ It SHALL not reduce a cap, widen the sample, or substitute a different method.
 **When** Exp6715 freezes its sample
 **Then** the manifest contains two instances from each family, the edge and
 contrast selection receipts, the reveal order, fixed caps, versions, and hashes
+**And** it contains one hash-matching typed specification per selected identity
 **And** any input containing a reported label field is rejected before freeze.
 
 **Spec traces:** REQ-CONSTRAINT-6715
@@ -1643,6 +1651,7 @@ optima, optimum plans, tie sets, state-action values, gaps, and a solver receipt
 **When** Exp6715 checks the bound
 **Then** it records expected and observed values, stops before enumeration
 continues, keeps the eight frozen identities, and leaves the audit gate false.
+The observed state count includes the terminal layer.
 
 **Spec traces:** REQ-CONSTRAINT-6715
 
