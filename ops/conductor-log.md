@@ -16684,3 +16684,5 @@ code |
 | 2026-08-28 06:40 UTC | Energy-guided action backtracking A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6692-structural-plan-energy) |
 | 2026-08-28 06:40 UTC | Cold search, budget, and leakage audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6693-energy-backtracking-ab.backtrackin |
 | 2026-08-28 06:42 UTC | Energy-guided action backtracking A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6692-structural-plan-energy) |
+| 2026-08-28 06:42 UTC | Cold search, budget, and leakage audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6693-energy-backtracking-ab.backtrackin |
+| 2026-08-28 06:45 UTC | Energy-guided action backtracking A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6692-structural-plan-energy) |
