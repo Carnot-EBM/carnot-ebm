@@ -16709,3 +16709,5 @@ code |
 | 2026-08-28 14:09 UTC | Held-family oracle-distinct structural plan energy | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6704-sota-planning-proposal-bank.propos |
 | 2026-08-28 14:11 UTC | Three-family frozen planning proposal bank | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6703-exact-planning-fixture-audit) |
 | 2026-08-28 14:11 UTC | Held-family oracle-distinct structural plan energy | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6704-sota-planning-proposal-bank.propos |
+| 2026-08-28 15:33 UTC | Plan milestone 2026.08.585 | OK | 4 tasks proposed |
+| 2026-08-28 15:36 UTC | Milestone 2026.08.585 activated | OK | 4 tasks queued |
