@@ -16670,3 +16670,5 @@ code |
 | 2026-08-28 06:26 UTC | V583 document-to-manifest parity contract | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: 17,8 @@
        |
 | 2026-08-28 06:28 UTC | Generated finite-horizon exact planning fixture | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6688-v583-manifest-parity-contract) |
+| 2026-08-28 06:28 UTC | Cold exact planning fixture audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6689-exact-planning-fixture.planning_fi |
+| 2026-08-28 06:30 UTC | Generated finite-horizon exact planning fixture | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6688-v583-manifest-parity-contract) |
