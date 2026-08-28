@@ -18885,3 +18885,73 @@ over-report the discipline documents, and neither names damage from a test:
   experiment module, inside that marker's window.
 
 No `git checkout --` was run over either list.
+
+### 2026-08-28 — The repository test suite has ~1,726 real failures, and most are cross-test pollution
+
+**How this was measured, and why earlier numbers were wrong.** Three full-suite runs were
+needed. The first two are void: `tmp_path_retention_count = 1` in `pyproject.toml` means every
+new pytest invocation deletes all but the most recent `/tmp/pytest-of-<user>/pytest-N`, and the
+conductor runs pytest almost every iteration, so it deleted the long run's tmp base out from
+under it. Signature: `No such file or directory: '.../pytest-14/popen-gw0'`, errors concentrated
+late, 2,263 of 2,267 at SETUP. Run 3 used `--basetemp` under a private directory and is the
+first honest measurement.
+
+| run | reported | truth |
+|---|---|---|
+| 1, shared tmp | 885 failed, xdist INTERNALERROR | base deleted, worker died, run aborted |
+| 2, shared tmp | 1,596 failed, 2,267 errors | same deletion, survived on `--max-worker-restart` |
+| 3, `--basetemp` | **1,726 failed, 55,973 passed, 143 errors, 4h14m** | the real number |
+
+The contamination SUPPRESSED the count by turning failures into setup errors. Run 3 has more
+failures and 2,021 more tests reaching a verdict. A lower count from a contaminated run is not
+better news.
+
+**The decomposition (670 distinct failing files):**
+
+| cause | failures | files | population |
+|---|---|---|---|
+| assertion family, heterogeneous | 560 | 302 | mixed |
+| CWD pollution — FileNotFoundError on relative paths that EXIST | 390 | ~288 | suite-only |
+| torch/triton `Only a single TORCH_LIBRARY ... namespace triton` | 281 | 47 | suite-only |
+| `KeyError: 'carnot_adversarial_verify_*'` | 98 | 13 | isolation |
+| `ArtifactPathError: absolute artifact path outside allowed roots` | 89 | 32 | isolation |
+| ValueError artifact-validation | 89 | 28 | unsampled |
+| `NameError: '_is_under' is not defined` | 18 | 1 | isolation |
+
+**Cross-test pollution is the dominant story, not any single defect.** 671 failures sit in two
+suite-only classes that pass in isolation: `test_experiment_834` fails 12 in the suite and
+passes 69 alone; `test_experiment_802` fails 21 in the suite and passes 21 alone. Fixing those
+tests one by one would be fixing the wrong thing.
+
+**A hypothesis that was measured and rejected.** The `carnot_adversarial_verify_*` KeyError was
+initially reported here as the systemic cause after tracing ONE file. It is 5.7% and 13 files.
+The 13 `experiment_50xx` modules that carry the by-path loading pattern produced ZERO failures,
+because their tests never reach live `verify_artifact`. Recorded because the wrong version was
+briefly acted on.
+
+**Consequence for exp6682 and its siblings.** Their gate requires `.venv/bin/pytest tests/python -q`
+green. That is a programme, not a fix. The capstone repair in `ab61b47dc2` removed a hard
+blocker — the suite now runs at all, where a single collection error previously aborted all
+57,917 tests — but green is far off.
+
+**Unexplained, do not attribute it to the above.** The run takes ~4h14m with or without the tmp
+contamination. An `ExperimentTimeoutWatchdog FIRED ... 100.00 min` line in the log is a UNIT
+TEST of the watchdog with `sys.exit` patched out, not a 100-minute test; it was misread as the
+explanation once already.
+
+### 2026-08-28 — A sealed guard calls a function that does not exist
+
+`scripts/test_suite_mutation_check.py:1197` calls `_is_under(target, root.parent)`. There is no
+`def _is_under` anywhere in that file, so the branch raises `NameError` — 18 failures, all
+reproducing in isolation. It landed 2026-08-25 in `2b5d340c70`, a conductor checkpoint commit
+rather than a reviewed change.
+
+This is a guard, and a sealed one: it is in `harness_integrity_lint.py`'s `SEALED_PATHS` and it
+is the pre-commit interlock that gates every commit in this repository. The `--gate` path still
+returns OK, so the live interlock works and the dead branch is unreached in normal use.
+
+The branch's own comment is the reason to care: "a check that cries wolf gets bypassed, which is
+worse than the gap it closes." This branch would not cry wolf — it would crash. Whatever
+condition it was written to detect is currently undetectable.
+
+Found by an independent measurement pass over the run-3 log, 2026-08-28.
