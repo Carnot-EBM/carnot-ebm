@@ -1,0 +1,311 @@
+milestone: "2026.08.584"
+milestone_title: "Recovery, Experience Graphs, and Exact Replay"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+  - id: exp6702-exact-planning-fixture-recovery
+    milestone: "2026.08.584"
+    deliverable: results/experiment_6702_exact_planning_fixture_recovery.json
+    title: "Generated exact planning fixture recovery"
+    priority: critical
+    track: exact-planning
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    agent_type: codex
+    model: gpt-5.6-sol
+    prior_failures:
+      - experiment_id: exp6689-exact-planning-fixture
+        verdict: "missing_terminal_artifact: preemptive skip after exp6688-v583-manifest-parity-contract retired"
+        addressed_by: "The fixture is now a root task. Runtime manifest parity is removed, and document-manifest parity is mechanically validated before activation."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      V583 reached terminal states without running its science. Exp6689 was preempted after a runtime manifest-parity task timed out three times. V584 removes that dependency and starts with the scientific producer. Build a contamination-resistant finite-horizon planning fixture for oracle-distinct verification and later continuous learning. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, {project_root}/_bmad/prd.md, and the V584 roadmap document
+      - {project_root}/research-roadmap.yaml, {project_root}/ops/conductor-log.md V583 entries, and any partial Exp6689 files without treating planned fields as evidence
+      - Existing exact fixture generators, finite-state planning helpers, verifier interfaces, artifact helpers, and statistical reducers under {project_root}/python/carnot and {project_root}/scripts
+      - The constraint-verification, continuous-learning, evidence, statistics, safety, reporting, and pipeline capability specs plus {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Generate an exact finite-horizon planning fixture with inventory, battery-dispatch, job-slot, and reservoir-control families. Emit natural-language prompts, typed executable specifications, exact optima, every reachable action value, held-family splits, and immutable label seals. This task must not depend on a runtime preflight artifact.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash the active roadmap and conductor; verify CPU, RAM, disk, exact-solver dependencies, artifact schema, and the absence of a runtime manifest-parity dependency. Write a blocked terminal artifact if a real prerequisite is absent.
+      1. Add or update the relevant `openspec/capabilities/*/spec.md` with REQ-* and SCENARIO-* anchors before implementation. Write focused tests first.
+      2. Generate at least 32 headline instances across the four families plus separate development instances. Cap horizons at eight and legal action sets at five so an independent exhaustive solver remains practical.
+      3. Freeze family generators, parameters, prompts, splits, seeds, transition functions, hard constraints, objectives, tie policy, feasibility policy, and exact dynamic-programming convention before headline evaluation.
+      4. Retain each natural-language prompt without answers, its typed spec, every reachable state-action transition, immediate cost, future value, optimum action set, optimum plan, total optimum, tie flag, and feasibility flag.
+      5. Seal exact labels separately from live prompts. Add API tests that make current-event labels unreadable until a commit receipt exists.
+      6. Add metamorphic rows for action renaming, cost shifts, equivalent state encodings, and family-preserving surface changes. Add mutations for bad transitions, infeasible actions, corrupted costs, label leakage, wrong ties, and stale seals.
+      7. Independently enumerate a task-owned subset and compare every optimum and action value. Recompute readiness only from per-unit rows.
+      8. Set planning_fixture_ready=true only if coverage, exactness, sealing, split isolation, metamorphic checks, mutation detection, focused tests, scoped coverage, spec coverage, and applicable E2E checks pass.
+      9. Write the artifact atomically. Run row consistency, artifact validation, adversarial verification, and git status. Do not modify the active roadmap or conductor.
+
+      Required deliverable: {project_root}/results/experiment_6702_exact_planning_fixture_recovery.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal fixture state. Principle: deterministic process evidence.
+        honest_verdict: complete fixture result or precise blocked condition. Principle: measured evidence only.
+        verdict_class: one of positive|circular_positive|null|blocked|disqualified|partial. Principle: closed classification.
+        gate_check_summary: failed precondition or fixture check with expected and observed values. Principle: deterministic failure localization.
+        openspec_requirement_ids: REQ-* and SCENARIO-* anchors used by the task. Principle: spec-first traceability.
+        frozen_fixture_manifest: families, generators, parameters, prompts, splits, seeds, transitions, constraints, objectives, ties, policies, versions, and hashes. Principle: immutable benchmark identity.
+        instance_rows: one row per instance with family, prompt hash, spec hash, horizon, action set, split, label-seal hash, optimum, ties, and feasibility. Principle: recheckable unit evidence.
+        state_action_rows: instance, state, action, legality, transition, immediate cost, future value, total value, action gap, and optimum membership. Principle: exact supervision evidence.
+        exact_solver_rows: instance, solver, enumeration count, optimum, runtime, and receipt hash. Principle: immutable authority evidence.
+        label_seal_rows: instance, prompt hash, label hash, access state, commit requirement, and negative-access result. Principle: oracle isolation.
+        metamorphic_rows: transform, expected invariant, observed result, and pass state. Principle: representation robustness.
+        mutation_rows: mutation, expected detection, observed detection, and pass state. Principle: adversarial fixture evidence.
+        planning_fixture_ready: boolean owned by this task and reduced from raw checks. Principle: producer-owned gate contract.
+        per_unit_rows: every instance, state-action, exact-solver, seal, metamorphic, and mutation row. Principle: recheckable evidence.
+        aggregate_row_recomputation: all counts and readiness rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: tools, resources, solver, schema, roadmap, conductor, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: cpu_exact_dynamic_programming_no_llm. Principle: measured substrate identity.
+        verifier_is_oracle: false for later live selection; exact values are sealed evaluator and post-event authority. Principle: explicit authority boundary.
+        field_provenance: generator, solver, seal, reducer, function, version, and hash per field. Principle: traceable evidence.
+        random_seed: family, instance, metamorphic, and mutation seeds. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, coverage, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6702_exact_planning_fixture_recovery --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6703-exact-planning-fixture-audit
+    milestone: "2026.08.584"
+    deliverable: results/experiment_6703_exact_planning_fixture_audit.json
+    title: "Cold exact planning fixture audit"
+    priority: critical
+    track: exact-planning
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 75
+    agent_type: codex
+    model: gpt-5.6-sol
+    gated_on:
+      - upstream: exp6702-exact-planning-fixture-recovery
+        artifact_field: planning_fixture_ready
+        op: in
+        value: [true]
+    prior_failures:
+      - experiment_id: exp6690-exact-planning-fixture-audit
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The audit now gates on a same-milestone root fixture with the exact declared planning_fixture_ready field, not on a preempted V583 producer."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp6690 only diagnosed a missing Exp6689 artifact. Exp6702 is now a root producer with a task-owned readiness field. Cold-audit the new fixture without importing its reported aggregates or solver implementation. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V584 roadmap document, and FR-12 evidence rules
+      - {project_root}/results/experiment_6702_exact_planning_fixture_recovery.json plus its raw stores, seals, specs, prompts, and test receipts
+      - Independent exhaustive-search utilities, canonicalization helpers, row consistency, artifact validation, and adversarial verification code
+      - Constraint-verification, evidence, statistics, safety, reporting, and pipeline specs plus {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Recompute a blinded fixture subset with an independently implemented exhaustive solver. Audit family and split isolation, prompt-answer leakage, transition consistency, feasibility, optimum ties, action gaps, label sealing, metamorphic invariants, and mutation detection.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify planning_fixture_ready=true; hash Exp6702, raw stores, active roadmap, and conductor; verify CPU, RAM, disk, and audit tools. Preserve a detailed gate_check_summary on any block.
+      1. Add REQ-* and SCENARIO-* anchors for cold recomputation, leakage checks, coverage, seal timing, and mutation audit. Write focused tests first.
+      2. Freeze the blinded sample and expected identity map before reading reported optima. Implement an independent enumeration path that does not import Exp6702's dynamic-program solver.
+      3. Recompute transitions, legal actions, feasibility, all plan totals, optima, tie sets, action values, and gaps for every blinded unit.
+      4. Scan prompts and metadata for direct labels, objective encodings, split collisions, instance-ID shortcuts, stale seals, and development-to-held duplication.
+      5. Replay each metamorphic and mutation case from raw specs. Confirm expected invariants and required failures.
+      6. Compare reported and recomputed rows field by field. Do not fill missing values or coerce a blocker to zero.
+      7. Set planning_fixture_audit_passed=true only when coverage, independent recomputation, leakage, split, seal, metamorphic, mutation, row, spec, focused-test, scoped-coverage, and applicable-E2E checks pass.
+      8. Write atomically. Run artifact validation, row consistency, adversarial verification, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6703_exact_planning_fixture_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal audit state. Principle: deterministic process evidence.
+        honest_verdict: reproduced, corrected, disqualified, or blocked conclusion. Principle: measured evidence only.
+        verdict_class: one of positive|circular_positive|null|blocked|disqualified|partial. Principle: closed classification.
+        gate_check_summary: failed upstream or audit check with expected and observed values. Principle: deterministic failure localization.
+        openspec_requirement_ids: audit REQ-* and SCENARIO-* anchors. Principle: spec-first traceability.
+        blinded_sample_manifest: selection rule, expected identities, hashes, and reveal order. Principle: cold-audit provenance.
+        coverage_rows: expected and observed instances, states, actions, seals, transforms, and mutations. Principle: completeness evidence.
+        independent_solver_rows: instance, enumeration count, optimum, tie set, action values, runtime, and receipt. Principle: independent authority evidence.
+        reported_vs_recomputed_rows: unit, field, reported value, recomputed value, tolerance, and disposition. Principle: deterministic audit.
+        leakage_rows: prompt, metadata, split, ID, seal, and duplication checks with evidence. Principle: contamination evidence.
+        metamorphic_mutation_rows: case, expected result, observed result, and pass state. Principle: adversarial fixture evidence.
+        planning_fixture_audit_passed: boolean owned by this task and reduced from raw audit rows. Principle: producer-owned gate contract.
+        per_unit_rows: every coverage, solver, comparison, leakage, transform, and mutation row. Principle: recheckable evidence.
+        aggregate_row_recomputation: all audit counts and readiness rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: gate, artifacts, tools, resources, roadmap, conductor, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: cpu_independent_exhaustive_audit_no_llm. Principle: measured substrate identity.
+        verifier_is_oracle: false for later live selection; this audit evaluates only sealed fixture labels. Principle: explicit authority boundary.
+        field_provenance: raw store, independent solver, scanner, reducer, function, and hash per field. Principle: traceable evidence.
+        random_seed: blinding, sample, and attack-order seeds. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, coverage, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6703_exact_planning_fixture_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6704-sota-planning-proposal-bank
+    milestone: "2026.08.584"
+    deliverable: results/experiment_6704_sota_planning_proposal_bank.json
+    title: "Three-family frozen planning proposal bank"
+    priority: critical
+    track: verifier-grounded-planning
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 300
+    gated_on:
+      - upstream: exp6703-exact-planning-fixture-audit
+        artifact_field: planning_fixture_audit_passed
+        op: in
+        value: [true]
+    prior_failures:
+      - experiment_id: exp6691-sota-planning-proposal-corpus
+        verdict: "missing_terminal_artifact: preemptive skip after exp6688-v583-manifest-parity-contract retired"
+        addressed_by: "The proposal producer now gates on a same-milestone audited root fixture, and its producer field is declared with identical spelling."
+        retire_if_same_verdict: true
+      - experiment_id: exp5747-sota-exact-proposal-utility-panel
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The old benchmark_ready_score=None contract is replaced by Exp6703's row-recomputed planning_fixture_audit_passed boolean and immutable exact labels."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Carnot needs one authentic proposal bank for complete inference-system comparisons. V583 never generated one. Exp6703 now owns a cold-audited exact fixture. Use all three required local GGUF families and preserve every failed or malformed unit. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md SOTA Local Models, {project_root}/scripts/experiment_template.py cached_sota_pair() example, and the V584 roadmap document
+      - {project_root}/results/experiment_6702_exact_planning_fixture_recovery.json, Exp6703, Exp5747, Exp6647, Exp6648, and Exp6649
+      - {project_root}/python/carnot/inference/sota_models.py, GGUF resolution, llama.cpp supervisor, owner-bound lease, GPU receipt, parser, checkpoint, and row-store helpers
+      - Model-tier, inference, constraint-verification, evidence, statistics, safety, reporting, and pipeline specs plus {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Create a frozen raw proposal bank for every headline planning instance with unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Record exact headroom and outcomes after each raw response is committed.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify planning_fixture_audit_passed=true; resolve all three GGUF files; verify magic, hashes, embedded tokenizers, CUDA, VRAM, RAM, disk, ports, exclusive owner-bound leases, active roadmap, and conductor. If a required model cannot run on CUDA, emit a blocked artifact. Do not substitute a legacy model.
+      1. Add REQ-* and SCENARIO-* anchors for authentic model identity, one-call execution, raw preservation, parser behavior, exact post-commit evaluation, missing rows, and bank replay. Write focused tests first.
+      2. Define MODEL_SPECS with the three exact hub IDs. Use cached_sota_pair() and resolve_cached_gguf(). Legacy Qwen3.5-0.8B or gemma-4-E4B-it may run CPU smoke tests only.
+      3. Freeze instances, prompts, system text, model order, model-instance seeds, generation parameters, token ceiling, candidate grammar, parser, one-call policy, missing policy, and exact-evaluation timing before launch.
+      4. Launch owner-bound llama.cpp CUDA processes. Capture PID, start time, owner token, model hash, tokenizer source, port, CUDA UUID, VRAM, load count, inference count, unload, and lease release.
+      5. Make exactly one planned call per model-instance-seed unit. Save the raw response before parsing. Keep timeouts, empty responses, malformed responses, and partial parses as explicit rows. Do not retry based on quality.
+      6. Parse at most four action sequences from the original response. After commit, use the sealed evaluator to compute legality, validity, objective, regret, headroom, and action-level outcomes.
+      7. Report per-model and per-family parse yield, proposal diversity, exact validity, regret, recoverable headroom, tokens, latency, failures, and uncertainty. Keep model-instance-seed rows as the checking unit.
+      8. Set proposal_bank_ready=true only when every planned unit has a terminal row, raw bytes, process receipt, parser receipt, and post-commit exact receipt. This is a completeness gate, not a quality threshold.
+      9. Write atomically. Unload servers and release leases. Run focused tests, scoped coverage, spec coverage, row consistency, artifact validation, adversarial verification, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6704_sota_planning_proposal_bank.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal proposal-bank state. Principle: deterministic process evidence.
+        honest_verdict: complete bank result or precise blocker. Principle: measured evidence only.
+        verdict_class: one of positive|circular_positive|null|blocked|disqualified|partial. Principle: closed classification.
+        gate_check_summary: failed upstream, model, lease, inference, parser, row, or test check with expected and observed values. Principle: deterministic failure localization.
+        openspec_requirement_ids: inference and evidence REQ-* and SCENARIO-* anchors. Principle: spec-first traceability.
+        model_specs: exact hub IDs, paths, hashes, quantization, tokenizer sources, GPU assignments, and roles. Principle: substrate identity.
+        models_used: exact mandated hub IDs that completed at least one authentic CUDA row. Principle: measured model provenance.
+        frozen_inference_manifest: instances, prompts, model order, seeds, generation settings, budgets, parser, policies, and hashes. Principle: preregistered protocol evidence.
+        per_model_process_receipts: PID and start time, owner token, port, model hash, tokenizer, CUDA UUID, VRAM, load count, inference count, unload, and release. Principle: authentic accelerator evidence.
+        proposal_rows: model, instance, seed, raw-response hash, parse status, candidates, tokens, latency, failure code, commit time, and exact-reveal time. Principle: unit-level generation evidence.
+        exact_outcome_rows: model, instance, candidate, legality, validity, objective, regret, headroom, and exact receipt. Principle: immutable outcome evidence.
+        bank_replay_rows: raw response, parser version, reported parse, replayed parse, and match. Principle: deterministic transport evidence.
+        proposal_bank_ready: boolean owned by this task and reduced from completeness rows. Principle: producer-owned gate contract.
+        per_unit_rows: every model-instance-seed proposal, exact outcome, process receipt, and replay row. Principle: recheckable comparative evidence.
+        aggregate_row_recomputation: all model and family metrics rebuilt from raw rows. Principle: deterministic aggregation.
+        preconditions_checked: gate, models, cache, CUDA, leases, ports, resources, roadmap, conductor, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: local_llamacpp_cuda_three_family_frozen_bank. Principle: measured substrate identity.
+        verifier_is_oracle: false for generation; exact outcomes are read only after raw-response commit. Principle: explicit oracle-distinct boundary.
+        field_provenance: transcript, parser, process receipt, exact evaluator, reducer, function, and hash per field. Principle: traceable evidence.
+        random_seed: base and per-model-instance seeds. Principle: reproducibility.
+        duration_s: total monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, coverage, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6704_sota_planning_proposal_bank --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6705-structural-plan-energy
+    milestone: "2026.08.584"
+    deliverable: results/experiment_6705_structural_plan_energy.json
+    title: "Held-family oracle-distinct structural plan energy"
+    priority: critical
+    track: verifier-grounded-planning
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 150
+    agent_type: codex
+    model: gpt-5.6-sol
+    gated_on:
+      - upstream: exp6704-sota-planning-proposal-bank
+        artifact_field: proposal_bank_ready
+        op: in
+        value: [true]
+    prior_failures:
+      - experiment_id: exp6692-structural-plan-energy
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The task now consumes Exp6704's same-milestone frozen proposal bank, whose proposal_bank_ready field is producer-owned and row-recomputed."
+        retire_if_same_verdict: true
+      - experiment_id: exp5163
+        verdict: "complete_mmlu_pro_fewshot_verifier_vs_cheap_delta_+0.025_CI95_[-0.125,0.175]_CI_includes_0"
+        addressed_by: "Typed executable plan features and held-family action-regret evaluation replace retired generated-text and logprob scoring; rationales and model identity are excluded."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      External generated-text Phase D scorers are retired. This is a different representation and seam: a compact energy over typed plan states, trained on development action gaps and evaluated on held families. V583 never ran this experiment. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md failed-rerun and oracle rules, the V584 roadmap document, and the Exp5163 exclusion entry
+      - {project_root}/results/experiment_6702_exact_planning_fixture_recovery.json, Exp6703, Exp6704, Exp5163, and relevant structural-energy artifacts
+      - Typed constraint features, small energy models, pairwise training, grouped cross-validation, calibration, interval, row consistency, and leakage-test helpers
+      - EBM, constraint-verification, evidence, statistics, safety, reporting, and pipeline capability specs plus {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Fit and evaluate an oracle-distinct pairwise structural energy using only typed plan features. Compare it with fixed nonlearned baselines under leave-one-family-out evaluation. Establish whether held-family regret improves without label, model, or representation leakage.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify proposal_bank_ready=true; hash the fixture, bank, raw rows, active roadmap, and conductor; verify CPU, RAM, disk, training dependencies, and family coverage.
+      1. Add REQ-* and SCENARIO-* anchors for typed inputs, exclusions, grouped splits, controls, calibration, uncertainty, readiness, and positive-support rules. Write focused tests first.
+      2. Freeze the feature schema before held evaluation: normalized resource slack, local hard violations, transition legality, immediate objective terms, constraint adjacency summaries, horizon position, and proposal structural statistics.
+      3. Prohibit rationales, free-form embeddings, answer strings, task and instance IDs, model identity, proposal order as a learned input, exact future values, optimum labels at inference, and any held-family training row.
+      4. Fit a small pairwise-margin energy on development rows. Use grouped leave-one-family-out folds and fixed seeds. Save training rows, weights, optimizer state, losses, checkpoints, and feature hashes.
+      5. Compare proposal order, hard-violation count, immediate cost, a simple linear rule, randomized labels, randomized features, and the learned energy on identical candidate sets.
+      6. Report per-family and independent-fold AUROC, rank correlation, calibration, top-choice validity, normalized regret, wins, losses, ties, no-headroom rows, paired deltas, and intervals.
+      7. Attack model identity, order, family surface, task IDs, label access, rationale injection, exact-value access, split contamination, and shuffled labels. Measure feature-only reconstruction of forbidden identifiers.
+      8. Set structural_energy_ready=true on complete replayable evaluation. Set energy_generalization_supported=true only if held-family regret improves over the strongest nonlearned baseline, the independent-fold interval excludes zero, every leakage attack passes, and no exact future value reached live scoring.
+      9. Write atomically. Run focused tests, scoped coverage, spec coverage, row consistency, artifact validation, adversarial verification, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6705_structural_plan_energy.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal structural-energy state. Principle: deterministic process evidence.
+        honest_verdict: complete positive, complete null, disqualified, or blocked conclusion. Principle: measured evidence only.
+        verdict_class: one of positive|circular_positive|null|blocked|disqualified|partial; oracle access forbids positive. Principle: closed classification.
+        gate_check_summary: failed upstream, data, feature, split, training, row, leakage, or test check with expected and observed values. Principle: deterministic failure localization.
+        openspec_requirement_ids: EBM and verification REQ-* and SCENARIO-* anchors. Principle: spec-first traceability.
+        frozen_feature_manifest: allowed features, forbidden features, normalization, folds, seeds, controls, metrics, thresholds, versions, and hashes. Principle: preregistered representation evidence.
+        training_rows: development pair, family, features, exact post-event labels, loss, weight update, checkpoint, and optimizer receipt. Principle: authentic learning evidence.
+        evaluation_rows: fold, family, model, instance, candidate, arm, energy, rank, validity, regret, headroom, and exact receipt. Principle: held-family evidence.
+        baseline_rows: fold, unit, proposal-order, violation, immediate-cost, linear, randomized-label, randomized-feature, and learned-energy outcomes. Principle: matched control evidence.
+        calibration_rows: fold, bin, count, predicted score, observed outcome, and uncertainty inputs. Principle: reliability evidence.
+        paired_fold_rows: independent fold deltas, intervals, wins, losses, ties, and no-headroom counts. Principle: valid uncertainty evidence.
+        leakage_attack_rows: attack, forbidden signal, expected result, observed result, and disposition. Principle: oracle-distinct safety evidence.
+        structural_energy_ready: boolean owned by this task for complete replayable evaluation. Principle: producer-owned readiness contract.
+        energy_generalization_supported: boolean owned by this task using the preregistered held-family rule. Principle: producer-owned scientific gate.
+        per_unit_rows: every train pair, held candidate, baseline, fold, calibration bin, and leakage attack. Principle: recheckable comparative evidence.
+        aggregate_row_recomputation: all metrics and booleans rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: gate, artifacts, features, folds, tools, resources, roadmap, conductor, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: cpu_typed_pairwise_energy_from_frozen_bank_no_new_llm. Principle: measured substrate identity.
+        verifier_is_oracle: false for energy scoring; exact labels train development folds and evaluate committed held choices only. Principle: explicit oracle-distinct boundary.
+        field_provenance: proposal bank, feature extractor, trainer, exact evaluator, reducer, function, and hash per field. Principle: traceable evidence.
+        random_seed: fold, training, control, and attack seeds. Principle: reproducibility.
+        duration_s: total monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, coverage, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6705_structural_plan_energy --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.

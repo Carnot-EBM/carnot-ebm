@@ -38073,3 +38073,97 @@ an executable local milestone. Previously indexed papers are not duplicated.
   correlation, update-order, and coefficient rows.
 
 <!-- V583-PLANNER-REFRESH-20260827-END -->
+
+## V584 planner refresh - 2026-08-28
+
+<!-- V584-PLANNER-REFRESH-20260828-START -->
+
+This refresh follows the terminal V583 conductor state. V583 closed every task,
+but it did not execute the planned scientific comparisons. The first runtime
+manifest-parity task hit the 80-minute hard cap three times. Its retirement then
+preempted every downstream producer. Four gate artifacts only recorded missing
+upstream artifacts. V584 must therefore remove runtime manifest parity from the
+science graph and validate document-manifest parity before activation.
+
+### Promising findings selected for V584
+
+- **Beyond Scaling: Self-Evolving LLM Agents for Hardware Kernel Optimization
+  via an Experience-Driven Workflow and Experience Graph Memory** -
+  arXiv:2608.25570, https://arxiv.org/abs/2608.25570. KOPE records decisions,
+  exact execution feedback, later uses, and alternative branches in an
+  Experience Graph Memory. It retrieves a bounded context while keeping the
+  foundation model frozen. In its 53-operator ablation, graph memory raises the
+  reported pass rate from 55.2% to 84.6%. Active context management raises it
+  from 60.0% to 84.6% and cuts reported token use from 15.9B to 1.113B. Carnot
+  hook: store typed planning decisions plus immutable exact-checker receipts.
+  Admit updates only between events. Compare no-memory, read-only retrieval,
+  and admitted graph-memory arms in prospective order replicates. Keep the
+  exact solver as update and release authority.
+- **Test-Time Scaling in Reasoning LLMs: Inference Regimes, Evaluation, and
+  Reproducibility** - arXiv:2608.04001,
+  https://arxiv.org/abs/2608.04001. The paper separates single-trajectory,
+  leaf-level reduction, and prefix-level search. It treats the prompt, decoder,
+  controller, verifier, stopping rule, and numerical settings as one evaluated
+  system. It also separates exact replay from distributional reproducibility.
+  Carnot hook: compare direct choice, fixed-budget best-of-N, and energy-guided
+  prefix backtracking under matched candidate and token budgets. Save proposal
+  banks, seeds, stop reasons, verifier calls, and per-instance replay rows.
+- **DCGC: Draft-Conditioned Global Correction for Complex Reasoning with Masked
+  Diffusion Models** - arXiv:2608.25428,
+  https://arxiv.org/abs/2608.25428. DCGC revisits an imperfect draft through a
+  masked-diffusion correction pass and reports gains on low-consensus outputs.
+  Carnot hook: retain low-consensus triggering and whole-plan correction as
+  design leads. Do not schedule a direct V584 experiment. The required local
+  GGUF models are autoregressive, and no matching local diffusion checkpoint or
+  executable exact-authority path was found.
+
+### Requested secondary and product checks
+
+- **OpenReview and Hugging Face Papers:** current verifier and reasoning pages
+  continue to support prefix checks, backtracking, selective intervention, and
+  explicit budget accounting. Project Aletheia remains a useful backtracking
+  distillation lead. No public matching-base checkpoint changes V584's local
+  execution plan.
+- **Semantic Scholar:** public citation calls returned the first 20 visible EBT
+  (`2507.02092`) rows and all eight visible ARM-EBM (`2512.15605`) rows on this
+  date. The useful reasoning citations remain the already indexed Memoir,
+  Solver-Hard, Fixed-Point Reasoners, LoopUS, Distributional EBM, and false
+  first-step planning work. Newer visible EBT rows concern tabular anomaly
+  detection and latent reasoning. They do not supply a reproducible
+  matching-base local checkpoint or a stronger exact-authority mechanism.
+- **GitHub discovery:** current EBM, constraint, KAN, Ising, and verifier
+  searches expose no maintained dependency that supersedes Carnot's pinned
+  exact solvers, local GGUF stack, or Torx installation. Reuse local interfaces
+  before adding a dependency.
+- **Extropic:** the 2026-08-03 first-party update reports open Torx, THRML,
+  Thermalizers as a compiler preview, and a taped-out Z1 with 269,568 pbits,
+  16-neighbor connectivity, chromatic Gibbs sampling above 50 MHz, and claimed
+  power below one watt:
+  https://extropic.ai/writing/from-one-to-one-billion. Public Z1 systems remain
+  planned for 2027 early access. V584 may test Torx software semantics. It must
+  make no TSU latency, power, or availability claim.
+- **Logical Intelligence:** Kona 1.0 still describes a separate constraint
+  layer that scores complete state spaces and enforces validity. The current
+  product page supplies no public weights, training recipe, or local runner:
+  https://logicalintelligence.com/kona-ebms-energy-based-models. Keep Kona as a
+  product comparator, not an executable baseline.
+- **KAN and attached boards:** arXiv:2602.06737 remains the current executable
+  KAN verification lead. No new KAN result or changed KV260, GateMate, or
+  PolarFire receipt closes the planning, online-learning, or sampler gaps.
+  Keep attached boards outside the blocking graph.
+
+### V584 planning impact
+
+- Remove runtime manifest parity from the experiment graph. Validate the design
+  document, YAML task set, gates, and prior-failure declarations before handoff.
+- Recover the exact finite-horizon planning fixture and cold audit without a
+  retired upstream dependency.
+- Evaluate all three required GGUF model families on one frozen proposal bank.
+  Compare complete inference regimes under matched budgets and exact replay.
+- Replace free-form repair memory with a typed experience graph. Admit only
+  exact-checker-backed records between events. Measure prospective learning,
+  old-family retention, rollback, and token cost.
+- Keep the Torx branch independent of planning and memory. Qualify exact factor
+  semantics before any schedule comparison.
+
+<!-- V584-PLANNER-REFRESH-20260828-END -->
