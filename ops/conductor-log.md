@@ -16690,3 +16690,5 @@ code |
 | 2026-08-28 06:47 UTC | Immutable online-energy update and rollback fixtur | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6692-structural-plan-energy) |
 | 2026-08-28 06:47 UTC | Prospective prequential online-energy A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6695-online-energy-update-fixture.onlin |
 | 2026-08-28 06:49 UTC | Immutable online-energy update and rollback fixtur | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6692-structural-plan-energy) |
+| 2026-08-28 06:49 UTC | Prospective prequential online-energy A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6695-online-energy-update-fixture.onlin |
+| 2026-08-28 06:51 UTC | Immutable online-energy update and rollback fixtur | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6692-structural-plan-energy) |
