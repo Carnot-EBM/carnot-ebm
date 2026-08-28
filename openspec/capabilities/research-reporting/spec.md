@@ -59012,3 +59012,51 @@ rows or readiness.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6702 and SCENARIO-REPORT-6702-* | Implemented (`python/carnot/experiment_6702_exact_planning_fixture_recovery.py`) | Implemented (`tests/python/test_experiment_6702_exact_planning_fixture_recovery.py`; terminal blocked and complete artifacts, checksum and schema localization, atomic publication, CLI validation, and 100% scoped statement coverage) |
+
+### REQ-REPORT-6703: Cold Planning Audit SHALL Be Atomic And Recomputable
+
+Exp6703 SHALL write
+`results/experiment_6703_exact_planning_fixture_audit.json` through a complete
+temporary write, file synchronization, atomic replacement, and directory
+synchronization. It SHALL retain every field required by the active V584 task.
+It SHALL include every coverage, solver, comparison, leakage, transform, and
+mutation row in `per_unit_rows`.
+
+The artifact SHALL hash Exp6702, its embedded raw row stores, the active
+roadmap, and the conductor. It SHALL record CPU, RAM, disk, audit tools,
+specification anchors, tests, scoped coverage, applicable end-to-end checks,
+row consistency, artifact validation, and adversarial verification. It SHALL
+use `inference_substrate=cpu_independent_exhaustive_audit_no_llm` and
+`verifier_is_oracle=false` for later live selection.
+
+The closed verdict class SHALL distinguish reproduced, corrected,
+disqualified, blocked, and partial evidence. `planning_fixture_audit_passed`
+SHALL be true only when every required raw check passes. A precondition failure
+or blinding chronology failure SHALL produce a terminal blocked or
+disqualified artifact with exact expected and observed values.
+
+#### SCENARIO-REPORT-6703-ATOMIC-PROVENANCE: One Complete Audit Is Published
+
+**Given** complete audit rows, test receipts, resource receipts, and protected
+hashes
+**When** Exp6703 validates and publishes its artifact
+**Then** readers observe one complete JSON object, the checksum replays, and the
+roadmap and conductor hashes remain unchanged.
+
+**Spec traces:** REQ-REPORT-6703
+
+#### SCENARIO-REPORT-6703-FAIL-CLOSED: Missing Evidence Stays Localized
+
+**Given** a missing prerequisite, missing reported field, failed audit row, or
+invalid blinding chronology
+**When** Exp6703 classifies the terminal audit
+**Then** it reports blocked, partial, corrected, or disqualified evidence and
+does not claim a reproduced fixture or a passing readiness gate.
+
+**Spec traces:** REQ-REPORT-6703
+
+## Implementation Status (REQ-REPORT-6703)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6703 and SCENARIO-REPORT-6703-* | Implemented (`python/carnot/experiment_6703_exact_planning_fixture_audit.py`) | Implemented (`tests/python/test_experiment_6703_exact_planning_fixture_audit.py`; blocked, corrected, disqualified, checksum, row-reduction, atomic-write, CLI, and 100% scoped coverage checks) |
