@@ -37976,3 +37976,100 @@ passed all task-owned checks but blocked on the known-red repository suite.
   comparisons. Preserve correlation, update-order, and coefficient receipts.
 
 <!-- V582-PLANNER-REFRESH-20260827-END -->
+
+## V583 planner refresh - 2026-08-27
+
+<!-- V583-PLANNER-REFRESH-20260827-START -->
+
+This refresh follows the terminal V582 artifacts and conductor log. It searched
+the requested 2025-2026 EBM, constraint, Ising, hallucination, KAN, constrained
+generation, hardware-sampling, and continual-learning topics on arXiv. It also
+checked OpenReview, Hugging Face Papers, Semantic Scholar citation trails,
+GitHub, Extropic, and Logical Intelligence. The findings below are selected for
+an executable local milestone. Previously indexed papers are not duplicated.
+
+### Promising findings selected for V583
+
+- **Verifier-Based Reinforcement Fine-Tuning of Reasoning Models for Thermal
+  Energy Storage Control** - arXiv:2607.12856,
+  https://arxiv.org/abs/2607.12856. The work converts exact dynamic-programming
+  action values into dense rewards for every candidate action. Thirty training
+  prompts move an open-weight scheduler close to the exact DP optimum, while
+  transfer weakens when task structure changes. Carnot hook: build a generated,
+  executable finite-horizon planning fixture with exact action values. Use the
+  values as immutable supervision and evaluation receipts for a small local
+  energy policy. Keep family-held-out transfer separate from in-family gain.
+- **On the Query Complexity of Verifier-Assisted Language Generation** - ICML
+  2025 poster, https://openreview.net/forum?id=9oIjvaDhoN. The paper formalizes
+  a process verifier that decides whether a prefix can still be completed. A
+  rejection sampler that can backtrack improves accuracy, diversity, and query
+  efficiency over blockwise rejection and nucleus baselines. Carnot hook: test
+  action-level backtracking over structured plans. The live policy may consult
+  Carnot's learned constraint energy, but the exact DP solver remains an
+  evaluator and update authority, not an inference-time answer oracle.
+- **Verifier-First Evaluation of Agentic LLMs for Infrastructure-as-Code
+  Generation** - arXiv:2607.20478,
+  https://arxiv.org/abs/2607.20478. The study evaluates 186 tasks through three
+  executable verifier stages. Verifier feedback improves iterative refinement,
+  and reflective instruction optimization adds 7.5 percentage points with 80
+  verifier-guided rollouts and no weight update. Carnot hook: treat compact
+  prompt or routing state as a continuous-self-learning surface. Update it only
+  between events, prequentially evaluate it, and retain immutable exact
+  acceptance plus rollback receipts.
+- **Reasoning Denoiser: Denoising Reasoning Traces for Hallucination Detection
+  in Large Reasoning Models** - arXiv:2607.22098,
+  https://arxiv.org/abs/2607.22098. The paper finds that irrelevant and
+  repetitive reasoning steps can obscure hallucination signals. Carnot hook:
+  do not train the planning energy from free-form rationales. Learn from typed
+  state, action, constraint, and exact-value rows. Keep rationales as untrusted
+  diagnostics outside the release path.
+
+### Revalidated methods and secondary checks
+
+- **Continuous verifier feedback:** DVI, arXiv:2510.05421, remains the clearest
+  pattern for turning immutable verifier accept/reject decisions into online
+  supervision while leaving the verifier frozen. V583 should adapt the pattern
+  to a small energy policy or router, not attempt GGUF weight updates.
+- **Executable dynamic fixtures:** VeRA, arXiv:2602.13217, remains the right
+  anti-contamination pattern: natural-language templates, coherent instance
+  generators, and deterministic verifiers. It complements the new exact-DP
+  action-value result.
+- **OpenReview and Hugging Face Papers:** current verifier records continue to
+  favor incremental checks, backtracking, executable specifications, and
+  explicit feedback-utilization measurements. No public matching-base EBT or
+  ARM-EBM checkpoint was found for the mandated GGUF families.
+- **Semantic Scholar:** the ARM-EBM citation endpoint exposed eight 2026 rows,
+  all already indexed here, including Distributional EBM, LoopUS, and false
+  first-step planning. The EBT endpoint returned HTTP 429. Retain earlier dated
+  EBT rows and invent no new count or checkpoint claim.
+- **GitHub:** `extropic-ai/torx`, `uiuc-focal-lab/Beaver`, and current guided
+  generation repositories confirm useful local interfaces. None supersedes the
+  pinned Carnot stack. Do not add a dependency for novelty alone.
+- **Extropic:** the August 2026 first-party update still places Z1 device access
+  in 2027. Torx and THRML are usable simulators today, while Thermalizers is a
+  preview. V583 may qualify software semantics but must make no TSU latency,
+  power, or availability claim.
+- **Logical Intelligence:** Kona's public 2026 material continues to emphasize
+  complete-state energy scoring, local revision, and a separate orchestration
+  layer. No public weights, training recipe, or local runner were found. Kona
+  remains a product comparator.
+- **KAN and attached hardware:** arXiv:2602.06737 remains the useful KAN
+  verification reference. No new KAN result or changed KV260, GateMate, or
+  PolarFire receipt closes the next scientific gaps. Keep those boards outside
+  the blocking task graph.
+
+### V583 planning impact
+
+- Generate a contamination-resistant finite-horizon planning fixture with
+  exact optima, per-action values, typed constraints, and held-out families.
+- Measure all three mandated GGUF families on the same frozen proposal corpus.
+- Compare learned structured energy, verifier-assisted backtracking, and fixed
+  baselines without giving the live selector access to exact future values.
+- Run a prospective, prequential self-learning arm whose energy policy updates
+  between events from frozen exact receipts. Include rollback and old-family
+  retention.
+- Continue the Torx sampler line only after a task-owned mathematical and
+  applicable-E2E qualification receipt. Preserve exact distribution,
+  correlation, update-order, and coefficient rows.
+
+<!-- V583-PLANNER-REFRESH-20260827-END -->

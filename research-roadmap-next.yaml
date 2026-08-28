@@ -1,0 +1,737 @@
+milestone: "2026.08.583"
+milestone_title: "Verifier-Grounded Planning Energy"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+  - id: exp6688-v583-manifest-parity-contract
+    milestone: "2026.08.583"
+    deliverable: results/experiment_6688_v583_manifest_parity_contract.json
+    title: "V583 document-to-manifest parity contract"
+    priority: critical
+    track: execution-integrity
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 100
+    estimated_wall_time_min: 45
+    agent_type: claude
+    model: opus
+    prompt: |
+      CONTEXT:
+      V582 proved that roadmap parity must be an executable precondition. V583 contains fourteen tasks across an exact-planning spine, continuous self-learning, and an independent sampler branch. This task proves that the design and execution manifest are the same contract before science begins. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/research-roadmap.yaml and {project_root}/research-roadmap-next.yaml
+      - {project_root}/research-complete.yaml, {project_root}/ops/conductor-log.md, {project_root}/ops/exclusion_manifest.yaml, and available Exp6674-Exp6687 records
+      - {project_root}/scripts/roadmap_schema.py, {project_root}/scripts/validate_prior_failures.py, {project_root}/scripts/audit_roadmap_gates.py, {project_root}/scripts/exclusion_manifest_lint.py, and {project_root}/scripts/conductor_gates.py
+      - relevant research-harness, evidence, reporting, and pipeline specs plus {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Implement and run a read-only V583 execution-contract audit. Confirm exact document-to-YAML task-set parity, conductor order, unique deliverables, dependencies, structured gates, producer field spelling, prior-failure blocks, routes, resource flags, and run commands. Do not patch either roadmap, the exclusion manifest, validators, or the conductor.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash both roadmaps, the V583 design, conductor, exclusion manifest, relevant prior artifacts, Python, CPU, RAM, disk, and the no-LLM substrate.
+      1. Add or update REQ-* and SCENARIO-* anchors for manifest parity before implementation. Write focused tests first.
+      2. Parse the design and next manifest. Require exactly Exp6688 through Exp6701 in identical order with one unique JSON deliverable each.
+      3. Compare every title, track, GPU flag, route, dependency, gate, prior-failure entry, required producer field, and run command.
+      4. For every gate, prove the producer is in V583 and declares the artifact_field with identical spelling in its own REQUIRED ARTIFACT FIELDS.
+      5. Verify all referenced prior failures against artifacts, conductor states, and the exclusion manifest. Reject retired upstream dependencies and missing retirement signals.
+      6. Run YAML parse, roadmap schema, prior-failure, gate-contract, and exclusion-manifest checks in read-only mode. Record any dated operator-schema mismatch without weakening a validator.
+      7. Set v583_manifest_parity_ready=true only if all task sets, order, paths, gates, fields, routes, and commands match with no activation-hard violation.
+      8. Write atomically. Run focused tests, scoped coverage, spec coverage, row consistency, artifact validation, adversarial verification, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6688_v583_manifest_parity_contract.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal task state. Principle: deterministic process evidence.
+        honest_verdict: parity conclusion or exact blocker. Principle: measured evidence only.
+        verdict_class: one of positive|circular_positive|null|blocked|disqualified|partial; ready infrastructure is null. Principle: closed classification.
+        gate_check_summary: exact failed check, expected value, and observed value for blocked results. Principle: deterministic failure localization.
+        design_task_rows: ordered design task IDs and declared fields. Principle: raw contract evidence.
+        manifest_task_rows: ordered YAML task IDs and declared fields. Principle: raw execution evidence.
+        producer_consumer_rows: producer, field, consumer, operator, and value for every gate. Principle: deterministic cross-reference evidence.
+        prior_failure_rows: prior scope, verdict, changed condition, and retirement signal. Principle: traceable failure lineage.
+        route_rows: agent backend, model, max turns, task category, and validation. Principle: explicit execution provenance.
+        validator_rows: command, exit, output, classification, and hash. Principle: reproducible verification.
+        v583_manifest_parity_ready: boolean owned by this task. Principle: deterministic reduction from complete rows.
+        per_unit_rows: every task, gate, prior-failure, route, and validator row. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: readiness rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: inputs, resources, tools, and hashes. Principle: measured provenance.
+        protected_files_unchanged: before and after hashes for both roadmaps and the conductor. Principle: deterministic integrity.
+        inference_substrate: artifact_and_manifest_audit_no_llm. Principle: measured substrate identity.
+        verifier_is_oracle: true for this deterministic infrastructure contract. Principle: explicit circularity boundary.
+        field_provenance: source path, parser, function, and hash per field. Principle: traceable evidence.
+        random_seed: deterministic audit-order seed. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6688_v583_manifest_parity_contract --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6689-exact-planning-fixture
+    milestone: "2026.08.583"
+    deliverable: results/experiment_6689_exact_planning_fixture.json
+    title: "Generated finite-horizon exact planning fixture"
+    priority: critical
+    track: verifier-grounded-planning
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    agent_type: codex
+    model: gpt-5.6-sol
+    gated_on:
+      - upstream: exp6688-v583-manifest-parity-contract
+        artifact_field: v583_manifest_parity_ready
+        op: in
+        value: [true]
+    prompt: |
+      CONTEXT:
+      V583 needs a contamination-resistant planning corridor with exact evaluation and dense per-action supervision. Recent work converts exact dynamic-programming action values into verifier rewards. VeRA recommends generated executable specifications rather than static benchmark questions. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md, the V583 roadmap doc, and the V583 reference refresh
+      - {project_root}/results/experiment_6688_v583_manifest_parity_contract.json, Exp6604, Exp6649, Exp6650, and relevant exact-corpus artifacts
+      - {project_root}/python/carnot/verify/plan_graph_energy_adapter.py, {project_root}/python/carnot/core/energy.py, exact checkers, artifact helpers, and deterministic split utilities
+      - constraint-verification, verifiable-reasoning, benchmarks, evidence, safety, reporting, and pipeline specs plus the E2E plan
+
+      TASK:
+      Build a generated finite-horizon planning fixture with four structural families, executable transitions and constraints, exact optima, exact per-action values, sealed labels, and natural-language prompts that contain no answer. This is a benchmark and authority fixture, not an LLM experiment.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify the manifest gate, Python, CPU, RAM, disk, numeric dependencies, deterministic JSON support, active roadmap hash, conductor hash, and no-LLM substrate. Stop with a blocked artifact on a failed gate.
+      1. Add REQ-* and SCENARIO-* anchors to the appropriate existing capability specs before implementation. Write focused failing tests first.
+      2. Implement inventory, battery-dispatch, job-slot, and reservoir-control generators. Cap horizon at eight and available actions at five. Generate separate development and 32 headline instances with family and seed isolation.
+      3. Emit typed state, action, hard-constraint, transition, immediate-cost, terminal-cost, and text-template records. Text must not contain optimum actions, action values, label hashes, or hidden solver hints.
+      4. Implement backward dynamic programming over complete reachable state spaces. Retain every state-action-next-state row, value, optimum tie set, infeasible action, and Bellman residual.
+      5. Seal exact tables separately from live prompts. Define an API that reveals validity, optimum, regret, and action gaps only after a plan commit or after an explicitly post-event learning boundary.
+      6. Freeze family splits, seeds, generator versions, text templates, tolerances, tie policy, infeasible-state policy, and missing-row policy.
+      7. Attack parameter mutation, transition mutation, constraint removal, cost sign flips, horizon truncation, tie mishandling, unreachable states, label leakage, prompt-answer collision, and split overlap.
+      8. Set planning_fixture_ready=true only if all generated instances are complete, Bellman residuals satisfy tolerance, attacks are detected, label sealing passes, and every aggregate recomputes from rows.
+      9. Write atomically. Run focused tests, 100% scoped coverage, lint, format, spec coverage, row/artifact/adversarial checks, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6689_exact_planning_fixture.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal fixture state. Principle: deterministic process evidence.
+        honest_verdict: exact fixture readiness or precise blocker. Principle: measured evidence only.
+        verdict_class: closed enum; ready exact infrastructure is null. Principle: deterministic classification.
+        gate_check_summary: failed upstream, generator, solver, sealing, test, or attack check with expected and observed values. Principle: deterministic failure localization.
+        openspec_requirement_ids: added REQ-* and SCENARIO-* anchors. Principle: spec-first traceability.
+        frozen_fixture_manifest: families, counts, splits, seeds, horizons, actions, templates, rules, tolerances, and hashes. Principle: immutable benchmark definition.
+        family_rows: family definition, parameter ranges, train/development/headline counts, and split hashes. Principle: transfer-boundary evidence.
+        instance_rows: every instance with prompt path, typed spec path, family, seed, horizon, action count, reachable-state count, and hashes. Principle: complete fixture evidence.
+        transition_rows: every reachable state-action-next-state, validity, constraints, cost, and receipt. Principle: executable dynamics evidence.
+        dynamic_programming_rows: every state-action value, optimum tie set, value-to-go, and Bellman residual. Principle: exact supervision evidence.
+        label_sealing_receipts: prompt-store and exact-store separation, access API, timing rule, and hashes. Principle: future-label isolation.
+        leakage_attack_rows: attack, expected result, observed result, and receipt. Principle: adversarial benchmark integrity.
+        metamorphic_rows: parameter, transition, cost, horizon, and symmetry transformations with expected and observed values. Principle: exact-solver validation.
+        planning_fixture_ready: boolean owned by this task. Principle: deterministic reduction from complete exact rows.
+        per_unit_rows: every family, instance, transition, state-action value, metamorphic check, and attack. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: all counts and readiness rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: gate, tools, resources, inputs, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: cpu_generated_exact_dynamic_programming_no_llm. Principle: measured substrate identity.
+        verifier_is_oracle: true because the generated executable specification defines correctness. Principle: explicit circularity boundary.
+        field_provenance: generator, transition, solver, sealing API, function, and hash per field. Principle: traceable evidence.
+        random_seed: base, family, split, and instance seeds. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6689_exact_planning_fixture --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6690-exact-planning-fixture-audit
+    milestone: "2026.08.583"
+    deliverable: results/experiment_6690_exact_planning_fixture_audit.json
+    title: "Cold exact planning fixture audit"
+    priority: critical
+    track: verifier-grounded-planning
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 60
+    gated_on:
+      - upstream: exp6689-exact-planning-fixture
+        artifact_field: planning_fixture_ready
+        op: in
+        value: [true]
+    prompt: |
+      CONTEXT:
+      Exp6689 claims generated dynamics, exact optima, per-action values, and sealed prompts. This cold audit must reproduce those claims without importing Exp6689's dynamic-programming reducer. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V583 roadmap doc, and exact-evidence claim rules
+      - {project_root}/results/experiment_6689_exact_planning_fixture.json and all fixture, prompt, typed-spec, and exact-table stores
+      - Exp6604 and Exp6649 cold-check patterns, independent enumeration helpers, row consistency, artifact validation, and adversarial verification
+      - relevant constraint-verification, benchmarks, evidence, statistics, safety, and reporting specs plus the E2E plan
+
+      TASK:
+      Independently audit the generated planning fixture. Reparse typed specs, exhaustively enumerate a blinded subset, recompute optimal values and ties, and verify prompt/label separation, family isolation, and mutation sensitivity. Do not use Exp6689's DP implementation for the cold calculation.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify the planning_fixture_ready gate; hash Exp6689, all stores, specs, audit code inputs, active roadmap, conductor, CPU, RAM, disk, and the no-LLM substrate.
+      1. Freeze a blinded stratified sample and reveal procedure before reading expected values. Include every family, feasible and infeasible actions, ties, and boundary states.
+      2. Implement an independent forward exhaustive enumerator or brute-force plan enumerator. Do not call the Exp6689 Bellman reducer.
+      3. Recompute reachable states, valid transitions, plan costs, optima, ties, state values, action gaps, and Bellman identities for every blinded audit unit.
+      4. Scan every natural-language prompt and live manifest for answers, labels, optimum plans, action values, hashes correlated with labels, split collisions, and development/headline overlap.
+      5. Attack row deletion, duplication, spec/prompt mismatch, family relabeling, transition mutation, constraint mutation, cost mutation, tie collapse, hidden-field access, and seal timing.
+      6. Set planning_fixture_audit_passed=true only if coverage is complete, cold values match within tolerance, sealing and isolation pass, and every attack fires.
+      7. Write atomically. Run focused tests, scoped coverage, spec coverage, row consistency, artifact validation, adversarial verification, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6690_exact_planning_fixture_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal audit state. Principle: deterministic process evidence.
+        honest_verdict: reproduced, corrected, disqualified, or blocked conclusion. Principle: measured evidence only.
+        verdict_class: one of positive|circular_positive|null|blocked|disqualified|partial; fixture audit normally null. Principle: closed classification.
+        gate_check_summary: failed upstream or audit check with expected and observed values. Principle: deterministic failure localization.
+        blinding_receipt: stratification, hidden map hash, reveal procedure, and audit seed. Principle: independent evaluation.
+        coverage_rows: expected and observed families, instances, states, actions, ties, and boundary cases. Principle: completeness evidence.
+        cold_enumeration_rows: independently recomputed plans, costs, optima, ties, state values, action gaps, and residuals. Principle: exact audit evidence.
+        reported_vs_recomputed: field-level reported and cold values with differences. Principle: deterministic correction evidence.
+        sealing_audit_rows: path, store, access phase, forbidden-field scan, and hash. Principle: future-label isolation evidence.
+        split_isolation_rows: family, split, identity, overlap check, and result. Principle: transfer-boundary evidence.
+        attack_rows: deletion, duplicate, mismatch, relabel, mutation, tie, hidden access, and timing attacks. Principle: adversarial evidence.
+        planning_fixture_audit_passed: boolean owned by this task. Principle: deterministic reduction from audit rows.
+        per_unit_rows: every coverage, cold value, sealing, split, comparison, and attack row. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: all audit conclusions rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: gate, inputs, tools, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: cold_exhaustive_planning_audit_no_llm. Principle: measured substrate identity.
+        verifier_is_oracle: true because the audit recomputes the exact authority. Principle: explicit circularity boundary.
+        field_provenance: raw spec, independent function, seal scan, and hash per field. Principle: traceable evidence.
+        random_seed: blinding and attack-order seeds. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6690_exact_planning_fixture_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6691-sota-planning-proposal-corpus
+    milestone: "2026.08.583"
+    deliverable: results/experiment_6691_sota_planning_proposal_corpus.json
+    title: "Three-family SOTA planning proposal corpus"
+    priority: critical
+    track: verifier-grounded-planning
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 240
+    gated_on:
+      - upstream: exp6690-exact-planning-fixture-audit
+        artifact_field: planning_fixture_audit_passed
+        op: in
+        value: [true]
+    prompt: |
+      CONTEXT:
+      Exp6689-Exp6690 provide an audited exact planning fixture with sealed labels. V583 now needs authentic proposals from all three mandated local GGUF families. The corpus measures proposal support and headroom; it does not retry malformed output or let the exact evaluator influence generation. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/scripts/experiment_template.py, the V583 roadmap doc, and the V583 reference refresh
+      - {project_root}/results/experiment_6689_exact_planning_fixture.json, Exp6690, Exp6648, Exp6649, and current SOTA GGUF canary artifacts
+      - {project_root}/python/carnot/inference/sota_models.py, llama.cpp loaders, embedded-tokenizer helpers, server supervisor, lease code, process receipts, and raw-output stores
+      - relevant inference, model-tier, constraint-verification, evidence, safety, statistics, reporting, and pipeline specs plus the E2E plan
+
+      TASK:
+      Create a frozen proposal corpus on the 32 audited headline instances using Qwen3.6-35B-A3B, Gemma-4-31B, and Gemma-4-26B-A4B. Retain raw responses, untrusted rationales, parsed action proposals, exact post-generation evaluations, and authentic CUDA receipts for every model-instance unit.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify the planning_fixture_audit_passed gate; resolve all model files from local cache; verify GGUF magic, hashes, embedded tokenizers, CUDA visibility, VRAM, RAM, disk, owner-bound leases, ports, and no conflicting process. If any mandated model cannot run on CUDA, write a blocked artifact and stop.
+      1. Add or update REQ-* and SCENARIO-* anchors for the frozen proposal corpus. Write focused tests first.
+      2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Resolve with cached_sota_pair() and resolve_cached_gguf(). Legacy small models may run CPU smoke tests only and cannot satisfy a headline row.
+      3. Freeze instance order, model order, prompts, system text, generation settings, seeds, one-call budget, response budget, parser, maximum four extracted proposals, stopping rules, missing-row policy, and exact-evaluation timing before inference.
+      4. Launch fresh owner-bound llama.cpp CUDA processes. Run exactly one planned call per model-instance unit. Ask for candidate action sequences and optional reasoning, but do not expose solver fields, optimum values, labels, or answer-encoding grammar.
+      5. Retain the unmodified response. Extract at most four action sequences without regeneration. Mark parse failures and empty proposal sets; do not silently retry, repair, or substitute a solver plan.
+      6. Only after response commitment, evaluate each proposal with the sealed exact API. Record validity, cost, normalized regret, first failing step, candidate diversity, oracle-at-K headroom, no-headroom, tokens, latency, process identity, and accelerator evidence.
+      7. Report overall and per-model parse yield, proposal count, exact validity, regret, headroom, diversity, cost, missing units, and intervals. Keep model comparisons paired by instance.
+      8. Set proposal_corpus_ready=true only when every planned unit is present or explicitly missing with cause, raw responses and process receipts exist, exact access occurred after commitment, and aggregates recompute from rows.
+      9. Write atomically. Cleanly unload servers and release leases. Run focused tests, scoped coverage, spec coverage, row/artifact/adversarial checks, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6691_sota_planning_proposal_corpus.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal corpus state. Principle: deterministic process evidence.
+        honest_verdict: corpus completeness and measured proposal support or precise blocker. Principle: measured evidence only.
+        verdict_class: closed enum; readiness alone is null and an oracle-defined positive is circular_positive. Principle: deterministic classification.
+        gate_check_summary: failed upstream, model, lease, process, row, test, or timing check with expected and observed values. Principle: deterministic failure localization.
+        openspec_requirement_ids: REQ-* and SCENARIO-* anchors. Principle: spec-first traceability.
+        model_specs: exact hub IDs, paths, hashes, tokenizer sources, quantization, GPU assignments, and roles. Principle: substrate identity.
+        models_used: exact mandated hub IDs that completed headline rows. Principle: measured model provenance.
+        frozen_run_manifest: instances, models, prompts, settings, seeds, budgets, parser, rules, order, and hashes. Principle: preregistered comparison.
+        per_model_process_receipts: PID/start, port, owner token, model hash, CUDA UUID, VRAM, inference count, unload, and release. Principle: authentic accelerator use.
+        per_unit_rows: every model-instance unit with raw response path, proposal paths, parse outcome, exact post-commit metrics, tokens, latency, and receipts. Principle: recheckable comparative evidence.
+        proposal_rows: every extracted proposal with action sequence, validity, cost, regret, first failure, rank, source span, and hashes. Principle: raw candidate evidence.
+        model_summary_rows: paired per-model parse, diversity, validity, regret, headroom, token, and latency metrics. Principle: model-family evidence.
+        headroom_rows: oracle-at-K, no-headroom cause, valid-candidate count, and best regret per instance-model. Principle: intervention opportunity evidence.
+        missing_unit_rows: every absent or invalid unit with cause and consequence. Principle: no missing-to-zero coercion.
+        proposal_corpus_ready: boolean owned by this task. Principle: completeness reduction from planned rows.
+        aggregate_row_recomputation: all headlines rebuilt from per-unit and proposal rows. Principle: deterministic aggregation.
+        preconditions_checked: gate, cache, CUDA, lease, process, memory, disk, and input receipts. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: local_llamacpp_cuda_mandated_gguf_three_family. Principle: measured substrate identity.
+        verifier_is_oracle: true because exact DP labels evaluate completed proposals. Principle: explicit circularity boundary.
+        field_provenance: raw response, parser, sealed evaluator, process, function, and hash per field. Principle: traceable evidence.
+        random_seed: base and per-model-instance seeds. Principle: reproducibility.
+        duration_s: total monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6691_sota_planning_proposal_corpus --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6692-structural-plan-energy
+    milestone: "2026.08.583"
+    deliverable: results/experiment_6692_structural_plan_energy.json
+    title: "Oracle-distinct structural plan energy"
+    priority: critical
+    track: verifier-grounded-planning
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 150
+    agent_type: codex
+    model: gpt-5.6-sol
+    gated_on:
+      - upstream: exp6691-sota-planning-proposal-corpus
+        artifact_field: proposal_corpus_ready
+        op: in
+        value: [true]
+    prior_failures:
+      - experiment_id: exp5163
+        verdict: "complete_mmlu_pro_fewshot_verifier_vs_cheap_delta_+0.025_CI95_[-0.125,0.175]_CI_includes_0"
+        addressed_by: "This task replaces retired generated-text and logprob scoring with typed executable plan features, family-held-out training, and action-search guidance; rationales and model identity are excluded."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      External generated-text energy scorers are retired after Exp5163 and seven milestones of null or marginal evidence. V583 tests a different representation and seam: a small energy over typed plan states, trained from exact development action gaps, evaluated leave-one-family-out, and later used to guide action search rather than rank prose answers. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V583 roadmap doc, the V583 reference refresh, and the Phase-D exclusion entry for Exp5163
+      - {project_root}/results/experiment_6689_exact_planning_fixture.json, Exp6690, Exp6691, Exp5163, Exp1501, and relevant structural-energy artifacts
+      - {project_root}/python/carnot/verify/plan_graph_energy_adapter.py, {project_root}/python/carnot/core/energy.py, {project_root}/python/carnot/experiment_4781_structural_energy_s1_contrastive_landscape.py, and leakage-audit helpers
+      - constraint-verification, verifiable-reasoning, core-EBM, evidence, statistics, safety, reporting, and pipeline specs plus the E2E plan
+
+      TASK:
+      Train and evaluate a small oracle-distinct pairwise-margin energy over typed planning features. Use exact action gaps only as development labels and held-out evaluation labels. Exclude all text, rationale, model identity, task identity, and exact future-value features from the live energy input.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify proposal_corpus_ready, fixture and corpus hashes, CPU, RAM, disk, numeric libraries, deterministic training support, active roadmap, and conductor. Stop with a blocked artifact on any failed gate.
+      1. Add REQ-* and SCENARIO-* anchors for typed energy features, leave-one-family-out evaluation, leakage exclusion, baselines, and promotion criteria. Write focused tests first.
+      2. Freeze feature schema, normalization, pair construction, development/headline splits, family folds, seeds, optimizer, epochs, early-stopping rule, missing-row rule, and primary metric before fitting.
+      3. Build features only from typed current state, proposed action or partial plan, immediate cost, resource slack, local hard-constraint status, transition-local deltas, and action-position statistics available at inference.
+      4. Prohibit free-form text, token logprobs, rationale embeddings, model ID, task ID, family ID, exact value-to-go, optimum action, future label, answer string, and post-commit evaluator output from features.
+      5. Fit pairwise margins on development families. Evaluate each held family without refitting on that family. Compare proposal order, hard-violation count, immediate cost, random score, and ablated structural features.
+      6. Report per-candidate energy, exact held label, pairwise correctness, AUROC, Spearman rank correlation, top-1 normalized regret, calibration, paired deltas, intervals, wins, losses, ties, and no-headroom rows.
+      7. Attack label shuffling, feature shuffling, model-ID injection, task-ID injection, family-ID injection, exact-value injection, rationale injection, duplicate candidates, split overlap, and identical-control weights.
+      8. Set structural_energy_ready=true when the complete frozen comparison and attacks ran. Set energy_generalization_supported=true only if held-family top-1 regret improves over the strongest nonlearned baseline with an interval excluding zero and every leakage attack passes.
+      9. Write atomically. Run focused tests, 100% scoped coverage, lint, format, spec coverage, row/artifact/adversarial checks, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6692_structural_plan_energy.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal training and evaluation state. Principle: deterministic process evidence.
+        honest_verdict: held-family structural-energy result or precise blocker. Principle: measured evidence only.
+        verdict_class: closed enum; positive is allowed only for the oracle-distinct live energy after leakage checks. Principle: deterministic classification.
+        gate_check_summary: failed upstream, feature, split, training, attack, metric, or test check with expected and observed values. Principle: deterministic failure localization.
+        openspec_requirement_ids: REQ-* and SCENARIO-* anchors. Principle: spec-first traceability.
+        frozen_training_manifest: feature schema, folds, pairs, seeds, optimizer, epochs, rules, primary metric, and hashes. Principle: preregistered learning evidence.
+        feature_schema_rows: feature, type, availability phase, allowed status, source, and hash. Principle: oracle-distinct input evidence.
+        prohibited_feature_rows: text, identity, label, future, rationale, and evaluator fields with exclusion receipts. Principle: leakage prevention.
+        training_rows: fold, seed, epoch, loss, margins, weights hash, and stopping receipt. Principle: inspectable optimization evidence.
+        per_unit_rows: every held-family candidate and pair with features, energy, exact post-hoc label, baseline scores, ranks, regret, and receipts. Principle: recheckable comparative evidence.
+        held_family_rows: family-level AUROC, rank correlation, top-1 regret, paired deltas, intervals, wins, losses, ties, and headroom. Principle: transfer evidence.
+        baseline_rows: proposal-order, violation-count, immediate-cost, random, and ablation results. Principle: genuine comparison evidence.
+        leakage_attack_rows: attack, expected result, observed result, and receipt. Principle: adversarial independence evidence.
+        model_parameter_receipts: architecture, weights path, hash, dtype, feature count, and size. Principle: learned-model identity.
+        structural_energy_ready: boolean owned by this task for complete execution. Principle: completeness reduction from rows.
+        energy_generalization_supported: boolean owned by this task using the preregistered interval and attack rule. Principle: fail-fast scientific gate.
+        aggregate_row_recomputation: all metrics and booleans rebuilt from per-unit rows. Principle: deterministic aggregation.
+        preconditions_checked: gate, inputs, tools, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: cpu_typed_pairwise_plan_energy_no_llm_calls. Principle: measured substrate identity.
+        verifier_is_oracle: false because the live energy is denied exact future values; exact DP is held-out evaluator only. Principle: explicit oracle-distinct boundary.
+        field_provenance: feature adapter, label store, trainer, evaluator, function, and hash per field. Principle: traceable evidence.
+        random_seed: base, fold, and training seeds. Principle: reproducibility.
+        duration_s: total monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6692_structural_plan_energy --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6693-energy-backtracking-ab
+    milestone: "2026.08.583"
+    deliverable: results/experiment_6693_energy_backtracking_ab.json
+    title: "Energy-guided action backtracking A/B"
+    priority: critical
+    track: verifier-grounded-planning
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 300
+    agent_type: codex
+    model: gpt-5.6-sol
+    gated_on:
+      - upstream: exp6692-structural-plan-energy
+        artifact_field: energy_generalization_supported
+        op: in
+        value: [true]
+    prompt: |
+      CONTEXT:
+      Exp6692 must first show that typed structural energy generalizes across held planning families. ICML 2025 verifier-assisted generation suggests that prefix checks and backtracking can improve constrained generation under finite query budgets. This experiment tests that mechanism with local flagship GGUF models while keeping exact future values sealed until a plan is committed. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/scripts/experiment_template.py, the V583 roadmap doc, and the verifier-assisted generation reference
+      - {project_root}/results/experiment_6689_exact_planning_fixture.json, Exp6690-Exp6692, and raw proposal corpus receipts
+      - {project_root}/python/carnot/inference/sota_models.py, llama.cpp supervisor and lease code, structural-energy model, typed plan adapter, parser, and exact evaluator timing boundary
+      - relevant inference, constraint-verification, core-EBM, evidence, statistics, safety, reporting, and pipeline specs plus the E2E plan
+
+      TASK:
+      Compare direct sequential proposals, hard-prefix reject-and-backtrack, and hard-prefix plus learned-energy backtracking on matched held instances with the flagship MoE and dense GGUF pair. Exact DP values may evaluate only after final plan commitment.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify energy_generalization_supported=true; resolve the two flagship GGUF files; verify magic, hashes, embedded tokenizers, CUDA, VRAM, RAM, disk, exclusive leases, ports, model weights, fixture hashes, active roadmap, and conductor. Stop with a blocked artifact if a flagship cannot run on CUDA.
+      1. Add REQ-* and SCENARIO-* anchors for action-level search, matched budgets, backtracking, exact-label sealing, and comparative metrics. Write focused tests first.
+      2. Define MODEL_SPECS containing unsloth/Qwen3.6-35B-A3B-GGUF and unsloth/gemma-4-31B-it-GGUF. Resolve with cached_sota_pair() and resolve_cached_gguf(). Small legacy models may smoke-test parser code only.
+      3. Freeze held instances, models, arms, prompts, seeds, action-query budget, token budget, maximum depth, maximum backtracks, energy threshold, hard-prefix rules, stopping rules, parser, order, and missing-unit policy.
+      4. Implement three arms: direct sequential commitment; local hard-constraint rejection with bounded rollback; and the same hard checks plus Exp6692 energy for accepting, rejecting, and choosing the rollback point.
+      5. The learned arm may read only precommitted typed features. No arm may read exact value-to-go, optimum actions, future labels, final regret, model identity features, or a solver completable oracle.
+      6. Launch fresh owner-bound llama.cpp CUDA processes. Run matched model-instance-arm units. Retain every prompt, response, parsed action, partial state, energy, hard check, accept/reject decision, rollback, token, query, and process receipt.
+      7. Commit a final plan before invoking the exact evaluator. Then record exact validity, total cost, normalized regret, first failure, harmful flips, no-headroom, queries, backtracks, tokens, latency, wins, losses, ties, and paired intervals.
+      8. Attack exact API calls before commit, budget drift, silent retries, arm-specific prompts, model-order effects, task IDs, rationale features, post-hoc thresholds, early stopping, missing rows, and duplicated transcripts.
+      9. Set backtracking_ab_ready=true only if every planned unit is present or explicitly missing, all budgets and timing boundaries pass, and aggregates recompute. Classify value honestly even when the treatment loses.
+      10. Write atomically. Unload servers and release leases. Run focused tests, scoped coverage, spec coverage, row/artifact/adversarial checks, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6693_energy_backtracking_ab.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal comparison state. Principle: deterministic process evidence.
+        honest_verdict: matched backtracking result or precise blocker. Principle: measured evidence only.
+        verdict_class: one of positive|circular_positive|null|blocked|disqualified|partial; oracle-distinct treatment may be positive only after leakage checks. Principle: closed classification.
+        gate_check_summary: failed upstream, model, lease, budget, timing, row, attack, or test check with expected and observed values. Principle: deterministic failure localization.
+        openspec_requirement_ids: REQ-* and SCENARIO-* anchors. Principle: spec-first traceability.
+        model_specs: exact hub IDs, paths, hashes, tokenizer sources, quantization, GPUs, and roles. Principle: substrate identity.
+        models_used: exact flagship IDs that completed rows. Principle: measured model provenance.
+        frozen_run_manifest: instances, arms, models, prompts, seeds, budgets, thresholds, rules, order, and hashes. Principle: preregistered comparison.
+        per_model_process_receipts: PID/start, port, owner token, model hash, CUDA UUID, VRAM, inference count, unload, and release. Principle: authentic accelerator use.
+        per_unit_rows: every model-instance-arm with final plan, validity, regret, queries, backtracks, tokens, latency, missing status, and receipts. Principle: recheckable comparative evidence.
+        decision_rows: every partial state, proposal, typed features, energy, hard checks, decision, rollback point, and timestamp. Principle: live mechanism evidence.
+        exact_access_rows: unit, commit timestamp and hash, evaluator access timestamp, requested fields, and timing result. Principle: oracle-sealing evidence.
+        paired_comparison_rows: instance-model treatment deltas, wins, losses, ties, headroom, and harmful flips. Principle: matched effect evidence.
+        metric_summary_rows: exact validity, normalized regret, queries, backtracks, tokens, latency, intervals, and missing counts by arm and model. Principle: complete outcome evidence.
+        harmful_flip_rows: baseline-correct units made worse by a treatment with cause. Principle: safety accounting.
+        attack_rows: oracle, budget, retry, prompt, order, identity, rationale, threshold, stop, missing, and duplicate attacks. Principle: adversarial evidence.
+        backtracking_ab_ready: boolean owned by this task. Principle: completeness reduction from raw rows.
+        aggregate_row_recomputation: all headlines rebuilt from decision and per-unit rows. Principle: deterministic aggregation.
+        preconditions_checked: gate, models, cache, CUDA, leases, weights, fixtures, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: local_llamacpp_cuda_flagship_pair_with_oracle_distinct_energy. Principle: measured substrate identity.
+        verifier_is_oracle: false because live decisions cannot access exact future values; exact DP evaluates only committed plans. Principle: explicit oracle-distinct boundary.
+        field_provenance: transcript, parser, energy, decision reducer, exact evaluator, process, and hash per field. Principle: traceable evidence.
+        random_seed: base and per-model-instance-arm seeds. Principle: reproducibility.
+        duration_s: total monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6693_energy_backtracking_ab --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6694-energy-backtracking-audit
+    milestone: "2026.08.583"
+    deliverable: results/experiment_6694_energy_backtracking_audit.json
+    title: "Cold search, budget, and leakage audit"
+    priority: high
+    track: verifier-grounded-planning
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 90
+    gated_on:
+      - upstream: exp6693-energy-backtracking-ab
+        artifact_field: backtracking_ab_ready
+        op: in
+        value: [true]
+    prompt: |
+      CONTEXT:
+      Exp6693 makes a live search claim from model transcripts, energy decisions, and exact post-commit evaluations. This cold audit must reconstruct the comparison and prove the live selector never received hidden exact future values or unequal budgets. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, the V583 roadmap doc, and oracle-distinct claim rules
+      - {project_root}/results/experiment_6692_structural_plan_energy.json, Exp6693, every raw transcript, decision store, process receipt, and exact access receipt
+      - typed plan adapter, energy model loader, budget reducer, exact evaluator boundary, row consistency, artifact validation, and adversarial verification
+      - relevant constraint-verification, inference, evidence, statistics, safety, reporting, and pipeline specs plus the E2E plan
+
+      TASK:
+      Recompute Exp6693 from frozen raw bytes. Audit unit coverage, matched prompts and budgets, decision determinism, exact-evaluator timing, leakage exclusions, harmful flips, statistics, and claim classification. Do not generate new model outputs.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify backtracking_ab_ready; hash Exp6692-Exp6693, model weights, transcripts, decision rows, exact access logs, fixtures, active roadmap, conductor, CPU, RAM, disk, and the no-new-inference substrate.
+      1. Freeze audit and blinding maps. Verify one-to-one coverage of every planned model-instance-arm and every decision step.
+      2. Reparse raw responses and replay every partial transition, feature vector, energy, hard check, accept/reject decision, rollback, query count, token count, and final plan in a fresh process.
+      3. Verify exact-evaluator access timestamps occur after the final plan hash for every unit. Scan the live code path, prompts, features, and logs for exact values, labels, optimum actions, task IDs, model IDs, and rationale-derived features.
+      4. Recompute validity, cost, normalized regret, query and token budgets, backtracks, harmful flips, headroom, paired deltas, intervals, wins, losses, ties, and missing-unit effects.
+      5. Attack row omission, duplicate transcripts, silent retries, prompt mismatch, arm-specific budgets, post-hoc thresholds, early stopping, exact pre-access, feature leakage, order drift, and missing-to-zero coercion.
+      6. Set energy_search_audit_passed=true only if coverage, replay, timing, leakage, budgets, statistics, attacks, and verdict classification pass.
+      7. Write atomically. Run focused tests, scoped coverage, spec coverage, row/artifact/adversarial checks, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6694_energy_backtracking_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal audit state. Principle: deterministic process evidence.
+        honest_verdict: reproduced, corrected, null, disqualified, or blocked conclusion. Principle: measured evidence only.
+        verdict_class: closed enum with oracle-distinct classification rechecked. Principle: deterministic classification.
+        gate_check_summary: failed upstream or audit check with expected and observed values. Principle: deterministic failure localization.
+        blinding_receipt: unit and decision map hash, hidden fields, and reveal procedure. Principle: independent evaluation.
+        coverage_rows: expected and observed model-instance-arm and decision identities. Principle: completeness evidence.
+        transcript_replay_rows: raw span, parsed action, state transition, feature vector, energy, decision, rollback, and hashes. Principle: deterministic mechanism replay.
+        exact_timing_audit_rows: commit and evaluator timestamps, requested fields, ordering, and result. Principle: oracle-sealing evidence.
+        leakage_scan_rows: path, forbidden feature or field, scan method, observed result, and hash. Principle: oracle-distinct evidence.
+        budget_recomputation_rows: reported and recomputed queries, tokens, backtracks, depth, and stopping. Principle: matched-resource evidence.
+        outcome_recomputation_rows: reported and recomputed validity, regret, flips, headroom, deltas, intervals, wins, losses, and ties. Principle: raw-outcome audit.
+        attack_rows: omission, duplicate, retry, prompt, budget, threshold, stop, oracle, leakage, order, and missing attacks. Principle: adversarial evidence.
+        reported_vs_recomputed: field-level differences and corrections. Principle: deterministic audit.
+        energy_search_audit_passed: boolean owned by this task. Principle: deterministic reduction from audit checks.
+        per_unit_rows: every coverage, replay, timing, scan, budget, outcome, and attack row. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: all audited headlines rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: gate, artifacts, stores, tools, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: cold_transcript_and_decision_audit_no_new_llm. Principle: measured substrate identity.
+        verifier_is_oracle: false for the audited live selector; exact DP remains post-commit evaluator. Principle: explicit oracle-distinct boundary.
+        field_provenance: transcript, parser, replay function, exact log, statistic, and hash per field. Principle: traceable evidence.
+        random_seed: blinding and attack-order seeds. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6694_energy_backtracking_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6695-online-energy-update-fixture
+    milestone: "2026.08.583"
+    deliverable: results/experiment_6695_online_energy_update_fixture.json
+    title: "Immutable online-energy update and rollback fixture"
+    priority: critical
+    track: continuous-self-learning
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    agent_type: codex
+    model: gpt-5.6-sol
+    gated_on:
+      - upstream: exp6692-structural-plan-energy
+        artifact_field: structural_energy_ready
+        op: in
+        value: [true]
+    prior_failures:
+      - experiment_id: exp6678-constraint-family-stream
+        verdict: "blocked_fixture_gate: exact constraint-family stream is not ready"
+        addressed_by: "This fixture changes the learning surface from repair-memory entries to typed energy weights and uses its own task-owned stream, event-boundary journal, retention gate, and byte-exact rollback tests."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      V582's repair-memory stream blocked on its fixture tests. V583 uses a different continuous-learning surface: online updates to the small typed structural energy from Exp6692. DVI motivates turning frozen-verifier decisions into online supervision, while Carnot requires exact admission, retention checks, restart replay, and byte-exact rollback. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md Continuous Self-Learning, the V583 roadmap doc, and DVI in the V583 reference refresh
+      - {project_root}/results/experiment_6692_structural_plan_energy.json, Exp6678-Exp6679, Exp5967-Exp5969, and relevant retention-safe CSL artifacts
+      - {project_root}/python/carnot/training/online.py, {project_root}/python/carnot/training/online_updater.py, revocable memory and atomic repair code, journal helpers, and model serialization
+      - continuous-learning, self-learning, verifiable-reasoning, core-EBM, evidence, safety, reporting, and pipeline specs plus the E2E plan
+
+      TASK:
+      Implement an immutable event-boundary update fixture for the structural plan energy. It must predict before labels, accept exact labels only after the event, update between events, gate promotions on protected-family retention, replay after restart, and restore byte-exact state after rejected or rolled-back updates.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify structural_energy_ready=true; hash the frozen model, feature schema, development rows, protected-family probes, active roadmap, conductor, Python, CPU, RAM, disk, and no-LLM substrate. Stop with a blocked artifact on any failed gate.
+      1. Add REQ-* and SCENARIO-* anchors for prequential timing, append-only receipts, exact admission, retention, idempotence, restart replay, and byte-exact rollback. Write focused failing tests first.
+      2. Define event schema with event ID, pre-event model hash, proposal feature rows, prediction, commit timestamp, post-event exact label receipt, update payload, candidate model hash, retention result, promotion decision, and post-event hash.
+      3. Implement deterministic online pairwise updates with fixed optimizer state. The exact label API must reject access before prediction commit. Updates occur only between events.
+      4. Implement append-only journal writes, atomic snapshots, parent hashes, sequence numbers, duplicate detection, reorder detection, partial-write recovery, restart replay, and reverse-order rollback.
+      5. Require a protected probe set across all learned families. Reject promotion when any protected-family metric crosses its preregistered regression tolerance. Restore model and optimizer bytes exactly.
+      6. Exercise accepted updates, no-op updates, duplicates, reorder, stale parents, poisoned labels, future labels, retention regression, partial writes, corrupt snapshots, restart, single rollback, and multi-update reverse rollback.
+      7. Set online_energy_fixture_ready=true only if every task-owned test, timing rule, attack, retention rule, restart replay, and byte-exact rollback check passes.
+      8. Write atomically. Run focused tests, 100% scoped coverage, lint, format, spec coverage, row/artifact/adversarial checks, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6695_online_energy_update_fixture.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal fixture state. Principle: deterministic process evidence.
+        honest_verdict: online-update fixture readiness or precise blocker. Principle: measured evidence only.
+        verdict_class: closed enum; ready safety infrastructure is null. Principle: deterministic classification.
+        gate_check_summary: failed upstream, timing, update, retention, journal, rollback, attack, or test check with expected and observed values. Principle: deterministic failure localization.
+        openspec_requirement_ids: REQ-* and SCENARIO-* anchors. Principle: spec-first traceability.
+        frozen_update_manifest: model, features, optimizer, probes, thresholds, event schema, rules, seeds, and hashes. Principle: immutable learning contract.
+        event_schema_rows: field, type, availability phase, required status, and source. Principle: explicit prequential boundary.
+        update_rows: event, pre-hash, prediction, commit, label receipt, gradients, candidate hash, retention, promotion, and post-hash. Principle: inspectable online learning.
+        journal_rows: sequence, parent, payload hash, snapshot, atomic-write receipt, replay status, and process. Principle: durable state provenance.
+        retention_probe_rows: update, family, pre and post metrics, delta, tolerance, and decision. Principle: non-forgetting evidence.
+        rollback_rows: trigger, before hash, candidate hash, restored model and optimizer hashes, order, restart, and byte equality. Principle: exact reversibility evidence.
+        timing_rows: prediction commit, label access, update start, update end, and ordering result per event. Principle: future-label isolation.
+        attack_rows: duplicate, reorder, stale, poison, future, regression, partial, corrupt, restart, and rollback attacks. Principle: adversarial safety evidence.
+        online_energy_fixture_ready: boolean owned by this task. Principle: deterministic reduction from fixture checks.
+        per_unit_rows: every event, update, journal entry, retention probe, rollback, timing check, and attack. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: readiness rebuilt from raw rows. Principle: deterministic aggregation.
+        preconditions_checked: gate, model, features, probes, tools, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: cpu_online_typed_energy_fixture_no_llm. Principle: measured substrate identity.
+        verifier_is_oracle: false for the live energy; exact labels are post-event update authority only. Principle: explicit oracle-distinct boundary.
+        field_provenance: model, journal, snapshot, retention reducer, timing API, function, and hash per field. Principle: traceable evidence.
+        random_seed: optimizer, event, attack, and restart seeds. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6695_online_energy_update_fixture --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6696-prequential-online-energy-ab
+    milestone: "2026.08.583"
+    deliverable: results/experiment_6696_prequential_online_energy_ab.json
+    title: "Prospective prequential online-energy A/B"
+    priority: critical
+    track: continuous-self-learning
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 300
+    gated_on:
+      - upstream: exp6695-online-energy-update-fixture
+        artifact_field: online_energy_fixture_ready
+        op: in
+        value: [true]
+    prior_failures:
+      - experiment_id: exp6679-prequential-cross-family-csl-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "This prospective comparison follows a new typed-weight update fixture, generates a fresh sealed planning stream, and uses post-event exact action gaps rather than the blocked repair-memory stream."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This is V583's required continuous-self-learning experiment and implements Tier 1 from research-program.md. The local GGUF generators stay frozen. Carnot's small structural energy learns online from exact labels revealed only after each prediction. The primary question is prospective prequential regret with retention and rollback, not training loss. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md Continuous Self-Learning, {project_root}/scripts/experiment_template.py, and the V583 roadmap doc
+      - {project_root}/results/experiment_6689_exact_planning_fixture.json, Exp6691, Exp6692, Exp6695, Exp6679, and prior retention-safe CSL artifacts
+      - {project_root}/python/carnot/inference/sota_models.py, llama.cpp supervisor and lease code, online-energy fixture, sealed exact API, stream/order helpers, and statistical reducers
+      - continuous-learning, self-learning, constraint-verification, model-tier, evidence, statistics, safety, reporting, and pipeline specs plus the E2E plan
+
+      TASK:
+      Run a prospective prequential comparison over a new sealed cross-family planning stream. Compare frozen energy, immediate write-through online energy, and exact-admitted retention-safe online energy on identical proposal pools from all three mandated GGUF families.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify online_energy_fixture_ready=true; resolve all three mandated GGUF files; verify magic, hashes, embedded tokenizers, CUDA, VRAM, RAM, disk, exclusive leases, ports, frozen energy, stream generator, exact label seal, active roadmap, and conductor. Stop with a blocked artifact if a mandated model cannot run on CUDA.
+      1. Add REQ-* and SCENARIO-* anchors for the prospective stream, matched arms, label timing, learning curves, retention, rollback, restart, and primary metric. Write focused tests first.
+      2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Resolve with cached_sota_pair() and resolve_cached_gguf(). Legacy models may smoke-test only.
+      3. Generate new instances from frozen family templates and seal the full stream manifest before inference. Freeze family orders, order replicates, models, prompts, generation settings, seeds, one-call budgets, parsers, candidate limits, arms, optimizer, update schedule, retention tolerance, primary prequential normalized regret, and missing-event policy.
+      4. Launch owner-bound llama.cpp CUDA processes. Generate one matched proposal pool per event from all three models. Retain raw outputs and process receipts. Do not regenerate proposals based on arm state.
+      5. Clone identical initial energy and optimizer state into frozen, immediate-write-through, and exact-admitted retention-safe arms. For every arm and event, rank and commit before exact labels become readable.
+      6. After all arm predictions for an event commit, reveal exact validity and action gaps. Update only the two online arms between events. The safe arm must run protected-family probes and roll back any rejected update byte-exactly.
+      7. After every event record pre-event state, selected proposal, exact post-event metrics, gradients, acceptance, rollback, old-family retention, and next-state hash. Checkpoint and restart at preregistered boundaries.
+      8. Report per-order and pooled-by-independent-order prequential regret, exact validity, learning speed, update acceptance, old-family retention, negative transfer, restart equivalence, paired deltas, intervals, wins, losses, ties, no-headroom, and missing events. Do not treat events within one order as independent replicates.
+      9. Attack future-label access, proposal regeneration, arm-specific pools, snapshot aliasing, duplicate admission, order leakage, poisoned labels, retention bypass, selective family omission, restart divergence, and missing-to-zero coercion.
+      10. Set prequential_csl_ready=true when every planned stream/order/arm event and safety receipt is complete. Set csl_improvement_supported=true only if the safe arm improves the primary metric over frozen with its interval excluding zero, has no protected-family regression, and passes every attack.
+      11. Write atomically. Unload servers and release leases. Run focused tests, scoped coverage, spec coverage, row/artifact/adversarial checks, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6696_prequential_online_energy_ab.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal comparison state. Principle: deterministic process evidence.
+        honest_verdict: prospective CSL result or precise blocker. Principle: measured evidence only.
+        verdict_class: one of positive|circular_positive|null|blocked|disqualified|partial; positive requires true prequential and retention evidence. Principle: closed classification.
+        gate_check_summary: failed upstream, model, lease, stream, label, update, retention, rollback, row, attack, or test check with expected and observed values. Principle: deterministic failure localization.
+        openspec_requirement_ids: REQ-* and SCENARIO-* anchors. Principle: spec-first traceability.
+        model_specs: exact hub IDs, paths, hashes, tokenizer sources, quantization, GPUs, and frozen proposer roles. Principle: substrate identity.
+        models_used: exact mandated hub IDs that completed proposal rows. Principle: measured model provenance.
+        frozen_stream_manifest: instances, family orders, replicates, models, prompts, settings, seeds, parsers, arms, optimizer, thresholds, primary metric, rules, and hashes. Principle: prospective preregistration.
+        per_model_process_receipts: PID/start, port, owner token, model hash, CUDA UUID, VRAM, inference count, unload, and release. Principle: authentic accelerator use.
+        per_unit_rows: every order-event-arm with pre-state hash, proposal pool hash, selection, post-event exact metrics, update, retention, rollback, next hash, and receipts. Principle: recheckable comparative evidence.
+        proposal_pool_rows: event, model, raw output, parsed candidates, pool hash, generation timing, and arm-independence receipt. Principle: matched proposal evidence.
+        prequential_timing_rows: prediction commit, label reveal, update, retention probe, and next-event timestamps. Principle: future-label isolation.
+        learning_curve_rows: order, arm, event index, cumulative regret, validity, loss, update count, and interval inputs. Principle: learning-speed evidence.
+        update_receipt_rows: event, arm, gradients, candidate hash, acceptance, rejection cause, and journal receipt. Principle: actual weight-learning evidence.
+        retention_rows: event, arm, protected family, pre and post metrics, delta, tolerance, and decision. Principle: non-forgetting evidence.
+        rollback_restart_rows: trigger, before and restored hashes, byte equality, checkpoint, restart, and replay result. Principle: durability evidence.
+        paired_order_rows: independent order-level deltas, intervals, wins, losses, ties, headroom, and negative transfer. Principle: valid uncertainty evidence.
+        attack_rows: future, regeneration, pool, alias, duplicate, order, poison, retention, omission, restart, and missing attacks. Principle: adversarial safety evidence.
+        prequential_csl_ready: boolean owned by this task for complete execution. Principle: completeness reduction from raw rows.
+        csl_improvement_supported: boolean owned by this task using the preregistered interval, retention, and attack rule. Principle: honest FR-11 gate.
+        aggregate_row_recomputation: all metrics and booleans rebuilt from event and order rows. Principle: deterministic aggregation.
+        preconditions_checked: gate, models, cache, CUDA, leases, stream, energy, seal, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: local_llamacpp_cuda_three_family_plus_online_typed_energy. Principle: measured substrate identity.
+        verifier_is_oracle: false for pre-event selection; exact DP labels are revealed only after commit as update authority. Principle: explicit oracle-distinct boundary.
+        field_provenance: transcript, parser, stream, energy, journal, exact label, statistic, and hash per field. Principle: traceable evidence.
+        random_seed: stream, model, order, event, optimizer, and attack seeds. Principle: reproducibility.
+        duration_s: total monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6696_prequential_online_energy_ab --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6697-online-energy-csl-audit
+    milestone: "2026.08.583"
+    deliverable: results/experiment_6697_online_energy_csl_audit.json
+    title: "Cold prequential, retention, and rollback audit"
+    priority: high
+    track: continuous-self-learning
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 90
+    gated_on:
+      - upstream: exp6696-prequential-online-energy-ab
+        artifact_field: prequential_csl_ready
+        op: in
+        value: [true]
+    prior_failures:
+      - experiment_id: exp6680-csl-durability-audit
+        verdict: "missing_terminal_artifact: preemptive skip after Exp6679 gate block"
+        addressed_by: "This audit has a new upstream mechanism and can replay an actual typed-weight event stream, journal, retention probes, and rollback receipts produced inside V583."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp6696 makes a prospective continuous-self-learning claim. V582's planned durability audit never ran because its upstream comparison gate-blocked. This task now has an actual typed-weight stream and must reproduce learning, retention, and rollback from immutable bytes in a fresh process. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CODEX.md, {project_root}/CLAUDE.md, {project_root}/research-program.md Continuous Self-Learning, the V583 roadmap doc, and FR-11 claim rules
+      - {project_root}/results/experiment_6695_online_energy_update_fixture.json, Exp6696, all stream manifests, raw proposal pools, journals, snapshots, protected probes, and exact-label receipts
+      - online-energy model loader, journal replay, exact seal, retention reducer, rollback helpers, row consistency, artifact validation, and adversarial verification
+      - continuous-learning, self-learning, evidence, statistics, safety, reporting, and pipeline specs plus the E2E plan
+
+      TASK:
+      Cold-replay the entire Exp6696 prequential stream and update journal. Recompute every prediction, label timing decision, weight update, retention probe, rollback, restart, learning curve, and aggregate. Audit future leakage, independent units, missing events, and verdict classification. Do not generate new proposals.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify prequential_csl_ready=true; hash Exp6695-Exp6696, stream, proposal pools, model start state, journals, snapshots, labels, probes, active roadmap, conductor, CPU, RAM, disk, and the no-new-inference substrate.
+      1. Freeze audit maps and independently enumerate expected order-event-arm, update, retention, rollback, checkpoint, and restart identities.
+      2. Reparse raw proposal pools and reconstruct each arm from the same initial model and optimizer bytes. Replay in a fresh process without reading reported aggregates.
+      3. For every event, verify prediction commit precedes label reveal, recompute selected proposal and post-event exact metrics, apply the journaled update, run protected probes, and verify promotion or rollback.
+      4. Recompute model and optimizer hashes after every event, byte-exact rollback, checkpoint equivalence, restart equivalence, cumulative regret, validity, learning curves, negative transfer, independent order deltas, intervals, wins, losses, ties, and missing effects.
+      5. Attack future-label access, label-store preload, snapshot aliasing, duplicate journal entries, reorder, dropped events, selective family omission, poisoned labels, retention bypass, rollback mismatch, restart divergence, within-order independence inflation, and missing-to-zero coercion.
+      6. Set csl_audit_passed=true only if coverage, replay, timing, hashes, retention, rollback, restart, statistics, attacks, and verdict classification pass.
+      7. Write atomically. Run focused tests, scoped coverage, spec coverage, row/artifact/adversarial checks, applicable E2E checks, and git status.
+
+      Required deliverable: {project_root}/results/experiment_6697_online_energy_csl_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+        status: terminal audit state. Principle: deterministic process evidence.
+        honest_verdict: reproduced, corrected, null, disqualified, or blocked CSL conclusion. Principle: measured evidence only.
+        verdict_class: closed enum with prequential and oracle-distinct classification rechecked. Principle: deterministic classification.
+        gate_check_summary: failed upstream or audit check with expected and observed values. Principle: deterministic failure localization.
+        coverage_rows: expected and observed order-event-arm, update, probe, rollback, checkpoint, and restart identities. Principle: completeness evidence.
+        cold_replay_rows: event, arm, pre-hash, proposal selection, label timing, update, retention, rollback, and post-hash. Principle: deterministic learning replay.
+        timing_audit_rows: commit, reveal, update, probe, and next-event order with raw timestamps. Principle: future-label isolation.
+        journal_recomputation_rows: sequence, parent, payload, model and optimizer hashes, reported values, and cold values. Principle: durable-state audit.
+        retention_recomputation_rows: family, event, pre and post metrics, delta, tolerance, decision, and cold match. Principle: non-forgetting audit.
+        rollback_restart_rows: trigger, snapshot, reported and restored hashes, byte equality, restart, and replay equivalence. Principle: exact durability evidence.
+        learning_recomputation_rows: order, arm, event, regret, validity, curve, delta, interval inputs, and independent-unit class. Principle: statistical audit evidence.
+        attack_rows: future, preload, alias, duplicate, reorder, drop, omission, poison, retention, rollback, restart, independence, and missing attacks. Principle: adversarial evidence.
+        reported_vs_recomputed: field-level differences and corrections. Principle: deterministic audit.
+        csl_audit_passed: boolean owned by this task. Principle: deterministic reduction from audit checks.
+        per_unit_rows: every coverage, replay, timing, journal, retention, rollback, learning, and attack row. Principle: recheckable raw evidence.
+        aggregate_row_recomputation: all audited headlines rebuilt from rows. Principle: deterministic aggregation.
+        preconditions_checked: gate, artifacts, stores, tools, resources, and hashes. Principle: measured provenance.
+        protected_files_unchanged: active roadmap and conductor hashes before and after. Principle: deterministic integrity.
+        inference_substrate: cold_prequential_journal_audit_no_new_llm. Principle: measured substrate identity.
+        verifier_is_oracle: false for audited pre-event selection; exact labels remain post-event authority. Principle: explicit oracle-distinct boundary.
+        field_provenance: proposal store, journal, snapshot, label log, reducer, function, and hash per field. Principle: traceable evidence.
+        random_seed: audit-map and attack-order seeds. Principle: reproducibility.
+        duration_s: monotonic runtime. Principle: measured value.
+        tests_run: commands, exits, and summaries. Principle: reproducible verification.
+        reproducibility_checksum: canonical artifact hash. Principle: deterministic identity.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6697_online_energy_csl_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.

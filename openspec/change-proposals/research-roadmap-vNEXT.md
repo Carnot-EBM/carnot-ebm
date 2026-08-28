@@ -1,414 +1,474 @@
-# Carnot Research Roadmap vNEXT — V582: Exact Transport and Prospective Adaptation
+# Carnot Research Roadmap vNEXT: Verifier-Grounded Planning Energy
 
-**Status:** Proposed  
-**Planning date:** 2026-08-27  
-**Milestone:** `2026.08.582`  
-**Execution manifest:** `research-roadmap-next.yaml`  
-**Task contract:** 14 tasks, `exp6674` through `exp6687`, in conductor order
+**Created:** 2026-08-27  
+**Milestone:** 2026.08.583  
+**Status:** Planned; activates after milestone 2026.08.582 is archived  
+**Experiments:** Exp6688-Exp6701  
+**Supersedes:** the V582 `research-roadmap-vNEXT.md` design  
+**Informed by:** Exp6674-Exp6687, the V583 literature refresh, FR-11, and FR-12
 
-## Executive decision
+## Milestone Decision
 
-V581 reached a terminal conductor state, but it did not execute its documented
-research plan. The design document declared 14 tasks. The active YAML contained
-four tasks. Exp6660 failed three times because it used an unavailable Gemini
-route. Exp6661 then built a valid fixture and passed every task-owned check, but
-its readiness reducer included the known-red repository suite. Exp6662 blocked
-on that false readiness field. Exp6663 was skipped.
+V583 moves Carnot from output-format and intervention experiments to a bounded
+but real planning corridor. Local flagship models propose action sequences.
+Carnot assigns structured energy to typed plan states. An action-level search
+may revise earlier choices. An exact dynamic program stays hidden from the live
+selector and serves only as the evaluator and post-event learning authority.
 
-V582 repairs the execution contract first. It then resumes the three research
-branches that remain natural after V580 and the usable part of V581:
+The milestone also closes the installed-Torx sampler branch. Exp6684 already
+proved mathematical factor parity to floating-point tolerance. Its only failed
+check was an applicable end-to-end suite that now independently passes 5/5 on
+the current tree. V583 qualifies that changed condition before generating raw
+chains.
 
-1. exact semantic transport from local SOTA reasoning to executable checks;
-2. prospective continuous self-learning across independent constraint families;
-3. outcome-bearing live control and exact stochastic portability contracts.
+V583 does not rerun two V582 methods unchanged:
 
-V582 does not rerun V581 unchanged. It changes the fixture gate to the approved
-task-owned verification scope. It adds document-to-YAML task-set parity. It also
-uses current Codex routing and removes Gemini from the plan.
+- The ARC supervisor produced zero intervention wins, three paired losses, and
+  nine false interventions on nine eligible rows. It is paused until a new
+  mechanism and genuine headroom exist.
+- The three-family syntax-tail experiment reached no inference row because no
+  exclusive accelerator lease was available. V583 uses a new scientific
+  mechanism and owner-bound leases. It does not claim that the syntax-tail
+  question was answered.
 
-## What V581 proved
+## What V582 Proved
 
-| V581 scope | Terminal evidence | What is proved | V582 consequence |
-|---|---|---|---|
-| Design-to-manifest activation | The V581 document named 14 tasks. The active roadmap loaded four. | A complete design document does not ensure a complete conductor manifest. | Exp6674 compares exact task IDs, order, deliverables, gates, and run commands before activation. |
-| Exp6660 evidence contract | Three dispatches failed because the Gemini model metadata was unavailable. No terminal artifact exists. | The selected backend was not executable on this host. No contract audit ran. | Use Codex for formulaic tasks. Record the stale `gpt-5.5` audit rule as a validator mismatch because the operator now requires `gpt-5.6-sol`. |
-| Exp6661 triggered-tail fixture | 33 focused tests passed. Scoped coverage was 100%. Ruff, formatting, and spec coverage passed. The full repository suite failed with 3,923 cached nodes, none owned by Exp6661. | The fixture and its exact checkers are usable. The readiness reducer used the wrong test scope. | Exp6675 replays task-owned receipts and publishes a corrected readiness field. It does not rebuild the fixture or hide the global-suite state. |
-| Exp6662 structured-tail A/B | The conductor wrote `blocked_gate_check_failed` because Exp6661 reported readiness false. | No model comparison ran. No output-transport claim exists. | Exp6676 runs only after Exp6675 owns a true readiness field. |
-| Exp6663 independent audit | The conductor skipped the task after the upstream gate chain terminated. | No independent audit exists. | Exp6677 audits only a complete Exp6676 row set. |
-| V580 scientific base | All three mandated GGUF families ran. Direct exact outputs parsed on 10 of 48 rows. Repair memory was safe but had a null independent interval. ARC redirects lacked exact post-action outcomes. The exact Ising reference passed algorithm rows but failed an overbroad readiness receipt. | The execution paths exist. Transport and independent outcome evidence remain the limiting gaps. | V582 repairs these boundaries instead of adding another model family or hardware target. |
+| Branch | Experiments | Measured result | V583 consequence |
+|---|---:|---|---|
+| Execution integrity | 6674 | The 14-task V582 document and active manifest matched. Gate fields and prior-failure records were mechanically auditable. | Retain a first-task parity contract. |
+| Triggered-tail fixture | 6675-6677 | The task-owned fixture was ready, but the GPU A/B produced zero inference rows because the exclusive-workload precondition was false. | Do not treat transport as tested. Leave it outside the new critical path. |
+| Prospective repair memory | 6678-6680 | The fixture blocked on its own tests. The A/B gate-blocked and the audit never ran. | Change the learning surface from repair prose to typed plan-energy weights. |
+| Live ARC outcomes | 6681-6682 | Exact post-action outcomes reached the canonical live seam for 30 eligible events. The supervisor treatment lost on three of nine paired rows and never won. | Retire the unchanged supervisor. Preserve the outcome transport for later mechanisms. |
+| Exact Ising reference | 6683 | Eleven supported fixtures, 294 states, partition functions, probabilities, marginals, and correlations recomputed to at most `1.11e-16` probability error. | Reuse as the immutable sampler reference. |
+| Torx typed factors | 6684 | All 97 factor rows and all 294 state rows matched the exact reference to floating-point tolerance. Readiness was false only because the then-applicable E2E command exited 1. | Requalify the changed E2E state before sampling. |
+| Sampler schedule | 6685-6686 | Both tasks gate-blocked, so no raw chain or ESS claim exists. | Run only after producer-owned Torx qualification. |
+| Milestone synthesis | 6687 | The milestone was partial: exact outcome transport landed; the supervisor was adverse; output, CSL, and stochastic comparisons remained blocked. | Pivot to one coherent planning-energy spine plus an independent sampler branch. |
 
-## Three largest gaps to the PRD vision
+## The Three Largest PRD Gaps
 
-| Rank | Gap | Current evidence | V582 closure attempt |
-|---:|---|---|---|
-| 1 | FR-12 has no trustworthy local-SOTA path from free reasoning to exact machine semantics. | The models run, but V580 parsed only 10 of 48 direct rows. V581 did not run the planned transport comparison. | Qualify the existing semantic-free triggered-tail fixture. Then compare natural extraction, immediate JSON, and delayed syntax tails on all three mandated GGUF families. |
-| 2 | FR-11 continuous self-learning has no independent cross-family benefit. | Verified memory was safe and reversible on one fixture. Its order-level interval included zero. | Run a reset-free prequential stream across four independent families. Separate read-only reasoning from between-event memory writes. Use held-family exact validity, retention, retirement, restart, and rollback gates. |
-| 3 | Objective feedback does not cross two live system boundaries. | ARC policy redirects lack exact next outcomes. Ising schedules lack a clean exact reference and typed portability receipt. | Carry exact post-action outcomes through the canonical live seam. Separately close the task-owned exact Ising receipt, Torx parity, and chain-level schedule evidence. |
+### Gap 1: FR-12 lacks a live, oracle-distinct planning path
 
-## Exact execution contract
+Carnot can verify bounded artifacts and can score many offline candidates. It
+has not shown that a learned structured energy changes the behavior of current
+local flagship models on held-out constraint families. Prior generated-text
+energy scorers are retired after repeated nulls. V583 uses typed state, action,
+resource, and constraint features. It never trains on free-form rationales.
 
-| Order | Task ID | YAML title | Deliverable |
-|---:|---|---|---|
-| 1 | `exp6674-v582-manifest-parity-contract` | V582 document-to-manifest parity contract | `results/experiment_6674_v582_manifest_parity_contract.json` |
-| 2 | `exp6675-triggered-tail-scope-receipt` | Triggered-tail task-owned verification receipt | `results/experiment_6675_triggered_tail_scope_receipt.json` |
-| 3 | `exp6676-three-family-triggered-tail-ab` | Three-family delayed syntax-tail A/B | `results/experiment_6676_three_family_triggered_tail_ab.json` |
-| 4 | `exp6677-triggered-tail-independent-audit` | Delayed syntax-tail blinded row audit | `results/experiment_6677_triggered_tail_independent_audit.json` |
-| 5 | `exp6678-constraint-family-stream` | Independent constraint-family prequential stream | `results/experiment_6678_constraint_family_stream.json` |
-| 6 | `exp6679-prequential-cross-family-csl-ab` | Prequential cross-family continuous self-learning A/B | `results/experiment_6679_prequential_cross_family_csl_ab.json` |
-| 7 | `exp6680-csl-durability-audit` | Cross-family CSL chronological durability audit | `results/experiment_6680_csl_durability_audit.json` |
-| 8 | `exp6681-arc-post-redirect-outcomes` | Canonical ARC post-redirect outcome transport | `results/experiment_6681_arc_post_redirect_outcomes.json` |
-| 9 | `exp6682-arc-held-family-supervisor-ab` | Held-family ARC supervisor outcome A/B | `results/experiment_6682_arc_held_family_supervisor_ab.json` |
-| 10 | `exp6683-ising-reference-scope-receipt` | Bounded-treewidth Ising task-owned receipt | `results/experiment_6683_ising_reference_scope_receipt.json` |
-| 11 | `exp6684-torx-typed-factor-parity` | Torx energy-distribution conformance | `results/experiment_6684_torx_typed_factor_parity.json` |
-| 12 | `exp6685-autocorrelation-schedule-ab` | Autocorrelation-aware stochastic schedule A/B | `results/experiment_6685_autocorrelation_schedule_ab.json` |
-| 13 | `exp6686-stochastic-portability-audit` | Cold exact and raw-chain review | `results/experiment_6686_stochastic_portability_audit.json` |
-| 14 | `exp6687-v582-branch-synthesis` | V582 five-branch disposition | `results/experiment_6687_v582_branch_synthesis.json` |
+### Gap 2: FR-11 lacks successful prospective weight adaptation
 
-## External research incorporated
+Carnot has memory and rollback infrastructure, but V582 produced no prospective
+learning comparison. The next experiment must update a real energy policy
+between events, evaluate predictions before revealing labels, prevent future
+label leakage, preserve old-family performance, and restore byte-exact state on
+rejected updates.
 
-The dated source record is in `research-references.md` under “V582 planner
-refresh.” V582 uses these findings:
+### Gap 3: the stochastic substrate has parity but no chain-level result
 
-- **Generalization Gap in LLM Planning (arXiv:2601.14456):** high in-domain
-  validity can coexist with zero validity on unseen domains. V582 makes
-  held-family validity a primary metric.
-- **Memoir (arXiv:2607.20792):** write-while-thinking memory slowed fixed-budget
-  learning. V582 stages memory updates between events.
-- **Self-Trained Verification (arXiv:2605.30290):** verifier scores can rise
-  while accuracy stays flat. V582 keeps executable checkers authoritative.
-- **AREX (arXiv:2607.21461):** verified evidence and unresolved constraints can
-  form a compact improvement state. V582 stores typed repair obligations with
-  exact receipt links.
-- **Finite-automaton diffusion decoding (arXiv:2607.07026):** syntax constraints
-  can be exact without carrying answer semantics. V582 applies that contract as
-  an audit principle, not as a direct method claim for autoregressive GGUFs.
-- **Pipelined p-computer (arXiv:2607.21077):** update order, coefficient width,
-  and memory movement define later hardware fidelity. V582 preserves those
-  receipts in the software reference.
+The exact Ising reference and Torx energy map are mathematically valid. Carnot
+still has no completed fixed-Gibbs versus autocorrelation-aware schedule result
+with raw chains, likelihood error, autocorrelation, integrated autocorrelation
+time, and effective sample size. This blocks the software-to-TSU portability
+story in the PRD architecture.
 
-OpenReview adds evidence that rule-based equivalence and learned-verifier
-hacking need separate tests. Hugging Face work supports selective intervention
-and harmful-flip accounting. GitHub supplies interface patterns but no required
-dependency. Extropic still schedules Z1 access for 2027. Kona still has no
-public weights or local runner. No attached FPGA has a changed-state receipt.
+## Research Findings Incorporated
 
-## Target architecture
+The full dated sweep is recorded in `research-references.md` before this design.
+V583 directly incorporates four findings:
+
+- **Exact DP action values as dense verifier signals** (`2607.12856`). V583
+  generates finite-horizon tasks whose exact action gaps can supervise a small
+  local energy policy.
+- **Verifier-assisted backtracking** (ICML 2025 OpenReview `9oIjvaDhoN`). V583
+  tests action-level rollback under matched query budgets.
+- **Verifier-guided optimization without weight changes to the LLM**
+  (`2607.20478`). V583 updates only Carnot's compact energy policy. The mandated
+  GGUF generators remain frozen.
+- **Reasoning-trace noise can hide reliability signals** (`2607.22098`). V583
+  excludes free-form rationales from learned energy features and release
+  decisions.
+
+DVI (`2510.05421`) and VeRA (`2602.13217`) remain supporting patterns. DVI
+freezes the verifier while turning decisions into online supervision. VeRA uses
+generated executable specifications to resist benchmark memorization.
+
+## V583 Architecture
 
 ```text
-design task set ----+
-YAML task set ------+--> parity receipt
+Generated executable planning specification (four families)
+         │
+         ├── natural-language state + constraints
+         ├── typed transition and cost functions
+         └── exact DP tables and action gaps (sealed from live selection)
+         │
+         ▼
+┌──────────────────────────────────────────────────────────────┐
+│ Frozen local proposers                                      │
+│ Qwen3.6-35B-A3B │ Gemma-4-31B │ Gemma-4-26B-A4B            │
+└──────────────────────────────────────────────────────────────┘
+         │ action proposals and untrusted rationales
+         ▼
+┌──────────────────────────────────────────────────────────────┐
+│ Typed plan-state adapter                                    │
+│ actions │ resource slack │ local violations │ objective rows │
+└──────────────────────────────────────────────────────────────┘
+         │
+         ▼
+┌───────────────────────────────┐
+│ Carnot structural energy      │
+│ learned on development rows   │
+│ no exact future feature       │
+└───────────────────────────────┘
+         │
+         ├──────────────┐
+         ▼              ▼
+ direct/search       action-level reject + backtrack
+         │              │
+         └──────┬───────┘
+                ▼
+       completed candidate plan
+                │
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│ Sealed exact evaluator                                      │
+│ validity │ optimum │ regret │ per-action DP value            │
+└──────────────────────────────────────────────────────────────┘
+                │ post-event receipt only
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│ Continuous energy learner                                   │
+│ prequential update │ retention gate │ journal │ rollback     │
+└──────────────────────────────────────────────────────────────┘
 
-V581 frozen fixture --> task-owned receipt --> three mandated GGUFs
-                                              | natural
-                                              | immediate JSON
-                                              + delayed syntax tail
-                                                        |
-                                                exact executors
-                                                        |
-                                                blinded row audit
-
-typed event stream --> frozen/context/memory arms --> exact admission
-        ^                       |                         |
-        |                       +---- future events <----+
-        +---------- sealed initial state + rollback -----+
-
-live E3 proposal --> canonical action seam --> applied action --> environment
-                              ^                                  |
-                              |                                  v
-                       trace supervisor <--- exact next outcome receipt
-
-Ising fixtures --> exact treewidth reference --> Torx typed factors
-                                                |
-                                        schedule A/B chains
-                                                |
-                                  likelihood + ACF + ESS audit
+Independent portability branch:
+exact Ising reference → installed Torx parity qualification → raw chains
+→ likelihood/ACF/IAT/ESS comparison → cold audit
 ```
 
-The exact checker, environment, or exact probability reference is release
-authority. Learned energies, LLM scores, memories, and supervisors may propose,
-rank, route, repair, or abstain. They may not certify themselves.
+The exact evaluator is deliberately one-way. A plan must be selected before its
+exact action values are revealed. Exact values may train the next event's energy
+policy. They may not select the current event's answer.
 
-## Phase I — Execution integrity and fixture qualification
+## Phase 1: Execution Contract and Exact Planning Fixture
 
-### Exp6674 — V582 manifest-parity contract
+Phase 1 creates a dynamic, contamination-resistant benchmark. It contains four
+finite-horizon families, generated parameters, natural-language templates,
+typed transitions, hard constraints, costs, exact optima, and exact per-action
+values. Horizons and action sets remain small enough for independent exhaustive
+checks.
 
-**Question:** Does the execution YAML contain the same 14-task contract as this
-document, with valid gates, routes, deliverables, prior failures, and commands?
+### Exp6688: V583 document-to-manifest parity contract
 
-**Deliverable:** `results/experiment_6674_v582_manifest_parity_contract.json`
+- Compare the design and YAML task IDs, order, deliverables, routes, gates,
+  producer fields, prior-failure records, and run commands.
+- Require exactly Exp6688 through Exp6701.
+- Set `v583_manifest_parity_ready=true` only after every activation-hard check
+  passes.
+- **Deliverable:** `results/experiment_6688_v583_manifest_parity_contract.json`
 
-Compare ordered task IDs, titles, tracks, deliverables, dependencies, gates,
-model routes, and run commands. Run schema, prior-failure, exclusion, and gate
-checks. Treat the repository rule that still pins Codex to `gpt-5.5` as a dated
-validator mismatch because this roadmap follows the operator's `gpt-5.6-sol`
-instruction. Do not patch any validator in this task.
+### Exp6689: generated exact planning fixture
 
-### Exp6675 — Triggered-tail verification-scope receipt
+- Generate 32 headline instances across inventory, battery dispatch, job-slot,
+  and reservoir-control families. Generate separate development instances.
+- Cap horizons at eight and action sets at five. Retain every transition and
+  dynamic-programming row.
+- Emit natural-language prompts without answers, typed executable specs,
+  optimum plans, action gaps, family splits, and mutation attacks.
+- Add `REQ-*` and `SCENARIO-*` anchors before implementation.
+- Set `planning_fixture_ready=true` only when all exact and metamorphic checks
+  pass.
+- **Deliverable:** `results/experiment_6689_exact_planning_fixture.json`
 
-**Question:** Is the existing Exp6661 fixture ready under task-owned checks while
-the unrelated repository-suite failure remains visible and non-gating?
+### Exp6690: cold planning-fixture audit
 
-**Deliverable:** `results/experiment_6675_triggered_tail_scope_receipt.json`
+- Recompute a blinded subset with an independent exhaustive solver.
+- Audit family separation, prompt-answer leakage, label sealing, dynamic
+  consistency, optimum ties, infeasible states, and mutation detection.
+- Set `planning_fixture_audit_passed=true` only from raw audit rows.
+- **Deliverable:** `results/experiment_6690_exact_planning_fixture_audit.json`
 
-Replay the 33 task-owned tests, scoped coverage, lint, format, spec coverage,
-exact controls, grammar leakage attacks, and row recomputation. Preserve the
-full-suite failure as a diagnostic field. Set `triggered_tail_fixture_ready`
-from owned checks only. If an Exp6661-owned node fails, block.
+## Phase 2: Flagship Proposals and Energy-Guided Backtracking
 
-## Phase II — Exact local-SOTA output transport
+Phase 2 measures all three mandated local GGUF families on the same frozen
+planning instances. It then trains an oracle-distinct structural energy and
+tests whether that energy helps action-level search under fixed query budgets.
 
-### Exp6676 — Three-family triggered-tail A/B
+### Exp6691: three-family SOTA planning proposal corpus
 
-**Question:** At matched task and token budgets, does a delayed syntax-only tail
-improve exact semantic success over natural extraction and immediate JSON?
+- Use `cached_sota_pair()` and `resolve_cached_gguf()` with:
+  `unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Run one planned call per model-instance unit. Retain up to four action
+  proposals from the unmodified response. Do not retry malformed outputs.
+- Record parse yield, candidate diversity, exact headroom, regret, token cost,
+  latency, CUDA process identity, and every raw response.
+- Set `proposal_corpus_ready=true` on completeness, not on model success.
+- **Deliverable:** `results/experiment_6691_sota_planning_proposal_corpus.json`
 
-**Deliverable:** `results/experiment_6676_three_family_triggered_tail_ab.json`
+### Exp6692: oracle-distinct structural plan energy
 
-Run all three mandated models:
+- Fit a small pairwise-margin energy from typed plan features and sealed
+  development labels. Exclude rationales, model identity, answer strings, task
+  IDs, and exact future values from inputs.
+- Compare against proposal order, hard-violation count, immediate cost, and
+  randomized controls with leave-one-family-out evaluation.
+- Report AUROC, rank correlation, top-1 regret, calibration, and paired
+  intervals per family.
+- Set `energy_generalization_supported=true` only if the preregistered held-
+  family regret improvement over the strongest nonlearned baseline is positive
+  with its interval excluding zero and all leakage attacks pass.
+- **Deliverable:** `results/experiment_6692_structural_plan_energy.json`
+
+This task acknowledges the retired Exp5163 external-text scorer. The new attempt
+changes both the representation and the inference seam: typed executable plan
+features replace generated-text and logprob scoring, and the energy guides
+action search rather than ranking prose answers.
+
+### Exp6693: energy-guided action backtracking A/B
+
+- Gate on `energy_generalization_supported=true`.
+- Use the Qwen3.6-35B-A3B and Gemma-4-31B flagship pair.
+- Compare direct sequential proposals, hard-prefix rejection with backtracking,
+  and hard-prefix plus learned-energy backtracking.
+- Match instances, seeds, action-query budgets, token budgets, stopping rules,
+  and parser behavior. The exact DP evaluator stays sealed until plan commit.
+- Report exact validity, normalized regret, queries, backtracks, tokens, harmful
+  flips, no-headroom units, wins, losses, ties, and intervals.
+- **Deliverable:** `results/experiment_6693_energy_backtracking_ab.json`
+
+### Exp6694: cold search and leakage audit
+
+- Recompute all claims from raw model transcripts and plan rows.
+- Prove the exact evaluator was not called before commitment.
+- Attack model/order leakage, label access, task IDs, rationale features,
+  budget drift, silent retries, missing rows, and post-hoc stopping.
+- Set `energy_search_audit_passed=true` only when every claim survives.
+- **Deliverable:** `results/experiment_6694_energy_backtracking_audit.json`
+
+## Phase 3: Continuous Self-Learning of the Energy Policy
+
+Phase 3 is the required continuous-self-learning experiment. It implements
+Tier 1 from `research-program.md`: online updates to Carnot's small energy
+policy. The LLM weights and exact evaluator remain frozen.
+
+### Exp6695: immutable online-energy update fixture
+
+- Add event-boundary snapshots, append-only update receipts, exact admission,
+  protected-family retention, restart replay, and byte-exact rollback.
+- Reject duplicate, reordered, poisoned, future-labeled, and retention-breaking
+  updates.
+- Set `online_energy_fixture_ready=true` only when every update and rollback
+  attack passes task-owned tests and applicable E2E checks.
+- **Deliverable:** `results/experiment_6695_online_energy_update_fixture.json`
+
+### Exp6696: prospective prequential online-energy A/B
+
+- Generate and seal a new planning stream before exposing any exact label.
+- Use all three mandated GGUF families to create the matched proposal pool.
+- Compare frozen energy, immediate write-through online energy, and exact-
+  admitted retention-safe online energy.
+- For each event: predict first, hash the pre-event state, reveal exact values,
+  update between events, then probe old-family retention.
+- Replicate family orders. Report prequential regret, exact validity, learning
+  curves, update acceptance, rollback, old-family retention, negative transfer,
+  restart equivalence, and intervals.
+- Set `csl_improvement_supported=true` only if the safe online arm improves the
+  primary prequential metric with its interval excluding zero, has no protected-
+  family regression, and passes every safety attack.
+- **Deliverable:** `results/experiment_6696_prequential_online_energy_ab.json`
+
+### Exp6697: cold prequential and rollback audit
+
+- Replay the sealed event stream and journal in a fresh process.
+- Recompute every pre-event prediction, update, learning curve, retention
+  probe, rollback, and aggregate from raw bytes.
+- Attack future-label access, snapshot aliasing, duplicate admission, order
+  dependence, restart divergence, poisoned rewards, selective family omission,
+  and missing events.
+- Set `csl_audit_passed=true` only when the result is reproducible.
+- **Deliverable:** `results/experiment_6697_online_energy_csl_audit.json`
+
+## Phase 4: Torx Sampler Qualification and Milestone Synthesis
+
+Phase 4 is independent of Phases 2 and 3 after the manifest contract. It
+qualifies the changed E2E state, produces raw chains, audits statistics, and
+closes the milestone without coercing blocked branches to zero.
+
+### Exp6698: installed-Torx factor qualification
+
+- Reuse the frozen Exp6683 exact reference and Exp6684 factor/state rows.
+- Rerun task-owned parity tests, scoped coverage, and the applicable E2E command.
+- Diagnose any changed failure. Do not weaken an applicable check.
+- Set `torx_factor_parity_qualified=true` only when mathematics, runtime API,
+  focused tests, and applicable E2E checks pass.
+- **Deliverable:** `results/experiment_6698_torx_factor_qualification.json`
+
+### Exp6699: autocorrelation-aware schedule A/B
+
+- Gate on `torx_factor_parity_qualified=true`.
+- Compare fixed-temperature Gibbs and the preregistered schedule at matched
+  update budgets across fixture-arm-seed chains.
+- Retain every raw state, energy, temperature, transition, update count, and
+  monotonic timestamp.
+- Report distribution error, marginal and correlation error, ACF, IAT, ESS,
+  ESS/update, ESS/second, sensitivity, and paired intervals.
+- **Deliverable:** `results/experiment_6699_autocorrelation_schedule_ab.json`
+
+### Exp6700: cold raw-chain sampler audit
+
+- Recompute exact probabilities and all chain statistics independently from raw
+  bytes.
+- Audit chain independence, seeds, burn-in, truncation, temperature labels,
+  update order, coefficient precision, fixture coverage, and missing chains.
+- Set `sampler_audit_passed=true` only when every reported statistic matches.
+- **Deliverable:** `results/experiment_6700_stochastic_portability_audit.json`
+
+### Exp6701: V583 branch synthesis
+
+- Enumerate all 14 task states and recompute every available headline from raw
+  rows.
+- Preserve `positive`, `circular_positive`, `null`, `blocked`, `disqualified`,
+  and `partial` without pooling branches.
+- Reconcile capability specs, traceability, status, changelog, and completed
+  research only after the synthesis artifact exists.
+- **Deliverable:** `results/experiment_6701_v583_branch_synthesis.json`
+
+## Dependency Graph
+
+```text
+Exp6688 manifest parity
+  ├── Exp6689 exact planning fixture
+  │     └── Exp6690 cold fixture audit
+  │            └── Exp6691 all-three-GGUF proposal corpus
+  │                   └── Exp6692 structural plan energy
+  │                          └── [energy_generalization_supported]
+  │                                  └── Exp6693 backtracking A/B
+  │                                         └── Exp6694 search audit
+  │
+  │                   └── Exp6695 online-update fixture
+  │                          └── Exp6696 prequential CSL A/B
+  │                                 └── Exp6697 CSL audit
+  │
+  └── Exp6698 Torx factor qualification
+          └── Exp6699 schedule A/B
+                 └── Exp6700 sampler audit
+
+Exp6701 synthesis is deliberately ungated and reads every terminal state.
+```
+
+All structured gate fields are declared with identical spelling in the
+producer's required artifact fields. No gate references a task outside V583.
+
+## Conductor Order
+
+| Order | ID | Phase | Route | GPU | Estimated wall time |
+|---:|---|---|---|---:|---:|
+| 1 | Exp6688 | Contract | Claude Opus | no | 45 min |
+| 2 | Exp6689 | Fixture | Codex gpt-5.6-sol | no | 120 min |
+| 3 | Exp6690 | Fixture audit | Claude | no | 60 min |
+| 4 | Exp6691 | Proposal corpus | Claude | yes | 240 min |
+| 5 | Exp6692 | Structural energy | Codex gpt-5.6-sol | no | 150 min |
+| 6 | Exp6693 | Backtracking A/B | Codex gpt-5.6-sol | yes | 300 min |
+| 7 | Exp6694 | Search audit | Claude | no | 90 min |
+| 8 | Exp6695 | Online fixture | Codex gpt-5.6-sol | no | 120 min |
+| 9 | Exp6696 | Prequential CSL | Claude | yes | 300 min |
+| 10 | Exp6697 | CSL audit | Claude | no | 90 min |
+| 11 | Exp6698 | Torx qualification | Claude Opus | no | 90 min |
+| 12 | Exp6699 | Schedule A/B | Codex gpt-5.6-sol | no | 150 min |
+| 13 | Exp6700 | Sampler audit | Claude | no | 90 min |
+| 14 | Exp6701 | Synthesis | Claude Opus | no | 150 min |
+
+## Hardware Requirements
+
+| Tasks | Required substrate | Resource contract |
+|---|---|---|
+| 6688-6690 | CPU, 128 GB host RAM, local disk | No LLM. Exact DP and audit only. |
+| 6691 | Dual RTX 3090, owner-bound llama.cpp CUDA processes | All three mandated GGUF families. Sequential per-device model ownership is allowed. No CPU headline fallback. |
+| 6692 | CPU; optional CUDA for small energy training | No LLM call. Training must fit on the local host. |
+| 6693 | Dual RTX 3090, owner-bound llama.cpp CUDA processes | Qwen3.6-35B-A3B plus Gemma-4-31B. Stop with a blocked artifact if a flagship cannot run on CUDA. |
+| 6694-6695 | CPU, local raw stores | No LLM. Audit and update fixture only. |
+| 6696 | Dual RTX 3090, owner-bound llama.cpp CUDA processes | All three mandated GGUF families create the sealed proposal stream. Energy updates are local and small. |
+| 6697 | CPU, immutable stream and journal | Fresh-process audit. No new model generation. |
+| 6698-6700 | CPU, installed `extro-torx`/JAX, exact fixtures | Software-only. No TSU or FPGA claim. Raw chains may use local CPU/JAX. |
+| 6701 | CPU and repository artifacts | Synthesis only. No LLM inference. |
+
+KV260, PolarFire, and GateMate are not blocking resources. Their state has not
+changed. KV260 and PolarFire remain opportunistic. GateMate remains blocked on
+physical/JTAG identification. Extropic Z1 access remains planned for 2027.
+
+## Model Contract
+
+Every task that invokes an LLM declares `MODEL_SPECS` and uses at least one of:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF`
 - `unsloth/gemma-4-31B-it-GGUF`
 - `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-Use `cached_sota_pair()` and `resolve_cached_gguf()`. Use embedded GGUF
-tokenizers. Emit every model-task-arm row. The primary metric is exact semantic
-success on held-family tasks. Secondary metrics are parse yield, harmful flips,
-trigger failures, proposal tokens, latency, and accelerator use. Immediate JSON
-is a control. It does not reopen the retired ConstraintIR method.
+Exp6691 and Exp6696 use all three. Exp6693 uses the flagship MoE and flagship
+dense pair. Legacy Qwen3.5-0.8B and Gemma-4-E4B may run CPU smoke checks only.
+They cannot populate headline rows. GGUF tokenizers come from embedded metadata.
 
-### Exp6677 — Triggered-tail independent audit
+## Claim Boundaries
 
-**Question:** Do cold-process exact checks reproduce the A/B result, and does the
-tail grammar remain free of task-answer semantics?
-
-**Deliverable:** `results/experiment_6677_triggered_tail_independent_audit.json`
-
-Blind task labels. Recompute all aggregates from raw rows. Attack answer
-permutations, label renaming, trigger collisions, missing rows, duplicate rows,
-unequal budgets, parser coercion, and grammar-only recovery. Report per-model
-and held-family uncertainty. A syntax gain without exact gain is a transport
-result only.
-
-## Phase III — Continuous self-learning
-
-### Exp6678 — Independent constraint-family stream
-
-**Question:** Can one typed event contract cover four independent constraint
-families without future leakage or family-specific answer keys?
-
-**Deliverable:** `results/experiment_6678_constraint_family_stream.json`
-
-Build scheduling, graph, arithmetic or logic, and plan-state families. Freeze
-calibration, held-family, and at least five task-order manifests. Each event
-contains visible state, exact violation witnesses, candidate repair operators,
-support, anchors, provenance, version, and inverse patch. Future outcomes may
-not enter retrieval keys.
-
-### Exp6679 — Prequential cross-family CSL A/B
-
-**Question:** Does exact-checker-admitted memory improve future exact outcomes
-over frozen and context-only controls across orders and held families?
-
-**Deliverable:** `results/experiment_6679_prequential_cross_family_csl_ab.json`
-
-This is the required Continuous Self-Learning experiment. Run frozen,
-context-only, and verified-memory arms on identical events. Use at least
-`unsloth/Qwen3.6-35B-A3B-GGUF`; use the full three-model set when resources
-permit, but never replace the headline model with a legacy smoke model. Event
-`t` can read only state committed before `t`. The model reasons read-only. The
-system admits patches between events after source repair, held-anchor retention,
-support, restart, and inverse-patch checks.
-
-### Exp6680 — CSL independent durability audit
-
-**Question:** Does the CSL result survive chronological replay, order-level
-uncertainty, poison attacks, restart, rollback, and family-held-out analysis?
-
-**Deliverable:** `results/experiment_6680_csl_durability_audit.json`
-
-Replay from a sealed initial state. Recompute future exact yield, forgetting,
-regret, negative transfer, retirement, and support. Attack future-outcome
-leakage, family labels in keys, duplicate events, poison patches, anchor
-regression, and non-atomic state. An interval that includes zero is null.
-
-## Phase IV — Live outcomes and stochastic portability
-
-### Exp6681 — Canonical live ARC outcome transport
-
-**Question:** Can the canonical live E3 action seam attach an exact next outcome
-to every applied game-agnostic supervisor redirect?
-
-**Deliverable:** `results/experiment_6681_arc_post_redirect_outcomes.json`
-
-Instrument `make_carnot_agent` and `E3AgentPolicy` at the environment seam.
-Record state hash, proposed action, applied action, reason, observations before
-and after, reward, termination, family, attempt, and receipt lineage. Validate
-on held-family live episodes. Archived replay is diagnostic only. This task
-makes no game or level solve claim.
-
-### Exp6682 — Held-family live supervisor A/B
-
-**Question:** With exact outcomes present, does the existing game-agnostic trace
-supervisor reduce forbidden actions or improve exact transitions without
-blocking valid actions?
-
-**Deliverable:** `results/experiment_6682_arc_held_family_supervisor_ab.json`
-
-Freeze the supervisor before the held-family run. Compare supervisor-off and
-supervisor-on at matched episode, seed, and action budgets. Emit every proposed
-and applied action with exact next outcome. Primary metrics are forbidden-action
-delta and exact transition utility. Report false interventions and actions.
-Make no solve-rate, game-level, or level-level claim.
-
-### Exp6683 — Bounded-treewidth exact-reference scope receipt
-
-**Question:** Is the Exp6657 exact Ising reference ready under task-owned tests
-and exact probability checks?
-
-**Deliverable:** `results/experiment_6683_ising_reference_scope_receipt.json`
-
-Replay decomposition, partition function, marginal, correlation, normalization,
-sampling, unsupported-input rejection, scoped coverage, lint, and spec checks.
-Record update order and coefficient precision. Keep the known global-suite state
-diagnostic. Do not rebuild the reference unless an owned check fails.
-
-### Exp6684 — Torx typed-factor parity
-
-**Question:** Does the installed Torx CPU path reproduce the exact fixture's
-energy and log-probability contract on supported graphs?
-
-**Deliverable:** `results/experiment_6684_torx_typed_factor_parity.json`
-
-Map binary variables, couplings, biases, temperatures, and update schedules to
-typed Torx factors. Compare factor energy, total energy, normalized probability,
-and rejected cases against Exp6683. Measure software only. Make no TSU, FPGA,
-power, or asymptotic claim.
-
-### Exp6685 — Autocorrelation-aware schedule A/B
-
-**Question:** On exact supported fixtures, does the preregistered schedule
-improve effective independent samples or likelihood accuracy at matched updates?
-
-**Deliverable:** `results/experiment_6685_autocorrelation_schedule_ab.json`
-
-Compare fixed-temperature Gibbs with the preregistered schedule. Freeze burn-in,
-chain length, update count, seeds, and stopping rules. Emit every chain row with
-energy, likelihood error, autocorrelation, integrated autocorrelation time,
-effective sample size, and wall time. Do not use energy minimum as a sampling
-quality proxy.
-
-### Exp6686 — Stochastic portability independent audit
-
-**Question:** Do cold exact recomputation and raw-chain analysis support the Torx
-and schedule claims without hidden filtering or correlated-sample inflation?
-
-**Deliverable:** `results/experiment_6686_stochastic_portability_audit.json`
-
-Recompute exact probabilities and chain statistics. Attack seed reuse, chain
-truncation, selective fixture omission, unsupported graphs, precision drift,
-update-order drift, and ESS inflation. Separate algorithm quality from runtime.
-
-### Exp6687 — V582 branch synthesis
-
-**Question:** Which branches produced positive, null, blocked, disqualified, or
-partial evidence, and what exact next action follows from each branch?
-
-**Deliverable:** `results/experiment_6687_v582_branch_synthesis.json`
-
-Read every terminal artifact and conductor state. Recompute headline metrics
-from rows. Reconcile the V582 change proposal, roadmap status, traceability,
-status, changelog, and research-complete records only to the evidence. Preserve
-missing artifacts as missing. Make no pooled milestone success claim.
-
-## Dependency graph
-
-```text
-6674                                      manifest parity, independent
-
-6675 -> 6676 -> 6677                     exact output transport
-
-6678 -> 6679 -> 6680                     continuous self-learning
-
-6681 -> 6682                             live ARC outcomes
-
-6683 -> 6684 -> 6685 -> 6686             exact stochastic portability
-
-6674-6686 terminal states -> 6687         ungated branch synthesis
-```
-
-Structured gates use producer-owned fields:
-
-| Consumer | Producer field | Condition |
-|---|---|---|
-| Exp6676 | `exp6675.triggered_tail_fixture_ready` | `in [true]` |
-| Exp6677 | `exp6676.triggered_tail_ab_ready` | `in [true]` |
-| Exp6679 | `exp6678.constraint_family_stream_ready` | `in [true]` |
-| Exp6680 | `exp6679.prequential_csl_ab_ready` | `in [true]` |
-| Exp6682 | `exp6681.arc_outcome_transport_ready` | `in [true]` |
-| Exp6682 | `exp6681.eligible_redirect_outcome_rows` | `>= 30` |
-| Exp6684 | `exp6683.ising_reference_ready` | `in [true]` |
-| Exp6685 | `exp6683.ising_reference_ready` | `in [true]` |
-| Exp6685 | `exp6684.torx_factor_parity_ready` | `in [true]` |
-| Exp6686 | `exp6685.schedule_ab_ready` | `in [true]` |
-
-Every producer prompt declares the field with identical spelling in its required
-artifact fields. A blocked artifact uses `gate_check_summary` and records the
-failed check, expected value, and observed value.
-
-## Failed-scope and retirement boundaries
-
-- Exp6675 addresses Exp6661 by changing verification scope, not the fixture.
-  The full-suite state remains visible.
-- Exp6676 addresses Exp6662 and Exp5923 through a qualified delayed syntax tail.
-  It does not use finite answer IDs or a schema-supported ConstraintIR reprompt.
-- Exp6679 addresses Exp6655 with independent families, held-family outcomes, and
-  between-event writes. A repeated null retires this fixed-schema replication.
-- Exp6681 addresses Exp6656 at the canonical live environment seam. Archived
-  replay cannot support a benefit claim.
-- Exp6683 addresses Exp6657 through owned checks. Exp6685 addresses Exp6658 only
-  after exact-reference and Torx-parity readiness.
-- No task references a retired upstream experiment in `requires` or `gated_on`.
-
-## Hardware requirements
-
-| Resource | Tasks | Requirement and claim boundary |
-|---|---|---|
-| Dual RTX 3090, 24 GB each | Exp6676, Exp6679 | Use owner-bound llama.cpp CUDA processes. Sequential model reuse is allowed. Record UUID, PID/start, model hash, load phases, VRAM, inference count, unload, and release. |
-| Local GGUF cache | Exp6676, Exp6679 | Resolve mandated models through `cached_sota_pair()` and `resolve_cached_gguf()`. Use embedded tokenizers. Legacy small models can run CPU smoke tests only. |
-| CPU and system RAM | Exp6674-6675, Exp6677-6678, Exp6680-6687 | Run exact checkers, memory replay, live ARC orchestration, exact Ising inference, Torx parity, chain analysis, and audits. Record the measured substrate. |
-| Torx 0.0.1 | Exp6684-6686 | Use the installed API. If it is absent, block with the missing symbol. Do not install a replacement in the experiment. |
-| Extropic TSU/Z1 | None | No authenticated runner is available. Make no latency, throughput, power, or availability claim. |
-| KV260, GateMate, PolarFire | None | No changed-state receipt exists. Keep the boards opportunistic and outside V582. |
-| AMD iGPU/ROCm | None required | Do not use the unstable path as a headline substrate. |
-
-## Measurement and claim rules
-
-- Every comparative task emits a per-unit row for every model, arm, event,
-  order, family, episode, chain, seed, and condition.
-- Every runtime LLM task includes a mandated GGUF in `MODEL_SPECS`. Exp6676 uses
-  all three. Exp6679 uses at least Qwen3.6-35B-A3B.
-- Exact executable checks authorize semantic validity and memory admission.
-- Missing parses, outcomes, rows, chains, or artifacts remain missing.
-- `verdict_class` is one of `positive`, `circular_positive`, `null`, `blocked`,
-  `disqualified`, or `partial`.
-- A terminal completed verdict starts `complete:`, `success:`, `passed:`, or
-  `shipped:`. A blocked verdict starts `blocked_` and records
+- Exact DP defines correctness and post-event learning labels. It is sealed from
+  current-event selection.
+- A structural-energy claim is oracle-distinct only when features exclude exact
+  future values, labels, answers, task IDs, model IDs, and rationales.
+- Ready infrastructure normally has `verdict_class: null`.
+- A positive claim with `verifier_is_oracle: true` is
+  `circular_positive`, never `positive`.
+- Every comparison emits per-unit rows, wins, losses, ties, no-headroom rows,
+  missing rows, intervals, and row-derived aggregates.
+- A blocked artifact names the exact failed check and value in
   `gate_check_summary`.
-- ARC tasks make no solve claim and do not modify the solve registry.
-- Hardware claims remain local to measured CUDA, CPU, or software paths.
+- No software result implies TSU, FPGA, latency, power, or asymptotic hardware
+  performance.
+- V583 makes no ARC game or level solve claim.
 
-## Milestone success criteria
+## Prior-Failure Discipline
 
-V582 is operationally complete when all 14 tasks have terminal artifacts or
-explicit conductor terminal states, and Exp6687 reconciles them. Scientific
-success is branch-specific:
+The execution manifest records changed conditions for all matching failed or
+retired scopes:
 
-- output transport needs complete three-model rows, exact held-family outcomes,
-  no semantic grammar leakage, and independent recomputation;
-- continuous self-learning needs positive future exact yield with order-level
-  uncertainty excluding zero, no anchor regression, restart, and rollback;
-- ARC needs exact post-redirect outcomes before any supervisor utility claim;
-- stochastic portability needs exact-reference readiness, Torx factor parity,
-  and raw chain evidence for likelihood, autocorrelation, and ESS;
-- process integrity needs exact document/YAML task-set parity, unchanged active
-  `research-roadmap.yaml`, unchanged conductor, and no push.
+- Exp5163 external generated-text scoring → Exp6692 typed executable plan
+  energy with a different inference seam.
+- Exp6678 blocked repair-memory stream → Exp6695 typed online-energy fixture.
+- Exp6679 gate-blocked prospective memory A/B → Exp6696 new weight-adaptation
+  surface after its own fixture.
+- Exp6684 parity blocked by E2E → Exp6698 reruns after the independently observed
+  5/5 changed E2E state.
+- Exp6685 schedule gate block → Exp6699 runs only after a producer-owned V583
+  qualification field.
+- Exp6686 missing audit → Exp6700 runs only after V583 raw chains exist.
+
+Every entry carries `retire_if_same_verdict: true`.
+
+## Promotion Gates
+
+V583 succeeds scientifically only if raw rows support the claim. Execution of
+all tasks is not itself success.
+
+- **Planning fixture:** exact and cold solvers agree on every audited unit.
+- **Energy:** held-family top-1 regret improves over the strongest nonlearned
+  baseline with an interval excluding zero and no leakage attack.
+- **Backtracking:** treatment beats hard-prefix backtracking under matched
+  budgets without harmful-flip or query-cost concealment.
+- **Continuous self-learning:** the retention-safe online arm improves
+  prequential regret with an interval excluding zero, no protected-family
+  regression, and byte-exact rollback.
+- **Sampler:** raw-chain distribution metrics and ESS recompute in the cold
+  audit. Ground-state frequency alone is insufficient.
+
+## Deferred
+
+- General open-domain natural-language constraint extraction beyond the four
+  executable planning families.
+- Training or modifying the GGUF model weights.
+- Hidden-state verifier work until a local extractor exists for a mandated
+  flagship base.
+- Another ARC supervisor comparison until a new mechanism has genuine
+  intervention headroom.
+- Another syntax-tail run until the operator wants to resolve the environment-
+  lease question directly.
+- Any attached-board or Z1 performance claim without changed authenticated
+  hardware evidence.
