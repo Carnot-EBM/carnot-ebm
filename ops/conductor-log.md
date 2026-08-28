@@ -16680,3 +16680,5 @@ code |
 | 2026-08-28 06:36 UTC | Three-family SOTA planning proposal corpus | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6690-exact-planning-fixture-audit) |
 | 2026-08-28 06:36 UTC | Oracle-distinct structural plan energy | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6691-sota-planning-proposal-corpus.prop |
 | 2026-08-28 06:38 UTC | Three-family SOTA planning proposal corpus | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6690-exact-planning-fixture-audit) |
+| 2026-08-28 06:38 UTC | Oracle-distinct structural plan energy | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6691-sota-planning-proposal-corpus.prop |
+| 2026-08-28 06:40 UTC | Energy-guided action backtracking A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6692-structural-plan-energy) |
