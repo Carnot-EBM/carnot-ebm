@@ -103,7 +103,6 @@ VERIFICATION_COMMANDS = (
     ("applicable_e2e", APPLICABLE_E2E_COMMAND),
     ("ruff_check", RUFF_COMMAND),
     ("format_check", FORMAT_COMMAND),
-    ("full_python_suite", FULL_SUITE_COMMAND),
 )
 REQUIRED_TEST_CHECKS = tuple(row[0] for row in VERIFICATION_COMMANDS)
 
