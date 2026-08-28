@@ -23067,6 +23067,40 @@ artifact states that this audit evaluates sealed fixture labels only.
 
 **Spec traces:** REQ-VERIFY-6703
 
+### REQ-VERIFY-6715: Sealed Exact Values Need Independent Replay
+
+Exp6715 SHALL use only each frozen typed specification as solver input. It
+SHALL open reported Exp6702 labels only after the eight-unit manifest is
+frozen. It SHALL compare exact integers with tolerance zero. It SHALL retain
+missing reported or recomputed values as explicit comparison rows. It SHALL
+not convert missing values to zero. Exact replay is post-event audit evidence
+only and SHALL not select a later live action.
+
+### SCENARIO-VERIFY-6715-EXACT-PARITY: Every Reported Field Has A Disposition
+
+**Given** independently recomputed instance and state-action rows
+**When** Exp6715 opens the sealed report
+**Then** feasibility, optima, deterministic plans, tie sets, transitions,
+legality, immediate costs, future values, totals, optimum membership, and gaps
+each receive a match, mismatch, missing-reported, or missing-recomputed row.
+
+**Spec traces:** REQ-VERIFY-6715
+
+### SCENARIO-VERIFY-6715-AUTHORITY: The Audit Is Not A Later Oracle
+
+**Given** a terminal bounded replay artifact
+**When** downstream work reads its conclusion
+**Then** `verifier_is_oracle` is false for later selection
+**And** the artifact states that it read sealed labels for audit only.
+
+**Spec traces:** REQ-VERIFY-6715
+
+## Implementation Status (REQ-VERIFY-6715)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6715 and SCENARIO-VERIFY-6715-* | Implemented (`python/carnot/experiment_6715_bounded_exact_replay_audit.py`) | Implemented (`tests/python/test_experiment_6715_bounded_exact_replay_audit.py`; exact field parity, missing-value, and authority checks) |
+
 ### SCENARIO-KONA-6340-MATCHED-ARMS: Decoder Budgets Are Shared
 
 Given the same model, development family, seed, and eligible task,

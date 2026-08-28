@@ -4846,6 +4846,40 @@ observed values for the first localized failure.
 
 **Spec traces:** REQ-PIPELINE-6703
 
+### REQ-PIPELINE-6715: Exact Replay Rows Own The Audit Gate
+
+Exp6715 SHALL reduce `exact_replay_audit_passed` only from raw precondition,
+manifest, cap, edge, enumeration, comparison, test, artifact-validation, row-
+consistency, adversarial-verification, and protected-file checks. Every
+expected instance and state-action row SHALL exist exactly once. Every exact
+comparison SHALL match. The method contract SHALL show no substitution, sample
+widening, or cap reduction. A missing or malformed value SHALL remain a named
+failure and SHALL not become zero.
+
+### SCENARIO-PIPELINE-6715-ROW-REDUCTION: One Raw Failure Closes The Gate
+
+**Given** the complete bounded audit rows
+**When** one required row is missing, duplicated, mismatched, capped, or failing
+**Then** `exact_replay_audit_passed` is false
+**And** `gate_check_summary` records expected and observed values.
+
+**Spec traces:** REQ-PIPELINE-6715
+
+### SCENARIO-PIPELINE-6715-PER-UNIT: Every Unit Is Conserved
+
+**Given** check, cap, enumeration, state-action, and comparison rows
+**When** `per_unit_rows` is rebuilt
+**Then** it equals their typed union without a missing or extra row
+**And** aggregate counts and the gate recompute from that union.
+
+**Spec traces:** REQ-PIPELINE-6715
+
+## Implementation Status (REQ-PIPELINE-6715)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-PIPELINE-6715 and SCENARIO-PIPELINE-6715-* | Implemented (`python/carnot/experiment_6715_bounded_exact_replay_audit.py`) | Implemented (`tests/python/test_experiment_6715_bounded_exact_replay_audit.py`; row conservation, cap, and fail-closed reduction checks) |
+
 ### REQ-INFRA-6801: Harness Files MUST Be Sealed Against Unnamed Modification
 
 **Statement:** A scope declaration MUST record a SHA-256 of every path in `SEALED_PATHS`
