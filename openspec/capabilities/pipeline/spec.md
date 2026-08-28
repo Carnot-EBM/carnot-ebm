@@ -4822,6 +4822,30 @@ declared a scope from quietly growing it, which is the failure that actually occ
 
 **Spec traces:** REQ-INFRA-6800
 
+### REQ-PIPELINE-6703: Cold Audit Rows Own The Readiness Gate
+
+Exp6703 SHALL reduce `planning_fixture_audit_passed` only from raw coverage,
+solver, comparison, leakage, split, seal, metamorphic, mutation, row, test,
+coverage, specification, and end-to-end checks. A missing or malformed row
+SHALL remain a named failure. The reducer SHALL not replace it with zero.
+
+### SCENARIO-PIPELINE-6703-ROW-REDUCTION: One Failed Unit Closes The Gate
+
+**Given** the complete audit row set
+**When** any required unit is absent, duplicated, malformed, or failing
+**Then** readiness is false and `gate_check_summary` records the expected and
+observed values for the first localized failure.
+
+**Spec traces:** REQ-PIPELINE-6703
+
+### SCENARIO-PIPELINE-6703-PER-UNIT-CONSERVATION: Every Audit Row Is Recheckable
+
+**Given** coverage, solver, comparison, leakage, transform, and mutation rows
+**When** `per_unit_rows` is built
+**Then** it equals the typed union of those rows with no missing or extra unit.
+
+**Spec traces:** REQ-PIPELINE-6703
+
 ### REQ-INFRA-6801: Harness Files MUST Be Sealed Against Unnamed Modification
 
 **Statement:** A scope declaration MUST record a SHA-256 of every path in `SEALED_PATHS`

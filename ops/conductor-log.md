@@ -16699,3 +16699,4 @@ code |
 | 2026-08-28 08:13 UTC | Milestone 2026.08.584 activated | OK | 4 tasks queued |
 | 2026-08-28 09:36 UTC | Generated exact planning fixture recovery | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: put", str(tmp_ |
 | 2026-08-28 09:55 UTC | Generated exact planning fixture recovery | OK | 92 passed, 1 warning in 18.23s |
+| 2026-08-28 11:18 UTC | Cold exact planning fixture audit | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:  -> list[str]: |

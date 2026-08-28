@@ -1540,3 +1540,54 @@ rows
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6702 and SCENARIO-CONSTRAINT-6702-* | Implemented (`python/carnot/experiment_6702_exact_planning_fixture_recovery.py`) | Implemented (`tests/python/test_experiment_6702_exact_planning_fixture_recovery.py`; 11 focused tests; 100% scoped statement coverage) |
+
+### REQ-CONSTRAINT-6703: Cold Exact Planning Fixture Audit
+
+Exp6703 SHALL audit a deterministic blinded subset of the Exp6702 fixture.
+The audit SHALL select one development unit and two headline units from each
+family. It SHALL sort units by a SHA-256 score from the fixed blinding seed and
+the instance identity. It SHALL freeze the selected identities, specification
+hashes, prompt hashes, seal hashes, selection scores, and reveal order before
+it reads any reported optimum or solver aggregate.
+
+The audit SHALL implement its own family transitions and exhaustive path
+enumerator. It SHALL not import the Exp6702 module or its dynamic-programming
+solver. For every selected unit, it SHALL enumerate all action sequences. It
+SHALL recompute legal actions, transitions, feasibility, plan totals, the
+optimum, all optimum plans, first-action ties, state-action values, and action
+gaps. It SHALL compare each available reported field without filling a missing
+value or converting a blocker to zero.
+
+#### SCENARIO-CONSTRAINT-6703-COLD-RECOMPUTATION: Independent Paths Rebuild Exact Labels
+
+**Given** a valid frozen sample manifest and raw typed specifications
+**When** the independent enumerator explores every action sequence
+**Then** every selected unit has a receipt for its enumeration count, optimum,
+tie set, action values, gaps, feasibility, runtime, and field comparison.
+
+**Spec traces:** REQ-CONSTRAINT-6703
+
+#### SCENARIO-CONSTRAINT-6703-BLINDING: Labels Open Only After Identity Freeze
+
+**Given** the public instance identities, prompt hashes, specification hashes,
+and seal hashes
+**When** Exp6703 selects the blinded units
+**Then** the manifest hash and ordered identities exist before any reported
+optimum, action value, tie, or solver aggregate is read.
+
+**Spec traces:** REQ-CONSTRAINT-6703
+
+#### SCENARIO-CONSTRAINT-6703-COVERAGE: Every Selected Exact Unit Is Conserved
+
+**Given** twelve selected units across all four families and both splits
+**When** audit coverage is reduced
+**Then** expected and observed instance, state, action, and solver counts match
+and each selected identity occurs exactly once in the independent solver rows.
+
+**Spec traces:** REQ-CONSTRAINT-6703
+
+## Implementation Status (REQ-CONSTRAINT-6703)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6703 and SCENARIO-CONSTRAINT-6703-* | Implemented (`python/carnot/experiment_6703_exact_planning_fixture_audit.py`) | Implemented (`tests/python/test_experiment_6703_exact_planning_fixture_audit.py`; 9 focused tests and 100% scoped statement coverage) |

@@ -23041,6 +23041,32 @@ hashes before raw outputs are evaluated.
 
 **Spec traces:** REQ-KONA-6340
 
+### REQ-VERIFY-6703: Independent Exact Planning Evidence
+
+Exp6703 SHALL provide FR-12 evidence from an independent exhaustive solver.
+The solver SHALL use only the frozen typed specification as its mathematical
+input. It SHALL not call an LLM. It SHALL not import the fixture producer or
+trust the producer's aggregates. Exact values SHALL evaluate only sealed
+fixture labels. They SHALL not claim authority for later live plan selection.
+
+### SCENARIO-VERIFY-6703-FIELD-PARITY: Reported Values Match Independent Values
+
+**Given** a selected unit and its independently enumerated plans
+**When** the audit opens the sealed reported row after sample freeze
+**Then** it compares the optimum, plans, ties, feasibility, transitions, action
+values, and gaps field by field with exact integer tolerance zero.
+
+**Spec traces:** REQ-VERIFY-6703
+
+### SCENARIO-VERIFY-6703-AUTHORITY: Exact Labels Stay Outside Live Selection
+
+**Given** an audit that reproduces every selected sealed label
+**When** the result is classified
+**Then** `verifier_is_oracle` remains false for later live selection and the
+artifact states that this audit evaluates sealed fixture labels only.
+
+**Spec traces:** REQ-VERIFY-6703
+
 ### SCENARIO-KONA-6340-MATCHED-ARMS: Decoder Budgets Are Shared
 
 Given the same model, development family, seed, and eligible task,

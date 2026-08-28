@@ -2065,3 +2065,47 @@ to independent positive evidence.
 | Requirement | Status | Notes |
 |---|---|---|
 | REQ-SAFE-6676 and SCENARIO-SAFE-6676-* | Planned | `python/carnot/experiment_6676_three_family_triggered_tail_ab.py`; `tests/python/test_experiment_6676_three_family_triggered_tail_ab.py` |
+
+### REQ-SAFE-6703: Planning Fixture Leakage And Seal Audit
+
+Exp6703 SHALL scan every fixture prompt and metadata row for direct labels,
+objective encodings, split collisions, instance-identity shortcuts, stale
+seals, and development-to-headline duplication. The audit SHALL verify that a
+seal binds the instance, prompt hash, label hash, commit requirement, and seal
+version. It SHALL reject label access that occurs before the blinded identity
+manifest is frozen.
+
+#### SCENARIO-SAFE-6703-LEAKAGE: Prompt And Split Shortcuts Fail Closed
+
+**Given** all prompts, metadata, family identities, and split identities
+**When** the leakage scanner checks exact-value text, label-bearing metadata,
+cross-split hashes, normalized prompt duplicates, and identity encodings
+**Then** each check retains evidence and any detected shortcut prevents audit
+readiness.
+
+**Spec traces:** REQ-SAFE-6703
+
+#### SCENARIO-SAFE-6703-SEAL-TIMING: A Stale Or Early Seal Fails
+
+**Given** each selected label seal and the frozen reveal order
+**When** the audit rebuilds the seal components and chronology
+**Then** every seal must match its current prompt and label hashes and no label
+reveal may precede the manifest freeze.
+
+**Spec traces:** REQ-SAFE-6703
+
+#### SCENARIO-SAFE-6703-MUTATIONS: All Required Attacks Are Detected
+
+**Given** raw cases for bad transition, infeasible action, corrupted cost,
+label leakage, wrong ties, and stale seal
+**When** Exp6703 independently replays each mutation
+**Then** all six attacks produce their required failures and none is inferred
+from the producer's reported mutation aggregate.
+
+**Spec traces:** REQ-SAFE-6703
+
+## Implementation Status (REQ-SAFE-6703)
+
+| Requirement | Status | Notes |
+|---|---|---|
+| REQ-SAFE-6703 and SCENARIO-SAFE-6703-* | Implemented | `python/carnot/experiment_6703_exact_planning_fixture_audit.py`; `tests/python/test_experiment_6703_exact_planning_fixture_audit.py`; all prompt, metadata, split, identity, seal, duplication, transform, and mutation checks are covered. |
