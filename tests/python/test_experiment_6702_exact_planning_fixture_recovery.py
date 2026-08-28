@@ -199,6 +199,7 @@ def test_metamorphic_invariants_and_mutations() -> None:
 def test_row_reducer_is_fail_closed() -> None:
     """REQ-CONSTRAINT-6702; SCENARIO-CONSTRAINT-6702-ROW-REDUCTION."""
 
+    assert exp.FULL_SUITE_COMMAND not in {command for _, command in exp.VERIFICATION_COMMANDS}
     instances = exp.generate_instances()
     instance_rows, action_rows, solver_rows, labels = solved_fixture()
     seal_rows = exp.build_label_seal_rows(instances, labels)
