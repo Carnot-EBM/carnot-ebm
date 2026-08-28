@@ -217,11 +217,6 @@ tasks:
     per_unit_rows: true
     max_turns: 50
     estimated_wall_time_min: 240
-    prior_failures:
-      - experiment_id: exp5747-sota-exact-proposal-utility-panel
-        verdict: blocked_gate_check_failed
-        addressed_by: "Exp5747 never ran because its gate read benchmark_ready_score=None; Exp6690 now owns the row-recomputed planning_fixture_audit_passed field that Exp6691 gates on before generation."
-        retire_if_same_verdict: true
     gated_on:
       - upstream: exp6690-exact-planning-fixture-audit
         artifact_field: planning_fixture_audit_passed

@@ -16660,3 +16660,6 @@ code |
 | 2026-08-28 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_verified_arithmetic_delta age-week 0: OPEN 1 days: SI |
 | 2026-08-28 00:41 UTC | V582 five-branch disposition | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6687_v582_br |
 | 2026-08-28 01:42 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | rc=1 |
+| 2026-08-28 02:07 UTC | Plan milestone 2026.08.583 | OK | 10 tasks proposed |
+| 2026-08-28 02:09 UTC | Activation REFUSED: milestone 2026.08.583 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-28 02:09 UTC | Activation replan 1/2: 2026.08.583 | OK | refused roadmap quarantined to roadmap-2026.08.583-refusal1.yaml; replanning wit |
