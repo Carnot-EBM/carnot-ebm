@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.582",
+  "generated_at": "2026-08-28T00:47:13Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 111.8,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Independent constraint-family prequential stream",
+      "duration_minutes": 57.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V582 five-branch disposition",
+      "duration_minutes": 49.72,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Held-family ARC supervisor outcome A/B",
+      "duration_minutes": 2.13,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Three-family delayed syntax-tail A/B",
+      "duration_minutes": 1.17,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Canonical ARC post-redirect outcome transport",
+      "duration_minutes": 0.46,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 12 experiments in 111.8 minutes. The two longest synthesis-only entries consumed 107.12 minutes, about 96% of the wall time, while the longest listed compute-bound experiment, Three-family delayed syntax-tail A/B, took 1.17 minutes. No data available this milestone explains that compute duration at phase level.",
+  "bottlenecks_identified": [
+    "Synthesis throughput dominated elapsed time: Independent constraint-family prequential stream took 57.4 minutes and V582 five-branch disposition took 49.72 minutes, jointly consuming 107.12 of 111.8 minutes.",
+    "The disk-mtime fallback provides experiment-level durations but no phase or wait-state attribution, so the cause of the 1.17-minute compute leader cannot be determined.",
+    "No data available this milestone identifies a task that loaded 2 or more models in parallel, so DualGPURunner applicability and dispatch compliance cannot be assessed."
+  ],
+  "improvements_suggested": [
+    "Add dependency-aware concurrent scheduling for independent synthesis-only workflows, with bounded workers and deterministic artifact reconciliation.",
+    "Emit monotonic per-experiment phase receipts for queue, setup, synthesis, verification, and artifact-write time, plus straggler alerts for long synthesis phases.",
+    "Record task-window GPU utilization, model count, and runner selection; choose DualGPURunner only when 2 or more models are loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Overlap dependency-independent synthesis-only workflows; perfect overlap of the two longest entries has a 49.72-minute theoretical ceiling.",
+    "Replace disk-mtime-only diagnosis with monotonic phase and wait-state receipts so the next long synthesis phase has an attributable cause.",
+    "Add model-count and runner-selection receipts alongside task-scoped GPU telemetry, without enforcing DualGPURunner for single-model work."
+  ],
+  "estimated_time_savings_pct": 44,
+  "meta_reflection": "The evidence supports a synthesis scheduling and observability priority, not a GPU-idle diagnosis: gpu_idle_on_compute_bound_tasks is false, and the final idle snapshot is not task-window evidence. The 44% estimate is a theoretical ceiling derived from 49.72 divided by 111.8, rounded to an integer, and applies only if the two longest synthesis workflows are dependency-independent and can overlap fully."
+}

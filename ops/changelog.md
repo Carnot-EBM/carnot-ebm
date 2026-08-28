@@ -18063,3 +18063,14 @@ savings remain 0%.
 - 2026-08-27: Torx energy-distribution conformance (⚠️ Blocked) — honest_verdict=blocked_parity_check_failed: installed Torx CPU parity did not pass every row; results/experiment_6684_torx_typed_factor_parity.json
 - 2026-08-27: V582 five-branch disposition (⚠️ Research Finding) — honest_verdict=complete_partial: V582 has a null execution-integrity receipt, blocked output, CSL, and stochastic branches, and a partial adverse ARC branch; there is no pooled success claim; results/experiment_6687_v582_branch_synthesis.json
 - 2026-08-28: V582 five-branch disposition (⚠️ Research Finding) — honest_verdict=complete_partial: V582 has a null execution-integrity receipt, blocked output, CSL, and stochastic branches, and a partial adverse ARC branch; there is no pooled success claim; results/experiment_6687_v582_branch_synthesis.json
+
+## 2026-08-28 — Milestone 2026.08.582 operational retrospective
+
+The milestone completed 12 experiments in 111.8 minutes. The two longest
+synthesis-only entries used 107.12 minutes, about 96% of the wall time; the
+longest listed compute-bound entry took 1.17 minutes, with no phase-level cause
+available. Compute-task GPU idle is false, and no data available this milestone
+establishes a parallel multi-model task or a missed DualGPURunner dispatch. The
+highest-leverage tooling change is dependency-aware synthesis concurrency plus
+monotonic phase receipts. Perfect overlap of the two longest synthesis entries
+would have a theoretical 44% savings ceiling, subject to dependency independence.
