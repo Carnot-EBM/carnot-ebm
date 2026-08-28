@@ -58870,3 +58870,88 @@ content mutation breaks validation.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6687 and SCENARIO-REPORT-6687-* | Implemented (`python/carnot/experiment_6687_v582_branch_synthesis.py`, `results/experiment_6687_v582_branch_synthesis.json`) | Implemented (`tests/python/test_experiment_6687_v582_branch_synthesis.py`; row recomputation, missing-state preservation, atomic validation, and 100% scoped statement coverage) |
+
+### REQ-REPORT-6688: V583 Activation SHALL Match Its Design Contract
+
+Exp6688 SHALL audit the V583 design and execution manifest without changing a
+roadmap, validator, conductor, or exclusion manifest. It SHALL select the active
+or next roadmap only when that file declares milestone `2026.08.583`. It SHALL
+hash both roadmap paths even when one path is absent.
+
+The design and selected YAML SHALL contain exactly fourteen ordered tasks from
+Exp6688 through Exp6701. Each task SHALL have one unique JSON deliverable under
+`results/`. The audit SHALL compare title, track, GPU flag, dependency, gate,
+route, task category, prior-failure entry, required producer field, and run
+command. It SHALL validate that each manifest route has a positive maximum-turn
+limit. It SHALL derive commands from each designed deliverable
+and the canonical module command. It SHALL derive dependencies from the design
+graph and explicit gate statements.
+
+Each gate SHALL name a V583 producer. The producer prompt SHALL declare the
+exact `artifact_field` spelling in `REQUIRED ARTIFACT FIELDS`. A retired task
+SHALL NOT appear as an upstream dependency. A prior-failure entry SHALL have a
+matching completed or conductor record, a verdict, a changed condition, and
+`retire_if_same_verdict=true`. An exclusion-manifest match SHALL remain visible.
+
+The audit SHALL run YAML parsing, roadmap schema validation, prior-failure
+validation, gate-contract validation, and exclusion-manifest validation in
+read-only mode. Each validator row SHALL retain its command, exit code, output,
+classification, and content hash. A dated validator rule that requires Codex
+`gpt-5.5` MAY be a recorded nonblocking mismatch only when every reported
+difference is the declared `gpt-5.6-sol` route. Every other nonzero validator
+result SHALL be an activation-hard failure.
+
+The audit SHALL write
+`results/experiment_6688_v583_manifest_parity_contract.json`. The artifact
+SHALL contain `status`, `honest_verdict`, `verdict_class`,
+`gate_check_summary`, `design_task_rows`, `manifest_task_rows`,
+`producer_consumer_rows`, `prior_failure_rows`, `route_rows`,
+`validator_rows`, `v583_manifest_parity_ready`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`. It SHALL use
+`inference_substrate=artifact_and_manifest_audit_no_llm` and
+`verifier_is_oracle=true`. Ready infrastructure SHALL use verdict class `null`.
+
+The artifact SHALL hash the design, both roadmap paths, conductor, exclusion
+manifest, completed record, conductor log, and available Exp6674 through
+Exp6687 artifacts. It SHALL record Python, CPU, RAM, disk, and zero LLM calls.
+It SHALL prove before-and-after identity for both roadmaps and the conductor.
+The writer SHALL sync one complete temporary JSON file before atomic
+replacement. The checksum SHALL exclude only itself.
+
+#### SCENARIO-REPORT-6688-EXACT-PARITY
+
+**Given** the V583 design and one selected execution manifest
+**When** the audit compares every task, route, gate, prior, field, and command
+**Then** readiness is true only when all fourteen ordered contracts match.
+
+#### SCENARIO-REPORT-6688-FAIL-CLOSED
+
+**Given** a missing roadmap, task, deliverable, field, prior record, route,
+command, valid gate producer, retirement signal, or hard validator result
+**When** the reducer rebuilds readiness from retained rows
+**Then** readiness is false and the gate summary retains exact expected and
+observed values without converting absence to zero.
+
+#### SCENARIO-REPORT-6688-VALIDATOR-MISMATCH
+
+**Given** a validator rejects only Codex `gpt-5.6-sol` under its dated
+`gpt-5.5` rule
+**When** Exp6688 classifies the validator output
+**Then** it records the mismatch without weakening the validator or treating
+the declared route as a task defect.
+
+#### SCENARIO-REPORT-6688-ATOMIC-PROVENANCE
+
+**Given** complete task, gate, prior, route, validator, resource, and hash rows
+**When** Exp6688 writes and validates its artifact
+**Then** readers see one complete JSON object, protected hashes match, and any
+content mutation breaks validation.
+
+## Implementation Status (REQ-REPORT-6688)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6688 and SCENARIO-REPORT-6688-* | Planned (`python/carnot/experiment_6688_v583_manifest_parity_contract.py`) | Planned (`tests/python/test_experiment_6688_v583_manifest_parity_contract.py`) |
