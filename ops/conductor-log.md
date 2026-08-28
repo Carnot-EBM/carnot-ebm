@@ -16665,3 +16665,4 @@ code |
 | 2026-08-28 02:09 UTC | Activation replan 1/2: 2026.08.583 | OK | refused roadmap quarantined to roadmap-2026.08.583-refusal1.yaml; replanning wit |
 | 2026-08-28 02:13 UTC | Plan milestone 2026.08.583 | OK | 10 tasks proposed |
 | 2026-08-28 02:15 UTC | Milestone 2026.08.583 activated | OK | 10 tasks queued |
+| 2026-08-28 03:39 UTC | V583 document-to-manifest parity contract | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: scenario_repor |
