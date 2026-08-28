@@ -16716,3 +16716,6 @@ code |
 | 2026-08-28 19:46 UTC | Bounded independent exact-replay audit | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: est.get("typed |
 | 2026-08-28 21:09 UTC | Bounded seal, leakage, and mutation audit | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output:  = -1
 +    bad |
+| 2026-08-28 22:32 UTC | Bounded seal, leakage, and mutation audit | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: y.
+codex
+The l |
