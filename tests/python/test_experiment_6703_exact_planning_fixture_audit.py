@@ -250,12 +250,50 @@ def test_leakage_split_and_seal_scans_detect_shortcuts() -> None:
     stale_rows = exp.audit_leakage(stale)
     assert any(row["check"] == "seal_integrity" and not row["pass_state"] for row in stale_rows)
 
+    unknown_seal = deepcopy(upstream)
+    unknown_seal["label_seal_rows"][0]["instance"] = "unknown-instance"
+    unknown_seal_rows = exp.audit_leakage(unknown_seal)
+    assert any(
+        row["check"] == "seal_integrity" and not row["pass_state"] for row in unknown_seal_rows
+    )
+
+    changed_prompt = deepcopy(upstream)
+    changed_prompt["instance_rows"][0]["prompt"] += " Please plan carefully."
+    changed_prompt_rows = exp.audit_leakage(changed_prompt)
+    assert any(
+        row["check"] == "seal_integrity" and not row["pass_state"] for row in changed_prompt_rows
+    )
+
     metadata = deepcopy(upstream)
     metadata["instance_rows"][0]["typed_spec"]["future_value"] = 7
     metadata_rows = exp.audit_leakage(metadata)
     assert any(
         row["check"] == "metadata_objective_encoding" and not row["pass_state"]
         for row in metadata_rows
+    )
+
+    metadata = deepcopy(upstream)
+    metadata["instance_rows"][0]["answer_hint"] = 7
+    metadata_rows = exp.audit_leakage(metadata)
+    assert any(
+        row["check"] == "metadata_objective_encoding" and not row["pass_state"]
+        for row in metadata_rows
+    )
+
+    normalized_duplicate = deepcopy(upstream)
+    headline = next(
+        row for row in normalized_duplicate["instance_rows"] if row["split"] == "headline"
+    )
+    development = next(
+        row
+        for row in normalized_duplicate["instance_rows"]
+        if row["split"] == "development" and row["family"] == headline["family"]
+    )
+    development["prompt"] = "  ".join(headline["prompt"].upper().split())
+    normalized_rows = exp.audit_leakage(normalized_duplicate)
+    assert any(
+        row["check"] == "development_headline_duplication" and not row["pass_state"]
+        for row in normalized_rows
     )
 
     family_collision = deepcopy(upstream)
@@ -363,6 +401,22 @@ def test_missing_and_corrected_comparison_paths(monkeypatch: pytest.MonkeyPatch)
 
     upstream = exp.load_json(exp.REPO_ROOT / exp.UPSTREAM_PATH)
     manifest = exp.freeze_blinded_sample(exp.public_instance_rows(upstream))
+    missing_nested = deepcopy(upstream)
+    selected_instance = manifest["reveal_order"][0]
+    selected_row = next(
+        row for row in missing_nested["instance_rows"] if row["instance"] == selected_instance
+    )
+    del selected_row["optimum"]["total"]
+    _, missing_nested_comparisons = exp.recompute_selected_units(missing_nested, manifest)
+    assert (
+        next(
+            row
+            for row in missing_nested_comparisons
+            if row["unit"] == selected_instance and row["field"] == "optimum.total"
+        )["disposition"]
+        == "missing_reported"
+    )
+
     manifest["reveal_order"] = ["missing-instance"]
     solvers, comparisons = exp.recompute_selected_units(upstream, manifest)
     assert solvers == []
@@ -504,15 +558,11 @@ def test_blocked_upstream_and_command_receipts(
         receipt = fake_runner(command, root)
         if "adversarial_verify.py" in command:
             receipt["exit_code"] = 1
-            receipt["stdout"] = json.dumps(
-                {"reports": [{"max_severity": 1}], "flagged_count": 1}
-            )
+            receipt["stdout"] = json.dumps({"reports": [{"max_severity": 1}], "flagged_count": 1})
         return receipt
 
     warning_rows = exp.run_artifact_checks(exp.REPO_ROOT, candidate, warning_runner)
-    warning = next(
-        row for row in warning_rows if row["check_id"] == "adversarial_verification"
-    )
+    warning = next(row for row in warning_rows if row["check_id"] == "adversarial_verification")
     assert warning["passed"] is True
     assert warning["critical_free"] is True
 
