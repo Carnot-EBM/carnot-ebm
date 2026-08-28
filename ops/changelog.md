@@ -18074,3 +18074,14 @@ establishes a parallel multi-model task or a missed DualGPURunner dispatch. The
 highest-leverage tooling change is dependency-aware synthesis concurrency plus
 monotonic phase receipts. Perfect overlap of the two longest synthesis entries
 would have a theoretical 44% savings ceiling, subject to dependency independence.
+
+## 2026-08-28 — Milestone 2026.08.583 operational retrospective
+
+The milestone completed 4 experiments in 0.0 minutes, including 1 compute-bound
+experiment. Prospective prequential online-energy A/B was the only compute-bound
+entry and took 0.0 minutes; no data available this milestone explains its cost.
+The locked compute-task GPU-idle classification is false. No data available this
+milestone establishes a task with 2 or more models in parallel or a missed
+DualGPURunner dispatch. The next tooling priority is sub-minute phase timing
+joined to task-scoped GPU, model-concurrency, and runner-selection receipts.
+Estimated time savings is 0% because no avoidable duration was measured.
