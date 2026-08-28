@@ -16719,3 +16719,5 @@ code |
 | 2026-08-28 22:32 UTC | Bounded seal, leakage, and mutation audit | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: y.
 codex
 The l |
+| 2026-08-28 23:56 UTC | Bounded seal, leakage, and mutation audit | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ptured termina |
+| 2026-08-28 23:58 UTC | Planning audit receipt merge | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6715-bounded-exact-replay-audit, exp6716- |
