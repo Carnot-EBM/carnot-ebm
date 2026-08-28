@@ -11,51 +11,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 3 |
-| CLAIM_OVERSTATED | 1 |
+| CLAIM_SUPPORTED | 4 |
 | NO_CLAIM | 4 |
 
-## experiment_6654_prospective_repair_memory_evolution.json
-
-**CLAIM_OVERSTATED**
-
-## VERDICT
-CLAIM_OVERSTATED
-
-## THE HEADLINE CLAIM
-Validation-gated repair memory adds value by improving future exact outcomes without forgetting or support collapse.
-
-## WHAT WOULD REFUTE IT
-An ungated accept-all repair-memory arm receiving the same proposals and tying or beating `verified_memory` would refute the validation gate’s added value.
-
-## WAS THAT CHECKED
-No. The artifact compares only `frozen`, `context_only`, and `verified_memory`; it lacks an ungated memory arm. Moreover, every proposed update was admitted, so the gate never changed the memory trajectory and an accept-all arm would necessarily tie under the stated method. The artifact did genuinely check memory against no-memory arms, future-label isolation, forgetting, and support collapse—but not the contribution implied by “validation-gated.”
-
-## EVIDENCE
-`honest_verdict`: `complete: validation-gated repair memory improved future exact outcomes with no forgetting or support collapse`
-
-`verified_memory`: `the context-only ranking plus admitted earlier repair memory`
-
-`acceptance_rate`: `1.0`
-
-`accepted_count`: `108`
-
-`proposed_count`: `108`
-
-`rejected_count`: `0`
-
-`verified_memory_minus_context_only`: `0.6666666666666667`
-
-`count`: `0`
-
-`collapse_count`: `0`
-
-`verifier_is_oracle`: `false`
-
-## RECOMMENDATION
-ADD_MISSING_CONTROL
-
-## experiment_6655_repair_memory_safety_audit.json
+## experiment_6678_constraint_family_stream.json
 
 **CLAIM_SUPPORTED**
 
@@ -63,21 +22,21 @@ ADD_MISSING_CONTROL
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Safety replay and point-estimate recomputation passed, but the order-level effect remains compatible with zero and should be limited to this fixture.
+The exact constraint-family stream fixture is not ready because its required test gate failed.
 
 ## WHAT WOULD REFUTE IT
-An independently recomputed order-level 95% interval that excluded zero—or a failed safety or recomputation unit—would falsify the headline.
+A recomputed readiness value of true, with every aggregate check—including the test gate—true and all required test commands successful.
 
 ## WAS THAT CHECKED
-Yes. The aggregate recomputation reports the order-level interval, and the audit includes event and metric recomputation, poison attacks, restart atomicity, rollback exactness, and unit-hash checks.
+Yes, in `aggregate_row_recomputation`, `gate_check_summary`, and the individual `tests_run` receipts; the test gate failed, so the refutation did not occur.
 
 ## EVIDENCE
-`"status": "complete_null"`; `"claim_disposition": "narrow"`; `"all_audit_units_pass": true`; `"order_delta_mean_95_interval": [-0.013448269770851111, 0.12455938088196222]`; `"event_recomputation": true`; `"metric_recomputation": true`; `"poison_attacks": true`; `"restart_atomicity": true`; `"rollback_exactness": true`; `"verifier_is_oracle": false`; `"recommendation": "do_not_deploy_and_collect_independent_orders"`
+`honest_verdict` = `blocked_fixture_gate: exact constraint-family stream is not ready`; `constraint_family_stream_ready` = `false`; `ready` = `false`; `tests` = `false`; `failed_check` = `tests`; `observed_value` = `false`; `status` = `blocked_fixture_gate`; `exit_code` = `3`; `summary` = `failure`; `inference_substrate` = `cpu_stream_fixture_and_exact_checkers_no_llm`; `verifier_is_oracle` = `true`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6656_arc_trace_automaton_live_loo.json
+## experiment_6679_prequential_cross_family_csl_ab.json
 
 **NO_CLAIM**
 
@@ -88,18 +47,40 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative value claim to falsify. The stated blocker would be refuted by exact post-redirect outcomes for changed actions, allowing the on/off arms to be compared for live-policy benefit.
+Not applicable: the artifact makes no comparative A/B claim. A completed run with outcome rows would be required before a substantive claim could be falsified.
 
 ## WAS THAT CHECKED
-No. The artifact checked whether such outcomes existed, but the archived replay transport could not generate them after actions diverged; therefore benefit was not genuinely tested.
+No. Execution stopped at the pre-gate because the required upstream readiness condition failed; no method, rival, or success criterion was evaluated.
 
 ## EVIDENCE
-`honest_verdict` = `blocked: the canonical E3 action seam applied held-family redirects, but the archived transport has no exact outcomes after changed actions; no live-policy benefit, game solve, or level solve is claimed`; `transport_observed` = `archived_live_e3_action_receipt_replay`; `failed_check` = `exact_live_next_outcome_after_applied_redirect`; `missing_exact_on_outcome_count` = `2067`; `benefit_claim_allowed` = `false`; `verdict_class` = `blocked`
+`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"failed_field": "constraint_family_stream_ready"`, `"failed_observed": false`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6657_bounded_treewidth_ising_reference.json
+## experiment_6681_arc_post_redirect_outcomes.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no solve or comparative-value claim to falsify; treating the transport receipt as a limited operational assertion, it would fail if any applied redirect lacked exactly one live, identity-joined next-outcome row.
+
+## WAS THAT CHECKED
+Yes. The aggregate recomputation checks redirect count, eligible outcome count, and exact joins; the gate checks one outcome per redirect; lineage attacks test dropped, duplicated, and reordered records.
+
+## EVIDENCE
+`honest_verdict`: `complete: every applied held-family redirect has one exact live next-outcome row (30 eligible); this is transport evidence with no solve claim`; `solve_claim_scope`: `none`; `verdict_class`: `null`; `eligible_redirect_outcome_rows`: `30`; `all_redirects_exactly_joined`: `true`; `one_outcome_per_redirect`: `true`; `all_attacks_passed`: `true`; `verifier_is_oracle`: `true`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6682_arc_held_family_supervisor_ab.json
 
 **CLAIM_SUPPORTED**
 
@@ -107,21 +88,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Bounded exact-reference readiness was not established because required test gates failed or were missing.
+The held-family supervisor A/B is partial because verification failed and does not establish transition benefit or a solve.
 
 ## WHAT WOULD REFUTE IT
-All required readiness gates passing, with no missing test scopes and `ising_reference_ready` becoming true, would refute the claim.
+A strict positive supervisor-on versus supervisor-off transition-utility interval on valid matched episodes, or a passed verification gate supporting a completed positive result.
 
 ## WAS THAT CHECKED
-Yes. The readiness reducer checked the required test scopes and recorded a failing full Python suite plus missing full-suite/spec-coverage gates, making a positive readiness result genuinely possible but absent.
+Yes for transition benefit: the matched off/on arm could differ, and the off arm actually won three episodes while the supervisor-on arm won none. The verification gate was also checked and failed. Forbidden-action benefit had no headroom, but the artifact makes no positive claim from it. A solve was not targeted or claimed.
 
 ## EVIDENCE
-`honest_verdict`: `blocked_tests_check_failed: bounded exact-reference readiness was not established`; `ising_reference_ready`: `false`; `tests_all_passed`: `false`; `ready`: `false`; `missing_test_scopes`: `full_python_suite`, `spec_coverage`; `exit_code`: `2`; `verdict_class`: `blocked`
+`honest_verdict`: `blocked: held-family supervisor A/B is partial because verification_failure; no transition benefit or solve is claimed`; `arc_supervisor_ab_ready`: `false`; `failed_check`: `verification_failure`; `transition_utility_summary`; `delta`: `-0.3333333333333333`; `lower`: `-0.6666666666666666`; `upper`: `0.0`; `losses`: `3`; `wins`: `0`; `off_total`: `3.0`; `on_total`: `0.0`; `false_intervention_count`: `9`; `solve_rate_claimed`: `false`; `solve_claim_scope`: `none`; `verifier_is_oracle`: `true`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6658_thermodynamic_schedule_ab.json
+## experiment_6683_ising_reference_scope_receipt.json
 
 **NO_CLAIM**
 
@@ -132,18 +113,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No scientific outcome is claimed; the blocking diagnosis would be falsified if the prerequisite gate had observed `true` or passed.
+There is no comparative or added-value claim to falsify. The narrower operational readiness receipt would be refuted by a supported fixture whose exact outputs exceeded the stated tolerances, an invalid decomposition, an incorrect rejection, or a failed task-owned gate.
 
 ## WAS THAT CHECKED
-Yes, in `gates_evaluated`; the sole prerequisite gate was evaluated and failed before the experiment ran.
+Yes, for operational readiness: retained probability, marginal, correlation, decomposition, attack, rejection, and owned-test rows could fail and were reduced into readiness. No independent value comparison was checked or claimed.
 
 ## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_field": "ising_reference_ready"`; `"failed_expected": true`; `"failed_observed": false`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`; `"duration_s": 0.0`
+`"verdict_class": null`, `"verifier_is_oracle": true`, `"inference_substrate": "cpu_bounded_treewidth_exact_inference_no_llm"`, `"honest_verdict": "complete: bounded-treewidth exact Ising reference is ready under task-owned evidence"`, `"ready": true`, `"global_suite_in_reducer": false`, `"gating": false`, `"readiness_influence": false`, `"passed": true`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6659_v580_capstone.json
+## experiment_6684_torx_typed_factor_parity.json
 
 **CLAIM_SUPPORTED**
 
@@ -151,21 +132,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-V580 provides bounded admission, direct-corpus, and verifier-unit evidence, while memory benefit is null and the ARC, repair, and scheduling branches remain blocked or unsupported.
+Installed Torx CPU parity did not pass every required check.
 
 ## WHAT WOULD REFUTE IT
-Valid recomputed rows showing fewer than 3 of 3 model families admitted, a direct-exact result other than 8 of 48, fewer than 8 of 8 two-step catches or any two-step false rejects, a memory interval excluding zero, exact ARC outcomes supporting solve credit, or completed repair/schedule comparisons would refute the corresponding headline assertions.
+Every required parity and gate check passing, including the applicable end-to-end check returning exit code 0, with parity readiness true.
 
 ## WAS THAT CHECKED
-Yes. The artifact recomputes the admission, corpus, verifier, memory, ARC, suffix-regeneration, reference, and schedule results in `headline_recomputation`; it also reports gate validity and field presence. The missing audit artifact and failed full-suite receipt are explicitly disclosed and are not converted into positive claims.
+Yes. The applicable end-to-end gate expected exit code 0 but returned 1; aggregate readiness and Torx factor parity readiness were consequently false.
 
 ## EVIDENCE
-`complete_partial: V580 has authentic admission, direct-corpus, and bounded verifier-unit evidence; memory general benefit is null under independent uncertainty; ARC and Ising branches are blocked; one audit artifact is missing; no pooled success, ARC solve, repair win, or hardware speedup is claimed`; `mandated_model_families_admitted` `3`; `mandated_model_families_total` `3`; `direct_exact_success_count` `8`; `candidate_row_count` `48`; `unit_id` `two_steps`; `catch_count` `8`; `pair_count` `8`; `false_reject_count` `0`; `interval_includes_zero` `true`; `arc_solve_credit` `0`; `changed_action_exact_outcome_count` `0`; `status` `blocked_headroom_gate`; `status` `blocked_reference_gate`; `verifier_is_oracle` `false`; `stored_metric_mismatches` `[]`
+`honest_verdict` = `blocked_parity_check_failed: installed Torx CPU parity did not pass every row`; `check_id` = `applicable_e2e`; `exit_code` = `1`; `passed` = `false`; `torx_factor_parity_ready` = `false`; `failed_check_count` = `1`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6661_triggered_tail_fixture.json
+## experiment_6685_autocorrelation_schedule_ab.json
 
 **NO_CLAIM**
 
@@ -176,35 +157,35 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: the artifact reports fixture readiness and test status, not model quality or comparative value.
+There is no asserted result to falsify; an implied claim that the autocorrelation-aware schedule improves outcomes would be refuted by a serious baseline tying or outperforming it on valid held-out rows.
 
 ## WAS THAT CHECKED
-No; no model inference or comparative evaluation was attempted.
+No. The experiment stopped at the upstream gate and contains no A/B observations or comparative metrics.
 
 ## EVIDENCE
-`honest_verdict`: `blocked_triggered_tail_fixture: tests failed`; `inference_substrate`: `cpu_fixture_and_exact_checker_no_llm`; `verifier_is_oracle`: `true`; `tests`: `false`; `The verdict reports fixture readiness and makes no model-quality claim.`
+`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"blocked_reason": "actual=False in expected=[True]"`, `"failed_upstream": "exp6684-torx-typed-factor-parity"`, `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6662_triggered_structured_tail_ab.json
+## experiment_6687_v582_branch_synthesis.json
 
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+V582 produced no pooled success: three branches were blocked, execution integrity was null, and the only outcome branch showed adverse supervisor utility.
 
 ## WHAT WOULD REFUTE IT
-No result claim exists to falsify; a completed A/B run with comparative outcome rows would be required before refutation is possible.
+A completed branch showing scientific success, or live ARC rows showing positive utility, wins without false interventions, or a solve would refute the headline.
 
 ## WAS THAT CHECKED
-No. The experiment stopped at the pre-gate, so the method, success criterion, and comparator were never evaluated.
+Yes. All five branch rows were recomputed, and the live ARC arm directly measured utility, wins, losses, false interventions, and solve status. Missing branches remained explicitly null rather than being read as zero. Oracle-defined checks were not promoted into an added-value claim.
 
 ## EVIDENCE
-`status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_observed`: `false`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`
+`"all_branch_rows_recomputed": true`; `"pooled_success_claim": false`; `"positive": 0`; `"blocked": 3`; `"null": 1`; `"partial": 1`; `"delta": -0.3333333333333333`; `"wins": 0`; `"losses": 3`; `"false_intervention"`; `"count": 9`; `"solve_claim": false`; `"verification_gate_passed": false`; `"branch metric remains null; absence is not a zero"`; `"there is no pooled success claim"`
 
 ## RECOMMENDATION
 KEEP

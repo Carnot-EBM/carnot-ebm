@@ -4015,5 +4015,20 @@
       "stochastic_portability": true
     },
     "mode": "mixed_by_branch"
-  }
+  },
+  "flagged_adversarial": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "64c1c2ed0c8af610429ba40d89de946933482276688019d4d21530838af8d182",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-08-28T01:42:47Z",
+    "stamper": "adversarial_verify.backfill_stamps"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+      "severity": "critical",
+      "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6687_v582_branch_synthesis.json; classification=partial; reason=partial marker present"
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }
