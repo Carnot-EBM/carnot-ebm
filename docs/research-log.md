@@ -6395,3 +6395,10 @@ The critical path for milestone .250:
 - theme: modification-time reconstruction concealed the execution shape of the trigger-switched fixture pair
 - key result: the compute entries share the 0.0-minute timing floor and the locked idle test is negative; the sources do not expose phase causality or a simultaneous-model launch
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.582
+
+- exp_range: no data available this milestone
+- theme: synthesis scheduling dominated a mixed milestone reconstructed from file modification times
+- key result: honest operational negative — synthesis-only work consumed nearly all elapsed time; compute-task GPU idle is false, while phase causality and parallel-model runner applicability have no data available this milestone
+- acceptance: no data available this milestone

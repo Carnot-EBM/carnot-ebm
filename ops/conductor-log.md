@@ -16658,3 +16658,4 @@ code |
 | 2026-08-28 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6654_prospective_repair_memory_evolution.json age-week 0: OPEN 1 days |
 | 2026-08-28 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_reference_field age-week 0: OPEN 1 days: SILENT_NON_F |
 | 2026-08-28 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_verified_arithmetic_delta age-week 0: OPEN 1 days: SI |
+| 2026-08-28 00:41 UTC | V582 five-branch disposition | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6687_v582_br |
