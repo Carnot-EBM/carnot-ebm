@@ -216,6 +216,7 @@ def test_actual_selected_units_match_every_reported_exact_field() -> None:
     assert len(solver_rows) == 12
     assert all(row["receipt"].startswith("sha256:") for row in solver_rows)
     assert all(row["enumeration_count"] > 0 for row in solver_rows)
+    assert all(row["plan_totals_receipt"].startswith("sha256:") for row in solver_rows)
     assert comparison_rows
     assert all(row["disposition"] == "match" for row in comparison_rows)
 
@@ -257,6 +258,17 @@ def test_leakage_split_and_seal_scans_detect_shortcuts() -> None:
         for row in metadata_rows
     )
 
+    family_collision = deepcopy(upstream)
+    left = family_collision["instance_rows"][0]
+    right = next(
+        row
+        for row in family_collision["instance_rows"]
+        if row["family"] != left["family"] and row["split"] == left["split"]
+    )
+    right["spec_hash"] = left["spec_hash"]
+    family_rows = exp.audit_leakage(family_collision)
+    assert any(row["check"] == "family_isolation" and not row["pass_state"] for row in family_rows)
+
 
 def test_metamorphic_and_mutation_cases_replay_from_raw_rows() -> None:
     """REQ-SAFE-6703; SCENARIO-SAFE-6703-MUTATIONS."""
@@ -296,6 +308,8 @@ def test_reducer_is_row_owned_and_fail_closed() -> None:
     )
     assert aggregate["planning_fixture_audit_passed"] is True
     assert aggregate["failed_checks"] == []
+    identity_row = next(row for row in coverage if row["coverage"] == "instance_identity_map")
+    assert identity_row["expected"] == identity_row["observed"]
 
     changed = deepcopy(comparisons)
     changed[0]["disposition"] = "mismatch"
@@ -314,6 +328,31 @@ def test_reducer_is_row_owned_and_fail_closed() -> None:
     assert {"reported_parity", "blinding_chronology"} <= set(failed["failed_checks"])
     summary = exp._gate_summary({"failed_checks": ["coverage"]}, exp.BLINDING_PROTOCOL_INCIDENT)
     assert [row["check"] for row in summary] == ["blinding_chronology", "coverage"]
+
+
+def test_required_receipts_include_final_artifact_checks() -> None:
+    """REQ-REPORT-6703; SCENARIO-REPORT-6703-ATOMIC-PROVENANCE."""
+
+    assert {
+        "artifact_validation",
+        "row_consistency",
+        "adversarial_verification",
+    } <= set(exp.REQUIRED_TEST_CHECKS)
+
+    failed_rows = passing_test_rows()
+    failed_rows = [row for row in failed_rows if row["check_id"] != "adversarial_verification"]
+    aggregate = exp.recompute_aggregate(
+        [],
+        [],
+        [],
+        [],
+        [],
+        failed_rows,
+        preconditions_passed=True,
+        protected_files_unchanged=True,
+        blinding_clean=True,
+    )
+    assert "adversarial_verification" in aggregate["failed_checks"]
 
 
 def test_missing_and_corrected_comparison_paths(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -444,7 +483,9 @@ def test_blocked_upstream_and_command_receipts(
         }
 
     command_rows = exp.run_verification_commands(exp.REPO_ROOT, fake_runner)
-    assert [row["check_id"] for row in command_rows] == list(exp.REQUIRED_TEST_CHECKS)
+    assert [row["check_id"] for row in command_rows] == [
+        check_id for check_id, _ in exp.VERIFICATION_COMMANDS
+    ]
     assert all(row["passed"] for row in command_rows)
     assert (
         next(row for row in command_rows if row["check_id"] == "scoped_coverage")[
@@ -453,10 +494,52 @@ def test_blocked_upstream_and_command_receipts(
         == 100.0
     )
 
-    monkeypatch.setattr(exp, "run_verification_commands", lambda root: passing_test_rows())
+    candidate = tmp_path / "experiment_6703_exact_planning_fixture_audit.json"
+    candidate.write_text("{}")
+    post_rows = exp.run_artifact_checks(exp.REPO_ROOT, candidate, fake_runner)
+    assert [row["check_id"] for row in post_rows] == list(exp.OPERATIONAL_CHECK_IDS)
+    assert all(row["passed"] for row in post_rows)
+
+    def warning_runner(command: str, root: Path) -> dict[str, object]:
+        receipt = fake_runner(command, root)
+        if "adversarial_verify.py" in command:
+            receipt["exit_code"] = 1
+            receipt["stdout"] = json.dumps(
+                {"reports": [{"max_severity": 1}], "flagged_count": 1}
+            )
+        return receipt
+
+    warning_rows = exp.run_artifact_checks(exp.REPO_ROOT, candidate, warning_runner)
+    warning = next(
+        row for row in warning_rows if row["check_id"] == "adversarial_verification"
+    )
+    assert warning["passed"] is True
+    assert warning["critical_free"] is True
+
+    monkeypatch.setattr(
+        exp,
+        "run_verification_commands",
+        lambda root: [
+            row for row in passing_test_rows() if row["check_id"] not in exp.OPERATIONAL_CHECK_IDS
+        ],
+    )
+    monkeypatch.setattr(
+        exp,
+        "run_artifact_checks",
+        lambda root, path: [
+            row for row in passing_test_rows() if row["check_id"] in exp.OPERATIONAL_CHECK_IDS
+        ],
+    )
     output = tmp_path / "generated.json"
     assert exp.main(["--date", "20260828", "--output", str(output)]) == 0
     assert output.is_file()
+    direct_output = tmp_path / "direct.json"
+    direct = exp.run(
+        date="20260828",
+        output_path=direct_output,
+        tests_run=passing_test_rows(),
+    )
+    assert direct["status"] == "disqualified_blinding_chronology"
     assert exp.main(["--validate", "--output", str(output)]) == 0
     output.write_text("{}")
     assert exp.main(["--validate", "--output", str(output)]) == 1
@@ -467,5 +550,10 @@ def test_blocked_upstream_and_command_receipts(
     assert exp.main(["--validate", "--output", str(tmp_path / "missing.json")]) == 1
 
     monkeypatch.setattr(exp, "validate_artifact", lambda artifact: ["injected failure"])
+    with pytest.raises(ValueError, match="candidate: injected failure"):
+        exp.run(
+            date="20260828",
+            output_path=tmp_path / "invalid-candidate.json",
+        )
     with pytest.raises(ValueError, match="injected failure"):
         exp.run(date="20260828", root=tmp_path, output_path=tmp_path / "invalid.json")

@@ -17,8 +17,10 @@ import json
 import os
 from pathlib import Path
 import re
+import shlex
 import shutil
 import subprocess
+import tempfile
 import time
 from typing import Any
 
@@ -151,7 +153,15 @@ VERIFICATION_COMMANDS = (
     ("ruff_check", RUFF_COMMAND),
     ("format_check", FORMAT_COMMAND),
 )
-REQUIRED_TEST_CHECKS = tuple(check_id for check_id, _ in VERIFICATION_COMMANDS)
+OPERATIONAL_CHECK_IDS = (
+    "artifact_validation",
+    "row_consistency",
+    "adversarial_verification",
+)
+REQUIRED_TEST_CHECKS = (
+    *(check_id for check_id, _ in VERIFICATION_COMMANDS),
+    *OPERATIONAL_CHECK_IDS,
+)
 
 
 def canonical_json(value: Any) -> str:
@@ -501,6 +511,9 @@ def exhaustive_solve(spec: Mapping[str, Any]) -> JsonDict:
         "instance": spec["instance_id"],
         "enumeration_count": len(actions) ** horizon,
         "feasible_plan_count": len(paths),
+        "plan_totals_receipt": sha256_json(
+            [{"actions": path, "total": total} for path, total in paths]
+        ),
         "optimum": optimum,
         "optimum_plans": optimum_plans,
         "tie_set": tie_set,
@@ -579,6 +592,7 @@ def recompute_selected_units(
             "solver": SOLVER_VERSION,
             "enumeration_count": solved["enumeration_count"],
             "feasible_plan_count": solved["feasible_plan_count"],
+            "plan_totals_receipt": solved["plan_totals_receipt"],
             "optimum": solved["optimum"],
             "tie_set": solved["tie_set"],
             "optimum_plans": solved["optimum_plans"],
@@ -695,17 +709,20 @@ def audit_leakage(upstream: Mapping[str, Any]) -> list[JsonDict]:
         if re.search(r"(?:opt|answer|label|total)[-_=]?\d", instance, re.I)
     )
     cross_split: list[JsonDict] = []
+    cross_family: list[JsonDict] = []
     for left_index, left in enumerate(rows):
         for right in rows[left_index + 1 :]:
-            if left.get("split") == right.get("split"):
-                continue
             shared = [
                 key
                 for key in ("spec_hash", "prompt_hash")
                 if left.get(key) is not None and left.get(key) == right.get(key)
             ]
-            if shared:
+            if shared and left.get("split") != right.get("split"):
                 cross_split.append(
+                    {"left": left.get("instance"), "right": right.get("instance"), "shared": shared}
+                )
+            if shared and left.get("family") != right.get("family"):
+                cross_family.append(
                     {"left": left.get("instance"), "right": right.get("instance"), "shared": shared}
                 )
     invalid_seals = [
@@ -725,6 +742,7 @@ def audit_leakage(upstream: Mapping[str, Any]) -> list[JsonDict]:
         ),
         ("split_collision", "instance identities are unique across splits", split_collisions),
         ("instance_id_shortcut", "instance ids do not encode exact results", id_shortcuts),
+        ("family_isolation", "no spec or prompt hash crosses families", cross_family),
         (
             "seal_integrity",
             "all seals bind current prompt and label hashes",
@@ -765,6 +783,10 @@ def audit_metamorphic_and_mutation_cases(upstream: Mapping[str, Any]) -> list[Js
             str(action): f"choice_{index}"
             for index, action in enumerate(instance["typed_spec"]["action_domain"])
         }
+        inverse_aliases = {alias: int(action) for action, alias in aliases.items()}
+        renamed_plans = [
+            [aliases[str(action)] for action in plan] for plan in base["optimum_plans"]
+        ]
         expected_results: dict[str, Any] = {
             "action_renaming": {
                 "aliases": aliases,
@@ -780,24 +802,42 @@ def audit_metamorphic_and_mutation_cases(upstream: Mapping[str, Any]) -> list[Js
             "shifted_total": shifted["optimum"],
         }
         surface_prompt = "Please solve this equivalent family task. " + str(instance["prompt"])
+        surface_replay = exhaustive_solve(instance["typed_spec"])
         expected_results["family_preserving_surface_change"] = {
             "base_prompt_hash": instance["prompt_hash"],
             "surface_prompt_hash": "sha256:"
             + hashlib.sha256(surface_prompt.encode("utf-8")).hexdigest(),
         }
 
+        encoded_spec = deepcopy(instance["typed_spec"])
+        state_name, initial_value = next(iter(encoded_spec["initial_state"].items()))
+        encoded_spec["initial_state"] = {f"encoded_{state_name}": initial_value}
+        encoded = exhaustive_solve(encoded_spec)
+
         invariants = {
-            "action_renaming": True,
+            "action_renaming": (
+                len(aliases) == len(set(aliases.values()))
+                and [[inverse_aliases[action] for action in plan] for plan in renamed_plans]
+                == base["optimum_plans"]
+            ),
             "constant_cost_shift": (
                 shifted["optimum_plans"] == base["optimum_plans"]
                 and shifted["tie_set"] == base["tie_set"]
                 and shifted["optimum"] == base["optimum"] + 3 * int(instance["horizon"])
             ),
-            "equivalent_state_encoding": all(
-                json.loads(canonical_json(row["state"])) == row["state"]
-                for row in base["state_action_rows"]
+            "equivalent_state_encoding": (
+                encoded["optimum"] == base["optimum"]
+                and encoded["optimum_plans"] == base["optimum_plans"]
+                and encoded["tie_set"] == base["tie_set"]
+                and [row["total_value"] for row in encoded["state_action_rows"]]
+                == [row["total_value"] for row in base["state_action_rows"]]
             ),
-            "family_preserving_surface_change": surface_prompt != instance["prompt"],
+            "family_preserving_surface_change": (
+                surface_prompt != instance["prompt"]
+                and surface_replay["optimum"] == base["optimum"]
+                and surface_replay["optimum_plans"] == base["optimum_plans"]
+                and surface_replay["tie_set"] == base["tie_set"]
+            ),
         }
         for transform in METAMORPHIC_TRANSFORMS:
             reported = next(
@@ -872,7 +912,10 @@ def audit_metamorphic_and_mutation_cases(upstream: Mapping[str, Any]) -> list[Js
         row["check"] == "prompt_direct_label" and not row["pass_state"]
         for row in audit_leakage(leaked)
     )
-    detections["wrong_ties"] = bool(base_instance["ties"] != (not base_instance["ties"]))
+    wrong_tie_set = (
+        [] if solved["tie_set"] else [int(base_instance["typed_spec"]["action_domain"][0])]
+    )
+    detections["wrong_ties"] = wrong_tie_set != solved["tie_set"]
     instances_by_id = {str(row["instance"]): row for row in instances}
     stale = deepcopy(upstream["label_seal_rows"][0])
     stale["prompt_hash"] = "sha256:stale"
@@ -906,6 +949,8 @@ def build_coverage_rows(
     """Record expected and observed counts without hiding absent units."""
 
     selected = set(manifest["reveal_order"])
+    expected_instances = sorted(selected)
+    observed_instances = sorted(str(row["instance"]) for row in solver_rows)
     action_rows = [row for row in upstream["state_action_rows"] if row["instance"] in selected]
     expected_states = len(
         {(row["instance"], row["time_index"], canonical_json(row["state"])) for row in action_rows}
@@ -915,15 +960,17 @@ def build_coverage_rows(
     selected_seals = [row for row in upstream["label_seal_rows"] if row["instance"] in selected]
     transform_count = sum(row["kind"] == "metamorphic" for row in attacks)
     mutation_count = sum(row["kind"] == "mutation" for row in attacks)
+    expected_comparisons = len(expected_instances) * 5 + observed_actions * 7
     values = (
         ("instances", 12, len(solver_rows)),
+        ("instance_identity_map", expected_instances, observed_instances),
         ("states", expected_states, observed_states),
         ("actions", len(action_rows), observed_actions),
         ("seals", 12, len(selected_seals)),
         ("transforms", len(FAMILIES) * len(METAMORPHIC_TRANSFORMS), transform_count),
         ("mutations", len(REQUIRED_MUTATIONS), mutation_count),
-        ("comparisons", len(comparisons), len(comparisons)),
-        ("leakage_checks", 6, len(leakage)),
+        ("comparisons", expected_comparisons, len(comparisons)),
+        ("leakage_checks", 7, len(leakage)),
     )
     return [
         {
@@ -959,7 +1006,7 @@ def recompute_aggregate(
         "independent_recomputation": len(solver_rows) == 12,
         "reported_parity": bool(comparisons)
         and all(row.get("disposition") == "match" for row in comparisons),
-        "leakage_split_seal": len(leakage) == 6
+        "leakage_split_seal": len(leakage) == 7
         and all(row.get("pass_state") is True for row in leakage),
         "metamorphic": sum(row.get("kind") == "metamorphic" for row in attacks) == 16
         and all(
@@ -975,6 +1022,10 @@ def recompute_aggregate(
         "applicable_e2e": test_map.get("applicable_e2e", {}).get("passed") is True,
         "ruff_check": test_map.get("ruff_check", {}).get("passed") is True,
         "format_check": test_map.get("format_check", {}).get("passed") is True,
+        "artifact_validation": test_map.get("artifact_validation", {}).get("passed") is True,
+        "row_consistency": test_map.get("row_consistency", {}).get("passed") is True,
+        "adversarial_verification": test_map.get("adversarial_verification", {}).get("passed")
+        is True,
     }
     failed = [name for name, passed in checks.items() if not passed]
     return {
@@ -1036,6 +1087,24 @@ def collect_preconditions(root: Path) -> list[JsonDict]:
                 "sha256": sha256_json(upstream.get(name, [])),
             }
             for name in stores
+        }
+        observed_stores["prompt_view"] = {
+            "count": len(upstream.get("instance_rows", [])),
+            "sha256": sha256_json(
+                [
+                    {"instance": row.get("instance"), "prompt": row.get("prompt")}
+                    for row in upstream.get("instance_rows", [])
+                ]
+            ),
+        }
+        observed_stores["typed_spec_view"] = {
+            "count": len(upstream.get("instance_rows", [])),
+            "sha256": sha256_json(
+                [
+                    {"instance": row.get("instance"), "typed_spec": row.get("typed_spec")}
+                    for row in upstream.get("instance_rows", [])
+                ]
+            ),
         }
         add(
             "raw_stores",
@@ -1447,7 +1516,7 @@ def default_command_runner(command: str, root: Path) -> JsonDict:
 def run_verification_commands(
     root: Path, runner: Callable[[str, Path], Mapping[str, Any]] = default_command_runner
 ) -> list[JsonDict]:
-    """Execute the focused, coverage, full, spec, and E2E checks once."""
+    """Execute checks that do not need the finished artifact."""
 
     rows: list[JsonDict] = []
     for check_id, command in VERIFICATION_COMMANDS:
@@ -1474,6 +1543,79 @@ def run_verification_commands(
     return rows
 
 
+def run_artifact_checks(
+    root: Path,
+    artifact_path: Path,
+    runner: Callable[[str, Path], Mapping[str, Any]] = default_command_runner,
+) -> list[JsonDict]:
+    """Run the three repository checks that need a complete candidate artifact."""
+
+    target = shlex.quote(str(artifact_path))
+    commands = (
+        (
+            "artifact_validation",
+            ".venv/bin/python -m carnot.experiment_6703_exact_planning_fixture_audit "
+            f"--validate --output {target}",
+        ),
+        (
+            "row_consistency",
+            f".venv/bin/python scripts/verdict_row_consistency_lint.py --strict {target}",
+        ),
+        (
+            "adversarial_verification",
+            f".venv/bin/python scripts/adversarial_verify.py --json {target}",
+        ),
+    )
+    rows: list[JsonDict] = []
+    for check_id, command in commands:
+        receipt = runner(command, root)
+        stdout = str(receipt.get("stdout", ""))
+        stderr = str(receipt.get("stderr", ""))
+        exit_code = receipt.get("exit_code")
+        critical_free: bool | None = None
+        if check_id == "adversarial_verification" and exit_code in {0, 1}:
+            try:
+                report = json.loads(stdout)
+                critical_free = all(
+                    int(row.get("max_severity", 0)) < 2 for row in report.get("reports", [])
+                )
+            except (TypeError, ValueError, AttributeError):
+                critical_free = exit_code == 0
+        passed = exit_code == 0
+        if check_id == "adversarial_verification" and critical_free is True:
+            passed = True
+        rows.append(
+            {
+                "check_id": check_id,
+                "command": command,
+                "exit_code": exit_code,
+                "passed": passed,
+                "coverage_percent": None,
+                "summary": (stdout + stderr)[-2000:],
+                "duration_s": receipt.get("duration_s", 0.0),
+                "critical_free": critical_free,
+            }
+        )
+    return rows
+
+
+def pending_artifact_check_rows() -> list[JsonDict]:
+    """Reserve operational receipt slots before the candidate file exists."""
+
+    return [
+        {
+            "check_id": check_id,
+            "command": "pending complete candidate artifact",
+            "exit_code": None,
+            "passed": False,
+            "coverage_percent": None,
+            "summary": "not run before candidate publication",
+            "duration_s": 0.0,
+        }
+        for check_id in OPERATIONAL_CHECK_IDS
+    ]
+
+
 def run(
     *,
     date: str,
@@ -1490,7 +1632,26 @@ def run(
         artifact = build_blocked_artifact(date, root, preconditions, time.perf_counter() - started)
     else:
         before = protected_hashes(root)
-        receipts = list(tests_run) if tests_run is not None else run_verification_commands(root)
+        if tests_run is not None:
+            receipts = list(tests_run)
+        else:
+            receipts = run_verification_commands(root)
+            candidate = build_artifact(
+                date=date,
+                root=root,
+                tests_run=[*receipts, *pending_artifact_check_rows()],
+                duration_s=time.perf_counter() - started,
+                protected_before=before,
+            )
+            candidate_errors = validate_artifact(candidate)
+            if candidate_errors:
+                raise ValueError("candidate: " + "; ".join(candidate_errors))
+            with tempfile.TemporaryDirectory(prefix="carnot-exp6703-") as temporary:
+                candidate_path = (
+                    Path(temporary) / "experiment_6703_exact_planning_fixture_audit.json"
+                )
+                write_json_atomic(candidate_path, candidate)
+                receipts.extend(run_artifact_checks(root, candidate_path))
         artifact = build_artifact(
             date=date,
             root=root,
