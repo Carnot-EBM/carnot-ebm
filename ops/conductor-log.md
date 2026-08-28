@@ -16701,3 +16701,6 @@ code |
 | 2026-08-28 09:55 UTC | Generated exact planning fixture recovery | OK | 92 passed, 1 warning in 18.23s |
 | 2026-08-28 11:18 UTC | Cold exact planning fixture audit | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:  -> list[str]: |
 | 2026-08-28 12:41 UTC | Cold exact planning fixture audit | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output:            rec |
+| 2026-08-28 14:05 UTC | Cold exact planning fixture audit | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: omparisons
++   |
+| 2026-08-28 14:07 UTC | Three-family frozen planning proposal bank | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6703-exact-planning-fixture-audit) |

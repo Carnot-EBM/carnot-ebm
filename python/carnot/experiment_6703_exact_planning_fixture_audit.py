@@ -548,6 +548,17 @@ def _comparison(unit: str, field: str, reported: Any, recomputed: Any) -> JsonDi
 _MISSING = object()
 
 
+def _nested_value(row: Mapping[str, Any], *keys: str) -> Any:
+    """Keep an absent nested field distinct from a reported JSON null."""
+
+    value: Any = row
+    for key in keys:
+        if not isinstance(value, Mapping) or key not in value:
+            return _MISSING
+        value = value[key]
+    return value
+
+
 def recompute_selected_units(
     upstream: Mapping[str, Any], manifest: Mapping[str, Any]
 ) -> tuple[list[JsonDict], list[JsonDict]]:
@@ -564,9 +575,17 @@ def recompute_selected_units(
     solver_rows: list[JsonDict] = []
     comparisons: list[JsonDict] = []
     instance_fields = (
-        ("optimum.total", lambda row: row.get("optimum", {}).get("total"), "optimum"),
-        ("optimum.plan", lambda row: row.get("optimum", {}).get("plan"), "optimum_plans"),
-        ("optimum.action_set", lambda row: row.get("optimum", {}).get("action_set"), "tie_set"),
+        ("optimum.total", lambda row: _nested_value(row, "optimum", "total"), "optimum"),
+        (
+            "optimum.plan",
+            lambda row: _nested_value(row, "optimum", "plan"),
+            "optimum_plans",
+        ),
+        (
+            "optimum.action_set",
+            lambda row: _nested_value(row, "optimum", "action_set"),
+            "tie_set",
+        ),
         ("ties", lambda row: row.get("ties", _MISSING), "ties"),
         ("feasibility", lambda row: row.get("feasibility", _MISSING), "feasible"),
     )
@@ -654,7 +673,16 @@ def recompute_selected_units(
 
 def _valid_seal(row: Mapping[str, Any], instances: Mapping[str, Mapping[str, Any]]) -> bool:
     instance = instances.get(str(row.get("instance")))
-    if instance is None or row.get("prompt_hash") != instance.get("prompt_hash"):
+    if instance is None:
+        return False
+    prompt_hash = (
+        "sha256:" + hashlib.sha256(str(instance.get("prompt", "")).encode("utf-8")).hexdigest()
+    )
+    if (
+        row.get("prompt_hash") != prompt_hash
+        or instance.get("prompt_hash") != prompt_hash
+        or instance.get("label_seal_hash") != row.get("seal_hash")
+    ):
         return False
     components = {
         "instance": row.get("instance"),
@@ -677,12 +705,34 @@ def audit_leakage(upstream: Mapping[str, Any]) -> list[JsonDict]:
 
     rows = list(upstream.get("instance_rows", []))
     instances = {str(row.get("instance")): row for row in rows}
-    label_pattern = re.compile(r"(?:exact\s+)?(?:optimum|answer|label)\s*[:=]", re.IGNORECASE)
+    label_pattern = re.compile(
+        r"(?:exact\s+)?(?:optimum|answer|label)(?:\s+(?:is|equals))?\s*[:=]?\s*[-+]?\d",
+        re.IGNORECASE,
+    )
     prompt_hits = [
         row["instance"] for row in rows if label_pattern.search(str(row.get("prompt", "")))
     ]
 
-    forbidden_keys = {"total_optimum", "optimum_plan", "future_value", "action_gap", "exact_label"}
+    allowed_instance_keys = {
+        "action_set",
+        "family",
+        "feasibility",
+        "horizon",
+        "instance",
+        "label_seal_hash",
+        "optimum",
+        "prompt",
+        "prompt_hash",
+        "seed",
+        "spec_hash",
+        "split",
+        "ties",
+        "typed_spec",
+    }
+    forbidden_key = re.compile(
+        r"(?:answer|exact[_-]?label|future[_-]?value|action[_-]?gap|optimum[_-]?plan|total[_-]?optimum)",
+        re.IGNORECASE,
+    )
     metadata_hits: list[str] = []
     for row in rows:
         typed = row.get("typed_spec", {})
@@ -698,7 +748,8 @@ def audit_leakage(upstream: Mapping[str, Any]) -> list[JsonDict]:
                     collect(nested)
 
         collect(typed)
-        if keys & forbidden_keys:
+        keys.update(str(key) for key in row if key not in allowed_instance_keys)
+        if any(forbidden_key.search(key) for key in keys):
             metadata_hits.append(str(row["instance"]))
 
     ids = [str(row.get("instance")) for row in rows]
@@ -712,11 +763,15 @@ def audit_leakage(upstream: Mapping[str, Any]) -> list[JsonDict]:
     cross_family: list[JsonDict] = []
     for left_index, left in enumerate(rows):
         for right in rows[left_index + 1 :]:
+            left_prompt = " ".join(str(left.get("prompt", "")).casefold().split())
+            right_prompt = " ".join(str(right.get("prompt", "")).casefold().split())
             shared = [
                 key
                 for key in ("spec_hash", "prompt_hash")
                 if left.get(key) is not None and left.get(key) == right.get(key)
             ]
+            if left_prompt and left_prompt == right_prompt:
+                shared.append("normalized_prompt")
             if shared and left.get("split") != right.get("split"):
                 cross_split.append(
                     {"left": left.get("instance"), "right": right.get("instance"), "shared": shared}
