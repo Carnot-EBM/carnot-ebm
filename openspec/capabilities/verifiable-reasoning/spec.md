@@ -23130,3 +23130,18 @@ hidden-state access count is bare zero, and false readiness with non-zero
 violations or failed commands is rejected.
 
 **Spec traces:** REQ-KONA-6340
+### REQ-VERIFY-6716: Seal Audit Has No Planning Authority
+
+Exp6716 SHALL audit label isolation after its attack manifest is frozen. It
+SHALL not enumerate plan spaces, recompute an optimum, select a plan, or call
+an LLM. It MAY compare archived exact-result hashes only after a valid audit
+commit receipt exists. Its result SHALL not authorize later live selection.
+
+### SCENARIO-VERIFY-6716-AUTHORITY: The Auditor Is Not An Oracle
+
+**Given** a terminal bounded seal and attack artifact
+**When** downstream work reads its result
+**Then** `verifier_is_oracle` remains false and the inference substrate is
+`cpu_static_and_dynamic_attack_audit_no_llm`.
+
+**Spec traces:** REQ-VERIFY-6716
