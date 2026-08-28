@@ -58892,6 +58892,12 @@ exact `artifact_field` spelling in `REQUIRED ARTIFACT FIELDS`. A retired task
 SHALL NOT appear as an upstream dependency. A prior-failure entry SHALL have a
 matching completed or conductor record, a verdict, a changed condition, and
 `retire_if_same_verdict=true`. An exclusion-manifest match SHALL remain visible.
+`producer_consumer_rows` SHALL contain the union of design and manifest gates.
+Each row SHALL state whether each source declares the gate. A missing manifest
+consumer or producer SHALL remain visible as a failed row. `prior_failure_rows`
+SHALL contain the union of design and manifest references. Each row SHALL state
+whether each source declares the reference and SHALL retain lineage evidence
+even when the other source omits it.
 
 The audit SHALL run YAML parsing, roadmap schema validation, prior-failure
 validation, gate-contract validation, and exclusion-manifest validation in
@@ -58918,6 +58924,9 @@ The artifact SHALL hash the design, both roadmap paths, conductor, exclusion
 manifest, completed record, conductor log, and available Exp6674 through
 Exp6687 artifacts. It SHALL record Python, CPU, RAM, disk, and zero LLM calls.
 It SHALL prove before-and-after identity for both roadmaps and the conductor.
+Artifact validation SHALL require exactly these three protected path receipts.
+It SHALL also require `per_unit_rows` to equal the task, gate, prior-failure,
+route, and validator row projections.
 The writer SHALL sync one complete temporary JSON file before atomic
 replacement. The checksum SHALL exclude only itself.
 
@@ -58954,4 +58963,4 @@ content mutation breaks validation.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-REPORT-6688 and SCENARIO-REPORT-6688-* | Planned (`python/carnot/experiment_6688_v583_manifest_parity_contract.py`) | Planned (`tests/python/test_experiment_6688_v583_manifest_parity_contract.py`) |
+| REQ-REPORT-6688 and SCENARIO-REPORT-6688-* | Implemented (`python/carnot/experiment_6688_v583_manifest_parity_contract.py`) | Implemented (`tests/python/test_experiment_6688_v583_manifest_parity_contract.py`; exact parity, design/manifest union gates and priors, fail-closed reduction, dated validator mismatch, atomic provenance, CLI checks, and 100% scoped statement coverage) |

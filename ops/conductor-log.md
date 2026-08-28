@@ -16667,3 +16667,6 @@ code |
 | 2026-08-28 02:15 UTC | Milestone 2026.08.583 activated | OK | 10 tasks queued |
 | 2026-08-28 03:39 UTC | V583 document-to-manifest parity contract | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: scenario_repor |
 | 2026-08-28 05:03 UTC | V583 document-to-manifest parity contract | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: l a single uni |
+| 2026-08-28 06:26 UTC | V583 document-to-manifest parity contract | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: 17,8 @@
+       |
+| 2026-08-28 06:28 UTC | Generated finite-horizon exact planning fixture | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6688-v583-manifest-parity-contract) |
