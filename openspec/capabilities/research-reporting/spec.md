@@ -59060,3 +59060,53 @@ does not claim a reproduced fixture or a passing readiness gate.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6703 and SCENARIO-REPORT-6703-* | Implemented (`python/carnot/experiment_6703_exact_planning_fixture_audit.py`) | Implemented (`tests/python/test_experiment_6703_exact_planning_fixture_audit.py`; blocked, corrected, disqualified, checksum, row-reduction, atomic-write, CLI, and 100% scoped coverage checks) |
+
+### REQ-REPORT-6715: Bounded Exact Replay SHALL Be Atomic And Recomputable
+
+Exp6715 SHALL atomically write
+`results/experiment_6715_bounded_exact_replay_audit.json`. It SHALL retain all
+fields required by the active V585 roadmap. `per_unit_rows` SHALL contain every
+instance, state-action, enumeration, comparison, cap, and check row. Field
+provenance SHALL name the source store, audit solver, comparator, reducer,
+function, version, and hash for each required field.
+
+The artifact SHALL hash Exp6702 and its embedded instance, state-action, and
+seal stores. It SHALL record CPU, RAM, disk, schema support, tools, roadmap,
+conductor, fixed caps, tests, scoped coverage, applicable end-to-end checks,
+row consistency, artifact validation, and adversarial verification. It SHALL
+hash the active roadmap and conductor before and after the run. It SHALL use
+`inference_substrate=cpu_independent_exhaustive_audit_no_llm` and
+`verifier_is_oracle=false` for later selection.
+
+`exact_replay_audit_passed` SHALL be true only when raw rows rebuild a complete
+exact match and every required check passes. A missing prerequisite SHALL
+produce a terminal blocked artifact. A cap, method substitution, sample drift,
+missing value, or exact mismatch SHALL produce corrected, disqualified, or
+partial evidence without a positive gate. The checksum SHALL use canonical
+JSON and exclude measured timing and free-form command summaries from its
+stable identity view.
+
+#### SCENARIO-REPORT-6715-ATOMIC: Readers Observe One Complete Audit
+
+**Given** complete rows, receipts, protected hashes, and test evidence
+**When** Exp6715 validates and publishes its artifact
+**Then** readers observe one complete JSON object, the checksum replays, the
+row aggregate replays, and the protected files remain unchanged.
+
+**Spec traces:** REQ-REPORT-6715
+
+#### SCENARIO-REPORT-6715-BLOCKED: A Failed Precondition Is Terminal Evidence
+
+**Given** a missing Exp6702 artifact, embedded store, tool, schema, roadmap, or
+conductor
+**When** Exp6715 runs its preconditions
+**Then** it writes a blocked artifact with the first expected and observed
+failure and does not fabricate enumeration or comparison rows.
+
+**Spec traces:** REQ-REPORT-6715
+
+## Implementation Status (REQ-REPORT-6715)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6715 and SCENARIO-REPORT-6715-* | Implemented (`python/carnot/experiment_6715_bounded_exact_replay_audit.py`) | Implemented (`tests/python/test_experiment_6715_bounded_exact_replay_audit.py`; blocked and complete artifacts, atomic publication, checksum, provenance, CLI, and 100% scoped statement coverage) |

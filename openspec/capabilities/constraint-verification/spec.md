@@ -1591,3 +1591,63 @@ and each selected identity occurs exactly once in the independent solver rows.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6703 and SCENARIO-CONSTRAINT-6703-* | Implemented (`python/carnot/experiment_6703_exact_planning_fixture_audit.py`) | Implemented (`tests/python/test_experiment_6703_exact_planning_fixture_audit.py`; 9 focused tests and 100% scoped statement coverage) |
+
+### REQ-CONSTRAINT-6715: Bounded Independent Exact Replay Audit
+
+Exp6715 SHALL cold-recompute exactly eight Exp6702 headline instances. It
+SHALL select two instances per planning family. The preregistered edge-probe
+slot SHALL be `headline-01`. The contrast slot SHALL have the lowest SHA-256
+selection score among the remaining headline instances. Selection SHALL use
+only public identities, split and family names, prompt hashes, specification
+hashes, seal hashes, and typed specifications. The audit SHALL freeze the
+selection hash, reveal order, caps, versions, and protected-file hashes before
+it reads any reported optimum, tie, feasibility, state-action value, or
+producer aggregate. A revealed edge-probe that is neither tie-bearing nor
+infeasible SHALL fail the audit. It SHALL NOT cause sample replacement.
+
+The audit SHALL implement its own transitions and exhaustive complete-path
+solver. It SHALL not import or call the Exp6702 producer or dynamic-programming
+solver. For each selected typed specification, it SHALL enumerate every action
+sequence. It SHALL recompute legal transitions, feasible plans, exact plan
+costs, optima, optimum plans, initial tie sets, every reachable state-action
+value, and every action gap.
+
+The fixed caps SHALL be maximum horizon 6, maximum action count 5, maximum
+reachable state count 128, maximum 15,625 complete paths per instance, maximum
+50,000 complete paths across the sample, and maximum 600 seconds for audit
+enumeration. The audit SHALL stop with a named cap row before it exceeds a cap.
+It SHALL not reduce a cap, widen the sample, or substitute a different method.
+
+#### SCENARIO-CONSTRAINT-6715-FROZEN-SAMPLE: Eight Identities Precede Label Reveal
+
+**Given** only the public projection of the Exp6702 headline store
+**When** Exp6715 freezes its sample
+**Then** the manifest contains two instances from each family, the edge and
+contrast selection receipts, the reveal order, fixed caps, versions, and hashes
+**And** any input containing a reported label field is rejected before freeze.
+
+**Spec traces:** REQ-CONSTRAINT-6715
+
+#### SCENARIO-CONSTRAINT-6715-EXHAUSTIVE: Complete Paths Rebuild Every Exact Value
+
+**Given** one selected typed specification within every fixed cap
+**When** the independent solver enumerates all complete action sequences
+**Then** it retains legal transitions, feasible plan counts and cost receipts,
+optima, optimum plans, tie sets, state-action values, gaps, and a solver receipt.
+
+**Spec traces:** REQ-CONSTRAINT-6715
+
+#### SCENARIO-CONSTRAINT-6715-CAPS: A Bound Stops Without Sample Drift
+
+**Given** a specification or cumulative enumeration that exceeds a frozen cap
+**When** Exp6715 checks the bound
+**Then** it records expected and observed values, stops before enumeration
+continues, keeps the eight frozen identities, and leaves the audit gate false.
+
+**Spec traces:** REQ-CONSTRAINT-6715
+
+## Implementation Status (REQ-CONSTRAINT-6715)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6715 and SCENARIO-CONSTRAINT-6715-* | Implemented (`python/carnot/experiment_6715_bounded_exact_replay_audit.py`) | Implemented (`tests/python/test_experiment_6715_bounded_exact_replay_audit.py`; 13 focused tests; 100% scoped statement coverage) |
