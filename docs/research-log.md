@@ -6409,3 +6409,10 @@ The critical path for milestone .250:
 - theme: mixed execution exposed gaps in sub-minute timing and task-scoped accelerator attribution
 - key result: honest operational negative — every listed task shares the zero-minute timing floor; compute-task GPU idle is false, while phase causality and parallel-model runner applicability have no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.584
+
+- exp_range: no data available this milestone
+- theme: brief synthesis-only execution exposed reconstructed-timing observability limits
+- key result: 2 synthesis-only experiments finished in 0.6 minutes; compute-bound GPU efficiency and parallel-model runner behavior have no data available this milestone
+- acceptance: no data available this milestone

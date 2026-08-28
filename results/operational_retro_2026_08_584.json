@@ -1,0 +1,40 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.584",
+  "generated_at": "2026-08-28T14:18:16Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.6,
+  "experiments_completed": 2,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Generated exact planning fixture recovery",
+      "duration_minutes": 0.55,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Held-family oracle-distinct structural plan energy",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone completed 2 synthesis-only experiments in 0.6 minutes; no compute-bound experiment was present. GPU efficiency and DualGPURunner engagement on compute-bound work therefore have no data available this milestone.",
+  "bottlenecks_identified": [
+    "Timing attribution was limited to disk-mtime reconstruction after the live git-log path found 0 commits, so phase-level causes are unavailable."
+  ],
+  "improvements_suggested": [
+    "Record task-scoped monotonic start, end, and phase timestamps directly in each artifact instead of reconstructing timing from disk modification times.",
+    "Retain sub-minute precision consistently so short synthesis-only work remains distinguishable.",
+    "Make accelerator recommendations task-aware, suppressing GPU and DualGPURunner advice when no compute-bound or parallel-model task is present."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add direct monotonic phase timing to the experiment lifecycle.",
+    "Add dependency metadata and concurrently schedule synthesis-only experiments only when they are independent.",
+    "Gate accelerator and DualGPURunner recommendations on task classification and model concurrency."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "GPU idleness is expected because all 2 experiments were synthesis-only and gpu_idle_on_compute_bound_tasks is null. Better timing can enable future optimization, but the available data supports 0% estimated savings rather than a speculative forecast."
+}
