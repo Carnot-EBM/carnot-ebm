@@ -16744,3 +16744,5 @@ The l |
 | 2026-08-29 06:18 UTC | Cold object-table row, statistic, and live-provena | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6731-object-table-fetch-on-demand-ab.ob |
 | 2026-08-29 06:20 UTC | Hardness-controlled exact certificate stream with  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6729-v587-activation-evidence-contract. |
 | 2026-08-29 06:22 UTC | Hardness-controlled exact certificate stream with  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6729-v587-activation-evidence-contract. |
+| 2026-08-29 06:24 UTC | Hardness-controlled exact certificate stream with  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6729-v587-activation-evidence-contract. |
+| 2026-08-29 06:26 UTC | Three-model SOTA dual-encoding proof-carrying prop | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6733-hardness-controlled-certificate-stre |
