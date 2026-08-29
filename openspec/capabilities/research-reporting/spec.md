@@ -59469,3 +59469,49 @@ restart receipts, rollback receipts, and gate evidence
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6761 and SCENARIO-REPORT-6761-* | Planned (`python/carnot/experiment_6761_procedural_memory_stream.py`, `scripts/experiments/experiment_6761_procedural_memory_stream.py`) | Planned (`tests/python/test_experiment_6761_procedural_memory_stream.py`) |
+
+### REQ-REPORT-6762: Procedural Memory Comparison SHALL Be Atomic And Row-Derived
+
+Exp6762 SHALL atomically write
+`results/experiment_6762_procedural_vs_trace_csl_ab.json`. The artifact SHALL
+include `field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `models_used`, `live_model_invoked`,
+`frozen_manifest`, `gpu_receipts`, `rows`,
+`prequential_exact_yield_by_arm`, `hard_case_yield_by_arm`,
+`effective_support_by_arm`, `retention_by_arm`, `forgetting_by_arm`,
+`negative_transfer_by_arm`, `retrieval_and_action_influence_by_arm`,
+`commits_by_arm`, `rejects_by_arm`, `procedural_over_no_memory_order_lcb`,
+`procedural_over_trace_order_lcb`, `prospective_csl_completed`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`.
+
+The artifact SHALL contain exactly one row for every frozen order, model, arm,
+and event. A cold reducer SHALL reproduce every headline aggregate, completion
+gate, and positive-credit comparison from those rows and lifecycle receipts.
+The checksum SHALL bind the frozen manifest, model identities, rows,
+transactions, and teardown evidence while excluding measured duration.
+
+#### SCENARIO-REPORT-6762-ATOMIC: Readers Observe One Complete Artifact
+
+**Given** complete rows, transactions, lifecycle receipts, and cold aggregates
+**When** Exp6762 validates and publishes the artifact
+**Then** readers observe one complete JSON object
+**And** all row-derived fields and the checksum replay exactly.
+
+**Spec traces:** REQ-REPORT-6762, REQ-CL-6762
+
+#### SCENARIO-REPORT-6762-BLOCKED: Owned Blocks Keep The Complete Schema
+
+**Given** one failed prerequisite before model load
+**When** Exp6762 publishes its blocked artifact
+**Then** it uses `complete_blocked_procedural_csl_ab`
+**And** it retains every required schema field with empty rows
+**And** it records failed checks with expected and observed values.
+
+**Spec traces:** REQ-REPORT-6762, SCENARIO-CL-6762-BLOCKED
+
+## Implementation Status (REQ-REPORT-6762)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6762 and SCENARIO-REPORT-6762-* | Implemented (`python/carnot/experiment_6762_procedural_vs_trace_csl_ab.py`, `scripts/experiments/experiment_6762_procedural_vs_trace_csl_ab.py`) | Implemented (`tests/python/test_experiment_6762_procedural_vs_trace_csl_ab.py`) |
