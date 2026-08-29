@@ -23231,3 +23231,91 @@ exactly one declared split.
 `hardness_stream_ready` to true and any owned block names its failed check.
 
 **Spec traces:** REQ-VERIFY-6744
+
+### REQ-VERIFY-6745: Complete Three-Model Dual-Encoding Certificate Corpus
+
+Exp6745 SHALL freeze the Exp6744 stream hash, one proof-carrying DSL prompt,
+one decode configuration, one output-token cap, one stop contract, and fixed
+per-instance seeds before inference. It SHALL run
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` sequentially through local llama.cpp CUDA.
+Every frozen model-instance attempt SHALL remain in the artifact. A malformed
+response, timeout, process failure, or abstention SHALL not reduce the frozen
+denominator.
+
+The DSL SHALL admit a SAT assignment, an UNSAT clause core, or an explicit
+abstention. Two separately implemented encoders SHALL translate every
+parseable certificate. The experiment SHALL compare normalized constraints,
+not serialized encoder output. A model statement or model self-assessment
+SHALL never supply exact authority. An independent CNF check SHALL evaluate
+both encodings. If exact authority is unavailable, the affected row SHALL be
+blocked and SHALL not receive a guessed diagnosis.
+
+Each diagnosable row SHALL receive exactly one of `exact_valid`,
+`malformed_certificate`, `translation_disagreement`, `reasoning_error`, or
+`abstention`. Translation disagreement SHALL take precedence when the two
+normalized encodings differ. Exact validity SHALL require agreement and two
+successful exact checks. Readiness SHALL not depend on the exact-valid rate.
+
+The terminal artifact SHALL be
+`results/experiment_6745_sota_dual_encoding_proposal_corpus.json`. It SHALL
+include `field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `models_used`, `live_model_invoked`,
+`gpu_receipts`, `planned_row_count`, `rows`, `diagnosis_counts`,
+`encoder_agreement_matrix`, `exact_success_by_model`,
+`dual_encoding_corpus_ready`, `gate_check_summary`, `verdict_class`, and
+`honest_verdict`. Field principles SHALL cover every artifact field and the
+downstream readiness gate.
+
+`dual_encoding_corpus_ready` SHALL be true only when every frozen
+model-instance row exists once, attribution and budgets are present, all
+applicable encoder and exact-check paths were attempted, and each model load
+has CUDA evidence. A failed precondition SHALL produce a complete blocked
+artifact with `complete_blocked_proposal_corpus` at the start of its honest
+verdict. The verdict class SHALL use the closed project vocabulary.
+
+### SCENARIO-VERIFY-6745-DSL: The Small Certificate DSL Fails Closed
+
+**Given** SAT assignments, UNSAT clause cores, explicit abstentions, and
+malformed text
+**When** Exp6745 parses the response
+**Then** only the two certificate forms are parseable, abstention remains
+distinct, and malformed text receives no invented constraints.
+
+**Spec traces:** REQ-VERIFY-6745
+
+### SCENARIO-VERIFY-6745-DUAL: Independent Encodings Control Diagnosis
+
+**Given** a parseable certificate
+**When** the independent encoders produce normalized constraints
+**Then** equal constraints reach both exact checks and unequal constraints
+receive `translation_disagreement` without serialized-string comparison.
+
+**Spec traces:** REQ-VERIFY-6745
+
+### SCENARIO-VERIFY-6745-EXACT: CNF Semantics Are Final Authority
+
+**Given** a SAT assignment or an UNSAT clause core
+**When** both encodings are exact-checked
+**Then** only the CNF semantics determine validity and model self-judgment has
+no authority.
+
+**Spec traces:** REQ-VERIFY-6745
+
+### SCENARIO-VERIFY-6745-RETENTION: Timeouts Do Not Change The Denominator
+
+**Given** a frozen model-instance attempt that times out or fails
+**When** the row is built
+**Then** its raw hash, failure reason, token budget, latency, and attribution
+remain present in the planned corpus row.
+
+**Spec traces:** REQ-VERIFY-6745
+
+### SCENARIO-VERIFY-6745-COMPLETENESS: Readiness Measures Evidence Completion
+
+**Given** every planned model-instance row with valid attribution and budgets
+**When** applicable dual encodings and exact checks are present
+**Then** corpus readiness is true even if every diagnosis is not
+`exact_valid`.
+
+**Spec traces:** REQ-VERIFY-6745
