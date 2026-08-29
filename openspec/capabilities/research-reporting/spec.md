@@ -59141,3 +59141,67 @@ or hash
 and observed values and no invented attack rows.
 
 **Spec traces:** REQ-REPORT-6716
+
+### REQ-REPORT-6729: V587 Activation Evidence Contract SHALL Fail Closed
+
+Exp6729 SHALL build a machine-checkable activation receipt for milestone
+`2026.08.587` without running an LLM or editing the active roadmap. It SHALL
+parse the V587 design, active manifest, optional staged manifest, V587 source
+receipts, exclusion manifest, completed ledger, and gate-producing prompts.
+
+The receipt SHALL verify exactly 13 unique task IDs, 13 unique deliverables,
+four phases, three named PRD gaps, at least two infrastructure tasks, an
+ungated capstone, exact producer-owned gate fields, complete prior-failure
+retirement rows, closed verdict classes, comparison row evidence, ARC
+source/BFS/adapter exclusions, and mandated local GGUF model declarations.
+
+If a listed local file, roadmap YAML parse, source receipt field, manifest
+contract, gate contract, prior-failure rule, claim boundary, or model policy
+check fails, Exp6729 SHALL write a terminal blocked artifact. It SHALL not
+normalize renamed gate fields or infer missing rows from prose.
+
+The artifact SHALL be written atomically to
+`results/experiment_6729_v587_activation_evidence_contract.json`. It SHALL
+include `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `source_cutoff`, `source_receipts`,
+`task_contract_rows`, `gate_contract_rows`, `prior_failure_rows`,
+`model_policy_rows`, `v587_contract_ready`, `gate_check_summary`,
+`verdict_class`, `honest_verdict`, and `field_principles`. It SHALL use
+`source_receipts_and_local_method_preregistration_no_llm`.
+
+#### SCENARIO-REPORT-6729-READY: Complete Manifest Opens Downstream Gates
+
+**Given** V587 design and manifest rows that match all source, task, gate,
+prior-failure, claim-boundary, and model-policy rules
+**When** Exp6729 builds the receipt
+**Then** `v587_contract_ready` is true, every contract row passes, the capstone
+has no gate, and the verdict class is `null`.
+
+**Spec traces:** REQ-REPORT-6729, REQ-HARNESS-008
+
+#### SCENARIO-REPORT-6729-BLOCKED: Missing Or Mismatched Inputs Stay Visible
+
+**Given** a missing staged roadmap, incomplete active manifest, renamed gate
+field, incomplete prior failure, comparison without rows, ARC boundary breach,
+or missing mandated GGUF declaration
+**When** Exp6729 reduces the activation checks
+**Then** `v587_contract_ready` is false, `verdict_class` is `blocked`, and
+`gate_check_summary` names each failed check with the observed value.
+
+**Spec traces:** REQ-REPORT-6729, REQ-HARNESS-002, REQ-HARNESS-008
+
+#### SCENARIO-REPORT-6729-ATOMIC: The Receipt Hash Replays
+
+**Given** source receipts, task rows, gate rows, prior rows, model rows, and
+field principles
+**When** Exp6729 writes and validates the artifact
+**Then** readers observe one JSON object, the checksum replays from canonical
+checked inputs, and partial writes are removed on failure.
+
+**Spec traces:** REQ-REPORT-6729
+
+## Implementation Status (REQ-REPORT-6729)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6729 and SCENARIO-REPORT-6729-* | Planned (`python/carnot/experiment_6729_v587_activation_evidence_contract.py`, `scripts/experiments/experiment_6729_v587_activation_evidence_contract.py`) | Planned (`tests/python/test_experiment_6729_v587_activation_evidence_contract.py`) |
