@@ -18201,3 +18201,14 @@ receipt with monotonic timestamps, task-linked GPU samples, model count, and
 runner identity. Since observed elapsed time has no positive amount, the
 savings estimate is 0%.
 - 2026-08-29: V587 activation, source-receipt, and evidence-contract preflight (⚠️ Blocked) — honest_verdict=blocked_v587_activation_contract: one or more source, manifest, gate, prior, or model checks failed.; results/experiment_6729_v587_activation_evidence_contract.json
+
+## 2026-08-29 — Milestone 2026.08.587 operational retrospective
+
+All 5 entries landed on the 0.0-minute floor, including the 2 compute-bound
+entries, so the record cannot explain their tie. The accelerator snapshot is
+idle despite that compute-bearing workload, making task-owned activity proof
+the next launch-gate priority. Model concurrency is absent, so no data
+available this milestone can show DualGPURunner eligibility or a dispatch
+failure. Source-level monotonic phase stamps and dispatcher metadata should
+follow. Estimated savings is 0% because the clock captured no positive
+duration.
