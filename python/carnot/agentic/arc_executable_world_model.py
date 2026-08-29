@@ -5669,6 +5669,16 @@ def _default_induce_n_ctx() -> int:
     change -- only the worst-case-prompt constant it reads. Recorded so a reader doing the old
     arithmetic by hand does not conclude this function is wrong; it is the constant's docstring
     that moved.
+
+    SINGLE-STREAM DEV HARNESSES MUST OVERRIDE (2026-08-28, hit live running the selfparse
+    transport gate). The current default (106,496) is sized for K=4 concurrent scored
+    serving and needs ~26.6 GiB of KV+weights headroom -- MORE than a 24 GiB 3090's total
+    capacity, so the GPU-headroom guard declines an EMPTY card as "no wait can satisfy
+    this" and falls back to the ~2 tok/s iGPU HIP build, where every induce call times
+    out. A sequential one-request-at-a-time harness needs no pool: set
+    CARNOT_ARC_INDUCE_N_CTX=49152 (verified: fully on-card, ~87 s per first-turn induce)
+    BEFORE constructing the proposer. The guard does print the refusal with this remedy,
+    but only to stderr -- do not rely on having watched it.
     """
     import os
 
