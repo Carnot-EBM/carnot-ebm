@@ -6416,3 +6416,10 @@ The critical path for milestone .250:
 - theme: brief synthesis-only execution exposed reconstructed-timing observability limits
 - key result: 2 synthesis-only experiments finished in 0.6 minutes; compute-bound GPU efficiency and parallel-model runner behavior have no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.585
+
+- exp_range: no data available this milestone
+- theme: compute-only planning-bank execution exposed GPU engagement and timing-observability gaps
+- key result: honest operational negative — the only compute-bound task registered 0.0 minutes while both GPUs were idle; duration cause and parallel-model runner applicability have no data available this milestone
+- acceptance: no data available this milestone

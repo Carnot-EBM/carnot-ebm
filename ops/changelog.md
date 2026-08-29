@@ -18097,3 +18097,13 @@ is expected for this workload. The live git-log path found 0 commits, leaving
 disk-mtime reconstruction as the timing-observability bottleneck. Direct
 monotonic phase timing is the next tooling priority. Estimated time savings is
 0% because the supplied data establishes no avoidable execution duration.
+
+## 2026-08-28 — Milestone 2026.08.585 operational retrospective
+
+The milestone's only experiment was compute-bound and registered 0.0 minutes
+under disk-mtime reconstruction. Both GPUs were idle in the supplied snapshot,
+so compute-task GPU idle is true. No data available this milestone explains the
+duration or establishes parallel multi-model loading and a missed DualGPURunner
+dispatch. The next tooling priority is a fail-fast GPU engagement check joined
+to monotonic phase timing and launch metadata. Estimated time savings is 0%
+because the timing data measures no positive duration.
