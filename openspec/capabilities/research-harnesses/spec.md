@@ -9668,3 +9668,27 @@ candidate list — an unmeasured population must never read as a clean one.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-HARNESS-5935 and SCENARIO-HARNESS-5935-* | Implemented (`ops/arc_artifact_lint_debt_baseline.json` + `tests/python/test_arc_artifact_debt_ratchet.py`) | Implemented (same file; the enforcement IS a test) |
+
+#### SCENARIO-HARNESS-5935-RETIRED-WRITER-SUBSTRATE-DOES-NOT-RETURN
+
+The exp3946 incident class: an artifact's illegal `inference_substrate` was corrected by
+hand, but the WRITER script kept the old literal, so every re-run recreated the illegal
+value (found 2026-07-27 in `experiment_3946_r11l_first_solve.py`; found again 2026-08-28 in
+seven sibling writers — arc3_r11l_solve, 3954, 3964, 3965, 3966, 3981, 3993). Given the
+retired literal `offline_arc_agi3_perception_planner_real_env_confirmed`, no writer under
+`scripts/experiments/` SHALL carry it as a Python string constant (a comment naming it is
+fine — the AST check sees only real literals). A regression here means a writer fix was
+reverted or a new writer copied the retired value, and the suite SHALL go RED before a
+re-run can lay the illegal value back into `results/**`.
+
+#### SCENARIO-HARNESS-5935-RETIRED-WRITER-SUBSTRATE-DOES-NOT-RETURN
+
+The exp3946 incident class: an artifact's illegal `inference_substrate` was corrected by
+hand, but the WRITER script kept the old literal, so every re-run recreated the illegal
+value (found 2026-07-27 in `experiment_3946_r11l_first_solve.py`; found again 2026-08-28 in
+seven sibling writers — arc3_r11l_solve, 3954, 3964, 3965, 3966, 3981, 3993). Given the
+retired literal `offline_arc_agi3_perception_planner_real_env_confirmed`, no writer under
+`scripts/experiments/` SHALL carry it as a Python string constant (a comment naming it is
+fine — the AST check sees only real literals). A regression here means a writer fix was
+reverted or a new writer copied the retired value, and the suite SHALL go RED before a
+re-run can lay the illegal value back into `results/**`.

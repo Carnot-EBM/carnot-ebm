@@ -29,7 +29,12 @@ PRIOR_BEST_LEVELS = 1
 STOP_AFTER_LEVEL = 2
 WIN_LEVELS = 8
 RANDOM_SEED = 3965
-INFERENCE_SUBSTRATE = "offline_arc_agi3_perception_planner_real_env_confirmed"
+# LEGAL substrate per CLAUDE.md's Inference-Substrate table. This script previously
+# wrote "offline_arc_agi3_perception_planner_real_env_confirmed", which is not in
+# that table, so every re-run recreated an artifact the ARC artifact lint rejects
+# (the exp3946 writer had the same defect, fixed 2026-07-27; see commit 0a6329fb45's
+# sibling). Honest: this script steps the offline Arcade sim; no LLM import exists.
+INFERENCE_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
 
 sys.path.insert(0, str(REPO / "python"))
 from carnot.agentic.arc_agi3_world_model import compute_grid_delta, grid_of, objects  # noqa: E402
@@ -118,7 +123,10 @@ def plan_permutation_clicks(
 
 
 def _baseline_for_solved_levels(levels_completed: int, baseline_actions: list[int]) -> list[int]:
-    return [int(baseline_actions[index]) for index in range(min(levels_completed, len(baseline_actions)))]
+    return [
+        int(baseline_actions[index])
+        for index in range(min(levels_completed, len(baseline_actions)))
+    ]
 
 
 def load_baseline_actions(game: str = GAME_ID, path: Path = BASELINE_PROBE) -> list[int]:
@@ -222,7 +230,8 @@ def solve_incremental_levels(
         level_summaries=level_summaries,
         solve_log=solve_log,
         induced_mechanic_held=int(levels_completed) >= stop_after_level,
-        real_env_confirmed=len(per_level_actions) == int(levels_completed) and int(levels_completed) > 0,
+        real_env_confirmed=len(per_level_actions) == int(levels_completed)
+        and int(levels_completed) > 0,
     )
 
 
@@ -359,7 +368,9 @@ def run(
         env,
         game_action,
         budget=budget,
-        baseline_actions=baseline_actions if baseline_actions is not None else load_baseline_actions(game),
+        baseline_actions=baseline_actions
+        if baseline_actions is not None
+        else load_baseline_actions(game),
         stop_after_level=STOP_AFTER_LEVEL,
         prior_best_levels=PRIOR_BEST_LEVELS,
     )

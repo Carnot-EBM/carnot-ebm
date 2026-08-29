@@ -26,7 +26,12 @@ PRIOR_BEST_LEVELS = 1
 WIN_LEVELS = 6
 STOP_AFTER_LEVEL = 3
 RANDOM_SEED = 3964
-INFERENCE_SUBSTRATE = "offline_arc_agi3_perception_planner_real_env_confirmed"
+# LEGAL substrate per CLAUDE.md's Inference-Substrate table. This script previously
+# wrote "offline_arc_agi3_perception_planner_real_env_confirmed", which is not in
+# that table, so every re-run recreated an artifact the ARC artifact lint rejects
+# (the exp3946 writer had the same defect, fixed 2026-07-27; see commit 0a6329fb45's
+# sibling). Honest: this script steps the offline Arcade sim; no LLM import exists.
+INFERENCE_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
 
 
 @dataclass(frozen=True)
@@ -70,7 +75,8 @@ def _perceive_and_match(env: Any) -> list[dict[str, Any]]:
         composite = data.get("roduyfsmiznvg")
         if composite:
             target_center = (
-                int(target.y) + int(getattr(composite, "height", getattr(target, "height", 1))) // 2,
+                int(target.y)
+                + int(getattr(composite, "height", getattr(target, "height", 1))) // 2,
                 int(target.x) + int(getattr(composite, "width", getattr(target, "width", 1))) // 2,
             )
         else:
@@ -217,7 +223,10 @@ def solve_incremental_levels(
             baseline_actions_ref.append(len(pairs) * 2)
             levels_completed = new_level_count
             state = getattr(frame, "state", None)
-            if state in (getattr(game_state, "WIN", object()), getattr(game_state, "GAME_OVER", object())):
+            if state in (
+                getattr(game_state, "WIN", object()),
+                getattr(game_state, "GAME_OVER", object()),
+            ):
                 break
             continue
 
