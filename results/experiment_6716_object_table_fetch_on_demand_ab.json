@@ -1,0 +1,81 @@
+{
+  "experiment_id": "experiment_6716_object_table_fetch_on_demand_ab",
+  "planning_date": "2026-08-29",
+  "run_completed": false,
+  "inference_substrate": "precondition_only_no_inference",
+  "duration_s": 0.073,
+  "random_seed": null,
+  "reproducibility_checksum": null,
+  "preconditions_checked": {
+    "llama_cpp_gpu_offload": {
+      "passed": true,
+      "evidence": "llama_supports_gpu_offload() assertion exited 0; llama.cpp found two RTX 3090 devices"
+    },
+    "pinned_qwen3_8_27b_gguf_cached": {
+      "passed": null,
+      "evidence": "Not resolved after the context-window precondition produced a terminal block"
+    },
+    "CARNOT_ARC_INDUCE_N_CTX_lowered": {
+      "passed": false,
+      "observed": "unset",
+      "evidence": "printenv CARNOT_ARC_INDUCE_N_CTX exited 1 with no value"
+    }
+  },
+  "verdict_class": "blocked",
+  "honest_verdict": "blocked_context_window: CARNOT_ARC_INDUCE_N_CTX is unset; the paired A/B did not start",
+  "change_fidelity_by_arm": {
+    "table_on": null,
+    "fetch_on_demand": null,
+    "paired_delta_fetch_minus_on": null,
+    "confidence_interval_95": null
+  },
+  "tokens_saved_per_prompt": null,
+  "find_objects_call_rate": null,
+  "noise_floor_used": null,
+  "field_provenance": {
+    "inference_substrate": {
+      "principle": "A substrate declaration separates real model inference from a precondition-only receipt.",
+      "satisfied_by": "No model loaded and no prompt ran because a required resource check failed."
+    },
+    "duration_s": {
+      "principle": "Wall-clock evidence helps detect claims of model inference when no plausible compute occurred.",
+      "satisfied_by": "The measured GPU-offload precondition command took 0.073 seconds; experiment duration is absent because the run did not start."
+    },
+    "random_seed": {
+      "principle": "A seed makes a completed paired experiment reproducible on the same games and arm assignments.",
+      "satisfied_by": "Null because the precondition gate stopped before the original design and seeds were loaded."
+    },
+    "reproducibility_checksum": {
+      "principle": "A content hash detects silent changes to games, seeds, model, prompts, or scoring inputs.",
+      "satisfied_by": "Null because no runnable experiment input bundle was constructed."
+    },
+    "preconditions_checked": {
+      "principle": "Resource receipts prevent a missing GPU, model, or safe context size from becoming a fabricated result.",
+      "satisfied_by": "The GPU check passed and the required context override was unset, which stopped the task."
+    },
+    "verdict_class": {
+      "principle": "Verdict class describes whether the run finished, not whether its scientific result was favorable.",
+      "satisfied_by": "Blocked because inference never started after the resource gate failed."
+    },
+    "honest_verdict": {
+      "principle": "A terminal prefix lets automation distinguish a resource block from a completed null or loss.",
+      "satisfied_by": "The value starts with blocked_context_window and states that the A/B did not run."
+    },
+    "change_fidelity_by_arm": {
+      "principle": "Paired arm scores are needed to test whether fetching preserves the held-out gain from the object table.",
+      "satisfied_by": "Null values prevent a precondition failure from being reported as measured arm performance."
+    },
+    "tokens_saved_per_prompt": {
+      "principle": "Measured prompt savings distinguish actual compression from a theoretical table-size estimate.",
+      "satisfied_by": "Null because no prompts were built or submitted."
+    },
+    "find_objects_call_rate": {
+      "principle": "Tool-call frequency distinguishes fetch-on-demand behavior from an object-table ablation.",
+      "satisfied_by": "Null because the fetch-on-demand arm did not run."
+    },
+    "noise_floor_used": {
+      "principle": "The preregistered noise floor defines the largest acceptable lower-bound loss against the table-on arm.",
+      "satisfied_by": "Null because the source design was not loaded after the terminal precondition failure."
+    }
+  }
+}
