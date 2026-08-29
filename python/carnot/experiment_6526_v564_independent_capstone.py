@@ -1286,6 +1286,11 @@ def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
         errors.append("inference_substrate mismatch")  # pragma: no cover
     if payload.get("verifier_is_oracle") is not False:
         errors.append("verifier_is_oracle must be false")
+    # The capstone always reads every expected artifact to completion, so a
+    # partial (may-retry) declaration is always wrong here
+    # (REQ-CONDUCTOR-VERDICT-3, SCENARIO-CONDUCTOR-VERDICT-5).
+    if payload.get("verdict_class") != "null":
+        errors.append("capstone verdict_class must be null")
     if payload.get("field_principles") != FIELD_PRINCIPLES:
         errors.append("field_principles mismatch")  # pragma: no cover
     provenance = payload.get("field_provenance")
