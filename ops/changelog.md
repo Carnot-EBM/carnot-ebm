@@ -18214,3 +18214,4 @@ follow. Estimated savings is 0% because the clock captured no positive
 duration.
 - 2026-08-29: Activated V588 handoff and binding-contract audit (⚠️ Blocked) — honest_verdict=complete_blocked_handoff_contract: one or more V588 handoff checks failed.; results/experiment_6742_v588_handoff_contract_audit.json
 - 2026-08-29: Task-owned phase clock and three-family accelerator canary (✅ Complete) — honest_verdict=complete: all three mandated models reached a first token on CUDA and teardown completed; results/experiment_6743_task_owned_phase_accelerator_canary.json
+- 2026-08-29: Hardness-controlled exact certificate stream with relabel pairs (✅ Complete) — honest_verdict=complete_positive: all 72 exact certificate rows and 36 relabel pairs are ready; results/experiment_6744_hardness_controlled_certificate_stream.json
