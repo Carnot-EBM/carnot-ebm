@@ -1249,7 +1249,7 @@
   "generic_transfer_rate_integrated": 0.04,
   "heldout_solve_rate": 0.04,
   "honest_verdict": "complete: no_lever_raises_a_metric_honest_null",
-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end (if the integrated config invokes the LLM proposer in the measured run, declare live_llm_inference + add the model precondition).",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
   "levers_integrated": [],
   "local_gate_budget": 8000,
   "operator_submission_performed": false,
@@ -1412,5 +1412,7 @@
       "severity": "warn",
       "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
     }
-  ]
+  ],
+  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end (if the integrated config invokes the LLM proposer in the measured run, declare live_llm_inference + add the model precondition).",
+  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
 }

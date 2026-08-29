@@ -82,7 +82,9 @@
   },
   "generic_transfer_rate_with_predictor": 0.04,
   "honest_verdict": "complete: clickability_predictor_no_efficiency_gain_honest_null_gap_sharpened",
-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- the CNN trains/scores against cached transitions (no LLM load, 1s floor); fast CPU forward pass declared.",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
+  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- the CNN trains/scores against cached transitions (no LLM load, 1s floor); fast CPU forward pass declared.",
   "median_actions_to_first_levelup_baseline": 1.0,
   "median_actions_to_first_levelup_with_predictor": 1.0,
   "missing_verifier_gaps": [

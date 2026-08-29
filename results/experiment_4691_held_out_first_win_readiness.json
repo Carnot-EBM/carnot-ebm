@@ -61,7 +61,7 @@
     "source_artifact_path": "results/experiment_4605_live_integration_scored_agent.json"
   },
   "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- the held-out proxy runs the scored agent over cached color-permuted variants offline, no live game server (1s floor).",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
   "leaderboard_relevant_change_note": "no leaderboard-relevant change this milestone: held-out first-win did not improve with bootstrap-CI lower bound above zero.",
   "multi_level_deepen_rate_integrated": 0.0,
   "operator_only": true,
@@ -118,5 +118,7 @@
       "severity": "critical",
       "detail": "first_win_baseline=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
     }
-  ]
+  ],
+  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- the held-out proxy runs the scored agent over cached color-permuted variants offline, no live game server (1s floor).",
+  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
 }

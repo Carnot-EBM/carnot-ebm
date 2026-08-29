@@ -49,7 +49,9 @@
     }
   },
   "honest_verdict": "complete_generation_lever_silent_bug_audit_11_levers_5_must_reopen",
-  "inference_substrate": "aggregation_from_upstream_artifacts; 100us floor.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'aggregation_from_upstream_artifacts' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
+  "inference_substrate_original_invalid_value": "aggregation_from_upstream_artifacts; 100us floor.",
   "levers_audited": [
     "experiment_4640_goal_energy_generation_live",
     "experiment_4641_action_effect_expansion_prior_live",

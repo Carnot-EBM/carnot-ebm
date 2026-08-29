@@ -70,7 +70,7 @@
     }
   },
   "honest_verdict": "success: world_model_trust_pass_rate_metric_helper_shipped_tests_green",
-  "inference_substrate": "aggregation_from_upstream_artifacts -- reads the A1 artifact + registry, no model load (100us floor).",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
   "inference_substrate_detail": "aggregation_only_no_model_load",
   "passed_games": [
     "ar25",
@@ -134,5 +134,7 @@
       "detail": "World-model trust pass is degenerate or circular: verifier_is_oracle=None, not False; no positive correctly-predicted grid-changing transition evidence. A trust pass must declare verifier_is_oracle=false and show >=1 correctly predicted grid-changing transition so identity/no-op models cannot clear the gate."
     }
   ],
-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+  "inference_substrate_original_invalid_value": "aggregation_from_upstream_artifacts -- reads the A1 artifact + registry, no model load (100us floor).",
+  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'aggregation_from_upstream_artifacts' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
 }

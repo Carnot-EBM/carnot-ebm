@@ -2536,7 +2536,7 @@
     "ls20"
   ],
   "honest_verdict": "complete: forward_walk_no_reduction_honest_null",
-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade search, no GGUF/LLM load (1s floor).",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
   "leaderboard_submission": false,
   "local_gate_budget": 8000,
   "median_actions_on_core_best": 7761.5,
@@ -2620,5 +2620,7 @@
       "severity": "warn",
       "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
     }
-  ]
+  ],
+  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade search, no GGUF/LLM load (1s floor).",
+  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
 }

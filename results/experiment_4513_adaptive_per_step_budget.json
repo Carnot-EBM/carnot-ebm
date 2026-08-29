@@ -23,7 +23,7 @@
     "solve_rate_with_adaptive": "principle \"the gate must not drop solve-rate.\""
   },
   "honest_verdict": "success: adaptive_budget_median_actions_2984_below_7760",
-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor).",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
   "local_gate_metrics": {
     "baseline": {
       "games": [
@@ -45589,5 +45589,7 @@
     "honest_verdict_corrected": "complete: adaptive_budget_inert_commit_count_0_no_action_change_false_win_retracted",
     "genuine_insight": "actions_to_first_levelup (lp85=20, near the offline-BFS optimum of 21) is FAR below total run length (7792): the explorer reaches first levelup early but over-explores to ~7760. The honest baseline actions-to-first-levelup median is ~2984 (identical for both conditions). Implication: the gate should measure actions-to-first-levelup (the scoring metric), the baseline must be re-measured on that same metric, and the real lever is STOP/measure-AT-first-levelup + the A6 nav tax -- not candidate pruning.",
     "capstone_directive": "PHASE E (.417 capstone) MUST NOT aggregate the 2984-below-7760 number as a win."
-  }
+  },
+  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor).",
+  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
 }
