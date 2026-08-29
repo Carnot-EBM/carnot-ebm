@@ -23284,6 +23284,58 @@ distinct, and malformed text receives no invented constraints.
 
 **Spec traces:** REQ-VERIFY-6745
 
+### REQ-VERIFY-6755: Lossless GGUF Output Boundary And Frozen Reparse
+
+Exp6755 SHALL normalize one GGUF output at a single bytes-or-text boundary.
+The boundary SHALL decode real bytes once as strict UTF-8. For frozen legacy
+text, it SHALL unwrap only one complete Python bytes literal. A safe literal
+parse SHALL return bytes, and UTF-8 encode-decode SHALL reproduce those bytes.
+The boundary SHALL reject invalid UTF-8, expressions, nested envelopes, and
+lossy or ambiguous coercion. It SHALL make no semantic edit.
+
+Exp6755 SHALL cold-reparse all 216 unique Exp6745 rows. It SHALL preserve each
+original text and hash beside the normalized text and hash. It SHALL run the
+frozen parser, both independent encoders, and the exact checker. Parsing and
+encoding SHALL not read the Exp6744 answer label. Every row SHALL retain its
+pre- and post-diagnosis, transport result, encoder agreement, exact outcome,
+failure reason, and grammar failure flags.
+
+All counts SHALL derive from rows. These counts SHALL include invalid variable
+references, invalid clause references, non-binary values, duplicates,
+incomplete evidence, false parseable proofs, and exact-valid proofs.
+`environment_grammar_targetable_rows` SHALL count the row union addressable by
+typed-symbol, domain, uniqueness, or completeness constraints.
+`transport_reparse_ready` SHALL require 216 lossless replays and a matching
+cold aggregate recomputation. It SHALL not require a positive exact-valid rate.
+
+### SCENARIO-VERIFY-6755-BOUNDARY: Transport Decoding Is Strict And Idempotent
+
+**Given** real bytes, ordinary text, or one legacy Python bytes envelope
+**When** the shared output boundary normalizes the value
+**Then** it returns one lossless UTF-8 text value, repeated normalization keeps
+that text unchanged, and invalid UTF-8, expressions, or nested envelopes fail.
+
+**Spec traces:** REQ-VERIFY-6755
+
+### SCENARIO-VERIFY-6755-REPLAY: Transport Recovery Does Not Repair Semantics
+
+**Given** the 216 frozen Exp6745 proposal receipts and ready Exp6744 CNFs
+**When** Exp6755 removes only the proven bytes envelope and replays exact checks
+**Then** every original receipt remains present, semantic edits equal zero,
+and parseability and exact validity remain separate row-derived outcomes.
+
+**Spec traces:** REQ-VERIFY-6755
+
+### SCENARIO-VERIFY-6755-BLOCKED: Invalid Frozen Input Fails Before Replay
+
+**Given** an unreadable artifact, a row-count or uniqueness mismatch, a missing
+original output hash, or a stream link that does not match ready Exp6744
+**When** Exp6755 checks its frozen inputs
+**Then** it atomically writes `complete_blocked_reparse_input` with the failed
+check and observed value, and it emits no replay rows.
+
+**Spec traces:** REQ-VERIFY-6755
+
 ### SCENARIO-VERIFY-6745-DUAL: Independent Encodings Control Diagnosis
 
 **Given** a parseable certificate
