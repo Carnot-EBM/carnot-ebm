@@ -1,5 +1,46 @@
 # Carnot — Changelog
 
+## 2026-08-28 — Seven verdict_class writers: finished runs declare null, not partial (REQ-CONDUCTOR-VERDICT-3)
+
+- Corrected the seven modules that declared `verdict_class: partial` on runs
+  that finished: exp6506, exp6510, exp6513, exp6526, exp6615, exp6659,
+  exp6687. To these writers, partial meant mixed evidence; to the enum-first
+  consumer it means may-retry, so each finished run was re-run toward the
+  3-fail limit (exp6513's task retired that way; exp6687's 2,983s synthesis
+  was logged FAIL and re-queued). All seven runs verifiably finished (ready
+  scores 1.0, full gate and branch matrices), so all seven are now null -
+  none stayed partial.
+- Fixed writer AND artifact per the exp3946 lesson: each writer emits null on
+  its completed path, each validator rejects a partial declaration there, and
+  each artifact carries a dated append-only correction note preserving the
+  original values verbatim, with checksums recomputed by each module's own
+  function. exp6687's flagged_adversarial stamp (caused by the partial
+  declaration via NONTERMINAL_DECLARED_ARTIFACT) is preserved untouched;
+  clearing it is the gate owner's decision.
+- Repaired three pre-existing stale-live-state test suites that rebuilt from
+  the LIVE tree: test_6687 (required the active roadmap to still be V582;
+  15/17 tests erroring), test_6526 (gate spelling against the live roadmap;
+  7 contracts failing), test_6527 (live milestone and exp6520's since-cleared
+  stamp; 6 failures pre-batch). Each now pins its archived input state
+  (commits a8e0d917e5, 73cef259c4, ab2a4b946a - the last verified 7/7
+  against exp6527's own recorded input hashes).
+- exp6527's writer baked "verdict_class_from_rows": "partial" as a mirror of
+  exp6526; it now derives the value from the source artifact.
+- Verification: 14 writer/validator rules plus the exp6527 derivation
+  mutation-proven RED then restored byte-identical; 118 tests green across
+  the seven suites, test_6516, and the three verdict-spec consumer suites;
+  adversarial_verify clean of VERDICT_PREFIX_CLASS_CONTRADICTION on all
+  seven artifacts.
+- Process finding, second confirmation today: a concurrent pre-commit
+  stash-restore destroyed this session's uncommitted first round outright,
+  and later re-applied an in-flight mutation OVER a byte-identical restore -
+  making two sound validator rules read as decorative until re-proven
+  serially. With concurrent agents, a GREEN mutation verdict is not evidence
+  a rule is decorative until the proof is re-run serially, and
+  `git diff HEAD -- <paths>` before every commit is the catch.
+- Commits: f5f4364cc6 (writers), a33755953d (artifacts), 3fddef1bf0 (tests +
+  capstone spec principle), c33a44d0b0 (stragglers), 8255e0f701 (exp6527).
+
 ## 2026-08-28 — Selfparse tool-call transport + goal-prompt RLE fix (REQ-ARC-WMTE-6730/6740)
 
 - Implemented the two builds from the 2026-08-28 context/frame-compression

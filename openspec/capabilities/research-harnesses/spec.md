@@ -9584,12 +9584,26 @@ SHALL treat it as retryable.
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-CONDUCTOR-VERDICT-3 | Specification only. No consumer change: `_verdict_is_untrustworthy` and `classify_artifact` are correct as written and SCENARIO-CONDUCTOR-VERDICT-5 is preserved. | Existing `tests/python/test_verdict_class_enum_first.py` (7 passing) covers the consumer half unchanged. |
+| REQ-CONDUCTOR-VERDICT-3 | Implemented for all seven known writers (commits f5f4364cc6 writers+validators, a33755953d artifacts). No consumer change: `_verdict_is_untrustworthy` and `classify_artifact` are correct as written and SCENARIO-CONDUCTOR-VERDICT-5 is preserved. | `tests/python/test_experiment_{6506,6510,6513,6526,6615,6659,6687}_*.py` pin the null declaration and each validator's partial-rejection rule (commit 3fddef1bf0); 14 rules plus exp6527's mirror derivation mutation-proven RED then restored byte-identical; existing `tests/python/test_verdict_class_enum_first.py` covers the consumer half unchanged. |
 
 **Outstanding, deliberately not auto-corrected.** Seven artifacts declare `partial` for a
 completed run: exp6506, exp6510, exp6513, exp6526, exp6615, exp6659, exp6687. Each needs its
 WRITER changed — including the hardcoded validator expectations — and each needs a human
 judgement about whether `null` or `blocked` fits its evidence. A sweep would be the wrong tool.
+
+**Resolved 2026-08-28 (append-only; the paragraph above is the work order it answers).** All
+seven were judged individually and every one is `null`: each run verifiably finished (ready
+scores 1.0, full gate/branch/availability matrices), none was stopped by a precondition, and
+none stayed `partial`. The closest call, exp6687, has three blocked branches and one partial —
+but those are upstream states its synthesis REPORTS, not its own execution state; nothing it
+planned went unattempted, so its mixed no-pooled-claim result is `null` per
+SCENARIO-CONDUCTOR-VERDICT-8. Writers and validators fixed per "Fix the WRITER, never only the
+artifact"; artifacts corrected with dated append-only notes preserving the original values and
+recomputed checksums. exp6687's `flagged_adversarial` stamp — caused by the mis-declaration via
+NONTERMINAL_DECLARED_ARTIFACT — is preserved; clearing it is the gate owner's decision.
+exp6527's writer additionally baked `"verdict_class_from_rows": "partial"` as a mirror of
+exp6526; it now derives the value from the source artifact (commit 8255e0f701). Full narrative:
+ops/changelog.md 2026-08-28.
 
 ## REQ-HARNESS-5930: Every Pytest Invocation SHALL Own A Private Tmp Base
 
