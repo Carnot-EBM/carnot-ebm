@@ -50,6 +50,8 @@ from carnot.agentic.arc_induction_tools import (
     TOOL_SCHEMAS,
     InductionToolSession,
     dispatch_tool,
+    parse_xml_tool_calls,
+    render_tool_schemas_for_prompt,
 )
 
 _LOG = logging.getLogger(__name__)
@@ -70,6 +72,17 @@ def tool_loop_repair_enabled() -> bool:
     failed engine. Deliberately a DIFFERENT value of the same env var, so the two modes
     are mutually exclusive by construction and `induce()`'s `== "1"` hook stays dead."""
     return os.environ.get("CARNOT_ARC_INDUCE_TOOL_LOOP") == "repair"
+
+
+def tool_loop_selfparse_enabled() -> bool:
+    """SELFPARSE transport (REQ-ARC-WMTE-6730, default OFF): the loop as primary mode,
+    with tool-call transport moved entirely to the agent side. No `tools` field is
+    ever sent (the flag-less scored vLLM server returns HTTP 400 on one); the schemas
+    travel as prompt text, and the model's Qwen3-coder XML emissions are parsed by
+    the loop itself. A third value of the same env var, so the three modes stay
+    mutually exclusive by construction. This is a TRANSPORT property of the loop:
+    any caller (primary induce, CEGIS refinement) inherits it while the value is set."""
+    return os.environ.get("CARNOT_ARC_INDUCE_TOOL_LOOP") == "selfparse"
 
 
 def _lean_prompt_k() -> Optional[int]:
@@ -207,19 +220,25 @@ def _post_chat(
     *,
     turn: int,
     timeout_s: float,
+    selfparse: bool = False,
 ) -> dict[str, Any]:
     """One /v1/chat/completions request with the tool schemas attached.
+
+    Under selfparse (REQ-ARC-WMTE-6730) the `tools` / `tool_choice` fields are OMITTED
+    -- the measured HTTP 400 on the flag-less scored server fires only when the request
+    carries `tools`, and the schemas travel as prompt text instead.
 
     Returns the raw response dict. Raises on transport failure -- the loop converts
     that into a clean fallback, same contract as _chat_complete_request."""
     payload: dict[str, Any] = {
         "messages": messages,
-        "tools": TOOL_SCHEMAS,
-        "tool_choice": "auto",
         "max_tokens": int(proposer.max_tokens),
         "temperature": 0.2,
         "cache_prompt": True,
     }
+    if not selfparse:
+        payload["tools"] = TOOL_SCHEMAS
+        payload["tool_choice"] = "auto"
     _sampling_overrides(payload)
     # Per-turn seed via the proposer's own ladder helper, so a seeded run is
     # deterministic per turn without collapsing all turns onto one draw.
@@ -386,8 +405,13 @@ def induce_with_tool_loop(
                 + "\n```\nFix THIS engine using the mismatch report. Do not start from "
                 "scratch unless the report shows the approach itself is wrong."
             )
+    # SELFPARSE transport (REQ-ARC-WMTE-6730): schemas travel as prompt text because
+    # the request will carry no `tools` field; everything else about the loop -- turn
+    # caps, budgets, dispatch, monotone accept -- is shared with the server-lifted mode.
+    selfparse = tool_loop_selfparse_enabled()
+    schema_text = ("\n\n" + render_tool_schemas_for_prompt()) if selfparse else ""
     messages: list[dict[str, Any]] = [
-        {"role": "user", "content": base + "\n\n" + _TOOL_INSTRUCTIONS + seed_note}
+        {"role": "user", "content": base + "\n\n" + _TOOL_INSTRUCTIONS + schema_text + seed_note}
     ]
     stats: dict[str, Any] = {
         "seeded": bool(seed_engine_code),
@@ -403,6 +427,15 @@ def induce_with_tool_loop(
         "tool_calls_per_turn": [],
         "tool_call_parse_failures": 0,
         "unparsed_tool_call_text_turns": 0,
+        # REQ-ARC-WMTE-6730 selfparse transport counters. All zero (and `selfparse`
+        # False) in the server-lifted modes, so an artifact can always tell which
+        # transport produced its numbers. blocks_seen - calls_parsed = parse failures
+        # of the agent-side XML parser specifically, the §5 gate's denominator.
+        "selfparse": selfparse,
+        "selfparse_turns_with_tool_call_text": 0,
+        "selfparse_blocks_seen": 0,
+        "selfparse_calls_parsed": 0,
+        "selfparse_blocks_unparsed": 0,
         "candidates_scored": 0,
         "force_engine_nudges": 0,
         # REQ-ARC-WMTE-6540 counters. The first two record on every run: telemetry
@@ -542,6 +575,7 @@ def induce_with_tool_loop(
                 messages,
                 turn=turn,
                 timeout_s=min(float(proposer.timeout), max(1.0, remaining)),
+                selfparse=selfparse,
             )
         except Exception as exc:  # noqa: BLE001 - transport failure -> clean fallback
             stats["transport_error"] = f"{type(exc).__name__}: {exc}"[:300]
@@ -564,16 +598,34 @@ def induce_with_tool_loop(
         stats["prompt_tokens_per_turn"].append(compact.note_response(raw))
         content = str(msg.get("content") or "")
         tool_calls = msg.get("tool_calls") or []
+        if selfparse and not tool_calls:
+            # AGENT-SIDE LIFT (REQ-ARC-WMTE-6730): the request carried no `tools`, so
+            # the server can never lift a call -- parse the model's Qwen3-coder XML
+            # here. Lifted calls enter the SAME dispatch path server-lifted calls use.
+            tool_calls, n_blocks, n_unparsed = parse_xml_tool_calls(content)
+            if n_blocks:
+                stats["selfparse_turns_with_tool_call_text"] += 1
+                stats["selfparse_blocks_seen"] += n_blocks
+                stats["selfparse_calls_parsed"] += len(tool_calls)
+                stats["selfparse_blocks_unparsed"] += n_unparsed
 
         if tool_calls:
-            # Feed the assistant turn back WITHOUT reasoning_content: reasoning is not
-            # part of the conversation contract, and re-prefilling it would spend the
-            # tokens the per-turn think budget exists to save.
-            # `content or ""`: some chat templates reject a null content field on an
-            # assistant tool-call turn; an empty string renders safely everywhere.
-            messages.append(
-                {"role": "assistant", "content": content or "", "tool_calls": tool_calls}
-            )
+            if selfparse:
+                # Plain assistant text, think channel stripped: the XML stays in-context
+                # exactly as the model wrote it, and no tool_calls field goes near a
+                # chat template that was never sent a tool declaration.
+                visible = content.rsplit("</think>", 1)[1] if "</think>" in content else content
+                messages.append({"role": "assistant", "content": visible})
+            else:
+                # Feed the assistant turn back WITHOUT reasoning_content: reasoning is not
+                # part of the conversation contract, and re-prefilling it would spend the
+                # tokens the per-turn think budget exists to save.
+                # `content or ""`: some chat templates reject a null content field on an
+                # assistant tool-call turn; an empty string renders safely everywhere.
+                messages.append(
+                    {"role": "assistant", "content": content or "", "tool_calls": tool_calls}
+                )
+            tool_response_parts: list[str] = []
             improved_this_turn = False
             turn_names: list[str] = []
             for tc in tool_calls:
@@ -590,18 +642,28 @@ def induce_with_tool_loop(
                 err = str(result.get("error") or "")
                 if "unparseable JSON arguments" in err or "unknown tool" in err:
                     stats["tool_call_parse_failures"] += 1
-                messages.append(
-                    {
-                        "role": "tool",
-                        "tool_call_id": str(tc.get("id") or f"call_{turn}"),
-                        "content": json.dumps(result),
-                    }
-                )
+                if selfparse:
+                    # Qwen3-coder convention: results return as user-side
+                    # <tool_response> blocks in call order. No tool role, so the chat
+                    # template's tool machinery is never engaged on any backend.
+                    tool_response_parts.append(
+                        "<tool_response>\n" + json.dumps(result) + "\n</tool_response>"
+                    )
+                else:
+                    messages.append(
+                        {
+                            "role": "tool",
+                            "tool_call_id": str(tc.get("id") or f"call_{turn}"),
+                            "content": json.dumps(result),
+                        }
+                    )
                 if name == "run_engine_on_transitions" and result.get("ok"):
                     m = session.candidates[-1].visible_mismatches
                     if best_mismatches is None or m < best_mismatches:
                         best_mismatches = m
                         improved_this_turn = True
+            if selfparse:
+                messages.append({"role": "user", "content": "\n".join(tool_response_parts)})
             stats["tool_calls_per_turn"].append(turn_names)
             if (
                 session.candidates

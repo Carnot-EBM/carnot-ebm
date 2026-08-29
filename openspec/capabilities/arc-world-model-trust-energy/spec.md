@@ -28052,3 +28052,213 @@ the active roadmap, conductor, and solve registry byte-identical.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6682 | `python/carnot/experiment_6682_arc_held_family_supervisor_ab.py` (frozen manifest, live E3 off/on runner, exact public utility and validity checks, paired/family reductions, attacks, atomic artifact, and validator). | `tests/python/test_experiment_6682_arc_held_family_supervisor_ab.py` (`SCENARIO-ARC-WMTE-6682-PRECONDITIONS-AND-FREEZE`, `EXACT-ROW-AND-UTILITY`, `MATCHED-PAIRS-AND-INTERVENTIONS`, `ATTACKS-FAIL-CLOSED`, `VERDICT-AND-NO-SOLVE`, and `ATOMIC-RECOMPUTATION`; scoped 100% new-module statement coverage). |
+
+### REQ-ARC-WMTE-6730: Selfparse Tool-Call Transport (Default OFF)
+
+The induction tool loop SHALL support an agent-side tool-call transport,
+selected by `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse`. The three env values
+("1", "repair", "selfparse") SHALL stay mutually exclusive on the one
+variable. With the value unset or "1" or "repair", behaviour SHALL stay
+byte-identical to before this requirement.
+
+Motivation (measured, offplay_out5 `tool_transport_probe`, 2026-08-20): the
+scored vLLM launch passes no tool-parser flags. A request that carries a
+`tools` field returns HTTP 400. With `--tool-call-parser hermes` the request
+succeeds but the model's calls stay unlifted text, because Qwen3.8 emits the
+Qwen3-coder XML convention. Selfparse removes the server dependency on every
+backend at once.
+
+Under selfparse the loop SHALL:
+
+1. Send NO `tools` and NO `tool_choice` request fields.
+2. Carry the tool schemas as prompt text, rendered from `TOOL_SCHEMAS` so
+   prompt and dispatch cannot drift apart.
+3. Parse the model's `<tool_call><function=NAME><parameter=K>...` XML itself,
+   scanning only text after the last `</think>`.
+4. Route parsed calls through the same `dispatch_tool` path server-lifted
+   calls use, with schema-typed argument coercion.
+5. Feed results back as user-side `<tool_response>` blocks. It SHALL never
+   send a tool-role message or an assistant `tool_calls` field.
+6. Count attempts, parsed calls, and unparsed blocks in
+   `last_tool_loop_stats` (`selfparse_*` counters), so the pre-registered
+   transport gate (>=80% attempt, >=95% parse-to-dispatch) is measurable.
+7. Never dispatch a length-truncated (unterminated) call; count it as
+   seen-but-unparsed instead.
+
+`LocalGGUFProposer.induce` SHALL enter the loop for "selfparse" exactly as it
+does for "1". "repair" SHALL still enter only through the recall-gated
+resample.
+
+#### SCENARIO-ARC-WMTE-6731: The captured cross-backend emission parses
+
+- GIVEN the verbatim emission the hermes server parser failed to lift
+  (offplay_out5 `content_head`)
+- WHEN `parse_xml_tool_calls` runs over it
+- THEN it yields one dispatchable `run_engine_on_transitions` call with the
+  exact code payload, newline-trimmed.
+
+#### SCENARIO-ARC-WMTE-6732: Reasoning-channel sketches are not calls
+
+- GIVEN a tool-call block that appears before `</think>` and none after
+- THEN no call is lifted and no block is counted.
+
+#### SCENARIO-ARC-WMTE-6733: Schema-typed coercion
+
+- GIVEN XML parameters for a tool whose schema declares integer parameters
+- THEN the dispatched arguments carry JSON integers, not digit strings.
+
+#### SCENARIO-ARC-WMTE-6734: Truncated calls are counted, never dispatched
+
+- GIVEN content that ends inside an unterminated `<tool_call>` block
+- THEN zero calls are lifted and the block counts as seen and unparsed.
+
+#### SCENARIO-ARC-WMTE-6735: Schemas travel as prompt text
+
+- GIVEN selfparse mode
+- THEN the first user message names every tool in `TOOL_NAMES` and states the
+  exact XML call format.
+
+#### SCENARIO-ARC-WMTE-6736: No tools field, no tool role, shared dispatch
+
+- GIVEN a selfparse loop turn whose response carries a tool-call as text
+- THEN the request payload has no `tools`/`tool_choice`, the call is
+  dispatched through the shared path, the result returns as a user-side
+  `<tool_response>` block, and no message in the stream has the tool role.
+
+## Implementation Status (REQ-ARC-WMTE-6730)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6730 | `python/carnot/agentic/arc_induction_tools.py` (`parse_xml_tool_calls`, `render_tool_schemas_for_prompt`, `_PARAM_TYPES` derived from `TOOL_SCHEMAS`); `python/carnot/agentic/arc_induction_tool_loop.py` (`tool_loop_selfparse_enabled`, `_post_chat(selfparse=...)`, agent-side lift + user-side `<tool_response>` feedback, `selfparse_*` stats); induce hook accepts "selfparse" in `python/carnot/agentic/arc_executable_world_model.py`. | `tests/python/test_arc_induction_selfparse_transport.py` (SCENARIO-ARC-WMTE-6731..6736; 7 mutations each RED then restored byte-identical). |
+
+### REQ-ARC-WMTE-6740: Goal-Only Prompt Renders The Previous Grid Run-Length Encoded
+
+`_goal_only_prompt` SHALL render `previous_level_complete_grid` with
+`_rle_grid`, not `to_ascii`, and SHALL state the encoding so the model can
+decode it. The 2026-07-29 polarity correction (the grid is the CURRENT
+level's opening board; `is_level_complete` must return False on it) SHALL
+survive the re-render.
+
+Motivation (measured with the pinned Qwen3.8-27B GGUF tokenizer on real
+reset frames): `to_ascii` costs 4,159 tokens on ANY 64x64 board.
+`_rle_grid` costs 1,002-2,776 across an 8-game sweep. Full-prompt effect:
+tu93 4,309 -> 1,928 (-2,381); ft09 4,309 -> 2,995 (-1,314). Lossless either
+way. This was the last full-grid ASCII render in the induce-prompt family.
+
+#### SCENARIO-ARC-WMTE-6741: RLE render with the format stated
+
+- GIVEN a 64x64 previous-level grid
+- WHEN `_goal_only_prompt` renders it
+- THEN the prompt carries the row-wise RLE form, no one-char-per-cell row,
+  the encoding explanation, and the 2026-07-29 polarity sentences.
+
+## Implementation Status (REQ-ARC-WMTE-6740)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6740 | `python/carnot/agentic/arc_executable_world_model.py` (`_goal_only_prompt` win block: `_rle_grid` + encoding sentence). | `tests/python/test_arc_induction_selfparse_transport.py` (SCENARIO-ARC-WMTE-6741; mutation to `to_ascii` RED then restored byte-identical). |
+
+### REQ-ARC-WMTE-6730: Selfparse Tool-Call Transport (Default OFF)
+
+The induction tool loop SHALL support an agent-side tool-call transport,
+selected by `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse`. The three env values
+("1", "repair", "selfparse") SHALL stay mutually exclusive on the one
+variable. With the value unset or "1" or "repair", behaviour SHALL stay
+byte-identical to before this requirement.
+
+Motivation (measured, offplay_out5 `tool_transport_probe`, 2026-08-20): the
+scored vLLM launch passes no tool-parser flags. A request that carries a
+`tools` field returns HTTP 400. With `--tool-call-parser hermes` the request
+succeeds but the model's calls stay unlifted text, because Qwen3.8 emits the
+Qwen3-coder XML convention. Selfparse removes the server dependency on every
+backend at once.
+
+Under selfparse the loop SHALL:
+
+1. Send NO `tools` and NO `tool_choice` request fields.
+2. Carry the tool schemas as prompt text, rendered from `TOOL_SCHEMAS` so
+   prompt and dispatch cannot drift apart.
+3. Parse the model's `<tool_call><function=NAME><parameter=K>...` XML itself,
+   scanning only text after the last `</think>`.
+4. Route parsed calls through the same `dispatch_tool` path server-lifted
+   calls use, with schema-typed argument coercion.
+5. Feed results back as user-side `<tool_response>` blocks. It SHALL never
+   send a tool-role message or an assistant `tool_calls` field.
+6. Count attempts, parsed calls, and unparsed blocks in
+   `last_tool_loop_stats` (`selfparse_*` counters), so the pre-registered
+   transport gate (>=80% attempt, >=95% parse-to-dispatch) is measurable.
+7. Never dispatch a length-truncated (unterminated) call; count it as
+   seen-but-unparsed instead.
+
+`LocalGGUFProposer.induce` SHALL enter the loop for "selfparse" exactly as it
+does for "1". "repair" SHALL still enter only through the recall-gated
+resample.
+
+#### SCENARIO-ARC-WMTE-6731: The captured cross-backend emission parses
+
+- GIVEN the verbatim emission the hermes server parser failed to lift
+  (offplay_out5 `content_head`)
+- WHEN `parse_xml_tool_calls` runs over it
+- THEN it yields one dispatchable `run_engine_on_transitions` call with the
+  exact code payload, newline-trimmed.
+
+#### SCENARIO-ARC-WMTE-6732: Reasoning-channel sketches are not calls
+
+- GIVEN a tool-call block that appears before `</think>` and none after
+- THEN no call is lifted and no block is counted.
+
+#### SCENARIO-ARC-WMTE-6733: Schema-typed coercion
+
+- GIVEN XML parameters for a tool whose schema declares integer parameters
+- THEN the dispatched arguments carry JSON integers, not digit strings.
+
+#### SCENARIO-ARC-WMTE-6734: Truncated calls are counted, never dispatched
+
+- GIVEN content that ends inside an unterminated `<tool_call>` block
+- THEN zero calls are lifted and the block counts as seen and unparsed.
+
+#### SCENARIO-ARC-WMTE-6735: Schemas travel as prompt text
+
+- GIVEN selfparse mode
+- THEN the first user message names every tool in `TOOL_NAMES` and states the
+  exact XML call format.
+
+#### SCENARIO-ARC-WMTE-6736: No tools field, no tool role, shared dispatch
+
+- GIVEN a selfparse loop turn whose response carries a tool-call as text
+- THEN the request payload has no `tools`/`tool_choice`, the call is
+  dispatched through the shared path, the result returns as a user-side
+  `<tool_response>` block, and no message in the stream has the tool role.
+
+## Implementation Status (REQ-ARC-WMTE-6730)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6730 | `python/carnot/agentic/arc_induction_tools.py` (`parse_xml_tool_calls`, `render_tool_schemas_for_prompt`, `_PARAM_TYPES` derived from `TOOL_SCHEMAS`); `python/carnot/agentic/arc_induction_tool_loop.py` (`tool_loop_selfparse_enabled`, `_post_chat(selfparse=...)`, agent-side lift + user-side `<tool_response>` feedback, `selfparse_*` stats); induce hook accepts "selfparse" in `python/carnot/agentic/arc_executable_world_model.py`. | `tests/python/test_arc_induction_selfparse_transport.py` (SCENARIO-ARC-WMTE-6731..6736; 7 mutations each RED then restored byte-identical). Transport gate measured 2026-08-28: 20/20 attempt, 20/20 parse-to-dispatch (see `docs/research-notes/arc-selfparse-transport-gate-2026-08-28.md`). |
+
+### REQ-ARC-WMTE-6740: Goal-Only Prompt Renders The Previous Grid Run-Length Encoded
+
+`_goal_only_prompt` SHALL render `previous_level_complete_grid` with
+`_rle_grid`, not `to_ascii`, and SHALL state the encoding so the model can
+decode it. The 2026-07-29 polarity correction (the grid is the CURRENT
+level's opening board; `is_level_complete` must return False on it) SHALL
+survive the re-render.
+
+Motivation (measured with the pinned Qwen3.8-27B GGUF tokenizer on real
+reset frames): `to_ascii` costs 4,159 tokens on ANY 64x64 board.
+`_rle_grid` costs 1,002-2,776 across an 8-game sweep. Full-prompt effect:
+tu93 4,309 -> 1,928 (-2,381); ft09 4,309 -> 2,995 (-1,314). Lossless either
+way. This was the last full-grid ASCII render in the induce-prompt family.
+
+#### SCENARIO-ARC-WMTE-6741: RLE render with the format stated
+
+- GIVEN a 64x64 previous-level grid
+- WHEN `_goal_only_prompt` renders it
+- THEN the prompt carries the row-wise RLE form, no one-char-per-cell row,
+  the encoding explanation, and the 2026-07-29 polarity sentences.
+
+## Implementation Status (REQ-ARC-WMTE-6740)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6740 | `python/carnot/agentic/arc_executable_world_model.py` (`_goal_only_prompt` win block: `_rle_grid` + encoding sentence). | `tests/python/test_arc_induction_selfparse_transport.py` (SCENARIO-ARC-WMTE-6741; mutation to `to_ascii` RED then restored byte-identical). |

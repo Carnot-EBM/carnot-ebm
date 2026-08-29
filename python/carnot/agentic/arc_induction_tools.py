@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import ast
 import json
+import re
 from dataclasses import dataclass, field
 from typing import Any, Callable, Optional, Sequence
 
@@ -548,6 +549,138 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
 ]
 
 TOOL_NAMES = tuple(s["function"]["name"] for s in TOOL_SCHEMAS)
+
+# ---------------------------------------------------------------------------------
+# SELFPARSE transport (REQ-ARC-WMTE-6730). The scored vLLM server is launched with no
+# tool-parser flags: a request carrying a `tools` field returns HTTP 400, and with
+# `--tool-call-parser hermes` the model's calls stay unlifted TEXT, because Qwen3.8
+# emits the Qwen3-coder XML convention (measured, offplay_out5 tool_transport_probe).
+# These two functions remove the server dependency: the schemas travel as PROMPT TEXT
+# so no `tools` field is ever sent, and the loop parses the XML itself.
+# ---------------------------------------------------------------------------------
+
+# Parameter types per tool, derived from TOOL_SCHEMAS so the two can never disagree.
+_PARAM_TYPES: dict[str, dict[str, str]] = {
+    s["function"]["name"]: {
+        p: str(spec.get("type", "string"))
+        for p, spec in (s["function"].get("parameters", {}).get("properties", {}) or {}).items()
+    }
+    for s in TOOL_SCHEMAS
+}
+
+_TOOL_CALL_BLOCK_RE = re.compile(r"<tool_call>(.*?)</tool_call>", re.DOTALL)
+_FUNCTION_NAME_RE = re.compile(r"<function=([\w.\-]+)\s*>")
+_PARAMETER_RE = re.compile(r"<parameter=([\w.\-]+)\s*>(.*?)</parameter>", re.DOTALL)
+
+
+def _trim_param_value(value: str) -> str:
+    """Drop the single wrapping newline the XML convention puts around a value.
+
+    Only ONE leading and ONE trailing newline: a code parameter may legitimately
+    begin with indented lines, so a full strip() would corrupt it."""
+    if value.startswith("\n"):
+        value = value[1:]
+    if value.endswith("\n"):
+        value = value[:-1]
+    return value
+
+
+def _coerce_param(name: str, param: str, value: str) -> Any:
+    """Schema-typed coercion of one XML parameter value.
+
+    The XML carries raw text; dispatch_tool expects JSON-typed arguments. A value
+    that fails coercion is passed through as text so dispatch reports the bad
+    argument back to the model -- a malformed call costs one turn, never the run."""
+    kind = _PARAM_TYPES.get(name, {}).get(param, "string")
+    raw = _trim_param_value(value)
+    if kind == "integer":
+        try:
+            return int(raw.strip())
+        except ValueError:
+            return raw
+    if kind == "number":
+        try:
+            return float(raw.strip())
+        except ValueError:
+            return raw
+    if kind == "boolean":
+        return raw.strip().lower() in ("true", "1", "yes")
+    return raw
+
+
+def parse_xml_tool_calls(content: str) -> tuple[list[dict[str, Any]], int, int]:
+    """Parse Qwen3-coder XML tool calls out of a plain text completion.
+
+    Returns (tool_calls, n_blocks_seen, n_blocks_unparsed). Each parsed call is in
+    the same OpenAI shape the server would have lifted -- {"id", "type", "function":
+    {"name", "arguments": <JSON string>}} -- so the loop's dispatch path is byte-for-
+    byte the one the server-lifted path already exercises.
+
+    Only text AFTER the last </think> is scanned: a call the model merely sketched
+    while reasoning is not a call it made. An unterminated block (length-truncated
+    mid-call) counts as seen-but-unparsed rather than dispatching half a payload."""
+    if "</think>" in content:
+        content = content.rsplit("</think>", 1)[1]
+    calls: list[dict[str, Any]] = []
+    n_blocks = 0
+    n_unparsed = 0
+    for i, m in enumerate(_TOOL_CALL_BLOCK_RE.finditer(content)):
+        n_blocks += 1
+        block = m.group(1)
+        fname = _FUNCTION_NAME_RE.search(block)
+        if not fname:
+            n_unparsed += 1
+            continue
+        args = {
+            pm.group(1): _coerce_param(fname.group(1), pm.group(1), pm.group(2))
+            for pm in _PARAMETER_RE.finditer(block)
+        }
+        calls.append(
+            {
+                "id": f"selfparse_{i}",
+                "type": "function",
+                "function": {"name": fname.group(1), "arguments": json.dumps(args)},
+            }
+        )
+    # A trailing <tool_call> with no closing tag is a truncated call: count it so the
+    # parse-rate stat sees it, but never dispatch a possibly half-transmitted payload.
+    if "<tool_call>" in (content.rsplit("</tool_call>", 1)[-1] if n_blocks else content):
+        n_blocks += 1
+        n_unparsed += 1
+    return calls, n_blocks, n_unparsed
+
+
+def render_tool_schemas_for_prompt() -> str:
+    """The tool schemas as PROMPT TEXT, plus the exact call format to write.
+
+    Rendered from TOOL_SCHEMAS so prompt and dispatch can never drift apart. This is
+    what lets a selfparse request omit the `tools` field entirely -- the only payload
+    shape the flag-less scored server accepts."""
+    lines = ["AVAILABLE TOOLS (schemas):"]
+    for s in TOOL_SCHEMAS:
+        fn = s["function"]
+        props = fn.get("parameters", {}).get("properties", {}) or {}
+        required = set(fn.get("parameters", {}).get("required", []) or [])
+        sig = ", ".join(
+            f"{p}: {spec.get('type', 'string')}" + ("" if p in required else " (optional)")
+            for p, spec in props.items()
+        )
+        lines.append(f"- {fn['name']}({sig})")
+        lines.append(f"    {fn['description']}")
+    lines.append(
+        "\nTOOL CALL FORMAT. This backend lifts no structured tool calls; write the call "
+        "as plain text, EXACTLY this shape, then stop and wait for the result:\n"
+        "<tool_call>\n"
+        "<function=TOOL_NAME>\n"
+        "<parameter=PARAM_NAME>\n"
+        "VALUE\n"
+        "</parameter>\n"
+        "</function>\n"
+        "</tool_call>\n"
+        "One <parameter=...> block per argument. The result arrives in the next user "
+        "message inside <tool_response>...</tool_response>."
+    )
+    return "\n".join(lines)
 
 
 def dispatch_tool(session: InductionToolSession, name: str, arguments: str) -> dict[str, Any]:
