@@ -325,6 +325,15 @@ ACKNOWLEDGED_NON_QA_LAYER: dict[str, str] = {
         "overdue_priority_lint"
     ),
     "batching_precommit_check.py": "build/perf convention, no record-integrity role",
+    "pytest_basetemp_isolation.py": (
+        "test-infrastructure isolation, not a verdict-deciding guard: it assigns each "
+        "pytest invocation a private tmp base so concurrent runs cannot prune each "
+        "other's live tmp (the 2026-08-28 destroyed-measurement incident). Its failure "
+        "loses or contaminates a MEASUREMENT RUN rather than admitting a false claim. "
+        "Listed proactively: its name carries none of the guard markers the runtime "
+        "sweep matches on, so without this entry nothing would ever have recorded the "
+        "decision that it is out of audit scope"
+    ),
     "check_spec_coverage.py": "build-time spec/test traceability, no record-integrity role",
     "precommit_sync_technical_report.py": "mechanical md->html sync, no judgement to get wrong",
     "check_torch_cuda.py": "environment capability probe, no record-integrity role",

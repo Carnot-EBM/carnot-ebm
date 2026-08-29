@@ -9590,3 +9590,44 @@ SHALL treat it as retryable.
 completed run: exp6506, exp6510, exp6513, exp6526, exp6615, exp6659, exp6687. Each needs its
 WRITER changed — including the hardcoded validator expectations — and each needs a human
 judgement about whether `null` or `blocked` fits its evidence. A sweep would be the wrong tool.
+
+## REQ-HARNESS-5930: Every Pytest Invocation SHALL Own A Private Tmp Base
+
+Concurrent pytest runs previously shared one rotation root (`/tmp/pytest-of-<user>`), and
+`tmp_path_retention_count = 1` made every new invocation prune the numbered bases down to
+one — including a still-running job's. The conductor runs pytest every few minutes, so two
+~8 hour full-suite measurement runs were destroyed mid-flight (2026-08-28), and the damage
+was worse than lost wall clock: mid-run deletion turned real failures into setup errors,
+which SUPPRESSED the failure count those runs existed to measure. The 5920 debt baseline
+had to be taken from "run 3, private --basetemp" because runs 1 and 2 meant nothing.
+
+The rule: a pytest invocation with no explicit `--basetemp` SHALL be assigned a fresh
+private base unique to that invocation, under a per-user parent outside the shared
+rotation root. An explicit `--basetemp` SHALL be respected untouched, and xdist workers —
+which arrive with a controller-assigned subdirectory — SHALL be untouched. Stale sibling
+bases MAY be pruned best-effort, but only by an age criterion that can never collect a
+live run's base.
+
+#### SCENARIO-HARNESS-5930-ISOLATION
+
+Given two pytest invocations started in the same second by the same user with no explicit
+`--basetemp`, each SHALL receive a distinct base, and neither invocation's tmp management
+SHALL delete or rotate anything under the other's base.
+
+#### SCENARIO-HARNESS-5930-EXPLICIT-RESPECTED
+
+Given an invocation that passes `--basetemp`, the isolation SHALL leave that choice
+untouched — including the xdist worker case, where the controller has already assigned
+`<session_base>/popen-<workerid>`.
+
+#### SCENARIO-HARNESS-5930-LIVE-RUN-NEVER-PRUNED
+
+Given a sibling base younger than the pruning age threshold, cleanup SHALL NOT remove it,
+whatever else it removes — a young base may belong to a live run, and collecting it is the
+exact incident this requirement exists to prevent.
+
+## Implementation Status (REQ-HARNESS-5930)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-HARNESS-5930 and SCENARIO-HARNESS-5930-* | Implemented (`python/carnot/testing/pytest_basetemp_isolation.py`, wired in `tests/python/conftest.py:pytest_configure`) | Implemented (`tests/python/test_pytest_basetemp_isolation.py`, incl. an in-session worker-proof wiring assertion) |

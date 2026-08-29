@@ -18,6 +18,7 @@ import jax
 import pytest
 
 from carnot.paths import repo_root as _resolve_repo_root
+from carnot.testing.pytest_basetemp_isolation import install_isolated_basetemp
 from carnot.testing.pytest_memory_watchdog import MemoryLeakDetected, PytestMemoryWatchdog
 
 # Add repo root to sys.path so tests can import from scripts/
@@ -282,6 +283,12 @@ def _is_xdist_worker(config) -> bool:
 
 def pytest_configure(config) -> None:
     """Set hard address-space limit and keep the RSS watchdog installed."""
+    # PRIVATE TMP BASE PER INVOCATION (2026-08-28). With the shared default tmp root and
+    # `tmp_path_retention_count = 1`, any concurrent pytest pruned the OTHER run's live tmp
+    # base. Two ~8h full-suite runs were destroyed that way, and mid-run deletion turned
+    # failures into setup errors -- suppressing the very count being measured. An explicit
+    # --basetemp is respected untouched; xdist workers already arrive with one assigned.
+    install_isolated_basetemp(config)
     _install_experiment_artifact_root(config)
     config._carnot_rlimit_as_set = _set_process_address_space_limit()
     config._carnot_memory_watchdog = PytestMemoryWatchdog()
