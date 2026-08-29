@@ -17,5 +17,6 @@
       "severity": "critical",
       "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1736_kanele_synth.json; classification=unknown; reason=status or honest_verdict is absent or unknown"
     }
-  ]
+  ],
+  "flagged_adversarial_reason": "Kept 2026-08-29. The declared state is itself the reason: honest_verdict is 'vivado_simulated_success' -- a SIMULATED result declaring success, which is not a live hardware measurement. Re-judged with the live gate it draws no critical flag, but the gate changing its mind is not the same as the finding being wrong. Recorded here so the determination is self-describing rather than a bare boolean."
 }
