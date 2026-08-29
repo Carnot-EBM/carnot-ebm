@@ -6423,3 +6423,10 @@ The critical path for milestone .250:
 - theme: compute-only planning-bank execution exposed GPU engagement and timing-observability gaps
 - key result: honest operational negative — the only compute-bound task registered 0.0 minutes while both GPUs were idle; duration cause and parallel-model runner applicability have no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.586
+
+- exp_range: no data available this milestone
+- theme: modification-time fallback erased the phase shape of a lone object-table compute task
+- key result: honest operational negative — 1 compute task landed at 0.0-minute resolution; stage attribution, simultaneous model execution, and runner applicability have no data available this milestone
+- acceptance: no data available this milestone
