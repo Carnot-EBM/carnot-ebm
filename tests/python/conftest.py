@@ -19,7 +19,18 @@ import pytest
 
 from carnot.paths import repo_root as _resolve_repo_root
 from carnot.testing.pytest_basetemp_isolation import install_isolated_basetemp
+from carnot.testing.worktree_import_guard import check as _check_worktree_import
 from carnot.testing.pytest_memory_watchdog import MemoryLeakDetected, PytestMemoryWatchdog
+
+# --- The tests and the package must come from the SAME checkout (2026-08-29) ----------------
+# Per-agent worktrees stop concurrent agents overwriting each other, but the venv still
+# resolves `import carnot` to the MAIN checkout -- so a worktree run would silently test code
+# the agent did not edit, and every mutation proof would read green while measuring nothing.
+# Verified in both directions before this was wired. Runs at import so a bad run dies during
+# collection rather than after an hour of meaningless passes.
+import carnot as _carnot  # noqa: E402
+
+_check_worktree_import(Path(__file__).resolve().parents[2], Path(_carnot.__file__).resolve().parent)
 
 # Add repo root to sys.path so tests can import from scripts/
 #

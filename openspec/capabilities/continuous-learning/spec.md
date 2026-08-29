@@ -7574,3 +7574,102 @@ against the required field set.
 | SCENARIO-CL-6554-ROWS | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
 | SCENARIO-CL-6554-ATTACKS | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
 | SCENARIO-CL-6554-ATOMIC | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
+
+## REQ-CL-6748: Read-Only Episode Transactional Constraint Memory
+
+Given FR11 needs reusable external memory without same-episode self-rewrite
+When Exp6748 runs for planning date 20260829
+Then it SHALL freeze a deterministic controlled constraint stream before policy evaluation
+And every active episode SHALL read one immutable parent snapshot
+And all writes during an active episode SHALL fail closed and emit attack rows
+And exact-certified records SHALL commit atomically only between episodes.
+
+The stream SHALL contain reusable repair structure, naive distractors, held-out
+families, retention anchors, and poison, stale, and conflict events. It SHALL
+publish six preregistered chronological orders and immutable stream, order, and
+attack seeds. Each proposed active record SHALL pass the exact checker, scope,
+provenance, future-use eligibility, TTL, conflict, and duplicate checks. Each
+commit receipt SHALL contain parent, evidence, and new-state hashes, a reason,
+and an inverse patch.
+
+Exp6748 SHALL use only a task-owned temporary state directory. It SHALL test
+normal commits, duplicates, contradictions, stale evidence, provenance loss,
+delayed-copy poison, crash before rename, crash after rename, restart from
+every event boundary, quarantine, and byte-exact rollback. It SHALL not read or
+write shared live memory.
+
+The artifact SHALL contain `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`, `rows`,
+`stream_manifest`, `commit_receipts`, `read_only_violations`,
+`unsafe_admission_count`, `unsafe_use_count`, `restart_receipts`,
+`rollback_byte_identity`, `transaction_memory_ready`, `gate_check_summary`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL cover every
+artifact field and every readiness gate. `inference_substrate` SHALL equal
+`deterministic CPU exact-checker transactional fixture`.
+The adversarial verifier SHALL recognize that exact value as a deterministic
+no-LLM substrate and apply its nonzero deterministic-verifier duration floor.
+
+`transaction_memory_ready` SHALL be bare true only when every mandatory row
+passes, no unsafe record is admitted or used, every restart reproduces exact
+state bytes, and rollback bytes equal the parent snapshot. A failed owned
+precondition SHALL emit `complete_blocked_transaction_fixture` and a
+`gate_check_summary` that names the failed check and observed value. The closed
+`verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`.
+
+### SCENARIO-CL-6748-READ-ONLY: Active Episodes Reject Writes
+
+Given an episode has an immutable snapshot
+When code attempts to commit before that episode closes
+Then the write SHALL raise a fail-closed error
+And the parent bytes SHALL remain unchanged
+And `read_only_violations` SHALL record the rejected attempt.
+
+### SCENARIO-CL-6748-DELAYED-COMMIT: Exact Updates Commit Between Episodes
+
+Given an episode closes with a proposed record
+When all seven admission checks pass
+Then one atomic rename SHALL publish the next state
+And its receipt SHALL bind the parent, evidence, next state, reason, and inverse patch.
+
+### SCENARIO-CL-6748-ATTACKS: Unsafe Updates Never Enter Active State
+
+Given duplicate, contradiction, stale, missing-provenance, delayed-copy poison,
+or crash injection events
+When the fixture evaluates them
+Then each event SHALL reject or recover at an atomic boundary
+And unsafe admission and use counts SHALL remain zero
+And rejected records SHALL enter only the task-owned quarantine.
+
+### SCENARIO-CL-6748-RESTART: Every Boundary Replays Exact Bytes
+
+Given any event or atomic-rename boundary
+When a new memory instance starts from the task-owned state file
+Then its bytes and state hash SHALL match the expected committed boundary.
+
+### SCENARIO-CL-6748-ROLLBACK: Inverse Patches Restore Parent Bytes
+
+Given a committed exact-certified update and its inverse patch
+When rollback runs after restart
+Then the restored state bytes SHALL match the parent snapshot byte for byte.
+
+### SCENARIO-CL-6748-ARTIFACT: Readiness Is Row-Derived
+
+Given the frozen stream, transaction rows, attack rows, restart receipts, and
+rollback rows
+When Exp6748 builds the terminal artifact
+Then every readiness gate SHALL derive from those rows
+And the artifact SHALL validate before atomic publication to
+`results/experiment_6748_transactional_constraint_memory_fixture.json`.
+
+## Implementation Status (REQ-CL-6748)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6748 | Implemented: `python/carnot/memory/transactional_constraint_memory.py`; `scripts/experiments/experiment_6748_transactional_constraint_memory_fixture.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
+| SCENARIO-CL-6748-READ-ONLY | Implemented: `python/carnot/memory/transactional_constraint_memory.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
+| SCENARIO-CL-6748-DELAYED-COMMIT | Implemented: `python/carnot/memory/transactional_constraint_memory.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
+| SCENARIO-CL-6748-ATTACKS | Implemented: `python/carnot/memory/transactional_constraint_memory.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
+| SCENARIO-CL-6748-RESTART | Implemented: `python/carnot/memory/transactional_constraint_memory.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
+| SCENARIO-CL-6748-ROLLBACK | Implemented: `python/carnot/memory/transactional_constraint_memory.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
+| SCENARIO-CL-6748-ARTIFACT | Implemented: `python/carnot/memory/transactional_constraint_memory.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
