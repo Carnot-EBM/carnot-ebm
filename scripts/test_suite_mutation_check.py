@@ -1152,6 +1152,21 @@ def _installed_package_root() -> Path | None:
     return None
 
 
+def _is_under(path: Path, root: Path) -> bool:
+    """Is `path` inside `root` (or equal to it), after resolving both?
+
+    REGRESSION NOTE (2026-08-28). This function was CALLED at the scripts/-and-tests/
+    branch below but never defined, so every proof of a file outside python/ died with
+    a NameError instead of answering -- 18 failing suite nodes, live since 2026-08-25.
+    A guard path that cannot run is a guard path that never fires.
+    """
+    try:
+        path.resolve().relative_to(root.resolve())
+    except ValueError:
+        return False
+    return True
+
+
 def check_target_is_live(target: Path) -> tuple[bool, str]:
     """(ok, explanation) -- would mutating this file change what the tests import?
 
@@ -1196,12 +1211,16 @@ def check_target_is_live(target: Path) -> tuple[bool, str]:
     # check that cries wolf gets bypassed, which is worse than the gap it closes.
     if not _is_under(target, root.parent):
         return True, (
-            f"{target} is loaded by explicit path, so its route cannot be resolved here.\n"
+            f"{target} is not under python/, so there is no import to divert; it is loaded\n"
+            "  by explicit path and its route cannot be resolved here.\n"
             f"  CAUTION: `carnot` resolves to a DIFFERENT checkout ({root.parent}). A loader\n"
             "  that derives its own repo root will reach that copy, not this one. Confirm by\n"
             "  import which file your tests load before trusting a single reading."
         )
-    return True, f"{target} is loaded by explicit path from the checkout `carnot` resolves to"
+    return True, (
+        f"{target} is not under python/, so there is no import to divert; it is loaded by\n"
+        "  explicit path from the checkout `carnot` resolves to"
+    )
 
 
 def _scan_paths_for_markers(paths: list[Path]) -> tuple[list[str], list[str]]:

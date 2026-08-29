@@ -1417,6 +1417,36 @@ def test_a_file_outside_the_package_is_declared_not_applicable_not_silently_pass
     assert "not under python/" in why and "no import to divert" in why
 
 
+def test_outside_package_branch_distinguishes_which_checkout_holds_the_file(repo):
+    """REGRESSION (2026-08-28): `_is_under` was called but never defined, so this whole
+    branch died with a NameError -- 18 failing suite nodes, live since 2026-08-25, and a
+    guard path that cannot run never fires. The two sub-branches must stay distinguishable:
+    a file in a DIFFERENT checkout than the one `carnot` resolves to carries the CAUTION,
+    a file in the SAME checkout does not. An `_is_under` that always answers True or always
+    False collapses them, and this test is what turns that mutation RED.
+    """
+    r, _ = repo
+    foreign = r / "some_script.py"
+    foreign.write_text("x = 1\n")
+    ok, why = tsm.check_target_is_live(foreign)
+    assert ok
+    assert "DIFFERENT checkout" in why, (
+        "a target outside the checkout `carnot` resolves to must carry the caution that a "
+        "loader deriving its own repo root will reach the other copy"
+    )
+
+    # A scripts/ file inside the checkout `carnot` actually resolves to, in this venv, is
+    # the same-checkout branch: applicable, and with no cross-checkout caution.
+    installed_root = tsm._installed_package_root()
+    assert installed_root is not None
+    native = installed_root.parent / "scripts" / "canonical_url_lint.py"
+    assert native.exists()
+    ok, why = tsm.check_target_is_live(native)
+    assert ok
+    assert "DIFFERENT checkout" not in why
+    assert "no import to divert" in why
+
+
 def test_a_missing_target_refuses(repo):
     r, _ = repo
     ok, why = tsm.check_target_is_live(r / "nope.py")
