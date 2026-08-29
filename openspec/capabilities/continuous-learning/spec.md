@@ -7673,3 +7673,97 @@ And the artifact SHALL validate before atomic publication to
 | SCENARIO-CL-6748-RESTART | Implemented: `python/carnot/memory/transactional_constraint_memory.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
 | SCENARIO-CL-6748-ROLLBACK | Implemented: `python/carnot/memory/transactional_constraint_memory.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
 | SCENARIO-CL-6748-ARTIFACT | Implemented: `python/carnot/memory/transactional_constraint_memory.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
+
+## REQ-CL-6749: Prospective Support-Preserving Transactional Memory A/B
+
+Given Exp6748 has a ready transaction fixture and six frozen orders
+When Exp6749 runs for planning date 20260829
+Then it SHALL compare frozen no-memory and read-only transactional-memory arms
+without changing model weights
+And it SHALL write
+`results/experiment_6749_prospective_support_preserving_csl_ab.json`.
+
+Exp6749 SHALL use exactly `unsloth/Qwen3.6-35B-A3B-GGUF` for acquisition and
+same-family evaluation. It SHALL use exactly
+`unsloth/gemma-4-31B-it-GGUF` for held dense-family transfer. Both models SHALL
+load from exact cached GGUF paths through CUDA-enabled llama.cpp. A failed
+fixture, order, model, CUDA-offload, or sequential-VRAM check SHALL emit
+`complete_blocked_prospective_csl` with the observed failure. It SHALL not use
+a substitute model, order, or retrospective replay.
+
+Before inference, Exp6749 SHALL freeze prompts, two candidates per cell, token
+and verifier budgets, all six orders, retention anchors, support definitions,
+rollback rules, and model, order, and candidate seeds. Each order SHALL start
+both arms from clean state. An active episode may read one immutable starting
+snapshot. It SHALL not write during inference. Qwen proposals may commit only
+after the exact result is known and all Exp6748 admission checks pass. Gemma
+SHALL read the Qwen pre-event snapshot and SHALL not add target-family evidence.
+
+Exp6749 SHALL keep every failed, incorrect, and abstaining candidate. Rows SHALL
+cover every order, model, family, event, and arm cell. Row-derived metrics SHALL
+include prequential exact yield, pass at one, best at two, effective rewardable
+support, joint correct-and-constraint-following support, anchor retention,
+cross-family transfer, negative transfer, tokens, latency, commits, rejects,
+quarantine, and rollback.
+
+`prospective_csl_completed` SHALL be bare true only when all planned rows exist,
+chronology and arm isolation hold, snapshots remain immutable, exact authority
+owns at least one commit and one reject, rollback closes, and model weights
+remain unchanged. This field
+is a completion gate. It SHALL not encode whether the scientific result is
+positive. The artifact SHALL contain every field named in the task contract,
+including a field principle for every field and gate.
+
+### SCENARIO-CL-6749-PROSPECTIVE-ORDER: Every Cell Uses Frozen Chronology
+
+Given the six Exp6748 order manifests and frozen candidate seeds
+When either arm evaluates an event
+Then its row SHALL bind the preregistered order position and pre-event snapshot
+And no row may use current or future outcome evidence.
+
+### SCENARIO-CL-6749-SNAPSHOT: Active Episodes Are Immutable
+
+Given a transactional episode has started
+When all candidates for that event are generated and checked
+Then the durable state hash SHALL remain equal to the starting snapshot hash
+And any attempted active-episode write SHALL fail closed.
+
+### SCENARIO-CL-6749-EXACT-ADMISSION: Exact Authority Owns Commits
+
+Given Qwen has completed an acquisition episode
+When Exp6749 evaluates a proposed reusable record
+Then it SHALL commit only after the exact result is known
+And every Exp6748 admission check SHALL pass before publication.
+
+### SCENARIO-CL-6749-ARM-ISOLATION: Baseline Never Reads Or Writes Memory
+
+Given matched no-memory and transactional-memory cells
+When their candidates are generated
+Then model, event, order, candidate count, budgets, and seeds SHALL match
+And the no-memory arm SHALL have no memory reads, writes, commits, or rollback.
+
+### SCENARIO-CL-6749-SUPPORT: Support Metrics Derive From Candidates
+
+Given all candidates, including failures and abstentions, are retained
+When Exp6749 reduces support metrics
+Then pass at one, best at two, effective rewardable support, and joint correct
+constraint support SHALL recompute from candidate rows only.
+
+### SCENARIO-CL-6749-NO-WEIGHT-WRITES: Model Files Stay Read-Only
+
+Given exact cached GGUF files are loaded for inference
+When both model phases finish
+Then their size and modification-time receipts SHALL remain unchanged
+And `model_weights_mutated` SHALL be bare false.
+
+## Implementation Status (REQ-CL-6749)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6749 | Planned: `python/carnot/experiment_6749_prospective_support_preserving_csl_ab.py`; `scripts/experiments/experiment_6749_prospective_support_preserving_csl_ab.py`. | Planned: `tests/python/test_experiment_6749_prospective_support_preserving_csl_ab.py`. |
+| SCENARIO-CL-6749-PROSPECTIVE-ORDER | Planned. | Planned. |
+| SCENARIO-CL-6749-SNAPSHOT | Planned. | Planned. |
+| SCENARIO-CL-6749-EXACT-ADMISSION | Planned. | Planned. |
+| SCENARIO-CL-6749-ARM-ISOLATION | Planned. | Planned. |
+| SCENARIO-CL-6749-SUPPORT | Planned. | Planned. |
+| SCENARIO-CL-6749-NO-WEIGHT-WRITES | Planned. | Planned. |
