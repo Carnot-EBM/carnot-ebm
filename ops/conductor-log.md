@@ -16767,3 +16767,4 @@ The l |
 | 2026-08-29 11:02 UTC | Thermalizers-style factor-to-trajectory compiler f | FLAGGED | adversarial_verify CRITICAL: VERDICT_CLASS_MISMATCH — result quarantined, not a  |
 | 2026-08-29 12:25 UTC | Owned 32K live code-carrying ARC tool preflight | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output:      1,
 +      |
+| 2026-08-29 12:44 UTC | Owned 32K live code-carrying ARC tool preflight | OK | 144 passed, 1 warning in 9.55s |
