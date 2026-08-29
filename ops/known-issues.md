@@ -19012,3 +19012,42 @@ exp3946 class needs the WRITER fixed, not the artifact, or it regenerates.
 commit-time hook — over `discover_candidate_artifacts()`, reporting the count rather than
 refusing anything. A hook cannot police write-once files by construction, and making this one
 refuse harder would not have helped: it was never invoked.
+
+### 2026-08-29 — The only supervisor arm with live evidence is tracked by nothing
+
+`arc_trajectory_supervisor.py` contains TWO mechanisms, and conflating them has cost this
+project time twice. The three-arm table — `drop_goal_bias`, `allow_reinduction`,
+`force_exploration_diversity` — is what `ARM_ORDER` holds and what the REQ-ARC-WMTE-6720
+refinement ledger tracks. A SECOND, single-arm stagnation detector at :271 forces `RESET` on
+`stagnant_repeat` and names its arm `reset_after_stagnant_repeat`. That name is in **neither**
+`ARM_ORDER` nor the ledger.
+
+**It is also the only arm with live outcome evidence.** exp6682 measured it:
+
+| measure | value |
+|---|---|
+| firings | 9, all `reset_after_stagnant_repeat`, all on family `vc33` |
+| `benefit_observed` | **False in 9 of 9** |
+| transition utility delta | **−0.333** (95% CI −0.667 to 0.0, paired bootstrap, n=9) |
+| win / tie / loss | 0 / 6 / 3 |
+| solve claim | none |
+| action cost delta | 0.0 — it did not even trade actions for the loss |
+
+**The trap.** The ledger's retirement rule is `retire_candidate: fired >= floor and helped == 0`
+with `MIN_FIRED_PER_ARM = 10`. This arm satisfies `helped == 0` and sits one firing short of the
+floor — and because the ledger does not know the arm exists, its 9 firings were never counted
+and never will be. The rule cannot fire on the one arm whose evidence points hardest at
+retirement. Meanwhile the three tracked arms sit at 2 firings each, `floor_shortfall: 8`.
+
+**Do not retire it on n=9.** The floor exists because at that count, with a CI touching zero,
+"worse" and "no different" are not separable — the same reasoning that set the floor at 10.
+Retiring here would be the over-reading the contract was written to prevent.
+
+**The fix is to make it countable, not to judge it.** Either add it to the ledger's tracked set
+so its firings accumulate, or state deliberately that the single-arm detector is out of scope
+for REQ-6720 and give it its own accounting. Doing neither leaves a mechanism that measurably
+loses utility, firing in production, with no route to a decision.
+
+**Read the two mechanisms apart.** An `arms_used` list that omits it is not evidence it did not
+fire; the ledger's per-arm table is about the OTHER supervisor. This is the second time the two
+were conflated in one session.

@@ -163,6 +163,14 @@ WHOLE_FILE_TARGETS = (
 # ---------------------------------------------------------------------------------------
 GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
     (
+        PROJECT_ROOT / "scripts" / "capstone_milestone_rot_lint.py",
+        "decides whether a capstone module will go stale and abort the test suite -- the "
+        "2026-08-29 incident took all 57,917 tests down at collection from one file, so a "
+        "silent non-firing here costs the whole suite rather than one module; note it was "
+        "narrowed twice during construction after flagging 6 then 8 correct capstones, so "
+        "over-matching is its demonstrated failure mode, not under-matching",
+    ),
+    (
         PROJECT_ROOT / "scripts" / "harness_integrity_lint.py",
         "decides whether a commit may stage a path its session never declared, and whether "
         "a sealed harness file may change -- so a silent non-firing here lets an agent edit "
