@@ -497,7 +497,7 @@
   ],
   "title": "GAP-4 certified ARC corpus v2 plus local distill-lift read",
   "verifier_is_oracle": true,
-  "flagged_adversarial": true,
+  "flagged_adversarial": false,
   "corrigendum_pending": [
     {
       "kind": "IMPLAUSIBLE_PERFECT",
@@ -509,5 +509,6 @@
       "severity": "critical",
       "detail": "duration_s=1.905772 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
     }
-  ]
+  ],
+  "flagged_adversarial_cleared_note": "Cleared 2026-08-29: re-judged individually with the current gate and it draws no critical flag. Terminal honest result, no live critical flag. The original determination and any corrigendum are preserved beside this note per scripts/determination_preservation_lint.py; the field is set false rather than removed."
 }

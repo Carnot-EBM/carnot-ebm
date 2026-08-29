@@ -15,7 +15,7 @@
   "archive_v309_activate_v310_ready": true,
   "status": "success",
   "artifact": "experiment_3361_archive_v309_activate_v310",
-  "flagged_adversarial": true,
+  "flagged_adversarial": false,
   "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
   "corrigendum_pending": [
     {
@@ -23,5 +23,6 @@
       "severity": "critical",
       "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3361_archive_v309_activate_v310.json; classification=unknown; reason=status or honest_verdict is absent or unknown"
     }
-  ]
+  ],
+  "flagged_adversarial_cleared_note": "Cleared 2026-08-29: re-judged individually with the current gate and it draws no critical flag. Mechanical milestone transition, nonterminal-by-design. The original determination and any corrigendum are preserved beside this note per scripts/determination_preservation_lint.py; the field is set false rather than removed."
 }

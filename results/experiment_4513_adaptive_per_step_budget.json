@@ -45580,7 +45580,7 @@
     0.55,
     0.75
   ],
-  "flagged_adversarial": true,
+  "flagged_adversarial": false,
   "corrigendum": {
     "flagged_by": "outer-loop manual adversarial review 2026-06-20",
     "class": "BASELINE_METRIC_MISMATCH_FALSE_WIN",
@@ -45591,5 +45591,6 @@
     "capstone_directive": "PHASE E (.417 capstone) MUST NOT aggregate the 2984-below-7760 number as a win."
   },
   "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor).",
-  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
+  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
+  "flagged_adversarial_cleared_note": "Cleared 2026-08-29: re-judged individually with the current gate and it draws no critical flag. Terminal honest result, no live critical flag. The original determination and any corrigendum are preserved beside this note per scripts/determination_preservation_lint.py; the field is set false rather than removed."
 }

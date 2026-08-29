@@ -27,5 +27,6 @@
   "inference_substrate": "offline_air_gapped_arc_agi3_local_environments",
   "n_solved_levels_measured": 2,
   "random_seed": 42,
-  "title": "arc3_m3_efficiency_real_games"
+  "title": "arc3_m3_efficiency_real_games",
+  "flagged_adversarial_reason": "Kept 2026-08-29. The claimed efficiency_ratio=24.662x does not measure the verifier. (1) VERIFIER NOT IN LOOP: the with-arm uses p=1/num_objects (object selection), the without-arm p=target_area/total_pixels (random pixel); the energy verifier and induced model are never invoked, so 24.7x is object-vs-pixel search geometry. (2) SIMULATED, NOT MEASURED: both arms are simulate_geometric() draws from those assumed probabilities, not the agent run with and without the verifier on the live env counting real actions, despite inference_substrate claiming 'real games'. (3) SURPRISING AND UNREPLICATED against the prior 1.96x (exp3929, itself a flagged tautology) and ~4x peer. The current gate no longer emits a flag; the finding stands, so the stamp stands."
 }

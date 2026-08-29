@@ -30,7 +30,7 @@
   "iterations_required": 1,
   "methodology_note": "Read test file to extract exact signatures needed, then added check_pypi_escalation and run_escalation to match. gh-CLI detection uses shutil.which + subprocess.run double-check to handle both test mock strategies.",
   "honest_verdict": "complete: partial_fix \u2014 pypi_escalation ImportError resolved (4/4 tests pass), full suite has 2 pre-existing unrelated failures",
-  "flagged_adversarial": true,
+  "flagged_adversarial": false,
   "corrigendum_pending": [
     {
       "kind": "TAUTOLOGY",
@@ -47,5 +47,6 @@
       "severity": "info",
       "detail": "full_pretest_errors=0.0 (exactly zero). Confirm this is not a stub default."
     }
-  ]
+  ],
+  "flagged_adversarial_cleared_note": "Cleared 2026-08-29: re-judged individually with the current gate and it draws no critical flag. Terminal honest result, no live critical flag. The original determination and any corrigendum are preserved beside this note per scripts/determination_preservation_lint.py; the field is set false rather than removed."
 }

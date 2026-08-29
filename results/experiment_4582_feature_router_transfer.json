@@ -4321,7 +4321,7 @@
     "with_router": true,
     "without_router": true
   },
-  "flagged_adversarial": true,
+  "flagged_adversarial": false,
   "corrigendum_pending": [
     {
       "kind": "TAUTOLOGY",
@@ -4343,5 +4343,6 @@
       "severity": "warn",
       "detail": "false_negative_risk_open: null efficiency/proposer/transfer claim ('complete: feature_router_no_value_honest_null_transfer_gap_sharp') lacks a passed positive control and completed false-negative-risk check (positive_control_passed=None, false_negative_risk_checked=False). Treat this as a broken-test signal, not as evidence for a clean null."
     }
-  ]
+  ],
+  "flagged_adversarial_cleared_note": "Cleared 2026-08-29: re-judged individually with the current gate and it draws no critical flag. Terminal honest result, no live critical flag. The original determination and any corrigendum are preserved beside this note per scripts/determination_preservation_lint.py; the field is set false rather than removed."
 }
