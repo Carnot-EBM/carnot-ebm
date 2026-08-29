@@ -1,0 +1,57 @@
+milestone: 2026.08.586
+milestone_title: Object-table token/quality trade and the first live code-carrying tool call
+milestone_doc: docs/research-notes/arc-context-frame-compression-and-callable-tools-2026-08-28.md
+tasks:
+- id: exp6716-object-table-fetch-on-demand-ab
+  title: Object-table fetch-on-demand A/B against the measured change_fidelity win
+  track: arc-agi3
+  priority: high
+  model: opus
+  requires_gpu: true
+  max_turns: 100
+  estimated_wall_time_min: 120
+  per_unit_rows: true
+  milestone: 2026.08.586
+  deliverable: results/experiment_6716_object_table_fetch_on_demand_ab.json
+  prompt: "CONTEXT:\nThe induce prompt's largest single block is the static object table: 4,667 tokens\
+    \ of 8,678 on a\nreal tu93 prompt, about 54 percent, independently reproduced at 4,691 / 55.5 percent\
+    \ on a\ndifferent seed. Frames are NOT the problem -- keyframe-plus-delta shipped months ago\n(`_rle_grid`\
+    \ at arc_executable_world_model.py:352, `_rle_delta_compact` at :2748), a raw 64x64\ngrid is 4,159\
+    \ tokens against 1,709 encoded, and a delta transition is 10-78. Palette schemes buy\nnothing because\
+    \ tokens already equal characters 1:1 on this digit-heavy text.\n\nSo the object table is the only\
+    \ remaining large lever, and it CANNOT simply be removed. It is\ndefault-ON because of a measured\
+    \ held-out win: mean_delta_on_minus_off = +0.0720 on\nchange_fidelity, 20 paired games, sign-test\
+    \ p = 0.0192, 19 of 20 discordant, 13,171 seconds of\ncompute (results/outer_loop_arc_object_perception_heldout_ab_change_fidelity_20260801.json).\n\
+    Cutting it to save tokens would un-buy that result.\n\nTHIS TASK IS AN A/B, NOT AN OPTIMISATION. The\
+    \ question is whether the table can be fetched\nON DEMAND -- via a `find_objects` tool call rather\
+    \ than shipped unconditionally in every prompt\n-- while holding change_fidelity AT LEAST FLAT against\
+    \ the default-ON arm.\n\nWork at {project_root}. The planning date is {date}.\n\nEXISTING CODE TO\
+    \ READ FIRST:\n- {project_root}/CLAUDE.md and {project_root}/docs/research-notes/arc-context-frame-compression-and-callable-tools-2026-08-28.md\n\
+    \  INCLUDING its appended CORRECTION 2026-08-29, which overturned the note's own\n  fetch-on-demand\
+    \ recommendation on exactly the grounds above. Read the correction before the note.\n- results/outer_loop_arc_object_perception_heldout_ab_change_fidelity_20260801.json\
+    \ -- the win\n  being defended, its pre-registration, and its disclosed protocol deviation\n- python/carnot/agentic/arc_induction_tools.py\
+    \ (the `find_objects` tool already exists),\n  arc_induction_tool_loop.py, arc_executable_world_model.py\n\
+    - The selfparse transport work: REQ-ARC-WMTE-6730, docs/research-notes/arc-selfparse-transport-gate-2026-08-28.md.\n\
+    \  Its gate passed 20/20 attempt and 20/20 parse-to-dispatch, BUT all 20 live turns were the\n  zero-argument\
+    \ list_transitions; the code-carrying multi-parameter shape is proven only on a\n  stored emission\
+    \ and unit fixtures. `find_objects` is a code-carrying call, so this task is\n  also the first live\
+    \ test of that shape -- report it as such.\n\nCONCRETE STEPS:\n0. PRECONDITIONS (check BEFORE anything\
+    \ else):\n   a. `.venv/bin/python -c \"from llama_cpp import llama_cpp as b; assert b.llama_supports_gpu_offload()\"\
+    `\n   b. the pinned Qwen3.8-27B GGUF is cached\n   c. CARNOT_ARC_INDUCE_N_CTX is lowered (the 106,496\
+    \ pooled default needs ~26.6 GiB and the\n      guard declines a 24 GiB card, silently falling back\
+    \ to the ~2 tok/s iGPU)\n   If any fails, write honest_verdict `blocked_<resource>` and STOP. Do not\
+    \ fabricate.\n1. Run the paired A/B on the SAME games and seeds as the 2026-08-01 held-out design,\
+    \ table-ON\n   versus fetch-on-demand. Reuse that design; do not invent a new one.\n2. Report change_fidelity\
+    \ per arm with the paired test the original used, plus the token saving\n   actually realised per\
+    \ prompt.\n3. Report how often the model CALLED find_objects when the table was absent. A fetch-on-demand\n\
+    \   arm that never fetches is not a token win, it is an ablation.\n\nACCEPTANCE GATE, pre-registered:\n\
+    \  fetch-on-demand is adopted ONLY if change_fidelity is at least flat -- the paired delta's\n  95\
+    \ percent CI lower bound must not fall below the ON arm by more than the noise floor recorded\n  in\
+    \ the 2026-08-01 artifact's NOISE_FLOOR_within_arm_replicate_spread field.\n  A LOSS IS A RESULT.\
+    \ If the table earns its tokens, say so and close the direction.\n\nREQUIRED ARTIFACT FIELDS (each\
+    \ with a `principle:` note):\n  inference_substrate, duration_s, random_seed, reproducibility_checksum,\
+    \ preconditions_checked,\n  verdict_class (choose by whether the RUN finished, per REQ-CONDUCTOR-VERDICT-4,\
+    \ NOT by whether\n  the result was positive -- a finished run measuring no effect is `null`, never\
+    \ `partial`),\n  honest_verdict (terminal prefix), change_fidelity_by_arm, tokens_saved_per_prompt,\n\
+    \  find_objects_call_rate, noise_floor_used.\n"
+  prior_failures: []
