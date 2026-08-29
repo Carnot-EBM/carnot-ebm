@@ -10,10 +10,9 @@ evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CHECKABLE | 6 |
-| AGGREGATE_ONLY | 1 |
-| CANNOT_DETERMINE | 1 |
+| AGGREGATE_ONLY | 2 |
 
-## experiment_6685_autocorrelation_schedule_ab.json
+## experiment_6484_non_generation_representation_receipt_contract.json
 
 **CHECKABLE**
 
@@ -21,7 +20,23 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because the `torx_factor_parity_ready` gate observed `false` when `true` was required.
+The non-generation representation receipt contract is ready with a row-recomputed score of 1.0, including successful positive validation and fail-closed handling of all attacks.
+
+## WHAT IS MISSING
+nothing; supporting unit-level evidence appears in `"attack_matrix.rows"`, `"candidate_commitment_rows"`, and `"family_separation_receipts"`, while `"aggregate_row_recomputation"` records the reducers, row counts, checks, and `"failed_checks"`.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6487_representation_integrity_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The representation audit is disqualified because three shortcut controls survived and three required length checks were unavailable.
 
 ## WHAT IS MISSING
 nothing
@@ -29,7 +44,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6687_v582_branch_synthesis.json
+## experiment_6491_sota_factor_proposal_stream.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The factor-proposal stream met its readiness gate with a score of 1.0 and all boundary attacks failed closed.
+
+## WHAT IS MISSING
+nothing; `"exact_compile_rows"` records every event/model outcome and reason, while `"boundary_attack_matrix.rows"` records every attack result and blocker.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6520_safety_net_branch_router_ab.json
 
 **AGGREGATE_ONLY**
 
@@ -37,15 +68,15 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The supervisor reduced live utility, caused false interventions, and produced no solve, while the other branches were blocked or null.
+The learned linear router seed 6520002 passed the gate and delivered 695 held benefit units, beating the best structural arm’s 667 units by 28.
 
 ## WHAT IS MISSING
-Per-game or per-condition live A/B rows containing each unit’s supervisor-on and supervisor-off utility, utility delta, intervention result, and headroom; `"live_arc_outcome_branch.utility"` records only aggregate `"delta"`, `"denominator"`, `"losses"`, `"ties"`, and `"wins"`, while `"per_unit_rows"` contains task-level synthesis rows rather than live outcome units.
+Per-held-unit rows containing each arm’s charged work or benefit, keyed by problem family and seed; only aggregate `"arm_held_summaries"`, `"held_total_charged_work_units"`, `"held_charged_benefit_units"`, and win/loss counts are present, while `"candidate_preservation_rows"` contain no outcome metric.
 
 ## THE CHECK A READER CANNOT DO
-Which nine live units were losses or ties, and what paired on/off measurements produced the reported utility delta of -0.3333?
+Was the claimed 28-unit advantage broad across held units, or concentrated in one or two outliers while other units tied or lost?
 
-## experiment_6690_exact_planning_fixture_audit.json
+## experiment_6561_v568_evidence_gate_contract.json
 
 **CHECKABLE**
 
@@ -53,7 +84,7 @@ Which nine live units were losses or ties, and what paired on/off measurements p
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because the required upstream artifact `exp6689-exact-planning-fixture` was not found, so the `planning_fixture_ready` gate failed.
+The V567 inputs are content-addressed, Exp6549–Exp6551 are eligible production evidence, and the V568 gate, prior-failure, model, hardware, and protected-file contracts are ready.
 
 ## WHAT IS MISSING
 nothing
@@ -61,7 +92,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6692_structural_plan_energy.json
+## experiment_6565_v569_evidence_and_retirement_contract.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+The V569 evidence contract is ready, including the claims that Exp6563 and Exp6564 are clean nulls and Exp6564 achieved only 0.764013447× speedup against a 10× requirement.
+
+## WHAT IS MISSING
+Per-benchmark or per-repetition timing rows for the Python and Rust arms, and per-workload enabled/control metric rows for Exp6563; the present `"per_unit_rows"` contains only one eligibility summary per upstream artifact, while `"measured_speedup_vs_requirement"` and `"honest_verdict"` report aggregate conclusions.
+
+## THE CHECK A READER CANNOT DO
+Was Exp6564’s 0.764013447× median speedup miss broad across benchmark units, or produced by a few extreme measurements?
+
+## experiment_6571_v570_evidence_gate_and_retirement_root.json
 
 **CHECKABLE**
 
@@ -69,7 +116,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The task was blocked because the upstream artifact `exp6691-sota-planning-proposal-corpus` was not found, so the `proposal_corpus_ready` gate failed.
+The V570 evidence and retirement contract is ready, with blocked and missing V569 scopes explicitly accounted for and no claim that source extraction or graph-Potts utility ran.
 
 ## WHAT IS MISSING
 nothing
@@ -77,7 +124,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6694_energy_backtracking_audit.json
+## experiment_6716_object_table_fetch_on_demand_ab.json
 
 **CHECKABLE**
 
@@ -85,55 +132,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because the upstream artifact `exp6693-energy-backtracking-ab` was not found, so its `backtracking_ab_ready` field could not be verified as `true`.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6696_prequential_online_energy_ab.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because the required upstream artifact `exp6695-online-energy-update-fixture` was not found.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6702_exact_planning_fixture_recovery.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The exact finite-horizon planning fixture passed all readiness checks and is ready.
-
-## WHAT IS MISSING
-The artifact is truncated mid-`instance_rows`, so the top-level `"per_unit_rows"` referenced by `"field_provenance.per_unit_rows"` and any remaining gate-driving row fields cannot be confirmed; `"aggregate_row_recomputation.checks"`, `"exact_solver_rows"`, `"instance_rows"`, and `"gate_check_summary"` are present.
-
-## THE CHECK A READER CANNOT DO
-Do the unseen per-unit results substantiate every `true` readiness check, or are some checks supported only by aggregate booleans?
-
-## experiment_6705_structural_plan_energy.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because the required upstream artifact `exp6704-sota-planning-proposal-bank` was missing, so `proposal_bank_ready` could not be observed as `true`.
+The paired A/B experiment was blocked before starting because `CARNOT_ARC_INDUCE_N_CTX` was unset.
 
 ## WHAT IS MISSING
 nothing

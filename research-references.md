@@ -1,3 +1,109 @@
+## V587 Planner Refresh - 2026-08-29
+
+Planning sweep for milestone `2026.08.587` after the operator reported `.586` complete. Sources
+checked: arXiv primary pages for 2025-2026 EBM verification/reasoning, neural CSPs, Ising and
+thermodynamic hardware, hallucination mitigation, KANs, constrained decoding, hardware-accelerated
+sampling, and continual/online constraint learning; OpenReview public pages; Hugging Face Papers;
+GitHub repository/topic discovery; Semantic Scholar citation endpoints for EBT `2507.02092` and
+ARM-EBM `2512.15605`; Extropic writing and software pages; and Logical Intelligence's public Kona
+pages. Existing entries already cover Distributional EBMs, PCRLLM, Thinking Before Constraining,
+XGrammar/llguidance, GraphMemix, EVOMAL, HarnessLens, ABE-Ralph, KAN verification, p-bit hardware,
+Torx preview material, and Kona/Aleph. This block adds only missing or newly actionable deltas.
+
+### New actionable deltas
+
+- **SymDiag: Explainable Diagnosis for LLM Reasoning via Neuro-Symbolic Verification** -
+  arXiv:2608.08786, https://arxiv.org/abs/2608.08786; Hugging Face mirror
+  https://huggingface.co/papers/2608.08786. SymDiag translates reasoning into symbolic constraints,
+  emits counterexamples/inconsistency witnesses/missing-premise indicators, and uses two independent
+  symbolic encodings to separate `TranslationError` from `ReasoningError`. Carnot hook: the next
+  verifier lane should not collapse every failed constraint into a model reasoning error. It should
+  emit a dual-encoding agreement matrix and a closed diagnostic taxonomy before using feedback for
+  repair or memory updates.
+- **Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM Constraint Reasoning** -
+  arXiv:2607.17047, https://arxiv.org/abs/2607.17047. Near-matched-density SAT families differed by
+  up to 51x in a solver conflict proxy without a corresponding pooled model-accuracy effect, while a
+  proof-preserving relabeling exposed strong surface sensitivity in one model. Carnot hook: exact
+  constraint panels should stratify proof hardness independently from surface form and instance size;
+  they must not infer reasoning depth from solver conflicts or token spend alone.
+- **PARTAB: Partition-Aware Reasoning with Structured Evidence for Scalable Table Understanding** -
+  arXiv:2608.24082, https://arxiv.org/abs/2608.24082; Hugging Face mirror
+  https://huggingface.co/papers/2608.24082. PARTAB hierarchically selects row-linked table regions
+  instead of sending a full table or one flat reduced view. Carnot hook: this is a direct design signal
+  for the ARC object-table experiment left blocked by `.586`: fetch query-relevant object partitions
+  through the live tool path, then measure token/context cost and transition utility against the inline
+  table under a task-owned 32K context contract.
+- **Memoir: Should a Model Write to Its Memory While It Thinks?** - arXiv:2607.20792,
+  https://arxiv.org/abs/2607.20792. Allowing a fast memory to rewrite itself during the same pondering
+  loop slowed learning at a fixed compute budget; the read-only arm led on 10/12 seeds before both arms
+  reached a ceiling. Carnot hook: continuous self-learning should make the active episode read-only and
+  commit only verifier-certified updates between episodes. The experiment needs a transactional
+  commit/rollback receipt rather than same-pass read/write coupling.
+- **Verifier-Induced Support Reshaping in On-Policy Optimization** - arXiv:2608.00220,
+  https://arxiv.org/abs/2608.00220; Hugging Face mirror
+  https://huggingface.co/papers/2608.00220. The paper shows that pass@1 can rise while best@32 and the
+  set of rewardable behaviors shrink. Carnot hook: a prospective self-learning claim must track
+  effective rewardable support, best@k, retention, and joint correct-and-constraint-following behavior,
+  not only endpoint mean accuracy. Any support contraction beyond the preregistered bound triggers
+  rollback.
+- **Thermalizing Stochastic Programs** - arXiv:2608.01615,
+  https://arxiv.org/abs/2608.01615, and **A Framework for Stochastic Differentiable Programming** -
+  arXiv:2608.01612, https://arxiv.org/abs/2608.01612. Torx expresses typed stochastic kernels as
+  parametrized stochastic circuits; Thermalizers compiles each factor into a hardware-native EBM and
+  makes accumulated trajectory error a function of per-factor approximation error, with context
+  matching and trajectory-level post-training as repairs. Carnot hook: replace another loose Torx
+  parity attempt with a bounded, exact-enumeration compiler-fidelity experiment that reports
+  conditional KL for every factor, accumulated trajectory total variation, topology/precision receipts,
+  and an explicit simulator-only substrate. This is hardware-preparation evidence, not a TSU speedup.
+- **Efficient Grammar-Constrained Decoding via Parser Stack Classification** - arXiv:2608.03065,
+  https://arxiv.org/abs/2608.03065. Parser Stack Classification preprocesses vocabulary acceptance into
+  a parser-stack classifier, making mask computation independent of vocabulary size. Carnot hook: keep
+  this as a measured preprocessing/break-even sidecar for proof-carrying output. It is not a milestone
+  dependency unless the local llama.cpp path actually invokes the mask implementation.
+- **Certified Correctness in Neural Constraint Reasoning Requires Symbolic Integration** -
+  arXiv:2608.14569, https://arxiv.org/abs/2608.14569, and **FSNet: Feasibility-Seeking Neural Network
+  for Constrained Optimization with Guarantees** - OpenReview
+  https://openreview.net/forum?id=oum1txoy1D. Both reinforce a strict division of labor: neural models
+  propose or prioritize, while symbolic checks certify feasibility. Carnot hook: exact validators remain
+  the certificate oracle; learned energy may guide search but cannot certify its own candidates.
+
+### Secondary-source status
+
+- **Semantic Scholar citation trails:** the EBT citation endpoint surfaced Solver-Hard, Memoir,
+  Fixed-Point Reasoners, LoopUS, and causal-energy parameterization; the ARM-EBM endpoint surfaced
+  Distributional EBMs and false-first-step planning. Solver-Hard and Memoir are the two new actionable
+  deltas above. No citation-count claim is made.
+- **OpenReview:** SPELL, Aletheia, TORe, verifier-robustness work, and FSNet reinforce verifier-driven
+  self-play, operation-recipe memory, and symbolic feasibility. Carnot's safer local instantiation is a
+  frozen chronological stream with exact labels and rollback, not online weight training in this
+  milestone.
+- **Hugging Face Papers:** SymDiag, PARTAB, and Verifier-Induced Support Reshaping are the strongest
+  current verification deltas. No newly surfaced model displaces the mandated local GGUF trio.
+- **GitHub discovery:** the official `extropic-ai/torx` repository is the only new repository promoted
+  into an experiment design. General EBM/KAN/constraint repositories did not provide a stronger local
+  dependency. KAN remains watch-only: recent critical assessments and performance studies do not justify
+  another KAN verifier branch before the current exact-verification and live-tool gaps close.
+- **Extropic:** the August 2026 update reports Torx and a simulator API live, Thermalizers as an upcoming
+  compiler, and a taped-out Z1 with 269,568 p-bits, 16-neighbor connectivity, claimed >50 MHz sampling
+  and <1 W, with sticks/cards/cluster early access targeted for 2027. Carnot has no authenticated Z1/X0
+  execution path, so `.587` may claim compiler fidelity only, never hardware speed or energy.
+- **Logical Intelligence:** Kona's public pages still describe globally scored editable latent traces and
+  a proprietary Sudoku demo, but no weights, runner, or reproducible architecture artifact was found.
+  Kona remains architecture context rather than a baseline.
+
+### V587 planning impact
+
+- Repair `.586` at the owned execution contract: set and validate `CARNOT_ARC_INDUCE_N_CTX=32768`,
+  exercise a code-carrying selfparse call, then rerun the paired object-table experiment with row-level
+  token, latency, tool, and transition-utility evidence.
+- Build the verification lane around hardness-controlled exact certificates plus SymDiag-style dual
+  encodings. Separate translation failures from reasoning failures before repair feedback can be
+  admitted.
+- Make the continuous self-learning lane transactional and prospective: active episodes are read-only;
+  between-episode updates require exact receipts, and support/retention contraction forces rollback.
+- Use Thermalizers' factor-error-to-trajectory-error framing for a bounded simulator-only portability
+  experiment. Do not repeat a generic Torx parity claim or imply access to Extropic silicon.
+
 ## V502 Planner Refresh - 2026-07-10
 
 Planning sweep for milestone `2026.07.502` after the operator reported `.501` complete. Sources checked:
