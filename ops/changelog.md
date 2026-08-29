@@ -18222,3 +18222,4 @@ duration.
 - 2026-08-29: Cold transactional self-learning durability and poison audit (⚠️ Research Finding) — honest_verdict=complete_null_csl_audit: no positive order-level CSL effect recomputed; results/experiment_6750_csl_durability_support_poison_audit.json
 - 2026-08-29: Thermalizers-style factor-to-trajectory compiler fidelity (✅ Complete) — honest_verdict=complete: context matching reduced exact mean trajectory total variation; simulator-only compiler evidence; results/experiment_6751_thermalizer_factor_trajectory_fidelity.json
 - 2026-08-29: Owned 32K live code-carrying ARC tool preflight (✅ Complete) — honest_verdict=complete_arc_context_tool_preflight_ready; results/experiment_6752_arc_code_carrying_tool_preflight.json
+- 2026-08-29: Live ARC object-table fetch-on-demand paired comparison (⚠️ Blocked) — honest_verdict=complete_blocked_object_table_ab:cuda_device_available; results/experiment_6753_object_table_fetch_on_demand_ab.json
