@@ -248,6 +248,21 @@ def test_scenario_report_6754_complete_artifact_has_no_pooled_claim(
     assert artifact["recomputed_headlines"]["pooled_milestone_success_score"] is None
     assert artifact["recomputed_headlines"]["pooled_success_claim_emitted"] is False
     assert not any("pooled_success" in row for row in artifact["rows"])
+    self_rows = [row for row in artifact["artifact_presence_matrix"] if row["task_id"] == "exp6754"]
+    assert self_rows == [
+        {
+            "task_id": "exp6754",
+            "manifest_task_id": "exp6754-v588-branch-disposition",
+            "branch": "capstone",
+            "path": exp.RESULT_PATH.as_posix(),
+            "artifact_state": "current_synthesis",
+            "valid_json": True,
+            "artifact_sha256": None,
+            "row_count": 0,
+            "verdict_class": "partial",
+            "error": None,
+        }
+    ]
     assert artifact["branch_verdicts"] == {
         "handoff": "blocked",
         "activity": "positive",

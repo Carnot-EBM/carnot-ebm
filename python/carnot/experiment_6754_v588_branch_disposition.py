@@ -856,6 +856,11 @@ def build_task_rows(
         payload = record.get("payload") if isinstance(record.get("payload"), Mapping) else None
         source_rows = _rows(payload)
         path = root / str(plan["path"])
+        artifact_sha256 = (
+            None
+            if record.get("artifact_state") == "current_synthesis"
+            else record.get("sha256") or sha256_file(path)
+        )
         rows.append(
             {
                 "row_type": "task",
@@ -867,7 +872,7 @@ def build_task_rows(
                 "path": plan["path"],
                 "artifact_state": record.get("artifact_state"),
                 "valid_json": record.get("valid_json"),
-                "artifact_sha256": record.get("sha256") or sha256_file(path),
+                "artifact_sha256": artifact_sha256,
                 "error": record.get("error"),
                 "status": payload.get("status")
                 if payload
