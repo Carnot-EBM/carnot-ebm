@@ -10,13 +10,105 @@ import json
 from pathlib import Path
 
 import pytest
+import yaml
 
 from carnot import experiment_6687_v582_branch_synthesis as mod
 
 
+# The archived V582 task manifest (commit a8e0d917e5, milestone 2026.08.582).
+# Pinned here because the live research-roadmap.yaml moves on after V582
+# closes; before this pin, all evidence-based tests errored at setup once the
+# next milestone activated (the 2026-08-27 stale-capstone incident shape).
+V582_TASKS = (
+    (
+        "exp6674-v582-manifest-parity-contract",
+        "V582 document-to-manifest parity contract",
+        "results/experiment_6674_v582_manifest_parity_contract.json",
+    ),
+    (
+        "exp6675-triggered-tail-scope-receipt",
+        "Triggered-tail task-owned verification receipt",
+        "results/experiment_6675_triggered_tail_scope_receipt.json",
+    ),
+    (
+        "exp6676-three-family-triggered-tail-ab",
+        "Three-family delayed syntax-tail A/B",
+        "results/experiment_6676_three_family_triggered_tail_ab.json",
+    ),
+    (
+        "exp6677-triggered-tail-independent-audit",
+        "Delayed syntax-tail blinded row audit",
+        "results/experiment_6677_triggered_tail_independent_audit.json",
+    ),
+    (
+        "exp6678-constraint-family-stream",
+        "Independent constraint-family prequential stream",
+        "results/experiment_6678_constraint_family_stream.json",
+    ),
+    (
+        "exp6679-prequential-cross-family-csl-ab",
+        "Prequential cross-family continuous self-learning A/B",
+        "results/experiment_6679_prequential_cross_family_csl_ab.json",
+    ),
+    (
+        "exp6680-csl-durability-audit",
+        "Cross-family CSL chronological durability audit",
+        "results/experiment_6680_csl_durability_audit.json",
+    ),
+    (
+        "exp6681-arc-post-redirect-outcomes",
+        "Canonical ARC post-redirect outcome transport",
+        "results/experiment_6681_arc_post_redirect_outcomes.json",
+    ),
+    (
+        "exp6682-arc-held-family-supervisor-ab",
+        "Held-family ARC supervisor outcome A/B",
+        "results/experiment_6682_arc_held_family_supervisor_ab.json",
+    ),
+    (
+        "exp6683-ising-reference-scope-receipt",
+        "Bounded-treewidth Ising task-owned receipt",
+        "results/experiment_6683_ising_reference_scope_receipt.json",
+    ),
+    (
+        "exp6684-torx-typed-factor-parity",
+        "Torx energy-distribution conformance",
+        "results/experiment_6684_torx_typed_factor_parity.json",
+    ),
+    (
+        "exp6685-autocorrelation-schedule-ab",
+        "Autocorrelation-aware stochastic schedule A/B",
+        "results/experiment_6685_autocorrelation_schedule_ab.json",
+    ),
+    (
+        "exp6686-stochastic-portability-audit",
+        "Cold exact and raw-chain review",
+        "results/experiment_6686_stochastic_portability_audit.json",
+    ),
+    (
+        "exp6687-v582-branch-synthesis",
+        "V582 five-branch disposition",
+        "results/experiment_6687_v582_branch_synthesis.json",
+    ),
+)
+
+
 @pytest.fixture(scope="module")
-def evidence() -> tuple[list[dict], dict[str, dict | None], dict[str, dict]]:
-    planned = mod.load_planned_tasks(mod.REPO_ROOT)
+def evidence(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> tuple[list[dict], dict[str, dict | None], dict[str, dict]]:
+    manifest_root = tmp_path_factory.mktemp("exp6687-v582-manifest")
+    manifest = {
+        "milestone": "2026.08.582",
+        "tasks": [
+            {"id": task_id, "title": title, "deliverable": deliverable}
+            for task_id, title, deliverable in V582_TASKS
+        ],
+    }
+    (manifest_root / mod.ACTIVE_ROADMAP_PATH.name).write_text(
+        yaml.safe_dump(manifest), encoding="utf-8"
+    )
+    planned = mod.load_planned_tasks(manifest_root)
     sources = mod.load_source_artifacts(mod.REPO_ROOT, planned)
     conductor = mod.load_conductor_states(mod.REPO_ROOT, planned)
     return planned, sources, conductor
@@ -162,9 +254,11 @@ def test_req_report_6687_complete_artifact_recomputes_from_rows(
 
     assert mod.validate_artifact(artifact) == []
     assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
-    assert artifact["status"] == "complete_terminal_partial"
-    assert artifact["honest_verdict"].startswith("complete_partial:")
-    assert artifact["verdict_class"] == "partial"
+    # REQ-CONDUCTOR-VERDICT-3: the finished synthesis declares null, not
+    # partial (its partial declaration re-ran the completed 2,983s task).
+    assert artifact["status"] == "complete_terminal_null"
+    assert artifact["honest_verdict"].startswith("complete_null:")
+    assert artifact["verdict_class"] == "null"
     assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
     assert artifact["verifier_is_oracle"] == mod.VERIFIER_BY_BRANCH
     assert artifact["verifier_is_oracle"]["mode"] == "mixed_by_branch"
@@ -181,6 +275,9 @@ def test_req_report_6687_complete_artifact_recomputes_from_rows(
     ("field", "bad"),
     [
         ("verdict_class", "positive"),
+        # REQ-CONDUCTOR-VERDICT-3 / SCENARIO-CONDUCTOR-VERDICT-5: partial is
+        # the may-retry class and a finished synthesis may not declare it.
+        ("verdict_class", "partial"),
         ("inference_substrate", "llm"),
         ("verifier_is_oracle", True),
         ("branch_rows", []),
@@ -340,5 +437,13 @@ def test_scenario_report_6687_validator_covers_terminal_inconsistencies(
     mutations.append(changed)
 
     assert all(mod.validate_artifact(changed) for changed in mutations)
+
+    # REQ-CONDUCTOR-VERDICT-3 / SCENARIO-CONDUCTOR-VERDICT-5: a finished
+    # synthesis may not declare the may-retry class. The checksum is
+    # recomputed so this pins the class rule itself, not the checksum check.
+    partial_declared = deepcopy(artifact)
+    partial_declared["verdict_class"] = "partial"
+    partial_declared["reproducibility_checksum"] = mod._checksum(partial_declared)
+    assert "verdict_class" in mod.validate_artifact(partial_declared)
     with pytest.raises(ValueError, match="invalid Exp6687 artifact"):
         mod.atomic_write_json(tmp_path / "bad.json", mutations[0])

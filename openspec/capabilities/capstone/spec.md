@@ -334,7 +334,8 @@ Field principles for Exp6526:
 
 - `status`: "Records the terminal V564 capstone state after reading all expected artifacts."
 - `honest_verdict`: "Summarizes mixed evidence without converting missing, null, or blocked rows into success."
-- `verdict_class`: "Uses partial for mixed lineage outcomes, positive only for oracle-distinct row-supported claims, and blocked or disqualified for missing or unsafe evidence."
+- `verdict_class`: "Uses null for a finished capstone with mixed lineage outcomes (partial only if the run itself stopped early, per REQ-CONDUCTOR-VERDICT-3), positive only for oracle-distinct row-supported claims, and blocked or disqualified for missing or unsafe evidence."
+  (Amended 2026-08-28: the principle previously read "Uses partial for mixed lineage outcomes". REQ-CONDUCTOR-VERDICT-3 reserves partial for a run that stopped early; the enum-first conductor re-ran this finished capstone because of the old reading.)
 - `task_inventory_rows`: "One row per expected task records path, hash, status, class, gate field, observed value, row support, authority, and eligibility."
 - `artifact_hash_receipts`: "Content hashes prove which files were read and which expected deliverables were missing."
 - `gate_contract_rows`: "Checks downstream gate field spelling against upstream artifacts and the V564 roadmap."

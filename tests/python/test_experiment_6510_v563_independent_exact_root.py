@@ -164,7 +164,7 @@ def test_scenario_bench_6510_direct_immutable_recomputation(
     assert recomputation["exp6506"]["contract_recomputed_from_file"] is True
     assert recomputation["exp6506"]["reported_v562_score"] == 1.0
     assert recomputation["exp6506"]["corrected_verdict_class"] == "circular_positive"
-    assert recomputation["exp6506"]["artifact_verdict_class"] == "partial"
+    assert recomputation["exp6506"]["artifact_verdict_class"] == "null"
     assert recomputation["exp6506"]["positive_scientific_claim_allowed"] is False
     assert recomputation["exp6506"]["allowed_fields"] == ["exact_label_rows", "raw_instance_rows"]
     assert recomputation["overall_independent_row_checks_passed"] is True
@@ -216,39 +216,49 @@ def test_scenario_bench_6510_attacks_and_verdict_class(
     assert attacks["all_attacks_fail_closed"] is True
     assert all(row["fail_closed"] is True for row in attacks["rows"])
     assert all(row["observed_ready_score_if_only_this_attack"] == 0.0 for row in attacks["rows"])
-    assert artifact["verdict_class"] in {"partial", "null"}
+    # REQ-CONDUCTOR-VERDICT-3: the finished replay declares null, not partial.
+    assert artifact["verdict_class"] == "null"
     assert artifact["verdict_class"] != "positive"
     assert artifact["verifier_is_oracle"] is True
     assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
 
-    assert mod.classify_lineage_dependency(
-        {
-            "scope_id": "missing_hash",
-            "dependency_kind": "historical_file_input",
-            "source_label": "immutable_exp6504_file",
-            "field": "raw_instance_rows",
-            "required_hash_present": False,
-        }
-    )["decision"] == "block"
-    assert mod.classify_lineage_dependency(
-        {
-            "scope_id": "retired_alias",
-            "dependency_kind": "structured_dependency",
-            "source_label": "exp6506-v561-evidence-corrigendum-v562-lineage-lock",
-            "field": "v562_exact_branch_ready_score",
-            "required_hash_present": True,
-        }
-    )["decision"] == "forbid"
-    assert mod.classify_lineage_dependency(
-        {
-            "scope_id": "new_path",
-            "dependency_kind": "structured_dependency",
-            "source_label": "exp6510-v563-independent-exact-root",
-            "field": "v563_independent_root_ready_score",
-            "required_hash_present": True,
-            "downstream_task": "exp6511-exact-branch-counterfactual-dataset-v2",
-        }
-    )["decision"] == "allow"
+    assert (
+        mod.classify_lineage_dependency(
+            {
+                "scope_id": "missing_hash",
+                "dependency_kind": "historical_file_input",
+                "source_label": "immutable_exp6504_file",
+                "field": "raw_instance_rows",
+                "required_hash_present": False,
+            }
+        )["decision"]
+        == "block"
+    )
+    assert (
+        mod.classify_lineage_dependency(
+            {
+                "scope_id": "retired_alias",
+                "dependency_kind": "structured_dependency",
+                "source_label": "exp6506-v561-evidence-corrigendum-v562-lineage-lock",
+                "field": "v562_exact_branch_ready_score",
+                "required_hash_present": True,
+            }
+        )["decision"]
+        == "forbid"
+    )
+    assert (
+        mod.classify_lineage_dependency(
+            {
+                "scope_id": "new_path",
+                "dependency_kind": "structured_dependency",
+                "source_label": "exp6510-v563-independent-exact-root",
+                "field": "v563_independent_root_ready_score",
+                "required_hash_present": True,
+                "downstream_task": "exp6511-exact-branch-counterfactual-dataset-v2",
+            }
+        )["decision"]
+        == "allow"
+    )
 
 
 def test_scenario_bench_6510_atomic_terminal_schema_and_validation(
@@ -281,6 +291,12 @@ def test_scenario_bench_6510_atomic_terminal_schema_and_validation(
             "verdict_class cannot be positive for oracle readiness",
             lambda item: item.__setitem__("verdict_class", "positive"),
         ),
+        # REQ-CONDUCTOR-VERDICT-3 / SCENARIO-CONDUCTOR-VERDICT-5: a ready root
+        # may not declare the may-retry class.
+        (
+            "ready root requires verdict_class null",
+            lambda item: item.__setitem__("verdict_class", "partial"),
+        ),
         (
             "inference_substrate mismatch",
             lambda item: item.__setitem__("inference_substrate", "live_llm_inference"),
@@ -295,9 +311,7 @@ def test_scenario_bench_6510_atomic_terminal_schema_and_validation(
                 row
                 for row in item["lineage_decision_rows"]
                 if row["scope_id"] == "v563_exact_branch_counterfactual_path"
-            ).__setitem__(
-                "source_label", "exp6506-v561-evidence-corrigendum-v562-lineage-lock"
-            ),
+            ).__setitem__("source_label", "exp6506-v561-evidence-corrigendum-v562-lineage-lock"),
         ),
         (
             "v563_independent_root_ready_score mismatch",
@@ -326,15 +340,18 @@ def test_scenario_bench_6510_fail_closed_defensive_paths(
     """SCENARIO-BENCH-6510-ATTACKS: defensive paths block unsafe roots."""
 
     assert mod.sha256_file(tmp_path / "missing.json") == "missing"
-    assert mod.classify_lineage_dependency(
-        {
-            "scope_id": "unknown",
-            "dependency_kind": "historical_file_input",
-            "source_label": "immutable_unknown_file",
-            "field": "row_payload",
-            "required_hash_present": True,
-        }
-    )["reason"] == "unknown_dependency_fail_closed"
+    assert (
+        mod.classify_lineage_dependency(
+            {
+                "scope_id": "unknown",
+                "dependency_kind": "historical_file_input",
+                "source_label": "immutable_unknown_file",
+                "field": "row_payload",
+                "required_hash_present": True,
+            }
+        )["reason"]
+        == "unknown_dependency_fail_closed"
+    )
 
     violations = mod.structured_dependency_retired_id_violations(
         {
@@ -457,6 +474,8 @@ def test_scenario_bench_6510_main_and_validate_roundtrip(tmp_path: Path) -> None
     assert payload["v563_independent_root_ready_score"] == 1.0
     assert payload["atomic_terminal_write_receipt"]["target_path"] == str(result_path)
     assert payload["atomic_terminal_write_receipt"]["terminal_payload_sha256"].startswith("sha256:")
-    full_receipt = next(row for row in payload["tests_run"] if row["command"] == FULL_PYTEST_COMMAND)
+    full_receipt = next(
+        row for row in payload["tests_run"] if row["command"] == FULL_PYTEST_COMMAND
+    )
     assert full_receipt["exit_code"] == 3
     assert "68 failed" in full_receipt["summary"]
