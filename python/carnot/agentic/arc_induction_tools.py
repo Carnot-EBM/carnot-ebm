@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import ast
 import json
+import os
 import re
 from dataclasses import dataclass, field
 from typing import Any, Callable, Optional, Sequence
@@ -50,6 +51,10 @@ MAX_FIND_OBJECTS = 32
 MAX_PREDICATE_CODE_CHARS = 2048
 MAX_FIND_OBJECT_RESPONSE_BYTES = 8192
 FIND_OBJECT_PREDICATE_TIMEOUT_S = 0.25
+
+# Tool-gap capture bound (REQ-ARC-WMTE-6770). Events feed an offline ledger,
+# so the per-session record is capped and the overflow is counted, not lost.
+MAX_TOOL_GAP_EVENTS = 20
 
 
 def _engine_source(full_source: str) -> str:
@@ -180,11 +185,23 @@ class InductionToolSession:
     coord_set: set[int] = field(init=False)
     candidates: list[CandidateRecord] = field(default_factory=list)
     calls: list[dict[str, Any]] = field(default_factory=list)
+    # Tool-gap evidence (REQ-ARC-WMTE-6770): the model asked for a capability
+    # the active tool set does not serve. See record_tool_gap for the kinds.
+    tool_gap_events: list[dict[str, Any]] = field(default_factory=list)
+    tool_gap_events_dropped: int = 0
+    # Candidate enablement FROZEN at session creation (adversarial review
+    # 2026-08-29, F5/F7): dispatch, payload, prompt, and stats all read this
+    # one snapshot, so a mid-run env or registry mutation — including one made
+    # by model-executed code — cannot change what this session serves or
+    # make the record disagree with what actually ran.
+    enabled_candidates: tuple[str, ...] = field(init=False)
+    rejected_candidates: tuple[str, ...] = field(init=False)
 
     def __post_init__(self) -> None:
         self.transitions = list(self.transitions)
         self.visible, self.held_out = holdout_split(self.transitions)
         self.coord_set = window_changed_coords(self.transitions)
+        self.enabled_candidates, self.rejected_candidates = _candidate_names_from_env()
 
     # ---- tool: run_engine_on_transitions ---------------------------------------
 
@@ -684,6 +701,132 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
 TOOL_NAMES = tuple(s["function"]["name"] for s in TOOL_SCHEMAS)
 
 # ---------------------------------------------------------------------------------
+# Tool-gap capture + curated candidate tools (REQ-ARC-WMTE-6770).
+#
+# WHY. TOOL_SCHEMAS is a closed, hand-authored set. Before this block, a model
+# call naming a tool that does not exist was answered with an error and then
+# FORGOTTEN: only a conflated counter survived (tool_call_parse_failures mixes
+# unknown names with malformed JSON), so nobody could ask "what tool did the
+# model need and not have?". record_tool_gap keeps the identity of that demand.
+#
+# INTRODUCING a tool stays a HUMAN act. The gap ledger names the demand; a
+# human authors the tool and registers it here as a CANDIDATE, default off.
+# CARNOT_ARC_INDUCE_CANDIDATE_TOOLS (comma-separated exact names) enables
+# registered candidates for a measurement run; with it unset the active set is
+# the same TOOL_SCHEMAS object as before, byte-identical. This mirrors the
+# supervisor-arm rule: selection over a curated set, never model generation.
+# ---------------------------------------------------------------------------------
+
+CANDIDATE_TOOLS_ENV = "CARNOT_ARC_INDUCE_CANDIDATE_TOOLS"
+
+# name -> {"schema": OpenAI-format tool schema, "factory": session -> callable}.
+# Human-authored entries only. Empty is the honest starting state: no live run
+# has yet demanded a tool that does not exist (measured 2026-08-29 over 633
+# recorded calls; see docs/research-notes/arc-tool-gap-feedback-2026-08-29.md).
+CANDIDATE_TOOLS: dict[str, dict[str, Any]] = {}
+
+
+def register_candidate_tool(
+    schema: dict[str, Any],
+    factory: Callable[["InductionToolSession"], Callable[..., dict[str, Any]]],
+) -> str:
+    """Register one HUMAN-AUTHORED candidate tool. Returns its name.
+
+    Refuses a name collision with a core tool: shadowing a shipped tool would
+    silently change measured behaviour under a flag meant only to ADD."""
+    name = str(schema["function"]["name"])
+    if name in TOOL_NAMES:
+        raise ValueError(f"candidate tool {name!r} collides with a core tool")
+    CANDIDATE_TOOLS[name] = {"schema": schema, "factory": factory}
+    return name
+
+
+def _candidate_names_from_env() -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """(enabled, rejected) candidate names from the env flag.
+
+    Rejected = named in the env but not registered. Returned rather than
+    dropped so a typo in the flag is visible in every run's stats instead of
+    silently disabling the tool it meant to enable."""
+    raw = os.environ.get(CANDIDATE_TOOLS_ENV, "")
+    wanted = tuple(n for n in (s.strip() for s in raw.split(",")) if n)
+    enabled = tuple(n for n in wanted if n in CANDIDATE_TOOLS)
+    rejected = tuple(n for n in wanted if n not in CANDIDATE_TOOLS)
+    return enabled, rejected
+
+
+def enabled_candidate_names() -> tuple[str, ...]:
+    return _candidate_names_from_env()[0]
+
+
+def active_tool_schemas() -> list[dict[str, Any]]:
+    """The tool set this process serves: core plus enabled candidates.
+
+    With the env flag unset this returns the TOOL_SCHEMAS object itself, so
+    the default request payload and prompt text cannot drift by construction."""
+    enabled = enabled_candidate_names()
+    if not enabled:
+        return TOOL_SCHEMAS
+    return [*TOOL_SCHEMAS, *(CANDIDATE_TOOLS[n]["schema"] for n in enabled)]
+
+
+def active_tool_names() -> tuple[str, ...]:
+    return tuple(s["function"]["name"] for s in active_tool_schemas())
+
+
+def active_tool_schemas_for(session: "InductionToolSession") -> list[dict[str, Any]]:
+    """The tool set for ONE session, from its frozen enablement snapshot.
+
+    The loop serves payload, prompt, and dispatch from this, so what a run
+    advertises is what it dispatches, for the whole run — a mid-run env or
+    registry mutation changes nothing (adversarial review 2026-08-29, F5/F7)."""
+    enabled = tuple(n for n in getattr(session, "enabled_candidates", ()) if n in CANDIDATE_TOOLS)
+    if not enabled:
+        return TOOL_SCHEMAS
+    return [*TOOL_SCHEMAS, *(CANDIDATE_TOOLS[n]["schema"] for n in enabled)]
+
+
+def active_tool_names_for(session: "InductionToolSession") -> tuple[str, ...]:
+    return tuple(s["function"]["name"] for s in active_tool_schemas_for(session))
+
+
+# Event-content bounds (adversarial review 2026-08-29, F9). The name and the
+# argument keys are MODEL-CONTROLLED text headed for a durable ledger and a
+# human-pasted markdown heading; the error field was already capped and these
+# were not — an asymmetry a single hostile call could exploit.
+MAX_TOOL_GAP_NAME_CHARS = 120
+MAX_TOOL_GAP_ARG_KEYS = 20
+
+
+def _record_unknown_tool(
+    session: "InductionToolSession", name: str, keys: Optional[list[str]]
+) -> None:
+    record_tool_gap(
+        session,
+        {
+            "kind": "unknown_tool",
+            "requested_tool": str(name)[:MAX_TOOL_GAP_NAME_CHARS],
+            "argument_keys": (
+                None
+                if keys is None
+                else [str(k)[:MAX_TOOL_GAP_NAME_CHARS] for k in keys[:MAX_TOOL_GAP_ARG_KEYS]]
+            ),
+        },
+    )
+
+
+def record_tool_gap(session: "InductionToolSession", event: dict[str, Any]) -> None:
+    """Retain one tool-gap event on the session, bounded.
+
+    Two kinds. "unknown_tool": the model called a name outside the active set
+    -- the strongest mechanical signal that a tool is missing. "bad_arguments":
+    the model imagined a different signature for a tool that exists."""
+    if len(session.tool_gap_events) >= MAX_TOOL_GAP_EVENTS:
+        session.tool_gap_events_dropped += 1
+        return
+    session.tool_gap_events.append(event)
+
+
+# ---------------------------------------------------------------------------------
 # SELFPARSE transport (REQ-ARC-WMTE-6730). The scored vLLM server is launched with no
 # tool-parser flags: a request carrying a `tools` field returns HTTP 400, and with
 # `--tool-call-parser hermes` the model's calls stay unlifted TEXT, because Qwen3.8
@@ -718,13 +861,31 @@ def _trim_param_value(value: str) -> str:
     return value
 
 
+def _param_types_for(name: str) -> dict[str, str]:
+    """Parameter types for one tool: the core table first, then the candidate
+    registry, so an enabled candidate's XML calls coerce by its own schema.
+
+    Gated on ENABLEMENT, not mere registration (adversarial review 2026-08-29,
+    F6): a registered-but-dark candidate must not change coercion, or the
+    default path stops being byte-identical the moment anything registers."""
+    if name in _PARAM_TYPES:
+        return _PARAM_TYPES[name]
+    if name not in enabled_candidate_names():
+        return {}
+    entry = CANDIDATE_TOOLS.get(name)
+    if entry is None:
+        return {}
+    props = entry["schema"]["function"].get("parameters", {}).get("properties", {}) or {}
+    return {p: str(spec.get("type", "string")) for p, spec in props.items()}
+
+
 def _coerce_param(name: str, param: str, value: str) -> Any:
     """Schema-typed coercion of one XML parameter value.
 
     The XML carries raw text; dispatch_tool expects JSON-typed arguments. A value
     that fails coercion is passed through as text so dispatch reports the bad
     argument back to the model -- a malformed call costs one turn, never the run."""
-    kind = _PARAM_TYPES.get(name, {}).get(param, "string")
+    kind = _param_types_for(name).get(param, "string")
     raw = _trim_param_value(value)
     if kind == "integer":
         try:
@@ -783,14 +944,52 @@ def parse_xml_tool_calls(content: str) -> tuple[list[dict[str, Any]], int, int]:
     return calls, n_blocks, n_unparsed
 
 
-def render_tool_schemas_for_prompt() -> str:
+_LOOSE_NAME_RES = (
+    # <function=NAME>, <function="NAME">, <function NAME>, <function=NAME()> --
+    # the shapes the strict parser refuses but a demanded name still sits in.
+    re.compile(r"<function[=\s\"']+([\w.\-]+)"),
+    # Server-lifted failure shape left as text: {"name": "NAME", "arguments": ...}
+    re.compile(r"\"name\"\s*:\s*\"([\w.\-]+)\""),
+)
+
+MAX_LOOSE_NAMES = 5
+
+
+def loose_tool_call_names(content: str) -> list[str]:
+    """Tool names sitting in UNPARSED tool-call text, best-effort and bounded.
+
+    Adversarial review 2026-08-29 (F4): the strict transports count a block the
+    model wrote malformed, and the demanded name — the tool-gap signal — was in
+    the refused text the whole time. This never dispatches anything; it only
+    lets the loop keep the name as gap evidence. Text before the final
+    </think> is skipped for the same reason parse_xml_tool_calls skips it."""
+    if "</think>" in content:
+        content = content.rsplit("</think>", 1)[1]
+    names: list[str] = []
+    for rx in _LOOSE_NAME_RES:
+        for m in rx.finditer(content):
+            name = m.group(1)[:MAX_TOOL_GAP_NAME_CHARS]
+            if name and name not in names:
+                names.append(name)
+            if len(names) >= MAX_LOOSE_NAMES:
+                return names
+    return names
+
+
+def render_tool_schemas_for_prompt(schemas: Optional[list[dict[str, Any]]] = None) -> str:
     """The tool schemas as PROMPT TEXT, plus the exact call format to write.
+
+    The loop passes its session's FROZEN schema list so prompt and dispatch
+    cannot disagree mid-run; with no argument this renders the env-derived
+    active set (the pre-freeze behaviour, kept for direct callers).
 
     Rendered from TOOL_SCHEMAS so prompt and dispatch can never drift apart. This is
     what lets a selfparse request omit the `tools` field entirely -- the only payload
     shape the flag-less scored server accepts."""
     lines = ["AVAILABLE TOOLS (schemas):"]
-    for s in TOOL_SCHEMAS:
+    # Active set, not the bare core constant: an enabled candidate tool must be
+    # announced in the prompt, or the model can never call it (REQ-ARC-WMTE-6770).
+    for s in schemas if schemas is not None else active_tool_schemas():
         fn = s["function"]
         props = fn.get("parameters", {}).get("properties", {}) or {}
         required = set(fn.get("parameters", {}).get("required", []) or [])
@@ -822,11 +1021,19 @@ def dispatch_tool(session: InductionToolSession, name: str, arguments: str) -> d
     Returns the tool's report dict, or {"ok": False, "error": ...} on a bad name or
     unparseable arguments -- the error text goes back to the model as the tool result,
     so a malformed call costs one turn, not the induction."""
+    known = name in TOOL_NAMES or name in getattr(session, "enabled_candidates", ())
     try:
         kwargs = json.loads(arguments) if arguments else {}
         if not isinstance(kwargs, dict):
+            if not known:
+                _record_unknown_tool(session, name, None)
             return {"ok": False, "error": "arguments must be a JSON object"}
     except json.JSONDecodeError as exc:
+        # The NAME needed no parsing: an unknown name with malformed JSON is
+        # still tool demand, and improvising an unseen tool is exactly when a
+        # model writes malformed arguments (adversarial review 2026-08-29, F3).
+        if not known:
+            _record_unknown_tool(session, name, None)
         return {"ok": False, "error": f"unparseable JSON arguments: {exc}"}
     fn = {
         "run_engine_on_transitions": session.run_engine_on_transitions,
@@ -836,11 +1043,41 @@ def dispatch_tool(session: InductionToolSession, name: str, arguments: str) -> d
         "find_objects": session.find_objects,
         "list_transitions": session.list_transitions,
     }.get(name)
+    if (
+        fn is None
+        and name in getattr(session, "enabled_candidates", ())
+        and name in CANDIDATE_TOOLS
+    ):
+        # Curated candidate tool, enabled for this SESSION (REQ-ARC-WMTE-6770;
+        # frozen snapshot, see enabled_candidates). The factory is
+        # human-authored code: a bug in it must cost one turn, never the
+        # induction -- same contract as a tool body below.
+        try:
+            fn = CANDIDATE_TOOLS[name]["factory"](session)
+        except Exception as exc:  # noqa: BLE001
+            return {
+                "ok": False,
+                "error": f"candidate tool {name} setup raised {type(exc).__name__}: {exc}",
+            }
     if fn is None:
-        return {"ok": False, "error": f"unknown tool {name!r}; available: {list(TOOL_NAMES)}"}
+        # THE tool-gap signal: the model wrote a call for a name the active set
+        # does not serve. Keep its identity; the count alone cannot say what
+        # tool was wanted (REQ-ARC-WMTE-6770).
+        _record_unknown_tool(session, name, sorted(kwargs))
+        return {
+            "ok": False,
+            "error": f"unknown tool {name!r}; available: {list(active_tool_names_for(session))}",
+        }
     try:
         return fn(**kwargs)
     except TypeError as exc:
+        # The model imagined a different signature for a real tool. Retained as
+        # gap evidence; a TypeError raised INSIDE a tool body lands here too,
+        # so the offline analyzer treats this kind as noisier than unknown_tool.
+        record_tool_gap(
+            session,
+            {"kind": "bad_arguments", "tool": name, "error": str(exc)[:200]},
+        )
         return {"ok": False, "error": f"bad arguments for {name}: {exc}"}
     except Exception as exc:  # noqa: BLE001 - a tool bug must cost a turn, not the induction
         return {"ok": False, "error": f"tool {name} raised {type(exc).__name__}: {exc}"}
