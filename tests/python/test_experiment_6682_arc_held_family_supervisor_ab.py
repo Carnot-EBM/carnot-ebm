@@ -582,6 +582,75 @@ def test_req_6682_failed_mandatory_verification_keeps_readiness_false(tmp_path: 
     assert exp.validate_artifact(artifact) == []
 
 
+def test_req_6682_aborted_suite_stdout_never_reads_as_ready(tmp_path: Path):
+    """REGRESSION (2026-08-28, demonstrated): an ABORTED suite prints zero FAILED lines.
+
+    Parsing that output naively yields an empty failure set, which the delta reads as
+    "1,726 failures fixed" and readiness goes True on a suite that never ran. The stdout
+    path must treat an abort -- and any nonzero exit the output does not explain -- as
+    evidence that CANNOT be computed, which fails closed.
+    """
+
+    aborted_stdout = (
+        "collected 57917 items / 1 error\n"
+        "ERROR tests/python/test_experiment_6659_v580_capstone.py - RuntimeError: rot\n"
+        "!!!!!!!! Interrupted: 1 error during collection !!!!!!!!\n"
+        "1 error in 42.31s\n"
+    )
+    artifact = exp.build_artifact(
+        repo_root=tmp_path,
+        result_path=tmp_path / "aborted.json",
+        preconditions=_passing_preconditions(),
+        run_manifest=_manifest(),
+        per_unit_rows=_rows(),
+        test_results={
+            exp.FULL_TEST_COMMAND: {
+                "exit_code": 2,
+                "summary": "collection abort",
+                "stdout": aborted_stdout,
+            }
+        },
+        duration_s=0.01,
+    )
+    assert artifact["arc_supervisor_ab_ready"] is False
+    assert (
+        artifact["canonical_path_receipts"]["live_metadata"]["global_suite_failure_delta"][
+            "ready_allowed"
+        ]
+        is False
+    )
+    assert (
+        artifact["canonical_path_receipts"]["live_metadata"]["global_suite_failure_delta"][
+            "new_node_ids"
+        ]
+        is None
+    )
+
+    # A nonzero exit whose stdout explains nothing is the same shape: unknown, not clean.
+    unexplained = exp.build_artifact(
+        repo_root=tmp_path,
+        result_path=tmp_path / "unexplained.json",
+        preconditions=_passing_preconditions(),
+        run_manifest=_manifest(),
+        per_unit_rows=_rows(),
+        test_results={
+            exp.FULL_TEST_COMMAND: {
+                "exit_code": 4,
+                "summary": "usage error",
+                "stdout": "no tests ran in 0.01s\n",
+            }
+        },
+        duration_s=0.01,
+    )
+    assert unexplained["arc_supervisor_ab_ready"] is False
+    assert (
+        unexplained["canonical_path_receipts"]["live_metadata"]["global_suite_failure_delta"][
+            "ready_allowed"
+        ]
+        is False
+    )
+
+
 def test_req_6682_artifact_validator_rejects_each_claim_axis(tmp_path: Path):
     """REQ-ARC-WMTE-6682 validates schema, claims, hashes, attacks, and readiness."""
 
