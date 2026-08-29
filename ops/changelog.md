@@ -31,6 +31,12 @@
 - Verification: 12 new tests (SCENARIO-ARC-WMTE-6731..6741), 8 mutations
   each RED then restored byte-identical; 100 tool-loop-family tests green;
   ruff + mypy clean on touched files.
+- CORRECTION (2026-08-28 adversarial pass, commit 193b152793): the mutation
+  total is 9 (8 for REQ-6730 + 1 for REQ-6740), not 8; all 9 needles
+  re-verified unique at f642037723. Same pass found f642037723 had committed
+  the two spec sections twice (a pre-commit stash-restore resurrected a
+  wiped copy under a concurrent commit); deduplicated, and the REQ-6730
+  status row now carries the gate's live-sample scope caveat.
 
 ## 2026-08-27 — Exp6615 closed-milestone replay stays closed
 
