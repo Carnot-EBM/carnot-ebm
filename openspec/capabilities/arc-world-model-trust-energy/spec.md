@@ -28302,3 +28302,34 @@ not imply adoption. The experiment SHALL never claim or register a solve.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6753 | `python/carnot/experiment_6753_object_table_fetch_on_demand_ab.py` (frozen design, arm environments, production E3 worker, strict fetch accounting, paired reducer, CUDA/model/preflight gates, terminal artifact validator); `scripts/experiments/experiment_6753_object_table_fetch_on_demand_ab.py` (repository entry point). | `tests/python/test_arc_object_table_fetch_on_demand_ab_6753.py` (arm isolation, exact prompt removal, useful fetches, pairing, sidecar exclusion, completion, no-solve, preflight, worker failures, CLI, 100 percent new-module statement coverage). |
+
+### REQ-ARC-WMTE-6760: The supervisor may escalate to tool-loop re-induction
+
+The trajectory supervisor SHALL carry a fourth arm, `tool_loop_reinduction`, which re-induces
+through the callable-tool loop rather than the single-shot draw. It SHALL fire only after
+`allow_reinduction` has already been spent on the current level and stagnation continued. It
+SHALL be DISABLED unless `CARNOT_ARC_SUPERVISOR_TOOL_ARM` is exactly `"1"`.
+
+The arm SHALL appear in the redirect ledger's `arm_outcomes` whether or not it is enabled, so
+its `fired` / `helped` counts can be read before it is trusted.
+
+#### SCENARIO-ARC-WMTE-6760-A: default off changes nothing live
+- GIVEN the environment variable is unset
+- WHEN a level stagnates through every earlier arm
+- THEN `tool_loop_reinduction` never fires
+
+#### SCENARIO-ARC-WMTE-6760-B: escalation order is preserved
+- GIVEN the arm is enabled and a level stagnates
+- WHEN `allow_reinduction` has not yet been spent
+- THEN `tool_loop_reinduction` does not fire before it
+
+Rationale: the selfparse transport gate passed at ceiling on 2026-08-28, so the loop RUNS;
+whether it induces BETTER is what the resumed holdout-equalized A/B measures, and that has not
+reported. Wiring an unmeasured lever into the live scored path is what this project's
+disciplines exist to prevent; leaving the supervisor unable to reach a capability it should be
+finetuning against is the opposite failure. A default-off arm with an outcome ledger avoids
+both.
+
+Implementation status: implemented 2026-08-29
+(`python/carnot/agentic/arc_trajectory_supervisor.py`;
+`tests/python/test_arc_trajectory_supervisor.py`, 34 tests, 4/4 mutations RED).

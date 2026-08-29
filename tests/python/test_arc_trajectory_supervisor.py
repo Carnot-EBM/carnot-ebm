@@ -555,3 +555,106 @@ def test_scenario_6660_raising_supervisor_cannot_break_the_run(monkeypatch):
     policy._maybe_supervise_trajectory(frame)
 
     assert policy.trajectory_supervisor_diagnostics()["observe_errors"] == 2
+
+
+# --- The fourth rung: tool-loop re-induction (REQ-ARC-WMTE-6760, 2026-08-29) ------------------
+# Default OFF. The selfparse transport's gate passed at ceiling on 2026-08-28, so the loop RUNS;
+# whether it induces BETTER is what the resumed holdout-equalized A/B measures, and that has not
+# reported. The arm exists so the supervisor can be finetuned against it through the outcome
+# ledger, without an unmeasured lever changing live scored behaviour first.
+
+import os as _os  # noqa: E402
+
+from carnot.agentic.arc_trajectory_supervisor import (  # noqa: E402
+    ARM_ALLOW_REINDUCTION,
+    ARM_TOOL_LOOP_REINDUCTION,
+    tool_loop_arm_enabled,
+)
+
+
+def _stagnate(sup, snapshot, n):
+    """Run n actions with no level change; return the last redirect seen."""
+    last = None
+    for _ in range(n):
+        got = sup.observe(snapshot)
+        if got is not None:
+            last = got
+    return last
+
+
+def test_the_tool_arm_is_off_by_default(monkeypatch) -> None:
+    monkeypatch.delenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", raising=False)
+    assert tool_loop_arm_enabled() is False
+
+
+def test_only_the_exact_string_one_arms_it(monkeypatch) -> None:
+    """A stray truthy value must not switch a live-path strategy change on by accident."""
+    monkeypatch.setenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", "yes")
+    assert tool_loop_arm_enabled() is False
+    monkeypatch.setenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", "1")
+    assert tool_loop_arm_enabled() is True
+
+
+def test_the_tool_arm_never_fires_while_disabled(monkeypatch) -> None:
+    """The whole point of default-off: an unmeasured lever changes nothing live."""
+    monkeypatch.delenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", raising=False)
+    sup = TrajectorySupervisor(window=3, reinduction_evidence_floor=0)
+    snap = TrajectorySnapshot(
+        level=0,
+        goal_bias_installed=False,
+        induced=True,
+        induction_attempts=1,
+        new_transitions_since_induction=500,
+        diversity_active=True,
+    )
+    fired = {r["arm"] for r in _fired_arms(sup, snap, 40)}
+    assert ARM_TOOL_LOOP_REINDUCTION not in fired
+
+
+def _fired_arms(sup, snap, n):
+    for _ in range(n):
+        sup.observe(snap)
+    return sup.receipt()["redirects"]
+
+
+def test_the_tool_arm_waits_for_plain_reinduction_to_be_spent(monkeypatch) -> None:
+    """It is the ESCALATION rung: paying for a multi-turn loop is only honest once the
+    single-shot re-draw has already been spent on this level and stagnation continued."""
+    monkeypatch.setenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", "1")
+    sup = TrajectorySupervisor(window=3, reinduction_evidence_floor=0)
+    # induced=False makes ARM_ALLOW_REINDUCTION ineligible, so it is never spent.
+    snap = TrajectorySnapshot(
+        level=0,
+        goal_bias_installed=False,
+        induced=False,
+        induction_attempts=0,
+        new_transitions_since_induction=0,
+        diversity_active=True,
+    )
+    fired = {r["arm"] for r in _fired_arms(sup, snap, 40)}
+    assert ARM_TOOL_LOOP_REINDUCTION not in fired
+
+
+def test_the_tool_arm_fires_after_reinduction_and_is_recorded(monkeypatch) -> None:
+    monkeypatch.setenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", "1")
+    sup = TrajectorySupervisor(window=3, reinduction_evidence_floor=0)
+    snap = TrajectorySnapshot(
+        level=0,
+        goal_bias_installed=False,
+        induced=True,
+        induction_attempts=1,
+        new_transitions_since_induction=500,
+        diversity_active=True,
+    )
+    fired = [r["arm"] for r in _fired_arms(sup, snap, 40)]
+    assert ARM_ALLOW_REINDUCTION in fired
+    assert ARM_TOOL_LOOP_REINDUCTION in fired
+    assert fired.index(ARM_ALLOW_REINDUCTION) < fired.index(ARM_TOOL_LOOP_REINDUCTION)
+
+
+def test_the_ledger_reports_the_new_arm_so_it_can_be_finetuned(monkeypatch) -> None:
+    """An arm with no outcome row cannot be retired or promoted -- which is the whole
+    purpose of adding it before the evidence lands."""
+    monkeypatch.setenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", "1")
+    sup = TrajectorySupervisor(window=3, reinduction_evidence_floor=0)
+    assert ARM_TOOL_LOOP_REINDUCTION in sup.receipt()["arm_outcomes"]

@@ -12,6 +12,7 @@ See docs/research-notes/avo-adaptation-for-local-generator-2026-08-21.md.
 
 from __future__ import annotations
 
+import os
 from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
@@ -23,7 +24,38 @@ from typing import Any
 ARM_DROP_GOAL_BIAS = "drop_goal_bias"
 ARM_ALLOW_REINDUCTION = "allow_reinduction"
 ARM_FORCE_DIVERSITY = "force_exploration_diversity"
-ARM_ORDER = (ARM_DROP_GOAL_BIAS, ARM_ALLOW_REINDUCTION, ARM_FORCE_DIVERSITY)
+# A FOURTH RUNG, added 2026-08-29 and DEFAULT OFF (REQ-ARC-WMTE-6760).
+#
+# The ladder's second rung buys a fresh world model with accumulated evidence, but it re-draws
+# through the SAME single-shot induction that just failed to explain the level. The callable-tool
+# loop is a different draw: the model queries transitions and executes candidate engines instead
+# of writing one blind. Its transport gate passed at ceiling on 2026-08-28 (20/20 attempt, 20/20
+# parse-to-dispatch) so it RUNS; whether it induces BETTER is what the resumed holdout-equalized
+# A/B measures, and that has not reported.
+#
+# So this arm exists, is fired last, and is gated OFF until that evidence lands. Wiring an
+# unmeasured lever into the live scored path is the thing this project's disciplines exist to
+# stop; leaving the supervisor unable to reach a capability it should be finetuning against is
+# the opposite failure. A default-off arm with an outcome ledger is how both are avoided: the
+# arm can be measured before it is trusted.
+ARM_TOOL_LOOP_REINDUCTION = "tool_loop_reinduction"
+
+ARM_ORDER = (
+    ARM_DROP_GOAL_BIAS,
+    ARM_ALLOW_REINDUCTION,
+    ARM_FORCE_DIVERSITY,
+    ARM_TOOL_LOOP_REINDUCTION,
+)
+
+
+def tool_loop_arm_enabled() -> bool:
+    """Is the fourth rung armed? Default OFF until the A/B reports.
+
+    Exact-match "1", so a stray truthy value cannot switch a live-path strategy change on by
+    accident -- the same discipline the worktree guard's override uses.
+    """
+
+    return os.environ.get("CARNOT_ARC_SUPERVISOR_TOOL_ARM") == "1"
 
 
 @dataclass(frozen=True)
@@ -154,6 +186,23 @@ class TrajectorySupervisor:
                 ARM_ALLOW_REINDUCTION,
                 f"induction latch set with {s.new_transitions_since_induction} new "
                 "transitions the model has never seen",
+            )
+        # Fires only AFTER a plain re-induction has already been spent on this level and the
+        # stagnation continued -- that is the written evidence that the single-shot draw is not
+        # the thing that will explain this level, which is the only honest reason to pay for a
+        # multi-turn loop. Reaching this rung with every earlier arm used is also exactly the
+        # "all arms exhausted and stagnation continued" state the refinement spec calls the
+        # specification for a NEW arm.
+        if (
+            tool_loop_arm_enabled()
+            and ARM_TOOL_LOOP_REINDUCTION not in self._arms_used
+            and ARM_ALLOW_REINDUCTION in self._arms_used
+            and s.induction_attempts < self.reinduction_attempt_cap
+        ):
+            return (
+                ARM_TOOL_LOOP_REINDUCTION,
+                "single-shot re-induction was already spent on this level and stagnation "
+                "continued; re-induce through the callable-tool loop instead",
             )
         if ARM_FORCE_DIVERSITY not in self._arms_used and not s.diversity_active:
             return (
