@@ -16794,3 +16794,5 @@ The l |
 | 2026-08-29 21:03 UTC | Held-family oracle-distinct diagnostic energy v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6758-proof-transport-independent-audit, e |
 | 2026-08-29 21:03 UTC | Diagnostic prefix-backtracking repair A/B | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp6759-oracle-distinct-diagnostic-energy- |
 | 2026-08-29 21:25 UTC | Capacity-controlled procedural memory stream | OK | 93 passed, 1 warning in 16.64s |
+| 2026-08-29 22:48 UTC | Procedural versus trace memory prospective A/B | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: lity_checksum( |
+| 2026-08-29 22:50 UTC | Conductor re-exec: fresh committed source | OK | d3ca0424e606 -> 63c64c3af372; argv preserved |

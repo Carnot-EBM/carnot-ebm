@@ -7945,3 +7945,117 @@ recompute without copied summary counts.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-CL-6761 and SCENARIO-CL-6761-* | Planned: `python/carnot/experiment_6761_procedural_memory_stream.py`; `scripts/experiments/experiment_6761_procedural_memory_stream.py`; terminal artifact `results/experiment_6761_procedural_memory_stream.json`. | Planned: `tests/python/test_experiment_6761_procedural_memory_stream.py`. |
+
+## REQ-CL-6762: Prospective Procedural Versus Trajectory Memory Comparison
+
+Given Exp6761 provides a ready non-saturating stream with six fixed orders
+When Exp6762 runs for planning date 20260829
+Then it SHALL compare `no_memory`, `detailed_trajectory`, and
+`procedural_constraint` on every order and event
+And it SHALL use `unsloth/Qwen3.6-35B-A3B-GGUF` for acquisition and
+within-family evaluation
+And it SHALL use `unsloth/gemma-4-31B-it-GGUF` for dense held-out transfer.
+
+The experiment SHALL freeze model roles, model revisions, GGUF hashes, embedded
+tokenizers, six order hashes, arm order rotations, prompts, seeds, candidate
+count, decode budget, context budget, storage bytes, record slots, top-k, TTL,
+update opportunities, exact-check budget, and retention anchors before the
+first model loads. Models SHALL run in sequential local llama.cpp CUDA sessions.
+Legacy or remote models SHALL not satisfy a gate.
+
+Every active episode SHALL read one immutable pre-event snapshot. It SHALL not
+write memory or see its current exact result. Exact-approved transactions SHALL
+occur only after the episode closes. Each model and arm SHALL use isolated
+mutable state. Gemma SHALL not receive Qwen answer traces.
+
+Exp6762 SHALL emit one row per order, model, arm, and event. Each row SHALL
+record retrieved IDs and scores, context bytes and tokens, citation and
+operational-use signals, before and after action fingerprints, exact result,
+difficulty, family, latency, token counts, commit or reject reason, state
+hashes, read-only evidence, restart evidence, and rollback evidence. All
+headline metrics SHALL recompute from rows.
+
+`prospective_csl_completed` SHALL be true only when all 1,080 planned rows,
+state boundaries, transactions, model teardown receipts, and cold row
+recomputation pass. Completion SHALL not imply a positive result.
+
+Positive credit SHALL require procedural memory to beat both other arms with
+positive order-level lower confidence bounds. It SHALL also require nonzero
+commits and rejects, no retention-anchor forgetting, no hard-case regression
+beyond the frozen margin, no effective-support contraction, and zero admitted
+poison.
+
+If Exp6761 is not ready, either exact cached GGUF or embedded tokenizer is
+missing, llama.cpp lacks CUDA, one-model VRAM is insufficient, task ownership
+or ports are unavailable, exact authority or atomic storage is unavailable, or
+RAM or disk is insufficient, Exp6762 SHALL write
+`complete_blocked_procedural_csl_ab`. The blocked artifact SHALL contain the
+complete schema, no headline fallback rows, and a `gate_check_summary` with the
+failed check and observed value.
+
+### SCENARIO-CL-6762-CHRONOLOGY: Snapshots Contain Only Earlier Events
+
+Given one event in one frozen order
+When any arm opens its active episode
+Then the visible event IDs SHALL equal the strict order prefix
+And current and future evidence SHALL be unavailable.
+
+### SCENARIO-CL-6762-READ-ONLY: Active Episodes Cannot Write
+
+Given a detailed or procedural memory snapshot
+When inference is active
+Then state bytes and the state hash SHALL remain unchanged
+And any update SHALL wait until the exact result closes the episode.
+
+### SCENARIO-CL-6762-CAPACITY: Memory Arms Have Equal Resource Contracts
+
+Given matched detailed and procedural representations
+When either memory arm stores, retrieves, or renders context
+Then storage, slot, top-k, TTL, context, update, and exact-check budgets SHALL
+match
+And the no-memory arm SHALL never read or write mutable memory.
+
+### SCENARIO-CL-6762-RETRIEVAL-ACTION: Rows Prove Behavioral Memory Use
+
+Given a memory-enabled event row
+When retrieval supplies prior records
+Then the row SHALL record IDs, scores, rendered context cost, citation, the
+memory-free action fingerprint, the memory-conditioned fingerprint, and whether
+the retrieved record changed or supported the selected action.
+
+### SCENARIO-CL-6762-TRANSACTIONS: Exact Authority Produces Activity
+
+Given an exact-eligible accept or reject event
+When the active episode closes
+Then each memory arm SHALL record a commit or reject receipt with its reason
+And the complete run SHALL contain nonzero commits and rejects.
+
+### SCENARIO-CL-6762-REDUCERS: Headline Metrics Come From Rows
+
+Given all row units
+When Exp6762 reduces the result
+Then prequential yield, hard-case yield, best-at-k, effective support, joint
+support, retention, forgetting, negative transfer, commits, rejects, actual
+retrieval, action influence, tokens, restarts, and rollbacks SHALL recompute
+without copied headline values.
+
+### SCENARIO-CL-6762-RESTART: Every Boundary Reopens Exact State
+
+Given any post-event transaction boundary
+When the arm state reopens
+Then its bytes and hash SHALL match the expected committed or unchanged state
+And each accepted update SHALL restore its parent bytes during rollback proof.
+
+### SCENARIO-CL-6762-BLOCKED: Failed Preconditions Do Not Produce Fallback Rows
+
+Given one failed owned precondition
+When Exp6762 writes its terminal artifact
+Then `verdict_class` SHALL be `blocked`
+And `rows` SHALL be empty
+And `gate_check_summary` SHALL name the failed check and observed value.
+
+## Implementation Status (REQ-CL-6762)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6762 and SCENARIO-CL-6762-* | Implemented: `python/carnot/experiment_6762_procedural_vs_trace_csl_ab.py`; `scripts/experiments/experiment_6762_procedural_vs_trace_csl_ab.py`; terminal artifact `results/experiment_6762_procedural_vs_trace_csl_ab.json`. | Implemented: `tests/python/test_experiment_6762_procedural_vs_trace_csl_ab.py`. |
