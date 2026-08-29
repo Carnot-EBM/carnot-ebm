@@ -11,9 +11,12 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| NO_CLAIM | 8 |
+| CLAIM_SUPPORTED | 1 |
+| CLAIM_REFUTED_BY_OWN_DATA | 1 |
+| NO_CLAIM | 4 |
+| SKIPPED_ALREADY_FLAGGED | 2 |
 
-## experiment_6565_v569_evidence_and_retirement_contract.json
+## experiment_1736_ebt_gradient_refinement.json
 
 **NO_CLAIM**
 
@@ -24,18 +27,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a contract/receipt audit, not a comparative value or generalization claim.
+No refuting observation applies because the artifact reports no experimental result or comparative claim.
 
 ## WAS THAT CHECKED
-No—there is no method-value claim to falsify; the artifact checks only contract consistency, provenance, gates, and retirement boundaries.
+No; execution stopped at the pre-gate before the method was tested.
 
 ## EVIDENCE
-`verdict_class`: `null`; `verifier_is_oracle`: `true`; `inference_substrate`: `immutable_v568_artifact_gate_failure_and_retirement_audit_no_llm`; `receipt_only_until_new_prospective_rows`: `true`; `no_game_or_level_solve_claim`: `true`; `no_llm_load_performed`: `true`
+`"status"`: `"blocked"`; `"honest_verdict"`: `"blocked_gate_check_failed"`; `"blocked_at_layer"`: `"conductor_pre_gate"`; `"passed"`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6571_v570_evidence_gate_and_retirement_root.json
+## experiment_6275_flagship_asp_constraint_verification_benchmark.formal_sidecar.json
 
 **NO_CLAIM**
 
@@ -46,18 +49,48 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No substantive method or value claim is made; the limited receipt claim would be falsified by failed gate checks, incorrect eligibility classifications, changed protected files, or any assertion that extraction, generation, or graph-Potts utility ran.
+No falsifying observation applies because the artifact makes no comparative or value claim; such a claim would require candidate outcomes that disagree with the formal answer sets or lose to a serious baseline.
 
 ## WAS THAT CHECKED
-No substantive refutation was applicable because those methods were not run; only the administrative gate and receipt conditions were checked through per-unit rows and explicit failure fields.
+No. This sidecar records formal programs and their solution sets, but provides no candidate performance, comparator arm, validity flags, success criterion, or headline verdict.
 
 ## EVIDENCE
-`verdict_class`: `null`; `source_extraction_claim_count`: `0`; `graph_potts_utility_claim_count`: `0`; `graph_potts_utility_claimed_by_exp6571`: `false`; `generation_ran`: `false`; `llm_load_performed`: `false`; `hardware_command_performed`: `false`; `inference_substrate`: `immutable_v569_artifact_gate_failure_and_retirement_audit_no_llm`
+`program_text`, `exact_answer_sets`, `solver_answer_set_count`, `zero_energy_states`, `task_id`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6716_object_table_fetch_on_demand_ab.json
+## experiment_1736_kanele_synth.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_6275_flagship_asp_constraint_verification_benchmark.json
+
+**CLAIM_REFUTED_BY_OWN_DATA**
+
+## VERDICT
+CLAIM_REFUTED_BY_OWN_DATA
+
+## THE HEADLINE CLAIM
+Energy-guided repair adds semantic-validity value over ordinary one-shot generation across the flagship models and task families.
+
+## WHAT WOULD REFUTE IT
+A zero or negative paired semantic-validity delta against the cheapest serious baseline—one-shot generation scored by the same exact solver—or a rival arm tying or outperforming repair would refute added value.
+
+## WAS THAT CHECKED
+Yes. The artifact directly pairs `energy_guided_repair` with `one_shot` by model and family. The refutation occurred: every Qwen semantic comparison tied exactly, and several Gemma comparisons also tied; no reported positive interval excludes zero. The value claim is additionally circular because exact ASP solving both guides repair and defines correctness.
+
+## EVIDENCE
+`base_arm`: `one_shot`; `repair_arm`: `energy_guided_repair`; `paired_intervals_and_sample_sizes`; `semantic`; `mean_delta`: `0.0`; `ci95`: `0.0`, `0.0`; `sample_size`: `6`; `verifier_is_oracle`; `Discloses exact ASP solving is the correctness oracle.`; `honest_verdict`: `complete_partial: test_exit_codes`
+
+## RECOMMENDATION
+CORRECT_THE_RECORD
+
+## experiment_6751_thermalizer_factor_trajectory_fidelity.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_6752_arc_code_carrying_tool_preflight.json
 
 **NO_CLAIM**
 
@@ -68,18 +101,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable; this is a precondition receipt, not a comparative result. Evidence that inference ran or that either A/B arm produced a score would contradict its factual blocked-run status.
+For the narrow readiness receipt, either model observing less than 32768 context, lacking full CUDA offload, failing the live production route, failing typed parsing or dispatch, or exceeding the response bound would refute readiness; there is no comparative, value, generalization, or solve claim to falsify.
 
 ## WAS THAT CHECKED
-Yes. The run-status, inference-substrate, honest-verdict, and arm-result fields all record that inference never began and no comparison was produced.
+Yes. Both model rows record context, CUDA offload, live-path, parse, dispatch, and bounded-response receipts, and the gate summary checks them per model. The false loop completion does not refute the expressly transport-only claim.
 
 ## EVIDENCE
-`"run_completed": false`, `"inference_substrate": "precondition_only_no_inference"`, `"verdict_class": "blocked"`, `"blocked_context_window: CARNOT_ARC_INDUCE_N_CTX is unset; the paired A/B did not start"`, `"table_on": null`, `"fetch_on_demand": null`, `"paired_delta_fetch_minus_on": null`
+`"title": "Task-owned 32K code-carrying ARC tool preflight"`; `"arc_context_tool_preflight_ready": true`; `"multi_parameter_parse_successes": 2`; `"multi_parameter_dispatch_successes": 2`; `"bounded_response_successes": 2`; `"live_path_reached": true`; `"loop_returned_success": false`; `"solve_claim": false`; `"claim_boundary": "This preflight proves 32K CUDA admission and code-carrying tool transport only. It measures no game quality and claims no level solve."`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6729_v587_activation_evidence_contract.json
+## experiment_6753_object_table_fetch_on_demand_ab.json
 
 **NO_CLAIM**
 
@@ -90,101 +123,35 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No scientific claim is made; the operational blocked status would be refuted if every required contract check passed and the activation-readiness field were true.
+No comparative claim exists to falsify. The intended future claim would be refuted by nonpositive prompt-token savings or a change-fidelity confidence-interval lower bound below the negative noninferiority margin, computed from valid completed arm pairs.
 
 ## WAS THAT CHECKED
-Yes, in `gate_check_summary`, `model_policy_rows`, and `task_contract_rows`; failed checks produced a false readiness result and blocked verdict.
+No. Model inference never occurred, every planned row was invalid due to the preflight block, zero pairs entered analysis, and the comparative metrics remained null.
 
 ## EVIDENCE
-`inference_substrate` is `source_receipts_and_local_method_preregistration_no_llm`; `v587_contract_ready` is `false`; `verdict_class` is `blocked`; `status` is `blocked_v587_activation_contract`.
+`status` `blocked` `live_model_invoked` `false` `mean_prompt_token_savings` `null` `change_fidelity_ci95` `n_games_paired` `0` `n_seed_pairs` `adoption_gate_passed` `object_table_ab_completed` `complete_blocked_object_table_ab:cuda_device_available`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6730_arc_context_tool_preflight.json
+## experiment_6754_v588_branch_disposition.json
 
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no substantive result claim to falsify; the artifact is only a blocked-preflight receipt. A successful gate observation would contradict its procedural report that the preflight was blocked.
-
-## WAS THAT CHECKED
-Yes, for the procedural gate status only: the sole entry in `gates_evaluated` records the expected and observed Boolean values and marks the gate as failed. No method, outcome, or comparator was evaluated.
-
-## EVIDENCE
-`"status"`: `"blocked"`; `"honest_verdict"`: `"blocked_gate_check_failed"`; `"failed_field"`: `"v587_contract_ready"`; `"failed_expected"`: `true`; `"failed_observed"`: `false`; `"passed"`: `false`; `"blocked_at_layer"`: `"conductor_pre_gate"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6732_object_table_ab_cold_audit.json
-
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+V588 produced mixed branch outcomes—blocked handoff and FR12, null continuous self-learning, positive execution activity, simulator-only stochastic evidence, and partial ARC transport—without claiming pooled milestone success.
 
 ## WHAT WOULD REFUTE IT
-Not applicable: the artifact reports a blocked prerequisite gate and no experimental outcome or comparative claim.
+A valid source row contradicting its assigned branch verdict—for example, transactional memory outperforming `no_memory` despite the null CSL verdict, a failed CUDA receipt despite positive activity, or emission of a pooled success claim—would refute the headline.
 
 ## WAS THAT CHECKED
-No. The experiment did not proceed beyond the prerequisite gate; no method, rival, success criterion, or result rows were evaluated.
+Yes. Raw task rows were replayed into `recomputed_headlines`, checked for headline disagreements in `row_headline_mismatches`, and audited by adversarial and row-consistency validators. The design demonstrably allowed failure: handoff and FR12 were blocked, CSL tied its `no_memory` comparator with zero gain, and the ARC A/B remained incomplete.
 
 ## EVIDENCE
-`status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `passed`: `false`; `actual`: `null`; `blocked_at_layer`: `conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6733_hardness_controlled_certificate_stream.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no scientific or comparative claim to falsify. The artifact’s gate-failure assertion would be refuted by the gate having passed or the observed value being true.
-
-## WAS THAT CHECKED
-Yes. The sole evaluated gate records an observed false value, a failed comparison against expected true, and a false pass status.
-
-## EVIDENCE
-`"schema": "blocked_gate_check_v1"`, `"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"failed_observed": false`, `"failed_expected": true`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6735_oracle_distinct_diagnostic_energy.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable; the artifact asserts no experimental outcome or comparative result to falsify.
-
-## WAS THAT CHECKED
-No. The experiment stopped at the prerequisite gate before producing scored rows or results.
-
-## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_observed": null`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
+`complete_partial: V588 preserved blocked handoff, blocked FR12, null CSL, positive activity, simulator-only stochastic evidence, and partial ARC transport without a pooled success claim.`; `pooled_success_claim_emitted`: `false`; `row_headline_mismatches`: `[]`; `verdict_class`: `partial`; `no_memory`: `0.4583333333333333`; `transactional_memory`: `0.4583333333333333`; `mean_delta`: `0.0`; `commits`: `0`; `diagnostic_energy_ready`: `false`; `heldout_reasoning_error_auroc`: `null`; `object_table_ab_completed`: `false`; `hardware_used`: `false`; `simulator_used`: `true`; `bounded_cpu_compiler_fidelity_no_physical_tsu_or_performance_claim`
 
 ## RECOMMENDATION
 KEEP

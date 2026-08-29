@@ -9,10 +9,59 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 7 |
-| AGGREGATE_ONLY | 1 |
+| CHECKABLE | 5 |
+| AGGREGATE_ONLY | 2 |
+| CANNOT_DETERMINE | 1 |
 
-## experiment_6565_v569_evidence_and_retirement_contract.json
+## experiment_1736_ebt_gradient_refinement.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because the required `prior_failures` entry was missing or incomplete.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6275_flagship_asp_constraint_verification_benchmark.formal_sidecar.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+no claim
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_1736_kanele_synth.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment reported simulated Vivado success, but was flagged as adversarial because it was not a live hardware measurement.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6275_flagship_asp_constraint_verification_benchmark.json
 
 **AGGREGATE_ONLY**
 
@@ -20,15 +69,31 @@ evidence the reviewer could not have read -- do NOT act on them.
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The artifact claims the V569 evidence contract is ready, including that Exp6564 is a clean null because its median Rust speedup was 0.764013447×, below the 10× gate.
+Energy-guided repair improved format and/or semantic validity over one-shot in several model-family cells, according to positive repair margins and paired mean deltas.
 
 ## WHAT IS MISSING
-Benchmark-level rows containing each workload/trial’s Python time, Rust time, and resulting speedup are missing; the present `"per_unit_rows"` contains only one eligibility row per experiment, while `"measured_speedup_vs_requirement"` and `"exp6564_speedup_vs_python_scalar"` record only the aggregate 0.764013447× value.
+Per-unit rows containing each model, task, seed, arm, parse-success result, and semantic-validity result; only aggregates such as `"format_repair_margin_by_model_family"` and `"paired_intervals_and_sample_sizes"` are present, while `"flagship_asp_event_corpus_path_and_hash"` merely references an external corpus.
 
 ## THE CHECK A READER CANNOT DO
-Can the reported 0.764013447× median be recomputed from individual benchmark measurements, and was the failed 10× gate broad across workloads rather than caused by a degenerate or anomalous subset?
+Were the positive mean deltas broad across paired units, or caused by one outlier while the remaining units were unchanged or lacked headroom?
 
-## experiment_6571_v570_evidence_gate_and_retirement_root.json
+## experiment_6751_thermalizer_factor_trajectory_fidelity.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+Context matching reduced exact mean trajectory total variation relative to the independent-factor arm, satisfying the positive-result gate.
+
+## WHAT IS MISSING
+The complete `"rows"` array: `"frozen_config.expected_row_count"` says 192, but the artifact truncates mid-row, so all 192 per-unit `"trajectory_tv"` values cannot be found; only aggregate values appear in `"positive_result_gate"`.
+
+## THE CHECK A READER CANNOT DO
+Do the 192 per-unit trajectory-TV rows actually reproduce the reported arm means and show that the reduction is broad rather than driven by a few units?
+
+## experiment_6752_arc_code_carrying_tool_preflight.json
 
 **CHECKABLE**
 
@@ -36,23 +101,7 @@ Can the reported 0.764013447× median be recomputed from individual benchmark me
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V570 evidence and retirement contract is ready, with prior blocked and missing scopes documented, while no extraction, model-generation, or graph-Potts utility run is claimed.
-
-## WHAT IS MISSING
-nothing; `"per_unit_rows"`, `"v569_artifact_eligibility_rows"`, `"gguf_admission_root_cause.per_model_rows"`, `"failed_scope"`, `"reason"`, and detailed `"honest_verdict"` diagnostics are present.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6716_object_table_fetch_on_demand_ab.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The paired A/B experiment was blocked before starting because `CARNOT_ARC_INDUCE_N_CTX` was unset.
+Both specified models passed the 32K CUDA admission and code-carrying tool transport preflight, without making a solve claim.
 
 ## WHAT IS MISSING
 nothing
@@ -60,7 +109,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6729_v587_activation_evidence_contract.json
+## experiment_6753_object_table_fetch_on_demand_ab.json
 
 **CHECKABLE**
 
@@ -68,74 +117,26 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V587 activation contract is blocked because one or more source, manifest, gate, prior-failure, or model-policy checks failed.
+The experiment was blocked because the `cuda_device_available` preflight check failed, so no comparative result was produced.
 
 ## WHAT IS MISSING
-nothing; `"gate_check_summary"` records the failed checks with `"expected_value"`, `"observed_value"`, `"reason"`, and `"unit"`.
+nothing; `"status": "blocked"`, `"stop_reason": "preflight_blocked"`, `"failure_class": "preflight_blocked:cuda_device_available"`, `"live_model_invoked": false`, and empty `"gpu_receipts"` identify the blocker.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6730_arc_context_tool_preflight.json
+## experiment_6754_v588_branch_disposition.json
 
-**CHECKABLE**
+**AGGREGATE_ONLY**
 
 ## VERDICT
-CHECKABLE
+AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `exp6729-v587-activation-evidence-contract.v587_contract_ready` was `false` but required to equal `true`.
+Context matching reduced mean trajectory total variation versus the independent-factor arm, supporting positive simulator-only stochastic-portability evidence.
 
 ## WHAT IS MISSING
-nothing
+Per-unit trajectory-TV values for each seed, cell, or condition in each arm; `"trajectory_tv_by_arm"` provides only aggregate `"value"` and `"denominator"` fields, while `"rows"` is described as task-level and branch-level rows rather than experimental-unit rows.
 
 ## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6732_object_table_ab_cold_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because the required upstream artifact `exp6731-object-table-fetch-on-demand-ab` was not found.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6733_hardness_controlled_certificate_stream.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The task was blocked because `exp6729-v587-activation-evidence-contract.v587_contract_ready` was `false` instead of the required `true`.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6735_oracle_distinct_diagnostic_energy.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because the required upstream artifact for task `exp6734-sota-dual-encoding-proposal-corpus` was not found, causing the `dual_encoding_corpus_ready == true` gate to fail.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+Was the lower context-matched mean a broad effect across the 64 units, or was it driven by a few outliers or floor/ceiling-pinned units?
