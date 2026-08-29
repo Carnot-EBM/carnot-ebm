@@ -398,6 +398,7 @@ def test_req_report_6754_defensive_edges(tmp_path: Path, monkeypatch: pytest.Mon
         exp._next_deliverable(["### Exp 6754: Missing", "### Exp 6755: Next"], 0)
     with pytest.raises(ValueError, match="milestone missing"):
         exp.parse_design_tasks("# no milestone")
+    assert exp.sha256_file(tmp_path / "absent.json") is None
 
     _write_plan_root(tmp_path, [], _design_text())
     with pytest.raises(ValueError, match="mapping with tasks"):
