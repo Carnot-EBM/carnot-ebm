@@ -18955,3 +18955,60 @@ worse than the gap it closes." This branch would not cry wolf — it would crash
 condition it was written to detect is currently undetectable.
 
 Found by an independent measurement pass over the run-3 log, 2026-08-28.
+
+### 2026-08-29 — 58% of ARC artifacts would fail their own lint the moment they were staged
+
+**Measured with the lint's own selector**, not a guess at its scope
+(`arc_artifact_lint.discover_candidate_artifacts`):
+
+| | count |
+|---|---|
+| ARC candidate artifacts | 573 |
+| `INVALID_INFERENCE_SUBSTRATE` | **194** |
+| `MISSING_INFERENCE_SUBSTRATE` | **141** |
+| `NON_TERMINAL_HONEST_VERDICT` | 111 |
+| `LIVE_LLM_NOT_ALLOWLISTED` | 56 |
+| `DURATION_MISSING` | 53 |
+| `DURATION_BELOW_SUBSTRATE_FLOOR` | 18 |
+
+335 of 573 — about 58% — carry an illegal or absent `inference_substrate`.
+
+**Why nobody knew.** `arc-artifact-lint` is a pre-commit hook, so it only ever sees files that
+reach `git add`. Result artifacts are written once and never re-staged, so the guard has been
+green for a population it has never inspected. This is the same structural blind spot CLAUDE.md
+already documents for `operator_curated_docs_lint` — "it only ever sees files that reach
+`git add`, which is why it never saw README.md being rewritten on every test run." Same shape,
+different guard. It surfaced only because an unrelated sweep staged 157 old artifacts at once
+and three fell out; the true rate is 58%, not 2%.
+
+**The illegal values split three ways, and the fix differs for each.**
+
+- *Genuine drift.* `arc_live_agent_self_discovery`, `adapter_search_only_no_induction`,
+  `offline_arcade_reproduction_gate_no_llm`, `hardware_smoke`. Plausible declarations never
+  added to `SUBSTRATE_DURATION_FLOORS`. Note `hardware_smoke` IS in CLAUDE.md's own
+  Inference-Substrate table but is absent from the code's allow-list, so the prose and the
+  enforcement disagree with each other.
+- *Malformed, not wrong.* 23 artifacts declare
+  `verifier_ensemble_against_cached_candidates -- <free text>`. The substrate is legal; a
+  trailing comment broke the exact-match. These are the cheapest to fix and the least risky.
+- *The exp3946 class.* Three still carry
+  `offline_arc_agi3_perception_planner_real_env_confirmed` — the exact string that experiment's
+  own comment records as corrected in the ARTIFACT but not in the WRITER, so every re-run
+  recreated it (see `scripts/experiments/experiment_3946_r11l_first_solve.py:118-130`).
+
+**What this blocked today.** The stale flagged-adversarial retraction (commit `e0d69d1e30`)
+could land only 25 of 158 eligible artifacts. The other 133 fail this lint on defects that
+predate the retraction — substrate strings byte-identical to HEAD — so they were restored to
+their stamped state rather than committed half-corrected. Their stamps remain stale, which is
+honest, pending a decision here.
+
+**What NOT to do.** Do not add the illegal names to `SUBSTRATE_DURATION_FLOORS` to make commits
+pass. That is precisely what `substrate_alias_evidence_lint` exists to catch — CLAUDE.md records
+19 of 38 aliases added in the same commit as the artifact they exempted. The malformed 23 are a
+formatting repair; the drifted names need evidence that the substrate is what it claims; and the
+exp3946 class needs the WRITER fixed, not the artifact, or it regenerates.
+
+**Step 6, the check that would have caught it.** A periodic full-corpus sweep — not a
+commit-time hook — over `discover_candidate_artifacts()`, reporting the count rather than
+refusing anything. A hook cannot police write-once files by construction, and making this one
+refuse harder would not have helped: it was never invoked.
