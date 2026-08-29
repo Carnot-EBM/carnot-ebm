@@ -135,13 +135,14 @@ def test_scenario_bench_6506_row_replay_and_corrigendum(
 
     assert correction["original_verdict_class"] == "positive"
     assert correction["corrected_verdict_class"] == "circular_positive"
-    assert correction["artifact_verdict_class"] == "partial"
+    assert correction["artifact_verdict_class"] == "null"
     assert correction["positive_scientific_claim_allowed"] is False
     assert correction["eligible_for_v562_exact_branch_raw_label_use"] is True
     assert correction["adversarial_verification_receipt"]["exit_code"] == 1
     assert "VERDICT_CLASS_MISMATCH" in correction["adversarial_verification_receipt"]["flag_kinds"]
 
-    assert artifact["verdict_class"] == "partial"
+    # REQ-CONDUCTOR-VERDICT-3: the finished replay declares null, not partial.
+    assert artifact["verdict_class"] == "null"
     assert artifact["v562_exact_branch_ready_score"] == 1.0
     assert artifact["honest_verdict"].startswith("complete_")
 
@@ -185,30 +186,39 @@ def test_scenario_bench_6506_lineage_lock_and_attacks(
     assert all(row["fail_closed"] is True for row in attacks)
     assert all(row["observed_ready_score_if_only_this_attack"] == 0.0 for row in attacks)
 
-    assert mod.classify_lineage_dependency(
-        {
-            "scope_id": "challenge_pool_laundered_as_branch_advice",
-            "upstream_artifact": "exp6505",
-            "field": "challenge_pool_ready_score",
-            "required_upstream_hash_present": True,
-        }
-    )["decision"] == "forbid"
-    assert mod.classify_lineage_dependency(
-        {
-            "scope_id": "exp6504_raw_instances",
-            "upstream_artifact": "exp6504",
-            "field": "raw_instance_rows",
-            "required_upstream_hash_present": False,
-        }
-    )["decision"] == "block"
-    assert mod.classify_lineage_dependency(
-        {
-            "scope_id": "positive_reuse",
-            "upstream_artifact": "exp6504",
-            "field": "verdict_class",
-            "required_upstream_hash_present": True,
-        }
-    )["decision"] == "forbid"
+    assert (
+        mod.classify_lineage_dependency(
+            {
+                "scope_id": "challenge_pool_laundered_as_branch_advice",
+                "upstream_artifact": "exp6505",
+                "field": "challenge_pool_ready_score",
+                "required_upstream_hash_present": True,
+            }
+        )["decision"]
+        == "forbid"
+    )
+    assert (
+        mod.classify_lineage_dependency(
+            {
+                "scope_id": "exp6504_raw_instances",
+                "upstream_artifact": "exp6504",
+                "field": "raw_instance_rows",
+                "required_upstream_hash_present": False,
+            }
+        )["decision"]
+        == "block"
+    )
+    assert (
+        mod.classify_lineage_dependency(
+            {
+                "scope_id": "positive_reuse",
+                "upstream_artifact": "exp6504",
+                "field": "verdict_class",
+                "required_upstream_hash_present": True,
+            }
+        )["decision"]
+        == "forbid"
+    )
     unknown = mod.classify_lineage_dependency(
         {
             "scope_id": "fresh_unregistered_side_input",
@@ -259,6 +269,12 @@ def test_scenario_bench_6506_schema_checksum_and_validation(
         (
             "verdict_class cannot be positive for oracle replay",
             lambda item: item.__setitem__("verdict_class", "positive"),
+        ),
+        # REQ-CONDUCTOR-VERDICT-3 / SCENARIO-CONDUCTOR-VERDICT-5: a ready
+        # corrigendum may not declare the may-retry class.
+        (
+            "ready corrigendum requires verdict_class null",
+            lambda item: item.__setitem__("verdict_class", "partial"),
         ),
         (
             "inference_substrate mismatch",

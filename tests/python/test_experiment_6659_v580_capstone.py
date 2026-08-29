@@ -198,9 +198,10 @@ def test_scenario_report_6659_keeps_closed_claims_and_branches_independent(
     assert by_id["arc_live_benefit"]["verdict_class"] == "blocked"
     assert by_id["arc_live_benefit"]["arc_solve_claim"] is False
     assert by_id["ising_schedule"]["verdict_class"] == "blocked"
-    assert artifact["verdict_class"] == "partial"
-    assert artifact["status"] == "complete_terminal_partial"
-    assert artifact["honest_verdict"].startswith("complete_partial:")
+    # REQ-CONDUCTOR-VERDICT-3: the finished capstone declares null, not partial.
+    assert artifact["verdict_class"] == "null"
+    assert artifact["status"] == "complete_terminal_null"
+    assert artifact["honest_verdict"].startswith("complete_null:")
     assert "pooled" not in artifact
 
     branches = {row["branch"]: row for row in artifact["branch_summary_rows"]}
@@ -350,6 +351,9 @@ def test_req_report_6659_validation_checksum_and_atomic_write(
         mod.validate_artifact(bad)
     for field, value, message in (
         ("verdict_class", "positive", "capstone verdict"),
+        # REQ-CONDUCTOR-VERDICT-3 / SCENARIO-CONDUCTOR-VERDICT-5: partial is
+        # the may-retry class and a finished capstone may not declare it.
+        ("verdict_class", "partial", "capstone verdict"),
         ("inference_substrate", "wrong", "inference substrate"),
         ("verifier_is_oracle", True, "oracle"),
         ("random_seed", 1, "random seed"),
@@ -527,7 +531,7 @@ def test_req_report_6659_input_failures_and_cli(
 
     output = tmp_path / "cli.json"
     assert mod.main(["--date", "20260827", "--repo-root", str(REPO), "--output", str(output)]) == 0
-    assert json.loads(output.read_text(encoding="utf-8"))["status"] == "complete_terminal_partial"
+    assert json.loads(output.read_text(encoding="utf-8"))["status"] == "complete_terminal_null"
     assert mod.main(["--validate", "--output", str(output)]) == 0
     assert json.loads(capsys.readouterr().out.splitlines()[-1]) == {"valid": True}
     missing_output = tmp_path / "missing.json"

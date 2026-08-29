@@ -26,19 +26,40 @@ SPEC = REPO / mod.SPEC_RELATIVE_PATH
 TESTS_RUN = [{"command": command, "exit_code": 0} for command in mod.DEFAULT_TEST_COMMANDS]
 
 
+# The V564 roadmap gate declarations, copied verbatim from the archived
+# roadmap (commit 73cef259c4, milestone 2026.08.564). Pinned because the live
+# research-roadmap.yaml rotates every milestone: once V565 activated, the live
+# file stopped spelling the V564 gate fields and every roadmap-spelling gate
+# contract failed at rebuild - the same stale-live-state failure class as the
+# 2026-08-27 stale-capstone collection incident.
+V564_ROADMAP_GATE_TEXT = """\
+        artifact_field: atomic_artifact_contract_ready_score
+        artifact_field: v564_method_contract_ready_score
+        artifact_field: branch_pilot_audited_ready_score
+        artifact_field: certified_structural_headroom_score
+        artifact_field: conflict_memory_controller_ready_score
+        artifact_field: csl_execution_complete_score
+"""
+
+
 @pytest.fixture(scope="module")
 def artifact(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
     """REQ-CAPSTONE-6526: build the capstone from checked-in V564 evidence."""
 
     root = tmp_path_factory.mktemp("exp6526")
-    return mod.build_artifact(
-        repo_root=REPO,
-        result_path=root / mod.RESULT_RELATIVE_PATH.name,
-        write=True,
-        duration_s=1.0,
-        tests_run=TESTS_RUN,
-        run_date="20260823",
-    )
+    patch = pytest.MonkeyPatch()
+    patch.setattr(mod, "roadmap_text", lambda repo_root: V564_ROADMAP_GATE_TEXT)
+    try:
+        return mod.build_artifact(
+            repo_root=REPO,
+            result_path=root / mod.RESULT_RELATIVE_PATH.name,
+            write=True,
+            duration_s=1.0,
+            tests_run=TESTS_RUN,
+            run_date="20260823",
+        )
+    finally:
+        patch.undo()
 
 
 def test_req_capstone_6526_spec_declares_contract() -> None:
@@ -72,9 +93,10 @@ def test_scenario_capstone_6526_inventory_schema_and_checksum(
     """SCENARIO-CAPSTONE-6526-INVENTORY/SCHEMA: inventory is complete."""
 
     assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
-    assert artifact["status"] == "complete_partial_v564_independent_capstone"
-    assert artifact["honest_verdict"].startswith("complete_partial_")
-    assert artifact["verdict_class"] == "partial"
+    assert artifact["status"] == "complete_v564_independent_capstone"
+    assert artifact["honest_verdict"].startswith("complete_v564_evidence_graph:")
+    # REQ-CONDUCTOR-VERDICT-3: the finished capstone declares null, not partial.
+    assert artifact["verdict_class"] == "null"
     assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
     assert artifact["verifier_is_oracle"] is False
     assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
@@ -136,7 +158,9 @@ def test_scenario_capstone_6526_row_reconstruction_and_authority(
     assert claims["structural_headroom"]["row_support"]["row_count"] == 136
     assert claims["learned_router"]["eligibility"] == "eligible_positive"
     assert claims["learned_router"]["observed_value"] == 1.0
-    assert claims["learned_router"]["row_support"]["held_benefit_beyond_best_structural_units"] == 28
+    assert (
+        claims["learned_router"]["row_support"]["held_benefit_beyond_best_structural_units"] == 28
+    )
     assert claims["continuous_self_learning"]["eligibility"] == "eligible_positive"
     assert claims["continuous_self_learning"]["observed_value"] == 1.0
     assert claims["adaptive_validation"]["eligibility"] == "eligible_positive"
@@ -178,7 +202,7 @@ def test_scenario_capstone_6526_missing_closure_next_states_and_rows(
     assert all(row["promoted_to_success"] is False for row in discrepancies.values())
 
     aggregate = artifact["aggregate_row_recomputation"]
-    assert aggregate["verdict_class_from_rows"] == "partial"
+    assert aggregate["verdict_class_from_rows"] == "null"
     assert aggregate["blocked_lineage_count"] == 2
     assert aggregate["learned_router_claim_eligible_score_from_rows"] == 1.0
     assert aggregate["continuous_self_learning_claim_eligible_score_from_rows"] == 1.0
@@ -217,6 +241,12 @@ def test_scenario_capstone_6526_validation_rejects_bad_artifacts(
     bad_oracle["verifier_is_oracle"] = True
     assert "verifier_is_oracle must be false" in mod.validate_artifact(bad_oracle)
 
+    # REQ-CONDUCTOR-VERDICT-3 / SCENARIO-CONDUCTOR-VERDICT-5: a finished
+    # capstone may not declare the may-retry class.
+    bad_partial = deepcopy(artifact)
+    bad_partial["verdict_class"] = "partial"
+    assert "capstone verdict_class must be null" in mod.validate_artifact(bad_partial)
+
 
 def test_scenario_capstone_6526_cli_roundtrip(tmp_path: Path) -> None:
     """SCENARIO-CAPSTONE-6526-SCHEMA: CLI writes and validates JSON."""
@@ -229,7 +259,7 @@ def test_scenario_capstone_6526_cli_roundtrip(tmp_path: Path) -> None:
 
 
 def test_scenario_capstone_6526_adversarial_verifier_accepts_schema(tmp_path: Path) -> None:
-    """SCENARIO-CAPSTONE-6526-SCHEMA: verifier accepts terminal partial capstone."""
+    """SCENARIO-CAPSTONE-6526-SCHEMA: verifier accepts the terminal null capstone."""
 
     result_path = tmp_path / mod.RESULT_RELATIVE_PATH.name
     mod.build_artifact(

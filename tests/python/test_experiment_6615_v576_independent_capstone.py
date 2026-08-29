@@ -84,7 +84,8 @@ def test_scenario_report_6615_missing_and_blocked_are_preserved(
     assert by_number[6606]["verdict_class"] == "blocked"
     assert by_number[6606]["gate_check_summary"]
     assert by_number[6614]["verdict_class"] == "disqualified"
-    assert artifact["verdict_class"] == "partial"
+    # REQ-CONDUCTOR-VERDICT-3: the finished capstone declares null, not partial.
+    assert artifact["verdict_class"] == "null"
 
 
 def test_scenario_report_6615_gate_contracts_are_exact(
@@ -223,6 +224,14 @@ def test_req_report_6615_wrapper_checksum_validation_and_atomic_write(
     with pytest.raises(ValueError, match="capstone verdict"):
         mod.validate_artifact(bad_class)
 
+    # REQ-CONDUCTOR-VERDICT-3 / SCENARIO-CONDUCTOR-VERDICT-5: a finished
+    # capstone may not declare the may-retry class.
+    bad_partial = deepcopy(artifact)
+    bad_partial["verdict_class"] = "partial"
+    bad_partial["reproducibility_checksum"] = mod.reproducibility_checksum(bad_partial)
+    with pytest.raises(ValueError, match="capstone verdict must be null"):
+        mod.validate_artifact(bad_partial)
+
     path = tmp_path / "nested" / "capstone.json"
     mod.write_artifact_atomic(path, artifact)
     assert json.loads(path.read_text(encoding="utf-8")) == artifact
@@ -308,9 +317,9 @@ def test_req_report_6615_input_helpers_fail_closed(tmp_path: Path) -> None:
     sources = mod.load_source_artifacts(REPO, tasks)
     alternate_identity = deepcopy(sources)
     qwen = alternate_identity["exp6605-qwen36-direct-headroom"]["payload"]
-    qwen["model_spec_and_identity"] = {"repository_id": mod.EXPECTED_MODEL_REGISTRY[
-        "exp6605-qwen36-direct-headroom"
-    ]}
+    qwen["model_spec_and_identity"] = {
+        "repository_id": mod.EXPECTED_MODEL_REGISTRY["exp6605-qwen36-direct-headroom"]
+    }
     replay = mod.replay_constrained_decoding(alternate_identity)
     assert replay["direct_arms"]["exp6605-qwen36-direct-headroom"]["identity_match"]
 
@@ -342,9 +351,7 @@ def test_req_report_6615_validator_rejects_each_contract_mutation(
     ]
     rejected(bad, "task matrix")
     bad = deepcopy(artifact)
-    bad["per_unit_rows"] = [
-        row for row in bad["per_unit_rows"] if row["row_kind"] == "task"
-    ]
+    bad["per_unit_rows"] = [row for row in bad["per_unit_rows"] if row["row_kind"] == "task"]
     rejected(bad, "comparative unit")
     bad = deepcopy(artifact)
     bad["roadmap_gate_contract_rows"][0]["contract_valid"] = False
