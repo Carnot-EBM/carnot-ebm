@@ -145,6 +145,106 @@ Required field principles:
 
 ---
 
+### REQ-HW-6751: Bounded Typed-Factor Compiler Fidelity
+
+Experiment 6751 SHALL compile frozen binary and small categorical stochastic
+kernels into bounded sparse EBM factors. It SHALL compare independent factor
+fitting, context-matched fitting, and trajectory-level refinement with the same
+factor capacity, topology, numeric precision, candidate budget, and seed bundle.
+
+- REQ-HW-6751-TYPES: Each kernel SHALL declare its input and output categories,
+  exact conditional table, sparse bias and coupler features, and finite parameter
+  bounds. Invalid categories, shapes, probabilities, or topology references SHALL
+  fail before fitting.
+- REQ-HW-6751-EXACT: Every selected factor and full trajectory state space SHALL
+  be enumerated. Depths SHALL be exactly 1, 2, 4, and 8. Target and compiled
+  distributions SHALL normalize within the declared tolerance.
+- REQ-HW-6751-MATCHED: The three arms SHALL use the same candidate parameters.
+  Only the declared selection objective SHALL differ: uniform conditional KL,
+  context-weighted conditional KL, or exact trajectory total variation.
+- REQ-HW-6751-METRICS: Every factor, context, arm, depth, precision, and seed
+  bundle SHALL have one row. Each row SHALL report per-input conditional KL,
+  context-weighted conditional KL, trajectory total variation, normalization
+  errors, exact state counts, and row hashes. Aggregate metrics SHALL be derived
+  only from retained rows.
+- REQ-HW-6751-SERIALIZATION: Topology receipts SHALL list categories, biases,
+  couplers, parameter bounds, and capacity. Precision receipts SHALL define each
+  numeric format and quantization rule. Round trips SHALL preserve their hashes.
+- REQ-HW-6751-PROVENANCE: The internal CPU exact compiler SHALL be authoritative.
+  If the installed Torx API is reachable, a separate sidecar SHALL record the
+  distribution version, module path, API identity, and measured conformance rows.
+  Sidecar failure SHALL remain visible and SHALL not block the internal reference.
+- REQ-HW-6751-COMPLETION: `compiler_fidelity_completed` SHALL be true only when
+  the complete row product exists, all exact distributions normalize, all row and
+  aggregate hashes validate, and all internal gate checks pass. A positive
+  result also requires context matching or trajectory refinement to reduce mean
+  trajectory total variation against independent fitting.
+- REQ-HW-6751-BOUNDARY: The artifact SHALL set `hardware_used=false`,
+  `simulator_used=true`, and
+  `inference_substrate=simulator_only_exact_enumeration_no_physical_tsu`. It SHALL
+  make no physical TSU, X0, Z1, FPGA, speed, power, energy, or throughput claim.
+  An unavailable internal exact path SHALL emit
+  `complete_blocked_compiler_reference` with a failed `gate_check_summary` row.
+
+Required artifact fields include `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`, `hardware_used`,
+`simulator_used`, `compiler_provenance`, `rows`,
+`conditional_kl_by_factor`, `trajectory_tv_by_depth`,
+`normalization_error_by_row`, `topology_receipts`, `precision_receipts`,
+`compiler_fidelity_completed`, `gate_check_summary`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one entry for every top-level
+artifact field.
+
+**Acceptance criteria:**
+- `.venv/bin/python scripts/experiments/experiment_6751_thermalizer_factor_trajectory_fidelity.py`
+  writes `results/experiment_6751_thermalizer_factor_trajectory_fidelity.json`.
+- Binary and categorical kernels, both frozen contexts, all three compiler arms,
+  depths 1, 2, 4, and 8, every precision, and every seed bundle have exactly one
+  hashed row in the Cartesian product.
+- All target and compiled conditional and trajectory normalization errors are at
+  most the frozen tolerance.
+- Aggregate conditional KL and trajectory total variation recompute from rows.
+- Topology and precision serialization round trips preserve canonical hashes.
+- A completed positive or circular-positive artifact reports a strict trajectory
+  total-variation reduction against independent fitting. Otherwise it reports a
+  null, partial, blocked, or disqualified verdict without a portability claim.
+- The official Torx sidecar, when reachable, records observed API results. It is
+  never treated as physical hardware evidence.
+
+**Implementation status:** Implemented (Exp 6751;
+`python/carnot/experiment_6751_thermalizer_factor_trajectory_fidelity.py`,
+`tests/python/test_experiment_6751_thermalizer_factor_trajectory_fidelity.py`)
+
+---
+
+### SCENARIO-HW-6751-EXACT-COMPILATION
+
+**Given:** Frozen typed kernels, contexts, sparse topologies, numeric formats,
+seed bundles, matched candidate budgets, and enumerable depth-eight spaces,
+**When:** Experiment 6751 fits each compiler arm and enumerates every trajectory,
+**Then:** Every Cartesian-product row exists, all distributions normalize, row
+aggregates replay exactly, and the artifact records simulator-only provenance.
+
+### SCENARIO-HW-6751-REFINEMENT
+
+**Given:** Independent fitting leaves a finite sparse-topology residual,
+**When:** Context matching and trajectory-level selection use the same candidate
+bank and exact bounded objectives,
+**Then:** a positive result requires at least one refinement arm to reduce mean
+trajectory total variation without changing factor capacity or precision.
+
+### SCENARIO-HW-6751-FAIL-CLOSED
+
+**Given:** A missing row, non-normalized distribution, changed receipt, invalid
+category, unavailable internal reference, or failed required verification check,
+**When:** Artifact validation runs,
+**Then:** completion is false, the failed check and observed value appear in
+`gate_check_summary`, and `honest_verdict` uses an allowed blocked prefix.
+
+**Implementation status:** Implemented (Exp 6751)
+
+---
+
 ### REQ-HW-6121
 
 **Title:** Exp6121 GateMate changed-state gate MUST skip unchanged DirtyJTAG detects and permit only one non-destructive IDCODE detect after a dated physical receipt
