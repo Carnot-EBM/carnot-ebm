@@ -28231,3 +28231,74 @@ closed verdict classes `positive`, `circular_positive`, `null`, `blocked`,
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6752 | `python/carnot/agentic/arc_induction_tools.py` (`find_objects`, typed schema, shared dispatch, source/object/detail/response/call-time bounds); `python/carnot/agentic/arc_induction_tool_loop.py` (production selfparse event receipts); `python/carnot/experiment_6752_arc_code_carrying_tool_preflight.py` (owned subprocesses, 32K/CUDA/model receipts, row reducer and artifact validator); `scripts/experiments/experiment_6752_arc_code_carrying_tool_preflight.py` (repository entry point). | `tests/python/test_arc_code_carrying_tool_preflight_6752.py`; focused parser, dispatch, response-bound, and production-loop scenarios in `tests/python/test_arc_induction_selfparse_transport.py`. |
+
+### REQ-ARC-WMTE-6753: Paired Object-Table Fetch-On-Demand Evidence
+
+The Exp6753 science comparison SHALL freeze the 20 games, three seeds per
+game, arm order, call budgets, 32768-cell context, and Qwen3.8 generator
+configuration from its registered design before any live row runs. The
+baseline SHALL use the production default inline object table. The treatment
+SHALL omit only that table and SHALL retain the same production selfparse tool
+surface, including bounded `find_objects`. Both arms SHALL enter through the
+public `make_carnot_agent` factory and `E3AgentPolicy` proposer route.
+
+The scored rows SHALL use only `unsloth/Qwen3.8-27B-GGUF`. A bounded
+`unsloth/Qwen3.6-35B-A3B-GGUF` transport sidecar SHALL exercise the same two
+prompt shapes. Sidecar rows SHALL remain outside every scored aggregate. The
+preflight SHALL fail closed unless Exp6752 is ready, both exact cached models
+are available, CUDA offload and owned 32K context are proven, the frozen games
+and seeds match the 2026-08-01 evidence, and the solve registry has no new or
+duplicate solve target.
+
+Every row SHALL retain its prompt hash and token count, tool emissions,
+arguments, bounded results, later-reasoning receipt, held-transition result,
+change fidelity, transition utility, monotonic duration, actions, stop reason,
+failure class, model provenance, context receipt, GPU receipt, and row
+checksum. A useful fetch SHALL be a successful `find_objects` result that is
+returned to the model before a later successful engine submission. Transition
+utility SHALL be held-out correct changed cells minus spurious changed cells,
+divided by the held-out true changed-cell count.
+
+The reducer SHALL pair treatment and baseline by exact game and seed. It SHALL
+report per-game paired means, a frozen-seed 95 percent bootstrap interval,
+prompt-token savings, fetch and useful-fetch rates, and harmful regressions.
+Adoption SHALL require complete valid provenance, positive paired prompt-token
+savings, and a change-fidelity interval whose lower endpoint is no worse than
+the frozen within-arm mean-spread margin. Completion SHALL require every
+planned Qwen3.8 row and both unpooled Qwen3.6 sidecar rows. Completion SHALL
+not imply adoption. The experiment SHALL never claim or register a solve.
+
+#### SCENARIO-ARC-WMTE-6753-ARM-ISOLATION
+
+- GIVEN one frozen game and seed
+- WHEN the two science environments and prompts are built
+- THEN only inline object-table presence differs, while model, context, seed,
+  budgets, production route, tool schemas, and all other prompt bytes match.
+
+#### SCENARIO-ARC-WMTE-6753-USEFUL-FETCH
+
+- GIVEN a successful bounded `find_objects` dispatch
+- WHEN its response enters the next user turn and a later engine submission
+  succeeds
+- THEN the row counts one useful fetch; an unreturned result, no later turn,
+  or failed later submission does not count.
+
+#### SCENARIO-ARC-WMTE-6753-PAIRING-AND-SIDECAR
+
+- GIVEN complete science and sidecar rows
+- WHEN the reducer computes the verdict
+- THEN it pairs only exact Qwen3.8 game-seed arms and excludes all Qwen3.6
+  sidecar values from science aggregates.
+
+#### SCENARIO-ARC-WMTE-6753-COMPLETION-NOT-SOLVE
+
+- GIVEN all planned rows with valid provenance
+- WHEN completion and adoption gates run
+- THEN `object_table_ab_completed` may become true independently of adoption,
+  while `solve_claim` remains false and the solve registry stays unchanged.
+
+## Implementation Status (REQ-ARC-WMTE-6753)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6753 | `python/carnot/experiment_6753_object_table_fetch_on_demand_ab.py` (frozen design, arm environments, production E3 worker, strict fetch accounting, paired reducer, CUDA/model/preflight gates, terminal artifact validator); `scripts/experiments/experiment_6753_object_table_fetch_on_demand_ab.py` (repository entry point). | `tests/python/test_arc_object_table_fetch_on_demand_ab_6753.py` (arm isolation, exact prompt removal, useful fetches, pairing, sidecar exclusion, completion, no-solve, preflight, worker failures, CLI, 100 percent new-module statement coverage). |
