@@ -410,3 +410,53 @@ unreachable).
 - CLAUDE.md "AVO-Method Adoption", "ARC Live-Path Reachability Discipline",
   "ARC-AGI-3 IS a Live Hidden-Game Discovery Agent" — governing rules; every
   plug point above is on the `make_carnot_agent` / `arc_loop_solve` closure.
+
+## CORRECTION 2026-08-29 (independent re-derivation, appended — the analysis above is not edited)
+
+A reviewer re-derived every number from source and live measurement BEFORE reading this note,
+running a tokenizer health control first (English prose 0.2 tok/char; digits 1.0 tok/char, so the
+1-token-per-character results are a real property of digit-heavy text, not a byte-fallback
+artifact). Eight of eight claims confirmed in substance. Three corrections matter.
+
+**1. The object-table recommendation must be withdrawn as stated.** This note's largest single
+saving was fetch-on-demand for the 4,667-token object table. That table is default-ON because of
+a MEASURED held-out win: `mean_delta_on_minus_off = +0.0720` on `change_fidelity`, 20 paired
+games, sign-test p = 0.0192, 19 of 20 discordant games, verdict
+`complete_object_perception_heldout_ab_SIGNIFICANT_on_prereg_primary_change_fidelity`
+(`results/outer_loop_arc_object_perception_heldout_ab_change_fidelity_20260801.json`, 13,171s of
+compute). Removing it to save tokens would un-buy that result.
+
+The structural claim survives: the object table IS the largest block, larger than all 25
+transitions together — independently reproduced at 4,691 tokens / 55.5% on seed 0 against this
+note's 4,667 / 54% on seed 5900, a ~2.5% sampling difference. So the target is right and the
+proposed move is wrong. Any change here has to hold `change_fidelity` at least flat, which makes
+it an A/B, not an optimisation.
+
+**2. The denominator 84 does not reproduce; cite 83.** The shards give 0 of 83 graded
+(44 in exp5760 + 39 in exp5766) or 0 of 88 delta-bearing (49 + 39). Every plausible filter was
+tested; none yields 84. The repo contradicts itself — `arc_llm_reinduction.py:39` says "0 of 83",
+`:1242` says "84 refinement cells", and this note inherited the second. The conclusion is
+untouched: pooled deltas −0.0128 and −0.0598, positive fraction 0.0, and 8 of 8 partially-correct
+engines collapsing to a final 0.0, verified cell by cell. Destructive holds at either denominator.
+Recorded because this project audits denominators.
+
+**3. Two ranges are narrow samples and should be labelled as such.** `_rle_grid` at 1,709–1,857
+is a 2-frame sample: an 8-game sweep spans 1,002 (vc33) to **2,776 (ft09)**, the latter 33% above
+the claimed maximum at only 1.5x compression. The delta range 8–78 splices two encoders —
+`_rle_delta_compact` measured 10–78 over n=75 tu93 transitions, while `_rle_delta` gives the 8.
+Cross-game, ar25 compact deltas reach **321** (n=25). The per-frame savings in section 1 are
+tu93-shaped and do not generalise unexamined.
+
+**What was confirmed exactly.** `to_ascii` at 4,159 tokens = 1 token/char, constant across all 8
+games. The `_goal_only_prompt` waste at 4,159 − 1,709 = **2,450 tokens exact**, with two scope
+limits worth knowing: it fires only when `previous_level_complete_grid` is not None, so goal calls
+before the first level-up waste nothing, and on an ft09-class grid the saving falls to ~1,383. The
+transport blocker is confirmed on three independent stored surfaces — the probe JSON verdict, both
+raw server logs including the hermes `JSONDecodeError` traceback, and `_ensure_vllm_server`'s argv
+carrying no tool flags at all (zero grep hits for `enable-auto-tool-choice` anywhere in `python/`
+or `scripts/`). No Kaggle quota was spent confirming it.
+
+**The claim that most governs what happens next is the transport blocker, and it is right.** Its
+one open edge — `qwen3_xml` and `qwen3_coder` untested because Kaggle-gated — is an argument FOR
+the agent-side parser rather than against it, since that path works whichever way the server-flag
+trial lands.
