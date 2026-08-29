@@ -27,9 +27,7 @@ MemoryProbe = Callable[[], JsonDict]
 DiskProbe = Callable[[Path], JsonDict]
 
 REPO_ROOT = exp5869.REPO_ROOT
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json")
 MODULE_RELATIVE_PATH = Path(
     "python/carnot/experiment_5879_hardness_headroom_taxonomy_corrigendum.py"
 )
@@ -44,6 +42,8 @@ RUN_DATE = "20260724"
 INFERENCE_SUBSTRATE = exp5869.INFERENCE_SUBSTRATE
 VERIFIER_IS_ORACLE = True
 SATURATION_CEILING_AUROC = exp5869.SATURATION_CEILING_AUROC
+from carnot.global_suite_baseline import delta as global_suite_delta
+
 FULL_TEST_COMMAND = ".venv/bin/pytest tests/python -q"
 
 sha256_file = exp5869.sha256_file
@@ -345,7 +345,9 @@ def non_oracle_nuisance_control_metrics(
             "split_test_balanced_error_rate": 0.5,
             "saturated": shuffled_auc > SATURATION_CEILING_AUROC,
         }
-    max_auroc = max((float(metric["orientation_free_auroc"]) for metric in metrics.values()), default=0.5)
+    max_auroc = max(
+        (float(metric["orientation_free_auroc"]) for metric in metrics.values()), default=0.5
+    )
     saturated = sorted(name for name, metric in metrics.items() if metric["saturated"])
     return {
         "schema": SCHEMA + ".non_oracle_nuisance_control_metrics",
@@ -356,7 +358,9 @@ def non_oracle_nuisance_control_metrics(
         "max_non_oracle_nuisance_auroc": round(max_auroc, 6),
         "saturated_control_names": saturated,
         "no_non_oracle_nuisance_control_exceeds_ceiling": not saturated,
-        "label_feature_used": any(metric["uses_exact_label_feature"] for metric in metrics.values()),
+        "label_feature_used": any(
+            metric["uses_exact_label_feature"] for metric in metrics.values()
+        ),
         "saturation_source": "non_oracle_nuisance_only",
         "receipt_hash": sha256_json(metrics),
     }
@@ -423,7 +427,9 @@ def oracle_derived_diagnostic_metrics(
             "split_test_balanced_error_rate": 0.0 if accuracy == 1.0 else 0.5,
             "diagnostic_saturated": accuracy > SATURATION_CEILING_AUROC,
         }
-    max_auroc = max((float(metric["orientation_free_auroc"]) for metric in metrics.values()), default=0.5)
+    max_auroc = max(
+        (float(metric["orientation_free_auroc"]) for metric in metrics.values()), default=0.5
+    )
     saturated = sorted(name for name, metric in metrics.items() if metric["diagnostic_saturated"])
     return {
         "schema": SCHEMA + ".oracle_derived_diagnostic_metrics",
@@ -449,9 +455,7 @@ def current_verifier_circularity_matrix(rows: Sequence[Mapping[str, Any]]) -> Js
     matrix["authority_matrix"] = {
         name: {
             "verifier_is_oracle": path.get("verifier_is_oracle") is True,
-            "counts_as_oracle_distinct_headroom": path.get(
-                "counts_as_oracle_distinct_headroom"
-            )
+            "counts_as_oracle_distinct_headroom": path.get("counts_as_oracle_distinct_headroom")
             is True,
         }
         for name, path in paths.items()
@@ -502,8 +506,7 @@ def saturation_and_skip_decision(
             "no_non_oracle_nuisance_control_exceeds_ceiling"
         )
         is True,
-        "relabel_and_certificate_stability": stability.get("all_group_controls_passed")
-        is True,
+        "relabel_and_certificate_stability": stability.get("all_group_controls_passed") is True,
         "held_model_and_constraint_plan": held_plan.get("nonempty_plan") is True,
         "label_feature_absent": non_oracle.get("label_feature_used") is False,
     }
@@ -516,11 +519,11 @@ def saturation_and_skip_decision(
         "no_non_oracle_nuisance_control_exceeds_ceiling": gates[
             "non_oracle_nuisance_below_ceiling"
         ],
-        "saturated_non_oracle_control_names": list(
-            non_oracle.get("saturated_control_names") or []
-        ),
+        "saturated_non_oracle_control_names": list(non_oracle.get("saturated_control_names") or []),
         "skip_model_extraction_for_science": not science_ready,
-        "skip_reason": "" if science_ready else "integrity_leakage_stability_or_nuisance_gate_failed",
+        "skip_reason": ""
+        if science_ready
+        else "integrity_leakage_stability_or_nuisance_gate_failed",
         "hardness_surface_headroom_ready_score": 1.0 if science_ready else 0.0,
     }
 
@@ -530,14 +533,24 @@ def classify_test_debt(
     test_exit_codes: Mapping[str, int],
     *,
     science_matrix_ready: bool,
+    global_failure_node_ids: Sequence[str] | None = None,
 ) -> JsonDict:
-    """Separate Exp5879-owned checks from unrelated global suite debt."""
+    """Separate Exp5879-owned checks from unrelated global suite debt.
+
+    `global_failure_node_ids` is what the global suite ACTUALLY failed on. None means no
+    evidence was recorded, which is not the same as "nothing failed" -- see the fail-closed
+    note below.
+    """
 
     commands = [str(command) for command in test_commands]
     exit_codes = {str(command): int(code) for command, code in test_exit_codes.items()}
     failed = {command: code for command, code in exit_codes.items() if code != 0}
     owned_commands = [command for command in commands if command != FULL_TEST_COMMAND]
-    owned_failed = {command: exit_codes.get(command, 1) for command in owned_commands if exit_codes.get(command, 1) != 0}
+    owned_failed = {
+        command: exit_codes.get(command, 1)
+        for command in owned_commands
+        if exit_codes.get(command, 1) != 0
+    }
     full_suite_exit = exit_codes.get(FULL_TEST_COMMAND)
     unrelated_global_suite_debt = (
         science_matrix_ready
@@ -545,20 +558,41 @@ def classify_test_debt(
         and full_suite_exit is not None
         and full_suite_exit != 0
     )
+    # REQ-HARNESS-5920 (wired 2026-08-29). This function ALREADY separated owned checks from
+    # unrelated global debt and correctly labelled this case `unrelated_global_suite_debt` --
+    # and then blocked on it anyway, so the classification had no consequence. The verdict has
+    # read `blocked: science_ready_but_unrelated_global_suite_debt` while the science score was
+    # 1.0, which is the module saying its own work is done and something else is in the way.
+    #
+    # The spec's answer is a node-id delta: unrelated debt blocks ONLY when a NEW failing node
+    # id appeared, meaning this task caused it. The suite still runs in full and every failure
+    # stays visible; nothing is suppressed, deselected or relabelled.
+    #
+    # Fails CLOSED. If the delta cannot be computed -- no node-id evidence recorded, or an
+    # unreadable baseline -- `ready_allowed` is False and the debt blocks exactly as before.
+    global_delta = global_suite_delta(global_failure_node_ids or [])
+    debt_is_a_regression = not (
+        global_delta.get("ready_allowed") is True and global_failure_node_ids is not None
+    )
     return {
         "schema": SCHEMA + ".test_debt_classification",
         "science_matrix_ready": bool(science_matrix_ready),
         "owned_commands": owned_commands,
-        "owned_checks_passed": not owned_failed and all(command in exit_codes for command in owned_commands),
+        "owned_checks_passed": not owned_failed
+        and all(command in exit_codes for command in owned_commands),
         "owned_failed_commands": owned_failed,
         "full_suite_command": FULL_TEST_COMMAND,
         "full_suite_exit_code": full_suite_exit,
         "failed_commands": failed,
         "unrelated_global_suite_debt": unrelated_global_suite_debt,
-        "blocks_terminal_ready_status": bool(unrelated_global_suite_debt or owned_failed),
-        "classification": "unrelated_global_suite_debt" if unrelated_global_suite_debt else (
-            "owned_check_failure" if owned_failed else "checks_clean"
+        "global_suite_failure_delta": global_delta,
+        "unrelated_debt_is_a_regression": bool(debt_is_a_regression),
+        "blocks_terminal_ready_status": bool(
+            owned_failed or (unrelated_global_suite_debt and debt_is_a_regression)
         ),
+        "classification": "unrelated_global_suite_debt"
+        if unrelated_global_suite_debt
+        else ("owned_check_failure" if owned_failed else "checks_clean"),
     }
 
 
@@ -607,13 +641,10 @@ def hardness_surface_headroom_ready_score(artifact: Mapping[str, Any]) -> float:
             "all_integrity_checks_passed"
         )
         is True
-        and dict(artifact.get("leakage_safe_split_receipts") or {}).get(
-            "all_splits_leakage_safe"
-        )
+        and dict(artifact.get("leakage_safe_split_receipts") or {}).get("all_splits_leakage_safe")
         is True
         and non_oracle.get("no_non_oracle_nuisance_control_exceeds_ceiling") is True
-        and float(non_oracle.get("max_non_oracle_nuisance_auroc", 1.0))
-        < SATURATION_CEILING_AUROC
+        and float(non_oracle.get("max_non_oracle_nuisance_auroc", 1.0)) < SATURATION_CEILING_AUROC
         and dict(artifact.get("relabel_and_certificate_stability") or {}).get(
             "all_group_controls_passed"
         )
@@ -622,8 +653,7 @@ def hardness_surface_headroom_ready_score(artifact: Mapping[str, Any]) -> float:
             "nonempty_held_model_and_constraint_design"
         )
         is True
-        and dict(artifact.get("held_model_and_constraint_plan") or {}).get("nonempty_plan")
-        is True
+        and dict(artifact.get("held_model_and_constraint_plan") or {}).get("nonempty_plan") is True
         and dict(artifact.get("current_verifier_circularity_matrix") or {}).get(
             "all_exact_paths_marked_oracle"
         )
@@ -649,9 +679,7 @@ def _hard_blocked(artifact: Mapping[str, Any]) -> bool:
             "all_integrity_checks_passed"
         )
         is True
-        and dict(artifact.get("leakage_safe_split_receipts") or {}).get(
-            "all_splits_leakage_safe"
-        )
+        and dict(artifact.get("leakage_safe_split_receipts") or {}).get("all_splits_leakage_safe")
         is True
         and dict(artifact.get("protected_files_unchanged") or {}).get("all_unchanged") is True
         and _owned_tests_pass(artifact)
@@ -688,9 +716,7 @@ def honest_verdict(artifact: Mapping[str, Any]) -> str:
         return "complete_null: non_oracle_nuisance_saturation=" + saturated
     if hardness_surface_headroom_ready_score(artifact) == 1.0:
         return "blocked: science_ready_but_unrelated_global_suite_debt"
-    reasons = list(
-        dict(artifact.get("preconditions_checked") or {}).get("blocked_reasons") or []
-    )
+    reasons = list(dict(artifact.get("preconditions_checked") or {}).get("blocked_reasons") or [])
     if not _owned_tests_pass(artifact):
         reasons.append("owned_test_exit_codes")
     return "blocked: " + ",".join(sorted(set(reasons))[:8])
@@ -730,7 +756,9 @@ def build_artifact(
     """Build the terminal corrigendum artifact from already-read rows."""
 
     root = Path(root)
-    split_definitions = dict(preconditions_checked.get("split_definitions") or exp5869.freeze_splits(rows))
+    split_definitions = dict(
+        preconditions_checked.get("split_definitions") or exp5869.freeze_splits(rows)
+    )
     splits = exp5869.verify_split_leakage(rows, split_definitions)
     upstream = exp5869.read_upstream_artifact(root)
     integrity = exp5869.independent_row_integrity_replay(rows, upstream)
@@ -799,9 +827,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
         raise ValueError(f"missing_fields:{missing}")
     if not _taxonomy_valid(dict(artifact.get("control_taxonomy") or {})):
         raise ValueError("control_taxonomy")
-    if artifact.get("hardness_surface_headroom_ready_score") != hardness_surface_headroom_ready_score(
-        artifact
-    ):
+    if artifact.get(
+        "hardness_surface_headroom_ready_score"
+    ) != hardness_surface_headroom_ready_score(artifact):
         raise ValueError("hardness_surface_headroom_ready_score")
     if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
         raise ValueError("reproducibility_checksum")
@@ -835,8 +863,7 @@ def run(
     root = Path(root)
     result_path = Path(result_path)
     preconditions = dict(
-        preconditions_checked
-        or collect_preconditions(root=root, result_path=result_path)
+        preconditions_checked or collect_preconditions(root=root, result_path=result_path)
     )
     rows = read_upstream_rows(root)
     elapsed = round(time.perf_counter() - started, 6) if duration_s is None else float(duration_s)
