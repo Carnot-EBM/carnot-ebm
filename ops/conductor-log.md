@@ -16750,3 +16750,4 @@ The l |
 | 2026-08-29 06:28 UTC | Three-model SOTA dual-encoding proof-carrying prop | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6733-hardness-controlled-certificate-stre |
 | 2026-08-29 06:28 UTC | Oracle-distinct dual-encoding diagnostic energy on | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6734-sota-dual-encoding-proposal-corpus |
 | 2026-08-29 06:30 UTC | Three-model SOTA dual-encoding proof-carrying prop | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6733-hardness-controlled-certificate-stre |
+| 2026-08-29 06:30 UTC | Oracle-distinct dual-encoding diagnostic energy on | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6734-sota-dual-encoding-proposal-corpus |
