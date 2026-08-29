@@ -91,7 +91,7 @@ import os
 import subprocess
 import sys
 import uuid
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 # Derived from __file__, never a hardcoded absolute path: CLAUDE.md "Test-Run Record
@@ -248,6 +248,166 @@ def _matches(path: str, patterns: list[str]) -> bool:
     return False
 
 
+#: How long a declaration may claim a path before it is treated as abandoned.
+#:
+#: FAIL TOWARD NOT BLOCKING, deliberately. A wrongly-held claim stops real work and there is
+#: nobody to appeal to; a wrongly-released one costs attribution on one commit. Agents die
+#: without releasing their scope routinely -- a killed run leaves its declaration on disk
+#: forever -- so without expiry the first crashed session would permanently lock its paths.
+CLAIM_STALE_AFTER = timedelta(hours=4)
+
+#: Sorts after every real ISO timestamp, so a declaration with no usable `declared_at` loses
+#: every wound-wait comparison instead of silently winning them.
+_YOUNGEST = "~"
+
+
+def is_universal_pattern(pattern: str) -> bool:
+    """Does this pattern claim the whole repository rather than a part of it?
+
+    THIS IS WHAT KEEPS ENFORCEMENT FROM DEADLOCKING EVERYTHING. The conductor holds a STANDING
+    declaration of `*` because it sweeps all uncommitted work -- that is a statement about what
+    it will COMMIT, not a claim that no other session may touch anything. Enforce `*` literally
+    and no agent could ever stage a file again.
+
+    So a pattern with no literal path content is advisory: it still governs what its own owner
+    may stage, and it never blocks a stranger. A pattern naming any real path segment is
+    enforceable.
+    """
+
+    stripped = pattern.strip()
+    if not stripped:
+        return True
+    return all(ch in "*?/[]!-" for ch in stripped)
+
+
+def _claim_age_key(record: dict) -> str:
+    value = record.get("declared_at")
+    return value if isinstance(value, str) and value else _YOUNGEST
+
+
+def _claim_is_stale(record: dict, now: datetime) -> bool:
+    raw = record.get("declared_at")
+    if not isinstance(raw, str) or not raw:
+        return False  # undated, not expired -- it loses on age instead
+    try:
+        declared = datetime.fromisoformat(raw)
+    except ValueError:
+        return False
+    if declared.tzinfo is None:
+        declared = declared.replace(tzinfo=UTC)
+    return (now - declared) > CLAIM_STALE_AFTER
+
+
+def claim_owner(path: str, records: list[dict], now: datetime) -> str | None:
+    """Which session owns this path? None means nobody, so anyone may stage it.
+
+    WOUND-WAIT ORDERING. The OLDEST declaration wins; ties break on run id. Both properties
+    matter and for different reasons.
+
+    Oldest-wins makes the resolution deadlock-free by construction: the order is total and
+    time-based, so a cycle cannot form. We reached a real deadlock on 2026-08-29 with the
+    previous first-come rule -- two narrow scopes each refusing the other's commit -- and worked
+    around it by removing cross-session judging entirely. This restores the judging with an
+    ordering that cannot deadlock, rather than leaving it off.
+
+    Tie-breaking on run id makes it DETERMINISTIC: every session computes the same owner from
+    the same files, so the wounded side is told the same thing the winner believes. A rule where
+    each side thinks it won is worse than no rule.
+
+    The wounded session keeps its edits and re-declares. We wound the CLAIM, never the work --
+    Fission can treat an abort as an early commit because its writes are prefix-safe, and a
+    half-applied source edit is not.
+    """
+
+    best: tuple[str, str] | None = None
+    for record in records:
+        run_id = record.get("run_id")
+        if not isinstance(run_id, str) or not run_id:
+            continue
+        if _claim_is_stale(record, now):
+            continue
+        patterns = [
+            p
+            for p in record.get("scope") or []
+            if isinstance(p, str) and not is_universal_pattern(p)
+        ]
+        if not patterns or not _matches(path, patterns):
+            continue
+        key = (_claim_age_key(record), run_id)
+        if best is None or key < best:
+            best = key
+    return None if best is None else best[1]
+
+
+def _literals(patterns: list[str]) -> list[str]:
+    """Concrete paths usable as probes: the patterns that name a path rather than a shape."""
+    return [p for p in patterns if not any(ch in p for ch in "*?[")]
+
+
+def overlapping_older_claims(
+    globs: list[str], mine: dict, others: list[dict], now: datetime
+) -> dict[str, str]:
+    """My patterns that an OLDER live declaration also covers, mapped to that owner.
+
+    Two glob patterns cannot be intersected exactly in the general case, so this probes with
+    the CONCRETE paths each side named, in both directions: their literals against my patterns,
+    and my literals against theirs. A first version probed by substituting "x" for the
+    wildcards, which found nothing at all -- `scripts/*` became `scripts/x`, and the literal
+    `scripts/target.py` it genuinely collides with does not match that.
+
+    Being approximate here is acceptable in a way it would not be in `claim_owner`: a missed
+    overlap costs a warning the author does not get, and the commit-time refusal still holds.
+    """
+
+    found: dict[str, str] = {}
+    for pattern in globs:
+        if is_universal_pattern(pattern):
+            continue
+        for other in others:
+            if _claim_is_stale(other, now):
+                continue
+            owner = other.get("run_id")
+            if not isinstance(owner, str) or not owner:
+                continue
+            if _claim_age_key(other) >= _claim_age_key(mine):
+                continue  # not older, so it does not win
+            theirs = [
+                q
+                for q in other.get("scope") or []
+                if isinstance(q, str) and not is_universal_pattern(q)
+            ]
+            if not theirs:
+                continue
+            overlap = any(_matches(lit, [pattern]) for lit in _literals(theirs)) or any(
+                _matches(lit, theirs) for lit in _literals([pattern])
+            )
+            if overlap:
+                found[pattern] = owner
+                break
+    return found
+
+
+def contested_paths(
+    staged: list[str], records: list[dict], committer: str | None, now: datetime
+) -> dict[str, str]:
+    """Staged paths another session owns, mapped to that owner.
+
+    When the committer cannot be identified, enforcement is SKIPPED rather than applied to all.
+    That is the opposite of the seal rule directly above, and the asymmetry is intended: an
+    unidentified session held to every claim could not commit at all while any claim stood,
+    which turns a missing environment variable into a repository-wide freeze.
+    """
+
+    if committer is None:
+        return {}
+    owned: dict[str, str] = {}
+    for path in staged:
+        owner = claim_owner(path, records, now)
+        if owner is not None and owner != committer:
+            owned[path] = owner
+    return owned
+
+
 def _scope_self_staged(scope_path: Path, staged: list[str]) -> bool:
     """Is the governing declaration itself being committed?
 
@@ -316,6 +476,25 @@ def declare(globs: list[str], unseal: list[str], run_id: str, anchor: str = "dec
     }
     out = SCOPES / f"{run_id}.scope.json"
     out.write_text(json.dumps(record, indent=1) + "\n")
+
+    # Tell the declaring session NOW if an older claim already overlaps what it just asked for.
+    # Discovering it at commit time means the work is already done; discovering it here costs
+    # nothing. This warns rather than refuses -- overlapping intent is often legitimate (the
+    # older session may be about to release) and a declaration that cannot be made is worse
+    # than one made with open eyes.
+    now = datetime.now(UTC)
+    others = [
+        r for r in (_load_scope(s) for s in _scope_files()) if r and r.get("run_id") != run_id
+    ]
+    wounds = overlapping_older_claims(globs, record, others, now)
+    if wounds:
+        print("harness-integrity: WOUNDED -- an older declaration already claims:")
+        for pattern, owner in sorted(wounds.items()):
+            print(f"  {pattern}  overlaps {owner}")
+        print(
+            "  Commits touching those paths will be refused while that claim stands.\n"
+            "  Keep your edits; narrow this scope, or wait for that session to release."
+        )
 
     print(f"harness-integrity: scope declared, run id {run_id}")
     for pattern in globs:
@@ -446,6 +625,35 @@ def check() -> int:
                 "deliberately, re-declare naming it:\n"
                 + "".join(f"      --unseal {p.split(' ')[0]}\n" for p in drifted).rstrip()
             )
+
+    # ENFORCED CLAIMS (2026-08-29). Until now a declaration bound only its own author: it
+    # constrained what THAT session could stage and did nothing about a stranger staging the
+    # same path. That is advisory in exactly the direction that hurt -- a shared index took one
+    # agent's staged work into another's commit three times in one day, and once took this very
+    # guard while it was being written.
+    #
+    # Now a path owned by another live session refuses the commit, with the owner named so the
+    # two can be told apart. Ownership is wound-wait ordered (see `claim_owner`), so conflicting
+    # claims resolve the same way from either side instead of deadlocking.
+    committer_id = os.environ.get(RUN_ID_ENV)
+    records = [r for r in (_load_scope(s) for s in scopes) if r]
+    contested = contested_paths(staged, records, committer_id, datetime.now(UTC))
+    if contested:
+        by_owner: dict[str, list[str]] = {}
+        for path, owner in sorted(contested.items()):
+            by_owner.setdefault(owner, []).append(path)
+        detail = []
+        for owner, paths in sorted(by_owner.items()):
+            detail.append(f"claimed by {owner}:\n" + "\n".join(f"      {p}" for p in paths))
+        failures.append(
+            f"{len(contested)} staged path(s) belong to another session's declaration.\n    "
+            + "\n    ".join(detail)
+            + "\n    Your edits are safe -- this refuses the COMMIT, not the work. Either wait "
+            "for that\n    session to finish and release, or re-declare without these paths and "
+            "commit the rest.\n    A claim older than "
+            f"{int(CLAIM_STALE_AFTER.total_seconds() // 3600)}h is treated as abandoned and "
+            "stops blocking on its own."
+        )
 
     if not failures:
         return 0

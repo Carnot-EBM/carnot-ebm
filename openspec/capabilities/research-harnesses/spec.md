@@ -9772,3 +9772,38 @@ retired literal `offline_arc_agi3_perception_planner_real_env_confirmed`, no wri
 fine — the AST check sees only real literals). A regression here means a writer fix was
 reverted or a new writer copied the retired value, and the suite SHALL go RED before a
 re-run can lay the illegal value back into `results/**`.
+
+### REQ-INFRA-6820: Scope declarations are enforced, and conflicts resolve by wound-wait
+
+A session's scope declaration SHALL bind other sessions, not only its author. A staged path
+owned by another live declaration SHALL refuse the commit and SHALL name the owning session.
+
+Ownership SHALL be resolved by wound-wait: the OLDEST declaration wins, and ties SHALL break on
+run id so every session computes the same owner from the same files. A declaration SHALL NOT be
+enforceable against strangers when its pattern names no literal path segment, and a declaration
+older than the staleness window SHALL be treated as abandoned.
+
+#### SCENARIO-INFRA-6820-A: two narrow scopes do not deadlock
+- GIVEN session A declared `a.py` and session B declared `b.py`
+- WHEN B stages only `b.py`
+- THEN the commit is permitted, and symmetrically for A
+
+#### SCENARIO-INFRA-6820-B: a stranger is refused and told who owns the path
+- GIVEN an older declaration claims `scripts/target.py`
+- WHEN a different session stages that path
+- THEN the commit is refused, naming the owning run id
+
+#### SCENARIO-INFRA-6820-C: a universal pattern never blocks a stranger
+- GIVEN the conductor holds a standing declaration of `*`
+- WHEN any other session stages any path
+- THEN the commit is permitted, because `*` states what the conductor will COMMIT rather than
+  that no other session may work
+
+#### SCENARIO-INFRA-6820-D: an abandoned claim expires
+- GIVEN a declaration older than the staleness window claims `x.py`
+- WHEN another session stages `x.py`
+- THEN the commit is permitted, because an agent that died without releasing its scope must not
+  lock a path permanently
+
+Implementation status: implemented 2026-08-29 (`scripts/harness_integrity_lint.py`;
+`tests/python/test_harness_claim_enforcement.py`, 14 tests, 7/7 mutations RED).
