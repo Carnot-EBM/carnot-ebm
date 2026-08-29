@@ -28157,3 +28157,77 @@ way. This was the last full-grid ASCII render in the induce-prompt family.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6740 | `python/carnot/agentic/arc_executable_world_model.py` (`_goal_only_prompt` win block: `_rle_grid` + encoding sentence). | `tests/python/test_arc_induction_selfparse_transport.py` (SCENARIO-ARC-WMTE-6741; mutation to `to_ascii` RED then restored byte-identical). |
+
+### REQ-ARC-WMTE-6752: Task-Owned 32K Code-Carrying Tool Preflight
+
+The production induction tool registry SHALL expose `find_objects`. The tool
+SHALL accept at least three schema-typed parameters. These parameters SHALL
+include a transition index, a before/after selector, and bounded predicate
+code. The predicate SHALL run under the generated-code call guard. The tool
+SHALL cap predicate source length, object count, object detail, and serialized
+response size.
+
+The Exp6752 preflight SHALL use only a fixed synthetic transition fixture. It
+SHALL not read game source, hidden state, solve traces, BFS output, or a
+per-game adapter. It SHALL not target a game or claim a level solve.
+
+The preflight SHALL run the immutable scored generator
+`unsloth/Qwen3.8-27B-GGUF` and the transport canary
+`unsloth/Qwen3.6-35B-A3B-GGUF`. Each model SHALL run sequentially in a fresh
+owned subprocess. Each subprocess environment SHALL set
+`CARNOT_ARC_INDUCE_N_CTX=32768` before constructing `LocalGGUFProposer`.
+CPU inference, remote inference, legacy-model substitution, and fabricated
+transcripts SHALL not satisfy readiness.
+
+Each live row SHALL pass through `induce_with_tool_loop` in selfparse mode.
+The model emission SHALL carry a live `find_objects` call with a transition
+index, a grid selector, bounded predicate code, and a result bound. The
+production XML parser SHALL coerce typed values. The shared dispatcher SHALL
+execute the call. The loop SHALL return the bounded result as a user-side
+`<tool_response>` block.
+
+Each row SHALL retain the raw emission hash, parsed tool and arguments,
+dispatch result, bounded-response hash, latency, failure class, transcript
+hash, requested and observed context, GPU layers, model hash, assigned device,
+and peak VRAM. `arc_context_tool_preflight_ready` SHALL be true only when both
+models report at least 32768 runtime context cells on CUDA and each completes
+one parse-to-dispatch-to-bounded-response call. The artifact SHALL use the
+closed verdict classes `positive`, `circular_positive`, `null`, `blocked`,
+`disqualified`, or `partial`. Its `solve_claim` SHALL always be false.
+
+#### SCENARIO-ARC-WMTE-6752-TYPED-CODE-DISPATCH
+
+- GIVEN XML for `find_objects` with integer, string, and predicate-code values
+- WHEN the production parser and shared dispatcher process the call
+- THEN integers remain integers, predicate indentation remains intact, and the
+  fixed fixture produces a typed object report.
+
+#### SCENARIO-ARC-WMTE-6752-BOUNDED-RESPONSE
+
+- GIVEN too-long predicate code, too many components, or a non-terminating
+  predicate
+- WHEN `find_objects` runs
+- THEN it rejects or truncates the request within the declared source, object,
+  detail, response, and call-time bounds.
+
+#### SCENARIO-ARC-WMTE-6752-OWNED-CONTEXT
+
+- GIVEN either model worker
+- WHEN the fresh subprocess starts
+- THEN its explicit environment requests 32768 context cells before proposer
+  construction and its row records the server-observed context and CUDA
+  admission receipt.
+
+#### SCENARIO-ARC-WMTE-6752-READY-AND-NO-SOLVE
+
+- GIVEN two complete model rows
+- WHEN the artifact reducer runs
+- THEN readiness is true only for two owned 32K CUDA production-route calls,
+  while `solve_claim` stays false and no game identity enters the fixture,
+  rows, prompt, transcript, or verdict.
+
+## Implementation Status (REQ-ARC-WMTE-6752)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6752 | `python/carnot/agentic/arc_induction_tools.py` (`find_objects`, typed schema, shared dispatch, source/object/detail/response/call-time bounds); `python/carnot/agentic/arc_induction_tool_loop.py` (production selfparse event receipts); `python/carnot/experiment_6752_arc_code_carrying_tool_preflight.py` (owned subprocesses, 32K/CUDA/model receipts, row reducer and artifact validator); `scripts/experiments/experiment_6752_arc_code_carrying_tool_preflight.py` (repository entry point). | `tests/python/test_arc_code_carrying_tool_preflight_6752.py`; focused parser, dispatch, response-bound, and production-loop scenarios in `tests/python/test_arc_induction_selfparse_transport.py`. |

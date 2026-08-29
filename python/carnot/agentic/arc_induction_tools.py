@@ -46,6 +46,10 @@ MAX_MISMATCHES_REPORTED = 5
 MAX_DIFF_CELLS = 200
 MAX_REGION_CELLS = 400
 MAX_GOAL_PROBE_GRIDS = 24
+MAX_FIND_OBJECTS = 32
+MAX_PREDICATE_CODE_CHARS = 2048
+MAX_FIND_OBJECT_RESPONSE_BYTES = 8192
+FIND_OBJECT_PREDICATE_TIMEOUT_S = 0.25
 
 
 def _engine_source(full_source: str) -> str:
@@ -377,6 +381,107 @@ class InductionToolSession:
             out["changed_cells_omitted"] = len(cells) - MAX_DIFF_CELLS
         return out
 
+    # ---- tool: find_objects -----------------------------------------------------
+
+    def find_objects(
+        self,
+        t: int,
+        which: str,
+        predicate_code: str,
+        max_objects: int,
+    ) -> dict[str, Any]:
+        """Find color components and filter them with bounded generated code.
+
+        The model receives compact object facts instead of every object cell. The
+        source, call time, object count, and JSON response all have explicit bounds.
+        These bounds stop a retrieval call from rebuilding an unbounded grid prompt.
+        """
+        self.calls.append({"tool": "find_objects"})
+        if not (0 <= int(t) < len(self.visible)):
+            return {
+                "ok": False,
+                "error": f"t must be in 0..{len(self.visible) - 1} (visible transitions)",
+            }
+        if which not in {"before", "after"}:
+            return {"ok": False, "error": "which must be 'before' or 'after'"}
+        if len(predicate_code) > MAX_PREDICATE_CODE_CHARS:
+            return {
+                "ok": False,
+                "error": f"predicate_code exceeds {MAX_PREDICATE_CODE_CHARS} characters",
+            }
+
+        from carnot.agentic.arc_engine_call_guard import guarded_call
+
+        try:
+            predicate, err = guarded_call(
+                _exec_candidate,
+                predicate_code,
+                "accept",
+                timeout_s=FIND_OBJECT_PREDICATE_TIMEOUT_S,
+            )
+        except Exception as exc:  # noqa: BLE001 - generated code failure is the tool result
+            return {"ok": False, "error": f"predicate raised {type(exc).__name__}: {exc}"}
+        if predicate is None:
+            return {"ok": False, "error": err}
+
+        from carnot.agentic.arc_color_blob_salience import connected_color_blobs
+
+        transition = self.visible[int(t)]
+        grid = np.asarray(transition.grid if which == "before" else transition.next_grid)
+        try:
+            blobs = connected_color_blobs(grid)
+        except Exception as exc:  # noqa: BLE001 - malformed fixture becomes a bounded error
+            return {"ok": False, "error": f"object scan raised {type(exc).__name__}: {exc}"}
+
+        limit = min(MAX_FIND_OBJECTS, max(1, int(max_objects)))
+        matches: list[dict[str, Any]] = []
+        for blob in blobs:
+            obj = {
+                "color": int(blob.color),
+                "pixel_count": int(blob.pixel_count),
+                "bbox": [int(value) for value in blob.bbox],
+                "centroid": [round(float(value), 4) for value in blob.centroid],
+                "height": int(blob.height),
+                "width": int(blob.width),
+            }
+            try:
+                accepted = bool(
+                    guarded_call(
+                        predicate,
+                        dict(obj),
+                        timeout_s=FIND_OBJECT_PREDICATE_TIMEOUT_S,
+                    )
+                )
+            except Exception as exc:  # noqa: BLE001 - generated code failure is the tool result
+                return {"ok": False, "error": f"predicate raised {type(exc).__name__}: {exc}"}
+            if accepted:
+                matches.append(obj)
+
+        objects = matches[:limit]
+        result: dict[str, Any] = {
+            "ok": True,
+            "t": int(t),
+            "which": which,
+            "predicate_applied": True,
+            "n_components_scanned": len(blobs),
+            "n_objects_matched": len(matches),
+            "objects": objects,
+            "truncated": len(matches) > len(objects),
+            "response_bytes": 0,
+        }
+        # The normal shape is already below the byte cap. Keep a second bound so a
+        # later object-field addition cannot silently make the response unbounded.
+        while True:
+            for _ in range(3):
+                result["response_bytes"] = len(json.dumps(result).encode("utf-8"))
+            if result["response_bytes"] <= MAX_FIND_OBJECT_RESPONSE_BYTES:
+                break
+            if not result["objects"]:
+                return {"ok": False, "error": "find_objects response bound is too small"}
+            result["objects"].pop()
+            result["truncated"] = True
+        return result
+
     # ---- tool: run_goal_on_states ------------------------------------------------
 
     def run_goal_on_states(self, code: str) -> dict[str, Any]:
@@ -529,6 +634,34 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
                     }
                 },
                 "required": ["code"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "find_objects",
+            "description": (
+                "Find same-color connected components in one observed before/after grid, then "
+                "filter compact object facts with bounded Python predicate code. The source "
+                "must define accept(obj) and may read color, pixel_count, bbox, centroid, "
+                "height, and width. Results and generated-code execution are bounded."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "t": {"type": "integer", "description": "transition index (0-based)"},
+                    "which": {"type": "string", "enum": ["before", "after"]},
+                    "predicate_code": {
+                        "type": "string",
+                        "description": "Python source defining accept(obj) -> bool",
+                    },
+                    "max_objects": {
+                        "type": "integer",
+                        "description": f"requested result cap; clamped to {MAX_FIND_OBJECTS}",
+                    },
+                },
+                "required": ["t", "which", "predicate_code", "max_objects"],
             },
         },
     },
@@ -700,6 +833,7 @@ def dispatch_tool(session: InductionToolSession, name: str, arguments: str) -> d
         "query_region": session.query_region,
         "diff_grids": session.diff_grids,
         "run_goal_on_states": session.run_goal_on_states,
+        "find_objects": session.find_objects,
         "list_transitions": session.list_transitions,
     }.get(name)
     if fn is None:
@@ -740,5 +874,9 @@ def register_mcp_tools(session: InductionToolSession, server: Any = None) -> Any
     @srv.tool()
     def run_goal_on_states(code: str) -> dict[str, Any]:
         return session.run_goal_on_states(code)
+
+    @srv.tool()
+    def find_objects(t: int, which: str, predicate_code: str, max_objects: int) -> dict[str, Any]:
+        return session.find_objects(t, which, predicate_code, max_objects)
 
     return srv

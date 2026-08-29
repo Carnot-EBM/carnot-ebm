@@ -21,8 +21,14 @@ import numpy as np
 import pytest
 
 from carnot.agentic.arc_induction_tools import (
+    MAX_FIND_OBJECTS,
+    MAX_FIND_OBJECT_RESPONSE_BYTES,
+    MAX_PREDICATE_CODE_CHARS,
     TOOL_NAMES,
+    InductionToolSession,
+    dispatch_tool,
     parse_xml_tool_calls,
+    register_mcp_tools,
     render_tool_schemas_for_prompt,
 )
 
@@ -86,6 +92,182 @@ def test_integer_params_coerced_from_the_schema_types() -> None:
     assert seen == 1 and unparsed == 0
     args = json.loads(calls[0]["function"]["arguments"])
     assert args == {"t": 2, "r0": 0, "r1": 4, "c0": 1, "c1": 5, "which": "after"}
+
+
+def test_scenario_arc_wmte_6752_typed_code_dispatch() -> None:
+    """SCENARIO-ARC-WMTE-6752-TYPED-CODE-DISPATCH exercises the exact
+    multi-parameter XML shape that the live preflight asks both models to emit."""
+    from carnot.agentic.arc_executable_world_model import Transition
+
+    before = np.zeros((6, 6), dtype=np.int16)
+    before[1, 1:3] = 2
+    before[4, 4] = 3
+    after = before.copy()
+    after[4, 4] = 4
+    session = InductionToolSession([Transition(before, 1, None, after, 0, 0)])
+    predicate = "def accept(obj):\n    return obj['color'] == 2 and obj['pixel_count'] >= 2"
+    xml = (
+        "</think>\n<tool_call>\n<function=find_objects>\n"
+        "<parameter=t>\n0\n</parameter>\n"
+        "<parameter=which>\nbefore\n</parameter>\n"
+        f"<parameter=predicate_code>\n{predicate}\n</parameter>\n"
+        "<parameter=max_objects>\n3\n</parameter>\n"
+        "</function>\n</tool_call>"
+    )
+
+    calls, seen, unparsed = parse_xml_tool_calls(xml)
+    assert seen == 1 and unparsed == 0 and len(calls) == 1
+    call = calls[0]["function"]
+    arguments = json.loads(call["arguments"])
+    assert call["name"] == "find_objects"
+    assert arguments == {
+        "t": 0,
+        "which": "before",
+        "predicate_code": predicate,
+        "max_objects": 3,
+    }
+    assert isinstance(arguments["t"], int)
+    assert isinstance(arguments["max_objects"], int)
+
+    result = dispatch_tool(session, call["name"], call["arguments"])
+    assert result["ok"] is True
+    assert result["objects"] == [
+        {
+            "color": 2,
+            "pixel_count": 2,
+            "bbox": [1, 1, 1, 2],
+            "centroid": [1.0, 1.5],
+            "height": 1,
+            "width": 2,
+        }
+    ]
+    assert result["response_bytes"] <= MAX_FIND_OBJECT_RESPONSE_BYTES
+
+
+def test_scenario_arc_wmte_6752_find_objects_bounds_generated_code(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """SCENARIO-ARC-WMTE-6752-BOUNDED-RESPONSE fails closed on source,
+    result-count, and predicate-time attacks."""
+    from carnot.agentic.arc_executable_world_model import Transition
+
+    grid = np.arange(64, dtype=np.int16).reshape(8, 8)
+    session = InductionToolSession([Transition(grid, 1, None, grid.copy(), 0, 0)])
+    monkeypatch.setenv("CARNOT_ARC_ENGINE_CALL_GUARD_POLL_S", "0.005")
+    too_long = dispatch_tool(
+        session,
+        "find_objects",
+        json.dumps(
+            {
+                "t": 0,
+                "which": "before",
+                "predicate_code": "x" * (MAX_PREDICATE_CODE_CHARS + 1),
+                "max_objects": MAX_FIND_OBJECTS,
+            }
+        ),
+    )
+    assert too_long == {
+        "ok": False,
+        "error": f"predicate_code exceeds {MAX_PREDICATE_CODE_CHARS} characters",
+    }
+
+    capped = dispatch_tool(
+        session,
+        "find_objects",
+        json.dumps(
+            {
+                "t": 0,
+                "which": "before",
+                "predicate_code": "def accept(obj):\n    return True",
+                "max_objects": MAX_FIND_OBJECTS + 100,
+            }
+        ),
+    )
+    assert capped["ok"] is True
+    assert len(capped["objects"]) <= MAX_FIND_OBJECTS
+    assert capped["response_bytes"] <= MAX_FIND_OBJECT_RESPONSE_BYTES
+
+    monkey_timeout = dispatch_tool(
+        session,
+        "find_objects",
+        json.dumps(
+            {
+                "t": 0,
+                "which": "before",
+                "predicate_code": "def accept(obj):\n    while True:\n        pass",
+                "max_objects": 1,
+            }
+        ),
+    )
+    assert monkey_timeout["ok"] is False
+    assert "predicate raised EngineCallTimeout" in monkey_timeout["error"]
+
+
+def test_scenario_arc_wmte_6752_find_objects_fails_closed_on_invalid_inputs(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """SCENARIO-ARC-WMTE-6752-BOUNDED-RESPONSE bounds every input and helper failure."""
+    from carnot.agentic import arc_color_blob_salience, arc_engine_call_guard
+    from carnot.agentic import arc_induction_tools as tools
+    from carnot.agentic.arc_executable_world_model import Transition
+
+    grid = np.zeros((3, 3), dtype=np.int16)
+    grid[1, 1] = 2
+    session = InductionToolSession([Transition(grid, 1, None, grid.copy(), 0, 0)])
+    predicate = "def accept(obj):\n    return True"
+
+    assert session.find_objects(1, "before", predicate, 1)["ok"] is False
+    assert session.find_objects(0, "sideways", predicate, 1)["ok"] is False
+    assert session.find_objects(0, "before", "not python", 1)["ok"] is False
+
+    monkeypatch.setattr(
+        arc_engine_call_guard,
+        "guarded_call",
+        lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("guard failed")),
+    )
+    assert (
+        "predicate raised RuntimeError" in session.find_objects(0, "before", predicate, 1)["error"]
+    )
+    monkeypatch.undo()
+
+    monkeypatch.setattr(
+        arc_color_blob_salience,
+        "connected_color_blobs",
+        lambda grid: (_ for _ in ()).throw(ValueError("bad grid")),
+    )
+    assert (
+        "object scan raised ValueError" in session.find_objects(0, "before", predicate, 1)["error"]
+    )
+    monkeypatch.undo()
+
+    monkeypatch.setattr(tools, "MAX_FIND_OBJECT_RESPONSE_BYTES", 10)
+    assert session.find_objects(0, "before", predicate, 1) == {
+        "ok": False,
+        "error": "find_objects response bound is too small",
+    }
+
+
+def test_scenario_arc_wmte_6752_dev_registration_uses_typed_find_objects() -> None:
+    """REQ-ARC-WMTE-6752 keeps the optional MCP wrapper aligned with typed dispatch."""
+    from carnot.agentic.arc_executable_world_model import Transition
+
+    class Server:
+        def __init__(self) -> None:
+            self.registered: dict[str, Any] = {}
+
+        def tool(self):
+            def decorate(function):
+                self.registered[function.__name__] = function
+                return function
+
+            return decorate
+
+    grid = np.zeros((3, 3), dtype=np.int16)
+    session = InductionToolSession([Transition(grid, 1, None, grid.copy(), 0, 0)])
+    server = Server()
+    assert register_mcp_tools(session, server) is server
+    result = server.registered["find_objects"](0, "before", "def accept(obj):\n    return True", 1)
+    assert result["ok"] is True
 
 
 def test_code_value_keeps_inner_indentation_drops_only_wrapping_newlines() -> None:
@@ -250,6 +432,98 @@ def test_selfparse_loop_dispatches_xml_with_no_tools_field_and_no_tool_role(
     assert "<tool_call>" in assistant[0]["content"]
     # The accepted world model was written from the dispatched candidate.
     assert prop.written and "def engine" in prop.written[0][1]
+
+
+def test_scenario_arc_wmte_6752_loop_captures_live_call_and_bounded_response(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """REQ-ARC-WMTE-6752 uses the production loop, parser, dispatcher, and
+    user-side response path. The model turn is canned here; the experiment supplies it live."""
+    from carnot.agentic import arc_induction_tool_loop as loop
+
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "selfparse")
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_TURNS", "1")
+    predicate = "def accept(obj):\n    return obj['color'] == 0"
+    emission = (
+        "</think>\n<tool_call>\n<function=find_objects>\n"
+        "<parameter=t>\n0\n</parameter>\n"
+        "<parameter=which>\nbefore\n</parameter>\n"
+        f"<parameter=predicate_code>\n{predicate}\n</parameter>\n"
+        "<parameter=max_objects>\n4\n</parameter>\n"
+        "</function>\n</tool_call>"
+    )
+
+    def fake_post_chat(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        return {
+            "choices": [{"message": {"content": emission}, "finish_reason": "stop"}],
+            "usage": {"completion_tokens": 20},
+        }
+
+    monkeypatch.setattr(loop, "_post_chat", fake_post_chat)
+    events: list[dict[str, Any]] = []
+    prop = _FakeProposer()
+    ok, note = loop.induce_with_tool_loop(
+        prop,
+        "transport_fixture",
+        _identity_transitions(),
+        1,
+        extra_user_instruction="Emit the exact requested find_objects call.",
+        tool_event_sink=events,
+    )
+
+    assert ok is False and "no scoreable engine" in note
+    assert len(events) == 1
+    event = events[0]
+    assert event["raw_emission"] == emission
+    assert event["parsed_tool"] == "find_objects"
+    assert event["parsed_arguments"] == {
+        "t": 0,
+        "which": "before",
+        "predicate_code": predicate,
+        "max_objects": 4,
+    }
+    assert event["dispatch_result"]["ok"] is True
+    assert event["bounded_response"].startswith("<tool_response>")
+    assert len(event["bounded_response"].encode()) <= MAX_FIND_OBJECT_RESPONSE_BYTES + 64
+    assert prop.last_tool_loop_stats["tool_calls_by_name"] == {"find_objects": 1}
+
+
+def test_scenario_arc_wmte_6752_loop_captures_unparseable_arguments(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """REQ-ARC-WMTE-6752 preserves a failed typed parse as explicit row evidence."""
+    from carnot.agentic import arc_induction_tool_loop as loop
+
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "selfparse")
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_TURNS", "1")
+    monkeypatch.setattr(
+        loop,
+        "_post_chat",
+        lambda *args, **kwargs: {
+            "choices": [{"message": {"content": "broken arguments"}, "finish_reason": "stop"}],
+            "usage": {"completion_tokens": 2},
+        },
+    )
+    monkeypatch.setattr(
+        loop,
+        "parse_xml_tool_calls",
+        lambda content: (
+            [{"function": {"name": "find_objects", "arguments": "{broken"}}],
+            1,
+            0,
+        ),
+    )
+    events: list[dict[str, Any]] = []
+    ok, _ = loop.induce_with_tool_loop(
+        _FakeProposer(),
+        "transport_fixture",
+        _identity_transitions(),
+        1,
+        tool_event_sink=events,
+    )
+    assert ok is False
+    assert events[0]["parsed_arguments"] is None
+    assert events[0]["dispatch_result"]["ok"] is False
 
 
 def test_post_chat_selfparse_payload_carries_no_tools_field(

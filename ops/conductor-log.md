@@ -16765,3 +16765,5 @@ The l |
 | 2026-08-29 10:21 UTC | Prospective support-preserving transactional self- | OK | 105 passed, 1 warning in 8.80s |
 | 2026-08-29 10:40 UTC | Cold transactional self-learning durability and po | OK | 173 passed, 1 warning in 11.60s |
 | 2026-08-29 11:02 UTC | Thermalizers-style factor-to-trajectory compiler f | FLAGGED | adversarial_verify CRITICAL: VERDICT_CLASS_MISMATCH — result quarantined, not a  |
+| 2026-08-29 12:25 UTC | Owned 32K live code-carrying ARC tool preflight | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output:      1,
++      |
