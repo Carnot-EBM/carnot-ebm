@@ -18200,3 +18200,4 @@ DualGPURunner dispatch. The highest-leverage tooling change is one launch
 receipt with monotonic timestamps, task-linked GPU samples, model count, and
 runner identity. Since observed elapsed time has no positive amount, the
 savings estimate is 0%.
+- 2026-08-29: V587 activation, source-receipt, and evidence-contract preflight (⚠️ Blocked) — honest_verdict=blocked_v587_activation_contract: one or more source, manifest, gate, prior, or model checks failed.; results/experiment_6729_v587_activation_evidence_contract.json
