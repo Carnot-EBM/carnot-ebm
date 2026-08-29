@@ -43,7 +43,17 @@ def foreign_import_reason(tests_root: Path, package_dir: Path) -> str | None:
 
     tests_root = tests_root.resolve()
     package_dir = package_dir.resolve()
-    if package_dir.is_relative_to(tests_root):
+    # EQUALITY, NOT CONTAINMENT (corrected 2026-08-29). Containment passed two real cases it
+    # should have caught, because on this machine worktrees and clones live UNDER the main root:
+    #
+    #   tests /home/x/carnot  +  package /home/x/carnot/.claude/worktrees/agent-abc/python/carnot
+    #   tests /home/x/carnot  +  package /home/x/carnot/output/carnot-clone/python/carnot
+    #
+    # The first is a worktree PYTHONPATH leaking into a main-checkout run -- an agent shell's
+    # export outliving its session -- which is this trap with the trees swapped. The second is
+    # not hypothetical either: a scorer once swept two full repo clones nested inside the root.
+    # The guard knows exactly where the package belongs, so it should say so.
+    if package_dir == tests_root / "python" / "carnot":
         return None
     return (
         f"tests were loaded from {tests_root}\n"

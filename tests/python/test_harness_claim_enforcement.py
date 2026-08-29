@@ -161,3 +161,193 @@ def test_disjoint_scopes_produce_no_warning() -> None:
     mine = rec("beta", 1, "docs/*")
     older = rec("alpha", 2, "scripts/target.py")
     assert overlapping_older_claims(["docs/*"], mine, [older], NOW) == {}
+
+
+# --- Tests that BITE at the wiring, added 2026-08-29 after an adversarial review -------------
+# Every test above exercises a PURE FUNCTION. An adversarial review replaced the enforcement
+# call inside `check()` with `contested = {}`, and the warning call inside `declare()` with
+# `wounds = {}`, and the suite stayed GREEN both times: the feature itself was untested and only
+# its helpers were covered. That is the same shape as the exp5879 hollow fix -- verifying
+# through a path production never takes. These go through the real entry points.
+
+import json  # noqa: E402
+import os  # noqa: E402
+import subprocess  # noqa: E402
+
+import pytest  # noqa: E402
+
+import harness_integrity_lint as guard  # noqa: E402
+
+
+@pytest.fixture(autouse=True)
+def _no_ambient_scope_id(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The suite must not inherit the developer's own session id.
+
+    Running the harness tests with `CARNOT_AGENT_SCOPE_ID` exported -- the state any agent that
+    actually used this tool is in -- failed three shipped tests. A test whose verdict depends on
+    the operator's shell is not measuring the code.
+    """
+    monkeypatch.delenv(guard.RUN_ID_ENV, raising=False)
+
+
+@pytest.fixture
+def repo(tmp_path, monkeypatch: pytest.MonkeyPatch):
+    """A real git repo with the guard's module-level paths pointed at it."""
+    subprocess.run(["git", "init", "-q", "."], cwd=tmp_path, check=True)
+    for key, value in (("user.email", "t@t"), ("user.name", "t")):
+        subprocess.run(["git", "config", key, value], cwd=tmp_path, check=True)
+    (tmp_path / "a.py").write_text("x\n")
+    (tmp_path / "b.py").write_text("y\n")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "commit", "-qm", "base"], cwd=tmp_path, check=True)
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(guard, "REPO", tmp_path)
+    monkeypatch.setattr(guard, "SCOPES", tmp_path / "ops" / ".agent_scopes")
+    return tmp_path
+
+
+def _declare(run_id: str, *scope: str) -> None:
+    guard.declare(list(scope), [], run_id)
+
+
+def _stage(repo, name: str) -> None:
+    (repo / name).write_text((repo / name).read_text() + "edit\n")
+    subprocess.run(["git", "add", name], cwd=repo, check=True)
+
+
+def test_check_refuses_a_path_another_session_owns(repo, monkeypatch, capsys) -> None:
+    """The enforcement branch is wired into `check()`, not merely implemented beside it."""
+    _declare("alpha", "a.py")
+    _declare("beta", "b.py")
+    _stage(repo, "a.py")
+    monkeypatch.setenv(guard.RUN_ID_ENV, "beta")
+    assert guard.check() == 1
+    assert "claimed by alpha" in capsys.readouterr().out
+
+
+def test_check_permits_a_session_committing_its_own_declared_path(repo, monkeypatch) -> None:
+    _declare("alpha", "a.py")
+    _declare("beta", "b.py")
+    _stage(repo, "b.py")
+    monkeypatch.setenv(guard.RUN_ID_ENV, "beta")
+    assert guard.check() == 0
+
+
+def test_two_narrow_scopes_do_not_deadlock_through_the_real_entry_point(repo) -> None:
+    """The 2026-08-29 deadlock, end to end, with NO environment variable set.
+
+    This is how the tool is actually used -- nothing in the repository set the id until the
+    same day this test was written -- and in that state every declaration judged every commit,
+    so B staging only its own file was refused by A's record. The pure-function test of the
+    same property passed throughout, because it never asked who was judging.
+    """
+    _declare("agent-a", "a.py")
+    _declare("agent-b", "b.py")
+    _stage(repo, "b.py")
+    assert guard.check() == 0
+
+
+def test_a_stale_declaration_stops_blocking_through_the_real_entry_point(repo) -> None:
+    """The refusal text promised this and the branch that fired did not honour it."""
+    _declare("ghost", "a.py")
+    path = guard.SCOPES / "ghost.scope.json"
+    record = json.loads(path.read_text())
+    record["declared_at"] = (datetime.now(UTC) - CLAIM_STALE_AFTER - timedelta(hours=1)).isoformat()
+    path.write_text(json.dumps(record))
+    _stage(repo, "b.py")
+    assert guard.check() == 0
+
+
+def test_a_lone_declaration_still_judges_an_unidentified_commit(repo) -> None:
+    """Attribution is unambiguous with one declaration, so the guard must not go silent."""
+    _declare("solo", "a.py")
+    _stage(repo, "b.py")
+    assert guard.check() == 1
+
+
+def test_declare_warns_about_an_older_overlapping_claim(repo, capsys) -> None:
+    """The declaration-time warning is wired into `declare()`."""
+    _declare("alpha", "scripts/target.py")
+    capsys.readouterr()
+    _declare("beta", "scripts/*")
+    assert "WOUNDED" in capsys.readouterr().out
+
+
+def test_declare_tells_the_agent_to_export_the_id(repo, capsys) -> None:
+    """Without this line nothing ever identifies a committer and the feature is inert.
+
+    Before 2026-08-29 a repo-wide grep for the variable found exactly one hit: its own
+    definition. Enforcement never fired for anyone.
+    """
+    _declare("alpha", "a.py")
+    assert f"export {guard.RUN_ID_ENV}=alpha" in capsys.readouterr().out
+
+
+# --- ordering tests that bite (run ids chosen to sort AGAINST age) ---------------------------
+# The originals used ids where the run-id tie-break happened to agree with age ("older" < "young"),
+# so destroying the age key entirely left them green.
+
+
+def test_age_beats_run_id_when_the_two_disagree() -> None:
+    older = rec("zzz-old", 3, "x.py")
+    younger = rec("aaa-new", 1, "x.py")
+    assert claim_owner("x.py", [younger, older], NOW) == "zzz-old"
+
+
+def test_a_corrupt_timestamp_never_wins_and_is_treated_as_abandoned() -> None:
+    """`"!"` sorts below every ISO stamp, and an unparseable value was never expiring.
+
+    One corrupt or hostile scope file owned its patterns permanently, while the comment beside
+    the code claimed an unusable timestamp loses every comparison.
+    """
+    corrupt = {"run_id": "corrupt", "declared_at": "!bad-timestamp", "scope": ["x.py"]}
+    assert claim_owner("x.py", [corrupt, rec("honest", 1, "x.py")], NOW) == "honest"
+    assert contested_paths(["x.py"], [corrupt], "anyone", NOW) == {}
+
+
+def test_lexical_order_does_not_decide_age() -> None:
+    """`.` < `Z`, so a half-second-later stamp sorted OLDER across two timestamp spellings."""
+    early = {"run_id": "early", "declared_at": "2026-08-29T10:00:00Z", "scope": ["x.py"]}
+    late = {"run_id": "late", "declared_at": "2026-08-29T10:00:00.500000+00:00", "scope": ["x.py"]}
+    assert claim_owner("x.py", [early, late], NOW) == "early"
+
+
+def test_a_non_utc_offset_is_compared_as_an_instant() -> None:
+    utc = {"run_id": "utc", "declared_at": "2026-08-29T09:00:00+00:00", "scope": ["x.py"]}
+    offset = {"run_id": "offset", "declared_at": "2026-08-29T08:00:00-05:00", "scope": ["x.py"]}
+    assert claim_owner("x.py", [utc, offset], NOW) == "utc"
+
+
+# --- the universal-pattern charset, which was entirely untested ------------------------------
+
+
+@pytest.mark.parametrize("pattern", ["*", "**", "*/*", "?", "-", "", "   "])
+def test_patterns_that_claim_everything_are_advisory(pattern: str) -> None:
+    assert is_universal_pattern(pattern)
+
+
+def test_a_bare_extension_claims_the_whole_repository() -> None:
+    """`fnmatch`'s `*` crosses `/`, so `*.py` owned every Python file in the tree."""
+    assert is_universal_pattern("*.py")
+    assert (
+        contested_paths(
+            ["python/carnot/paths.py", "tests/python/conftest.py"],
+            [rec("grabber", 1, "*.py")],
+            "stranger",
+            NOW,
+        )
+        == {}
+    )
+
+
+# `[a-z]` matches single-character names only, so it claims a place rather than the tree.
+@pytest.mark.parametrize("pattern", ["scripts/*.py", "scripts/*", "a.py", "docs/notes", "[a-z]"])
+def test_a_pattern_naming_a_place_stays_enforceable(pattern: str) -> None:
+    assert not is_universal_pattern(pattern)
+
+
+def test_identical_globs_warn_at_declaration_time() -> None:
+    """Two sessions declaring the same glob is the likeliest collision and warned about nothing."""
+    mine = rec("beta", 1, "scripts/*")
+    older = rec("alpha", 2, "scripts/*")
+    assert overlapping_older_claims(["scripts/*"], mine, [older], NOW) == {"scripts/*": "alpha"}

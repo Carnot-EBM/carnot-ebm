@@ -223,12 +223,41 @@ def test_list_reports_active_and_unreadable_scopes(guard, capsys):
     assert "UNREADABLE" in capsys.readouterr().out
 
 
-def test_two_scopes_are_both_enforced(guard, monkeypatch, capsys):
-    """Concurrent sessions each keep their own guard; neither relaxes the other."""
+@pytest.fixture(autouse=True)
+def _no_ambient_scope_id(monkeypatch):
+    """This suite must not inherit the developer's own session id.
+
+    Three tests here fail when `CARNOT_AGENT_SCOPE_ID` is exported -- the state any agent that
+    actually used this tool is in, and the state the operator shell was in while fixing it. A
+    test whose verdict depends on the ambient environment is not measuring the code.
+    """
+    monkeypatch.delenv(_load_module().RUN_ID_ENV, raising=False)
+
+
+def test_two_scopes_do_not_refuse_an_unattributable_commit(guard, monkeypatch, capsys):
+    """CORRECTED 2026-08-29. This test previously asserted the DEADLOCK as a requirement.
+
+    It declared two scopes, staged a path belonging to the first, and required the SECOND to
+    refuse it -- "neither relaxes the other". With nothing in the repository ever setting
+    `CARNOT_AGENT_SCOPE_ID` (a grep found one hit, its own definition), every real commit took
+    that path: agent A declares a.py, agent B declares b.py, B stages only its own b.py, and
+    A's record refuses it. The comment in `check()` claimed per-session judging had removed
+    this; the `committer is None` fall-through kept it alive, and this test locked it in.
+
+    An unattributable commit cannot be asked "did YOU stage something you did not declare" --
+    there is no YOU -- so it is judged only when attribution is unambiguous, meaning exactly
+    one live declaration. That is a real weakening when several sessions run without exporting
+    their id, and the mitigation is that `declare()` now prints the export line.
+    """
     _declare(guard, "scripts/a.py", run_id="run-a")
     _declare(guard, "scripts/b.py", run_id="run-b")
     monkeypatch.setattr(guard, "_staged_paths", lambda: ["scripts/a.py"])
-    assert guard.check() == 1  # in scope for run-a, out of scope for run-b
+    monkeypatch.delenv(guard.RUN_ID_ENV, raising=False)
+    assert guard.check() == 0
+
+    # Identified, the guard is as strict as it ever was.
+    monkeypatch.setenv(guard.RUN_ID_ENV, "run-b")
+    assert guard.check() == 1
     assert "run-b" in capsys.readouterr().out
 
 

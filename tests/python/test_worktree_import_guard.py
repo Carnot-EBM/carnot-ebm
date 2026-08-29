@@ -69,3 +69,42 @@ def test_the_override_is_honoured_and_is_exact(monkeypatch) -> None:
     except RuntimeError:
         return
     raise AssertionError("a non-'1' value disabled the guard")
+
+
+# --- The WIRING, not just the rule (added 2026-08-29 after an adversarial review) -------------
+# The review replaced the `_check_worktree_import(...)` call in `tests/python/conftest.py` with
+# `pass` and this file stayed 7/7 GREEN: the guard's rule was tested and its installation was
+# not. A guard nothing calls is the bug class this repository keeps rediscovering.
+
+
+def test_both_conftests_invoke_the_guard() -> None:
+    """`testpaths` covers tests/python AND tests/integration; both must refuse.
+
+    `tests/integration/test_install.py` imports carnot, so `pytest tests/integration` from an
+    unpinned worktree was exactly the trap and was not refused -- the guard had been wired into
+    one of the two places that needed it.
+    """
+    repo = Path(__file__).resolve().parents[2]
+    for rel in ("tests/python/conftest.py", "tests/integration/conftest.py"):
+        text = (repo / rel).read_text()
+        assert "worktree_import_guard" in text, f"{rel} does not import the guard"
+        assert "_check_worktree_import(" in text, f"{rel} imports the guard but never calls it"
+
+
+def test_a_nested_worktree_or_clone_is_still_foreign() -> None:
+    """Containment passed this; on this machine worktrees and clones live UNDER the main root.
+
+    A worktree PYTHONPATH leaking into a main-checkout run is this trap with the trees swapped,
+    and nested repo clones are not hypothetical here -- a scorer once swept two of them.
+    """
+    root = Path("/home/x/carnot")
+    for nested in (
+        root / ".claude/worktrees/agent-abc/python/carnot",
+        root / "output/carnot-clone/python/carnot",
+    ):
+        assert foreign_import_reason(root, nested) is not None
+
+
+def test_the_canonical_location_is_accepted() -> None:
+    root = Path("/home/x/carnot")
+    assert foreign_import_reason(root, root / "python" / "carnot") is None
