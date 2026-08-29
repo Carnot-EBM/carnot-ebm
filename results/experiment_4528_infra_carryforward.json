@@ -164,7 +164,9 @@
     "preconditions_checked": "principle \"records resources verified; pre-empts missing-resource fabrication.\""
   },
   "honest_verdict": "complete: infra_audit_already_done",
-  "inference_substrate": "aggregation_from_upstream_artifacts (reads the .417 B2 artifact)",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'aggregation_from_upstream_artifacts' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
+  "inference_substrate_original_invalid_value": "aggregation_from_upstream_artifacts (reads the .417 B2 artifact)",
   "leaderboard_submission": false,
   "preconditions_checked": {
     "agents_md_read": true,

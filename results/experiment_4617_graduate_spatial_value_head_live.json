@@ -1372,7 +1372,7 @@
     "variant_solved_count": 1
   },
   "honest_verdict": "complete: spatial_value_head_graduated_no_live_value_honest_null_gap_sharpened",
-  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); any LLM arm on the iGPU declares live_llm_inference.",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
   "linear_measurement": {
     "actions_to_first_levelup": [
       20
@@ -2130,5 +2130,7 @@
       "severity": "info",
       "detail": "first_win_delta=0.0 (exactly zero). Confirm this is not a stub default."
     }
-  ]
+  ],
+  "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); any LLM arm on the iGPU declares live_llm_inference.",
+  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
 }
