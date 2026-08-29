@@ -16741,3 +16741,4 @@ The l |
 | 2026-08-29 06:16 UTC | Object-table fetch-on-demand paired A/B on the liv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6730-arc-context-tool-preflight) |
 | 2026-08-29 06:16 UTC | Cold object-table row, statistic, and live-provena | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6731-object-table-fetch-on-demand-ab.ob |
 | 2026-08-29 06:18 UTC | Object-table fetch-on-demand paired A/B on the liv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6730-arc-context-tool-preflight) |
+| 2026-08-29 06:18 UTC | Cold object-table row, statistic, and live-provena | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6731-object-table-fetch-on-demand-ab.ob |
