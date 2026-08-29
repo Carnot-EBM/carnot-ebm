@@ -59371,3 +59371,53 @@ states its own narrowed or not-narrowed disposition.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6754 and SCENARIO-REPORT-6754-* | Planned (`python/carnot/experiment_6754_v588_branch_disposition.py`, `scripts/experiments/experiment_6754_v588_branch_disposition.py`) | Planned (`tests/python/test_experiment_6754_v588_branch_disposition.py`) |
+
+### REQ-REPORT-6755: Lossless Reparse Receipts SHALL Be Atomic And Recomputable
+
+Exp6755 SHALL atomically write
+`results/experiment_6755_lossless_gguf_output_reparse.json`. It SHALL include
+all 216 per-proposal rows. Each row SHALL preserve model, family, source row,
+original text and hash, normalized text and hash, pre- and post-diagnosis,
+normalization kind, parse result, encoder agreement, exact outcome, and failure
+reason.
+
+The artifact SHALL include `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_sha256`, `rows`, `pre_diagnosis_counts`,
+`post_diagnosis_counts`, `bytes_envelope_rows`,
+`transport_reparse_ready`, `environment_grammar_targetable_rows`,
+`exact_valid_rows`, `semantic_edits_performed`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL explain every artifact field, including itself. The
+inference substrate SHALL state frozen local row replay with no LLM.
+
+The reproducibility receipt SHALL bind the input artifacts, implementation
+code, and row-derived hash. Aggregate fields SHALL replay from `rows`.
+`verifier_is_oracle` SHALL be false because exact checks evaluate evidence but
+do not perform transport normalization. A completed transport replay SHALL use
+an allowed terminal verdict prefix and SHALL state the exact-valid count
+without equating transport recovery with semantic success.
+
+#### SCENARIO-REPORT-6755-ATOMIC: Readers Observe One Complete Reparse
+
+**Given** complete preserved inputs, replay rows, aggregate counts, and hashes
+**When** Exp6755 validates and publishes its artifact
+**Then** readers observe one complete JSON object, the checksum replays, and
+all headline counts recompute from rows.
+
+**Spec traces:** REQ-REPORT-6755
+
+#### SCENARIO-REPORT-6755-BLOCKED: Failed Preconditions Stay Visible
+
+**Given** one failed frozen-input precondition
+**When** Exp6755 builds its terminal receipt
+**Then** it writes no replay rows, uses `verdict_class=blocked`, and records the
+failed check with its expected and observed values in `gate_check_summary`.
+
+**Spec traces:** REQ-REPORT-6755
+
+## Implementation Status (REQ-REPORT-6755)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6755 and SCENARIO-REPORT-6755-* | Planned (`python/carnot/experiment_6755_lossless_gguf_output_reparse.py`, `python/carnot/inference/gguf_output_text.py`, `scripts/experiments/experiment_6755_lossless_gguf_output_reparse.py`) | Planned (`tests/python/test_experiment_6755_lossless_gguf_output_reparse.py`) |
