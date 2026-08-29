@@ -12,6 +12,7 @@ from __future__ import annotations
 from copy import deepcopy
 import json
 from pathlib import Path
+import subprocess
 from typing import Any
 
 import pytest
@@ -24,18 +25,57 @@ SPEC = REPO / mod.SPEC_RELATIVE_PATH
 TESTS_RUN = [{"command": command, "exit_code": 0} for command in mod.DEFAULT_TEST_COMMANDS]
 
 
+# The exact input state Exp6527 ran against, pinned by commit. ab2a4b946a is
+# the V565 activation commit, and every adopted-artifact hash there matches
+# the hashes this experiment's own immutable_input_receipts recorded
+# (verified 2026-08-28, 7/7). Pinned because the live tree moves on: the
+# roadmap now carries a later milestone, and exp6520's flagged_adversarial
+# stamp was cleared on 2026-08-29 as a false positive - legitimate later
+# changes that made these tests fail for reasons unrelated to the code under
+# test (the stale-live-state class from the 2026-08-27 capstone incident).
+V565_INPUT_STATE_COMMIT = "ab2a4b946a"
+
+
 @pytest.fixture(scope="module")
 def artifact(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
     """REQ-CAPSTONE-6527: build a temp artifact without touching history."""
 
+    mirror = tmp_path_factory.mktemp("exp6527-v565-inputs")
+    pinned = [
+        mod.ROADMAP_RELATIVE_PATH,
+        *[Path(spec["path"]) for spec in mod.ADOPTED_TASKS.values()],
+    ]
+    for rel in pinned:
+        blob = subprocess.run(
+            ["git", "show", f"{V565_INPUT_STATE_COMMIT}:{rel.as_posix()}"],
+            cwd=REPO,
+            capture_output=True,
+            check=True,
+        ).stdout
+        target = mirror / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(blob)
+    pinned_set = {rel.as_posix() for rel in pinned}
+    for rel in mod.PROTECTED_RELATIVE_PATHS:
+        if rel.as_posix() in pinned_set:
+            continue
+        source = REPO / rel
+        if source.is_file():
+            target = mirror / rel
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(source.read_bytes())
+    # The live rechecks stay live on purpose: the corrigendum's own design is
+    # historical reads plus a current-code recheck of Exp6520.
+    receipts = mod.default_command_receipts(REPO)
     root = tmp_path_factory.mktemp("exp6527")
     return mod.build_artifact(
-        repo_root=REPO,
+        repo_root=mirror,
         result_path=root / mod.RESULT_RELATIVE_PATH.name,
         write=True,
         duration_s=1.0,
         tests_run=TESTS_RUN,
         run_date="20260823",
+        command_receipts=receipts,
     )
 
 
@@ -176,6 +216,25 @@ def test_scenario_capstone_6527_live_recheck_and_corrected_claims(
     assert claims["hardware_continuity"]["corrected_eligibility"] == "blocked_not_adopted"
 
 
+def test_scenario_capstone_6527_exp6526_mirror_follows_source() -> None:
+    """SCENARIO-CAPSTONE-6527-IMMUTABLE-ROWS: the Exp6526 mirror reads its source.
+
+    REQ-CONDUCTOR-VERDICT-3: Exp6526 corrected its declaration to null, and a
+    baked "partial" literal here would silently reassert the old value on
+    every rebuild. Synthetic payload on purpose: the pinned V565 fixture
+    still carries the pre-correction value, so only a direct unit call can
+    prove the mirror follows the source rather than a constant.
+    """
+
+    row = mod.recompute_exp6526(
+        {
+            "aggregate_row_recomputation": {"verdict_class_from_rows": "null"},
+            "gate_check_summary": {},
+        }
+    )
+    assert row["verdict_class_from_rows"] == "null"
+
+
 def test_scenario_capstone_6527_retired_dependency_and_aggregate_rows(
     artifact: dict[str, Any],
 ) -> None:
@@ -281,9 +340,7 @@ def test_scenario_capstone_6527_validation_rejects_bad_artifacts(
     bad_provenance = deepcopy(artifact)
     bad_provenance["field_provenance"] = {}
     bad_provenance["reproducibility_checksum"] = mod.reproducibility_checksum(bad_provenance)
-    assert "field_provenance must cover required fields" in mod.validate_artifact(
-        bad_provenance
-    )
+    assert "field_provenance must cover required fields" in mod.validate_artifact(bad_provenance)
 
     bad_substrate = deepcopy(artifact)
     bad_substrate["inference_substrate"] = "live_llm_inference"
@@ -306,9 +363,7 @@ def test_scenario_capstone_6527_validation_rejects_bad_artifacts(
     bad_duration = deepcopy(artifact)
     bad_duration["monotonic_duration_receipt"]["credible_duration"] = False
     bad_duration["reproducibility_checksum"] = mod.reproducibility_checksum(bad_duration)
-    assert "ready score requires credible duration receipt" in mod.validate_artifact(
-        bad_duration
-    )
+    assert "ready score requires credible duration receipt" in mod.validate_artifact(bad_duration)
 
     bad_retired = deepcopy(artifact)
     bad_retired["aggregate_row_recomputation"]["retired_dependency_violation_count"] = 1
@@ -320,9 +375,7 @@ def test_scenario_capstone_6527_validation_rejects_bad_artifacts(
     bad_protected = deepcopy(artifact)
     bad_protected["protected_files_unchanged"]["all_protected_files_unchanged"] = False
     bad_protected["reproducibility_checksum"] = mod.reproducibility_checksum(bad_protected)
-    assert "ready score requires protected files unchanged" in mod.validate_artifact(
-        bad_protected
-    )
+    assert "ready score requires protected files unchanged" in mod.validate_artifact(bad_protected)
 
     bad_gate = deepcopy(artifact)
     bad_gate["gate_check_summary"]["all_root_checks_passed"] = False
