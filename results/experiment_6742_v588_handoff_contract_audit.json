@@ -1,0 +1,4271 @@
+{
+  "binding_contract_rows": [
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "Verify that binding conditions, exact authority, fallbacks, gate fields, prior-failure mechanics, model roles, deliverables, and claim boundaries survived the handoff."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "If not, write the artifact atomically with complete_blocked_handoff_input, include the failed check and observed value in gate_check_summary, and stop."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "This audit does not gate any science branch."
+      },
+      "design_deliverable": "results/experiment_6742_v588_handoff_contract_audit.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "This audit does not gate any science branch."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "If not, write the artifact atomically with complete_blocked_handoff_input, include the failed check and observed value in gate_check_summary, and stop."
+      },
+      "gated_on_count": 0,
+      "item_id": "exp6742-v588-handoff-contract-audit",
+      "manifest_deliverable": "results/experiment_6742_v588_handoff_contract_audit.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.5",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "operationally_preserved": false,
+      "order": 1,
+      "phase": "Phase 1",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": "require the active roadmap, design, source refresh, schema, and exclusion manifest to exist and parse. If not, write the artifact atomically with complete_blocked_handoff_input, include the failed check and observed value in gate_check_summary, and stop. Do not fall back to an absent next-roadmap file."
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "source_cutoff",
+        "rows",
+        "binding_contract_rows",
+        "task_count",
+        "handoff_contract_preserved",
+        "science_branches_independent_of_handoff_audit",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6742-v588-handoff-contract-audit",
+      "track": "infrastructure"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "EXISTING CODE TO READ FIRST: - {project_root}/CLAUDE.md and {project_root}/CODEX.md - {project_root}/scripts/experiment_template.py and its cached_sota_pair() pattern - {project_root}/python/carnot/inference/sota_models.py - {project_root}/python/carnot/pipeline/gpu_monitor.py - {project_root}/pytho"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "On failure write complete_blocked_accelerator_canary with gate_check_summary; do not use CPU or remote inference as headline evidence."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "CONTEXT: The V587 retrospective found five 0.0-minute entries, including compute-bearing classifications, with no task-owned evidence showing whether a model loaded, decoded, or used an accelerator."
+      },
+      "design_deliverable": "results/experiment_6743_task_owned_phase_accelerator_canary.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Set accelerator_receipt_ready only when every model reaches first token on CUDA and teardown leaves no owned process."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "On failure write complete_blocked_accelerator_canary with gate_check_summary; do not use CPU or remote inference as headline evidence."
+      },
+      "gated_on_count": 0,
+      "item_id": "exp6743-task-owned-phase-accelerator-canary",
+      "manifest_deliverable": "results/experiment_6743_task_owned_phase_accelerator_canary.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "operationally_preserved": false,
+      "order": 2,
+      "phase": "Phase 1",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": "require llama.cpp CUDA offload, exact cached paths for all MODEL_SPECS, and enough free VRAM for one model at a time. On failure write complete_blocked_accelerator_canary with gate_check_summary; do not use CPU or remote inference as headline evidence."
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "live_model_invoked",
+        "rows",
+        "task_phase_rows",
+        "phase_clock_monotonic",
+        "gpu_receipts",
+        "accelerator_receipt_ready",
+        "claim_boundary",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6743-task-owned-phase-accelerator-canary",
+      "track": "infrastructure"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "V588 makes the exact stream an independent science root."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "If unavailable, emit complete_blocked_exact_checker with gate_check_summary."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Solver-Hard Is Not Model-Hard (arXiv 2607.17047) shows that solver conflicts and density do not measure model difficulty, and proof-preserving relabeling can expose surface sensitivity."
+      },
+      "design_deliverable": "results/experiment_6744_hardness_controlled_certificate_stream.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Set hardness_stream_ready true only when all 72 rows, certificates, relabel pairs, and split-leak checks pass."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "If unavailable, emit complete_blocked_exact_checker with gate_check_summary."
+      },
+      "gated_on_count": 0,
+      "item_id": "exp6744-hardness-controlled-certificate-stream",
+      "manifest_deliverable": "results/experiment_6744_hardness_controlled_certificate_stream.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "operationally_preserved": false,
+      "order": 3,
+      "phase": "Phase 1",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": "require two independent exact checking paths or one solver plus a separate certificate checker, deterministic seeds, and a writable task result path. If unavailable, emit complete_blocked_exact_checker with gate_check_summary."
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "family_counts",
+        "split_manifest",
+        "certificate_checker_receipts",
+        "relabel_pair_receipts",
+        "solver_work_metadata",
+        "hardness_stream_ready",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6744-hardness-controlled-certificate-stream",
+      "track": "verifiable-reasoning"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "CONTEXT: The existing direct certificate corpus has only 8/48 exact successes."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "On failure, emit complete_blocked_proposal_corpus with gate_check_summary; do not substitute remote or small models."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Exp6734 was preempted, so no all-three-model dual-encoding corpus exists."
+      },
+      "design_deliverable": "results/experiment_6745_sota_dual_encoding_proposal_corpus.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Set dual_encoding_corpus_ready true only when every planned model-instance row exists, attribution and budgets are present, and both encoders/checker paths were attempted where applicable."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "On failure, emit complete_blocked_proposal_corpus with gate_check_summary; do not substitute remote or small models."
+      },
+      "gated_on_count": 1,
+      "item_id": "exp6745-sota-dual-encoding-proposal-corpus",
+      "manifest_deliverable": "results/experiment_6745_sota_dual_encoding_proposal_corpus.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "operationally_preserved": false,
+      "order": 4,
+      "phase": "Phase 2",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": [
+          {
+            "artifact_field": "hardness_stream_ready",
+            "op": "==",
+            "upstream": "exp6744-hardness-controlled-certificate-stream",
+            "value": true
+          }
+        ]
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "live_model_invoked",
+        "gpu_receipts",
+        "planned_row_count",
+        "rows",
+        "diagnosis_counts",
+        "encoder_agreement_matrix",
+        "exact_success_by_model",
+        "dual_encoding_corpus_ready",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6745-sota-dual-encoding-proposal-corpus",
+      "track": "verifiable-reasoning"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "V588 now has a frozen exact corpus with two independent symbolic views and closed failure diagnoses."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "If not, emit complete_blocked_diagnostic_energy with gate_check_summary."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Set diagnostic_energy_ready true only when all arms and audits complete; readiness does not mean positive science."
+      },
+      "design_deliverable": "results/experiment_6746_oracle_distinct_diagnostic_energy.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Any leak disqualifies positive credit."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "If not, emit complete_blocked_diagnostic_energy with gate_check_summary."
+      },
+      "gated_on_count": 1,
+      "item_id": "exp6746-oracle-distinct-diagnostic-energy",
+      "manifest_deliverable": "results/experiment_6746_oracle_distinct_diagnostic_energy.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "operationally_preserved": false,
+      "order": 5,
+      "phase": "Phase 2",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": [
+          {
+            "artifact_field": "dual_encoding_corpus_ready",
+            "op": "==",
+            "upstream": "exp6745-sota-dual-encoding-proposal-corpus",
+            "value": true
+          }
+        ]
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "verifier_is_oracle",
+        "feature_schema",
+        "oracle_feature_denylist",
+        "rows",
+        "heldout_metrics_by_family",
+        "paired_relabel_metrics",
+        "heldout_reasoning_error_auroc",
+        "oracle_leakage_detected",
+        "diagnostic_energy_ready",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6746-oracle-distinct-diagnostic-energy",
+      "track": "energy-verification"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "V588 changes the substrate: the all-three-model corpus keeps every exact-invalid parseable proposal, and Exp6746 must first show held-family diagnostic signal without leakage."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "On failure emit complete_blocked_repair_headroom with gate_check_summary; do not lower the denominator."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "EXISTING CODE TO READ FIRST: - {project_root}/CLAUDE.md and {project_root}/CODEX.md - {project_root}/openspec/capabilities/verify-repair/spec.md - {project_root}/results/experiment_6745_sota_dual_encoding_proposal_corpus.json - {project_root}/results/experiment_6746_oracle_distinct_diagnostic_energy"
+      },
+      "design_deliverable": "results/experiment_6747_diagnostic_energy_localized_repair_ab.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Positive requires localized-minus-full exact-success lower bound above zero and no higher harmful-flip rate."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "On failure emit complete_blocked_repair_headroom with gate_check_summary; do not lower the denominator."
+      },
+      "gated_on_count": 2,
+      "item_id": "exp6747-diagnostic-energy-localized-repair-ab",
+      "manifest_deliverable": "results/experiment_6747_diagnostic_energy_localized_repair_ab.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "operationally_preserved": false,
+      "order": 6,
+      "phase": "Phase 2",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": [
+          {
+            "artifact_field": "heldout_reasoning_error_auroc",
+            "op": ">=",
+            "upstream": "exp6746-oracle-distinct-diagnostic-energy",
+            "value": 0.65
+          },
+          {
+            "artifact_field": "oracle_leakage_detected",
+            "op": "==",
+            "upstream": "exp6746-oracle-distinct-diagnostic-energy",
+            "value": false
+          }
+        ]
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "live_model_invoked",
+        "gpu_receipts",
+        "verifier_is_oracle",
+        "rows",
+        "paired_exact_success_delta",
+        "paired_delta_ci95",
+        "harmful_flip_rate_by_arm",
+        "repair_ab_completed",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6747-diagnostic-energy-localized-repair-ab",
+      "track": "verify-repair"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "This task owns a new controlled stream and exact delayed-commit mechanism without an upstream science dependency."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "If unavailable emit complete_blocked_transaction_fixture with gate_check_summary."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Do not write to shared live memory during fixture tests."
+      },
+      "design_deliverable": "results/experiment_6748_transactional_constraint_memory_fixture.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "CONTEXT: FR11 requires continuous self-learning."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "If unavailable emit complete_blocked_transaction_fixture with gate_check_summary."
+      },
+      "gated_on_count": 0,
+      "item_id": "exp6748-transactional-constraint-memory-fixture",
+      "manifest_deliverable": "results/experiment_6748_transactional_constraint_memory_fixture.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "operationally_preserved": false,
+      "order": 7,
+      "phase": "Phase 3",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": "require deterministic exact labels, atomic-write support, a task-owned temporary/state directory, and immutable stream seeds. If unavailable emit complete_blocked_transaction_fixture with gate_check_summary. Do not write to shared live memory during fixture tests."
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "stream_manifest",
+        "commit_receipts",
+        "read_only_violations",
+        "unsafe_admission_count",
+        "unsafe_use_count",
+        "restart_receipts",
+        "rollback_byte_identity",
+        "transaction_memory_ready",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6748-transactional-constraint-memory-fixture",
+      "track": "continuous-self-learning"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "Measure exact future utility, support, retention, cross-family transfer, token cost, rejects, and rollbacks without changing model weights."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "On failure emit complete_blocked_prospective_csl with gate_check_summary; do not substitute models, orders, or retrospective replay."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Legacy models may be CPU smoke tests only and cannot enter the prospective claim."
+      },
+      "design_deliverable": "results/experiment_6749_prospective_support_preserving_csl_ab.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Set prospective_csl_completed true only if every planned order/model/arm row exists and arm isolation, chronology, no-weight-mutation, and exact-authority checks pass."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "On failure emit complete_blocked_prospective_csl with gate_check_summary; do not substitute models, orders, or retrospective replay."
+      },
+      "gated_on_count": 1,
+      "item_id": "exp6749-prospective-support-preserving-csl-ab",
+      "manifest_deliverable": "results/experiment_6749_prospective_support_preserving_csl_ab.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "operationally_preserved": false,
+      "order": 8,
+      "phase": "Phase 3",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": [
+          {
+            "artifact_field": "transaction_memory_ready",
+            "op": "==",
+            "upstream": "exp6748-transactional-constraint-memory-fixture",
+            "value": true
+          }
+        ]
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "live_model_invoked",
+        "gpu_receipts",
+        "model_weights_mutated",
+        "rows",
+        "prequential_exact_yield_by_order",
+        "best_at_k_by_arm",
+        "effective_rewardable_support_by_arm",
+        "joint_correct_constraint_support_by_arm",
+        "retention_by_anchor",
+        "commit_reject_rollback_counts",
+        "prospective_csl_completed",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6749-prospective-support-preserving-csl-ab",
+      "track": "continuous-self-learning"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "It independently recomputes order intervals, support, retention, commit provenance, restart, poison rejection, and rollback."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "If absent emit complete_blocked_csl_audit with gate_check_summary."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "CONTEXT: Prior self-learning lifecycle audits were blocked by missing upstream evidence, and the V582 synthesis found no prospective A/B rows."
+      },
+      "design_deliverable": "results/experiment_6750_csl_durability_support_poison_audit.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Positive eligibility requires the preregistered order-level lower confidence bound above zero, no best@k or effective-support contraction beyond its bound, no anchor forgetting, no harmful cross-family transfer, zero admitted poison, and exact rollback."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "If absent emit complete_blocked_csl_audit with gate_check_summary."
+      },
+      "gated_on_count": 1,
+      "item_id": "exp6750-csl-durability-support-poison-audit",
+      "manifest_deliverable": "results/experiment_6750_csl_durability_support_poison_audit.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.5",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "operationally_preserved": false,
+      "order": 9,
+      "phase": "Phase 3",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": [
+          {
+            "artifact_field": "prospective_csl_completed",
+            "op": "==",
+            "upstream": "exp6749-prospective-support-preserving-csl-ab",
+            "value": true
+          }
+        ]
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "recomputed_prequential_delta_by_order",
+        "order_level_ci95",
+        "support_contraction_by_metric",
+        "retention_failures",
+        "future_leakage_count",
+        "admitted_poison_count",
+        "restart_boundary_pass_count",
+        "rollback_byte_identity",
+        "csl_audit_passed",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6750-csl-durability-support-poison-audit",
+      "track": "infrastructure"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "This task implements a bounded exact-enumeration reference."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "If the internal exact path is unavailable emit complete_blocked_compiler_reference with gate_check_summary."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "It does not require physical Extropic hardware or claim speed, power, or energy."
+      },
+      "design_deliverable": "results/experiment_6751_thermalizer_factor_trajectory_fidelity.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Set compiler_fidelity_completed true only when every factor, arm, depth, context, precision, and seed row exists and exact distributions normalize."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "If the internal exact path is unavailable emit complete_blocked_compiler_reference with gate_check_summary."
+      },
+      "gated_on_count": 0,
+      "item_id": "exp6751-thermalizer-factor-trajectory-fidelity",
+      "manifest_deliverable": "results/experiment_6751_thermalizer_factor_trajectory_fidelity.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "operationally_preserved": false,
+      "order": 10,
+      "phase": "Phase 4",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": "require exact enumeration for every selected state space, deterministic seeds, and a simulator path. Official Torx is optional conformance evidence, not a prerequisite. If the internal exact path is unavailable emit complete_blocked_compiler_reference with gate_check_summary."
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "hardware_used",
+        "simulator_used",
+        "compiler_provenance",
+        "rows",
+        "conditional_kl_by_factor",
+        "trajectory_tv_by_depth",
+        "normalization_error_by_row",
+        "topology_receipts",
+        "precision_receipts",
+        "compiler_fidelity_completed",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6751-thermalizer-factor-trajectory-fidelity",
+      "track": "hardware-portability"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "PRECONDITIONS: require llama.cpp CUDA offload, cached exact paths for both MODEL_SPECS, enough free VRAM for one model at a time, and a registry check confirming no new or duplicate solve is targeted."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "On failure emit complete_blocked_arc_transport with gate_check_summary; do not use CPU, remote APIs, another model, or fabricated transcripts."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Earlier selfparse evidence covers 20/20 zero-argument list_transitions calls, not a live multi-parameter call carrying code."
+      },
+      "design_deliverable": "results/experiment_6752_arc_code_carrying_tool_preflight.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Set arc_context_tool_preflight_ready true only if both models admit 32K on CUDA and complete at least one parse-to-dispatch-to-bounded-response multi-parameter call."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "On failure emit complete_blocked_arc_transport with gate_check_summary; do not use CPU, remote APIs, another model, or fabricated transcripts."
+      },
+      "gated_on_count": 0,
+      "item_id": "exp6752-arc-code-carrying-tool-preflight",
+      "manifest_deliverable": "results/experiment_6752_arc_code_carrying_tool_preflight.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.8-27B-GGUF",
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "operationally_preserved": false,
+      "order": 11,
+      "phase": "Phase 4",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": "require llama.cpp CUDA offload, cached exact paths for both MODEL_SPECS, enough free VRAM for one model at a time, and a registry check confirming no new or duplicate solve is targeted. On failure emit complete_blocked_arc_transport with gate_check_summary; do not use CPU, remote APIs, another model, or fabricated transcripts."
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "live_model_invoked",
+        "context_requested",
+        "context_observed_by_model",
+        "gpu_admission_by_model",
+        "rows",
+        "multi_parameter_parse_successes",
+        "multi_parameter_dispatch_successes",
+        "bounded_response_successes",
+        "arc_context_tool_preflight_ready",
+        "solve_claim",
+        "live_path_reached",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6752-arc-code-carrying-tool-preflight",
+      "track": "arc-agi3"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "PRECONDITIONS: require Exp6752 arc_context_tool_preflight_ready == true, CUDA offload, cached exact Qwen3.8 and Qwen3.6 paths, task-owned 32K context, the exact 20 games/seeds and within-arm noise floor from the 2026-08-01 artifact, and a registry check proving no new or duplicate solve target."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "On failure emit complete_blocked_object_table_ab with gate_check_summary; do not change games, model, context, or denominator."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Do not claim a level solve."
+      },
+      "design_deliverable": "results/experiment_6753_object_table_fetch_on_demand_ab.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Adoption requires positive token savings and change_fidelity non-inferiority within the pre-registered noise floor."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "On failure emit complete_blocked_object_table_ab with gate_check_summary; do not change games, model, context, or denominator."
+      },
+      "gated_on_count": 1,
+      "item_id": "exp6753-object-table-fetch-on-demand-ab",
+      "manifest_deliverable": "results/experiment_6753_object_table_fetch_on_demand_ab.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.8-27B-GGUF",
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "operationally_preserved": false,
+      "order": 12,
+      "phase": "Phase 4",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": [
+          {
+            "artifact_field": "arc_context_tool_preflight_ready",
+            "op": "==",
+            "upstream": "exp6752-arc-code-carrying-tool-preflight",
+            "value": true
+          }
+        ]
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "live_model_invoked",
+        "context_requested",
+        "gpu_receipts",
+        "rows",
+        "mean_prompt_token_savings",
+        "useful_fetch_rate",
+        "change_fidelity_delta",
+        "change_fidelity_ci95",
+        "transition_utility_delta",
+        "noninferiority_margin",
+        "adoption_gate_passed",
+        "object_table_ab_completed",
+        "solve_claim",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6753-object-table-fetch-on-demand-ab",
+      "track": "arc-agi3"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "EXISTING CODE TO READ FIRST: - {project_root}/CLAUDE.md and {project_root}/CODEX.md - {project_root}/research-program.md, {project_root}/_bmad/prd.md, and {project_root}/_bmad/architecture.md - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md - {project_root}/research-roadmap.yaml "
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "Preserve exact authority boundaries, model identities, hardware/simulator boundaries, ARC no-solve scope, and all gate_check_summary diagnostics."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Add focused tests for missing-branch preservation, row recomputation, verdict-class propagation, and no pooled claims."
+      },
+      "design_deliverable": "results/experiment_6754_v588_branch_disposition.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "REQUIRED ARTIFACT FIELDS: field_principles (entry for every field), inference_substrate (local row-replay and audit path), duration_s (monotonic), random_seed (audit/recompute seeds), reproducibility_checksum (manifest/source-artifact/recomputed-row hash), rows (one row per task and branch), artifac"
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "REQUIRED ARTIFACT FIELDS: field_principles (entry for every field), inference_substrate (local row-replay and audit path), duration_s (monotonic), random_seed (audit/recompute seeds), reproducibility_checksum (manifest/source-artifact/recomputed-row hash), rows (one row per task and branch), artifac"
+      },
+      "gated_on_count": 0,
+      "item_id": "exp6754-v588-branch-disposition",
+      "manifest_deliverable": "results/experiment_6754_v588_branch_disposition.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.5",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "operationally_preserved": false,
+      "order": 13,
+      "phase": "Phase 4",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": "require the active V588 manifest and design. Individual branch artifacts are optional inputs by design. Record each missing or invalid artifact as a row; never block the capstone solely because a branch is absent."
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "artifact_presence_matrix",
+        "branch_verdicts",
+        "recomputed_headlines",
+        "row_headline_mismatches",
+        "adversarial_findings",
+        "prd_gap_disposition",
+        "prior_failure_retirements",
+        "next_licensed_actions",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6754-v588-branch-disposition",
+      "track": "research-reporting"
+    },
+    {
+      "artifact_field": "hardness_stream_ready",
+      "authority": {
+        "producer_required_artifact_fields": [
+          "field_principles",
+          "inference_substrate",
+          "duration_s",
+          "random_seed",
+          "reproducibility_checksum",
+          "rows",
+          "family_counts",
+          "split_manifest",
+          "certificate_checker_receipts",
+          "relabel_pair_receipts",
+          "solver_work_metadata",
+          "hardness_stream_ready",
+          "gate_check_summary",
+          "verdict_class",
+          "honest_verdict"
+        ],
+        "type": "upstream_required_artifact_field"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "gate_check_summary records failed upstream field and observed value"
+      },
+      "checks": {
+        "consumer_prompt_contract": false,
+        "matches_design_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Exp6734 was preempted, so no all-three-model dual-encoding corpus exists."
+      },
+      "consumer_task_id": "exp6745-sota-dual-encoding-proposal-corpus",
+      "execution_consequence": {
+        "type": "consumer_dispatch_block",
+        "value": "consumer cannot run until the gate predicate passes"
+      },
+      "fallback": {
+        "type": "conductor_gate_block",
+        "value": "write blocked artifact with exact failed gate"
+      },
+      "item_id": "exp6745-sota-dual-encoding-proposal-corpus->exp6744-hardness-controlled-certificate-stream.hardness_stream_ready",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "op": "==",
+      "operationally_preserved": false,
+      "prerequisite": {
+        "artifact_field": "hardness_stream_ready",
+        "op": "==",
+        "type": "upstream_artifact_field",
+        "upstream": "exp6744-hardness-controlled-certificate-stream",
+        "value": true
+      },
+      "row_type": "gate",
+      "upstream_task_id": "exp6744-hardness-controlled-certificate-stream",
+      "value": true
+    },
+    {
+      "artifact_field": "dual_encoding_corpus_ready",
+      "authority": {
+        "producer_required_artifact_fields": [
+          "field_principles",
+          "inference_substrate",
+          "duration_s",
+          "random_seed",
+          "reproducibility_checksum",
+          "models_used",
+          "live_model_invoked",
+          "gpu_receipts",
+          "planned_row_count",
+          "rows",
+          "diagnosis_counts",
+          "encoder_agreement_matrix",
+          "exact_success_by_model",
+          "dual_encoding_corpus_ready",
+          "gate_check_summary",
+          "verdict_class",
+          "honest_verdict"
+        ],
+        "type": "upstream_required_artifact_field"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "gate_check_summary records failed upstream field and observed value"
+      },
+      "checks": {
+        "consumer_prompt_contract": false,
+        "matches_design_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Set diagnostic_energy_ready true only when all arms and audits complete; readiness does not mean positive science."
+      },
+      "consumer_task_id": "exp6746-oracle-distinct-diagnostic-energy",
+      "execution_consequence": {
+        "type": "consumer_dispatch_block",
+        "value": "consumer cannot run until the gate predicate passes"
+      },
+      "fallback": {
+        "type": "conductor_gate_block",
+        "value": "write blocked artifact with exact failed gate"
+      },
+      "item_id": "exp6746-oracle-distinct-diagnostic-energy->exp6745-sota-dual-encoding-proposal-corpus.dual_encoding_corpus_ready",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "op": "==",
+      "operationally_preserved": false,
+      "prerequisite": {
+        "artifact_field": "dual_encoding_corpus_ready",
+        "op": "==",
+        "type": "upstream_artifact_field",
+        "upstream": "exp6745-sota-dual-encoding-proposal-corpus",
+        "value": true
+      },
+      "row_type": "gate",
+      "upstream_task_id": "exp6745-sota-dual-encoding-proposal-corpus",
+      "value": true
+    },
+    {
+      "artifact_field": "heldout_reasoning_error_auroc",
+      "authority": {
+        "producer_required_artifact_fields": [
+          "field_principles",
+          "inference_substrate",
+          "duration_s",
+          "random_seed",
+          "reproducibility_checksum",
+          "verifier_is_oracle",
+          "feature_schema",
+          "oracle_feature_denylist",
+          "rows",
+          "heldout_metrics_by_family",
+          "paired_relabel_metrics",
+          "heldout_reasoning_error_auroc",
+          "oracle_leakage_detected",
+          "diagnostic_energy_ready",
+          "gate_check_summary",
+          "verdict_class",
+          "honest_verdict"
+        ],
+        "type": "upstream_required_artifact_field"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "gate_check_summary records failed upstream field and observed value"
+      },
+      "checks": {
+        "consumer_prompt_contract": false,
+        "matches_design_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "EXISTING CODE TO READ FIRST: - {project_root}/CLAUDE.md and {project_root}/CODEX.md - {project_root}/openspec/capabilities/verify-repair/spec.md - {project_root}/results/experiment_6745_sota_dual_encoding_proposal_corpus.json - {project_root}/results/experiment_6746_oracle_distinct_diagnostic_energy"
+      },
+      "consumer_task_id": "exp6747-diagnostic-energy-localized-repair-ab",
+      "execution_consequence": {
+        "type": "consumer_dispatch_block",
+        "value": "consumer cannot run until the gate predicate passes"
+      },
+      "fallback": {
+        "type": "conductor_gate_block",
+        "value": "write blocked artifact with exact failed gate"
+      },
+      "item_id": "exp6747-diagnostic-energy-localized-repair-ab->exp6746-oracle-distinct-diagnostic-energy.heldout_reasoning_error_auroc",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "op": ">=",
+      "operationally_preserved": false,
+      "prerequisite": {
+        "artifact_field": "heldout_reasoning_error_auroc",
+        "op": ">=",
+        "type": "upstream_artifact_field",
+        "upstream": "exp6746-oracle-distinct-diagnostic-energy",
+        "value": 0.65
+      },
+      "row_type": "gate",
+      "upstream_task_id": "exp6746-oracle-distinct-diagnostic-energy",
+      "value": 0.65
+    },
+    {
+      "artifact_field": "oracle_leakage_detected",
+      "authority": {
+        "producer_required_artifact_fields": [
+          "field_principles",
+          "inference_substrate",
+          "duration_s",
+          "random_seed",
+          "reproducibility_checksum",
+          "verifier_is_oracle",
+          "feature_schema",
+          "oracle_feature_denylist",
+          "rows",
+          "heldout_metrics_by_family",
+          "paired_relabel_metrics",
+          "heldout_reasoning_error_auroc",
+          "oracle_leakage_detected",
+          "diagnostic_energy_ready",
+          "gate_check_summary",
+          "verdict_class",
+          "honest_verdict"
+        ],
+        "type": "upstream_required_artifact_field"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "gate_check_summary records failed upstream field and observed value"
+      },
+      "checks": {
+        "consumer_prompt_contract": false,
+        "matches_design_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "EXISTING CODE TO READ FIRST: - {project_root}/CLAUDE.md and {project_root}/CODEX.md - {project_root}/openspec/capabilities/verify-repair/spec.md - {project_root}/results/experiment_6745_sota_dual_encoding_proposal_corpus.json - {project_root}/results/experiment_6746_oracle_distinct_diagnostic_energy"
+      },
+      "consumer_task_id": "exp6747-diagnostic-energy-localized-repair-ab",
+      "execution_consequence": {
+        "type": "consumer_dispatch_block",
+        "value": "consumer cannot run until the gate predicate passes"
+      },
+      "fallback": {
+        "type": "conductor_gate_block",
+        "value": "write blocked artifact with exact failed gate"
+      },
+      "item_id": "exp6747-diagnostic-energy-localized-repair-ab->exp6746-oracle-distinct-diagnostic-energy.oracle_leakage_detected",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "op": "==",
+      "operationally_preserved": false,
+      "prerequisite": {
+        "artifact_field": "oracle_leakage_detected",
+        "op": "==",
+        "type": "upstream_artifact_field",
+        "upstream": "exp6746-oracle-distinct-diagnostic-energy",
+        "value": false
+      },
+      "row_type": "gate",
+      "upstream_task_id": "exp6746-oracle-distinct-diagnostic-energy",
+      "value": false
+    },
+    {
+      "artifact_field": "transaction_memory_ready",
+      "authority": {
+        "producer_required_artifact_fields": [
+          "field_principles",
+          "inference_substrate",
+          "duration_s",
+          "random_seed",
+          "reproducibility_checksum",
+          "rows",
+          "stream_manifest",
+          "commit_receipts",
+          "read_only_violations",
+          "unsafe_admission_count",
+          "unsafe_use_count",
+          "restart_receipts",
+          "rollback_byte_identity",
+          "transaction_memory_ready",
+          "gate_check_summary",
+          "verdict_class",
+          "honest_verdict"
+        ],
+        "type": "upstream_required_artifact_field"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "gate_check_summary records failed upstream field and observed value"
+      },
+      "checks": {
+        "consumer_prompt_contract": false,
+        "matches_design_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Legacy models may be CPU smoke tests only and cannot enter the prospective claim."
+      },
+      "consumer_task_id": "exp6749-prospective-support-preserving-csl-ab",
+      "execution_consequence": {
+        "type": "consumer_dispatch_block",
+        "value": "consumer cannot run until the gate predicate passes"
+      },
+      "fallback": {
+        "type": "conductor_gate_block",
+        "value": "write blocked artifact with exact failed gate"
+      },
+      "item_id": "exp6749-prospective-support-preserving-csl-ab->exp6748-transactional-constraint-memory-fixture.transaction_memory_ready",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "op": "==",
+      "operationally_preserved": false,
+      "prerequisite": {
+        "artifact_field": "transaction_memory_ready",
+        "op": "==",
+        "type": "upstream_artifact_field",
+        "upstream": "exp6748-transactional-constraint-memory-fixture",
+        "value": true
+      },
+      "row_type": "gate",
+      "upstream_task_id": "exp6748-transactional-constraint-memory-fixture",
+      "value": true
+    },
+    {
+      "artifact_field": "prospective_csl_completed",
+      "authority": {
+        "producer_required_artifact_fields": [
+          "field_principles",
+          "inference_substrate",
+          "duration_s",
+          "random_seed",
+          "reproducibility_checksum",
+          "models_used",
+          "live_model_invoked",
+          "gpu_receipts",
+          "model_weights_mutated",
+          "rows",
+          "prequential_exact_yield_by_order",
+          "best_at_k_by_arm",
+          "effective_rewardable_support_by_arm",
+          "joint_correct_constraint_support_by_arm",
+          "retention_by_anchor",
+          "commit_reject_rollback_counts",
+          "prospective_csl_completed",
+          "gate_check_summary",
+          "verdict_class",
+          "honest_verdict"
+        ],
+        "type": "upstream_required_artifact_field"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "gate_check_summary records failed upstream field and observed value"
+      },
+      "checks": {
+        "consumer_prompt_contract": false,
+        "matches_design_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "CONTEXT: Prior self-learning lifecycle audits were blocked by missing upstream evidence, and the V582 synthesis found no prospective A/B rows."
+      },
+      "consumer_task_id": "exp6750-csl-durability-support-poison-audit",
+      "execution_consequence": {
+        "type": "consumer_dispatch_block",
+        "value": "consumer cannot run until the gate predicate passes"
+      },
+      "fallback": {
+        "type": "conductor_gate_block",
+        "value": "write blocked artifact with exact failed gate"
+      },
+      "item_id": "exp6750-csl-durability-support-poison-audit->exp6749-prospective-support-preserving-csl-ab.prospective_csl_completed",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.5",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "op": "==",
+      "operationally_preserved": false,
+      "prerequisite": {
+        "artifact_field": "prospective_csl_completed",
+        "op": "==",
+        "type": "upstream_artifact_field",
+        "upstream": "exp6749-prospective-support-preserving-csl-ab",
+        "value": true
+      },
+      "row_type": "gate",
+      "upstream_task_id": "exp6749-prospective-support-preserving-csl-ab",
+      "value": true
+    },
+    {
+      "artifact_field": "arc_context_tool_preflight_ready",
+      "authority": {
+        "producer_required_artifact_fields": [
+          "field_principles",
+          "inference_substrate",
+          "duration_s",
+          "random_seed",
+          "reproducibility_checksum",
+          "models_used",
+          "live_model_invoked",
+          "context_requested",
+          "context_observed_by_model",
+          "gpu_admission_by_model",
+          "rows",
+          "multi_parameter_parse_successes",
+          "multi_parameter_dispatch_successes",
+          "bounded_response_successes",
+          "arc_context_tool_preflight_ready",
+          "solve_claim",
+          "live_path_reached",
+          "gate_check_summary",
+          "verdict_class",
+          "honest_verdict"
+        ],
+        "type": "upstream_required_artifact_field"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "gate_check_summary records failed upstream field and observed value"
+      },
+      "checks": {
+        "consumer_prompt_contract": false,
+        "matches_design_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Do not claim a level solve."
+      },
+      "consumer_task_id": "exp6753-object-table-fetch-on-demand-ab",
+      "execution_consequence": {
+        "type": "consumer_dispatch_block",
+        "value": "consumer cannot run until the gate predicate passes"
+      },
+      "fallback": {
+        "type": "conductor_gate_block",
+        "value": "write blocked artifact with exact failed gate"
+      },
+      "item_id": "exp6753-object-table-fetch-on-demand-ab->exp6752-arc-code-carrying-tool-preflight.arc_context_tool_preflight_ready",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.8-27B-GGUF",
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "op": "==",
+      "operationally_preserved": false,
+      "prerequisite": {
+        "artifact_field": "arc_context_tool_preflight_ready",
+        "op": "==",
+        "type": "upstream_artifact_field",
+        "upstream": "exp6752-arc-code-carrying-tool-preflight",
+        "value": true
+      },
+      "row_type": "gate",
+      "upstream_task_id": "exp6752-arc-code-carrying-tool-preflight",
+      "value": true
+    }
+  ],
+  "duration_s": 3.0099181458353996e-07,
+  "field_principles": {
+    "binding_contract_rows": "Carries the typed binding tuple for every task and gate.",
+    "duration_s": "Records monotonic wall time so a zero-duration artifact is visible.",
+    "field_principles": "Explains why every required field exists, including this field.",
+    "gate_check_summary": "Names failed checks and observed values for blocked outcomes.",
+    "handoff_contract_preserved": "States whether all hard handoff checks passed.",
+    "honest_verdict": "Gives a terminal-prefixed human-readable outcome.",
+    "inference_substrate": "Declares that this is a static audit and not a model run.",
+    "random_seed": "Keeps reproducibility explicit even though this audit uses no sampling.",
+    "reproducibility_checksum": "Binds input hashes and derived rows with canonical JSON.",
+    "rows": "Provides one auditable row for every task and every gate.",
+    "science_branches_independent_of_handoff_audit": "Shows the audit is not a science gate.",
+    "source_cutoff": "Freezes the dated planning window used by the V588 source refresh.",
+    "task_count": "Records the observed active task count before reductions.",
+    "verdict_class": "Uses the closed outcome vocabulary required by the prompt."
+  },
+  "gate_check_summary": [
+    {
+      "check": "prompt.project_root_literal",
+      "expected_value": "/home/ianblenke/github.com/ianblenke/carnot",
+      "observed_value": "{project_root}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6742-v588-handoff-contract-audit"
+    },
+    {
+      "check": "prompt.planning_date_literal",
+      "expected_value": "20260829",
+      "observed_value": "{date}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6742-v588-handoff-contract-audit"
+    },
+    {
+      "check": "task.prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "task_binding_contract_mismatch",
+      "unit": "exp6742-v588-handoff-contract-audit"
+    },
+    {
+      "check": "prompt.project_root_literal",
+      "expected_value": "/home/ianblenke/github.com/ianblenke/carnot",
+      "observed_value": "{project_root}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6743-task-owned-phase-accelerator-canary"
+    },
+    {
+      "check": "prompt.planning_date_literal",
+      "expected_value": "20260829",
+      "observed_value": "{date}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6743-task-owned-phase-accelerator-canary"
+    },
+    {
+      "check": "task.prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "task_binding_contract_mismatch",
+      "unit": "exp6743-task-owned-phase-accelerator-canary"
+    },
+    {
+      "check": "prompt.project_root_literal",
+      "expected_value": "/home/ianblenke/github.com/ianblenke/carnot",
+      "observed_value": "{project_root}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6744-hardness-controlled-certificate-stream"
+    },
+    {
+      "check": "prompt.planning_date_literal",
+      "expected_value": "20260829",
+      "observed_value": "{date}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6744-hardness-controlled-certificate-stream"
+    },
+    {
+      "check": "task.prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "task_binding_contract_mismatch",
+      "unit": "exp6744-hardness-controlled-certificate-stream"
+    },
+    {
+      "check": "prompt.project_root_literal",
+      "expected_value": "/home/ianblenke/github.com/ianblenke/carnot",
+      "observed_value": "{project_root}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6745-sota-dual-encoding-proposal-corpus"
+    },
+    {
+      "check": "prompt.planning_date_literal",
+      "expected_value": "20260829",
+      "observed_value": "{date}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6745-sota-dual-encoding-proposal-corpus"
+    },
+    {
+      "check": "task.prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "task_binding_contract_mismatch",
+      "unit": "exp6745-sota-dual-encoding-proposal-corpus"
+    },
+    {
+      "check": "prompt.project_root_literal",
+      "expected_value": "/home/ianblenke/github.com/ianblenke/carnot",
+      "observed_value": "{project_root}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6746-oracle-distinct-diagnostic-energy"
+    },
+    {
+      "check": "prompt.planning_date_literal",
+      "expected_value": "20260829",
+      "observed_value": "{date}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6746-oracle-distinct-diagnostic-energy"
+    },
+    {
+      "check": "task.prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "task_binding_contract_mismatch",
+      "unit": "exp6746-oracle-distinct-diagnostic-energy"
+    },
+    {
+      "check": "prompt.project_root_literal",
+      "expected_value": "/home/ianblenke/github.com/ianblenke/carnot",
+      "observed_value": "{project_root}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6747-diagnostic-energy-localized-repair-ab"
+    },
+    {
+      "check": "prompt.planning_date_literal",
+      "expected_value": "20260829",
+      "observed_value": "{date}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6747-diagnostic-energy-localized-repair-ab"
+    },
+    {
+      "check": "task.prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "task_binding_contract_mismatch",
+      "unit": "exp6747-diagnostic-energy-localized-repair-ab"
+    },
+    {
+      "check": "prompt.project_root_literal",
+      "expected_value": "/home/ianblenke/github.com/ianblenke/carnot",
+      "observed_value": "{project_root}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6748-transactional-constraint-memory-fixture"
+    },
+    {
+      "check": "prompt.planning_date_literal",
+      "expected_value": "20260829",
+      "observed_value": "{date}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6748-transactional-constraint-memory-fixture"
+    },
+    {
+      "check": "task.prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "task_binding_contract_mismatch",
+      "unit": "exp6748-transactional-constraint-memory-fixture"
+    },
+    {
+      "check": "prompt.project_root_literal",
+      "expected_value": "/home/ianblenke/github.com/ianblenke/carnot",
+      "observed_value": "{project_root}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6749-prospective-support-preserving-csl-ab"
+    },
+    {
+      "check": "prompt.planning_date_literal",
+      "expected_value": "20260829",
+      "observed_value": "{date}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6749-prospective-support-preserving-csl-ab"
+    },
+    {
+      "check": "task.prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "task_binding_contract_mismatch",
+      "unit": "exp6749-prospective-support-preserving-csl-ab"
+    },
+    {
+      "check": "prompt.project_root_literal",
+      "expected_value": "/home/ianblenke/github.com/ianblenke/carnot",
+      "observed_value": "{project_root}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6750-csl-durability-support-poison-audit"
+    },
+    {
+      "check": "prompt.planning_date_literal",
+      "expected_value": "20260829",
+      "observed_value": "{date}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6750-csl-durability-support-poison-audit"
+    },
+    {
+      "check": "task.prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "task_binding_contract_mismatch",
+      "unit": "exp6750-csl-durability-support-poison-audit"
+    },
+    {
+      "check": "prompt.project_root_literal",
+      "expected_value": "/home/ianblenke/github.com/ianblenke/carnot",
+      "observed_value": "{project_root}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6751-thermalizer-factor-trajectory-fidelity"
+    },
+    {
+      "check": "prompt.planning_date_literal",
+      "expected_value": "20260829",
+      "observed_value": "{date}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6751-thermalizer-factor-trajectory-fidelity"
+    },
+    {
+      "check": "task.prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "task_binding_contract_mismatch",
+      "unit": "exp6751-thermalizer-factor-trajectory-fidelity"
+    },
+    {
+      "check": "prompt.project_root_literal",
+      "expected_value": "/home/ianblenke/github.com/ianblenke/carnot",
+      "observed_value": "{project_root}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6752-arc-code-carrying-tool-preflight"
+    },
+    {
+      "check": "prompt.planning_date_literal",
+      "expected_value": "20260829",
+      "observed_value": "{date}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6752-arc-code-carrying-tool-preflight"
+    },
+    {
+      "check": "task.prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "task_binding_contract_mismatch",
+      "unit": "exp6752-arc-code-carrying-tool-preflight"
+    },
+    {
+      "check": "prompt.project_root_literal",
+      "expected_value": "/home/ianblenke/github.com/ianblenke/carnot",
+      "observed_value": "{project_root}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6753-object-table-fetch-on-demand-ab"
+    },
+    {
+      "check": "prompt.planning_date_literal",
+      "expected_value": "20260829",
+      "observed_value": "{date}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6753-object-table-fetch-on-demand-ab"
+    },
+    {
+      "check": "task.prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "task_binding_contract_mismatch",
+      "unit": "exp6753-object-table-fetch-on-demand-ab"
+    },
+    {
+      "check": "prompt.project_root_literal",
+      "expected_value": "/home/ianblenke/github.com/ianblenke/carnot",
+      "observed_value": "{project_root}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6754-v588-branch-disposition"
+    },
+    {
+      "check": "prompt.planning_date_literal",
+      "expected_value": "20260829",
+      "observed_value": "{date}",
+      "passed": false,
+      "reason": "prompt_contract_mismatch",
+      "unit": "exp6754-v588-branch-disposition"
+    },
+    {
+      "check": "task.prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "task_binding_contract_mismatch",
+      "unit": "exp6754-v588-branch-disposition"
+    },
+    {
+      "check": "gate.consumer_prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "gate_binding_contract_mismatch",
+      "unit": "exp6745-sota-dual-encoding-proposal-corpus->exp6744-hardness-controlled-certificate-stream"
+    },
+    {
+      "check": "gate.consumer_prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "gate_binding_contract_mismatch",
+      "unit": "exp6746-oracle-distinct-diagnostic-energy->exp6745-sota-dual-encoding-proposal-corpus"
+    },
+    {
+      "check": "gate.consumer_prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "gate_binding_contract_mismatch",
+      "unit": "exp6747-diagnostic-energy-localized-repair-ab->exp6746-oracle-distinct-diagnostic-energy"
+    },
+    {
+      "check": "gate.consumer_prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "gate_binding_contract_mismatch",
+      "unit": "exp6747-diagnostic-energy-localized-repair-ab->exp6746-oracle-distinct-diagnostic-energy"
+    },
+    {
+      "check": "gate.consumer_prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "gate_binding_contract_mismatch",
+      "unit": "exp6749-prospective-support-preserving-csl-ab->exp6748-transactional-constraint-memory-fixture"
+    },
+    {
+      "check": "gate.consumer_prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "gate_binding_contract_mismatch",
+      "unit": "exp6750-csl-durability-support-poison-audit->exp6749-prospective-support-preserving-csl-ab"
+    },
+    {
+      "check": "gate.consumer_prompt_contract",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "reason": "gate_binding_contract_mismatch",
+      "unit": "exp6753-object-table-fetch-on-demand-ab->exp6752-arc-code-carrying-tool-preflight"
+    },
+    {
+      "check": "validator.prompt_contract",
+      "expected_value": true,
+      "observed_value": 26,
+      "passed": false,
+      "reason": "focused_validator_failed",
+      "unit": "internal prompt section and literal check"
+    }
+  ],
+  "handoff_contract_preserved": false,
+  "honest_verdict": "complete_blocked_handoff_contract: one or more V588 handoff checks failed.",
+  "inference_substrate": "activated_manifest_binding_contract_static_audit_no_llm",
+  "input_receipts": [
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:65500152ee08f50a9e9a3cb8151ed06ab75378cdd9e2744387864ea5cbd3e73d"
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:56df09bf17ee46527e2b30a9efa34106ffaf4884b7617e3c388217bd8e4c2d5c"
+    },
+    {
+      "exists": true,
+      "path": "research-references.md",
+      "sha256": "sha256:394c477ca4ace2badd5c0aeea0896e1e7e3393fc382d78ab4627b0242871a65b"
+    },
+    {
+      "exists": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+    },
+    {
+      "exists": true,
+      "path": "scripts/roadmap_schema.py",
+      "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7"
+    },
+    {
+      "exists": true,
+      "path": "scripts/audit_roadmap_gates.py",
+      "sha256": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9"
+    },
+    {
+      "exists": true,
+      "path": "scripts/exclusion_manifest_lint.py",
+      "sha256": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042"
+    },
+    {
+      "exists": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:5545e75a16610dbc9ee281f2233e93b5bb0e8747d156ec5bc1e4fc4e22660457"
+    },
+    {
+      "exists": true,
+      "path": "openspec/capabilities/research-harnesses/spec.md",
+      "sha256": "sha256:bfd3f18ba92c738ec6dd8a1a1142183893c5a8fa55ab6872368b2ac5bd52a64f"
+    }
+  ],
+  "model_policy_rows": [
+    {
+      "agent_type": "codex",
+      "checks": {
+        "agent_type_codex": true,
+        "formulaic_codex_model_allowed": true,
+        "mandated_local_gguf": true,
+        "model_specs_declared": true
+      },
+      "mandated_models_present": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "model": "gpt-5.6-sol",
+      "models_declared": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "passed": true,
+      "task_id": "exp6743-task-owned-phase-accelerator-canary"
+    },
+    {
+      "agent_type": "codex",
+      "checks": {
+        "agent_type_codex": true,
+        "formulaic_codex_model_allowed": true,
+        "mandated_local_gguf": true,
+        "model_specs_declared": true
+      },
+      "mandated_models_present": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "model": "gpt-5.6-sol",
+      "models_declared": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "passed": true,
+      "task_id": "exp6745-sota-dual-encoding-proposal-corpus"
+    },
+    {
+      "agent_type": "codex",
+      "checks": {
+        "agent_type_codex": true,
+        "formulaic_codex_model_allowed": true,
+        "mandated_local_gguf": true,
+        "model_specs_declared": true
+      },
+      "mandated_models_present": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "model": "gpt-5.6-sol",
+      "models_declared": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "passed": true,
+      "task_id": "exp6747-diagnostic-energy-localized-repair-ab"
+    },
+    {
+      "agent_type": "codex",
+      "checks": {
+        "agent_type_codex": true,
+        "formulaic_codex_model_allowed": true,
+        "mandated_local_gguf": true,
+        "model_specs_declared": true
+      },
+      "mandated_models_present": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "model": "gpt-5.6-sol",
+      "models_declared": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "passed": true,
+      "task_id": "exp6749-prospective-support-preserving-csl-ab"
+    },
+    {
+      "agent_type": "codex",
+      "checks": {
+        "agent_type_codex": true,
+        "formulaic_codex_model_allowed": true,
+        "mandated_local_gguf": true,
+        "model_specs_declared": true
+      },
+      "mandated_models_present": [
+        "unsloth/Qwen3.8-27B-GGUF",
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "model": "gpt-5.6-sol",
+      "models_declared": [
+        "unsloth/Qwen3.8-27B-GGUF",
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "passed": true,
+      "task_id": "exp6752-arc-code-carrying-tool-preflight"
+    },
+    {
+      "agent_type": "codex",
+      "checks": {
+        "agent_type_codex": true,
+        "formulaic_codex_model_allowed": true,
+        "mandated_local_gguf": true,
+        "model_specs_declared": true
+      },
+      "mandated_models_present": [
+        "unsloth/Qwen3.8-27B-GGUF",
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "model": "gpt-5.6-sol",
+      "models_declared": [
+        "unsloth/Qwen3.8-27B-GGUF",
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "passed": true,
+      "task_id": "exp6753-object-table-fetch-on-demand-ab"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "required_handoff_input",
+      "sha256": "sha256:65500152ee08f50a9e9a3cb8151ed06ab75378cdd9e2744387864ea5cbd3e73d",
+      "unit": "research-roadmap.yaml"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "required_handoff_input",
+      "sha256": "sha256:56df09bf17ee46527e2b30a9efa34106ffaf4884b7617e3c388217bd8e4c2d5c",
+      "unit": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "required_handoff_input",
+      "sha256": "sha256:394c477ca4ace2badd5c0aeea0896e1e7e3393fc382d78ab4627b0242871a65b",
+      "unit": "research-references.md"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "required_handoff_input",
+      "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+      "unit": "scripts/roadmap_schema.py"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "required_handoff_input",
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+      "unit": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "precondition.yaml_parse",
+      "expected_value": "parseable YAML mapping",
+      "observed_value": "dict",
+      "passed": true,
+      "reason": "parsed",
+      "unit": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+    },
+    {
+      "check": "precondition.roadmap_schema_parse",
+      "expected_value": "Roadmap validates active manifest",
+      "observed_value": true,
+      "passed": true,
+      "reason": "schema_valid",
+      "unit": "scripts/roadmap_schema.py"
+    },
+    {
+      "check": "precondition.design_parse",
+      "expected_value": "parseable V588 design",
+      "observed_value": true,
+      "passed": true,
+      "reason": "design_parsed",
+      "unit": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "check": "precondition.source_refresh",
+      "expected_value": "V588 Planner Refresh - 2026-08-29",
+      "observed_value": true,
+      "passed": true,
+      "reason": "source_refresh_found",
+      "unit": "research-references.md"
+    },
+    {
+      "check": "precondition.exclusion_manifest_parse",
+      "expected_value": "parseable YAML mapping",
+      "observed_value": "dict",
+      "passed": true,
+      "reason": "parsed",
+      "unit": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "precondition.no_next_roadmap_fallback",
+      "expected_value": "not consulted",
+      "observed_value": "not consulted",
+      "passed": true,
+      "reason": "active_manifest_only",
+      "unit": "research-roadmap-next.yaml"
+    }
+  ],
+  "prior_failure_rows": [
+    {
+      "addressed_by": "V588 is statically complete before handoff, audits only the activated manifest, preserves binding state as typed rows, and is removed from every science gate.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6729-v587-activation-evidence-contract",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6742-v588-handoff-contract-audit",
+      "verdict": "blocked_v587_activation_contract: one or more source, manifest, gate, prior, or model checks failed."
+    },
+    {
+      "addressed_by": "The canary removes the retired scheduler dependency, owns sequential leases and teardown, and emits first-token plus monotonic phase evidence instead of a gate-only admission artifact.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6634-mandated-model-admission",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6743-task-owned-phase-accelerator-canary",
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "addressed_by": "The stream is now an independent root with task-owned exact generators and checkers; it no longer depends on a global activation artifact.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6733-hardness-controlled-certificate-stream",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6744-hardness-controlled-certificate-stream",
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "addressed_by": "The corpus consumes a completed task-owned exact stream, uses proof-carrying rows rather than the retired planning chain, and defines readiness by attributable completion rather than accuracy.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6718-sota-planning-proposal-bank",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6745-sota-dual-encoding-proposal-corpus",
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "addressed_by": "The new task has a present dual-encoding corpus, family-disjoint rows, and an explicit pre-oracle feature denylist instead of reading a missing proposal artifact.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6735-oracle-distinct-diagnostic-energy",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6746-oracle-distinct-diagnostic-energy",
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "addressed_by": "The new corpus supplies at least 24 frozen exact-invalid parseable units, and localization is gated on a fresh held-family leak-free diagnostic signal rather than the old two-row headroom count.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6651-failure-localized-suffix-regeneration",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6747-diagnostic-energy-localized-repair-ab",
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "addressed_by": "The fixture owns a fresh exact chronological stream and delayed-commit ABI, removes the failed exact-slot dependency, and tests read-only episodes plus atomic restart and inverse-patch rollback directly.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp5913-transactional-constraint-memory-fixture",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6748-transactional-constraint-memory-fixture",
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "addressed_by": "The upstream transactional fixture is present and independently runnable, and the comparison uses controlled prospective orders with support and transfer metrics instead of the missing online-energy fixture.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6696-prequential-online-energy-ab",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6749-prospective-support-preserving-csl-ab",
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "addressed_by": "The audit now has an exact completion gate, all six prospective order rows, immutable snapshots, and commit receipts; it remains cold and refuses to repair missing evidence.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6444-csl-lifecycle-recomputation-audit",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6750-csl-durability-support-poison-audit",
+      "verdict": "complete_blocked: V554 CSL lifecycle recomputation audit blocked by missing or failed upstream evidence"
+    },
+    {
+      "addressed_by": "The new scope owns an exact-enumeration typed compiler and measures factor-to-trajectory error across three fitting methods; official Torx is an optional versioned sidecar rather than the failed readiness gate.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6684-torx-typed-factor-parity",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6751-thermalizer-factor-trajectory-fidelity",
+      "verdict": "blocked_parity_check_failed: installed Torx CPU parity did not pass every row"
+    },
+    {
+      "addressed_by": "The preflight is now an independent root, owns CARNOT_ARC_INDUCE_N_CTX=32768 inside each subprocess, and no longer depends on the failed V587 activation artifact.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6730-arc-context-tool-preflight",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6752-arc-code-carrying-tool-preflight",
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "addressed_by": "The upstream preflight now proves task-owned 32K CUDA context and production multi-parameter find_objects transport before the paired science run.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6716-object-table-fetch-on-demand-ab",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6753-object-table-fetch-on-demand-ab",
+      "verdict": "blocked_context_window: CARNOT_ARC_INDUCE_N_CTX is unset; the paired A/B did not start"
+    },
+    {
+      "addressed_by": "V588 supplies fresh independent branch roots, exact row contracts, task-owned activity receipts, and an ungated synthesis that preserves rather than inherits V582 missing evidence.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6687-v582-branch-synthesis",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6754-v588-branch-disposition",
+      "verdict": "complete_null: V582 has a null execution-integrity receipt, blocked output, CSL, and stochastic branches, and a partial adverse ARC branch; there is no pooled success claim"
+    }
+  ],
+  "random_seed": 6742,
+  "reproducibility_checksum": "sha256:e257a7fa7e42d989026e9dd260ad47e985ead1c7e12360dcae0ce91c97a41def",
+  "rows": [
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "Verify that binding conditions, exact authority, fallbacks, gate fields, prior-failure mechanics, model roles, deliverables, and claim boundaries survived the handoff."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "If not, write the artifact atomically with complete_blocked_handoff_input, include the failed check and observed value in gate_check_summary, and stop."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "This audit does not gate any science branch."
+      },
+      "design_deliverable": "results/experiment_6742_v588_handoff_contract_audit.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "This audit does not gate any science branch."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "If not, write the artifact atomically with complete_blocked_handoff_input, include the failed check and observed value in gate_check_summary, and stop."
+      },
+      "gated_on_count": 0,
+      "item_id": "exp6742-v588-handoff-contract-audit",
+      "manifest_deliverable": "results/experiment_6742_v588_handoff_contract_audit.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.5",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "operationally_preserved": false,
+      "order": 1,
+      "phase": "Phase 1",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": "require the active roadmap, design, source refresh, schema, and exclusion manifest to exist and parse. If not, write the artifact atomically with complete_blocked_handoff_input, include the failed check and observed value in gate_check_summary, and stop. Do not fall back to an absent next-roadmap file."
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "source_cutoff",
+        "rows",
+        "binding_contract_rows",
+        "task_count",
+        "handoff_contract_preserved",
+        "science_branches_independent_of_handoff_audit",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6742-v588-handoff-contract-audit",
+      "track": "infrastructure"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "EXISTING CODE TO READ FIRST: - {project_root}/CLAUDE.md and {project_root}/CODEX.md - {project_root}/scripts/experiment_template.py and its cached_sota_pair() pattern - {project_root}/python/carnot/inference/sota_models.py - {project_root}/python/carnot/pipeline/gpu_monitor.py - {project_root}/pytho"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "On failure write complete_blocked_accelerator_canary with gate_check_summary; do not use CPU or remote inference as headline evidence."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "CONTEXT: The V587 retrospective found five 0.0-minute entries, including compute-bearing classifications, with no task-owned evidence showing whether a model loaded, decoded, or used an accelerator."
+      },
+      "design_deliverable": "results/experiment_6743_task_owned_phase_accelerator_canary.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Set accelerator_receipt_ready only when every model reaches first token on CUDA and teardown leaves no owned process."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "On failure write complete_blocked_accelerator_canary with gate_check_summary; do not use CPU or remote inference as headline evidence."
+      },
+      "gated_on_count": 0,
+      "item_id": "exp6743-task-owned-phase-accelerator-canary",
+      "manifest_deliverable": "results/experiment_6743_task_owned_phase_accelerator_canary.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "operationally_preserved": false,
+      "order": 2,
+      "phase": "Phase 1",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": "require llama.cpp CUDA offload, exact cached paths for all MODEL_SPECS, and enough free VRAM for one model at a time. On failure write complete_blocked_accelerator_canary with gate_check_summary; do not use CPU or remote inference as headline evidence."
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "live_model_invoked",
+        "rows",
+        "task_phase_rows",
+        "phase_clock_monotonic",
+        "gpu_receipts",
+        "accelerator_receipt_ready",
+        "claim_boundary",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6743-task-owned-phase-accelerator-canary",
+      "track": "infrastructure"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "V588 makes the exact stream an independent science root."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "If unavailable, emit complete_blocked_exact_checker with gate_check_summary."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Solver-Hard Is Not Model-Hard (arXiv 2607.17047) shows that solver conflicts and density do not measure model difficulty, and proof-preserving relabeling can expose surface sensitivity."
+      },
+      "design_deliverable": "results/experiment_6744_hardness_controlled_certificate_stream.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Set hardness_stream_ready true only when all 72 rows, certificates, relabel pairs, and split-leak checks pass."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "If unavailable, emit complete_blocked_exact_checker with gate_check_summary."
+      },
+      "gated_on_count": 0,
+      "item_id": "exp6744-hardness-controlled-certificate-stream",
+      "manifest_deliverable": "results/experiment_6744_hardness_controlled_certificate_stream.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "operationally_preserved": false,
+      "order": 3,
+      "phase": "Phase 1",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": "require two independent exact checking paths or one solver plus a separate certificate checker, deterministic seeds, and a writable task result path. If unavailable, emit complete_blocked_exact_checker with gate_check_summary."
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "family_counts",
+        "split_manifest",
+        "certificate_checker_receipts",
+        "relabel_pair_receipts",
+        "solver_work_metadata",
+        "hardness_stream_ready",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6744-hardness-controlled-certificate-stream",
+      "track": "verifiable-reasoning"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "CONTEXT: The existing direct certificate corpus has only 8/48 exact successes."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "On failure, emit complete_blocked_proposal_corpus with gate_check_summary; do not substitute remote or small models."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Exp6734 was preempted, so no all-three-model dual-encoding corpus exists."
+      },
+      "design_deliverable": "results/experiment_6745_sota_dual_encoding_proposal_corpus.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Set dual_encoding_corpus_ready true only when every planned model-instance row exists, attribution and budgets are present, and both encoders/checker paths were attempted where applicable."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "On failure, emit complete_blocked_proposal_corpus with gate_check_summary; do not substitute remote or small models."
+      },
+      "gated_on_count": 1,
+      "item_id": "exp6745-sota-dual-encoding-proposal-corpus",
+      "manifest_deliverable": "results/experiment_6745_sota_dual_encoding_proposal_corpus.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "operationally_preserved": false,
+      "order": 4,
+      "phase": "Phase 2",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": [
+          {
+            "artifact_field": "hardness_stream_ready",
+            "op": "==",
+            "upstream": "exp6744-hardness-controlled-certificate-stream",
+            "value": true
+          }
+        ]
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "live_model_invoked",
+        "gpu_receipts",
+        "planned_row_count",
+        "rows",
+        "diagnosis_counts",
+        "encoder_agreement_matrix",
+        "exact_success_by_model",
+        "dual_encoding_corpus_ready",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6745-sota-dual-encoding-proposal-corpus",
+      "track": "verifiable-reasoning"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "V588 now has a frozen exact corpus with two independent symbolic views and closed failure diagnoses."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "If not, emit complete_blocked_diagnostic_energy with gate_check_summary."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Set diagnostic_energy_ready true only when all arms and audits complete; readiness does not mean positive science."
+      },
+      "design_deliverable": "results/experiment_6746_oracle_distinct_diagnostic_energy.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Any leak disqualifies positive credit."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "If not, emit complete_blocked_diagnostic_energy with gate_check_summary."
+      },
+      "gated_on_count": 1,
+      "item_id": "exp6746-oracle-distinct-diagnostic-energy",
+      "manifest_deliverable": "results/experiment_6746_oracle_distinct_diagnostic_energy.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "operationally_preserved": false,
+      "order": 5,
+      "phase": "Phase 2",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": [
+          {
+            "artifact_field": "dual_encoding_corpus_ready",
+            "op": "==",
+            "upstream": "exp6745-sota-dual-encoding-proposal-corpus",
+            "value": true
+          }
+        ]
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "verifier_is_oracle",
+        "feature_schema",
+        "oracle_feature_denylist",
+        "rows",
+        "heldout_metrics_by_family",
+        "paired_relabel_metrics",
+        "heldout_reasoning_error_auroc",
+        "oracle_leakage_detected",
+        "diagnostic_energy_ready",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6746-oracle-distinct-diagnostic-energy",
+      "track": "energy-verification"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "V588 changes the substrate: the all-three-model corpus keeps every exact-invalid parseable proposal, and Exp6746 must first show held-family diagnostic signal without leakage."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "On failure emit complete_blocked_repair_headroom with gate_check_summary; do not lower the denominator."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "EXISTING CODE TO READ FIRST: - {project_root}/CLAUDE.md and {project_root}/CODEX.md - {project_root}/openspec/capabilities/verify-repair/spec.md - {project_root}/results/experiment_6745_sota_dual_encoding_proposal_corpus.json - {project_root}/results/experiment_6746_oracle_distinct_diagnostic_energy"
+      },
+      "design_deliverable": "results/experiment_6747_diagnostic_energy_localized_repair_ab.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Positive requires localized-minus-full exact-success lower bound above zero and no higher harmful-flip rate."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "On failure emit complete_blocked_repair_headroom with gate_check_summary; do not lower the denominator."
+      },
+      "gated_on_count": 2,
+      "item_id": "exp6747-diagnostic-energy-localized-repair-ab",
+      "manifest_deliverable": "results/experiment_6747_diagnostic_energy_localized_repair_ab.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "operationally_preserved": false,
+      "order": 6,
+      "phase": "Phase 2",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": [
+          {
+            "artifact_field": "heldout_reasoning_error_auroc",
+            "op": ">=",
+            "upstream": "exp6746-oracle-distinct-diagnostic-energy",
+            "value": 0.65
+          },
+          {
+            "artifact_field": "oracle_leakage_detected",
+            "op": "==",
+            "upstream": "exp6746-oracle-distinct-diagnostic-energy",
+            "value": false
+          }
+        ]
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "live_model_invoked",
+        "gpu_receipts",
+        "verifier_is_oracle",
+        "rows",
+        "paired_exact_success_delta",
+        "paired_delta_ci95",
+        "harmful_flip_rate_by_arm",
+        "repair_ab_completed",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6747-diagnostic-energy-localized-repair-ab",
+      "track": "verify-repair"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "This task owns a new controlled stream and exact delayed-commit mechanism without an upstream science dependency."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "If unavailable emit complete_blocked_transaction_fixture with gate_check_summary."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Do not write to shared live memory during fixture tests."
+      },
+      "design_deliverable": "results/experiment_6748_transactional_constraint_memory_fixture.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "CONTEXT: FR11 requires continuous self-learning."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "If unavailable emit complete_blocked_transaction_fixture with gate_check_summary."
+      },
+      "gated_on_count": 0,
+      "item_id": "exp6748-transactional-constraint-memory-fixture",
+      "manifest_deliverable": "results/experiment_6748_transactional_constraint_memory_fixture.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "operationally_preserved": false,
+      "order": 7,
+      "phase": "Phase 3",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": "require deterministic exact labels, atomic-write support, a task-owned temporary/state directory, and immutable stream seeds. If unavailable emit complete_blocked_transaction_fixture with gate_check_summary. Do not write to shared live memory during fixture tests."
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "stream_manifest",
+        "commit_receipts",
+        "read_only_violations",
+        "unsafe_admission_count",
+        "unsafe_use_count",
+        "restart_receipts",
+        "rollback_byte_identity",
+        "transaction_memory_ready",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6748-transactional-constraint-memory-fixture",
+      "track": "continuous-self-learning"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "Measure exact future utility, support, retention, cross-family transfer, token cost, rejects, and rollbacks without changing model weights."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "On failure emit complete_blocked_prospective_csl with gate_check_summary; do not substitute models, orders, or retrospective replay."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Legacy models may be CPU smoke tests only and cannot enter the prospective claim."
+      },
+      "design_deliverable": "results/experiment_6749_prospective_support_preserving_csl_ab.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Set prospective_csl_completed true only if every planned order/model/arm row exists and arm isolation, chronology, no-weight-mutation, and exact-authority checks pass."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "On failure emit complete_blocked_prospective_csl with gate_check_summary; do not substitute models, orders, or retrospective replay."
+      },
+      "gated_on_count": 1,
+      "item_id": "exp6749-prospective-support-preserving-csl-ab",
+      "manifest_deliverable": "results/experiment_6749_prospective_support_preserving_csl_ab.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "operationally_preserved": false,
+      "order": 8,
+      "phase": "Phase 3",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": [
+          {
+            "artifact_field": "transaction_memory_ready",
+            "op": "==",
+            "upstream": "exp6748-transactional-constraint-memory-fixture",
+            "value": true
+          }
+        ]
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "live_model_invoked",
+        "gpu_receipts",
+        "model_weights_mutated",
+        "rows",
+        "prequential_exact_yield_by_order",
+        "best_at_k_by_arm",
+        "effective_rewardable_support_by_arm",
+        "joint_correct_constraint_support_by_arm",
+        "retention_by_anchor",
+        "commit_reject_rollback_counts",
+        "prospective_csl_completed",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6749-prospective-support-preserving-csl-ab",
+      "track": "continuous-self-learning"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "It independently recomputes order intervals, support, retention, commit provenance, restart, poison rejection, and rollback."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "If absent emit complete_blocked_csl_audit with gate_check_summary."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "CONTEXT: Prior self-learning lifecycle audits were blocked by missing upstream evidence, and the V582 synthesis found no prospective A/B rows."
+      },
+      "design_deliverable": "results/experiment_6750_csl_durability_support_poison_audit.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Positive eligibility requires the preregistered order-level lower confidence bound above zero, no best@k or effective-support contraction beyond its bound, no anchor forgetting, no harmful cross-family transfer, zero admitted poison, and exact rollback."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "If absent emit complete_blocked_csl_audit with gate_check_summary."
+      },
+      "gated_on_count": 1,
+      "item_id": "exp6750-csl-durability-support-poison-audit",
+      "manifest_deliverable": "results/experiment_6750_csl_durability_support_poison_audit.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.5",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "operationally_preserved": false,
+      "order": 9,
+      "phase": "Phase 3",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": [
+          {
+            "artifact_field": "prospective_csl_completed",
+            "op": "==",
+            "upstream": "exp6749-prospective-support-preserving-csl-ab",
+            "value": true
+          }
+        ]
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "recomputed_prequential_delta_by_order",
+        "order_level_ci95",
+        "support_contraction_by_metric",
+        "retention_failures",
+        "future_leakage_count",
+        "admitted_poison_count",
+        "restart_boundary_pass_count",
+        "rollback_byte_identity",
+        "csl_audit_passed",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6750-csl-durability-support-poison-audit",
+      "track": "infrastructure"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "This task implements a bounded exact-enumeration reference."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "If the internal exact path is unavailable emit complete_blocked_compiler_reference with gate_check_summary."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "It does not require physical Extropic hardware or claim speed, power, or energy."
+      },
+      "design_deliverable": "results/experiment_6751_thermalizer_factor_trajectory_fidelity.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Set compiler_fidelity_completed true only when every factor, arm, depth, context, precision, and seed row exists and exact distributions normalize."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "If the internal exact path is unavailable emit complete_blocked_compiler_reference with gate_check_summary."
+      },
+      "gated_on_count": 0,
+      "item_id": "exp6751-thermalizer-factor-trajectory-fidelity",
+      "manifest_deliverable": "results/experiment_6751_thermalizer_factor_trajectory_fidelity.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "operationally_preserved": false,
+      "order": 10,
+      "phase": "Phase 4",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": "require exact enumeration for every selected state space, deterministic seeds, and a simulator path. Official Torx is optional conformance evidence, not a prerequisite. If the internal exact path is unavailable emit complete_blocked_compiler_reference with gate_check_summary."
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "hardware_used",
+        "simulator_used",
+        "compiler_provenance",
+        "rows",
+        "conditional_kl_by_factor",
+        "trajectory_tv_by_depth",
+        "normalization_error_by_row",
+        "topology_receipts",
+        "precision_receipts",
+        "compiler_fidelity_completed",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6751-thermalizer-factor-trajectory-fidelity",
+      "track": "hardware-portability"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "PRECONDITIONS: require llama.cpp CUDA offload, cached exact paths for both MODEL_SPECS, enough free VRAM for one model at a time, and a registry check confirming no new or duplicate solve is targeted."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "On failure emit complete_blocked_arc_transport with gate_check_summary; do not use CPU, remote APIs, another model, or fabricated transcripts."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Earlier selfparse evidence covers 20/20 zero-argument list_transitions calls, not a live multi-parameter call carrying code."
+      },
+      "design_deliverable": "results/experiment_6752_arc_code_carrying_tool_preflight.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Set arc_context_tool_preflight_ready true only if both models admit 32K on CUDA and complete at least one parse-to-dispatch-to-bounded-response multi-parameter call."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "On failure emit complete_blocked_arc_transport with gate_check_summary; do not use CPU, remote APIs, another model, or fabricated transcripts."
+      },
+      "gated_on_count": 0,
+      "item_id": "exp6752-arc-code-carrying-tool-preflight",
+      "manifest_deliverable": "results/experiment_6752_arc_code_carrying_tool_preflight.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.8-27B-GGUF",
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "operationally_preserved": false,
+      "order": 11,
+      "phase": "Phase 4",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": "require llama.cpp CUDA offload, cached exact paths for both MODEL_SPECS, enough free VRAM for one model at a time, and a registry check confirming no new or duplicate solve is targeted. On failure emit complete_blocked_arc_transport with gate_check_summary; do not use CPU, remote APIs, another model, or fabricated transcripts."
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "live_model_invoked",
+        "context_requested",
+        "context_observed_by_model",
+        "gpu_admission_by_model",
+        "rows",
+        "multi_parameter_parse_successes",
+        "multi_parameter_dispatch_successes",
+        "bounded_response_successes",
+        "arc_context_tool_preflight_ready",
+        "solve_claim",
+        "live_path_reached",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6752-arc-code-carrying-tool-preflight",
+      "track": "arc-agi3"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "PRECONDITIONS: require Exp6752 arc_context_tool_preflight_ready == true, CUDA offload, cached exact Qwen3.8 and Qwen3.6 paths, task-owned 32K context, the exact 20 games/seeds and within-arm noise floor from the 2026-08-01 artifact, and a registry check proving no new or duplicate solve target."
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "On failure emit complete_blocked_object_table_ab with gate_check_summary; do not change games, model, context, or denominator."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Do not claim a level solve."
+      },
+      "design_deliverable": "results/experiment_6753_object_table_fetch_on_demand_ab.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "Adoption requires positive token savings and change_fidelity non-inferiority within the pre-registered noise floor."
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "On failure emit complete_blocked_object_table_ab with gate_check_summary; do not change games, model, context, or denominator."
+      },
+      "gated_on_count": 1,
+      "item_id": "exp6753-object-table-fetch-on-demand-ab",
+      "manifest_deliverable": "results/experiment_6753_object_table_fetch_on_demand_ab.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.8-27B-GGUF",
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "operationally_preserved": false,
+      "order": 12,
+      "phase": "Phase 4",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": [
+          {
+            "artifact_field": "arc_context_tool_preflight_ready",
+            "op": "==",
+            "upstream": "exp6752-arc-code-carrying-tool-preflight",
+            "value": true
+          }
+        ]
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "live_model_invoked",
+        "context_requested",
+        "gpu_receipts",
+        "rows",
+        "mean_prompt_token_savings",
+        "useful_fetch_rate",
+        "change_fidelity_delta",
+        "change_fidelity_ci95",
+        "transition_utility_delta",
+        "noninferiority_margin",
+        "adoption_gate_passed",
+        "object_table_ab_completed",
+        "solve_claim",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6753-object-table-fetch-on-demand-ab",
+      "track": "arc-agi3"
+    },
+    {
+      "authority": {
+        "type": "declared_verifier_or_schema_authority",
+        "value": "EXISTING CODE TO READ FIRST: - {project_root}/CLAUDE.md and {project_root}/CODEX.md - {project_root}/research-program.md, {project_root}/_bmad/prd.md, and {project_root}/_bmad/architecture.md - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md - {project_root}/research-roadmap.yaml "
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "Preserve exact authority boundaries, model identities, hardware/simulator boundaries, ARC no-solve scope, and all gate_check_summary diagnostics."
+      },
+      "checks": {
+        "authority_preserved": true,
+        "blocked_artifact_behavior_preserved": true,
+        "capstone_ungated": true,
+        "claim_boundary_preserved": true,
+        "deliverable": true,
+        "deliverable_json": true,
+        "execution_consequence_preserved": true,
+        "expected_gate_count": true,
+        "fallback_preserved": true,
+        "manifest_present": true,
+        "milestone": true,
+        "model_role": true,
+        "model_role_preserved": true,
+        "per_unit_rows": true,
+        "prerequisite_preserved": true,
+        "prior_failure_present": true,
+        "prompt_contract": false,
+        "required_fields_present": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Add focused tests for missing-branch preservation, row recomputation, verdict-class propagation, and no pooled claims."
+      },
+      "design_deliverable": "results/experiment_6754_v588_branch_disposition.json",
+      "execution_consequence": {
+        "type": "readiness_or_gate_consequence",
+        "value": "REQUIRED ARTIFACT FIELDS: field_principles (entry for every field), inference_substrate (local row-replay and audit path), duration_s (monotonic), random_seed (audit/recompute seeds), reproducibility_checksum (manifest/source-artifact/recomputed-row hash), rows (one row per task and branch), artifac"
+      },
+      "fallback": {
+        "type": "task_owned_blocked_artifact",
+        "value": "REQUIRED ARTIFACT FIELDS: field_principles (entry for every field), inference_substrate (local row-replay and audit path), duration_s (monotonic), random_seed (audit/recompute seeds), reproducibility_checksum (manifest/source-artifact/recomputed-row hash), rows (one row per task and branch), artifac"
+      },
+      "gated_on_count": 0,
+      "item_id": "exp6754-v588-branch-disposition",
+      "manifest_deliverable": "results/experiment_6754_v588_branch_disposition.json",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.5",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "operationally_preserved": false,
+      "order": 13,
+      "phase": "Phase 4",
+      "prerequisite": {
+        "type": "task_precondition_or_gate",
+        "value": "require the active V588 manifest and design. Individual branch artifacts are optional inputs by design. Record each missing or invalid artifact as a row; never block the capstone solely because a branch is absent."
+      },
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "artifact_presence_matrix",
+        "branch_verdicts",
+        "recomputed_headlines",
+        "row_headline_mismatches",
+        "adversarial_findings",
+        "prd_gap_disposition",
+        "prior_failure_retirements",
+        "next_licensed_actions",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "row_type": "task",
+      "task_id": "exp6754-v588-branch-disposition",
+      "track": "research-reporting"
+    },
+    {
+      "artifact_field": "hardness_stream_ready",
+      "authority": {
+        "producer_required_artifact_fields": [
+          "field_principles",
+          "inference_substrate",
+          "duration_s",
+          "random_seed",
+          "reproducibility_checksum",
+          "rows",
+          "family_counts",
+          "split_manifest",
+          "certificate_checker_receipts",
+          "relabel_pair_receipts",
+          "solver_work_metadata",
+          "hardness_stream_ready",
+          "gate_check_summary",
+          "verdict_class",
+          "honest_verdict"
+        ],
+        "type": "upstream_required_artifact_field"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "gate_check_summary records failed upstream field and observed value"
+      },
+      "checks": {
+        "consumer_prompt_contract": false,
+        "matches_design_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Exp6734 was preempted, so no all-three-model dual-encoding corpus exists."
+      },
+      "consumer_task_id": "exp6745-sota-dual-encoding-proposal-corpus",
+      "execution_consequence": {
+        "type": "consumer_dispatch_block",
+        "value": "consumer cannot run until the gate predicate passes"
+      },
+      "fallback": {
+        "type": "conductor_gate_block",
+        "value": "write blocked artifact with exact failed gate"
+      },
+      "item_id": "exp6745-sota-dual-encoding-proposal-corpus->exp6744-hardness-controlled-certificate-stream.hardness_stream_ready",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "op": "==",
+      "operationally_preserved": false,
+      "prerequisite": {
+        "artifact_field": "hardness_stream_ready",
+        "op": "==",
+        "type": "upstream_artifact_field",
+        "upstream": "exp6744-hardness-controlled-certificate-stream",
+        "value": true
+      },
+      "row_type": "gate",
+      "upstream_task_id": "exp6744-hardness-controlled-certificate-stream",
+      "value": true
+    },
+    {
+      "artifact_field": "dual_encoding_corpus_ready",
+      "authority": {
+        "producer_required_artifact_fields": [
+          "field_principles",
+          "inference_substrate",
+          "duration_s",
+          "random_seed",
+          "reproducibility_checksum",
+          "models_used",
+          "live_model_invoked",
+          "gpu_receipts",
+          "planned_row_count",
+          "rows",
+          "diagnosis_counts",
+          "encoder_agreement_matrix",
+          "exact_success_by_model",
+          "dual_encoding_corpus_ready",
+          "gate_check_summary",
+          "verdict_class",
+          "honest_verdict"
+        ],
+        "type": "upstream_required_artifact_field"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "gate_check_summary records failed upstream field and observed value"
+      },
+      "checks": {
+        "consumer_prompt_contract": false,
+        "matches_design_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Set diagnostic_energy_ready true only when all arms and audits complete; readiness does not mean positive science."
+      },
+      "consumer_task_id": "exp6746-oracle-distinct-diagnostic-energy",
+      "execution_consequence": {
+        "type": "consumer_dispatch_block",
+        "value": "consumer cannot run until the gate predicate passes"
+      },
+      "fallback": {
+        "type": "conductor_gate_block",
+        "value": "write blocked artifact with exact failed gate"
+      },
+      "item_id": "exp6746-oracle-distinct-diagnostic-energy->exp6745-sota-dual-encoding-proposal-corpus.dual_encoding_corpus_ready",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "op": "==",
+      "operationally_preserved": false,
+      "prerequisite": {
+        "artifact_field": "dual_encoding_corpus_ready",
+        "op": "==",
+        "type": "upstream_artifact_field",
+        "upstream": "exp6745-sota-dual-encoding-proposal-corpus",
+        "value": true
+      },
+      "row_type": "gate",
+      "upstream_task_id": "exp6745-sota-dual-encoding-proposal-corpus",
+      "value": true
+    },
+    {
+      "artifact_field": "heldout_reasoning_error_auroc",
+      "authority": {
+        "producer_required_artifact_fields": [
+          "field_principles",
+          "inference_substrate",
+          "duration_s",
+          "random_seed",
+          "reproducibility_checksum",
+          "verifier_is_oracle",
+          "feature_schema",
+          "oracle_feature_denylist",
+          "rows",
+          "heldout_metrics_by_family",
+          "paired_relabel_metrics",
+          "heldout_reasoning_error_auroc",
+          "oracle_leakage_detected",
+          "diagnostic_energy_ready",
+          "gate_check_summary",
+          "verdict_class",
+          "honest_verdict"
+        ],
+        "type": "upstream_required_artifact_field"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "gate_check_summary records failed upstream field and observed value"
+      },
+      "checks": {
+        "consumer_prompt_contract": false,
+        "matches_design_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "EXISTING CODE TO READ FIRST: - {project_root}/CLAUDE.md and {project_root}/CODEX.md - {project_root}/openspec/capabilities/verify-repair/spec.md - {project_root}/results/experiment_6745_sota_dual_encoding_proposal_corpus.json - {project_root}/results/experiment_6746_oracle_distinct_diagnostic_energy"
+      },
+      "consumer_task_id": "exp6747-diagnostic-energy-localized-repair-ab",
+      "execution_consequence": {
+        "type": "consumer_dispatch_block",
+        "value": "consumer cannot run until the gate predicate passes"
+      },
+      "fallback": {
+        "type": "conductor_gate_block",
+        "value": "write blocked artifact with exact failed gate"
+      },
+      "item_id": "exp6747-diagnostic-energy-localized-repair-ab->exp6746-oracle-distinct-diagnostic-energy.heldout_reasoning_error_auroc",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "op": ">=",
+      "operationally_preserved": false,
+      "prerequisite": {
+        "artifact_field": "heldout_reasoning_error_auroc",
+        "op": ">=",
+        "type": "upstream_artifact_field",
+        "upstream": "exp6746-oracle-distinct-diagnostic-energy",
+        "value": 0.65
+      },
+      "row_type": "gate",
+      "upstream_task_id": "exp6746-oracle-distinct-diagnostic-energy",
+      "value": 0.65
+    },
+    {
+      "artifact_field": "oracle_leakage_detected",
+      "authority": {
+        "producer_required_artifact_fields": [
+          "field_principles",
+          "inference_substrate",
+          "duration_s",
+          "random_seed",
+          "reproducibility_checksum",
+          "verifier_is_oracle",
+          "feature_schema",
+          "oracle_feature_denylist",
+          "rows",
+          "heldout_metrics_by_family",
+          "paired_relabel_metrics",
+          "heldout_reasoning_error_auroc",
+          "oracle_leakage_detected",
+          "diagnostic_energy_ready",
+          "gate_check_summary",
+          "verdict_class",
+          "honest_verdict"
+        ],
+        "type": "upstream_required_artifact_field"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "gate_check_summary records failed upstream field and observed value"
+      },
+      "checks": {
+        "consumer_prompt_contract": false,
+        "matches_design_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "EXISTING CODE TO READ FIRST: - {project_root}/CLAUDE.md and {project_root}/CODEX.md - {project_root}/openspec/capabilities/verify-repair/spec.md - {project_root}/results/experiment_6745_sota_dual_encoding_proposal_corpus.json - {project_root}/results/experiment_6746_oracle_distinct_diagnostic_energy"
+      },
+      "consumer_task_id": "exp6747-diagnostic-energy-localized-repair-ab",
+      "execution_consequence": {
+        "type": "consumer_dispatch_block",
+        "value": "consumer cannot run until the gate predicate passes"
+      },
+      "fallback": {
+        "type": "conductor_gate_block",
+        "value": "write blocked artifact with exact failed gate"
+      },
+      "item_id": "exp6747-diagnostic-energy-localized-repair-ab->exp6746-oracle-distinct-diagnostic-energy.oracle_leakage_detected",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "op": "==",
+      "operationally_preserved": false,
+      "prerequisite": {
+        "artifact_field": "oracle_leakage_detected",
+        "op": "==",
+        "type": "upstream_artifact_field",
+        "upstream": "exp6746-oracle-distinct-diagnostic-energy",
+        "value": false
+      },
+      "row_type": "gate",
+      "upstream_task_id": "exp6746-oracle-distinct-diagnostic-energy",
+      "value": false
+    },
+    {
+      "artifact_field": "transaction_memory_ready",
+      "authority": {
+        "producer_required_artifact_fields": [
+          "field_principles",
+          "inference_substrate",
+          "duration_s",
+          "random_seed",
+          "reproducibility_checksum",
+          "rows",
+          "stream_manifest",
+          "commit_receipts",
+          "read_only_violations",
+          "unsafe_admission_count",
+          "unsafe_use_count",
+          "restart_receipts",
+          "rollback_byte_identity",
+          "transaction_memory_ready",
+          "gate_check_summary",
+          "verdict_class",
+          "honest_verdict"
+        ],
+        "type": "upstream_required_artifact_field"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "gate_check_summary records failed upstream field and observed value"
+      },
+      "checks": {
+        "consumer_prompt_contract": false,
+        "matches_design_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Legacy models may be CPU smoke tests only and cannot enter the prospective claim."
+      },
+      "consumer_task_id": "exp6749-prospective-support-preserving-csl-ab",
+      "execution_consequence": {
+        "type": "consumer_dispatch_block",
+        "value": "consumer cannot run until the gate predicate passes"
+      },
+      "fallback": {
+        "type": "conductor_gate_block",
+        "value": "write blocked artifact with exact failed gate"
+      },
+      "item_id": "exp6749-prospective-support-preserving-csl-ab->exp6748-transactional-constraint-memory-fixture.transaction_memory_ready",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "op": "==",
+      "operationally_preserved": false,
+      "prerequisite": {
+        "artifact_field": "transaction_memory_ready",
+        "op": "==",
+        "type": "upstream_artifact_field",
+        "upstream": "exp6748-transactional-constraint-memory-fixture",
+        "value": true
+      },
+      "row_type": "gate",
+      "upstream_task_id": "exp6748-transactional-constraint-memory-fixture",
+      "value": true
+    },
+    {
+      "artifact_field": "prospective_csl_completed",
+      "authority": {
+        "producer_required_artifact_fields": [
+          "field_principles",
+          "inference_substrate",
+          "duration_s",
+          "random_seed",
+          "reproducibility_checksum",
+          "models_used",
+          "live_model_invoked",
+          "gpu_receipts",
+          "model_weights_mutated",
+          "rows",
+          "prequential_exact_yield_by_order",
+          "best_at_k_by_arm",
+          "effective_rewardable_support_by_arm",
+          "joint_correct_constraint_support_by_arm",
+          "retention_by_anchor",
+          "commit_reject_rollback_counts",
+          "prospective_csl_completed",
+          "gate_check_summary",
+          "verdict_class",
+          "honest_verdict"
+        ],
+        "type": "upstream_required_artifact_field"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "gate_check_summary records failed upstream field and observed value"
+      },
+      "checks": {
+        "consumer_prompt_contract": false,
+        "matches_design_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "CONTEXT: Prior self-learning lifecycle audits were blocked by missing upstream evidence, and the V582 synthesis found no prospective A/B rows."
+      },
+      "consumer_task_id": "exp6750-csl-durability-support-poison-audit",
+      "execution_consequence": {
+        "type": "consumer_dispatch_block",
+        "value": "consumer cannot run until the gate predicate passes"
+      },
+      "fallback": {
+        "type": "conductor_gate_block",
+        "value": "write blocked artifact with exact failed gate"
+      },
+      "item_id": "exp6750-csl-durability-support-poison-audit->exp6749-prospective-support-preserving-csl-ab.prospective_csl_completed",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.5",
+        "model_specs": [],
+        "requires_gpu": false
+      },
+      "op": "==",
+      "operationally_preserved": false,
+      "prerequisite": {
+        "artifact_field": "prospective_csl_completed",
+        "op": "==",
+        "type": "upstream_artifact_field",
+        "upstream": "exp6749-prospective-support-preserving-csl-ab",
+        "value": true
+      },
+      "row_type": "gate",
+      "upstream_task_id": "exp6749-prospective-support-preserving-csl-ab",
+      "value": true
+    },
+    {
+      "artifact_field": "arc_context_tool_preflight_ready",
+      "authority": {
+        "producer_required_artifact_fields": [
+          "field_principles",
+          "inference_substrate",
+          "duration_s",
+          "random_seed",
+          "reproducibility_checksum",
+          "models_used",
+          "live_model_invoked",
+          "context_requested",
+          "context_observed_by_model",
+          "gpu_admission_by_model",
+          "rows",
+          "multi_parameter_parse_successes",
+          "multi_parameter_dispatch_successes",
+          "bounded_response_successes",
+          "arc_context_tool_preflight_ready",
+          "solve_claim",
+          "live_path_reached",
+          "gate_check_summary",
+          "verdict_class",
+          "honest_verdict"
+        ],
+        "type": "upstream_required_artifact_field"
+      },
+      "blocked_artifact_behavior": {
+        "type": "failed_check_and_observed_value",
+        "value": "gate_check_summary records failed upstream field and observed value"
+      },
+      "checks": {
+        "consumer_prompt_contract": false,
+        "matches_design_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "claim_boundary": {
+        "type": "declared_scope_limit",
+        "value": "Do not claim a level solve."
+      },
+      "consumer_task_id": "exp6753-object-table-fetch-on-demand-ab",
+      "execution_consequence": {
+        "type": "consumer_dispatch_block",
+        "value": "consumer cannot run until the gate predicate passes"
+      },
+      "fallback": {
+        "type": "conductor_gate_block",
+        "value": "write blocked artifact with exact failed gate"
+      },
+      "item_id": "exp6753-object-table-fetch-on-demand-ab->exp6752-arc-code-carrying-tool-preflight.arc_context_tool_preflight_ready",
+      "model_role": {
+        "agent_type": "codex",
+        "model": "gpt-5.6-sol",
+        "model_specs": [
+          "unsloth/Qwen3.8-27B-GGUF",
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "requires_gpu": true
+      },
+      "op": "==",
+      "operationally_preserved": false,
+      "prerequisite": {
+        "artifact_field": "arc_context_tool_preflight_ready",
+        "op": "==",
+        "type": "upstream_artifact_field",
+        "upstream": "exp6752-arc-code-carrying-tool-preflight",
+        "value": true
+      },
+      "row_type": "gate",
+      "upstream_task_id": "exp6752-arc-code-carrying-tool-preflight",
+      "value": true
+    }
+  ],
+  "science_branches_independent_of_handoff_audit": true,
+  "source_cutoff": "2026-08-29",
+  "source_receipts": [
+    {
+      "adoption_decision": "replace `.587`'s global runtime activation root with two independent infrastructure receipts: a static handoff-contract audit and a task-owned phase/accelerator canary. Science branches keep their own preconditions and do not depend on an unrelated global success bit.",
+      "adoption_decision_present": true,
+      "arxiv_id": "2608.27311",
+      "design_milestone": "2026.08.588",
+      "mapped_to_v588": true,
+      "passed": true,
+      "section_sha256": "sha256:13153cc94ddcd4d67b5406df754679fc635c26dfa0bc4b62ec471a7a86ba0468",
+      "source_cutoff": "2026-08-29",
+      "source_path": "research-references.md",
+      "title": "HarnessLens",
+      "url": "https://arxiv.org/abs/2608.27311",
+      "url_present": true
+    },
+    {
+      "adoption_decision": "freeze a method contract beside each comparative branch. Every artifact must expose per-unit rows, actual budgets, substrate, model IDs, exact-authority calls, and disqualification reasons; a runnable substitute is not evidence for the preregistered method.",
+      "adoption_decision_present": true,
+      "arxiv_id": "2608.26753",
+      "design_milestone": "2026.08.588",
+      "mapped_to_v588": true,
+      "passed": true,
+      "section_sha256": "sha256:2266c7f92d7eb30770a585bb9931a942c8d6cd384d0e5a4d92cf48fcc69bc22b",
+      "source_cutoff": "2026-08-29",
+      "source_path": "research-references.md",
+      "title": "ABE-Ralph",
+      "url": "https://arxiv.org/abs/2608.26753",
+      "url_present": true
+    },
+    {
+      "adoption_decision": "the roadmap handoff receipt must preserve the prerequisite, authority, fallback, and execution consequence as typed fields. Gate fields must be spelled identically in the upstream prompt, artifact, and downstream YAML; prose mentions do not count.",
+      "adoption_decision_present": true,
+      "arxiv_id": "2608.24569",
+      "design_milestone": "2026.08.588",
+      "mapped_to_v588": true,
+      "passed": true,
+      "section_sha256": "sha256:1b90e02ce05d9a61c8d429009a4209f94f4c2262751f6203b4448ac8b00e4c04",
+      "source_cutoff": "2026-08-29",
+      "source_path": "research-references.md",
+      "title": "When \"Must\" Becomes \"Maybe\"",
+      "url": "https://arxiv.org/abs/2608.24569",
+      "url_present": true
+    }
+  ],
+  "status": "complete_blocked_handoff_contract",
+  "task_count": 13,
+  "validator_rows": [
+    {
+      "authoritative_for_handoff": true,
+      "command": "Roadmap.model_validate(research-roadmap.yaml)",
+      "observed_value": true,
+      "passed": true,
+      "validator": "roadmap_schema"
+    },
+    {
+      "authoritative_for_handoff": true,
+      "command": "internal exact upstream REQUIRED ARTIFACT FIELDS check",
+      "observed_value": 0,
+      "passed": true,
+      "validator": "gate_contract"
+    },
+    {
+      "authoritative_for_handoff": true,
+      "command": "internal prompt section and literal check",
+      "observed_value": 26,
+      "passed": false,
+      "validator": "prompt_contract"
+    },
+    {
+      "authoritative_for_handoff": true,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+      "observed_value": "Exclusion-manifest lint clean: research-roadmap.yaml",
+      "passed": true,
+      "validator": "exclusion_manifest_lint"
+    },
+    {
+      "authoritative_for_handoff": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+      "compatibility_accepted": true,
+      "model_only_findings": true,
+      "observed_value": {
+        "audit_script_written": true,
+        "failure_details": [
+          "MODEL_AGENT_COHERENCE exp6743-task-owned-phase-accelerator-canary: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+          "MODEL_AGENT_COHERENCE exp6744-hardness-controlled-certificate-stream: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+          "MODEL_AGENT_COHERENCE exp6745-sota-dual-encoding-proposal-corpus: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+          "MODEL_AGENT_COHERENCE exp6746-oracle-distinct-diagnostic-energy: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+          "MODEL_AGENT_COHERENCE exp6747-diagnostic-energy-localized-repair-ab: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+          "MODEL_AGENT_COHERENCE exp6748-transactional-constraint-memory-fixture: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+          "MODEL_AGENT_COHERENCE exp6749-prospective-support-preserving-csl-ab: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+          "MODEL_AGENT_COHERENCE exp6751-thermalizer-factor-trajectory-fidelity: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+          "MODEL_AGENT_COHERENCE exp6752-arc-code-carrying-tool-preflight: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+          "MODEL_AGENT_COHERENCE exp6753-object-table-fetch-on-demand-ab: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol"
+        ],
+        "honest_verdict": "model_agent_incoherence_found",
+        "n_gate_field_cross_ref_failures": 0,
+        "n_gate_upstream_checks": 7,
+        "n_gate_upstream_failures": 0,
+        "n_model_agent_coherence_failures": 10,
+        "n_prior_failures_checks": 13,
+        "n_prior_failures_missing": 0,
+        "n_tasks_audited": 13,
+        "roadmap_gate_audit_passed": false,
+        "roadmap_path_note": "requested roadmap path exists",
+        "roadmap_path_used": "research-roadmap.yaml"
+      },
+      "passed": false,
+      "validator": "audit_roadmap_gates_legacy"
+    }
+  ],
+  "verdict_class": "blocked"
+}
