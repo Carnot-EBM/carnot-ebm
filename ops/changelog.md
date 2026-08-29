@@ -18212,3 +18212,4 @@ available this milestone can show DualGPURunner eligibility or a dispatch
 failure. Source-level monotonic phase stamps and dispatcher metadata should
 follow. Estimated savings is 0% because the clock captured no positive
 duration.
+- 2026-08-29: Activated V588 handoff and binding-contract audit (⚠️ Blocked) — honest_verdict=complete_blocked_handoff_contract: one or more V588 handoff checks failed.; results/experiment_6742_v588_handoff_contract_audit.json
