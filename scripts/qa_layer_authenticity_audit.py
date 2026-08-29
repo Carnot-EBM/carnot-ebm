@@ -163,6 +163,14 @@ WHOLE_FILE_TARGETS = (
 # ---------------------------------------------------------------------------------------
 GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
     (
+        PROJECT_ROOT / "python" / "carnot" / "testing" / "worktree_import_guard.py",
+        "decides whether a test run is measuring the checkout it claims to measure; per-agent "
+        "worktrees make `import carnot` resolve to the MAIN tree unless PYTHONPATH is pinned, "
+        "so a silent non-firing here turns every assertion and every mutation proof GREEN "
+        "while the edited file was never loaded -- a guard that is trusted and blind, which "
+        "is worse than the shared-index failure worktrees were adopted to fix",
+    ),
+    (
         PROJECT_ROOT / "scripts" / "capstone_milestone_rot_lint.py",
         "decides whether a capstone module will go stale and abort the test suite -- the "
         "2026-08-29 incident took all 57,917 tests down at collection from one file, so a "

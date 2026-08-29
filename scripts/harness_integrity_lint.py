@@ -256,10 +256,6 @@ def _matches(path: str, patterns: list[str]) -> bool:
 #: forever -- so without expiry the first crashed session would permanently lock its paths.
 CLAIM_STALE_AFTER = timedelta(hours=4)
 
-#: Sorts after every real ISO timestamp, so a declaration with no usable `declared_at` loses
-#: every wound-wait comparison instead of silently winning them.
-_YOUNGEST = "~"
-
 
 def is_universal_pattern(pattern: str) -> bool:
     """Does this pattern claim the whole repository rather than a part of it?
@@ -277,25 +273,69 @@ def is_universal_pattern(pattern: str) -> bool:
     stripped = pattern.strip()
     if not stripped:
         return True
-    return all(ch in "*?/[]!-" for ch in stripped)
+    if all(ch in "*?/[]!-" for ch in stripped):
+        return True
+    # A BARE EXTENSION CLAIMS THE WHOLE REPOSITORY (2026-08-29). `fnmatch`'s `*` crosses `/`,
+    # so `--scope '*.py'` is a one-line declaration that owns every Python file in the tree --
+    # `python/carnot/paths.py`, `tests/python/conftest.py`, the conductor itself -- against
+    # every other session for the whole staleness window. It "names a real path segment" only
+    # in the sense of an extension, so the first version classified it enforceable.
+    #
+    # The concept is "claims the whole repository in practice", and a pattern with no directory
+    # separator that begins with a wildcard satisfies it. `scripts/*.py` is unaffected: it names
+    # a directory and stays enforceable.
+    if "/" not in stripped and stripped.startswith(("*", "?")):
+        return True
+    return False
 
 
-def _claim_age_key(record: dict) -> str:
-    value = record.get("declared_at")
-    return value if isinstance(value, str) and value else _YOUNGEST
+def claim_instant(record: dict) -> datetime | None:
+    """When this declaration was made, as an aware UTC datetime. None means UNUSABLE.
+
+    ONE PARSE, ONE CLOCK. The first version keyed ordering on the RAW string and expiry on a
+    parsed value, so the two disagreed in three ways an adversarial review demonstrated:
+
+      * `"!bad-timestamp"` is unparseable, so expiry treated it as fresh forever, while `"!"`
+        (0x21) sorts below every real ISO stamp -- one corrupt file owned its patterns
+        permanently. The comment claimed an unusable timestamp "loses every comparison"; it
+        won them all. A pattern list narrower than the concept it named.
+      * `"...10:00:00Z"` versus `"...10:00:00.500000+00:00"`: `.` (0x2E) < `Z` (0x5A), so the
+        stamp half a second LATER sorted older.
+      * `"08:00:00-05:00"` is 13:00Z and sorted before `"09:00:00Z"`.
+
+    Only the first is reachable today, because `declare()` is the sole writer and always emits
+    `+00:00` with microseconds. The other two are one hand-edit or one second writer away, and
+    a comparison that is right only while one function has a monopoly on the format is not
+    right.
+    """
+
+    raw = record.get("declared_at")
+    if not isinstance(raw, str) or not raw:
+        return None
+    try:
+        parsed = datetime.fromisoformat(raw)
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo else parsed.replace(tzinfo=UTC)
+
+
+def _claim_age_key(record: dict) -> tuple[int, datetime]:
+    """Sortable age. An unusable timestamp sorts after every real one, so it never wins."""
+    instant = claim_instant(record)
+    return (1, datetime.max.replace(tzinfo=UTC)) if instant is None else (0, instant)
 
 
 def _claim_is_stale(record: dict, now: datetime) -> bool:
-    raw = record.get("declared_at")
-    if not isinstance(raw, str) or not raw:
-        return False  # undated, not expired -- it loses on age instead
-    try:
-        declared = datetime.fromisoformat(raw)
-    except ValueError:
-        return False
-    if declared.tzinfo is None:
-        declared = declared.replace(tzinfo=UTC)
-    return (now - declared) > CLAIM_STALE_AFTER
+    """Is this claim abandoned? An UNUSABLE timestamp counts as stale.
+
+    Treating an undated claim as fresh-forever was the other half of the corrupt-record bug:
+    it could neither be aged out nor out-ranked. A claim that cannot say when it was made
+    cannot be trusted to hold a path against a claim that can.
+    """
+    instant = claim_instant(record)
+    if instant is None:
+        return True
+    return (now - instant) > CLAIM_STALE_AFTER
 
 
 def claim_owner(path: str, records: list[dict], now: datetime) -> str | None:
@@ -378,8 +418,17 @@ def overlapping_older_claims(
             ]
             if not theirs:
                 continue
-            overlap = any(_matches(lit, [pattern]) for lit in _literals(theirs)) or any(
-                _matches(lit, theirs) for lit in _literals([pattern])
+            # Literal probes cannot see glob-vs-glob overlap, and two sessions declaring the
+            # SAME glob is the single most likely collision there is -- it produced no warning
+            # at all, so the younger session learned at commit time, after the work, which is
+            # the exact cost this warning exists to avoid. Exact equality and mutual matching
+            # cover the common cases; full glob intersection is undecidable in general and the
+            # commit-time refusal remains the backstop.
+            overlap = (
+                pattern in theirs
+                or any(_matches(lit, [pattern]) for lit in _literals(theirs))
+                or any(_matches(lit, theirs) for lit in _literals([pattern]))
+                or any(fnmatch.fnmatch(q, pattern) or fnmatch.fnmatch(pattern, q) for q in theirs)
             )
             if overlap:
                 found[pattern] = owner
@@ -502,6 +551,14 @@ def declare(globs: list[str], unseal: list[str], run_id: str, anchor: str = "dec
     for path in sorted(unseal):
         print(f"  unseal  {path}")
     print(f"  sealed  {len(seals)} harness file(s), anchored to {anchor}")
+    # EXPORT THIS OR NOTHING WORKS. `check()` identifies the committing session solely by this
+    # variable. Until 2026-08-29 nothing in the repository ever set it -- a grep found exactly
+    # one reference, its own definition -- so every committer read as unidentified: cross-session
+    # enforcement never fired for anyone, while the out-of-scope branch judged the unidentified
+    # committer by EVERY declaration and refused it. The feature was dead and the freeze was
+    # live, which is the worst pairing of the two policies.
+    print("\nExport this so your commits are recognised as yours:")
+    print(f"  export {RUN_ID_ENV}={run_id}")
     print(
         f"\nRelease it when the work is done:\n  python3 {Path(__file__).name} --release --run-id {run_id}"
     )
@@ -536,6 +593,11 @@ def check() -> int:
         record = _load_scope(scope_path)
         if record:
             explicitly_unsealed.update(record.get("unsealed") or [])
+
+    judged_at = datetime.now(UTC)
+    live_records = [
+        r for r in (_load_scope(s) for s in scopes) if r and not _claim_is_stale(r, judged_at)
+    ]
 
     failures: list[str] = []
     for scope_path in scopes:
@@ -573,8 +635,28 @@ def check() -> int:
         # When the committing session cannot be identified, EVERY declaration judges, which is
         # the old behaviour and the strict direction: an unidentified committer is held to all
         # of them rather than none.
+        # WHO JUDGES AN UNIDENTIFIED COMMITTER (corrected 2026-08-29). This read
+        # `committer is None or run_id == committer` -- every declaration judged every
+        # unattributable commit. Combined with nothing ever setting the variable, that made the
+        # 2026-08-29 deadlock still live in the deployed state: agent A declares a.py, agent B
+        # declares b.py, B stages only its own b.py, and A's record refuses it. Reproduced
+        # exactly, following the tool's own documented usage.
+        #
+        # An unattributable commit cannot be checked against "did YOU stage something you did
+        # not declare" -- there is no YOU. Guessing it belongs to all of them freezes the repo.
+        # The one case where attribution is unambiguous is a single live declaration, so that
+        # is the only case where an unidentified committer is judged.
+        #
+        # STALENESS APPLIES HERE TOO. It did not, and the refusal text promising that a claim
+        # older than the window "stops blocking on its own" was false for the branch that
+        # actually fired: a crashed agent locked every other session out permanently.
         committer = os.environ.get(RUN_ID_ENV)
-        judges_scope = committer is None or run_id == committer
+        if _claim_is_stale(record, judged_at):
+            judges_scope = False
+        elif committer is not None:
+            judges_scope = run_id == committer
+        else:
+            judges_scope = len(live_records) == 1
         out_of_scope = [p for p in staged if not _matches(p, patterns)] if judges_scope else []
         if out_of_scope:
             failures.append(
@@ -637,7 +719,7 @@ def check() -> int:
     # claims resolve the same way from either side instead of deadlocking.
     committer_id = os.environ.get(RUN_ID_ENV)
     records = [r for r in (_load_scope(s) for s in scopes) if r]
-    contested = contested_paths(staged, records, committer_id, datetime.now(UTC))
+    contested = contested_paths(staged, records, committer_id, judged_at)
     if contested:
         by_owner: dict[str, list[str]] = {}
         for path, owner in sorted(contested.items()):
