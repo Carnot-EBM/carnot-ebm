@@ -1252,7 +1252,7 @@ def build_artifact(
     duration_s: float,
     tests_run: Sequence[Mapping[str, Any]],
 ) -> JsonDict:
-    """Build a terminal partial report from all available V580 evidence."""
+    """Build a terminal null report from all available V580 evidence."""
 
     tasks = _upstream_tasks(load_roadmap(repo_root))
     sources = _source_map(repo_root, tasks)
@@ -1300,13 +1300,16 @@ def build_artifact(
     )
     receipt_tests = [dict(row) for row in tests_run]
     artifact: JsonDict = {
-        "status": "complete_terminal_partial",
+        # The capstone read all 12 sources, recomputed every gate and claim,
+        # and finished; mixed branch evidence with no pooled claim is a null
+        # finding, not a retryable partial (REQ-CONDUCTOR-VERDICT-3).
+        "status": "complete_terminal_null",
         "honest_verdict": (
-            "complete_partial: V580 has authentic admission, direct-corpus, and bounded verifier-unit evidence; "
+            "complete_null: V580 has authentic admission, direct-corpus, and bounded verifier-unit evidence; "
             "memory general benefit is null under independent uncertainty; ARC and Ising branches are blocked; "
             "one audit artifact is missing; no pooled success, ARC solve, repair win, or hardware speedup is claimed"
         ),
-        "verdict_class": "partial",
+        "verdict_class": "null",
         "gate_check_summary": gate_summary,
         "expected_task_manifest": manifest,
         "artifact_availability_rows": availability,
@@ -1344,8 +1347,11 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
     missing = set(REQUIRED_FIELDS) - set(artifact)
     if missing:
         raise ValueError(f"required fields missing: {sorted(missing)}")
-    if artifact["verdict_class"] != "partial" or artifact["status"] != "complete_terminal_partial":
-        raise ValueError("capstone verdict must remain terminal partial")
+    # A finished capstone declares null, never partial: partial told the
+    # conductor to re-run this completed reducer
+    # (REQ-CONDUCTOR-VERDICT-3, SCENARIO-CONDUCTOR-VERDICT-5).
+    if artifact["verdict_class"] != "null" or artifact["status"] != "complete_terminal_null":
+        raise ValueError("capstone verdict must remain terminal null")
     if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
         raise ValueError("inference substrate mismatch")
     if artifact["verifier_is_oracle"] is not False:

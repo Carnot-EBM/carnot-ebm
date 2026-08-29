@@ -118,7 +118,7 @@ FIELD_PRINCIPLES = {
         "The verdict states independent milestone dispositions without upgrading completeness "
         "to science."
     ),
-    "verdict_class": "Use the closed enum; the capstone itself is null or partial, never positive.",
+    "verdict_class": "Use the closed enum; a finished capstone is null, never positive, and partial only if the replay itself stopped early (REQ-CONDUCTOR-VERDICT-3).",
     "gate_check_summary": (
         "Any capstone block names the failed source, row, gate, hash, authority, replay, "
         "document, or test and observed value."
@@ -1460,14 +1460,17 @@ def build_artifact(
         "schema": "carnot.v576.independent_capstone.v1",
         "experiment_id": EXPERIMENT_ID,
         "run_date": run_date,
-        "status": "complete_partial_v576_independent_capstone",
+        # The capstone replayed every available source and finished; mixed and
+        # absent upstream effects are a null finding, not a retryable partial
+        # (REQ-CONDUCTOR-VERDICT-3).
+        "status": "complete_v576_independent_capstone",
         "honest_verdict": (
-            "complete_partial: all available V576 evidence was independently replayed; "
+            "complete_null: all available V576 evidence was independently replayed; "
             "decoding remains blocked, live projection is null, sampler evidence is partial "
             "and software-only, lifecycle is conformant without utility, and prospective "
             "self-learning has zero benefit with a disqualified source verdict field"
         ),
-        "verdict_class": "partial",
+        "verdict_class": "null",
         "gate_check_summary": {
             "capstone_terminal": True,
             "capstone_blocked": False,
@@ -1520,8 +1523,11 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
         raise ValueError(f"missing required fields: {missing}")
     if artifact["reproducibility_checksum"] != reproducibility_checksum(artifact):
         raise ValueError("reproducibility checksum mismatch")
-    if artifact["verdict_class"] not in {"null", "partial"}:
-        raise ValueError("capstone verdict must be null or partial")
+    # A finished capstone declares null; a partial declaration told the
+    # conductor to re-run this completed replay
+    # (REQ-CONDUCTOR-VERDICT-3, SCENARIO-CONDUCTOR-VERDICT-5).
+    if artifact["verdict_class"] != "null":
+        raise ValueError("capstone verdict must be null")
     if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
         raise ValueError("inference substrate mismatch")
     if artifact["verifier_is_oracle"] is not True:

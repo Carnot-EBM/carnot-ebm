@@ -1538,7 +1538,10 @@ def build_artifact(
         attacks=attacks,
         forbidden=forbidden,
     )
-    verdict_class = "partial"
+    # The handoff replay attempts every unit and claims no positive result, so
+    # a clean run is null. Partial would mark a finished run as retryable
+    # (REQ-CONDUCTOR-VERDICT-3).
+    verdict_class = "null"
     gates = gate_check_summary(
         aggregate=aggregate,
         protected=protected,
@@ -1641,11 +1644,10 @@ def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
         errors.append("v564_handoff_ready_score mismatch")
     if payload.get("v564_handoff_ready_score") == 0.0 and all_gates_pass:
         errors.append("v564_handoff_ready_score mismatch")
-    if payload.get("v564_handoff_ready_score") == 1.0 and payload.get("verdict_class") not in {
-        "partial",
-        "null",
-    }:
-        errors.append("ready handoff requires partial or null verdict_class")
+    # A ready handoff finished its run; its class is null, never partial
+    # (REQ-CONDUCTOR-VERDICT-3, SCENARIO-CONDUCTOR-VERDICT-5).
+    if payload.get("v564_handoff_ready_score") == 1.0 and (payload.get("verdict_class") != "null"):
+        errors.append("ready handoff requires null verdict_class")
     if payload.get("v564_handoff_ready_score") == 0.0 and payload.get("verdict_class") != "blocked":
         errors.append("blocked handoff requires blocked verdict_class")
     if payload.get("reproducibility_checksum") != reproducibility_checksum(payload):

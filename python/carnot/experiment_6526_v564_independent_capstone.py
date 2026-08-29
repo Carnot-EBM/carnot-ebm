@@ -78,7 +78,7 @@ REQUIRED_ARTIFACT_FIELDS = (
 FIELD_PRINCIPLES: dict[str, str] = {
     "status": "Records the terminal V564 capstone state after reading all expected artifacts.",
     "honest_verdict": "Summarizes mixed evidence without converting missing, null, or blocked rows into success.",
-    "verdict_class": "Uses partial for mixed lineage outcomes, positive only for oracle-distinct row-supported claims, and blocked or disqualified for missing or unsafe evidence.",
+    "verdict_class": "Uses null for a finished capstone with mixed lineage outcomes (partial only if the run itself stopped early, per REQ-CONDUCTOR-VERDICT-3), positive only for oracle-distinct row-supported claims, and blocked or disqualified for missing or unsafe evidence.",
     "task_inventory_rows": "One row per expected task records path, hash, status, class, gate field, observed value, row support, authority, and eligibility.",
     "artifact_hash_receipts": "Content hashes prove which files were read and which expected deliverables were missing.",
     "gate_contract_rows": "Checks downstream gate field spelling against upstream artifacts and the V564 roadmap.",
@@ -148,9 +148,7 @@ EXACT_E2E_COMMAND = (
     ".venv/bin/pytest tests/python/test_experiment_6477_backend_neutral_exact_constraint_record.py "
     "-q --no-cov -n 0"
 )
-VALIDATE_COMMAND = (
-    ".venv/bin/python -m carnot.experiment_6526_v564_independent_capstone --validate"
-)
+VALIDATE_COMMAND = ".venv/bin/python -m carnot.experiment_6526_v564_independent_capstone --validate"
 DEFAULT_TEST_COMMANDS = (
     FOCUSED_TEST_COMMAND,
     COVERAGE_RUN_COMMAND,
@@ -434,7 +432,12 @@ def row_count(payload: Mapping[str, Any]) -> int:
             return len(value)
     aggregate = payload.get("aggregate_row_recomputation")  # pragma: no cover
     if isinstance(aggregate, Mapping):  # pragma: no cover
-        for key in ("row_count", "planned_row_count", "terminal_row_count", "receipt_candidate_count"):
+        for key in (
+            "row_count",
+            "planned_row_count",
+            "terminal_row_count",
+            "receipt_candidate_count",
+        ):
             value = aggregate.get(key)
             if isinstance(value, int):
                 return value
@@ -590,7 +593,9 @@ def build_retired_scope_audit(gate_rows: Sequence[Mapping[str, Any]]) -> JsonDic
     """Check structured gate dependencies without treating prior failures as gates."""
 
     structured_dependencies = [
-        f"exp{row['upstream_task']}" for row in gate_rows if isinstance(row.get("upstream_task"), str)
+        f"exp{row['upstream_task']}"
+        for row in gate_rows
+        if isinstance(row.get("upstream_task"), str)
     ]
     violations = [
         dependency
@@ -685,10 +690,12 @@ def build_comparative_claim_rows(artifacts: Mapping[str, JsonDict]) -> list[Json
             "eligibility": "eligible_positive",
             "acceptance_conditions": {
                 "certification_conditions_met": a6519.get("certification_conditions_met"),
-                "source_aggregate_fields_used": exp6519.get("independent_row_recomputation", {})
-                .get("source_aggregate_fields_used"),
-                "charged_cost_accounting_passed": exp6519.get("charged_cost_audit", {})
-                .get("charged_cost_accounting_passed"),
+                "source_aggregate_fields_used": exp6519.get(
+                    "independent_row_recomputation", {}
+                ).get("source_aggregate_fields_used"),
+                "charged_cost_accounting_passed": exp6519.get("charged_cost_audit", {}).get(
+                    "charged_cost_accounting_passed"
+                ),
             },
         },
         {
@@ -803,9 +810,9 @@ def build_comparative_claim_rows(artifacts: Mapping[str, JsonDict]) -> list[Json
             "acceptance_conditions": {
                 "hardware_command_count": exp6525.get("hardware_command_count"),
                 "hardware_speedup_claim": exp6525.get("hardware_speedup_claim"),
-                "new_post_exp6325_physical_receipt_found": exp6525.get("gate_check_summary", {}).get(
-                    "new_post_exp6325_physical_receipt_found"
-                ),
+                "new_post_exp6325_physical_receipt_found": exp6525.get(
+                    "gate_check_summary", {}
+                ).get("new_post_exp6325_physical_receipt_found"),
             },
         },
     ]
@@ -1055,7 +1062,9 @@ def build_aggregate_row_recomputation(
         row["lineage_id"] for row in next_state_rows if row.get("verdict_class") == "blocked"
     ]
     return {
-        "verdict_class_from_rows": "partial",
+        # The capstone read every expected artifact and finished, so the class
+        # from rows is null: mixed evidence, no retry (REQ-CONDUCTOR-VERDICT-3).
+        "verdict_class_from_rows": "null",
         "blocked_lineage_count": len(blocked_lineages),
         "blocked_lineages": blocked_lineages,
         "positive_lineage_count": sum(
@@ -1069,7 +1078,9 @@ def build_aggregate_row_recomputation(
         ).get("observed_value"),
         "per_unit_row_count": len(per_unit_rows),
         "per_unit_row_type_counts": dict(sorted(type_counts.items())),
-        "allowed_next_states_only": all(row.get("next_state") in NEXT_STATES for row in next_state_rows),
+        "allowed_next_states_only": all(
+            row.get("next_state") in NEXT_STATES for row in next_state_rows
+        ),
     }
 
 
@@ -1181,12 +1192,15 @@ def build_artifact(
     learned_score, csl_score = recompute_scores(claim_rows)
     elapsed = duration_s if duration_s is not None else max(time.perf_counter() - start, 0.0001)
     artifact: JsonDict = {
-        "status": "complete_partial_v564_independent_capstone",
+        "status": "complete_v564_independent_capstone",
         "honest_verdict": (
-            "complete_partial_v564_evidence_graph: row-supported structural, router, "
+            "complete_v564_evidence_graph: row-supported structural, router, "
             "CSL, and adaptive validation claims coexist with blocked ARC and GateMate lineages"
         ),
-        "verdict_class": "partial",
+        # The capstone finished reading every expected artifact; mixed lineage
+        # evidence with no pooled claim is null, not partial
+        # (REQ-CONDUCTOR-VERDICT-3).
+        "verdict_class": "null",
         "task_inventory_rows": task_rows,
         "artifact_hash_receipts": hash_receipts,
         "gate_contract_rows": gate_rows,
@@ -1253,7 +1267,9 @@ def build_artifact(
         if result_path.is_absolute():
             atomic_write_json(result_path, artifact, root=repo_root, env={}, sort_keys=False)
         else:
-            atomic_write_json(result_path, artifact, root=repo_root, sort_keys=False)  # pragma: no cover
+            atomic_write_json(
+                result_path, artifact, root=repo_root, sort_keys=False
+            )  # pragma: no cover
     return artifact
 
 
