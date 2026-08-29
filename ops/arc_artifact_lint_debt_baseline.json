@@ -1,0 +1,9 @@
+{
+  "schema": "carnot.arc_artifact_lint_debt_baseline.v1",
+  "recorded_at": "2026-08-29",
+  "baseline_commit": "ce6831b234a5ab7f95272ee47a59538c51b1572f",
+  "known_failing_count": 444,
+  "what_this_is": "A DEBT SNAPSHOT for REQ-HARNESS-5935, not a target and not an approval. As of the baseline commit, 444 of 573 ARC candidate artifacts under results/ carry at least one arc_artifact_lint error (194 INVALID_INFERENCE_SUBSTRATE, 141 MISSING_INFERENCE_SUBSTRATE, 111 NON_TERMINAL_HONEST_VERDICT, 56 LIVE_LLM_NOT_ALLOWLISTED, 53 DURATION_MISSING, 18 DURATION_BELOW_SUBSTRATE_FLOOR; an artifact can carry several). The lint is a pre-commit hook and result artifacts are written once and never re-staged, so it had never inspected the population it governs. Every artifact ADDED after baseline_commit must pass the lint; the standing 444 await per-class repair decisions recorded in ops/known-issues.md (2026-08-28 entry).",
+  "how_to_shrink": "Fix a failing artifact's WRITER and regenerate, or make the per-class repair the known-issues entry describes. This file needs no update when old debt shrinks; it freezes only the boundary commit. Moving baseline_commit FORWARD past newly-added failing artifacts is the forbidden move -- it converts a regression into debt.",
+  "enforced_by": "tests/python/test_arc_artifact_debt_ratchet.py"
+}
