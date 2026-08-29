@@ -16727,3 +16727,5 @@ The l |
 | 2026-08-29 00:02 UTC | Planning audit receipt merge | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6715-bounded-exact-replay-audit, exp6716- |
 | 2026-08-29 00:02 UTC | Three-family frozen planning proposal bank | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6717-planning-audit-receipt-merge.plann |
 | 2026-08-29 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | harness_integrity_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on harness_ |
+| 2026-08-29 02:19 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 2492957 (port 8919) reparented to init, no live process references its |
+| 2026-08-29 04:18 UTC | Milestone 2026.08.586 activated | OK | 1 tasks queued |
