@@ -470,6 +470,20 @@ def _scope_self_staged(scope_path: Path, staged: list[str]) -> bool:
     return rel in staged
 
 
+def _prior_declared_at(run_id: str) -> str | None:
+    """The timestamp this run id first declared with, if it is still live and usable.
+
+    A STALE prior returns None, so an abandoned claim that is picked up again starts a fresh
+    clock rather than resurrecting expired seniority.
+    """
+    path = SCOPES / f"{run_id}.scope.json"
+    record = _load_scope(path)
+    if record is None or _claim_is_stale(record, datetime.now(UTC)):
+        return None
+    value = record.get("declared_at")
+    return value if isinstance(value, str) and value else None
+
+
 def declare(globs: list[str], unseal: list[str], run_id: str, anchor: str = "declaration") -> int:
     """Record the intended blast radius and the seal, before the work starts.
 
@@ -511,7 +525,14 @@ def declare(globs: list[str], unseal: list[str], run_id: str, anchor: str = "dec
     SCOPES.mkdir(parents=True, exist_ok=True)
     record = {
         "run_id": run_id,
-        "declared_at": datetime.now(UTC).isoformat(),
+        # SENIORITY SURVIVES A RE-DECLARE (2026-08-29). Rewriting this unconditionally meant a
+        # session working past the staleness window lost its own declared paths to any younger
+        # claimant, and could never regain them: the refusal's own advice -- re-declare -- reset
+        # the clock, so it stayed junior forever. An expiry meant to release ABANDONED claims was
+        # demoting live ones. Re-declaring the same run id keeps its original timestamp, so the
+        # record answers "when did this session first claim this" rather than "when did it last
+        # type the command".
+        "declared_at": _prior_declared_at(run_id) or datetime.now(UTC).isoformat(),
         "pid": os.getpid(),
         "scope": list(globs),
         "unsealed": sorted(unseal),
@@ -667,6 +688,19 @@ def check() -> int:
             )
 
         seals = record.get("seals") or {}
+        # A DEAD SESSION'S DECLARATION-ANCHORED SEAL MUST NOT FREEZE THE REPO FOREVER
+        # (2026-08-29). Staleness was applied to the out-of-scope branch and not to this one,
+        # one branch over. A crashed declaration refuses every commit repo-wide the moment any
+        # sealed file legitimately changes, and only deleting the file recovers it.
+        #
+        # HEAD-ANCHORED SEALS ARE DELIBERATELY EXEMPT. `--seal-anchor head` marks a STANDING
+        # declaration -- the conductor's, which is re-asserted at startup and is routinely
+        # older than the window; it was 6.5h old when this was written. Its seal is also
+        # self-limiting: it compares the working tree to HEAD, so committing the change clears
+        # it. Expiring those would silently remove the only harness protection in the repo,
+        # which is the failure this rule is supposed to prevent, achieved by the fix for it.
+        if seals and record.get("seal_anchor") != "head" and _claim_is_stale(record, judged_at):
+            seals = {}
         drifted = []
         for rel, expected in seals.items():
             if rel in explicitly_unsealed:

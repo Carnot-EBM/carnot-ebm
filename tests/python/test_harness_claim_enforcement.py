@@ -351,3 +351,75 @@ def test_identical_globs_warn_at_declaration_time() -> None:
     mine = rec("beta", 1, "scripts/*")
     older = rec("alpha", 2, "scripts/*")
     assert overlapping_older_claims(["scripts/*"], mine, [older], NOW) == {"scripts/*": "alpha"}
+
+
+# --- Residual findings from the same review, fixed 2026-08-29 -------------------------------
+
+
+def test_a_dead_declaration_anchored_seal_stops_freezing_the_repo(repo) -> None:
+    """Staleness had been applied to the out-of-scope branch and not to the seal branch.
+
+    A crashed session's declaration refused every commit repo-wide the moment any sealed file
+    legitimately changed, recoverable only by deleting the scope file.
+    """
+    (repo / "sealed.py").write_text("original\n")
+    subprocess.run(["git", "add", "-A"], cwd=repo, check=True)
+    subprocess.run(["git", "commit", "-qm", "seal"], cwd=repo, check=True)
+    guard.declare(["a.py"], [], "ghost")
+
+    path = guard.SCOPES / "ghost.scope.json"
+    record = json.loads(path.read_text())
+    record["seals"] = {"sealed.py": "deadbeef"}  # drifted
+    record["seal_anchor"] = "declaration"
+    record["declared_at"] = (datetime.now(UTC) - CLAIM_STALE_AFTER - timedelta(hours=1)).isoformat()
+    path.write_text(json.dumps(record))
+
+    _stage(repo, "a.py")
+    assert guard.check() == 0
+
+
+def test_a_standing_head_anchored_seal_does_not_expire(repo) -> None:
+    """The conductor's standing declaration is routinely older than the window.
+
+    It was 6.5h old when this was written. Expiring it would silently remove the only harness
+    protection in the repo -- the failure the sibling fix exists to prevent, delivered by the
+    fix for it. A HEAD-anchored seal is self-limiting anyway: committing the change clears it.
+    """
+    (repo / "sealed.py").write_text("original\n")
+    subprocess.run(["git", "add", "-A"], cwd=repo, check=True)
+    subprocess.run(["git", "commit", "-qm", "seal"], cwd=repo, check=True)
+    guard.declare(["a.py"], [], "standing", anchor="head")
+
+    path = guard.SCOPES / "standing.scope.json"
+    record = json.loads(path.read_text())
+    record["seals"] = {"sealed.py": guard.HEAD_ANCHOR}
+    record["declared_at"] = (datetime.now(UTC) - CLAIM_STALE_AFTER - timedelta(hours=3)).isoformat()
+    path.write_text(json.dumps(record))
+
+    (repo / "sealed.py").write_text("edited uncommitted\n")  # drift vs HEAD
+    _stage(repo, "a.py")
+    assert guard.check() == 1
+
+
+def test_re_declaring_keeps_seniority(repo) -> None:
+    """An expiry meant to release ABANDONED claims was demoting LIVE ones.
+
+    A session working past the window lost its own paths to any younger claimant, and the
+    refusal's own advice -- re-declare -- reset the clock, so it stayed junior forever.
+    """
+    guard.declare(["a.py"], [], "longrunner")
+    first = json.loads((guard.SCOPES / "longrunner.scope.json").read_text())["declared_at"]
+    guard.declare(["a.py", "b.py"], [], "longrunner")
+    assert json.loads((guard.SCOPES / "longrunner.scope.json").read_text())["declared_at"] == first
+
+
+def test_re_declaring_an_abandoned_id_starts_a_fresh_clock(repo) -> None:
+    """Reusing a dead id must not resurrect expired seniority."""
+    guard.declare(["a.py"], [], "revenant")
+    path = guard.SCOPES / "revenant.scope.json"
+    record = json.loads(path.read_text())
+    stale = (datetime.now(UTC) - CLAIM_STALE_AFTER - timedelta(hours=2)).isoformat()
+    record["declared_at"] = stale
+    path.write_text(json.dumps(record))
+    guard.declare(["a.py"], [], "revenant")
+    assert json.loads(path.read_text())["declared_at"] != stale
