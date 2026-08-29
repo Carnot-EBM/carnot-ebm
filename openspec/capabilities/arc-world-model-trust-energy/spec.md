@@ -28333,3 +28333,200 @@ both.
 Implementation status: implemented 2026-08-29
 (`python/carnot/agentic/arc_trajectory_supervisor.py`;
 `tests/python/test_arc_trajectory_supervisor.py`, 34 tests, 4/4 mutations RED).
+
+### REQ-ARC-WMTE-6770: Tool-Gap Feedback — Live Runs Record Tool Demand; Tool Introduction Stays Curated, Default Off
+
+Origin: 2026-08-29 operator-directed follow-up to the supervisor-refinement
+loop (REQ-ARC-WMTE-6720) and the Missing-Verifier Gap Logging discipline
+(CLAUDE.md; `ops/verifier_gaps.md`). `TOOL_SCHEMAS` is a closed, hand-authored
+set. Before this requirement, a model call naming a tool outside that set was
+refused and then forgotten: only `tool_call_parse_failures` survived, and that
+counter also counts malformed JSON. Eight live rows carry the counter at 1
+with no way to say which kind fired, and no readable artifact records WHICH
+tool a model ever wanted. This requirement is the tool-side analogue of the
+verifier-gap ledger: the machine identifies demand; a human authors supply.
+
+1. **Capture keeps identity, at the shared dispatch chokepoint.**
+   `dispatch_tool` SHALL record a bounded `tool_gap_events` entry on the
+   session for: an `unknown_tool` call (the requested name plus the argument
+   keys), and a `bad_arguments` call (the tool plus the error text). The
+   bound is `MAX_TOOL_GAP_EVENTS`; overflow increments a visible
+   `tool_gap_events_dropped` counter, never silently discards.
+2. **Events ride the stats every consumer already copies.** The loop SHALL
+   initialize `tool_gap_events` (empty list), `tool_gap_events_dropped`,
+   `candidate_tools_enabled`, and `candidate_tools_rejected` on every run's
+   stats — present-and-empty, never absent — and finalize them from the
+   session at `_finish`. The live E3 policy's `record["tool_loop"]` subset
+   SHALL carry all four fields.
+3. **Introduction is curated selection, never generation.** A new tool
+   enters as a HUMAN-AUTHORED candidate via `register_candidate_tool`
+   (refusing core-name collisions), and is served only when named exactly in
+   `CARNOT_ARC_INDUCE_CANDIDATE_TOOLS` (comma-separated). An env name that is
+   not registered SHALL be visibly rejected in the stats, not silently
+   dropped. With the flag unset, `active_tool_schemas()` SHALL return the
+   `TOOL_SCHEMAS` object itself, so the default payload, prompt text, and
+   dispatch are byte-identical to before this requirement.
+4. **Both transports serve the same active set.** The server-lifted payload
+   (`tools` field), the selfparse prompt text
+   (`render_tool_schemas_for_prompt`), and XML parameter coercion SHALL all
+   derive from the active set, so an enabled candidate is callable on either
+   transport and a dark one on neither.
+5. **The offline analyzer only specifies; a human authors.**
+   `python/carnot/agentic/arc_tool_gap_refinement.py` (CLI
+   `scripts/arc_tool_gap_refine.py`) SHALL ingest rows into a durable
+   deduplicated ledger (`ops/arc_tool_gap_ledger.json`), find stats by the
+   capture key wherever a row nests them, count pre-capture rows as a named
+   population (absence of evidence, not evidence of absence), and apply a
+   frozen contract: a gap with `>= MIN_EVENTS_PER_GAP (3)` events across
+   `>= MIN_DISTINCT_ROWS (2)` rows yields a written `tool_gap_specification`
+   for a human, with a ready-to-append `ops/arc_tool_gaps.md` entry in the
+   verifier-gaps schema. The tool SHALL NOT generate a schema or an
+   implementation, SHALL NOT edit `TOOL_SCHEMAS`, and SHALL NOT write any
+   file other than its own ledger. Below the floors it says
+   `insufficient_evidence` loudly; IO or schema errors exit non-zero.
+
+#### SCENARIO-ARC-WMTE-6770-1 (default byte-identical)
+- GIVEN a registered candidate tool and the env flag unset
+- THEN `active_tool_schemas()` is the `TOOL_SCHEMAS` object, the request
+  payload carries no candidate schema, and calling the candidate is an
+  unknown-tool refusal that records a gap event.
+
+#### SCENARIO-ARC-WMTE-6770-2 (unknown-tool identity)
+- GIVEN a loop turn calling a tool name outside the active set, through the
+  real induce() entry point
+- THEN the run's stats carry a `tool_gap_events` entry with the requested
+  name and argument keys, and the legacy conflated counter still moves.
+
+#### SCENARIO-ARC-WMTE-6770-3 (bad-arguments identity)
+- GIVEN a call to an existing tool with an argument its schema lacks
+- THEN a `bad_arguments` event retains the tool and the error text.
+
+#### SCENARIO-ARC-WMTE-6770-4 (presence and bound)
+- GIVEN a clean run — THEN the gap keys are present and empty, never absent.
+- GIVEN more events than the bound — THEN the list caps at
+  `MAX_TOOL_GAP_EVENTS` and the overflow count is visible.
+
+#### SCENARIO-ARC-WMTE-6770-5 (curated introduction, measurable)
+- GIVEN a registered candidate named exactly in the env flag
+- THEN its schema reaches the request payload and the selfparse prompt text,
+  its XML calls coerce by its own schema, dispatch executes it, and its
+  usage appears in `tool_calls_by_name`.
+
+#### SCENARIO-ARC-WMTE-6770-6 (env typo visible)
+- GIVEN the env flag naming an unregistered tool
+- THEN the name appears in `candidate_tools_rejected` and the payload stays
+  byte-identical to the default.
+
+#### SCENARIO-ARC-WMTE-6770-7 (live path record)
+- GIVEN the live repair path runs the loop and its stats carry gap events
+- THEN `record["tool_loop"]` carries `tool_gap_events`,
+  `tool_gap_events_dropped`, `candidate_tools_enabled`, and
+  `candidate_tools_rejected`.
+
+#### SCENARIO-ARC-WMTE-6770-8 (analyzer contract)
+- GIVEN 3 events for one name across 2 distinct rows — THEN
+  `specification_available`, `recommendation_only: true`, a human-audience
+  specification with a `### TOOLGAP-` markdown entry, and no generated code.
+- GIVEN 3 events in one row, or 2 events across two rows — THEN
+  `insufficient_evidence` with the exact shortfalls named.
+- GIVEN only pre-capture rows — THEN `no_capture_capable_rows`.
+- GIVEN capture rows with zero events — THEN
+  `no_gap_events_nothing_to_specify`, the honest empty.
+
+#### SCENARIO-ARC-WMTE-6770-9 (durability and fail-loud)
+- GIVEN the same rows file twice — THEN one ledger entry and a visible
+  duplicate count.
+- GIVEN a nested repo clone with a rows.json — THEN it is pruned.
+- GIVEN the source deleted after ingest — THEN re-evaluation reproduces the
+  same totals.
+- GIVEN a missing input — THEN exit non-zero.
+
+## Implementation Status (REQ-ARC-WMTE-6770)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6770 | `python/carnot/agentic/arc_induction_tools.py` (`record_tool_gap`, session gap fields, `CANDIDATE_TOOLS` + `register_candidate_tool`, `_candidate_names_from_env`, `active_tool_schemas`, `_param_types_for`, dispatch capture + candidate dispatch); `python/carnot/agentic/arc_induction_tool_loop.py` (payload from `active_tool_schemas`, gap keys on every stats, finalize at `_finish`); `python/carnot/agentic/arc_competition_agent.py` (`record["tool_loop"]` widened); `python/carnot/agentic/arc_tool_gap_refinement.py` + `scripts/arc_tool_gap_refine.py` (ledger `ops/arc_tool_gap_ledger.json`); gap doc `ops/arc_tool_gaps.md`. | `tests/python/test_arc_tool_gap_feedback.py` (SCENARIO-ARC-WMTE-6770-1..9; mutation proofs re-run in full after the 2026-08-29 adversarial review — see the amendment below: 30 mutation runs, labels M1-M28, each RED then restored byte-identical, run in a PYTHONPATH-pinned worktree). |
+
+### Amendment to REQ-ARC-WMTE-6770 from the adversarial review of a613f36bc7 (2026-08-29, append-only)
+
+A hostile same-day review of the first cut found one premise-level defect and
+several silent-non-firing holes. The rules above stand; these clauses extend
+them. Each carries its review id and a regression test proven by deletion.
+
+1. **Rule 2 gains the PRIMARY live induction site (F2 — the finding that
+   mattered).** The first cut widened only the repair branch's record, but
+   `CARNOT_ARC_INDUCE_TOOL_LOOP` is one variable: "1"/"selfparse" runs the
+   loop, "repair" builds the widened record — mutually exclusive, so the live
+   path captured evidence and then overwrote it with no row written. The
+   primary induce site in `_induce_and_plan` SHALL clear
+   `last_tool_loop_stats` before inducing and, when the post-call stats carry
+   `tool_gap_events`, copy the gap fields onto `attempt["tool_gap"]`. The
+   pre-clear is load-bearing: without it a loop-less induction republishes a
+   stale run's events.
+2. **Rule 1 widens to name-first capture (F3, F4).** An unknown NAME with
+   unparseable or non-object arguments is still demand — the name needed no
+   parse — and SHALL be recorded with `argument_keys: null`. A tool-call
+   block the strict transports refuse (selfparse XML the regex cannot lift;
+   server-lift JSON left as text) SHALL yield best-effort loose-extracted
+   names (`loose_tool_call_names`, bounded), recorded with
+   `source: "unparsed_text"` when outside the active set. A malformed call
+   to a KNOWN tool stays transport noise, never demand.
+3. **Rule 3's enablement is FROZEN per session (F5, F7).**
+   `InductionToolSession` snapshots `(enabled, rejected)` at creation;
+   payload, prompt text, dispatch, and the stats record all read that one
+   snapshot (`active_tool_schemas_for`). A mid-run env or registry mutation —
+   including one made by model-executed tool code — changes nothing within
+   the run, and the record cannot disagree with what dispatched.
+   **Disclosed limit (F5):** across runs, code executed in-process by the
+   tools (full builtins, by design of `_exec_candidate`) can mutate the
+   registry and environment; no in-process guard can prevent that, because
+   the same execution could remove the guard. The human-only introduction
+   boundary is therefore a CONTRACT enforced within a run by the freeze,
+   across runs only by the same trust boundary as in-process exec itself
+   (`CARNOT_USE_SANDBOX` is the real containment for untrusted code). The
+   spec claims no more than this.
+4. **Rule 1 bounds model-controlled text (F9).** `requested_tool` is capped
+   at `MAX_TOOL_GAP_NAME_CHARS`; `argument_keys` at `MAX_TOOL_GAP_ARG_KEYS`
+   entries — the same discipline the `error` field already had.
+5. **Rule 5's coercion claim is now true as written (F6).**
+   `_param_types_for` consults the registry only for ENABLED names, so a
+   registered-but-dark candidate changes nothing, including XML coercion.
+6. **Rule 5 surfaces truncation (F8).** The analyzer sums
+   `tool_gap_events_dropped` into `evidence.gap_events_dropped_total`; a
+   non-zero value marks every per-gap count as a floor.
+
+#### SCENARIO-ARC-WMTE-6770-10 (primary live path records)
+- GIVEN the primary live induction runs the tool loop and events were captured
+- THEN `attempt["tool_gap"]` carries them.
+- GIVEN a later induction that never entered the loop
+- THEN no stale events are republished.
+
+#### SCENARIO-ARC-WMTE-6770-11 (name-first capture)
+- GIVEN an unknown-name call with unparseable JSON, and an unparsed
+  tool-call block naming a nonexistent tool on either transport
+- THEN the demanded name is recorded; a malformed call to a known tool is not.
+
+#### SCENARIO-ARC-WMTE-6770-12 (session freeze)
+- GIVEN a candidate registered and enabled AFTER a session was created
+- THEN that session refuses it and its schema list stays the core object.
+- GIVEN enablement at creation and the env cleared mid-run
+- THEN the session still serves it and the record says enabled.
+
+**Corrigendum (owned, per the Error Lifecycle).** The first cut's commit
+message claimed "Zero decorative rules." The review falsified it three ways:
+the dropped-counter finalize was proven only at the session attribute (a
+literal 0 stayed green), a markdown assertion (`"def " not in entry`) was a
+tautology, and nothing bound the refusal text to the active set. All three
+now have biting tests, and the mutation set was re-run in full: 30 mutation runs
+(labels M1-M28 with M6 and M22 in two halves each, including the review fixes and the split-out freshness-lint rider's
+M15/M16/M25/M26), each RED, each restore byte-identical. The review also
+corrected the gap doc's bootstrap null: the measured no-unknown-name corpus
+is entirely the SERVER-LIFTED transport (selfparse_blocks_seen == 0), where
+the server constrains names structurally — the null does not extend to the
+live selfparse transport, where unknown-name demand becomes possible.
+
+## Implementation Status (REQ-ARC-WMTE-6770 amendment)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6770 (amendment) | `python/carnot/agentic/arc_induction_tools.py` (session freeze fields + `active_tool_schemas_for`/`active_tool_names_for`, name-first capture in `dispatch_tool`, `_record_unknown_tool` caps, `loose_tool_call_names`, enablement-gated `_param_types_for`); `python/carnot/agentic/arc_induction_tool_loop.py` (frozen payload/prompt, loose-name capture on both transports, session-sourced stats); `python/carnot/agentic/arc_competition_agent.py` (`_induce_and_plan` pre-clear + `attempt["tool_gap"]`); `python/carnot/agentic/arc_tool_gap_refinement.py` (`gap_events_dropped_total`). | `tests/python/test_arc_tool_gap_feedback.py` (SCENARIO-ARC-WMTE-6770-10..12 plus the F3/F4/F6/F8/F9 regressions; 26 feature mutation runs RED). |

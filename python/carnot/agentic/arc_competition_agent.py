@@ -8159,12 +8159,33 @@ class E3AgentPolicy:
             _induce_rows = active_transitions
             if _cegis_accept_split_enabled():
                 _induce_rows = _split_refinement_acceptance(active_transitions).refinable
-            ok, _induce_note = self._proposer().induce(
+            _induce_prop = self._proposer()
+            # Cleared BEFORE the call so a non-empty dict after it is THIS
+            # induction's tool-loop stats, never a stale run's. Without this,
+            # the primary live path recorded no tool-gap evidence at all: the
+            # loop runs under "1"/"selfparse" but the only widened record was
+            # on the "repair" branch — same env var, mutually exclusive values
+            # (adversarial review 2026-08-29, F2). REQ-ARC-WMTE-6770 rule 2.
+            _induce_prop.last_tool_loop_stats = {}
+            ok, _induce_note = _induce_prop.induce(
                 self.short,
                 _induce_rows,
                 self.cell,
                 **_induce_kwargs,
             )
+            _loop_stats = dict(getattr(_induce_prop, "last_tool_loop_stats", {}) or {})
+            if "tool_gap_events" in _loop_stats:
+                attempt["tool_gap"] = {
+                    k: _loop_stats.get(k)
+                    for k in (
+                        "tool_gap_events",
+                        "tool_gap_events_dropped",
+                        "candidate_tools_enabled",
+                        "candidate_tools_rejected",
+                        "terminated_by",
+                        "tool_calls_total",
+                    )
+                }
             if not ok or _plan_start_grid is None:
                 # SPLIT RECORD (REQ-ARC-WMTE-6610). The old single label
                 # "proposer_failed_or_missing_root" conflated two different causes, and the
@@ -8690,6 +8711,12 @@ class E3AgentPolicy:
                     "seed_visible_mismatches",
                     "decode_tokens_total",
                     "tool_call_parse_failures",
+                    # REQ-ARC-WMTE-6770: without these the live record would be
+                    # blind to tool-gap demand on exactly the path that matters.
+                    "tool_gap_events",
+                    "tool_gap_events_dropped",
+                    "candidate_tools_enabled",
+                    "candidate_tools_rejected",
                 )
             }
         else:
