@@ -1,6 +1,21 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-08-28 (REQ-ARC-WMTE-6730/6740: selfparse tool-call
+**Last Updated:** 2026-08-29 (REQ-CONDUCTOR-GATECASCADE-1: gate-cascade
+settlement shipped from a worktree session after the evening GATE_BLOCK
+cycling. Root confirmed: exp6756's gate read a FROZEN shortfall (21 < 24)
+from the finished exp6755 artifact, burned its 3 retries on it, and the
+retirement cascaded through exp6757..exp6760 at 3 rows per link. Fix:
+`evaluate_gates` marks deterministic failures with `gate-unsat(final): `;
+`pick_next_task` retires on the first marked GATE_BLOCK row and closes
+retirement transitively over `gated_on` edges — a dead chain now settles in
+one iteration. The GPU-contention theory for today's FAILs was REFUTED by
+base rate (3-4 caps today vs 9 yesterday with no A/B); the GPU-1 A/B should
+NOT be paused. 16 entry-point tests, 11/11 mutations RED. Lands on branch
+`worktree-agent-aff05cc9b49c41da6`; the live conductor picks it up at its
+next restart after merge. See
+`docs/research-notes/gate-cascade-settlement-2026-08-29.md`.)
+
+**Prior update (2026-08-28):** (REQ-ARC-WMTE-6730/6740: selfparse tool-call
 transport + goal-prompt RLE fix shipped, both from the 2026-08-28
 context/frame design note and its independent-review correction.
 `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse` runs the induction tool loop with NO
