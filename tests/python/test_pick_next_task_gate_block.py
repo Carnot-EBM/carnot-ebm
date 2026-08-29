@@ -112,10 +112,14 @@ def test_pick_next_task_source_includes_gate_block_in_failure_set():
     is in the failure-counting set. The pre-2026-04-29 bug was that
     GATE_BLOCK was silently ignored."""
     source = (SCRIPTS_DIR / "research_conductor.py").read_text()
-    # The relevant tuple should include GATE_BLOCK
+    # The relevant tuple should include GATE_BLOCK. The needle below matched
+    # the pre-2026-04-30 tuple; DOOMED_RERUN_BLOCK was appended later and
+    # this assertion silently went RED for months (found 2026-08-29 during
+    # the gate-cascade fix). Keep it aligned with the live tuple.
     assert (
         '"GATE_BLOCK"' in source
-        and 'status in ("FAIL", "REVERT", "SKIP", "NOOP", "GATE_BLOCK")' in source
+        and 'status in ("FAIL", "REVERT", "SKIP", "NOOP", "GATE_BLOCK", "DOOMED_RERUN_BLOCK")'
+        in source
     ), (
         "pick_next_task must count GATE_BLOCK toward fail_counts. "
         "The pre-2026-04-29 bug let exp1044 loop indefinitely."

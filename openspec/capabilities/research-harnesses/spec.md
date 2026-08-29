@@ -9807,3 +9807,68 @@ older than the staleness window SHALL be treated as abandoned.
 
 Implementation status: implemented 2026-08-29 (`scripts/harness_integrity_lint.py`;
 `tests/python/test_harness_claim_enforcement.py`, 14 tests, 7/7 mutations RED).
+
+### REQ-CONDUCTOR-GATECASCADE-1: A deterministic gate failure retires at once, and retirement closes transitively
+
+A gate that fails against a FINISHED upstream artifact SHALL be treated as permanent for the
+milestone. The upstream value is frozen evidence; a retry re-reads the same bytes. The conductor
+SHALL NOT spend the task's retry budget re-evaluating such a gate.
+
+Three rules implement this:
+
+1. `evaluate_gates` (`scripts/conductor_gates.py`) SHALL prefix its failure summary with
+   `gate-unsat(final): ` when any FAILED gate read an existing, parsed upstream artifact whose
+   `status` is terminal (`success`/`complete`/`completed`/`passed`/`shipped`/`ok`) or whose
+   `honest_verdict` carries a terminal prefix. A missing, unreadable, `running`, `blocked`, or
+   `failed` upstream artifact SHALL stay transient — the upstream may re-run and rewrite it.
+2. `pick_next_task` (`scripts/research_conductor.py`) SHALL retire a task on its FIRST
+   GATE_BLOCK log row whose details start with a terminal marker: `gate-unsat(final):` or
+   `Pre-emptive skip: upstream retired`. Unmarked GATE_BLOCK rows keep the
+   MAX_FAILURES_PER_TASK budget (the 2026-04-29 rule, REQ-INFRA-085).
+3. `pick_next_task` SHALL close the retired-task set transitively over `gated_on` edges before
+   scanning, so a chain whose root retired settles in one iteration instead of one
+   MAX_FAILURES cycle per link.
+
+Origin: 2026-08-29, milestone 2026.08.589. exp6755 finished with
+`environment_grammar_targetable_rows=21`; exp6756's gate demanded `>=24`. The conductor
+re-evaluated the frozen shortfall 3 times, retired exp6756, then burned 3 GATE_BLOCK rows per
+downstream link (exp6757..exp6760) — ~18 minutes of 2-minute GATE_BLOCK cycling and 16 log
+rows before the next runnable task ran.
+
+#### SCENARIO-CONDUCTOR-GATECASCADE-1-A: the incident input is marked terminal
+- GIVEN exp6755's artifact with status `complete` and `environment_grammar_targetable_rows=21`
+- WHEN exp6756's gates (`transport_reparse_ready == true`, `..._targetable_rows >= 24`) are evaluated
+- THEN the check fails, the summary starts with `gate-unsat(final): `, and
+  `gate_failure_is_deterministic` returns true
+
+#### SCENARIO-CONDUCTOR-GATECASCADE-1-B: a healthy roadmap gets no marker
+- GIVEN the same artifact with `environment_grammar_targetable_rows=30`
+- WHEN the same gates are evaluated
+- THEN the check passes with the normal satisfied summary and no marker
+
+#### SCENARIO-CONDUCTOR-GATECASCADE-1-C: an unfinished upstream keeps the retry budget
+- GIVEN an upstream artifact whose status is `running`, `blocked`, or `failed`, or no artifact at all
+- WHEN a gate against it fails
+- THEN the summary carries no marker, and the task keeps its MAX_FAILURES_PER_TASK retries
+
+#### SCENARIO-CONDUCTOR-GATECASCADE-1-D: one terminal row settles the whole chain
+- GIVEN a log with one `gate-unsat(final):` GATE_BLOCK row for the chain root
+- WHEN pick_next_task runs once
+- THEN the root and every transitive dependent are skipped and the next runnable task is returned
+
+#### SCENARIO-CONDUCTOR-GATECASCADE-1-E: an unmarked gate block still retries
+- GIVEN a log with one unmarked GATE_BLOCK row for a task
+- WHEN pick_next_task runs
+- THEN that task is returned again (transient blocks keep their three tries)
+
+#### SCENARIO-CONDUCTOR-GATECASCADE-1-F: three unmarked rows still retire
+- GIVEN a log with MAX_FAILURES_PER_TASK unmarked GATE_BLOCK rows for a task
+- WHEN pick_next_task runs
+- THEN the task is retired exactly as before this requirement
+
+Implementation status: implemented 2026-08-29 (`scripts/conductor_gates.py`
+`_upstream_is_final`/`gate_failure_is_deterministic`/`GATE_UNSAT_FINAL_PREFIX`;
+`scripts/research_conductor.py` `_GATE_BLOCK_TERMINAL_DETAIL_PREFIXES` + fail-counter
+marker rule + transitive closure; `tests/python/test_gate_cascade_settlement.py`, 16 tests
+at the real entry points, 11/11 mutations RED, restores byte-identical). Verified read-only
+against the live 2026.08.589 roadmap: the marker fires on exp6756 only.

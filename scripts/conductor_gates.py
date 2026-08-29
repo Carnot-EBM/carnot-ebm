@@ -85,6 +85,11 @@ class GateResult:
     reason: str = ""
     artifact_path: str | None = None
     artifact_sha256: str | None = None
+    # True when the upstream artifact exists, parsed, and is in a terminal
+    # success state. A failed gate on such an artifact can never pass by
+    # retrying: the value it read is frozen. See commit for the 2026-08-29
+    # exp6756 incident (gate 21 < 24 retried 3x against a finished artifact).
+    upstream_final: bool = False
 
 
 @dataclass
@@ -98,6 +103,61 @@ class GateCheckResult:
 
 _TRUE_TOKENS = frozenset({"true", "1", "yes", "y", "on"})
 _FALSE_TOKENS = frozenset({"false", "0", "no", "n", "off"})
+
+# Marker prefix for a gate failure that retrying cannot fix. It leads the
+# summary, so it survives log_step's 80-char detail truncation and the
+# conductor's fail counter can retire the task on the FIRST such row.
+# research_conductor.py holds a byte-identical copy; a test asserts equality.
+GATE_UNSAT_FINAL_PREFIX = "gate-unsat(final): "
+
+# An upstream artifact in one of these states is DONE. Its fields are frozen
+# evidence (results/** is append-only), so a gate that fails against it fails
+# forever. "running"/"bootstrap"/"blocked"/"failed" states stay non-final:
+# the upstream may retry and rewrite, so the downstream keeps its retries.
+_FINAL_UPSTREAM_STATUSES = frozenset(
+    {"success", "complete", "completed", "passed", "shipped", "ok"}
+)
+_FINAL_VERDICT_PREFIXES = (
+    "complete:",
+    "complete_",
+    "success:",
+    "success_",
+    "passed:",
+    "passed_",
+    "shipped:",
+    "shipped_",
+)
+
+
+def _upstream_is_final(data: dict) -> bool:
+    """True when an upstream artifact declares a terminal success state.
+
+    Checks the same two signals the conductor trusts for completion: the
+    `status` field and the honest_verdict terminal prefix (CLAUDE.md
+    "Verdict Terminal-Prefix Discipline"). Either one is enough.
+    """
+    status = data.get("status")
+    if isinstance(status, str) and status.strip().lower() in _FINAL_UPSTREAM_STATUSES:
+        return True
+    verdict = data.get("honest_verdict")
+    if isinstance(verdict, str):
+        v = verdict.strip().lower()
+        if v.startswith(_FINAL_VERDICT_PREFIXES):
+            return True
+    return False
+
+
+def gate_failure_is_deterministic(gate_check: GateCheckResult) -> bool:
+    """True when at least one FAILED gate read a finished upstream artifact.
+
+    One permanently-failed gate dooms the task no matter what the other
+    gates do, so ANY (not ALL) is the correct quantifier. A missing or
+    unreadable upstream artifact never counts: the upstream may still run.
+    """
+    return any(
+        (not g.passed) and g.upstream_final and g.artifact_path is not None
+        for g in gate_check.gates_evaluated
+    )
 
 
 def _coerce_gate_value(v: Any) -> Any:
@@ -458,6 +518,7 @@ def evaluate_gates(
                 reason=op_reason,
                 artifact_path=artifact_path.as_posix(),
                 artifact_sha256=artifact_sha,
+                upstream_final=_upstream_is_final(data),
             )
         )
         if not passed:
@@ -473,7 +534,13 @@ def evaluate_gates(
             f"first failure: {first.upstream}.{first.artifact_field} ({first.reason})"
         )
 
-    return GateCheckResult(passed=all_passed, gates_evaluated=results, summary=summary)
+    check = GateCheckResult(passed=all_passed, gates_evaluated=results, summary=summary)
+    if not all_passed and gate_failure_is_deterministic(check):
+        # Lead with the marker so the log row (truncated at 80 chars) keeps
+        # it, and the conductor's fail counter can retire on the first row
+        # instead of burning 3 iterations on a value that cannot change.
+        check.summary = GATE_UNSAT_FINAL_PREFIX + check.summary
+    return check
 
 
 def _first_failed_gate(gate_check: GateCheckResult) -> GateResult | None:
