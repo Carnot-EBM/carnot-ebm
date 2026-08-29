@@ -16755,3 +16755,4 @@ The l |
 | 2026-08-29 07:51 UTC | Milestone 2026.08.588 activated | OK | 13 tasks queued |
 | 2026-08-29 08:20 UTC | Activated V588 handoff and binding-contract audit | OK | 87 passed, 1 warning in 44.08s |
 | 2026-08-29 08:39 UTC | Task-owned phase clock and three-family accelerato | OK | 94 passed, 1 warning in 7.30s |
+| 2026-08-29 08:56 UTC | Hardness-controlled exact certificate stream with  | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT — result quarantined, |
