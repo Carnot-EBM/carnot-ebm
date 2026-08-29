@@ -388,6 +388,28 @@ repos:
         always_run: true
         pass_filenames: false
 
+      - id: capstone-milestone-rot-lint
+        name: A capstone must not refuse when the live roadmap moves past its milestone
+        entry: .venv/bin/python scripts/capstone_milestone_rot_lint.py
+        language: system
+        # WHY (2026-08-29). A capstone freezes MILESTONE at authoring time. Two of them then
+        # read the LIVE research-roadmap.yaml and raised unless it still matched, so they were
+        # green only during their own milestone. One built its artifact at MODULE scope, so the
+        # raise landed at COLLECTION and pytest abandoned the whole run -- 57,917 tests
+        # interrupted by one file, and every conductor task shelling out to
+        # `pytest tests/python` failed with it, exp6682 among them.
+        #
+        # The correct pattern already existed 23 times (compare the ARTIFACT's own milestone).
+        # This exists so a 26th capstone cannot rediscover the mistake.
+        #
+        # NARROW ON PURPOSE. Two false-positive classes were found and rejected while building
+        # it: matching by variable name flagged 6 correct capstones whose validators also call
+        # their argument `payload`, and matching any comparison flagged 8 more that merely
+        # RECORD `milestone_matches` as a field. The rule is: ONE function both reads the live
+        # roadmap AND raises (or asserts) on the mismatch.
+        files: ^python/carnot/experiment_.*capstone.*\.py$
+        pass_filenames: true
+
       - id: harness-integrity-lint
         name: A commit stays inside the scope its session declared
         entry: python3 scripts/harness_integrity_lint.py --check
