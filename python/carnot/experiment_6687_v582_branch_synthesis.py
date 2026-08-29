@@ -306,7 +306,10 @@ def _task_class(number: int, payload: Mapping[str, Any] | None) -> str:
     """Infer only a missing closed class from terminal process evidence."""
 
     if number == 6687:
-        return "partial"
+        # The synthesis itself attempts every planned unit and finishes; its
+        # mixed branch evidence is a null finding, not a retryable partial
+        # (REQ-CONDUCTOR-VERDICT-3).
+        return "null"
     if payload is None:
         return "blocked"
     declared = payload.get("verdict_class")
@@ -350,8 +353,8 @@ def build_terminal_task_rows(
         if number == 6687:
             artifact_state = "current_synthesis"
             terminal_source = "current_synthesis"
-            status = "complete_terminal_partial"
-            verdict = "complete_partial: current non-pooled branch synthesis"
+            status = "complete_terminal_null"
+            verdict = "complete_null: current non-pooled branch synthesis"
         elif payload is None:
             artifact_state = "missing"
             terminal_source = "conductor"
@@ -1089,13 +1092,17 @@ def build_artifact(
     artifact: JsonDict = {
         "experiment": "Exp6687",
         "run_date": date,
-        "status": "complete_terminal_partial",
+        # The synthesis run finished: 14 of 14 planned tasks joined, all five
+        # branches recomputed, and the two known-missing artifacts recorded.
+        # Mixed branch evidence with no pooled claim is class null; partial
+        # would mark a finished run as retryable (REQ-CONDUCTOR-VERDICT-3).
+        "status": "complete_terminal_null",
         "honest_verdict": (
-            "complete_partial: V582 has a null execution-integrity receipt, blocked "
+            "complete_null: V582 has a null execution-integrity receipt, blocked "
             "output, CSL, and stochastic branches, and a partial adverse ARC branch; "
             "there is no pooled success claim"
         ),
-        "verdict_class": "partial",
+        "verdict_class": "null",
         "gate_check_summary": [
             {
                 "branch": row["branch"],
@@ -1126,7 +1133,7 @@ def build_artifact(
             "branch_count": len(branch_rows),
             "branch_class_counts": class_counts,
             "pooled_success_claim": False,
-            "overall_verdict_class": "partial",
+            "overall_verdict_class": "null",
             "all_branch_rows_recomputed": len(branch_rows) == 5,
         },
         "preconditions_checked": preconditions,
@@ -1150,11 +1157,14 @@ def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
     missing_fields = sorted(set(REQUIRED_ARTIFACT_FIELDS) - set(payload))
     if missing_fields:
         return [f"missing required fields: {missing_fields}"]
-    if payload["status"] != "complete_terminal_partial":
+    # A finished synthesis must declare null, never partial: a partial
+    # declaration made the conductor re-run this completed 2,983s task to the
+    # 3-fail limit (REQ-CONDUCTOR-VERDICT-3, SCENARIO-CONDUCTOR-VERDICT-5).
+    if payload["status"] != "complete_terminal_null":
         issues.append("status")
-    if payload["verdict_class"] != "partial":
+    if payload["verdict_class"] != "null":
         issues.append("verdict_class")
-    if not str(payload["honest_verdict"]).startswith("complete_partial:"):
+    if not str(payload["honest_verdict"]).startswith("complete_null:"):
         issues.append("honest_verdict")
     if payload["inference_substrate"] != INFERENCE_SUBSTRATE:
         issues.append("inference_substrate")

@@ -151,9 +151,7 @@ FIELD_PRINCIPLES: dict[str, str] = {
     "verifier_is_oracle": (
         "Oracle disclosure prevents circular exact checks from supporting a verifier-value headline."
     ),
-    "field_principles": (
-        "The artifact must preserve why each evidence field is load-bearing."
-    ),
+    "field_principles": ("The artifact must preserve why each evidence field is load-bearing."),
     "field_provenance": (
         "JSON pointers and reducers make each corrected field independently traceable."
     ),
@@ -507,7 +505,9 @@ def _exp6504_unit_rows(
     return rows
 
 
-def recompute_exp6504(repo_root: Path, payload: Mapping[str, Any]) -> tuple[JsonDict, list[JsonDict]]:
+def recompute_exp6504(
+    repo_root: Path, payload: Mapping[str, Any]
+) -> tuple[JsonDict, list[JsonDict]]:
     """Replay Exp6504 from raw rows and compare with the immutable artifact."""
 
     raw_rows = [dict(row) for row in payload.get("raw_instance_rows", [])]
@@ -552,9 +552,13 @@ def recompute_exp6504(repo_root: Path, payload: Mapping[str, Any]) -> tuple[Json
         "leakage_attack_matrix": leakage,
         "aggregate_row_recomputation": aggregate,
     }
-    historical_checksum_matches = payload.get("reproducibility_checksum") == exp6504.reproducibility_checksum(payload)
+    historical_checksum_matches = payload.get(
+        "reproducibility_checksum"
+    ) == exp6504.reproducibility_checksum(payload)
     recomputed_checksum = exp6504.reproducibility_checksum(reconstructed_for_checksum)
-    historical_hashes = [str(row.get("raw_instance_hash")) for row in payload.get("raw_instance_rows", [])]
+    historical_hashes = [
+        str(row.get("raw_instance_hash")) for row in payload.get("raw_instance_rows", [])
+    ]
     regenerated_by_id = {str(row["instance_id"]): row for row in regenerated_raw_rows}
     stored_label_by_id = {
         str(row["instance_id"]): row for row in payload.get("exact_label_rows", [])
@@ -663,7 +667,8 @@ def recompute_exp6504(repo_root: Path, payload: Mapping[str, Any]) -> tuple[Json
         },
         "stored_aggregate_recomputed_from_rows": stored_aggregate_from_rows,
         "recomputed_aggregate_from_raw_rows": aggregate,
-        "reported_aggregate_matches_recomputed": aggregate == payload.get("aggregate_row_recomputation"),
+        "reported_aggregate_matches_recomputed": aggregate
+        == payload.get("aggregate_row_recomputation"),
         "historical_reproducibility_checksum_matches": historical_checksum_matches,
         "recomputed_reproducibility_checksum": recomputed_checksum,
         "row_replay_passed": row_replay_passed,
@@ -680,10 +685,11 @@ def exp6504_corrigendum(
     """Emit the corrected interpretation without editing Exp6504."""
 
     original_positive_oracle = (
-        payload.get("verdict_class") == "positive"
-        and payload.get("verifier_is_oracle") is True
+        payload.get("verdict_class") == "positive" and payload.get("verifier_is_oracle") is True
     )
-    corrected_class = "circular_positive" if original_positive_oracle else payload.get("verdict_class")
+    corrected_class = (
+        "circular_positive" if original_positive_oracle else payload.get("verdict_class")
+    )
     eligible = (
         recomputation.get("row_replay_passed") is True
         and corrected_class == "circular_positive"
@@ -697,7 +703,9 @@ def exp6504_corrigendum(
         "original_verdict_class": payload.get("verdict_class"),
         "original_verifier_is_oracle": payload.get("verifier_is_oracle"),
         "corrected_verdict_class": corrected_class,
-        "artifact_verdict_class": "partial",
+        # This artifact's own class. The replay finishes and makes no positive
+        # claim, so the class is null, not partial (REQ-CONDUCTOR-VERDICT-3).
+        "artifact_verdict_class": "null",
         "operational_disposition": "benchmark_ready_for_exact_branch_advice_raw_labels_only",
         "positive_scientific_claim_allowed": False,
         "oracle_distinct_scientific_comparison_present": False,
@@ -758,12 +766,18 @@ def exp6505_terminal_null_receipt(
         "accepted_mutation_count": aggregate.get("accepted_mutation_count"),
         "quarantined_mutation_count": aggregate.get("quarantined_mutation_count"),
         "failure_modes": aggregate.get("failure_modes", {}),
-        "challenge_generation_complete_score": aggregate.get("challenge_generation_complete_score_from_rows"),
+        "challenge_generation_complete_score": aggregate.get(
+            "challenge_generation_complete_score_from_rows"
+        ),
         "challenge_pool_ready_score": aggregate.get("challenge_pool_ready_score_from_rows"),
-        "reported_challenge_generation_complete_score": payload.get("challenge_generation_complete_score"),
+        "reported_challenge_generation_complete_score": payload.get(
+            "challenge_generation_complete_score"
+        ),
         "reported_challenge_pool_ready_score": payload.get("challenge_pool_ready_score"),
-        "reported_aggregate_matches_recomputed": aggregate == payload.get("aggregate_row_recomputation"),
-        "terminal_null_frozen": aggregate.get("challenge_generation_complete_score_from_rows") == 1.0
+        "reported_aggregate_matches_recomputed": aggregate
+        == payload.get("aggregate_row_recomputation"),
+        "terminal_null_frozen": aggregate.get("challenge_generation_complete_score_from_rows")
+        == 1.0
         and aggregate.get("challenge_pool_ready_score_from_rows") == 0.0
         and aggregate.get("accepted_mutation_count") == 0,
         "model_invocation_performed_by_exp6506": False,
@@ -875,7 +889,9 @@ def lineage_decision_rows(citations: Mapping[str, Any]) -> list[JsonDict]:
             {
                 "row_type": "lineage_decision",
                 "schema_version": SCHEMA_VERSION + ".lineage_decision",
-                "source_hash": exp6504_hash if base["upstream_artifact"] == "exp6504" else exp6505_hash,
+                "source_hash": exp6504_hash
+                if base["upstream_artifact"] == "exp6504"
+                else exp6505_hash,
                 "allowed_downstream_milestone": "2026.08.562",
                 "spec_refs": ["REQ-BENCH-6506", "SCENARIO-BENCH-6506-LINEAGE-LOCK"],
                 **base,
@@ -997,7 +1013,9 @@ def gate_check_summary(
     """Summarize V562 activation checks with observed values."""
 
     allowed = _allowed_dependency_set(decisions)
-    expected_allowed = [list(row) for row in sorted(("exp6504", field) for field in ALLOWED_EXP6504_FIELDS)]
+    expected_allowed = [
+        list(row) for row in sorted(("exp6504", field) for field in ALLOWED_EXP6504_FIELDS)
+    ]
     observed_allowed = [list(row) for row in sorted(allowed)]
     checks = {
         "exp6504_row_replay_passed": {
@@ -1029,14 +1047,23 @@ def gate_check_summary(
         "allowed_dependencies_limited_to_exp6504_raw_and_labels": {
             "expected": expected_allowed,
             "observed": observed_allowed,
-            "passed": allowed == {("exp6504", "raw_instance_rows"), ("exp6504", "exact_label_rows")},
+            "passed": allowed
+            == {("exp6504", "raw_instance_rows"), ("exp6504", "exact_label_rows")},
         },
         "forbidden_dependencies_fail_closed": {
             "expected": True,
             "observed": attacks.get("all_attacks_fail_closed")
-            and all(row.get("decision") != "allow" for row in decisions if row.get("scope_id") not in {"exp6504_raw_instances", "exp6504_exact_labels"}),
+            and all(
+                row.get("decision") != "allow"
+                for row in decisions
+                if row.get("scope_id") not in {"exp6504_raw_instances", "exp6504_exact_labels"}
+            ),
             "passed": attacks.get("all_attacks_fail_closed") is True
-            and all(row.get("decision") != "allow" for row in decisions if row.get("scope_id") not in {"exp6504_raw_instances", "exp6504_exact_labels"}),
+            and all(
+                row.get("decision") != "allow"
+                for row in decisions
+                if row.get("scope_id") not in {"exp6504_raw_instances", "exp6504_exact_labels"}
+            ),
         },
     }
     failed = [
@@ -1055,7 +1082,9 @@ def gate_check_summary(
         },
         "failed_checks": failed,
         "all_gates_passed": failed == [],
-        "blocked_reason": "" if failed == [] else "blocked_" + ",".join(row["check"] for row in failed),
+        "blocked_reason": ""
+        if failed == []
+        else "blocked_" + ",".join(row["check"] for row in failed),
     }
 
 
@@ -1117,9 +1146,7 @@ def preconditions_checked(
             "exact_replay_module": "carnot.experiment_6504_exact_structural_benchmark_commitment",
             "mutation_accounting_module": "carnot.experiment_6505_sota_formal_challenge_mutations",
         },
-        "input_artifact_hashes": {
-            key: row["sha256"] for key, row in citations.items()
-        },
+        "input_artifact_hashes": {key: row["sha256"] for key, row in citations.items()},
         "protected_hashes_before_replay": dict(protected_before),
         "exclusion_manifest_state": _exclusion_manifest_state(repo_root),
         "required_files": required,
@@ -1193,11 +1220,17 @@ def _expected_score(artifact: Mapping[str, Any]) -> float:
     allowed = _allowed_dependency_set(artifact.get("lineage_decision_rows", []))
     passed = (
         artifact.get("exp6504_row_recomputation", {}).get("row_replay_passed") is True
-        and artifact.get("exp6504_corrigendum", {}).get("eligible_for_v562_exact_branch_raw_label_use") is True
-        and artifact.get("exp6504_corrigendum", {}).get("positive_scientific_claim_allowed") is False
+        and artifact.get("exp6504_corrigendum", {}).get(
+            "eligible_for_v562_exact_branch_raw_label_use"
+        )
+        is True
+        and artifact.get("exp6504_corrigendum", {}).get("positive_scientific_claim_allowed")
+        is False
         and artifact.get("exp6505_terminal_null_receipt", {}).get("terminal_null_frozen") is True
-        and artifact.get("forbidden_dependency_attack_matrix", {}).get("all_attacks_fail_closed") is True
-        and artifact.get("protected_files_unchanged", {}).get("all_protected_files_unchanged") is True
+        and artifact.get("forbidden_dependency_attack_matrix", {}).get("all_attacks_fail_closed")
+        is True
+        and artifact.get("protected_files_unchanged", {}).get("all_protected_files_unchanged")
+        is True
         and allowed == {("exp6504", "raw_instance_rows"), ("exp6504", "exact_label_rows")}
     )
     return 1.0 if passed else 0.0
@@ -1219,6 +1252,13 @@ def validate_artifact(value: Mapping[str, Any] | str | Path) -> list[str]:
         errors.append("verdict_class cannot be positive for oracle replay")
     if artifact.get("verdict_class") not in {"partial", "null", None, "blocked"}:
         errors.append("verdict_class outside corrigendum enum")
+    # A ready corrigendum finished its run, so its class is null. A partial
+    # declaration here made the conductor re-run a finished task
+    # (REQ-CONDUCTOR-VERDICT-3, SCENARIO-CONDUCTOR-VERDICT-5).
+    if artifact.get("v562_exact_branch_ready_score") == 1.0 and (
+        artifact.get("verdict_class") != "null"
+    ):
+        errors.append("ready corrigendum requires verdict_class null")
     if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
         errors.append("inference_substrate mismatch")
     if artifact.get("verifier_is_oracle") is not True:
@@ -1231,7 +1271,10 @@ def validate_artifact(value: Mapping[str, Any] | str | Path) -> list[str]:
         and receipt.get("terminal_null_frozen") is True
     ):
         errors.append("exp6505 terminal null receipt mismatch")
-    if artifact.get("forbidden_dependency_attack_matrix", {}).get("all_attacks_fail_closed") is not True:
+    if (
+        artifact.get("forbidden_dependency_attack_matrix", {}).get("all_attacks_fail_closed")
+        is not True
+    ):
         errors.append("forbidden_dependency_attack_matrix false accepts")
     expected_score = _expected_score(artifact)
     if artifact.get("v562_exact_branch_ready_score") != expected_score:
@@ -1288,7 +1331,9 @@ def build_artifact(
     ]
     artifact: JsonDict = {
         "status": status,
-        "verdict_class": "partial" if score == 1.0 else "blocked",
+        # A finished replay with no positive claim is null. Partial is reserved
+        # for a run that stopped early (REQ-CONDUCTOR-VERDICT-3).
+        "verdict_class": "null" if score == 1.0 else "blocked",
         "cited_upstream_artifacts": citations,
         "exp6504_row_recomputation": exp6504_replay,
         "exp6504_corrigendum": correction,
@@ -1315,7 +1360,9 @@ def build_artifact(
             "attack_order_seed": RANDOM_SEED * 1000 + len(ATTACK_IDS),
             "attack_ids": list(ATTACK_IDS),
         },
-        "duration_s": round(duration_s if duration_s is not None else time.perf_counter() - start, 6),
+        "duration_s": round(
+            duration_s if duration_s is not None else time.perf_counter() - start, 6
+        ),
         "tests_run": tests,
         "reproducibility_checksum": "",
         "honest_verdict": verdict,
@@ -1362,7 +1409,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--result-path", type=Path, default=RESULT_RELATIVE_PATH)
     parser.add_argument("--validate", action="store_true")
     args = parser.parse_args(argv)
-    result_path = args.result_path if args.result_path.is_absolute() else REPO_ROOT / args.result_path
+    result_path = (
+        args.result_path if args.result_path.is_absolute() else REPO_ROOT / args.result_path
+    )
     if args.validate:
         errors = validate_artifact(result_path)
         print(json.dumps({"ok": errors == [], "errors": errors}, sort_keys=True))

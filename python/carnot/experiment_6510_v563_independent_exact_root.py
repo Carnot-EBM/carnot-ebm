@@ -514,7 +514,9 @@ def _exp6504_unit_rows(
     return rows
 
 
-def recompute_exp6504_direct(repo_root: Path, payload: Mapping[str, Any]) -> tuple[JsonDict, list[JsonDict]]:
+def recompute_exp6504_direct(
+    repo_root: Path, payload: Mapping[str, Any]
+) -> tuple[JsonDict, list[JsonDict]]:
     """Recompute Exp6504 from raw rows without trusting aggregate fields."""
 
     raw_rows = [dict(row) for row in payload.get("raw_instance_rows", [])]
@@ -619,12 +621,10 @@ def recompute_exp6504_direct(repo_root: Path, payload: Mapping[str, Any]) -> tup
         ),
         "replay_failure_count": replay_failure_count,
         "split_hash_matches": split_hash_matches,
-        "stored_aggregate_matches_recomputed": aggregate == payload.get(
-            "aggregate_row_recomputation"
-        ),
-        "stored_rows_match_reported_aggregate": stored_aggregate == payload.get(
-            "aggregate_row_recomputation"
-        ),
+        "stored_aggregate_matches_recomputed": aggregate
+        == payload.get("aggregate_row_recomputation"),
+        "stored_rows_match_reported_aggregate": stored_aggregate
+        == payload.get("aggregate_row_recomputation"),
         "historical_checksum_matches": historical_checksum_matches,
         "row_replay_passed": row_replay_passed,
         "verifier_is_oracle_for_exact_label_hash_and_row_checks": True,
@@ -1115,8 +1115,7 @@ def gate_check_summary(
         "exp6506_contract_recomputed_from_file": {
             "expected": True,
             "observed": recomputation.get("exp6506", {}).get("contract_recomputed_from_file"),
-            "passed": recomputation.get("exp6506", {}).get("contract_recomputed_from_file")
-            is True,
+            "passed": recomputation.get("exp6506", {}).get("contract_recomputed_from_file") is True,
         },
         "prior_failure_preserved": {
             "expected": "artifact_not_updated_past_bootstrap x3",
@@ -1172,7 +1171,9 @@ def gate_check_summary(
         },
         "failed_checks": failed,
         "all_gates_passed": failed == [],
-        "blocked_reason": "" if failed == [] else "blocked_" + ",".join(row["check"] for row in failed),
+        "blocked_reason": ""
+        if failed == []
+        else "blocked_" + ",".join(row["check"] for row in failed),
     }
 
 
@@ -1278,8 +1279,7 @@ def _overall_recomputation(
         "schema_version": SCHEMA_VERSION + ".independent_row_recomputation",
         "exp6504": dict(exp6504_summary),
         "exp6506": dict(exp6506_summary),
-        "overall_independent_row_checks_passed": exp6504_summary.get("row_replay_passed")
-        is True
+        "overall_independent_row_checks_passed": exp6504_summary.get("row_replay_passed") is True
         and exp6506_summary.get("contract_recomputed_from_file") is True,
     }
 
@@ -1376,6 +1376,12 @@ def validate_artifact(value: Mapping[str, Any] | str | Path) -> list[str]:
         errors.append("verdict_class cannot be positive for oracle readiness")
     if artifact.get("verdict_class") not in {"partial", "null", "blocked"}:
         errors.append("verdict_class outside independent root enum")
+    # A ready root finished its run; its class is null, never partial
+    # (REQ-CONDUCTOR-VERDICT-3, SCENARIO-CONDUCTOR-VERDICT-5).
+    if artifact.get("v563_independent_root_ready_score") == 1.0 and (
+        artifact.get("verdict_class") != "null"
+    ):
+        errors.append("ready root requires verdict_class null")
     if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
         errors.append("inference_substrate mismatch")
     if artifact.get("verifier_is_oracle") is not True:
@@ -1384,13 +1390,17 @@ def validate_artifact(value: Mapping[str, Any] | str | Path) -> list[str]:
         "artifact_not_updated_past_bootstrap"
     ):
         errors.append("prior failure receipt mismatch")
-    if artifact.get("independent_row_recomputation", {}).get(
-        "overall_independent_row_checks_passed"
-    ) is not True:
+    if (
+        artifact.get("independent_row_recomputation", {}).get(
+            "overall_independent_row_checks_passed"
+        )
+        is not True
+    ):
         errors.append("independent row recomputation failed")
-    if artifact.get("retired_dependency_attack_matrix", {}).get(
-        "all_attacks_fail_closed"
-    ) is not True:
+    if (
+        artifact.get("retired_dependency_attack_matrix", {}).get("all_attacks_fail_closed")
+        is not True
+    ):
         errors.append("retired dependency attack false accepts")
     if structured_dependency_retired_id_violations(artifact):
         errors.append("retired dependency violation")
@@ -1438,7 +1448,10 @@ def build_artifact(
     protected = protected_files_unchanged(protected_before, protected_after)
     tests = _tests_run_receipts(tests_run)
     atomic_receipt = _atomic_terminal_write_receipt(target, write=write)
-    verdict_class = "partial"
+    # The replay attempts every unit and makes no positive claim, so a clean
+    # run is null. Partial would tell the conductor to re-run a finished task
+    # (REQ-CONDUCTOR-VERDICT-3).
+    verdict_class = "null"
     summary = gate_check_summary(
         recomputation=recomputation,
         prior_failure=prior,
@@ -1497,14 +1510,16 @@ def build_artifact(
             "attack_order_seed": RANDOM_SEED * 1000 + len(ATTACK_IDS),
             "attack_ids": list(ATTACK_IDS),
         },
-        "duration_s": round(duration_s if duration_s is not None else time.perf_counter() - start, 6),
+        "duration_s": round(
+            duration_s if duration_s is not None else time.perf_counter() - start, 6
+        ),
         "tests_run": tests,
         "reproducibility_checksum": "",
         "honest_verdict": verdict,
     }
     artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
-    artifact["atomic_terminal_write_receipt"]["terminal_payload_sha256"] = (
-        _terminal_payload_sha256(artifact)
+    artifact["atomic_terminal_write_receipt"]["terminal_payload_sha256"] = _terminal_payload_sha256(
+        artifact
     )
     errors = validate_artifact(artifact)
     if errors:
@@ -1537,8 +1552,8 @@ def run(
     artifact["duration_s"] = round(max(time.perf_counter() - start, 0.0001), 6)
     artifact["atomic_terminal_write_receipt"]["write_requested"] = True
     artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
-    artifact["atomic_terminal_write_receipt"]["terminal_payload_sha256"] = (
-        _terminal_payload_sha256(artifact)
+    artifact["atomic_terminal_write_receipt"]["terminal_payload_sha256"] = _terminal_payload_sha256(
+        artifact
     )
     errors = validate_artifact(artifact)
     if errors:
@@ -1554,7 +1569,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--result-path", type=Path, default=RESULT_RELATIVE_PATH)
     parser.add_argument("--validate", action="store_true")
     args = parser.parse_args(argv)
-    result_path = args.result_path if args.result_path.is_absolute() else REPO_ROOT / args.result_path
+    result_path = (
+        args.result_path if args.result_path.is_absolute() else REPO_ROOT / args.result_path
+    )
     if args.validate:
         errors = validate_artifact(result_path)
         print(json.dumps({"ok": errors == [], "errors": errors}, sort_keys=True))
