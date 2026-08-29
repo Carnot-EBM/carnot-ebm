@@ -16786,3 +16786,5 @@ The l |
 | 2026-08-29 20:55 UTC | Three-model DCCD environment-grammar A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6756-environment-indexed-proof-grammar-fi |
 | 2026-08-29 20:55 UTC | Independent proof-transport and support audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6757-dccd-environment-grammar-ab.proof_ |
 | 2026-08-29 20:57 UTC | Three-model DCCD environment-grammar A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6756-environment-indexed-proof-grammar-fi |
+| 2026-08-29 20:57 UTC | Independent proof-transport and support audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6757-dccd-environment-grammar-ab.proof_ |
+| 2026-08-29 20:59 UTC | Held-family oracle-distinct diagnostic energy v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6758-proof-transport-independent-audit, e |
