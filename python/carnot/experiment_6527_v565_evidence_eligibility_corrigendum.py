@@ -111,8 +111,7 @@ RUN_COMMAND = (
     "--date 20260823"
 )
 VALIDATE_COMMAND = (
-    ".venv/bin/python -m carnot.experiment_6527_v565_evidence_eligibility_corrigendum "
-    "--validate"
+    ".venv/bin/python -m carnot.experiment_6527_v565_evidence_eligibility_corrigendum --validate"
 )
 DEFAULT_TEST_COMMANDS = (
     FOCUSED_TEST_COMMAND,
@@ -687,7 +686,9 @@ def _sum_by_arm(
     return dict(totals)
 
 
-def _best_arm(totals: Mapping[str, float], exclude: set[str] | None = None) -> tuple[str | None, int]:
+def _best_arm(
+    totals: Mapping[str, float], exclude: set[str] | None = None
+) -> tuple[str | None, int]:
     exclude = exclude or set()
     candidates = {arm: value for arm, value in totals.items() if arm not in exclude}
     if not candidates:
@@ -834,7 +835,9 @@ def recompute_exp6520(payload: Mapping[str, Any], structural_best_benefit: int) 
 
 def recompute_exp6521(payload: Mapping[str, Any]) -> JsonDict:
     rows = [row for row in payload.get("per_unit_rows", []) if isinstance(row, Mapping)]
-    unsafe_admission = sum(1 for row in rows if row.get("durable_write_performed") is True and not row.get("passed"))
+    unsafe_admission = sum(
+        1 for row in rows if row.get("durable_write_performed") is True and not row.get("passed")
+    )
     unsafe_use = sum(1 for row in rows if row.get("unsafe_use_performed") is True)
     return {
         "row_type": "row_recomputation",
@@ -854,7 +857,10 @@ def recompute_exp6521(payload: Mapping[str, Any]) -> JsonDict:
             if isinstance(row, Mapping)
         ),
         "readiness_score_from_rows": 1.0
-        if rows and all(row.get("passed") is True for row in rows) and unsafe_admission == 0 and unsafe_use == 0
+        if rows
+        and all(row.get("passed") is True for row in rows)
+        and unsafe_admission == 0
+        and unsafe_use == 0
         else 0.0,
         "verdict_class_from_rows": "circular_positive",
         "gate_chain": ["6521_requires_6517_branch_pilot_audited_ready_score"],
@@ -883,7 +889,9 @@ def recompute_exp6522(payload: Mapping[str, Any]) -> JsonDict:
         if isinstance(row, Mapping) and row.get("unsafe_write_performed") is True
     )
     unsafe_uses = sum(
-        1 for row in rows if row.get("unsafe_use_performed") is True or row.get("unsafe_use_count") not in (None, 0)
+        1
+        for row in rows
+        if row.get("unsafe_use_performed") is True or row.get("unsafe_use_count") not in (None, 0)
     )
     return {
         "row_type": "row_recomputation",
@@ -967,7 +975,10 @@ def recompute_exp6526(payload: Mapping[str, Any]) -> JsonDict:
         and payload.get("continuous_self_learning_claim_eligible_score") == 1.0
         and gate.get("all_capstone_checks_passed") is True
         else 0.0,
-        "verdict_class_from_rows": "partial",
+        # Read from the Exp6526 artifact instead of a baked constant. The old
+        # literal "partial" froze a declaration Exp6526 has since corrected to
+        # null (REQ-CONDUCTOR-VERDICT-3); a mirror must follow its source.
+        "verdict_class_from_rows": aggregate.get("verdict_class_from_rows"),
         "gate_chain": ["6526_reads_v564_graph_by_path_and_hash"],
     }
 
@@ -1088,9 +1099,7 @@ def build_corrected_claim_rows(
             "claim_id": "learned_router",
             "source_task_ids": ["6520"],
             "adopted_for_v565_root": True,
-            "historical_claim_state": capstone_claims.get("learned_router", {}).get(
-                "eligibility"
-            ),
+            "historical_claim_state": capstone_claims.get("learned_router", {}).get("eligibility"),
             "corrected_eligibility": "corrected_eligible"
             if learned_current_clean
             else "ineligible_current_recheck_failed",
@@ -1255,7 +1264,10 @@ def build_attack_rows(
             "monotonic validation duration meets the declared floor",
         ),
         "status_only_success": (
-            all(recomputed[key]["readiness_score_from_rows"] == 1.0 for key in ("6519", "6520", "6522", "6523")),
+            all(
+                recomputed[key]["readiness_score_from_rows"] == 1.0
+                for key in ("6519", "6520", "6522", "6523")
+            ),
             "rows_recomputed",
             "status strings alone never set the root score",
         ),
@@ -1303,7 +1315,9 @@ def build_aggregate(
     )
     attack_rows = recomputed.get("attack_rows", [])
     attack_rows = attack_rows if isinstance(attack_rows, list) else []
-    retired_violations = sum(int(row.get("retired_dependency_violation_count", 0)) for row in retired_rows)
+    retired_violations = sum(
+        int(row.get("retired_dependency_violation_count", 0)) for row in retired_rows
+    )
     root_ready = (
         adopted_eligible
         and live_recheck.get("current_recheck_clean") is True
@@ -1317,7 +1331,9 @@ def build_aggregate(
         "v565_evidence_root_ready_score_from_rows": 1.0 if root_ready else 0.0,
         "verdict_class_from_rows": None if root_ready else "partial",
         "adopted_claim_count": len(adopted),
-        "eligible_claim_count": sum(1 for row in claim_rows if row.get("corrected_eligibility") == "eligible"),
+        "eligible_claim_count": sum(
+            1 for row in claim_rows if row.get("corrected_eligibility") == "eligible"
+        ),
         "corrected_eligible_claim_count": sum(
             1 for row in claim_rows if row.get("corrected_eligibility") == "corrected_eligible"
         ),
@@ -1523,7 +1539,9 @@ def build_artifact(
     )
     recomputed = build_row_recomputation(artifacts, attack_rows=attack_rows)
     claim_rows = build_corrected_claim_rows(artifacts, recomputed, live, duration)
-    per_unit_rows = flatten_per_unit_rows(task_rows, claim_rows, retired_rows, recomputed, live, protected)
+    per_unit_rows = flatten_per_unit_rows(
+        task_rows, claim_rows, retired_rows, recomputed, live, protected
+    )
     aggregate = build_aggregate(
         claim_rows,
         retired_rows,
@@ -1535,7 +1553,11 @@ def build_artifact(
     )
     gates = gate_check_summary(aggregate)
     ready_score = aggregate["v565_evidence_root_ready_score_from_rows"]
-    status = "complete_v565_evidence_root_eligible" if ready_score == 1.0 else "partial_v565_evidence_root"
+    status = (
+        "complete_v565_evidence_root_eligible"
+        if ready_score == 1.0
+        else "partial_v565_evidence_root"
+    )
     verdict_class = None if ready_score == 1.0 else "partial"
     honest = (
         "complete_v565_evidence_root_eligible: corrected Exp6520 eligibility is separated "
