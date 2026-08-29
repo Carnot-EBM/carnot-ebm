@@ -16726,3 +16726,4 @@ The l |
 | 2026-08-29 00:00 UTC | Three-family frozen planning proposal bank | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6717-planning-audit-receipt-merge.plann |
 | 2026-08-29 00:02 UTC | Planning audit receipt merge | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6715-bounded-exact-replay-audit, exp6716- |
 | 2026-08-29 00:02 UTC | Three-family frozen planning proposal bank | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6717-planning-audit-receipt-merge.plann |
+| 2026-08-29 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | harness_integrity_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on harness_ |
