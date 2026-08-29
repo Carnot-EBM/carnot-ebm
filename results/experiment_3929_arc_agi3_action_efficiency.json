@@ -172,5 +172,6 @@
     true,
     true
   ],
-  "verifier_total_pruned_count": 6468
+  "verifier_total_pruned_count": 6468,
+  "flagged_adversarial_reason": "Kept 2026-08-29. The action_efficiency_ratio=1.959 is CIRCULAR. encode_rich_candidate_action() calls task_potential(), which reads ORACLE goal fields (key/switch/gate/goal) the synthetic env exposes by construction, then plants a hard-coded string: progress -> '1 + 0 = 1. The answer is 1.'; non-progress -> '1 + 0 = 2. The answer is 0. actually inconsistent.' The energy verifier then detects the contradiction it was handed. A bare `if 'inconsistent' in step_text` reproduces the identical 1.96x, so the encoder makes every decision and the verifier scores a planted label. Found by adversarial verifier-audit workflow wf_5c1967c2-7f9 and confirmed by direct code read. The current gate no longer emits a flag here; the finding stands regardless, so the stamp stands."
 }

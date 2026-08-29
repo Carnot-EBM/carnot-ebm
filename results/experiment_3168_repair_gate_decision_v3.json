@@ -7,7 +7,7 @@
   "exact_authority_ready": true,
   "false_accept_gate_passed": false,
   "false_accept_rate": 0.0,
-  "flagged_adversarial": true,
+  "flagged_adversarial": false,
   "gate_criteria": {
     "clean_live_verifier_rerun_v9_ready": true,
     "controlled_invariance_passed": true,
@@ -154,5 +154,6 @@
     ".venv/bin/pytest tests/python/test_experiment_3168_repair_gate_decision_v3.py -q --no-cov",
     ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_3168_repair_gate_decision_v3.py -q && .venv/bin/coverage report --include='python/carnot/verify/repair_gate_decision_v3.py' --fail-under=100 --show-missing",
     ".venv/bin/pytest tests/python -q"
-  ]
+  ],
+  "flagged_adversarial_cleared_note": "Cleared 2026-08-29: re-judged individually with the current gate and it draws no critical flag. Blocked_* was never headline-eligible; clearing changes nothing downstream. The original determination and any corrigendum are preserved beside this note per scripts/determination_preservation_lint.py; the field is set false rather than removed."
 }

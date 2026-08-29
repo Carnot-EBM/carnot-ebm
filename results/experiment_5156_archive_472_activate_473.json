@@ -71,7 +71,7 @@
     "tests_run": "verification evidence",
     "v472_runtime_clean": "Downstream .473 tasks may gate on this; a dirty handoff should block, not silently proceed."
   },
-  "flagged_adversarial": true,
+  "flagged_adversarial": false,
   "gap4_status_recommendation": "still_open",
   "generation_axis_retirement_signal": {
     "allocation_read": "Generation-axis exploration-signal levers should not be re-run without a new mechanism.",
@@ -397,5 +397,6 @@
     "python scripts/check_spec_coverage.py tests/python/test_experiment_5156_archive_472_activate_473.py",
     ".venv/bin/pytest tests/python -q"
   ],
-  "v472_runtime_clean": true
+  "v472_runtime_clean": true,
+  "flagged_adversarial_cleared_note": "Cleared 2026-08-29: re-judged individually with the current gate and it draws no critical flag. Terminal honest result, no live critical flag. The original determination and any corrigendum are preserved beside this note per scripts/determination_preservation_lint.py; the field is set false rather than removed."
 }

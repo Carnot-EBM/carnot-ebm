@@ -13141,7 +13141,7 @@
     "known_false_accept_rows_covered": "adversarial rows must remain load-bearing",
     "repair_call_ready": "live repair attempts need an explicit readiness signal"
   },
-  "flagged_adversarial": true,
+  "flagged_adversarial": false,
   "honest_verdict": "complete: counterexample_certificate_expansion_v3_ready=true; exact_row_count=72; counterexample_count=4; known_false_accept_rows_covered=2; repair_call_ready=false",
   "inference_substrate": {
     "exact_authority_only": true,
@@ -13367,5 +13367,6 @@
     ".venv/bin/coverage report --include='python/carnot/verify/counterexample_certificate_expansion_v3.py' --fail-under=100 --show-missing",
     ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_3183_counterexample_certificate_expansion_v3.py",
     ".venv/bin/pytest tests/python -q"
-  ]
+  ],
+  "flagged_adversarial_cleared_note": "Cleared 2026-08-29: re-judged individually with the current gate and it draws no critical flag. Terminal honest result, no live critical flag. The original determination and any corrigendum are preserved beside this note per scripts/determination_preservation_lint.py; the field is set false rather than removed."
 }
