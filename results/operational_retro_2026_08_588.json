@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.588",
+  "generated_at": "2026-08-29T18:46:09.466494+00:00",
+  "retro_type": "operational_in_progress",
+  "summary": "The milestone completed 13 experiments in 10.2 minutes, including 7 compute-bound experiments. The accelerator snapshot showed active compute, while the timing source could not explain phase costs or runner selection.",
+  "total_wall_time_minutes": 10.2,
+  "experiments_completed": 13,
+  "slowest_experiments": [
+    {
+      "experiment": "Three-model SOTA dual-encoding proof-carrying corpus",
+      "duration_minutes": 4.44,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Prospective support-preserving transactional self-learning comparison",
+      "duration_minutes": 2.56,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Owned 32K live code-carrying ARC tool preflight",
+      "duration_minutes": 1.13,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Task-owned phase clock and three-family accelerator canary",
+      "duration_minutes": 1.09,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Live ARC object-table fetch-on-demand paired comparison",
+      "duration_minutes": 0.56,
+      "compute_bound": true
+    }
+  ],
+  "bottlenecks_identified": [
+    "The 4-minute corpus task and 3-minute transactional comparison formed the compute tail, but the supplied timing data gives no phase-level cause.",
+    "Disk modification-time reconstruction replaced live commit timing, so the record cannot separate launch, load, inference, and teardown costs.",
+    "The records do not link the three-model task to simultaneous model loading or runner identity, so a missed DualGPURunner dispatch cannot be assessed."
+  ],
+  "improvements_suggested": [
+    "Record monotonic start, end, and phase timestamps in each experiment artifact instead of reconstructing timing from disk modification times.",
+    "Emit a launch receipt that joins task identity, simultaneous model count, runner identity, GPU assignment, and task-window utilization samples.",
+    "Add memory-aware placement advice that evaluates device_map='auto' for eligible multi-model launches without imposing a dual-GPU runner on single-model work.",
+    "Report the critical path separately from overlapped GPU work so the next retrospective can distinguish throughput from per-task latency."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add task-owned monotonic phase timing to every experiment artifact.",
+    "Make the dispatcher log simultaneous model count and the DualGPURunner eligibility decision before launch.",
+    "Join GPU utilization and memory samples to each compute task and use them for memory-aware placement."
+  ],
+  "compute_bound_experiments_count": 7,
+  "gpu_idle_on_compute_bound_tasks": false,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The GPU snapshot supports efficient accelerator engagement, not a compute-idle finding. No data available this milestone identifies why the longest tasks took their recorded time, verifies parallel model loading, or establishes a measurable savings percentage.",
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false
+}

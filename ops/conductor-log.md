@@ -16773,3 +16773,4 @@ The l |
 | 2026-08-29 16:45 UTC | Live ARC object-table fetch-on-demand paired compa | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6753_object_ |
 | 2026-08-29 17:10 UTC | V588 branch disposition and PRD gap reconciliation | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6754_v588_br |
 | 2026-08-29 18:33 UTC | V588 branch disposition and PRD gap reconciliation | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:     with pytes |
+| 2026-08-29 18:40 UTC | V588 branch disposition and PRD gap reconciliation | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6754_v588_br |

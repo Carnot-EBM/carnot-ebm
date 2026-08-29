@@ -6437,3 +6437,10 @@ The critical path for milestone .250:
 - theme: mixed execution surfaced missing compute activity proof and a fallback clock with no ordering power
 - key result: honest operational negative — the 2 compute-bound entries share the 0.0-minute floor while both GPUs are idle; cause and parallel-model dispatcher eligibility have no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.588
+
+- exp_range: no data available this milestone
+- theme: sustained accelerator activity accompanied a mixed milestone whose fallback timing could not expose phase costs
+- key result: honest operational negative — the GPU snapshot ruled out compute idle, but task causes and parallel-model runner engagement remain unverified
+- acceptance: no data available this milestone
