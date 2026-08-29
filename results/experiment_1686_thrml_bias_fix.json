@@ -51,12 +51,13 @@
   "methodology_note": "Exp 1682 established the bias is systematic (N-invariant linear-in-beta). OLS fit to 3-point sweep_b data gives the correction formula. Correction is applied uniformly to all spins (mean-field effect). The sample() API is unchanged; corrected_magnetization_mean() is a new additive estimator.",
   "random_seed": 1682,
   "honest_verdict": "complete: bias_correction_implemented_and_verified_on_10k_curie_weiss",
-  "flagged_adversarial": true,
+  "flagged_adversarial": false,
   "corrigendum_pending": [
     {
       "kind": "TAUTOLOGY",
       "severity": "critical",
       "detail": "prior_experiment=1682.0 and random_seed=1682.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
     }
-  ]
+  ],
+  "flagged_adversarial_cleared_note": "Cleared 2026-08-29: the original TAUTOLOGY determination was a false positive under gate rules that have since been corrected. TAUTOLOGY: identifier and seed fields were compared as if they were distinct measurements; seeding an RNG off the experiment number is reproducibility practice, and the check excluded those fields on 2026-05-31. Verified by re-running scripts/adversarial_verify.py against THIS artifact: 0 CRITICAL flags. The original stamp and every corrigendum_pending entry are preserved above; this retraction does not delete them. Population: 158 of 567 stamped artifacts, selected because their recorded reason falls wholly within documented false-positive corrections. 22 IMPLAUSIBLE_PERFECT, 20 with no recorded reason, and 1 mixed-kind artifact were deliberately NOT cleared and await individual reading."
 }

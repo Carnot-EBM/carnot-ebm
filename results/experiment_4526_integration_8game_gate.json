@@ -415,7 +415,7 @@
       }
     }
   },
-  "flagged_adversarial": true,
+  "flagged_adversarial": false,
   "corrigendum_pending": [
     {
       "kind": "TAUTOLOGY",
@@ -434,5 +434,6 @@
     }
   ],
   "inference_substrate_original_invalid_value": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end via the per-level gate (no headline GGUF load unless the induction tier is invoked).",
-  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched."
+  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, class a; ops/known-issues.md 2026-08-29). The original value was the legal substrate name 'verifier_ensemble_against_cached_candidates' followed by a trailing human note. That form follows the '<canonical value><separator><human note>' convention that scripts/determination_preservation_lint.py documents, but scripts/arc_artifact_lint.py exact-matches and returned INVALID_INFERENCE_SUBSTRATE on it. The substrate MEANING is unchanged. The full original string is preserved verbatim in inference_substrate_original_invalid_value. No measurement field was touched.",
+  "flagged_adversarial_cleared_note": "Cleared 2026-08-29: the original DURATION_TOO_SHORT, METHODOLOGY_MISSING, TAUTOLOGY determination was a false positive under gate rules that have since been corrected. DURATION_TOO_SHORT: the 60s live-inference floor was applied before the Inference-Substrate Declaration Discipline gave aggregation and verifier-scoring artifacts their own floors (exp2837/exp2842 are the exemplars named in CLAUDE.md). METHODOLOGY_MISSING: the methodology check ran on aggregation-only artifacts, which inherit methodology from the upstream sources they cite; the linter now skips them. TAUTOLOGY: identifier and seed fields were compared as if they were distinct measurements; seeding an RNG off the experiment number is reproducibility practice, and the check excluded those fields on 2026-05-31. Verified by re-running scripts/adversarial_verify.py against THIS artifact: 0 CRITICAL flags. The original stamp and every corrigendum_pending entry are preserved above; this retraction does not delete them. Population: 158 of 567 stamped artifacts, selected because their recorded reason falls wholly within documented false-positive corrections. 22 IMPLAUSIBLE_PERFECT, 20 with no recorded reason, and 1 mixed-kind artifact were deliberately NOT cleared and await individual reading."
 }
