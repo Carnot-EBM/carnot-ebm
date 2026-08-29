@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.587",
+  "generated_at": "2026-08-29T06:35:39Z",
+  "retro_type": "operational_in_progress",
+  "total_wall_time_minutes": 0.0,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "V587 activation, source-receipt, and evidence-contract preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Owned 32K context and live code-carrying selfparse preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Cold object-table row, statistic, and live-provenance audit",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Hardness-controlled exact certificate stream with proof-preserving relabeling",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Oracle-distinct dual-encoding diagnostic energy on held-out families",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": true,
+  "summary": "The milestone completed 5 experiments in 0.0 minutes, including 2 compute-bound experiments. Every entry shares the timing floor, while the GPU snapshot establishes idle accelerators in a milestone containing compute-bound work.",
+  "bottlenecks_identified": [
+    "The monitor snapshot showed 0% utilization on both accelerators despite the milestone containing 2 compute-bound entries.",
+    "The fallback clock rounded all 5 records to 0.0 minutes, exposing neither an ordering nor a causal execution stage.",
+    "Model concurrency and selected runner are absent from the source blocks; no data available this milestone can establish DualGPURunner eligibility or a dispatch failure."
+  ],
+  "improvements_suggested": [
+    "Require each compute launch to prove task-owned accelerator activity before continuing, and stop with a diagnostic receipt when that proof is absent.",
+    "Instrument task boundaries and execution phases with a high-resolution monotonic clock at the source.",
+    "Include concurrently loaded model count and dispatcher identity in the launch artifact, routing 2-or-more-model parallel work through DualGPURunner."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Make task-owned accelerator activity proof a compute-launch gate.",
+    "Capture monotonic phase timestamps inside the execution path.",
+    "Persist and validate model concurrency plus dispatcher choice."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "V587 activation, source-receipt, and evidence-contract preflight and Owned 32K context and live code-carrying selfparse preflight are tied as the longest compute-bound entries at 0.0 minutes; no data available this milestone explains why. The idle snapshot is actionable for compute execution, but the record supports neither a positive savings estimate nor a claim that DualGPURunner was missed.",
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false
+}

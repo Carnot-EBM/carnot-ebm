@@ -6430,3 +6430,10 @@ The critical path for milestone .250:
 - theme: modification-time fallback erased the phase shape of a lone object-table compute task
 - key result: honest operational negative — 1 compute task landed at 0.0-minute resolution; stage attribution, simultaneous model execution, and runner applicability have no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.587
+
+- exp_range: no data available this milestone
+- theme: mixed execution surfaced missing compute activity proof and a fallback clock with no ordering power
+- key result: honest operational negative — the 2 compute-bound entries share the 0.0-minute floor while both GPUs are idle; cause and parallel-model dispatcher eligibility have no data available this milestone
+- acceptance: no data available this milestone
