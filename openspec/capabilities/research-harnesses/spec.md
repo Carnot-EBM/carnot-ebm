@@ -9631,3 +9631,40 @@ exact incident this requirement exists to prevent.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-HARNESS-5930 and SCENARIO-HARNESS-5930-* | Implemented (`python/carnot/testing/pytest_basetemp_isolation.py`, wired in `tests/python/conftest.py:pytest_configure`) | Implemented (`tests/python/test_pytest_basetemp_isolation.py`, incl. an in-session worker-proof wiring assertion) |
+
+## REQ-HARNESS-5935: A Result Artifact Committed After The Debt Baseline SHALL Pass Its Own Lint
+
+Measured 2026-08-28 with the lint's own candidate selector: of 573 ARC candidate artifacts,
+444 carry at least one error `scripts/arc_artifact_lint.py` would refuse — 194 illegal
+inference_substrate values, 141 missing declarations, 111 non-terminal verdicts, 56
+un-allowlisted live-LLM claims, 53 missing durations, 18 below their substrate floor. The
+guard was green the whole time because it is a pre-commit hook and result artifacts are
+written once and never re-staged — and the conductor commits with hooks skipped, so even
+first-time staging never inspected them. A guard that never looks at the population it
+governs is the SILENT_NON_FIRING class in its purest form.
+
+The rule: the standing debt is recorded, frozen at a named baseline commit in
+`ops/arc_artifact_lint_debt_baseline.json`, and every result artifact ADDED after that
+commit SHALL pass `arc_artifact_lint` — enforced from the test suite, because pytest is the
+gate the conductor actually runs. The recorded debt is a snapshot, not an approval: its
+repair is a per-class decision (see ops/known-issues.md 2026-08-28) and this requirement
+does not relitigate it. It only stops the debt growing.
+
+#### SCENARIO-HARNESS-5935-NEW-ARTIFACT-MUST-PASS
+
+Given a result artifact first committed after the baseline commit that fails
+`arc_artifact_lint` with error severity, the enforcement test SHALL fail, naming the
+artifact and each lint error, until the artifact's WRITER is fixed and the artifact
+regenerated — never by adding the artifact to the baseline.
+
+#### SCENARIO-HARNESS-5935-GIT-UNAVAILABLE-FAILS-CLOSED
+
+Given a checkout where git cannot answer which artifacts were added after the baseline
+commit, the enforcement test SHALL fail with a clear message rather than pass on an empty
+candidate list — an unmeasured population must never read as a clean one.
+
+## Implementation Status (REQ-HARNESS-5935)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-HARNESS-5935 and SCENARIO-HARNESS-5935-* | Implemented (`ops/arc_artifact_lint_debt_baseline.json` + `tests/python/test_arc_artifact_debt_ratchet.py`) | Implemented (same file; the enforcement IS a test) |
