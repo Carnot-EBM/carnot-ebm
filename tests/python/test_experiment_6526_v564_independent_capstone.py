@@ -95,7 +95,7 @@ def test_scenario_capstone_6526_inventory_schema_and_checksum(
     assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
     assert artifact["status"] == "complete_v564_independent_capstone"
     assert artifact["honest_verdict"].startswith("complete_v564_evidence_graph:")
-    # REQ-CONDUCTOR-VERDICT-3: the finished capstone declares null, not partial.
+    # REQ-CONDUCTOR-VERDICT-4: the finished capstone declares null, not partial.
     assert artifact["verdict_class"] == "null"
     assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
     assert artifact["verifier_is_oracle"] is False
@@ -241,7 +241,7 @@ def test_scenario_capstone_6526_validation_rejects_bad_artifacts(
     bad_oracle["verifier_is_oracle"] = True
     assert "verifier_is_oracle must be false" in mod.validate_artifact(bad_oracle)
 
-    # REQ-CONDUCTOR-VERDICT-3 / SCENARIO-CONDUCTOR-VERDICT-5: a finished
+    # REQ-CONDUCTOR-VERDICT-4 / SCENARIO-CONDUCTOR-VERDICT-5: a finished
     # capstone may not declare the may-retry class.
     bad_partial = deepcopy(artifact)
     bad_partial["verdict_class"] = "partial"

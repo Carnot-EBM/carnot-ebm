@@ -704,7 +704,7 @@ def exp6504_corrigendum(
         "original_verifier_is_oracle": payload.get("verifier_is_oracle"),
         "corrected_verdict_class": corrected_class,
         # This artifact's own class. The replay finishes and makes no positive
-        # claim, so the class is null, not partial (REQ-CONDUCTOR-VERDICT-3).
+        # claim, so the class is null, not partial (REQ-CONDUCTOR-VERDICT-4).
         "artifact_verdict_class": "null",
         "operational_disposition": "benchmark_ready_for_exact_branch_advice_raw_labels_only",
         "positive_scientific_claim_allowed": False,
@@ -1254,7 +1254,7 @@ def validate_artifact(value: Mapping[str, Any] | str | Path) -> list[str]:
         errors.append("verdict_class outside corrigendum enum")
     # A ready corrigendum finished its run, so its class is null. A partial
     # declaration here made the conductor re-run a finished task
-    # (REQ-CONDUCTOR-VERDICT-3, SCENARIO-CONDUCTOR-VERDICT-5).
+    # (REQ-CONDUCTOR-VERDICT-4, SCENARIO-CONDUCTOR-VERDICT-5).
     if artifact.get("v562_exact_branch_ready_score") == 1.0 and (
         artifact.get("verdict_class") != "null"
     ):
@@ -1332,7 +1332,7 @@ def build_artifact(
     artifact: JsonDict = {
         "status": status,
         # A finished replay with no positive claim is null. Partial is reserved
-        # for a run that stopped early (REQ-CONDUCTOR-VERDICT-3).
+        # for a run that stopped early (REQ-CONDUCTOR-VERDICT-4).
         "verdict_class": "null" if score == 1.0 else "blocked",
         "cited_upstream_artifacts": citations,
         "exp6504_row_recomputation": exp6504_replay,

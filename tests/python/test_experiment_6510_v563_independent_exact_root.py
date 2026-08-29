@@ -216,7 +216,7 @@ def test_scenario_bench_6510_attacks_and_verdict_class(
     assert attacks["all_attacks_fail_closed"] is True
     assert all(row["fail_closed"] is True for row in attacks["rows"])
     assert all(row["observed_ready_score_if_only_this_attack"] == 0.0 for row in attacks["rows"])
-    # REQ-CONDUCTOR-VERDICT-3: the finished replay declares null, not partial.
+    # REQ-CONDUCTOR-VERDICT-4: the finished replay declares null, not partial.
     assert artifact["verdict_class"] == "null"
     assert artifact["verdict_class"] != "positive"
     assert artifact["verifier_is_oracle"] is True
@@ -291,7 +291,7 @@ def test_scenario_bench_6510_atomic_terminal_schema_and_validation(
             "verdict_class cannot be positive for oracle readiness",
             lambda item: item.__setitem__("verdict_class", "positive"),
         ),
-        # REQ-CONDUCTOR-VERDICT-3 / SCENARIO-CONDUCTOR-VERDICT-5: a ready root
+        # REQ-CONDUCTOR-VERDICT-4 / SCENARIO-CONDUCTOR-VERDICT-5: a ready root
         # may not declare the may-retry class.
         (
             "ready root requires verdict_class null",

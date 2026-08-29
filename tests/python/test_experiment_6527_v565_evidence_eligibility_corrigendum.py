@@ -219,7 +219,7 @@ def test_scenario_capstone_6527_live_recheck_and_corrected_claims(
 def test_scenario_capstone_6527_exp6526_mirror_follows_source() -> None:
     """SCENARIO-CAPSTONE-6527-IMMUTABLE-ROWS: the Exp6526 mirror reads its source.
 
-    REQ-CONDUCTOR-VERDICT-3: Exp6526 corrected its declaration to null, and a
+    REQ-CONDUCTOR-VERDICT-4: Exp6526 corrected its declaration to null, and a
     baked "partial" literal here would silently reassert the old value on
     every rebuild. Synthetic payload on purpose: the pinned V565 fixture
     still carries the pre-correction value, so only a direct unit call can

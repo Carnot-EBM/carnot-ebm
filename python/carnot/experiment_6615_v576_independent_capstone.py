@@ -118,7 +118,7 @@ FIELD_PRINCIPLES = {
         "The verdict states independent milestone dispositions without upgrading completeness "
         "to science."
     ),
-    "verdict_class": "Use the closed enum; a finished capstone is null, never positive, and partial only if the replay itself stopped early (REQ-CONDUCTOR-VERDICT-3).",
+    "verdict_class": "Use the closed enum; a finished capstone is null, never positive, and partial only if the replay itself stopped early (REQ-CONDUCTOR-VERDICT-4).",
     "gate_check_summary": (
         "Any capstone block names the failed source, row, gate, hash, authority, replay, "
         "document, or test and observed value."
@@ -1462,7 +1462,7 @@ def build_artifact(
         "run_date": run_date,
         # The capstone replayed every available source and finished; mixed and
         # absent upstream effects are a null finding, not a retryable partial
-        # (REQ-CONDUCTOR-VERDICT-3).
+        # (REQ-CONDUCTOR-VERDICT-4).
         "status": "complete_v576_independent_capstone",
         "honest_verdict": (
             "complete_null: all available V576 evidence was independently replayed; "
@@ -1525,7 +1525,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
         raise ValueError("reproducibility checksum mismatch")
     # A finished capstone declares null; a partial declaration told the
     # conductor to re-run this completed replay
-    # (REQ-CONDUCTOR-VERDICT-3, SCENARIO-CONDUCTOR-VERDICT-5).
+    # (REQ-CONDUCTOR-VERDICT-4, SCENARIO-CONDUCTOR-VERDICT-5).
     if artifact["verdict_class"] != "null":
         raise ValueError("capstone verdict must be null")
     if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:

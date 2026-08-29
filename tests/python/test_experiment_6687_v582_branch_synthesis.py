@@ -254,7 +254,7 @@ def test_req_report_6687_complete_artifact_recomputes_from_rows(
 
     assert mod.validate_artifact(artifact) == []
     assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
-    # REQ-CONDUCTOR-VERDICT-3: the finished synthesis declares null, not
+    # REQ-CONDUCTOR-VERDICT-4: the finished synthesis declares null, not
     # partial (its partial declaration re-ran the completed 2,983s task).
     assert artifact["status"] == "complete_terminal_null"
     assert artifact["honest_verdict"].startswith("complete_null:")
@@ -275,7 +275,7 @@ def test_req_report_6687_complete_artifact_recomputes_from_rows(
     ("field", "bad"),
     [
         ("verdict_class", "positive"),
-        # REQ-CONDUCTOR-VERDICT-3 / SCENARIO-CONDUCTOR-VERDICT-5: partial is
+        # REQ-CONDUCTOR-VERDICT-4 / SCENARIO-CONDUCTOR-VERDICT-5: partial is
         # the may-retry class and a finished synthesis may not declare it.
         ("verdict_class", "partial"),
         ("inference_substrate", "llm"),
@@ -438,7 +438,7 @@ def test_scenario_report_6687_validator_covers_terminal_inconsistencies(
 
     assert all(mod.validate_artifact(changed) for changed in mutations)
 
-    # REQ-CONDUCTOR-VERDICT-3 / SCENARIO-CONDUCTOR-VERDICT-5: a finished
+    # REQ-CONDUCTOR-VERDICT-4 / SCENARIO-CONDUCTOR-VERDICT-5: a finished
     # synthesis may not declare the may-retry class. The checksum is
     # recomputed so this pins the class rule itself, not the checksum check.
     partial_declared = deepcopy(artifact)

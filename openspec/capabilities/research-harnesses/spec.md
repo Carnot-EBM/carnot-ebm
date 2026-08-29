@@ -9525,7 +9525,21 @@ an assigned CUDA device.
 |---|---|---|
 | REQ-INFRA-6676 and SCENARIO-INFRA-6676-* | Planned (`python/carnot/experiment_6676_three_family_triggered_tail_ab.py`) | Planned (`tests/python/test_experiment_6676_three_family_triggered_tail_ab.py`) |
 
-## REQ-CONDUCTOR-VERDICT-3: A Writer SHALL Choose `verdict_class` By Whether The RUN Finished, Not By Whether The RESULT Was Mixed
+## REQ-CONDUCTOR-VERDICT-4: A Writer SHALL Choose `verdict_class` By Whether The RUN Finished, Not By Whether The RESULT Was Mixed
+
+**ID CORRECTION 2026-08-29.** This requirement was first appended as
+REQ-CONDUCTOR-VERDICT-3 on 2026-08-28 (commit 080baaadff) without checking whether that
+identifier was free. It was not: REQ-CONDUCTOR-VERDICT-3 was taken on 2026-08-23 (commit
+b54a7aa3e6) by "A Success-Shaped Verdict String SHALL NOT Declare Itself Partial", which
+addresses the SAME four artifacts this one does -- exp6506 among them. Two different
+requirements shared one identifier for a day, which makes every trace to it ambiguous.
+Renumbered to -4 here rather than deleting either; the -3 section above is unchanged.
+
+The two are complementary and worth reading together. -3 forbids the CONTRADICTION (a
+`complete_`-prefixed verdict string declaring itself partial). -4 answers the question -3
+leaves open: if not partial, then what? It says choose by whether the RUN finished, and gives
+the mixed-result case `null` -- which is why the seven writers it names could be corrected
+rather than merely flagged.
 
 REQ-CONDUCTOR-VERDICT-2 defines what each enum member does to a CONSUMER and never defines
 what it means to a WRITER. That gap is not theoretical: measured 2026-08-29, of 73 artifacts
@@ -9580,11 +9594,11 @@ Given a run that stopped before attempting every planned unit, the artifact SHAL
 `verdict_class: partial` regardless of any terminal prefix on `honest_verdict`, and consumers
 SHALL treat it as retryable.
 
-## Implementation Status (REQ-CONDUCTOR-VERDICT-3)
+## Implementation Status (REQ-CONDUCTOR-VERDICT-4)
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-CONDUCTOR-VERDICT-3 | Implemented for all seven known writers (commits f5f4364cc6 writers+validators, a33755953d artifacts). No consumer change: `_verdict_is_untrustworthy` and `classify_artifact` are correct as written and SCENARIO-CONDUCTOR-VERDICT-5 is preserved. | `tests/python/test_experiment_{6506,6510,6513,6526,6615,6659,6687}_*.py` pin the null declaration and each validator's partial-rejection rule (commit 3fddef1bf0); 14 rules plus exp6527's mirror derivation mutation-proven RED then restored byte-identical; existing `tests/python/test_verdict_class_enum_first.py` covers the consumer half unchanged. |
+| REQ-CONDUCTOR-VERDICT-4 | Implemented for all seven known writers (commits f5f4364cc6 writers+validators, a33755953d artifacts). No consumer change: `_verdict_is_untrustworthy` and `classify_artifact` are correct as written and SCENARIO-CONDUCTOR-VERDICT-5 is preserved. | `tests/python/test_experiment_{6506,6510,6513,6526,6615,6659,6687}_*.py` pin the null declaration and each validator's partial-rejection rule (commit 3fddef1bf0); 14 rules plus exp6527's mirror derivation mutation-proven RED then restored byte-identical; existing `tests/python/test_verdict_class_enum_first.py` covers the consumer half unchanged. |
 
 **Outstanding, deliberately not auto-corrected.** Seven artifacts declare `partial` for a
 completed run: exp6506, exp6510, exp6513, exp6526, exp6615, exp6659, exp6687. Each needs its

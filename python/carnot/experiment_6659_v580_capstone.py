@@ -1302,7 +1302,7 @@ def build_artifact(
     artifact: JsonDict = {
         # The capstone read all 12 sources, recomputed every gate and claim,
         # and finished; mixed branch evidence with no pooled claim is a null
-        # finding, not a retryable partial (REQ-CONDUCTOR-VERDICT-3).
+        # finding, not a retryable partial (REQ-CONDUCTOR-VERDICT-4).
         "status": "complete_terminal_null",
         "honest_verdict": (
             "complete_null: V580 has authentic admission, direct-corpus, and bounded verifier-unit evidence; "
@@ -1349,7 +1349,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
         raise ValueError(f"required fields missing: {sorted(missing)}")
     # A finished capstone declares null, never partial: partial told the
     # conductor to re-run this completed reducer
-    # (REQ-CONDUCTOR-VERDICT-3, SCENARIO-CONDUCTOR-VERDICT-5).
+    # (REQ-CONDUCTOR-VERDICT-4, SCENARIO-CONDUCTOR-VERDICT-5).
     if artifact["verdict_class"] != "null" or artifact["status"] != "complete_terminal_null":
         raise ValueError("capstone verdict must remain terminal null")
     if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
