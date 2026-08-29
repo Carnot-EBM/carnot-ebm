@@ -1,0 +1,3042 @@
+{
+  "best_at_k_by_arm": {},
+  "cold_aggregate_recomputation_passed": false,
+  "commits_by_arm": {},
+  "duration_s": 60.204935,
+  "effective_support_by_arm": {},
+  "experiment_id": "experiment_6762_procedural_vs_trace_csl_ab",
+  "field_principles": {
+    "best_at_k_by_arm": "This field preserves the evidence needed to audit the prospective comparison.",
+    "cold_aggregate_recomputation_passed": "This field preserves the evidence needed to audit the prospective comparison.",
+    "commits_by_arm": "This field preserves the evidence needed to audit the prospective comparison.",
+    "duration_s": "This field preserves the evidence needed to audit the prospective comparison.",
+    "effective_support_by_arm": "This field preserves the evidence needed to audit the prospective comparison.",
+    "experiment_id": "This field preserves the evidence needed to audit the prospective comparison.",
+    "field_principles": "This field preserves the evidence needed to audit the prospective comparison.",
+    "fixture_receipt": "This field preserves the evidence needed to audit the prospective comparison.",
+    "forgetting_by_arm": "This field preserves the evidence needed to audit the prospective comparison.",
+    "frozen_manifest": "This field preserves the evidence needed to audit the prospective comparison.",
+    "gate:all_planned_rows_present": "This conjunct must pass before prospective_csl_completed is true.",
+    "gate:capacity_equality": "This conjunct must pass before prospective_csl_completed is true.",
+    "gate:chronology_preserved": "This conjunct must pass before prospective_csl_completed is true.",
+    "gate:cold_recompute_pass": "This conjunct must pass before prospective_csl_completed is true.",
+    "gate:model_teardown_complete": "This conjunct must pass before prospective_csl_completed is true.",
+    "gate:model_weights_immutable": "This conjunct must pass before prospective_csl_completed is true.",
+    "gate:no_memory_isolated": "This conjunct must pass before prospective_csl_completed is true.",
+    "gate:preconditions_pass": "This conjunct must pass before prospective_csl_completed is true.",
+    "gate:read_only_episodes": "This conjunct must pass before prospective_csl_completed is true.",
+    "gate:restart_complete": "This conjunct must pass before prospective_csl_completed is true.",
+    "gate:rollback_complete": "This conjunct must pass before prospective_csl_completed is true.",
+    "gate:row_keys_unique": "This conjunct must pass before prospective_csl_completed is true.",
+    "gate:state_boundaries_complete": "This conjunct must pass before prospective_csl_completed is true.",
+    "gate:transactions_complete": "This conjunct must pass before prospective_csl_completed is true.",
+    "gate_check_summary": "This field preserves the evidence needed to audit the prospective comparison.",
+    "gpu_receipts": "This field preserves the evidence needed to audit the prospective comparison.",
+    "hard_case_yield_by_arm": "This field preserves the evidence needed to audit the prospective comparison.",
+    "honest_verdict": "The terminal prefix distinguishes positive, null, partial, and blocked evidence.",
+    "inference_substrate": "Only sequential local CUDA GGUF inference can support a headline result.",
+    "joint_correct_constraint_support_by_arm": "This field preserves the evidence needed to audit the prospective comparison.",
+    "live_model_invoked": "This field preserves the evidence needed to audit the prospective comparison.",
+    "model_specific_answer_traces_shared": "This field preserves the evidence needed to audit the prospective comparison.",
+    "model_weight_receipts": "This field preserves the evidence needed to audit the prospective comparison.",
+    "model_weights_mutated": "This field preserves the evidence needed to audit the prospective comparison.",
+    "models_used": "This field preserves the evidence needed to audit the prospective comparison.",
+    "negative_transfer_by_arm": "This field preserves the evidence needed to audit the prospective comparison.",
+    "poison_receipts": "This field preserves the evidence needed to audit the prospective comparison.",
+    "positive_credit_checks": "This field preserves the evidence needed to audit the prospective comparison.",
+    "preconditions_checked": "This field preserves the evidence needed to audit the prospective comparison.",
+    "prequential_exact_yield_by_arm": "This field preserves the evidence needed to audit the prospective comparison.",
+    "procedural_over_no_memory_order_lcb": "This field preserves the evidence needed to audit the prospective comparison.",
+    "procedural_over_trace_order_lcb": "This field preserves the evidence needed to audit the prospective comparison.",
+    "prospective_csl_completed": "Completion means the planned evidence exists; it does not mean the result is positive.",
+    "random_seed": "This field preserves the evidence needed to audit the prospective comparison.",
+    "rejects_by_arm": "This field preserves the evidence needed to audit the prospective comparison.",
+    "reproducibility_checksum": "This field preserves the evidence needed to audit the prospective comparison.",
+    "restarts_by_arm": "This field preserves the evidence needed to audit the prospective comparison.",
+    "retention_by_arm": "This field preserves the evidence needed to audit the prospective comparison.",
+    "retrieval_and_action_influence_by_arm": "This field preserves the evidence needed to audit the prospective comparison.",
+    "rollbacks_by_arm": "This field preserves the evidence needed to audit the prospective comparison.",
+    "rows": "One row per order, model, arm, and event prevents aggregate-only claims.",
+    "run_date": "This field preserves the evidence needed to audit the prospective comparison.",
+    "schema": "This field preserves the evidence needed to audit the prospective comparison.",
+    "status": "This field preserves the evidence needed to audit the prospective comparison.",
+    "teardown_receipts": "This field preserves the evidence needed to audit the prospective comparison.",
+    "tests_run": "This field preserves the evidence needed to audit the prospective comparison.",
+    "tokens_by_arm": "This field preserves the evidence needed to audit the prospective comparison.",
+    "transaction_receipts": "This field preserves the evidence needed to audit the prospective comparison.",
+    "verdict_class": "This field preserves the evidence needed to audit the prospective comparison.",
+    "verifier_is_oracle": "Exact authority labels outcomes and admissions but does not select model actions."
+  },
+  "fixture_receipt": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6761_procedural_memory_stream.json",
+    "procedural_memory_stream_ready": true,
+    "sha256": "sha256:e99699342f1edc1504f922498a5c18c21adea5a35241d36b1a1ce248bcca80b8",
+    "stream_hash": "sha256:56dcae39d25dc5671a2c4b74cc44fb88b4386dfb8cff8d4b5f86496b1f7ff84f"
+  },
+  "forgetting_by_arm": {},
+  "frozen_manifest": {
+    "active_episode_policy": "read_only",
+    "arm_rotations": {
+      "model_0:order_1:event_0": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_1:event_1": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_1:event_10": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_1:event_11": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_1:event_12": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_1:event_13": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_1:event_14": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_1:event_15": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_1:event_16": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_1:event_17": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_1:event_18": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_1:event_19": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_1:event_2": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_1:event_20": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_1:event_21": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_1:event_22": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_1:event_23": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_1:event_24": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_1:event_25": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_1:event_26": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_1:event_27": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_1:event_28": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_1:event_29": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_1:event_3": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_1:event_4": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_1:event_5": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_1:event_6": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_1:event_7": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_1:event_8": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_1:event_9": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_2:event_0": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_2:event_1": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_2:event_10": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_2:event_11": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_2:event_12": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_2:event_13": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_2:event_14": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_2:event_15": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_2:event_16": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_2:event_17": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_2:event_18": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_2:event_19": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_2:event_2": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_2:event_20": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_2:event_21": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_2:event_22": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_2:event_23": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_2:event_24": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_2:event_25": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_2:event_26": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_2:event_27": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_2:event_28": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_2:event_29": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_2:event_3": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_2:event_4": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_2:event_5": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_2:event_6": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_2:event_7": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_2:event_8": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_2:event_9": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_3:event_0": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_3:event_1": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_3:event_10": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_3:event_11": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_3:event_12": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_3:event_13": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_3:event_14": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_3:event_15": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_3:event_16": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_3:event_17": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_3:event_18": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_3:event_19": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_3:event_2": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_3:event_20": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_3:event_21": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_3:event_22": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_3:event_23": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_3:event_24": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_3:event_25": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_3:event_26": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_3:event_27": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_3:event_28": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_3:event_29": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_3:event_3": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_3:event_4": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_3:event_5": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_3:event_6": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_3:event_7": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_3:event_8": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_3:event_9": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_4:event_0": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_4:event_1": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_4:event_10": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_4:event_11": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_4:event_12": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_4:event_13": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_4:event_14": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_4:event_15": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_4:event_16": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_4:event_17": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_4:event_18": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_4:event_19": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_4:event_2": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_4:event_20": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_4:event_21": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_4:event_22": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_4:event_23": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_4:event_24": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_4:event_25": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_4:event_26": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_4:event_27": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_4:event_28": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_4:event_29": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_4:event_3": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_4:event_4": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_4:event_5": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_4:event_6": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_4:event_7": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_4:event_8": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_4:event_9": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_5:event_0": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_5:event_1": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_5:event_10": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_5:event_11": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_5:event_12": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_5:event_13": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_5:event_14": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_5:event_15": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_5:event_16": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_5:event_17": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_5:event_18": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_5:event_19": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_5:event_2": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_5:event_20": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_5:event_21": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_5:event_22": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_5:event_23": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_5:event_24": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_5:event_25": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_5:event_26": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_5:event_27": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_5:event_28": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_5:event_29": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_5:event_3": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_5:event_4": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_5:event_5": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_5:event_6": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_5:event_7": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_5:event_8": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_5:event_9": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_6:event_0": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_6:event_1": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_6:event_10": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_6:event_11": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_6:event_12": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_6:event_13": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_6:event_14": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_6:event_15": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_6:event_16": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_6:event_17": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_6:event_18": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_6:event_19": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_6:event_2": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_6:event_20": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_6:event_21": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_6:event_22": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_6:event_23": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_6:event_24": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_6:event_25": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_6:event_26": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_6:event_27": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_6:event_28": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_6:event_29": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_6:event_3": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_6:event_4": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_6:event_5": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_6:event_6": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_0:order_6:event_7": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_0:order_6:event_8": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_0:order_6:event_9": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_1:event_0": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_1:event_1": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_1:event_10": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_1:event_11": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_1:event_12": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_1:event_13": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_1:event_14": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_1:event_15": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_1:event_16": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_1:event_17": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_1:event_18": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_1:event_19": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_1:event_2": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_1:event_20": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_1:event_21": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_1:event_22": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_1:event_23": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_1:event_24": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_1:event_25": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_1:event_26": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_1:event_27": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_1:event_28": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_1:event_29": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_1:event_3": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_1:event_4": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_1:event_5": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_1:event_6": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_1:event_7": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_1:event_8": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_1:event_9": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_2:event_0": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_2:event_1": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_2:event_10": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_2:event_11": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_2:event_12": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_2:event_13": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_2:event_14": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_2:event_15": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_2:event_16": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_2:event_17": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_2:event_18": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_2:event_19": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_2:event_2": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_2:event_20": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_2:event_21": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_2:event_22": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_2:event_23": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_2:event_24": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_2:event_25": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_2:event_26": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_2:event_27": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_2:event_28": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_2:event_29": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_2:event_3": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_2:event_4": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_2:event_5": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_2:event_6": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_2:event_7": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_2:event_8": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_2:event_9": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_3:event_0": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_3:event_1": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_3:event_10": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_3:event_11": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_3:event_12": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_3:event_13": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_3:event_14": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_3:event_15": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_3:event_16": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_3:event_17": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_3:event_18": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_3:event_19": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_3:event_2": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_3:event_20": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_3:event_21": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_3:event_22": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_3:event_23": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_3:event_24": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_3:event_25": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_3:event_26": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_3:event_27": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_3:event_28": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_3:event_29": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_3:event_3": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_3:event_4": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_3:event_5": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_3:event_6": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_3:event_7": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_3:event_8": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_3:event_9": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_4:event_0": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_4:event_1": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_4:event_10": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_4:event_11": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_4:event_12": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_4:event_13": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_4:event_14": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_4:event_15": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_4:event_16": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_4:event_17": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_4:event_18": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_4:event_19": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_4:event_2": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_4:event_20": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_4:event_21": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_4:event_22": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_4:event_23": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_4:event_24": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_4:event_25": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_4:event_26": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_4:event_27": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_4:event_28": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_4:event_29": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_4:event_3": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_4:event_4": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_4:event_5": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_4:event_6": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_4:event_7": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_4:event_8": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_4:event_9": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_5:event_0": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_5:event_1": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_5:event_10": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_5:event_11": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_5:event_12": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_5:event_13": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_5:event_14": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_5:event_15": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_5:event_16": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_5:event_17": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_5:event_18": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_5:event_19": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_5:event_2": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_5:event_20": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_5:event_21": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_5:event_22": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_5:event_23": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_5:event_24": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_5:event_25": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_5:event_26": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_5:event_27": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_5:event_28": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_5:event_29": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_5:event_3": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_5:event_4": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_5:event_5": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_5:event_6": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_5:event_7": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_5:event_8": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_5:event_9": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_6:event_0": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_6:event_1": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_6:event_10": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_6:event_11": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_6:event_12": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_6:event_13": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_6:event_14": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_6:event_15": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_6:event_16": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_6:event_17": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_6:event_18": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_6:event_19": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_6:event_2": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_6:event_20": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_6:event_21": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_6:event_22": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_6:event_23": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_6:event_24": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_6:event_25": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_6:event_26": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_6:event_27": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_6:event_28": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_6:event_29": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_6:event_3": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_6:event_4": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_6:event_5": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_6:event_6": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ],
+      "model_1:order_6:event_7": [
+        "detailed_trajectory",
+        "procedural_constraint",
+        "no_memory"
+      ],
+      "model_1:order_6:event_8": [
+        "procedural_constraint",
+        "no_memory",
+        "detailed_trajectory"
+      ],
+      "model_1:order_6:event_9": [
+        "no_memory",
+        "detailed_trajectory",
+        "procedural_constraint"
+      ]
+    },
+    "arms": [
+      "no_memory",
+      "detailed_trajectory",
+      "procedural_constraint"
+    ],
+    "candidate_count_k": 2,
+    "event_count": 30,
+    "events": [
+      {
+        "abstract_constraint": "An exclusive upper bound must reject an index equal to the length.",
+        "authority_admissible": true,
+        "depends_on": [],
+        "difficulty": "easy",
+        "eligibility": "transaction_candidate",
+        "event_id": "a01",
+        "event_kind": "reusable_procedure",
+        "evidence_source": "a01",
+        "expected_transaction_class": "accept",
+        "family": "exclusive_bounds",
+        "intended_admission_reason": "accept_exact_reusable_lesson",
+        "lesson_key": "exclusive_bounds:python_collection",
+        "observed_violation": "A exclusive_bounds precondition failed under python_collection scope.",
+        "provenance_present": true,
+        "repair_procedure": "Replace the inclusive comparison and recheck both boundary neighbors.",
+        "scope": "python_collection",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A parity-preserving transform must leave the result divisible by two.",
+        "authority_admissible": true,
+        "depends_on": [],
+        "difficulty": "medium",
+        "eligibility": "transaction_candidate",
+        "event_id": "a02",
+        "event_kind": "reusable_procedure",
+        "evidence_source": "a02",
+        "expected_transaction_class": "accept",
+        "family": "even_parity",
+        "intended_admission_reason": "accept_exact_reusable_lesson",
+        "lesson_key": "even_parity:rust_integer",
+        "observed_violation": "A even_parity precondition failed under rust_integer scope.",
+        "provenance_present": true,
+        "repair_procedure": "Normalize the final term and replay the parity invariant.",
+        "scope": "rust_integer",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A versioned artifact must include its required schema field.",
+        "authority_admissible": true,
+        "depends_on": [],
+        "difficulty": "medium",
+        "eligibility": "transaction_candidate",
+        "event_id": "a03",
+        "event_kind": "reusable_procedure",
+        "evidence_source": "a03",
+        "expected_transaction_class": "accept",
+        "family": "required_schema",
+        "intended_admission_reason": "accept_exact_reusable_lesson",
+        "lesson_key": "required_schema:json_artifact",
+        "observed_violation": "A required_schema precondition failed under json_artifact scope.",
+        "provenance_present": true,
+        "repair_procedure": "Insert the schema before validation and reject unknown versions.",
+        "scope": "json_artifact",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "Committed event positions must increase strictly.",
+        "authority_admissible": true,
+        "depends_on": [],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "a04",
+        "event_kind": "reusable_procedure",
+        "evidence_source": "a04",
+        "expected_transaction_class": "accept",
+        "family": "monotonic_sequence",
+        "intended_admission_reason": "accept_exact_reusable_lesson",
+        "lesson_key": "monotonic_sequence:ordered_events",
+        "observed_violation": "A monotonic_sequence precondition failed under ordered_events scope.",
+        "provenance_present": true,
+        "repair_procedure": "Sort by committed position and reject equal or decreasing positions.",
+        "scope": "ordered_events",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "An acquired resource must close on success and failure paths.",
+        "authority_admissible": true,
+        "depends_on": [],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "a05",
+        "event_kind": "reusable_procedure",
+        "evidence_source": "a05",
+        "expected_transaction_class": "accept",
+        "family": "resource_cleanup",
+        "intended_admission_reason": "accept_exact_reusable_lesson",
+        "lesson_key": "resource_cleanup:python_context",
+        "observed_violation": "A resource_cleanup precondition failed under python_context scope.",
+        "provenance_present": true,
+        "repair_procedure": "Move cleanup into a finalizer and replay the injected failure path.",
+        "scope": "python_context",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A retried request must not apply the same effect twice.",
+        "authority_admissible": true,
+        "depends_on": [],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "a06",
+        "event_kind": "reusable_procedure",
+        "evidence_source": "a06",
+        "expected_transaction_class": "accept",
+        "family": "idempotent_retry",
+        "intended_admission_reason": "accept_exact_reusable_lesson",
+        "lesson_key": "idempotent_retry:service_request",
+        "observed_violation": "A idempotent_retry precondition failed under service_request scope.",
+        "provenance_present": true,
+        "repair_procedure": "Bind retries to one idempotency key and compare the committed effect hash.",
+        "scope": "service_request",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A balanced ledger must preserve the sum across a transfer.",
+        "authority_admissible": true,
+        "depends_on": [],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "a07",
+        "event_kind": "reusable_procedure",
+        "evidence_source": "a07",
+        "expected_transaction_class": "accept",
+        "family": "ledger_conservation",
+        "intended_admission_reason": "accept_exact_reusable_lesson",
+        "lesson_key": "ledger_conservation:transaction_ledger",
+        "observed_violation": "A ledger_conservation precondition failed under transaction_ledger scope.",
+        "provenance_present": true,
+        "repair_procedure": "Apply debit and credit atomically and replay the conservation check.",
+        "scope": "transaction_ledger",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A half-open time range must exclude its upper endpoint.",
+        "authority_admissible": true,
+        "depends_on": [],
+        "difficulty": "medium",
+        "eligibility": "transaction_candidate",
+        "event_id": "a08",
+        "event_kind": "reusable_procedure",
+        "evidence_source": "a08",
+        "expected_transaction_class": "accept",
+        "family": "range_filter",
+        "intended_admission_reason": "accept_exact_reusable_lesson",
+        "lesson_key": "range_filter:sql_query",
+        "observed_violation": "A range_filter precondition failed under sql_query scope.",
+        "provenance_present": true,
+        "repair_procedure": "Use a strict upper predicate and test the endpoint explicitly.",
+        "scope": "sql_query",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A paged response needs a stable total ordering.",
+        "authority_admissible": true,
+        "depends_on": [],
+        "difficulty": "easy",
+        "eligibility": "transaction_candidate",
+        "event_id": "a09",
+        "event_kind": "reusable_procedure",
+        "evidence_source": "a09",
+        "expected_transaction_class": "accept",
+        "family": "stable_ordering",
+        "intended_admission_reason": "accept_exact_reusable_lesson",
+        "lesson_key": "stable_ordering:api_page",
+        "observed_violation": "A stable_ordering precondition failed under api_page scope.",
+        "provenance_present": true,
+        "repair_procedure": "Add a deterministic tie-break key before page slicing.",
+        "scope": "api_page",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A checked conversion must reject values outside the target type.",
+        "authority_admissible": true,
+        "depends_on": [],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "a10",
+        "event_kind": "reusable_procedure",
+        "evidence_source": "a10",
+        "expected_transaction_class": "accept",
+        "family": "type_preservation",
+        "intended_admission_reason": "accept_exact_reusable_lesson",
+        "lesson_key": "type_preservation:rust_conversion",
+        "observed_violation": "A type_preservation precondition failed under rust_conversion scope.",
+        "provenance_present": true,
+        "repair_procedure": "Use the checked conversion and propagate its range error.",
+        "scope": "rust_conversion",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A retry loop must stop at its fixed attempt budget.",
+        "authority_admissible": true,
+        "depends_on": [],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "a11",
+        "event_kind": "reusable_procedure",
+        "evidence_source": "a11",
+        "expected_transaction_class": "accept",
+        "family": "retry_budget",
+        "intended_admission_reason": "accept_exact_reusable_lesson",
+        "lesson_key": "retry_budget:network_client",
+        "observed_violation": "A retry_budget precondition failed under network_client scope.",
+        "provenance_present": true,
+        "repair_procedure": "Increment attempts before retry and refuse once the budget is consumed.",
+        "scope": "network_client",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A receipt must bind the evidence bytes that justified its decision.",
+        "authority_admissible": true,
+        "depends_on": [],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "a12",
+        "event_kind": "reusable_procedure",
+        "evidence_source": "a12",
+        "expected_transaction_class": "accept",
+        "family": "evidence_binding",
+        "intended_admission_reason": "accept_exact_reusable_lesson",
+        "lesson_key": "evidence_binding:audit_receipt",
+        "observed_violation": "A evidence_binding precondition failed under audit_receipt scope.",
+        "provenance_present": true,
+        "repair_procedure": "Hash canonical evidence bytes and verify the hash before admission.",
+        "scope": "audit_receipt",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "Evaluation events do not propose durable memory.",
+        "authority_admissible": false,
+        "depends_on": [],
+        "difficulty": "easy",
+        "eligibility": "evaluation_only",
+        "event_id": "n01",
+        "event_kind": "naive_distractor",
+        "evidence_source": "n01",
+        "expected_transaction_class": "no_update",
+        "family": "surface_wording",
+        "intended_admission_reason": "no_update_evaluation_event",
+        "lesson_key": "observe:n01",
+        "observed_violation": "No reusable update is proposed.",
+        "provenance_present": true,
+        "repair_procedure": "Observe the frozen snapshot without an update.",
+        "scope": "evaluation_only",
+        "ttl_events": 0
+      },
+      {
+        "abstract_constraint": "Evaluation events do not propose durable memory.",
+        "authority_admissible": false,
+        "depends_on": [],
+        "difficulty": "easy",
+        "eligibility": "evaluation_only",
+        "event_id": "n02",
+        "event_kind": "naive_distractor",
+        "evidence_source": "n02",
+        "expected_transaction_class": "no_update",
+        "family": "surface_format",
+        "intended_admission_reason": "no_update_evaluation_event",
+        "lesson_key": "observe:n02",
+        "observed_violation": "No reusable update is proposed.",
+        "provenance_present": true,
+        "repair_procedure": "Observe the frozen snapshot without an update.",
+        "scope": "evaluation_only",
+        "ttl_events": 0
+      },
+      {
+        "abstract_constraint": "Evaluation events do not propose durable memory.",
+        "authority_admissible": false,
+        "depends_on": [],
+        "difficulty": "hard",
+        "eligibility": "evaluation_only",
+        "event_id": "h01",
+        "event_kind": "held_family",
+        "evidence_source": "h01",
+        "expected_transaction_class": "no_update",
+        "family": "held_graph_reachability",
+        "intended_admission_reason": "no_update_evaluation_event",
+        "lesson_key": "observe:h01",
+        "observed_violation": "No reusable update is proposed.",
+        "provenance_present": true,
+        "repair_procedure": "Observe the frozen snapshot without an update.",
+        "scope": "evaluation_only",
+        "ttl_events": 0
+      },
+      {
+        "abstract_constraint": "Evaluation events do not propose durable memory.",
+        "authority_admissible": false,
+        "depends_on": [],
+        "difficulty": "hard",
+        "eligibility": "evaluation_only",
+        "event_id": "h02",
+        "event_kind": "held_family",
+        "evidence_source": "h02",
+        "expected_transaction_class": "no_update",
+        "family": "held_temporal_window",
+        "intended_admission_reason": "no_update_evaluation_event",
+        "lesson_key": "observe:h02",
+        "observed_violation": "No reusable update is proposed.",
+        "provenance_present": true,
+        "repair_procedure": "Observe the frozen snapshot without an update.",
+        "scope": "evaluation_only",
+        "ttl_events": 0
+      },
+      {
+        "abstract_constraint": "Evaluation events do not propose durable memory.",
+        "authority_admissible": false,
+        "depends_on": [
+          "a01"
+        ],
+        "difficulty": "hard",
+        "eligibility": "evaluation_only",
+        "event_id": "t01",
+        "event_kind": "retention_anchor",
+        "evidence_source": "t01",
+        "expected_transaction_class": "no_update",
+        "family": "exclusive_bounds",
+        "intended_admission_reason": "no_update_evaluation_event",
+        "lesson_key": "observe:t01",
+        "observed_violation": "No reusable update is proposed.",
+        "provenance_present": true,
+        "repair_procedure": "Observe the frozen snapshot without an update.",
+        "scope": "evaluation_only",
+        "ttl_events": 0
+      },
+      {
+        "abstract_constraint": "Evaluation events do not propose durable memory.",
+        "authority_admissible": false,
+        "depends_on": [
+          "a03"
+        ],
+        "difficulty": "hard",
+        "eligibility": "evaluation_only",
+        "event_id": "t02",
+        "event_kind": "retention_anchor",
+        "evidence_source": "t02",
+        "expected_transaction_class": "no_update",
+        "family": "required_schema",
+        "intended_admission_reason": "no_update_evaluation_event",
+        "lesson_key": "observe:t02",
+        "observed_violation": "No reusable update is proposed.",
+        "provenance_present": true,
+        "repair_procedure": "Observe the frozen snapshot without an update.",
+        "scope": "evaluation_only",
+        "ttl_events": 0
+      },
+      {
+        "abstract_constraint": "An exclusive upper bound must reject an index equal to the length.",
+        "authority_admissible": true,
+        "depends_on": [
+          "a01"
+        ],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "r01",
+        "event_kind": "duplicate",
+        "evidence_source": "r01",
+        "expected_transaction_class": "reject",
+        "family": "exclusive_bounds",
+        "intended_admission_reason": "reject_duplicate",
+        "lesson_key": "exclusive_bounds:python_collection",
+        "observed_violation": "A candidate triggered the duplicate admission case.",
+        "provenance_present": true,
+        "repair_procedure": "Replace the inclusive comparison and recheck both boundary neighbors.",
+        "scope": "python_collection",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A parity-preserving transform must leave the result divisible by two.",
+        "authority_admissible": true,
+        "depends_on": [
+          "a02"
+        ],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "r02",
+        "event_kind": "duplicate",
+        "evidence_source": "r02",
+        "expected_transaction_class": "reject",
+        "family": "even_parity",
+        "intended_admission_reason": "reject_duplicate",
+        "lesson_key": "even_parity:rust_integer",
+        "observed_violation": "A candidate triggered the duplicate admission case.",
+        "provenance_present": true,
+        "repair_procedure": "Normalize the final term and replay the parity invariant.",
+        "scope": "rust_integer",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A versioned artifact must include its required schema field.",
+        "authority_admissible": true,
+        "depends_on": [
+          "a03"
+        ],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "r03",
+        "event_kind": "contradiction",
+        "evidence_source": "r03",
+        "expected_transaction_class": "reject",
+        "family": "required_schema",
+        "intended_admission_reason": "reject_contradiction",
+        "lesson_key": "required_schema:json_artifact",
+        "observed_violation": "A candidate triggered the contradiction admission case.",
+        "provenance_present": true,
+        "repair_procedure": "Remove the schema field before validation.",
+        "scope": "json_artifact",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "Committed event positions must increase strictly.",
+        "authority_admissible": true,
+        "depends_on": [
+          "a04"
+        ],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "r04",
+        "event_kind": "contradiction",
+        "evidence_source": "r04",
+        "expected_transaction_class": "reject",
+        "family": "monotonic_sequence",
+        "intended_admission_reason": "reject_contradiction",
+        "lesson_key": "monotonic_sequence:ordered_events",
+        "observed_violation": "A candidate triggered the contradiction admission case.",
+        "provenance_present": true,
+        "repair_procedure": "Permit equal positions after sorting.",
+        "scope": "ordered_events",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "An acquired resource must close on success and failure paths.",
+        "authority_admissible": true,
+        "depends_on": [
+          "a05"
+        ],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "r05",
+        "event_kind": "stale_lesson",
+        "evidence_source": "r05",
+        "expected_transaction_class": "reject",
+        "family": "resource_cleanup",
+        "intended_admission_reason": "reject_stale",
+        "lesson_key": "resource_cleanup:python_context",
+        "observed_violation": "A candidate triggered the stale_lesson admission case.",
+        "provenance_present": true,
+        "repair_procedure": "Move cleanup into a finalizer and replay the injected failure path.",
+        "scope": "python_context",
+        "ttl_events": -1
+      },
+      {
+        "abstract_constraint": "A retried request must not apply the same effect twice.",
+        "authority_admissible": true,
+        "depends_on": [
+          "a06"
+        ],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "r06",
+        "event_kind": "stale_lesson",
+        "evidence_source": "r06",
+        "expected_transaction_class": "reject",
+        "family": "idempotent_retry",
+        "intended_admission_reason": "reject_stale",
+        "lesson_key": "idempotent_retry:service_request",
+        "observed_violation": "A candidate triggered the stale_lesson admission case.",
+        "provenance_present": true,
+        "repair_procedure": "Bind retries to one idempotency key and compare the committed effect hash.",
+        "scope": "service_request",
+        "ttl_events": -1
+      },
+      {
+        "abstract_constraint": "A balanced ledger must preserve the sum across a transfer.",
+        "authority_admissible": true,
+        "depends_on": [
+          "a07"
+        ],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "r07",
+        "event_kind": "provenance_loss",
+        "evidence_source": "r07",
+        "expected_transaction_class": "reject",
+        "family": "ledger_conservation",
+        "intended_admission_reason": "reject_provenance_loss",
+        "lesson_key": "ledger_conservation:transaction_ledger",
+        "observed_violation": "A candidate triggered the provenance_loss admission case.",
+        "provenance_present": false,
+        "repair_procedure": "Apply debit and credit atomically and replay the conservation check.",
+        "scope": "transaction_ledger",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A half-open time range must exclude its upper endpoint.",
+        "authority_admissible": true,
+        "depends_on": [
+          "a08"
+        ],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "r08",
+        "event_kind": "provenance_loss",
+        "evidence_source": "r08",
+        "expected_transaction_class": "reject",
+        "family": "range_filter",
+        "intended_admission_reason": "reject_provenance_loss",
+        "lesson_key": "range_filter:sql_query",
+        "observed_violation": "A candidate triggered the provenance_loss admission case.",
+        "provenance_present": false,
+        "repair_procedure": "Use a strict upper predicate and test the endpoint explicitly.",
+        "scope": "sql_query",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A paged response needs a stable total ordering.",
+        "authority_admissible": false,
+        "depends_on": [
+          "a09"
+        ],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "r09",
+        "event_kind": "poison_candidate",
+        "evidence_source": "r09",
+        "expected_transaction_class": "reject",
+        "family": "stable_ordering",
+        "intended_admission_reason": "reject_poison_exact_authority",
+        "lesson_key": "stable_ordering:api_page",
+        "observed_violation": "A candidate triggered the poison_candidate admission case.",
+        "provenance_present": true,
+        "repair_procedure": "Bypass ordering checks for later pages.",
+        "scope": "api_page",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A checked conversion must reject values outside the target type.",
+        "authority_admissible": false,
+        "depends_on": [
+          "a10"
+        ],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "r10",
+        "event_kind": "poison_candidate",
+        "evidence_source": "r10",
+        "expected_transaction_class": "reject",
+        "family": "type_preservation",
+        "intended_admission_reason": "reject_poison_exact_authority",
+        "lesson_key": "type_preservation:rust_conversion",
+        "observed_violation": "A candidate triggered the poison_candidate admission case.",
+        "provenance_present": true,
+        "repair_procedure": "Wrap out-of-range values without an error.",
+        "scope": "rust_conversion",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A retry loop must stop at its fixed attempt budget.",
+        "authority_admissible": true,
+        "depends_on": [
+          "a11"
+        ],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "r11",
+        "event_kind": "poison_candidate",
+        "evidence_source": "a01",
+        "expected_transaction_class": "reject",
+        "family": "retry_budget",
+        "intended_admission_reason": "reject_evidence_mismatch",
+        "lesson_key": "retry_budget:network_client",
+        "observed_violation": "A candidate triggered the poison_candidate admission case.",
+        "provenance_present": true,
+        "repair_procedure": "Increment attempts before retry and refuse once the budget is consumed.",
+        "scope": "network_client",
+        "ttl_events": 64
+      },
+      {
+        "abstract_constraint": "A receipt must bind the evidence bytes that justified its decision.",
+        "authority_admissible": true,
+        "depends_on": [
+          "a12"
+        ],
+        "difficulty": "hard",
+        "eligibility": "transaction_candidate",
+        "event_id": "r12",
+        "event_kind": "poison_candidate",
+        "evidence_source": "a02",
+        "expected_transaction_class": "reject",
+        "family": "evidence_binding",
+        "intended_admission_reason": "reject_evidence_mismatch",
+        "lesson_key": "evidence_binding:audit_receipt",
+        "observed_violation": "A candidate triggered the poison_candidate admission case.",
+        "provenance_present": true,
+        "repair_procedure": "Hash canonical evidence bytes and verify the hash before admission.",
+        "scope": "audit_receipt",
+        "ttl_events": 64
+      }
+    ],
+    "fixture_stream_hash": "sha256:56dcae39d25dc5671a2c4b74cc44fb88b4386dfb8cff8d4b5f86496b1f7ff84f",
+    "frozen_before_first_model_load": true,
+    "hard_case_margin": 0.0,
+    "max_tokens_per_candidate": 32,
+    "memory_contract": {
+      "detailed_trajectory": {
+        "context_bytes": 4096,
+        "context_tokens": 256,
+        "exact_authority": "Exp6761 deterministic local admission labels v1",
+        "exact_check_budget_per_event": 2,
+        "record_slot_bytes": 1024,
+        "storage_bytes": 32768,
+        "top_k": 3,
+        "ttl_events": 64,
+        "update_opportunities": 24
+      },
+      "procedural_constraint": {
+        "context_bytes": 4096,
+        "context_tokens": 256,
+        "exact_authority": "Exp6761 deterministic local admission labels v1",
+        "exact_check_budget_per_event": 2,
+        "record_slot_bytes": 1024,
+        "storage_bytes": 32768,
+        "top_k": 3,
+        "ttl_events": 64,
+        "update_opportunities": 24
+      }
+    },
+    "model_session_policy": "sequential_one_model_at_a_time",
+    "model_specific_answer_trace_sharing": false,
+    "model_specs": [
+      {
+        "family": "qwen_moe",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "quantization": "Q4_K_M",
+        "role": "acquisition_and_within_family"
+      },
+      {
+        "family": "gemma_dense",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "quantization": "Q4_K_M",
+        "role": "held_out_dense_transfer"
+      }
+    ],
+    "order_hashes": [
+      "sha256:b7fb45f5a52009e73759f0113dda64d9d823d24495792878f24b19756bec14d4",
+      "sha256:47a4eba4238456a0cd207767c5a84e9d09e73a93aa985b0ea8d934ada6602119",
+      "sha256:97158e2920c2ee3d3821d2f6a4433400f8cb4148034c36427814f34f4069e88b",
+      "sha256:f34f9549fa16ebe2cc95dd6e330a0c09d4c491473c7560d8593109e71a03af78",
+      "sha256:3e3f27d049e8e1958506caa9d95d12b99124f23e38e3726b78f4d63333269099",
+      "sha256:40ae4f86eabdfe76fc6bb888e5ca494e24e150a8b957eec95780057313c5d1c8"
+    ],
+    "orders": [
+      {
+        "event_ids": [
+          "a01",
+          "a02",
+          "a03",
+          "a04",
+          "a05",
+          "a06",
+          "a07",
+          "a08",
+          "a09",
+          "a10",
+          "a11",
+          "a12",
+          "n01",
+          "n02",
+          "h01",
+          "h02",
+          "t01",
+          "t02",
+          "r01",
+          "r02",
+          "r03",
+          "r04",
+          "r05",
+          "r06",
+          "r07",
+          "r08",
+          "r09",
+          "r10",
+          "r11",
+          "r12"
+        ],
+        "order_hash": "sha256:b7fb45f5a52009e73759f0113dda64d9d823d24495792878f24b19756bec14d4",
+        "order_id": "order_1"
+      },
+      {
+        "event_ids": [
+          "a03",
+          "a04",
+          "a05",
+          "a06",
+          "a07",
+          "a08",
+          "a09",
+          "a10",
+          "a11",
+          "a12",
+          "a01",
+          "a02",
+          "n02",
+          "h01",
+          "h02",
+          "t01",
+          "t02",
+          "n01",
+          "r03",
+          "r04",
+          "r05",
+          "r06",
+          "r07",
+          "r08",
+          "r09",
+          "r10",
+          "r11",
+          "r12",
+          "r01",
+          "r02"
+        ],
+        "order_hash": "sha256:47a4eba4238456a0cd207767c5a84e9d09e73a93aa985b0ea8d934ada6602119",
+        "order_id": "order_2"
+      },
+      {
+        "event_ids": [
+          "a05",
+          "a06",
+          "a07",
+          "a08",
+          "a09",
+          "a10",
+          "a11",
+          "a12",
+          "a01",
+          "a02",
+          "a03",
+          "a04",
+          "h01",
+          "h02",
+          "t01",
+          "t02",
+          "n01",
+          "n02",
+          "r05",
+          "r06",
+          "r07",
+          "r08",
+          "r09",
+          "r10",
+          "r11",
+          "r12",
+          "r01",
+          "r02",
+          "r03",
+          "r04"
+        ],
+        "order_hash": "sha256:97158e2920c2ee3d3821d2f6a4433400f8cb4148034c36427814f34f4069e88b",
+        "order_id": "order_3"
+      },
+      {
+        "event_ids": [
+          "a07",
+          "a08",
+          "a09",
+          "a10",
+          "a11",
+          "a12",
+          "a01",
+          "a02",
+          "a03",
+          "a04",
+          "a05",
+          "a06",
+          "h02",
+          "t01",
+          "t02",
+          "n01",
+          "n02",
+          "h01",
+          "r07",
+          "r08",
+          "r09",
+          "r10",
+          "r11",
+          "r12",
+          "r01",
+          "r02",
+          "r03",
+          "r04",
+          "r05",
+          "r06"
+        ],
+        "order_hash": "sha256:f34f9549fa16ebe2cc95dd6e330a0c09d4c491473c7560d8593109e71a03af78",
+        "order_id": "order_4"
+      },
+      {
+        "event_ids": [
+          "a09",
+          "a10",
+          "a11",
+          "a12",
+          "a01",
+          "a02",
+          "a03",
+          "a04",
+          "a05",
+          "a06",
+          "a07",
+          "a08",
+          "t01",
+          "t02",
+          "n01",
+          "n02",
+          "h01",
+          "h02",
+          "r09",
+          "r10",
+          "r11",
+          "r12",
+          "r01",
+          "r02",
+          "r03",
+          "r04",
+          "r05",
+          "r06",
+          "r07",
+          "r08"
+        ],
+        "order_hash": "sha256:3e3f27d049e8e1958506caa9d95d12b99124f23e38e3726b78f4d63333269099",
+        "order_id": "order_5"
+      },
+      {
+        "event_ids": [
+          "a11",
+          "a12",
+          "a01",
+          "a02",
+          "a03",
+          "a04",
+          "a05",
+          "a06",
+          "a07",
+          "a08",
+          "a09",
+          "a10",
+          "t02",
+          "n01",
+          "n02",
+          "h01",
+          "h02",
+          "t01",
+          "r11",
+          "r12",
+          "r01",
+          "r02",
+          "r03",
+          "r04",
+          "r05",
+          "r06",
+          "r07",
+          "r08",
+          "r09",
+          "r10"
+        ],
+        "order_hash": "sha256:40ae4f86eabdfe76fc6bb888e5ca494e24e150a8b957eec95780057313c5d1c8",
+        "order_id": "order_6"
+      }
+    ],
+    "planning_date": "20260829",
+    "ports": [
+      16762,
+      16763
+    ],
+    "prompt_template_hash": "sha256:c2cf53f13c92af3a195fd4247521a9d6a9aaae1906a0ed333a354d0bbb8aeb26",
+    "resolved_models": [
+      {
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "mtime_ns": 1780046332847654213,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "quantization": "Q4_K_M",
+        "revision": "local-unversioned",
+        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "size_bytes": 22134528992
+      },
+      {
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "mtime_ns": 1780838958726406205,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "quantization": "Q4_K_M",
+        "revision": "local-unversioned",
+        "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "size_bytes": 18323731456
+      }
+    ],
+    "retention_anchors": [
+      "t01",
+      "t02"
+    ],
+    "seeds": {
+      "base": 6762029,
+      "candidate_formula": "base + model*100000 + order*10000 + event*10 + candidate"
+    },
+    "temperature": 0.0,
+    "transaction_timing": "after_exact_result_closes_episode"
+  },
+  "gate_check_summary": {
+    "checks": {
+      "atomic_storage": true,
+      "cached_ggufs_with_hashes": true,
+      "disk_sufficient": true,
+      "embedded_tokenizers": true,
+      "exact_authority": true,
+      "exact_model_specs": true,
+      "llama_cpp_cuda": true,
+      "one_model_vram": false,
+      "planning_date_matches": true,
+      "ports_available": true,
+      "procedural_memory_stream_ready": true,
+      "ram_sufficient": true,
+      "six_frozen_orders": true,
+      "task_owned_lease": false
+    },
+    "failed_checks": [
+      "one_model_vram",
+      "task_owned_lease"
+    ],
+    "failures": [
+      {
+        "check": "one_model_vram",
+        "expected": true,
+        "observed": false
+      },
+      {
+        "check": "task_owned_lease",
+        "expected": true,
+        "observed": false
+      }
+    ]
+  },
+  "gpu_receipts": [],
+  "hard_case_yield_by_arm": {},
+  "honest_verdict": "complete_blocked_procedural_csl_ab: owned precondition failed",
+  "inference_substrate": "local CUDA GGUF with external transactional memory",
+  "joint_correct_constraint_support_by_arm": {},
+  "live_model_invoked": false,
+  "model_specific_answer_traces_shared": false,
+  "model_weight_receipts": [],
+  "model_weights_mutated": false,
+  "models_used": [
+    {
+      "family": "qwen_moe",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "role": "acquisition_and_within_family"
+    },
+    {
+      "family": "gemma_dense",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "role": "held_out_dense_transfer"
+    }
+  ],
+  "negative_transfer_by_arm": {},
+  "poison_receipts": [],
+  "positive_credit_checks": {},
+  "preconditions_checked": {
+    "all_passed": false,
+    "checks": {
+      "atomic_storage": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "cached_ggufs_with_hashes": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "disk_sufficient": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "embedded_tokenizers": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "exact_authority": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "exact_model_specs": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "llama_cpp_cuda": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "one_model_vram": {
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      "planning_date_matches": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "ports_available": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "procedural_memory_stream_ready": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "ram_sufficient": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "six_frozen_orders": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "task_owned_lease": {
+        "expected": true,
+        "observed": false,
+        "passed": false
+      }
+    },
+    "disk_free_bytes": 66213195776,
+    "free_vram_bytes": 10122952704,
+    "gpu_snapshot": [
+      {
+        "free_mib": 6231,
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 3090",
+        "total_mib": 24576,
+        "used_mib": 17894,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+      },
+      {
+        "free_mib": 3423,
+        "index": 1,
+        "name": "NVIDIA GeForce RTX 3090",
+        "total_mib": 24576,
+        "used_mib": 20702,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      }
+    ],
+    "largest_model_bytes": 22134528992,
+    "model_receipts": [
+      {
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "mtime_ns": 1780046332847654213,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "quantization": "Q4_K_M",
+        "revision": "local-unversioned",
+        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "size_bytes": 22134528992
+      },
+      {
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "mtime_ns": 1780838958726406205,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "quantization": "Q4_K_M",
+        "revision": "local-unversioned",
+        "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "size_bytes": 18323731456
+      }
+    ],
+    "ports": [
+      16762,
+      16763
+    ],
+    "ram_available_bytes": 98263302144,
+    "tokenizer_receipts": [
+      {
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "passed": true
+      },
+      {
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "passed": true
+      }
+    ]
+  },
+  "prequential_exact_yield_by_arm": {},
+  "procedural_over_no_memory_order_lcb": 0.0,
+  "procedural_over_trace_order_lcb": 0.0,
+  "prospective_csl_completed": false,
+  "random_seed": 6762029,
+  "rejects_by_arm": {},
+  "reproducibility_checksum": "sha256:94ff66c180b2e3ceea6a17c440444490887db4db40fa65424f7508546036b97f",
+  "restarts_by_arm": {},
+  "retention_by_arm": {},
+  "retrieval_and_action_influence_by_arm": {},
+  "rollbacks_by_arm": {},
+  "rows": [],
+  "run_date": "20260829",
+  "schema": "carnot.experiment_6762.procedural_vs_trace_csl_ab.v1",
+  "status": "complete_blocked_procedural_csl_ab",
+  "teardown_receipts": [],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6762_procedural_vs_trace_csl_ab.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6762_procedural_vs_trace_csl_ab.py,scripts/experiments/experiment_6762_procedural_vs_trace_csl_ab.py -m pytest tests/python/test_experiment_6762_procedural_vs_trace_csl_ab.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6762_procedural_vs_trace_csl_ab.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_6762_procedural_vs_trace_csl_ab.py scripts/experiments/experiment_6762_procedural_vs_trace_csl_ab.py tests/python/test_experiment_6762_procedural_vs_trace_csl_ab.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6762_procedural_vs_trace_csl_ab.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6762_procedural_vs_trace_csl_ab.json",
+      "exit_code": 0
+    }
+  ],
+  "tokens_by_arm": {},
+  "transaction_receipts": [],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}
