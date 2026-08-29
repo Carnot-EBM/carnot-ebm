@@ -312,3 +312,25 @@ results/arc_leaderboard_eval_runs/
 # state, like the mutation-check run files. A committed scope would become active for every
 # session in every checkout and refuse commits nobody could explain.
 ops/.agent_scopes/
+
+# Conductor bookkeeping state: escalation-dedupe ledgers, rewritten every few seconds by the
+# running loop. TRACKED until 2026-08-29, and that was a standing commit deadlock: a
+# test-suite mutation marker naming them can never go clean while the loop runs, so it
+# refused every hook-respecting commit indefinitely. The conductor itself was immune
+# (--no-verify), so the cost fell entirely on humans and agents -- five refused commits in
+# one day.
+#
+# Safe to untrack: every reader treats absence as fresh state, and run_stop_authority.py
+# documents the fail direction out loud -- "Unreadable state = fresh state: persistence
+# restarts, which only DELAYS an action (fail toward not killing)." The cost on a fresh clone
+# is that deduplicated alerts re-fire once, which is self-correcting.
+#
+# Siblings ops/.agent_scopes/ and ops/.test_suite_mutation_runs/ are already ignored for the
+# same reason: per-run local state does not belong in the research record.
+ops/.activation_replan_state.json
+ops/.arc_leaderboard_technique_watch_state.json
+ops/.arc_news_watch_state.json
+ops/.audit_findings_ledger_state.json
+ops/.conductor_reexec_state.json
+ops/.run_sentinel_state.json
+ops/.stop_authority_state.json
