@@ -163,6 +163,18 @@ def resolve_gguf() -> str:
     return str(hits[-1])
 
 
+def transport_env(arm: str, tool_transport: str) -> dict[str, str]:
+    """Env the chosen transport needs, as a pure function so it can be tested off-GPU.
+
+    The single arm NEVER gets the variable: setting it would silently turn the control arm
+    into a second treatment arm, and the whole A/B would compare a loop against a loop.
+    """
+
+    if arm != "tool" or tool_transport != "selfparse":
+        return {}
+    return {"CARNOT_ARC_INDUCE_TOOL_LOOP": "selfparse"}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--arm", required=True, choices=["single", "tool"])
@@ -170,6 +182,20 @@ def main() -> int:
     ap.add_argument("--gpu", required=True, type=int, help="physical CUDA index for this arm")
     ap.add_argument("--port", required=True, type=int)
     ap.add_argument("--games", help="comma-separated subset of the roster")
+    # TRANSPORT, added 2026-08-29. The tool arm previously had exactly one transport --
+    # native `tools` in the request -- because that was the only one that existed. The
+    # selfparse transport (REQ-ARC-WMTE-6730) sends no `tools` field and parses the
+    # model's XML agent-side, which is what the SCORED vLLM server requires: it is
+    # launched with no --enable-auto-tool-choice and returns HTTP 400 on any request
+    # carrying `tools`. Default stays "native" so previously banked cells keep meaning
+    # what they meant; a selfparse run belongs in its own run-dir, never mixed in.
+    ap.add_argument(
+        "--tool-transport",
+        choices=["native", "selfparse"],
+        default="native",
+        help="tool arm only: 'native' sends a tools field (dev-only), "
+        "'selfparse' carries schemas as prompt text and parses XML agent-side",
+    )
     args = ap.parse_args()
 
     run_dir = Path(args.run_dir)
@@ -189,7 +215,12 @@ def main() -> int:
     # The single arm must take the SHIPPED single-shot path; the tool arm calls
     # the loop directly, and compaction stays at its shipped default (unset) --
     # compaction is a separate lever, not what this A/B measures.
+    # The single arm must never see this set. For the tool arm the value selects the
+    # TRANSPORT: popping it (native) makes the loop send a `tools` field, which only the
+    # local llama.cpp dev twin accepts.
     os.environ.pop("CARNOT_ARC_INDUCE_TOOL_LOOP", None)
+    for key, value in transport_env(args.arm, args.tool_transport).items():
+        os.environ[key] = value
     os.environ.pop("CARNOT_ARC_INDUCE_TOOL_COMPACT", None)
     if not os.environ.get("CARNOT_LLAMA_SERVER"):
         log("FATAL: CARNOT_LLAMA_SERVER unset (a module relaunch could pick the HIP build)")
@@ -343,6 +374,8 @@ def main() -> int:
         "n_ctx": prop.n_ctx,
         "decode_ceiling_total": TOTAL_DECODE_CEILING,
         "decode_shape": ("1 x 49152, tries=1" if args.arm == "single" else "12 turns x 4096"),
+        # Recorded so a shard can never be read as the other transport's evidence.
+        "tool_transport": (args.tool_transport if args.arm == "tool" else None),
         "induce_timeout_s": 3600,
         "kv_quant": "q8_0",
         "seed_base": SEED_BASE,
