@@ -691,7 +691,17 @@ def status(artifact: Mapping[str, Any]) -> str:
 
     score = hardness_surface_headroom_ready_score(artifact)
     debt = dict(artifact.get("test_debt_classification") or {})
-    if score == 1.0 and debt.get("unrelated_global_suite_debt") is True:
+    # Key on the DECISION, not the CLASSIFICATION. `unrelated_global_suite_debt` says the debt
+    # exists; `blocks_terminal_ready_status` says whether it is this task's fault, which is the
+    # question REQ-HARNESS-5920 asks. Keying on the classification is what made the first fix
+    # hollow: the decision field was computed correctly and then read by nothing.
+    #
+    # Falls back to the classification when the decision field is absent, so an artifact
+    # written before this change still reads exactly as it did.
+    blocks = debt.get("blocks_terminal_ready_status")
+    if blocks is None:
+        blocks = debt.get("unrelated_global_suite_debt")
+    if score == 1.0 and blocks is True:
         return "blocked"
     if score == 1.0:
         return "complete_ready"
@@ -752,8 +762,20 @@ def build_artifact(
     test_exit_codes: Mapping[str, int],
     duration_s: float,
     root: Path = REPO_ROOT,
+    global_failure_node_ids: Sequence[str] | None = None,
 ) -> JsonDict:
-    """Build the terminal corrigendum artifact from already-read rows."""
+    """Build the terminal corrigendum artifact from already-read rows.
+
+    `global_failure_node_ids` is what the global suite actually failed on. None means no
+    evidence, which is NOT the same as no failures: `classify_test_debt` then fails closed and
+    the debt blocks exactly as it did before REQ-HARNESS-5920 was wired here.
+
+    THIS PARAMETER EXISTS BECAUSE ITS ABSENCE MADE THE FIRST WIRING HOLLOW (2026-08-29).
+    `classify_test_debt` gained the delta, and this caller never passed it, so production took
+    the fail-closed path on every run and nothing changed. The verification quoted in that
+    commit tested `classify_test_debt` directly with evidence handed in -- a path production
+    never takes. Test the call site, not the function.
+    """
 
     root = Path(root)
     split_definitions = dict(
@@ -777,6 +799,7 @@ def build_artifact(
         test_commands,
         test_exit_codes,
         science_matrix_ready=decision["hardness_surface_headroom_ready_score"] == 1.0,
+        global_failure_node_ids=global_failure_node_ids,
     )
     artifact: JsonDict = {
         "schema": SCHEMA,
