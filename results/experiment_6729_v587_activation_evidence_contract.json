@@ -1,0 +1,1677 @@
+{
+  "duration_s": 0.06852483202237636,
+  "field_principles": {
+    "duration_s": "Monotonic wall time lets readers reject zero-time fabricated checks.",
+    "field_principles": "Principles document why each artifact field is required.",
+    "field_provenance": "Each field names the parser or reducer that produced it.",
+    "gate_check_summary": "Blocked paths must name the failing check and observed value.",
+    "gate_contract_rows": "Each gate must cite an upstream field with exact producer spelling.",
+    "honest_verdict": "The terminal prefix makes blocked or null infrastructure status explicit.",
+    "inference_substrate": "The source-only substrate prevents false claims that a model was run.",
+    "model_policy_rows": "LLM tasks must declare a current mandated local GGUF identity.",
+    "preconditions_checked": "Input existence, YAML parse state, and source checks remain auditable.",
+    "prior_failure_rows": "Reruns must name the old verdict, changed condition, and retirement rule.",
+    "random_seed": "An explicit unused seed keeps deterministic replay policy visible.",
+    "reproducibility_checksum": "The checksum binds the checked inputs and derived contract rows.",
+    "source_cutoff": "The dated cutoff prevents later source drift from changing this receipt.",
+    "source_receipts": "One row per primary source ties each adopted idea to local experiments.",
+    "status": "The terminal state makes blocked activation visible to the conductor.",
+    "task_contract_rows": "One row per planned task exposes missing, duplicate, or renamed work.",
+    "v587_contract_ready": "This gate opens downstream work only after every contract check passes.",
+    "verdict_class": "The closed class keeps readiness separate from a scientific positive."
+  },
+  "field_provenance": {
+    "duration_s": "time.monotonic elapsed seconds supplied by caller",
+    "field_principles": "constant FIELD_PRINCIPLES",
+    "gate_check_summary": "audit_contract() named failure rows",
+    "gate_contract_rows": "build_gate_contract_rows() over manifest gated_on entries",
+    "honest_verdict": "derived terminal-prefixed summary",
+    "inference_substrate": "constant from Exp6729 prompt",
+    "model_policy_rows": "build_model_policy_rows() over manifest MODEL_SPECS",
+    "prior_failure_rows": "build_prior_failure_rows() over manifest prior_failures",
+    "random_seed": "constant RANDOM_SEED; no random sampling performed",
+    "reproducibility_checksum": "canonical hash from reproducibility_checksum()",
+    "source_cutoff": "constant SOURCE_CUTOFF from V587 planning date",
+    "source_receipts": "collect_source_receipts() over research-references.md",
+    "task_contract_rows": "build_task_contract_rows() over design and active YAML",
+    "v587_contract_ready": "audit_contract() failure reduction",
+    "verdict_class": "derived from v587_contract_ready"
+  },
+  "gate_check_summary": [
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "missing",
+      "passed": false,
+      "reason": "listed_input_file",
+      "sha256": "missing",
+      "unit": "research-roadmap-next.yaml"
+    },
+    {
+      "check": "precondition.yaml_parse",
+      "expected_value": "parseable YAML",
+      "observed_value": "missing",
+      "passed": false,
+      "reason": "file_missing",
+      "unit": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml"
+    },
+    {
+      "check": "manifest.task_count",
+      "expected_value": 13,
+      "observed_value": 7,
+      "reason": "wrong_manifest_task_count",
+      "unit": "research-roadmap.yaml"
+    },
+    {
+      "check": "manifest.task_ids_unique",
+      "expected_value": 13,
+      "observed_value": 7,
+      "reason": "manifest_task_ids_not_unique_or_complete",
+      "unit": "research-roadmap.yaml"
+    },
+    {
+      "check": "manifest.deliverables_unique",
+      "expected_value": 13,
+      "observed_value": 7,
+      "reason": "manifest_deliverables_not_unique_or_complete",
+      "unit": "research-roadmap.yaml"
+    },
+    {
+      "check": "manifest.task_count",
+      "expected_value": 13,
+      "observed_value": 0,
+      "reason": "wrong_manifest_task_count",
+      "unit": "research-roadmap-next.yaml"
+    },
+    {
+      "check": "manifest.task_ids_unique",
+      "expected_value": 13,
+      "observed_value": 0,
+      "reason": "manifest_task_ids_not_unique_or_complete",
+      "unit": "research-roadmap-next.yaml"
+    },
+    {
+      "check": "manifest.deliverables_unique",
+      "expected_value": 13,
+      "observed_value": 0,
+      "reason": "manifest_deliverables_not_unique_or_complete",
+      "unit": "research-roadmap-next.yaml"
+    },
+    {
+      "check": "manifest.infrastructure_count",
+      "expected_value": ">=2",
+      "observed_value": 0,
+      "reason": "too_few_infrastructure_tasks",
+      "unit": "research-roadmap-next.yaml"
+    },
+    {
+      "check": "task.closed_verdict_class_declared",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6730-arc-context-tool-preflight"
+    },
+    {
+      "check": "task.closed_verdict_class_declared",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6731-object-table-fetch-on-demand-ab"
+    },
+    {
+      "check": "task.closed_verdict_class_declared",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6732-object-table-ab-cold-audit"
+    },
+    {
+      "check": "task.closed_verdict_class_declared",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6733-hardness-controlled-certificate-stream"
+    },
+    {
+      "check": "task.closed_verdict_class_declared",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6734-sota-dual-encoding-proposal-corpus"
+    },
+    {
+      "check": "task.closed_verdict_class_declared",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6735-oracle-distinct-diagnostic-energy"
+    },
+    {
+      "check": "task.manifest_present",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6736-diagnostic-energy-localized-repair-ab"
+    },
+    {
+      "check": "task.milestone",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6736-diagnostic-energy-localized-repair-ab"
+    },
+    {
+      "check": "task.deliverable",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6736-diagnostic-energy-localized-repair-ab"
+    },
+    {
+      "check": "task.required_fields_include_verdict_class",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6736-diagnostic-energy-localized-repair-ab"
+    },
+    {
+      "check": "task.required_fields_include_gate_check_summary",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6736-diagnostic-energy-localized-repair-ab"
+    },
+    {
+      "check": "task.closed_verdict_class_declared",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6736-diagnostic-energy-localized-repair-ab"
+    },
+    {
+      "check": "task.per_unit_rows",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6736-diagnostic-energy-localized-repair-ab"
+    },
+    {
+      "check": "task.manifest_present",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6737-transactional-constraint-memory-fixture"
+    },
+    {
+      "check": "task.milestone",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6737-transactional-constraint-memory-fixture"
+    },
+    {
+      "check": "task.deliverable",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6737-transactional-constraint-memory-fixture"
+    },
+    {
+      "check": "task.required_fields_include_verdict_class",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6737-transactional-constraint-memory-fixture"
+    },
+    {
+      "check": "task.required_fields_include_gate_check_summary",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6737-transactional-constraint-memory-fixture"
+    },
+    {
+      "check": "task.closed_verdict_class_declared",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6737-transactional-constraint-memory-fixture"
+    },
+    {
+      "check": "task.manifest_present",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6738-prospective-support-preserving-csl-ab"
+    },
+    {
+      "check": "task.milestone",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6738-prospective-support-preserving-csl-ab"
+    },
+    {
+      "check": "task.deliverable",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6738-prospective-support-preserving-csl-ab"
+    },
+    {
+      "check": "task.required_fields_include_verdict_class",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6738-prospective-support-preserving-csl-ab"
+    },
+    {
+      "check": "task.required_fields_include_gate_check_summary",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6738-prospective-support-preserving-csl-ab"
+    },
+    {
+      "check": "task.closed_verdict_class_declared",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6738-prospective-support-preserving-csl-ab"
+    },
+    {
+      "check": "task.per_unit_rows",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6738-prospective-support-preserving-csl-ab"
+    },
+    {
+      "check": "task.manifest_present",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6739-csl-support-durability-audit"
+    },
+    {
+      "check": "task.milestone",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6739-csl-support-durability-audit"
+    },
+    {
+      "check": "task.deliverable",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6739-csl-support-durability-audit"
+    },
+    {
+      "check": "task.required_fields_include_verdict_class",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6739-csl-support-durability-audit"
+    },
+    {
+      "check": "task.required_fields_include_gate_check_summary",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6739-csl-support-durability-audit"
+    },
+    {
+      "check": "task.closed_verdict_class_declared",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6739-csl-support-durability-audit"
+    },
+    {
+      "check": "task.per_unit_rows",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6739-csl-support-durability-audit"
+    },
+    {
+      "check": "task.manifest_present",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6740-thermalizer-compiler-fidelity"
+    },
+    {
+      "check": "task.milestone",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6740-thermalizer-compiler-fidelity"
+    },
+    {
+      "check": "task.deliverable",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6740-thermalizer-compiler-fidelity"
+    },
+    {
+      "check": "task.required_fields_include_verdict_class",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6740-thermalizer-compiler-fidelity"
+    },
+    {
+      "check": "task.required_fields_include_gate_check_summary",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6740-thermalizer-compiler-fidelity"
+    },
+    {
+      "check": "task.closed_verdict_class_declared",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6740-thermalizer-compiler-fidelity"
+    },
+    {
+      "check": "task.per_unit_rows",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6740-thermalizer-compiler-fidelity"
+    },
+    {
+      "check": "task.manifest_present",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6741-v587-branch-disposition"
+    },
+    {
+      "check": "task.milestone",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6741-v587-branch-disposition"
+    },
+    {
+      "check": "task.deliverable",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6741-v587-branch-disposition"
+    },
+    {
+      "check": "task.required_fields_include_verdict_class",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6741-v587-branch-disposition"
+    },
+    {
+      "check": "task.required_fields_include_gate_check_summary",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6741-v587-branch-disposition"
+    },
+    {
+      "check": "task.closed_verdict_class_declared",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6741-v587-branch-disposition"
+    },
+    {
+      "check": "task.per_unit_rows",
+      "expected_value": true,
+      "observed_value": false,
+      "reason": "task_contract_mismatch",
+      "unit": "exp6741-v587-branch-disposition"
+    },
+    {
+      "check": "model.policy",
+      "expected_value": true,
+      "observed_value": {
+        "arc_generator_pinned": true,
+        "mandated_model_present": false,
+        "model_cache_required_for_exp6729": false,
+        "model_specs_declared": false,
+        "task_present": false
+      },
+      "reason": "model_policy_mismatch",
+      "unit": "exp6736-diagnostic-energy-localized-repair-ab"
+    },
+    {
+      "check": "model.policy",
+      "expected_value": true,
+      "observed_value": {
+        "arc_generator_pinned": true,
+        "mandated_model_present": false,
+        "model_cache_required_for_exp6729": false,
+        "model_specs_declared": false,
+        "task_present": false
+      },
+      "reason": "model_policy_mismatch",
+      "unit": "exp6738-prospective-support-preserving-csl-ab"
+    }
+  ],
+  "gate_contract_rows": [
+    {
+      "artifact_field": "v587_contract_ready",
+      "checks": {
+        "matches_expected_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "consumer_task_id": "exp6730-arc-context-tool-preflight",
+      "op": "==",
+      "passed": true,
+      "producer_required_artifact_fields": [
+        "prior_failures",
+        "verdict_class",
+        "gate_check_summary",
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "source_cutoff",
+        "source_receipts",
+        "task_contract_rows",
+        "gate_contract_rows",
+        "prior_failure_rows",
+        "model_policy_rows",
+        "v587_contract_ready",
+        "honest_verdict",
+        "source_receipts_and_local_method_preregistration_no_llm"
+      ],
+      "upstream_task_id": "exp6729-v587-activation-evidence-contract",
+      "value": true
+    },
+    {
+      "artifact_field": "arc_context_tool_preflight_ready",
+      "checks": {
+        "matches_expected_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "consumer_task_id": "exp6731-object-table-fetch-on-demand-ab",
+      "op": "==",
+      "passed": true,
+      "producer_required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "context_requested",
+        "context_observed_by_model",
+        "gpu_admission_by_model",
+        "rows",
+        "multi_parameter_parse_successes",
+        "multi_parameter_dispatch_successes",
+        "bounded_response_successes",
+        "arc_context_tool_preflight_ready",
+        "solve_claim",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict",
+        "local_llama_cpp_python_cuda_gguf_diagnostic"
+      ],
+      "upstream_task_id": "exp6730-arc-context-tool-preflight",
+      "value": true
+    },
+    {
+      "artifact_field": "object_table_ab_completed",
+      "checks": {
+        "matches_expected_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "consumer_task_id": "exp6732-object-table-ab-cold-audit",
+      "op": "==",
+      "passed": true,
+      "producer_required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "preconditions_checked",
+        "rows",
+        "paired_rows",
+        "change_fidelity_by_arm",
+        "transition_utility_by_arm",
+        "tokens_saved_per_prompt",
+        "find_objects_call_rate",
+        "valid_fetch_count",
+        "noise_floor_used",
+        "paired_delta_ci",
+        "object_table_ab_completed",
+        "adoption_gate_passed",
+        "solve_claim",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict",
+        "actual_capability_bound_adapter_disabled_e3_local_mandated_gguf_public_llama_cpp_cuda"
+      ],
+      "upstream_task_id": "exp6731-object-table-fetch-on-demand-ab",
+      "value": true
+    },
+    {
+      "artifact_field": "v587_contract_ready",
+      "checks": {
+        "matches_expected_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "consumer_task_id": "exp6733-hardness-controlled-certificate-stream",
+      "op": "==",
+      "passed": true,
+      "producer_required_artifact_fields": [
+        "prior_failures",
+        "verdict_class",
+        "gate_check_summary",
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "source_cutoff",
+        "source_receipts",
+        "task_contract_rows",
+        "gate_contract_rows",
+        "prior_failure_rows",
+        "model_policy_rows",
+        "v587_contract_ready",
+        "honest_verdict",
+        "source_receipts_and_local_method_preregistration_no_llm"
+      ],
+      "upstream_task_id": "exp6729-v587-activation-evidence-contract",
+      "value": true
+    },
+    {
+      "artifact_field": "hardness_stream_ready",
+      "checks": {
+        "matches_expected_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "consumer_task_id": "exp6734-sota-dual-encoding-proposal-corpus",
+      "op": "==",
+      "passed": true,
+      "producer_required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "dataset_paths",
+        "rows",
+        "family_counts",
+        "size_density_bins",
+        "split_manifest",
+        "certificate_check_summary",
+        "relabel_invariant_summary",
+        "solver_work_metadata",
+        "hardness_stream_ready",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict",
+        "procedural_formal_instances_and_exact_solver_labels_no_llm"
+      ],
+      "upstream_task_id": "exp6733-hardness-controlled-certificate-stream",
+      "value": true
+    },
+    {
+      "artifact_field": "dual_encoding_corpus_ready",
+      "checks": {
+        "matches_expected_gate": true,
+        "operator_supported": true,
+        "producer_declares_exact_field": true,
+        "upstream_exists": true
+      },
+      "consumer_task_id": "exp6735-oracle-distinct-diagnostic-energy",
+      "op": "==",
+      "passed": true,
+      "producer_required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "model_specs",
+        "upstream_dataset_hash",
+        "rows",
+        "encoding_disagreement_rows",
+        "exact_success_by_model_family",
+        "error_type_by_model_family",
+        "abstention_counts",
+        "dual_encoding_corpus_ready",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict",
+        "local_llama_cpp_python_cuda_gguf_exact_proposal_stream"
+      ],
+      "upstream_task_id": "exp6734-sota-dual-encoding-proposal-corpus",
+      "value": true
+    }
+  ],
+  "honest_verdict": "blocked_v587_activation_contract: one or more source, manifest, gate, prior, or model checks failed.",
+  "inference_substrate": "source_receipts_and_local_method_preregistration_no_llm",
+  "model_policy_rows": [
+    {
+      "arc_scored_generator": "unsloth/Qwen3.8-27B-GGUF",
+      "checks": {
+        "arc_generator_pinned": true,
+        "mandated_model_present": true,
+        "model_cache_required_for_exp6729": false,
+        "model_specs_declared": true,
+        "task_present": true
+      },
+      "mandated_models_present": [
+        "unsloth/Qwen3.8-27B-GGUF",
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "model_cache_required": false,
+      "models_declared": [
+        "unsloth/Qwen3.8-27B-GGUF",
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "passed": true,
+      "task_id": "exp6730-arc-context-tool-preflight"
+    },
+    {
+      "arc_scored_generator": "unsloth/Qwen3.8-27B-GGUF",
+      "checks": {
+        "arc_generator_pinned": true,
+        "mandated_model_present": true,
+        "model_cache_required_for_exp6729": false,
+        "model_specs_declared": true,
+        "task_present": true
+      },
+      "mandated_models_present": [
+        "unsloth/Qwen3.8-27B-GGUF",
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "model_cache_required": false,
+      "models_declared": [
+        "unsloth/Qwen3.8-27B-GGUF",
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "passed": true,
+      "task_id": "exp6731-object-table-fetch-on-demand-ab"
+    },
+    {
+      "arc_scored_generator": null,
+      "checks": {
+        "arc_generator_pinned": true,
+        "mandated_model_present": true,
+        "model_cache_required_for_exp6729": false,
+        "model_specs_declared": true,
+        "task_present": true
+      },
+      "mandated_models_present": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "model_cache_required": false,
+      "models_declared": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "passed": true,
+      "task_id": "exp6734-sota-dual-encoding-proposal-corpus"
+    },
+    {
+      "arc_scored_generator": null,
+      "checks": {
+        "arc_generator_pinned": true,
+        "mandated_model_present": false,
+        "model_cache_required_for_exp6729": false,
+        "model_specs_declared": false,
+        "task_present": false
+      },
+      "mandated_models_present": [],
+      "model_cache_required": false,
+      "models_declared": [],
+      "passed": false,
+      "task_id": "exp6736-diagnostic-energy-localized-repair-ab"
+    },
+    {
+      "arc_scored_generator": null,
+      "checks": {
+        "arc_generator_pinned": true,
+        "mandated_model_present": false,
+        "model_cache_required_for_exp6729": false,
+        "model_specs_declared": false,
+        "task_present": false
+      },
+      "mandated_models_present": [],
+      "model_cache_required": false,
+      "models_declared": [],
+      "passed": false,
+      "task_id": "exp6738-prospective-support-preserving-csl-ab"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "listed_input_file",
+      "sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+      "unit": "CLAUDE.md"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "listed_input_file",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "unit": "CODEX.md"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "listed_input_file",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "unit": "research-program.md"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "listed_input_file",
+      "sha256": "sha256:e983d111e0cb39fc3f47d4133c47acb036be36f3863103636012f8249437ab09",
+      "unit": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "missing",
+      "passed": false,
+      "reason": "listed_input_file",
+      "sha256": "missing",
+      "unit": "research-roadmap-next.yaml"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "listed_input_file",
+      "sha256": "sha256:7faba7ce00bbf1f13872ad06405a2e442b0a75f730e70db1d354f734262e2ae8",
+      "unit": "research-roadmap.yaml"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "listed_input_file",
+      "sha256": "sha256:b93895f7340763c9e85c7ab0ff245df7a031cb1022c4a7aa970d1945a6dd59fc",
+      "unit": "research-references.md"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "listed_input_file",
+      "sha256": "sha256:013e97c905fd75be568408c1dfdd4a8c804d9ff77e4603aca6151e7d98feac0e",
+      "unit": "research-complete.yaml"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "listed_input_file",
+      "sha256": "sha256:4086300259d19a551bcca13a34deba5f8bf79cf2dc4b6693c8071336ee2da38a",
+      "unit": "ops/conductor-log.md"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "listed_input_file",
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+      "unit": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "listed_input_file",
+      "sha256": "sha256:fbbcb1eb324f8dfae835ba694c4a665c6d4a512f021e7165b387ec4518ce37fd",
+      "unit": "scripts/conductor_gates.py"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "listed_input_file",
+      "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+      "unit": "scripts/verdict_row_consistency_lint.py"
+    },
+    {
+      "check": "precondition.local_file",
+      "expected_value": "present",
+      "observed_value": "present",
+      "passed": true,
+      "reason": "listed_input_file",
+      "sha256": "sha256:96ecd4fae7d444ba5ff5b9c461a7e39efe457b2b4de0383d49783d3285690a07",
+      "unit": "scripts/adversarial_verify.py"
+    },
+    {
+      "check": "precondition.yaml_parse",
+      "expected_value": "parseable YAML",
+      "observed_value": true,
+      "passed": true,
+      "reason": "parsed",
+      "unit": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+    },
+    {
+      "check": "precondition.yaml_parse",
+      "expected_value": "parseable YAML",
+      "observed_value": "missing",
+      "passed": false,
+      "reason": "file_missing",
+      "unit": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml"
+    },
+    {
+      "check": "precondition.no_source_lookup",
+      "expected_value": false,
+      "observed_value": false,
+      "passed": true,
+      "reason": "local_receipts_only",
+      "unit": "runtime"
+    },
+    {
+      "check": "precondition.model_cache_required",
+      "expected_value": false,
+      "observed_value": false,
+      "passed": true,
+      "reason": "source_manifest_only",
+      "unit": "exp6729"
+    }
+  ],
+  "prior_failure_rows": [
+    {
+      "addressed_by": "V587 routes this bounded local contract preflight to Codex gpt-5.5 and requests no Gemini backend or unavailable model metadata.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "consumer_task_id": "exp6729-v587-activation-evidence-contract",
+      "experiment_id": "exp6660-v581-evidence-contract",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "verdict": "skipped_three_fail: model metadata for gemini-3.1-pro-preview was unavailable before artifact creation"
+    },
+    {
+      "addressed_by": "The diagnostic subprocess now owns and verifies CARNOT_ARC_INDUCE_N_CTX=32768 before exercising the previously unproven multi-parameter tool shape.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "consumer_task_id": "exp6730-arc-context-tool-preflight",
+      "experiment_id": "exp6716-object-table-fetch-on-demand-ab",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "verdict": "blocked_context_window: CARNOT_ARC_INDUCE_N_CTX is unset; the paired A/B did not start"
+    },
+    {
+      "addressed_by": "The upstream transport receipt now proves task-owned 32K CUDA admission and a live multi-parameter find_objects call before the paired science run.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "consumer_task_id": "exp6731-object-table-fetch-on-demand-ab",
+      "experiment_id": "exp6716-object-table-fetch-on-demand-ab",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "verdict": "blocked_context_window: CARNOT_ARC_INDUCE_N_CTX is unset; the paired A/B did not start"
+    },
+    {
+      "addressed_by": "This task audits a new completed row corpus behind an exact completion gate; it never attempts to infer science from the prior blocked artifact.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "consumer_task_id": "exp6732-object-table-ab-cold-audit",
+      "experiment_id": "exp6716-object-table-fetch-on-demand-ab",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "verdict": "blocked_context_window: CARNOT_ARC_INDUCE_N_CTX is unset; the paired A/B did not start"
+    },
+    {
+      "addressed_by": "The rerun owns deterministic generators, independent exact checking, proof-preserving relabelings, and frozen splits instead of depending on the missing upstream fixture.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "consumer_task_id": "exp6733-hardness-controlled-certificate-stream",
+      "experiment_id": "exp6678-constraint-family-stream",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "verdict": "blocked_fixture_gate: exact constraint-family stream is not ready"
+    },
+    {
+      "addressed_by": "This corpus consumes a task-owned exact stream and completes on attributable attempts rather than depending on the retired finite-horizon planning chain or an accuracy threshold.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "consumer_task_id": "exp6734-sota-dual-encoding-proposal-corpus",
+      "experiment_id": "exp6718-sota-planning-proposal-bank",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "addressed_by": "The new energy trains on a completed dual-encoding exact corpus with family-disjoint splits and an explicit oracle-denylist, not the retired planning fixture chain.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "consumer_task_id": "exp6735-oracle-distinct-diagnostic-energy",
+      "experiment_id": "exp6705-structural-plan-energy",
+      "passed": true,
+      "retire_if_same_verdict": true,
+      "verdict": "blocked_gate_check_failed"
+    }
+  ],
+  "random_seed": 6729,
+  "reproducibility_checksum": "sha256:a48b94a9b3eee23b0d9921e349a16426e07d281074971cf6d032aebe28706398",
+  "source_cutoff": "2026-08-29",
+  "source_receipts": [
+    {
+      "adoption_decision_present": true,
+      "arxiv_id": "2608.08786",
+      "date_or_cutoff": "2026-08-29",
+      "date_or_cutoff_present": true,
+      "experiment_mapping": [
+        "exp6734-sota-dual-encoding-proposal-corpus",
+        "exp6735-oracle-distinct-diagnostic-energy",
+        "exp6736-diagnostic-energy-localized-repair-ab"
+      ],
+      "experiment_mapping_present": true,
+      "local_adoption_decision": "the next verifier lane should not collapse every failed constraint into a model reasoning error. It should emit a dual-encoding agreement matrix and a closed diagnostic taxonomy before using feedback for repair or memory updates.",
+      "passed": true,
+      "section_sha256": "sha256:6b783a64e740a5b6f31f64384fd760300b5d1aac714fca6d8be53e01936a1bc1",
+      "source_cutoff": "2026-08-29",
+      "source_path": "research-references.md",
+      "title": "SymDiag",
+      "url": "https://arxiv.org/abs/2608.08786",
+      "url_present": true
+    },
+    {
+      "adoption_decision_present": true,
+      "arxiv_id": "2607.17047",
+      "date_or_cutoff": "2026-08-29",
+      "date_or_cutoff_present": true,
+      "experiment_mapping": [
+        "exp6733-hardness-controlled-certificate-stream",
+        "exp6734-sota-dual-encoding-proposal-corpus",
+        "exp6735-oracle-distinct-diagnostic-energy"
+      ],
+      "experiment_mapping_present": true,
+      "local_adoption_decision": "exact constraint panels should stratify proof hardness independently from surface form and instance size; they must not infer reasoning depth from solver conflicts or token spend alone.",
+      "passed": true,
+      "section_sha256": "sha256:99fe4556bf56363296563873bde5dd76634b6af5c05287699e102fd20842bdcb",
+      "source_cutoff": "2026-08-29",
+      "source_path": "research-references.md",
+      "title": "Solver-Hard Is Not Model-Hard",
+      "url": "https://arxiv.org/abs/2607.17047",
+      "url_present": true
+    },
+    {
+      "adoption_decision_present": true,
+      "arxiv_id": "2608.24082",
+      "date_or_cutoff": "2026-08-29",
+      "date_or_cutoff_present": true,
+      "experiment_mapping": [
+        "exp6731-object-table-fetch-on-demand-ab",
+        "exp6732-object-table-ab-cold-audit"
+      ],
+      "experiment_mapping_present": true,
+      "local_adoption_decision": "this is a direct design signal for the ARC object-table experiment left blocked by `.586`: fetch query-relevant object partitions through the live tool path, then measure token/context cost and transition utility against the inline table under a task-owned 32K context contract.",
+      "passed": true,
+      "section_sha256": "sha256:3a3653fd95d88eb76368b4aae36aae83a96f0fb00078198df7a4a50b56f2aa33",
+      "source_cutoff": "2026-08-29",
+      "source_path": "research-references.md",
+      "title": "PARTAB",
+      "url": "https://arxiv.org/abs/2608.24082",
+      "url_present": true
+    },
+    {
+      "adoption_decision_present": true,
+      "arxiv_id": "2607.20792",
+      "date_or_cutoff": "2026-08-29",
+      "date_or_cutoff_present": true,
+      "experiment_mapping": [
+        "exp6737-transactional-constraint-memory-fixture",
+        "exp6738-prospective-support-preserving-csl-ab",
+        "exp6739-csl-support-durability-audit"
+      ],
+      "experiment_mapping_present": true,
+      "local_adoption_decision": "continuous self-learning should make the active episode read-only and commit only verifier-certified updates between episodes. The experiment needs a transactional commit/rollback receipt rather than same-pass read/write coupling.",
+      "passed": true,
+      "section_sha256": "sha256:775e40bd323c43ae4206f955caef759b3be668ea0d786a56e7ce650c308accb1",
+      "source_cutoff": "2026-08-29",
+      "source_path": "research-references.md",
+      "title": "Memoir",
+      "url": "https://arxiv.org/abs/2607.20792",
+      "url_present": true
+    },
+    {
+      "adoption_decision_present": true,
+      "arxiv_id": "2608.00220",
+      "date_or_cutoff": "2026-08-29",
+      "date_or_cutoff_present": true,
+      "experiment_mapping": [
+        "exp6738-prospective-support-preserving-csl-ab",
+        "exp6739-csl-support-durability-audit"
+      ],
+      "experiment_mapping_present": true,
+      "local_adoption_decision": "a prospective self-learning claim must track effective rewardable support, best@k, retention, and joint correct-and-constraint-following behavior, not only endpoint mean accuracy. Any support contraction beyond the preregistered bound triggers rollback.",
+      "passed": true,
+      "section_sha256": "sha256:8d3967cd8b4a4f6f869a2fd4781475fe117fbba27a0f70b2c97affd31f14e2f5",
+      "source_cutoff": "2026-08-29",
+      "source_path": "research-references.md",
+      "title": "Verifier-Induced Support Reshaping",
+      "url": "https://arxiv.org/abs/2608.00220",
+      "url_present": true
+    },
+    {
+      "adoption_decision_present": true,
+      "arxiv_id": "2608.01615",
+      "date_or_cutoff": "2026-08-29",
+      "date_or_cutoff_present": true,
+      "experiment_mapping": [
+        "exp6740-thermalizer-compiler-fidelity"
+      ],
+      "experiment_mapping_present": true,
+      "local_adoption_decision": "replace another loose Torx parity attempt with a bounded, exact-enumeration compiler-fidelity experiment that reports conditional KL for every factor, accumulated trajectory total variation, topology/precision receipts, and an explicit simulator-only substrate. This is hardware-preparation evidence, not a TSU speedup.",
+      "passed": true,
+      "section_sha256": "sha256:2d9f27c5eeacfed7d2e63584fa513282cc1d3228db820ac39063022f8d206a16",
+      "source_cutoff": "2026-08-29",
+      "source_path": "research-references.md",
+      "title": "Thermalizing Stochastic Programs",
+      "url": "https://arxiv.org/abs/2608.01615",
+      "url_present": true
+    },
+    {
+      "adoption_decision_present": true,
+      "arxiv_id": "2608.01612",
+      "date_or_cutoff": "2026-08-29",
+      "date_or_cutoff_present": true,
+      "experiment_mapping": [
+        "exp6740-thermalizer-compiler-fidelity"
+      ],
+      "experiment_mapping_present": true,
+      "local_adoption_decision": "replace another loose Torx parity attempt with a bounded, exact-enumeration compiler-fidelity experiment that reports conditional KL for every factor, accumulated trajectory total variation, topology/precision receipts, and an explicit simulator-only substrate. This is hardware-preparation evidence, not a TSU speedup.",
+      "passed": true,
+      "section_sha256": "sha256:2d9f27c5eeacfed7d2e63584fa513282cc1d3228db820ac39063022f8d206a16",
+      "source_cutoff": "2026-08-29",
+      "source_path": "research-references.md",
+      "title": "A Framework for Stochastic Differentiable Programming",
+      "url": "https://arxiv.org/abs/2608.01612",
+      "url_present": true
+    },
+    {
+      "adoption_decision_present": true,
+      "arxiv_id": "2608.03065",
+      "date_or_cutoff": "2026-08-29",
+      "date_or_cutoff_present": true,
+      "experiment_mapping": [
+        "exp6734-sota-dual-encoding-proposal-corpus"
+      ],
+      "experiment_mapping_present": true,
+      "local_adoption_decision": "keep this as a measured preprocessing/break-even sidecar for proof-carrying output. It is not a milestone dependency unless the local llama.cpp path actually invokes the mask implementation.",
+      "passed": true,
+      "section_sha256": "sha256:3aa8ed9942d2b5a042c8a206de20fbad5558fcf0b0ea99f1075365e2254eda54",
+      "source_cutoff": "2026-08-29",
+      "source_path": "research-references.md",
+      "title": "Parser Stack Classification",
+      "url": "https://arxiv.org/abs/2608.03065",
+      "url_present": true
+    }
+  ],
+  "status": "blocked_v587_activation_contract",
+  "task_contract_rows": [
+    {
+      "checks": {
+        "arc_boundary": true,
+        "capstone_ungated": true,
+        "closed_verdict_class_declared": true,
+        "comparison_per_unit_rows": true,
+        "deliverable": true,
+        "manifest_present": true,
+        "milestone": true,
+        "required_fields_include_gate_check_summary": true,
+        "required_fields_include_verdict_class": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "design_deliverable": "results/experiment_6729_v587_activation_evidence_contract.json",
+      "gated_on_count": 0,
+      "is_capstone": false,
+      "is_infrastructure": true,
+      "manifest_deliverable": "results/experiment_6729_v587_activation_evidence_contract.json",
+      "order": 1,
+      "passed": true,
+      "phase": "Phase 1",
+      "required_artifact_fields": [
+        "prior_failures",
+        "verdict_class",
+        "gate_check_summary",
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "source_cutoff",
+        "source_receipts",
+        "task_contract_rows",
+        "gate_contract_rows",
+        "prior_failure_rows",
+        "model_policy_rows",
+        "v587_contract_ready",
+        "honest_verdict",
+        "source_receipts_and_local_method_preregistration_no_llm"
+      ],
+      "requires_edges": [],
+      "task_id": "exp6729-v587-activation-evidence-contract",
+      "track": "infrastructure"
+    },
+    {
+      "checks": {
+        "arc_boundary": true,
+        "capstone_ungated": true,
+        "closed_verdict_class_declared": false,
+        "comparison_per_unit_rows": true,
+        "deliverable": true,
+        "manifest_present": true,
+        "milestone": true,
+        "required_fields_include_gate_check_summary": true,
+        "required_fields_include_verdict_class": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "design_deliverable": "results/experiment_6730_arc_context_tool_preflight.json",
+      "gated_on_count": 1,
+      "is_capstone": false,
+      "is_infrastructure": false,
+      "manifest_deliverable": "results/experiment_6730_arc_context_tool_preflight.json",
+      "order": 2,
+      "passed": false,
+      "phase": "Phase 1",
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "context_requested",
+        "context_observed_by_model",
+        "gpu_admission_by_model",
+        "rows",
+        "multi_parameter_parse_successes",
+        "multi_parameter_dispatch_successes",
+        "bounded_response_successes",
+        "arc_context_tool_preflight_ready",
+        "solve_claim",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict",
+        "local_llama_cpp_python_cuda_gguf_diagnostic"
+      ],
+      "requires_edges": [],
+      "task_id": "exp6730-arc-context-tool-preflight",
+      "track": "arc-agi3"
+    },
+    {
+      "checks": {
+        "arc_boundary": true,
+        "capstone_ungated": true,
+        "closed_verdict_class_declared": false,
+        "comparison_per_unit_rows": true,
+        "deliverable": true,
+        "manifest_present": true,
+        "milestone": true,
+        "required_fields_include_gate_check_summary": true,
+        "required_fields_include_verdict_class": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "design_deliverable": "results/experiment_6731_object_table_fetch_on_demand_ab.json",
+      "gated_on_count": 1,
+      "is_capstone": false,
+      "is_infrastructure": false,
+      "manifest_deliverable": "results/experiment_6731_object_table_fetch_on_demand_ab.json",
+      "order": 3,
+      "passed": false,
+      "phase": "Phase 1",
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "preconditions_checked",
+        "rows",
+        "paired_rows",
+        "change_fidelity_by_arm",
+        "transition_utility_by_arm",
+        "tokens_saved_per_prompt",
+        "find_objects_call_rate",
+        "valid_fetch_count",
+        "noise_floor_used",
+        "paired_delta_ci",
+        "object_table_ab_completed",
+        "adoption_gate_passed",
+        "solve_claim",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict",
+        "actual_capability_bound_adapter_disabled_e3_local_mandated_gguf_public_llama_cpp_cuda"
+      ],
+      "requires_edges": [],
+      "task_id": "exp6731-object-table-fetch-on-demand-ab",
+      "track": "arc-agi3"
+    },
+    {
+      "checks": {
+        "arc_boundary": true,
+        "capstone_ungated": true,
+        "closed_verdict_class_declared": false,
+        "comparison_per_unit_rows": true,
+        "deliverable": true,
+        "manifest_present": true,
+        "milestone": true,
+        "required_fields_include_gate_check_summary": true,
+        "required_fields_include_verdict_class": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "design_deliverable": "results/experiment_6732_object_table_ab_cold_audit.json",
+      "gated_on_count": 1,
+      "is_capstone": false,
+      "is_infrastructure": true,
+      "manifest_deliverable": "results/experiment_6732_object_table_ab_cold_audit.json",
+      "order": 4,
+      "passed": false,
+      "phase": "Phase 1",
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "upstream_artifact_hash",
+        "rows",
+        "pairing_recomputed",
+        "statistics_recomputed",
+        "provenance_rows",
+        "claim_discrepancies",
+        "cold_adoption_gate_passed",
+        "object_table_audit_passed",
+        "solve_claim",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict",
+        "cached_artifact_reconciliation_no_llm"
+      ],
+      "requires_edges": [],
+      "task_id": "exp6732-object-table-ab-cold-audit",
+      "track": "infrastructure"
+    },
+    {
+      "checks": {
+        "arc_boundary": true,
+        "capstone_ungated": true,
+        "closed_verdict_class_declared": false,
+        "comparison_per_unit_rows": true,
+        "deliverable": true,
+        "manifest_present": true,
+        "milestone": true,
+        "required_fields_include_gate_check_summary": true,
+        "required_fields_include_verdict_class": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "design_deliverable": "results/experiment_6733_hardness_controlled_certificate_stream.json",
+      "gated_on_count": 1,
+      "is_capstone": false,
+      "is_infrastructure": false,
+      "manifest_deliverable": "results/experiment_6733_hardness_controlled_certificate_stream.json",
+      "order": 5,
+      "passed": false,
+      "phase": "Phase 2",
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "dataset_paths",
+        "rows",
+        "family_counts",
+        "size_density_bins",
+        "split_manifest",
+        "certificate_check_summary",
+        "relabel_invariant_summary",
+        "solver_work_metadata",
+        "hardness_stream_ready",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict",
+        "procedural_formal_instances_and_exact_solver_labels_no_llm"
+      ],
+      "requires_edges": [],
+      "task_id": "exp6733-hardness-controlled-certificate-stream",
+      "track": "verifiable-reasoning"
+    },
+    {
+      "checks": {
+        "arc_boundary": true,
+        "capstone_ungated": true,
+        "closed_verdict_class_declared": false,
+        "comparison_per_unit_rows": true,
+        "deliverable": true,
+        "manifest_present": true,
+        "milestone": true,
+        "required_fields_include_gate_check_summary": true,
+        "required_fields_include_verdict_class": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "design_deliverable": "results/experiment_6734_sota_dual_encoding_proposal_corpus.json",
+      "gated_on_count": 1,
+      "is_capstone": false,
+      "is_infrastructure": false,
+      "manifest_deliverable": "results/experiment_6734_sota_dual_encoding_proposal_corpus.json",
+      "order": 6,
+      "passed": false,
+      "phase": "Phase 2",
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "models_used",
+        "model_specs",
+        "upstream_dataset_hash",
+        "rows",
+        "encoding_disagreement_rows",
+        "exact_success_by_model_family",
+        "error_type_by_model_family",
+        "abstention_counts",
+        "dual_encoding_corpus_ready",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict",
+        "local_llama_cpp_python_cuda_gguf_exact_proposal_stream"
+      ],
+      "requires_edges": [],
+      "task_id": "exp6734-sota-dual-encoding-proposal-corpus",
+      "track": "verifiable-reasoning"
+    },
+    {
+      "checks": {
+        "arc_boundary": true,
+        "capstone_ungated": true,
+        "closed_verdict_class_declared": false,
+        "comparison_per_unit_rows": true,
+        "deliverable": true,
+        "manifest_present": true,
+        "milestone": true,
+        "required_fields_include_gate_check_summary": true,
+        "required_fields_include_verdict_class": true,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "design_deliverable": "results/experiment_6735_oracle_distinct_diagnostic_energy.json",
+      "gated_on_count": 1,
+      "is_capstone": false,
+      "is_infrastructure": false,
+      "manifest_deliverable": "results/experiment_6735_oracle_distinct_diagnostic_energy.json",
+      "order": 7,
+      "passed": false,
+      "phase": "Phase 2",
+      "required_artifact_fields": [
+        "field_principles",
+        "inference_substrate",
+        "duration_s",
+        "random_seed",
+        "reproducibility_checksum",
+        "upstream_corpus_hash",
+        "feature_allowlist",
+        "feature_denylist",
+        "rows",
+        "metrics_by_arm_family",
+        "heldout_reasoning_error_auroc",
+        "heldout_translation_error_auroc",
+        "macro_f1_by_arm",
+        "relabel_stability_by_arm",
+        "oracle_leakage_tests",
+        "oracle_leakage_detected",
+        "verifier_is_oracle",
+        "gate_check_summary",
+        "verdict_class",
+        "honest_verdict",
+        "local_compact_energy_heads_on_exact_solver_features_no_llm"
+      ],
+      "requires_edges": [],
+      "task_id": "exp6735-oracle-distinct-diagnostic-energy",
+      "track": "energy-verification"
+    },
+    {
+      "checks": {
+        "arc_boundary": true,
+        "capstone_ungated": true,
+        "closed_verdict_class_declared": false,
+        "comparison_per_unit_rows": false,
+        "deliverable": false,
+        "manifest_present": false,
+        "milestone": false,
+        "required_fields_include_gate_check_summary": false,
+        "required_fields_include_verdict_class": false,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "design_deliverable": "results/experiment_6736_diagnostic_energy_localized_repair_ab.json",
+      "gated_on_count": 0,
+      "is_capstone": false,
+      "is_infrastructure": false,
+      "manifest_deliverable": null,
+      "order": 8,
+      "passed": false,
+      "phase": "Phase 2",
+      "required_artifact_fields": [],
+      "requires_edges": [],
+      "task_id": "exp6736-diagnostic-energy-localized-repair-ab",
+      "track": null
+    },
+    {
+      "checks": {
+        "arc_boundary": true,
+        "capstone_ungated": true,
+        "closed_verdict_class_declared": false,
+        "comparison_per_unit_rows": true,
+        "deliverable": false,
+        "manifest_present": false,
+        "milestone": false,
+        "required_fields_include_gate_check_summary": false,
+        "required_fields_include_verdict_class": false,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "design_deliverable": "results/experiment_6737_transactional_constraint_memory_fixture.json",
+      "gated_on_count": 0,
+      "is_capstone": false,
+      "is_infrastructure": false,
+      "manifest_deliverable": null,
+      "order": 9,
+      "passed": false,
+      "phase": "Phase 3",
+      "required_artifact_fields": [],
+      "requires_edges": [],
+      "task_id": "exp6737-transactional-constraint-memory-fixture",
+      "track": null
+    },
+    {
+      "checks": {
+        "arc_boundary": true,
+        "capstone_ungated": true,
+        "closed_verdict_class_declared": false,
+        "comparison_per_unit_rows": false,
+        "deliverable": false,
+        "manifest_present": false,
+        "milestone": false,
+        "required_fields_include_gate_check_summary": false,
+        "required_fields_include_verdict_class": false,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "design_deliverable": "results/experiment_6738_prospective_support_preserving_csl_ab.json",
+      "gated_on_count": 0,
+      "is_capstone": false,
+      "is_infrastructure": false,
+      "manifest_deliverable": null,
+      "order": 10,
+      "passed": false,
+      "phase": "Phase 3",
+      "required_artifact_fields": [],
+      "requires_edges": [],
+      "task_id": "exp6738-prospective-support-preserving-csl-ab",
+      "track": null
+    },
+    {
+      "checks": {
+        "arc_boundary": true,
+        "capstone_ungated": true,
+        "closed_verdict_class_declared": false,
+        "comparison_per_unit_rows": false,
+        "deliverable": false,
+        "manifest_present": false,
+        "milestone": false,
+        "required_fields_include_gate_check_summary": false,
+        "required_fields_include_verdict_class": false,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "design_deliverable": "results/experiment_6739_csl_support_durability_audit.json",
+      "gated_on_count": 0,
+      "is_capstone": false,
+      "is_infrastructure": false,
+      "manifest_deliverable": null,
+      "order": 11,
+      "passed": false,
+      "phase": "Phase 3",
+      "required_artifact_fields": [],
+      "requires_edges": [],
+      "task_id": "exp6739-csl-support-durability-audit",
+      "track": null
+    },
+    {
+      "checks": {
+        "arc_boundary": true,
+        "capstone_ungated": true,
+        "closed_verdict_class_declared": false,
+        "comparison_per_unit_rows": false,
+        "deliverable": false,
+        "manifest_present": false,
+        "milestone": false,
+        "required_fields_include_gate_check_summary": false,
+        "required_fields_include_verdict_class": false,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "design_deliverable": "results/experiment_6740_thermalizer_compiler_fidelity.json",
+      "gated_on_count": 0,
+      "is_capstone": false,
+      "is_infrastructure": false,
+      "manifest_deliverable": null,
+      "order": 12,
+      "passed": false,
+      "phase": "Phase 4",
+      "required_artifact_fields": [],
+      "requires_edges": [],
+      "task_id": "exp6740-thermalizer-compiler-fidelity",
+      "track": null
+    },
+    {
+      "checks": {
+        "arc_boundary": true,
+        "capstone_ungated": true,
+        "closed_verdict_class_declared": false,
+        "comparison_per_unit_rows": false,
+        "deliverable": false,
+        "manifest_present": false,
+        "milestone": false,
+        "required_fields_include_gate_check_summary": false,
+        "required_fields_include_verdict_class": false,
+        "requires_no_retired_task": true,
+        "task_id_not_retired": true
+      },
+      "design_deliverable": "results/experiment_6741_v587_branch_disposition.json",
+      "gated_on_count": 0,
+      "is_capstone": true,
+      "is_infrastructure": false,
+      "manifest_deliverable": null,
+      "order": 13,
+      "passed": false,
+      "phase": "Phase 4",
+      "required_artifact_fields": [],
+      "requires_edges": [],
+      "task_id": "exp6741-v587-branch-disposition",
+      "track": null
+    }
+  ],
+  "v587_contract_ready": false,
+  "verdict_class": "blocked"
+}
