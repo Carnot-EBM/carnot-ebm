@@ -9524,3 +9524,69 @@ an assigned CUDA device.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-INFRA-6676 and SCENARIO-INFRA-6676-* | Planned (`python/carnot/experiment_6676_three_family_triggered_tail_ab.py`) | Planned (`tests/python/test_experiment_6676_three_family_triggered_tail_ab.py`) |
+
+## REQ-CONDUCTOR-VERDICT-3: A Writer SHALL Choose `verdict_class` By Whether The RUN Finished, Not By Whether The RESULT Was Mixed
+
+REQ-CONDUCTOR-VERDICT-2 defines what each enum member does to a CONSUMER and never defines
+what it means to a WRITER. That gap is not theoretical: measured 2026-08-29, of 73 artifacts
+declaring a `verdict_class`, 9 declare `partial` and 7 of those 9 open their `honest_verdict`
+with a terminal prefix — a completed run describing a mixed result. Six are capstones.
+
+The collision is in the word. To the consumer, `partial` means **the run may retry**. To those
+seven writers it meant **the evidence is mixed**. Both readings are natural; only one is
+implemented. The cost is an hour per re-run: exp6687 ran 2,983 seconds, produced a complete
+four-branch synthesis, and was logged FAIL `artifact_not_updated_past_bootstrap` — a message
+asserting the agent bailed without writing anything — and queued for re-run, repeatedly, until
+it hit the three-strike skip.
+
+**The rule. Choose by the RUN, not by the RESULT.**
+
+| the run | the result | declare |
+|---|---|---|
+| finished | a positive claim | `positive` |
+| finished | a positive claim, verifier IS the oracle | `circular_positive` |
+| finished | no positive claim; measured negative, null, or mixed | **`null`** |
+| finished | a precondition or upstream gate stopped the science | `blocked` |
+| finished | the method was invalidated, not merely negative | `disqualified` |
+| **DID NOT finish** | unknown, because it stopped early | **`partial`** |
+
+`partial` is the ONLY member that means "retry me". Reserve it for a run that genuinely
+stopped: a timeout mid-corpus, a crash, an exhausted budget with units still unattempted —
+"ran 3 of 10 corpora before timeout" is the canonical shape. A run that attempted everything
+it planned and found a mixed or absent effect is `null`; that is an honest negative and a
+finding, and re-running it changes nothing.
+
+**A terminal prefix on the verdict does NOT change the class, and must not.**
+SCENARIO-CONDUCTOR-VERDICT-5 stands unchanged: a declared `partial` stays untrustworthy even
+behind `complete:`, because a truncated run must not be able to launder itself through
+free text an agent authored. This requirement removes the incentive to try, by giving the
+mixed-result case a correct member to declare, rather than weakening the check.
+
+**Fix the WRITER, never only the artifact.** Where a module hardcodes its own expectation —
+exp6687's validator asserts `payload["verdict_class"] != "partial"` is an error — correcting
+the artifact alone means the next run recreates the mis-declaration. This is the exp3946 lesson
+(`scripts/experiments/experiment_3946_r11l_first_solve.py:118-130`), where an artifact was
+corrected and the line that wrote it was not.
+
+#### SCENARIO-CONDUCTOR-VERDICT-8
+
+Given a run that attempted every planned unit and measured no positive effect, the artifact
+SHALL declare `verdict_class: null` and SHALL NOT declare `partial`; consumers therefore treat
+it as a trustworthy terminal state and SHALL NOT schedule a re-run.
+
+#### SCENARIO-CONDUCTOR-VERDICT-9
+
+Given a run that stopped before attempting every planned unit, the artifact SHALL declare
+`verdict_class: partial` regardless of any terminal prefix on `honest_verdict`, and consumers
+SHALL treat it as retryable.
+
+## Implementation Status (REQ-CONDUCTOR-VERDICT-3)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-VERDICT-3 | Specification only. No consumer change: `_verdict_is_untrustworthy` and `classify_artifact` are correct as written and SCENARIO-CONDUCTOR-VERDICT-5 is preserved. | Existing `tests/python/test_verdict_class_enum_first.py` (7 passing) covers the consumer half unchanged. |
+
+**Outstanding, deliberately not auto-corrected.** Seven artifacts declare `partial` for a
+completed run: exp6506, exp6510, exp6513, exp6526, exp6615, exp6659, exp6687. Each needs its
+WRITER changed — including the hardcoded validator expectations — and each needs a human
+judgement about whether `null` or `blocked` fits its evidence. A sweep would be the wrong tool.
