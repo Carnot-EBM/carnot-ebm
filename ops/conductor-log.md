@@ -16769,3 +16769,4 @@ The l |
 +      |
 | 2026-08-29 12:44 UTC | Owned 32K live code-carrying ARC tool preflight | OK | 144 passed, 1 warning in 9.55s |
 | 2026-08-29 14:08 UTC | Live ARC object-table fetch-on-demand paired compa | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output:           "ado |
+| 2026-08-29 15:31 UTC | Live ARC object-table fetch-on-demand paired compa | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output:   resolved = e |
