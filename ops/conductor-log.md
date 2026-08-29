@@ -16777,3 +16777,4 @@ The l |
 | 2026-08-29 19:41 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | rc=1 |
 | 2026-08-29 20:08 UTC | Plan milestone 2026.08.589 | OK | 13 tasks proposed |
 | 2026-08-29 20:10 UTC | Milestone 2026.08.589 activated | OK | 13 tasks queued |
+| 2026-08-29 20:45 UTC | Lossless GGUF output boundary and 216-row reparse | OK | 106 passed, 1 warning in 237.95s (0:03:57) |
