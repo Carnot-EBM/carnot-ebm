@@ -356,6 +356,26 @@ def test_req_arc_wmte_6752_fixture_and_cache_resolution(
     assert wrong["model_sha256"] is None
 
 
+def test_scenario_arc_wmte_6752_cached_huggingface_symlink_keeps_gguf_identity(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-ARC-WMTE-6752-OWNED-CONTEXT accepts a cached GGUF symlink."""
+    spec = exp.MODEL_SPECS[0]
+    blob = tmp_path / "blobs" / "content-addressed-hash"
+    blob.parent.mkdir()
+    blob.write_bytes(b"gguf")
+    snapshot = tmp_path / "snapshots" / spec["filename"]
+    snapshot.parent.mkdir()
+    snapshot.symlink_to(blob)
+
+    receipt = exp.model_receipt(spec, snapshot, file_hasher=lambda _: "sha256:fixture")
+
+    assert receipt["resolved"] is True
+    assert receipt["model_path"] == str(snapshot)
+    assert receipt["model_size_bytes"] == 4
+    assert receipt["model_sha256"] == "sha256:fixture"
+
+
 def test_req_arc_wmte_6752_host_probes_and_preflight(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -427,6 +447,11 @@ def test_req_arc_wmte_6752_gpu_receipt_parsers(monkeypatch: pytest.MonkeyPatch) 
         "total": 50,
     }
     assert exp._gpu_layers_from_log("offloaded 12 repeating layers", 999)["total"] == 12
+    assert exp._gpu_layers_from_log("offloading 37 repeating layers to GPU", 999) == {
+        "requested": 999,
+        "offloaded": 37,
+        "total": 37,
+    }
     assert exp._gpu_layers_from_log("no layer receipt", 999)["offloaded"] == 0
     monkeypatch.setattr(
         exp,
@@ -442,6 +467,7 @@ class _LiveFakeProposer:
 
     def __init__(self, **kwargs):
         self.n_gpu_layers = kwargs["n_gpu_layers"]
+        self.extra_server_args = kwargs.get("extra_server_args", ())
         self._proc = SimpleNamespace(pid=9000)
         self.last_tool_loop_stats = {"turns": 1}
         self._stderr_log_path = None
@@ -530,6 +556,7 @@ def test_req_arc_wmte_6752_live_worker_reduces_transport_outcomes(
     assert row["failure_class"] == failure
     assert row["live_path_reached"] is True
     assert row["gpu_layers"]["offloaded"] == 49
+    assert made[0].extra_server_args == ("-v",)
     assert made[0].stopped is True
 
 

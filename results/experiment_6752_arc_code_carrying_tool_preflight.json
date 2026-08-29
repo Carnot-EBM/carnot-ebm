@@ -1,0 +1,603 @@
+{
+  "schema": "carnot.experiment_6752.arc_code_carrying_tool_preflight.v1",
+  "experiment": 6752,
+  "title": "Task-owned 32K code-carrying ARC tool preflight",
+  "run_date": "20260829",
+  "status": "complete",
+  "field_principles": {
+    "schema": "A versioned contract lets downstream readers reject incompatible shapes.",
+    "experiment": "The numeric ARC root binds this artifact to Exp6752.",
+    "title": "The title states the narrow transport-only scope in human-readable form.",
+    "run_date": "The fixed planning date anchors the evidence to its requested run.",
+    "status": "The terminal status distinguishes a ready, partial, or blocked run.",
+    "field_principles": "Each field and gate states why an auditor needs it.",
+    "inference_substrate": "The declaration excludes CPU, remote, and helper-only substitutes.",
+    "duration_s": "A monotonic interval makes real model work visible.",
+    "random_seed": "The fixed seed makes both bounded requests repeatable.",
+    "reproducibility_checksum": "The fixture, config, transcript, and row hashes detect drift.",
+    "models_used": "Exact IDs, roles, paths, and hashes prevent model substitution.",
+    "live_model_invoked": "Readiness needs a real decode from both models.",
+    "context_requested": "The fixed 32768 request is the task-owned admission target.",
+    "context_observed_by_model": "Server values distinguish runtime context from declared intent.",
+    "gpu_admission_by_model": "PID, device, layers, and VRAM bind each decode to CUDA.",
+    "rows": "One row per model preserves every call-shape receipt.",
+    "multi_parameter_parse_successes": "The count proves typed multi-parameter XML parsed.",
+    "multi_parameter_dispatch_successes": "The count proves parsed calls reached shared dispatch.",
+    "bounded_response_successes": "The count proves tool output returned within its byte cap.",
+    "arc_context_tool_preflight_ready": "The downstream gate needs both full transport receipts.",
+    "solve_claim": "False prevents a transport result from becoming a solve claim.",
+    "live_path_reached": "The flag distinguishes the production loop from direct helper calls.",
+    "gate_check_summary": "A blocked result names each failed check and observed value.",
+    "verdict_class": "A closed class makes the terminal state machine-readable.",
+    "honest_verdict": "The terminal prefix states completion or an owned block plainly.",
+    "preconditions_checked": "Complete host receipts explain why live inference did or did not start.",
+    "fixture_manifest": "The bounded synthetic input proves no game source or solve adapter was used.",
+    "fixture_checksum": "The fixture digest detects any input mutation.",
+    "claim_boundary": "The prose boundary prevents transport evidence from implying game quality.",
+    "any_live_decode_before_terminal_state": "Partial runs retain whether any real decode occurred.",
+    "gate:exact_models": "Both fixed model IDs must be present; substitutes do not count.",
+    "gate:cuda_offload": "CUDA support must be observed before any model starts.",
+    "gate:cached_paths": "Exact local GGUF paths prevent downloads and model drift.",
+    "gate:free_vram": "Each sequential model needs enough free memory before launch.",
+    "gate:registry_no_solve_target": "A transport preflight must not duplicate or add a solve.",
+    "gate:owned_32k": "Each server must report at least the requested context.",
+    "gate:multi_parameter_parse": "Each model must emit the typed code-carrying call.",
+    "gate:dispatch": "Each parsed call must execute through the shared dispatcher.",
+    "gate:bounded_response": "Each tool result must stay inside the production bound.",
+    "gate:no_solve": "Every row and the artifact must keep solve_claim false."
+  },
+  "inference_substrate": "local llama.cpp CUDA GGUF production tool route",
+  "duration_s": 67.827775,
+  "random_seed": 6752,
+  "reproducibility_checksum": "sha256:ae870fe0693761e787ce0fd8b7cd81e6399f9fd9869303c1eee7ba04e68f4532",
+  "models_used": [
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator",
+      "repo_substr": "Qwen3.8-27B",
+      "filename": "Qwen3.8-27B-Q4_K_M.gguf",
+      "device_index": 0,
+      "resolved": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "model_size_bytes": 17106775008,
+      "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "required_vram_mb": 17815
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "repo_substr": "Qwen3.6-35B-A3B",
+      "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "device_index": 0,
+      "resolved": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_size_bytes": 22134528992,
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "required_vram_mb": 22610
+    }
+  ],
+  "live_model_invoked": true,
+  "context_requested": 32768,
+  "context_observed_by_model": {
+    "unsloth/Qwen3.8-27B-GGUF": 32768,
+    "unsloth/Qwen3.6-35B-A3B-GGUF": 32768
+  },
+  "gpu_admission_by_model": {
+    "unsloth/Qwen3.8-27B-GGUF": {
+      "assigned_device": {
+        "physical_index": 0,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      "gpu_layers": {
+        "requested": 999,
+        "offloaded": 66,
+        "total": 66
+      },
+      "peak_vram_mb": 17878,
+      "owned_pid": 2877592,
+      "server_pid": 2877622
+    },
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "assigned_device": {
+        "physical_index": 0,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      "gpu_layers": {
+        "requested": 999,
+        "offloaded": 41,
+        "total": 41
+      },
+      "peak_vram_mb": 21650,
+      "owned_pid": 2877996,
+      "server_pid": 2878026
+    }
+  },
+  "rows": [
+    {
+      "device_index": 0,
+      "filename": "Qwen3.8-27B-Q4_K_M.gguf",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "model_size_bytes": 17106775008,
+      "repo_substr": "Qwen3.8-27B",
+      "required_vram_mb": 17815,
+      "resolved": true,
+      "role": "immutable_scored_arc_generator",
+      "call_shape": "find_objects_t_which_predicate_code_max_objects",
+      "owned_pid": 2877592,
+      "server_pid": 2877622,
+      "assigned_device": {
+        "physical_index": 0,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      "context_requested": 32768,
+      "context_observed_by_model": 32768,
+      "gpu_layers": {
+        "requested": 999,
+        "offloaded": 66,
+        "total": 66
+      },
+      "peak_vram_mb": 17878,
+      "live_model_invoked": true,
+      "live_path_reached": true,
+      "production_route": "induce_with_tool_loop/selfparse/dispatch_tool",
+      "raw_emission_sha256": "sha256:7c5e45a4922e0fe9dbf9c29992ee8dd9162b6122435c9902536a8039bc4921c5",
+      "parsed_tool": "find_objects",
+      "parsed_arguments": {
+        "t": 0,
+        "which": "before",
+        "predicate_code": "def accept(obj):\n    return obj['color'] in (2, 4) and obj['pixel_count'] >= 2",
+        "max_objects": 8
+      },
+      "dispatch_result": {
+        "ok": true,
+        "t": 0,
+        "which": "before",
+        "predicate_applied": true,
+        "n_components_scanned": 6,
+        "n_objects_matched": 2,
+        "objects": [
+          {
+            "color": 2,
+            "pixel_count": 3,
+            "bbox": [
+              1,
+              1,
+              2,
+              2
+            ],
+            "centroid": [
+              1.3333,
+              1.3333
+            ],
+            "height": 2,
+            "width": 2
+          },
+          {
+            "color": 4,
+            "pixel_count": 3,
+            "bbox": [
+              4,
+              1,
+              4,
+              3
+            ],
+            "centroid": [
+              4.0,
+              2.0
+            ],
+            "height": 1,
+            "width": 3
+          }
+        ],
+        "truncated": false,
+        "response_bytes": 385
+      },
+      "bounded_response_bytes": 418,
+      "bounded_response_sha256": "sha256:ef4c0a46ae03b7438a629519aceee61011231c6588c1f2499dd9162958443fd0",
+      "latency_s": 29.027393,
+      "failure_class": null,
+      "transcript_sha256": "sha256:e75e06e7722e94fc3338abc9a6cad2d60ed99172bd10f4418493d3ea6a74183f",
+      "loop_returned_success": false,
+      "loop_note_sha256": "sha256:235948a800853cb45e5f9c9dd14f738037ec9f83a3c6b4b687ed972726b1163b",
+      "process_exit_code": 0,
+      "solve_claim": false,
+      "row_sha256": "sha256:6567791dc30bc61fe20fade178b5eeae0f5c93e394f3b6f1f609e85c056409f4"
+    },
+    {
+      "device_index": 0,
+      "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_size_bytes": 22134528992,
+      "repo_substr": "Qwen3.6-35B-A3B",
+      "required_vram_mb": 22610,
+      "resolved": true,
+      "role": "flagship_moe_transport_canary",
+      "call_shape": "find_objects_t_which_predicate_code_max_objects",
+      "owned_pid": 2877996,
+      "server_pid": 2878026,
+      "assigned_device": {
+        "physical_index": 0,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      "context_requested": 32768,
+      "context_observed_by_model": 32768,
+      "gpu_layers": {
+        "requested": 999,
+        "offloaded": 41,
+        "total": 41
+      },
+      "peak_vram_mb": 21650,
+      "live_model_invoked": true,
+      "live_path_reached": true,
+      "production_route": "induce_with_tool_loop/selfparse/dispatch_tool",
+      "raw_emission_sha256": "sha256:7c5e45a4922e0fe9dbf9c29992ee8dd9162b6122435c9902536a8039bc4921c5",
+      "parsed_tool": "find_objects",
+      "parsed_arguments": {
+        "t": 0,
+        "which": "before",
+        "predicate_code": "def accept(obj):\n    return obj['color'] in (2, 4) and obj['pixel_count'] >= 2",
+        "max_objects": 8
+      },
+      "dispatch_result": {
+        "ok": true,
+        "t": 0,
+        "which": "before",
+        "predicate_applied": true,
+        "n_components_scanned": 6,
+        "n_objects_matched": 2,
+        "objects": [
+          {
+            "color": 2,
+            "pixel_count": 3,
+            "bbox": [
+              1,
+              1,
+              2,
+              2
+            ],
+            "centroid": [
+              1.3333,
+              1.3333
+            ],
+            "height": 2,
+            "width": 2
+          },
+          {
+            "color": 4,
+            "pixel_count": 3,
+            "bbox": [
+              4,
+              1,
+              4,
+              3
+            ],
+            "centroid": [
+              4.0,
+              2.0
+            ],
+            "height": 1,
+            "width": 3
+          }
+        ],
+        "truncated": false,
+        "response_bytes": 385
+      },
+      "bounded_response_bytes": 418,
+      "bounded_response_sha256": "sha256:ef4c0a46ae03b7438a629519aceee61011231c6588c1f2499dd9162958443fd0",
+      "latency_s": 19.734775,
+      "failure_class": null,
+      "transcript_sha256": "sha256:e75e06e7722e94fc3338abc9a6cad2d60ed99172bd10f4418493d3ea6a74183f",
+      "loop_returned_success": false,
+      "loop_note_sha256": "sha256:235948a800853cb45e5f9c9dd14f738037ec9f83a3c6b4b687ed972726b1163b",
+      "process_exit_code": 0,
+      "solve_claim": false,
+      "row_sha256": "sha256:ca560faf284055ded9cc23cb39748741a810ff122cda7a567c132a70615e05c4"
+    }
+  ],
+  "multi_parameter_parse_successes": 2,
+  "multi_parameter_dispatch_successes": 2,
+  "bounded_response_successes": 2,
+  "arc_context_tool_preflight_ready": true,
+  "solve_claim": false,
+  "live_path_reached": true,
+  "gate_check_summary": [
+    {
+      "check": "owned_32k_cuda_by_model",
+      "expected": 2,
+      "observed": 2,
+      "passed": true
+    },
+    {
+      "check": "parse_dispatch_bounded_response_by_model",
+      "expected": 2,
+      "observed": 2,
+      "passed": true
+    },
+    {
+      "check": "solve_claim",
+      "expected": false,
+      "observed": false,
+      "passed": true
+    }
+  ],
+  "verdict_class": "positive",
+  "honest_verdict": "complete_arc_context_tool_preflight_ready",
+  "preconditions_checked": {
+    "all_passed": true,
+    "checks": [
+      {
+        "check": "llama_cpp_cuda_offload",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "llama_server_cuda_binary",
+        "expected": true,
+        "observed": true,
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "passed": true
+      },
+      {
+        "check": "arc_registry_no_solve_target",
+        "expected": true,
+        "observed": true,
+        "registry_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "passed": true
+      },
+      {
+        "check": "cache:unsloth/Qwen3.8-27B-GGUF",
+        "expected": {
+          "filename": "Qwen3.8-27B-Q4_K_M.gguf"
+        },
+        "observed": {
+          "resolved": true,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+        },
+        "passed": true
+      },
+      {
+        "check": "free_vram:unsloth/Qwen3.8-27B-GGUF",
+        "expected": {
+          "at_least_mb": 17815
+        },
+        "observed": 24120,
+        "device_index": 0,
+        "passed": true
+      },
+      {
+        "check": "cache:unsloth/Qwen3.6-35B-A3B-GGUF",
+        "expected": {
+          "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+        },
+        "observed": {
+          "resolved": true,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+        },
+        "passed": true
+      },
+      {
+        "check": "free_vram:unsloth/Qwen3.6-35B-A3B-GGUF",
+        "expected": {
+          "at_least_mb": 22610
+        },
+        "observed": 24120,
+        "device_index": 0,
+        "passed": true
+      }
+    ],
+    "gpu_inventory": {
+      "command": [
+        "nvidia-smi",
+        "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free",
+        "--format=csv,noheader,nounits"
+      ],
+      "returncode": 0,
+      "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 24576, 4, 24120\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 24576, 4, 24120\n",
+      "stderr": "",
+      "ok": true,
+      "devices": [
+        {
+          "index": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "memory_free_mb": 24120
+        },
+        {
+          "index": 1,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "memory_free_mb": 24120
+        }
+      ]
+    }
+  },
+  "fixture_manifest": {
+    "source_class": "synthetic_bounded_transition_fixture",
+    "transition": {
+      "grid": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0,
+          0,
+          3,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          4,
+          4,
+          0,
+          5,
+          5,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          6,
+          0,
+          7,
+          7,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "action": 1,
+      "data": null,
+      "next_grid": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          4,
+          0,
+          0,
+          3,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          4,
+          4,
+          0,
+          5,
+          5,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          6,
+          0,
+          7,
+          7,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "reward": 0,
+      "done": 0
+    }
+  },
+  "fixture_checksum": "sha256:bd2d6764bc5630d4fccc98e6797f9629e6d75980372cb6f10b0b2146b4b116a2",
+  "claim_boundary": "This preflight proves 32K CUDA admission and code-carrying tool transport only. It measures no game quality and claims no level solve.",
+  "any_live_decode_before_terminal_state": true
+}
