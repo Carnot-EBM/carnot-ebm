@@ -16735,3 +16735,5 @@ The l |
 | 2026-08-29 06:05 UTC | V587 activation, source-receipt, and evidence-cont | OK | 87 passed, 1 warning in 9.55s |
 | 2026-08-29 06:07 UTC | Owned 32K context and live code-carrying selfparse | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6729-v587-activation-evidence-contract. |
 | 2026-08-29 06:09 UTC | Owned 32K context and live code-carrying selfparse | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6729-v587-activation-evidence-contract. |
+| 2026-08-29 06:12 UTC | Owned 32K context and live code-carrying selfparse | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6729-v587-activation-evidence-contract. |
+| 2026-08-29 06:14 UTC | Object-table fetch-on-demand paired A/B on the liv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6730-arc-context-tool-preflight) |
