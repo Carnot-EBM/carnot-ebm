@@ -147,7 +147,7 @@ REQUIRED_GATE_PRINCIPLES = {key for key in FIELD_PRINCIPLES if key.startswith("g
 
 GPU_LAYER_PATTERNS = (
     re.compile(r"offloaded\s+(\d+)\s*/\s*(\d+)\s+layers\s+to\s+GPU", re.I),
-    re.compile(r"offloaded\s+(\d+)\s+repeating layers", re.I),
+    re.compile(r"offload(?:ed|ing)\s+(\d+)\s+repeating layers", re.I),
 )
 
 
@@ -280,15 +280,15 @@ def model_receipt(
 ) -> JsonDict:
     """Bind a fixed model ID to one exact cached GGUF and content hash."""
 
-    resolved = Path(path).resolve()
-    present = resolved.is_file() and resolved.name == spec["filename"]
-    size = resolved.stat().st_size if present else 0
+    snapshot_path = Path(path).expanduser().absolute()
+    present = snapshot_path.is_file() and snapshot_path.name == spec["filename"]
+    size = snapshot_path.stat().st_size if present else 0
     return {
         **dict(spec),
         "resolved": present,
-        "model_path": str(resolved) if present else str(path),
+        "model_path": str(snapshot_path) if present else str(path),
         "model_size_bytes": size,
-        "model_sha256": file_hasher(resolved) if present else None,
+        "model_sha256": file_hasher(snapshot_path) if present else None,
         "required_vram_mb": math.ceil(size / (1024 * 1024)) + VRAM_GUARD_MB if present else 0,
     }
 
@@ -520,6 +520,7 @@ def run_live_worker(model: Mapping[str, Any], *, device_index: int) -> JsonDict:
         mtp=False,
         n_gpu_layers=999,
         use_chat_template=True,
+        extra_server_args=("-v",),
     )
     events: list[JsonDict] = []
     peak_vram = 0
