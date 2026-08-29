@@ -59282,3 +59282,92 @@ checked inputs, and partial writes are removed on failure.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6742 and SCENARIO-REPORT-6742-* | Implemented (`python/carnot/experiment_6742_v588_handoff_contract_audit.py`, `scripts/experiments/experiment_6742_v588_handoff_contract_audit.py`) | Implemented (`tests/python/test_experiment_6742_v588_handoff_contract_audit.py`) |
+
+### REQ-REPORT-6754: V588 Branch Disposition SHALL Preserve Independent Terminal States
+
+Exp6754 SHALL synthesize milestone `2026.08.588` from the active manifest,
+the V588 design, and every available upstream artifact without an LLM. It
+SHALL require the manifest and design to parse. It SHALL treat individual
+branch artifacts as optional inputs. A missing, unreadable, or invalid branch
+artifact SHALL become an explicit task row and artifact-presence row. It SHALL
+not block the capstone only because a branch artifact is absent.
+
+The synthesis SHALL emit one task row for each V588 task and one branch row for
+handoff, activity, FR12 diagnostics and repair, FR11 continuous self-learning,
+stochastic portability, and ARC transport or object-table quality. Each task
+and branch row SHALL preserve the closed verdict class, gate diagnostics, model
+identity, exact-authority boundary, hardware or simulator boundary, ARC
+no-solve scope, and next licensed action. The allowed classes are `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, `partial`, and
+`missing`.
+
+The synthesis SHALL recompute all comparative headlines from raw rows when
+eligible rows exist. It SHALL compare recomputed values with artifact headline
+fields. A contradiction or missing denominator SHALL remain visible in
+`row_headline_mismatches`; it SHALL not be repaired by prose. A metric with no
+eligible rows SHALL keep a null value and a zero denominator. The artifact
+SHALL not emit a pooled milestone success claim.
+
+The synthesis SHALL run `scripts/adversarial_verify.py` and
+`scripts/verdict_row_consistency_lint.py` for every available upstream
+artifact. It SHALL retain flags, circularity, substitutions, short-duration
+claims, and provenance failures as validator findings. Validator findings
+SHALL not be used to rewrite source artifacts.
+
+The artifact SHALL be written atomically to
+`results/experiment_6754_v588_branch_disposition.json`. It SHALL include
+`field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `rows`, `artifact_presence_matrix`,
+`branch_verdicts`, `recomputed_headlines`, `row_headline_mismatches`,
+`adversarial_findings`, `prd_gap_disposition`, `prior_failure_retirements`,
+`next_licensed_actions`, `gate_check_summary`, `verdict_class`, and
+`honest_verdict`. It SHALL use
+`local_cpu_branch_row_replay_and_adversarial_audit_no_llm`.
+
+#### SCENARIO-REPORT-6754-MISSING-BRANCH: Missing Inputs Stay Visible
+
+**Given** the V588 manifest and design parse and one expected branch artifact
+is absent
+**When** Exp6754 builds task and branch rows
+**Then** the absent artifact is recorded in `artifact_presence_matrix`, the
+related task row uses `verdict_class=missing`, and the capstone still writes a
+terminal artifact.
+
+**Spec traces:** REQ-REPORT-6754, REQ-HARNESS-008
+
+#### SCENARIO-REPORT-6754-ROW-RECOMPUTATION: Headlines Replay From Rows
+
+**Given** an upstream artifact contains raw per-unit rows and headline fields
+**When** Exp6754 recomputes the branch headline
+**Then** the recomputed numerator, denominator, rate, or mean is derived from
+the rows, and any disagreement with the artifact headline remains in
+`row_headline_mismatches`.
+
+**Spec traces:** REQ-REPORT-6754
+
+#### SCENARIO-REPORT-6754-VERDICT-PROPAGATION: Closed Classes Are Preserved
+
+**Given** upstream artifacts declare positive, circular positive, null,
+blocked, disqualified, partial, or missing outcomes
+**When** Exp6754 synthesizes branches
+**Then** each task row keeps the source class and each branch receives exactly
+one closed class without converting infrastructure success into science
+success.
+
+**Spec traces:** REQ-REPORT-6754
+
+#### SCENARIO-REPORT-6754-NO-POOLED-CLAIM: Branches Are Not Pooled
+
+**Given** V588 has independent handoff, activity, FR12, FR11, stochastic, and
+ARC branches
+**When** Exp6754 writes `recomputed_headlines`
+**Then** no pooled milestone success score is emitted, and each roadmap gap
+states its own narrowed or not-narrowed disposition.
+
+**Spec traces:** REQ-REPORT-6754
+
+## Implementation Status (REQ-REPORT-6754)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6754 and SCENARIO-REPORT-6754-* | Planned (`python/carnot/experiment_6754_v588_branch_disposition.py`, `scripts/experiments/experiment_6754_v588_branch_disposition.py`) | Planned (`tests/python/test_experiment_6754_v588_branch_disposition.py`) |
