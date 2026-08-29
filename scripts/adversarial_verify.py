@@ -282,6 +282,7 @@ DETERMINISTIC_VERIFIER_SUBSTRATES = (
     "production_verify_repair_workload_canary_exact_verifier_no_llm",
     "sealed_cached_event_evaluation",
     "transactional_exact_conflict_memory_and_cpu_mapping_no_llm",
+    "deterministic CPU exact-checker transactional fixture",
 )
 DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
 NO_LLM_DECLARED_MIN_DURATION_S = 0.0001
