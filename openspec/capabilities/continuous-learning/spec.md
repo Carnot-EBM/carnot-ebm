@@ -7853,3 +7853,95 @@ Then the restored state bytes SHALL equal the parent snapshot bytes exactly.
 | SCENARIO-CL-6750-POISON | Planned. | Planned. |
 | SCENARIO-CL-6750-RESTART | Planned. | Planned. |
 | SCENARIO-CL-6750-ROLLBACK | Planned. | Planned. |
+
+## REQ-CL-6761: Capacity-Controlled Procedural Memory Stream
+
+Given Exp6748 provides exact transactional memory but Exp6749 and Exp6750
+recorded no prospective commits or rejects
+When Exp6761 runs for planning date 20260829
+Then it SHALL build at least six preregistered chronological orders
+And every order SHALL expose at least 12 exact-eligible accepts and 12
+exact-eligible rejects before a later memory comparison starts.
+
+The stream SHALL include reusable procedure families, naive distractors, held
+families, hard cases, retention anchors, contradictions, stale lessons,
+duplicates, poison candidates, and provenance-loss candidates. All orders SHALL
+be fixed before dry replay. An active episode SHALL read only its pre-event
+snapshot. It SHALL not read its current exact result or any later event.
+
+Each reusable event SHALL have a detailed trajectory and an abstract procedural
+lesson. The procedural lesson SHALL state an abstract constraint, an
+applicability scope, and a repair procedure. Neither representation SHALL
+contain current or future answer content. Both representations SHALL bind to
+the same evidence hash.
+
+Detailed and procedural memory arms SHALL have equal storage bytes, record
+slot bytes, top-k retrieval, context tokens, TTL policy, update opportunities,
+and exact authority. The maximum committed bytes SHALL stay below the frozen
+ceiling in every order and arm. Counts and capacity use SHALL derive from one
+row per order and event.
+
+Transactions SHALL occur only after an exact result closes the active episode.
+Each accept or reject transaction SHALL include its parent hash, evidence hash,
+representation type, scope, TTL, admission reason, inverse patch, and atomic
+restart receipt. Restart from each transaction boundary SHALL reproduce exact
+bytes. Each accepted transaction SHALL also have a byte-exact rollback receipt.
+Poison, contradiction, duplicate, stale, delayed-evidence, and provenance-loss
+candidates SHALL reject for their preregistered reason.
+
+`procedural_memory_stream_ready` SHALL be true only when chronology,
+non-saturation, nonzero accept and reject opportunity, capacity equality,
+restart, rollback, and poison gates all pass. A missing Exp6748 fixture, exact
+authority, atomic storage, restart helper, or rollback helper SHALL produce
+`complete_blocked_procedural_stream`. `gate_check_summary` SHALL name each
+failed check and its observed value. The experiment SHALL use
+`deterministic_verifier_plus_replay: exact-labeled chronological stream, no LLM`
+and SHALL set
+`verifier_is_oracle=false` because exact authority labels admissions but is not
+a learned verifier claim.
+
+### SCENARIO-CL-6761-CHRONOLOGY: Active Episodes Cannot See Current Or Future Evidence
+
+Given one event in a preregistered order
+When its active episode opens
+Then its snapshot SHALL contain only evidence from earlier closed events
+And active writes, current evidence, and future evidence SHALL be unavailable.
+
+### SCENARIO-CL-6761-CAPACITY: Representation Arms Have Equal Unsaturated Budgets
+
+Given a detailed trajectory and procedural lesson for each reusable event
+When the stream dry replay commits exact-eligible records
+Then both arms SHALL charge the same fixed record slot
+And storage, retrieval, context, TTL, update, and authority contracts SHALL
+match
+And committed bytes SHALL stay below the common ceiling.
+
+### SCENARIO-CL-6761-TRANSACTIONS: Accepts And Rejects Are Durable And Reversible
+
+Given an event closes with an exact admission result
+When both representation arms transact between episodes
+Then each receipt SHALL contain the complete transaction schema
+And restart SHALL reproduce the expected state bytes
+And an accepted update's inverse patch SHALL restore its parent bytes.
+
+### SCENARIO-CL-6761-POISON: Unsafe Candidates Reject For The Intended Reason
+
+Given poison, contradiction, duplicate, stale, delayed-evidence, and
+provenance-loss candidates
+When exact dry replay evaluates them
+Then no candidate SHALL enter active memory
+And each receipt SHALL report its preregistered rejection reason.
+
+### SCENARIO-CL-6761-ROWS: All Readiness Counts Recompute From Rows
+
+Given all order and event rows
+When Exp6761 reduces the terminal artifact
+Then each order SHALL have at least 12 eligible accepts and 12 eligible rejects
+And hard-case counts, future-evidence violations, and capacity use SHALL
+recompute without copied summary counts.
+
+## Implementation Status (REQ-CL-6761)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6761 and SCENARIO-CL-6761-* | Planned: `python/carnot/experiment_6761_procedural_memory_stream.py`; `scripts/experiments/experiment_6761_procedural_memory_stream.py`; terminal artifact `results/experiment_6761_procedural_memory_stream.json`. | Planned: `tests/python/test_experiment_6761_procedural_memory_stream.py`. |
