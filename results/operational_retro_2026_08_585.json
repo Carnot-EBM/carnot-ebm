@@ -1,0 +1,37 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.585",
+  "generated_at": "2026-08-29T00:07:16.134717+00:00",
+  "retro_type": "operational_in_progress",
+  "total_wall_time_minutes": 0.0,
+  "experiments_completed": 1,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Three-family frozen planning proposal bank",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": true,
+  "summary": "The milestone completed 1 compute-bound experiment in 0.0 minutes. Three-family frozen planning proposal bank was the only and therefore longest experiment; no data available this milestone explains its duration, while the GPU snapshot establishes idle accelerators during compute-bound work.",
+  "bottlenecks_identified": [
+    "GPU engagement failed for compute-bound work: both accelerators reported 0% utilization.",
+    "Disk-mtime reconstruction produced a 0.0-minute timing floor, so no data available this milestone identifies a slow execution phase.",
+    "No data available this milestone establishes parallel multi-model loading or a missed DualGPURunner dispatch."
+  ],
+  "improvements_suggested": [
+    "Add a post-load GPU engagement check for compute-bound launches and emit a fail-fast diagnostic artifact when utilization stays at 0%.",
+    "Record monotonic sub-minute task and phase timestamps instead of relying only on disk modification times.",
+    "Record model concurrency and runner selection with each compute task so DualGPURunner eligibility is directly auditable."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Gate compute-bound execution on a successful post-load GPU engagement check.",
+    "Capture monotonic task and phase timing at sub-minute resolution.",
+    "Persist model-count and runner-selection receipts for every compute launch."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The zero-duration reconstruction can identify the task set but cannot explain execution cost. The idle compute classification is actionable, while duration causality, parallel-model eligibility, and a positive savings estimate have no data available this milestone.",
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false
+}
