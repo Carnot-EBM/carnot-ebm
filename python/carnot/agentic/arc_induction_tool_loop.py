@@ -49,8 +49,12 @@ from carnot.agentic.arc_induction_compact_state import (
 from carnot.agentic.arc_induction_tools import (
     TOOL_SCHEMAS,
     InductionToolSession,
+    active_tool_names_for,
+    active_tool_schemas_for,
     dispatch_tool,
+    loose_tool_call_names,
     parse_xml_tool_calls,
+    record_tool_gap,
     render_tool_schemas_for_prompt,
 )
 
@@ -223,6 +227,7 @@ def _post_chat(
     turn: int,
     timeout_s: float,
     selfparse: bool = False,
+    tools_payload: Optional[list[dict[str, Any]]] = None,
 ) -> dict[str, Any]:
     """One /v1/chat/completions request with the tool schemas attached.
 
@@ -239,7 +244,10 @@ def _post_chat(
         "cache_prompt": True,
     }
     if not selfparse:
-        payload["tools"] = TOOL_SCHEMAS
+        # The SESSION-FROZEN active set (REQ-ARC-WMTE-6770): core tools plus
+        # candidates enabled when the session was created. With no candidates
+        # this IS the TOOL_SCHEMAS object, so the default payload cannot drift.
+        payload["tools"] = tools_payload if tools_payload is not None else TOOL_SCHEMAS
         payload["tool_choice"] = "auto"
     _sampling_overrides(payload)
     # Per-turn seed via the proposer's own ladder helper, so a seeded run is
@@ -413,7 +421,11 @@ def induce_with_tool_loop(
     # the request will carry no `tools` field; everything else about the loop -- turn
     # caps, budgets, dispatch, monotone accept -- is shared with the server-lifted mode.
     selfparse = tool_loop_selfparse_enabled()
-    schema_text = ("\n\n" + render_tool_schemas_for_prompt()) if selfparse else ""
+    # One frozen schema list serves the payload, the prompt text, and (via the
+    # session snapshot) dispatch, for the whole run (REQ-ARC-WMTE-6770).
+    session_schemas = active_tool_schemas_for(session)
+    active_names = set(active_tool_names_for(session))
+    schema_text = ("\n\n" + render_tool_schemas_for_prompt(session_schemas)) if selfparse else ""
     extra = f"\n\n{extra_user_instruction.strip()}" if extra_user_instruction.strip() else ""
     messages: list[dict[str, Any]] = [
         {
@@ -446,6 +458,16 @@ def induce_with_tool_loop(
         "selfparse_blocks_unparsed": 0,
         "candidates_scored": 0,
         "force_engine_nudges": 0,
+        # Tool-gap capture (REQ-ARC-WMTE-6770). Keys present on EVERY run --
+        # an empty list must be visibly empty, never absent -- and finalized
+        # from the session at _finish. Enablement comes from the SESSION'S
+        # FROZEN snapshot, the same one dispatch and the payload serve, so the
+        # record cannot disagree with what ran. candidate_tools_rejected makes
+        # an env typo visible instead of silently disabling the tool.
+        "tool_gap_events": [],
+        "tool_gap_events_dropped": 0,
+        "candidate_tools_enabled": list(session.enabled_candidates),
+        "candidate_tools_rejected": list(session.rejected_candidates),
         # REQ-ARC-WMTE-6540 counters. The first two record on every run: telemetry
         # never alters a request payload, and the OFF arm of the A/B needs the same
         # baseline. The last three only move when CARNOT_ARC_INDUCE_TOOL_COMPACT=1.
@@ -476,6 +498,11 @@ def induce_with_tool_loop(
         stats["terminated_by"] = reason
         stats["turns_completed"] = stats["turns"]
         stats["candidates_scored"] = len(session.candidates)
+        # Tool-gap evidence rides out on the stats every consumer already
+        # copies into rows, so the offline gap analyzer needs no new plumbing
+        # (REQ-ARC-WMTE-6770).
+        stats["tool_gap_events"] = list(session.tool_gap_events)
+        stats["tool_gap_events_dropped"] = int(session.tool_gap_events_dropped)
         # Per-candidate trajectories, in submission order: is the loop CONVERGING
         # (mismatches falling) or thrashing? This is the number that distinguishes
         # "needs a tighter early-exit" from "cannot converge on this cell".
@@ -578,12 +605,17 @@ def induce_with_tool_loop(
                 ledger.note_compaction()
                 compact.note_rebuild()
         try:
+            # Under selfparse no `tools` field is ever sent, so the frozen
+            # payload kwarg is omitted there — which also keeps the stricter
+            # pre-existing test stubs for the selfparse transport valid.
+            _tools_kw = {} if selfparse else {"tools_payload": session_schemas}
             raw = _post_chat(
                 proposer,
                 messages,
                 turn=turn,
                 timeout_s=min(float(proposer.timeout), max(1.0, remaining)),
                 selfparse=selfparse,
+                **_tools_kw,
             )
         except Exception as exc:  # noqa: BLE001 - transport failure -> clean fallback
             stats["transport_error"] = f"{type(exc).__name__}: {exc}"[:300]
@@ -616,6 +648,27 @@ def induce_with_tool_loop(
                 stats["selfparse_blocks_seen"] += n_blocks
                 stats["selfparse_calls_parsed"] += len(tool_calls)
                 stats["selfparse_blocks_unparsed"] += n_unparsed
+            if n_unparsed:
+                # A block the strict parser refused still holds the demanded
+                # NAME — the tool-gap signal (adversarial review 2026-08-29,
+                # F4). Names the active set serves, or that a parsed call in
+                # this same turn already carries, are transport noise, not
+                # demand, and are skipped.
+                parsed_names = {
+                    str((tc.get("function") or {}).get("name") or "") for tc in tool_calls
+                }
+                for lname in loose_tool_call_names(content):
+                    if lname in active_names or lname in parsed_names:
+                        continue
+                    record_tool_gap(
+                        session,
+                        {
+                            "kind": "unknown_tool",
+                            "requested_tool": lname,
+                            "argument_keys": None,
+                            "source": "unparsed_text",
+                        },
+                    )
 
         if tool_calls:
             if selfparse:
@@ -731,6 +784,22 @@ def induce_with_tool_loop(
             return _finish("final_answer")
         if _looks_like_unparsed_tool_call(content):
             stats["unparsed_tool_call_text_turns"] += 1
+            # Same F4 capture on the server-lifted transport: the server left
+            # the call as text, and the demanded name is in that text. Skipped
+            # under selfparse — the lift block above already captured there,
+            # and doing it twice would double-count one demand.
+            if not selfparse:
+                for lname in loose_tool_call_names(content):
+                    if lname not in active_names:
+                        record_tool_gap(
+                            session,
+                            {
+                                "kind": "unknown_tool",
+                                "requested_tool": lname,
+                                "argument_keys": None,
+                                "source": "unparsed_text",
+                            },
+                        )
         stats["tool_calls_per_turn"].append([])  # keep the per-turn record aligned
         # A turn with no tool call and no final answer is a stall turn too.
         turns_since_submission += 1

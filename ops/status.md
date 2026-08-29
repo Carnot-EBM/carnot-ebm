@@ -9056,3 +9056,33 @@ pytest collection leaked that guard into the core pipeline tests, producing the
 exact `1 failed, 171 passed, 12 errors` gate result. The combined gate is green
 after the repair, and scoped Exp6681 coverage remains `526/526` statements.
 No test was skipped, weakened, deleted, or reverted.
+
+## 2026-08-29 (worktree agent) — Tool-gap feedback loop shipped (REQ-ARC-WMTE-6770)
+
+What works now: the induction tool loop records WHICH tool the model demanded
+and did not have (`tool_gap_events` in `last_tool_loop_stats` and in the live
+`record["tool_loop"]`), instead of a conflated counter. New tools enter as
+human-authored candidates behind `CARNOT_ARC_INDUCE_CANDIDATE_TOOLS`
+(default off, flag-ledger `unevaluated`). `scripts/arc_tool_gap_refine.py`
+aggregates events cross-run into `ops/arc_tool_gap_ledger.json` and emits a
+ready-to-append `ops/arc_tool_gaps.md` entry when 3 events cross 2 rows.
+
+What's next: no live evidence of unknown-tool demand exists yet (633 calls,
+all in-schema), so the gap ledger is honestly empty. Future tool-loop runs
+carry the capture; run the analyzer over their rows dirs. A candidate tool
+should be authored only when a specification lands.
+
+## 2026-08-29 (worktree agent, later) — Tool-gap feedback survived its adversarial review; two commits, unmerged
+
+The review falsified the first cut's headline plumbing: no env
+configuration let the live agent both run the tool loop and record gap
+events. Fixed at the primary induce site (attempt["tool_gap"], stale-stats
+pre-clear pinned). Also fixed: name-first capture on refused calls (bad
+JSON + unparsed tool-call text on both transports), per-session candidate
+freeze, dark-candidate coercion, event-string caps, dropped-count
+visibility in the analyzer, and the freshness-lint rider split into its
+own commit with a related-repo gate (unrelated-checkout adoption was a
+fail-open on a fail-closed gate). Branch worktree-agent-a092d79bdf0704db3,
+NOT merged to main per coordinator hold. Next: coordinator review, then
+merge; first selfparse rows with tool_gap_events feed
+scripts/arc_tool_gap_refine.py.
