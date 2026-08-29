@@ -16757,3 +16757,4 @@ The l |
 | 2026-08-29 08:39 UTC | Task-owned phase clock and three-family accelerato | OK | 94 passed, 1 warning in 7.30s |
 | 2026-08-29 08:56 UTC | Hardness-controlled exact certificate stream with  | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT — result quarantined, |
 | 2026-08-29 09:20 UTC | Three-model SOTA dual-encoding proof-carrying corp | OK | 108 passed, 1 warning in 6.96s |
+| 2026-08-29 09:38 UTC | Held-family oracle-distinct dual-encoding diagnost | OK | 88 passed, 1 warning in 10.01s |
