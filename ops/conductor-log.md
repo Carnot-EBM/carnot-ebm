@@ -16780,3 +16780,5 @@ The l |
 | 2026-08-29 20:45 UTC | Lossless GGUF output boundary and 216-row reparse | OK | 106 passed, 1 warning in 237.95s (0:03:57) |
 | 2026-08-29 20:47 UTC | Environment-indexed proof grammar runtime fixture | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6755-lossless-gguf-output-reparse.envir |
 | 2026-08-29 20:49 UTC | Environment-indexed proof grammar runtime fixture | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6755-lossless-gguf-output-reparse.envir |
+| 2026-08-29 20:51 UTC | Environment-indexed proof grammar runtime fixture | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6755-lossless-gguf-output-reparse.envir |
+| 2026-08-29 20:53 UTC | Three-model DCCD environment-grammar A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6756-environment-indexed-proof-grammar-fi |
