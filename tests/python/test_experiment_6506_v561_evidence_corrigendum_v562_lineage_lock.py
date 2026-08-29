@@ -141,7 +141,7 @@ def test_scenario_bench_6506_row_replay_and_corrigendum(
     assert correction["adversarial_verification_receipt"]["exit_code"] == 1
     assert "VERDICT_CLASS_MISMATCH" in correction["adversarial_verification_receipt"]["flag_kinds"]
 
-    # REQ-CONDUCTOR-VERDICT-3: the finished replay declares null, not partial.
+    # REQ-CONDUCTOR-VERDICT-4: the finished replay declares null, not partial.
     assert artifact["verdict_class"] == "null"
     assert artifact["v562_exact_branch_ready_score"] == 1.0
     assert artifact["honest_verdict"].startswith("complete_")
@@ -270,7 +270,7 @@ def test_scenario_bench_6506_schema_checksum_and_validation(
             "verdict_class cannot be positive for oracle replay",
             lambda item: item.__setitem__("verdict_class", "positive"),
         ),
-        # REQ-CONDUCTOR-VERDICT-3 / SCENARIO-CONDUCTOR-VERDICT-5: a ready
+        # REQ-CONDUCTOR-VERDICT-4 / SCENARIO-CONDUCTOR-VERDICT-5: a ready
         # corrigendum may not declare the may-retry class.
         (
             "ready corrigendum requires verdict_class null",

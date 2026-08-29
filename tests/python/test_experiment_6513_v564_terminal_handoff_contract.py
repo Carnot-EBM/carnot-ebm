@@ -269,7 +269,7 @@ def test_scenario_bench_6513_atomic_schema_and_validation(
     assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
     assert set(artifact["field_provenance"]) == set(mod.REQUIRED_ARTIFACT_FIELDS)
     assert artifact["protected_files_unchanged"]["all_protected_files_unchanged"] is True
-    # REQ-CONDUCTOR-VERDICT-3: the finished handoff declares null, not partial.
+    # REQ-CONDUCTOR-VERDICT-4: the finished handoff declares null, not partial.
     assert artifact["verdict_class"] == "null"
     assert artifact["verdict_class"] != "positive"
     assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
@@ -289,7 +289,7 @@ def test_scenario_bench_6513_atomic_schema_and_validation(
             "verdict_class cannot be positive",
             lambda item: item.__setitem__("verdict_class", "positive"),
         ),
-        # REQ-CONDUCTOR-VERDICT-3 / SCENARIO-CONDUCTOR-VERDICT-5: a ready
+        # REQ-CONDUCTOR-VERDICT-4 / SCENARIO-CONDUCTOR-VERDICT-5: a ready
         # handoff may not declare the may-retry class.
         (
             "ready handoff requires null verdict_class",

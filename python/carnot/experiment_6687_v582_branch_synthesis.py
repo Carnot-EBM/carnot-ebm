@@ -308,7 +308,7 @@ def _task_class(number: int, payload: Mapping[str, Any] | None) -> str:
     if number == 6687:
         # The synthesis itself attempts every planned unit and finishes; its
         # mixed branch evidence is a null finding, not a retryable partial
-        # (REQ-CONDUCTOR-VERDICT-3).
+        # (REQ-CONDUCTOR-VERDICT-4).
         return "null"
     if payload is None:
         return "blocked"
@@ -1095,7 +1095,7 @@ def build_artifact(
         # The synthesis run finished: 14 of 14 planned tasks joined, all five
         # branches recomputed, and the two known-missing artifacts recorded.
         # Mixed branch evidence with no pooled claim is class null; partial
-        # would mark a finished run as retryable (REQ-CONDUCTOR-VERDICT-3).
+        # would mark a finished run as retryable (REQ-CONDUCTOR-VERDICT-4).
         "status": "complete_terminal_null",
         "honest_verdict": (
             "complete_null: V582 has a null execution-integrity receipt, blocked "
@@ -1159,7 +1159,7 @@ def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
         return [f"missing required fields: {missing_fields}"]
     # A finished synthesis must declare null, never partial: a partial
     # declaration made the conductor re-run this completed 2,983s task to the
-    # 3-fail limit (REQ-CONDUCTOR-VERDICT-3, SCENARIO-CONDUCTOR-VERDICT-5).
+    # 3-fail limit (REQ-CONDUCTOR-VERDICT-4, SCENARIO-CONDUCTOR-VERDICT-5).
     if payload["status"] != "complete_terminal_null":
         issues.append("status")
     if payload["verdict_class"] != "null":

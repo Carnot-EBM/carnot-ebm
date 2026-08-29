@@ -84,7 +84,7 @@ def test_scenario_report_6615_missing_and_blocked_are_preserved(
     assert by_number[6606]["verdict_class"] == "blocked"
     assert by_number[6606]["gate_check_summary"]
     assert by_number[6614]["verdict_class"] == "disqualified"
-    # REQ-CONDUCTOR-VERDICT-3: the finished capstone declares null, not partial.
+    # REQ-CONDUCTOR-VERDICT-4: the finished capstone declares null, not partial.
     assert artifact["verdict_class"] == "null"
 
 
@@ -224,7 +224,7 @@ def test_req_report_6615_wrapper_checksum_validation_and_atomic_write(
     with pytest.raises(ValueError, match="capstone verdict"):
         mod.validate_artifact(bad_class)
 
-    # REQ-CONDUCTOR-VERDICT-3 / SCENARIO-CONDUCTOR-VERDICT-5: a finished
+    # REQ-CONDUCTOR-VERDICT-4 / SCENARIO-CONDUCTOR-VERDICT-5: a finished
     # capstone may not declare the may-retry class.
     bad_partial = deepcopy(artifact)
     bad_partial["verdict_class"] = "partial"

@@ -198,7 +198,7 @@ def test_scenario_report_6659_keeps_closed_claims_and_branches_independent(
     assert by_id["arc_live_benefit"]["verdict_class"] == "blocked"
     assert by_id["arc_live_benefit"]["arc_solve_claim"] is False
     assert by_id["ising_schedule"]["verdict_class"] == "blocked"
-    # REQ-CONDUCTOR-VERDICT-3: the finished capstone declares null, not partial.
+    # REQ-CONDUCTOR-VERDICT-4: the finished capstone declares null, not partial.
     assert artifact["verdict_class"] == "null"
     assert artifact["status"] == "complete_terminal_null"
     assert artifact["honest_verdict"].startswith("complete_null:")
@@ -351,7 +351,7 @@ def test_req_report_6659_validation_checksum_and_atomic_write(
         mod.validate_artifact(bad)
     for field, value, message in (
         ("verdict_class", "positive", "capstone verdict"),
-        # REQ-CONDUCTOR-VERDICT-3 / SCENARIO-CONDUCTOR-VERDICT-5: partial is
+        # REQ-CONDUCTOR-VERDICT-4 / SCENARIO-CONDUCTOR-VERDICT-5: partial is
         # the may-retry class and a finished capstone may not declare it.
         ("verdict_class", "partial", "capstone verdict"),
         ("inference_substrate", "wrong", "inference substrate"),

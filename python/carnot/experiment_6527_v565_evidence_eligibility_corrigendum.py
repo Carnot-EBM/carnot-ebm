@@ -977,7 +977,7 @@ def recompute_exp6526(payload: Mapping[str, Any]) -> JsonDict:
         else 0.0,
         # Read from the Exp6526 artifact instead of a baked constant. The old
         # literal "partial" froze a declaration Exp6526 has since corrected to
-        # null (REQ-CONDUCTOR-VERDICT-3); a mirror must follow its source.
+        # null (REQ-CONDUCTOR-VERDICT-4); a mirror must follow its source.
         "verdict_class_from_rows": aggregate.get("verdict_class_from_rows"),
         "gate_chain": ["6526_reads_v564_graph_by_path_and_hash"],
     }

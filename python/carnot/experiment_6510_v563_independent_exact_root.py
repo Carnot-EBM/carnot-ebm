@@ -1377,7 +1377,7 @@ def validate_artifact(value: Mapping[str, Any] | str | Path) -> list[str]:
     if artifact.get("verdict_class") not in {"partial", "null", "blocked"}:
         errors.append("verdict_class outside independent root enum")
     # A ready root finished its run; its class is null, never partial
-    # (REQ-CONDUCTOR-VERDICT-3, SCENARIO-CONDUCTOR-VERDICT-5).
+    # (REQ-CONDUCTOR-VERDICT-4, SCENARIO-CONDUCTOR-VERDICT-5).
     if artifact.get("v563_independent_root_ready_score") == 1.0 and (
         artifact.get("verdict_class") != "null"
     ):
@@ -1450,7 +1450,7 @@ def build_artifact(
     atomic_receipt = _atomic_terminal_write_receipt(target, write=write)
     # The replay attempts every unit and makes no positive claim, so a clean
     # run is null. Partial would tell the conductor to re-run a finished task
-    # (REQ-CONDUCTOR-VERDICT-3).
+    # (REQ-CONDUCTOR-VERDICT-4).
     verdict_class = "null"
     summary = gate_check_summary(
         recomputation=recomputation,

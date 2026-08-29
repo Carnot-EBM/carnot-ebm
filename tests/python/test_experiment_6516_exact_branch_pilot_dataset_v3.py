@@ -155,7 +155,7 @@ def test_scenario_bench_6516_direct_inputs_and_gates(
 
     prior = artifact["prior_failure_receipts"]
     # "null" since the 2026-08-28 exp6510 correction: a finished replay
-    # declares null, not the may-retry partial (REQ-CONDUCTOR-VERDICT-3).
+    # declares null, not the may-retry partial (REQ-CONDUCTOR-VERDICT-4).
     assert prior["exp6510_verdict_class"] == "null"
     assert prior["exp6510_ready_score"] == 1.0
     assert prior["retired_structured_dependency_used"] is False

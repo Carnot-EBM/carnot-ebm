@@ -78,7 +78,7 @@ REQUIRED_ARTIFACT_FIELDS = (
 FIELD_PRINCIPLES: dict[str, str] = {
     "status": "Records the terminal V564 capstone state after reading all expected artifacts.",
     "honest_verdict": "Summarizes mixed evidence without converting missing, null, or blocked rows into success.",
-    "verdict_class": "Uses null for a finished capstone with mixed lineage outcomes (partial only if the run itself stopped early, per REQ-CONDUCTOR-VERDICT-3), positive only for oracle-distinct row-supported claims, and blocked or disqualified for missing or unsafe evidence.",
+    "verdict_class": "Uses null for a finished capstone with mixed lineage outcomes (partial only if the run itself stopped early, per REQ-CONDUCTOR-VERDICT-4), positive only for oracle-distinct row-supported claims, and blocked or disqualified for missing or unsafe evidence.",
     "task_inventory_rows": "One row per expected task records path, hash, status, class, gate field, observed value, row support, authority, and eligibility.",
     "artifact_hash_receipts": "Content hashes prove which files were read and which expected deliverables were missing.",
     "gate_contract_rows": "Checks downstream gate field spelling against upstream artifacts and the V564 roadmap.",
@@ -1063,7 +1063,7 @@ def build_aggregate_row_recomputation(
     ]
     return {
         # The capstone read every expected artifact and finished, so the class
-        # from rows is null: mixed evidence, no retry (REQ-CONDUCTOR-VERDICT-3).
+        # from rows is null: mixed evidence, no retry (REQ-CONDUCTOR-VERDICT-4).
         "verdict_class_from_rows": "null",
         "blocked_lineage_count": len(blocked_lineages),
         "blocked_lineages": blocked_lineages,
@@ -1199,7 +1199,7 @@ def build_artifact(
         ),
         # The capstone finished reading every expected artifact; mixed lineage
         # evidence with no pooled claim is null, not partial
-        # (REQ-CONDUCTOR-VERDICT-3).
+        # (REQ-CONDUCTOR-VERDICT-4).
         "verdict_class": "null",
         "task_inventory_rows": task_rows,
         "artifact_hash_receipts": hash_receipts,
@@ -1288,7 +1288,7 @@ def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
         errors.append("verifier_is_oracle must be false")
     # The capstone always reads every expected artifact to completion, so a
     # partial (may-retry) declaration is always wrong here
-    # (REQ-CONDUCTOR-VERDICT-3, SCENARIO-CONDUCTOR-VERDICT-5).
+    # (REQ-CONDUCTOR-VERDICT-4, SCENARIO-CONDUCTOR-VERDICT-5).
     if payload.get("verdict_class") != "null":
         errors.append("capstone verdict_class must be null")
     if payload.get("field_principles") != FIELD_PRINCIPLES:
