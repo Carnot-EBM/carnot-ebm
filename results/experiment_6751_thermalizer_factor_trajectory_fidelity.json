@@ -11865,5 +11865,24 @@
     }
   ],
   "verdict_class": "positive",
-  "verifier_is_oracle": true
+  "verifier_is_oracle": true,
+  "flagged_adversarial": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "afdf258f012a9fe9a9876108674a8299cc3bd583ae3a423713a57b232e612103",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-08-29T11:02:09Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "SUBSTRATE_HAS_NO_DURATION_FLOOR",
+      "severity": "warn",
+      "detail": "inference_substrate='simulator_only_exact_enumeration_no_physical_tsu' matches no duration-floor recognizer, so duration_s=5.13896010402823 was NOT checked against any floor. A declaration is an affirmative claim about what ran; an unrecognized one is unverified, not verified. Add a recognizer plus floor for this substrate, or correct the declaration to an existing one."
+    },
+    {
+      "kind": "VERDICT_CLASS_MISMATCH",
+      "severity": "critical",
+      "detail": "verdict_class=positive but verifier_is_oracle=True: a circular (verifier==oracle) result must declare circular_positive so the circularity travels WITH the claim into capstones and headline aggregation. See CLAUDE.md 'Circularity / Oracle-Distinctness Discipline'."
+    }
+  ]
 }

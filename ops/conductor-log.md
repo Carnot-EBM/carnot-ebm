@@ -16764,3 +16764,4 @@ The l |
 | 2026-08-29 10:02 UTC | Read-only episode and atomic constraint-memory com | OK | 104 passed, 1 warning in 8.68s |
 | 2026-08-29 10:21 UTC | Prospective support-preserving transactional self- | OK | 105 passed, 1 warning in 8.80s |
 | 2026-08-29 10:40 UTC | Cold transactional self-learning durability and po | OK | 173 passed, 1 warning in 11.60s |
+| 2026-08-29 11:02 UTC | Thermalizers-style factor-to-trajectory compiler f | FLAGGED | adversarial_verify CRITICAL: VERDICT_CLASS_MISMATCH — result quarantined, not a  |
