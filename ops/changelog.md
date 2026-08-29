@@ -18186,3 +18186,4 @@ duration or establishes parallel multi-model loading and a missed DualGPURunner
 dispatch. The next tooling priority is a fail-fast GPU engagement check joined
 to monotonic phase timing and launch metadata. Estimated time savings is 0%
 because the timing data measures no positive duration.
+- 2026-08-29: Object-table fetch-on-demand A/B against the measured change_fidelity win (⚠️ Blocked) — honest_verdict=blocked_context_window: CARNOT_ARC_INDUCE_N_CTX is unset; the paired A/B did not start; results/experiment_6716_object_table_fetch_on_demand_ab.json
