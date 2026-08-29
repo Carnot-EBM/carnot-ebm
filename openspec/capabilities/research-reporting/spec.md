@@ -59421,3 +59421,51 @@ failed check with its expected and observed values in `gate_check_summary`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6755 and SCENARIO-REPORT-6755-* | Planned (`python/carnot/experiment_6755_lossless_gguf_output_reparse.py`, `python/carnot/inference/gguf_output_text.py`, `scripts/experiments/experiment_6755_lossless_gguf_output_reparse.py`) | Planned (`tests/python/test_experiment_6755_lossless_gguf_output_reparse.py`) |
+
+### REQ-REPORT-6761: Procedural Stream Evidence SHALL Be Atomic And Row-Recomputable
+
+Exp6761 SHALL atomically write
+`results/experiment_6761_procedural_memory_stream.json`. The artifact SHALL
+include `field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `stream_manifest`, `rows`, `order_count`,
+`eligible_accepts_by_order`, `eligible_rejects_by_order`,
+`hard_cases_by_order`, `representation_pair_receipts`, `capacity_contract`,
+`read_only_episode_enforced`, `transaction_schema`, `transaction_receipts`,
+`poison_fixture_receipts`, `restart_receipts`, `rollback_receipts`,
+`future_evidence_violations`, `procedural_memory_stream_ready`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`.
+
+The artifact SHALL emit exactly one row per order and event. Each row SHALL
+record eligibility, its representation pair, difficulty, family, chronology,
+expected transaction class, evidence hash, and capacity cost. All order counts
+and readiness gates SHALL recompute from those rows and transaction receipts.
+The reproducibility checksum SHALL bind the frozen stream, orders, capacity
+contract, rows, representations, and transaction evidence while excluding
+measured duration.
+
+#### SCENARIO-REPORT-6761-ATOMIC: Readers Observe One Complete Stream Artifact
+
+**Given** complete stream rows, representation pairs, transaction receipts,
+restart receipts, rollback receipts, and gate evidence
+**When** Exp6761 validates and publishes the artifact
+**Then** readers observe one complete JSON object
+**And** the checksum and row-derived aggregates replay exactly.
+
+**Spec traces:** REQ-REPORT-6761, REQ-CL-6761
+
+#### SCENARIO-REPORT-6761-BLOCKED: Missing Transaction Prerequisites Stay Visible
+
+**Given** the Exp6748 fixture or one required transaction helper is unavailable
+**When** Exp6761 checks preconditions
+**Then** it writes `complete_blocked_procedural_stream`
+**And** the failed check and observed value remain in `gate_check_summary`
+**And** it does not invent stream rows or transaction receipts.
+
+**Spec traces:** REQ-REPORT-6761, REQ-CL-6761
+
+## Implementation Status (REQ-REPORT-6761)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6761 and SCENARIO-REPORT-6761-* | Planned (`python/carnot/experiment_6761_procedural_memory_stream.py`, `scripts/experiments/experiment_6761_procedural_memory_stream.py`) | Planned (`tests/python/test_experiment_6761_procedural_memory_stream.py`) |
