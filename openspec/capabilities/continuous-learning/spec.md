@@ -7767,3 +7767,89 @@ And `model_weights_mutated` SHALL be bare false.
 | SCENARIO-CL-6749-ARM-ISOLATION | Planned. | Planned. |
 | SCENARIO-CL-6749-SUPPORT | Planned. | Planned. |
 | SCENARIO-CL-6749-NO-WEIGHT-WRITES | Planned. | Planned. |
+
+## REQ-CL-6750: Cold Durability, Support, And Poison Audit
+
+Given Exp6749 is the prospective support-preserving CSL A/B for planning date
+20260829
+When Exp6750 starts in a fresh CPU process
+Then it SHALL write
+`results/experiment_6750_csl_durability_support_poison_audit.json`
+And it SHALL load only immutable Exp6749 rows, Exp6749 state snapshot fields,
+Exp6748 stream manifests, Exp6748 state bytes, and Exp6748 commit receipts.
+The required wrapper command SHALL live at
+`scripts/experiments/experiment_6750_csl_durability_support_poison_audit.py`.
+The top-level `inference_substrate` SHALL equal
+`fresh_process_no_llm_transaction_audit`.
+
+Exp6750 SHALL not rerun live inference, fabricate rows, repair missing rows,
+replace missing rows, or reinterpret rows from another experiment as Exp6749
+rows. If Exp6749 is absent, `prospective_csl_completed` is not bare true, raw
+rows are absent, six frozen orders are absent, state snapshots are absent, or
+commit receipts are absent, it SHALL emit `complete_blocked_csl_audit` with a
+`gate_check_summary` that names each failed precondition and its observed
+value.
+
+Exp6750 SHALL recompute prequential yield deltas by order from raw rows. It
+SHALL compute the preregistered order-level 95 percent interval, support
+contraction by support metric, retention failures, negative transfer, tokens,
+commit counts, reject counts, and rollback counts from rows and receipts. A
+positive CSL audit SHALL require the order-level lower confidence bound to be
+above zero, no best-at-k or effective-support contraction beyond its bound, no
+anchor forgetting, no harmful cross-family transfer, zero admitted poison, and
+byte-exact rollback.
+
+Exp6750 SHALL verify that each episode snapshot predates its event. It SHALL
+reject any snapshot with future evidence, held-family evidence, or opposite-arm
+evidence. It SHALL recompute each commit receipt's parent hash, evidence hash,
+new-state hash, and inverse rollback identity from the receipt bytes.
+
+Exp6750 SHALL replay duplicate, stale, contradiction, delayed-copy, relation
+poison, provenance-loss, and tombstone-reappearance attacks with independent
+CPU state. No replayed attack may admit a record, make an unsafe record
+readable, or corrupt later restart state.
+
+### SCENARIO-CL-6750-COLD-RECOMPUTE: Rows Drive The Audit
+
+Given the immutable Exp6749 artifact has raw candidate rows
+When Exp6750 recomputes metrics
+Then all prequential deltas, support values, retention rows, negative-transfer
+rows, token counts, and lifecycle counts SHALL derive from rows and receipts
+rather than copied aggregate fields.
+
+### SCENARIO-CL-6750-CHRONOLOGY: Future Evidence Is Denied
+
+Given an Exp6749 episode snapshot for one order position
+When Exp6750 validates it
+Then the snapshot SHALL predate the event and SHALL contain no future,
+held-family, or opposite-arm evidence.
+
+### SCENARIO-CL-6750-POISON: Poison Variants Fail Closed
+
+Given duplicate, stale, contradiction, delayed-copy, relation-poison,
+provenance-loss, and tombstone-reappearance attacks
+When Exp6750 replays them against copied CPU state
+Then every variant SHALL have zero admission and zero unsafe use.
+
+### SCENARIO-CL-6750-RESTART: Boundaries Replay Deterministically
+
+Given each Exp6748 commit boundary and restart receipt
+When Exp6750 replays the remaining stream from that boundary
+Then each boundary SHALL reproduce the expected bytes and state hash.
+
+### SCENARIO-CL-6750-ROLLBACK: Inverse Patches Restore Parents
+
+Given each Exp6748 commit receipt
+When Exp6750 applies its inverse patch after a restart
+Then the restored state bytes SHALL equal the parent snapshot bytes exactly.
+
+## Implementation Status (REQ-CL-6750)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6750 | Planned: `python/carnot/experiment_6750_csl_durability_support_poison_audit.py`; terminal artifact `results/experiment_6750_csl_durability_support_poison_audit.json`. | Planned: `tests/python/test_experiment_6750_csl_durability_support_poison_audit.py`. |
+| SCENARIO-CL-6750-COLD-RECOMPUTE | Planned. | Planned. |
+| SCENARIO-CL-6750-CHRONOLOGY | Planned. | Planned. |
+| SCENARIO-CL-6750-POISON | Planned. | Planned. |
+| SCENARIO-CL-6750-RESTART | Planned. | Planned. |
+| SCENARIO-CL-6750-ROLLBACK | Planned. | Planned. |
