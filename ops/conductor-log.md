@@ -16721,3 +16721,5 @@ codex
 The l |
 | 2026-08-28 23:56 UTC | Bounded seal, leakage, and mutation audit | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ptured termina |
 | 2026-08-28 23:58 UTC | Planning audit receipt merge | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6715-bounded-exact-replay-audit, exp6716- |
+| 2026-08-28 23:58 UTC | Three-family frozen planning proposal bank | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6717-planning-audit-receipt-merge.plann |
+| 2026-08-29 00:00 UTC | Planning audit receipt merge | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6715-bounded-exact-replay-audit, exp6716- |
