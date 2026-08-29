@@ -339,3 +339,50 @@ def test_a_glob_still_never_lifts_a_standing_seal(guard, monkeypatch, capsys):
     _declare(guard, "scripts/*", run_id="wide")
     assert guard.check() == 1
     assert "sealed harness file" in capsys.readouterr().out
+
+
+# --- Whose declaration judges a commit (2026-08-29) ----------------------------------------
+# Out-of-scope is judged against the COMMITTING session's declaration only. Before this, every
+# active declaration judged every commit, so two narrow scopes deadlocked: agent A declares
+# a.py, agent B declares b.py, B stages its OWN b.py, and A's record refuses it. Demonstrated
+# in a scratch repo by an independent review, and it bit that reviewer live. It was masked only
+# because the sole standing declaration is '*', which matches everything.
+
+
+def test_two_narrow_scopes_no_longer_deadlock(guard, monkeypatch):
+    """The demonstrated deadlock: B stages its own declared file and A refuses it."""
+    _declare(guard, "scripts/a.py", run_id="agent-a")
+    _declare(guard, "scripts/b.py", run_id="agent-b")
+    monkeypatch.setattr(guard, "_staged_paths", lambda: ["scripts/b.py"])
+    monkeypatch.setenv(guard.RUN_ID_ENV, "agent-b")
+    assert guard.check() == 0
+
+
+def test_the_committing_session_is_still_held_to_its_own_scope(guard, monkeypatch, capsys):
+    """Per-session judging must not become no judging."""
+    _declare(guard, "scripts/a.py", run_id="agent-a")
+    _declare(guard, "scripts/b.py", run_id="agent-b")
+    monkeypatch.setattr(guard, "_staged_paths", lambda: ["scripts/elsewhere.py"])
+    monkeypatch.setenv(guard.RUN_ID_ENV, "agent-b")
+    assert guard.check() == 1
+    assert "agent-b" in capsys.readouterr().out
+
+
+def test_an_unidentified_committer_is_held_to_every_declaration(guard, monkeypatch, capsys):
+    """No session id means the STRICT direction: judged by all, not by none."""
+    _declare(guard, "scripts/a.py", run_id="agent-a")
+    monkeypatch.setattr(guard, "_staged_paths", lambda: ["scripts/b.py"])
+    monkeypatch.delenv(guard.RUN_ID_ENV, raising=False)
+    assert guard.check() == 1
+    assert "agent-a" in capsys.readouterr().out
+
+
+def test_seals_still_apply_across_every_session(guard, monkeypatch, capsys):
+    """A harness file is sealed against EVERYONE; only scope judging became per-session."""
+    _declare(guard, "scripts/a.py", run_id="agent-a")
+    _declare(guard, "scripts/b.py", run_id="agent-b")
+    guard._sealed_file.write_text("# edited by whoever\n")
+    monkeypatch.setattr(guard, "_staged_paths", lambda: ["scripts/b.py"])
+    monkeypatch.setenv(guard.RUN_ID_ENV, "agent-b")
+    assert guard.check() == 1
+    assert "sealed harness file" in capsys.readouterr().out

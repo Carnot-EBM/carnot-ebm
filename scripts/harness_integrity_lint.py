@@ -109,6 +109,15 @@ RUN_ID_ENV = "CARNOT_AGENT_SCOPE_ID"
 #
 # Keep it SHORT. Every entry is a path an agent must name explicitly to touch, so a long list
 # is a tax on honest work, and a tax on honest work is how a guard teaches people to bypass it.
+# WHAT IS ACTUALLY SEALED IN PRACTICE, and it is not this list (2026-08-29).
+# An explicit `--unseal` in ANY active declaration lifts that path for every session, and the
+# conductor's standing declaration unseals four of the nine below -- .pre-commit-config.yaml,
+# adversarial_verify.py, operator_curated_docs_lint.py and conftest.py -- because it AUTHORS
+# them as normal task work (measured: 90 authored commits to adversarial_verify.py alone).
+# So while the conductor's scope exists, the effective sealed set is FIVE files and the
+# fabrication gate is NOT among them. That is deliberate -- sealing a file the loop edits
+# hourly would wedge it -- but a reader of this tuple would otherwise believe nine are sealed.
+# Run `--list` to see what is actually lifted right now.
 SEALED_PATHS: tuple[str, ...] = (
     ".pre-commit-config.yaml",
     "scripts/adversarial_verify.py",
@@ -371,7 +380,23 @@ def check() -> int:
                 f"in the commit it governs proves nothing -- commit it separately."
             )
 
-        out_of_scope = [p for p in staged if not _matches(p, patterns)]
+        # WHOSE scope judges this commit (2026-08-29). Out-of-scope is judged against the
+        # COMMITTING session's declaration only. Before this, every active declaration judged
+        # every commit, so two narrow scopes deadlocked each other: agent A declares a.py,
+        # agent B declares b.py, B stages its own b.py, and A's record refuses it. Demonstrated
+        # in a scratch repo by an independent review, and it bit that reviewer live. It was
+        # masked only because the sole standing declaration is '*', which matches everything.
+        #
+        # SEALS ARE UNAFFECTED and still apply across every declaration -- a harness file is
+        # sealed against everyone, which is the property worth having. Only the "did YOU stage
+        # something you did not declare" question becomes per-session.
+        #
+        # When the committing session cannot be identified, EVERY declaration judges, which is
+        # the old behaviour and the strict direction: an unidentified committer is held to all
+        # of them rather than none.
+        committer = os.environ.get(RUN_ID_ENV)
+        judges_scope = committer is None or run_id == committer
+        out_of_scope = [p for p in staged if not _matches(p, patterns)] if judges_scope else []
         if out_of_scope:
             failures.append(
                 f"{run_id}: {len(out_of_scope)} staged path(s) outside the declared scope:\n"

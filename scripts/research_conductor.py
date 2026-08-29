@@ -7475,6 +7475,62 @@ def _run_haiku_doc_reconcile(task: dict, push: bool, timestamp: datetime) -> Non
         logger.info("No doc updates needed (or reconciliation skipped)")
 
 
+def _reassert_standing_scope() -> None:
+    """Re-declare the conductor's standing harness-integrity scope, idempotently.
+
+    WHY (2026-08-29). The declaration lives in `ops/.agent_scopes/`, which is gitignored local
+    state with no re-assertion anywhere. A fresh clone, a deleted file, or ANY agent calling
+    `--release` silently reverts the repository to a fully inert guard, with zero detection --
+    the seals stop applying and nothing says so. An independent review flagged that as the
+    weakest point of the whole mechanism, and it is: a guard that can be switched off by
+    accident, quietly, is worse than one that was never installed, because people believe it is
+    running.
+
+    Re-asserting at loop start makes the conductor's own startup the thing that keeps it alive.
+    Idempotent by construction: declaring over an existing scope with the same run id rewrites
+    the same record.
+
+    FAIL-OPEN, deliberately. This must never stop the research loop from starting. A conductor
+    that will not boot because a lint helper moved is a worse outcome than a session running
+    without the scope, and the failure is logged rather than swallowed silently.
+    """
+
+    scope_id = next(iter(CONDUCTOR_SCOPE_IDS), "conductor-standing")
+    try:
+        rc, _, err = run_cmd(
+            [
+                sys.executable,
+                str(PROJECT_ROOT / "scripts" / "harness_integrity_lint.py"),
+                "--declare",
+                "--run-id",
+                scope_id,
+                "--seal-anchor",
+                "head",
+                "--scope",
+                "*",
+                # The four the conductor AUTHORS as normal task work -- measured over its whole
+                # history: adversarial_verify.py 90 authored commits, .pre-commit-config.yaml 9,
+                # conftest.py 3, operator_curated_docs_lint.py 1. Sealing those would refuse its
+                # own commits routinely and wedge the loop.
+                "--unseal",
+                ".pre-commit-config.yaml",
+                "--unseal",
+                "scripts/adversarial_verify.py",
+                "--unseal",
+                "scripts/operator_curated_docs_lint.py",
+                "--unseal",
+                "tests/python/conftest.py",
+            ],
+            timeout=60,
+        )
+        if rc == 0:
+            logger.info("Standing harness-integrity scope re-asserted (%s)", scope_id)
+        else:
+            logger.warning("Standing scope re-assert failed rc=%s: %s", rc, err[:200])
+    except Exception as exc:  # noqa: BLE001 - fail-open per docstring
+        logger.warning("Standing scope re-assert skipped: %s", exc)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Carnot Research Conductor")
     parser.add_argument("--loop", action="store_true", help="Run continuously")
@@ -7542,6 +7598,11 @@ def main() -> int:
             )
     except Exception as exc:
         logger.warning("env_autofix unavailable at startup: %s", exc)
+
+    # Keep the standing harness-integrity scope alive. It is gitignored local state, so a
+    # clone, a deleted file, or any agent's `--release` would otherwise leave the guard
+    # silently inert. See _reassert_standing_scope; fail-open by design.
+    _reassert_standing_scope()
 
     # Register an atexit handler so any in-flight async doc-reconciliation
     # gets a chance to finish (and push) before the conductor process exits.
