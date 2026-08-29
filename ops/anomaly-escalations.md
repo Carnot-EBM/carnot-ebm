@@ -1557,3 +1557,43 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag(s) ['NONTERMINAL_DECLARED_ARTIFACT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
 - artifact: results/experiment_6687_v582_branch_synthesis.json
+
+## experiment_2987_capstone_v280.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - INVARIANT regression: paper_ready regressed to False
+- artifact: results/experiment_2987_capstone_v280.json
+
+## experiment_2999_capstone_v281.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - INVARIANT regression: paper_ready regressed to False
+- artifact: results/experiment_2999_capstone_v281.json
+
+## experiment_3011_capstone_v282.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - INVARIANT regression: paper_ready regressed to False
+- artifact: results/experiment_3011_capstone_v282.json
+
+## experiment_3025_capstone_v283.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - INVARIANT regression: paper_ready regressed to False
+- artifact: results/experiment_3025_capstone_v283.json
+
+## experiment_3435_capstone_v316.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - INVARIANT regression: paper_ready regressed to False
+- artifact: results/experiment_3435_capstone_v316.json
+
+## experiment_3503_capstone_v322.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - INVARIANT regression: paper_ready regressed to False
+- artifact: results/experiment_3503_capstone_v322.json
+
+## experiment_2505_capstone_v241.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+- artifact: results/experiment_2505_capstone_v241.json
+
+## experiment_3039_capstone_v284.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - INVARIANT regression: paper_ready regressed to False
+- artifact: results/experiment_3039_capstone_v284.json
