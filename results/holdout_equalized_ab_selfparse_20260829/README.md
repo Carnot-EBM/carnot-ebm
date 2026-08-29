@@ -23,3 +23,37 @@ the arm.
 
 Cost, from the 08-20 stop note: the tool arm averaged 598s per cell, the single arm 4,238s. The
 tool arm is therefore hours and the control arm is days; the tool arm runs first.
+
+## Scope limit of this A/B's metric (operator directive, 2026-08-29)
+
+Operator, on seeing `mem=True` in an early cell:
+
+> "if the live agent is memorizing at run time, that is acceptable: while it is probably
+>  generally better for efficiency if our world model understands the game, so long as we are
+>  making progress on levels and improving our challenge score in the process, memorization is
+>  only a bad thing here at training time before we submit a live agent challenge run."
+
+This corrects a misreading in the run log's early commentary, and it also bounds what this A/B
+can decide.
+
+**What the shards record:** `holdout`, `visible_fit`, `is_memorizing`, `memorization_scan`,
+`tool_loop_stats`, `elapsed_s`. **What they do not record: level progress, in any form.** The
+arm script imports `arc_actions_to_progress` only to BUILD windows; it never scores with it.
+
+So this A/B selects on OFFLINE GENERALIZATION. That is a legitimate dev-time question — a
+memorizing engine at selection time tells us the draw did not explain the level — but it is a
+PROXY for the deliverable, which is levels banked and challenge score on a hidden game. If a
+memorizing engine still banks levels, holdout is not the property that drives the score, and an
+A/B selecting on holdout could reject the better live method.
+
+**Consequence for reading the result.** A holdout difference between arms answers "does the tool
+loop induce more generalizable engines". It does NOT answer "does the tool loop bank more
+levels", which is the question that decides whether to ship it. Do not let this run's number
+stand in for that.
+
+The follow-up that would answer it is an actions-to-progress A/B (REQ-ARC-WMTE-5720) over the
+same arms — bounded live runs counting actions to level-up, with memorization recorded as an
+observation rather than a penalty. Not started; naming it here so it is not rediscovered.
+
+This run continues unchanged: mid-run metric changes would invalidate the cells already banked,
+and the generalization question is still worth its answer.
