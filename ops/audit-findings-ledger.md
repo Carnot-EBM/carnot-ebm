@@ -50,3 +50,6 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-08-27 | qa_layer_authenticity_audit | adversarial_verify.py::_is_reference_field | SILENT_NON_FIRING | OPEN | |
 | 2026-08-27 | qa_layer_authenticity_audit | adversarial_verify.py::_is_verified_arithmetic_delta | SILENT_NON_FIRING | OPEN | |
 | 2026-08-28 | qa_layer_authenticity_audit | harness_integrity_lint.py | SILENT_NON_FIRING | OPEN | |
+| 2026-08-29 | experiment_claim_audit | experiment_6275_flagship_asp_constraint_verification_benchmark.json | CLAIM_REFUTED_BY_OWN_DATA | OPEN | |
+| 2026-08-29 | qa_layer_authenticity_audit | worktree_import_guard.py | SILENT_NON_FIRING | OPEN | |
+| 2026-08-29 | qa_layer_authenticity_audit | capstone_milestone_rot_lint.py | SILENT_NON_FIRING | OPEN | |

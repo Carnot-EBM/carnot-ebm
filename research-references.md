@@ -1,3 +1,78 @@
+## V589 Planner Refresh - 2026-08-29
+
+Planning sweep for milestone `2026.08.589` after all thirteen `.588` tasks reached terminal
+artifacts. The search covers the requested 2025-2026 arXiv topics, OpenReview, Hugging Face Papers,
+GitHub discovery, Semantic Scholar citation trails for EBT `2507.02092` and ARM-EBM `2512.15605`,
+Extropic, and Logical Intelligence. It records methods that change the next milestone and negative
+checks that prevent novelty-only branches.
+
+### Promising findings selected for V589
+
+- **Decode-Time Grammars: Constrained LLM Generation over a Refinement Order of Grammar
+  Fragments** - arXiv:2607.18357, https://arxiv.org/abs/2607.18357. The method instantiates grammar
+  fragments from a runtime environment, tightens open references to typed slots, and adds generated
+  declarations to the environment before later regions decode. Its No-Ghost guarantee is stronger
+  than syntax-only CFG decoding. Carnot hook: bind certificate symbols, clause IDs, and rule
+  references to the current exact problem instance during decoding. This is a new mechanism, not a
+  retry of the retired schema-reprompt path that yielded zero exact semantics.
+- **The Hidden Cost of Structured Generation in LLMs: Draft-Conditioned Constrained Decoding** -
+  arXiv:2603.03305v2, https://arxiv.org/abs/2603.03305. DCCD separates unconstrained semantic
+  planning from constrained rendering. The paper reports that draft conditioning reduces the
+  support distortion caused by token masks. Carnot hook: compare one-shot output, static grammar,
+  and a draft-conditioned environment-indexed grammar under matched budgets. Measure exact
+  certificate validity and semantic accuracy separately. A parseable but false proof does not pass.
+- **When Continual Learning Moves to Memory: A Study of Experience Reuse in LLM Agents** -
+  arXiv:2604.27003, https://arxiv.org/abs/2604.27003. Under finite context, the stability-plasticity
+  problem moves to representation and retrieval. Abstract procedural memories transfer more
+  reliably than detailed trajectories, while negative transfer hits hard cases most. Carnot hook:
+  compare procedural constraint templates with detailed traces under the same storage, retrieval,
+  and context budgets. Report forward transfer, forgetting, hard-case harm, and actual memory use.
+- **Memoir: Should a Model Write to Its Memory While It Thinks?** - arXiv:2607.20792,
+  https://arxiv.org/abs/2607.20792, with code at https://github.com/RightNow-AI/Memoir. Writing fast
+  memory during pondering slowed fixed-budget learning by 13.5 points in the reported controlled
+  study; the gap closed on a ceiling-limited longer run. Carnot hook: keep each live inference
+  episode read-only. Commit exact-authority-approved lessons only between episodes, preserve the
+  no-headroom control, and use a non-saturating stream.
+- **Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM Constraint
+  Reasoning** - arXiv:2607.17047, https://arxiv.org/abs/2607.17047, with receipts at
+  https://github.com/lucky-verma/solver-hard-is-not-model-hard. Solver conflict counts separated
+  matched families, but pooled model accuracy did not track the proxy. Carnot hook: match surface
+  form and density, stratify by exact difficulty and family, and never infer model difficulty from
+  one solver proxy. This method strengthens the proof-transport and memory panels without adding a
+  new solver benchmark branch.
+
+### Requested secondary checks and hardware update
+
+- **Semantic Scholar citation trails:** the EBT trail newly exposed Memoir and Solver-Hard as
+  actionable controls. Other visible 2026 citations include fixed-point reasoners, LoopUS, and
+  anomaly or modality-specific EBMs. The ARM-EBM trail still points to Distributional EBMs,
+  LoopUS, false-first-step planning, and unrelated applications. No citation supplies a stronger
+  local exact-authority path or a matching-base GGUF EBM checkpoint. No citation-count claim is
+  made because the API response did not expose a stable total.
+- **OpenReview and Hugging Face Papers:** hybrid symbolic-neural verification work continues to
+  support exact symbolic authority. Hugging Face surfaced DCCD and energy-spill hallucination
+  detection, but external-text energy remains retired for Carnot. No public checkpoint displaces
+  the mandated local Qwen3.6-35B-A3B, Gemma-4-31B, or Gemma-4-26B-A4B GGUF families.
+- **GitHub discovery:** `RightNow-AI/Memoir`,
+  `lucky-verma/solver-hard-is-not-model-hard`, `kaons-research/drift-bench`, and
+  `StanfordLeanClub/lean-ebm` are useful reproducibility or watch items. Small KAN, Ising, and Lean
+  EBM repositories do not yet provide a stronger tested substrate than Carnot. Do not add a
+  dependency for novelty.
+- **Extropic:** the first-party 2026 summer update gives Z1 as 269,000 sparse-graph pbits at a
+  claimed sampling rate above 50 MHz and power below 1 W. It targets early access to sticks, cards,
+  and a cluster in 2027: https://extropic.ai/writing/from-one-to-one-billion. Carnot still has no
+  Z1/X0 hardware. V589 may claim only independent simulator/compiler fidelity, not TSU speed or
+  energy.
+- **Logical Intelligence:** Kona 1.0 still presents a global, continuous, editable trace energy
+  layer beneath LLMs: https://logicalintelligence.com/kona-ebms-energy-based-models and
+  https://logicalintelligence.com/blog/energy-based-models-for-reasoning. The public site exposes no
+  weights, training recipe, or local runner. Keep Kona as architecture evidence, not a runnable
+  baseline.
+- **KAN and new accelerators:** no 2026 KAN, FPGA, or thermodynamic release closes the immediate
+  proof-transport or inactive-memory gaps. The Thermalizers branch from `.588` needs an independent
+  audit before any new compiler or hardware claim. Adaptive KAN structure remains a later Tier-4
+  task after transactional memory produces a non-circular learning signal.
+
 ## V588 Planner Refresh - 2026-08-29
 
 Planning sweep for milestone `2026.08.588` after the terminal `.587` conductor run. The active

@@ -2856,5 +2856,20 @@
     }
   ],
   "status": "complete_terminal_partial",
-  "verdict_class": "partial"
+  "verdict_class": "partial",
+  "flagged_adversarial": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "afdf258f012a9fe9a9876108674a8299cc3bd583ae3a423713a57b232e612103",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-08-29T19:41:45Z",
+    "stamper": "adversarial_verify.backfill_stamps"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+      "severity": "critical",
+      "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6754_v588_branch_disposition.json; classification=partial; reason=partial marker present"
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }
