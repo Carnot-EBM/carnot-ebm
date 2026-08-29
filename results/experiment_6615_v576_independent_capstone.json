@@ -597,7 +597,7 @@
         "openspec/capabilities/research-reporting/spec.md",
         "_bmad/architecture.md"
       ],
-      "principle": "Use the closed enum; the capstone itself is null or partial, never positive.",
+      "principle": "Use the closed enum; a finished capstone is null, never positive, and partial only if the replay itself stopped early (REQ-CONDUCTOR-VERDICT-3).",
       "replay_function": "build_artifact or validate_artifact",
       "sources": "V576 roadmap, source artifact receipts, and independent replay outputs",
       "spec": "REQ-REPORT-6615"
@@ -816,7 +816,7 @@
     "observed_upstream_gate_count": 8,
     "observed_upstream_gates_passed": 6
   },
-  "honest_verdict": "complete_partial: all available V576 evidence was independently replayed; decoding remains blocked, live projection is null, sampler evidence is partial and software-only, lifecycle is conformant without utility, and prospective self-learning has zero benefit with a disqualified source verdict field",
+  "honest_verdict": "complete_null: all available V576 evidence was independently replayed; decoding remains blocked, live projection is null, sampler evidence is partial and software-only, lifecycle is conformant without utility, and prospective self-learning has zero benefit with a disqualified source verdict field",
   "inference_substrate": "v576_independent_artifact_row_and_architecture_replay_no_llm",
   "live_projection_replay": {
     "all_predictions_before_observations": true,
@@ -1393,7 +1393,7 @@
     {
       "adversarial_flags": [
         {
-          "detail": "verdict_class='blocked_tests' is outside the closed enum ['blocked', 'circular_positive', 'disqualified', 'null', 'partial', 'positive']. The enum is closed on purpose — extending it per-artifact recreates the drifting-token-list problem this field replaces. Pick the nearest class and put the nuance in honest_verdict.",
+          "detail": "verdict_class='blocked_tests' is outside the closed enum ['blocked', 'circular_positive', 'disqualified', 'null', 'partial', 'positive']. The enum is closed on purpose \u2014 extending it per-artifact recreates the drifting-token-list problem this field replaces. Pick the nearest class and put the nuance in honest_verdict.",
           "kind": "VERDICT_CLASS_MISMATCH",
           "severity": "critical"
         }
@@ -1862,7 +1862,7 @@
     {
       "adversarial_flags": [
         {
-          "detail": "verdict_class='blocked_tests' is outside the closed enum ['blocked', 'circular_positive', 'disqualified', 'null', 'partial', 'positive']. The enum is closed on purpose — extending it per-artifact recreates the drifting-token-list problem this field replaces. Pick the nearest class and put the nuance in honest_verdict.",
+          "detail": "verdict_class='blocked_tests' is outside the closed enum ['blocked', 'circular_positive', 'disqualified', 'null', 'partial', 'positive']. The enum is closed on purpose \u2014 extending it per-artifact recreates the drifting-token-list problem this field replaces. Pick the nearest class and put the nuance in honest_verdict.",
           "kind": "VERDICT_CLASS_MISMATCH",
           "severity": "critical"
         }
@@ -1911,7 +1911,7 @@
     {
       "adversarial_flags": [
         {
-          "detail": "verdict_class='blocked_tests' is outside the closed enum ['blocked', 'circular_positive', 'disqualified', 'null', 'partial', 'positive']. The enum is closed on purpose — extending it per-artifact recreates the drifting-token-list problem this field replaces. Pick the nearest class and put the nuance in honest_verdict.",
+          "detail": "verdict_class='blocked_tests' is outside the closed enum ['blocked', 'circular_positive', 'disqualified', 'null', 'partial', 'positive']. The enum is closed on purpose \u2014 extending it per-artifact recreates the drifting-token-list problem this field replaces. Pick the nearest class and put the nuance in honest_verdict.",
           "kind": "VERDICT_CLASS_MISMATCH",
           "severity": "critical"
         }
@@ -2219,7 +2219,7 @@
       "sha256": "sha256:ef4fb5c5a4eb373eca80d3effc9448e70081521666a0fe64c6ff2e3aedc9f450"
     }
   ],
-  "reproducibility_checksum": "sha256:6741239cece0890bb334d84c2b90892e7c1e21067d42b3ec1192f578b5919f94",
+  "reproducibility_checksum": "sha256:c2612590ca5d258a8febb2b67c206560b878a3121d3c70dcd97953c6ea9f52e4",
   "roadmap_gate_contract_rows": [
     {
       "actual": 1.0,
@@ -3246,7 +3246,7 @@
       "adversarial_flagged": true,
       "adversarial_flags": [
         {
-          "detail": "verdict_class='blocked_tests' is outside the closed enum ['blocked', 'circular_positive', 'disqualified', 'null', 'partial', 'positive']. The enum is closed on purpose — extending it per-artifact recreates the drifting-token-list problem this field replaces. Pick the nearest class and put the nuance in honest_verdict.",
+          "detail": "verdict_class='blocked_tests' is outside the closed enum ['blocked', 'circular_positive', 'disqualified', 'null', 'partial', 'positive']. The enum is closed on purpose \u2014 extending it per-artifact recreates the drifting-token-list problem this field replaces. Pick the nearest class and put the nuance in honest_verdict.",
           "kind": "VERDICT_CLASS_MISMATCH",
           "severity": "critical"
         }
@@ -3422,7 +3422,7 @@
       "task_id": "exp6554"
     }
   ],
-  "status": "complete_partial_v576_independent_capstone",
+  "status": "complete_v576_independent_capstone",
   "task_disposition_rows": [
     {
       "blocker_reasons": [],
@@ -3593,6 +3593,22 @@
       "scope": "artifact_row_gate_and_claim_replay"
     }
   ],
-  "verdict_class": "partial",
-  "verifier_is_oracle": true
+  "verdict_class": "null",
+  "verifier_is_oracle": true,
+  "verdict_class_correction_note_2026_08_28": {
+    "date": "2026-08-28",
+    "spec": "REQ-CONDUCTOR-VERDICT-3 (openspec/capabilities/research-harnesses/spec.md, commit 080baaadff)",
+    "reason": "The run attempted every planned unit and finished. verdict_class 'partial' was declared to mean mixed evidence, but the enum-first consumer reads partial as may-retry, so the conductor re-ran this finished task. A finished run with a mixed or absent effect is class null.",
+    "original": {
+      "status": "complete_partial_v576_independent_capstone",
+      "honest_verdict": "complete_partial: all available V576 evidence was independently replayed; decoding remains blocked, live projection is null, sampler evidence is partial and software-only, lifecycle is conformant without utility, and prospective self-learning has zero benefit with a disqualified source verdict field",
+      "verdict_class": "partial"
+    },
+    "corrected": {
+      "status": "complete_v576_independent_capstone",
+      "honest_verdict": "complete_null: all available V576 evidence was independently replayed; decoding remains blocked, live projection is null, sampler evidence is partial and software-only, lifecycle is conformant without utility, and prospective self-learning has zero benefit with a disqualified source verdict field",
+      "verdict_class": "null"
+    },
+    "completion_evidence": "gate_check_summary.capstone_terminal=true and capstone_blocked=false; every available source replayed; missing and blocked sources recorded as findings"
+  }
 }

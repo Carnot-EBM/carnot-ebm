@@ -11,7 +11,7 @@
     },
     "branch_count": 5,
     "missing_source_artifact_count": 2,
-    "overall_verdict_class": "partial",
+    "overall_verdict_class": "null",
     "planned_task_count": 14,
     "pooled_success_claim": false,
     "present_source_artifact_count": 11,
@@ -738,7 +738,7 @@
       }
     }
   ],
-  "honest_verdict": "complete_partial: V582 has a null execution-integrity receipt, blocked output, CSL, and stochastic branches, and a partial adverse ARC branch; there is no pooled success claim",
+  "honest_verdict": "complete_null: V582 has a null execution-integrity receipt, blocked output, CSL, and stochastic branches, and a partial adverse ARC branch; there is no pooled success claim",
   "inference_substrate": "artifact_row_and_document_synthesis_no_llm",
   "live_arc_outcome_branch": {
     "action": {
@@ -2382,9 +2382,9 @@
       },
       "order": 14,
       "task_id": "exp6687",
-      "terminal_state": "complete_terminal_partial",
+      "terminal_state": "complete_terminal_null",
       "validation_rows": [],
-      "verdict_class": "partial"
+      "verdict_class": "null"
     }
   ],
   "planned_task_rows": [
@@ -2777,9 +2777,9 @@
     }
   },
   "random_seed": 6687582,
-  "reproducibility_checksum": "sha256:c51fe7c90f391ef84d51098a524923c02dd0f28b932f6e23a25a50f28c39c88e",
+  "reproducibility_checksum": "sha256:2dc603c27496c0f1c630bd680306dbb91cf0ee05d35ac85be7641c4f1b99d008",
   "run_date": "20260827",
-  "status": "complete_terminal_partial",
+  "status": "complete_terminal_null",
   "stochastic_portability_branch": {
     "acf": {
       "cause": "Exp6685 was gate-blocked before raw chain rows existed",
@@ -3138,15 +3138,15 @@
       "expected_branch": "synthesis",
       "experiment_number": 6687,
       "gate_diagnostic": "Codex CLI error: Hard wall-clock cap after 4801s. Last output:  still active.",
-      "honest_verdict": "complete_partial: current non-pooled branch synthesis",
+      "honest_verdict": "complete_null: current non-pooled branch synthesis",
       "manifest_task_id": "exp6687-v582-branch-synthesis",
       "order": 14,
       "path": "results/experiment_6687_v582_branch_synthesis.json",
       "task_id": "exp6687",
       "terminal_source": "current_synthesis",
-      "terminal_status": "complete_terminal_partial",
+      "terminal_status": "complete_terminal_null",
       "title": "V582 five-branch disposition",
-      "verdict_class": "partial"
+      "verdict_class": "null"
     }
   ],
   "tests_run": [
@@ -4005,7 +4005,7 @@
       "validator": "claim_boundary_audit"
     }
   ],
-  "verdict_class": "partial",
+  "verdict_class": "null",
   "verifier_is_oracle": {
     "branches": {
       "continuous_self_learning": true,
@@ -4030,5 +4030,25 @@
       "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6687_v582_branch_synthesis.json; classification=partial; reason=partial marker present"
     }
   ],
-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+  "verdict_class_correction_note_2026_08_28": {
+    "date": "2026-08-28",
+    "spec": "REQ-CONDUCTOR-VERDICT-3 (openspec/capabilities/research-harnesses/spec.md, commit 080baaadff)",
+    "reason": "The run attempted every planned unit and finished. verdict_class 'partial' was declared to mean mixed evidence, but the enum-first consumer reads partial as may-retry, so the conductor re-ran this finished task. A finished run with a mixed or absent effect is class null.",
+    "original": {
+      "status": "complete_terminal_partial",
+      "honest_verdict": "complete_partial: V582 has a null execution-integrity receipt, blocked output, CSL, and stochastic branches, and a partial adverse ARC branch; there is no pooled success claim",
+      "verdict_class": "partial",
+      "aggregate_row_recomputation.overall_verdict_class": "partial"
+    },
+    "corrected": {
+      "status": "complete_terminal_null",
+      "honest_verdict": "complete_null: V582 has a null execution-integrity receipt, blocked output, CSL, and stochastic branches, and a partial adverse ARC branch; there is no pooled success claim",
+      "verdict_class": "null",
+      "aggregate_row_recomputation.overall_verdict_class": "null",
+      "self_terminal_rows": "complete_terminal_null / null"
+    },
+    "completion_evidence": "14/14 planned tasks joined to terminal states; 5/5 branches recomputed; the two known-missing artifacts (6680, 6686) recorded as planned",
+    "flagged_adversarial_disposition": "The flagged_adversarial=true stamp (2026-08-28T01:42:47Z) was caused by NONTERMINAL_DECLARED_ARTIFACT: classification=partial from the corrected declaration. The stamp, its provenance, and corrigendum_pending are preserved per determination-preservation; clearing them is the gate owner's decision, not this correction's."
+  }
 }

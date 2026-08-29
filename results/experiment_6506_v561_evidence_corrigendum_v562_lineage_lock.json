@@ -1,6 +1,6 @@
 {
   "status": "complete_v561_evidence_corrigendum_v562_lineage_locked",
-  "verdict_class": "partial",
+  "verdict_class": "null",
   "cited_upstream_artifacts": {
     "exp6502": {
       "path": "results/experiment_6502_v560_retirement_v561_lineage_lock.json",
@@ -235,7 +235,7 @@
     "original_verdict_class": "positive",
     "original_verifier_is_oracle": true,
     "corrected_verdict_class": "circular_positive",
-    "artifact_verdict_class": "partial",
+    "artifact_verdict_class": "null",
     "operational_disposition": "benchmark_ready_for_exact_branch_advice_raw_labels_only",
     "positive_scientific_claim_allowed": false,
     "oracle_distinct_scientific_comparison_present": false,
@@ -266,7 +266,22 @@
       ],
       "stderr_tail": []
     },
-    "mismatch_explanation": "Exp6504 is a useful exact benchmark commitment, but its exact solver is also the label oracle. That supports operational row readiness, not a positive verifier-value claim."
+    "mismatch_explanation": "Exp6504 is a useful exact benchmark commitment, but its exact solver is also the label oracle. That supports operational row readiness, not a positive verifier-value claim.",
+    "verdict_class_correction_note_2026_08_28": {
+      "date": "2026-08-28",
+      "spec": "REQ-CONDUCTOR-VERDICT-3 (openspec/capabilities/research-harnesses/spec.md, commit 080baaadff)",
+      "reason": "The run attempted every planned unit and finished. verdict_class 'partial' was declared to mean mixed evidence, but the enum-first consumer reads partial as may-retry, so the conductor re-ran this finished task. A finished run with a mixed or absent effect is class null.",
+      "original": {
+        "verdict_class": "partial",
+        "exp6504_corrigendum.artifact_verdict_class": "partial"
+      },
+      "corrected": {
+        "verdict_class": "null",
+        "exp6504_corrigendum.artifact_verdict_class": "null"
+      },
+      "completion_evidence": "v562_exact_branch_ready_score=1.0; gate_check_summary.all_gates_passed=true; failed_checks=[]",
+      "scope": "This note corrects Exp6506's own declared class. It is nested here because the artifact schema closes its top-level field set. The Exp6504 correction above is unchanged."
+    }
   },
   "exp6505_terminal_null_receipt": {
     "schema_version": "carnot.experiment_6506.v561_corrigendum_v562_lineage_lock.v1.exp6505_terminal_null_receipt",
@@ -12525,6 +12540,6 @@
       "exit_code": 0
     }
   ],
-  "reproducibility_checksum": "sha256:28a8f8a13ce3ed9daf3b21adcaf3ff0cdccffa708ed620b6d0bf70aca8c63960",
+  "reproducibility_checksum": "sha256:755d6d9dd5ab757ed9fe4805403ffe3b08d4bc0253aee0fc568e21ec49a6b039",
   "honest_verdict": "complete_v561_evidence_corrigendum_v562_lineage_lock: Exp6504 raw instances and exact labels are operational for V562 exact branch advice without a positive verifier-value claim; Exp6505 is terminal null"
 }

@@ -1,6 +1,6 @@
 {
   "status": "complete_v563_independent_exact_root_ready",
-  "verdict_class": "partial",
+  "verdict_class": "null",
   "prior_failure_receipt": {
     "schema_version": "carnot.experiment_6510.v563_independent_exact_root.v1.prior_failure_receipt",
     "source_path": "ops/conductor-log.md",
@@ -108,10 +108,10 @@
       "source_artifact_sha256": "sha256:c006b788edd9a3dd35dcbf84b927bd95f40d2f7f27a9646a98557e2c11c32c94",
       "contract_recomputed_from_file": true,
       "reported_status": "complete_v561_evidence_corrigendum_v562_lineage_locked",
-      "reported_verdict_class": "partial",
+      "reported_verdict_class": "null",
       "reported_v562_score": 1.0,
       "corrected_verdict_class": "circular_positive",
-      "artifact_verdict_class": "partial",
+      "artifact_verdict_class": "null",
       "positive_scientific_claim_allowed": false,
       "allowed_fields": [
         "exact_label_rows",
@@ -10809,7 +10809,7 @@
           "partial",
           "null"
         ],
-        "observed": "partial",
+        "observed": "null",
         "passed": true
       },
       "retired_dependency_attacks_fail_closed": {
@@ -10838,7 +10838,23 @@
     },
     "failed_checks": [],
     "all_gates_passed": true,
-    "blocked_reason": ""
+    "blocked_reason": "",
+    "verdict_class_correction_note_2026_08_28": {
+      "date": "2026-08-28",
+      "spec": "REQ-CONDUCTOR-VERDICT-3 (openspec/capabilities/research-harnesses/spec.md, commit 080baaadff)",
+      "reason": "The run attempted every planned unit and finished. verdict_class 'partial' was declared to mean mixed evidence, but the enum-first consumer reads partial as may-retry, so the conductor re-ran this finished task. A finished run with a mixed or absent effect is class null.",
+      "original": {
+        "verdict_class": "partial",
+        "gate_check_summary.checks.verdict_class_non_positive.observed": "partial",
+        "independent_row_recomputation.exp6506.reported_verdict_class": "partial",
+        "independent_row_recomputation.exp6506.artifact_verdict_class": "partial"
+      },
+      "corrected": {
+        "all of the above": "null"
+      },
+      "completion_evidence": "v563_independent_root_ready_score=1.0; gate_check_summary.all_gates_passed=true",
+      "scope": "The exp6506 mirror fields follow the same-day correction of the Exp6506 artifact itself, so a fresh replay and this record agree."
+    }
   },
   "preconditions_checked": {
     "schema_version": "carnot.experiment_6510.v563_independent_exact_root.v1.preconditions",
@@ -12338,6 +12354,6 @@
       "exit_code": 0
     }
   ],
-  "reproducibility_checksum": "sha256:5c382b913e344053d4c7321eba65f350d1b0149e526c3bc809de05e8064a4113",
+  "reproducibility_checksum": "sha256:f692cce632107f57b53ba50bae181d8fa4a9cd3b708e5d67744a9dc8c319182d",
   "honest_verdict": "complete_v563_independent_exact_root: immutable Exp6504 rows and Exp6506 receipts qualify the fresh Exp6510 exact branch-counterfactual root without reactivating retired V562 task IDs"
 }
