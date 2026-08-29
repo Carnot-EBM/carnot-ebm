@@ -283,6 +283,7 @@ DETERMINISTIC_VERIFIER_SUBSTRATES = (
     "sealed_cached_event_evaluation",
     "transactional_exact_conflict_memory_and_cpu_mapping_no_llm",
     "deterministic CPU exact-checker transactional fixture",
+    "fresh_process_no_llm_transaction_audit",
 )
 DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
 NO_LLM_DECLARED_MIN_DURATION_S = 0.0001
