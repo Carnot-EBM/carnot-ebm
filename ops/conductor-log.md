@@ -16737,3 +16737,5 @@ The l |
 | 2026-08-29 06:09 UTC | Owned 32K context and live code-carrying selfparse | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6729-v587-activation-evidence-contract. |
 | 2026-08-29 06:12 UTC | Owned 32K context and live code-carrying selfparse | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6729-v587-activation-evidence-contract. |
 | 2026-08-29 06:14 UTC | Object-table fetch-on-demand paired A/B on the liv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6730-arc-context-tool-preflight) |
+| 2026-08-29 06:14 UTC | Cold object-table row, statistic, and live-provena | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6731-object-table-fetch-on-demand-ab.ob |
+| 2026-08-29 06:16 UTC | Object-table fetch-on-demand paired A/B on the liv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6730-arc-context-tool-preflight) |
