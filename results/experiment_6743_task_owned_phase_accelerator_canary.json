@@ -1,0 +1,690 @@
+{
+  "accelerator_receipt_ready": true,
+  "claim_boundary": "This tiny canary proves local execution receipts only. It does not compare model quality or speed, rank models, or gate a science branch.",
+  "duration_s": 65.390682077,
+  "field_principles": {
+    "accelerator_receipt_ready": "Readiness needs all three CUDA decodes and clean teardown.",
+    "claim_boundary": "The boundary forbids quality, speed, ranking, and science-gate claims.",
+    "duration_s": "A monotonic wall interval prevents a synthetic zero-minute receipt.",
+    "field_principles": "Each required field states why an auditor needs it.",
+    "gate_check_summary": "Blocked runs preserve the failed check and observed value.",
+    "gpu_receipts": "Before, during, and after samples bind CUDA use to an owned PID.",
+    "honest_verdict": "An allowed prefix reports success or a task-owned block plainly.",
+    "inference_substrate": "The substrate excludes CPU and remote inference substitutions.",
+    "live_model_invoked": "This flag stays false until a real decode completes.",
+    "models_used": "Exact hub IDs prevent legacy or substitute models from counting.",
+    "phase_clock_monotonic": "A row-derived flag exposes skipped or reversed phases.",
+    "random_seed": "A fixed seed makes the bounded decode configuration repeatable.",
+    "reproducibility_checksum": "The config and row hashes detect receipt drift.",
+    "rows": "One raw row per model preserves model-owned evidence.",
+    "task_phase_rows": "Task-owned clocks show where real work occurred.",
+    "verdict_class": "A closed class gives automation an unambiguous terminal state."
+  },
+  "gate_check_summary": [
+    {
+      "check": "llama_cpp_cuda_offload",
+      "expected": true,
+      "llama_cpp_version": "0.3.33",
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "nvidia_smi_available",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "cache:unsloth/Qwen3.6-35B-A3B-GGUF",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+    },
+    {
+      "check": "free_vram_mb:unsloth/Qwen3.6-35B-A3B-GGUF",
+      "device_index": 0,
+      "expected": {
+        "at_least": 21622
+      },
+      "observed": 24120,
+      "passed": true
+    },
+    {
+      "check": "cache:unsloth/gemma-4-31B-it-GGUF",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+    },
+    {
+      "check": "free_vram_mb:unsloth/gemma-4-31B-it-GGUF",
+      "device_index": 1,
+      "expected": {
+        "at_least": 17987
+      },
+      "observed": 24120,
+      "passed": true
+    },
+    {
+      "check": "cache:unsloth/gemma-4-26B-A4B-it-GGUF",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    },
+    {
+      "check": "free_vram_mb:unsloth/gemma-4-26B-A4B-it-GGUF",
+      "device_index": 0,
+      "expected": {
+        "at_least": 16675
+      },
+      "observed": 24120,
+      "passed": true
+    }
+  ],
+  "gpu_receipts": [
+    {
+      "after": {
+        "compute_processes": [],
+        "device_index": 0,
+        "device_memory_free_mb": 24120,
+        "device_memory_used_mb": 4,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "monotonic_ns": 284272554540003,
+        "phase": "after",
+        "pid": 2737086,
+        "pid_memory_mb": 0,
+        "pid_present": false,
+        "process_name": null,
+        "query_ok": true
+      },
+      "before": {
+        "compute_processes": [],
+        "device_index": 0,
+        "device_memory_free_mb": 24120,
+        "device_memory_used_mb": 4,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "monotonic_ns": 284258026584919,
+        "phase": "before",
+        "pid": 2737086,
+        "pid_memory_mb": 0,
+        "pid_present": false,
+        "process_name": null,
+        "query_ok": true
+      },
+      "during": {
+        "compute_processes": [
+          {
+            "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 2737086,
+            "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "used_memory_mb": 21016
+          }
+        ],
+        "device_index": 0,
+        "device_memory_free_mb": 3099,
+        "device_memory_used_mb": 21026,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "monotonic_ns": 284272043029521,
+        "phase": "during",
+        "pid": 2737086,
+        "pid_memory_mb": 21016,
+        "pid_present": true,
+        "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "query_ok": true
+      },
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+    },
+    {
+      "after": {
+        "compute_processes": [],
+        "device_index": 1,
+        "device_memory_free_mb": 24120,
+        "device_memory_used_mb": 4,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "monotonic_ns": 284293985093977,
+        "phase": "after",
+        "pid": 2737137,
+        "pid_memory_mb": 0,
+        "pid_present": false,
+        "process_name": null,
+        "query_ok": true
+      },
+      "before": {
+        "compute_processes": [],
+        "device_index": 1,
+        "device_memory_free_mb": 24120,
+        "device_memory_used_mb": 4,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "monotonic_ns": 284273046469393,
+        "phase": "before",
+        "pid": 2737137,
+        "pid_memory_mb": 0,
+        "pid_present": false,
+        "process_name": null,
+        "query_ok": true
+      },
+      "during": {
+        "compute_processes": [
+          {
+            "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 2737137,
+            "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "used_memory_mb": 18046
+          }
+        ],
+        "device_index": 1,
+        "device_memory_free_mb": 6069,
+        "device_memory_used_mb": 18056,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "monotonic_ns": 284293313996865,
+        "phase": "during",
+        "pid": 2737137,
+        "pid_memory_mb": 18046,
+        "pid_present": true,
+        "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "query_ok": true
+      },
+      "model_id": "unsloth/gemma-4-31B-it-GGUF"
+    },
+    {
+      "after": {
+        "compute_processes": [],
+        "device_index": 0,
+        "device_memory_free_mb": 24120,
+        "device_memory_used_mb": 4,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "monotonic_ns": 284322678158793,
+        "phase": "after",
+        "pid": 2737212,
+        "pid_memory_mb": 0,
+        "pid_present": false,
+        "process_name": null,
+        "query_ok": true
+      },
+      "before": {
+        "compute_processes": [],
+        "device_index": 0,
+        "device_memory_free_mb": 24120,
+        "device_memory_used_mb": 4,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "monotonic_ns": 284294488499929,
+        "phase": "before",
+        "pid": 2737212,
+        "pid_memory_mb": 0,
+        "pid_present": false,
+        "process_name": null,
+        "query_ok": true
+      },
+      "during": {
+        "compute_processes": [
+          {
+            "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 2737212,
+            "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "used_memory_mb": 16562
+          }
+        ],
+        "device_index": 0,
+        "device_memory_free_mb": 7553,
+        "device_memory_used_mb": 16572,
+        "device_name": "NVIDIA GeForce RTX 3090",
+        "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "monotonic_ns": 284321537844273,
+        "phase": "during",
+        "pid": 2737212,
+        "pid_memory_mb": 16562,
+        "pid_present": true,
+        "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "query_ok": true
+      },
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+    }
+  ],
+  "honest_verdict": "complete: all three mandated models reached a first token on CUDA and teardown completed",
+  "inference_substrate": "local llama.cpp CUDA GGUF",
+  "live_model_invoked": true,
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "phase_clock_monotonic": true,
+  "random_seed": 6743,
+  "reproducibility_checksum": "sha256:b3bcbcd051f85a590b3ee49c88dd19afbcb672cef050f3709b14d5f162359f4e",
+  "rows": [
+    {
+      "assigned_device": {
+        "cuda_visible_devices": "0",
+        "index": 0,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+      },
+      "backend_stderr_sha256": "sha256:7a5f64504bbd04f538d3c6505bbd294c75b68f72a7a74e817cbebbbdab67a624",
+      "clocks": {
+        "decode_complete_ns": 284272083401058,
+        "first_token_ns": 284271993867677,
+        "model_loaded_ns": 284271904456996,
+        "subprocess_started_ns": 284257972454544,
+        "teardown_complete_ns": 284272554546836
+      },
+      "decode_completed": true,
+      "device_index": 0,
+      "file_identity": {
+        "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "head_1m_sha256": "sha256:4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+        "mtime_ns": 1780046332847654213,
+        "quantization": "Q4_K_M",
+        "size_bytes": 22134528992,
+        "snapshot_revision": "a483e9e6cbd595906af30beda3187c2663a1118c"
+      },
+      "first_token_reached": true,
+      "gpu_layers": {
+        "offloaded": 41,
+        "requested": -1,
+        "total": 41
+      },
+      "gpu_receipts": {
+        "after": {
+          "compute_processes": [],
+          "device_index": 0,
+          "device_memory_free_mb": 24120,
+          "device_memory_used_mb": 4,
+          "device_name": "NVIDIA GeForce RTX 3090",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "monotonic_ns": 284272554540003,
+          "phase": "after",
+          "pid": 2737086,
+          "pid_memory_mb": 0,
+          "pid_present": false,
+          "process_name": null,
+          "query_ok": true
+        },
+        "before": {
+          "compute_processes": [],
+          "device_index": 0,
+          "device_memory_free_mb": 24120,
+          "device_memory_used_mb": 4,
+          "device_name": "NVIDIA GeForce RTX 3090",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "monotonic_ns": 284258026584919,
+          "phase": "before",
+          "pid": 2737086,
+          "pid_memory_mb": 0,
+          "pid_present": false,
+          "process_name": null,
+          "query_ok": true
+        },
+        "during": {
+          "compute_processes": [
+            {
+              "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 2737086,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 21016
+            }
+          ],
+          "device_index": 0,
+          "device_memory_free_mb": 3099,
+          "device_memory_used_mb": 21026,
+          "device_name": "NVIDIA GeForce RTX 3090",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "monotonic_ns": 284272043029521,
+          "phase": "during",
+          "pid": 2737086,
+          "pid_memory_mb": 21016,
+          "pid_present": true,
+          "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "query_ok": true
+        }
+      },
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "output_tokens": 4,
+      "owned_pid": 2737086,
+      "owned_process_absent": true,
+      "parent_pid": 2737045,
+      "peak_vram_mb": 21016,
+      "process_exit_code": 0,
+      "prompt_sha256": "sha256:7f5f256317689315c06db085da90637610680c91530e36f0fa84b088a5aac41c",
+      "prompt_tokens": 9,
+      "quantization": "Q4_K_M",
+      "raw_output": "\n\n<think>\nThinking",
+      "raw_output_sha256": "sha256:3f1c6451d21a0240a07f109352a1caa363c34b60dadb4a59ff78b43fe6db6a47",
+      "required_vram_mb": 21622,
+      "resolved": true,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "resolved_path_sha256": "sha256:ddbed736bb31a2e6ca06746f12faefc5d814ace8ac9db7955b52c8fdc3294640",
+      "role": "flagship_moe",
+      "row_sha256": "sha256:363febb8d3b8ecb5cccbec6d4b26c6750a2c2dd7d59efe354cf4e71fa9f1da59",
+      "runtime_error": null,
+      "stop_reason": "length",
+      "supports_gpu_offload": true,
+      "teardown_completed": true
+    },
+    {
+      "assigned_device": {
+        "cuda_visible_devices": "1",
+        "index": 1,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      },
+      "backend_stderr_sha256": "sha256:32c847a9090eacd442ff43aa46bf9630557f939bb84c110a2b6e35ffd36cd439",
+      "clocks": {
+        "decode_complete_ns": 284293409680045,
+        "first_token_ns": 284293265611979,
+        "model_loaded_ns": 284293194743821,
+        "subprocess_started_ns": 284272998063468,
+        "teardown_complete_ns": 284293985098946
+      },
+      "decode_completed": true,
+      "device_index": 1,
+      "file_identity": {
+        "filename": "gemma-4-31B-it-Q4_K_M.gguf",
+        "head_1m_sha256": "sha256:94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+        "mtime_ns": 1780838958726406205,
+        "quantization": "Q4_K_M",
+        "size_bytes": 18323731456,
+        "snapshot_revision": "f130ba51393346288f5862e30e9586b9b021513f"
+      },
+      "first_token_reached": true,
+      "gpu_layers": {
+        "offloaded": 61,
+        "requested": -1,
+        "total": 61
+      },
+      "gpu_receipts": {
+        "after": {
+          "compute_processes": [],
+          "device_index": 1,
+          "device_memory_free_mb": 24120,
+          "device_memory_used_mb": 4,
+          "device_name": "NVIDIA GeForce RTX 3090",
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "monotonic_ns": 284293985093977,
+          "phase": "after",
+          "pid": 2737137,
+          "pid_memory_mb": 0,
+          "pid_present": false,
+          "process_name": null,
+          "query_ok": true
+        },
+        "before": {
+          "compute_processes": [],
+          "device_index": 1,
+          "device_memory_free_mb": 24120,
+          "device_memory_used_mb": 4,
+          "device_name": "NVIDIA GeForce RTX 3090",
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "monotonic_ns": 284273046469393,
+          "phase": "before",
+          "pid": 2737137,
+          "pid_memory_mb": 0,
+          "pid_present": false,
+          "process_name": null,
+          "query_ok": true
+        },
+        "during": {
+          "compute_processes": [
+            {
+              "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 2737137,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 18046
+            }
+          ],
+          "device_index": 1,
+          "device_memory_free_mb": 6069,
+          "device_memory_used_mb": 18056,
+          "device_name": "NVIDIA GeForce RTX 3090",
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "monotonic_ns": 284293313996865,
+          "phase": "during",
+          "pid": 2737137,
+          "pid_memory_mb": 18046,
+          "pid_present": true,
+          "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "query_ok": true
+        }
+      },
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "output_tokens": 4,
+      "owned_pid": 2737137,
+      "owned_process_absent": true,
+      "parent_pid": 2737045,
+      "peak_vram_mb": 18046,
+      "process_exit_code": 0,
+      "prompt_sha256": "sha256:7f5f256317689315c06db085da90637610680c91530e36f0fa84b088a5aac41c",
+      "prompt_tokens": 10,
+      "quantization": "Q4_K_M",
+      "raw_output": "e\n\nThe same",
+      "raw_output_sha256": "sha256:e039c2fc23a5e5e976cb252e42f6ab5f5b4a32fe0cfb9ebac60dc662c5fd906c",
+      "required_vram_mb": 17987,
+      "resolved": true,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "resolved_path_sha256": "sha256:f3b5e9e8d3026db550b67a5bce47a43211421732f6d60a785735011f5f76c1be",
+      "role": "flagship_dense",
+      "row_sha256": "sha256:242066c44d4667203b6b840ec1dabd60507dd3d66fa719902445f1fef76e0667",
+      "runtime_error": null,
+      "stop_reason": "length",
+      "supports_gpu_offload": true,
+      "teardown_completed": true
+    },
+    {
+      "assigned_device": {
+        "cuda_visible_devices": "0",
+        "index": 0,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+      },
+      "backend_stderr_sha256": "sha256:a15c6d295ea97cc844b3c1275b9d677db45119fa31d66be57952fe56347a2bff",
+      "clocks": {
+        "decode_complete_ns": 284321593838719,
+        "first_token_ns": 284321429367727,
+        "model_loaded_ns": 284321222191415,
+        "subprocess_started_ns": 284294439597141,
+        "teardown_complete_ns": 284322678166497
+      },
+      "decode_completed": true,
+      "device_index": 0,
+      "file_identity": {
+        "filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "head_1m_sha256": "sha256:c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+        "mtime_ns": 1778129415691941084,
+        "quantization": "Q4_K_M",
+        "size_bytes": 16947539744,
+        "snapshot_revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3"
+      },
+      "first_token_reached": true,
+      "gpu_layers": {
+        "offloaded": 31,
+        "requested": -1,
+        "total": 31
+      },
+      "gpu_receipts": {
+        "after": {
+          "compute_processes": [],
+          "device_index": 0,
+          "device_memory_free_mb": 24120,
+          "device_memory_used_mb": 4,
+          "device_name": "NVIDIA GeForce RTX 3090",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "monotonic_ns": 284322678158793,
+          "phase": "after",
+          "pid": 2737212,
+          "pid_memory_mb": 0,
+          "pid_present": false,
+          "process_name": null,
+          "query_ok": true
+        },
+        "before": {
+          "compute_processes": [],
+          "device_index": 0,
+          "device_memory_free_mb": 24120,
+          "device_memory_used_mb": 4,
+          "device_name": "NVIDIA GeForce RTX 3090",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "monotonic_ns": 284294488499929,
+          "phase": "before",
+          "pid": 2737212,
+          "pid_memory_mb": 0,
+          "pid_present": false,
+          "process_name": null,
+          "query_ok": true
+        },
+        "during": {
+          "compute_processes": [
+            {
+              "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 2737212,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 16562
+            }
+          ],
+          "device_index": 0,
+          "device_memory_free_mb": 7553,
+          "device_memory_used_mb": 16572,
+          "device_name": "NVIDIA GeForce RTX 3090",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "monotonic_ns": 284321537844273,
+          "phase": "during",
+          "pid": 2737212,
+          "pid_memory_mb": 16562,
+          "pid_present": true,
+          "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "query_ok": true
+        }
+      },
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "output_tokens": 4,
+      "owned_pid": 2737212,
+      "owned_process_absent": true,
+      "parent_pid": 2737045,
+      "peak_vram_mb": 16562,
+      "process_exit_code": 0,
+      "prompt_sha256": "sha256:7f5f256317689315c06db085da90637610680c91530e36f0fa84b088a5aac41c",
+      "prompt_tokens": 10,
+      "quantization": "Q4_K_M",
+      "raw_output": "-YELLOW-FL",
+      "raw_output_sha256": "sha256:3b39dc42c7a7fe8389d98c4da2eacf4fe9670d741b163e6417c3364f96ff84ba",
+      "required_vram_mb": 16675,
+      "resolved": true,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "resolved_path_sha256": "sha256:39bf8b625c3646c9b96f133d9b35a474e567c25ba67fd7486c8ec97c7a9d3c93",
+      "role": "middle_moe",
+      "row_sha256": "sha256:ff807b0b4351a5402e33c4cf41e37b4091ea163787f78ef6812f1e513baad7a9",
+      "runtime_error": null,
+      "stop_reason": "length",
+      "supports_gpu_offload": true,
+      "teardown_completed": true
+    }
+  ],
+  "task_phase_rows": [
+    {
+      "model_id": null,
+      "monotonic_ns": 284257288361928,
+      "phase": "preflight"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "monotonic_ns": 284257293640891,
+      "phase": "cache_resolved"
+    },
+    {
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "monotonic_ns": 284257293641873,
+      "phase": "cache_resolved"
+    },
+    {
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "monotonic_ns": 284257293642194,
+      "phase": "cache_resolved"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "monotonic_ns": 284257972454544,
+      "phase": "subprocess_started"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "monotonic_ns": 284271904456996,
+      "phase": "model_loaded"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "monotonic_ns": 284271993867677,
+      "phase": "first_token"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "monotonic_ns": 284272083401058,
+      "phase": "decode_complete"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "monotonic_ns": 284272554546836,
+      "phase": "teardown_complete"
+    },
+    {
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "monotonic_ns": 284272998063468,
+      "phase": "subprocess_started"
+    },
+    {
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "monotonic_ns": 284293194743821,
+      "phase": "model_loaded"
+    },
+    {
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "monotonic_ns": 284293265611979,
+      "phase": "first_token"
+    },
+    {
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "monotonic_ns": 284293409680045,
+      "phase": "decode_complete"
+    },
+    {
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "monotonic_ns": 284293985098946,
+      "phase": "teardown_complete"
+    },
+    {
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "monotonic_ns": 284294439597141,
+      "phase": "subprocess_started"
+    },
+    {
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "monotonic_ns": 284321222191415,
+      "phase": "model_loaded"
+    },
+    {
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "monotonic_ns": 284321429367727,
+      "phase": "first_token"
+    },
+    {
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "monotonic_ns": 284321593838719,
+      "phase": "decode_complete"
+    },
+    {
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "monotonic_ns": 284322678166497,
+      "phase": "teardown_complete"
+    },
+    {
+      "model_id": null,
+      "monotonic_ns": 284322679044005,
+      "phase": "artifact_write"
+    }
+  ],
+  "verdict_class": "positive"
+}

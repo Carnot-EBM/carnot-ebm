@@ -9483,6 +9483,58 @@ post-process-absence receipt
 |---|---|---|
 | REQ-INFRA-6648 | Implemented (`python/carnot/experiment_6648_three_family_gguf_canaries.py`) | Implemented (`tests/python/test_experiment_6648_three_family_gguf_canaries.py`; fresh-process, accelerator UUID, lease, phase, unload, and absence coverage) |
 
+## REQ-INFRA-6743: The Accelerator Canary SHALL Emit Task-Owned Phase Receipts
+
+Exp6743 SHALL resolve the exact cached GGUF file for each mandated model. It
+SHALL require local llama.cpp CUDA offload and enough free VRAM before decode.
+It SHALL stop before inference when a precondition fails. The blocked artifact
+SHALL preserve the failed check and observed value.
+
+Exp6743 SHALL run each model in a fresh subprocess in the fixed declared order.
+Each subprocess SHALL use the same hashed prompt, fixed seed, and non-zero
+output budget. It SHALL finish and release its CUDA allocation before the next
+subprocess starts.
+
+Each model row SHALL bind the model ID, cache path hash, file identity,
+quantization, device UUID, GPU layers, owned PID, prompt and output token
+counts, stop reason, raw output hash, and before/during/after GPU samples. The
+task SHALL emit monotonic markers for `preflight`, `cache_resolved`,
+`subprocess_started`, `model_loaded`, `first_token`, `decode_complete`,
+`teardown_complete`, and `artifact_write`.
+
+`accelerator_receipt_ready` SHALL be true only when all three model rows reach
+a first token with PID-bound CUDA memory and no owned process remains after
+teardown. This field is infrastructure evidence only. No science gate, model
+quality claim, speed claim, or model ranking SHALL depend on it.
+
+### SCENARIO-INFRA-6743-MONOTONIC-ELAPSED
+
+**Given** task-owned phase rows from the fixed sequential canary
+**When** the validator derives phase order and duration from monotonic clocks
+**Then** every required marker is ordered, duration is positive and measured,
+and a skipped, repeated, reversed, or synthetic zero-length interval fails.
+
+### SCENARIO-INFRA-6743-ACCELERATOR-INTEGRITY
+
+**Given** one raw row for each mandated model
+**When** accelerator readiness is reduced
+**Then** each row must bind its owned PID and device UUID to live GPU memory,
+positive offloaded layers, a non-empty decode, and completed teardown.
+
+### SCENARIO-INFRA-6743-BLOCKED-PREFLIGHT
+
+**Given** a missing exact cache, unavailable CUDA offload, or insufficient free
+VRAM
+**When** Exp6743 writes its terminal artifact
+**Then** no CPU or remote fallback runs and `gate_check_summary` preserves each
+failed check with its observed value.
+
+## Implementation Status (REQ-INFRA-6743)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6743 | Implemented (`python/carnot/experiment_6743_task_owned_phase_accelerator_canary.py` and `scripts/experiments/experiment_6743_task_owned_phase_accelerator_canary.py`). | Implemented (`tests/python/test_experiment_6743_task_owned_phase_accelerator_canary.py`; phase order, elapsed time, CUDA receipt, blocked preflight, subprocess, and mutation coverage). |
+
 ## REQ-INFRA-6676: Each Transport Session SHALL Own Its CUDA Process And Lease
 
 Exp6676 SHALL launch a fresh llama.cpp server for each mandated model. One
