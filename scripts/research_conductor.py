@@ -2324,6 +2324,16 @@ def _ensure_tasks_loaded():
 
 MAX_FAILURES_PER_TASK = 3  # Skip task after this many consecutive failures
 
+# Detail prefixes that mark a GATE_BLOCK log row as PERMANENT for this
+# milestone. One such row retires the task at once: the gate read a frozen
+# value from a finished upstream artifact, or the upstream task is retired.
+# Entry 0 must stay a prefix of conductor_gates.GATE_UNSAT_FINAL_PREFIX
+# (tests/python/test_gate_cascade_settlement.py asserts the pair).
+_GATE_BLOCK_TERMINAL_DETAIL_PREFIXES = (
+    "gate-unsat(final):",
+    "Pre-emptive skip: upstream retired",
+)
+
 
 # --- Fresh-source re-exec (REQ-CONDUCTOR-FRESHEXEC-1) -----------------------
 # Origin: 2026-08-22, the conductor process predated fixes in HEAD for up
@@ -3191,6 +3201,15 @@ def pick_next_task(completed_log: str) -> dict | None:
             # GATE_BLOCK as a failure mode lets MAX_FAILURES retire the
             # task after 3 consecutive gate-blocks, unblocking the cascade.
             fail_counts[title] = fail_counts.get(title, 0) + 1
+            if status == "GATE_BLOCK":
+                # A terminal-marked gate block cannot pass on retry: the
+                # gate read a frozen value from a FINISHED upstream artifact
+                # (2026-08-29: exp6756 retried 21>=24 three times against
+                # exp6755's final artifact), or the upstream is retired.
+                # Retire on the first row instead of burning all retries.
+                details = parts[4].strip() if len(parts) > 4 else ""
+                if details.startswith(_GATE_BLOCK_TERMINAL_DETAIL_PREFIXES):
+                    fail_counts[title] = max(fail_counts[title], MAX_FAILURES_PER_TASK)
 
     # Ensure tasks are loaded from YAML
     _ensure_tasks_loaded()
@@ -3212,6 +3231,24 @@ def pick_next_task(completed_log: str) -> dict | None:
             tid = task.get("id")
             if tid:
                 retired_task_ids.add(tid)
+
+    # Transitive closure: a task gated on a retired upstream can never run
+    # in this milestone, and neither can anything gated on IT. Retiring the
+    # whole chain at once lets one iteration settle a cascade that used to
+    # burn MAX_FAILURES_PER_TASK iterations per link (2026-08-29: the
+    # exp6756->exp6760 chain spun ~18 min of GATE_BLOCK rows link by link).
+    changed = True
+    while changed:
+        changed = False
+        for task in RESEARCH_TASKS:
+            tid = task.get("id")
+            if not tid or tid in retired_task_ids:
+                continue
+            for gate in task.get("gated_on") or []:
+                if isinstance(gate, dict) and gate.get("upstream") in retired_task_ids:
+                    retired_task_ids.add(tid)
+                    changed = True
+                    break
 
     # Find first task not yet completed AND not failed too many times
     for task in RESEARCH_TASKS:
