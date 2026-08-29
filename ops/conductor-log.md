@@ -16732,3 +16732,4 @@ The l |
 | 2026-08-29 04:23 UTC | Object-table fetch-on-demand A/B against the measu | OK | cache hit: 81 passed, 1 warning in 6.37s |
 | 2026-08-29 05:44 UTC | Plan milestone 2026.08.587 | OK | 7 tasks proposed |
 | 2026-08-29 05:47 UTC | Milestone 2026.08.587 activated | OK | 7 tasks queued |
+| 2026-08-29 06:05 UTC | V587 activation, source-receipt, and evidence-cont | OK | 87 passed, 1 warning in 9.55s |
