@@ -1,7 +1,7 @@
 {
-  "status": "complete_partial_v564_independent_capstone",
-  "honest_verdict": "complete_partial_v564_evidence_graph: row-supported structural, router, CSL, and adaptive validation claims coexist with blocked ARC and GateMate lineages",
-  "verdict_class": "partial",
+  "status": "complete_v564_independent_capstone",
+  "honest_verdict": "complete_v564_evidence_graph: row-supported structural, router, CSL, and adaptive validation claims coexist with blocked ARC and GateMate lineages",
+  "verdict_class": "null",
   "task_inventory_rows": [
     {
       "row_type": "task_inventory",
@@ -12,7 +12,7 @@
       "sha256": "sha256:2a8ce7061fcaf41a8242abb730619bb4b3331f380cc8b4d8844d069c810fa6d2",
       "status": "complete_v564_terminal_handoff_contract_ready",
       "honest_verdict": "complete_v564_terminal_handoff_contract: V563 terminal failures, usable immutable content, missing Exp6511 data, and the Exp6512 score-0 block are preserved without any retired structured dependency",
-      "verdict_class": "partial",
+      "verdict_class": "null",
       "required_field": "v564_handoff_ready_score",
       "observed_value": 1.0,
       "row_support": {
@@ -877,7 +877,7 @@
       "sha256": "sha256:2a8ce7061fcaf41a8242abb730619bb4b3331f380cc8b4d8844d069c810fa6d2",
       "status": "complete_v564_terminal_handoff_contract_ready",
       "honest_verdict": "complete_v564_terminal_handoff_contract: V563 terminal failures, usable immutable content, missing Exp6511 data, and the Exp6512 score-0 block are preserved without any retired structured dependency",
-      "verdict_class": "partial",
+      "verdict_class": "null",
       "required_field": "v564_handoff_ready_score",
       "observed_value": 1.0,
       "row_support": {
@@ -1417,7 +1417,7 @@
     }
   ],
   "aggregate_row_recomputation": {
-    "verdict_class_from_rows": "partial",
+    "verdict_class_from_rows": "null",
     "blocked_lineage_count": 2,
     "blocked_lineages": [
       "arc_generalization",
@@ -1594,7 +1594,7 @@
   "field_principles": {
     "status": "Records the terminal V564 capstone state after reading all expected artifacts.",
     "honest_verdict": "Summarizes mixed evidence without converting missing, null, or blocked rows into success.",
-    "verdict_class": "Uses partial for mixed lineage outcomes, positive only for oracle-distinct row-supported claims, and blocked or disqualified for missing or unsafe evidence.",
+    "verdict_class": "Uses null for a finished capstone with mixed lineage outcomes (partial only if the run itself stopped early, per REQ-CONDUCTOR-VERDICT-3), positive only for oracle-distinct row-supported claims, and blocked or disqualified for missing or unsafe evidence.",
     "task_inventory_rows": "One row per expected task records path, hash, status, class, gate field, observed value, row support, authority, and eligibility.",
     "artifact_hash_receipts": "Content hashes prove which files were read and which expected deliverables were missing.",
     "gate_contract_rows": "Checks downstream gate field spelling against upstream artifacts and the V564 roadmap.",
@@ -1641,7 +1641,7 @@
       ]
     },
     "verdict_class": {
-      "principle": "Uses partial for mixed lineage outcomes, positive only for oracle-distinct row-supported claims, and blocked or disqualified for missing or unsafe evidence.",
+      "principle": "Uses null for a finished capstone with mixed lineage outcomes (partial only if the run itself stopped early, per REQ-CONDUCTOR-VERDICT-3), positive only for oracle-distinct row-supported claims, and blocked or disqualified for missing or unsafe evidence.",
       "source": "Exp6526 deterministic V564 row reducer",
       "spec_refs": [
         "REQ-CAPSTONE-6526"
@@ -1907,5 +1907,24 @@
       "exit_code": 0
     }
   ],
-  "reproducibility_checksum": "sha256:152802c9aa460000825f6183245056fd865c6d10b5722af940b2deabfb24f52a"
+  "reproducibility_checksum": "sha256:4011e017392b68eb6c2fd5ea3a1916a612e918f9bf05a9bb1974ef1a25e81d8c",
+  "verdict_class_correction_note_2026_08_28": {
+    "date": "2026-08-28",
+    "spec": "REQ-CONDUCTOR-VERDICT-3 (openspec/capabilities/research-harnesses/spec.md, commit 080baaadff)",
+    "reason": "The run attempted every planned unit and finished. verdict_class 'partial' was declared to mean mixed evidence, but the enum-first consumer reads partial as may-retry, so the conductor re-ran this finished task. A finished run with a mixed or absent effect is class null.",
+    "original": {
+      "status": "complete_partial_v564_independent_capstone",
+      "honest_verdict": "complete_partial_v564_evidence_graph: row-supported structural, router, CSL, and adaptive validation claims coexist with blocked ARC and GateMate lineages",
+      "verdict_class": "partial",
+      "aggregate_row_recomputation.verdict_class_from_rows": "partial"
+    },
+    "corrected": {
+      "status": "complete_v564_independent_capstone",
+      "honest_verdict": "complete_v564_evidence_graph: row-supported structural, router, CSL, and adaptive validation claims coexist with blocked ARC and GateMate lineages",
+      "verdict_class": "null",
+      "aggregate_row_recomputation.verdict_class_from_rows": "null",
+      "exp6513_mirror_rows": "null"
+    },
+    "completion_evidence": "gate_check_summary.all_capstone_checks_passed=true; failed_checks=[]; both claim-eligibility scores recomputed from rows"
+  }
 }

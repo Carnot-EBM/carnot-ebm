@@ -1227,7 +1227,7 @@
       }
     ]
   },
-  "honest_verdict": "complete_partial: V580 has authentic admission, direct-corpus, and bounded verifier-unit evidence; memory general benefit is null under independent uncertainty; ARC and Ising branches are blocked; one audit artifact is missing; no pooled success, ARC solve, repair win, or hardware speedup is claimed",
+  "honest_verdict": "complete_null: V580 has authentic admission, direct-corpus, and bounded verifier-unit evidence; memory general benefit is null under independent uncertainty; ARC and Ising branches are blocked; one audit artifact is missing; no pooled success, ARC solve, repair win, or hardware speedup is claimed",
   "inference_substrate": "artifact_only_v580_capstone_no_llm",
   "next_actions": [
     {
@@ -2519,10 +2519,10 @@
       "summary": "worktree inspection completed after tests"
     }
   ],
-  "reproducibility_checksum": "sha256:8dc69b0b05a80a7e60f360243870ef303688257200a4a5933786cc42b75f64e0",
+  "reproducibility_checksum": "sha256:3aaff04712a1d35f337639b229dc89cde6ad5866354d7f50b53b5b1abfad1530",
   "run_date": "20260827",
   "schema": "carnot.experiment_6659.v580_capstone.v1",
-  "status": "complete_terminal_partial",
+  "status": "complete_terminal_null",
   "tests_run": [
     {
       "command": ".venv/bin/pytest -o addopts='' tests/python/test_experiment_6659_v580_capstone.py -q",
@@ -2605,6 +2605,22 @@
       "summary": "worktree inspection completed after tests"
     }
   ],
-  "verdict_class": "partial",
-  "verifier_is_oracle": false
+  "verdict_class": "null",
+  "verifier_is_oracle": false,
+  "verdict_class_correction_note_2026_08_28": {
+    "date": "2026-08-28",
+    "spec": "REQ-CONDUCTOR-VERDICT-3 (openspec/capabilities/research-harnesses/spec.md, commit 080baaadff)",
+    "reason": "The run attempted every planned unit and finished. verdict_class 'partial' was declared to mean mixed evidence, but the enum-first consumer reads partial as may-retry, so the conductor re-ran this finished task. A finished run with a mixed or absent effect is class null.",
+    "original": {
+      "status": "complete_terminal_partial",
+      "honest_verdict": "complete_partial: V580 has authentic admission, direct-corpus, and bounded verifier-unit evidence; memory general benefit is null under independent uncertainty; ARC and Ising branches are blocked; one audit artifact is missing; no pooled success, ARC solve, repair win, or hardware speedup is claimed",
+      "verdict_class": "partial"
+    },
+    "corrected": {
+      "status": "complete_terminal_null",
+      "honest_verdict": "complete_null: V580 has authentic admission, direct-corpus, and bounded verifier-unit evidence; memory general benefit is null under independent uncertainty; ARC and Ising branches are blocked; one audit artifact is missing; no pooled success, ARC solve, repair win, or hardware speedup is claimed",
+      "verdict_class": "null"
+    },
+    "completion_evidence": "12/12 availability rows, 9 gate recomputation rows, 4 branch rows; validator passed at write time"
+  }
 }

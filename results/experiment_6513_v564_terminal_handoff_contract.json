@@ -1,7 +1,7 @@
 {
   "status": "complete_v564_terminal_handoff_contract_ready",
   "honest_verdict": "complete_v564_terminal_handoff_contract: V563 terminal failures, usable immutable content, missing Exp6511 data, and the Exp6512 score-0 block are preserved without any retired structured dependency",
-  "verdict_class": "partial",
+  "verdict_class": "null",
   "prior_failure_receipts": [
     {
       "row_type": "prior_failure_receipt",
@@ -119,7 +119,7 @@
       "source_path": "results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json",
       "exists": true,
       "status": "complete_v561_evidence_corrigendum_v562_lineage_locked",
-      "verdict_class": "partial",
+      "verdict_class": "null",
       "terminal_score": 1.0,
       "usable_content": true,
       "source_task_is_retired": true,
@@ -199,7 +199,7 @@
       "source_path": "results/experiment_6510_v563_independent_exact_root.json",
       "exists": true,
       "status": "complete_v563_independent_exact_root_ready",
-      "verdict_class": "partial",
+      "verdict_class": "null",
       "terminal_score": 1.0,
       "usable_content": true,
       "source_task_is_retired": true,
@@ -1071,7 +1071,7 @@
       "source_path": "results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json",
       "exists": true,
       "status": "complete_v561_evidence_corrigendum_v562_lineage_locked",
-      "verdict_class": "partial",
+      "verdict_class": "null",
       "terminal_score": 1.0,
       "usable_content": true,
       "source_task_is_retired": true,
@@ -1151,7 +1151,7 @@
       "source_path": "results/experiment_6510_v563_independent_exact_root.json",
       "exists": true,
       "status": "complete_v563_independent_exact_root_ready",
-      "verdict_class": "partial",
+      "verdict_class": "null",
       "terminal_score": 1.0,
       "usable_content": true,
       "source_task_is_retired": true,
@@ -1972,7 +1972,27 @@
     "planned_structured_dependency_retired_violation_count": 0,
     "forbidden_dependency_false_accept_count": 0,
     "retired_attack_false_accept_count": 0,
-    "all_historical_determinations_preserved": true
+    "all_historical_determinations_preserved": true,
+    "verdict_class_correction_note_2026_08_28": {
+      "date": "2026-08-28",
+      "spec": "REQ-CONDUCTOR-VERDICT-3 (openspec/capabilities/research-harnesses/spec.md, commit 080baaadff)",
+      "reason": "The run attempted every planned unit and finished. verdict_class 'partial' was declared to mean mixed evidence, but the enum-first consumer reads partial as may-retry, so the conductor re-ran this finished task. A finished run with a mixed or absent effect is class null.",
+      "original": {
+        "verdict_class": "partial",
+        "upstream_mirror_rows": "partial"
+      },
+      "corrected": {
+        "verdict_class": "null",
+        "upstream_mirror_rows": [
+          "historical_task_rows[exp6506-v561-evidence-corrigendum-v562-lineage-lock]",
+          "historical_task_rows[exp6510-v563-independent-exact-root]",
+          "per_unit_rows[exp6506-v561-evidence-corrigendum-v562-lineage-lock]",
+          "per_unit_rows[exp6510-v563-independent-exact-root]"
+        ]
+      },
+      "completion_evidence": "v564_handoff_ready_score=1.0; all 12 gate rows passed",
+      "scope": "Mirror rows for Exp6506 and Exp6510 follow the same-day corrections of those artifacts. Rows about other experiments are unchanged."
+    }
   },
   "preconditions_checked": {
     "schema_version": "carnot.experiment_6513.v564_terminal_handoff_contract.v1.preconditions",
@@ -3564,5 +3584,5 @@
       "exit_code": 0
     }
   ],
-  "reproducibility_checksum": "sha256:804fc64c69827b83fd941e6cad1d0c9cd4e2f7d65883b97b7ebae3b29308644a"
+  "reproducibility_checksum": "sha256:e976c40423faad0230d9f5a432fb4980f36ab3617029c6c7f3dedaef140d4f02"
 }
