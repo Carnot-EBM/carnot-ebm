@@ -11,121 +11,7 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 1 |
-| NO_CLAIM | 6 |
-| CANNOT_DETERMINE | 1 |
-
-## experiment_6484_non_generation_representation_receipt_contract.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative or model-quality claim to falsify; the receipt-status assertion would fail if required rows were invalid or absent, a prohibited generation call occurred, or a mutation attack was falsely accepted.
-
-## WAS THAT CHECKED
-Yes, for receipt readiness: aggregate row checks, generation-call receipts, and the mutation attack matrix checked those failure conditions. No model-quality hypothesis was tested or asserted.
-
-## EVIDENCE
-`honest_verdict`: `complete: non-generation representation receipt contract is ready; no model-quality claim is made`; `inference_substrate`: `deterministic_representation_contract_no_llm`; `model_loaded`: `false`; `false_accept_count`: `0`; `generation_call_count`: `0`; `failed_checks`: `[]`; `verifier_is_oracle`: `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6487_representation_integrity_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The representation stream is disqualified because three shortcut features predict correctness and three required length-based controls cannot be evaluated.
-
-## WHAT WOULD REFUTE IT
-No shortcut exceeding its stated ceiling, together with complete raw-row token, candidate, and prompt lengths enabling all required controls, would refute the disqualification.
-
-## WAS THAT CHECKED
-Yes. Shortcut-control rows tested predictive nuisance features, and the missing-gap audit checked whether the three length controls were selectable. The refuting outcome did not occur. The oracle flag does not make this negative integrity finding a circular claim of verifier value.
-
-## EVIDENCE
-`honest_verdict` is `disqualified: candidate_identifier_length,candidate_identity,row_order_modulo_pair,token_length_unavailable_from_raw_rows,candidate_length_unavailable_from_raw_rows,prompt_length_unavailable_from_raw_rows`. `surviving_shortcut_count` is `9`. `surviving_shortcuts` includes `candidate_identifier_length`, `candidate_identity`, and `row_order_modulo_pair`. For `candidate_identifier_length`, `balanced_accuracy` is `1.0`, `ceiling` is `0.75`, and `survived_shortcut` is `true`. Each listed length gap has `blocks_readiness` set to `true`, `selectable` set to `false`, and `missing_count` set to `432`. `representation_integrity_ready_score` is `0.0`, and `status` is `disqualified`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6491_sota_factor_proposal_stream.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative or value claim to falsify. Treating the receipt statement as an operational assertion, it would be refuted by a missing event–model receipt, an incomplete cross-product, a one-shot violation, missing raw bytes, or absent exact-compilation disposition.
-
-## WAS THAT CHECKED
-Yes. The aggregate recomputation checks model-family completion, event–model coverage, one-shot violations, raw-receipt completeness, and compilation outcomes. These checks could have failed, but they establish execution and receipt integrity—not model usefulness or successful factor generation.
-
-## EVIDENCE
-`"completed_model_family_count": 2`, `"event_model_cross_product_complete": true`, `"one_shot_violation_count": 0`, `"raw_receipt_missing_count": 0`, `"accept": 0`, `"no_proposal": 2`, `"reject": 2`, `"model_output_is_oracle": false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6520_safety_net_branch_router_ab.json
-
-**CANNOT_DETERMINE**
-
-> Audit-integrity guard: quoted evidence ['. The ', '. The positive gate instead cites '] does not appear in the artifact, so this verdict was downgraded and must not be acted on.
-
-## VERDICT
-CLAIM_REFUTED_BY_OWN_DATA
-
-## THE HEADLINE CLAIM
-Compact learned routers beat certified structural headroom while preserving exact fallback and making no held-table writes.
-
-## WHAT WOULD REFUTE IT
-A certified structural comparator tying or outperforming every learned router on the same held charged-work metric would refute the claimed router advantage.
-
-## WAS THAT CHECKED
-Yes. The `arm_held_summaries` compare the learned routers directly with the certified static analytical arm, which wins.
-
-## EVIDENCE
-The `best_certified_static_analytical` arm has `held_charged_benefit_units` of `714`, `held_total_charged_work_units` of `13382`, and `held_loss_count` of `0`. The `best_learned_arm` is `linear_router_seed_6520002`, with `best_learned_held_charged_benefit_units` of `695`; its summary has `held_total_charged_work_units` of `13401` and `held_loss_count` of `4`. The positive gate instead cites `upstream_best_structural_held_benefit_units` of `667`.
-
-## RECOMMENDATION
-CORRECT_THE_RECORD
-
-## experiment_6561_v568_evidence_gate_contract.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative or scientific claim to falsify. The administrative readiness assertion would fail if an expected artifact were missing or ineligible, a required gate field were undeclared, a contract check failed, or a protected file changed.
-
-## WAS THAT CHECKED
-Yes. Per-artifact eligibility rows, aggregate recomputation, gate summaries, and before/after protected-file hashes provide explicit failure paths. No method-value comparison was attempted or claimed; the verifier is merely the contract oracle.
-
-## EVIDENCE
-`verdict_class`: `null`; `artifact_kind`: `contract_or_infrastructure`; `inference_substrate`: `immutable_v567_artifact_gate_and_scope_audit_no_llm`; `verifier_is_oracle`: `true`; `exp6561_llm_load_count`: `0`; `exp6561_hardware_command_count`: `0`; `all_rows_contract_eligible`: `true`; `failed_checks`: `[]`; `all_unchanged`: `true`
-
-## RECOMMENDATION
-KEEP
+| NO_CLAIM | 8 |
 
 ## experiment_6565_v569_evidence_and_retirement_contract.json
 
@@ -138,13 +24,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-As a contract/receipt artifact, its readiness would be falsified by a required source artifact being absent or hash-mismatched, a gate using an undeclared or retired upstream field, an incomplete retirement row, or a protected-file mutation; it makes no comparative method-value claim to refute.
+Not applicable: this is a contract/receipt audit, not a comparative value or generalization claim.
 
 ## WAS THAT CHECKED
-Yes. Artifact-level eligibility, hashes, gate-field declarations, prior-failure contracts, aggregate recomputation, and protected-file hashes were checked; the artifact also explicitly records adverse and null inputs rather than claiming scientific success.
+No—there is no method-value claim to falsify; the artifact checks only contract consistency, provenance, gates, and retirement boundaries.
 
 ## EVIDENCE
-`inference_substrate`: `immutable_v568_artifact_gate_failure_and_retirement_audit_no_llm`; `verifier_is_oracle`: `true`; `verdict_class`: `null`; `no_llm_load_performed`: `true`; `no_hardware_command_performed`: `true`; `exp6562_disqualified_science_recorded`: `true`; `exp6563_clean_null_production_recorded`: `true`; `exp6564_clean_null_nfr01_recorded`: `true`; `protected_files_unchanged`: `true`; `failed_checks`: `[]`; `Artifact validation is audit authority, so a clean result cannot use a positive class.`
+`verdict_class`: `null`; `verifier_is_oracle`: `true`; `inference_substrate`: `immutable_v568_artifact_gate_failure_and_retirement_audit_no_llm`; `receipt_only_until_new_prospective_rows`: `true`; `no_game_or_level_solve_claim`: `true`; `no_llm_load_performed`: `true`
 
 ## RECOMMENDATION
 KEEP
@@ -160,13 +46,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative or scientific claim to falsify. Treating contract readiness as an administrative claim, it would be refuted by an unresolved gate, an unexpected missing prerequisite, inconsistent eligibility rows, or any assertion that extraction, generation, or graph-Potts utility ran despite contrary execution receipts.
+No substantive method or value claim is made; the limited receipt claim would be falsified by failed gate checks, incorrect eligibility classifications, changed protected files, or any assertion that extraction, generation, or graph-Potts utility ran.
 
 ## WAS THAT CHECKED
-Yes, for administrative consistency: the artifact includes eligibility rows, gate checks, aggregate recomputation, missing-artifact handling, and execution-boundary receipts. It does not test method value, nor claim to do so.
+No substantive refutation was applicable because those methods were not run; only the administrative gate and receipt conditions were checked through per-unit rows and explicit failure fields.
 
 ## EVIDENCE
-`source_extraction_claim_count` `0`; `graph_potts_utility_claim_count` `0`; `generation_ran` `false`; `llm_load_performed` `false`; `graph_potts_utility_claimed_by_exp6571` `false`; `failed_checks` `[]`; `unexpected_missing_prerequisite` `false`; `verifier_is_oracle` `true`
+`verdict_class`: `null`; `source_extraction_claim_count`: `0`; `graph_potts_utility_claim_count`: `0`; `graph_potts_utility_claimed_by_exp6571`: `false`; `generation_ran`: `false`; `llm_load_performed`: `false`; `hardware_command_performed`: `false`; `inference_substrate`: `immutable_v569_artifact_gate_failure_and_retirement_audit_no_llm`
 
 ## RECOMMENDATION
 KEEP
@@ -182,13 +68,123 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No falsifying observation applies because the artifact reports only a blocked precondition receipt, not an experimental result.
+Not applicable; this is a precondition receipt, not a comparative result. Evidence that inference ran or that either A/B arm produced a score would contradict its factual blocked-run status.
 
 ## WAS THAT CHECKED
-No; the paired A/B was not checked because inference never started.
+Yes. The run-status, inference-substrate, honest-verdict, and arm-result fields all record that inference never began and no comparison was produced.
 
 ## EVIDENCE
-`"run_completed": false`, `"inference_substrate": "precondition_only_no_inference"`, `"verdict_class": "blocked"`, `"honest_verdict": "blocked_context_window: CARNOT_ARC_INDUCE_N_CTX is unset; the paired A/B did not start"`, `"table_on": null`, `"fetch_on_demand": null`, `"paired_delta_fetch_minus_on": null`
+`"run_completed": false`, `"inference_substrate": "precondition_only_no_inference"`, `"verdict_class": "blocked"`, `"blocked_context_window: CARNOT_ARC_INDUCE_N_CTX is unset; the paired A/B did not start"`, `"table_on": null`, `"fetch_on_demand": null`, `"paired_delta_fetch_minus_on": null`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6729_v587_activation_evidence_contract.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No scientific claim is made; the operational blocked status would be refuted if every required contract check passed and the activation-readiness field were true.
+
+## WAS THAT CHECKED
+Yes, in `gate_check_summary`, `model_policy_rows`, and `task_contract_rows`; failed checks produced a false readiness result and blocked verdict.
+
+## EVIDENCE
+`inference_substrate` is `source_receipts_and_local_method_preregistration_no_llm`; `v587_contract_ready` is `false`; `verdict_class` is `blocked`; `status` is `blocked_v587_activation_contract`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6730_arc_context_tool_preflight.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no substantive result claim to falsify; the artifact is only a blocked-preflight receipt. A successful gate observation would contradict its procedural report that the preflight was blocked.
+
+## WAS THAT CHECKED
+Yes, for the procedural gate status only: the sole entry in `gates_evaluated` records the expected and observed Boolean values and marks the gate as failed. No method, outcome, or comparator was evaluated.
+
+## EVIDENCE
+`"status"`: `"blocked"`; `"honest_verdict"`: `"blocked_gate_check_failed"`; `"failed_field"`: `"v587_contract_ready"`; `"failed_expected"`: `true`; `"failed_observed"`: `false`; `"passed"`: `false`; `"blocked_at_layer"`: `"conductor_pre_gate"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6732_object_table_ab_cold_audit.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable: the artifact reports a blocked prerequisite gate and no experimental outcome or comparative claim.
+
+## WAS THAT CHECKED
+No. The experiment did not proceed beyond the prerequisite gate; no method, rival, success criterion, or result rows were evaluated.
+
+## EVIDENCE
+`status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `passed`: `false`; `actual`: `null`; `blocked_at_layer`: `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6733_hardness_controlled_certificate_stream.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no scientific or comparative claim to falsify. The artifact’s gate-failure assertion would be refuted by the gate having passed or the observed value being true.
+
+## WAS THAT CHECKED
+Yes. The sole evaluated gate records an observed false value, a failed comparison against expected true, and a false pass status.
+
+## EVIDENCE
+`"schema": "blocked_gate_check_v1"`, `"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"failed_observed": false`, `"failed_expected": true`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6735_oracle_distinct_diagnostic_energy.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable; the artifact asserts no experimental outcome or comparative result to falsify.
+
+## WAS THAT CHECKED
+No. The experiment stopped at the prerequisite gate before producing scored rows or results.
+
+## EVIDENCE
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_observed": null`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
