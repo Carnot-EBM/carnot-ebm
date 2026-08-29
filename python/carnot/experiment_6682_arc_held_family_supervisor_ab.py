@@ -142,7 +142,7 @@ COVERAGE_REPORT_COMMAND = (
 from carnot.global_suite_baseline import (
     baseline_node_ids,
     delta as global_suite_delta,
-    failure_node_ids_from_pytest_output,
+    observed_suite_evidence,
 )
 
 #: Recorded in a receipt's `failure_node_ids` to state, auditably, that the observed global
@@ -225,7 +225,14 @@ def _global_failure_node_ids(
         return baseline_node_ids()
     stdout = measured.get("stdout")
     if isinstance(stdout, str) and stdout:
-        return failure_node_ids_from_pytest_output(stdout)
+        # NOT a bare FAILED-line parse (2026-08-29). An ABORTED run prints zero FAILED lines,
+        # so parsing it naively reads "1,726 failures fixed" -- ready_allowed on a suite that
+        # never ran. Same for a nonzero exit whose output explains nothing. Both return None
+        # here, and None fails closed below.
+        evidence = observed_suite_evidence(stdout, int(measured.get("exit_code", 1)))
+        if evidence is None:
+            return None
+        return evidence["failure_node_ids"]
     if int(measured.get("exit_code", 0)) == 0:
         return []
     return None
