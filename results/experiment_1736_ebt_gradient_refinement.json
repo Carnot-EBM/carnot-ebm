@@ -21,6 +21,7 @@
     }
   ],
   "blocked_at_layer": "conductor_pre_gate",
-  "flagged_adversarial": true,
-  "flagged_adversarial_reason": "Kept 2026-08-29. The declared state is itself the reason: verdict itself is the reason (simulated / missing write path / degenerate metric). Re-judged with the live gate it draws no critical flag, but the gate changing its mind is not the same as the finding being wrong. Recorded here so the determination is self-describing rather than a bare boolean."
+  "flagged_adversarial": false,
+  "flagged_adversarial_cleared_note": "Cleared 2026-08-29: THIS STAMP WAS NEVER A REAL DETERMINATION. It was written onto this artifact in error by a path-resolution bug in the 43-held-back-stamp pass: the applier resolved an experiment id with `sorted(glob('experiment_<id>_*.json'))[0]`, which picks alphabetically, so two ids with several files each received the decision intended for a SIBLING artifact. The intended targets were experiment_1736_kanele_synth.json and experiment_6275_flagship_asp_constraint_verification_benchmark.json, which have since been handled correctly. No adversarial gate ever flagged this file, and nothing about its contents was judged. The field is set false with this note rather than deleted, because determination_preservation_lint.py is correct to refuse a silent drop even when the determination being dropped was mistaken -- and because erasing it would erase the evidence of the error. See commit 5b163b017e for the erroneous write.",
+  "flagged_adversarial_reason": "SUPERSEDED 2026-08-29, same day: this reason was written onto the wrong artifact by a path-resolution bug (see flagged_adversarial_cleared_note beside it). It describes a decision intended for a sibling file and states nothing about this artifact. Kept rather than deleted per CLAUDE.md never-prune -- a mistaken record is corrected in place, not erased."
 }

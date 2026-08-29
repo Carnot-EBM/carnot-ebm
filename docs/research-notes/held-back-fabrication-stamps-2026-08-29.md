@@ -100,3 +100,51 @@ INDIVIDUALLY at write time rather than trusting this table, and `corrigendum_pen
 
 `results/arc_e3`, `results/arc_logo_snapshot` and `results/arc_e3_origin_fixtures` are evidence and
 are not touched by any of this.
+
+## Executed 2026-08-29
+
+All 43 acted on individually. Each was re-verified with the live gate at write time rather than
+on the strength of the table above; a live CRITICAL flag would have aborted that artifact, and
+none did.
+
+- **9 stamps kept**, each now carrying `flagged_adversarial_reason` in the artifact. Three hold
+  the findings recovered from commit messages (exp3929's circular 1.96x, exp3959's
+  verifier-never-in-the-loop 24.7x, exp3405's recorded corrigendum). Six record that the declared
+  state is itself the reason: two `disqualified:` verdicts, a `vivado_simulated_success`, an
+  `auroc=0.0000` capstone, a `write_path_missing`, and one artifact whose `status` is
+  `preconditions_recorded` with no `honest_verdict` at all.
+- **34 stamps cleared**, each with `flagged_adversarial_cleared_note` beside a field that was set
+  false and never removed.
+
+Verified after writing: `flagged_adversarial` absent from 0 artifacts, 0 corrigendum fields lost,
+`determination-preservation-lint` OK, and every modified path checked against the intended list —
+zero strays, which matters because the index is shared with a running conductor.
+
+The lasting change is not the 34 clearances. It is that a determination on these artifacts now
+carries its own reason, so the next reader does not face the choice this note had to resolve from
+commit archaeology.
+
+### Correction, same day: two artifacts were written by path-resolution bug
+
+The applier resolved an experiment id with `sorted(glob("experiment_<id>_*.json"))[0]`, which
+picks ALPHABETICALLY. Two ids own several files, so each received the decision intended for a
+sibling:
+
+| intended | actually written |
+|---|---|
+| `experiment_1736_kanele_synth.json` | `experiment_1736_ebt_gradient_refinement.json` |
+| `experiment_6275_..._benchmark.json` | `experiment_6275_..._benchmark.formal_sidecar.json` |
+
+The `1736` case is the serious direction: it ADDED a `flagged_adversarial: true` quarantine stamp
+to an artifact that had never carried one and that no gate had ever flagged. A fabricated
+quarantine is the same defect as a fabricated result, pointed the other way.
+
+Caught by a cross-check comparing the modified file list against the intended list — the same
+check that found "zero strays" and would have said so again had it compared against the authored
+paths rather than a re-derived glob. **An id is not a path when a corpus has sidecars and
+same-numbered siblings.** Both wrong writes were corrected, and both corrections went through
+`determination_preservation_lint.py` rather than around it: the erroneous fields are set false
+with a note explaining they were never real determinations, not deleted, because erasing them
+would erase the evidence of the error.
+
+41 of 43 were resolved correctly and are unaffected.
