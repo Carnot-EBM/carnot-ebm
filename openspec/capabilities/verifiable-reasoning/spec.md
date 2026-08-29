@@ -23145,3 +23145,89 @@ commit receipt exists. Its result SHALL not authorize later live selection.
 `cpu_static_and_dynamic_attack_audit_no_llm`.
 
 **Spec traces:** REQ-VERIFY-6716
+
+### REQ-VERIFY-6744: Independent Hardness-Controlled Exact Certificate Stream
+
+Exp6744 SHALL create exactly 72 deterministic CNF rows as 36 proof-preserving
+relabel pairs. It SHALL pre-register 24 rows for each of the
+`expander_tseitin`, `ladder_tseitin`, and `pigeonhole_anchor` families. Each
+family SHALL contain 12 satisfiable rows and 12 unsatisfiable rows. The
+registration SHALL use fixed size bins and at least three explicit seeds. It
+SHALL exist before any row is solved.
+
+One complete exact solver and one separate certificate checker SHALL agree on
+every row. SAT evidence SHALL contain a satisfying assignment. UNSAT evidence
+SHALL cover every assignment with an explicit falsified-clause witness. Each
+checker receipt SHALL record identity, version, exit code, and evidence hash.
+If these paths or a writable result path are unavailable, the task SHALL emit
+`complete_blocked_exact_checker` with a non-empty `gate_check_summary`.
+
+Each mate SHALL apply a bijective symbol relabel. The task SHALL verify label,
+certificate, inverse-mapped clause multiset, and graph invariants for every
+pair. Train, development, and test splits SHALL be family-disjoint. Both mates
+in a pair SHALL stay in one split. Solver conflicts, decisions, propagations,
+and wall time SHALL remain in `solver_work_metadata`. No solver-work value
+SHALL create a label or a model-hardness field.
+
+The terminal artifact SHALL be
+`results/experiment_6744_hardness_controlled_certificate_stream.json`. It
+SHALL include `field_principles`, `inference_substrate`, `duration_s`,
+`random_seed`, `reproducibility_checksum`, `rows`, `family_counts`,
+`split_manifest`, `certificate_checker_receipts`,
+`relabel_pair_receipts`, `solver_work_metadata`, `hardness_stream_ready`,
+`gate_check_summary`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL explain every artifact field and the readiness gate.
+The inference substrate SHALL be
+`deterministic_cpu_exact_certificate_generation_and_independent_checking`.
+
+`hardness_stream_ready` SHALL be true only when all 72 rows have valid exact
+certificates, all 36 relabel receipts pass, the family-disjoint split has no
+leak, deterministic replay matches the frozen stream hash, and every required
+verification command exits zero. The terminal verdict class SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. The honest verdict SHALL use an allowed terminal prefix.
+
+### SCENARIO-VERIFY-6744-GENERATION: Counts Are Frozen Before Solving
+
+**Given** the fixed family, size-bin, label, and seed registry
+**When** Exp6744 starts exact generation
+**Then** it freezes the 72-row manifest before solving and reproduces its row
+identities and canonical formula hashes on replay.
+
+**Spec traces:** REQ-VERIFY-6744
+
+### SCENARIO-VERIFY-6744-CERTIFICATES: Independent Evidence Owns Labels
+
+**Given** any SAT or UNSAT row
+**When** the exact solver returns a label and evidence
+**Then** the separate certificate checker validates the evidence from the CNF
+without trusting solver-work counters or solver aggregates.
+
+**Spec traces:** REQ-VERIFY-6744
+
+### SCENARIO-VERIFY-6744-RELABEL: Symbol Changes Preserve Exact Structure
+
+**Given** a base row and its relabel mate
+**When** the pair receipt inverse-maps the mate
+**Then** the labels, certificates, clause multisets, and graph invariants match
+and both rows remain in the same split.
+
+**Spec traces:** REQ-VERIFY-6744
+
+### SCENARIO-VERIFY-6744-SPLIT: Families Cannot Leak Across Splits
+
+**Given** the frozen split manifest
+**When** train, development, and test rows are collected
+**Then** their family sets are pairwise disjoint and every row belongs to
+exactly one declared split.
+
+**Spec traces:** REQ-VERIFY-6744
+
+### SCENARIO-VERIFY-6744-REPLAY: Readiness Fails Closed
+
+**Given** a complete artifact or a mutated copy
+**When** Exp6744 recomputes exact row, pair, split, and stream checks
+**Then** only the complete untampered artifact can set
+`hardness_stream_ready` to true and any owned block names its failed check.
+
+**Spec traces:** REQ-VERIFY-6744
