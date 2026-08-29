@@ -1,181 +1,99 @@
-milestone: 2026.08.588
-milestone_title: Handoff-preserved verification, transactional learning, and live tool recovery
+milestone: 2026.08.589
+milestone_title: Exact proof transport, active procedural memory, and independent live evidence
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-- id: exp6742-v588-handoff-contract-audit
-  title: Activated V588 handoff and binding-contract audit
-  track: infrastructure
-  priority: critical
-  agent_type: codex
-  model: gpt-5.5
-  requires_gpu: false
-  max_turns: 20
-  estimated_wall_time_min: 20
-  per_unit_rows: true
-  milestone: 2026.08.588
-  deliverable: results/experiment_6742_v588_handoff_contract_audit.json
-  prompt: |
-    CONTEXT:
-    Milestone 2026.08.587 activated seven tasks although its design described thirteen, and the
-    staged next-roadmap file was absent. Exp6729 therefore blocked the entire graph before science
-    ran. HarnessLens (arXiv 2608.27311), ABE-Ralph (arXiv 2608.26753), and When "Must" Becomes
-    "Maybe" (arXiv 2608.24569) motivate attributable checks and typed binding state. V588 was
-    statically checked before handoff. This audit does not gate any science branch.
-
-    Work at {project_root}. The planning date is {date}.
-
-    EXISTING CODE TO READ FIRST:
-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
-    - {project_root}/research-program.md
-    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
-    - {project_root}/research-roadmap.yaml
-    - {project_root}/research-references.md, section V588 Planner Refresh - 2026-08-29
-    - {project_root}/results/experiment_6729_v587_activation_evidence_contract.json
-    - {project_root}/scripts/roadmap_schema.py, {project_root}/scripts/conductor_gates.py,
-      {project_root}/scripts/exclusion_manifest_lint.py, and
-      {project_root}/scripts/audit_roadmap_gates.py
-    - {project_root}/ops/exclusion_manifest.yaml and {project_root}/ops/conductor-log.md
-    - Primary sources arXiv 2608.27311, 2608.26753, and 2608.24569.
-
-    TASK:
-    Build a row-level audit of the activated 13-task V588 manifest and design. Verify that binding
-    conditions, exact authority, fallbacks, gate fields, prior-failure mechanics, model roles,
-    deliverables, and claim boundaries survived the handoff. Diagnose mismatches without editing
-    research-roadmap.yaml and without blocking unrelated experiments.
-
-    CONCRETE STEPS:
-    0. PRECONDITIONS: require the active roadmap, design, source refresh, schema, and exclusion
-       manifest to exist and parse. If not, write the artifact atomically with
-       complete_blocked_handoff_input, include the failed check and observed value in
-       gate_check_summary, and stop. Do not fall back to an absent next-roadmap file.
-    1. Confirm the relevant REQ-* anchors exist in
-       openspec/capabilities/research-harnesses/spec.md and
-       openspec/capabilities/research-reporting/spec.md before implementation. Add only a narrow
-       missing requirement and focused test.
-    2. Verify exactly 13 unique task IDs, 13 unique JSON deliverables, milestone 2026.08.588, four
-       phases in the design, at least two infrastructure tasks, and an ungated Exp6754.
-    3. Emit one binding_contract_rows row per task and gate with prerequisite, authority, fallback,
-       execution consequence, blocked-artifact behavior, model role, claim boundary, and whether
-       each item is operationally preserved rather than merely mentioned.
-    4. Verify every gate upstream exists and the artifact field is spelled identically in the
-       upstream REQUIRED ARTIFACT FIELDS. Do not normalize aliases.
-    5. Verify every prompt contains CONTEXT, EXISTING CODE TO READ FIRST, TASK, CONCRETE STEPS,
-       {project_root}, {date}, a Run command, and both final prohibitions. Verify every prompt
-       declares verdict_class exactly as positive | circular_positive | null | blocked |
-       disqualified | partial.
-    6. Verify each recovery has all four prior-failure fields including
-       retire_if_same_verdict: true; no task reuses a retired ID; all comparisons set
-       per_unit_rows: true; and all LLM tasks name a mandated local GGUF.
-    7. Run focused schema, gate-contract, exclusion-manifest, and prompt-contract checks. Do not run
-       the known-red repository-wide suite as a precondition. The legacy
-       audit_roadmap_gates.py currently hardcodes agent_type=codex to model=gpt-5.5. Record its
-       model-only findings as a validator-compatibility row; validate the operator-requested
-       gpt-5.6-sol formulaic routing against roadmap_schema.py and this manifest. Do not edit the
-       audit tool in this experiment.
-    8. REQUIRED ARTIFACT FIELDS: field_principles (explanatory entry for every required field,
-       including itself), inference_substrate (exact static-audit path), duration_s (monotonic wall
-       time), random_seed (explicit even when unused), reproducibility_checksum (canonical input
-       hash), source_cutoff (2026-08-29), rows (one row per task and gate),
-       binding_contract_rows (typed prerequisite, authority, fallback, and consequence),
-       task_count (observed active count), handoff_contract_preserved (all-check boolean),
-       science_branches_independent_of_handoff_audit (structural boolean),
-       gate_check_summary (failed check and observed value for any blocked_* verdict),
-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial),
-       and honest_verdict (must start with complete:, complete_, success:, success_, passed:,
-       passed_, shipped:, or shipped_; use complete_blocked_<reason> for task-owned blocks).
-       Use activated_manifest_binding_contract_static_audit_no_llm as the substrate.
-
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6742_v588_handoff_contract_audit.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-  prior_failures:
-    - experiment_id: exp6729-v587-activation-evidence-contract
-      verdict: 'blocked_v587_activation_contract: one or more source, manifest, gate, prior, or model checks failed.'
-      addressed_by: 'V588 is statically complete before handoff, audits only the activated manifest, preserves binding state as typed rows, and is removed from every science gate.'
-      retire_if_same_verdict: true
-
-- id: exp6743-task-owned-phase-accelerator-canary
-  title: Task-owned phase clock and three-family accelerator canary
-  track: infrastructure
+- id: exp6755-lossless-gguf-output-reparse
+  title: Lossless GGUF output boundary and 216-row reparse
+  track: verifiable-reasoning
   priority: critical
   agent_type: codex
   model: gpt-5.6-sol
-  requires_gpu: true
+  requires_gpu: false
   max_turns: 30
   estimated_wall_time_min: 60
   per_unit_rows: true
-  milestone: 2026.08.588
-  deliverable: results/experiment_6743_task_owned_phase_accelerator_canary.json
+  milestone: 2026.08.589
+  deliverable: results/experiment_6755_lossless_gguf_output_reparse.json
   prompt: |
     CONTEXT:
-    The V587 retrospective found five 0.0-minute entries, including compute-bearing
-    classifications, with no task-owned evidence showing whether a model loaded, decoded, or used
-    an accelerator. This second infrastructure slot runs a tiny real canary on each mandated model
-    and emits monotonic phase receipts. It does not compare model quality or speed, and no science
-    branch depends on it.
+    Exp6745 retained all 216 planned SOTA proposal rows but labeled every row
+    malformed_certificate. Direct inspection shows 216/216 raw_output values are Python byte
+    literal envelopes such as b'SAT ...'. The frozen parser therefore sees b'SAT rather than SAT
+    and returns unknown_claim. Recover this already-paid-for evidence before any new LLM run. This
+    task tests transport normalization, not model quality, and it must not silently repair semantic
+    errors.
 
     Work at {project_root}. The planning date is {date}.
 
     EXISTING CODE TO READ FIRST:
     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
-    - {project_root}/scripts/experiment_template.py and its cached_sota_pair() pattern
-    - {project_root}/python/carnot/inference/sota_models.py
-    - {project_root}/python/carnot/pipeline/gpu_monitor.py
-    - {project_root}/python/carnot/pipeline/run_stop_authority.py
-    - {project_root}/results/experiment_6634_mandated_model_admission.json
-    - {project_root}/ops/status.md and {project_root}/ops/conductor-log.md
+    - {project_root}/research-program.md and
+      {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+    - {project_root}/results/experiment_6745_sota_dual_encoding_proposal_corpus.json
+    - {project_root}/results/experiment_6744_hardness_controlled_certificate_stream.json
+    - {project_root}/python/carnot/experiment_6745_sota_dual_encoding_proposal_corpus.py
+    - {project_root}/python/carnot/experiment_6745_certificate_encoder_a.py and
+      {project_root}/python/carnot/experiment_6745_certificate_encoder_b.py
+    - {project_root}/tests/python/test_experiment_6745_sota_dual_encoding_proposal_corpus.py
+    - {project_root}/scripts/experiment_template.py and its output handling
+    - {project_root}/ops/exclusion_manifest.yaml and {project_root}/ops/conductor-log.md
 
     TASK:
-    Run a bounded sequential CUDA canary for all three mandated GGUF families. Prove cache identity,
-    GPU offload, first-token reachability, teardown, and monotonic phase accounting with one raw row
-    per model. Do not infer a model ranking from this tiny workload.
-
-    MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF: flagship MoE canary.
-    - unsloth/gemma-4-31B-it-GGUF: flagship dense canary.
-    - unsloth/gemma-4-26B-A4B-it-GGUF: middle MoE canary.
-    Legacy Qwen3.5-0.8B or Gemma4-E4B may be labeled CPU smoke tests only. They cannot satisfy
-    readiness, and a remote API cannot replace a missing local model.
+    Add one explicit bytes-or-text GGUF output boundary and cold-reparse every frozen Exp6745 row.
+    Preserve original receipts, reject ambiguous coercions, and distinguish transport recovery from
+    exact semantic success. Do not invoke an LLM and do not alter Exp6745.
 
     CONCRETE STEPS:
-    0. PRECONDITIONS: require llama.cpp CUDA offload, exact cached paths for all MODEL_SPECS, and
-       enough free VRAM for one model at a time. On failure write
-       complete_blocked_accelerator_canary with gate_check_summary; do not use CPU or remote
-       inference as headline evidence.
-    1. Confirm or add a narrow REQ-* anchor in
-       openspec/capabilities/research-harnesses/spec.md. Add focused tests for monotonic phase order,
-       real elapsed time, and accelerator receipt integrity.
-    2. Load models sequentially in fresh task-owned subprocesses. Use a fixed, checksum-recorded
-       one-prompt decode with a small non-zero output budget. Release each model before the next.
-    3. Emit phase markers for preflight, cache resolved, subprocess started, model loaded, first
-       token, decode complete, teardown complete, and artifact write. Use monotonic timestamps.
-    4. Record exact model ID, resolved-path hash, quantization/file identity, assigned device, GPU
-       layers, peak VRAM, prompt/output tokens, stop reason, and raw-output hash. Capture NVML or
-       nvidia-smi evidence before, during, and after decode.
-    5. Set accelerator_receipt_ready only when every model reaches first token on CUDA and teardown
-       leaves no owned process. This is not a downstream gate.
-    6. Run focused tests, lint, spec coverage, and adversarial verification.
-    7. REQUIRED ARTIFACT FIELDS: field_principles (entry for every required field),
-       inference_substrate (local llama.cpp CUDA GGUF), duration_s (monotonic wall time),
-       random_seed (fixed decode seed), reproducibility_checksum (config and row hash),
-       models_used (exact hub IDs), live_model_invoked (true only after real decode),
-       rows (one row per model), task_phase_rows (all phases), phase_clock_monotonic (row-derived
-       boolean), gpu_receipts (before/during/after evidence), accelerator_receipt_ready
-       (all-three-model activity result), claim_boundary (no quality or speed comparison),
-       gate_check_summary (failed check and observed value for blocked_*),
-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial),
-       and honest_verdict (allowed complete/success/passed/shipped prefix; use
-       complete_blocked_<reason> for task-owned blocks).
+    0. PRECONDITIONS: require Exp6745 to parse, contain exactly 216 unique rows, preserve nonempty
+       original output hashes, and link to the ready Exp6744 stream. If a check fails, write
+       complete_blocked_reparse_input atomically with the failed check and observed value in
+       gate_check_summary, then stop.
+    1. Confirm the relevant REQ-* anchors in
+       openspec/capabilities/verifiable-reasoning/spec.md and
+       openspec/capabilities/research-reporting/spec.md. Add only a narrow missing requirement and
+       focused tests before implementation.
+    2. Implement a shared output-text boundary that accepts str or bytes. Decode real bytes once as
+       UTF-8 with explicit failure. For the frozen legacy rows, unwrap only a strict Python bytes
+       literal whose safe parse returns bytes and whose canonical round-trip is unambiguous. Reject
+       arbitrary expressions, nested literals, lossy replacement, or semantic edits.
+    3. Add tests for single and double quotes, escapes, non-UTF-8 bytes, text that legitimately
+       begins with b, malicious literal text, double wrapping, empty output, and idempotence.
+    4. Replay all 216 rows through the original parser, both independent encoders, and the exact
+       checker. Do not read the Exp6744 answer label while parsing or encoding. Preserve original
+       text/hash and normalized text/hash in every row.
+    5. Emit one rows entry per frozen proposal with model, family, source row, pre/post diagnosis,
+       normalization kind, parse result, encoder agreement, exact outcome, and failure reason.
+       Derive all aggregates from rows.
+    6. Count invalid variable references, invalid clause references, non-binary values, duplicates,
+       incomplete evidence, false parseable proofs, and exact-valid proofs. Set
+       environment_grammar_targetable_rows to the row-derived count addressable by typed symbol,
+       domain, uniqueness, or completeness constraints.
+    7. Set transport_reparse_ready only when all 216 rows replay without evidence loss and cold
+       aggregate recomputation matches. This readiness does not require a positive exact-valid rate.
+    8. Run focused tests, lint, spec coverage, adversarial verification, and row-consistency lint.
+    9. REQUIRED ARTIFACT FIELDS: field_principles (explanation for every required field, including
+       itself), inference_substrate (frozen local row replay with no LLM), duration_s (monotonic wall
+       time), random_seed (explicit fixed replay seed), reproducibility_checksum (input, code, and
+       row-derived hash), source_artifact_sha256, rows (all 216 per-proposal receipts),
+       pre_diagnosis_counts, post_diagnosis_counts, bytes_envelope_rows,
+       transport_reparse_ready (lossless complete replay boolean),
+       environment_grammar_targetable_rows (row-derived integer), exact_valid_rows,
+       semantic_edits_performed (must be zero), gate_check_summary (failed check and observed value
+       for any blocked_* verdict), verifier_is_oracle (false; exact checks evaluate replay but are
+       not the transport mechanism), verdict_class (positive | circular_positive | null | blocked |
+       disqualified | partial), and honest_verdict (allowed complete/success/passed/shipped prefix;
+       use complete_blocked_<reason> for task-owned blocks).
 
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6743_task_owned_phase_accelerator_canary.py
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6755_lossless_gguf_output_reparse.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
   prior_failures:
-    - experiment_id: exp6634-mandated-model-admission
-      verdict: blocked_gate_check_failed
-      addressed_by: 'The canary removes the retired scheduler dependency, owns sequential leases and teardown, and emits first-token plus monotonic phase evidence instead of a gate-only admission artifact.'
+    - experiment_id: exp6745-sota-dual-encoding-proposal-corpus
+      verdict: 'complete: all 216 attributable rows are ready; exact-valid is 0/216 and does not control readiness'
+      addressed_by: 'This attempt does not regenerate or reprompt. It fixes the observed bytes-to-text boundary, preserves both hashes, and cold-reparses every paid-for row before adding a new decoding method.'
       retire_if_same_verdict: true
 
-- id: exp6744-hardness-controlled-certificate-stream
-  title: Hardness-controlled exact certificate stream with relabel pairs
+- id: exp6756-environment-indexed-proof-grammar-fixture
+  title: Environment-indexed proof grammar runtime fixture
   track: verifiable-reasoning
   priority: critical
   agent_type: codex
@@ -184,165 +102,274 @@ tasks:
   max_turns: 50
   estimated_wall_time_min: 90
   per_unit_rows: true
-  milestone: 2026.08.588
-  deliverable: results/experiment_6744_hardness_controlled_certificate_stream.json
+  milestone: 2026.08.589
+  deliverable: results/experiment_6756_environment_indexed_proof_grammar_fixture.json
+  gated_on:
+    - upstream: exp6755-lossless-gguf-output-reparse
+      artifact_field: transport_reparse_ready
+      op: '=='
+      value: true
+    - upstream: exp6755-lossless-gguf-output-reparse
+      artifact_field: environment_grammar_targetable_rows
+      op: '>='
+      value: 24
   prompt: |
     CONTEXT:
-    Exp6733 never tested its stream because it was gated on the failed V587 activation task.
-    Solver-Hard Is Not Model-Hard (arXiv 2607.17047) shows that solver conflicts and density do not
-    measure model difficulty, and proof-preserving relabeling can expose surface sensitivity. V588
-    makes the exact stream an independent science root.
+    Exp6755 identifies the semantic failure mass left after lossless transport recovery. Decode-Time
+    Grammars (arXiv 2607.18357) refine grammar fragments from a live environment so undefined
+    symbols cannot be emitted. DCCD (arXiv 2603.03305v2) separates a semantic draft from constrained
+    rendering. Carnot previously retired schema-supported ConstraintIR after zero exact semantics;
+    this task uses a different mechanism: instance-bound variables, clause IDs, values, uniqueness,
+    and prefix state enforced during decoding.
 
     Work at {project_root}. The planning date is {date}.
 
     EXISTING CODE TO READ FIRST:
     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
-    - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md
-    - {project_root}/openspec/capabilities/energy-verification/spec.md
-    - {project_root}/scripts/experiments/experiment_6733_hardness_controlled_certificate_stream.py
-      if present, and {project_root}/results/experiment_6733_hardness_controlled_certificate_stream.json
-    - {project_root}/scripts/experiments/experiment_6678_constraint_family_stream.py
-    - {project_root}/python/carnot/verify/ and existing SAT/certificate helpers
-    - {project_root}/research-references.md, V588 entry for arXiv 2607.17047
+    - {project_root}/research-references.md, section V589 Planner Refresh - 2026-08-29
+    - {project_root}/results/experiment_6755_lossless_gguf_output_reparse.json
+    - {project_root}/results/experiment_5923_sota_schema_supported_constraintir_ab.json
+    - {project_root}/python/carnot/experiment_6745_sota_dual_encoding_proposal_corpus.py
+    - {project_root}/tests/python/test_experiment_1312_triggered_certificate_extraction_dccd_gbnf.py
+    - {project_root}/tests/python/test_experiment_1352_truncproof_xgrammar_certificate_completion_preflight.py
+    - {project_root}/tests/python/test_experiment_1339_xgrammar2_tagdispatch_certificate_grammar_dryrun.py
+    - {project_root}/tests/python/test_experiment_1580_dccd_jsonschemabench_sota_structured_output_smoke.py
+    - Primary sources arXiv 2607.18357 and 2603.03305v2.
 
     TASK:
-    Generate and independently verify a frozen 72-instance SAT/UNSAT certificate stream with
-    proof-preserving relabel pairs, family-disjoint splits, and solver-work metadata that is never
-    promoted into a model-hardness or answer label.
+    Build and adversarially test an environment-indexed runtime grammar for Carnot's proof DSL.
+    Prove that the invoked runtime path preserves valid certificate support while making ghost
+    variables, ghost clauses, non-binary values, duplicates, and incomplete terminal forms
+    unreachable. Add a draft-conditioned rendering interface but do not run a SOTA comparison.
 
     CONCRETE STEPS:
-    0. PRECONDITIONS: require two independent exact checking paths or one solver plus a separate
-       certificate checker, deterministic seeds, and a writable task result path. If unavailable,
-       emit complete_blocked_exact_checker with gate_check_summary.
-    1. Confirm or add a narrow REQ-* anchor in
-       openspec/capabilities/verifiable-reasoning/spec.md before code. Add generator, certificate,
-       relabel-invariance, split-isolation, and replay tests under tests/python/.
-    2. Generate exactly 72 instances across expander-Tseitin, ladder-Tseitin, and
-       pigeonhole-anchor families, fixed size bins, SAT/UNSAT labels, and at least three seeds.
-       Pre-register counts before solving.
-    3. Create a proof-preserving symbol relabel for each pair. Verify label, certificate, clause
-       multiset, and graph invariants after relabeling.
-    4. Emit satisfying assignments for SAT rows and independently checkable UNSAT evidence for
-       UNSAT rows. Record checker identities, versions, exit codes, and hashes.
-    5. Freeze family-disjoint train/dev/test splits. Record conflicts, decisions, propagations, and
-       wall time only as solver-work metadata. Do not derive the label or a model-hard field from
-       those counters.
-    6. Set hardness_stream_ready true only when all 72 rows, certificates, relabel pairs, and
-       split-leak checks pass. This is the exact downstream gate.
-    7. Run focused tests, lint, spec coverage, row-consistency lint, and adversarial verification.
-    8. REQUIRED ARTIFACT FIELDS: field_principles (entry for every field and future gate),
-       inference_substrate (exact CPU generator/checker), duration_s (monotonic), random_seed (all
-       seeds), reproducibility_checksum (canonical stream hash), rows (one row per instance and
-       relabel mate), family_counts (pre-registered counts), split_manifest (family-disjoint
-       assignments), certificate_checker_receipts (independent evidence), relabel_pair_receipts
-       (invariance checks), solver_work_metadata (non-label diagnostics),
-       hardness_stream_ready (all-row exact readiness gate), gate_check_summary (failed check and
-       observed value for blocked_*),
-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial),
-       and honest_verdict (allowed terminal prefix;
-       complete_blocked_<reason> for owned blocks). Use
-       deterministic_cpu_exact_certificate_generation_and_independent_checking as substrate.
+    0. PRECONDITIONS: load Exp6755 and verify transport_reparse_ready=true and
+       environment_grammar_targetable_rows>=24. Verify the local grammar backend and exact checker
+       imports. On failure write complete_blocked_dynamic_grammar_fixture with gate_check_summary.
+    1. Confirm or add narrow REQ-* anchors in
+       openspec/capabilities/verifiable-reasoning/spec.md. Write focused tests first.
+    2. Define a Gamma environment per CNF with the exact variable set, clause-ID set, binary value
+       domain, claim branch, remaining required slots, and used-symbol state. Never include the
+       answer label or exact-valid outcome in Gamma.
+    3. Implement prefix-dependent policy resolution for SAT, UNSAT, and ABSTAIN. The runtime must
+       record actual mask or grammar-policy invocations; a post-hoc parser filter is disqualified.
+    4. Implement a draft-conditioned renderer that receives only a model draft and Gamma. It may
+       copy semantic intent but may not call the exact checker, read an answer, or synthesize a
+       ground-truth proof.
+    5. Build exact-valid fixtures and attacks for undefined variables, out-of-range clauses,
+       duplicates, non-binary values, premature stop, extra text, Unicode confusables, adversarial
+       prefixes, and support-set collapse. Compare static CFG, environment-indexed, and
+       draft-conditioned fixture behavior row by row.
+    6. Prove at least one exact-valid SAT and UNSAT certificate remains reachable per supported size
+       bin. Record the support receipt rather than claiming all valid proofs are enumerated.
+    7. Set dynamic_proof_grammar_ready only if all runtime invocation, no-ghost, reachability,
+       parser, exact-authority separation, and focused-test gates pass.
+    8. Run focused tests, lint, spec coverage, adversarial verification, and row consistency.
+    9. REQUIRED ARTIFACT FIELDS: field_principles, inference_substrate (invoked local runtime
+       grammar fixture with no LLM), duration_s, random_seed, reproducibility_checksum,
+       source_artifact_sha256, gamma_schema, rows (one row per mode, fixture, and attack),
+       runtime_mask_invocation_count, no_ghost_violations, valid_sat_reachable,
+       valid_unsat_reachable, support_contraction_receipts, exact_authority_features_in_grammar
+       (must be empty), dynamic_proof_grammar_ready (all-gates boolean), gate_check_summary (failed
+       check and observed value for blocked_*), verifier_is_oracle (false), verdict_class (positive |
+       circular_positive | null | blocked | disqualified | partial), and honest_verdict (allowed
+       complete/success/passed/shipped prefix; use complete_blocked_<reason> for task-owned blocks).
 
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6744_hardness_controlled_certificate_stream.py
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6756_environment_indexed_proof_grammar_fixture.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
   prior_failures:
-    - experiment_id: exp6733-hardness-controlled-certificate-stream
-      verdict: blocked_gate_check_failed
-      addressed_by: 'The stream is now an independent root with task-owned exact generators and checkers; it no longer depends on a global activation artifact.'
+    - experiment_id: exp5923-sota-schema-supported-constraintir-ab
+      verdict: 'retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates'
+      addressed_by: 'The new path is not schema reprompting. It invokes an instance-bound prefix policy over variables, clauses, values, uniqueness, and completion, and it must prove exact-valid SAT and UNSAT support before any live run.'
       retire_if_same_verdict: true
 
-- id: exp6745-sota-dual-encoding-proposal-corpus
-  title: Three-model SOTA dual-encoding proof-carrying corpus
+- id: exp6757-dccd-environment-grammar-ab
+  title: Three-model DCCD environment-grammar A/B
   track: verifiable-reasoning
   priority: critical
   agent_type: codex
   model: gpt-5.6-sol
   requires_gpu: true
   max_turns: 50
-  estimated_wall_time_min: 480
+  estimated_wall_time_min: 240
   per_unit_rows: true
-  milestone: 2026.08.588
-  deliverable: results/experiment_6745_sota_dual_encoding_proposal_corpus.json
+  milestone: 2026.08.589
+  deliverable: results/experiment_6757_dccd_environment_grammar_ab.json
+  gated_on:
+    - upstream: exp6756-environment-indexed-proof-grammar-fixture
+      artifact_field: dynamic_proof_grammar_ready
+      op: '=='
+      value: true
   prompt: |
     CONTEXT:
-    The existing direct certificate corpus has only 8/48 exact successes. Exp6734 was preempted,
-    so no all-three-model dual-encoding corpus exists. SymDiag (arXiv 2608.08786) motivates two
-    independent encodings that distinguish translation disagreement from reasoning error. This
-    task values attributable complete rows over a flattering accuracy gate.
+    Exp6755 repairs the bytes-to-text boundary without semantic edits. Exp6756 supplies an invoked,
+    instance-bound grammar fixture. This experiment tests whether static grammar or
+    draft-conditioned environment-indexed grammar improves exact certificate yield on current local
+    SOTA models. Parseability is not success. Exact semantic correctness remains the headline.
 
     Work at {project_root}. The planning date is {date}.
 
     EXISTING CODE TO READ FIRST:
     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
     - {project_root}/scripts/experiment_template.py and cached_sota_pair()
-    - {project_root}/python/carnot/inference/sota_models.py
+    - {project_root}/results/experiment_6755_lossless_gguf_output_reparse.json
+    - {project_root}/results/experiment_6756_environment_indexed_proof_grammar_fixture.json
     - {project_root}/results/experiment_6744_hardness_controlled_certificate_stream.json
-    - {project_root}/scripts/experiments/experiment_6649_exact_certificate_proposal_corpus.py
-    - {project_root}/results/experiment_6649_exact_certificate_proposal_corpus.json
-    - {project_root}/python/carnot/verify/ and the two candidate encoder modules
-    - {project_root}/research-references.md, V588 entry for arXiv 2608.08786
+    - {project_root}/results/experiment_6745_sota_dual_encoding_proposal_corpus.json
+    - {project_root}/python/carnot/experiment_6745_sota_dual_encoding_proposal_corpus.py
+    - {project_root}/tests/python/test_experiment_1580_dccd_jsonschemabench_sota_structured_output_smoke.py
+    - Primary sources arXiv 2607.18357, 2603.03305v2, and 2607.17047.
 
     TASK:
-    Run all three mandated local GGUF families on the frozen exact stream, retain every attempt,
-    encode each parseable certificate through two independent implementations, exact-check it, and
-    emit a closed diagnostic taxonomy without using model self-judgment as authority.
+    Run a paired three-arm, three-model live GGUF comparison on a frozen family- and
+    hardness-stratified proof set. Compare repaired one-shot output, static grammar, and
+    draft-conditioned environment-indexed grammar under matched total generation and exact-check
+    budgets. Report exact-valid yield and semantic error, not syntax alone.
 
     MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF: flagship MoE headline arm.
-    - unsloth/gemma-4-31B-it-GGUF: flagship dense headline arm.
-    - unsloth/gemma-4-26B-A4B-it-GGUF: middle MoE headline arm.
-    Legacy small models may run a separately labeled CPU smoke row only. They cannot satisfy the
-    corpus gate or enter headline aggregates.
+    - unsloth/Qwen3.6-35B-A3B-GGUF: flagship MoE headline model.
+    - unsloth/gemma-4-31B-it-GGUF: flagship dense headline model.
+    - unsloth/gemma-4-26B-A4B-it-GGUF: middle MoE headline model.
+    Resolve exact cached GGUF files with embedded tokenizers and llama.cpp CUDA offload. Load models
+    sequentially and tear each down before the next. Legacy models may run only labeled CPU smoke
+    tests and cannot satisfy any gate. Remote APIs cannot replace a missing local model.
 
     CONCRETE STEPS:
-    0. PRECONDITIONS: require Exp6744 and hardness_stream_ready == true, exact cached paths for all
-       MODEL_SPECS, llama.cpp CUDA offload, and enough free VRAM for sequential loads. On failure,
-       emit complete_blocked_proposal_corpus with gate_check_summary; do not substitute remote or
-       small models.
-    1. Confirm or add a narrow REQ-* anchor in
-       openspec/capabilities/verifiable-reasoning/spec.md. Add focused tests for DSL parsing,
-       independent encoder disagreement, exact checking, timeout retention, and row completeness.
-    2. Freeze one prompt, decoding configuration, token cap, stop contract, and stream checksum
-       before inference. Run each model sequentially on every eligible row with fixed seeds.
-    3. Store raw output hash, parser status, timeout/stop reason, tokens, latency, and abstention.
-       Never drop malformed, failed, or timed-out rows.
-    4. Pass each parseable proposal through two separately implemented encoders. Compare normalized
-       constraints, not serialized strings. Exact-check both encodings.
-    5. Assign exactly one diagnosis per row from exact_valid, malformed_certificate,
-       translation_disagreement, reasoning_error, or abstention. If exact authority is unavailable,
-       the row is blocked, not guessed.
-    6. Set dual_encoding_corpus_ready true only when every planned model-instance row exists,
-       attribution and budgets are present, and both encoders/checker paths were attempted where
-       applicable. Accuracy is not the readiness threshold.
-    7. Run focused tests, lint, spec coverage, row-consistency lint, and adversarial verification.
-    8. REQUIRED ARTIFACT FIELDS: field_principles (entry for every field and downstream gate),
-       inference_substrate (local llama.cpp CUDA GGUF), duration_s (monotonic wall time),
-       random_seed (decode seeds), reproducibility_checksum (prompt/config/stream/rows hash),
-       models_used (exact IDs and roles), live_model_invoked (real inference boolean),
-       gpu_receipts (per-load CUDA evidence), planned_row_count (frozen denominator),
-       rows (every model-instance attempt), diagnosis_counts (row-derived taxonomy),
-       encoder_agreement_matrix (two-encoder outcomes), exact_success_by_model (row-derived),
-       dual_encoding_corpus_ready (complete attributable corpus gate),
-       gate_check_summary (failed check and observed value for blocked_*),
-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial),
-       and honest_verdict (allowed terminal prefix; complete_blocked_<reason> for owned blocks).
+    0. PRECONDITIONS: verify dynamic_proof_grammar_ready=true, freeze at least 36 Exp6744 instances
+       balanced across family, size, SAT/UNSAT, and relabel role, resolve all MODEL_SPECS, confirm
+       hashes, tokenizer, CUDA offload, one-model-at-a-time VRAM, exact authority, task-owned lease,
+       ports, RAM, and disk. On failure write complete_blocked_proof_transport_ab with
+       gate_check_summary and no CPU or remote headline fallback.
+    1. Confirm the relevant REQ-* anchors and add focused tests for arm matching, runtime invocation,
+       row-derived metrics, teardown, and blocked artifacts before live execution.
+    2. Freeze instance IDs, model order, arm order rotation, seeds, prompts, context, maximum total
+       output tokens, draft/render token split, stop rules, temperatures, and exact-check budget.
+    3. Run three arms per model-instance pair: repaired one-shot; static syntax grammar; and an
+       unconstrained semantic draft followed by environment-indexed constrained rendering. The DCCD
+       arm gets the same total token budget as other arms.
+    4. Record real grammar-policy invocation counts. Disqualify a constrained arm if it falls back
+       to post-hoc filtering, a canned fixture, a different model, or exact-answer-conditioned masks.
+    5. Preserve raw output, output hash, normalized text, parsed proof, both encoder receipts, exact
+       result, latency, tokens, device, peak VRAM, seed, stop reason, and failure for every row.
+    6. Compute paired exact-valid delta, semantic-correct delta, parseability, abstention,
+       invalid-reference rate, invalid-domain rate, support contraction, tokens, and latency by
+       model, family, size, label, and relabel role. Do not treat solver conflicts as model hardness.
+    7. Set proof_transport_ab_completed when every planned row is attributable and both cold
+       aggregate recomputation and teardown pass, regardless of whether the scientific delta is
+       positive.
+    8. Run focused tests, lint, spec coverage, adversarial verification, and row-consistency lint.
+    9. REQUIRED ARTIFACT FIELDS: field_principles, inference_substrate (local llama.cpp CUDA GGUF
+       with invoked runtime grammar), duration_s, random_seed, reproducibility_checksum,
+       models_used (exact hub IDs, paths, hashes, roles), live_model_invoked, frozen_manifest,
+       gpu_receipts, rows (every model-instance-arm unit), runtime_mask_invocations_by_arm,
+       exact_valid_rate_by_arm, semantic_correct_rate_by_arm, paired_exact_valid_deltas,
+       support_contraction_by_arm, proof_transport_ab_completed (row-completeness boolean),
+       claim_boundary (exact validity rather than parseability), gate_check_summary (failed check and
+       observed value for blocked_*), verifier_is_oracle (false; exact authority evaluates outputs
+       but is not an arm), verdict_class (positive | circular_positive | null | blocked |
+       disqualified | partial), and honest_verdict (allowed complete/success/passed/shipped prefix;
+       use complete_blocked_<reason> for task-owned blocks).
 
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6745_sota_dual_encoding_proposal_corpus.py
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6757_dccd_environment_grammar_ab.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  gated_on:
-    - upstream: exp6744-hardness-controlled-certificate-stream
-      artifact_field: hardness_stream_ready
-      op: '=='
-      value: true
   prior_failures:
-    - experiment_id: exp6718-sota-planning-proposal-bank
-      verdict: blocked_gate_check_failed
-      addressed_by: 'The corpus consumes a completed task-owned exact stream, uses proof-carrying rows rather than the retired planning chain, and defines readiness by attributable completion rather than accuracy.'
+    - experiment_id: exp6745-sota-dual-encoding-proposal-corpus
+      verdict: 'complete: all 216 attributable rows are ready; exact-valid is 0/216 and does not control readiness'
+      addressed_by: 'The baseline now uses the lossless output boundary, while the new arms invoke static or environment-indexed decoding and DCCD under a matched total token budget.'
+      retire_if_same_verdict: true
+    - experiment_id: exp5923-sota-schema-supported-constraintir-ab
+      verdict: 'retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates'
+      addressed_by: 'This is a proof DSL with runtime instance-bound symbol masks and exact-valid headline gates, not another schema-supported ConstraintIR prompt.'
       retire_if_same_verdict: true
 
-- id: exp6746-oracle-distinct-diagnostic-energy
-  title: Held-family oracle-distinct dual-encoding diagnostic energy
-  track: energy-verification
+- id: exp6758-proof-transport-independent-audit
+  title: Independent proof-transport and support audit
+  track: verifiable-reasoning
+  priority: critical
+  agent_type: codex
+  model: gpt-5.5
+  requires_gpu: false
+  max_turns: 30
+  estimated_wall_time_min: 75
+  per_unit_rows: true
+  milestone: 2026.08.589
+  deliverable: results/experiment_6758_proof_transport_independent_audit.json
+  gated_on:
+    - upstream: exp6757-dccd-environment-grammar-ab
+      artifact_field: proof_transport_ab_completed
+      op: '=='
+      value: true
+  prompt: |
+    CONTEXT:
+    Structured generation can improve syntax while distorting semantic support. Exp6757 therefore
+    needs a cold evaluator that does not import its parser, reducers, or exact-check implementation.
+    This audit validates actual runtime invocation, matched budgets, exact semantics, leakage, and
+    proof-preserving relabeling. It also determines whether a two-class panel exists for diagnostic
+    energy; it does not force that panel to exist.
+
+    Work at {project_root}. The planning date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/results/experiment_6757_dccd_environment_grammar_ab.json
+    - {project_root}/results/experiment_6744_hardness_controlled_certificate_stream.json
+    - {project_root}/results/experiment_6756_environment_indexed_proof_grammar_fixture.json
+    - {project_root}/scripts/adversarial_verify.py and
+      {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/research-references.md, V589 DCCD and Solver-Hard entries
+
+    TASK:
+    Independently replay every Exp6757 row. Verify exact outcomes, budget equality, runtime grammar
+    use, no oracle leakage, support, and relabel invariance. Emit the exact diagnostic-panel gate
+    fields consumed by Exp6759.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require Exp6757 to exist, parse, declare proof_transport_ab_completed=true,
+       contain all frozen rows, and preserve raw hashes. On failure write
+       complete_blocked_transport_audit with gate_check_summary.
+    1. Confirm or add narrow audit requirements in
+       openspec/capabilities/research-reporting/spec.md. Write independent evaluator tests first.
+    2. Implement the cold parser and exact checker without importing Exp6755-Exp6757 parser,
+       encoder, reducer, or checker functions. It may reuse only the frozen CNF input schema.
+    3. Recompute parseability, exact validity, semantic correctness, invalid references,
+       invalid-domain failures, abstention, paired arm deltas, and model/family/size strata from
+       rows. Fail closed on disagreement with the producing artifact.
+    4. Inspect prompts, Gamma receipts, mask traces, and feature manifests for answer labels,
+       current-row exact outcomes, solver labels, or other oracle proxies. Record every prohibited
+       feature check.
+    5. Verify identical total token ceilings, context, seed policy, exact-check budget, and honest
+       accounting for draft plus render tokens. Measure support contraction and harmful flips from
+       baseline-valid rows.
+    6. Verify proof-preserving relabel pairs do not change exact outcomes. Solver conflicts remain
+       metadata and are not used as a model-difficulty conclusion.
+    7. Set proof_transport_audit_ready only when independent replay, leakage, runtime invocation,
+       and budget checks pass. Set diagnostic_panel_ready only when every held family has at least
+       two diagnosis classes and there are at least 24 parseable exact-invalid rows.
+    8. Run focused tests, lint, spec coverage, adversarial verification, and row consistency.
+    9. REQUIRED ARTIFACT FIELDS: field_principles, inference_substrate (cold independent CPU exact
+       replay), duration_s, random_seed, reproducibility_checksum, source_artifact_sha256, rows (one
+       cold audit row per source unit), independent_parser_id, independent_exact_checker_id,
+       aggregate_recomputation, paired_exact_valid_deltas, semantic_error_by_arm,
+       support_contraction_by_arm, harmful_flips_by_arm, runtime_invocation_verified,
+       prohibited_feature_findings, proof_transport_audit_ready (all-audit boolean),
+       diagnosis_counts_by_held_family, parseable_exact_invalid_rows, diagnostic_panel_ready
+       (two-class-and-size boolean), gate_check_summary (failed check and observed value for
+       blocked_*), verifier_is_oracle (false; this is an evaluator audit, not a learned verifier
+       claim), verdict_class (positive | circular_positive | null | blocked | disqualified |
+       partial), and honest_verdict (allowed complete/success/passed/shipped prefix; use
+       complete_blocked_<reason> for task-owned blocks).
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6758_proof_transport_independent_audit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+    - experiment_id: exp6570-proof-obligation-independent-audit
+      verdict: 'blocked_proof_obligation_independent_audit: provenance=not_recomputable; spans=not_replayable; compiler=not_replayable; exact_release=not_replayable; harm=not_recomputable; cost=not_recomputable; promotion=not_confirmed'
+      addressed_by: 'Exp6757 is required to preserve raw output hashes, runtime-mask traces, frozen budgets, exact inputs, and per-unit rows; this audit independently replays those rows instead of auditing non-replayable source spans.'
+      retire_if_same_verdict: true
+
+- id: exp6759-oracle-distinct-diagnostic-energy-v2
+  title: Held-family oracle-distinct diagnostic energy v2
+  track: energy-models
   priority: critical
   agent_type: codex
   model: gpt-5.6-sol
@@ -350,173 +377,188 @@ tasks:
   max_turns: 50
   estimated_wall_time_min: 120
   per_unit_rows: true
-  milestone: 2026.08.588
-  deliverable: results/experiment_6746_oracle_distinct_diagnostic_energy.json
+  milestone: 2026.08.589
+  deliverable: results/experiment_6759_oracle_distinct_diagnostic_energy_v2.json
+  gated_on:
+    - upstream: exp6758-proof-transport-independent-audit
+      artifact_field: proof_transport_audit_ready
+      op: '=='
+      value: true
+    - upstream: exp6758-proof-transport-independent-audit
+      artifact_field: diagnostic_panel_ready
+      op: '=='
+      value: true
   prompt: |
     CONTEXT:
-    Exp6735 only wrote a missing-upstream gate artifact. V588 now has a frozen exact corpus with
-    two independent symbolic views and closed failure diagnoses. The learned energy may diagnose or
-    prioritize, but it cannot certify. Current-row exact outcomes, labels, answer keys, solver work,
-    certificate validity, and proxies derived from them are prohibited model inputs.
+    Exp6746 gate-blocked because every held-family row was labeled malformed_certificate. Exp6758
+    opens this branch only after independent replay proves at least two diagnosis classes per held
+    family and at least 24 parseable exact-invalid rows. The research question is whether structural
+    features can diagnose reasoning error without reading exact outcomes or answer proxies.
 
     Work at {project_root}. The planning date is {date}.
 
     EXISTING CODE TO READ FIRST:
     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
-    - {project_root}/openspec/capabilities/energy-verification/spec.md
-    - {project_root}/results/experiment_6745_sota_dual_encoding_proposal_corpus.json
-    - {project_root}/scripts/experiments/experiment_6705_structural_plan_energy.py
-    - {project_root}/results/experiment_6705_structural_plan_energy.json
-    - {project_root}/python/carnot/verify/constraint.py and structural feature helpers
-    - {project_root}/scripts/verdict_row_consistency_lint.py and
-      {project_root}/scripts/adversarial_verify.py
+    - {project_root}/results/experiment_6758_proof_transport_independent_audit.json
+    - {project_root}/results/experiment_6746_oracle_distinct_diagnostic_energy.json
+    - {project_root}/results/experiment_6744_hardness_controlled_certificate_stream.json
+    - {project_root}/python/carnot/experiment_6746_oracle_distinct_diagnostic_energy.py
+    - {project_root}/tests/python/test_experiment_6746_oracle_distinct_diagnostic_energy.py
+    - {project_root}/research-references.md, V589 Solver-Hard and Decode-Time Grammars entries
 
     TASK:
-    Compare a dual-encoding structural diagnostic energy with single-encoding and scalar-failure
-    controls on family-held-out and relabel tests. Measure reasoning-error discrimination and
-    localization without current-row oracle leakage.
+    Train and evaluate a compact structural diagnostic energy on audited proof rows. Compare
+    dual-encoding structure, single-encoding structure, and an undifferentiated scalar baseline on
+    family-disjoint tests and proof-preserving relabel pairs. Keep the learned verifier distinct
+    from exact authority.
 
     CONCRETE STEPS:
-    0. PRECONDITIONS: require Exp6745 and dual_encoding_corpus_ready == true, immutable family
-       splits, at least two outcome classes per evaluable held family, and enough rows for a
-       pre-registered bootstrap. If not, emit complete_blocked_diagnostic_energy with
-       gate_check_summary.
-    1. Confirm or add a narrow REQ-* anchor in
-       openspec/capabilities/energy-verification/spec.md. Add tests for feature denylists,
-       family-disjoint splits, relabel pairing, and metric recomputation.
-    2. Freeze the feature schema before labels are joined. Allow only pre-oracle syntax, topology,
-       encoder structure, local inconsistency descriptors, and model-independent format features.
-    3. Build an explicit denylist and taint audit for exact outcomes, diagnoses, answers, solver
-       counters, validity bits, and deterministic proxies. Any leak disqualifies positive credit.
-    4. Train identical-capacity dual-encoding, encoder-A-only, encoder-B-only, and
-       undifferentiated-scalar baselines on allowed training families with fixed seeds and budgets.
-    5. Evaluate on held families and relabel mates. Emit row-level energy, prediction, target,
-       localization, and paired relabel consistency for every arm.
-    6. Report AUROC, AUPRC, calibration, localization accuracy, bootstrap intervals, and paired
-       deltas. Set heldout_reasoning_error_auroc from raw held rows.
-    7. Set oracle_leakage_detected true on any denylist, split, taint, or proxy failure. Set
-       diagnostic_energy_ready true only when all arms and audits complete; readiness does not mean
-       positive science.
-    8. Run focused tests, lint, spec coverage, row-consistency lint, and adversarial verification.
-    9. REQUIRED ARTIFACT FIELDS: field_principles (entry for every field and gate),
-       inference_substrate (local CPU structural-energy training/evaluation), duration_s
-       (monotonic), random_seed (all split/train/bootstrap seeds), reproducibility_checksum
-       (feature/split/config/row hash), verifier_is_oracle (false), feature_schema (allowed inputs),
-       oracle_feature_denylist (prohibited inputs), rows (unit-arm predictions),
-       heldout_metrics_by_family (row-derived), paired_relabel_metrics (row-derived),
-       heldout_reasoning_error_auroc (exact downstream threshold field),
-       oracle_leakage_detected (exact downstream boolean field),
-       diagnostic_energy_ready (completion boolean), gate_check_summary (failed check and observed
-       value for blocked_*),
-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial),
-       and honest_verdict (allowed terminal prefix;
-       complete_blocked_<reason> for owned blocks).
+    0. PRECONDITIONS: require proof_transport_audit_ready=true, diagnostic_panel_ready=true, at
+       least two diagnosis classes per held family, at least 24 parseable exact-invalid rows, sealed
+       family splits, and available compact-model dependencies. On failure write
+       complete_blocked_diagnostic_energy_v2 with gate_check_summary.
+    1. Confirm or add narrow REQ-* anchors in
+       openspec/capabilities/energy-based-models/spec.md and
+       openspec/capabilities/verifiable-reasoning/spec.md. Write focused leakage, split, reducer,
+       and determinism tests first.
+    2. Freeze train/dev/test by family before training. Keep all proof-preserving relabel pairs in
+       the same split. Use at least six seeds or a paired bootstrap with an explicit seed schedule.
+    3. Permit only pre-oracle structural features such as prefix position, grammar rejection kind,
+       typed-slot state, encoder agreement structure, and certificate-shape counts. Deny answer
+       labels, SAT/UNSAT truth, exact-valid bits, exact-check traces, solver conflicts, source
+       answer fields, and repair outcomes.
+    4. Fit matched-capacity dual-encoding, single-encoding, and scalar baselines. No model may use
+       hidden access unavailable on the local GGUF substrate.
+    5. Emit one rows entry per held unit, seed, and arm with score, target diagnosis, family, size,
+       relabel pair, feature-manifest hash, and prediction. Derive AUROC, AUPRC, calibration, and
+       paired relabel consistency from rows.
+    6. Run an automated prohibited-feature and feature-ablation audit. Set oracle_leakage_detected
+       true on any direct, hashed, aliased, or monotone answer proxy.
+    7. Set heldout_reasoning_error_auroc from the cold row reducer. Positive credit requires AUROC
+       at least 0.65 on every held family, not only pooled data, zero leakage, and improvement over
+       both baselines. Completion and positivity are separate.
+    8. Run focused tests, lint, spec coverage, adversarial verification, and row consistency.
+    9. REQUIRED ARTIFACT FIELDS: field_principles, inference_substrate (compact local structural
+       energy with exact authority excluded from inputs), duration_s, random_seed,
+       reproducibility_checksum, source_artifact_sha256, split_manifest, feature_manifest,
+       prohibited_features, rows (per held unit, seed, and arm), metrics_by_family_and_arm,
+       relabel_consistency, heldout_reasoning_error_auroc (cold row-derived float),
+       heldout_reasoning_error_auroc_by_family, oracle_leakage_detected (boolean),
+       diagnostic_energy_completed, gate_check_summary (failed check and observed value for
+       blocked_*), verifier_is_oracle (false), verdict_class (positive | circular_positive | null |
+       blocked | disqualified | partial), and honest_verdict (allowed
+       complete/success/passed/shipped prefix; use complete_blocked_<reason> for task-owned blocks).
 
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6746_oracle_distinct_diagnostic_energy.py
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6759_oracle_distinct_diagnostic_energy_v2.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  gated_on:
-    - upstream: exp6745-sota-dual-encoding-proposal-corpus
-      artifact_field: dual_encoding_corpus_ready
-      op: '=='
-      value: true
   prior_failures:
-    - experiment_id: exp6735-oracle-distinct-diagnostic-energy
-      verdict: blocked_gate_check_failed
-      addressed_by: 'The new task has a present dual-encoding corpus, family-disjoint rows, and an explicit pre-oracle feature denylist instead of reading a missing proposal artifact.'
+    - experiment_id: exp6746-oracle-distinct-diagnostic-energy
+      verdict: 'complete_blocked_diagnostic_energy: held_family_outcome_classes expected ">=2 diagnosis classes per held family"; observed {"expander_tseitin":{"malformed_certificate":72},"ladder_tseitin":{"malformed_certificate":72},"pigeonhole_anchor":{"malformed_certificate":72}}'
+      addressed_by: 'The lossless reparse and independently audited grammar panel must now prove the missing per-family outcome diversity before this agent call; the feature set also adds prefix-policy structure without oracle fields.'
       retire_if_same_verdict: true
 
-- id: exp6747-diagnostic-energy-localized-repair-ab
-  title: Diagnostic-energy localized repair versus full regeneration
-  track: verify-repair
-  priority: high
+- id: exp6760-prefix-backtracking-repair-ab
+  title: Diagnostic prefix-backtracking repair A/B
+  track: verifiable-reasoning
+  priority: critical
   agent_type: codex
   model: gpt-5.6-sol
   requires_gpu: true
   max_turns: 50
-  estimated_wall_time_min: 360
+  estimated_wall_time_min: 240
   per_unit_rows: true
-  milestone: 2026.08.588
-  deliverable: results/experiment_6747_diagnostic_energy_localized_repair_ab.json
-  prompt: |
-    CONTEXT:
-    Exp6651 could not run suffix regeneration because its old corpus had only two headroom rows
-    against a gate of eight. V588 changes the substrate: the all-three-model corpus keeps every
-    exact-invalid parseable proposal, and Exp6746 must first show held-family diagnostic signal
-    without leakage. The exact checker remains final authority.
-
-    Work at {project_root}. The planning date is {date}.
-
-    EXISTING CODE TO READ FIRST:
-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
-    - {project_root}/openspec/capabilities/verify-repair/spec.md
-    - {project_root}/results/experiment_6745_sota_dual_encoding_proposal_corpus.json
-    - {project_root}/results/experiment_6746_oracle_distinct_diagnostic_energy.json
-    - {project_root}/scripts/experiments/experiment_6651_failure_localized_suffix_regeneration.py
-    - {project_root}/results/experiment_6651_failure_localized_suffix_regeneration.json
-    - {project_root}/scripts/experiment_template.py and current SOTA model helpers
-    - {project_root}/python/carnot/verify/ exact checker and repair interfaces
-
-    TASK:
-    On a frozen set of exact-invalid parseable proposals, compare no repair, matched full
-    regeneration, and diagnostic-localized suffix/backtracking repair. Use paired budgets and exact
-    final checking, and report harmful flips as well as exact successes.
-
-    MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF: flagship MoE paired repair arm.
-    - unsloth/gemma-4-31B-it-GGUF: flagship dense paired repair arm.
-    Legacy models may be smoke tests only and cannot enter headline rows.
-
-    CONCRETE STEPS:
-    0. PRECONDITIONS: require Exp6746 heldout_reasoning_error_auroc >= 0.65,
-       oracle_leakage_detected == false, at least 24 exact-invalid parseable frozen proposals
-       across both MODEL_SPECS, cached model paths, and CUDA offload. On failure emit
-       complete_blocked_repair_headroom with gate_check_summary; do not lower the denominator.
-    1. Confirm or add a narrow REQ-* anchor in
-       openspec/capabilities/verify-repair/spec.md. Add tests for paired budgets, localization
-       routing, exact final authority, harmful flips, and metric recomputation.
-    2. Freeze proposal IDs, models, seeds, prompts, candidates, token budgets, verifier calls,
-       stopping rules, and timeout policy before generation.
-    3. Run no repair, full regeneration, and diagnostic-localized suffix/backtracking per unit.
-       The localized arm may consume only pre-oracle diagnosis and the same generation budget.
-    4. Exact-check every original and final candidate. Preserve invalid, timeout, abstention, and
-       no-change rows. Evaluate localization correctness only after repair.
-    5. Report exact success, harmful flips, abstention, tokens, latency, verifier calls, error-class
-       movement, and paired win/loss/tie rows by model and family.
-    6. Compute paired bootstrap intervals. Positive requires localized-minus-full exact-success
-       lower bound above zero and no higher harmful-flip rate.
-    7. Run focused tests, lint, spec coverage, row-consistency lint, and adversarial verification.
-    8. REQUIRED ARTIFACT FIELDS: field_principles (entry for every field),
-       inference_substrate (local llama.cpp CUDA GGUF plus exact CPU checker), duration_s
-       (monotonic), random_seed (paired seeds), reproducibility_checksum (frozen units/config/rows),
-       models_used (exact IDs), live_model_invoked (real decode), gpu_receipts (per model load),
-       verifier_is_oracle (false for diagnostic energy; exact checker declared separately),
-       rows (every model-unit-arm result), paired_exact_success_delta (localized minus full),
-       paired_delta_ci95 (row-derived), harmful_flip_rate_by_arm (row-derived),
-       repair_ab_completed (all planned rows), gate_check_summary (failed check and observed value
-       for blocked_*),
-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial),
-       and honest_verdict (allowed terminal prefix; complete_blocked_<reason> for
-       owned blocks).
-
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6747_diagnostic_energy_localized_repair_ab.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.08.589
+  deliverable: results/experiment_6760_prefix_backtracking_repair_ab.json
   gated_on:
-    - upstream: exp6746-oracle-distinct-diagnostic-energy
+    - upstream: exp6759-oracle-distinct-diagnostic-energy-v2
       artifact_field: heldout_reasoning_error_auroc
       op: '>='
       value: 0.65
-    - upstream: exp6746-oracle-distinct-diagnostic-energy
+    - upstream: exp6759-oracle-distinct-diagnostic-energy-v2
       artifact_field: oracle_leakage_detected
       op: '=='
       value: false
+  prompt: |
+    CONTEXT:
+    Exp6747 gate-blocked because no valid diagnostic energy existed. Earlier failure-localized suffix
+    regeneration also gate-blocked. Exp6759 reopens the question only with held-family AUROC at
+    least 0.65 and zero oracle leakage. This task compares a new prefix-state backtracking mechanism
+    against matched full regeneration. The exact checker remains final authority and cannot select
+    the learned repair location.
+
+    Work at {project_root}. The planning date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/scripts/experiment_template.py and cached_sota_pair()
+    - {project_root}/results/experiment_6759_oracle_distinct_diagnostic_energy_v2.json
+    - {project_root}/results/experiment_6758_proof_transport_independent_audit.json
+    - {project_root}/results/experiment_6747_diagnostic_energy_localized_repair_ab.json
+    - {project_root}/results/experiment_6651_failure_localized_suffix_regeneration.json
+    - {project_root}/python/carnot/pipeline/repair.py and exact certificate code
+    - {project_root}/research-references.md, V589 DCCD and Memoir entries
+
+    TASK:
+    Run a matched live A/B/C on frozen parseable exact-invalid candidates. Compare no repair, full
+    regeneration, and diagnostic prefix backtracking. Test whether the learned energy can localize a
+    useful rewind point without exact-answer access and improve exact-valid yield over regeneration.
+
+    MODEL_SPECS:
+    - unsloth/Qwen3.6-35B-A3B-GGUF: flagship MoE headline repair model.
+    - unsloth/gemma-4-31B-it-GGUF: flagship dense headline repair model.
+    Load exact cached GGUFs sequentially through llama.cpp CUDA. Legacy models are CPU smoke tests
+    only. A remote or substituted model cannot satisfy the gate.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require heldout_reasoning_error_auroc>=0.65,
+       oracle_leakage_detected=false, at least 24 parseable exact-invalid frozen candidates, both
+       MODEL_SPECS cached with hashes and tokenizers, CUDA offload, one-model-at-a-time VRAM,
+       task-owned lease, ports, exact authority, RAM, and disk. On failure write
+       complete_blocked_prefix_repair_ab with gate_check_summary and no headline fallback.
+    1. Confirm or add narrow REQ-* anchors and write focused tests for pairing, prefix selection,
+       budget equality, no-headroom controls, harmful flips, and blocked artifacts.
+    2. Freeze candidates, models, seeds, arm-order rotation, prompt, context, original outputs,
+       total generated-token ceiling, exact-check count, and time ceiling. Include valid no-headroom
+       controls that repair must leave unchanged.
+    3. Run no repair, matched full regeneration, and diagnostic prefix backtracking. The learned
+       energy selects the earliest supported bad region using only Exp6759 features. The repair arm
+       resumes with the environment-indexed grammar from the selected prefix.
+    4. Deny the current-row exact outcome, answer label, exact trace, solver counters, and post-repair
+       result from prefix selection. Record the feature-manifest hash in every row.
+    5. Emit one rows entry per model, candidate, seed, and arm with original and final hashes,
+       selected prefix, generated tokens, exact checks, exact outcome, semantic outcome, latency,
+       harmful flip, abstention, device, and peak VRAM.
+    6. Derive paired exact-valid gain, lower confidence bound, harmful-flip rate, support, tokens,
+       and latency by model and family. Positive credit requires the lower bound over full
+       regeneration above zero, no harmful-flip increase, and no preregistered support contraction.
+    7. Set prefix_repair_ab_completed from row completeness and cold reducer agreement, independent
+       of the scientific verdict. Tear down every owned model process.
+    8. Run focused tests, lint, spec coverage, adversarial verification, and row consistency.
+    9. REQUIRED ARTIFACT FIELDS: field_principles, inference_substrate (local llama.cpp CUDA GGUF
+       plus oracle-distinct diagnostic energy), duration_s, random_seed, reproducibility_checksum,
+       models_used, live_model_invoked, frozen_manifest, gpu_receipts, rows (every
+       model-candidate-seed-arm unit), prefix_selection_feature_manifest,
+       exact_valid_rate_by_arm, paired_prefix_over_regeneration_delta,
+       paired_prefix_over_regeneration_lcb, harmful_flip_rate_by_arm, support_by_arm,
+       budget_match_receipt, prefix_repair_ab_completed, gate_check_summary (failed check and
+       observed value for blocked_*), verifier_is_oracle (false), verdict_class (positive |
+       circular_positive | null | blocked | disqualified | partial), and honest_verdict (allowed
+       complete/success/passed/shipped prefix; use complete_blocked_<reason> for task-owned blocks).
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6760_prefix_backtracking_repair_ab.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
   prior_failures:
+    - experiment_id: exp6747-diagnostic-energy-localized-repair-ab
+      verdict: blocked_gate_check_failed
+      addressed_by: 'This task has a new audited producer contract, a structured AUROC/leakage pre-gate, and prefix-state backtracking through the invoked environment grammar rather than an unavailable generic diagnosis.'
+      retire_if_same_verdict: true
     - experiment_id: exp6651-failure-localized-suffix-regeneration
       verdict: blocked_gate_check_failed
-      addressed_by: 'The new corpus supplies at least 24 frozen exact-invalid parseable units, and localization is gated on a fresh held-family leak-free diagnostic signal rather than the old two-row headroom count.'
+      addressed_by: 'The new attempt uses an oracle-distinct held-family energy and matched prefix backtracking, with the exact checker reserved for final evaluation rather than localized suffix selection.'
       retire_if_same_verdict: true
 
-- id: exp6748-transactional-constraint-memory-fixture
-  title: Read-only episode and atomic constraint-memory commit fixture
+- id: exp6761-procedural-memory-stream
+  title: Capacity-controlled procedural memory stream
   track: continuous-self-learning
   priority: critical
   agent_type: codex
@@ -525,540 +567,572 @@ tasks:
   max_turns: 50
   estimated_wall_time_min: 120
   per_unit_rows: true
-  milestone: 2026.08.588
-  deliverable: results/experiment_6748_transactional_constraint_memory_fixture.json
+  milestone: 2026.08.589
+  deliverable: results/experiment_6761_procedural_memory_stream.json
   prompt: |
     CONTEXT:
-    FR11 requires continuous self-learning. Memoir (arXiv 2607.20792) warns against rewriting
-    memory during the same reasoning episode, while AgentCL (arXiv 2606.02461) shows that
-    controlled reusable streams distinguish memory designs better than naive streams. Exp5913
-    gate-blocked before its transactional fixture ran. This task owns a new controlled stream and
-    exact delayed-commit mechanism without an upstream science dependency.
+    Exp6748 proved transactional mechanics, but Exp6749 and Exp6750 recorded zero commits and zero
+    rejects. The branch therefore did not exercise continuous self-learning. When Continual Learning
+    Moves to Memory (arXiv 2604.27003) finds that procedural abstractions transfer more reliably
+    than detailed trajectories and that hard cases suffer the most negative transfer. Memoir
+    (arXiv 2607.20792) supports read-only active episodes and between-episode updates.
 
     Work at {project_root}. The planning date is {date}.
 
     EXISTING CODE TO READ FIRST:
     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
     - {project_root}/research-program.md, Continuous Self-Learning section
-    - {project_root}/openspec/capabilities/continuous-self-learning/spec.md
-    - {project_root}/scripts/experiments/experiment_5967_delayed_commit_memory_fixture.py
-    - {project_root}/results/experiment_5967_delayed_commit_memory_fixture.json
-    - {project_root}/scripts/experiments/experiment_6521_transactional_refinement_conflict_memory.py
-    - {project_root}/results/experiment_6521_transactional_refinement_conflict_memory.json
-    - {project_root}/results/experiment_5913_transactional_constraint_memory_fixture.json
-    - {project_root}/python/carnot/memory/ and transactional ABI helpers
-    - {project_root}/research-references.md, V588 entries for Memoir and AgentCL
+    - {project_root}/results/experiment_6748_transactional_constraint_memory_fixture.json
+    - {project_root}/results/experiment_6749_prospective_support_preserving_csl_ab.json
+    - {project_root}/results/experiment_6750_csl_durability_support_poison_audit.json
+    - {project_root}/python/carnot/training/online.py and
+      {project_root}/python/carnot/training/online_updater.py
+    - {project_root}/python/carnot/pipeline/case_memory.py and atomic journal helpers
+    - Primary sources arXiv 2604.27003 and 2607.20792 and code at
+      https://github.com/RightNow-AI/Memoir.
 
     TASK:
-    Build a deterministic chronological constraint stream and transactional external memory whose
-    active episode is read-only and whose exact-certified updates commit atomically only between
-    episodes. Prove restart and byte-exact rollback before live model use.
+    Build a chronological, non-saturating constraint stream that guarantees known exact-admissible
+    accept and reject opportunities without leaking future answers. Represent each reusable event
+    both as a detailed trace and as an abstract procedural constraint lesson under equal capacity.
 
     CONCRETE STEPS:
-    0. PRECONDITIONS: require deterministic exact labels, atomic-write support, a task-owned
-       temporary/state directory, and immutable stream seeds. If unavailable emit
-       complete_blocked_transaction_fixture with gate_check_summary. Do not write to shared live
-       memory during fixture tests.
-    1. Confirm or add a narrow REQ-* anchor in
-       openspec/capabilities/continuous-self-learning/spec.md. Add focused tests for read-only
-       episodes, delayed commit, parent hashes, atomicity, restart, and rollback.
-    2. Generate a controlled stream with reusable repair substructure, naive distractor events,
-       held-out families, retention anchors, poison/stale/conflict events, and six preregistered
-       chronological orders. Freeze the stream before policy evaluation.
-    3. Give each active episode an immutable snapshot. Attempts to write during an episode must
-       fail closed and produce an attack row.
-    4. Admit a record between episodes only when the exact checker passes and scope, provenance,
-       future-use eligibility, TTL, conflict, and duplicate checks pass. Store parent hash,
-       evidence hash, reason, and inverse patch.
-    5. Exercise normal commits plus duplicate, contradiction, stale evidence, provenance loss,
-       delayed-copy poison, crash-before-rename, crash-after-rename, restart from every boundary,
-       quarantine, and byte-exact rollback.
-    6. Set transaction_memory_ready true only if every mandatory fixture row passes, zero unsafe
-       records are admitted or used, every restart reproduces the same state, and rollback bytes
-       match the parent snapshot.
-    7. Run focused tests, lint, spec coverage, row-consistency lint, and adversarial verification.
-    8. REQUIRED ARTIFACT FIELDS: field_principles (entry for every field and gate),
-       inference_substrate (deterministic CPU exact-checker transactional fixture), duration_s
-       (monotonic), random_seed (stream/order/attack seeds), reproducibility_checksum
-       (stream/config/state/rows hash), rows (one row per event/order/attack), stream_manifest
-       (families and six orders), commit_receipts (parent/evidence/new hashes), read_only_violations
-       (attempted and rejected writes), unsafe_admission_count (must be zero), unsafe_use_count
-       (must be zero), restart_receipts (each boundary), rollback_byte_identity (row-derived),
-       transaction_memory_ready (exact downstream gate), gate_check_summary (failed check and
-       observed value for blocked_*),
-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial),
-       and honest_verdict (allowed terminal prefix;
-       complete_blocked_<reason> for owned blocks).
+    0. PRECONDITIONS: require the Exp6748 transaction fixture, exact authority, atomic storage,
+       restart, and rollback helpers. If unavailable write complete_blocked_procedural_stream with
+       gate_check_summary.
+    1. Confirm or add narrow REQ-* anchors in
+       openspec/capabilities/continuous-learning/spec.md and research-reporting specs. Write stream,
+       chronology, capacity, transaction, and poison tests first.
+    2. Generate at least six preregistered chronological orders across reusable procedure families,
+       naive distractors, held families, hard cases, retention anchors, contradictions, stale
+       lessons, duplicates, and poison candidates. Keep the stream below ceiling for all arms.
+    3. For each reusable event, create a detailed trajectory record and a procedural lesson that
+       states an abstract constraint, applicability scope, and repair procedure without current or
+       future answer content. Bind both to the same evidence hash.
+    4. Freeze equal storage bytes, top-k retrieval, context tokens, TTL policy, update opportunities,
+       and exact authority for the later memory arms. Do not optimize the stream for one arm.
+    5. Keep every active episode read-only. Transactions occur only after the exact result closes
+       the episode. Each transaction includes parent hash, evidence hash, representation type,
+       scope, TTL, admission reason, inverse patch, and atomic restart receipt.
+    6. Prove by exact dry replay that each order has at least 12 eligible accepts and 12 eligible
+       rejects, while no future event is visible. Poison, contradiction, duplicate, stale, and
+       provenance-loss cases must be rejected for the intended reason.
+    7. Emit one rows entry per order and event with eligibility, representation pair, difficulty,
+       family, chronology, expected transaction class, evidence hash, and capacity cost. Derive
+       all counts from rows.
+    8. Set procedural_memory_stream_ready only if chronology, non-saturation, nonzero accept and
+       reject opportunity, capacity equality, restart, rollback, and poison gates pass.
+    9. Run focused tests, lint, spec coverage, adversarial verification, and row consistency.
+    10. REQUIRED ARTIFACT FIELDS: field_principles, inference_substrate (deterministic exact-labeled
+        chronological stream, no LLM), duration_s, random_seed, reproducibility_checksum,
+        stream_manifest, rows (one row per order and event), order_count,
+        eligible_accepts_by_order, eligible_rejects_by_order, hard_cases_by_order,
+        representation_pair_receipts, capacity_contract, read_only_episode_enforced,
+        transaction_schema, poison_fixture_receipts, restart_receipts, rollback_receipts,
+        future_evidence_violations, procedural_memory_stream_ready (all-gates boolean),
+        gate_check_summary (failed check and observed value for blocked_*), verifier_is_oracle
+        (false; exact authority labels admissions but is not a learned verifier claim),
+        verdict_class (positive | circular_positive | null | blocked | disqualified | partial), and
+        honest_verdict (allowed complete/success/passed/shipped prefix; use
+        complete_blocked_<reason> for task-owned blocks).
 
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6748_transactional_constraint_memory_fixture.py
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6761_procedural_memory_stream.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
   prior_failures:
-    - experiment_id: exp5913-transactional-constraint-memory-fixture
-      verdict: blocked_gate_check_failed
-      addressed_by: 'The fixture owns a fresh exact chronological stream and delayed-commit ABI, removes the failed exact-slot dependency, and tests read-only episodes plus atomic restart and inverse-patch rollback directly.'
+    - experiment_id: exp6207-prospective-procedural-memory-csl
+      verdict: 'GATE_BLOCK: Pre-emptive skip: upstream retired (exp6206-live-strategy-seed-v2)'
+      addressed_by: 'This task is a fresh independent stream root with no retired upstream; it freezes nonzero exact-admissible accept and reject opportunities before any live procedural-memory comparison.'
       retire_if_same_verdict: true
 
-- id: exp6749-prospective-support-preserving-csl-ab
-  title: Prospective support-preserving transactional self-learning comparison
+- id: exp6762-procedural-vs-trace-csl-ab
+  title: Procedural versus trace memory prospective A/B
   track: continuous-self-learning
   priority: critical
   agent_type: codex
   model: gpt-5.6-sol
   requires_gpu: true
   max_turns: 50
-  estimated_wall_time_min: 480
+  estimated_wall_time_min: 300
   per_unit_rows: true
-  milestone: 2026.08.588
-  deliverable: results/experiment_6749_prospective_support_preserving_csl_ab.json
+  milestone: 2026.08.589
+  deliverable: results/experiment_6762_procedural_vs_trace_csl_ab.json
+  gated_on:
+    - upstream: exp6761-procedural-memory-stream
+      artifact_field: procedural_memory_stream_ready
+      op: '=='
+      value: true
   prompt: |
     CONTEXT:
-    Exp6696 gate-blocked because its update fixture artifact was absent. V588 has an independent
-    transactional fixture with controlled reusable and distractor streams. Verifier-Induced Support
-    Reshaping (arXiv 2608.00220) warns that pass@1 can rise while best@k and rewardable support
-    shrink. This experiment therefore measures support, retention, transfer, and rollback, not only
-    endpoint mean accuracy.
+    Exp6749 completed a prospective memory comparison but found no support-preserving gain; Exp6750
+    then found zero commits and rejects. Exp6761 changes the scientific prerequisite by supplying a
+    non-saturating stream with exact-admissible opportunities and matched trace/procedural
+    representations. This task tests continuous Tier-2 self-learning, not weight updates.
 
     Work at {project_root}. The planning date is {date}.
 
     EXISTING CODE TO READ FIRST:
     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
     - {project_root}/research-program.md, Continuous Self-Learning section
-    - {project_root}/openspec/capabilities/continuous-self-learning/spec.md
-    - {project_root}/results/experiment_6748_transactional_constraint_memory_fixture.json
-    - {project_root}/scripts/experiments/experiment_5968_delayed_commit_csl_prospective.py
-    - {project_root}/results/experiment_5968_delayed_commit_csl_prospective.json
-    - {project_root}/scripts/experiments/experiment_6696_prequential_online_energy_ab.py
-    - {project_root}/results/experiment_6696_prequential_online_energy_ab.json
-    - {project_root}/scripts/experiment_template.py and current SOTA model helpers
+    - {project_root}/scripts/experiment_template.py and cached_sota_pair()
+    - {project_root}/results/experiment_6761_procedural_memory_stream.json
+    - {project_root}/results/experiment_6749_prospective_support_preserving_csl_ab.json
+    - {project_root}/python/carnot/training/online.py,
+      {project_root}/python/carnot/training/online_updater.py, and memory retrieval code
+    - {project_root}/research-references.md, V589 continual-memory entries
+    - Primary sources arXiv 2604.27003 and 2607.20792.
 
     TASK:
-    Run a prospective, order-replicated comparison between frozen no-memory and read-only-episode
-    transactional memory. Measure exact future utility, support, retention, cross-family transfer,
-    token cost, rejects, and rollbacks without changing model weights.
+    Compare no memory, detailed trajectory memory, and abstract procedural constraint memory on the
+    same six chronological orders. Fix storage, retrieval, context, update opportunities, exact
+    authority, models, and decode budgets. Measure prospective transfer, forgetting, hard-case harm,
+    support, and actual behavioral use of memory.
 
     MODEL_SPECS:
-    - unsloth/Qwen3.6-35B-A3B-GGUF: acquisition model and same-family evaluation.
-    - unsloth/gemma-4-31B-it-GGUF: held-out dense-family transfer evaluation.
-    Legacy models may be CPU smoke tests only and cannot enter the prospective claim.
+    - unsloth/Qwen3.6-35B-A3B-GGUF: flagship MoE acquisition and transfer model.
+    - unsloth/gemma-4-31B-it-GGUF: flagship dense held-out transfer model.
+    Resolve exact cached GGUFs and embedded tokenizers. Use llama.cpp CUDA and sequential model
+    sessions. Legacy models are CPU smoke tests only and cannot satisfy a gate. Remote inference is
+    not a substitute.
 
     CONCRETE STEPS:
-    0. PRECONDITIONS: require Exp6748 transaction_memory_ready == true, all six frozen orders,
-       exact cached MODEL_SPECS, llama.cpp CUDA offload, and enough VRAM for sequential loads. On
-       failure emit complete_blocked_prospective_csl with gate_check_summary; do not substitute
-       models, orders, or retrospective replay.
-    1. Confirm or add a narrow REQ-* anchor in
-       openspec/capabilities/continuous-self-learning/spec.md. Add tests for prospective order,
-       snapshot immutability, exact admission, arm isolation, support metrics, and no weight writes.
-    2. Freeze prompts, candidate count k, token and verifier budgets, six orders, retention anchors,
-       support thresholds, and rollback criteria before the first episode.
-    3. Run paired frozen/no-memory and transactional-memory arms in clean state per order. The
-       active episode can read its starting snapshot but cannot write. Commit only after the exact
-       result and all Exp6748 admission checks.
-    4. Use Qwen3.6 for acquisition. Evaluate later same-family reuse and Gemma-4-31B held-family
-       transfer without allowing target-family future evidence into memory.
-    5. Record all candidates needed for pass@1, best@k, effective rewardable support, and joint
-       correct-and-constraint-following support. Keep failed and abstaining rows.
-    6. Measure prequential exact yield, support changes, anchor retention, negative transfer,
-       tokens, latency, commits, rejects, quarantine, and rollback by order, model, family, and arm.
-    7. Set prospective_csl_completed true only if every planned order/model/arm row exists and arm
-       isolation, chronology, no-weight-mutation, and exact-authority checks pass. It is a
-       completion gate, not a positive-result bit.
-    8. Run focused tests, lint, spec coverage, row-consistency lint, and adversarial verification.
-    9. REQUIRED ARTIFACT FIELDS: field_principles (entry for every field and gate),
-       inference_substrate (local llama.cpp CUDA GGUF plus exact CPU admission checker), duration_s
-       (monotonic), random_seed (order/model/candidate seeds), reproducibility_checksum
-       (stream/config/snapshots/rows), models_used (exact IDs and roles), live_model_invoked (real
-       inference), gpu_receipts (per model load), model_weights_mutated (must be false),
-       rows (every order/model/family/event/arm result), prequential_exact_yield_by_order
-       (row-derived), best_at_k_by_arm (row-derived), effective_rewardable_support_by_arm
-       (row-derived), joint_correct_constraint_support_by_arm (row-derived), retention_by_anchor
-       (row-derived), commit_reject_rollback_counts (row-derived), prospective_csl_completed
-       (exact downstream completion field), gate_check_summary (failed check and observed value for
-       blocked_*),
-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial),
-       and honest_verdict (allowed terminal prefix; complete_blocked_<reason> for owned
-       blocks).
+    0. PRECONDITIONS: require procedural_memory_stream_ready=true, both MODEL_SPECS cached with
+       hashes and tokenizers, llama.cpp CUDA, sufficient one-model-at-a-time VRAM, task-owned lease,
+       ports, exact authority, atomic storage, RAM, and disk. On failure write
+       complete_blocked_procedural_csl_ab with gate_check_summary and no headline fallback.
+    1. Confirm or add narrow REQ-* anchors and write tests for chronological isolation, read-only
+       episodes, capacity equality, retrieval accounting, action influence, commit/reject activity,
+       order reducers, restart, and blocked artifacts.
+    2. Freeze all six orders, three arms, model roles, seeds, prompts, context, decode budget,
+       storage bytes, top-k, TTL, update opportunities, exact-check budget, and retention anchors.
+       Rotate arm order without sharing mutable state.
+    3. Run frozen no-memory, detailed trace memory, and procedural memory. The active episode may
+       read a snapshot but cannot write. Apply exact-approved transactions only between episodes.
+    4. On every event record retrieved IDs, retrieval scores, context bytes/tokens, whether the
+       response cites or operationally uses the memory, before/after action fingerprints, exact
+       result, difficulty, family, latency, tokens, commit/reject reason, and state hashes.
+    5. Use Qwen3.6 for acquisition and within-family evaluation. Evaluate held-out transfer on both
+       Qwen3.6 and Gemma-4-31B without sharing model-specific answer traces.
+    6. Emit one rows entry per order, model, arm, and event. Derive prequential exact yield,
+       hard-case yield, best@k, effective rewardable support, joint correct-and-constraint support,
+       retention, forgetting, negative transfer, commits, rejects, actual retrieval, action
+       influence, tokens, restarts, and rollbacks from rows.
+    7. Set prospective_csl_completed only when all planned rows, state boundaries, transaction
+       receipts, teardown, and cold aggregate recomputation pass. Completion does not imply a
+       positive result.
+    8. Positive credit requires procedural memory to beat both no memory and detailed traces with an
+       order-level lower bound above zero, nonzero commits and rejects, no anchor forgetting, no
+       hard-case regression beyond the frozen margin, no support contraction, and zero poison.
+    9. Run focused tests, lint, spec coverage, adversarial verification, and row consistency.
+    10. REQUIRED ARTIFACT FIELDS: field_principles, inference_substrate (local CUDA GGUF with
+        external transactional memory), duration_s, random_seed, reproducibility_checksum,
+        models_used, live_model_invoked, frozen_manifest, gpu_receipts, rows (every
+        order-model-arm-event unit), prequential_exact_yield_by_arm, hard_case_yield_by_arm,
+        effective_support_by_arm, retention_by_arm, forgetting_by_arm, negative_transfer_by_arm,
+        retrieval_and_action_influence_by_arm, commits_by_arm, rejects_by_arm,
+        procedural_over_no_memory_order_lcb, procedural_over_trace_order_lcb,
+        prospective_csl_completed (row-completeness boolean), gate_check_summary (failed check and
+        observed value for blocked_*), verifier_is_oracle (false), verdict_class (positive |
+        circular_positive | null | blocked | disqualified | partial), and honest_verdict (allowed
+        complete/success/passed/shipped prefix; use complete_blocked_<reason> for task-owned blocks).
 
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6749_prospective_support_preserving_csl_ab.py
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6762_procedural_vs_trace_csl_ab.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  gated_on:
-    - upstream: exp6748-transactional-constraint-memory-fixture
-      artifact_field: transaction_memory_ready
-      op: '=='
-      value: true
   prior_failures:
-    - experiment_id: exp6696-prequential-online-energy-ab
-      verdict: blocked_gate_check_failed
-      addressed_by: 'The upstream transactional fixture is present and independently runnable, and the comparison uses controlled prospective orders with support and transfer metrics instead of the missing online-energy fixture.'
+    - experiment_id: exp6749-prospective-support-preserving-csl-ab
+      verdict: 'complete_prospective_csl_null: all planned cells completed without a support-preserving gain'
+      addressed_by: 'The new stream guarantees nonzero admissible transactions and compares equal-capacity procedural abstractions against detailed traces, with actual retrieval and action influence required in every event row.'
       retire_if_same_verdict: true
 
-- id: exp6750-csl-durability-support-poison-audit
-  title: Cold transactional self-learning durability and poison audit
-  track: infrastructure
-  priority: high
+- id: exp6763-csl-hard-case-forgetting-audit
+  title: Cold CSL hard-case, forgetting, and poison audit
+  track: continuous-self-learning
+  priority: critical
   agent_type: codex
   model: gpt-5.5
   requires_gpu: false
   max_turns: 30
   estimated_wall_time_min: 90
   per_unit_rows: true
-  milestone: 2026.08.588
-  deliverable: results/experiment_6750_csl_durability_support_poison_audit.json
+  milestone: 2026.08.589
+  deliverable: results/experiment_6763_csl_hard_case_forgetting_audit.json
+  gated_on:
+    - upstream: exp6762-procedural-vs-trace-csl-ab
+      artifact_field: prospective_csl_completed
+      op: '=='
+      value: true
   prompt: |
     CONTEXT:
-    Prior self-learning lifecycle audits were blocked by missing upstream evidence, and the V582
-    synthesis found no prospective A/B rows. Exp6749 now has a strict completion field. This cold
-    audit cannot repair, replace, or reinterpret missing rows. It independently recomputes order
-    intervals, support, retention, commit provenance, restart, poison rejection, and rollback.
+    Exp6750 correctly returned a null cold audit because the prospective branch had zero commits and
+    rejects. Exp6762 changes that prerequisite and records every transaction, retrieval, and action
+    influence event. Recent continual-memory work warns that apparent forward transfer can coexist
+    with forgetting and disproportionate harm on hard cases. This task independently checks those
+    failure modes and durable rollback.
 
     Work at {project_root}. The planning date is {date}.
 
     EXISTING CODE TO READ FIRST:
     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
-    - {project_root}/openspec/capabilities/continuous-self-learning/spec.md
-    - {project_root}/results/experiment_6748_transactional_constraint_memory_fixture.json
-    - {project_root}/results/experiment_6749_prospective_support_preserving_csl_ab.json
-    - {project_root}/scripts/experiments/experiment_5969_csl_poison_drift_abi_audit.py
-    - {project_root}/results/experiment_5969_csl_poison_drift_abi_audit.json
-    - {project_root}/results/experiment_6444_csl_lifecycle_recomputation_audit.json
-    - {project_root}/scripts/verdict_row_consistency_lint.py and
-      {project_root}/scripts/adversarial_verify.py
+    - {project_root}/results/experiment_6762_procedural_vs_trace_csl_ab.json
+    - {project_root}/results/experiment_6761_procedural_memory_stream.json
+    - {project_root}/results/experiment_6750_csl_durability_support_poison_audit.json
+    - {project_root}/scripts/adversarial_verify.py and
+      {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/python/carnot/training/online.py and atomic journal helpers
+    - Primary sources arXiv 2604.27003 and 2607.20792.
 
     TASK:
-    In a fresh CPU process, recompute the prospective self-learning result from raw rows and state
-    snapshots. Audit future isolation, order-level uncertainty, support preservation, retention,
-    poison rejection, restart durability, and byte-exact rollback.
+    Cold-recompute the prospective CSL result from raw rows and state receipts in a fresh process.
+    Audit hard-case transfer, forgetting, capacity equality, actual use, poison, restart, and
+    byte-exact rollback. Do not reuse Exp6762 reducers.
 
     CONCRETE STEPS:
-    0. PRECONDITIONS: require Exp6749 and prospective_csl_completed == true, raw rows, all six
-       orders, state snapshots, and commit receipts. If absent emit complete_blocked_csl_audit with
-       gate_check_summary. Do not fabricate rows or rerun live inference.
-    1. Confirm or add a narrow audit REQ-* anchor in
-       openspec/capabilities/continuous-self-learning/spec.md. Add focused tests for cold
-       recomputation, chronological denial, poison variants, restart, and rollback.
-    2. Load only immutable artifacts in a fresh process. Recompute per-order yield deltas,
-       hierarchical/bootstrap intervals, support measures, retention, negative transfer, tokens,
-       and commit/reject/rollback counts from rows.
-    3. Verify that each episode snapshot predates its event and contains no future, held-family, or
-       opposite-arm evidence. Recompute every commit parent/evidence/new hash.
-    4. Replay duplicate, stale, contradiction, delayed-copy, relation poison, provenance-loss, and
-       tombstone-reappearance attacks. Require zero admission and use.
-    5. Restart from every commit boundary and replay the remaining stream. Apply inverse patches and
-       require byte identity with each parent snapshot.
-    6. Positive eligibility requires the preregistered order-level lower confidence bound above
-       zero, no best@k or effective-support contraction beyond its bound, no anchor forgetting, no
-       harmful cross-family transfer, zero admitted poison, and exact rollback.
-    7. Run focused tests, lint, spec coverage, row-consistency lint, and adversarial verification.
-    8. REQUIRED ARTIFACT FIELDS: field_principles (entry for every field),
-       inference_substrate (fresh-process CPU row and state audit), duration_s (monotonic),
-       random_seed (audit/bootstrap/attack seeds), reproducibility_checksum
-       (source-artifact/state/recomputed-row hash), rows (one row per order/metric/attack/boundary),
-       recomputed_prequential_delta_by_order (raw-row result), order_level_ci95 (pre-registered
-       interval), support_contraction_by_metric (raw-row result), retention_failures (anchor rows),
-       future_leakage_count (must be zero), admitted_poison_count (must be zero),
-       restart_boundary_pass_count (all boundaries), rollback_byte_identity (all boundaries),
-       csl_audit_passed (all eligibility checks), gate_check_summary (failed check and observed
-       value for blocked_*),
-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial),
-       and honest_verdict (allowed terminal prefix;
-       complete_blocked_<reason> for owned blocks). Use fresh_process_no_llm_transaction_audit.
+    0. PRECONDITIONS: require Exp6762 to parse, declare prospective_csl_completed=true, preserve all
+       raw rows and state hashes, and link to the frozen Exp6761 stream. On failure write
+       complete_blocked_csl_hard_case_audit with gate_check_summary.
+    1. Confirm or add narrow audit REQ-* anchors. Write independent reducer, chronology, capacity,
+       restart, rollback, and poison tests first.
+    2. Recompute every headline from rows without importing Exp6762 reducers. Verify unique event
+       keys, planned order coverage, chronological isolation, no future evidence, equal storage and
+       context capacity, and fixed model/decode budgets.
+    3. Recompute order-level paired intervals for procedural versus no memory and procedural versus
+       detailed traces. Report all wins, losses, ties, and no-headroom rows.
+    4. Stratify retention, forgetting, negative transfer, and support by hard/easy, family, model,
+       order, and memory arm. Enforce the preregistered hard-case and anchor margins.
+    5. Verify nonzero exact commits and rejects, evidence and parent hashes, read-only active
+       episodes, actual retrieval, and action influence. A stored but unused lesson cannot support a
+       learning claim.
+    6. Restart from every transaction boundary, replay state hashes, inject frozen poison cases, and
+       perform byte-exact inverse-patch rollback. Record every mismatch.
+    7. Set procedural_csl_positive only when both order-level lower bounds exceed zero, commits and
+       rejects are nonzero, no hard-case or anchor regression exceeds its margin, support is
+       preserved, poison admissions are zero, and every restart and rollback passes.
+    8. Run focused tests, lint, spec coverage, adversarial verification, and row consistency.
+    9. REQUIRED ARTIFACT FIELDS: field_principles, inference_substrate (fresh-process cold row and
+       state replay), duration_s, random_seed, reproducibility_checksum, source_artifact_sha256,
+       rows (one audit row per source unit and transaction boundary), independent_reducer_id,
+       aggregate_recomputation, order_level_intervals, wins_losses_ties_no_headroom,
+       hard_case_transfer_by_arm, forgetting_by_arm, anchor_retention_by_arm, support_by_arm,
+       commits_recomputed, rejects_recomputed, retrieval_use_recomputed,
+       action_influence_recomputed, poison_admissions, restart_mismatches, rollback_mismatches,
+       procedural_csl_positive (all-science-gates boolean), csl_audit_completed,
+       gate_check_summary (failed check and observed value for blocked_*), verifier_is_oracle
+       (false), verdict_class (positive | circular_positive | null | blocked | disqualified |
+       partial), and honest_verdict (allowed complete/success/passed/shipped prefix; use
+       complete_blocked_<reason> for task-owned blocks).
 
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6750_csl_durability_support_poison_audit.py
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6763_csl_hard_case_forgetting_audit.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  gated_on:
-    - upstream: exp6749-prospective-support-preserving-csl-ab
-      artifact_field: prospective_csl_completed
-      op: '=='
-      value: true
   prior_failures:
-    - experiment_id: exp6444-csl-lifecycle-recomputation-audit
-      verdict: 'complete_blocked: V554 CSL lifecycle recomputation audit blocked by missing or failed upstream evidence'
-      addressed_by: 'The audit now has an exact completion gate, all six prospective order rows, immutable snapshots, and commit receipts; it remains cold and refuses to repair missing evidence.'
+    - experiment_id: exp6750-csl-durability-support-poison-audit
+      verdict: 'complete_null_csl_audit: no positive order-level CSL effect recomputed'
+      addressed_by: 'The audited producer now requires a non-saturating stream, nonzero exact commits and rejects, equal-capacity procedural and trace arms, and per-event retrieval plus action-influence receipts.'
       retire_if_same_verdict: true
 
-- id: exp6751-thermalizer-factor-trajectory-fidelity
-  title: Thermalizers-style factor-to-trajectory compiler fidelity
+- id: exp6764-arc-exclusive-load-preflight
+  title: Exclusive full-load ARC preflight and teardown receipt
+  track: infrastructure
+  priority: critical
+  model: opus
+  requires_gpu: true
+  max_turns: 100
+  estimated_wall_time_min: 90
+  per_unit_rows: true
+  milestone: 2026.08.589
+  deliverable: results/experiment_6764_arc_exclusive_load_preflight.json
+  prompt: |
+    CONTEXT:
+    Exp6752 proved 32K code-carrying selfparse transport on Qwen3.8 and Qwen3.6. Exp6753 then did
+    not start because GPU 0 had only 6,235 MiB free against a 22,610 MiB requirement. Carnot already
+    has a receipt-scoped GpuLease whose task-owned checks passed in Exp6647. This hardware task must
+    select and lease the least-used eligible RTX 3090, prove a real full load and unload, and never
+    kill or preempt unrelated work. It is routed directly to Opus because it coordinates leases,
+    processes, CUDA admission, transport, and teardown.
+
+    Work at {project_root}. The planning date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/results/experiment_6752_arc_code_carrying_tool_preflight.json
+    - {project_root}/results/experiment_6753_object_table_fetch_on_demand_ab.json
+    - {project_root}/results/experiment_6647_receipt_scoped_admission_boundary.json
+    - {project_root}/results/experiment_6633_gpu_lease_phase_journal.json
+    - {project_root}/python/carnot/pipeline/gpu_lease.py and phase-journal code
+    - {project_root}/python/carnot/agents/arc_e3_agent.py and production selfparse tool dispatch
+    - {project_root}/python/carnot/inference/sota_models.py
+    - {project_root}/ops/arc_solve_registry.yaml and {project_root}/ops/e2e-test-plan.md
+
+    TASK:
+    Acquire a real task-owned lease on the least-used eligible RTX 3090. In fresh subprocesses,
+    prove a 32K Qwen3.8 full load, one bounded production selfparse call, teardown, VRAM recovery,
+    and a Qwen3.6 transport canary. Produce an admission receipt only; do not measure ARC quality.
+
+    MODEL_SPECS:
+    - unsloth/Qwen3.8-27B-GGUF: immutable scored ARC generator for the full-load canary.
+    - unsloth/Qwen3.6-35B-A3B-GGUF: mandated flagship MoE transport canary.
+    Resolve exact cached GGUF files and embedded tokenizers. Both must use llama.cpp CUDA. A legacy,
+    CPU, remote, or substituted model cannot satisfy readiness.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require Exp6752 preflight readiness, Exp6647 task-owned admission score 1.0,
+       both exact MODEL_SPECS with hashes and tokenizers, the two RTX 3090 identities, llama.cpp CUDA,
+       32K context support, GpuLease, ports, RAM, disk, and production selfparse imports. On failure
+       write complete_blocked_arc_exclusive_load with gate_check_summary and stop.
+    1. Confirm or add narrow REQ-* anchors in research-harness and ARC agent specs. Write focused
+       tests for device selection, lease exclusion, no-preemption, full-load receipt, selfparse
+       dispatch, teardown, VRAM recovery, and blocked artifacts.
+    2. Inspect both devices with NVML or nvidia-smi. Rank eligible devices by free VRAM, temperature,
+       and active compute. Acquire the least-used eligible UUID with GpuLease before model load.
+       Never signal, kill, adopt, or preempt an unrelated PID. If neither device has the frozen free
+       VRAM threshold, block honestly.
+    3. In a fresh leased subprocess set CARNOT_ARC_INDUCE_N_CTX=32768, pin the device, load Qwen3.8,
+       record actual GPU layers and peak VRAM, and execute one bounded multi-parameter
+       find_objects request through production XML parse, dispatch, response bounding, and transcript
+       capture.
+    4. Unload Qwen3.8, terminate only the owned subprocess, release the lease, and prove owned VRAM
+       returns within a frozen tolerance. Record monotonic phase transitions and owner receipts.
+    5. Repeat a smaller first-token and selfparse transport canary for Qwen3.6 under the same lease
+       and teardown policy. Do not pool timings or quality with Qwen3.8.
+    6. Set arc_exclusive_load_ready only when both canaries use real CUDA, Qwen3.8 reaches 32K load
+       and production selfparse dispatch, every owned process ends, both leases release, and VRAM
+       recovery passes.
+    7. Run focused tests, lint, spec coverage, the applicable ARC transport E2E checks, adversarial
+       verification, and row consistency. Do not run a game-level solve.
+    8. REQUIRED ARTIFACT FIELDS: field_principles, inference_substrate (task-owned local llama.cpp
+       CUDA GGUF), duration_s, random_seed, reproducibility_checksum, models_used, live_model_invoked,
+       rows (one row per model and phase), device_inventory_before, device_selection_receipt,
+       lease_owner_receipts, phase_rows, gpu_receipts, runtime_context_by_model,
+       production_selfparse_receipt, owned_processes_terminated, lease_release_receipts,
+       vram_recovery_receipts, unrelated_processes_signaled (must be empty),
+       arc_exclusive_load_ready (all-admission boolean), claim_boundary (transport and teardown only),
+       gate_check_summary (failed check and observed value for blocked_*), verifier_is_oracle (false),
+       verdict_class (positive | circular_positive | null | blocked | disqualified | partial), and
+       honest_verdict (allowed complete/success/passed/shipped prefix; use
+       complete_blocked_<reason> for task-owned blocks).
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6764_arc_exclusive_load_preflight.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+    - experiment_id: exp6753-object-table-fetch-on-demand-ab
+      verdict: complete_blocked_object_table_ab:cuda_device_available
+      addressed_by: 'A separate upstream receipt now acquires the least-used eligible device, proves the complete 32K load and production tool call, and tears down before the paired A/B agent is invoked.'
+      retire_if_same_verdict: true
+    - experiment_id: exp6633-gpu-lease-phase-journal
+      verdict: 'blocked_gpu_lease_scheduler_not_ready: infrastructure checks failed; no model-quality claim'
+      addressed_by: 'Exp6647 subsequently proved the receipt-scoped GpuLease contract. This task uses that shipped lease in a real full-load subprocess instead of rebuilding the failed scheduler fixture.'
+      retire_if_same_verdict: true
+
+- id: exp6765-object-table-fetch-ab-v2
+  title: Live object-table fetch-on-demand A/B v2
+  track: arc-agent
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: true
+  max_turns: 50
+  estimated_wall_time_min: 300
+  per_unit_rows: true
+  milestone: 2026.08.589
+  deliverable: results/experiment_6765_object_table_fetch_ab_v2.json
+  gated_on:
+    - upstream: exp6764-arc-exclusive-load-preflight
+      artifact_field: arc_exclusive_load_ready
+      op: '=='
+      value: true
+  prompt: |
+    CONTEXT:
+    Exp6753 completed every scientific precondition except CUDA capacity, then correctly blocked
+    before the paired run. Exp6764 now opens this task only after a real exclusive Qwen3.8 32K load,
+    production selfparse call, teardown, and VRAM-recovery receipt. The experiment tests whether
+    fetching object rows on demand saves prompt tokens without degrading live change_fidelity. It
+    does not target or claim a game-level solve.
+
+    Work at {project_root}. The planning date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/results/experiment_6764_arc_exclusive_load_preflight.json
+    - {project_root}/results/experiment_6753_object_table_fetch_on_demand_ab.json
+    - {project_root}/results/experiment_6752_arc_code_carrying_tool_preflight.json
+    - {project_root}/results/experiment_6716_object_table_fetch_on_demand_ab.json
+    - {project_root}/python/carnot/agents/arc_e3_agent.py,
+      {project_root}/python/carnot/agents/arc_perception.py, and production selfparse dispatch
+    - {project_root}/ops/arc_solve_registry.yaml,
+      {project_root}/ops/arc_levelup_architecture_map.md, and
+      {project_root}/ops/e2e-test-plan.md
+
+    TASK:
+    Rerun the frozen 20-game paired A/B under the exclusive-load prerequisite. Compare the default
+    inline object table against table-absent plus production find_objects fetch. Keep the immutable
+    Qwen3.8 generator, public agent route, 32K context, games, seeds, and budgets fixed.
+
+    MODEL_SPECS:
+    - unsloth/Qwen3.8-27B-GGUF: immutable scored ARC generator; do not replace or fine-tune it.
+    - unsloth/Qwen3.6-35B-A3B-GGUF: mandated flagship MoE transport canary only; do not pool its
+      rows with Qwen3.8 quality results.
+    Resolve exact cached GGUF files and embedded tokenizers. Use llama.cpp CUDA. Legacy, CPU,
+    remote, or substituted models cannot satisfy the live comparison.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require arc_exclusive_load_ready=true; verify the frozen 20 games and three
+       seeds from Exp6753, current production E3AgentPolicy route, no new or duplicate solve target
+       in the registry, architecture map freshness, exact Qwen3.8 and Qwen3.6 cache hashes, 32K
+       context, llama.cpp CUDA, lease, ports, RAM, and disk. On failure write
+       complete_blocked_object_table_ab_v2 with gate_check_summary and no fallback.
+    1. Confirm existing ARC REQ-* anchors and add only narrow missing coverage. Write tests for
+       frozen pairing, absent-table prompt construction, production find_objects dispatch, useful
+       fetch scoring, token accounting, lease use, teardown, and no solve claim.
+    2. Freeze the same game IDs, seeds 6100-6102, within-arm noise floor, prompts, context, action and
+       tool budgets, selfparse schema, model hash, sampling configuration, and arm-order rotation as
+       Exp6753.
+    3. Acquire the Exp6764-tested lease policy and run only on the eligible leased device. Never
+       signal unrelated processes. Tear down each owned session before changing arm or seed.
+    4. Run arm A with the production inline object table. Run arm B with that table absent and the
+       production find_objects tool available. The model must choose and parameterize the tool from
+       observations; no hand-written per-game query is allowed.
+    5. Preserve public observations, prompts, tool requests and bounded responses, action traces,
+       transition receipts, tokens, latency, device, peak VRAM, failures, and teardown in one rows
+       entry per game, seed, and arm. Record Qwen3.6 canary rows separately and exclude them from
+       quality reducers.
+    6. Recompute mean prompt-token savings, tool-call rate, useful fetch rate, transition utility,
+       change_fidelity delta and interval, harmful regressions, and within-arm variance from rows.
+    7. Adoption requires positive realized token savings and non-inferiority on change_fidelity
+       within the frozen noise floor. Set object_table_ab_completed from complete attributable rows,
+       not from adoption success.
+    8. Run focused tests, lint, spec coverage, applicable live ARC E2E checks, adversarial
+       verification, and row consistency. Do not inspect game source or claim a level solve.
+    9. REQUIRED ARTIFACT FIELDS: field_principles, inference_substrate (production E3AgentPolicy on
+       task-owned llama.cpp CUDA Qwen3.8), duration_s, random_seed, reproducibility_checksum,
+       models_used, live_model_invoked, frozen_manifest, rows (every game-seed-arm plus separately
+       typed canary unit), gpu_receipts, lease_receipts, prompt_tokens_by_arm, tool_calls_by_arm,
+       useful_fetch_rate, transition_utility_delta, mean_prompt_token_savings,
+       change_fidelity_by_arm, change_fidelity_delta, change_fidelity_interval,
+       noninferiority_margin, harmful_regressions, adoption_gate_passed,
+       object_table_ab_completed (row-completeness boolean), solve_claim (must be false),
+       source_receipts (must show no game source or offline BFS), gate_check_summary (failed check and
+       observed value for blocked_*), verifier_is_oracle (false), verdict_class (positive |
+       circular_positive | null | blocked | disqualified | partial), and honest_verdict (allowed
+       complete/success/passed/shipped prefix; use complete_blocked_<reason> for task-owned blocks).
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6765_object_table_fetch_ab_v2.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+    - experiment_id: exp6753-object-table-fetch-on-demand-ab
+      verdict: complete_blocked_object_table_ab:cuda_device_available
+      addressed_by: 'The A/B is now conductor-gated on a real task-owned exclusive full-load, production selfparse, teardown, and VRAM-recovery receipt from Exp6764.'
+      retire_if_same_verdict: true
+    - experiment_id: exp6716-object-table-fetch-on-demand-ab
+      verdict: 'blocked_context_window: CARNOT_ARC_INDUCE_N_CTX is unset; the paired A/B did not start'
+      addressed_by: 'Exp6752 shipped owned 32K context and code-carrying transport, and Exp6764 must prove that same context in a leased full-load subprocess before this run.'
+      retire_if_same_verdict: true
+
+- id: exp6766-thermalizer-independent-trajectory-audit
+  title: Independent Thermalizer factor-to-trajectory audit
   track: hardware-portability
   priority: high
   agent_type: codex
   model: gpt-5.6-sol
   requires_gpu: false
   max_turns: 50
-  estimated_wall_time_min: 180
+  estimated_wall_time_min: 120
   per_unit_rows: true
-  milestone: 2026.08.588
-  deliverable: results/experiment_6751_thermalizer_factor_trajectory_fidelity.json
+  milestone: 2026.08.589
+  deliverable: results/experiment_6766_thermalizer_independent_trajectory_audit.json
   prompt: |
     CONTEXT:
-    Exp6684 blocked because installed Torx CPU parity did not pass every end-to-end check.
-    Thermalizing Stochastic Programs (arXiv 2608.01615) reframes portability as typed factor
-    approximation plus accumulated trajectory error, with context matching and trajectory-level
-    refinement. This task implements a bounded exact-enumeration reference. It does not require
-    physical Extropic hardware or claim speed, power, or energy.
+    Exp6751 reported that context matching reduced mean trajectory total variation on bounded
+    simulator circuits. Its artifact also set verifier_is_oracle=true and verdict_class=positive,
+    which the live adversarial check correctly flags as a circularity-class mismatch. Extropic's
+    public 2026 update still targets Z1 early access for 2027. This task asks only whether the local
+    compiler-fidelity result survives a separately implemented exact enumerator and direct sampler.
 
     Work at {project_root}. The planning date is {date}.
 
     EXISTING CODE TO READ FIRST:
     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
-    - {project_root}/openspec/capabilities/hardware-acceleration/spec.md
-    - {project_root}/results/experiment_6684_torx_typed_factor_parity.json
-    - {project_root}/scripts/experiments/experiment_6684_torx_typed_factor_parity.py
-    - {project_root}/python/carnot/samplers/ and typed stochastic factor helpers
-    - {project_root}/research-references.md, V588 entries for arXiv 2608.01615 and 2608.01612
-    - The installed Torx/THRML package metadata if present; do not install a dependency silently.
+    - {project_root}/results/experiment_6751_thermalizer_factor_trajectory_fidelity.json
+    - {project_root}/python/carnot/experiment_6751_thermalizer_factor_trajectory_fidelity.py
+    - {project_root}/tests/python/test_experiment_6751_thermalizer_factor_trajectory_fidelity.py
+    - {project_root}/python/carnot/backends/torx_backend.py and installed THRML/Torx interfaces
+    - {project_root}/scripts/adversarial_verify.py and
+      {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/research-references.md, V589 Extropic entry
+    - Primary sources arXiv 2608.01615 and 2608.01612 and
+      https://extropic.ai/writing/from-one-to-one-billion.
 
     TASK:
-    Compile bounded typed stochastic kernels into sparse EBM/Ising factors and compare independent
-    factor fitting, context matching, and trajectory-level refinement against exact conditional and
-    trajectory distributions.
+    Cold-audit Exp6751 with an evaluator that does not import its factor-normalization, enumeration,
+    sampling, trajectory, or reducer functions. Recompute conditional KL and trajectory total
+    variation per factor, depth, and seed. Determine whether the compiler under test is genuinely
+    distinct from the evaluation authority and classify the evidence accordingly.
 
     CONCRETE STEPS:
-    0. PRECONDITIONS: require exact enumeration for every selected state space, deterministic seeds,
-       and a simulator path. Official Torx is optional conformance evidence, not a prerequisite. If
-       the internal exact path is unavailable emit complete_blocked_compiler_reference with
+    0. PRECONDITIONS: require Exp6751 to parse, retain all raw rows and frozen topology, precision,
+       seed, factor, and trajectory receipts. Verify exact enumeration is bounded and the independent
+       implementation can be isolated. On failure write complete_blocked_thermalizer_audit with
        gate_check_summary.
-    1. Confirm or add a narrow REQ-* anchor in
-       openspec/capabilities/hardware-acceleration/spec.md. Add tests for typed kernels,
-       normalization, exact enumeration, topology/precision serialization, and trajectory metrics.
-    2. Freeze binary and small categorical kernels, context conditions, sparse target topologies,
-       numeric precisions, seeds, and circuit depths 1, 2, 4, and 8. Keep all state spaces exactly
-       enumerable.
-    3. Implement three matched compiler arms: independent factor fitting, context-matched fitting,
-       and trajectory-level refinement. Hold factor capacity, topology, precision, and training
-       budget fixed except for the declared refinement method.
-    4. Compute conditional KL for each factor/context and total variation for every exact trajectory
-       distribution. Record error accumulation by depth and seeds.
-    5. If installed Torx APIs are reachable, run a separate conformance sidecar with exact version
-       and API identity. A sidecar failure cannot be replaced by a handwritten claim.
-    6. Set compiler_fidelity_completed true only when every factor, arm, depth, context, precision,
-       and seed row exists and exact distributions normalize. A positive result requires context or
-       trajectory refinement to reduce trajectory TV against independent fitting.
-    7. Run focused tests, lint, spec coverage, row-consistency lint, and adversarial verification.
-    8. REQUIRED ARTIFACT FIELDS: field_principles (entry for every field),
-       inference_substrate (CPU exact enumeration plus simulator), duration_s (monotonic),
-       random_seed (factor/train/trajectory seeds), reproducibility_checksum
-       (kernel/topology/config/rows), hardware_used (false), simulator_used (true),
-       compiler_provenance (internal and optional official sidecar identities),
-       rows (every factor/context/arm/depth/precision/seed), conditional_kl_by_factor
-       (row-derived), trajectory_tv_by_depth (row-derived), normalization_error_by_row
-       (exact check), topology_receipts (couplers and categories), precision_receipts (numeric
-       formats), compiler_fidelity_completed (all-row completion),
-       gate_check_summary (failed check and observed value for blocked_*),
-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial),
-       and honest_verdict (allowed terminal prefix; complete_blocked_<reason> for owned blocks).
-       Use simulator_only_exact_enumeration_no_physical_tsu as the substrate.
+    1. Confirm or add narrow REQ-* anchors in hardware-portability and research-reporting specs.
+       Write independent enumeration, normalization, sampling, metric, circularity, and reducer
+       tests first.
+    2. Implement the evaluator in a separate module without importing Exp6751 normalization,
+       exact-enumeration, direct-sampling, trajectory, or aggregation functions. It may consume only
+       serialized typed factors, compiler outputs, frozen seeds, and documented schemas.
+    3. Recompute normalization, conditional distributions, conditional KL, short trajectory
+       distributions, and total variation for independent factor fitting, context matching, and
+       trajectory refinement at depths 1, 2, 4, and 8.
+    4. Add direct sampling with frozen seeds as a second independent check. If installed Torx or
+       THRML is invoked, record exact version and API path, but do not require it and do not treat an
+       internal simulator as physical hardware.
+    5. Emit one rows entry per factor, method, precision, topology, depth, seed, and evaluator path.
+       Recompute means, intervals, and paired differences only from those rows.
+    6. Verify compiler and evaluator module identity, dependency graph, code hashes, and shared
+       functions. If the tested method consumes the same exact evaluator outcome as its mechanism,
+       set verifier_is_oracle=true and verdict_class=circular_positive at best. If implementations
+       are distinct and exact evaluation is only held-out measurement, set verifier_is_oracle=false.
+    7. Set independent_trajectory_audit_completed when all planned cold rows and cross-checks are
+       attributable. A positive non-circular result requires the preregistered trajectory reduction
+       to reproduce with a paired interval excluding zero and evaluator_distinct=true.
+    8. Run focused tests, lint, spec coverage, adversarial verification, and row consistency.
+    9. REQUIRED ARTIFACT FIELDS: field_principles, inference_substrate (local simulator/compiler
+       cold audit; no physical TSU), duration_s, random_seed, reproducibility_checksum,
+       source_artifact_sha256, compiler_provenance, evaluator_provenance, dependency_graph_receipt,
+       evaluator_distinct (boolean), rows (every factor-method-precision-topology-depth-seed-evaluator
+       unit), conditional_kl_by_factor, trajectory_tv_by_depth, paired_trajectory_deltas,
+       direct_sampler_crosscheck, normalization_mismatches, topology_mismatches,
+       precision_mismatches, independent_trajectory_audit_completed, claim_boundary (simulator-only;
+       no speed, power, X0, Z1, FPGA, or physical-hardware claim), gate_check_summary (failed check
+       and observed value for blocked_*), verifier_is_oracle (row-derived circularity boolean),
+       verdict_class (positive | circular_positive | null | blocked | disqualified | partial), and
+       honest_verdict (allowed complete/success/passed/shipped prefix; use
+       complete_blocked_<reason> for task-owned blocks).
 
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6751_thermalizer_factor_trajectory_fidelity.py
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6766_thermalizer_independent_trajectory_audit.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
   prior_failures:
-    - experiment_id: exp6684-torx-typed-factor-parity
-      verdict: 'blocked_parity_check_failed: installed Torx CPU parity did not pass every row'
-      addressed_by: 'The new scope owns an exact-enumeration typed compiler and measures factor-to-trajectory error across three fitting methods; official Torx is an optional versioned sidecar rather than the failed readiness gate.'
+    - experiment_id: exp6751-thermalizer-factor-trajectory-fidelity
+      verdict: 'complete: context matching reduced exact mean trajectory total variation; simulator-only compiler evidence'
+      addressed_by: 'A separately implemented enumerator, direct sampler, reducer, dependency receipt, and correct circularity class now audit the existing result instead of trusting its shared exact path and positive self-classification.'
       retire_if_same_verdict: true
 
-- id: exp6752-arc-code-carrying-tool-preflight
-  title: Owned 32K live code-carrying ARC tool preflight
-  track: arc-agi3
+- id: exp6767-v589-branch-disposition
+  title: V589 branch disposition and PRD gap update
+  track: synthesis
   priority: critical
-  agent_type: codex
-  model: gpt-5.6-sol
-  requires_gpu: true
-  max_turns: 50
-  estimated_wall_time_min: 90
-  per_unit_rows: true
-  milestone: 2026.08.588
-  deliverable: results/experiment_6752_arc_code_carrying_tool_preflight.json
-  prompt: |
-    CONTEXT:
-    Exp6730 gate-blocked on the unrelated V587 activation artifact before testing transport.
-    Earlier selfparse evidence covers 20/20 zero-argument list_transitions calls, not a live
-    multi-parameter call carrying code. This task is an independent ARC root. It owns a 32K context
-    inside each subprocess and exercises production find_objects parsing, dispatch, response
-    bounding, and transcript capture. It measures no game quality and claims no level solve.
-
-    Work at {project_root}. The planning date is {date}.
-
-    EXISTING CODE TO READ FIRST:
-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
-    - {project_root}/openspec/capabilities/arc-world-model-trust-energy/spec.md
-    - {project_root}/python/carnot/agentic/arc_induction_tools.py
-    - {project_root}/python/carnot/agentic/arc_induction_tool_loop.py
-    - {project_root}/python/carnot/agentic/arc_executable_world_model.py
-    - {project_root}/scripts/experiments/experiment_6716_object_table_fetch_on_demand_ab.py
-    - {project_root}/results/experiment_6716_object_table_fetch_on_demand_ab.json
-    - {project_root}/results/experiment_6730_arc_context_tool_preflight.json
-    - {project_root}/scripts/experiment_template.py and current SOTA helpers
-    - {project_root}/ops/arc_solve_registry.yaml
-
-    TASK:
-    Prove task-owned 32K CUDA admission and a live multi-parameter, code-carrying find_objects call
-    through the production ARC selfparse/tool loop on the immutable scored generator and a mandated
-    SOTA transport canary. Do not claim a game-level solve.
-
-    MODEL_SPECS:
-    - unsloth/Qwen3.8-27B-GGUF: immutable scored/live ARC generator.
-    - unsloth/Qwen3.6-35B-A3B-GGUF: mandated flagship-MoE transport canary.
-    Legacy small models may be CPU smoke tests only and cannot satisfy readiness.
-
-    CONCRETE STEPS:
-    0. PRECONDITIONS: require llama.cpp CUDA offload, cached exact paths for both MODEL_SPECS, enough
-       free VRAM for one model at a time, and a registry check confirming no new or duplicate solve
-       is targeted. On failure emit complete_blocked_arc_transport with gate_check_summary; do not
-       use CPU, remote APIs, another model, or fabricated transcripts.
-    1. Confirm or add a narrow REQ-* anchor in
-       openspec/capabilities/arc-world-model-trust-energy/spec.md. Add focused tests for task-owned
-       context, code argument parsing, typed dispatch, output bounds, and no-solve claims.
-    2. Spawn each model in a fresh subprocess whose explicit environment sets
-       CARNOT_ARC_INDUCE_N_CTX=32768. Record requested and runtime-observed context, GPU layers,
-       model hash, assigned device, and peak VRAM.
-    3. Use a synthetic or stored bounded transition fixture, never game source, ground-truth BFS,
-       or a per-game adapter. Request find_objects with at least three typed parameters including a
-       bounded predicate/code argument.
-    4. Exercise the production XML/selfparse and tool-loop route. A direct Python helper call cannot
-       satisfy transport readiness.
-    5. Record raw emission hash, parsed tool and arguments, dispatch result, bounded response hash,
-       latency, failure class, and transcript hash for every model and call shape.
-    6. Set arc_context_tool_preflight_ready true only if both models admit 32K on CUDA and complete
-       at least one parse-to-dispatch-to-bounded-response multi-parameter call.
-    7. Run focused tests, ARC spec coverage, lint, row-consistency lint, and adversarial verification.
-    8. REQUIRED ARTIFACT FIELDS: field_principles (entry for every field and gate),
-       inference_substrate (local llama.cpp CUDA GGUF production tool route), duration_s
-       (monotonic), random_seed (fixture/model seeds), reproducibility_checksum
-       (fixture/config/transcript/rows), models_used (exact IDs and roles), live_model_invoked
-       (real decode), context_requested (32768), context_observed_by_model (runtime values),
-       gpu_admission_by_model (measured receipts), rows (every model and call shape),
-       multi_parameter_parse_successes (count), multi_parameter_dispatch_successes (count),
-       bounded_response_successes (count), arc_context_tool_preflight_ready (exact downstream
-       gate), solve_claim (false), live_path_reached (production route boolean),
-       gate_check_summary (failed check and observed value for blocked_*),
-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial),
-       and honest_verdict (allowed terminal prefix; complete_blocked_<reason> for owned blocks).
-
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6752_arc_code_carrying_tool_preflight.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-  prior_failures:
-    - experiment_id: exp6730-arc-context-tool-preflight
-      verdict: blocked_gate_check_failed
-      addressed_by: 'The preflight is now an independent root, owns CARNOT_ARC_INDUCE_N_CTX=32768 inside each subprocess, and no longer depends on the failed V587 activation artifact.'
-      retire_if_same_verdict: true
-
-- id: exp6753-object-table-fetch-on-demand-ab
-  title: Live ARC object-table fetch-on-demand paired comparison
-  track: arc-agi3
-  priority: critical
-  agent_type: codex
-  model: gpt-5.6-sol
-  requires_gpu: true
-  max_turns: 50
-  estimated_wall_time_min: 360
-  per_unit_rows: true
-  milestone: 2026.08.588
-  deliverable: results/experiment_6753_object_table_fetch_on_demand_ab.json
-  prompt: |
-    CONTEXT:
-    The static object table consumes about 54-56 percent of measured ARC induce prompts, but the
-    prior default-ON table improved held change_fidelity by +0.0720 across 20 paired games.
-    Exp6716 did not start because its context setting was external and unset. Exp6752 now owns the
-    32K context and proves the live code-carrying tool shape. The question is non-inferiority with
-    realized token savings, not whether deleting text shortens a prompt.
-
-    Work at {project_root}. The planning date is {date}.
-
-    EXISTING CODE TO READ FIRST:
-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
-    - {project_root}/openspec/capabilities/arc-world-model-trust-energy/spec.md
-    - {project_root}/docs/research-notes/arc-context-frame-compression-and-callable-tools-2026-08-28.md
-    - {project_root}/results/outer_loop_arc_object_perception_heldout_ab_change_fidelity_20260801.json
-    - {project_root}/results/experiment_6716_object_table_fetch_on_demand_ab.json
-    - {project_root}/results/experiment_6752_arc_code_carrying_tool_preflight.json
-    - {project_root}/python/carnot/agentic/arc_induction_tools.py
-    - {project_root}/python/carnot/agentic/arc_induction_tool_loop.py
-    - {project_root}/python/carnot/agentic/arc_executable_world_model.py
-    - {project_root}/python/carnot/agentic/arc_agi3_agent.py and production E3AgentPolicy route
-    - {project_root}/ops/arc_solve_registry.yaml
-
-    TASK:
-    Run a same-game, same-seed paired comparison of inline object-table ON against table absent plus
-    production find_objects fetch. Preserve the immutable live generator, public agent route,
-    budgets, context, and seeds. Measure change_fidelity, transition utility, prompt tokens, tool
-    use, and useful evidence. Do not claim a level solve.
-
-    MODEL_SPECS:
-    - unsloth/Qwen3.8-27B-GGUF: immutable scored ARC generator for both science arms.
-    - unsloth/Qwen3.6-35B-A3B-GGUF: mandated SOTA same-task transport canary; run bounded call-shape
-      rows only and never pool them with the scored Qwen3.8 result.
-
-    CONCRETE STEPS:
-    0. PRECONDITIONS: require Exp6752 arc_context_tool_preflight_ready == true, CUDA offload,
-       cached exact Qwen3.8 and Qwen3.6 paths, task-owned 32K context, the exact 20 games/seeds and
-       within-arm noise floor from the 2026-08-01 artifact, and a registry check proving no new or
-       duplicate solve target. On failure emit complete_blocked_object_table_ab with
-       gate_check_summary; do not change games, model, context, or denominator.
-    1. Confirm or add a narrow REQ-* anchor in
-       openspec/capabilities/arc-world-model-trust-energy/spec.md. Add focused tests for arm
-       isolation, prompt construction, useful-fetch accounting, pairing, and no-solve claims.
-    2. Freeze games, seeds, arm order, budgets, timeout, 32K context, generator configuration,
-       production agent factory, and adoption thresholds before live runs.
-    3. Baseline arm: current default inline object table. Treatment arm: omit the inline table and
-       make bounded find_objects available through production selfparse. Change no other prompt or
-       tool surface.
-    4. Run Qwen3.8 on both arms. Run Qwen3.6 only as a bounded transport/control sidecar for the same
-       query shape; keep its rows separate from science aggregates.
-    5. Record raw prompt hash, prompt tokens, tool emissions, arguments, bounded results, whether
-       fetched evidence entered later reasoning, transition result, change_fidelity, latency,
-       actions, stop reason, and failure class per game/seed/arm.
-    6. Compute paired change_fidelity and transition-utility deltas, confidence intervals, token
-       savings, fetch rate, useful-fetch rate, and harmful regressions. Adoption requires positive
-       token savings and change_fidelity non-inferiority within the pre-registered noise floor.
-    7. Set object_table_ab_completed true only when every planned paired Qwen3.8 row and mandated
-       Qwen3.6 sidecar row exists with valid provenance. Completion is not adoption.
-    8. Run focused tests, ARC spec coverage, lint, row-consistency lint, and adversarial verification.
-    9. REQUIRED ARTIFACT FIELDS: field_principles (entry for every field),
-       inference_substrate (production E3AgentPolicy local CUDA GGUF), duration_s (monotonic),
-       random_seed (all game/arm seeds), reproducibility_checksum (games/config/prompts/rows),
-       models_used (exact roles), live_model_invoked (true), context_requested (32768),
-       gpu_receipts (per load), rows (every game/seed/arm and sidecar),
-       mean_prompt_token_savings (paired row result), useful_fetch_rate (row-derived),
-       change_fidelity_delta (paired row result), change_fidelity_ci95 (paired interval),
-       transition_utility_delta (paired row result), noninferiority_margin (frozen noise floor),
-       adoption_gate_passed (all pre-registered conditions), object_table_ab_completed
-       (all-row completion), solve_claim (false), gate_check_summary (failed check and observed
-       value for blocked_*),
-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial),
-       and honest_verdict (allowed terminal prefix;
-       complete_blocked_<reason> for owned blocks).
-
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6753_object_table_fetch_on_demand_ab.py
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-  gated_on:
-    - upstream: exp6752-arc-code-carrying-tool-preflight
-      artifact_field: arc_context_tool_preflight_ready
-      op: '=='
-      value: true
-  prior_failures:
-    - experiment_id: exp6716-object-table-fetch-on-demand-ab
-      verdict: 'blocked_context_window: CARNOT_ARC_INDUCE_N_CTX is unset; the paired A/B did not start'
-      addressed_by: 'The upstream preflight now proves task-owned 32K CUDA context and production multi-parameter find_objects transport before the paired science run.'
-      retire_if_same_verdict: true
-
-- id: exp6754-v588-branch-disposition
-  title: V588 branch disposition and PRD gap reconciliation
-  track: research-reporting
-  priority: high
   agent_type: codex
   model: gpt-5.5
   requires_gpu: false
   max_turns: 50
   estimated_wall_time_min: 90
   per_unit_rows: true
-  milestone: 2026.08.588
-  deliverable: results/experiment_6754_v588_branch_disposition.json
+  milestone: 2026.08.589
+  deliverable: results/experiment_6767_v589_branch_disposition.json
+  operator_override: 'Standing capstone continuation directive recorded 2026-05-29; synthesize the new milestone under a fresh ID.'
   prompt: |
     CONTEXT:
-    V588 has independent handoff, activity, verifier, self-learning, stochastic-compiler, and ARC
-    branches. A branch may be positive, circular_positive, null, blocked, disqualified, partial, or
-    missing. This capstone is deliberately ungated so it can preserve every terminal state. It
-    cannot pool unrelated branches or turn harness success into scientific success.
+    V589 has four independent roots: proof transport and diagnostic repair; procedural continuous
+    memory; leased live ARC fetch; and an independent stochastic compiler audit. The milestone is
+    complete when every task is terminal, not when every branch is positive. This ungated capstone
+    must preserve blocked, null, circular, partial, and disqualified evidence and update the three
+    PRD gaps without pooling unrelated metrics.
 
     Work at {project_root}. The planning date is {date}.
 
@@ -1067,68 +1141,64 @@ tasks:
     - {project_root}/research-program.md, {project_root}/_bmad/prd.md, and
       {project_root}/_bmad/architecture.md
     - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
-    - {project_root}/research-roadmap.yaml
-    - {project_root}/results/experiment_6742_v588_handoff_contract_audit.json
-    - {project_root}/results/experiment_6743_task_owned_phase_accelerator_canary.json
-    - {project_root}/results/experiment_6744_hardness_controlled_certificate_stream.json
-    - {project_root}/results/experiment_6745_sota_dual_encoding_proposal_corpus.json
-    - {project_root}/results/experiment_6746_oracle_distinct_diagnostic_energy.json
-    - {project_root}/results/experiment_6747_diagnostic_energy_localized_repair_ab.json
-    - {project_root}/results/experiment_6748_transactional_constraint_memory_fixture.json
-    - {project_root}/results/experiment_6749_prospective_support_preserving_csl_ab.json
-    - {project_root}/results/experiment_6750_csl_durability_support_poison_audit.json
-    - {project_root}/results/experiment_6751_thermalizer_factor_trajectory_fidelity.json
-    - {project_root}/results/experiment_6752_arc_code_carrying_tool_preflight.json
-    - {project_root}/results/experiment_6753_object_table_fetch_on_demand_ab.json
-    - {project_root}/scripts/adversarial_verify.py,
+    - {project_root}/research-roadmap.yaml and {project_root}/research-roadmap-next.yaml if present
+    - Every available V589 artifact from Exp6755 through Exp6766, including blocked artifacts
+    - {project_root}/results/experiment_6754_v588_branch_disposition.json
+    - {project_root}/ops/status.md, {project_root}/ops/changelog.md,
+      {project_root}/ops/conductor-log.md, and {project_root}/research-complete.yaml
+    - {project_root}/scripts/summarize_artifact.py, {project_root}/scripts/adversarial_verify.py,
       {project_root}/scripts/verdict_row_consistency_lint.py, and
       {project_root}/scripts/recurring_blocker_ledger.py
 
     TASK:
-    Independently synthesize V588 from available rows and receipts. Recompute each branch headline,
-    preserve blocked and missing evidence, run adversarial checks, and state which of the three PRD
-    gaps narrowed and which next action is licensed.
+    Produce the terminal V589 branch disposition. Recompute each comparative headline from rows,
+    preserve circularity and blocks, classify the three PRD gaps, record exact retired follow-ups,
+    and reconcile the milestone evidence docs. Do not fill missing evidence with narrative success.
 
     CONCRETE STEPS:
-    0. PRECONDITIONS: require the active V588 manifest and design. Individual branch artifacts are
-       optional inputs by design. Record each missing or invalid artifact as a row; never block the
-       capstone solely because a branch is absent.
-    1. Confirm or add a narrow REQ-* anchor in
-       openspec/capabilities/research-reporting/spec.md. Add focused tests for missing-branch
-       preservation, row recomputation, verdict-class propagation, and no pooled claims.
-    2. Build one branch row for handoff, activity, FR12 diagnostics/repair, FR11 continuous
-       self-learning, stochastic portability, and ARC transport/object-table quality.
-    3. Recompute every comparative headline from per-unit rows. Compare recomputed values with
-       artifact headlines and disqualify contradictions or missing denominators.
-    4. Run adversarial_verify.py and verdict_row_consistency_lint.py on every available artifact.
-       Record critical flags, circularity, substitutions, short-duration claims, and provenance
-       failures without auto-repairing results.
-    5. Preserve exact authority boundaries, model identities, hardware/simulator boundaries, ARC
-       no-solve scope, and all gate_check_summary diagnostics. Do not infer physical hardware,
-       proprietary Kona, or external publication claims.
-    6. State separately whether each of the three roadmap gaps narrowed. Name the single next
-       licensed experiment per branch or retire the branch when its same-verdict condition fired.
-    7. Reconcile only docs directly owned by this milestone and only from landed evidence. Do not
-       modify operator-curated north-star or external publication state.
-    8. REQUIRED ARTIFACT FIELDS: field_principles (entry for every field),
-       inference_substrate (local row-replay and audit path), duration_s (monotonic), random_seed
-       (audit/recompute seeds), reproducibility_checksum (manifest/source-artifact/recomputed-row
-       hash), rows (one row per task and branch), artifact_presence_matrix (all 13 tasks),
-       branch_verdicts (closed class per branch), recomputed_headlines (values from raw rows),
-       row_headline_mismatches (must remain visible), adversarial_findings (all audited artifacts),
-       prd_gap_disposition (three named gaps), prior_failure_retirements (same-verdict outcomes),
-       next_licensed_actions (one bounded action per branch), gate_check_summary (failed check and
-       observed value for any blocked_* verdict),
-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial),
-       and honest_verdict (allowed terminal prefix;
-       complete_blocked_<reason> only if the capstone itself cannot inspect the active manifest).
-       Use local_cpu_branch_row_replay_and_adversarial_audit_no_llm as substrate.
+    0. PRECONDITIONS: inspect the active roadmap and list all 13 expected task IDs and deliverables.
+       Missing or nonterminal artifacts become explicit partial or blocked rows; they do not block
+       this capstone. Write the capstone artifact atomically before doc reconciliation.
+    1. Confirm the relevant research-reporting REQ-* anchors and add only narrow missing capstone
+       coverage. Write branch-classification and row-recomputation tests first.
+    2. Run summarize_artifact.py on every available V589 artifact. Record missing files, blocked
+       gates, verdict classes, durations, substrates, model IDs, and raw-row availability.
+    3. Independently recompute proof exact-valid deltas, diagnostic AUROC and leakage, repair paired
+       intervals and harmful flips, CSL order-level intervals and transaction activity, ARC token
+       savings and non-inferiority, and stochastic trajectory deltas and evaluator independence.
+    4. Run adversarial verification and verdict-row consistency lint on every artifact. Preserve all
+       CRITICAL, WARNING, circular, no-headroom, stale-stamp, and missing-row findings.
+    5. Emit one rows entry per experiment and one branch_rows entry per proof transport, repair,
+       continuous memory, ARC, stochastic portability, and infrastructure branch. Do not average or
+       vote across branches.
+    6. Classify each of the three roadmap gaps as narrowed, unchanged, widened, or blocked with
+       direct artifact and row citations. FR11 continuous self-learning is positive only if the cold
+       audit passes every activity, support, hard-case, poison, restart, and rollback gate.
+    7. Reconcile research-complete.yaml, _bmad/traceability.md, ops/status.md, and ops/changelog.md
+       with only terminal evidence. Do not activate or modify research-roadmap.yaml and do not write
+       a successor roadmap.
+    8. Write explicit branch disposition and next_action values. Any recovered scope that repeats
+       its prior verdict with retire_if_same_verdict=true must be named for exclusion-manifest
+       retirement; do not silently propose it again.
+    9. Run focused tests, lint, spec coverage, adversarial verification, row consistency, recurring
+       blocker ledger, and the applicable documentation E2E checks.
+    10. REQUIRED ARTIFACT FIELDS: field_principles, inference_substrate (cold local artifact and row
+        synthesis), duration_s, random_seed, reproducibility_checksum, milestone,
+        expected_task_ids, available_artifacts, missing_artifacts, rows (one per experiment),
+        branch_rows (one per independent branch), row_recomputed_headlines, adversarial_findings,
+        verdict_row_consistency_findings, recurring_blockers, prior_verdict_recurrences,
+        retirement_recommendations, prd_gap_disposition (all three gaps), fr12_disposition,
+        fr11_disposition, live_hardware_disposition, docs_reconciled, protected_files_unchanged
+        (must include scripts/research_conductor.py and research-roadmap.yaml),
+        gate_check_summary (failed check and observed value for any blocked_* verdict),
+        verifier_is_oracle (false; synthesis is not a verifier), verdict_class (positive |
+        circular_positive | null | blocked | disqualified | partial), and honest_verdict (allowed
+        complete/success/passed/shipped prefix; partial is expected if any branch lacks evidence).
 
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6754_v588_branch_disposition.py
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6767_v589_branch_disposition.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  operator_override: 'Standing operator directive 2026-05-29 authorizes routine branch-independent capstone continuation.'
   prior_failures:
-    - experiment_id: exp6687-v582-branch-synthesis
-      verdict: 'complete_null: V582 has a null execution-integrity receipt, blocked output, CSL, and stochastic branches, and a partial adverse ARC branch; there is no pooled success claim'
-      addressed_by: 'V588 supplies fresh independent branch roots, exact row contracts, task-owned activity receipts, and an ungated synthesis that preserves rather than inherits V582 missing evidence.'
+    - experiment_id: exp6754-v588-branch-disposition
+      verdict: 'complete_partial: V588 preserved blocked handoff, blocked FR12, null CSL, positive activity, simulator-only stochastic evidence, and partial ARC transport without a pooled success claim.'
+      addressed_by: 'V589 starts from the observed bytes boundary, guarantees active CSL opportunities, gates ARC on a real exclusive full load, and audits stochastic fidelity with a distinct evaluator before this fresh capstone.'
       retire_if_same_verdict: true
