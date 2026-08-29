@@ -1,3 +1,97 @@
+## V588 Planner Refresh - 2026-08-29
+
+Planning sweep for milestone `2026.08.588` after the terminal `.587` conductor run. The active
+`.587` manifest contained seven tasks while its design document described thirteen, and
+`research-roadmap-next.yaml` was absent. Exp6729 therefore failed the activation contract;
+Exp6730, Exp6732, Exp6733, and Exp6735 gate-blocked; Exp6731 and Exp6734 were preempted; and the
+six later design-document tasks never entered the active manifest. The search below covers the
+requested 2025-2026 arXiv topics, OpenReview, Hugging Face Papers, GitHub discovery, Semantic
+Scholar citation trails for EBT `2507.02092` and ARM-EBM `2512.15605`, Extropic, and Logical
+Intelligence. It records only findings that change the recovery design or the longer-term watch
+list.
+
+### Promising findings selected for V588
+
+- **Verify Smarter, Evolve Further: Efficient Harness Evolution through Behavior-Aware
+  Verification** - arXiv:2608.27311, https://arxiv.org/abs/2608.27311; submitted 2026-08-27.
+  HarnessLens selects behavior-relevant checks and requires attributable evidence instead of
+  rescoring every candidate on one monolithic suite. Carnot hook: replace `.587`'s global runtime
+  activation root with two independent infrastructure receipts: a static handoff-contract audit
+  and a task-owned phase/accelerator canary. Science branches keep their own preconditions and do
+  not depend on an unrelated global success bit.
+- **Beyond Execution: Auditing Experimental Fidelity in LLM-Driven Scientific Research** -
+  arXiv:2608.26753, https://arxiv.org/abs/2608.26753; submitted 2026-08-27. ABE-Ralph represents
+  claims, protocols, required components, baselines, and metrics as structured constraints, and
+  flags silent budget reductions, dataset substitutions, and oracle replacements. Carnot hook:
+  freeze a method contract beside each comparative branch. Every artifact must expose per-unit
+  rows, actual budgets, substrate, model IDs, exact-authority calls, and disqualification reasons;
+  a runnable substitute is not evidence for the preregistered method.
+- **When \"Must\" Becomes \"Maybe\": Constraint Weakening in LLM Agent Workflows** -
+  arXiv:2608.24569, https://arxiv.org/abs/2608.24569; submitted 2026-08-25. The controlled study
+  separates topical retention from operational preservation and finds that handoff compression can
+  retain a blocker in prose while weakening its binding effect. Carnot hook: the roadmap handoff
+  receipt must preserve the prerequisite, authority, fallback, and execution consequence as typed
+  fields. Gate fields must be spelled identically in the upstream prompt, artifact, and downstream
+  YAML; prose mentions do not count.
+- **SymDiag: Explainable Diagnosis for LLM Reasoning via Neuro-Symbolic Verification** -
+  arXiv:2608.08786, https://arxiv.org/abs/2608.08786. The dual-encoding diagnosis remains the best
+  recent method lead for the science branch blocked in `.587`. Carnot hook: recover the branch with
+  a fresh experiment ID and explicit prior-failure lineage, then separate translation disagreement,
+  model reasoning error, malformed certificate, and exact-valid output before any repair feedback or
+  memory admission.
+- **Memoir: Should a Model Write to Its Memory While It Thinks?** - arXiv:2607.20792,
+  https://arxiv.org/abs/2607.20792, and **AGENTCL: Toward Rigorous Evaluation of Continual Learning
+  in Language Agents** - arXiv:2606.02461, https://arxiv.org/abs/2606.02461. Memoir motivates
+  read-only active episodes and between-episode commits. AgentCL motivates controlled streams with
+  known reusable substructure plus naive and held-out streams. Carnot hook: the `.588` continuous
+  self-learning comparison must be prospective, transactional, order-replicated, and measured for
+  transfer, retention, support contraction, poison rejection, restart durability, and rollback.
+- **Thermalizing Stochastic Programs** - arXiv:2608.01615,
+  https://arxiv.org/abs/2608.01615, and **A Framework for Stochastic Differentiable Programming** -
+  arXiv:2608.01612, https://arxiv.org/abs/2608.01612. Their typed stochastic kernels and
+  factor-error-to-trajectory-error framing remain the hardware-portability lead. Carnot hook: run a
+  bounded simulator-only exact-enumeration study over factors and short trajectories. Record
+  conditional KL, trajectory total variation, precision, topology, and compiler provenance. Do not
+  claim Z1/X0 access, speed, or energy.
+
+### Watch items and requested secondary checks
+
+- **OpenReview and Hugging Face Papers:** verifier-robustness, symbolic-feasibility, delayed
+  constrained decoding, and support-reshaping work reinforce exact authority, selective
+  intervention, and matched-budget evaluation. No public matching-base checkpoint displaces the
+  mandated local Qwen3.6-35B-A3B, Gemma-4-31B, or Gemma-4-26B-A4B GGUF families.
+- **Semantic Scholar:** the visible EBT and ARM-EBM citation families still lead through
+  Solver-Hard, Memoir, fixed-point reasoning, Distributional EBMs, and false-first-step planning.
+  No newly visible citation supplies a reproducible matching-base local checkpoint or a stronger
+  exact-authority path. No citation-count claim is made.
+- **GitHub discovery:** `microsoft/interwhen`, `StanfordLeanClub/lean-ebm`, verifier repositories,
+  and small KAN/Ising prototypes remain useful design context. None supersedes Carnot's exact
+  solvers, GGUF inference path, or current Torx interfaces. Do not add a dependency for novelty.
+- **KAN:** no recent executable result closes Carnot's present verifier, continual-memory, or ARC
+  transport gaps. Adaptive KAN structure remains a Tier-4 self-learning direction, not a `.588`
+  branch; it should follow a clean transactional-memory result and a non-circular energy signal.
+- **Extropic:** the 2026-08-03 first-party update reports Torx, THRML, a Thermalizers compiler
+  preview, and taped-out Z1 specifications, while public system access remains targeted for 2027:
+  https://extropic.ai/writing/from-one-to-one-billion. `.588` may claim simulator/compiler fidelity
+  only.
+- **Logical Intelligence:** Kona continues to describe a separate global constraint layer, but the
+  public site exposes no weights, training recipe, or local runner:
+  https://logicalintelligence.com/kona-ebms-energy-based-models. Keep Kona as architecture context,
+  not an executable baseline.
+
+### V588 planning impact
+
+- Statically validate document-manifest parity before handoff. At runtime, use independent,
+  task-owned receipts rather than one activation result that can cascade-preempt all science.
+- Recover the `.587` exact-verification, transactional-memory, ARC object-table, and
+  Thermalizers-inspired branches with fresh IDs and explicit prior-failure lineage.
+- Run the three mandated local GGUF families where proposals are required. Keep exact symbolic
+  checks as certificate authority and classify circular or substituted evidence structurally.
+- Make continuous self-learning prospective and read-only within an episode. Commit only exact-
+  certified records between episodes and require rollback on retention, support, or poison gates.
+- Keep ARC and simulator-only hardware work independent of verifier and memory outcomes. Preserve
+  the live-agent transport contract and make no physical-board or TSU performance claim.
+
 ## V587 Planner Refresh - 2026-08-29
 
 Planning sweep for milestone `2026.08.587` after the operator reported `.586` complete. Sources

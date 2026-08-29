@@ -9,88 +9,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| AGGREGATE_ONLY | 2 |
-
-## experiment_6484_non_generation_representation_receipt_contract.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The non-generation representation receipt contract is ready with a row-recomputed score of 1.0, including successful positive validation and fail-closed handling of all attacks.
-
-## WHAT IS MISSING
-nothing; supporting unit-level evidence appears in `"attack_matrix.rows"`, `"candidate_commitment_rows"`, and `"family_separation_receipts"`, while `"aggregate_row_recomputation"` records the reducers, row counts, checks, and `"failed_checks"`.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6487_representation_integrity_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The representation audit is disqualified because three shortcut controls survived and three required length checks were unavailable.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6491_sota_factor_proposal_stream.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The factor-proposal stream met its readiness gate with a score of 1.0 and all boundary attacks failed closed.
-
-## WHAT IS MISSING
-nothing; `"exact_compile_rows"` records every event/model outcome and reason, while `"boundary_attack_matrix.rows"` records every attack result and blocker.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6520_safety_net_branch_router_ab.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-The learned linear router seed 6520002 passed the gate and delivered 695 held benefit units, beating the best structural arm’s 667 units by 28.
-
-## WHAT IS MISSING
-Per-held-unit rows containing each arm’s charged work or benefit, keyed by problem family and seed; only aggregate `"arm_held_summaries"`, `"held_total_charged_work_units"`, `"held_charged_benefit_units"`, and win/loss counts are present, while `"candidate_preservation_rows"` contain no outcome metric.
-
-## THE CHECK A READER CANNOT DO
-Was the claimed 28-unit advantage broad across held units, or concentrated in one or two outliers while other units tied or lost?
-
-## experiment_6561_v568_evidence_gate_contract.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The V567 inputs are content-addressed, Exp6549–Exp6551 are eligible production evidence, and the V568 gate, prior-failure, model, hardware, and protected-file contracts are ready.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+| CHECKABLE | 7 |
+| AGGREGATE_ONLY | 1 |
 
 ## experiment_6565_v569_evidence_and_retirement_contract.json
 
@@ -100,13 +20,13 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The V569 evidence contract is ready, including the claims that Exp6563 and Exp6564 are clean nulls and Exp6564 achieved only 0.764013447× speedup against a 10× requirement.
+The artifact claims the V569 evidence contract is ready, including that Exp6564 is a clean null because its median Rust speedup was 0.764013447×, below the 10× gate.
 
 ## WHAT IS MISSING
-Per-benchmark or per-repetition timing rows for the Python and Rust arms, and per-workload enabled/control metric rows for Exp6563; the present `"per_unit_rows"` contains only one eligibility summary per upstream artifact, while `"measured_speedup_vs_requirement"` and `"honest_verdict"` report aggregate conclusions.
+Benchmark-level rows containing each workload/trial’s Python time, Rust time, and resulting speedup are missing; the present `"per_unit_rows"` contains only one eligibility row per experiment, while `"measured_speedup_vs_requirement"` and `"exp6564_speedup_vs_python_scalar"` record only the aggregate 0.764013447× value.
 
 ## THE CHECK A READER CANNOT DO
-Was Exp6564’s 0.764013447× median speedup miss broad across benchmark units, or produced by a few extreme measurements?
+Can the reported 0.764013447× median be recomputed from individual benchmark measurements, and was the failed 10× gate broad across workloads rather than caused by a degenerate or anomalous subset?
 
 ## experiment_6571_v570_evidence_gate_and_retirement_root.json
 
@@ -116,10 +36,10 @@ Was Exp6564’s 0.764013447× median speedup miss broad across benchmark units, 
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V570 evidence and retirement contract is ready, with blocked and missing V569 scopes explicitly accounted for and no claim that source extraction or graph-Potts utility ran.
+The V570 evidence and retirement contract is ready, with prior blocked and missing scopes documented, while no extraction, model-generation, or graph-Potts utility run is claimed.
 
 ## WHAT IS MISSING
-nothing
+nothing; `"per_unit_rows"`, `"v569_artifact_eligibility_rows"`, `"gguf_admission_root_cause.per_model_rows"`, `"failed_scope"`, `"reason"`, and detailed `"honest_verdict"` diagnostics are present.
 
 ## THE CHECK A READER CANNOT DO
 none
@@ -133,6 +53,86 @@ CHECKABLE
 
 ## WHAT THE CLAIM IS
 The paired A/B experiment was blocked before starting because `CARNOT_ARC_INDUCE_N_CTX` was unset.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6729_v587_activation_evidence_contract.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V587 activation contract is blocked because one or more source, manifest, gate, prior-failure, or model-policy checks failed.
+
+## WHAT IS MISSING
+nothing; `"gate_check_summary"` records the failed checks with `"expected_value"`, `"observed_value"`, `"reason"`, and `"unit"`.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6730_arc_context_tool_preflight.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because `exp6729-v587-activation-evidence-contract.v587_contract_ready` was `false` but required to equal `true`.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6732_object_table_ab_cold_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because the required upstream artifact `exp6731-object-table-fetch-on-demand-ab` was not found.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6733_hardness_controlled_certificate_stream.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The task was blocked because `exp6729-v587-activation-evidence-contract.v587_contract_ready` was `false` instead of the required `true`.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6735_oracle_distinct_diagnostic_energy.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because the required upstream artifact for task `exp6734-sota-dual-encoding-proposal-corpus` was not found, causing the `dual_encoding_corpus_ready == true` gate to fail.
 
 ## WHAT IS MISSING
 nothing
