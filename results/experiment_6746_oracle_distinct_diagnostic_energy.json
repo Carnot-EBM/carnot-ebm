@@ -1,0 +1,526 @@
+{
+  "bootstrap_config": {
+    "confidence_level": 0.95,
+    "minimum_rows_per_binary_class": 10,
+    "minimum_rows_per_family": 30,
+    "n_resamples": 2000,
+    "paired": true
+  },
+  "diagnostic_energy_ready": false,
+  "duration_s": 0.005994,
+  "experiment": 6746,
+  "feature_schema": {
+    "allowed_input_classes": [
+      "pre-oracle syntax",
+      "formula topology",
+      "encoder structure",
+      "local inconsistency descriptors",
+      "model-independent format"
+    ],
+    "arms": {
+      "dual_encoding": [
+        "format.raw_char_count",
+        "format.whitespace_token_count",
+        "format.line_count",
+        "format.digit_count",
+        "format.equals_count",
+        "format.comma_count",
+        "format.invalid_symbol_count",
+        "format.trailing_text_count",
+        "format.output_budget_fraction",
+        "syntax.claim_token_count",
+        "syntax.binding_term_count",
+        "syntax.clause_term_count",
+        "topology.variable_count",
+        "topology.clause_count",
+        "topology.literal_count",
+        "topology.mean_clause_width",
+        "topology.max_clause_width",
+        "topology.component_count",
+        "topology.max_component_fraction",
+        "topology.mean_degree",
+        "topology.degree_std",
+        "encoder_a.binding_node_count",
+        "encoder_a.core_node_count",
+        "encoder_a.duplicate_variable_count",
+        "encoder_a.conflicting_variable_count",
+        "encoder_a.out_of_range_reference_count",
+        "encoder_a.local_syntax_error_count",
+        "encoder_b.binding_node_count",
+        "encoder_b.core_node_count",
+        "encoder_b.duplicate_variable_count",
+        "encoder_b.conflicting_variable_count",
+        "encoder_b.out_of_range_reference_count",
+        "encoder_b.local_syntax_error_count",
+        "dual.binding_count_delta",
+        "dual.core_count_delta",
+        "dual.conflict_count_delta",
+        "dual.out_of_range_delta",
+        "dual.structural_jaccard",
+        "dual.claim_disagreement"
+      ],
+      "encoder_a_only": [
+        "format.raw_char_count",
+        "format.whitespace_token_count",
+        "format.line_count",
+        "format.digit_count",
+        "format.equals_count",
+        "format.comma_count",
+        "format.invalid_symbol_count",
+        "format.trailing_text_count",
+        "format.output_budget_fraction",
+        "syntax.claim_token_count",
+        "syntax.binding_term_count",
+        "syntax.clause_term_count",
+        "topology.variable_count",
+        "topology.clause_count",
+        "topology.literal_count",
+        "topology.mean_clause_width",
+        "topology.max_clause_width",
+        "topology.component_count",
+        "topology.max_component_fraction",
+        "topology.mean_degree",
+        "topology.degree_std",
+        "encoder_a.binding_node_count",
+        "encoder_a.core_node_count",
+        "encoder_a.duplicate_variable_count",
+        "encoder_a.conflicting_variable_count",
+        "encoder_a.out_of_range_reference_count",
+        "encoder_a.local_syntax_error_count"
+      ],
+      "encoder_b_only": [
+        "format.raw_char_count",
+        "format.whitespace_token_count",
+        "format.line_count",
+        "format.digit_count",
+        "format.equals_count",
+        "format.comma_count",
+        "format.invalid_symbol_count",
+        "format.trailing_text_count",
+        "format.output_budget_fraction",
+        "syntax.claim_token_count",
+        "syntax.binding_term_count",
+        "syntax.clause_term_count",
+        "topology.variable_count",
+        "topology.clause_count",
+        "topology.literal_count",
+        "topology.mean_clause_width",
+        "topology.max_clause_width",
+        "topology.component_count",
+        "topology.max_component_fraction",
+        "topology.mean_degree",
+        "topology.degree_std",
+        "encoder_b.binding_node_count",
+        "encoder_b.core_node_count",
+        "encoder_b.duplicate_variable_count",
+        "encoder_b.conflicting_variable_count",
+        "encoder_b.out_of_range_reference_count",
+        "encoder_b.local_syntax_error_count"
+      ],
+      "undifferentiated_scalar": [
+        "scalar.local_failure_mass"
+      ]
+    },
+    "frozen_before_label_join": true,
+    "version": "preoracle_structural_features_v1"
+  },
+  "feature_taint_audit": {
+    "deterministic_proxy_audit": {
+      "status": "not_evaluable_precondition_failed",
+      "violations": []
+    },
+    "schema_audit": {
+      "passed": true,
+      "violations": []
+    },
+    "schema_frozen_before_label_join": true,
+    "taint_audit": {
+      "status": "passed",
+      "violations": []
+    }
+  },
+  "field_principles": {
+    "bootstrap_config": "The registered resampling plan prevents interval tuning after results are seen.",
+    "diagnostic_energy_ready": "Readiness requires every arm and audit; it does not imply a positive result.",
+    "duration_s": "Monotonic elapsed time records the work actually performed.",
+    "experiment": "The numeric identity binds this artifact to the planned task.",
+    "feature_schema": "The frozen allowlist makes every possible model input auditable.",
+    "feature_taint_audit": "The audit records schema taint and whether proxy testing was evaluable.",
+    "field_principles": "Each field and gate states why it affects scientific credit.",
+    "gate:bootstrap_sample_support": "Intervals need enough rows in both binary outcome classes.",
+    "gate:dual_encoding_corpus_ready": "Incomplete upstream rows cannot support a controlled comparison.",
+    "gate:exp6745_artifact_present": "Training cannot start without the frozen upstream corpus.",
+    "gate:exp6745_identity": "The task accepts only the planned upstream experiment.",
+    "gate:family_disjoint_splits": "A held family in training invalidates the transfer test.",
+    "gate:feature_denylist_clean": "A prohibited input would make the learned score circular.",
+    "gate:held_family_outcome_classes": "AUROC needs outcome variation in every evaluated family.",
+    "gate:immutable_source_family_splits": "Source split drift can move a family across the evaluation boundary.",
+    "gate:relabel_pairs_complete": "Unpaired relabel rows cannot support a paired consistency delta.",
+    "gate_check_summary": "The first failed check names its expected and observed value.",
+    "heldout_metrics_by_family": "Family reports must derive from raw held rows.",
+    "heldout_reasoning_error_auroc": "This exact downstream field comes only from raw held rows.",
+    "honest_verdict": "The terminal prefix makes an owned block explicit.",
+    "immutable_family_splits": "The receipt proves that training and held families do not overlap.",
+    "inference_substrate": "The declaration limits this task to local CPU structural training and evaluation.",
+    "oracle_feature_denylist": "The denylist prevents exact outcomes and their proxies from entering a model.",
+    "oracle_leakage_detected": "Any denylist, split, taint, or proxy failure removes positive credit.",
+    "paired_relabel_metrics": "Paired deltas test stability under meaning-preserving variable relabeling.",
+    "preconditions_checked": "Every owned stop records the expected and observed gate value.",
+    "random_seed": "Split, arm-training, and bootstrap seeds make all random choices explicit.",
+    "reproducibility_checksum": "The hash binds features, splits, configs, and ordered source rows.",
+    "rows": "Unit-arm predictions are the only authority for reported metrics.",
+    "run_date": "The planning date identifies the frozen evaluation window.",
+    "schema": "A versioned shape lets downstream checks reject incompatible results.",
+    "source_artifact": "The path and hash bind the exact upstream evidence used.",
+    "status": "The status separates an owned block from a completed comparison.",
+    "title": "The title states the narrow oracle-distinct diagnostic purpose.",
+    "training_config": "One fixed capacity and budget makes arm comparisons matched.",
+    "verdict_class": "The closed vocabulary makes the terminal scientific state machine-readable.",
+    "verifier_is_oracle": "False prevents a learned diagnostic from claiming exact authority."
+  },
+  "gate_check_summary": {
+    "all_passed": false,
+    "checks": [
+      {
+        "check": "exp6745_artifact_present",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "exp6745_identity",
+        "expected": 6745,
+        "observed": 6745,
+        "passed": true
+      },
+      {
+        "check": "dual_encoding_corpus_ready",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "feature_denylist_clean",
+        "expected": [],
+        "observed": [],
+        "passed": true
+      },
+      {
+        "check": "immutable_source_family_splits",
+        "expected": {
+          "expander_tseitin": [
+            "train"
+          ],
+          "ladder_tseitin": [
+            "dev"
+          ],
+          "pigeonhole_anchor": [
+            "test"
+          ]
+        },
+        "observed": {
+          "expander_tseitin": [
+            "train"
+          ],
+          "ladder_tseitin": [
+            "dev"
+          ],
+          "pigeonhole_anchor": [
+            "test"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "check": "family_disjoint_splits",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "relabel_pairs_complete",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "held_family_outcome_classes",
+        "expected": ">=2 diagnosis classes per held family",
+        "observed": {
+          "expander_tseitin": {
+            "malformed_certificate": 72
+          },
+          "ladder_tseitin": {
+            "malformed_certificate": 72
+          },
+          "pigeonhole_anchor": {
+            "malformed_certificate": 72
+          }
+        },
+        "passed": false
+      },
+      {
+        "check": "bootstrap_sample_support",
+        "expected": {
+          "minimum_rows_per_binary_class": 10,
+          "minimum_rows_per_family": 30
+        },
+        "observed": {
+          "expander_tseitin": {
+            "minimum_binary_class_rows": 0,
+            "other": 72,
+            "reasoning_error": 0,
+            "rows": 72
+          },
+          "ladder_tseitin": {
+            "minimum_binary_class_rows": 0,
+            "other": 72,
+            "reasoning_error": 0,
+            "rows": 72
+          },
+          "pigeonhole_anchor": {
+            "minimum_binary_class_rows": 0,
+            "other": 72,
+            "reasoning_error": 0,
+            "rows": 72
+          }
+        },
+        "passed": false
+      }
+    ],
+    "expected": ">=2 diagnosis classes per held family",
+    "failed_check": "held_family_outcome_classes",
+    "observed": {
+      "expander_tseitin": {
+        "malformed_certificate": 72
+      },
+      "ladder_tseitin": {
+        "malformed_certificate": 72
+      },
+      "pigeonhole_anchor": {
+        "malformed_certificate": 72
+      }
+    }
+  },
+  "heldout_metrics_by_family": {},
+  "heldout_reasoning_error_auroc": null,
+  "honest_verdict": "complete_blocked_diagnostic_energy: held_family_outcome_classes expected \">=2 diagnosis classes per held family\"; observed {\"expander_tseitin\":{\"malformed_certificate\":72},\"ladder_tseitin\":{\"malformed_certificate\":72},\"pigeonhole_anchor\":{\"malformed_certificate\":72}}",
+  "immutable_family_splits": {
+    "heldout_folds": {
+      "expander_tseitin": {
+        "heldout_families": [
+          "expander_tseitin"
+        ],
+        "heldout_row_count": 72,
+        "membership_sha256": "sha256:a5a38d69bbb9ee13e43ea35deb778e8e1eca9487dba1a0840db6b73e003f46e7",
+        "train_families": [
+          "ladder_tseitin",
+          "pigeonhole_anchor"
+        ],
+        "train_row_count": 144
+      },
+      "ladder_tseitin": {
+        "heldout_families": [
+          "ladder_tseitin"
+        ],
+        "heldout_row_count": 72,
+        "membership_sha256": "sha256:6f0587a648d37a4a66d64787eacd5f00a18191cc0b41e95ea2f6c8fb43d582d6",
+        "train_families": [
+          "expander_tseitin",
+          "pigeonhole_anchor"
+        ],
+        "train_row_count": 144
+      },
+      "pigeonhole_anchor": {
+        "heldout_families": [
+          "pigeonhole_anchor"
+        ],
+        "heldout_row_count": 72,
+        "membership_sha256": "sha256:347b77e069072b57e769c741e07ae063188e2c556786050f315e7cf635086730",
+        "train_families": [
+          "expander_tseitin",
+          "ladder_tseitin"
+        ],
+        "train_row_count": 144
+      }
+    },
+    "source_family_assignments": {
+      "expander_tseitin": "train",
+      "ladder_tseitin": "dev",
+      "pigeonhole_anchor": "test"
+    }
+  },
+  "inference_substrate": "local CPU structural-energy training/evaluation",
+  "oracle_feature_denylist": [
+    "diagnosis",
+    "target",
+    "label",
+    "answer",
+    "answer_key",
+    "certificate",
+    "certificate_sha256",
+    "parsed_certificate",
+    "exact_check",
+    "exact_valid",
+    "valid",
+    "validity",
+    "reason",
+    "checked_assignment_count",
+    "solver",
+    "solver_count",
+    "solver_conflicts",
+    "assignment",
+    "row_blocked",
+    "parser_status",
+    "parse_failure",
+    "abstention"
+  ],
+  "oracle_leakage_detected": false,
+  "paired_relabel_metrics": {},
+  "preconditions_checked": [
+    {
+      "check": "exp6745_artifact_present",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "exp6745_identity",
+      "expected": 6745,
+      "observed": 6745,
+      "passed": true
+    },
+    {
+      "check": "dual_encoding_corpus_ready",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "feature_denylist_clean",
+      "expected": [],
+      "observed": [],
+      "passed": true
+    },
+    {
+      "check": "immutable_source_family_splits",
+      "expected": {
+        "expander_tseitin": [
+          "train"
+        ],
+        "ladder_tseitin": [
+          "dev"
+        ],
+        "pigeonhole_anchor": [
+          "test"
+        ]
+      },
+      "observed": {
+        "expander_tseitin": [
+          "train"
+        ],
+        "ladder_tseitin": [
+          "dev"
+        ],
+        "pigeonhole_anchor": [
+          "test"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "check": "family_disjoint_splits",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "relabel_pairs_complete",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "held_family_outcome_classes",
+      "expected": ">=2 diagnosis classes per held family",
+      "observed": {
+        "expander_tseitin": {
+          "malformed_certificate": 72
+        },
+        "ladder_tseitin": {
+          "malformed_certificate": 72
+        },
+        "pigeonhole_anchor": {
+          "malformed_certificate": 72
+        }
+      },
+      "passed": false
+    },
+    {
+      "check": "bootstrap_sample_support",
+      "expected": {
+        "minimum_rows_per_binary_class": 10,
+        "minimum_rows_per_family": 30
+      },
+      "observed": {
+        "expander_tseitin": {
+          "minimum_binary_class_rows": 0,
+          "other": 72,
+          "reasoning_error": 0,
+          "rows": 72
+        },
+        "ladder_tseitin": {
+          "minimum_binary_class_rows": 0,
+          "other": 72,
+          "reasoning_error": 0,
+          "rows": 72
+        },
+        "pigeonhole_anchor": {
+          "minimum_binary_class_rows": 0,
+          "other": 72,
+          "reasoning_error": 0,
+          "rows": 72
+        }
+      },
+      "passed": false
+    }
+  ],
+  "random_seed": {
+    "bootstrap": 6746021,
+    "split": 6746001,
+    "train": {
+      "dual_encoding": 6746011,
+      "encoder_a_only": 6746011,
+      "encoder_b_only": 6746011,
+      "undifferentiated_scalar": 6746011
+    }
+  },
+  "reproducibility_checksum": "sha256:6fd7973137740cd922c49e7aec02a665a9047513c34e7091361a3cc240891265",
+  "rows": [],
+  "run_date": "20260829",
+  "schema": "carnot.experiment_6746.oracle_distinct_diagnostic_energy.v1",
+  "source_artifact": {
+    "exists": true,
+    "experiment": 6745,
+    "path": "results/experiment_6745_sota_dual_encoding_proposal_corpus.json",
+    "reproducibility_checksum": "sha256:8b0edb2c9d978192ae2868c8518d1482c593796c9aa80ec2bf9d493beef87ae0",
+    "sha256": "sha256:d9f8cad418dbc3890ddcb8a799d8b7951362084b3f1e58e41cfca35ec1a3cdd7"
+  },
+  "status": "complete_blocked_diagnostic_energy",
+  "title": "Held-family oracle-distinct diagnostic energy",
+  "training_config": {
+    "arms": [
+      "dual_encoding",
+      "encoder_a_only",
+      "encoder_b_only",
+      "undifferentiated_scalar"
+    ],
+    "capacity": 32,
+    "fixed_budget_for_all_arms": true,
+    "l2_penalty": 1.0,
+    "maximum_steps": 500,
+    "model": "linear_structural_energy"
+  },
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}
