@@ -58,6 +58,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -201,6 +202,42 @@ def check_artifact(artifact: Path) -> tuple[str, list[str], str | None]:
     return ("fresh", detail, cmd)
 
 
+def _git_env_without_repo_overrides() -> dict[str, str]:
+    """The process env minus the four vars that override git's repo DISCOVERY.
+
+    `git commit` exports GIT_DIR / GIT_INDEX_FILE to its hooks; with those set,
+    `git -C <elsewhere>` answers about the HOOK'S repo, not the path it was
+    pointed at (measured 2026-08-29: every dependency degraded to its bare
+    basename at hook time). Only the discovery overrides are dropped —
+    GIT_CONFIG_* and GIT_CEILING_DIRECTORIES stay, because CI and containers
+    legitimately inject config (safe.directory) through them."""
+    drop = {"GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_COMMON_DIR"}
+    return {k: v for k, v in os.environ.items() if k not in drop}
+
+
+def _root_commits(repo_dir: Path) -> tuple[str, ...] | None:
+    """The repository's root (parentless) commits, or None when unanswerable.
+
+    Two checkouts are the SAME repository — main tree, worktree, clone — when
+    they share a root commit. An unrelated repo that merely shares file layout
+    does not, which is what keeps the worktree fallback in `_repo_relative`
+    from adopting a stranger's checkout (fail-open across repos)."""
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(repo_dir), "rev-list", "--max-parents=0", "HEAD"],
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_git_env_without_repo_overrides(),
+        )
+    except Exception:
+        return None
+    if out.returncode != 0:
+        return None
+    roots = tuple(sorted(line.strip() for line in out.stdout.splitlines() if line.strip()))
+    return roots or None
+
+
 def _sha256_at_head(rel: str) -> str | None:
     """sha256 of a repo-relative path as it exists at HEAD, or None if unavailable.
 
@@ -208,6 +245,11 @@ def _sha256_at_head(rel: str) -> str | None:
     caller treats None as "cannot prove this drift is pre-existing" and therefore keeps
     blocking. Fail-CLOSED on purpose: the alternative would let an unreadable git turn a
     real regression into a warning.
+
+    Runs with the discovery-override env vars stripped: this call DECIDES
+    block-versus-backlog, and under a hook a poisoned GIT_DIR made it hash the
+    wrong repo's blob — cwd does not beat GIT_DIR (adversarial review
+    2026-08-29, R2).
     """
     try:
         out = subprocess.run(
@@ -215,6 +257,7 @@ def _sha256_at_head(rel: str) -> str | None:
             capture_output=True,
             cwd=str(REPO),
             check=False,
+            env=_git_env_without_repo_overrides(),
         )
         if out.returncode != 0:
             return None
@@ -282,12 +325,46 @@ def drift_is_pre_existing(artifact: Path) -> bool:
     return saw_drift
 
 
+def _git_toplevel_containing(p: Path) -> str | None:
+    """The root of the git checkout that contains p, or None (e.g. /tmp scratch).
+
+    Asked of git, not guessed from string prefixes, so any checkout of this
+    repository — the operator's main tree, a session worktree, a fresh clone —
+    resolves the same way.
+
+    Runs with the discovery-override env vars stripped (see
+    `_git_env_without_repo_overrides` for the hook incident this answers)."""
+    probe = p if p.is_dir() else p.parent
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(probe), "rev-parse", "--show-toplevel"],
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_git_env_without_repo_overrides(),
+        )
+    except Exception:
+        return None
+    if out.returncode != 0:
+        return None
+    top = out.stdout.strip()
+    return top or None
+
+
 def _repo_relative(raw: str) -> str | None:
     """Provenance records ABSOLUTE paths. pre-commit matches `files:` against REPO-RELATIVE paths.
 
     That mismatch is why a naive "does the provenance path match the regex" check reports nothing
     useful, and it is worth stating: a row source under /tmp (a scratchpad input) is not a tracked
     file at all and can never be a commit trigger, so it is dropped rather than reported as a gap.
+
+    WORKTREE FIX (2026-08-29). Provenance paths are recorded in whichever checkout built the
+    artifact — usually the operator's main tree. Run from a session WORKTREE, `relative_to(REPO)`
+    can never strip that other checkout's prefix, so this returned None, `_sha256_at_head` got an
+    absolute path git cannot show, and `drift_is_pre_existing` fail-closed — every worktree commit
+    touching the trigger was refused for backlog it did not cause, the exact --no-verify-training
+    failure this module's own docstring names. The fallback relativizes against the git toplevel
+    that CONTAINS the recorded path; the same repo-relative name then resolves in any checkout.
     """
     if not raw:
         return None
@@ -295,7 +372,22 @@ def _repo_relative(raw: str) -> str | None:
     try:
         return str(p.resolve().relative_to(REPO)) if p.is_absolute() else str(p)
     except ValueError:
-        return None
+        top = _git_toplevel_containing(p)
+        if not top:
+            return None
+        # RELATEDNESS GATE (adversarial review 2026-08-29, R1). The discovered
+        # checkout must be THIS repository — sharing a root commit — or the
+        # fallback would adopt a stranger's checkout whose layout merely
+        # collides, and the caller's HEAD lookup would then downgrade a real
+        # block to backlog. Unanswerable either side stays None: fail-closed.
+        ours = _root_commits(REPO)
+        theirs = _root_commits(Path(top))
+        if not ours or not theirs or not set(ours) & set(theirs):
+            return None
+        try:
+            return str(p.resolve().relative_to(Path(top).resolve()))
+        except ValueError:
+            return None
 
 
 def registered_dependency_paths(index_path: Path = DEFAULT_INDEX) -> dict[str, list[str]]:
