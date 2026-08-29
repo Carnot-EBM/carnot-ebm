@@ -148,6 +148,8 @@ You have TOOLS. Use them instead of simulating grids in your head:
 
   * diff_grids(t) -- every cell transition t changed, with the action taken.
   * query_region(t, r0, r1, c0, c1, which) -- plain integer cells, no run-length decoding.
+  * find_objects(t, which, predicate_code, max_objects) -- bounded color components
+    filtered by Python source that defines accept(obj). Use it for object-level evidence.
   * run_engine_on_transitions(code) -- RUNS your candidate engine on the observed
     transitions and returns concrete mismatches plus a held-out score. This is the only
     reliable test of a rule hypothesis. Do NOT hand-trace transforms; submit the
@@ -318,6 +320,8 @@ def induce_with_tool_loop(
     win_transition: Optional[Any] = None,
     seed_engine_code: Optional[str] = None,
     hud_mask: Any = None,
+    extra_user_instruction: str = "",
+    tool_event_sink: Optional[list[dict[str, Any]]] = None,
 ) -> tuple[bool, str]:
     """Run tool-assisted induction. Returns (True, note) after writing world_model.py,
     or (False, reason) -- in which case the caller runs the shipped single-shot path.
@@ -410,8 +414,12 @@ def induce_with_tool_loop(
     # caps, budgets, dispatch, monotone accept -- is shared with the server-lifted mode.
     selfparse = tool_loop_selfparse_enabled()
     schema_text = ("\n\n" + render_tool_schemas_for_prompt()) if selfparse else ""
+    extra = f"\n\n{extra_user_instruction.strip()}" if extra_user_instruction.strip() else ""
     messages: list[dict[str, Any]] = [
-        {"role": "user", "content": base + "\n\n" + _TOOL_INSTRUCTIONS + schema_text + seed_note}
+        {
+            "role": "user",
+            "content": base + "\n\n" + _TOOL_INSTRUCTIONS + schema_text + seed_note + extra,
+        }
     ]
     stats: dict[str, Any] = {
         "seeded": bool(seed_engine_code),
@@ -646,9 +654,25 @@ def induce_with_tool_loop(
                     # Qwen3-coder convention: results return as user-side
                     # <tool_response> blocks in call order. No tool role, so the chat
                     # template's tool machinery is never engaged on any backend.
-                    tool_response_parts.append(
+                    bounded_response = (
                         "<tool_response>\n" + json.dumps(result) + "\n</tool_response>"
                     )
+                    tool_response_parts.append(bounded_response)
+                    if tool_event_sink is not None:
+                        try:
+                            parsed_arguments = json.loads(args) if args else {}
+                        except json.JSONDecodeError:
+                            parsed_arguments = None
+                        tool_event_sink.append(
+                            {
+                                "turn": turn,
+                                "raw_emission": content,
+                                "parsed_tool": name,
+                                "parsed_arguments": parsed_arguments,
+                                "dispatch_result": result,
+                                "bounded_response": bounded_response,
+                            }
+                        )
                 else:
                     messages.append(
                         {
