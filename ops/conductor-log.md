@@ -16797,3 +16797,4 @@ The l |
 | 2026-08-29 22:48 UTC | Procedural versus trace memory prospective A/B | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: lity_checksum( |
 | 2026-08-29 22:50 UTC | Conductor re-exec: fresh committed source | OK | d3ca0424e606 -> 63c64c3af372; argv preserved |
 | 2026-08-29 22:58 UTC | Procedural versus trace memory prospective A/B | OK | cache hit: 92 passed, 1 warning in 16.83s |
+| 2026-08-29 23:00 UTC | Cold CSL hard-case, forgetting, and poison audit | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6762-procedural-vs-t |
