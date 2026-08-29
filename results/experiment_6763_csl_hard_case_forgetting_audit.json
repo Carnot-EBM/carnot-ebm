@@ -1,0 +1,51 @@
+{
+  "experiment": 6763,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-29",
+  "started_at": "2026-08-29T23:00:12.792592+00:00",
+  "finished_at": "2026-08-29T23:00:12.792592+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Cold CSL hard-case, forgetting, and poison audit",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=False == expected=True",
+  "failed_upstream": "exp6762-procedural-vs-trace-csl-ab",
+  "failed_field": "prospective_csl_completed",
+  "failed_operator": "==",
+  "failed_expected": true,
+  "failed_expected_type": "bool",
+  "failed_observed": false,
+  "failed_observed_type": "bool",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6762_procedural_vs_trace_csl_ab.json",
+  "failed_evidence_sha256": "sha256:95ecf96c49d4d17c993e49eb44db0c58fc0541ae01e7f7faf3e66d8a0ced280f",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=False == expected=True",
+    "failed_upstream": "exp6762-procedural-vs-trace-csl-ab",
+    "failed_field": "prospective_csl_completed",
+    "failed_operator": "==",
+    "failed_expected": true,
+    "failed_expected_type": "bool",
+    "failed_observed": false,
+    "failed_observed_type": "bool",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6762_procedural_vs_trace_csl_ab.json",
+    "failed_evidence_sha256": "sha256:95ecf96c49d4d17c993e49eb44db0c58fc0541ae01e7f7faf3e66d8a0ced280f"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6762-procedural-vs-trace-csl-ab.prospective_csl_completed (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6762-procedural-vs-trace-csl-ab",
+      "artifact_field": "prospective_csl_completed",
+      "op": "==",
+      "expected": true,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": false,
+      "reason": "actual=False == expected=True",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6762_procedural_vs_trace_csl_ab.json",
+      "artifact_sha256": "sha256:95ecf96c49d4d17c993e49eb44db0c58fc0541ae01e7f7faf3e66d8a0ced280f"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
