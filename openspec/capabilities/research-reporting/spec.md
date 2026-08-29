@@ -59205,3 +59205,80 @@ checked inputs, and partial writes are removed on failure.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6729 and SCENARIO-REPORT-6729-* | Planned (`python/carnot/experiment_6729_v587_activation_evidence_contract.py`, `scripts/experiments/experiment_6729_v587_activation_evidence_contract.py`) | Planned (`tests/python/test_experiment_6729_v587_activation_evidence_contract.py`) |
+
+### REQ-REPORT-6742: V588 Handoff Binding Contract Audit SHALL Preserve Binding State
+
+Exp6742 SHALL audit milestone `2026.08.588` without running an LLM, editing
+`research-roadmap.yaml`, or falling back to an absent staged roadmap. It SHALL
+require the active roadmap, V588 design, V588 source refresh, roadmap schema,
+and exclusion manifest to exist and parse before it performs handoff checks. If
+one of those inputs is missing or unparsable, it SHALL write one atomic
+`complete_blocked_handoff_input` artifact with the failed check and observed
+value in `gate_check_summary`.
+
+The audit SHALL verify exactly 13 unique task IDs, 13 unique JSON deliverables,
+milestone `2026.08.588`, four design phases, at least two infrastructure tasks,
+an ungated Exp6754 capstone, exact producer-owned gate fields, complete
+prior-failure rows, non-reused retired IDs, comparison `per_unit_rows=true`,
+mandated local GGUF declarations for LLM tasks, prompt section contracts,
+literal project root and planning date strings, and final prompt prohibitions.
+
+The audit SHALL emit one `binding_contract_rows` row for every task and every
+gate. Each row SHALL type the prerequisite, authority, fallback, execution
+consequence, blocked-artifact behavior, model role, claim boundary, and whether
+the item is operationally preserved rather than only mentioned. Every gate
+upstream SHALL exist in the active manifest, and the gate field SHALL match the
+upstream prompt's `REQUIRED ARTIFACT FIELDS` spelling exactly. Alias
+normalization SHALL NOT be used.
+
+The audit SHALL record the dated `audit_roadmap_gates.py` Codex
+`gpt-5.5` hardcode as a validator-compatibility row when its findings are
+model-only. Roadmap schema validation remains authoritative for the
+operator-requested Codex `gpt-5.6-sol` formulaic routing.
+
+The artifact SHALL be written atomically to
+`results/experiment_6742_v588_handoff_contract_audit.json`. It SHALL include
+`field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `source_cutoff`, `rows`,
+`binding_contract_rows`, `task_count`, `handoff_contract_preserved`,
+`science_branches_independent_of_handoff_audit`, `gate_check_summary`,
+`verdict_class`, and `honest_verdict`. It SHALL use
+`activated_manifest_binding_contract_static_audit_no_llm`.
+
+#### SCENARIO-REPORT-6742-CONTRACT: Complete Handoff Rows Preserve Authority
+
+**Given** the V588 design and active manifest contain matching task, gate,
+prior-failure, prompt, model, and claim-boundary contracts
+**When** Exp6742 audits the handoff
+**Then** `handoff_contract_preserved` is true, Exp6754 is ungated, science
+branches do not depend on the audit, every row is operationally preserved, and
+`verdict_class` is `null`.
+
+**Spec traces:** REQ-REPORT-6742, REQ-HARNESS-008
+
+#### SCENARIO-REPORT-6742-BLOCKED: Exact Mismatches Stay Visible
+
+**Given** a missing input, duplicate deliverable, renamed gate field, incomplete
+prior-failure row, prompt literal placeholder, reused retired ID, missing local
+GGUF declaration, or non-row comparison
+**When** Exp6742 reduces the checks
+**Then** `handoff_contract_preserved` is false, `verdict_class` is `blocked`,
+and `gate_check_summary` records the failed check and observed value without
+normalizing aliases.
+
+**Spec traces:** REQ-REPORT-6742, REQ-HARNESS-002, REQ-HARNESS-008
+
+#### SCENARIO-REPORT-6742-ATOMIC: The Static Audit Hash Replays
+
+**Given** source receipts, validator rows, binding rows, and field principles
+**When** Exp6742 writes and validates the artifact
+**Then** readers observe one JSON object, the checksum replays from canonical
+checked inputs, and partial writes are removed on failure.
+
+**Spec traces:** REQ-REPORT-6742
+
+## Implementation Status (REQ-REPORT-6742)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6742 and SCENARIO-REPORT-6742-* | Implemented (`python/carnot/experiment_6742_v588_handoff_contract_audit.py`, `scripts/experiments/experiment_6742_v588_handoff_contract_audit.py`) | Implemented (`tests/python/test_experiment_6742_v588_handoff_contract_audit.py`) |
