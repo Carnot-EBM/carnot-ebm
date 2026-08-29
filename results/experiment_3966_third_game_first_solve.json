@@ -10,7 +10,9 @@
   ],
   "honest_verdict": "complete: third_game_solve_sc25-635fd71a_levels1_solvedTrue",
   "induced_mechanic": "Clicking a specific subset of the 3x3 grid cells toggles their state to match a target pattern, then navigating the player sprite to an exit sprite triggers level completion. The goal predicate is pattern_matched AND player_at_exit. This differs from r11l/lp85 as it involves both a hidden boolean pattern matching phase and a spatial navigation phase.",
-  "inference_substrate": "offline_arc_agi3_perception_planner_real_env_confirmed",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, exp3946 class; ops/known-issues.md 2026-08-29). The original value 'offline_arc_agi3_perception_planner_real_env_confirmed' is not in scripts/arc_artifact_lint.py's legal set. The corrected declaration is honest: the writer (scripts/experiments/experiment_3966_third_game_first_solve.py) constructs Arcade(operation_mode=OFFLINE) and steps the offline sim, and the script imports no llama/gguf/torch/cuda, so no LLM ran. This is the same correction experiment_3946_r11l_first_solve.json received on 2026-07-27. The WRITER is fixed in this same commit, so a re-run no longer recreates the illegal value. The original string is preserved in inference_substrate_original_invalid_value.",
+  "inference_substrate_original_invalid_value": "offline_arc_agi3_perception_planner_real_env_confirmed",
   "random_seed": 42,
   "real_env_confirmed": true,
   "solve_log": [

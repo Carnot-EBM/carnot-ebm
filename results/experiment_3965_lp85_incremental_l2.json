@@ -12,7 +12,9 @@
   "honest_verdict": "complete: lp85_levels1_first_fail2",
   "induced_mechanic": "Clicking visible lp85 buttons applies deterministic permutations. The planner probes copied engine states, then executes only the short level-up sequence on the real environment.",
   "induced_mechanic_held": false,
-  "inference_substrate": "offline_arc_agi3_perception_planner_real_env_confirmed",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "inference_substrate_correction_note": "CORRECTED 2026-08-28 by the outer loop (ARC artifact lint debt repair, exp3946 class; ops/known-issues.md 2026-08-29). The original value 'offline_arc_agi3_perception_planner_real_env_confirmed' is not in scripts/arc_artifact_lint.py's legal set. The corrected declaration is honest: the writer (scripts/experiments/experiment_3965_lp85_incremental_l2.py) constructs Arcade(operation_mode=OFFLINE) and steps the offline sim, and the script imports no llama/gguf/torch/cuda, so no LLM ran. This is the same correction experiment_3946_r11l_first_solve.json received on 2026-07-27. The WRITER is fixed in this same commit, so a re-run no longer recreates the illegal value. The original string is preserved in inference_substrate_original_invalid_value.",
+  "inference_substrate_original_invalid_value": "offline_arc_agi3_perception_planner_real_env_confirmed",
   "level_summaries": [
     {
       "budget_left": 60,
