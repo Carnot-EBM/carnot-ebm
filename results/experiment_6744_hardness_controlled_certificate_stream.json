@@ -44355,5 +44355,24 @@
       "command": "internal:deterministic_stream_replay",
       "exit_code": 0
     }
+  ],
+  "flagged_adversarial": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "64c1c2ed0c8af610429ba40d89de946933482276688019d4d21530838af8d182",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-08-29T08:56:17Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+      "severity": "critical",
+      "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6744_hardness_controlled_certificate_stream.json; classification=contradictory; reason=status=ready conflicts with verdict=positive"
+    },
+    {
+      "kind": "SUBSTRATE_HAS_NO_DURATION_FLOOR",
+      "severity": "warn",
+      "detail": "inference_substrate='deterministic_cpu_exact_certificate_generation_and_independent_checking' matches no duration-floor recognizer, so duration_s=0.3044437930220738 was NOT checked against any floor. A declaration is an affirmative claim about what ran; an unrecognized one is unverified, not verified. Add a recognizer plus floor for this substrate, or correct the declaration to an existing one."
+    }
   ]
 }
