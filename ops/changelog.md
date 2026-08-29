@@ -18187,3 +18187,16 @@ dispatch. The next tooling priority is a fail-fast GPU engagement check joined
 to monotonic phase timing and launch metadata. Estimated time savings is 0%
 because the timing data measures no positive duration.
 - 2026-08-29: Object-table fetch-on-demand A/B against the measured change_fidelity win (⚠️ Blocked) — honest_verdict=blocked_context_window: CARNOT_ARC_INDUCE_N_CTX is unset; the paired A/B did not start; results/experiment_6716_object_table_fetch_on_demand_ab.json
+
+## 2026-08-29 — Milestone 2026.08.586 operational retrospective
+
+The bounded execution record contains 1 compute-bound item and reports 0.0
+minutes total. Object-table fetch-on-demand A/B ranks as slowest only because
+no competing entry exists; no data available this milestone attributes its
+duration to an execution stage. The immutable idle-on-compute value is false,
+so this report does not treat accelerator idle as a bottleneck. The source
+blocks do not establish parallel loading of 2 or more models or a missed
+DualGPURunner dispatch. The highest-leverage tooling change is one launch
+receipt with monotonic timestamps, task-linked GPU samples, model count, and
+runner identity. Since observed elapsed time has no positive amount, the
+savings estimate is 0%.

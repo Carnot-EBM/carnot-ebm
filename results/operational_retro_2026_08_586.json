@@ -1,0 +1,36 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.586",
+  "generated_at": "2026-08-29T04:29:50Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.0,
+  "experiments_completed": 1,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Object-table fetch-on-demand A/B against the measured change_fidelity win",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The bounded record contains 1 compute-bound experiment and 0.0 minutes of elapsed time. This resolution is insufficient for causal or savings analysis.",
+  "bottlenecks_identified": [
+    "Modification-time fallback collapsed the full execution into a 0.0-minute observation, so stage attribution is unavailable.",
+    "Neither source block identifies simultaneous model loads or runner dispatch, which prevents a concurrency audit."
+  ],
+  "improvements_suggested": [
+    "Have the harness emit high-resolution monotonic timestamps for each execution stage.",
+    "Write task-linked GPU samples and worker process identifiers into every compute receipt.",
+    "Persist model count and runner identity, and select DualGPURunner only for 2-or-more-model parallel work."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Replace modification-time duration reconstruction with harness-owned monotonic timestamps.",
+    "Correlate accelerator samples and worker processes with the active task.",
+    "Add model count and chosen runner to the launch receipt."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Object-table fetch-on-demand A/B ranks first because there is only 1 entry, not because a positive delay was measured. The immutable GPU-idle value is false, so the blocks do not support an idle-during-compute finding. No source row documents 2 or more simultaneous models, so DualGPURunner compliance cannot be judged."
+}
