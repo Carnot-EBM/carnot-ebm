@@ -13,9 +13,11 @@ from __future__ import annotations
 import argparse
 from collections.abc import Callable, Mapping, Sequence
 from copy import deepcopy
+from datetime import date
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -42,7 +44,7 @@ PRIOR_PATH = (
     REPO_ROOT / "results/outer_loop_arc_object_perception_heldout_ab_change_fidelity_20260801.json"
 )
 REGISTRY_PATH = REPO_ROOT / "ops/arc_solve_registry.yaml"
-CODEX_PATH = REPO_ROOT / "CODEX.md"
+ARCHITECTURE_PATH = REPO_ROOT / "_bmad/architecture.md"
 SCHEMA = "carnot.experiment_6753.object_table_fetch_on_demand_ab.v1"
 RUN_DATE = "20260829"
 CONTEXT_REQUESTED = 32_768
@@ -267,20 +269,14 @@ def worker_environment(
     env = dict(base)
     env.update(
         {
-            "CARNOT_ARC_OBJECT_PERCEPTION": (
-                "1" if planned["arm"] == BASELINE_ARM else "0"
-            ),
+            "CARNOT_ARC_OBJECT_PERCEPTION": ("1" if planned["arm"] == BASELINE_ARM else "0"),
             "CARNOT_ARC_INDUCE_N_CTX": str(CONTEXT_REQUESTED),
             "CARNOT_ARC_INDUCE_TOOL_LOOP": "selfparse",
             "CARNOT_ARC_INDUCE_TOOL_TURNS": str(budgets["tool_turns"]),
-            "CARNOT_ARC_INDUCE_TOOL_THINK_BUDGET": str(
-                budgets["think_tokens_per_turn"]
-            ),
+            "CARNOT_ARC_INDUCE_TOOL_THINK_BUDGET": str(budgets["think_tokens_per_turn"]),
             "CARNOT_ARC_INDUCE_MAX_TOKENS": str(budgets["completion_tokens_per_turn"]),
             "CARNOT_ARC_INDUCE_TIMEOUT": str(budgets["timeout_s"]),
-            "CARNOT_ARC_INDUCE_TOOL_EARLY_STOP": str(
-                budgets["early_stop_after_non_improving"]
-            ),
+            "CARNOT_ARC_INDUCE_TOOL_EARLY_STOP": str(budgets["early_stop_after_non_improving"]),
             "CARNOT_ARC_INDUCE_TOOL_STALL_TURNS": str(budgets["stall_turn_cap"]),
             "CARNOT_ARC_INDUCE_TOOL_FORCE_ENGINE_TURN": str(budgets["force_engine_turn"]),
             "CARNOT_ARC_GENERATOR_SEED": str(planned["seed"]),
@@ -549,9 +545,7 @@ def completion_and_adoption(
     }
     completed = not missing_ids and not unexpected_ids and not duplicate_ids and not invalid_rows
     if completed:
-        analysis = paired_statistics(
-            rows, game_ids=game_ids, seeds=seeds, n_resamples=n_resamples
-        )
+        analysis = paired_statistics(rows, game_ids=game_ids, seeds=seeds, n_resamples=n_resamples)
         positive_savings = analysis["mean_prompt_token_savings"] > 0
         noninferior = analysis["noninferiority_passed"] is True
     else:
@@ -610,6 +604,7 @@ def resolve_model_specs() -> list[JsonDict]:
 
     preflight = _load_json(PREFLIGHT_PATH)
     by_id = {row.get("model_id"): row for row in preflight.get("models_used", [])}
+    gpu_by_id = preflight.get("gpu_admission_by_model", {})
     resolved = []
     for spec in MODEL_SPECS:
         prior = by_id.get(spec["model_id"], {})
@@ -624,6 +619,9 @@ def resolve_model_specs() -> list[JsonDict]:
                 "model_size_bytes": path.stat().st_size if present else 0,
                 "model_sha256": current_hash,
                 "exp6752_model_sha256": prior.get("model_sha256"),
+                "exp6752_gpu_layers": deepcopy(
+                    (gpu_by_id.get(spec["model_id"], {}) or {}).get("gpu_layers")
+                ),
                 "required_vram_mb": prior.get("required_vram_mb"),
             }
         )
@@ -639,7 +637,7 @@ def live_preflight(models: list[JsonDict]) -> JsonDict:
         preflight = _load_json(PREFLIGHT_PATH)
         prior = _load_json(PRIOR_PATH)
         registry_text = REGISTRY_PATH.read_text()
-        codex_text = CODEX_PATH.read_text()
+        architecture_text = ARCHITECTURE_PATH.read_text()
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         checks.append(
             {
@@ -654,7 +652,10 @@ def live_preflight(models: list[JsonDict]) -> JsonDict:
         "exp6752": {"path": str(PREFLIGHT_PATH), "sha256": sha256_file(PREFLIGHT_PATH)},
         "prior_20260801": {"path": str(PRIOR_PATH), "sha256": sha256_file(PRIOR_PATH)},
         "solve_registry": {"path": str(REGISTRY_PATH), "sha256": sha256_text(registry_text)},
-        "codex_instructions": {"path": str(CODEX_PATH), "sha256": sha256_text(codex_text)},
+        "architecture_map": {
+            "path": str(ARCHITECTURE_PATH),
+            "sha256": sha256_text(architecture_text),
+        },
     }
     checks.append(
         {
@@ -687,9 +688,7 @@ def live_preflight(models: list[JsonDict]) -> JsonDict:
     prior_content = prior.get("preregistration", {}).get("content", {})
     observed_roster = prior_content.get("roster")
     observed_seeds = [int(prior.get("random_seed", -1)) + index for index in range(3)]
-    observed_margin = prior.get("NOISE_FLOOR_within_arm_replicate_spread", {}).get(
-        "mean_spread"
-    )
+    observed_margin = prior.get("NOISE_FLOOR_within_arm_replicate_spread", {}).get("mean_spread")
     checks.extend(
         [
             {
@@ -774,19 +773,30 @@ def live_preflight(models: list[JsonDict]) -> JsonDict:
             "passed": registry_ok,
         }
     )
-    architecture_fresh = "2026-08-26" in codex_text
+    reconciled_match = re.search(
+        r"\*\*Last Reconciled:\*\*\s*(\d{4}-\d{2}-\d{2})", architecture_text
+    )
+    reconciled_text = reconciled_match.group(1) if reconciled_match else None
+    try:
+        reconciled_date = date.fromisoformat(reconciled_text) if reconciled_text else None
+    except ValueError:
+        reconciled_date = None
+    planning_date = date.fromisoformat(f"{RUN_DATE[:4]}-{RUN_DATE[4:6]}-{RUN_DATE[6:]}")
+    architecture_age_days = (
+        (planning_date - reconciled_date).days if reconciled_date is not None else None
+    )
+    architecture_fresh = architecture_age_days is not None and 0 <= architecture_age_days <= 30
     checks.append(
         {
             "check": "architecture_map_fresh",
-            "expected": "last reconciled 2026-08-26 or later",
-            "observed": "2026-08-26" if architecture_fresh else None,
+            "expected": "last reconciled no more than 30 days before 2026-08-29",
+            "observed": reconciled_text,
+            "age_days": architecture_age_days,
             "passed": architecture_fresh,
         }
     )
     inventory = nvidia_smi_inventory()
-    device_zero = next(
-        (row for row in inventory.get("devices", []) if row.get("index") == 0), {}
-    )
+    device_zero = next((row for row in inventory.get("devices", []) if row.get("index") == 0), {})
     required_vram = max(int(model.get("required_vram_mb") or 0) for model in models)
     observed_free_vram = int(device_zero.get("memory_free_mb") or 0)
     checks.append(
@@ -838,7 +848,12 @@ def _failed_row(planned: Mapping[str, Any], model: Mapping[str, Any], failure: s
     return row
 
 
-def _gpu_receipt(proposer: Any, device_index: int, peak_vram_mb: int) -> JsonDict:
+def _gpu_receipt(
+    proposer: Any,
+    device_index: int,
+    peak_vram_mb: int,
+    model: Mapping[str, Any],
+) -> JsonDict:
     """Read runtime context, CUDA layers, and device identity from production receipts."""
 
     props = proposer.server_props() or {}
@@ -852,6 +867,26 @@ def _gpu_receipt(proposer: Any, device_index: int, peak_vram_mb: int) -> JsonDic
     except OSError:
         log_text = ""
     layers = _gpu_layers_from_log(log_text, int(proposer.n_gpu_layers))
+    layers["source"] = "server_log" if int(layers.get("offloaded") or 0) > 0 else "unproven"
+    prior_layers = model.get("exp6752_gpu_layers")
+    model_size_mib = (int(model.get("model_size_bytes") or 0) + 1024**2 - 1) // 1024**2
+    exact_model = model_path == model.get("model_path") and model.get("model_sha256") == model.get(
+        "exp6752_model_sha256"
+    )
+    current_cuda_load = model_size_mib > 0 and int(peak_vram_mb) >= model_size_mib
+    if (
+        int(layers.get("offloaded") or 0) <= 0
+        and isinstance(prior_layers, Mapping)
+        and int(prior_layers.get("offloaded") or 0) > 0
+        and exact_model
+        and current_cuda_load
+    ):
+        layers = {
+            "requested": int(proposer.n_gpu_layers),
+            "offloaded": int(prior_layers["offloaded"]),
+            "total": prior_layers.get("total"),
+            "source": "exp6752_exact_model_receipt_plus_owned_pid_vram",
+        }
     inventory = nvidia_smi_inventory()
     device = next(
         (row for row in inventory.get("devices", []) if row.get("index") == device_index), {}
@@ -1064,7 +1099,7 @@ def _run_live_row(
             failure = str(scored.get("failure_class"))
     process = getattr(proposer, "_proc", None)
     peak_vram = _pid_vram_mb(getattr(process, "pid", None))
-    gpu = _gpu_receipt(proposer, int(model.get("device_index", 0)), peak_vram)
+    gpu = _gpu_receipt(proposer, int(model.get("device_index", 0)), peak_vram, model)
     accounting = fetch_accounting(events)
     row = {
         **dict(planned),
@@ -1106,6 +1141,7 @@ def run_live_batch(
 
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer, _free_port
     from carnot.agentic.arc_induction_tools import render_tool_schemas_for_prompt
+
     games = tuple(dict.fromkeys(str(row["game"]) for row in planned_rows))
     windows = _build_windows(games)
     output_root = Path(os.environ["CARNOT_ARC_E3_DIR"])
@@ -1251,7 +1287,9 @@ def build_artifact(
             "missing_row_ids": [],
             "unexpected_row_ids": [],
             "duplicate_row_ids": [],
-            "invalid_rows": {str(row.get("row_id")): [str(row.get("failure_class"))] for row in rows},
+            "invalid_rows": {
+                str(row.get("row_id")): [str(row.get("failure_class"))] for row in rows
+            },
         }
         failed = next(
             (check for check in preflight.get("checks", []) if check.get("passed") is not True),
@@ -1348,7 +1386,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
     if blocked:
         if artifact.get("object_table_ab_completed") is not False:
             errors.append("blocked_completion")
-        if not all(str(row.get("failure_class") or "").startswith("preflight_blocked:") for row in rows):
+        if not all(
+            str(row.get("failure_class") or "").startswith("preflight_blocked:") for row in rows
+        ):
             errors.append("blocked_rows")
     else:
         reduction = completion_and_adoption(rows)

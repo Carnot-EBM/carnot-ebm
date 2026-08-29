@@ -54,14 +54,14 @@ def _science_row(
                     "max_objects": 8,
                 },
                 "dispatch_result": {"ok": True, "objects": [], "response_bytes": 64},
-                "bounded_response": "<tool_response>{\"ok\":true}</tool_response>",
+                "bounded_response": '<tool_response>{"ok":true}</tool_response>',
             },
             {
                 "turn": 1,
                 "parsed_tool": "run_engine_on_transitions",
                 "parsed_arguments": {"code": "def engine(grid, action, data): return grid"},
                 "dispatch_result": {"ok": True, "change_fidelity": change_fidelity},
-                "bounded_response": "<tool_response>{\"ok\":true}</tool_response>",
+                "bounded_response": '<tool_response>{"ok":true}</tool_response>',
             },
         ]
         if treatment
@@ -206,9 +206,7 @@ def test_scenario_arc_wmte_6753_arm_environment_isolation(tmp_path: Path) -> Non
     treatment = exp.worker_environment(base, model, {**planned, "arm": exp.TREATMENT_ARM})
     assert baseline["CARNOT_ARC_OBJECT_PERCEPTION"] == "1"
     assert treatment["CARNOT_ARC_OBJECT_PERCEPTION"] == "0"
-    difference = {
-        key for key in baseline | treatment if baseline.get(key) != treatment.get(key)
-    }
+    difference = {key for key in baseline | treatment if baseline.get(key) != treatment.get(key)}
     assert difference == {"CARNOT_ARC_OBJECT_PERCEPTION"}
     assert baseline["CARNOT_ARC_INDUCE_N_CTX"] == "32768"
     assert baseline["CARNOT_ARC_INDUCE_TOOL_LOOP"] == "selfparse"
@@ -250,11 +248,16 @@ def test_scenario_arc_wmte_6753_useful_fetch_accounting() -> None:
         "fetched_evidence_entered_later_reasoning": True,
         "useful_fetches": 1,
     }
-    assert exp.fetch_accounting([{**fetch, "bounded_response": ""}, later_good])["useful_fetches"] == 0
+    assert (
+        exp.fetch_accounting([{**fetch, "bounded_response": ""}, later_good])["useful_fetches"] == 0
+    )
     assert exp.fetch_accounting([fetch])["useful_fetches"] == 0
-    assert exp.fetch_accounting([fetch, {**later_good, "dispatch_result": {"ok": False}}])[
-        "useful_fetches"
-    ] == 0
+    assert (
+        exp.fetch_accounting([fetch, {**later_good, "dispatch_result": {"ok": False}}])[
+            "useful_fetches"
+        ]
+        == 0
+    )
 
 
 def test_req_arc_wmte_6753_transition_result_uses_net_changed_cells() -> None:
@@ -267,12 +270,15 @@ def test_req_arc_wmte_6753_transition_result_uses_net_changed_cells() -> None:
     )
     assert result["transition_utility"] == pytest.approx(0.5)
     assert result["transition_result"]["correct_changed_cells"] == 7
-    assert exp.transition_result(
-        n_heldout=0,
-        true_changed_cells=0,
-        correct_changed_cells=0,
-        spurious_changed_cells=0,
-    )["transition_utility"] == 0.0
+    assert (
+        exp.transition_result(
+            n_heldout=0,
+            true_changed_cells=0,
+            correct_changed_cells=0,
+            spurious_changed_cells=0,
+        )["transition_utility"]
+        == 0.0
+    )
 
 
 def test_scenario_arc_wmte_6753_pairing_excludes_sidecar(tmp_path: Path) -> None:
@@ -430,7 +436,9 @@ def test_req_arc_wmte_6753_blocked_artifact_keeps_full_denominator(tmp_path: Pat
     )
     assert calls == []
     assert len(artifact["rows"]) == 20 * 3 * 2 + 2
-    assert all(row["failure_class"] == "preflight_blocked:exp6752_ready" for row in artifact["rows"])
+    assert all(
+        row["failure_class"] == "preflight_blocked:exp6752_ready" for row in artifact["rows"]
+    )
     assert artifact["honest_verdict"] == "complete_blocked_object_table_ab:exp6752_ready"
     assert artifact["verdict_class"] == "blocked"
     assert artifact["object_table_ab_completed"] is False
@@ -575,22 +583,20 @@ def test_req_arc_wmte_6753_resolve_models_and_preflight(
     prior = {
         "preregistration": {"content": {"roster": list(exp.GAME_IDS)}},
         "random_seed": exp.SEEDS[0],
-        "NOISE_FLOOR_within_arm_replicate_spread": {
-            "mean_spread": exp.NONINFERIORITY_MARGIN
-        },
+        "NOISE_FLOOR_within_arm_replicate_spread": {"mean_spread": exp.NONINFERIORITY_MARGIN},
     }
     preflight_path = tmp_path / "6752.json"
     prior_path = tmp_path / "prior.json"
     registry_path = tmp_path / "registry.yaml"
-    codex_path = tmp_path / "CODEX.md"
+    architecture_path = tmp_path / "architecture.md"
     preflight_path.write_text(json.dumps(preflight))
     prior_path.write_text(json.dumps(prior))
     registry_path.write_text("solves:\n  ls20: registered\n")
-    codex_path.write_text("Last reconciled: 2026-08-26\n")
+    architecture_path.write_text("**Last Reconciled:** 2026-08-26\n")
     monkeypatch.setattr(exp, "PREFLIGHT_PATH", preflight_path)
     monkeypatch.setattr(exp, "PRIOR_PATH", prior_path)
     monkeypatch.setattr(exp, "REGISTRY_PATH", registry_path)
-    monkeypatch.setattr(exp, "CODEX_PATH", codex_path)
+    monkeypatch.setattr(exp, "ARCHITECTURE_PATH", architecture_path)
     monkeypatch.setattr(
         exp,
         "nvidia_smi_inventory",
@@ -609,9 +615,7 @@ def test_req_arc_wmte_6753_resolve_models_and_preflight(
 
     monkeypatch.setattr(llama_cpp, "llama_supports_gpu_offload", lambda: True)
     resolved = exp.resolve_model_specs()
-    assert [row["model_sha256"] for row in resolved] == [
-        row["model_sha256"] for row in model_rows
-    ]
+    assert [row["model_sha256"] for row in resolved] == [row["model_sha256"] for row in model_rows]
     checked = exp.live_preflight(resolved)
     assert checked["all_passed"] is True
     assert all(row["passed"] is True for row in checked["checks"])
@@ -619,8 +623,22 @@ def test_req_arc_wmte_6753_resolve_models_and_preflight(
         "exp6752",
         "prior_20260801",
         "solve_registry",
-        "codex_instructions",
+        "architecture_map",
     }
+
+    architecture_path.write_text("**Last Reconciled:** 2026-06-01\n")
+    stale = exp.live_preflight(resolved)
+    freshness = next(row for row in stale["checks"] if row["check"] == "architecture_map_fresh")
+    assert freshness["passed"] is False
+    assert freshness["observed"] == "2026-06-01"
+    architecture_path.write_text("**Last Reconciled:** 2026-99-99\n")
+    malformed = exp.live_preflight(resolved)
+    malformed_freshness = next(
+        row for row in malformed["checks"] if row["check"] == "architecture_map_fresh"
+    )
+    assert malformed_freshness["passed"] is False
+    assert malformed_freshness["observed"] == "2026-99-99"
+    architecture_path.write_text("**Last Reconciled:** 2026-08-26\n")
 
     monkeypatch.setattr(
         llama_cpp,
@@ -628,7 +646,9 @@ def test_req_arc_wmte_6753_resolve_models_and_preflight(
         lambda: (_ for _ in ()).throw(RuntimeError("cuda probe")),
     )
     cuda_blocked = exp.live_preflight(resolved)
-    cuda_check = next(row for row in cuda_blocked["checks"] if row["check"] == "llama_cpp_cuda_offload")
+    cuda_check = next(
+        row for row in cuda_blocked["checks"] if row["check"] == "llama_cpp_cuda_offload"
+    )
     assert cuda_check["passed"] is False
     assert "RuntimeError" in cuda_check["observed"]
 
@@ -653,17 +673,28 @@ def test_req_arc_wmte_6753_gpu_and_scoring_helpers(
         observed_model_path=lambda: "/cache/model.gguf",
         observed_n_ctx=lambda: exp.CONTEXT_REQUESTED,
     )
+    model = {
+        "model_path": "/cache/model.gguf",
+        "model_sha256": "sha256:exact",
+        "exp6752_model_sha256": "sha256:exact",
+        "model_size_bytes": 100 * 1024 * 1024,
+        "exp6752_gpu_layers": {"requested": 999, "offloaded": 66, "total": 66},
+    }
     monkeypatch.setattr(
         exp,
         "nvidia_smi_inventory",
         lambda: {"devices": [{"index": 0, "uuid": "GPU-0", "name": "RTX 3090"}]},
     )
-    receipt = exp._gpu_receipt(proposer, 0, 123)
+    receipt = exp._gpu_receipt(proposer, 0, 123, model)
     assert receipt["gpu_layers"]["offloaded"] == 66
+    assert receipt["gpu_layers"]["source"] == "server_log"
     assert receipt["server_pid"] == 77
     assert receipt["context_observed_by_model"] == exp.CONTEXT_REQUESTED
     proposer._stderr_log_path = tmp_path
-    assert exp._gpu_receipt(proposer, 0, 123)["gpu_layers"]["offloaded"] == 0
+    fallback = exp._gpu_receipt(proposer, 0, 1_800, model)
+    assert fallback["gpu_layers"]["offloaded"] == 66
+    assert fallback["gpu_layers"]["source"] == ("exp6752_exact_model_receipt_plus_owned_pid_vram")
+    assert exp._gpu_receipt(proposer, 0, 0, model)["gpu_layers"]["offloaded"] == 0
 
     assert exp._pid_vram_mb(None) == 0
     monkeypatch.setattr(
@@ -833,7 +864,7 @@ def test_req_arc_wmte_6753_live_row_instrumentation(
     monkeypatch.setattr(
         exp,
         "_gpu_receipt",
-        lambda proposer, device, peak: {
+        lambda proposer, device, peak, model: {
             "context_observed_by_model": exp.CONTEXT_REQUESTED,
             "gpu_layers": {"requested": 999, "offloaded": 66, "total": 66},
             "assigned_device": {"physical_index": 0, "uuid": "GPU-0", "name": "RTX"},
@@ -875,9 +906,7 @@ def test_req_arc_wmte_6753_live_row_instrumentation(
         return False, "turn_cap"
 
     monkeypatch.setattr(loop, "induce_with_tool_loop", unsuccessful_loop)
-    sidecar_row, _ = exp._run_live_row(
-        sidecar, sidecar_model, proposer, window, output_root
-    )
+    sidecar_row, _ = exp._run_live_row(sidecar, sidecar_model, proposer, window, output_root)
     assert sidecar_row["failure_class"] is None
     assert sidecar_row["change_fidelity"] is None
     assert sidecar_row["prompt_tokens"] == 321
@@ -911,7 +940,9 @@ def test_req_arc_wmte_6753_live_batch_prompt_pair_and_checkpoint(
 
     model = _model(tmp_path, 0)
     monkeypatch.setenv("CARNOT_ARC_E3_DIR", str(tmp_path / "e3"))
-    monkeypatch.setattr(exp, "_build_windows", lambda games: {"g": {"shown": [], "held": [], "cell": 1}})
+    monkeypatch.setattr(
+        exp, "_build_windows", lambda games: {"g": {"shown": [], "held": [], "cell": 1}}
+    )
     monkeypatch.setattr(world, "_free_port", lambda: 1234)
     monkeypatch.setattr(world, "objects_block", lambda shown: "ROWS")
     monkeypatch.setattr(tools, "render_tool_schemas_for_prompt", lambda: "SCHEMAS")
@@ -1003,7 +1034,9 @@ def test_req_arc_wmte_6753_batch_subprocess_terminal_paths(
     )
     crashed = exp.run_model_batch_subprocess(model, plans)
     assert len(crashed) == 2
-    assert all(row["failure_class"].startswith("worker_process_failed:returncode=7") for row in crashed)
+    assert all(
+        row["failure_class"].startswith("worker_process_failed:returncode=7") for row in crashed
+    )
 
     def timed_out(command, **kwargs):
         output = Path(command[command.index("--worker-output") + 1])
@@ -1132,7 +1165,9 @@ def test_req_arc_wmte_6753_blocked_validator_attacks(tmp_path: Path) -> None:
         "source_receipts": {},
     }
     rows = [exp._failed_row(row, models[0], "preflight_blocked:gate") for row in exp.science_plan()]
-    rows.extend(exp._failed_row(row, models[1], "preflight_blocked:gate") for row in exp.sidecar_plan())
+    rows.extend(
+        exp._failed_row(row, models[1], "preflight_blocked:gate") for row in exp.sidecar_plan()
+    )
     artifact = exp.build_artifact(
         rows=rows,
         models=models,
