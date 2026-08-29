@@ -1,6 +1,23 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-08-27 (REQ-ARC-WMTE-6720: unattended cross-run
+**Last Updated:** 2026-08-28 (REQ-ARC-WMTE-6730/6740: selfparse tool-call
+transport + goal-prompt RLE fix shipped, both from the 2026-08-28
+context/frame design note and its independent-review correction.
+`CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse` runs the induction tool loop with NO
+`tools` request field (the scored vLLM 400 trigger), schemas as prompt text,
+and an agent-side parser for the model's Qwen3-coder XML; results return as
+user-side `<tool_response>` blocks. Pre-registered transport gate PASSED at
+ceiling on the local CUDA backend: 20/20 first-turn attempts, 20/20
+parse-to-dispatch (thresholds >=80% / >=95%); all 20 live calls were the
+zero-arg `list_transitions`, code-carrying shapes covered by the stored vLLM
+emission spot check. `_goal_only_prompt` now renders the previous-level grid
+run-length encoded: tu93 goal prompt 4,309 -> 1,928 tokens, ft09 -> 2,995,
+measured with the pinned GGUF tokenizer. Default OFF everywhere; the scored
+kernel still runs `repair` mode. Next: resume the holdout-equalized A/B
+under selfparse as the quality gate, then decide the kernel flip. See
+`docs/research-notes/arc-selfparse-transport-gate-2026-08-28.md`.)
+
+**Prior update (2026-08-27):** (REQ-ARC-WMTE-6720: unattended cross-run
 supervisor refinement shipped. `scripts/arc_supervisor_refine.py` ingests
 applied trajectory-supervisor receipts into a durable deduplicated ledger at
 `ops/arc_supervisor_refinement_ledger.json`, then applies a frozen evidence

@@ -1,5 +1,37 @@
 # Carnot — Changelog
 
+## 2026-08-28 — Selfparse tool-call transport + goal-prompt RLE fix (REQ-ARC-WMTE-6730/6740)
+
+- Implemented the two builds from the 2026-08-28 context/frame-compression
+  design note and its appended independent-review correction.
+- REQ-ARC-WMTE-6740: `_goal_only_prompt` now renders
+  `previous_level_complete_grid` with `_rle_grid` (was `to_ascii`, the last
+  full-grid ASCII render in the induce-prompt family). Measured with the
+  pinned Qwen3.8-27B GGUF tokenizer on real reset frames: tu93 goal prompt
+  4,309 -> 1,928 tokens (-2,381); ft09 4,309 -> 2,995 (-1,314). Lossless.
+- REQ-ARC-WMTE-6730: new `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse` transport
+  (default unreachable; "", "1", "repair" byte-identical to before). No
+  `tools` request field (the scored server's HTTP 400 trigger); schemas as
+  prompt text; the loop parses the model's Qwen3-coder XML itself and feeds
+  results back as user-side `<tool_response>` blocks. Cross-backend spot
+  check: the parser lifts the stored vLLM emission hermes could not.
+- Pre-registered transport gate measured on the local CUDA backend
+  (20 first-turn induce requests, 5 games x 4 seeds, think ON):
+  GATE PASS at ceiling: attempt 20/20 (100%, threshold >=80%),
+  parse-to-dispatch 20/20 (100%, threshold >=95%), 0 dispatch failures.
+  Scope: all 20 live first-turn calls were the zero-argument
+  `list_transitions`; code-carrying shapes covered by the stored vLLM
+  emission spot check and unit fixtures. Full summary JSON:
+  `{"n_requests": 20, "attempt_rate": 1.0, "parse_to_dispatch": 1.0,
+  "dispatched_total": 20, "dispatch_name_or_args_failures": 0,
+  "gate_pass": true}`.
+- NOT built, per the correction: fetch-on-demand object table (its 4,667
+  tokens are bought by a measured held-out change_fidelity win, p=0.0192);
+  the scored kernel still runs `repair` mode.
+- Verification: 12 new tests (SCENARIO-ARC-WMTE-6731..6741), 8 mutations
+  each RED then restored byte-identical; 100 tool-loop-family tests green;
+  ruff + mypy clean on touched files.
+
 ## 2026-08-27 — Exp6615 closed-milestone replay stays closed
 
 - Fixed the four Exp6615 regressions without changing their tests. The capstone

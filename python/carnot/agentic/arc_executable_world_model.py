@@ -8117,12 +8117,22 @@ class LocalGGUFProposer:
             )
         win = ""
         if previous_level_complete_grid is not None:
+            # RLE, NOT to_ascii (2026-08-28, REQ-ARC-WMTE-6740). This was the last full-grid
+            # ASCII render in the induce-prompt family: to_ascii costs 4,159 tokens on ANY
+            # 64x64 board (1 token per digit char, measured with the pinned Qwen3.8-27B GGUF
+            # tokenizer), where _rle_grid costs 1,002-2,776 (8-game range). Lossless either
+            # way; the format sentence below is what lets the model decode it, the same
+            # contract induce_prompt states for its own full-grid renders.
             win = (
                 "This is the board at the START of the current level (captured just after the "
                 "previous level completed). is_level_complete must return False here -- a level is "
                 "NOT complete at its opening screen. Use it for the object vocabulary, palette and "
-                "geometry, and infer what would have to CHANGE for the level to be complete:\n"
-                + to_ascii(np.asarray(previous_level_complete_grid))
+                "geometry, and infer what would have to CHANGE for the level to be complete.\n"
+                "The grid is run-length encoded, one line per row: "
+                '"r<row>:<v0>x<n0>,<v1>x<n1>,...". Runs are left-to-right and cover every '
+                "column with no gaps, so each run starts where the previous one ended (the "
+                "first run in a row starts at column 0):\n"
+                + _rle_grid(np.asarray(previous_level_complete_grid))
                 + "\n"
             )
         # CORRECTED 2026-08-08 (adversarial review, think-routing gap). `generate()`'s own
@@ -8193,7 +8203,11 @@ class LocalGGUFProposer:
         # with in-process tool execution; see arc_induction_tool_loop's docstring. A
         # loop failure returns (False, ...) and we FALL THROUGH to the shipped path,
         # so the worst case is today's behaviour plus the loop's bounded cost.
-        if os.environ.get("CARNOT_ARC_INDUCE_TOOL_LOOP") == "1":
+        # "selfparse" (REQ-ARC-WMTE-6730, 2026-08-28) is the same loop with agent-side
+        # tool-call transport: no `tools` request field, schemas as prompt text, the
+        # model's XML parsed by the loop. "repair" still does NOT enter here -- it fires
+        # only through the recall-gated resample, unchanged.
+        if os.environ.get("CARNOT_ARC_INDUCE_TOOL_LOOP") in ("1", "selfparse"):
             from carnot.agentic.arc_induction_tool_loop import induce_with_tool_loop
 
             ok_tool, note_tool = induce_with_tool_loop(
