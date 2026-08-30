@@ -10022,3 +10022,61 @@ failed teardown, or failed recovery SHALL close readiness.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-INFRA-6773 and SCENARIO-INFRA-6773-* | Planned (`python/carnot/experiment_6773_csl_owned_lease_contract.py`) | Planned (`tests/python/test_experiment_6773_csl_owned_lease_contract.py`) |
+
+### REQ-INFRA-6785: Parent-Owned Row Checkpoints SHALL Survive Worker Teardown
+
+A parent process SHALL choose each durable row checkpoint path. The path SHALL
+be outside worker temporary directories. Each checkpoint SHALL bind to one
+frozen manifest hash. Every accepted row SHALL contain a row ID, manifest hash,
+payload hash, attempt, start receipt, end receipt, and complete status.
+
+The parent SHALL replace the checkpoint atomically after each accepted row. It
+SHALL sync the complete file before replacement. It SHALL sync the parent
+directory after replacement. An identical row ID and payload SHALL be a no-op.
+A changed payload for an existing row ID SHALL fail without changing the file.
+A changed manifest SHALL also fail without changing the file.
+
+Exp6785 SHALL prove this contract with 24 deterministic CPU rows. The first
+worker SHALL stop after row 9. Its temporary directory SHALL be removed. The
+checkpoint and nine row hashes SHALL remain. A fresh worker SHALL produce rows
+10 through 24 once. A further resume SHALL produce no rows. The final artifact
+SHALL aggregate all 24 rows and SHALL retain the task-owned checkpoint until
+the artifact hash is verified.
+
+#### SCENARIO-INFRA-6785-PREFIX-SURVIVES
+
+- GIVEN a parent checkpoint outside a worker temporary directory
+- WHEN the worker stops after nine complete row messages
+- THEN the worker directory is gone and the checkpoint retains nine valid rows.
+
+#### SCENARIO-INFRA-6785-RESUME-EXACTLY-ONCE
+
+- GIVEN a checkpoint with rows 1 through 9
+- WHEN a fresh process resumes the frozen 24-row manifest twice
+- THEN the first resume adds rows 10 through 24 and the second adds no rows.
+
+#### SCENARIO-INFRA-6785-CONFLICTS-REFUSE
+
+- GIVEN a good checkpoint
+- WHEN a changed manifest or changed payload reuses checkpoint identity
+- THEN the request fails and the checkpoint bytes do not change.
+
+#### SCENARIO-INFRA-6785-DURABLE-PUBLISH
+
+- GIVEN one complete row envelope
+- WHEN the parent accepts that row
+- THEN it syncs a complete temporary file, replaces the checkpoint, and syncs
+  the checkpoint directory.
+
+#### SCENARIO-INFRA-6785-FINAL-AGGREGATION
+
+- GIVEN 24 unique checkpoint rows
+- WHEN the parent builds and verifies the final artifact
+- THEN each unit appears once, the artifact hash matches, and cleanup affects no
+  unrelated result or user file.
+
+## Implementation Status (REQ-INFRA-6785)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6785 and SCENARIO-INFRA-6785-* | Implemented (`python/carnot/durable_row_checkpoint.py`; `python/carnot/experiment_6785_durable_row_checkpoint_contract.py`) | Implemented (`tests/python/test_experiment_6785_durable_row_checkpoint_contract.py`; 15 focused tests, 100% new-module statement coverage) |
