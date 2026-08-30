@@ -1,0 +1,136 @@
+{
+  "arm": "tool",
+  "arm_wall_s": 28066.95,
+  "cells_completed": 39,
+  "cells_missing": [],
+  "cells_total": 39,
+  "decode_ceiling_total": 49152,
+  "decode_shape": "12 turns x 4096",
+  "e3_dir": "results/holdout_equalized_ab_selfparse_20260829/e3_tool",
+  "ended_iso": "2026-08-29T23:21:43Z",
+  "gguf": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+  "gpu_index": 1,
+  "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+  "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+  "holdout_sizes": {
+    "ar25": 6,
+    "cd82": 2,
+    "ft09": 1,
+    "g50t": 8,
+    "lp85": 2,
+    "r11l": 1,
+    "re86": 11,
+    "sb26": 2,
+    "sk48": 5,
+    "sp80": 1,
+    "tr87": 5,
+    "tu93": 9,
+    "vc33": 1
+  },
+  "induce_timeout_s": 3600,
+  "kv_quant": "q8_0",
+  "n_ctx": 106496,
+  "port_requested": 8991,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "resource": "gguf_cached_qwen38_27b_q4km"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "resource": "llama_server_binary"
+    },
+    {
+      "available": true,
+      "detail": "{\"libcuda\": true, \"libcublas\": true, \"libamdhip64\": false}",
+      "resource": "server_binary_is_cuda_build"
+    },
+    {
+      "available": true,
+      "detail": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "resource": "gpu1_on_pci_bus"
+    },
+    {
+      "available": true,
+      "detail": "no pre-existing server on our port",
+      "resource": "port_8991_free"
+    }
+  ],
+  "quantisation": "Q4_K_M",
+  "roster": [
+    "tu93",
+    "tr87",
+    "sp80",
+    "sb26",
+    "re86",
+    "g50t",
+    "r11l",
+    "cd82",
+    "ar25",
+    "lp85",
+    "sk48",
+    "vc33",
+    "ft09"
+  ],
+  "seed_base": 100,
+  "server": {
+    "completion_probe": {
+      "alive": true,
+      "s": 0.25
+    },
+    "launch_argv": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "-ngl",
+      "999",
+      "-c",
+      "106496",
+      "--port",
+      "8991",
+      "--host",
+      "127.0.0.1",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0"
+    ],
+    "pid": 2949122,
+    "port_actual": 8991,
+    "props_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+    "residency_mib": 20664,
+    "stderr_log": "results/holdout_equalized_ab_selfparse_20260829/server_logs/carnot_llama_server_logs/llama_server_p8991_1788017636.log"
+  },
+  "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+  "server_binary_linkage": {
+    "libamdhip64": false,
+    "libcublas": true,
+    "libcuda": true
+  },
+  "started_iso": "2026-08-29T15:33:56Z",
+  "status": "complete",
+  "tool_transport": "selfparse",
+  "trials": [
+    0,
+    1,
+    2
+  ],
+  "visible_sizes": {
+    "ar25": 9,
+    "cd82": 3,
+    "ft09": 3,
+    "g50t": 9,
+    "lp85": 3,
+    "r11l": 2,
+    "re86": 9,
+    "sb26": 7,
+    "sk48": 9,
+    "sp80": 3,
+    "tr87": 9,
+    "tu93": 9,
+    "vc33": 2
+  },
+  "wedge": null
+}

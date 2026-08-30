@@ -9872,3 +9872,64 @@ Implementation status: implemented 2026-08-29 (`scripts/conductor_gates.py`
 marker rule + transitive closure; `tests/python/test_gate_cascade_settlement.py`, 16 tests
 at the real entry points, 11/11 mutations RED, restores byte-identical). Verified read-only
 against the live 2026.08.589 roadmap: the marker fires on exp6756 only.
+
+### REQ-INFRA-6764: An Exclusive ARC Load Canary SHALL Lease The Least-Used Eligible RTX 3090
+
+Exp6764 SHALL inspect the two fixed RTX 3090 UUIDs before any model load. It
+SHALL record free VRAM, temperature, and active compute processes. It SHALL
+exclude a device below the frozen 22,610 MiB free-VRAM floor. It SHALL rank
+eligible devices by free VRAM, temperature, and active compute count. It SHALL
+select only the first ranked device.
+
+Each model SHALL run in a fresh worker. The worker SHALL acquire an owner-bound
+`GpuLease` for the selected UUID before it starts llama.cpp. The lease SHALL
+bind the worker PID, PID start time, model path, and device UUID. A busy lease
+or a changed hardware gate SHALL block the worker before model load.
+
+The two workers SHALL run in fixed sequence. Each worker SHALL record the full
+phase journal from `preflight` through one terminal phase. It SHALL terminate
+only its owned llama.cpp child. It SHALL prove that the child and worker ended,
+that the lease released, and that device VRAM returned within 512 MiB of the
+worker's baseline. It SHALL never signal, kill, adopt, or preempt an unrelated
+PID.
+
+If no device is eligible, or any other precondition fails, Exp6764 SHALL write
+`complete_blocked_arc_exclusive_load`. The artifact SHALL preserve every gate,
+the first failed check, and its observed value. It SHALL not start a worker or
+substitute CPU, remote, legacy, or different-model inference.
+
+#### SCENARIO-INFRA-6764-LEAST-USED-SELECTION
+
+- GIVEN two fixed RTX 3090 inventory rows
+- WHEN one or both rows meet the frozen free-VRAM floor
+- THEN only eligible rows are ranked, and the selected UUID is the first row
+  under the frozen free-VRAM, temperature, and active-compute ordering.
+
+#### SCENARIO-INFRA-6764-LEASE-EXCLUSION-AND-NO-PREEMPTION
+
+- GIVEN a selected device already has a live `GpuLease` owner
+- WHEN an Exp6764 worker requests that UUID
+- THEN it reports busy, starts no model, and sends no signal.
+- GIVEN unrelated compute PIDs in the inventory
+- WHEN Exp6764 tears down
+- THEN only its recorded worker group and llama.cpp child can receive a signal.
+
+#### SCENARIO-INFRA-6764-TEARDOWN-RECOVERY
+
+- GIVEN an owned model reached GPU residence
+- WHEN inference finishes or fails
+- THEN the child exits, VRAM returns within 512 MiB, the journal reaches a
+  terminal phase, and the lease release receipt is durable.
+
+#### SCENARIO-INFRA-6764-BLOCKED-ARTIFACT
+
+- GIVEN no eligible device or any failed precondition
+- WHEN the reducer writes the result
+- THEN readiness is false, no model worker starts, and `gate_check_summary`
+  retains the failed check and observed value.
+
+## Implementation Status (REQ-INFRA-6764)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6764 and SCENARIO-INFRA-6764-* | Implemented (`python/carnot/experiment_6764_arc_exclusive_load_preflight.py`) | Implemented (`tests/python/test_experiment_6764_arc_exclusive_load_preflight.py`; 31 focused tests, 100% new-module statement coverage) |

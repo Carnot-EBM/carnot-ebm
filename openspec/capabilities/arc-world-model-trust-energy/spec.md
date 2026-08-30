@@ -28530,3 +28530,57 @@ live selfparse transport, where unknown-name demand becomes possible.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6770 (amendment) | `python/carnot/agentic/arc_induction_tools.py` (session freeze fields + `active_tool_schemas_for`/`active_tool_names_for`, name-first capture in `dispatch_tool`, `_record_unknown_tool` caps, `loose_tool_call_names`, enablement-gated `_param_types_for`); `python/carnot/agentic/arc_induction_tool_loop.py` (frozen payload/prompt, loose-name capture on both transports, session-sourced stats); `python/carnot/agentic/arc_competition_agent.py` (`_induce_and_plan` pre-clear + `attempt["tool_gap"]`); `python/carnot/agentic/arc_tool_gap_refinement.py` (`gap_events_dropped_total`). | `tests/python/test_arc_tool_gap_feedback.py` (SCENARIO-ARC-WMTE-6770-10..12 plus the F3/F4/F6/F8/F9 regressions; 26 feature mutation runs RED). |
+
+### REQ-ARC-WMTE-6764: The Exclusive Load Receipt SHALL Prove Production Selfparse Transport Only
+
+Exp6764 SHALL resolve the exact cached
+`unsloth/Qwen3.8-27B-GGUF` and
+`unsloth/Qwen3.6-35B-A3B-GGUF` files. It SHALL bind each file to its SHA-256
+hash and embedded llama.cpp tokenizer. A missing tokenizer, changed hash,
+legacy model, remote endpoint, CPU path, or substituted model SHALL block the
+run.
+
+The Qwen3.8 worker SHALL set `CARNOT_ARC_INDUCE_N_CTX=32768` before proposer
+construction. It SHALL complete a full llama.cpp CUDA load. It SHALL record the
+server-observed context, actual GPU layers, peak owned VRAM, and one bounded
+`find_objects` request through the production selfparse XML parser, shared
+dispatcher, response bound, and transcript path.
+
+After Qwen3.8 releases its lease and recovers VRAM, Qwen3.6 SHALL run a smaller
+first-token and selfparse transport canary on the same selected physical UUID.
+The Qwen3.6 receipt SHALL remain separate from the Qwen3.8 receipt. Timings and
+quality SHALL not be pooled.
+
+`arc_exclusive_load_ready` SHALL be true only when both rows used local
+llama.cpp CUDA, Qwen3.8 observed at least 32,768 context cells, production
+selfparse dispatched its bounded call, every owned process ended, both leases
+released, and both VRAM recovery checks passed. This receipt SHALL make no ARC
+quality, score, solve, or model-ranking claim. `verifier_is_oracle` SHALL be
+false.
+
+#### SCENARIO-ARC-WMTE-6764-FULL-LOAD-SELFPARSE
+
+- GIVEN the exact Qwen3.8 GGUF and one owned eligible device
+- WHEN its fresh worker loads at 32K and enters the production selfparse loop
+- THEN the receipt binds CUDA layers, context, peak VRAM, parsed typed
+  `find_objects` arguments, bounded dispatch output, and transcript evidence.
+
+#### SCENARIO-ARC-WMTE-6764-FLAGSHIP-CANARY
+
+- GIVEN Qwen3.8 teardown and lease release passed
+- WHEN the fresh Qwen3.6 worker runs
+- THEN it records a non-empty first token and one production selfparse dispatch
+  under a new owner receipt on the same physical UUID.
+
+#### SCENARIO-ARC-WMTE-6764-ADMISSION-ONLY
+
+- GIVEN a complete or blocked Exp6764 artifact
+- WHEN a reader evaluates its claim boundary
+- THEN no timing is pooled, `verifier_is_oracle` is false, and no model quality
+  or ARC solve claim is present.
+
+## Implementation Status (REQ-ARC-WMTE-6764)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6764 and SCENARIO-ARC-WMTE-6764-* | Implemented (`python/carnot/experiment_6764_arc_exclusive_load_preflight.py`; `scripts/experiments/experiment_6764_arc_exclusive_load_preflight.py`) | Implemented (`tests/python/test_experiment_6764_arc_exclusive_load_preflight.py`; 31 focused tests, 100% new-module statement coverage) |
