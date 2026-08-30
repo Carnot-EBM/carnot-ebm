@@ -16798,3 +16798,8 @@ The l |
 | 2026-08-29 22:50 UTC | Conductor re-exec: fresh committed source | OK | d3ca0424e606 -> 63c64c3af372; argv preserved |
 | 2026-08-29 22:58 UTC | Procedural versus trace memory prospective A/B | OK | cache hit: 92 passed, 1 warning in 16.83s |
 | 2026-08-29 23:00 UTC | Cold CSL hard-case, forgetting, and poison audit | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6762-procedural-vs-t |
+| 2026-08-30 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6275_flagship_asp_constraint_verification_benchmark.json age-week 0:  |
+| 2026-08-30 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | worktree_import_guard.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on worktree_ |
+| 2026-08-30 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | capstone_milestone_rot_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on cap |
+| 2026-08-30 00:23 UTC | Exclusive full-load ARC preflight and teardown rec | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ad"),
++        |
