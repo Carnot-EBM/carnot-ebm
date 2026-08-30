@@ -16828,3 +16828,6 @@ The l |
 | 2026-08-30 11:55 UTC | Procedural versus trace memory prospective A/B v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6773-csl-owned-lease-contract) |
 | 2026-08-30 11:55 UTC | Independent continuous-learning durability audit v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6774-procedural-vs-trace-csl-ab-v2) |
 | 2026-08-30 12:35 UTC | Window-120 shadow-supervisor evidence accrual | OK | 89 passed, 1 warning in 11.39s |
+| 2026-08-30 12:37 UTC | Live selfparse tool-gap transport receipt | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6776-arc-shadow-supe |
+| 2026-08-30 12:40 UTC | Selfparse actions-to-progress A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6777-arc-tool-gap-transport) |
+| 2026-08-30 12:40 UTC | Independent ARC tool and supervisor adoption audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6778-arc-selfparse-actions-to-progress-ab |
