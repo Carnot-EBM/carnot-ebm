@@ -1,0 +1,55 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.592",
+  "generated_at": "2026-08-30T22:36:35Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 1.2,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Group-aware fixed point versus parameter-matched flat control",
+      "duration_minutes": 0.33,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Temporal coupling sampler target-law study",
+      "duration_minutes": 0.26,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Temporal coupling target-law recomputation and cost accounting",
+      "duration_minutes": 0.18,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Compositional online constraint-routing comparison",
+      "duration_minutes": 0.17,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Cold fixed-point authority and shortcut audit",
+      "duration_minutes": 0.11,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 12 synthesis-only experiments in 1.2 minutes, with 0 compute-bound experiments. Compute-bound GPU efficiency and DualGPURunner applicability therefore had no data available this milestone.",
+  "bottlenecks_identified": [
+    "Disk-mtime reconstruction provides elapsed estimates but no task-phase attribution, so the causes of the listed synthesis durations cannot be identified."
+  ],
+  "improvements_suggested": [
+    "Capture task-owned monotonic start, end, and phase timestamps so future retrospectives can distinguish launch, execution, validation, and artifact-write costs.",
+    "Add dependency-aware parallel dispatch for independent synthesis-only work and measure its effect before assigning a savings estimate.",
+    "Record compute classification, model concurrency, runner identity, and task-window accelerator samples in one launch receipt so GPU and DualGPURunner assessments are task-scoped."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Replace disk-mtime-only reconstruction with task-owned monotonic phase telemetry.",
+    "Dispatch independent synthesis-only tasks concurrently when their dependencies permit.",
+    "Emit a task-scoped launch receipt that records compute classification, model concurrency, runner identity, and accelerator activity."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The reconstructed timestamps support a bounded duration ranking but not a causal bottleneck diagnosis. With 0 compute-bound experiments, the GPU snapshot cannot establish compute-task efficiency or a missed parallel-model runner engagement."
+}
