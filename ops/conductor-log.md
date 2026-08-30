@@ -16858,3 +16858,4 @@ The l |
 | 2026-08-30 20:33 UTC | Compositional online constraint-routing comparison | OK | 111 passed, 1 warning in 43.77s |
 | 2026-08-30 20:35 UTC | Conductor re-exec: fresh committed source | OK | 63c64c3af372 -> 765dc53838c6; argv preserved |
 | 2026-08-30 20:48 UTC | Cold causal-use, forgetting, poison, restart, and  | OK | 116 passed, 1 warning in 14.73s |
+| 2026-08-30 21:17 UTC | Temporal coupling sampler target-law study | OK | 104 passed, 1 warning in 61.15s (0:01:01) |
