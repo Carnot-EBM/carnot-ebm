@@ -23719,6 +23719,118 @@ sets completion false, and records the observed failed check.
 |---|---|---|
 | REQ-VERIFY-6788 and SCENARIO-VERIFY-6788-* | Planned (`python/carnot/experiment_6788_soft_fixed_point_structural_control_ab.py`, `scripts/experiments/experiment_6788_soft_fixed_point_structural_control_ab.py`) | Planned (`tests/python/test_experiment_6788_soft_fixed_point_structural_control_ab.py`) |
 
+### REQ-VERIFY-6789: Soft Fixed-Point Authority SHALL Pass A Cold Destructive Audit
+
+Exp6789 SHALL load the frozen Exp6786, Exp6787, and Exp6788 JSON artifacts in
+a fresh CPU process. It SHALL not import their experiment modules or reuse
+their headline values. Before analysis, it SHALL require the Exp6788
+`fixed_point_comparison_completed` flag, all 640 frozen row identities, both
+arms for every paired key, exact source hashes, three raw candidates per row,
+and an exact post-proposal receipt whose before and after hashes match. A
+failed input gate SHALL write `complete_blocked_fixed_point_cold_audit`, emit
+no audit rows, set `fixed_point_audit_completed` false, and record the failed
+check with its expected and observed values. Missing planned rows SHALL also
+set `verdict_class` to `disqualified` because the source claim is incomplete.
+
+The audit SHALL independently recompute row IDs, paired keys, candidate hashes,
+local validity, dependency failures, exact validity, nearest-valid distances,
+hard-negative discrimination, parameter counts, update counts, arm metrics,
+topology metrics, support, and all confidence intervals from raw rows and the
+serialized Exp6786 graph authority. The exact evaluator SHALL enumerate valid
+assignments from graph semantics. It SHALL not consume serialized exact
+assignments or source headlines. Bootstrap samples SHALL resample units inside
+each topology family and keep all seeds and arms together.
+
+The audit SHALL run four frozen destructive controls for every source row:
+exact-label permutation across candidate slots within each split, group-value
+permutation across group IDs, dependency-edge rewiring within directed degree
+strata, and topology-family identifier swaps. Controls SHALL retain the source
+candidate, parameter, update, and seed budgets. Each source or control row
+SHALL identify its unit, seed, arm, control, and deterministic control seed.
+An unmatched, missing, or budget-changing control SHALL disqualify the claim.
+A claimed topology benefit SHALL not remain positive after dependency rewiring.
+
+The audit SHALL inspect proposal-time code paths and runtime receipts for exact
+answers, exact-valid labels, solver conflicts, oracle residuals, post-action
+outcomes, or checker feedback. It SHALL record the static call order and prove
+that raw candidate hashes were frozen before exact checking. If exact authority
+entered fitting, recurrence, stopping, decoding, or selection, the terminal
+`verdict_class` SHALL be `circular_positive` and `verifier_is_oracle` SHALL be
+true. Other proposal-time leakage, missing rows, or unmatched controls SHALL use
+`disqualified`. A complete supported source claim SHALL use `positive`. A
+complete unsupported source claim SHALL use `null`. Complete audits SHALL set
+`fixed_point_audit_completed` true even when they reject the source verdict.
+
+The terminal artifact SHALL include `field_principles`,
+`inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `source_artifact_hashes`, `rows`,
+`cold_recomputed_metrics`, `headline_differences`,
+`parameter_match_recomputed`, `compute_match_recomputed`,
+`exact_checker_call_order`, `oracle_feature_violations`,
+`label_permutation_effect`, `group_id_permutation_effect`,
+`dependency_rewire_effect`, `topology_id_swap_effect`,
+`hard_negative_shortcut_findings`, `source_verdict_supported`,
+`fixed_point_audit_completed`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. Every required
+field SHALL have a one-line purpose in `field_principles`.
+`inference_substrate` SHALL declare a fresh-process CPU audit with no LLM.
+`verdict_class` SHALL use only `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. A terminal `honest_verdict` SHALL
+start with `complete:`, `complete_`, `success:`, `success_`, `passed:`,
+`passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-6789-INDEPENDENT-RECOMPUTE: Rows Own Every Headline
+
+**Given** the complete Exp6788 row grid and the serialized Exp6786 graphs
+**When** Exp6789 runs in a fresh CPU process
+**Then** it recomputes exact outcomes, budgets, effects, and intervals without
+importing a source experiment module or reading a source headline value.
+
+**Spec traces:** REQ-VERIFY-6789
+
+### SCENARIO-VERIFY-6789-DESTRUCTIVE-CONTROLS: Identity And Structure Are Separated
+
+**Given** every source unit, seed, and arm
+**When** the four frozen destructive controls run
+**Then** each control preserves budgets, records a deterministic row, and a
+topology claim cannot survive degree-stratified dependency destruction.
+
+**Spec traces:** REQ-VERIFY-6789
+
+### SCENARIO-VERIFY-6789-ORACLE-ORDER: Exact Authority Is Post-Proposal Only
+
+**Given** source code paths and every exact evaluation receipt
+**When** the audit traces fitting through candidate freeze and exact scoring
+**Then** no exact authority reaches proposal selection and every before and
+after candidate hash agrees, or the verdict becomes circular or disqualified.
+
+**Spec traces:** REQ-VERIFY-6789
+
+### SCENARIO-VERIFY-6789-HARD-NEGATIVE: Local Failure Does Not Explain The Effect
+
+**Given** local one-hot failures and cross-dependency hard negatives
+**When** the audit recomputes class-specific outcomes
+**Then** it reports whether the grouped effect exists after local checks pass
+and refuses a topology benefit that is explained only by easy local failures.
+
+**Spec traces:** REQ-VERIFY-6789
+
+### SCENARIO-VERIFY-6789-BLOCKED: Missing Authority Stops The Audit
+
+**Given** a false completion flag, source hash drift, missing planned key,
+missing candidate bytes, or missing exact receipt
+**When** Exp6789 checks preconditions
+**Then** it writes `complete_blocked_fixed_point_cold_audit`, emits no rows,
+sets completion false, and names the observed failure in `gate_check_summary`.
+
+**Spec traces:** REQ-VERIFY-6789
+
+## Implementation Status (REQ-VERIFY-6789)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6789 and SCENARIO-VERIFY-6789-* | Planned (`python/carnot/experiment_6789_soft_fixed_point_cold_authority_audit.py`, `scripts/experiments/experiment_6789_soft_fixed_point_cold_authority_audit.py`) | Planned (`tests/python/test_experiment_6789_soft_fixed_point_cold_authority_audit.py`) |
+
 ### SCENARIO-VERIFY-6745-DUAL: Independent Encodings Control Diagnosis
 
 **Given** a parseable certificate
