@@ -23336,6 +23336,57 @@ check and observed value, and it emits no replay rows.
 
 **Spec traces:** REQ-VERIFY-6755
 
+### REQ-VERIFY-6768: Answer-Blind Exact-Invalid Counterfactual Panel
+
+Exp6768 SHALL freeze the 21 environment-grammar targetable Exp6755 source
+rows. It SHALL apply deterministic operators for undefined variables, invalid
+clauses, non-binary values, duplicate evidence, missing evidence, and premature
+terminals. An operator MAY read certificate structure and the source CNF. It
+SHALL NOT read an answer label, exact-valid bit, solver trace, or ground-truth
+certificate.
+
+Each retained mutation SHALL keep the source CNF unchanged. It SHALL be
+structurally parseable and exact-invalid under a cold replay. It SHALL have one
+preregistered error class and one smallest responsible region. The panel SHALL
+reject exact-valid, unparsable, duplicate, cross-problem, multi-class, or
+unattributable mutations.
+
+The ready panel SHALL contain at least 36 unique rows. Each held proof family
+and each target error class SHALL contain at least two rows. Complete
+proof-preserving relabel pairs SHALL stay in one split and SHALL have pair
+invariance receipts. `targetable_panel_ready` SHALL describe fixture readiness,
+not model quality.
+
+### SCENARIO-VERIFY-6768-MUTATION: Every Retained Error Is Local And Exact-Invalid
+
+**Given** one frozen source certificate and its answer-blind CNF projection
+**When** each preregistered counterfactual operator mutates the certificate
+**Then** the source problem stays unchanged, one smallest region explains one
+error class, the structural parser accepts the result, and exact validity is
+false.
+
+**Spec traces:** REQ-VERIFY-6768
+
+### SCENARIO-VERIFY-6768-LEAKAGE: Forbidden Authority Cannot Affect Mutation
+
+**Given** copies of a source row with changed answer, exact-valid, solver, or
+ground-truth fields
+**When** Exp6768 projects and mutates each copy
+**Then** the mutation rows stay identical and
+`future_or_answer_features_read` stays empty.
+
+**Spec traces:** REQ-VERIFY-6768
+
+### SCENARIO-VERIFY-6768-BLOCKED: Frozen Input Drift Stops Expansion
+
+**Given** an invalid Exp6755 JSON object, readiness flag, row denominator,
+output hash, targetable count, or Exp6745 lineage
+**When** Exp6768 checks its frozen inputs
+**Then** it writes `complete_blocked_targetable_panel`, names the first failed
+check and observed value, and emits no mutation rows.
+
+**Spec traces:** REQ-VERIFY-6768
+
 ### SCENARIO-VERIFY-6745-DUAL: Independent Encodings Control Diagnosis
 
 **Given** a parseable certificate

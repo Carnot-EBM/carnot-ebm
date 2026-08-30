@@ -59422,6 +59422,56 @@ failed check with its expected and observed values in `gate_check_summary`.
 |---|---|---|
 | REQ-REPORT-6755 and SCENARIO-REPORT-6755-* | Planned (`python/carnot/experiment_6755_lossless_gguf_output_reparse.py`, `python/carnot/inference/gguf_output_text.py`, `scripts/experiments/experiment_6755_lossless_gguf_output_reparse.py`) | Planned (`tests/python/test_experiment_6755_lossless_gguf_output_reparse.py`) |
 
+### REQ-REPORT-6768: Targetable Panel Receipts SHALL Be Atomic And Row-Derived
+
+Exp6768 SHALL atomically write
+`results/experiment_6768_targetable_proof_panel_expansion.json`. Each mutation
+row SHALL preserve the CNF, family, size, split, source output and hash, source
+lineage, mutation operator, target region, before and after certificates,
+parser receipt, both encoder receipts, and exact failure receipt.
+
+The artifact SHALL include `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_sha256`, `rows`, `targetable_row_count`,
+`counts_by_family`, `counts_by_error_class`,
+`proof_preserving_relabel_receipts`, `future_or_answer_features_read`,
+`exact_valid_mutations`, `duplicate_rows`, `targetable_panel_ready`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. Field principles SHALL explain every artifact field,
+including themselves. The inference substrate SHALL declare deterministic
+local certificate mutation with no LLM.
+
+All counts, coverage summaries, and row hashes SHALL derive only from `rows`.
+The reproducibility checksum SHALL bind the frozen inputs, code, fixed ordering
+seed, and rows. A fresh process SHALL replay the parser, both encoders, and the
+exact checker before readiness becomes true. `verifier_is_oracle` SHALL be
+false because exact checks evaluate mutations but do not generate them.
+
+#### SCENARIO-REPORT-6768-READY: Readers Can Replay The Frozen Panel
+
+**Given** complete source receipts, mutation rows, pair receipts, and cold
+replay evidence
+**When** Exp6768 validates and publishes the artifact
+**Then** every count and hash recomputes from rows and all fixture gates control
+the exact `targetable_panel_ready` field consumed by Exp6769.
+
+**Spec traces:** REQ-REPORT-6768
+
+#### SCENARIO-REPORT-6768-BLOCKED: Input Failure Remains A Terminal Artifact
+
+**Given** one failed frozen-input precondition
+**When** Exp6768 builds its terminal receipt
+**Then** it emits no rows, uses `verdict_class=blocked`, and records the failed
+check with its expected and observed values in `gate_check_summary`.
+
+**Spec traces:** REQ-REPORT-6768
+
+## Implementation Status (REQ-REPORT-6768)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6768 and SCENARIO-REPORT-6768-* | Implemented (`python/carnot/experiment_6768_targetable_proof_panel_expansion.py`, `scripts/experiments/experiment_6768_targetable_proof_panel_expansion.py`; terminal artifact `results/experiment_6768_targetable_proof_panel_expansion.json`) | Implemented (`tests/python/test_experiment_6768_targetable_proof_panel_expansion.py`; 20 focused tests; 100% module statement coverage) |
+
 ### REQ-REPORT-6761: Procedural Stream Evidence SHALL Be Atomic And Row-Recomputable
 
 Exp6761 SHALL atomically write
