@@ -98,6 +98,7 @@ REQUIRED_ARTIFACT_FIELDS = (
     "random_seed",
     "reproducibility_checksum",
     "models_used",
+    "model_specs",
     "live_model_invoked",
     "rows",
     "device_inventory_before",
@@ -130,6 +131,7 @@ FIELD_PRINCIPLES: JsonDict = {
     "random_seed": "The fixed seed makes model requests repeatable.",
     "reproducibility_checksum": "The checksum detects receipt or input drift.",
     "models_used": "Exact paths and hashes prevent model substitution.",
+    "model_specs": "The adversarial verifier consumes this exact-model evidence alias.",
     "live_model_invoked": "Readiness requires both real local decodes.",
     "rows": "One row per model phase keeps lifecycle evidence atomic.",
     "device_inventory_before": "The initial inventory exposes unrelated work and capacity.",
@@ -1422,7 +1424,7 @@ def build_artifact(
         pid for receipt in receipts for pid in receipt.get("unrelated_processes_signaled", [])
     ]
     gate_summary = (
-        deepcopy(list(preflight.get("checks", [])))
+        deepcopy([row for row in preflight.get("checks", []) if row.get("passed") is not True])
         if preflight.get("all_passed") is not True
         else _derived_gate_summary(receipts)
     )
@@ -1438,6 +1440,7 @@ def build_artifact(
         "random_seed": RANDOM_SEED,
         "reproducibility_checksum": "",
         "models_used": models,
+        "model_specs": deepcopy(models),
         "live_model_invoked": bool(receipts)
         and len(receipts) == len(MODEL_SPECS)
         and all(receipt.get("live_model_invoked") is True for receipt in receipts),
@@ -1499,11 +1502,18 @@ def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
         errors.append("duration_s")
     models = artifact.get("models_used")
     models = models if isinstance(models, list) else []
-    if [row.get("model_id") for row in models] != [spec["model_id"] for spec in MODEL_SPECS] or any(
-        row.get("model_sha256") != spec["expected_sha256"]
+    model_ids_match = [row.get("model_id") for row in models] == [
+        spec["model_id"] for spec in MODEL_SPECS
+    ]
+    exact_hashes_match = model_ids_match and all(
+        row.get("model_sha256") == spec["expected_sha256"]
         for row, spec in zip(models, MODEL_SPECS, strict=True)
-    ):
+    )
+    preconditions_passed = artifact.get("preconditions_checked", {}).get("all_passed") is True
+    if not model_ids_match or (preconditions_passed and not exact_hashes_match):
         errors.append("models_used")
+    if artifact.get("model_specs") != models:
+        errors.append("model_specs")
     inventory = artifact.get("device_inventory_before")
     inventory = inventory if isinstance(inventory, list) else []
     expected_selection = rank_eligible_devices(inventory)
@@ -1559,7 +1569,11 @@ def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
     expected_gates = (
         _derived_gate_summary(receipts)
         if artifact.get("preconditions_checked", {}).get("all_passed") is True
-        else artifact.get("preconditions_checked", {}).get("checks", [])
+        else [
+            row
+            for row in artifact.get("preconditions_checked", {}).get("checks", [])
+            if row.get("passed") is not True
+        ]
     )
     if artifact.get("gate_check_summary") != expected_gates:
         errors.append("gate_check_summary")

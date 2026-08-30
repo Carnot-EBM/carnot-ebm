@@ -1,0 +1,252 @@
+{
+  "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+  "role": "flagship_moe_transport_canary",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+  "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+  "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+  "inference_substrate": "task-owned local llama.cpp CUDA GGUF",
+  "llama_cpp_cuda": true,
+  "server_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+  "server_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+  "device": {
+    "index": 1,
+    "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "name": "NVIDIA GeForce RTX 3090",
+    "memory_total_mb": 24576,
+    "memory_used_mb": 266,
+    "memory_free_mb": 23859,
+    "temperature_c": 52,
+    "utilization_pct": 0,
+    "active_compute_processes": [
+      {
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "pid": 3261882,
+        "process_name": ".venv/bin/python",
+        "used_memory_mb": 256
+      }
+    ],
+    "active_compute_count": 1,
+    "eligible": true,
+    "ineligibility_reasons": []
+  },
+  "worker_process": {
+    "pid": 3262432,
+    "pid_start_ticks": 34197221,
+    "exit_code": 0,
+    "absent_after_exit": false
+  },
+  "model_process": {
+    "pid": 3262476,
+    "pid_start_ticks": 34197299,
+    "parent_pid": 3262432,
+    "executable": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "exit_code": 0,
+    "absent_after_exit": true
+  },
+  "lease_owner": {
+    "task_id": "exp6764-Qwen3.6-35B-A3B-GGUF",
+    "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "pid": 3262432,
+    "pid_start_ticks": 34197221,
+    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+    "argv_digest": "sha256:38e138f08f5ab211a87139f9c4d7e366961417ef4daa5030e3601511bf5b12d5",
+    "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+    "token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+    "token_opaque": true,
+    "token_length": 43,
+    "acquired_monotonic_ns": 341972924917554,
+    "expires_monotonic_ns": 343172924917554,
+    "recovery": {
+      "performed": false,
+      "signals_sent": []
+    },
+    "signals_sent": []
+  },
+  "phase_history": [
+    {
+      "details": {
+        "recovery_performed": false
+      },
+      "event_checksum": "sha256:e48d38d78b14e85f385b52038aaf5667f53d13345b7dec2b410b64d688540bf7",
+      "monotonic_ns": 341972924917554,
+      "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+      "phase": "preflight",
+      "previous_event_checksum": null,
+      "previous_phase": null
+    },
+    {
+      "details": {},
+      "event_checksum": "sha256:0ad0eb0ef913a753b211243eab8ff1f3d7290f72a3048b007039fef926d2828f",
+      "monotonic_ns": 341972925288169,
+      "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+      "phase": "admitted",
+      "previous_event_checksum": "sha256:e48d38d78b14e85f385b52038aaf5667f53d13345b7dec2b410b64d688540bf7",
+      "previous_phase": "preflight"
+    },
+    {
+      "details": {},
+      "event_checksum": "sha256:bbb3b1f8c67d7e481bf49ab90595d4c93a71636a4a46c2540dd75e443789136c",
+      "monotonic_ns": 341972926652296,
+      "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+      "phase": "loading",
+      "previous_event_checksum": "sha256:0ad0eb0ef913a753b211243eab8ff1f3d7290f72a3048b007039fef926d2828f",
+      "previous_phase": "admitted"
+    },
+    {
+      "details": {
+        "vram_resident_mb": 21899
+      },
+      "event_checksum": "sha256:ceb4a6e0796ba818444bfa46c20596ff5c14b382815db433b5acd2a0ac9fa214",
+      "monotonic_ns": 341985069296290,
+      "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+      "phase": "resident",
+      "previous_event_checksum": "sha256:bbb3b1f8c67d7e481bf49ab90595d4c93a71636a4a46c2540dd75e443789136c",
+      "previous_phase": "loading"
+    },
+    {
+      "details": {},
+      "event_checksum": "sha256:949c93e19326bf00a6f336cf6b0bcbc82df0e617fc3903bda1b3544cb22f977c",
+      "monotonic_ns": 341985070130955,
+      "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+      "phase": "inferencing",
+      "previous_event_checksum": "sha256:ceb4a6e0796ba818444bfa46c20596ff5c14b382815db433b5acd2a0ac9fa214",
+      "previous_phase": "resident"
+    },
+    {
+      "details": {},
+      "event_checksum": "sha256:65603dcf074642f882f259c393613f0984121e0bcb2cb5e5a395f6cf1dec84c2",
+      "monotonic_ns": 341988754916397,
+      "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+      "phase": "unloading",
+      "previous_event_checksum": "sha256:949c93e19326bf00a6f336cf6b0bcbc82df0e617fc3903bda1b3544cb22f977c",
+      "previous_phase": "inferencing"
+    },
+    {
+      "details": {
+        "exit_code": 0,
+        "unload_observed": true,
+        "vram_after_mb": 266
+      },
+      "event_checksum": "sha256:bdae01ec4fc52cab901c625d5d83fb5b3cfb99ff05deb1f4b7b33b0636817b17",
+      "monotonic_ns": 341989228699034,
+      "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+      "phase": "validating",
+      "previous_event_checksum": "sha256:65603dcf074642f882f259c393613f0984121e0bcb2cb5e5a395f6cf1dec84c2",
+      "previous_phase": "unloading"
+    },
+    {
+      "details": {},
+      "event_checksum": "sha256:0e1bd4cd35fbe17664e01f35046ab1dbb18b102448c789418203fc19e0dee1ee",
+      "monotonic_ns": 341989229227164,
+      "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+      "phase": "terminal_complete",
+      "previous_event_checksum": "sha256:bdae01ec4fc52cab901c625d5d83fb5b3cfb99ff05deb1f4b7b33b0636817b17",
+      "previous_phase": "validating"
+    }
+  ],
+  "lease_release": {
+    "released": true,
+    "phase": "terminal_complete",
+    "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "pid": 3262432,
+    "pid_start_ticks": 34197221,
+    "checksum": "sha256:f736a2797ebee4e577503d03d435ee396f8c69ce580a170d4e756be449c4d0dc",
+    "signals_sent": []
+  },
+  "runtime_context": 32768,
+  "gpu_layers": {
+    "requested": 999,
+    "offloaded": 41,
+    "total": 41
+  },
+  "peak_owned_vram_mb": 21650,
+  "resident_owned_vram_mb": 21628,
+  "duration_s": 16.527644,
+  "live_model_invoked": true,
+  "first_token_observed": true,
+  "production_selfparse": {
+    "production_route": "induce_with_tool_loop/selfparse/dispatch_tool",
+    "raw_emission": "<tool_call>\n<function=find_objects>\n<parameter=t>\n0\n</parameter>\n<parameter=which>\nbefore\n</parameter>\n<parameter=predicate_code>\ndef accept(obj):\n    return obj['color'] in (2, 4) and obj['pixel_count'] >= 2\n</parameter>\n<parameter=max_objects>\n8\n</parameter>\n</function>\n</tool_call>",
+    "raw_emission_sha256": "sha256:7c5e45a4922e0fe9dbf9c29992ee8dd9162b6122435c9902536a8039bc4921c5",
+    "parsed_tool": "find_objects",
+    "parsed_arguments": {
+      "t": 0,
+      "which": "before",
+      "predicate_code": "def accept(obj):\n    return obj['color'] in (2, 4) and obj['pixel_count'] >= 2",
+      "max_objects": 8
+    },
+    "dispatch_result": {
+      "ok": true,
+      "t": 0,
+      "which": "before",
+      "predicate_applied": true,
+      "n_components_scanned": 6,
+      "n_objects_matched": 2,
+      "objects": [
+        {
+          "color": 2,
+          "pixel_count": 3,
+          "bbox": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "centroid": [
+            1.3333,
+            1.3333
+          ],
+          "height": 2,
+          "width": 2
+        },
+        {
+          "color": 4,
+          "pixel_count": 3,
+          "bbox": [
+            4,
+            1,
+            4,
+            3
+          ],
+          "centroid": [
+            4.0,
+            2.0
+          ],
+          "height": 1,
+          "width": 3
+        }
+      ],
+      "truncated": false,
+      "response_bytes": 385
+    },
+    "bounded_response": "<tool_response>\n{\"ok\": true, \"t\": 0, \"which\": \"before\", \"predicate_applied\": true, \"n_components_scanned\": 6, \"n_objects_matched\": 2, \"objects\": [{\"color\": 2, \"pixel_count\": 3, \"bbox\": [1, 1, 2, 2], \"centroid\": [1.3333, 1.3333], \"height\": 2, \"width\": 2}, {\"color\": 4, \"pixel_count\": 3, \"bbox\": [4, 1, 4, 3], \"centroid\": [4.0, 2.0], \"height\": 1, \"width\": 3}], \"truncated\": false, \"response_bytes\": 385}\n</tool_response>",
+    "bounded_response_bytes": 418,
+    "bounded_response_sha256": "sha256:ef4c0a46ae03b7438a629519aceee61011231c6588c1f2499dd9162958443fd0",
+    "transcript_sha256": "sha256:e75e06e7722e94fc3338abc9a6cad2d60ed99172bd10f4418493d3ea6a74183f",
+    "blocks_seen": 1,
+    "blocks_unparsed": 0,
+    "success": true
+  },
+  "vram_recovery": {
+    "before_used_mb": 266,
+    "after_used_mb": 266,
+    "absolute_delta_mb": 0,
+    "tolerance_mb": 512,
+    "owned_pid_present": false,
+    "passed": true,
+    "observed_monotonic_ns": 341989228156858
+  },
+  "full_load": false,
+  "transport_canary": true,
+  "owned_cleanup": {
+    "pid": 3262476,
+    "terminate_sent": true,
+    "kill_sent": false,
+    "exit_code": 0,
+    "absent_after_exit": true,
+    "unrelated_processes_signaled": []
+  },
+  "unrelated_processes_signaled": [],
+  "errors": [],
+  "receipt_sha256": "sha256:2bc73c376e1e4117ca123aaab23e551e939b6cd4939969fc79c5de2ec1ba83bf"
+}
