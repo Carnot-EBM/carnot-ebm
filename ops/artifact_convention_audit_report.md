@@ -9,11 +9,11 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| AGGREGATE_ONLY | 1 |
-| CANNOT_DETERMINE | 1 |
+| CHECKABLE | 3 |
+| AGGREGATE_ONLY | 2 |
+| CANNOT_DETERMINE | 3 |
 
-## experiment_6770_dccd_environment_grammar_ab_v2.json
+## experiment_6788_soft_fixed_point_structural_control_ab.json
 
 **CANNOT_DETERMINE**
 
@@ -21,15 +21,15 @@ evidence the reviewer could not have read -- do NOT act on them.
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible excerpt reports zero exact-valid rate for all three arms, but the headline claim is not included.
+The visible `"decision_gates"` claim that grouped fixed-point beat the flat recurrent control and passed the positive-effect gate.
 
 ## WHAT IS MISSING
-The actual `"honest_verdict"`, `"status"`, `"gate_check_summary"`, and `"rows"` fields are missing from the truncated artifact; only their descriptions appear under `"field_principles"`, while aggregate fields such as `"exact_valid_rate_by_arm"` are present.
+The artifact is truncated inside `"frozen_manifest.paired_keys"`; although `"field_principles"` promises `"rows"` and `"honest_verdict"`, their actual contents are unavailable, so per-unit arm metrics cannot be inspected.
 
 ## THE CHECK A READER CANNOT DO
-Does the omitted verdict make a comparative or blocked claim, and—if so—do per-unit rows or a specific failed-gate diagnostic support it?
+Were improvements broad across unit-seed pairs, or driven by a few outliers or units pinned at metric bounds?
 
-## experiment_6771_proof_transport_localization_audit.json
+## experiment_6789_soft_fixed_point_cold_authority_audit.json
 
 **CHECKABLE**
 
@@ -37,7 +37,55 @@ Does the omitted verdict make a comparative or blocked claim, and—if so—do p
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because upstream field `proof_transport_ab_completed` was `false` but required to equal `true`.
+The cold destructive audit supports the V592 claim that the grouped fixed-point arm outperformed the flat recurrent control under matched budgets and passed the destructive-control gates.
+
+## WHAT IS MISSING
+nothing; the artifact includes per-unit evidence in `"rows"` with `"paired_key"`, `"arm"`, `"exact_valid_rate"`, and exact outcomes, plus diagnostic gate details in `"gate_check_summary"`.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6790_chronological_constraint_routing_stream.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The constraint-routing stream passed all readiness gates, with exhaustive routing outperforming the frozen policy by 0.35 accuracy in every order.
+
+## WHAT IS MISSING
+The supplied artifact is truncated before showing the actual `"rows"`, `"gate_check_summary"`, `"honest_verdict"`, `"status"`, and `"verdict_class"` values; these names appear only in `"field_principles"`, so their presence and contents cannot be verified.
+
+## THE CHECK A READER CANNOT DO
+A reader cannot determine whether the reported 0.35 accuracy gaps were broad across event-order rows or driven by a small number of outliers.
+
+## experiment_6791_compositional_online_constraint_routing_ab.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The `"honest_verdict"` claims compositional online routing beat both the frozen controller and matched placebo without preregistered harm.
+
+## WHAT IS MISSING
+The complete `"rows"` array: per-row fields such as `"route_utility"`, `"arm"`, `"order_id"`, and `"pair_key"` are present, but the artifact cuts off mid-row and does not expose all 4,800 rows asserted by `"all_planned_rows_present"`.
+
+## THE CHECK A READER CANNOT DO
+Can all five `"online_minus_frozen_order_effects"`, all five `"online_minus_placebo_order_effects"`, and the 0.34375 lower confidence bound be recomputed from the complete paired unit-level results?
+
+## experiment_6792_csl_causal_safety_cold_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The causal safety audit was blocked because the `transaction_byte_snapshots` check failed.
 
 ## WHAT IS MISSING
 nothing
@@ -45,7 +93,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6773_csl_owned_lease_contract.json
+## experiment_6793_temporal_exchange_ising_ab.json
 
 **CHECKABLE**
 
@@ -53,7 +101,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The live preflight was blocked because no RTX 3090 met the required minimum of 22,610 MB free VRAM.
+Temporal exchange did not pass both the paired-efficiency and target-law gates in the CPU simulation.
 
 ## WHAT IS MISSING
 nothing
@@ -61,39 +109,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6776_arc_shadow_supervisor_accrual.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked before live inference because the exclusive-GPU-without-unrelated-compute preflight check failed.
-
-## WHAT IS MISSING
-nothing; `"status"`, per-row `"failure_class"`, `"live_model_invoked"`, and `"actions_observed"` record the blocked outcome and diagnostic.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6777_arc_tool_gap_transport.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because `shadow_supervisor_transport_ready` was observed as `false` but required to equal `true`.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6780_v590_branch_disposition.json
+## experiment_6794_temporal_exchange_cold_hardware_audit.json
 
 **AGGREGATE_ONLY**
 
@@ -101,42 +117,26 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-V590 partially narrowed the proof gap because the 126-row targetable panel and 45-row dynamic proof grammar were ready, while downstream experiments remained blocked or missing.
+The cold replay supports the source null comparison between temporal exchange and ordinary Gibbs, while showing that any favorable efficiency result depends on the denominator used.
 
 ## WHAT IS MISSING
-The per-unit `"rows"` underlying the aggregate `"panel_rows": 126`, `"grammar_rows": 45`, `"targetable_panel_ready": true`, and `"dynamic_proof_grammar_ready": true`; only aggregate `"branch_rows"` and `"gate_check_summary"` are present.
+The per-seed, per-arm metric rows referenced as `"rows"` are missing; `"cold_recomputed_metrics"` and `"denominator_sensitivity.comparisons"` contain only `mean`, `ci95`, and `n` aggregates, while `"gate_check_summary"` is present but empty.
 
 ## THE CHECK A READER CANNOT DO
-Did every panel and grammar condition satisfy the readiness criteria, or were the reported gates driven by duplicated, degenerate, or selectively successful rows?
+Were the arm-level null and denominator-dependent differences broad across the 20 seeds, or caused by outliers, cancellations, or degenerate control rows?
 
-## experiment_6782_sequential_sota_runtime_admission.json
+## experiment_6795_v592_branch_disposition.json
 
-**CHECKABLE**
+**AGGREGATE_ONLY**
 
 ## VERDICT
-CHECKABLE
+AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The run was blocked because no model completed owned CUDA admission after the Qwen 3.6 runtime-admission lease wait expired.
+V592 provides positive bounded fixed-point evidence—grouped fixed-point proposals beat the matched flat control—while dispatch and cold CSL causality remain incomplete and temporal exchange is null.
 
 ## WHAT IS MISSING
-nothing; `gate_check_summary.failed_check` identifies `"runtime_admission:unsloth/Qwen3.6-35B-A3B-GGUF"` and `gate_check_summary.observed` records `"lease_wait_deadline_expired"`.
+Per-unit paired rows containing each seed/topology’s arm-level metrics and deltas; `"rows"` contains only task receipts and branch summaries, while `"paired_exact_valid_delta"`, `"exact_valid_rate_by_arm"`, and `"held_topology_exact_valid_delta"` are aggregates. The blocked checks are adequately diagnosed in `"gate_check_summary"`.
 
 ## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6783_owned_proof_generation_ab.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because `exp6782-sequential-sota-runtime-admission.all_mandated_runtime_ready` was `false` instead of the required `true`.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+Did grouped fixed-point outperform the flat control broadly across the 320 paired keys, or was the positive mean driven by a few outliers, degenerate controls, or units with no headroom?
