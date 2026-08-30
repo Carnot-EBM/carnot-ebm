@@ -16812,3 +16812,4 @@ The l |
 | 2026-08-30 05:18 UTC | Live object-table fetch-on-demand A/B v2 | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: t."""
      pla |
 | 2026-08-30 05:48 UTC | Independent Thermalizer factor-to-trajectory audit | OK | 109 passed, 1 warning in 22.80s |
+| 2026-08-30 06:14 UTC | V589 branch disposition and PRD gap update | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6767_v589_br |
