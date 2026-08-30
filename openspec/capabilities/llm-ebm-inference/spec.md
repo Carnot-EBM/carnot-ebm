@@ -2893,3 +2893,47 @@ CPU or legacy model.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFER-SOTA-6676 and SCENARIO-INFER-SOTA-6676-* | Planned (`python/carnot/experiment_6676_three_family_triggered_tail_ab.py`) | Planned (`tests/python/test_experiment_6676_three_family_triggered_tail_ab.py`) |
+
+### REQ-INFER-SOTA-6782: Sequential SOTA Runtime Admission SHALL Prove Real CUDA Tokens
+
+Exp6782 SHALL freeze this model order:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL resolve each exact cached GGUF,
+hash its bytes, and load its embedded tokenizer. It SHALL not download or
+substitute a model.
+
+Each model SHALL run in a fresh process with the same deterministic canary
+prompt, context, output limit, seed, and compatible llama.cpp parameters. A
+model is ready only when its exact file becomes resident through CUDA offload
+on an owned RTX 3090, emits at least one real output token, closes the backend,
+exits its worker, and returns VRAM to the measured baseline. CPU generation,
+remote inference, a legacy model, or the integrated GPU SHALL not satisfy this
+requirement.
+
+#### SCENARIO-INFER-SOTA-6782-IDENTITY
+
+**Given** all three mandated cached GGUF families
+**When** Exp6782 resolves the frozen manifest
+**Then** every resolved row retains the hub ID, role, path, revision, byte
+size, SHA-256 hash, embedded tokenizer receipt, context, and output limit.
+
+#### SCENARIO-INFER-SOTA-6782-FIRST-TOKEN
+
+**Given** one exact model has an owner-bound RTX 3090 lease
+**When** its fresh llama.cpp worker runs the canary
+**Then** the receipt binds CUDA residency and at least one non-fixture output
+token to that model, worker, device UUID, and lease owner.
+
+#### SCENARIO-INFER-SOTA-6782-SEQUENTIAL-RECOVERY
+
+**Given** an earlier model completed its canary
+**When** the next model starts
+**Then** the earlier backend is closed, its worker is absent, its lease is
+released through the ownership API, and its VRAM recovery receipt has passed.
+
+## Implementation Status (REQ-INFER-SOTA-6782)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFER-SOTA-6782 and SCENARIO-INFER-SOTA-6782-* | Planned (`python/carnot/experiment_6782_sequential_sota_runtime_admission.py`) | Planned (`tests/python/test_experiment_6782_sequential_sota_runtime_admission.py`) |

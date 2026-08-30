@@ -59826,3 +59826,55 @@ enum. The honest verdict SHALL use a terminal prefix.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6780 and SCENARIO-REPORT-6780-* | Implemented (`python/carnot/experiment_6780_v590_branch_disposition.py`, `scripts/experiments/experiment_6780_v590_branch_disposition.py`) | Implemented (`tests/python/test_experiment_6780_v590_branch_disposition.py`; 100% scoped statement coverage) |
+
+### REQ-REPORT-6782: Sequential Runtime Admission SHALL Checkpoint Model-Local Readiness
+
+Exp6782 SHALL use one task deadline with at most 20 minutes of lease polling.
+Every poll SHALL retain the observed fixed RTX 3090 inventory and selection.
+The task SHALL acquire by UUID through `GpuLease`. It SHALL never signal,
+stop, or reuse an unowned process. Training and serving processes SHALL make a
+device ineligible and `protected_process_actions` SHALL remain empty.
+
+The producer SHALL atomically checkpoint after each model attempt. A later
+lease or runtime block SHALL preserve all earlier poll and model rows. It SHALL
+derive `qwen36_runtime_ready`, `gemma31_runtime_ready`, and
+`gemma26_runtime_ready` only from that model's owned load, first-token,
+teardown, lease-release, and VRAM-recovery receipts.
+`all_mandated_runtime_ready` SHALL be true only when all three fields are true.
+
+The terminal artifact SHALL include `field_principles`,
+`inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `MODEL_SPECS`, `model_specs`, `models_used`,
+`live_model_invoked`, `rows`, `gpu_receipts`, `protected_process_actions`, the
+four readiness fields, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. A precondition failure SHALL still write
+the complete schema with status `complete_blocked_sequential_sota_runtime`.
+The verdict class SHALL use the closed enum. The honest verdict SHALL use a
+permitted terminal prefix. This artifact proves execution capability only.
+
+#### SCENARIO-REPORT-6782-BOUNDED-WAIT
+
+**Given** both fixed cards remain ineligible
+**When** the single task lease deadline expires
+**Then** every poll remains in `rows`, no unowned process is signaled, and the
+artifact reports the failed lease check and observed inventory.
+
+#### SCENARIO-REPORT-6782-CHECKPOINT
+
+**Given** one model is ready and a later model blocks
+**When** the producer writes its terminal checkpoint
+**Then** the earlier model readiness, rows, GPU receipt, and model identity
+remain present while aggregate readiness remains false.
+
+#### SCENARIO-REPORT-6782-COLD-CONSISTENCY
+
+**Given** a completed or blocked artifact
+**When** the cold validator recomputes model readiness, aggregate readiness,
+models used, live invocation, gate summary, rows, and checksum
+**Then** copied or inconsistent top-level claims fail validation.
+
+## Implementation Status (REQ-REPORT-6782)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6782 and SCENARIO-REPORT-6782-* | Planned (`python/carnot/experiment_6782_sequential_sota_runtime_admission.py`, `scripts/experiments/experiment_6782_sequential_sota_runtime_admission.py`) | Planned (`tests/python/test_experiment_6782_sequential_sota_runtime_admission.py`) |
