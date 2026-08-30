@@ -868,3 +868,120 @@ def test_main_refuses_prewrite_and_cold_reload_failures(
     monkeypatch.setattr(exp, "validate_artifact", lambda artifact, root: next(calls))
     with pytest.raises(ValueError, match="cold reload"):
         exp.main(["--root", str(REPO), "--output", str(tmp_path / "two.json")])
+
+
+def test_nonterminal_source_stays_partial_in_its_experiment_row() -> None:
+    """SCENARIO-REPORT-6780-PRECONDITIONS: an unfinished file stays visible."""
+
+    plan = {
+        "order": 1,
+        "task_id": "exp6768",
+        "manifest_task_id": exp.EXPECTED_TASK_IDS[0],
+        "title": "unfinished source",
+        "branch": "proof",
+        "path": exp.TASK_PATHS["exp6768"],
+        "gated_on": [],
+    }
+    rows = exp.build_experiment_rows([plan], {"exp6768": _record({}, "nonterminal")})
+    assert rows[0]["verdict_class"] == "partial"
+    assert rows[0]["honest_verdict"].startswith("complete_partial_nonterminal")
+
+
+def test_collect_self_audits_preserves_hard_and_advisory_counts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-REPORT-6780-VALIDATION: the capstone audits its own rows."""
+
+    class Verifier:
+        @staticmethod
+        def verify_artifact(path: Path) -> dict[str, object]:
+            return {"artifact": str(path), "flags": []}
+
+    class Lint:
+        HARD_CLASSES = ("ALL_ROWS_NULL",)
+
+        @staticmethod
+        def check_artifact(path: Path) -> tuple[str, list[str]]:
+            assert path == tmp_path / "artifact.json"
+            return "findings", ["ALL_ROWS_NULL: empty", "NO_HEADROOM: pinned"]
+
+    modules = iter((Verifier, Lint))
+    monkeypatch.setattr(exp, "_load_script_module", lambda root, name: next(modules))
+    adversarial, row_report = exp.collect_self_audits(REPO, tmp_path / "artifact.json")
+    assert adversarial["flags"] == []
+    assert row_report["blocking_count"] == 1
+    assert row_report["warning_count"] == 1
+
+
+def test_main_runs_canonical_self_audits_without_writing_the_repo(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-REPORT-6780-VALIDATION: canonical publication is audited twice."""
+
+    monkeypatch.setattr(exp, "build_artifact", lambda *args, **kwargs: {"stage": "built"})
+    monkeypatch.setattr(exp, "validate_artifact", lambda artifact, root: [])
+    monkeypatch.setattr(
+        exp,
+        "reconcile_self_audits",
+        lambda artifact, adversarial, rows, root, duration_s: {"stage": "reconciled"},
+    )
+    stable = ({"flags": []}, {"findings": []})
+    monkeypatch.setattr(exp, "collect_self_audits", lambda root, path: stable)
+
+    assert exp.main(["--root", str(tmp_path), "--date", "20260830"]) == 0
+    written = json.loads((tmp_path / exp.RESULT_PATH).read_text(encoding="utf-8"))
+    assert written == {"stage": "reconciled"}
+
+
+def test_main_rejects_invalid_reconciliation_before_final_publication(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-REPORT-6780-VALIDATION: post-audit validation fails closed."""
+
+    monkeypatch.setattr(exp, "build_artifact", lambda *args, **kwargs: {})
+    validation_results = iter(([], ["invalid after self-audit"]))
+    monkeypatch.setattr(exp, "validate_artifact", lambda artifact, root: next(validation_results))
+    monkeypatch.setattr(exp, "collect_self_audits", lambda root, path: ({"flags": []}, {}))
+    monkeypatch.setattr(
+        exp,
+        "reconcile_self_audits",
+        lambda artifact, adversarial, rows, root, duration_s: artifact,
+    )
+
+    with pytest.raises(ValueError, match="invalid V590 artifact after self-audit"):
+        exp.main(["--root", str(tmp_path), "--date", "20260830"])
+
+
+@pytest.mark.parametrize(
+    ("reports", "message"),
+    [
+        (
+            (({"flags": []}, {"findings": []}), ({"flags": ["changed"]}, {"findings": []})),
+            "adversarial self-audit changed",
+        ),
+        (
+            (({"flags": []}, {"findings": []}), ({"flags": []}, {"findings": ["changed"]})),
+            "row self-audit changed",
+        ),
+    ],
+)
+def test_main_rejects_an_unstable_final_self_audit(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    reports: tuple[tuple[dict[str, object], dict[str, object]], ...],
+    message: str,
+) -> None:
+    """SCENARIO-REPORT-6780-VALIDATION: a changing final audit fails closed."""
+
+    monkeypatch.setattr(exp, "build_artifact", lambda *args, **kwargs: {})
+    monkeypatch.setattr(exp, "validate_artifact", lambda artifact, root: [])
+    monkeypatch.setattr(
+        exp,
+        "reconcile_self_audits",
+        lambda artifact, adversarial, rows, root, duration_s: artifact,
+    )
+    audit_sequence = iter(reports)
+    monkeypatch.setattr(exp, "collect_self_audits", lambda root, path: next(audit_sequence))
+
+    with pytest.raises(ValueError, match=message):
+        exp.main(["--root", str(tmp_path), "--date", "20260830"])

@@ -84,6 +84,28 @@
       "gate_version": "afdf258f012a9fe9a9876108674a8299cc3bd583ae3a423713a57b232e612103",
       "loaded": true,
       "max_severity": -1
+    },
+    {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6780_v590_branch_disposition.json",
+      "exp_id": 6780,
+      "flag_count": 2,
+      "flags": [
+        {
+          "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6780_v590_branch_disposition.json; classification=partial; reason=partial marker present",
+          "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+          "severity": "critical"
+        },
+        {
+          "detail": "honest_verdict opens with the terminal-success prefix 'complete_' but verdict_class='partial'. The conductor is enum-first, so it believes the FIELD: the task is classified partial and re-run toward the 3-fail retire limit, while a reader of the verdict string sees a success. Pick one. If the run genuinely fell short, drop the success prefix. If it completed, declare the class that matches (positive / circular_positive / null).",
+          "kind": "VERDICT_PREFIX_CLASS_CONTRADICTION",
+          "severity": "warn"
+        }
+      ],
+      "gate_version": "afdf258f012a9fe9a9876108674a8299cc3bd583ae3a423713a57b232e612103",
+      "honest_verdict": "complete_partial: V590 narrowed the proof fixture and runtime grammar gap, while",
+      "loaded": true,
+      "max_severity": 2,
+      "title": "V590 branch disposition and PRD gap update"
     }
   ],
   "arc_disposition": {
@@ -447,7 +469,7 @@
       "verdict_class": "blocked"
     },
     {
-      "adversarial_finding_count": 0,
+      "adversarial_finding_count": 2,
       "branch": "execution_contract",
       "branch_disposition": "partial",
       "claim_boundary": "The capstone closes task accounting. It is not a verifier or a science vote.",
@@ -457,7 +479,7 @@
         "successor_roadmap_activated": false
       },
       "next_action": "Hand terminal evidence to the separate document reconciler; do not activate a successor roadmap.",
-      "row_consistency_finding_count": 0,
+      "row_consistency_finding_count": 1,
       "row_type": "branch",
       "task_ids": [
         "exp6780"
@@ -466,6 +488,14 @@
         "exp6780": "partial"
       },
       "verdict_class": "partial"
+    }
+  ],
+  "corrigendum_pending": [
+    {
+      "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6780_v590_branch_disposition.json; classification=partial; reason=partial marker present",
+      "disposition": "preserved_required_partial_terminal_contract_conflict",
+      "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+      "severity": "critical"
     }
   ],
   "docs_reconciled": [
@@ -490,7 +520,7 @@
       "updated": false
     }
   ],
-  "duration_s": 11.392652,
+  "duration_s": 11.676947,
   "expected_task_ids": [
     "exp6768-targetable-proof-panel-expansion",
     "exp6769-environment-indexed-proof-grammar-v2",
@@ -537,6 +567,7 @@
     "verdict_row_consistency_findings": "Shows when raw rows do not support a source headline.",
     "verifier_is_oracle": "States that this synthesis is not a correctness oracle."
   },
+  "flagged_adversarial": true,
   "fr11_disposition": {
     "cold_audit_completed": false,
     "disposition": "blocked",
@@ -1556,7 +1587,7 @@
     ],
     "window": 14
   },
-  "reproducibility_checksum": "sha256:c9d15a8dd2c0498a892608fc2f224ad1c316727a961278f8f08ebb725565d173",
+  "reproducibility_checksum": "sha256:c692612000a9650b7e11478ee0644a4e237b654aa88420e0f427b9c98b7a0f1b",
   "retirement_recommendations": [
     {
       "branch": "proof",
@@ -2375,6 +2406,16 @@
       "status": "skipped",
       "task_id": "exp6777",
       "warning_count": 1
+    },
+    {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6780_v590_branch_disposition.json",
+      "blocking_count": 1,
+      "findings": [
+        "ALL_ROWS_NULL: 13 row(s) and not one numeric value among ['inference_substrate'] -- the verdict summarises nothing measured"
+      ],
+      "status": "findings",
+      "task_id": "exp6780",
+      "warning_count": 0
     }
   ],
   "verifier_is_oracle": false
