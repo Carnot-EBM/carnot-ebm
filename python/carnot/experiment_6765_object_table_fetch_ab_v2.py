@@ -50,9 +50,7 @@ BASELINE_ARM = exp6753.BASELINE_ARM
 TREATMENT_ARM = exp6753.TREATMENT_ARM
 ARMS = exp6753.ARMS
 PRODUCTION_ROUTE = exp6753.PRODUCTION_ROUTE
-INFERENCE_SUBSTRATE = (
-    "production E3AgentPolicy on task-owned llama.cpp CUDA Qwen3.8-27B-GGUF"
-)
+INFERENCE_SUBSTRATE = "production E3AgentPolicy on task-owned llama.cpp CUDA Qwen3.8-27B-GGUF"
 COMPLETE_PHASE_SEQUENCE = lease_api.COMPLETE_PHASE_SEQUENCE
 VERDICT_CLASSES = exp6753.VERDICT_CLASSES
 
@@ -138,8 +136,7 @@ def row_plan() -> list[JsonDict]:
     """Return 120 science rows and two separately typed canary rows."""
 
     science = [
-        {**deepcopy(row), "quality_pool": "qwen3.8_science"}
-        for row in exp6753.science_plan()
+        {**deepcopy(row), "quality_pool": "qwen3.8_science"} for row in exp6753.science_plan()
     ]
     canaries = [
         {**deepcopy(row), "quality_pool": "excluded_canary", "canary_unit": True}
@@ -292,8 +289,8 @@ def collect_preconditions(
     try:
         planned = calendar_date.fromisoformat(f"{date[:4]}-{date[4:6]}-{date[6:]}")
         architecture_age = (
-            planned - calendar_date.fromisoformat(reconciled)
-        ).days if reconciled else None
+            (planned - calendar_date.fromisoformat(reconciled)).days if reconciled else None
+        )
     except ValueError:
         architecture_age = None
     architecture_fresh = architecture_age is not None and 0 <= architecture_age <= 30
@@ -570,9 +567,7 @@ def run_live_row_session(
         window = _build_window(str(planned["game"]))
         bound_model = {**dict(model), "device_index": int(selected_device["index"])}
         output_root = Path(os.environ["CARNOT_ARC_E3_DIR"])
-        row, prompt = exp6753._run_live_row(
-            planned, bound_model, proposer, window, output_root
-        )
+        row, prompt = exp6753._run_live_row(planned, bound_model, proposer, window, output_root)
         after_inference = _gpu_snapshot(device_uuid, int(process.pid))
         peak_vram = max(peak_vram, int(after_inference.get("owned_pid_vram_mb", 0) or 0))
     except Exception as exc:  # noqa: BLE001 - a live row keeps its owned terminal failure
@@ -685,6 +680,53 @@ def _session_slug(row_id: str) -> str:
     return re.sub(r"[^a-zA-Z0-9]+", "-", row_id).strip("-").lower()
 
 
+def _load_completed_checkpoint(
+    runtime_dir: Path,
+    planned: Mapping[str, Any],
+    model: Mapping[str, Any],
+    selected_device: Mapping[str, Any],
+) -> JsonDict | None:
+    """Reuse a row only when its owned evidence still matches this frozen run.
+
+    The worker writes the row atomically after teardown. The parent adds the
+    pair-level prompt receipt later, so this check validates every other field.
+    A partial or changed file returns ``None`` and the row runs again.
+    """
+
+    path = runtime_dir / _session_slug(str(planned["row_id"])) / "row.json"
+    row = _load_json(path)
+    if not row or row.get("row_sha256") != row_checksum(row):
+        return None
+    if any(row.get(key) != value for key, value in planned.items()):
+        return None
+    expected_model = {
+        "model_role": model.get("role"),
+        "model_path": model.get("model_path"),
+        "model_sha256": model.get("model_sha256"),
+    }
+    if any(row.get(key) != value for key, value in expected_model.items()):
+        return None
+    gpu = row.get("gpu_receipt") if isinstance(row.get("gpu_receipt"), Mapping) else {}
+    assigned = gpu.get("assigned_device") if isinstance(gpu.get("assigned_device"), Mapping) else {}
+    session = row.get("session_receipt") if isinstance(row.get("session_receipt"), Mapping) else {}
+    owner = session.get("lease_owner") if isinstance(session.get("lease_owner"), Mapping) else {}
+    if (
+        assigned.get("physical_index") != selected_device.get("index")
+        or assigned.get("uuid") != selected_device.get("uuid")
+        or owner.get("device_uuid") != selected_device.get("uuid")
+        or owner.get("expected_model") not in (None, model.get("model_path"))
+        or session.get("observed_model_path") not in (None, model.get("model_path"))
+        or session.get("errors") not in (None, [])
+    ):
+        return None
+    attributable = deepcopy(row)
+    attributable["prompt_isolation_receipt"] = {"only_object_table_removed": True}
+    attributable["row_sha256"] = row_checksum(attributable)
+    if row_evidence_errors(attributable):
+        return None
+    return row
+
+
 def run_row_worker_subprocess(
     model: Mapping[str, Any],
     selected_device: Mapping[str, Any],
@@ -768,14 +810,18 @@ def attach_prompt_pair_receipts(rows: Sequence[JsonDict], *, tool_schemas: str) 
     """Attach exact prompt-isolation evidence to every observed arm pair."""
 
     indexed = {
-        (str(row.get("game")), int(row.get("seed", -1)), str(row.get("arm"))): row
-        for row in rows
+        (str(row.get("game")), int(row.get("seed", -1)), str(row.get("arm"))): row for row in rows
     }
     pair_keys = sorted({(key[0], key[1]) for key in indexed})
     for game, seed in pair_keys:
         baseline = indexed.get((game, seed, BASELINE_ARM))
         treatment = indexed.get((game, seed, TREATMENT_ARM))
-        if not baseline or not treatment or not baseline.get("prompt") or not treatment.get("prompt"):
+        if (
+            not baseline
+            or not treatment
+            or not baseline.get("prompt")
+            or not treatment.get("prompt")
+        ):
             continue
         try:
             receipt = exp6753.prompt_isolation_receipt(
@@ -950,9 +996,7 @@ def _gpu_receipts(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
             "row_id": row.get("row_id"),
             "model_id": row.get("model_id"),
             "gpu_receipt": deepcopy(row.get("gpu_receipt")),
-            "peak_owned_vram_mb": (row.get("session_receipt") or {}).get(
-                "peak_owned_vram_mb"
-            ),
+            "peak_owned_vram_mb": (row.get("session_receipt") or {}).get("peak_owned_vram_mb"),
         }
         for row in rows
         if row.get("gpu_receipt") is not None
@@ -1150,8 +1194,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
         if artifact.get("verdict_class") != "blocked":
             errors.append("blocked_verdict_class")
         if any(
-            not str(row.get("failure_class") or "").startswith("preflight_blocked:")
-            for row in rows
+            not str(row.get("failure_class") or "").startswith("preflight_blocked:") for row in rows
         ):
             errors.append("blocked_rows")
     expected_live = any(row.get("live_model_invoked") is True for row in rows)
@@ -1202,6 +1245,10 @@ def run(
             if stopped or not isinstance(model, Mapping):
                 reason = failure or "not_run_after_session_failure:model_missing"
                 rows.append(_blocked_row(planned, model or {}, reason))
+                continue
+            checkpoint = _load_completed_checkpoint(runtime_dir, planned, model, selected)
+            if checkpoint is not None:
+                rows.append(checkpoint)
                 continue
             port = exp6764.choose_free_ports(1)[0]
             try:
