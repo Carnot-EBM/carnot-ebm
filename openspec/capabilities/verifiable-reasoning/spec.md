@@ -23487,6 +23487,113 @@ sets readiness false, and records the failed check with its observed value.
 
 **Spec traces:** REQ-VERIFY-6786
 
+### REQ-VERIFY-6787: Group-Aware Soft Fixed-Point Proposals SHALL Stay Oracle-Distinct
+
+Exp6787 SHALL provide a bounded CPU PyTorch soft fixed-point proposer for the
+declarative constraint graphs in the frozen Exp6786 artifact. The proposer
+SHALL preserve each graph, group, variable, and dependency identity. It SHALL
+keep variable states, local-group messages, and dependency messages as
+separate inspectable values. Each recurrent iteration SHALL emit one message
+receipt for every local group.
+
+The run SHALL stop before training when the Exp6786 readiness flag is not
+true, the source file hash differs from the frozen expected hash, any train,
+development, or held-topology split is empty, or the proposal features fail
+the allowlist and denylist audit. A stopped run SHALL still write a complete
+artifact. Its status and honest verdict SHALL start with
+`complete_blocked_soft_fixed_point`, and `gate_check_summary` SHALL name each
+failed check with its expected and observed value.
+
+Five seeds, training steps, Adam optimizer, learning rate, hidden width,
+iteration cap, convergence tolerance, decoding threshold, and candidate count
+SHALL be frozen before fitting. Each seed SHALL fit only on units whose split
+is `train`. The forward path, fixed-point loss, convergence rule, candidate
+decoder, and any update loop SHALL use only the Exp6786 proposal-feature
+allowlist. They SHALL refuse exact assignments, exact labels, exact checker
+feedback, target assignments, solver conflicts, future rows, post-action
+outcomes, and oracle residuals.
+
+The proposer SHALL emit the frozen number of candidate assignments for every
+development and held-topology unit under every seed. Each unit-seed row SHALL
+record graph and split identity, iterations, final state residual, stop reason,
+finite-value status, candidate hashes, and group-message receipts. The
+artifact SHALL aggregate convergence by split and record finite-value
+failures. One seed SHALL replay in a fresh process and produce byte-identical
+candidate hashes.
+
+The terminal artifact SHALL include `field_principles`,
+`inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `source_artifact_hash`,
+`frozen_hyperparameters`, `trainable_parameter_count`, `feature_allowlist`,
+`feature_denylist`, `oracle_feature_violations`, `rows`,
+`training_receipts`,
+`convergence_by_split`, `finite_value_failures`,
+`deterministic_replay_agreement`, `candidate_hashes`,
+`soft_fixed_point_proposer_ready`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. Every required
+field SHALL have a one-line purpose in `field_principles`.
+`inference_substrate` SHALL declare CPU PyTorch soft fixed-point proposal with
+no LLM. `verifier_is_oracle` SHALL be false. `verdict_class` SHALL use only
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. A terminal `honest_verdict` SHALL start with `complete:`,
+`complete_`, `success:`, `success_`, `passed:`, `passed_`, `shipped:`, or
+`shipped_`. Readiness means only that the bounded proposal mechanism ran and
+replayed. It SHALL NOT claim correctness or superiority.
+
+### SCENARIO-VERIFY-6787-GROUP-RECURRENCE: Group Messages Stay Inspectable
+
+**Given** one allowed Exp6786 proposal graph
+**When** the recurrent operator runs
+**Then** graph serialization and ordered group identities remain unchanged,
+variable, group, and dependency states remain distinct and finite, and every
+iteration has exactly one receipt per local group.
+
+**Spec traces:** REQ-VERIFY-6787
+
+### SCENARIO-VERIFY-6787-BOUND-AND-DECODE: Iteration And Candidates Stay Bounded
+
+**Given** a frozen seed and iteration cap
+**When** residual convergence is reached or the cap expires
+**Then** iteration count does not exceed the cap, the stop reason is explicit,
+and each decoded candidate contains every declared variable exactly once.
+
+**Spec traces:** REQ-VERIFY-6787
+
+### SCENARIO-VERIFY-6787-SPLIT-AND-ORACLE-ISOLATION: Held Rows Never Train
+
+**Given** train, development, and held-topology units
+**When** fitting and proposal run
+**Then** fitting sees train unit identities only, output rows contain
+development and held-topology identities only, and any denied oracle feature
+causes a refusal before model execution.
+
+**Spec traces:** REQ-VERIFY-6787
+
+### SCENARIO-VERIFY-6787-DETERMINISTIC-REPLAY: Candidate Hashes Replay
+
+**Given** one frozen seed and the frozen source artifact
+**When** proposal runs again in a fresh process
+**Then** its ordered candidate-hash bytes match the producer process exactly.
+
+**Spec traces:** REQ-VERIFY-6787
+
+### SCENARIO-VERIFY-6787-BLOCKED-PRECONDITION: Authority Drift Stops Training
+
+**Given** a false readiness flag, source hash drift, an empty required split,
+or a feature-contract violation
+**When** Exp6787 evaluates preconditions
+**Then** it writes `complete_blocked_soft_fixed_point`, emits no proposal rows,
+sets readiness false, and identifies the observed failure in
+`gate_check_summary`.
+
+**Spec traces:** REQ-VERIFY-6787
+
+## Implementation Status (REQ-VERIFY-6787)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6787 and SCENARIO-VERIFY-6787-* | Implemented (`python/carnot/experiment_6787_group_aware_soft_fixed_point.py`, `scripts/experiments/experiment_6787_group_aware_soft_fixed_point.py`; terminal artifact `results/experiment_6787_group_aware_soft_fixed_point.json`) | Implemented (`tests/python/test_experiment_6787_group_aware_soft_fixed_point.py`; group identity, bounded recurrence, finite values, decoding, split isolation, oracle refusal, blocking, and fresh replay) |
+
 ### SCENARIO-VERIFY-6745-DUAL: Independent Encodings Control Diagnosis
 
 **Given** a parseable certificate
