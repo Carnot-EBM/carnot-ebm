@@ -216,7 +216,18 @@ def generalization_levels() -> dict:
     # Reading only arc_loop_solve_*.json would leave this line stuck at "not measured" forever
     # even after that run lands, because they are different files.
     total, games = 0, 0
-    lb = REPO / "results" / "arc_leaderboard_eval.json"
+    # The eval writes a PER-RUN file under arc_leaderboard_eval_runs/ and only sometimes updates
+    # the flat arc_leaderboard_eval.json. Reading only the flat file showed a 48-day-old
+    # `policy=explorer` number while a fresh `policy=e3` result sat unread beside it.
+    candidates = sorted(
+        (REPO / "results" / "arc_leaderboard_eval_runs").glob("*.json"),
+        key=lambda q: q.stat().st_mtime,
+        reverse=True,
+    )
+    flat = REPO / "results" / "arc_leaderboard_eval.json"
+    if flat.exists():
+        candidates.append(flat)
+    lb = candidates[0] if candidates else flat
     if lb.exists():
         try:
             d = json.loads(lb.read_text())
@@ -351,9 +362,18 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
                 )
             except (OSError, json.JSONDecodeError):
                 L.append(f"job         {name}: gone; receipt unreadable at {receipt}")
+        elif receipt is None:
+            # NO RECEIPT WAS ARMED, which proves nothing about how the job ended. The first
+            # version printed the SIGKILL/OOM inference here unconditionally and reported a job
+            # that had exited CLEANLY, after writing its result, as a violent death. An absent
+            # receipt is evidence only when a receipt was installed; otherwise it is silence.
+            L.append(
+                f"job         {name}: gone; no receipt was armed, so the exit is UNKNOWN "
+                f"-- check the run's own log before inferring anything"
+            )
         else:
             L.append(
-                f"job         {name}: gone, NO receipt "
+                f"job         {name}: gone, receipt ARMED but ABSENT at {receipt} "
                 f"(SIGKILL, OOM, or kernel event -- REQ-INFRA-6830)"
             )
 
