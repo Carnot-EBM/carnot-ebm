@@ -16831,3 +16831,4 @@ The l |
 | 2026-08-30 12:37 UTC | Live selfparse tool-gap transport receipt | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6776-arc-shadow-supe |
 | 2026-08-30 12:40 UTC | Selfparse actions-to-progress A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6777-arc-tool-gap-transport) |
 | 2026-08-30 12:40 UTC | Independent ARC tool and supervisor adoption audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6778-arc-selfparse-actions-to-progress-ab |
+| 2026-08-30 13:08 UTC | V590 branch disposition and PRD gap update | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6780_v590_br |
