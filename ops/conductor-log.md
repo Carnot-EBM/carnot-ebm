@@ -16861,3 +16861,4 @@ The l |
 | 2026-08-30 21:17 UTC | Temporal coupling sampler target-law study | OK | 104 passed, 1 warning in 61.15s (0:01:01) |
 | 2026-08-30 21:39 UTC | Temporal coupling target-law recomputation and cos | OK | 91 passed, 1 warning in 23.84s |
 | 2026-08-30 22:07 UTC | V592 branch disposition and PRD reconciliation | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6795_v592_br |
+| 2026-08-30 22:17 UTC | V592 branch disposition and PRD reconciliation | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6795_v592_br |
