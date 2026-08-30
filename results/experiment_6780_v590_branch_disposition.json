@@ -112,12 +112,12 @@
         "force_exploration_diversity": false,
         "tool_loop_reinduction": false
       },
-      "firings": 0,
+      "firings": null,
       "transport_ready": false
     },
     "tool_gap": {
       "analyzer_ingest_passed": false,
-      "events": 0,
+      "events": null,
       "transport_ready": false
     }
   },
@@ -218,7 +218,7 @@
   ],
   "branch_rows": [
     {
-      "adversarial_finding_count": 0,
+      "adversarial_finding_count": 2,
       "branch": "proof",
       "branch_disposition": "partial",
       "claim_boundary": "Fixture and grammar readiness do not prove live exact-valid gain or localized repair.",
@@ -226,7 +226,11 @@
         "proof": {
           "comparison_rows": 0,
           "dynamic_proof_grammar_ready": true,
-          "exact_valid_rate_by_arm": {},
+          "exact_valid_rate_by_arm": {
+            "cause": "no_eligible_comparative_rows",
+            "denominator": 0,
+            "value": null
+          },
           "grammar_rows": 45,
           "no_ghost_violations": 0,
           "paired_exact_valid_effects": {
@@ -247,8 +251,28 @@
           "valid_unsat_reachable": true
         },
         "repair": {
-          "harmful_flips_by_arm": {},
+          "harmful_flips_by_arm": {
+            "cause": "no_eligible_repair_rows",
+            "denominator": 0,
+            "value": null
+          },
           "paired_exact_valid_effect": {
+            "cause": "no_eligible_comparative_rows",
+            "ci95_high": null,
+            "ci95_low": null,
+            "mean_delta": null,
+            "pair_count": 0,
+            "value": null
+          },
+          "paired_harmful_flip_effect": {
+            "cause": "no_eligible_comparative_rows",
+            "ci95_high": null,
+            "ci95_low": null,
+            "mean_delta": null,
+            "pair_count": 0,
+            "value": null
+          },
+          "paired_support_loss_effect": {
             "cause": "no_eligible_comparative_rows",
             "ci95_high": null,
             "ci95_low": null,
@@ -260,7 +284,11 @@
           "repair_panel_ready": false,
           "repair_rows": 0,
           "source_interval_ignored": null,
-          "support_loss_by_arm": {}
+          "support_loss_by_arm": {
+            "cause": "no_eligible_repair_rows",
+            "denominator": 0,
+            "value": null
+          }
         }
       },
       "next_action": "Exclude the repeated GPU-starved proof comparison route until an owned RTX 3090 is available.",
@@ -290,10 +318,18 @@
       "headline": {
         "cold_audit_completed": false,
         "csl_live_preflight_ready": false,
-        "historical_loss_by_arm": {},
+        "historical_loss_by_arm": {
+          "cause": "no_eligible_prospective_rows",
+          "denominator": 0,
+          "value": null
+        },
         "live_model_invoked": false,
         "preflight_rows": 11,
-        "prequential_yield_by_arm": {},
+        "prequential_yield_by_arm": {
+          "cause": "no_eligible_prospective_rows",
+          "denominator": 0,
+          "value": null
+        },
         "procedural_minus_no_memory_order_effect": {
           "cause": "no_eligible_comparative_rows",
           "ci95_high": null,
@@ -322,11 +358,12 @@
           "support": false
         },
         "transaction_activity": {
-          "action_influences": 0,
-          "commits": 0,
-          "rejects": 0,
-          "retrievals": 0,
-          "rollbacks": 0
+          "action_influences": null,
+          "cause": "no_eligible_prospective_rows",
+          "commits": null,
+          "rejects": null,
+          "retrievals": null,
+          "rollbacks": null
         }
       },
       "next_action": "Exclude the repeated GPU-capacity preflight route until one model has an owned lease.",
@@ -351,7 +388,11 @@
       "claim_boundary": "Supervisor and tool transport do not prove adoption without a cold actions-to-progress effect.",
       "headline": {
         "actions_to_progress_ab_completed": false,
-        "actions_to_progress_by_arm": {},
+        "actions_to_progress_by_arm": {
+          "cause": "no_eligible_actions_to_progress_rows",
+          "denominator": 0,
+          "value": null
+        },
         "actions_to_progress_rows": 0,
         "adoption_decision": "unavailable",
         "adoption_positive": false,
@@ -369,8 +410,8 @@
           "force_exploration_diversity": false,
           "tool_loop_reinduction": false
         },
-        "row_recomputed_firings": 0,
-        "row_recomputed_helped": 0,
+        "row_recomputed_firings": null,
+        "row_recomputed_helped": null,
         "selfparse_minus_control_actions_effect": {
           "cause": "no_eligible_comparative_rows",
           "ci95_high": null,
@@ -381,9 +422,11 @@
         },
         "shadow_supervisor_transport_ready": false,
         "solve_claim": false,
+        "supervisor_evidence_cause": "no_eligible_live_supervisor_rows",
         "supervisor_rows": 40,
         "tool_gap_analyzer_ingest_passed": false,
-        "tool_gap_event_count": 0,
+        "tool_gap_event_count": null,
+        "tool_gap_event_count_cause": "tool_gap_events_missing",
         "tool_gap_transport_ready": false
       },
       "next_action": "Keep supervisor and selfparse default-off until a cold actions-to-progress audit exists.",
@@ -447,7 +490,7 @@
       "updated": false
     }
   ],
-  "duration_s": 14.20602,
+  "duration_s": 11.392652,
   "expected_task_ids": [
     "exp6768-targetable-proof-panel-expansion",
     "exp6769-environment-indexed-proof-grammar-v2",
@@ -495,6 +538,7 @@
     "verifier_is_oracle": "States that this synthesis is not a correctness oracle."
   },
   "fr11_disposition": {
+    "cold_audit_completed": false,
     "disposition": "blocked",
     "positive": false,
     "required_positive_gates": {
@@ -507,7 +551,11 @@
       "support": false
     },
     "row_citations": {
-      "historical_loss_by_arm": {},
+      "historical_loss_by_arm": {
+        "cause": "no_eligible_prospective_rows",
+        "denominator": 0,
+        "value": null
+      },
       "procedural_minus_no_memory": {
         "cause": "no_eligible_comparative_rows",
         "ci95_high": null,
@@ -526,11 +574,12 @@
       },
       "prospective_rows": 0,
       "transaction_activity": {
-        "action_influences": 0,
-        "commits": 0,
-        "rejects": 0,
-        "retrievals": 0,
-        "rollbacks": 0
+        "action_influences": null,
+        "cause": "no_eligible_prospective_rows",
+        "commits": null,
+        "rejects": null,
+        "retrievals": null,
+        "rollbacks": null
       }
     }
   },
@@ -555,7 +604,19 @@
     },
     "positive": false,
     "repair": {
-      "harmful_flips": {},
+      "harmful_flip_effect": {
+        "cause": "no_eligible_comparative_rows",
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean_delta": null,
+        "pair_count": 0,
+        "value": null
+      },
+      "harmful_flips": {
+        "cause": "no_eligible_repair_rows",
+        "denominator": 0,
+        "value": null
+      },
       "row_citation": {
         "cause": "no_eligible_comparative_rows",
         "ci95_high": null,
@@ -564,7 +625,15 @@
         "pair_count": 0,
         "value": null
       },
-      "row_count": 0
+      "row_count": 0,
+      "support_loss_effect": {
+        "cause": "no_eligible_comparative_rows",
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean_delta": null,
+        "pair_count": 0,
+        "value": null
+      }
     }
   },
   "gate_check_summary": [
@@ -1080,11 +1149,12 @@
           "support": false
         },
         "transaction_activity": {
-          "action_influences": 0,
-          "commits": 0,
-          "rejects": 0,
-          "retrievals": 0,
-          "rollbacks": 0
+          "action_influences": null,
+          "cause": "no_eligible_prospective_rows",
+          "commits": null,
+          "rejects": null,
+          "retrievals": null,
+          "rollbacks": null
         }
       }
     },
@@ -1486,7 +1556,7 @@
     ],
     "window": 14
   },
-  "reproducibility_checksum": "sha256:5eda1696c344b05f3e49edccb5fa8b404c99661772df9ddeab2e8174bbde7e6c",
+  "reproducibility_checksum": "sha256:c9d15a8dd2c0498a892608fc2f224ad1c316727a961278f8f08ebb725565d173",
   "retirement_recommendations": [
     {
       "branch": "proof",
@@ -1523,7 +1593,11 @@
   "row_recomputed_headlines": {
     "arc": {
       "actions_to_progress_ab_completed": false,
-      "actions_to_progress_by_arm": {},
+      "actions_to_progress_by_arm": {
+        "cause": "no_eligible_actions_to_progress_rows",
+        "denominator": 0,
+        "value": null
+      },
       "actions_to_progress_rows": 0,
       "adoption_decision": "unavailable",
       "adoption_positive": false,
@@ -1541,8 +1615,8 @@
         "force_exploration_diversity": false,
         "tool_loop_reinduction": false
       },
-      "row_recomputed_firings": 0,
-      "row_recomputed_helped": 0,
+      "row_recomputed_firings": null,
+      "row_recomputed_helped": null,
       "selfparse_minus_control_actions_effect": {
         "cause": "no_eligible_comparative_rows",
         "ci95_high": null,
@@ -1553,18 +1627,28 @@
       },
       "shadow_supervisor_transport_ready": false,
       "solve_claim": false,
+      "supervisor_evidence_cause": "no_eligible_live_supervisor_rows",
       "supervisor_rows": 40,
       "tool_gap_analyzer_ingest_passed": false,
-      "tool_gap_event_count": 0,
+      "tool_gap_event_count": null,
+      "tool_gap_event_count_cause": "tool_gap_events_missing",
       "tool_gap_transport_ready": false
     },
     "continuous_memory": {
       "cold_audit_completed": false,
       "csl_live_preflight_ready": false,
-      "historical_loss_by_arm": {},
+      "historical_loss_by_arm": {
+        "cause": "no_eligible_prospective_rows",
+        "denominator": 0,
+        "value": null
+      },
       "live_model_invoked": false,
       "preflight_rows": 11,
-      "prequential_yield_by_arm": {},
+      "prequential_yield_by_arm": {
+        "cause": "no_eligible_prospective_rows",
+        "denominator": 0,
+        "value": null
+      },
       "procedural_minus_no_memory_order_effect": {
         "cause": "no_eligible_comparative_rows",
         "ci95_high": null,
@@ -1593,11 +1677,12 @@
         "support": false
       },
       "transaction_activity": {
-        "action_influences": 0,
-        "commits": 0,
-        "rejects": 0,
-        "retrievals": 0,
-        "rollbacks": 0
+        "action_influences": null,
+        "cause": "no_eligible_prospective_rows",
+        "commits": null,
+        "rejects": null,
+        "retrievals": null,
+        "rollbacks": null
       }
     },
     "execution_contract": {
@@ -1608,7 +1693,11 @@
     "proof": {
       "comparison_rows": 0,
       "dynamic_proof_grammar_ready": true,
-      "exact_valid_rate_by_arm": {},
+      "exact_valid_rate_by_arm": {
+        "cause": "no_eligible_comparative_rows",
+        "denominator": 0,
+        "value": null
+      },
       "grammar_rows": 45,
       "no_ghost_violations": 0,
       "paired_exact_valid_effects": {
@@ -1629,8 +1718,28 @@
       "valid_unsat_reachable": true
     },
     "repair": {
-      "harmful_flips_by_arm": {},
+      "harmful_flips_by_arm": {
+        "cause": "no_eligible_repair_rows",
+        "denominator": 0,
+        "value": null
+      },
       "paired_exact_valid_effect": {
+        "cause": "no_eligible_comparative_rows",
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean_delta": null,
+        "pair_count": 0,
+        "value": null
+      },
+      "paired_harmful_flip_effect": {
+        "cause": "no_eligible_comparative_rows",
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean_delta": null,
+        "pair_count": 0,
+        "value": null
+      },
+      "paired_support_loss_effect": {
         "cause": "no_eligible_comparative_rows",
         "ci95_high": null,
         "ci95_low": null,
@@ -1642,7 +1751,11 @@
       "repair_panel_ready": false,
       "repair_rows": 0,
       "source_interval_ignored": null,
-      "support_loss_by_arm": {}
+      "support_loss_by_arm": {
+        "cause": "no_eligible_repair_rows",
+        "denominator": 0,
+        "value": null
+      }
     }
   },
   "rows": [
@@ -1662,6 +1775,7 @@
       "raw_row_count": 126,
       "raw_rows_available": true,
       "row_type": "experiment",
+      "source_artifact_terminal": true,
       "source_error": null,
       "status": "complete",
       "summary_receipt": {
@@ -1693,6 +1807,7 @@
       "raw_row_count": 45,
       "raw_rows_available": true,
       "row_type": "experiment",
+      "source_artifact_terminal": true,
       "source_error": null,
       "status": "complete",
       "summary_receipt": {
@@ -1737,6 +1852,7 @@
       "raw_row_count": 0,
       "raw_rows_available": false,
       "row_type": "experiment",
+      "source_artifact_terminal": true,
       "source_error": null,
       "status": "complete_blocked_proof_transport_ab_v2",
       "summary_receipt": {
@@ -1777,6 +1893,7 @@
       "raw_row_count": 0,
       "raw_rows_available": false,
       "row_type": "experiment",
+      "source_artifact_terminal": true,
       "source_error": null,
       "status": "blocked",
       "summary_receipt": {
@@ -1825,6 +1942,7 @@
       "raw_row_count": 0,
       "raw_rows_available": false,
       "row_type": "experiment",
+      "source_artifact_terminal": false,
       "source_error": "file_missing",
       "status": "missing",
       "summary_receipt": null,
@@ -1864,6 +1982,7 @@
       "raw_row_count": 11,
       "raw_rows_available": true,
       "row_type": "experiment",
+      "source_artifact_terminal": true,
       "source_error": null,
       "status": "blocked",
       "summary_receipt": {
@@ -1904,6 +2023,7 @@
       "raw_row_count": 0,
       "raw_rows_available": false,
       "row_type": "experiment",
+      "source_artifact_terminal": false,
       "source_error": "file_missing",
       "status": "missing",
       "summary_receipt": null,
@@ -1938,6 +2058,7 @@
       "raw_row_count": 0,
       "raw_rows_available": false,
       "row_type": "experiment",
+      "source_artifact_terminal": false,
       "source_error": "file_missing",
       "status": "missing",
       "summary_receipt": null,
@@ -2030,6 +2151,7 @@
       "raw_row_count": 40,
       "raw_rows_available": true,
       "row_type": "experiment",
+      "source_artifact_terminal": true,
       "source_error": null,
       "status": "complete_blocked_shadow_supervisor_accrual",
       "summary_receipt": {
@@ -2070,6 +2192,7 @@
       "raw_row_count": 0,
       "raw_rows_available": false,
       "row_type": "experiment",
+      "source_artifact_terminal": true,
       "source_error": null,
       "status": "blocked",
       "summary_receipt": {
@@ -2110,6 +2233,7 @@
       "raw_row_count": 0,
       "raw_rows_available": false,
       "row_type": "experiment",
+      "source_artifact_terminal": false,
       "source_error": "file_missing",
       "status": "missing",
       "summary_receipt": null,
@@ -2144,6 +2268,7 @@
       "raw_row_count": 0,
       "raw_rows_available": false,
       "row_type": "experiment",
+      "source_artifact_terminal": false,
       "source_error": "file_missing",
       "status": "missing",
       "summary_receipt": null,
@@ -2169,6 +2294,7 @@
       "raw_row_count": 0,
       "raw_rows_available": false,
       "row_type": "experiment",
+      "source_artifact_terminal": false,
       "source_error": null,
       "status": "current_synthesis",
       "summary_receipt": null,

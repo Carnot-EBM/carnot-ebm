@@ -219,3 +219,9 @@ CHECK_TIMED_OUT
 
 CHECK_TIMED_OUT
 
+## 2026-08-30 13:14 UTC -- NEW
+
+- Leaderboard shakeup: Tufa Labs improved to 4.71 (#3); Tong Hui Kang to 4.27 (#4); rfbr entered #5 at 3.37; Youssef Nader @ Aurelic is #6 at 3.19; Tony G fell to #7; Daniel Franzen is #8 at 3.15; Liao Zixu and sawada entered #9–10. wking edewd dropped to #18. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- On July 17, the host published an analysis of 500 failed submissions: roughly one-third had no traceable visible notebook error, nearly 20% required a GPU that had not been enabled, and remaining causes—each below 5%—included missing datasets/dependencies, logic errors, CUDA OOM, using the public API instead of competition settings, and writing to read-only `/kaggle/input`. [Official Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
+
