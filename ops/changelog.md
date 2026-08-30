@@ -18262,6 +18262,7 @@ DualGPURunner dispatch. Task-owned phase timing, accelerator samples, launch
 metadata, and device-aware scheduling are the next tooling priorities;
 estimated savings remains 0% because the evidence does not quantify a causal
 reduction.
+
 - 2026-08-30: Exact-invalid targetable proof panel expansion (✅ Complete) — honest_verdict=complete: targetable exact-invalid fixture ready with 126 cold-replayed rows; this is not a model-quality claim; results/experiment_6768_targetable_proof_panel_expansion.json
 - 2026-08-30: Environment-indexed proof grammar fixture v2 (✅ Complete) — honest_verdict=complete: environment-indexed SAT and UNSAT support remained reachable with zero ghost violations; no live SOTA comparison was run; results/experiment_6769_environment_indexed_proof_grammar_v2.json
 - 2026-08-30: Three-model DCCD environment-grammar A/B v2 (⚠️ Blocked) — honest_verdict=complete_blocked_proof_transport_ab_v2: precondition one_model_vram observed False.; results/experiment_6770_dccd_environment_grammar_ab_v2.json
@@ -18272,3 +18273,15 @@ reduction.
 - 2026-08-30: V590 branch disposition and PRD gap update (⚠️ Research Finding) — honest_verdict=complete_partial: V590 narrowed the proof fixture and runtime grammar gap, while exact generation, localized repair, prospective continuous memory, and ARC actions-to-progress evidence remained blocked or missing; no branch metrics were pooled.; results/experiment_6780_v590_branch_disposition.json
 - 2026-08-30: V590 branch disposition and PRD gap update (⚠️ Research Finding) — honest_verdict=complete_partial: V590 narrowed the proof fixture and runtime grammar gap, while exact generation, localized repair, prospective continuous memory, and ARC actions-to-progress evidence remained blocked or missing; no branch metrics were pooled.; results/experiment_6780_v590_branch_disposition.json
 - 2026-08-30: V590 branch disposition and PRD gap update (⚠️ Research Finding) — honest_verdict=complete_partial: V590 narrowed the proof fixture and runtime grammar gap, while exact generation, localized repair, prospective continuous memory, and ARC actions-to-progress evidence remained blocked or missing; no branch metrics were pooled.; results/experiment_6780_v590_branch_disposition.json
+
+## 2026-08-30 — Milestone 2026.08.590 operational retrospective
+
+Eight experiments completed in 2.7 minutes, and five were compute-bound.
+Three compute entries tied for the longest listed duration at 1 minute. No
+data available this milestone explains their phase costs. The GPU snapshot
+showed GPU 1 at 85% utilization and GPU 0 at 0%, so the retrospective flags
+idle accelerator capacity. No data available this milestone establishes
+concurrent loading of 2 or more models or a missed DualGPURunner dispatch.
+Automatic batches of 8-16 questions are the first tooling action. The 75%
+savings estimate is the lower bound implied by the stated 4x batching gain.
+It applies only to batched inference, not total milestone wall time.

@@ -6451,3 +6451,10 @@ The critical path for milestone .250:
 - theme: fast mixed execution exposed missing phase attribution and task-owned accelerator telemetry
 - key result: honest operational negative — the longest compute tasks were identified and compute-task GPU idle was false, but their phase costs and any parallel-model runner applicability remain unverified
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.590
+
+- exp_range: no data available this milestone
+- theme: fast mixed execution exposed idle accelerator capacity and missing task-scoped telemetry
+- key result: honest operational negative — three compute tasks tied at 1 minute while GPU 0 was idle; phase costs and parallel-model runner eligibility remain unverified
+- acceptance: no data available this milestone
