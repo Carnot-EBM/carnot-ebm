@@ -1,3 +1,70 @@
+## V590 Planner Refresh - 2026-08-30
+
+This sweep follows the terminal `2026.08.589` milestone. It covers the requested 2025-2026 arXiv
+topics, OpenReview, Hugging Face Papers, GitHub discovery, Semantic Scholar citation trails for EBT
+`2507.02092` and ARM-EBM `2512.15605`, Extropic, and Logical Intelligence. The search did not find a
+new public checkpoint or hardware interface that displaces Carnot's pinned local GGUF stack. It did
+identify a tighter combination of existing methods for the three open evidence gaps.
+
+### Promising findings selected for V590
+
+- **Decode-Time Grammars** - arXiv:2607.18357,
+  https://arxiv.org/abs/2607.18357 - and **Draft-Conditioned Constrained Decoding** -
+  arXiv:2603.03305, https://arxiv.org/abs/2603.03305 - provide complementary controls for exact
+  certificate generation. A runtime grammar can bind proof symbols to the current environment. A
+  free draft can preserve semantic planning before structural enforcement. Carnot hook: build a
+  larger exact-invalid but parseable panel, compare direct, static-grammar, and draft-conditioned
+  environment-grammar arms, and keep the exact checker as final authority.
+- **Project Aletheia: Verifier-Guided Distillation of Backtracking for Small Language Models** -
+  arXiv:2601.14290, https://arxiv.org/abs/2601.14290; OpenReview:
+  https://openreview.net/forum?id=4zupWb2xmE. The useful result is the explicit repair process:
+  detect a conflict, return to the responsible choice, and revise it. Carnot hook: test bounded
+  prefix backtracking from runtime grammar conflicts after the grammar branch passes its cold audit.
+  Do not expose exact answers or call checker-guided repair non-circular.
+- **When Continual Learning Moves to Memory** - arXiv:2604.27003,
+  https://arxiv.org/abs/2604.27003 - and **Harness Continual Learning** - arXiv:2608.19013,
+  https://arxiv.org/abs/2608.19013 - place the stability-plasticity problem in memory
+  representation, retrieval, and candidate acceptance. Carnot hook: compare abstract procedural
+  memory with detailed traces in prospective event order. Require actual retrieval and use, exact
+  admission receipts, old-family retention, poison rejection, restart durability, and rollback.
+- **Claim-Level Reliability Assessment** - arXiv:2608.11994,
+  https://arxiv.org/abs/2608.11994 - reallocates test-time effort toward decision-critical claims
+  instead of scoring a whole trace uniformly. Carnot hook: record conflict location and the smallest
+  responsible proof region in the repair lane. This is a diagnostic control, not a learned oracle.
+
+### Requested secondary checks and hardware status
+
+- **OpenReview and Hugging Face Papers:** Project Aletheia, delayed constraint application, DCCD,
+  and claim-level verification support selective, structured intervention. No public matching-base
+  verifier or generator supersedes Qwen3.6-35B-A3B, Gemma-4-31B, or Gemma-4-26B-A4B.
+- **Semantic Scholar citation trails:** the visible EBT and ARM-EBM trails still lead through
+  already indexed distributional EBM, memory, fixed-point, and verifier work. No citation exposes a
+  reproducible matching-base local checkpoint or stronger exact-authority path. No citation-count
+  claim is made.
+- **GitHub discovery:** current guided-generation, verifier, EBM, KAN, Ising, and continual-memory
+  repositories provide reference implementations but no dependency that should replace Carnot's
+  pinned inference, exact-checker, or memory interfaces.
+- **Extropic:** the first-party 2026 update reports Torx, a Thermalizers compiler preview, and a
+  taped-out Z1 with 269,568 pbits, 16-neighbor connectivity, greater-than-50-MHz sampling, and
+  claimed power below one watt: https://extropic.ai/writing/from-one-to-one-billion. Public device
+  access remains planned for 2027. V590 makes no physical TSU speed, power, or availability claim.
+- **Logical Intelligence:** the current Kona 1.0 pages still describe a global constraint layer but
+  expose no public weights, training recipe, or local runner:
+  https://logicalintelligence.com/kona-ebms-energy-based-models. Kona remains architecture context,
+  not an executable baseline.
+
+### V590 planning impact
+
+- Recover exact proof repair with fresh experiment IDs, an expanded targetable panel, and explicit
+  prior-failure lineage. Do not lower the old threshold and call that a scientific recovery.
+- Run prospective continuous self-learning only after a task-owned model lease proves one-model-at-
+  a-time execution. Keep each episode read-only and commit exact-certified memory between episodes.
+- Complete the existing ARC evidence chain: accrue shadow-supervisor firings, prove tool-gap event
+  transport, and compare actions-to-progress with the control environment variable truly unset.
+- Keep the three science branches independent. Use structured gates only inside a branch. Let the
+  ungated capstone report blocked, null, circular, partial, or positive outcomes without pooling
+  them into one success claim.
+
 ## V589 Planner Refresh - 2026-08-29
 
 Planning sweep for milestone `2026.08.589` after all thirteen `.588` tasks reached terminal

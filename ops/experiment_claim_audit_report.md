@@ -12,11 +12,9 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CLAIM_SUPPORTED | 1 |
-| CLAIM_REFUTED_BY_OWN_DATA | 1 |
-| NO_CLAIM | 4 |
-| SKIPPED_ALREADY_FLAGGED | 2 |
+| NO_CLAIM | 7 |
 
-## experiment_1736_ebt_gradient_refinement.json
+## experiment_6760_prefix_backtracking_repair_ab.json
 
 **NO_CLAIM**
 
@@ -27,18 +25,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No refuting observation applies because the artifact reports no experimental result or comparative claim.
+Not applicable; the artifact makes no comparative claim about prefix-backtracking repair.
 
 ## WAS THAT CHECKED
-No; execution stopped at the pre-gate before the method was tested.
+No. The experiment was blocked at `conductor_pre_gate` before any A/B data was produced.
 
 ## EVIDENCE
-`"status"`: `"blocked"`; `"honest_verdict"`: `"blocked_gate_check_failed"`; `"blocked_at_layer"`: `"conductor_pre_gate"`; `"passed"`: `false`
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"duration_s": 0.0`; `"failed_observed": null`; `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6275_flagship_asp_constraint_verification_benchmark.formal_sidecar.json
+## experiment_6761_procedural_memory_stream.json
 
 **NO_CLAIM**
 
@@ -49,48 +47,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No falsifying observation applies because the artifact makes no comparative or value claim; such a claim would require candidate outcomes that disagree with the formal answer sets or lose to a serious baseline.
+There is no comparative or scientific claim to falsify; only the procedural-readiness receipt could fail, through any false readiness gate, unequal capacity, chronology leakage, insufficient accept/reject opportunities, restart mismatch, rollback failure, or mishandled poison fixture.
 
 ## WAS THAT CHECKED
-No. This sidecar records formal programs and their solution sets, but provides no candidate performance, comparator arm, validity flags, success criterion, or headline verdict.
+Yes. Those conditions are covered by `gate_check_summary`, per-order opportunity counts, capacity fields, transaction rows, and restart, rollback, and poison receipts.
 
 ## EVIDENCE
-`program_text`, `exact_answer_sets`, `solver_answer_set_count`, `zero_energy_states`, `task_id`
+`complete_procedural_memory_stream_ready`; `procedural_memory_stream_ready`; `true`; `failed_checks`; `[]`; `verdict_class`; `circular_positive`; `A closed class prevents fixture readiness from becoming a science claim.`; `verifier_is_oracle`; `false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_1736_kanele_synth.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_6275_flagship_asp_constraint_verification_benchmark.json
-
-**CLAIM_REFUTED_BY_OWN_DATA**
-
-## VERDICT
-CLAIM_REFUTED_BY_OWN_DATA
-
-## THE HEADLINE CLAIM
-Energy-guided repair adds semantic-validity value over ordinary one-shot generation across the flagship models and task families.
-
-## WHAT WOULD REFUTE IT
-A zero or negative paired semantic-validity delta against the cheapest serious baseline—one-shot generation scored by the same exact solver—or a rival arm tying or outperforming repair would refute added value.
-
-## WAS THAT CHECKED
-Yes. The artifact directly pairs `energy_guided_repair` with `one_shot` by model and family. The refutation occurred: every Qwen semantic comparison tied exactly, and several Gemma comparisons also tied; no reported positive interval excludes zero. The value claim is additionally circular because exact ASP solving both guides repair and defines correctness.
-
-## EVIDENCE
-`base_arm`: `one_shot`; `repair_arm`: `energy_guided_repair`; `paired_intervals_and_sample_sizes`; `semantic`; `mean_delta`: `0.0`; `ci95`: `0.0`, `0.0`; `sample_size`: `6`; `verifier_is_oracle`; `Discloses exact ASP solving is the correctness oracle.`; `honest_verdict`: `complete_partial: test_exit_codes`
-
-## RECOMMENDATION
-CORRECT_THE_RECORD
-
-## experiment_6751_thermalizer_factor_trajectory_fidelity.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_6752_arc_code_carrying_tool_preflight.json
+## experiment_6762_procedural_vs_trace_csl_ab.json
 
 **NO_CLAIM**
 
@@ -101,18 +69,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-For the narrow readiness receipt, either model observing less than 32768 context, lacking full CUDA offload, failing the live production route, failing typed parsing or dispatch, or exceeding the response bound would refute readiness; there is no comparative, value, generalization, or solve claim to falsify.
+No comparative claim exists to falsify; a future claim that procedural memory outperforms rivals would be refuted if the procedural arm tied or lost to detailed-trajectory or no-memory controls on valid rows.
 
 ## WAS THAT CHECKED
-Yes. Both model rows record context, CUDA offload, live-path, parse, dispatch, and bounded-response receipts, and the gate summary checks them per model. The false loop completion does not refute the expressly transport-only claim.
+No. Execution stopped at failed preconditions, so no comparative rows or arm outcomes were produced.
 
 ## EVIDENCE
-`"title": "Task-owned 32K code-carrying ARC tool preflight"`; `"arc_context_tool_preflight_ready": true`; `"multi_parameter_parse_successes": 2`; `"multi_parameter_dispatch_successes": 2`; `"bounded_response_successes": 2`; `"live_path_reached": true`; `"loop_returned_success": false`; `"solve_claim": false`; `"claim_boundary": "This preflight proves 32K CUDA admission and code-carrying tool transport only. It measures no game quality and claims no level solve."`
+`honest_verdict`: `complete_blocked_procedural_csl_ab: owned precondition failed`; `live_model_invoked`: `false`; `prospective_csl_completed`: `false`; `rows`: `[]`; `failed_checks`: `one_model_vram`, `task_owned_lease`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6753_object_table_fetch_on_demand_ab.json
+## experiment_6763_csl_hard_case_forgetting_audit.json
 
 **NO_CLAIM**
 
@@ -123,18 +91,62 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative claim exists to falsify. The intended future claim would be refuted by nonpositive prompt-token savings or a change-fidelity confidence-interval lower bound below the negative noninferiority margin, computed from valid completed arm pairs.
+There is no experimental outcome claim to falsify. The receipt’s implicit gate assertion would be refuted if the prerequisite were observed as true or the gate passed.
 
 ## WAS THAT CHECKED
-No. Model inference never occurred, every planned row was invalid due to the preflight block, zero pairs entered analysis, and the comparative metrics remained null.
+Yes, in `gates_evaluated`; the sole prerequisite was explicitly compared with its expected value. No hard-case, forgetting, or poison audit was executed.
 
 ## EVIDENCE
-`status` `blocked` `live_model_invoked` `false` `mean_prompt_token_savings` `null` `change_fidelity_ci95` `n_games_paired` `0` `n_seed_pairs` `adoption_gate_passed` `object_table_ab_completed` `complete_blocked_object_table_ab:cuda_device_available`
+`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_expected`: `true`; `failed_observed`: `false`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6754_v588_branch_disposition.json
+## experiment_6764_arc_exclusive_load_preflight.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative or quality proposition is asserted. The limited operational receipt would fail if either model lacked a complete CUDA load, 32K runtime context, first token, successful selfparse dispatch, teardown, lease release, VRAM recovery, or if an unrelated process were signaled.
+
+## WAS THAT CHECKED
+Yes, for both model admissions in `gpu_receipts` and `gate_check_summary`; this was an operational readiness check, not a method-value experiment.
+
+## EVIDENCE
+`claim_boundary` `Transport and teardown admission only. It measures no ARC quality, claims no solve, and keeps model timings unpooled.` `runtime_context` `32768` `first_token_observed` `true` `success` `true` `released` `true` `passed` `true` `unrelated_processes_signaled` `[]` `verifier_is_oracle` `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6765_object_table_fetch_ab_v2.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative claim to falsify; live paired rows showing fetch-on-demand inferior, superior, or tied would merely answer the planned question.
+
+## WAS THAT CHECKED
+No. The model was never invoked, all displayed rows stopped at preflight, and the comparative metrics were not computed.
+
+## EVIDENCE
+`status` is `blocked`; `live_model_invoked` is `false`; `stop_reason` is `preflight_blocked`; `mean_prompt_token_savings`, `change_fidelity_delta`, and `change_fidelity_interval` are `null`; `object_table_ab_completed` and `adoption_gate_passed` are `false`; `honest_verdict` is `complete_blocked_object_table_ab_v2`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6766_thermalizer_independent_trajectory_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -142,16 +154,58 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-V588 produced mixed branch outcomes—blocked handoff and FR12, null continuous self-learning, positive execution activity, simulator-only stochastic evidence, and partial ARC transport—without claiming pooled milestone success.
+An independent simulator evaluator reproduced a trajectory-TV reduction for context matching, while trajectory refinement received no non-circular value claim.
 
 ## WHAT WOULD REFUTE IT
-A valid source row contradicting its assigned branch verdict—for example, transactional memory outperforming `no_memory` despite the null CSL verdict, a failed CUDA receipt despite positive activity, or emission of a pooled success claim—would refute the headline.
+Context matching tying or losing to the independent-factor baseline—shown by a nonpositive paired TV difference or a confidence interval including zero—or the direct sampler materially disagreeing with the exact evaluator would refute the claim.
 
 ## WAS THAT CHECKED
-Yes. Raw task rows were replayed into `recomputed_headlines`, checked for headline disagreements in `row_headline_mismatches`, and audited by adversarial and row-consistency validators. The design demonstrably allowed failure: handoff and FR12 were blocked, CSL tied its `no_memory` comparator with zero gain, and the ARC A/B remained incomplete.
+Yes. Paired comparisons against `independent_factor` include ties and worsened rows, so failure was possible; the reported intervals exclude zero at the shown depths. A 192-row direct-sampler cross-check also tested the exact evaluator. Circularity was identified specifically for `trajectory_refinement`, not credited as evidence of value.
 
 ## EVIDENCE
-`complete_partial: V588 preserved blocked handoff, blocked FR12, null CSL, positive activity, simulator-only stochastic evidence, and partial ARC transport without a pooled success claim.`; `pooled_success_claim_emitted`: `false`; `row_headline_mismatches`: `[]`; `verdict_class`: `partial`; `no_memory`: `0.4583333333333333`; `transactional_memory`: `0.4583333333333333`; `mean_delta`: `0.0`; `commits`: `0`; `diagnostic_energy_ready`: `false`; `heldout_reasoning_error_auroc`: `null`; `object_table_ab_completed`: `false`; `hardware_used`: `false`; `simulator_used`: `true`; `bounded_cpu_compiler_fidelity_no_physical_tsu_or_performance_claim`
+`honest_verdict`: `complete: the independent evaluator reproduced the context-matching trajectory reduction; trajectory refinement remains exact-objective circular; simulator only`
+
+`method`: `context_matched`
+
+`mean_independent_minus_method_tv`: `0.057389814199323`, `0.0659517153362909`, `0.0537530735194788`
+
+`interval_excludes_zero`: `true`
+
+`worsened_pair_count`: `2`
+
+`methods_consuming_exact_evaluator_outcome`: `trajectory_refinement`
+
+`verifier_is_oracle`: `true`
+
+`exact_in_ci99_count`: `190`
+
+`observed_row_count`: `192`
+
+`passed`: `true`
+
+`claim_boundary`: `simulator-only; no speed, power, X0, Z1, FPGA, or physical-hardware claim`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6767_v589_branch_disposition.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+As a synthesis receipt, it would be contradicted by its own rows showing completed repair, prospective continuous-memory results, live ARC quality measurements, non-oracle portability evidence, or an emitted pooled-success claim while the headline reports those outcomes as blocked, circular, or absent.
+
+## WAS THAT CHECKED
+Yes. The branch summaries and recomputed headlines check each disposition, while the artifact reports no row/headline mismatches.
+
+## EVIDENCE
+`"The capstone is a synthesis receipt. It is not a verifier or a pooled science claim."`; `"complete_partial: V589 preserved narrowed proof transport, blocked repair, blocked continuous memory, blocked ARC quality, circular simulator portability, and no pooled success claim."`; `"repair_completed": false`; `"prospective_rows": 0`; `"live_quality_rows"` with `"numerator": 0`; `"simulator_only": true`; `"verifier_is_oracle": true`; `"pooled_success_claim_emitted": false`; `"row_headline_mismatches": []`
 
 ## RECOMMENDATION
 KEEP
