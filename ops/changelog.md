@@ -18268,3 +18268,4 @@ reduction.
 - 2026-08-30: Task-owned SOTA memory lease and artifact contract (⚠️ Blocked) — honest_verdict=complete_blocked_csl_owned_lease_contract; results/experiment_6773_csl_owned_lease_contract.json
 - 2026-08-30: Task-owned SOTA memory lease and artifact contract (⚠️ Blocked) — honest_verdict=complete_blocked_csl_owned_lease_contract; results/experiment_6773_csl_owned_lease_contract.json
 - 2026-08-30: Task-owned SOTA memory lease and artifact contract (⚠️ Blocked) — honest_verdict=complete_blocked_csl_owned_lease_contract; results/experiment_6773_csl_owned_lease_contract.json
+- 2026-08-30: Window-120 shadow-supervisor evidence accrual (⚠️ Blocked) — honest_verdict=complete_blocked_shadow_supervisor_accrual:exclusive_gpu_without_unrelated_compute; results/experiment_6776_arc_shadow_supervisor_accrual.json
