@@ -16805,3 +16805,7 @@ The l |
 +        |
 | 2026-08-30 00:40 UTC | Exclusive full-load ARC preflight and teardown rec | OK | 113 passed, 1 warning in 8.76s |
 | 2026-08-30 02:31 UTC | Live object-table fetch-on-demand A/B v2 | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: lures. I’ll re |
+| 2026-08-30 02:53 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 3319725 serves '7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e |
+| 2026-08-30 03:24 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 3332813 serves '7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e |
+| 2026-08-30 03:55 UTC | Live object-table fetch-on-demand A/B v2 | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: blenke/.cache/ |
+| 2026-08-30 03:55 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 3335761 serves '7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e |
