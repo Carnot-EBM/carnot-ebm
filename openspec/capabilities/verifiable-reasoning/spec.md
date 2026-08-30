@@ -23387,6 +23387,106 @@ check and observed value, and emits no mutation rows.
 
 **Spec traces:** REQ-VERIFY-6768
 
+### REQ-VERIFY-6786: Exact Constraint-Dependency Hard-Negative Fixture
+
+Exp6786 SHALL require the ready 126-row Exp6768 panel and valid row hashes.
+It SHALL require the Exp5299 and Exp5304 declarative group builders. It SHALL
+also require a CPU exact-enumeration path and at least three topology families.
+A failed precondition SHALL write `complete_blocked_constraint_graph_fixture`.
+The blocked artifact SHALL name each failed check and its observed value.
+
+The ready fixture SHALL contain at least 96 unique bounded graph units. Each
+unit SHALL preserve ordered typed local groups and named cross-group dependency
+edges. It SHALL include a satisfiable role or an explicit contradiction role.
+It SHALL include all exact assignments or an exact contradiction certificate.
+It SHALL also retain an Exp6768 source row ID and source row hash.
+
+Each unit SHALL produce a hard negative and an easy negative. A hard negative
+SHALL pass every declared local group and fail exactly one named cross-group
+dependency. An easy negative SHALL fail a declared local group. Exact labels,
+group receipts, and dependency receipts SHALL come only from CPU enumeration.
+
+Train, development, and held-topology test splits SHALL use disjoint topology
+families. Random row splitting SHALL NOT be used. The manifest SHALL freeze
+graph serialization, group order, row IDs, difficulty strata, and seeds.
+
+Proposal features SHALL use an explicit allowlist. They SHALL exclude exact
+assignments, exact-valid labels, future receipts, solver conflicts, oracle
+residuals, and post-action outcomes. The artifact SHALL record the complete
+denylist and any feature violations.
+
+A fresh process SHALL replay all exact labels and dependency classifications.
+`constraint_group_fixture_ready` SHALL be true only when every precondition,
+row, split, feature, uniqueness, and cold-replay check passes. The exact checker
+SHALL label and audit rows. It SHALL never propose a candidate, so
+`verifier_is_oracle` SHALL be false.
+
+The artifact SHALL include `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_hashes`, `frozen_manifest`, `topology_families`,
+`split_by_topology`, `feature_allowlist`, `feature_denylist`, `rows`,
+`exact_label_counts_by_split`,
+`local_pass_cross_dependency_fail_counts`, `easy_negative_counts`,
+`duplicate_rows`, `future_feature_violations`, `cold_replay_agreement`,
+`constraint_group_fixture_ready`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. Each required
+field SHALL have a one-line purpose in `field_principles`.
+
+### SCENARIO-VERIFY-6786-GRAPH: Graph Identity And Exact Semantics Are Frozen
+
+**Given** a generated bounded unit
+**When** Exp6786 serializes and enumerates its graph
+**Then** graph identity, ordered groups, dependency edges, exact assignments or
+contradiction certificate, difficulty, seed, and source provenance are stable.
+
+**Spec traces:** REQ-VERIFY-6786
+
+### SCENARIO-VERIFY-6786-NEGATIVES: Hard And Easy Failures Stay Distinct
+
+**Given** one frozen graph unit
+**When** Exp6786 creates its two counterfactual rows
+**Then** the hard row passes all local groups and fails exactly one named
+dependency, while the easy row fails a named local group.
+
+**Spec traces:** REQ-VERIFY-6786
+
+### SCENARIO-VERIFY-6786-SPLITS: Topology Families Do Not Cross Splits
+
+**Given** all frozen units
+**When** Exp6786 assigns train, development, and held-topology test membership
+**Then** each topology family occurs in exactly one split and each split has
+hard and easy negatives.
+
+**Spec traces:** REQ-VERIFY-6786
+
+### SCENARIO-VERIFY-6786-FEATURES: Proposal Inputs Contain No Answer Fields
+
+**Given** a fixture row and its proposal feature projection
+**When** Exp6786 audits the allowlist and denylist
+**Then** no exact assignment, exact-valid label, future receipt, solver
+conflict, oracle residual, or post-action outcome is present.
+
+**Spec traces:** REQ-VERIFY-6786
+
+### SCENARIO-VERIFY-6786-REPLAY: A Fresh Process Recomputes Every Label
+
+**Given** the frozen manifest and all candidate rows
+**When** a fresh CPU process enumerates group and dependency semantics
+**Then** every exact label and failure classification agrees and the replayed
+row count equals the planned row count.
+
+**Spec traces:** REQ-VERIFY-6786
+
+### SCENARIO-VERIFY-6786-BLOCKED: Missing Authority Writes A Complete Block
+
+**Given** a missing Exp6768 artifact, invalid row hash, unavailable group
+builder, unavailable exact enumeration, or fewer than three topology families
+**When** Exp6786 checks preconditions
+**Then** it writes `complete_blocked_constraint_graph_fixture`, emits no rows,
+sets readiness false, and records the failed check with its observed value.
+
+**Spec traces:** REQ-VERIFY-6786
+
 ### SCENARIO-VERIFY-6745-DUAL: Independent Encodings Control Diagnosis
 
 **Given** a parseable certificate
