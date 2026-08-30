@@ -16822,3 +16822,4 @@ The l |
 | 2026-08-30 09:13 UTC | Three-model DCCD environment-grammar A/B v2 | OK | 99 passed, 1 warning in 14.19s |
 | 2026-08-30 09:15 UTC | Independent proof transport and localization audit | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6770-dccd-environmen |
 | 2026-08-30 09:18 UTC | Claim-localized prefix-backtracking repair A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6771-proof-transport-localization-audit,  |
+| 2026-08-30 10:04 UTC | Task-owned SOTA memory lease and artifact contract | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6773_csl_own |
