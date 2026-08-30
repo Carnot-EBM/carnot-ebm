@@ -8120,3 +8120,125 @@ And `gate_check_summary` SHALL retain the failed check and observed value.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-CL-6773 and SCENARIO-CL-6773-* | Planned: `python/carnot/experiment_6773_csl_owned_lease_contract.py`; `scripts/experiments/experiment_6773_csl_owned_lease_contract.py`; terminal artifact `results/experiment_6773_csl_owned_lease_contract.json`. | Planned: `tests/python/test_experiment_6773_csl_owned_lease_contract.py`. |
+
+## REQ-CL-6790: Frozen Chronological Constraint-Routing Opportunity Stream
+
+Given Exp6786 provides a ready exact constraint-group fixture
+When Exp6790 runs for planning date 20260830
+Then it SHALL build at least 240 bounded route-decision events
+And it SHALL freeze exactly five chronological order replicates before replay
+And it SHALL write
+`results/experiment_6790_chronological_constraint_routing_stream.json`.
+
+Each event SHALL present one candidate graph and at least two named live routes.
+Each live route SHALL inspect a fixed number of factors. That budget SHALL be
+smaller than exhaustive checking for every event. Exact labels, exact receipts,
+future outcomes, order positions, and future family statistics SHALL not enter
+the action feature allowlist. The exact exhaustive route SHALL be diagnostic
+only. It SHALL not appear in any event's live actions or baseline actions.
+
+The stream SHALL include repeated visible motifs, whole-family held-future
+topology, difficulty drift, local and cross-dependency failures, clean valid
+cases, hard cases, and poison candidates. A poison candidate SHALL preserve its
+apparent route reward. Its post-action receipt SHALL deny credit when provenance
+or retention rules conflict. A held-future family SHALL not appear in factor
+statistics, retrieval memory, or tuning data before its first event.
+
+The post-action exact receipt SHALL state whether the chosen route found the
+planted failure. It SHALL also state route cost, checked factors, missed
+dependencies, safe factors, poison disposition, and exhaustive diagnostic
+outcome. The receipt SHALL remain separate from legal observations. A hash of
+the complete receipt SHALL bind the hidden pre-action receipt to the revealed
+post-action value.
+
+Exp6790 SHALL publish frozen-policy, random-route, and exhaustive-oracle
+diagnostic metrics for every order. The exhaustive route SHALL measure headroom
+only. In every order, frozen decision accuracy SHALL be above random-route
+accuracy and below exhaustive diagnostic accuracy. Every order SHALL contain
+actual route alternatives, repeated motif signal, held-future events, poison
+rows, and positive diagnostic headroom.
+
+Preconditions SHALL require `constraint_group_fixture_ready=true`, the frozen
+Exp6786 artifact and module hashes, at least three topology families, nonzero
+local and cross-dependency failures, and a bounded route cost model. A failed
+precondition SHALL write `complete_blocked_constraint_routing_stream`. The
+blocked artifact SHALL contain no event rows. Its `gate_check_summary` SHALL
+name each failed check with its expected and observed values.
+
+The terminal artifact SHALL include `field_principles`,
+`inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `source_artifact_hash`, `frozen_manifest`,
+`order_definitions`, `feature_allowlist`, `feature_denylist`,
+`route_definitions`, `rows`, `event_count_by_order`,
+`topology_count_by_order`, `held_future_counts`, `poison_counts`,
+`reusable_motif_counts`, `future_feature_violations`,
+`frozen_policy_metrics_by_order`, `random_route_metrics_by_order`,
+`diagnostic_headroom_by_order`, `cold_replay_hashes`,
+`constraint_routing_stream_ready`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`CPU exact chronological decision fixture, no LLM`.
+`verifier_is_oracle` SHALL be bare false. `verdict_class` SHALL use only
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL start with an approved terminal prefix.
+
+### SCENARIO-CL-6790-CHRONOLOGY: Action Features Precede Exact Receipts
+
+Given one event in a frozen order
+When the frozen and random policies choose their routes
+Then both choices SHALL use only the current legal observation and earlier
+closed-event memory
+And the exact receipt SHALL become readable only after both actions are fixed.
+
+### SCENARIO-CL-6790-ROUTES: Live Checks Are Bounded Alternatives
+
+Given one candidate graph
+When its available routes are materialized
+Then at least two distinct live routes SHALL fit the fixed budget
+And every live route SHALL cost less than exhaustive checking
+And the exhaustive diagnostic route SHALL not be a live action.
+
+### SCENARIO-CL-6790-HELD-FUTURE: Whole Families Stay Outside Prior State
+
+Given a topology family is designated held future
+When an order reaches that family's first event
+Then prior factor statistics, retrieval records, and tuning event records SHALL
+contain no member of that family
+And later rows MAY use only receipts revealed after that first event.
+
+### SCENARIO-CL-6790-POISON: Apparent Reward Cannot Override Safety
+
+Given a route appears to find a failure on a poison candidate
+When the post-action receipt evaluates provenance and retention rules
+Then apparent reward SHALL remain observable
+And credited reward SHALL be zero
+And the named poison disposition SHALL remain in the row.
+
+### SCENARIO-CL-6790-HEADROOM: Every Order Has A Floor And Ceiling
+
+Given all 240 events appear once in an order
+When baseline metrics derive from rows
+Then random-route accuracy SHALL be below frozen-policy accuracy
+And frozen-policy accuracy SHALL be below exhaustive diagnostic accuracy
+And diagnostic headroom SHALL be strictly positive.
+
+### SCENARIO-CL-6790-REPLAY: Frozen Rows Replay Byte-Stably
+
+Given the frozen events, routes, and five orders
+When a fresh CPU process rebuilds the stream
+Then each order row hash and the aggregate row hash SHALL match
+And no future-feature violation SHALL appear.
+
+### SCENARIO-CL-6790-BLOCKED: Failed Authority Produces A Complete Block
+
+Given one required source, hash, topology, failure class, or budget check fails
+When Exp6790 builds its terminal artifact
+Then readiness SHALL be false
+And rows SHALL be empty
+And `gate_check_summary` SHALL preserve the failed check and observed value.
+
+## Implementation Status (REQ-CL-6790)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6790 and SCENARIO-CL-6790-* | Planned: `python/carnot/experiment_6790_chronological_constraint_routing_stream.py`; `scripts/experiments/experiment_6790_chronological_constraint_routing_stream.py`; terminal artifact `results/experiment_6790_chronological_constraint_routing_stream.json`. | Planned: `tests/python/test_experiment_6790_chronological_constraint_routing_stream.py`. |
