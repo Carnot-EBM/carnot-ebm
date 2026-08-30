@@ -1,3 +1,81 @@
+## V593 Planner Refresh - 2026-08-30
+
+This sweep follows terminal milestone `2026.08.592`. Exp6788 and Exp6789 established a positive,
+oracle-distinct grouped fixed-point effect on a synthetic exact-enumerable fixture. Exp6791 produced
+prospective online writes, later reads, changed route actions, and a positive held-future effect, but
+Exp6792 withheld causal credit because the source artifact stored transaction hashes without the
+canonical parent and new state bytes needed for cold replay. The live ARC supervisor and selfparse
+tool chain also remains without decision-grade evidence. The search below rechecks the requested
+2025-2026 sources and selects only deltas that change the next experiment design.
+
+### Findings selected for V593
+
+- **X-RAY: Mapping LLM Reasoning Capability via Formalized and Calibrated Probes** -
+  arXiv:2603.05290, https://arxiv.org/abs/2603.05290; revised 2026-06-02 and accepted at KDD 2026.
+  X-RAY generates formally verified probes with controlled changes to constraint interaction,
+  reasoning depth, and solution-space geometry. It reports that models handle constraint refinement
+  better than solution-space restructuring. Carnot hook: transform the frozen, already-generated
+  mandated-GGUF proof corpus into paired refinement and restructuring graphs. Test the frozen V592
+  grouped proposer zero-shot against its matched flat control. Keep the exact checker post-proposal
+  and report effects by transformation class, source model, family, and case rather than one pooled
+  number.
+- **Evaluating Inference-Time Defenses Against Package Hallucination in LLM-Generated Code** -
+  arXiv:2608.22652, https://arxiv.org/abs/2608.22652; submitted 2026-08-23 and accepted at ASE 2026.
+  The study separates hallucination reduction from package utility and stress-tests fabricated-name
+  prompts. Under adversarial prompts, external grounding and iterative self-refinement outperform
+  decoding-only defenses. Carnot hook: preserve exact-valid support and task utility while testing
+  fixed-point repair, and include adversarial structural rewrites that a local decoding score cannot
+  certify. A lower soft energy or constraint count never replaces external exact validity.
+- **Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning** -
+  arXiv:2605.18871, https://arxiv.org/abs/2605.18871. The paper's decomposed learned-plus-analytic
+  energy and targeted-regeneration design remains relevant, but it does not change Carnot's authority
+  boundary. V593 uses frozen real model outputs and deterministic constraints. It does not train a
+  learned quality scorer or grant uncertainty an oracle role.
+
+### Requested secondary, citation, repository, and product checks
+
+- **OpenReview and Hugging Face Papers:** current verifier work continues to favor symbolic
+  feasibility, structured failure diagnosis, selective intervention, and matched-budget controls.
+  SymDiag and SEVRA remain useful comparators, but no public matching-base checkpoint or exact
+  verifier supersedes Carnot's local stack. OpenReview's browser challenge prevented a fresh full-text
+  review of some submission PDFs, so no inaccessible submission is promoted into a dependency.
+- **Semantic Scholar:** the EBT `2507.02092` citation endpoint still surfaces Fixed-Point Reasoners,
+  Memoir, Solver-Hard, LoopUS, and causal-energy work. The ARM-EBM `2512.15605` endpoint still
+  surfaces Distributional EBMs, LoopUS, and false-first-step planning. The latest visible EBT citation
+  in this check was dated 2026-08-14 and was not a reasoning result. No citation-count claim is made.
+- **GitHub discovery:** `alexiglad/EBT`, `microsoft/interwhen`, `StanfordLeanClub/lean-ebm`, and
+  `extropic-ai/torx` remain design references. No recently surfaced EBM, constraint, KAN, or Ising
+  repository replaces Carnot's exact solvers, frozen GGUF corpus, transactional store, or typed-factor
+  compiler.
+- **Extropic:** the first-party summer update reports Torx, a Thermalizers compiler preview, and a
+  taped-out Z1 with systems targeted for early access in 2027:
+  https://extropic.ai/writing/from-one-to-one-billion. V593 may test only typed-factor compiler
+  portability on the local simulator. It may not claim Z1/X0 execution, latency, throughput, power,
+  or energy efficiency.
+- **Logical Intelligence:** Kona's current public page still describes a proprietary global
+  constraint layer but exposes no weights, training recipe, or reproducible local runner:
+  https://logicalintelligence.com/kona-ebms-energy-based-models. Kona remains an architecture
+  comparator, not a baseline.
+- **KAN and attached hardware:** no new KAN result closes the immediate real-output, transactional
+  replay, or live-agent evidence gaps. KV260 and GateMate retain terminal receipts. PolarFire remains
+  opportunistic. No physical board belongs on V593's blocking path.
+
+### V593 planning impact
+
+- Requalify the existing fail-closed dispatch implementation against the now-present next-roadmap
+  manifest. Treat it as infrastructure evidence, not a scientific result.
+- Emit canonical parent and new state bytes for every committed Exp6791-style transaction, verify
+  their hashes, and rerun the independent causal, restart, rollback, poison, and retention audit.
+- Reuse frozen outputs from the completed mandated-GGUF corpus. Build X-RAY-style paired refinement
+  and restructuring graphs, then test the frozen grouped fixed-point proposer zero-shot with exact
+  post-proposal authority and a matched flat control.
+- Run the ARC supervisor, live tool-gap, and actions-to-progress chain only through task-owned local
+  GGUF execution, durable cell checkpoints, live-agent provenance, and a registry precheck. A resource
+  block writes a terminal blocked artifact; no smaller or substituted run becomes headline evidence.
+- Compile only the audited real-output grouped operator into the existing typed stochastic factor IR.
+  Measure representation and short-trajectory fidelity by exact enumeration. Keep this as
+  simulator-only hardware-preparation evidence.
+
 ## V592 Planner Refresh - 2026-08-30
 
 This sweep follows the terminal `2026.08.591` milestone. Exp6781 produced no artifact because the

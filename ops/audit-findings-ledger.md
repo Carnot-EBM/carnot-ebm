@@ -54,3 +54,4 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-08-29 | qa_layer_authenticity_audit | worktree_import_guard.py | SILENT_NON_FIRING | OPEN | |
 | 2026-08-29 | qa_layer_authenticity_audit | capstone_milestone_rot_lint.py | SILENT_NON_FIRING | OPEN | |
 | 2026-08-30 | qa_layer_authenticity_audit | exclusion_manifest_lint.py | SILENT_NON_FIRING | OPEN | |
+| 2026-08-30 | qa_layer_authenticity_audit | adversarial_verify.py::_is_timestamp_field | SILENT_NON_FIRING | OPEN | |
