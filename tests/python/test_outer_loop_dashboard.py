@@ -272,3 +272,30 @@ def test_a_job_with_no_gpu_worker_says_so(monkeypatch) -> None:
     monkeypatch.setattr(m, "_run", lambda *a: "")
     monkeypatch.setattr(m, "pid_alive", lambda pid: True)
     assert "no GPU worker" in m.render([("j", os.getpid(), None)])
+
+
+def test_the_walk_prefers_the_busiest_descendant_not_the_first(monkeypatch) -> None:
+    """The launcher can itself appear in nvidia-smi's holder list.
+
+    It does for the leaderboard eval, so "first descendant" picked the supervisor at 1.2% CPU
+    over its own worker at 629% -- reproducing the exact misreading the walk was written to end.
+    A pid is a descendant of itself at zero hops, which is why the naive version matched it.
+    """
+    m = _module()
+    monkeypatch.setattr(
+        m,
+        "_run",
+        lambda *a: (
+            "500, 100 MiB\n600, 17884 MiB"
+            if a[0] == "nvidia-smi"
+            else ("1.2" if a[-1] == "500" else "629.0")
+        ),
+    )
+    stats = {500: "500 (x) S 1", 600: "600 (x) R 500"}
+
+    def fake_read(self, **kwargs):
+        return stats[int(str(self).split("/")[2])]
+
+    monkeypatch.setattr(m.Path, "read_text", fake_read, raising=False)
+    # 500 is the launcher (a holder, and its own descendant); 600 is its busy worker.
+    assert m.gpu_worker_for(500) == 600

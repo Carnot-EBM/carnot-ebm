@@ -266,17 +266,33 @@ def gpu_worker_for(pid: int) -> int | None:
         head = row.split(",")[0].strip()
         if head.isdigit():
             holders.append(int(head))
+    # PREFER THE BUSIEST DESCENDANT, NOT THE FIRST MATCH. The launcher itself can appear in
+    # nvidia-smi's holder list -- it does for the leaderboard eval -- so "first descendant" picked
+    # the supervisor at 1.2% CPU over its own worker at 629%, reproducing the exact misreading
+    # this walk was written to end. `pid` is a descendant of itself for zero hops, which is why
+    # the naive version matched it.
+    matches = []
     for holder in holders:
         cur, hops = holder, 0
-        while cur > 1 and hops < 6:  # bounded: a cycle in ppid would otherwise hang the report
+        while cur > 1 and hops < 6:  # bounded: a ppid cycle would otherwise hang the report
             if cur == pid:
-                return holder
+                matches.append(holder)
+                break
             try:
                 cur = int(Path(f"/proc/{cur}/stat").read_text().split()[3])
             except (OSError, IndexError, ValueError):
                 break
             hops += 1
-    return None
+    if not matches:
+        return None
+
+    def _cpu(candidate: int) -> float:
+        try:
+            return float(_run("ps", "-o", "%cpu=", "-p", str(candidate)).strip() or 0.0)
+        except ValueError:
+            return 0.0
+
+    return max(matches, key=_cpu)
 
 
 def worker_progress(worker: int) -> str:
