@@ -1,3 +1,88 @@
+## V592 Planner Refresh - 2026-08-30
+
+This sweep follows the terminal `2026.08.591` milestone. Exp6781 produced no artifact because the
+roadmap paired a Gemini model name with a dispatch path that the live conductor coerced to Codex.
+Exp6782 passed its static preconditions but no mandated model acquired an owned CUDA runtime before
+the lease deadline. Exp6783 then gate-blocked. These are execution results, not evidence about the
+scientific proof-generation arms. The search below rechecks the requested 2025-2026 sources and
+promotes only methods that can produce new evidence without repeating that resource path.
+
+### Findings selected for V592
+
+- **Compositional Online Learning for Semantic Data Processing Systems** - arXiv:2608.27244,
+  https://arxiv.org/abs/2608.27244; submitted 2026-08-27. The paper decomposes an adaptive system
+  into separately attributable online decisions and update cadences instead of assigning one pooled
+  gain to an opaque learner. Carnot hook: build a frozen chronological constraint-routing stream in
+  which factor admission, retrieval, and route selection are distinct components. Update only
+  between events. Compare frozen, online, and random-update controls. Credit learning only when a
+  leave-one-update or retrieval-disable counterfactual changes the selected action and the exact
+  receipt confirms the later outcome. This supports Tier-2 continuous self-learning without a new
+  model-serving dependency.
+- **SymbolLKG: Towards Verifiable Logical Reasoning via Logical Knowledge Graph and Symbolic
+  Solvers** - arXiv:2608.26836, https://arxiv.org/abs/2608.26836; submitted 2026-08-27. SymbolLKG
+  represents rules and constraints as first-class graph nodes and routes problems to symbolic
+  engines. Carnot hook: preserve group and dependency topology in the AS2-inspired soft fixed-point
+  fixture. Let the soft operator propose priorities or assignments while the existing independent
+  exact checker remains the only release authority. Do not treat graph topology or a low soft
+  residual as proof.
+- **Neuro-symbolic PRM: Enhancing Scientific Reasoning via Structured Traces and Symbolic
+  Verification** - arXiv:2608.26329, https://arxiv.org/abs/2608.26329; submitted 2026-08-26. The
+  paper separates verifier-covered symbolic validity from semantic groundedness and constructs
+  constraint-preserving counterfactual negatives. Carnot hook: add hard negatives that satisfy a
+  local group or format contract while violating a cross-group dependency. Use them to audit a
+  soft fixed-point proposer for shortcut learning. V592 does not train a PRM and does not grant a
+  learned score authority over exact validity.
+- **High-Efficiency Ising Machine with Time-Dimensional Exchange Coupling** - arXiv:2608.21753,
+  https://arxiv.org/abs/2608.21753; submitted 2026-08-22. The proposed schedule couples successive
+  configurations of one p-bit network rather than duplicating spatial replicas. Carnot hook: run a
+  simulator-only, matched-update comparison on exact-enumerable Ising fixtures. Measure target-law
+  error, autocorrelation, effective samples, optimum hitting time, and added state or coefficient
+  cost. A SPICE feasibility report is not evidence for Carnot's FPGA boards or an Extropic TSU.
+
+### Requested secondary, citation, repository, and product checks
+
+- **OpenReview and Hugging Face Papers:** current reasoning work continues to favor exact symbolic
+  authority, structured failure diagnosis, and explicit verifier boundaries. SymDiag remains a
+  useful diagnostic reference. No matching-base public checkpoint or independently executable
+  verifier changes the local plan. Withdrawn or desk-rejected submissions are treated as design
+  leads, not validation.
+- **Semantic Scholar:** the current EBT `2507.02092` trail still includes Memoir, Solver-Hard,
+  Fixed-Point Reasoners, LoopUS, and Causal Energy Minimization. The ARM-EBM `2512.15605` trail
+  still includes Distributional EBMs, LoopUS, and false-first-step planning. No newly visible
+  citation supplies a reproducible matching-base GGUF checkpoint or stronger exact authority. No
+  citation-count claim is made.
+- **GitHub discovery:** the maintained `alexiglad/EBT`, `extropic-ai/torx`, and existing constraint,
+  KAN, and Ising repositories remain implementation references. Searches for recently updated EBM
+  reasoning, FPGA-Ising, and continual-KAN repositories found no dependency that supersedes
+  Carnot's pinned exact solvers, local GGUF resolver, or current stochastic-simulation code.
+- **Extropic:** the first-party summer update still presents Torx as open software, Thermalizers as
+  a compiler preview, and Z1 system access as a 2027 target:
+  https://extropic.ai/writing/from-one-to-one-billion. The July funding announcement changes
+  company plans, not Carnot's device access. V592 makes no physical TSU latency, energy, or
+  availability claim.
+- **Logical Intelligence:** Kona's current public pages still describe a separate global constraint
+  layer and complete-state scoring: https://logicalintelligence.com/kona-ebms-energy-based-models.
+  No public weights, training recipe, or reproducible local runner were found. Kona remains an
+  architecture comparator.
+- **KAN and attached hardware:** KAN-CL and KAN verification are already indexed. No new KAN result
+  closes the immediate oracle-distinct or causal-learning gaps. KV260 and GateMate retain their
+  terminal receipts; PolarFire remains opportunistic. No board is placed on V592's blocking path.
+
+### V592 planning impact
+
+- Add a fail-closed agent/model compatibility check and durable checkpoint contract before another
+  long experiment is eligible. Validate document-manifest parity before handoff, not as a runtime
+  science dependency.
+- Do not repeat the exclusive-GPU admission or proof-generation chain. Reuse frozen model outputs
+  only as attributed observations; V592's new causal claims are CPU replay claims.
+- Build and adversarially validate a bounded soft fixed-point constraint-group bridge. Preserve the
+  symbolic checker as independent authority and require a parameter-matched non-structural control.
+- Implement continuous self-learning as prospective component decisions over a chronological
+  stream. Require actual writes, actual reads, changed actions, random-update controls, retention,
+  poison rejection, restart durability, and exact rollback.
+- Test temporal exchange coupling only in exact-enumerable simulation. Keep physical-board and TSU
+  claims outside the milestone.
+
 ## V591 Planner Refresh - 2026-08-30
 
 This sweep follows terminal milestone `2026.08.590`. It rechecks the requested 2025-2026 arXiv

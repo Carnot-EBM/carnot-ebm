@@ -9,40 +9,9 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 7 |
+| CHECKABLE | 6 |
+| AGGREGATE_ONLY | 1 |
 | CANNOT_DETERMINE | 1 |
-
-## experiment_6768_targetable_proof_panel_expansion.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The artifact claims that a 126-row, cold-replayed exact-invalid fixture is ready, explicitly not that one model or arm outperformed another.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6769_environment_indexed_proof_grammar_v2.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The environment-indexed grammar kept valid SAT and UNSAT support reachable with zero ghost violations, and every readiness gate passed.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
 
 ## experiment_6770_dccd_environment_grammar_ab_v2.json
 
@@ -52,13 +21,13 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-the headline claim cannot be determined because the artifact ends mid-record
+The visible excerpt reports zero exact-valid rate for all three arms, but the headline claim is not included.
 
 ## WHAT IS MISSING
-Actual values for `"status"`, `"honest_verdict"`, `"verdict_class"`, `"gate_check_summary"`, and `"rows"`; these names appear only in `"field_principles"` before the artifact is truncated.
+The actual `"honest_verdict"`, `"status"`, `"gate_check_summary"`, and `"rows"` fields are missing from the truncated artifact; only their descriptions appear under `"field_principles"`, while aggregate fields such as `"exact_valid_rate_by_arm"` are present.
 
 ## THE CHECK A READER CANNOT DO
-Did the experiment make a comparative claim supported by per-unit outcome rows, or was it blocked with a recorded failed check and observed value?
+Does the omitted verdict make a comparative or blocked claim, and—if so—do per-unit rows or a specific failed-gate diagnostic support it?
 
 ## experiment_6771_proof_transport_localization_audit.json
 
@@ -68,7 +37,7 @@ Did the experiment make a comparative claim supported by per-unit outcome rows, 
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because the upstream `proof_transport_ab_completed` gate observed `false` but required `true`.
+The experiment was blocked because upstream field `proof_transport_ab_completed` was `false` but required to equal `true`.
 
 ## WHAT IS MISSING
 nothing
@@ -100,10 +69,10 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run was blocked at preflight because exclusive GPU access without unrelated compute was unavailable, so no live model was invoked.
+The experiment was blocked before live inference because the exclusive-GPU-without-unrelated-compute preflight check failed.
 
 ## WHAT IS MISSING
-nothing
+nothing; `"status"`, per-row `"failure_class"`, `"live_model_invoked"`, and `"actions_observed"` record the blocked outcome and diagnostic.
 
 ## THE CHECK A READER CANNOT DO
 none
@@ -116,7 +85,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The task was blocked because `shadow_supervisor_transport_ready` was `false` while the gate expected `true`.
+The experiment was blocked because `shadow_supervisor_transport_ready` was observed as `false` but required to equal `true`.
 
 ## WHAT IS MISSING
 nothing
@@ -126,16 +95,48 @@ none
 
 ## experiment_6780_v590_branch_disposition.json
 
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+V590 partially narrowed the proof gap because the 126-row targetable panel and 45-row dynamic proof grammar were ready, while downstream experiments remained blocked or missing.
+
+## WHAT IS MISSING
+The per-unit `"rows"` underlying the aggregate `"panel_rows": 126`, `"grammar_rows": 45`, `"targetable_panel_ready": true`, and `"dynamic_proof_grammar_ready": true`; only aggregate `"branch_rows"` and `"gate_check_summary"` are present.
+
+## THE CHECK A READER CANNOT DO
+Did every panel and grammar condition satisfy the readiness criteria, or were the reported gates driven by duplicated, degenerate, or selectively successful rows?
+
+## experiment_6782_sequential_sota_runtime_admission.json
+
 **CHECKABLE**
 
 ## VERDICT
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims V590 produced fixture and grammar readiness, while comparative proof, repair, continuous-memory, and ARC evidence remained blocked or missing, with no branch metrics pooled.
+The run was blocked because no model completed owned CUDA admission after the Qwen 3.6 runtime-admission lease wait expired.
 
 ## WHAT IS MISSING
-nothing; blocked outcomes identify failed checks and observed values in `"gate_check_summary"`, while comparative fields record `"no_eligible_comparative_rows"` with `"pair_count": 0`.
+nothing; `gate_check_summary.failed_check` identifies `"runtime_admission:unsloth/Qwen3.6-35B-A3B-GGUF"` and `gate_check_summary.observed` records `"lease_wait_deadline_expired"`.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6783_owned_proof_generation_ab.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because `exp6782-sequential-sota-runtime-admission.all_mandated_runtime_ready` was `false` instead of the required `true`.
+
+## WHAT IS MISSING
+nothing
 
 ## THE CHECK A READER CANNOT DO
 none
