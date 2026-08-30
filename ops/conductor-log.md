@@ -16845,3 +16845,4 @@ The l |
 | 2026-08-30 15:42 UTC | Owned three-model exact proof-generation A/B | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6782-sequential-sota |
 | 2026-08-30 17:01 UTC | Plan milestone 2026.08.592 | OK | 12 tasks proposed |
 | 2026-08-30 17:03 UTC | Milestone 2026.08.592 activated | OK | 12 tasks queued |
+| 2026-08-30 17:07 UTC | Fail-closed roadmap agent-model dispatch contract | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6784_agent_m |
