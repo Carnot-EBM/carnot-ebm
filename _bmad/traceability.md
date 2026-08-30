@@ -1,6 +1,15 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-08-27
+**Last Updated:** 2026-08-30
+
+**Operational Note:** 2026-08-30 Exp6791 substrate-floor regression repair
+reconciled `REQ-VERIFY-5933` and `REQ-CL-6791`. The exact prospective CPU
+constraint-memory declaration now receives the deterministic-verifier duration
+floor instead of an unrecognized-substrate warning. The conductor-equivalent
+smart subset passes (`111 passed`, one existing warning), all adversarial
+verifier tests pass (`432 passed`), and Exp6791 scoped statement coverage is
+100% (`543/543`). No test was skipped, weakened, deleted, or reverted, and
+`scripts/research_conductor.py` was not modified.
 
 **Operational Note:** 2026-08-27 Exp6615 durable-replay repair reconciled
 `REQ-REPORT-6615-DURABLE-REPLAY`. Once the V576 capstone has landed, its

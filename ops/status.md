@@ -1,5 +1,12 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-08-30 (REQ-VERIFY-5933 / REQ-CL-6791 regression
+repair: the Exp6791 `CPU prospective Tier-2 constraint-memory controller, no
+LLM` declaration now uses the deterministic-verifier duration floor. The
+conductor-equivalent subset is green at 111 tests, all 432 adversarial verifier
+tests pass, and the 543-statement Exp6791 module has 100% scoped coverage.
+`scripts/research_conductor.py` was not modified.)
+
 **Last Updated:** 2026-08-30 (outer-loop: the three shipped tool/supervisor
 capabilities were audited for whether they can actually produce evidence. All
 three are built, default-off, and `unevaluated` in the flag ledger; none had a
