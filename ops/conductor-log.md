@@ -16842,3 +16842,4 @@ The l |
 | 2026-08-30 15:10 UTC | V591 SOTA delta and retirement-aware method contra | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
 | 2026-08-30 15:12 UTC | V591 SOTA delta and retirement-aware method contra | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
 | 2026-08-30 15:40 UTC | Sequential mandated-GGUF ownership and runtime adm | OK | 93 passed, 1 warning in 7.18s |
+| 2026-08-30 15:42 UTC | Owned three-model exact proof-generation A/B | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6782-sequential-sota |
