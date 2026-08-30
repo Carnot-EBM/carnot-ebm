@@ -1,5 +1,37 @@
 # Carnot — Operational Status
 
+**In flight (2026-08-30 23:36Z):** adapter-free live-agent eval, 5 batches x 2
+games on GPU 1 (`scripts/arc_leaderboard_eval.py --policy e3`, pid 3762592).
+Batch 1 (`r11l,lp85`) at 3h20m; each batch writes its own file under
+`results/arc_leaderboard_eval_runs/` because the eval writes only at the end and
+one long invocation would risk ~60h producing nothing.
+
+**KNOWN GAP IN THIS RUN — the tool loop is OFF.** `CARNOT_ARC_INDUCE_TOOL_LOOP`
+is NOT set in the batch runner's environment. GPU, server binary and context size
+were pinned; the loop was not. So ten games of live adapter-free induction will
+produce ZERO tool-gap evidence, and the tool-gap mechanism (REQ-ARC-WMTE-6770)
+stays at 7 empty rows with `ops/arc_tool_gap_ledger.json` never created.
+
+That matters because the mechanism's stated prerequisite is live runs WITH the
+loop on. Its adversarial review found the capture path blind on exactly the path
+that matters (finding F2); that was fixed and has still never been OBSERVED
+working. Seven empty rows cannot distinguish "the model never wants a tool it
+lacks" from "we have barely looked".
+
+**The open trade, for the operator:** four batches remain. Adding
+`CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse` to them would give eight games of live
+tool-loop induction and the gap ledger its first population — but those batches
+would then measure a DIFFERENT configuration from batch 1, so their efficiency
+numbers must not be pooled with it. Efficiency-on-a-consistent-config versus
+tool-gap-evidence is a real choice about what the remaining GPU hours buy.
+
+**Measured so far (one game):** cd82, adapter-free, 2 levels reached in 2459
+actions, efficiency 0.0267 — roughly 37x more actions than the human baseline,
+with the competition's quadratic rule doing most of that. Prior art worth reading
+before over-reading it: exp4703/4740 `held_out_first_win_flat_no_leaderboard_change`
+already found the held-out picture flat, and exp4729 stopped partway at 20 of 25
+games with a resume note.
+
 **Last Updated:** 2026-08-30 (REQ-VERIFY-5933 / REQ-CL-6791 regression
 repair: the Exp6791 `CPU prospective Tier-2 constraint-memory controller, no
 LLM` declaration now uses the deterministic-verifier duration floor. The
