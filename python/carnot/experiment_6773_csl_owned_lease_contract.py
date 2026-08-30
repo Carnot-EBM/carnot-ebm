@@ -354,7 +354,10 @@ def model_record_errors(record: Mapping[str, Any], planned: Mapping[str, Any]) -
         errors.append("revision")
     if not isinstance(record.get("model_path"), str) or not record.get("model_path"):
         errors.append("model_path")
-    if not isinstance(record.get("model_size_bytes"), int) or record.get("model_size_bytes", 0) <= 0:
+    if (
+        not isinstance(record.get("model_size_bytes"), int)
+        or record.get("model_size_bytes", 0) <= 0
+    ):
         errors.append("model_size_bytes")
     tokenizer = record.get("tokenizer")
     tokenizer = tokenizer if isinstance(tokenizer, Mapping) else {}
@@ -427,7 +430,9 @@ def stream_contract_checks(
             source_artifact_sha256,
             source_artifact_sha256 == EXPECTED_SOURCE_ARTIFACT_SHA256,
         ),
-        _check("upstream_validator", [], list(upstream_validator_errors), not upstream_validator_errors),
+        _check(
+            "upstream_validator", [], list(upstream_validator_errors), not upstream_validator_errors
+        ),
         _check(
             "stream_ready",
             {"procedural_memory_stream_ready": True, "future_evidence_violations": 0},
@@ -457,7 +462,9 @@ def stream_contract_checks(
             fixture.get("read_only_episode_enforced"),
             fixture.get("read_only_episode_enforced") is True,
         ),
-        _check("transaction_schema", "Exp6761 transaction schema v1", transaction, transaction_pass),
+        _check(
+            "transaction_schema", "Exp6761 transaction schema v1", transaction, transaction_pass
+        ),
         _check(
             "restart_receipts",
             "all byte and hash matches",
@@ -549,6 +556,20 @@ def rank_eligible_devices(devices: Sequence[Mapping[str, Any]]) -> JsonDict:
     """Use the established least-used fixed-RTX-3090 ranking contract."""
 
     return infra.rank_eligible_devices(devices, threshold_mb=FROZEN_FREE_VRAM_THRESHOLD_MB)
+
+
+def select_device_before_load() -> JsonDict:
+    """Refresh both fixed GPU identities and select the least-used eligible card."""
+
+    inventory = infra.nvidia_smi_inventory()
+    selection = rank_eligible_devices(inventory.get("devices", []))
+    return {
+        **selection,
+        "inventory_commands": {
+            "devices": deepcopy(inventory.get("device_query")),
+            "processes": deepcopy(inventory.get("process_query")),
+        },
+    }
 
 
 def _load_json(path: Path) -> JsonDict:
@@ -827,6 +848,14 @@ def run_live_model_worker(
         False,
     )
     try:
+        device_recheck_passed = (
+            before.get("uuid") == selected_device.get("uuid")
+            and before.get("uuid") in EXPECTED_GPU_UUIDS
+            and before.get("name") == "NVIDIA GeForce RTX 3090"
+            and int(before.get("memory_free_mb", 0) or 0) >= FROZEN_FREE_VRAM_THRESHOLD_MB
+        )
+        if not device_recheck_passed:
+            raise RuntimeError("selected_device_recheck_failed")
         lease = lease_factory(
             runtime_dir=lease_runtime_dir,
             task_id=f"exp6773-{model['model_id'].split('/')[-1]}",
@@ -948,9 +977,7 @@ def gpu_receipt_errors(receipt: Mapping[str, Any], model: Mapping[str, Any]) -> 
         errors.append("receipt_sha256")
     if receipt.get("model_record") != model or receipt.get("model_id") != model.get("model_id"):
         errors.append("model_record")
-    planned = next(
-        (row for row in PLANNED_MODELS if row["model_id"] == model.get("model_id")), {}
-    )
+    planned = next((row for row in PLANNED_MODELS if row["model_id"] == model.get("model_id")), {})
     if model_record_errors(model, planned):
         errors.append("model_identity")
     device = receipt.get("device")
@@ -1058,7 +1085,9 @@ def _write_json_unchecked(path: Path, value: Mapping[str, Any]) -> None:
     stream_mod.atomic_write(path, data)
 
 
-def _blocked_worker_receipt(model: Mapping[str, Any], device: Mapping[str, Any], error: str) -> JsonDict:
+def _blocked_worker_receipt(
+    model: Mapping[str, Any], device: Mapping[str, Any], error: str
+) -> JsonDict:
     row: JsonDict = {
         "model_record": deepcopy(dict(model)),
         "model_id": model.get("model_id"),
@@ -1231,13 +1260,16 @@ def _gate_summary(
     receipts: Sequence[Mapping[str, Any]],
 ) -> JsonDict:
     rows = [deepcopy(dict(row)) for row in preconditions.get("checks", [])]
+    rows.extend(deepcopy(dict(row)) for row in preconditions.get("runtime_device_checks", []))
     rows.extend(deepcopy(dict(row)) for row in stream_checks)
     if preconditions.get("all_passed") is True:
         for model in models:
             receipt = next(
                 (row for row in receipts if row.get("model_id") == model.get("model_id")), None
             )
-            failures = ["receipt_missing"] if receipt is None else gpu_receipt_errors(receipt, model)
+            failures = (
+                ["receipt_missing"] if receipt is None else gpu_receipt_errors(receipt, model)
+            )
             rows.append(
                 _check(
                     f"model_lifecycle:{model.get('model_id')}",
@@ -1277,17 +1309,22 @@ def _expected_state(
     stream_checks: Sequence[Mapping[str, Any]],
 ) -> JsonDict:
     models_used = _models_used(models, receipts)
-    live = bool(len(receipts) == len(PLANNED_MODELS)) and all(
-        (row.get("first_token_canary") or {}).get("first_token_observed") is True
-        for row in receipts
+    live = bool(models_used)
+    runtime_device_checks = preconditions.get("runtime_device_checks", [])
+    runtime_devices_passed = all(
+        isinstance(row, Mapping) and row.get("passed") is True for row in runtime_device_checks
     )
     ready = bool(
         preconditions.get("all_passed") is True
+        and runtime_devices_passed
         and len(models) == len(PLANNED_MODELS)
         and models_used == list(models)
         and all(row.get("passed") is True for row in stream_checks)
         and len(receipts) == len(models)
-        and all(not gpu_receipt_errors(receipt, model) for receipt, model in zip(receipts, models, strict=True))
+        and all(
+            not gpu_receipt_errors(receipt, model)
+            for receipt, model in zip(receipts, models, strict=True)
+        )
     )
     if ready:
         return {
@@ -1334,7 +1371,9 @@ def build_artifact(
     fixture = fixture if isinstance(fixture, Mapping) else {}
     checks = [deepcopy(dict(row)) for row in preconditions.get("stream_contract_checks", [])]
     state = _expected_state(preconditions, models, receipts, checks)
-    rows = stream_rows(checks) + [row for receipt in receipts for row in phase_rows_for_receipt(receipt)]
+    rows = stream_rows(checks) + [
+        row for receipt in receipts for row in phase_rows_for_receipt(receipt)
+    ]
     gates = _gate_summary(preconditions, checks, models, receipts)
     artifact: JsonDict = {
         "schema": SCHEMA,
@@ -1393,12 +1432,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
         errors.append("verdict_class")
     models = artifact.get("model_specs")
     models = models if isinstance(models, list) else []
-    model_schema_errors = (
-        len(models) != len(PLANNED_MODELS)
-        or any(
-            model_record_errors(model, planned)
-            for model, planned in zip(models, PLANNED_MODELS, strict=False)
-        )
+    model_schema_errors = len(models) != len(PLANNED_MODELS) or any(
+        model_record_errors(model, planned)
+        for model, planned in zip(models, PLANNED_MODELS, strict=False)
     )
     if model_schema_errors:
         errors.append("model_specs")
@@ -1470,7 +1506,10 @@ def run(
     result_path: Path = RESULT_PATH,
     date: str = RUN_DATE,
     preflight_fn: Callable[[], JsonDict] = collect_preconditions,
-    worker_runner: Callable[[Mapping[str, Any], Mapping[str, Any], str, Path], JsonDict] = run_model_worker,
+    device_selector: Callable[[], JsonDict] = select_device_before_load,
+    worker_runner: Callable[
+        [Mapping[str, Any], Mapping[str, Any], str, Path], JsonDict
+    ] = run_model_worker,
     code_receipt_fn: Callable[[], JsonDict] = code_receipts,
     clock: Callable[[], int] = time.monotonic_ns,
 ) -> JsonDict:
@@ -1478,19 +1517,31 @@ def run(
 
     started_ns = clock()
     preflight = preflight_fn()
+    preflight.setdefault("runtime_device_checks", [])
     receipts: list[JsonDict] = []
     if preflight.get("all_passed") is True:
-        selected = preflight.get("device_selection_receipt", {}).get("selected_device")
         fixture = preflight.get("stream_fixture")
         fixture = fixture if isinstance(fixture, Mapping) else {}
         prompt = build_canary_prompt(fixture)
         runtime_dir = result_path.parent / ".experiment_6773_csl_owned_lease_contract"
-        if isinstance(selected, Mapping):
-            for model in preflight.get("models", []):
+        for model in preflight.get("models", []):
+            selection = device_selector()
+            selected = selection.get("selected_device")
+            preflight["runtime_device_checks"].append(
+                _check(
+                    f"device_recheck:{model.get('model_id')}",
+                    {"free_vram_mb_at_least": FROZEN_FREE_VRAM_THRESHOLD_MB},
+                    selection,
+                    isinstance(selected, Mapping),
+                )
+            )
+            if isinstance(selected, Mapping):
                 receipt = worker_runner(model, selected, prompt, runtime_dir)
                 receipts.append(receipt)
                 if gpu_receipt_errors(receipt, model):
                     break
+            else:
+                break
     artifact = build_artifact(
         date=date,
         preconditions=preflight,
@@ -1567,4 +1618,3 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":  # pragma: no cover - the repository wrapper is the CLI surface.
     raise SystemExit(main())
-
