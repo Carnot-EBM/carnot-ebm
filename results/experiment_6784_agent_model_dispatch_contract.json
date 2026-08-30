@@ -1,0 +1,78 @@
+{
+  "experiment": 6784,
+  "schema": "agent_model_dispatch_contract_v1",
+  "run_date": "2026-08-30",
+  "started_at": "2026-08-30T17:06:57Z",
+  "finished_at": "2026-08-30T17:06:57Z",
+  "status": "blocked",
+  "field_principles": {
+    "field_principles": "Explain why each required result field exists.",
+    "inference_substrate": "Disclose whether the result depends on an inference model.",
+    "duration_s": "Record the monotonic wall time used by the precondition check.",
+    "random_seed": "Fix the planned fixture order for reproducible evaluation.",
+    "reproducibility_checksum": "Bind the matrix, source, roadmap, and evaluated rows to one digest.",
+    "compatibility_matrix": "State the maintained agent families, model patterns, and reason codes, or why they are unavailable.",
+    "rows": "Record one result for every pair that the task evaluated.",
+    "exp6781_reproduced": "Show whether the incident pair was rejected for the expected reason.",
+    "supported_pairs_passed": "Show whether every supported fixture passed.",
+    "cross_family_pairs_rejected": "Show whether every cross-family fixture failed closed.",
+    "unknown_pairs_rejected": "Show whether every unknown fixture failed closed.",
+    "v592_pairs_audited": "Show whether every task pair in the required V592 roadmap was audited.",
+    "dispatch_contract_ready": "State the exact readiness decision required before activation.",
+    "gate_check_summary": "Name each blocking precondition and its observed value.",
+    "verifier_is_oracle": "Prevent a static contract check from being described as an independent oracle.",
+    "verdict_class": "Classify the terminal outcome with the closed result enum.",
+    "honest_verdict": "Give a terminal result with the required trusted prefix."
+  },
+  "inference_substrate": "static local filesystem inspection, no inference model",
+  "duration_s": 0.000003396,
+  "random_seed": 0,
+  "reproducibility_checksum": "sha256:3267fe4707428be67f83b262b30d813e8b36b52f499d93711c091b455f8795d6",
+  "checksum_inputs": {
+    "compatibility_matrix": {
+      "agent_families": [],
+      "model_patterns": [],
+      "reason_codes": [],
+      "state": "not_built_because_precondition_failed"
+    },
+    "source": {
+      "path": "scripts/agent_model_compatibility.py",
+      "state": "not_created_because_precondition_failed"
+    },
+    "roadmap": {
+      "path": "research-roadmap-next.yaml",
+      "state": "missing"
+    },
+    "rows": []
+  },
+  "compatibility_matrix": {
+    "agent_families": [],
+    "model_patterns": [],
+    "reason_codes": [],
+    "state": "not_built_because_precondition_failed"
+  },
+  "rows": [],
+  "exp6781_reproduced": false,
+  "supported_pairs_passed": false,
+  "cross_family_pairs_rejected": false,
+  "unknown_pairs_rejected": false,
+  "v592_pairs_audited": false,
+  "dispatch_contract_ready": false,
+  "gate_check_summary": {
+    "passed": false,
+    "failed_check": "next_roadmap_exists_and_parses",
+    "expected": {
+      "path": "research-roadmap-next.yaml",
+      "exists": true,
+      "parses_as": "YAML mapping"
+    },
+    "observed": {
+      "path": "research-roadmap-next.yaml",
+      "exists": false,
+      "parses_as": null
+    }
+  },
+  "verifier_is_oracle": false,
+  "verdict_class": "blocked",
+  "honest_verdict": "complete_blocked_dispatch_contract"
+}
