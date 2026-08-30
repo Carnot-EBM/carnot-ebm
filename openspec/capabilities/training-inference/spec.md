@@ -2834,6 +2834,77 @@ target-law gates pass. A complete measured null remains terminal.
 
 **Implementation Status:** Planned (Exp 6793)
 
+## REQ-SAMPLE-100: Exp 6794 cold temporal-exchange and board-envelope audit
+
+Carnot SHALL provide a separate Exp6794 evaluator. It SHALL read the serialized
+Exp6793 rows without importing Exp6793 reducers or headline aggregates. It SHALL
+replay the finite Ising chains, enumerate each spatial target law, and recount
+logical work before it classifies the source verdict.
+
+Acceptance criteria:
+- The launch gate SHALL require `temporal_exchange_comparison_completed=true`,
+  source and sampler code identities, row and trajectory or sufficient-statistic
+  hashes, exact-target hashes, attempted-update receipts, and existing KV260 and
+  GateMate receipts. A failed check SHALL write
+  `complete_blocked_temporal_exchange_audit` and stop before replay.
+- The evaluator SHALL recompute target marginals, empirical law error, energy and
+  magnetization autocorrelation, effective samples, optimum-hitting updates,
+  diversity, and confidence intervals from rows or independent replays.
+- Work accounting SHALL report attempted conditional updates, accepted state
+  changes, temporal-coupling operations, random API draws, and stored-state
+  reads and writes. Denominator sensitivity SHALL identify conclusions that
+  change under an alternative work denominator.
+- A bounded sensitivity panel SHALL cover burn-in, thinning, previous-state
+  initialization, coupling magnitude and sign, temperature boundaries, and run
+  length. It SHALL include zero-coupling equivalence and long-run stationarity.
+- Static hardware mapping SHALL estimate extra state, arithmetic, coefficient
+  precision and range, memory traffic, and update dependencies. It SHALL compare
+  those estimates with checked-in KV260 and GateMate envelopes only. It SHALL
+  not run synthesis, place-and-route, a board command, or physical timing.
+- Every hardware value SHALL use one evidence class from `measured_simulator`,
+  `derived_estimate`, `existing_board_receipt`, or `unavailable`.
+- The artifact SHALL set `physical_hardware_invoked=false` and
+  `verifier_is_oracle=false`. It SHALL emit
+  `temporal_exchange_audit_completed=true` after a complete audit even when the
+  source result is null, rejected, or stationary-law incompatible.
+
+Required artifact fields are `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`, `source_artifact_hash`,
+`existing_hardware_receipt_hashes`, `rows`, `exact_target_recomputation`,
+`cold_recomputed_metrics`, `headline_differences`, `update_accounting_by_arm`,
+`denominator_sensitivity`, `burnin_sensitivity`, `thinning_sensitivity`,
+`initialization_sensitivity`, `coupling_sensitivity`, `stationarity_checks`,
+`zero_coupling_equivalence`, `estimated_state_cost`,
+`estimated_arithmetic_cost`, `estimated_memory_traffic`,
+`coefficient_precision_range`, `evidence_class_by_hardware_field`,
+`physical_hardware_invoked`, `source_verdict_supported`,
+`temporal_exchange_audit_completed`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+
+**Implementation Status:** Planned (Exp 6794)
+
+### SCENARIO-SAMPLE-100: Independent replay and denominator audit
+
+Given: the complete Exp6793 row grid and matching code receipts.
+When: Exp6794 replays every row through its separate evaluator.
+Then: trajectory hashes, target hashes, row metrics, work counts, and alternative
+denominators are independently attributable without source headline imports.
+
+### SCENARIO-SAMPLE-101: Sensitivity, stationarity, and zero coupling
+
+Given: the fixed bounded sensitivity manifest.
+When: Exp6794 varies one declared factor at a time and runs the long-chain check.
+Then: each condition remains a row, zero coupling matches ordinary Gibbs, and
+stationarity evidence does not assume that temporal coupling preserves the
+spatial Boltzmann law.
+
+### SCENARIO-SAMPLE-102: Static board mapping and fail-closed launch
+
+Given: checked-in KV260 and GateMate receipts and no board authorization.
+When: Exp6794 checks resource envelopes or encounters a missing prerequisite.
+Then: it records typed static estimates with no clock, power, throughput, or
+physical timing claim, or writes the complete blocked schema before replay.
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
