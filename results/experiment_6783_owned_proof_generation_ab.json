@@ -1,0 +1,51 @@
+{
+  "experiment": 6783,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-30",
+  "started_at": "2026-08-30T15:42:48.989526+00:00",
+  "finished_at": "2026-08-30T15:42:48.989526+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Owned three-model exact proof-generation A/B",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=False == expected=True",
+  "failed_upstream": "exp6782-sequential-sota-runtime-admission",
+  "failed_field": "all_mandated_runtime_ready",
+  "failed_operator": "==",
+  "failed_expected": true,
+  "failed_expected_type": "bool",
+  "failed_observed": false,
+  "failed_observed_type": "bool",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6782_sequential_sota_runtime_admission.json",
+  "failed_evidence_sha256": "sha256:efeb6a2c27097ea14f540287287f7442313ddd7c90619ba6615f828ade92ad84",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=False == expected=True",
+    "failed_upstream": "exp6782-sequential-sota-runtime-admission",
+    "failed_field": "all_mandated_runtime_ready",
+    "failed_operator": "==",
+    "failed_expected": true,
+    "failed_expected_type": "bool",
+    "failed_observed": false,
+    "failed_observed_type": "bool",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6782_sequential_sota_runtime_admission.json",
+    "failed_evidence_sha256": "sha256:efeb6a2c27097ea14f540287287f7442313ddd7c90619ba6615f828ade92ad84"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6782-sequential-sota-runtime-admission.all_mandated_runtime_ready (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6782-sequential-sota-runtime-admission",
+      "artifact_field": "all_mandated_runtime_ready",
+      "op": "==",
+      "expected": true,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": false,
+      "reason": "actual=False == expected=True",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6782_sequential_sota_runtime_admission.json",
+      "artifact_sha256": "sha256:efeb6a2c27097ea14f540287287f7442313ddd7c90619ba6615f828ade92ad84"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
