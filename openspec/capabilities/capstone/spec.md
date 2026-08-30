@@ -4254,3 +4254,63 @@ records, and reproducibility checksum are present and internally consistent.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-6560 | Planned (`python/carnot/experiment_6560_v567_independent_capstone.py`, `results/experiment_6560_v567_independent_capstone.json`) | Planned (`tests/python/test_experiment_6560_v567_independent_capstone.py`) |
+
+- REQ-CAPSTONE-6795: The V592 branch-disposition workflow SHALL run without
+  upstream science gates after the V592 design and active roadmap parse. It
+  SHALL load each expected Exp6784 through Exp6794 artifact by exact task ID,
+  preserve missing and unreadable inputs as evidence states, hash every present
+  source, and write `results/experiment_6795_v592_branch_disposition.json`
+  without running new science or changing the active roadmap or conductor.
+- The workflow SHALL independently recompute the fixed-point, continuous
+  self-learning, and temporal-exchange comparison claims from per-unit rows.
+  It SHALL prefer the corresponding cold audit when an audit disagrees with a
+  source claim, record every disagreement, classify infrastructure separately
+  from science, and never pool metrics across branches.
+- The required artifact fields are `field_principles`,
+  `inference_substrate`, `duration_s`, `random_seed`,
+  `reproducibility_checksum`, `expected_task_ids`, `artifact_inventory`,
+  `source_artifact_hashes`, `rows`, `branch_decisions`,
+  `infrastructure_disposition`, `fixed_point_disposition`,
+  `csl_disposition`, `temporal_exchange_disposition`,
+  `source_audit_disagreements`, `prior_verdict_recurrences`,
+  `retirement_recommendations`, `prd_gap_reconciliation`,
+  `next_prerequisites`, `pooled_score_computed`, `docs_updated`,
+  `gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+  `honest_verdict`. `pooled_score_computed` and `verifier_is_oracle` SHALL both
+  be false. `verdict_class` SHALL use the closed project enum and
+  `honest_verdict` SHALL start with a terminal prefix.
+- SCENARIO-CAPSTONE-6795-PRECONDITIONS: Given a readable V592 design and
+  active roadmap, when a source artifact or the inactive next-roadmap path is
+  absent or unreadable, then the capstone SHALL continue and record that
+  absence. If the design or active roadmap is unreadable, it SHALL emit
+  `complete_blocked_v592_disposition` and name the failed check and observed
+  value in `gate_check_summary`.
+- SCENARIO-CAPSTONE-6795-ROWS: Given the available V592 artifacts, when the
+  capstone runs, then it SHALL emit one task row and one branch-claim row for
+  each claim it adjudicates. Fixed-point exact-valid effects, self-learning
+  writes, reads, action changes and held-future effects, and temporal sampler
+  efficiency and target-law gates SHALL derive from rows rather than copied
+  headline values.
+- SCENARIO-CAPSTONE-6795-BRANCHES: Given mixed V592 evidence, when branch
+  decisions are written, then dispatch and durable-checkpoint readiness SHALL
+  not become scientific wins; fixed-point superiority SHALL require matched
+  controls and no oracle leakage; self-learning promotion SHALL require
+  auditable write/read/action causality and a positive held-future lower bound;
+  and temporal exchange SHALL require target-law preservation under matched
+  work. Each branch SHALL retain its own verdict class, claim boundary,
+  adoption or retirement decision, and exact next prerequisite.
+- SCENARIO-CAPSTONE-6795-RETIREMENT: Given roadmap `prior_failures`, when a
+  V592 task repeats a prior outcome under the same method scope, then the
+  artifact SHALL propose an exclusion-manifest entry and SHALL stop
+  recommending that unchanged method. Historical artifacts, the active
+  roadmap, and the active exclusion manifest SHALL remain unchanged.
+- SCENARIO-CAPSTONE-6795-PRD: Given PRD FR11 and FR12, when the capstone
+  reconciles the three named V592 gaps, then it SHALL state the smallest
+  justified next prerequisite or retirement condition for every open gap and
+  SHALL not compute a pooled milestone score.
+
+## Implementation Status (REQ-CAPSTONE-6795)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-6795 | Implemented (`python/carnot/experiment_6795_v592_branch_disposition.py`, `results/experiment_6795_v592_branch_disposition.json`) | Covered (`tests/python/test_experiment_6795_v592_branch_disposition.py`) |
