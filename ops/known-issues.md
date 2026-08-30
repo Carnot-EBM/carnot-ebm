@@ -7221,6 +7221,53 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-08-30 (outer-loop, ROOT-CAUSED) — THE AGENT COERCION REWRITES agent_type AND NOT model, SO A COERCED TASK GETS THE OLD AGENT'S MODEL
+
+**Symptom:** `Codex CLI error: Model metadata for 'gemini-3.1-pro-preview' not found`. The task
+burns all three retries in ~4 minutes and retires.
+
+**Root cause, in `scripts/research_conductor.py`:**
+
+```
+6579:  task_model = task.get("model")          # read BEFORE the coercion
+6603:  if os.environ.get("CODEX_FORCE_EXPERIMENTS") == "1":
+6619:      elif task_agent_type == "gemini" and not task.get("requires_gemini_verified"):
+6627:          task_agent_type = "codex"       # agent flipped
+6695:  model_override=task_model,              # ...model NOT flipped
+```
+
+`task_model` is captured at 6579, the coercion block rewrites `task_agent_type` in four places
+between 6603 and 6627, and nothing touches `task_model`. Codex is then invoked with a Gemini
+model name.
+
+**Two defects, and the second is the one that matters.**
+
+1. The planner still emits `agent_type: gemini` + `model: gemini-3.1-pro-preview`
+   (`exp6781-v591-sota-delta-contract` in the live `.591` roadmap), despite CLAUDE.md's
+   Codex-Default-v2 retiring gemini as a standing default on 2026-06-10.
+2. **The coercion is the mechanical safety net for exactly that, it FIRED CORRECTLY, and then
+   handed the new agent the old agent's model.** A half-applied coercion is worse than none:
+   without it the task fails as gemini and is legible; with it, the task fails as CODEX with an
+   error that reads like a codex problem, which is why this went five occurrences without being
+   traced. The verdict is environmental, so a task retires for a reason unrelated to its merits.
+
+**Base rate, counted from `ops/conductor-log.md` (not estimated):** 15 occurrences on 5 dates —
+2026-07-01, 07-05, 08-05, 08-27, 08-30 — always exactly 3 per date, i.e. one task burning its
+full retry budget. Intervals +4, +31, +22, +3 days: irregular, and the two most recent gaps are
+the shortest. Five points is too few to call a trend; it is enough to say this is neither rare
+nor stable. (An earlier read of "roughly monthly" was wrong — the deltas were eyeballed rather
+than computed, and one date was missed by reading a truncated command output as complete.)
+
+**Fix:** coerce the model alongside the agent. When `task_agent_type` changes, `task_model` must
+either move to that agent's default (`AGENT_MODEL`, currently `gpt-5.6-sol`) or be dropped so the
+callee picks its own. The invariant worth pinning in a test: **a coerced task never keeps a model
+belonging to the agent it was coerced away from.**
+
+**Also worth fixing at the planner layer**, but that is the softer half: a mechanical coercion
+that works correctly makes planner drift harmless, while planner discipline alone has already
+failed five times.
+
+
 ### NEW 2026-08-30 (outer-loop, ROOT-CAUSED) — exp6753 CHECKPOINTS INTO A TemporaryDirectory, SO EVERY INTERRUPTED RUN LOSES ALL WORK
 
 Three independent attempts have now spent hours on the object-table A/B and produced nothing.
