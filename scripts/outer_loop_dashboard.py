@@ -109,6 +109,111 @@ def gpu_rows() -> list[str]:
     return [r.strip() for r in out.splitlines() if r.strip()]
 
 
+#: The competition's own per-level rule, from docs.arcprize.org/methodology as recorded in
+#: docs/research-notes/arc-human-baseline-and-replay-signal.md:
+#:     level_score = (human_baseline_actions / ai_actions) ** 2, capped at human parity.
+#: Matches `experiment_4634_live_action_efficiency_metric._efficiency_score`, deliberately -- a
+#: second implementation of a scoring rule is a second answer, and this one is for display only.
+def efficiency_score(baseline_actions: float, agent_actions: float) -> float | None:
+    """Per-level efficiency, or None when either side is missing.
+
+    None rather than 0.0: an unmeasured level and a maximally inefficient one are different
+    findings, and averaging the second into a headline is how a coverage gap becomes a bad score.
+    """
+
+    if baseline_actions <= 0 or agent_actions <= 0:
+        return None
+    return min(float(baseline_actions) / float(agent_actions), 1.0) ** 2
+
+
+def public_set_efficiency() -> dict:
+    """Aggregate efficiency over the public solve artifacts, with its own coverage.
+
+    HONEST SCOPE, and it is the whole reason this returns a dict rather than a number:
+
+    * AGGREGATE, NOT PER-LEVEL. The stored `solution` is one flat move list for reaching
+      `reached_level`, so this compares total moves against the summed human baseline for the
+      levels reached. The real rule scores each level separately. This cannot be quoted as a
+      competition score.
+    * DEVELOPMENT PROXY. Every solve artifact carries
+      `solve_provenance: development_proxy` -- the offline twin driven by hand-built per-game
+      adapters. It says nothing about the live agent on a game it has never seen.
+    * PARTIAL. Games without a move list are excluded and counted, never defaulted.
+    """
+
+    import yaml  # local: the dashboard must run even where yaml is absent
+
+    results = REPO / "results"
+    char = results / "arc_agi3_game_characterization.json"
+    baselines: dict[str, list] = {}
+    if char.exists():
+        def _walk(o):
+            if isinstance(o, dict):
+                if "game_id" in o and "baseline_actions" in o:
+                    baselines[str(o["game_id"])[:4]] = o["baseline_actions"]
+                for v in o.values():
+                    _walk(v)
+            elif isinstance(o, list):
+                for v in o:
+                    _walk(v)
+        try:
+            _walk(json.loads(char.read_text()))
+        except (OSError, json.JSONDecodeError):
+            pass
+
+    scores, missing, provenances = [], 0, set()
+    for path in sorted(results.glob("arc_loop_solve_*.json")):
+        try:
+            d = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        game = str(d.get("game", ""))[:4]
+        moves = d.get("solution")
+        reached = d.get("reached_level")
+        provenances.add(str(d.get("solve_provenance")))
+        base = baselines.get(game)
+        if not isinstance(moves, list) or not moves or not base or not isinstance(reached, int):
+            missing += 1
+            continue
+        s = efficiency_score(sum(base[: max(1, reached)]), len(moves))
+        if s is None:
+            missing += 1
+        else:
+            scores.append(s)
+    del yaml  # imported only to prove availability alongside the rest of the harness
+    return {
+        "mean": (sum(scores) / len(scores)) if scores else None,
+        "covered": len(scores),
+        "missing": missing,
+        "provenance": sorted(p for p in provenances if p and p != "None"),
+    }
+
+
+def generalization_levels() -> dict:
+    """Levels credited to the LIVE agent's own discovery, not the adaptered dev twin.
+
+    This is the number that bears on a hidden-game submission, because it is the only
+    configuration resembling first contact. A public-set count is a measurement of a DIFFERENT
+    quantity and must never stand in for it -- all 25 public games are cleared by hand-built
+    per-game adapters that by construction do not transfer.
+
+    Returns `measured: False` when nothing qualifies, so the dashboard can print "not measured"
+    rather than a zero that reads like a result.
+    """
+
+    total, games = 0, 0
+    for path in sorted((REPO / "results").glob("arc_loop_solve_*.json")):
+        try:
+            d = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        if str(d.get("solve_provenance")) == "live_agent_self_discovery":
+            games += 1
+            lv = d.get("reproduced_levels")
+            total += int(lv) if isinstance(lv, int) else 0
+    return {"measured": games > 0, "levels": total, "games": games}
+
+
 def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
     now = datetime.now(UTC)
     L: list[str] = []
@@ -160,6 +265,22 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
         L.append(f"flags       {len(unproven)}/{len(flags)} shipped-but-unevaluated")
         for k in unproven:
             L.append(f"              {k}")
+
+    eff = public_set_efficiency()
+    if eff["mean"] is not None:
+        prov = ",".join(eff["provenance"]) or "unknown"
+        L.append(f"efficiency  {eff['mean']:.3f} aggregate over {eff['covered']} game(s), "
+                 f"{eff['missing']} unmeasured  [{prov}; NOT a competition score]")
+    else:
+        L.append(f"efficiency  not measured ({eff['missing']} game(s) lack a move list)")
+
+    gen = generalization_levels()
+    if gen["measured"]:
+        L.append(f"generaliz.  {gen['levels']} level(s) across {gen['games']} game(s) "
+                 f"by live self-discovery")
+    else:
+        L.append("generaliz.  not measured -- no solve carries "
+                 "solve_provenance=live_agent_self_discovery")
 
     head = _run("git", "log", "-1", "--format=%h %ad %s", "--date=format:%m-%d %H:%M")
     L.append(f"head        {head[:70]}")

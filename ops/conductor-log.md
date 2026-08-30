@@ -16817,3 +16817,4 @@ The l |
 | 2026-08-30 06:32 UTC | V589 branch disposition and PRD gap update | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6767_v589_br |
 | 2026-08-30 07:52 UTC | Plan milestone 2026.08.590 | OK | 13 tasks proposed |
 | 2026-08-30 07:54 UTC | Milestone 2026.08.590 activated | OK | 13 tasks queued |
+| 2026-08-30 08:21 UTC | Exact-invalid targetable proof panel expansion | OK | 101 passed, 1 warning in 18.30s |
