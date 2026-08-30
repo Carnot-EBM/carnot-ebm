@@ -8059,3 +8059,64 @@ And `gate_check_summary` SHALL name the failed check and observed value.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-CL-6762 and SCENARIO-CL-6762-* | Implemented: `python/carnot/experiment_6762_procedural_vs_trace_csl_ab.py`; `scripts/experiments/experiment_6762_procedural_vs_trace_csl_ab.py`; terminal artifact `results/experiment_6762_procedural_vs_trace_csl_ab.json`. | Implemented: `tests/python/test_experiment_6762_procedural_vs_trace_csl_ab.py`. |
+
+## REQ-CL-6773: Owned-Lease Memory Branch Admission Contract
+
+Given the frozen Exp6761 stream is ready with six orders
+When Exp6773 runs for planning date 20260830
+Then it SHALL revalidate the checked-in stream without regenerating it
+And it SHALL prove one bounded first-token inference for each mandated memory model.
+
+The mandated models SHALL be `unsloth/Qwen3.6-35B-A3B-GGUF` for acquisition
+and within-family work and `unsloth/gemma-4-31B-it-GGUF` for dense held-family
+transfer. Each model SHALL use its exact cached Q4_K_M GGUF and embedded
+tokenizer. Legacy, CPU, remote, and substituted models SHALL not satisfy
+readiness.
+
+One typed model record SHALL contain `model_id`, `role`, `family`,
+`quantization`, `revision`, `filename`, `model_path`, `model_sha256`,
+`model_size_bytes`, and `tokenizer`. `model_specs` SHALL contain the two
+planned resolved records before any live load. `models_used` SHALL contain the
+same records, in the same order, only after both records produce live canaries.
+The validator SHALL reject a missing, renamed, extra, or unequal identity
+field.
+
+The stream checks SHALL cover the source artifact hash, stream hash, order
+count, equal unsaturated capacity, read-only episodes, transaction schema,
+restart receipts, rollback receipts, and poison receipts. One row SHALL exist
+for each stream check. One row SHALL also exist for each phase in every live
+model lease journal.
+
+`csl_live_preflight_ready` SHALL be true only when the two typed model lists
+are equal, both models have complete live phase rows, both first-token canaries
+pass, both teardown and VRAM recovery checks pass, and all stream checks pass.
+This admission field SHALL not make a continuous-learning result claim.
+
+### SCENARIO-CL-6773-STREAM: The Frozen Stream Revalidates Without Regeneration
+
+Given the checked-in Exp6761 artifact
+When Exp6773 validates its public fixture and memory contract
+Then the source hash, six order hashes, stream hash, capacity, read-only,
+transaction, restart, rollback, and poison evidence SHALL match the frozen
+artifact.
+
+### SCENARIO-CL-6773-MODEL-CONTRACT: Planned And Used Records Are Identical
+
+Given two resolved typed model records
+When live canary receipts are reduced
+Then `model_specs` and `models_used` SHALL be byte-equivalent JSON values
+And any identity mismatch SHALL close readiness.
+
+### SCENARIO-CL-6773-BLOCKED: A Failed Admission Gate Produces No Live Claim
+
+Given any failed source, model, CUDA, device, lease, port, RAM, or disk gate
+When Exp6773 stops before loading
+Then it SHALL emit `complete_blocked_csl_owned_lease_contract`
+And `csl_live_preflight_ready` and `live_model_invoked` SHALL be false
+And `gate_check_summary` SHALL retain the failed check and observed value.
+
+## Implementation Status (REQ-CL-6773)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6773 and SCENARIO-CL-6773-* | Planned: `python/carnot/experiment_6773_csl_owned_lease_contract.py`; `scripts/experiments/experiment_6773_csl_owned_lease_contract.py`; terminal artifact `results/experiment_6773_csl_owned_lease_contract.json`. | Planned: `tests/python/test_experiment_6773_csl_owned_lease_contract.py`. |
