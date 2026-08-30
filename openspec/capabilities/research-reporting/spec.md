@@ -59694,3 +59694,49 @@ promoting blocked science.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6767 and SCENARIO-REPORT-6767-* | Planned (`python/carnot/experiment_6767_v589_branch_disposition.py`, `scripts/experiments/experiment_6767_v589_branch_disposition.py`) | Planned (`tests/python/test_experiment_6767_v589_branch_disposition.py`) |
+
+### REQ-REPORT-6773: The Memory Admission Artifact SHALL Be Typed And Cold-Validated
+
+Exp6773 SHALL atomically write
+`results/experiment_6773_csl_owned_lease_contract.json`. The artifact SHALL
+include `field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `source_artifact_sha256`, `model_specs`,
+`models_used`, `live_model_invoked`, `rows`, `gpu_receipts`,
+`lease_receipts`, `teardown_receipts`, `stream_manifest`,
+`stream_contract_checks`, `csl_live_preflight_ready`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+
+`field_principles` SHALL state one purpose for every artifact field and gate.
+The checksum SHALL bind the source stream hash, typed models, implementation
+code, and rows. It SHALL exclude measured duration and its own value.
+
+A cold validator SHALL recompute model equality, phase rows, stream rows,
+readiness, gate summary, verdict class, terminal verdict, and checksum. The
+validator SHALL reject missing required fields, extra fields, renamed model
+identity fields, model identity mismatch, copied readiness, or inconsistent
+rows.
+
+#### SCENARIO-REPORT-6773-LIVE: Readiness Derives From Atomic Rows And Receipts
+
+**Given** two complete live receipts and all stream contract receipts
+**When** Exp6773 reduces and cold-validates the artifact
+**Then** every phase and stream check has one row
+**And** `csl_live_preflight_ready` is derived from those rows and receipts.
+
+**Spec traces:** REQ-REPORT-6773, REQ-CL-6773, REQ-INFRA-6773
+
+#### SCENARIO-REPORT-6773-BLOCKED: The Complete Schema Survives A Gate Failure
+
+**Given** one failed precondition before model load
+**When** Exp6773 publishes its blocked result
+**Then** all required fields remain present
+**And** no model is listed as used
+**And** the failed check retains its expected and observed values.
+
+**Spec traces:** REQ-REPORT-6773, SCENARIO-CL-6773-BLOCKED
+
+## Implementation Status (REQ-REPORT-6773)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6773 and SCENARIO-REPORT-6773-* | Planned (`python/carnot/experiment_6773_csl_owned_lease_contract.py`, `scripts/experiments/experiment_6773_csl_owned_lease_contract.py`) | Planned (`tests/python/test_experiment_6773_csl_owned_lease_contract.py`) |

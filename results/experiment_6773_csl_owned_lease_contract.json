@@ -1,0 +1,932 @@
+{
+  "code_receipts": {
+    "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6773_csl_owned_lease_contract.py": "sha256:44120649483069596799266c3f1c734a1cbfa5d2b1f6872cbbe8ca9b769dc726",
+    "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6773_csl_owned_lease_contract.py": "sha256:24e615362492712658a856c631d651a19a5a99d312a41edbdc185970ea7f8291",
+    "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_6773_csl_owned_lease_contract.py": "sha256:c6d111c5195f9da876ff60b058ad0b19287bf96325bde5d36b76e02c4d047cdc"
+  },
+  "csl_live_preflight_ready": false,
+  "duration_s": 33.454375,
+  "experiment_id": "experiment_6773_csl_owned_lease_contract",
+  "field_principles": {
+    "code_receipts": "Code hashes identify the producer, wrapper, and contract tests.",
+    "csl_live_preflight_ready": "The Exp6774 gate opens only after every admission check passes.",
+    "duration_s": "Monotonic task wall time makes the live work auditable.",
+    "experiment_id": "The stable identifier binds the artifact to its owned producer.",
+    "field_principles": "Every artifact field states why it is required.",
+    "gate_check_summary": "Failed checks retain their expected and observed values.",
+    "gpu_receipts": "Per-model CUDA, offload, token, and recovery evidence stays separate.",
+    "honest_verdict": "A terminal prefix makes the final execution state machine-readable.",
+    "inference_substrate": "The exact substrate excludes CPU, remote, and substituted inference.",
+    "lease_receipts": "Owner and release evidence defines who had authority over each GPU.",
+    "live_model_invoked": "True requires bounded first-token evidence from both models.",
+    "model_specs": "Planned typed identities are fixed before any model load.",
+    "models_used": "Only exact planned records that produced live tokens appear here.",
+    "preconditions_checked": "Observed resource gates explain why workers did or did not start.",
+    "random_seed": "The fixed canary seed makes both bounded requests repeatable.",
+    "reproducibility_checksum": "The hash binds stream, models, code, rows, and receipts.",
+    "rows": "One row per stream check and lease phase prevents aggregate-only readiness.",
+    "run_date": "The fixed planning date prevents silent protocol drift.",
+    "schema": "A versioned shape lets cold readers reject incompatible receipts.",
+    "source_artifact_sha256": "The source hash binds the frozen Exp6761 bytes.",
+    "status": "The status separates ready, partial, and blocked execution.",
+    "stream_contract_checks": "Independent checks cover capacity, transactions, and safety receipts.",
+    "stream_manifest": "Six frozen order identities prove that the stream was not regenerated.",
+    "teardown_receipts": "Process absence and VRAM recovery must precede the next load.",
+    "verdict_class": "A closed enum prevents admission evidence from becoming a learning claim.",
+    "verifier_is_oracle": "False marks this as execution admission, not a correctness oracle."
+  },
+  "gate_check_summary": {
+    "checks": {
+      "capacity_contract": true,
+      "frozen_stream_contract": true,
+      "gpu_lease_api": true,
+      "least_used_eligible_rtx3090": false,
+      "llama_cpp_cuda": true,
+      "models_resolved": true,
+      "order_count": true,
+      "planning_date_matches": true,
+      "poison_receipts": true,
+      "ports_available": true,
+      "ram_and_disk": true,
+      "read_only_episode": true,
+      "restart_receipts": true,
+      "rollback_receipts": true,
+      "source_artifact_hash": true,
+      "stream_hash": true,
+      "stream_ready": true,
+      "transaction_schema": true,
+      "two_fixed_rtx3090_identities": true,
+      "upstream_validator": true
+    },
+    "failed_checks": [
+      "least_used_eligible_rtx3090"
+    ],
+    "failures": [
+      {
+        "check": "least_used_eligible_rtx3090",
+        "expected": {
+          "free_vram_mb_at_least": 22610
+        },
+        "observed": null
+      }
+    ]
+  },
+  "gpu_receipts": [],
+  "honest_verdict": "complete_blocked_csl_owned_lease_contract",
+  "inference_substrate": "task-owned local llama.cpp CUDA GGUF preflight",
+  "lease_receipts": [],
+  "live_model_invoked": false,
+  "model_specs": [
+    {
+      "family": "qwen_moe",
+      "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_size_bytes": 22134528992,
+      "quantization": "Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "role": "flagship_moe_acquisition_and_within_family",
+      "tokenizer": {
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "loadable": true,
+        "source": "llama.cpp_embedded_gguf"
+      }
+    },
+    {
+      "family": "gemma_dense",
+      "filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_size_bytes": 18323731456,
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "role": "flagship_dense_held_family_transfer",
+      "tokenizer": {
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "loadable": true,
+        "source": "llama.cpp_embedded_gguf"
+      }
+    }
+  ],
+  "models_used": [],
+  "preconditions_checked": {
+    "all_passed": false,
+    "checks": [
+      {
+        "check": "planning_date_matches",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "frozen_stream_contract",
+        "expected": true,
+        "observed": {
+          "capacity_contract": true,
+          "order_count": true,
+          "poison_receipts": true,
+          "read_only_episode": true,
+          "restart_receipts": true,
+          "rollback_receipts": true,
+          "source_artifact_hash": true,
+          "stream_hash": true,
+          "stream_ready": true,
+          "transaction_schema": true,
+          "upstream_validator": true
+        },
+        "passed": true
+      },
+      {
+        "check": "models_resolved",
+        "expected": true,
+        "observed": [
+          [],
+          []
+        ],
+        "passed": true
+      },
+      {
+        "check": "two_fixed_rtx3090_identities",
+        "expected": {
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9": "NVIDIA GeForce RTX 3090",
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": "NVIDIA GeForce RTX 3090"
+        },
+        "observed": {
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9": "NVIDIA GeForce RTX 3090",
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": "NVIDIA GeForce RTX 3090"
+        },
+        "passed": true
+      },
+      {
+        "check": "llama_cpp_cuda",
+        "expected": true,
+        "observed": {
+          "cuda_linked": true,
+          "dynamic_link": {
+            "command": [
+              "ldd",
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+            ],
+            "duration_s": 0.020563,
+            "exit_code": 0,
+            "stderr": "",
+            "stdout": "\tlinux-vdso.so.1 (0x00007ffb194fb000)\n\tlibllama-server-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so (0x00007ffb18800000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007ffb18200000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007ffb19376000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007ffb17e00000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007ffb19368000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007ffb17c43000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007ffb14200000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007ffb18729000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007ffb0d600000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007ffb17b29000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007ffb0ce00000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007ffb0ca00000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007ffb0d4f7000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007ffb186f4000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007ffb0c600000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007ffb194fd000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007ffb18190000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007ffb0c200000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007ffb08a00000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007ffae3400000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007ffb186eb000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007ffb186e6000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007ffb186e1000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007ffb186a5000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007ffb0c906000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007ffb18180000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007ffae329f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007ffb1815d000)\n"
+          },
+          "executable": true,
+          "exists": true,
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "python_cuda_offload": true,
+          "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773"
+        },
+        "passed": true
+      },
+      {
+        "check": "gpu_lease_api",
+        "expected": true,
+        "observed": {
+          "acquire": true,
+          "release": true,
+          "transition": true
+        },
+        "passed": true
+      },
+      {
+        "check": "least_used_eligible_rtx3090",
+        "expected": {
+          "free_vram_mb_at_least": 22610
+        },
+        "observed": null,
+        "passed": false
+      },
+      {
+        "check": "ports_available",
+        "expected": 2,
+        "observed": {
+          "40191": true,
+          "41337": true
+        },
+        "passed": true
+      },
+      {
+        "check": "ram_and_disk",
+        "expected": {
+          "disk_free_bytes_at_least": 1073741824,
+          "ram_available_bytes_at_least": 68719476736
+        },
+        "observed": {
+          "cpu_count": 24,
+          "disk_free_bytes": 1065435856896,
+          "disk_total_bytes": 3953289023488,
+          "platform": "Linux-7.2.0-1-cachyos-x86_64-with-glibc2.44",
+          "ram_available_bytes": 100782022656,
+          "ram_total_bytes": 134304591872
+        },
+        "passed": true
+      }
+    ],
+    "device_inventory_before": [
+      {
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3306606,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 17884
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3471467,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ],
+        "index": 0,
+        "memory_free_mb": 5969,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 18155,
+        "name": "NVIDIA GeForce RTX 3090",
+        "temperature_c": 81,
+        "utilization_pct": 98,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+      },
+      {
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3452377,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 536
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3452459,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 18416
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3471467,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ],
+        "index": 1,
+        "memory_free_mb": 4896,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 19228,
+        "name": "NVIDIA GeForce RTX 3090",
+        "temperature_c": 75,
+        "utilization_pct": 86,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      }
+    ],
+    "device_inventory_commands": {
+      "devices": {
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,temperature.gpu,utilization.gpu",
+          "--format=csv,noheader,nounits"
+        ],
+        "duration_s": 0.033882,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 24576, 18155, 5969, 81, 98\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 24576, 19228, 4896, 75, 86\n"
+      },
+      "processes": {
+        "command": [
+          "nvidia-smi",
+          "--query-compute-apps=gpu_uuid,pid,process_name,used_memory",
+          "--format=csv,noheader,nounits"
+        ],
+        "duration_s": 0.027023,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab, 3306606, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 17884\nGPU-b52387a2-c625-de87-8d34-e6f64e684bab, 3471467, .venv/bin/python, 256\nGPU-7971baff-9583-eaa6-2292-393f930a28f9, 3452377, .venv/bin/python, 536\nGPU-7971baff-9583-eaa6-2292-393f930a28f9, 3452459, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 18416\nGPU-7971baff-9583-eaa6-2292-393f930a28f9, 3471467, .venv/bin/python, 256\n"
+      }
+    },
+    "device_selection_receipt": {
+      "eligible_device_count": 0,
+      "evaluated_devices": [
+        {
+          "active_compute_count": 2,
+          "active_compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 3306606,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 17884
+            },
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 3471467,
+              "process_name": ".venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "eligible": false,
+          "index": 0,
+          "ineligibility_reasons": [
+            "free_vram_below_frozen_floor"
+          ],
+          "memory_free_mb": 5969,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 18155,
+          "name": "NVIDIA GeForce RTX 3090",
+          "temperature_c": 81,
+          "utilization_pct": 98,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        {
+          "active_compute_count": 3,
+          "active_compute_processes": [
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 3452377,
+              "process_name": ".venv/bin/python",
+              "used_memory_mb": 536
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 3452459,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 18416
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 3471467,
+              "process_name": ".venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "eligible": false,
+          "index": 1,
+          "ineligibility_reasons": [
+            "free_vram_below_frozen_floor"
+          ],
+          "memory_free_mb": 4896,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 19228,
+          "name": "NVIDIA GeForce RTX 3090",
+          "temperature_c": 75,
+          "utilization_pct": 86,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "frozen_free_vram_threshold_mb": 22610,
+      "rank_policy": [
+        "free_vram_desc",
+        "temperature_asc",
+        "active_compute_asc"
+      ],
+      "ranked_eligible_devices": [],
+      "selected_device": null
+    },
+    "llama_cpp": {
+      "cuda_linked": true,
+      "dynamic_link": {
+        "command": [
+          "ldd",
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+        ],
+        "duration_s": 0.020563,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "\tlinux-vdso.so.1 (0x00007ffb194fb000)\n\tlibllama-server-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so (0x00007ffb18800000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007ffb18200000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007ffb19376000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007ffb17e00000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007ffb19368000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007ffb17c43000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007ffb14200000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007ffb18729000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007ffb0d600000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007ffb17b29000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007ffb0ce00000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007ffb0ca00000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007ffb0d4f7000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007ffb186f4000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007ffb0c600000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007ffb194fd000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007ffb18190000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007ffb0c200000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007ffb08a00000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007ffae3400000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007ffb186eb000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007ffb186e6000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007ffb186e1000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007ffb186a5000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007ffb0c906000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007ffb18180000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007ffae329f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007ffb1815d000)\n"
+      },
+      "executable": true,
+      "exists": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "python_cuda_offload": true,
+      "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773"
+    },
+    "ports": [
+      40191,
+      41337
+    ],
+    "resources": {
+      "cpu_count": 24,
+      "disk_free_bytes": 1065435856896,
+      "disk_total_bytes": 3953289023488,
+      "platform": "Linux-7.2.0-1-cachyos-x86_64-with-glibc2.44",
+      "ram_available_bytes": 100782022656,
+      "ram_total_bytes": 134304591872
+    },
+    "source_artifact_sha256": "sha256:e99699342f1edc1504f922498a5c18c21adea5a35241d36b1a1ce248bcca80b8"
+  },
+  "random_seed": 6773,
+  "reproducibility_checksum": "sha256:d998459e649364c9df4346c9caa74146ede6aefe7ce4601a81d45dd2352539f5",
+  "rows": [
+    {
+      "check": "source_artifact_hash",
+      "expected": "sha256:e99699342f1edc1504f922498a5c18c21adea5a35241d36b1a1ce248bcca80b8",
+      "observed": "sha256:e99699342f1edc1504f922498a5c18c21adea5a35241d36b1a1ce248bcca80b8",
+      "ordinal": 0,
+      "passed": true,
+      "row_kind": "stream_contract"
+    },
+    {
+      "check": "upstream_validator",
+      "expected": [],
+      "observed": [],
+      "ordinal": 1,
+      "passed": true,
+      "row_kind": "stream_contract"
+    },
+    {
+      "check": "stream_ready",
+      "expected": {
+        "future_evidence_violations": 0,
+        "procedural_memory_stream_ready": true
+      },
+      "observed": {
+        "future_evidence_violations": 0,
+        "procedural_memory_stream_ready": true
+      },
+      "ordinal": 2,
+      "passed": true,
+      "row_kind": "stream_contract"
+    },
+    {
+      "check": "stream_hash",
+      "expected": "sha256:56dcae39d25dc5671a2c4b74cc44fb88b4386dfb8cff8d4b5f86496b1f7ff84f",
+      "observed": "sha256:56dcae39d25dc5671a2c4b74cc44fb88b4386dfb8cff8d4b5f86496b1f7ff84f",
+      "ordinal": 3,
+      "passed": true,
+      "row_kind": "stream_contract"
+    },
+    {
+      "check": "order_count",
+      "expected": 6,
+      "observed": {
+        "declared": 6,
+        "manifest": 6
+      },
+      "ordinal": 4,
+      "passed": true,
+      "row_kind": "stream_contract"
+    },
+    {
+      "check": "capacity_contract",
+      "expected": "equal_and_unsaturated",
+      "observed": {
+        "arms": {
+          "detailed_trajectory": {
+            "context_tokens": 256,
+            "exact_authority": "deterministic_local_admission_labels_v1",
+            "storage_bytes": 32768,
+            "top_k": 3,
+            "ttl_policy": "event_horizon_64",
+            "update_opportunities": 24
+          },
+          "procedural_lesson": {
+            "context_tokens": 256,
+            "exact_authority": "deterministic_local_admission_labels_v1",
+            "storage_bytes": 32768,
+            "top_k": 3,
+            "ttl_policy": "event_horizon_64",
+            "update_opportunities": 24
+          }
+        },
+        "max_committed_bytes_by_arm": {
+          "detailed_trajectory": 12288,
+          "procedural_lesson": 12288
+        },
+        "record_slot_bytes": 1024,
+        "storage_ceiling_bytes": 32768
+      },
+      "ordinal": 5,
+      "passed": true,
+      "row_kind": "stream_contract"
+    },
+    {
+      "check": "read_only_episode",
+      "expected": true,
+      "observed": true,
+      "ordinal": 6,
+      "passed": true,
+      "row_kind": "stream_contract"
+    },
+    {
+      "check": "transaction_schema",
+      "expected": "Exp6761 transaction schema v1",
+      "observed": {
+        "active_episode_policy": "read_only",
+        "commit_timing": "after_exact_result_closes_episode",
+        "representation_types": [
+          "detailed_trajectory",
+          "procedural_lesson"
+        ],
+        "required_fields": [
+          "transaction_id",
+          "parent_hash",
+          "evidence_hash",
+          "representation_type",
+          "scope",
+          "ttl",
+          "admission_reason",
+          "inverse_patch",
+          "atomic_restart_receipt",
+          "transaction_class",
+          "committed",
+          "state_hash"
+        ],
+        "version": 1
+      },
+      "ordinal": 7,
+      "passed": true,
+      "row_kind": "stream_contract"
+    },
+    {
+      "check": "restart_receipts",
+      "expected": "all byte and hash matches",
+      "observed": {
+        "count": 288
+      },
+      "ordinal": 8,
+      "passed": true,
+      "row_kind": "stream_contract"
+    },
+    {
+      "check": "rollback_receipts",
+      "expected": "all inverse patches restore exact bytes",
+      "observed": {
+        "count": 144
+      },
+      "ordinal": 9,
+      "passed": true,
+      "row_kind": "stream_contract"
+    },
+    {
+      "check": "poison_receipts",
+      "expected": "all unsafe candidates reject for their intended reason",
+      "observed": {
+        "count": 144
+      },
+      "ordinal": 10,
+      "passed": true,
+      "row_kind": "stream_contract"
+    }
+  ],
+  "run_date": "20260830",
+  "schema": "carnot.experiment_6773.csl_owned_lease_contract.v1",
+  "source_artifact_sha256": "sha256:e99699342f1edc1504f922498a5c18c21adea5a35241d36b1a1ce248bcca80b8",
+  "status": "blocked",
+  "stream_contract_checks": [
+    {
+      "check": "source_artifact_hash",
+      "expected": "sha256:e99699342f1edc1504f922498a5c18c21adea5a35241d36b1a1ce248bcca80b8",
+      "observed": "sha256:e99699342f1edc1504f922498a5c18c21adea5a35241d36b1a1ce248bcca80b8",
+      "passed": true
+    },
+    {
+      "check": "upstream_validator",
+      "expected": [],
+      "observed": [],
+      "passed": true
+    },
+    {
+      "check": "stream_ready",
+      "expected": {
+        "future_evidence_violations": 0,
+        "procedural_memory_stream_ready": true
+      },
+      "observed": {
+        "future_evidence_violations": 0,
+        "procedural_memory_stream_ready": true
+      },
+      "passed": true
+    },
+    {
+      "check": "stream_hash",
+      "expected": "sha256:56dcae39d25dc5671a2c4b74cc44fb88b4386dfb8cff8d4b5f86496b1f7ff84f",
+      "observed": "sha256:56dcae39d25dc5671a2c4b74cc44fb88b4386dfb8cff8d4b5f86496b1f7ff84f",
+      "passed": true
+    },
+    {
+      "check": "order_count",
+      "expected": 6,
+      "observed": {
+        "declared": 6,
+        "manifest": 6
+      },
+      "passed": true
+    },
+    {
+      "check": "capacity_contract",
+      "expected": "equal_and_unsaturated",
+      "observed": {
+        "arms": {
+          "detailed_trajectory": {
+            "context_tokens": 256,
+            "exact_authority": "deterministic_local_admission_labels_v1",
+            "storage_bytes": 32768,
+            "top_k": 3,
+            "ttl_policy": "event_horizon_64",
+            "update_opportunities": 24
+          },
+          "procedural_lesson": {
+            "context_tokens": 256,
+            "exact_authority": "deterministic_local_admission_labels_v1",
+            "storage_bytes": 32768,
+            "top_k": 3,
+            "ttl_policy": "event_horizon_64",
+            "update_opportunities": 24
+          }
+        },
+        "max_committed_bytes_by_arm": {
+          "detailed_trajectory": 12288,
+          "procedural_lesson": 12288
+        },
+        "record_slot_bytes": 1024,
+        "storage_ceiling_bytes": 32768
+      },
+      "passed": true
+    },
+    {
+      "check": "read_only_episode",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "transaction_schema",
+      "expected": "Exp6761 transaction schema v1",
+      "observed": {
+        "active_episode_policy": "read_only",
+        "commit_timing": "after_exact_result_closes_episode",
+        "representation_types": [
+          "detailed_trajectory",
+          "procedural_lesson"
+        ],
+        "required_fields": [
+          "transaction_id",
+          "parent_hash",
+          "evidence_hash",
+          "representation_type",
+          "scope",
+          "ttl",
+          "admission_reason",
+          "inverse_patch",
+          "atomic_restart_receipt",
+          "transaction_class",
+          "committed",
+          "state_hash"
+        ],
+        "version": 1
+      },
+      "passed": true
+    },
+    {
+      "check": "restart_receipts",
+      "expected": "all byte and hash matches",
+      "observed": {
+        "count": 288
+      },
+      "passed": true
+    },
+    {
+      "check": "rollback_receipts",
+      "expected": "all inverse patches restore exact bytes",
+      "observed": {
+        "count": 144
+      },
+      "passed": true
+    },
+    {
+      "check": "poison_receipts",
+      "expected": "all unsafe candidates reject for their intended reason",
+      "observed": {
+        "count": 144
+      },
+      "passed": true
+    }
+  ],
+  "stream_manifest": {
+    "frozen_before_dry_replay": true,
+    "order_count": 6,
+    "orders": [
+      {
+        "event_ids": [
+          "a01",
+          "a02",
+          "a03",
+          "a04",
+          "a05",
+          "a06",
+          "a07",
+          "a08",
+          "a09",
+          "a10",
+          "a11",
+          "a12",
+          "n01",
+          "n02",
+          "h01",
+          "h02",
+          "t01",
+          "t02",
+          "r01",
+          "r02",
+          "r03",
+          "r04",
+          "r05",
+          "r06",
+          "r07",
+          "r08",
+          "r09",
+          "r10",
+          "r11",
+          "r12"
+        ],
+        "order_hash": "sha256:b7fb45f5a52009e73759f0113dda64d9d823d24495792878f24b19756bec14d4",
+        "order_id": "order_1"
+      },
+      {
+        "event_ids": [
+          "a03",
+          "a04",
+          "a05",
+          "a06",
+          "a07",
+          "a08",
+          "a09",
+          "a10",
+          "a11",
+          "a12",
+          "a01",
+          "a02",
+          "n02",
+          "h01",
+          "h02",
+          "t01",
+          "t02",
+          "n01",
+          "r03",
+          "r04",
+          "r05",
+          "r06",
+          "r07",
+          "r08",
+          "r09",
+          "r10",
+          "r11",
+          "r12",
+          "r01",
+          "r02"
+        ],
+        "order_hash": "sha256:47a4eba4238456a0cd207767c5a84e9d09e73a93aa985b0ea8d934ada6602119",
+        "order_id": "order_2"
+      },
+      {
+        "event_ids": [
+          "a05",
+          "a06",
+          "a07",
+          "a08",
+          "a09",
+          "a10",
+          "a11",
+          "a12",
+          "a01",
+          "a02",
+          "a03",
+          "a04",
+          "h01",
+          "h02",
+          "t01",
+          "t02",
+          "n01",
+          "n02",
+          "r05",
+          "r06",
+          "r07",
+          "r08",
+          "r09",
+          "r10",
+          "r11",
+          "r12",
+          "r01",
+          "r02",
+          "r03",
+          "r04"
+        ],
+        "order_hash": "sha256:97158e2920c2ee3d3821d2f6a4433400f8cb4148034c36427814f34f4069e88b",
+        "order_id": "order_3"
+      },
+      {
+        "event_ids": [
+          "a07",
+          "a08",
+          "a09",
+          "a10",
+          "a11",
+          "a12",
+          "a01",
+          "a02",
+          "a03",
+          "a04",
+          "a05",
+          "a06",
+          "h02",
+          "t01",
+          "t02",
+          "n01",
+          "n02",
+          "h01",
+          "r07",
+          "r08",
+          "r09",
+          "r10",
+          "r11",
+          "r12",
+          "r01",
+          "r02",
+          "r03",
+          "r04",
+          "r05",
+          "r06"
+        ],
+        "order_hash": "sha256:f34f9549fa16ebe2cc95dd6e330a0c09d4c491473c7560d8593109e71a03af78",
+        "order_id": "order_4"
+      },
+      {
+        "event_ids": [
+          "a09",
+          "a10",
+          "a11",
+          "a12",
+          "a01",
+          "a02",
+          "a03",
+          "a04",
+          "a05",
+          "a06",
+          "a07",
+          "a08",
+          "t01",
+          "t02",
+          "n01",
+          "n02",
+          "h01",
+          "h02",
+          "r09",
+          "r10",
+          "r11",
+          "r12",
+          "r01",
+          "r02",
+          "r03",
+          "r04",
+          "r05",
+          "r06",
+          "r07",
+          "r08"
+        ],
+        "order_hash": "sha256:3e3f27d049e8e1958506caa9d95d12b99124f23e38e3726b78f4d63333269099",
+        "order_id": "order_5"
+      },
+      {
+        "event_ids": [
+          "a11",
+          "a12",
+          "a01",
+          "a02",
+          "a03",
+          "a04",
+          "a05",
+          "a06",
+          "a07",
+          "a08",
+          "a09",
+          "a10",
+          "t02",
+          "n01",
+          "n02",
+          "h01",
+          "h02",
+          "t01",
+          "r11",
+          "r12",
+          "r01",
+          "r02",
+          "r03",
+          "r04",
+          "r05",
+          "r06",
+          "r07",
+          "r08",
+          "r09",
+          "r10"
+        ],
+        "order_hash": "sha256:40ae4f86eabdfe76fc6bb888e5ca494e24e150a8b957eec95780057313c5d1c8",
+        "order_id": "order_6"
+      }
+    ],
+    "stream_hash": "sha256:56dcae39d25dc5671a2c4b74cc44fb88b4386dfb8cff8d4b5f86496b1f7ff84f"
+  },
+  "teardown_receipts": [],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}

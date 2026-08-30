@@ -9973,3 +9973,52 @@ best fit the symptom is how a wrong cause becomes recorded fact.
 Implementation status: implemented 2026-08-30
 (`python/carnot/testing/long_run_receipt.py`; `tests/python/test_long_run_receipt.py`, 6 tests
 in real child processes, 5/5 mutations RED).
+
+### REQ-INFRA-6773: Sequential Memory Canaries SHALL Use Receipt-Scoped GPU Leases
+
+Exp6773 SHALL inspect the two fixed RTX 3090 UUIDs before each model load. It
+SHALL record free and used VRAM, temperature, utilization, and unrelated
+compute processes. It SHALL choose the least-used eligible device under the
+frozen free-VRAM floor and SHALL recheck that choice inside the worker.
+
+Each model SHALL run in a fresh worker. The worker SHALL acquire `GpuLease`
+before llama.cpp loads the model. The lease SHALL bind the owner PID, PID start
+ticks, device UUID, exact model path, and phase journal. The worker SHALL use
+local CUDA llama.cpp with one physical GPU visible and full layer offload.
+
+Each worker SHALL advance through `preflight`, `admitted`, `loading`,
+`resident`, `inferencing`, `unloading`, `validating`, and one terminal phase.
+It SHALL record first-token evidence, peak owned VRAM, full-offload evidence,
+lease release authority, process absence, and VRAM recovery within 512 MiB of
+its baseline. The second worker SHALL not start until the first worker has
+released its lease and recovered VRAM.
+
+Exp6773 SHALL never signal, preempt, adopt, or terminate an unrelated process.
+A busy lease, changed device gate, missing full offload, missing first token,
+failed teardown, or failed recovery SHALL close readiness.
+
+#### SCENARIO-INFRA-6773-LEASE: Ownership Is Bound To One Worker And Model
+
+- GIVEN an eligible fixed RTX 3090
+- WHEN a model worker acquires its lease
+- THEN the owner PID and start ticks, UUID, model path, and phase journal are
+  bound in the owner and release receipts.
+
+#### SCENARIO-INFRA-6773-SEQUENTIAL: Recovery Precedes The Next Load
+
+- GIVEN the first model has produced its bounded canary
+- WHEN the parent considers the second model
+- THEN the first worker is absent, its lease is released, and its device VRAM
+  is recovered before the second worker starts.
+
+#### SCENARIO-INFRA-6773-NO-PREEMPTION: Unrelated Processes Are Inventory Only
+
+- GIVEN unrelated compute processes on either fixed GPU
+- WHEN Exp6773 selects, loads, or tears down
+- THEN those processes remain inventory evidence and receive no signal.
+
+## Implementation Status (REQ-INFRA-6773)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6773 and SCENARIO-INFRA-6773-* | Planned (`python/carnot/experiment_6773_csl_owned_lease_contract.py`) | Planned (`tests/python/test_experiment_6773_csl_owned_lease_contract.py`) |
