@@ -211,7 +211,32 @@ def generalization_levels() -> dict:
     rather than a zero that reads like a result.
     """
 
+    # The adapter-free leaderboard eval is a SECOND source and the more direct one: its own
+    # header says "frame-only, no banked plan, no GameAdapter", which IS live self-discovery.
+    # Reading only arc_loop_solve_*.json would leave this line stuck at "not measured" forever
+    # even after that run lands, because they are different files.
     total, games = 0, 0
+    lb = REPO / "results" / "arc_leaderboard_eval.json"
+    if lb.exists():
+        try:
+            d = json.loads(lb.read_text())
+            live = d.get("live_levels")
+            if isinstance(live, int) and live > 0:
+                per = d.get("per_game")
+                # AGE AND POLICY TRAVEL WITH THE NUMBER. The first version of this branch
+                # reported a 48-day-old `policy=explorer` result -- the no-LLM tier-1 floor --
+                # as though it were the current adapter-free e3 measurement. A number without
+                # its provenance is how a stale floor becomes a headline.
+                return {
+                    "measured": True,
+                    "levels": live,
+                    "games": len(per) if isinstance(per, (list, dict)) else 0,
+                    "source": "leaderboard_eval",
+                    "policy": str(d.get("policy", "?")),
+                    "age_days": int((time.time() - lb.stat().st_mtime) // 86400),
+                }
+        except (OSError, json.JSONDecodeError):
+            pass
     for path in sorted((REPO / "results").glob("arc_loop_solve_*.json")):
         try:
             d = json.loads(path.read_text())
@@ -221,7 +246,59 @@ def generalization_levels() -> dict:
             games += 1
             lv = d.get("reproduced_levels")
             total += int(lv) if isinstance(lv, int) else 0
-    return {"measured": games > 0, "levels": total, "games": games}
+    return {"measured": games > 0, "levels": total, "games": games, "source": "solve_artifacts"}
+
+
+def gpu_worker_for(pid: int) -> int | None:
+    """The GPU-holding descendant of `pid`, or None.
+
+    WHY THIS EXISTS. On 2026-08-30 a healthy run was reported as stalled across four hourly
+    checks because the dashboard showed the SUPERVISING PARENT: 35 CPU-seconds, asleep in poll.
+    The work was two levels down in a `llama-server` at 99% CPU decoding at 38 tok/s. Liveness of
+    a supervisor answers no useful question, and it came within one command of killing a healthy
+    five-hour measurement.
+    """
+
+    holders = []
+    for row in _run(
+        "nvidia-smi", "--query-compute-apps=pid,used_memory", "--format=csv,noheader"
+    ).splitlines():
+        head = row.split(",")[0].strip()
+        if head.isdigit():
+            holders.append(int(head))
+    for holder in holders:
+        cur, hops = holder, 0
+        while cur > 1 and hops < 6:  # bounded: a cycle in ppid would otherwise hang the report
+            if cur == pid:
+                return holder
+            try:
+                cur = int(Path(f"/proc/{cur}/stat").read_text().split()[3])
+            except (OSError, IndexError, ValueError):
+                break
+            hops += 1
+    return None
+
+
+def worker_progress(worker: int) -> str:
+    """One line about what the worker is actually doing, from ITS log, not the launcher's.
+
+    The launcher's `nohup` log is silent for these runs; the worker writes to its own file, whose
+    path is discoverable from `/proc/<pid>/fd`. That indirection is what made the run look dead.
+    """
+
+    cpu = _run("ps", "-o", "%cpu=", "-p", str(worker)).strip() or "?"
+    line = ""
+    try:
+        for entry in Path(f"/proc/{worker}/fd").iterdir():
+            target = str(entry.resolve())
+            if target.endswith(".log"):
+                tail = Path(target).read_text(errors="replace").splitlines()
+                if tail:
+                    line = tail[-1][-58:]
+                break
+    except (OSError, RuntimeError):
+        pass
+    return f"worker {worker} cpu {cpu}%" + (f" | {line}" if line else "")
 
 
 def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
@@ -246,7 +323,9 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
 
     for name, pid, receipt in jobs or []:
         if pid_alive(pid):
-            L.append(f"job         {name}: alive pid {pid}")
+            worker = gpu_worker_for(pid)
+            detail = worker_progress(worker) if worker else "no GPU worker"
+            L.append(f"job         {name}: alive pid {pid} -- {detail}")
         elif receipt and receipt.exists():
             try:
                 r = json.loads(receipt.read_text())
@@ -289,9 +368,12 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
 
     gen = generalization_levels()
     if gen["measured"]:
+        prov = ""
+        if gen.get("source") == "leaderboard_eval":
+            prov = f" [policy={gen.get('policy')}, {gen.get('age_days')}d old]"
         L.append(
             f"generaliz.  {gen['levels']} level(s) across {gen['games']} game(s) "
-            f"by live self-discovery"
+            f"by live self-discovery{prov}"
         )
     else:
         L.append(
