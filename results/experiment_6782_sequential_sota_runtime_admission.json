@@ -1,0 +1,381 @@
+{
+  "MODEL_SPECS": [
+    {
+      "expected_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "family_id": "qwen36",
+      "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "quantization": "Q4_K_M",
+      "role": "flagship_moe_admission"
+    },
+    {
+      "expected_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "family_id": "gemma31",
+      "filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "quantization": "Q4_K_M",
+      "role": "flagship_dense_admission"
+    },
+    {
+      "expected_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "family_id": "gemma26",
+      "filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "quantization": "Q4_K_M",
+      "role": "middle_moe_admission"
+    }
+  ],
+  "all_mandated_runtime_ready": false,
+  "code_receipts": {
+    "python/carnot/experiment_6782_sequential_sota_runtime_admission.py": "sha256:4dcd91871ec1a363ca476d47821ea301a7744c681cf501c317fe83ef4356bf77",
+    "scripts/experiments/experiment_6782_sequential_sota_runtime_admission.py": "sha256:30ed5f51557210362d86193e599acf6dfb7e925e94915b49a716e0155c6a6973",
+    "tests/python/test_experiment_6782_sequential_sota_runtime_admission.py": "sha256:e6574296b74d40b7f3fff6e7912d2b9440f8df9f4b93cb6d53ac0c29dcfa43d3"
+  },
+  "duration_s": 30.618838,
+  "experiment_id": "experiment_6782_sequential_sota_runtime_admission",
+  "field_principles": {
+    "MODEL_SPECS": "The frozen hub IDs and roles prevent family substitution.",
+    "all_mandated_runtime_ready": "Exp6783 consumes this conjunction of all three models.",
+    "code_receipts": "Source hashes identify the producer, wrapper, and tests.",
+    "duration_s": "Monotonic task wall time records the complete execution window.",
+    "experiment_id": "The stable identifier binds the artifact to its producer.",
+    "field_principles": "Every required field states its purpose.",
+    "gate_check_summary": "A blocked result retains the failed check and observed value.",
+    "gemma26_runtime_ready": "This field reports middle MoE readiness only.",
+    "gemma31_runtime_ready": "This field reports dense flagship readiness only.",
+    "gpu_receipts": "Model-local ownership, offload, VRAM, token, and release evidence stays separate.",
+    "honest_verdict": "A terminal prefix makes the final state machine-readable.",
+    "inference_substrate": "The value excludes CPU, remote, and unowned inference.",
+    "live_model_invoked": "True means at least one real model emitted a token.",
+    "model_specs": "Resolved paths, hashes, tokenizers, contexts, and limits bind exact files.",
+    "models_used": "Only models with valid real-token receipts appear as used.",
+    "preconditions_checked": "Observed host gates explain whether live work could start.",
+    "protected_process_actions": "An empty list proves protected work was not changed.",
+    "qwen36_runtime_ready": "Exp6787 consumes this exact model-local readiness field.",
+    "random_seed": "The fixed seed makes the canary requests repeatable.",
+    "reproducibility_checksum": "The hash binds models, code, rows, and GPU receipts.",
+    "rows": "Poll, load, inference, teardown, and recovery rows preserve partial progress.",
+    "run_date": "The fixed execution date prevents silent protocol drift.",
+    "schema": "A versioned shape lets cold readers reject incompatible evidence.",
+    "status": "The status separates complete, partial, and blocked execution.",
+    "verdict_class": "A closed enum prevents execution evidence from becoming a science claim.",
+    "verifier_is_oracle": "False states that admission is not a correctness oracle."
+  },
+  "gate_check_summary": {
+    "all_preconditions_passed": true,
+    "checks": {
+      "gpu_lease_api": true,
+      "llama_cpp_cuda_offload": true,
+      "models_resolved": true,
+      "planning_date_matches": true,
+      "ram_and_disk": true,
+      "two_fixed_rtx3090_identities": true,
+      "unused_task_ports": true
+    },
+    "expected": true,
+    "failed_check": "runtime_admission:unsloth/Qwen3.6-35B-A3B-GGUF",
+    "model_readiness": {
+      "gemma26": false,
+      "gemma31": false,
+      "qwen36": false
+    },
+    "observed": "lease_wait_deadline_expired"
+  },
+  "gemma26_runtime_ready": false,
+  "gemma31_runtime_ready": false,
+  "gpu_receipts": [],
+  "honest_verdict": "complete_blocked_sequential_sota_runtime: no model completed owned CUDA admission.",
+  "inference_substrate": "local llama.cpp CUDA with receipt-scoped RTX lease",
+  "live_model_invoked": false,
+  "model_specs": [
+    {
+      "context_tokens": 512,
+      "expected_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "family_id": "qwen36",
+      "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "max_output_tokens": 1,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_size_bytes": 22134528992,
+      "quantization": "Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "role": "flagship_moe_admission",
+      "tokenizer": {
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "loadable": true,
+        "source": "llama.cpp_embedded_gguf"
+      }
+    },
+    {
+      "context_tokens": 512,
+      "expected_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "family_id": "gemma31",
+      "filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "max_output_tokens": 1,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_size_bytes": 18323731456,
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "role": "flagship_dense_admission",
+      "tokenizer": {
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "loadable": true,
+        "source": "llama.cpp_embedded_gguf"
+      }
+    },
+    {
+      "context_tokens": 512,
+      "expected_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "family_id": "gemma26",
+      "filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "max_output_tokens": 1,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_size_bytes": 16947539744,
+      "quantization": "Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "role": "middle_moe_admission",
+      "tokenizer": {
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "loadable": true,
+        "source": "llama.cpp_embedded_gguf"
+      }
+    }
+  ],
+  "models_used": [],
+  "preconditions_checked": {
+    "all_passed": true,
+    "checks": [
+      {
+        "check": "planning_date_matches",
+        "expected": "20260830",
+        "observed": "20260830",
+        "passed": true
+      },
+      {
+        "check": "two_fixed_rtx3090_identities",
+        "expected": {
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9": "NVIDIA GeForce RTX 3090",
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": "NVIDIA GeForce RTX 3090"
+        },
+        "observed": {
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9": "NVIDIA GeForce RTX 3090",
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": "NVIDIA GeForce RTX 3090"
+        },
+        "passed": true
+      },
+      {
+        "check": "models_resolved",
+        "expected": true,
+        "observed": [
+          [],
+          [],
+          []
+        ],
+        "passed": true
+      },
+      {
+        "check": "llama_cpp_cuda_offload",
+        "expected": true,
+        "observed": {
+          "cuda_linked": true,
+          "dynamic_link": {
+            "command": [
+              "ldd",
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+            ],
+            "duration_s": 0.005653,
+            "exit_code": 0,
+            "stderr": "",
+            "stdout": "\tlinux-vdso.so.1 (0x00007f7db71ae000)\n\tlibllama-server-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so (0x00007f7db6600000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007f7db6000000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007f7db64b3000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007f7db5c00000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007f7db7168000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007f7db5a43000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007f7db2000000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007f7db5f29000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007f7dab400000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007f7db5929000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007f7daac00000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007f7daa800000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007f7dab2f7000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f7dab2c2000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f7daa400000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007f7db71b0000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007f7daab90000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007f7daa000000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007f7da6800000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007f7d81200000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007f7db64aa000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007f7db64a5000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007f7db5f24000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007f7daab54000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007f7daa706000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007f7db1ff0000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007f7d8109f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007f7dab29f000)\n"
+          },
+          "executable": true,
+          "exists": true,
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "python_cuda_offload": true,
+          "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773"
+        },
+        "passed": true
+      },
+      {
+        "check": "gpu_lease_api",
+        "expected": true,
+        "observed": {
+          "acquire": true,
+          "release": true,
+          "transition": true
+        },
+        "passed": true
+      },
+      {
+        "check": "unused_task_ports",
+        "expected": 3,
+        "observed": {
+          "43043": true,
+          "49043": true,
+          "56699": true
+        },
+        "passed": true
+      },
+      {
+        "check": "ram_and_disk",
+        "expected": {
+          "disk_free_bytes": 1073741824,
+          "ram_available_bytes": 68719476736
+        },
+        "observed": {
+          "cpu_count": 24,
+          "disk_free_bytes": 1064910163968,
+          "disk_total_bytes": 3953289023488,
+          "platform": "Linux-7.2.0-1-cachyos-x86_64-with-glibc2.44",
+          "ram_available_bytes": 122956566528,
+          "ram_total_bytes": 134304591872
+        },
+        "passed": true
+      }
+    ],
+    "device_inventory_before": [
+      {
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3655045,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ],
+        "index": 0,
+        "memory_free_mb": 23859,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 266,
+        "name": "NVIDIA GeForce RTX 3090",
+        "temperature_c": 55,
+        "utilization_pct": 0,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+      },
+      {
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3655045,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ],
+        "index": 1,
+        "memory_free_mb": 23859,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 266,
+        "name": "NVIDIA GeForce RTX 3090",
+        "temperature_c": 55,
+        "utilization_pct": 0,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      }
+    ],
+    "llama_cpp": {
+      "cuda_linked": true,
+      "dynamic_link": {
+        "command": [
+          "ldd",
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+        ],
+        "duration_s": 0.005653,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "\tlinux-vdso.so.1 (0x00007f7db71ae000)\n\tlibllama-server-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so (0x00007f7db6600000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007f7db6000000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007f7db64b3000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007f7db5c00000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007f7db7168000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007f7db5a43000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007f7db2000000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007f7db5f29000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007f7dab400000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007f7db5929000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007f7daac00000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007f7daa800000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007f7dab2f7000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f7dab2c2000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f7daa400000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007f7db71b0000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007f7daab90000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007f7daa000000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007f7da6800000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007f7d81200000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007f7db64aa000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007f7db64a5000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007f7db5f24000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007f7daab54000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007f7daa706000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007f7db1ff0000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007f7d8109f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007f7dab29f000)\n"
+      },
+      "executable": true,
+      "exists": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "python_cuda_offload": true,
+      "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773"
+    },
+    "models": [
+      {
+        "context_tokens": 512,
+        "expected_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "family_id": "qwen36",
+        "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "max_output_tokens": 1,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "model_size_bytes": 22134528992,
+        "quantization": "Q4_K_M",
+        "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+        "role": "flagship_moe_admission",
+        "tokenizer": {
+          "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+          "loadable": true,
+          "source": "llama.cpp_embedded_gguf"
+        }
+      },
+      {
+        "context_tokens": 512,
+        "expected_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "family_id": "gemma31",
+        "filename": "gemma-4-31B-it-Q4_K_M.gguf",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "max_output_tokens": 1,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "model_size_bytes": 18323731456,
+        "quantization": "Q4_K_M",
+        "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+        "role": "flagship_dense_admission",
+        "tokenizer": {
+          "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+          "loadable": true,
+          "source": "llama.cpp_embedded_gguf"
+        }
+      },
+      {
+        "context_tokens": 512,
+        "expected_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "family_id": "gemma26",
+        "filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "max_output_tokens": 1,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "model_size_bytes": 16947539744,
+        "quantization": "Q4_K_M",
+        "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+        "role": "middle_moe_admission",
+        "tokenizer": {
+          "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+          "loadable": true,
+          "source": "llama.cpp_embedded_gguf"
+        }
+      }
+    ],
+    "ports": [
+      49043,
+      56699,
+      43043
+    ],
+    "protected_process_actions": [],
+    "resources": {
+      "cpu_count": 24,
+      "disk_free_bytes": 1064910163968,
+      "disk_total_bytes": 3953289023488,
+      "platform": "Linux-7.2.0-1-cachyos-x86_64-with-glibc2.44",
+      "ram_available_bytes": 122956566528,
+      "ram_total_bytes": 134304591872
+    }
+  },
+  "protected_process_actions": [],
+  "qwen36_runtime_ready": false,
+  "random_seed": 6782,
+  "reproducibility_checksum": "sha256:e4517db1c734f1fe1b635a4bef4056f4da7c3074479fc29372d56bc5827fa337",
+  "rows": [],
+  "run_date": "20260830",
+  "schema": "carnot.experiment_6782.sequential_sota_runtime_admission.v1",
+  "status": "complete_blocked_sequential_sota_runtime",
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}
