@@ -10,6 +10,7 @@ from . import brs_residual as brs_residual
 from . import init_policy_benchmark as init_policy_benchmark
 from . import rho_of_c_measurement as rho_of_c_measurement
 from . import soft_gibbs_coverage_bound as soft_gibbs_coverage_bound
+from . import temporal_exchange as temporal_exchange
 from .gibbs import (
     build_exp1564_deliverable_payload,
     constructive_kl_to_thrml,
@@ -29,5 +30,6 @@ __all__ = [
     "sample",
     "sample_from_payload",
     "soft_gibbs_coverage_bound",
+    "temporal_exchange",
     "zero_coupling_hamming_summary",
 ]

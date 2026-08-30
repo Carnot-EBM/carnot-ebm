@@ -2751,6 +2751,89 @@ artifact with a stable reproducibility checksum.
 
 **Implementation Status:** Planned (Exp 2901)
 
+## REQ-SAMPLE-097: Exp 6793 matched-update temporal exchange Ising comparison
+
+Carnot SHALL provide a CPU-only single-site Ising sampler that compares ordinary
+Gibbs updates with time-dimensional exchange coupling from arXiv:2608.21753.
+The same interface SHALL run ordinary Gibbs, nonzero temporal exchange, and
+temporal exchange with zero coupling. The comparison SHALL count one attempted
+single-spin conditional draw as one spin update in every arm.
+
+Acceptance criteria:
+- For spatial energy
+  `E(s) = -sum_i b_i s_i - sum_(i<j) J_ij s_i s_j`, the sampler SHALL use
+  `P(s_i=+1) = sigmoid(2 * (b_i + sum_j J_ij s_j + kappa p_i) / T)`.
+  Here `p_i` is the matching spin in the previous completed configuration.
+- The sampler SHALL store current and previous configurations separately. The
+  previous configuration SHALL stay fixed during one complete random-order
+  sweep. It SHALL become a copy of the completed current configuration only at
+  the sweep boundary.
+- Negative `kappa` SHALL implement low-temperature antiferromagnetic temporal
+  coupling. Positive `kappa` SHALL implement high-temperature ferromagnetic
+  temporal coupling. The frozen grid SHALL be `{-0.08, 0, +0.08}`. The selected
+  schedule SHALL use `-0.08` at `T=0.75` and `+0.08` at `T=2.0`.
+- The headline panel SHALL use three fixed graph families with 6, 7, and 8
+  spins. Every graph-temperature target law SHALL be exhaustively enumerated.
+  Coefficients SHALL satisfy `abs(b_i) <= 0.15` and `abs(J_ij) <= 0.60`.
+- The headline panel SHALL use seeds 679300 through 679319. Every matched cell
+  SHALL use the same current state, previous state, random seed, burn-in,
+  collection interval, sample count, and attempted spin-update count.
+- Each headline row SHALL collect 1,024 samples after 128 complete burn-in
+  sweeps. It SHALL preserve the exact target marginal, empirical marginal,
+  energy trace, best state, autocorrelation, effective samples, optimum hitting
+  updates, diversity, row wall time, and update count.
+- The zero-coupling temporal arm SHALL be bit-identical to ordinary Gibbs for
+  every matched row. This includes collected states, energy traces, optimum
+  hitting updates, and update counts.
+- The artifact SHALL derive target-law error, energy and magnetization error,
+  integrated autocorrelation, effective samples per update, optimum hitting,
+  and diversity per graph-temperature stratum before any cross-stratum summary.
+- Positive credit SHALL require a positive paired 95% lower confidence bound
+  for energy effective samples per update in every headline stratum. It SHALL
+  also require the temporal-minus-Gibbs total-variation upper bound to be at
+  most `0.03` in every headline graph family.
+- A 32-spin stress panel MAY run only after all headline rows complete. Stress
+  rows SHALL stay separate and SHALL not contribute to target-law fidelity or
+  the positive gate.
+- The artifact SHALL set `physical_hardware_invoked=false`. It SHALL make no
+  FPGA, TSU, latency, power, energy-use, or hardware-availability claim.
+- A failed sampler, enumeration, coefficient, clock, memory, or wall-budget
+  precondition SHALL produce `complete_blocked_temporal_exchange_ab` with the
+  failed check, expected value, and observed value in `gate_check_summary`.
+
+**Implementation Status:** Planned (Exp 6793)
+
+### SCENARIO-SAMPLE-097: Temporal conditional and explicit previous state
+
+Given: a finite symmetric Ising graph, a positive temperature, explicit current
+and previous bipolar states, and a coupling from the frozen grid.
+When: the temporal sampler attempts a single-site update.
+Then: it uses the specified conditional probability, keeps the previous state
+fixed for the sweep, applies the declared coupling sign, and increments the
+attempted spin-update count by one.
+
+**Implementation Status:** Planned (Exp 6793)
+
+### SCENARIO-SAMPLE-098: Matched collection and disabled-coupling equivalence
+
+Given: the frozen graph, temperature, seed, initial-state pair, burn-in, sample
+count, and update budget.
+When: ordinary Gibbs and both temporal arms run through the common interface.
+Then: all three arms collect at the same update calls, and ordinary Gibbs is
+bit-identical to temporal exchange with zero coupling.
+
+**Implementation Status:** Planned (Exp 6793)
+
+### SCENARIO-SAMPLE-099: Exact target-law artifact and terminal null allowance
+
+Given: all preconditions pass and every headline row is attributable.
+When: Exp 6793 enumerates each headline target and reduces retained rows.
+Then: `temporal_exchange_comparison_completed=true` regardless of measured
+effect, while `verdict_class=positive` only when both the efficiency and
+target-law gates pass. A complete measured null remains terminal.
+
+**Implementation Status:** Planned (Exp 6793)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
