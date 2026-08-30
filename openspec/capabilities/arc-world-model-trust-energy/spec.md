@@ -28649,6 +28649,13 @@ legacy route, or reduced denominator.
 - THEN its owned lease, model load, CUDA receipt, teardown, release, and VRAM
   recovery finish before the next row starts, with no unrelated process signaled
 
+#### SCENARIO-ARC-WMTE-6765-INTERRUPTION-RESUME
+
+- GIVEN an interrupted parent run with an atomic row checkpoint
+- WHEN Exp6765 restarts with the same frozen plan, model, and eligible device
+- THEN it reuses only a checksum-valid row with a complete lease lifecycle and
+  reruns any partial, changed, failed, or source-boundary-violating checkpoint
+
 #### SCENARIO-ARC-WMTE-6765-REDUCTION-AND-CLAIM-BOUNDARY
 
 - GIVEN complete attributable rows

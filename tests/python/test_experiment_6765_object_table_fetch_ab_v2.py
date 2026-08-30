@@ -137,9 +137,7 @@ def _row(tmp_path: Path, planned: dict, *, treatment_delta: float = 0.02) -> dic
         **accounting,
         "tool_loop_stats": {
             "tool_calls_total": len(events),
-            "tool_calls_by_name": {
-                event["parsed_tool"]: 1 for event in events
-            },
+            "tool_calls_by_name": {event["parsed_tool"]: 1 for event in events},
             "terminated_by": "zero_mismatches",
         },
         "transition_result": (
@@ -359,7 +357,9 @@ def test_scenario_arc_wmte_6765_blocked_keeps_denominator(
     assert artifact["adoption_gate_passed"] is False
     assert artifact["solve_claim"] is False
     assert artifact["gate_check_summary"][0]["observed"] is False
-    assert all(row["failure_class"].endswith("arc_exclusive_load_ready") for row in artifact["rows"])
+    assert all(
+        row["failure_class"].endswith("arc_exclusive_load_ready") for row in artifact["rows"]
+    )
     assert exp.validate_artifact(artifact) == []
 
 
@@ -446,6 +446,63 @@ def test_scenario_arc_wmte_6765_session_order_stops_after_owned_failure(
     assert artifact["verdict_class"] == "partial"
     assert artifact["object_table_ab_completed"] is False
     assert artifact["rows"][2]["failure_class"].startswith("not_run_after_session_failure")
+
+
+def test_scenario_arc_wmte_6765_interruption_resume_reuses_only_complete_row(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-ARC-WMTE-6765-INTERRUPTION-RESUME keeps valid owned evidence."""
+    preflight = _passing_preflight(tmp_path)
+    selected = preflight["device_selection_receipt"]["selected_device"]
+    planned = exp.row_plan()[0]
+    model = preflight["models"][0]
+    runtime_dir = tmp_path / ".experiment_6765_object_table_fetch_ab_v2"
+    row_path = runtime_dir / exp._session_slug(planned["row_id"]) / "row.json"
+    row_path.parent.mkdir(parents=True)
+    assert exp._load_completed_checkpoint(runtime_dir, planned, model, selected) is None
+    checkpoint = _row(tmp_path, planned)
+    checkpoint["prompt_isolation_receipt"] = {}
+    checkpoint["row_sha256"] = exp.row_checksum(checkpoint)
+    row_path.write_text(json.dumps(checkpoint))
+
+    assert exp._load_completed_checkpoint(runtime_dir, planned, model, selected) == checkpoint
+    mutations = (
+        ("row_sha256", "sha256:damaged"),
+        ("game", "changed"),
+        ("model_sha256", "sha256:substituted"),
+        ("prompt", ""),
+    )
+    for field, value in mutations:
+        changed = deepcopy(checkpoint)
+        changed[field] = value
+        if field != "row_sha256":
+            changed["row_sha256"] = exp.row_checksum(changed)
+        row_path.write_text(json.dumps(changed))
+        assert exp._load_completed_checkpoint(runtime_dir, planned, model, selected) is None
+    changed = deepcopy(checkpoint)
+    changed["gpu_receipt"]["assigned_device"]["uuid"] = "GPU-other"
+    changed["row_sha256"] = exp.row_checksum(changed)
+    row_path.write_text(json.dumps(changed))
+    assert exp._load_completed_checkpoint(runtime_dir, planned, model, selected) is None
+    row_path.write_text(json.dumps(checkpoint))
+
+    calls: list[str] = []
+
+    def worker(model, selected, planned, runtime_dir, **kwargs):
+        calls.append(planned["row_id"])
+        raise RuntimeError("stop after proving resume")
+
+    artifact = exp.run(
+        result_path=tmp_path / "partial.json",
+        date="20260830",
+        preflight_fn=lambda **kwargs: preflight,
+        worker_runner=worker,
+        clock=iter((1, 2)).__next__,
+    )
+    assert calls == [exp.row_plan()[1]["row_id"]]
+    assert artifact["rows"][0]["row_id"] == planned["row_id"]
+    assert artifact["rows"][0]["session_receipt"]["lease_release"]["released"] is True
+    assert artifact["object_table_ab_completed"] is False
 
 
 def test_scenario_arc_wmte_6765_prompt_pair_receipt_is_exact(tmp_path: Path) -> None:
@@ -553,47 +610,75 @@ def test_req_arc_wmte_6765_live_session_receipts_and_cleanup(
 
     monkeypatch.setattr(world, "LocalGGUFProposer", Proposer)
     monkeypatch.setattr(exp, "acquire_selected_lease", lambda **kwargs: Lease())
-    monkeypatch.setattr(exp, "_gpu_snapshot", lambda *args: {
-        **selected,
-        "owned_pid_present": bool(args and args[-1] == 123),
-        "owned_pid_vram_mb": 18_000,
-    })
+    monkeypatch.setattr(
+        exp,
+        "_gpu_snapshot",
+        lambda *args: {
+            **selected,
+            "owned_pid_present": bool(args and args[-1] == 123),
+            "owned_pid_vram_mb": 18_000,
+        },
+    )
     monkeypatch.setattr(exp, "_eligible_device_still_selected", lambda selected: True)
-    monkeypatch.setattr(exp, "_process_identity", lambda process: {
-        "pid": 123,
-        "pid_start_ticks": 1,
-        "parent_pid": 1,
-        "executable": "llama-server",
-        "exit_code": None,
-        "absent_after_exit": False,
-    })
-    monkeypatch.setattr(exp, "_read_gpu_layers", lambda proposer: {
-        "requested": 999,
-        "offloaded": 66,
-        "total": 66,
-    })
-    monkeypatch.setattr(exp, "_build_window", lambda game: {
-        "shown": [SimpleNamespace(grid=[[0]], next_grid=[[1]], action=1, data={})],
-        "held": [],
-        "cell": 1,
-    })
+    monkeypatch.setattr(
+        exp,
+        "_process_identity",
+        lambda process: {
+            "pid": 123,
+            "pid_start_ticks": 1,
+            "parent_pid": 1,
+            "executable": "llama-server",
+            "exit_code": None,
+            "absent_after_exit": False,
+        },
+    )
+    monkeypatch.setattr(
+        exp,
+        "_read_gpu_layers",
+        lambda proposer: {
+            "requested": 999,
+            "offloaded": 66,
+            "total": 66,
+        },
+    )
+    monkeypatch.setattr(
+        exp,
+        "_build_window",
+        lambda game: {
+            "shown": [SimpleNamespace(grid=[[0]], next_grid=[[1]], action=1, data={})],
+            "held": [],
+            "cell": 1,
+        },
+    )
     base_row = _row(tmp_path, planned)
     monkeypatch.setattr(exp6753, "_run_live_row", lambda *args: (deepcopy(base_row), "PROMPT"))
-    monkeypatch.setattr(exp, "terminate_owned_process", lambda process: {
-        "pid": 123,
-        "absent_after_exit": True,
-        "unrelated_processes_signaled": [],
-    })
-    monkeypatch.setattr(exp, "_wait_for_vram_recovery", lambda *args: (
-        {"passed": True, "owned_pid_present": False, "before_used_mb": 4, "after_used_mb": 4},
-        {"memory_used_mb": 4},
-    ))
-    monkeypatch.setattr(exp, "read_journal", lambda path: {
-        "phase_history": [
-            {"phase": phase, "monotonic_ns": index + 1}
-            for index, phase in enumerate(exp.COMPLETE_PHASE_SEQUENCE)
-        ]
-    })
+    monkeypatch.setattr(
+        exp,
+        "terminate_owned_process",
+        lambda process: {
+            "pid": 123,
+            "absent_after_exit": True,
+            "unrelated_processes_signaled": [],
+        },
+    )
+    monkeypatch.setattr(
+        exp,
+        "_wait_for_vram_recovery",
+        lambda *args: (
+            {"passed": True, "owned_pid_present": False, "before_used_mb": 4, "after_used_mb": 4},
+            {"memory_used_mb": 4},
+        ),
+    )
+    monkeypatch.setattr(
+        exp,
+        "read_journal",
+        lambda path: {
+            "phase_history": [
+                {"phase": phase, "monotonic_ns": index + 1}
+                for index, phase in enumerate(exp.COMPLETE_PHASE_SEQUENCE)
+            ]
+        },
+    )
     monkeypatch.setattr(exp, "_object_table_for_window", lambda window: "TABLE")
     monkeypatch.setenv("CARNOT_ARC_E3_DIR", str(tmp_path / "e3"))
     row = exp.run_live_row_session(
@@ -661,7 +746,9 @@ def test_req_arc_wmte_6765_worker_subprocess_and_cli(
     job = tmp_path / "job.json"
     output = tmp_path / "worker.json"
     job.write_text(json.dumps({"model": model, "selected_device": selected, "planned": planned}))
-    monkeypatch.setattr(exp, "run_live_row_session", lambda *args, **kwargs: _row(tmp_path, planned))
+    monkeypatch.setattr(
+        exp, "run_live_row_session", lambda *args, **kwargs: _row(tmp_path, planned)
+    )
     assert exp._worker_entry(job, output, 4567, tmp_path / "leases") == 0
     assert json.loads(output.read_text())["row_id"] == planned["row_id"]
 
@@ -934,9 +1021,7 @@ def test_req_arc_wmte_6765_worker_timeout_and_missing_output(
         lease_runtime_dir=tmp_path / "leases",
     )
     assert row["failure_class"].startswith("session_lifecycle_failed:worker_output_missing")
-    assert row["session_receipt"]["worker_process"]["timeout_cleanup"] == {
-        "terminated": True
-    }
+    assert row["session_receipt"]["worker_process"]["timeout_cleanup"] == {"terminated": True}
 
 
 def test_req_arc_wmte_6765_validator_and_parent_error_branches(
@@ -991,8 +1076,7 @@ def test_req_arc_wmte_6765_validator_and_parent_error_branches(
     blocked = exp.build_artifact(
         date="20260830",
         rows=[
-            exp._blocked_row(planned, {}, "preflight_blocked:test")
-            for planned in exp.row_plan()
+            exp._blocked_row(planned, {}, "preflight_blocked:test") for planned in exp.row_plan()
         ],
         preflight=blocked_preflight,
         started_ns=1,
@@ -1040,15 +1124,18 @@ def test_req_arc_wmte_6765_main_worker_arguments(
         exp.main(["--worker-job", str(tmp_path / "job.json")])
     assert exc.value.code == 2
     monkeypatch.setattr(exp, "_worker_entry", lambda *args: 7)
-    assert exp.main(
-        [
-            "--worker-job",
-            str(tmp_path / "job.json"),
-            "--worker-output",
-            str(tmp_path / "row.json"),
-            "--port",
-            "4567",
-            "--lease-runtime-dir",
-            str(tmp_path / "leases"),
-        ]
-    ) == 7
+    assert (
+        exp.main(
+            [
+                "--worker-job",
+                str(tmp_path / "job.json"),
+                "--worker-output",
+                str(tmp_path / "row.json"),
+                "--port",
+                "4567",
+                "--lease-runtime-dir",
+                str(tmp_path / "leases"),
+            ]
+        )
+        == 7
+    )
