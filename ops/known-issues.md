@@ -7221,6 +7221,61 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-08-30 (outer-loop, MEASURED) — THE OBJECT-TABLE A/B STALLS IN `poll` WITH ITS SERVER RESIDENT, AND LONG GPU JOBS GO LOG-SILENT WHILE ALIVE
+
+Two observations, recorded because each has now recurred and each was described in chat twice
+before anyone wrote it down.
+
+**A. exp6753 does not fail — it stalls, and the conductor reproduces it independently.**
+
+Launched by hand 2026-08-30 01:45Z after its earlier `cuda_device_available` gate block cleared
+(GPU 0 had 23,781 MB free against the 22,610 MB the gate demands). Measured at 05:35Z:
+
+| | |
+|---|---|
+| wall time | 3h50m |
+| CPU consumed | **35.21 s**, unchanged across a full hour of observation |
+| state | `S`, `wchan = __x64_sys_poll.cold` |
+| child | pid 3301909, owning a `llama-server` resident at 17,884 MiB on GPU 0 |
+
+So the Python driver is blocked in `poll` waiting on a response that never arrives, while the
+server it spawned sits loaded and idle. **Not a crash, not a cap, not a slow run — a stall.**
+
+The conductor reached the same place by a different route: `Live object-table fetch-on-demand
+A/B v2` FAILED at 03:55Z and again at 05:18Z, both `Codex CLI error: Hard wall-clock cap after
+4803s`. A hand-launched run and a conductor task, different harnesses, same experiment, both
+stuck. That is a property of the WORK, not of who launched it, and it means the earlier
+"wall-clock cap" reading of exp6753's history was a symptom rather than a cause.
+
+*A correction that belongs with it:* at 03:35Z this run was reported as "computing" on the
+strength of GPUs sitting at 98–99%. That load belonged to OTHER processes. Liveness is not
+progress, and GPU utilisation is not attribution — check `/proc/<pid>/stat` CPU time and
+`nvidia-smi --query-compute-apps` ownership before saying a job is working.
+
+**B. Long-running GPU jobs here go log-silent while still alive. Twice now.**
+
+The holdout A/B (2026-08-29) stopped writing `runner_tool_selfparse.log` at 13:57 local while
+its `shard_tool.jsonl` kept growing until 19:21 — so the run log understated what actually
+completed by six hours. exp6753's log has not been written since its launch minute.
+
+Whether these share a mechanism is UNKNOWN and the uncertainty is the point: a severed handle, a
+buffering artifact under `nohup`, and a stall that produces nothing to log all look identical
+from outside. What is certain is the operational cost — the log is the only progress signal, and
+when it dies the job becomes unobservable while continuing to hold a GPU.
+
+Possibly related, possibly not: three long-running measurements have now been killed by an
+unidentified external `exit=143`/SIGTERM (2026-08-09, the 2026-08-27 `supwindow` run, and the
+2026-08-29 holdout A/B). REQ-INFRA-6830 leaves a receipt for the next one. **Do not merge these
+into one story without evidence** — that is how a plausible cause becomes a recorded fact, which
+this project has already done twice this week.
+
+**Tasks.** (1) Diagnose what exp6753's driver is polling for — a `py-spy dump` on the live pid,
+or an strace, before killing it, since the stall is reproducible and the evidence is currently
+sitting in memory. (2) Decide whether the object-table question is worth a third attempt at all;
+two independent harnesses have now spent hours on it and produced nothing. (3) Give long-running
+outer-loop jobs a heartbeat that does not depend on their own stdout.
+
+
 ### NEW 2026-08-30 (outer-loop) — THREE SHIPPED TOOL/SUPERVISOR CAPABILITIES HAVE NO PATH TO EVIDENCE
 
 All three are built, default-off, and registered `unevaluated` in `ops/arc_flag_ledger.yaml`.
