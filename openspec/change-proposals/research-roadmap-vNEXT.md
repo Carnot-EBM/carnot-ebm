@@ -1,395 +1,278 @@
-# Carnot Research Roadmap vNEXT: Exact Proof Transport and Active Procedural Memory
+# Carnot Research Roadmap vNEXT: Exact Repair, Active Memory, and ARC Progress Evidence
 
-**Milestone:** `2026.08.589`
-**Created:** 2026-08-29
-**Status:** Proposed
-**Supersedes:** milestone `2026.08.588`
+**Milestone:** `2026.08.590`  
+**Created:** 2026-08-30  
+**Status:** Proposed  
+**Supersedes:** milestone `2026.08.589`  
 **Research basis:** `research-program.md`, `_bmad/prd.md`, `_bmad/architecture.md`,
 `ops/status.md`, `ops/changelog.md`, `research-complete.yaml`, `research-roadmap.yaml`, prior
 roadmap proposals, `ops/conductor-log.md`, `research-hardware-wishlist.md`, and the
-`V589 Planner Refresh` in `research-references.md`.
+`V590 Planner Refresh` in `research-references.md`.
 
-## What milestone 2026.08.588 proved
+## What milestone 2026.08.589 proved
 
-Milestone `.588` completed all thirteen planned tasks. It restored broad execution after `.587`,
-but its terminal capstone was correctly partial. The useful evidence is specific:
+Milestone `.589` reached a terminal state for all thirteen planned task positions. Its capstone
+correctly reported a partial result. The useful evidence is narrow and reproducible.
 
-- All three mandated local GGUF families loaded on CUDA and produced attributable output. The
-  exact 72-instance certificate stream also passed deterministic replay.
-- Exp6745 retained 216/216 planned proposal rows, but exact-valid yield was 0/216. Every row was
-  labeled `malformed_certificate`, so Exp6746 could not form a two-class diagnostic panel and
-  Exp6747 gate-blocked.
-- The malformed result is now locally explainable. All 216 `raw_output` fields begin as Python byte
-  literal envelopes such as `b'SAT ...'`. Both the Qwen and Gemma families show this boundary form.
-  The frozen parser therefore saw `b'SAT` instead of `SAT` and returned `unknown_claim` on every
-  row. `.588` did not test a lossless decode-and-reparse path.
-- The transactional memory fixture passed. The prospective self-learning comparison then produced
-  a null result. The cold audit recorded zero commits and zero rejects, so the branch did not test
-  an active learning mechanism.
-- The Thermalizers-style compiler produced bounded simulator results, but its artifact declared
-  `verifier_is_oracle=true` with `verdict_class=positive`. The live adversarial check correctly
-  treats that combination as circular. The result cannot support a non-circular portability claim.
-- The 32K code-carrying ARC preflight passed on Qwen3.8 and Qwen3.6. The paired object-table A/B did
-  not start because GPU 0 had 6,235 MiB free while the frozen load required 22,610 MiB. This is a
-  resource-admission block, not a negative result about fetch-on-demand.
-- The activated handoff audit blocked because it expected rendered paths while the roadmap contract
-  intentionally preserved `{project_root}` and `{date}` placeholders. That validator mismatch did
-  not suppress unrelated science and should not become another milestone root.
+| Branch | What `.589` proved | Remaining boundary |
+|---|---|---|
+| Proof transport | Exp6755 losslessly replayed 216/216 local GGUF outputs. Eleven rows were exact-valid. The transport bug is closed. | Only 21 rows fit the frozen environment-grammar target classes. The gate required 24, so the grammar, live A/B, audit, diagnostic energy, and repair did not run. |
+| Continuous self-learning | Exp6761 produced six chronological orders with matched trace and procedural representations. Accepts, rejects, restart, rollback, and poison fixtures all passed. | Exp6762 did not run the prospective A/B. Its owned checks found no one-model VRAM admission and no task-owned lease. Exp6763 therefore gate-blocked. |
+| ARC live path | Exp6764 loaded Qwen3.8 and Qwen3.6 one at a time on a leased RTX 3090. It recorded first-token, selfparse dispatch, teardown, and VRAM recovery receipts. | Exp6765 rejected the upstream artifact because it required `model_specs` while Exp6764 emitted `models_used`. No ARC quality comparison ran. Separately, the shipped trajectory supervisor, tool-gap capture, and selfparse tool loop still lack the evidence needed for adoption. |
+| Hardware portability | Exp6766 independently reproduced the context-matching trajectory reduction. | Trajectory refinement still optimizes the same exact objective used for evaluation. Its strongest result is circular and simulator-only. There is no physical TSU claim. |
+| Milestone synthesis | Exp6767 preserved blocked, partial, circular, and positive branch states without pooling them. | FR12 exact repair, FR11 prospective learning, and live ARC action efficiency remain open. |
 
-The natural next step is therefore not a broad new architecture. First recover the proof evidence
-already paid for. Then compare a new environment-indexed decoding mechanism on the remaining
-semantic failures. In parallel, make memory admission active on a controlled non-saturating stream.
-Finally, obtain the two missing independent receipts: a resource-owned live ARC comparison and a
-non-circular stochastic compiler audit.
+The next step is not another broad architecture change. It is to repair the three broken evidence
+contracts and run the comparisons that `.589` could not reach.
 
 ## The three largest gaps to the PRD vision
 
-| Rank | Gap | Current evidence | `.589` response |
+| Rank | PRD gap | Current evidence | `.590` response |
 |---|---|---|---|
-| 1 | **FR12 has exact authority but no reliable proof transport from current local SOTA models.** | Exact stream and checkers work, but a byte-envelope boundary made 216/216 proposals look malformed. No current result separates transport loss, invalid references, and false but parseable proofs. | Repair and replay the output boundary without regenerating. Then compare one-shot, static grammar, and draft-conditioned environment-indexed grammar. Cold-audit exact validity, semantic accuracy, support, and leakage before diagnostic energy or repair. |
-| 2 | **FR11 memory exists as storage, not as continuous self-learning.** | The `.588` fixture passed, but the prospective run made no commits or rejects and found no support-preserving gain. It did not exercise a learning loop. | Build a non-saturating stream with exact-admissible opportunities. Compare no memory, detailed trajectories, and abstract procedural constraint memory under fixed storage, retrieval, and context budgets. Audit hard-case negative transfer, forgetting, poison, restart, and rollback. |
-| 3 | **Live and hardware-facing evidence still breaks at the execution boundary.** | ARC tool transport works but the paired A/B was blocked by VRAM contention. The stochastic compiler result is simulator-only and circularly classified. | Use the existing task-owned lease on the least-used eligible GPU, prove full load and teardown, and rerun the live A/B only after that receipt. Recompute compiler fidelity with an independently implemented reference and correct circularity semantics. |
+| 1 | **FR12 can certify a proof but cannot reliably produce or repair exact certificates.** | Lossless transport gives 11/216 exact-valid rows. The grammar chain stopped at 21 targetable errors, three below an arbitrary panel floor. No exact repair result exists. | Expand the panel with exact-preserving counterfactuals. Build an instance-bound runtime grammar. Compare direct, static, and draft-conditioned decoding on all three mandated GGUF families. Cold-audit the result, then test claim-localized prefix backtracking. |
+| 2 | **FR11 has transactional storage but no prospective continuous self-learning result.** | The stream and transaction mechanics are ready. The actual procedural-versus-trace A/B never acquired a model lease. | Prove a task-owned one-model-at-a-time lease and artifact contract. Run the six-order prospective comparison with actual retrieval and use. Audit retention, hard-case harm, poison, restart, and rollback in a fresh process. |
+| 3 | **The live ARC agent has default-off tools and supervision without actions-to-progress evidence.** | Selfparse transport passed 20/20. The supervisor ledger is below its evidence floor. No artifact carries live `tool_gap_events`. No paired result tests whether selfparse reduces actions to level-up. | Accrue shadow-supervisor evidence at window 120. Prove tool-gap events reach an artifact and the refinement tool. Fix arm isolation. Run control-unset versus selfparse on actions to progress, then cold-audit the adoption decision. |
 
-## Research deltas adopted in this milestone
+## Research findings used by this milestone
 
-- **Decode-Time Grammars (`2607.18357`)** supplies an environment-indexed grammar. The current CNF
-  defines the only valid variable names, clause IDs, and values. Prefix-generated declarations can
-  tighten later holes. This is materially different from the retired schema-reprompt route.
-- **Draft-Conditioned Constrained Decoding (`2603.03305v2`)** separates semantic planning from
-  structural rendering. `.589` measures whether draft conditioning reduces the projection tax of a
-  hard grammar without merely increasing parseability.
-- **When Continual Learning Moves to Memory (`2604.27003`)** shifts the research question from
-  storage to representation and retrieval. `.589` compares detailed traces against abstract
-  procedural lessons under the same finite capacity and measures harm on hard cases.
-- **Memoir (`2607.20792`)** supplies a negative control. Live inference remains read-only. Exact-
-  approved memory changes happen only between episodes. No branch writes memory while it reads it.
-- **Solver-Hard Is Not Model-Hard (`2607.17047`)** motivates matched surface forms, exact family
-  strata, and proof-preserving relabeling. Solver conflicts remain metadata and never stand in for
-  model difficulty.
-- **Extropic's summer 2026 update** keeps physical TSU claims out of scope. Z1 early access remains
-  targeted for 2027. `.589` asks only whether the existing compiler result survives an independent
-  local reference.
-- **Kona 1.0** remains architecture evidence for global editable trace energies. It exposes no
-  weights or local runner, so it is not an executable baseline.
+- **Decode-Time Grammars** (`arXiv:2607.18357`) provides the instance-bound symbol and prefix-state
+  mechanism for the proof grammar.
+- **Draft-Conditioned Constrained Decoding** (`arXiv:2603.03305`) keeps free semantic planning
+  separate from structural enforcement. The experiment measures exact validity, not syntax alone.
+- **Project Aletheia** (`arXiv:2601.14290`) motivates explicit conflict detection and bounded
+  backtracking. `.590` uses runtime grammar conflicts, not an answer-conditioned verifier, to pick
+  a repair region.
+- **Claim-Level Reliability Assessment** (`arXiv:2608.11994`) motivates the smallest responsible
+  proof-region receipt. It does not replace exact authority.
+- **When Continual Learning Moves to Memory** (`arXiv:2604.27003`) and **Harness Continual
+  Learning** (`arXiv:2608.19013`) motivate prospective order, equal capacity, actual retrieval,
+  candidate acceptance, and historical-loss checks.
+- Extropic's 2026 Z1 update remains a future hardware signal. Public device access is planned for
+  2027. This milestone makes no TSU latency, power, or availability claim.
+- Kona 1.0 remains architecture context. It provides no public weights or local runner and is not
+  an executable baseline.
+
+The literature refresh is recorded in `research-references.md` before this roadmap. `.590` is a
+continuation milestone, so it does not spend another experiment slot on a duplicate SOTA sweep.
 
 ## vNEXT architecture
 
 ```text
-                           EXACT AUTHORITY BOUNDARY
-                   learned scores propose; exact checks certify
+                       EXACT AUTHORITY BOUNDARY
+              proposal mechanisms never receive answer labels
 
- Local SOTA GGUF ──► output-text boundary ──► semantic draft
-                           │                       │
-                           │ lossless reparse      ▼
-                           └──────────────► environment-indexed grammar
-                                                  │
-                              typed symbols only  ▼
-                                           proof candidate
-                                                  │
-                      dual encoders ───────► exact checker
-                              │                   │
-                              ▼                   ▼
-                    diagnostic energy ──► prefix backtracking
-                                                  │
-                                                  └──► exact recheck
+ Frozen proof rows ──► targetable-panel expansion ──► runtime proof grammar
+        │                                                   │
+        │                                     direct / static / DCCD
+        │                                                   ▼
+        └──────────────────────────────────────────► proof candidates
+                                                            │
+                                         cold parser + exact checker
+                                                            │
+                                    conflict region ──► prefix backtrack
+                                                            │
+                                                    final exact check
 
- Chronological event ──► read-only memory snapshot ──► proposal + exact result
-        ▲                                                       │
-        │             fixed capacity and retrieval budget       ▼
-        └──── next episode ◄── atomic procedural commit ◄── admission gate
-                               │
-                               └── restart / poison / rollback audit
+ Frozen chronological stream ──► task-owned GGUF lease and schema receipt
+        │                                                   │
+        ▼                                                   ▼
+ read-only episode ──► no memory / trace memory / procedural memory
+        │                                                   │
+        └── exact admission between episodes ◄──────────────┘
+                              │
+                 cold retention / poison / rollback audit
 
- Task-owned GPU lease ──► full 32K load receipt ──► live ARC object fetch A/B
-                                 │
-                                 └── unload and VRAM-release receipt
-
- Typed stochastic program ──► factor compiler under test ──► trajectory samples
-           │                                                      │
-           └──── independent enumerator and sampler audit ◄────────┘
+ Live E3AgentPolicy ──► shadow supervisor at window 120 ──► refinement ledger
+        │
+        ├── selfparse run ──► tool_gap_events ──► tool-gap refinement
+        │
+        └── isolated control-unset vs selfparse ──► actions to progress
+                                                       │
+                                              cold adoption audit
 ```
 
-The exact checker may label rows and certify final candidates. It may not enter the feature vector
-of the diagnostic energy or procedural memory query. The current-row label, answer key, exact-valid
-bit, solver-work counters, and equivalent proxies remain prohibited features. ARC remains on the
-production `E3AgentPolicy` / `make_carnot_agent` path. No game source, offline ground-truth BFS,
-hand-built per-game adapter, or game-level solve claim is introduced.
+The exact checker certifies final proof rows and memory admissions. It may not select a generated
+answer or enter a proposal feature vector. The ARC branch uses the production `E3AgentPolicy` /
+`make_carnot_agent` route. It does not inspect game source, run an offline ground-truth BFS, add a
+per-game adapter, or claim a new public-game solve. Public level-ups are development-proxy rows.
 
-## Phase 1: Recover and harden proof transport
+## Phase 1: Recover exact proof generation and repair
 
-### Exp 6755: Lossless GGUF output boundary and 216-row reparse
+### Exp 6768: Exact-invalid targetable proof panel expansion
 
-Prove the byte-envelope failure from the frozen Exp6745 rows. Add one explicit output-text boundary
-that accepts bytes or text, decodes bytes once, and rejects ambiguous repr coercion. Reparse every
-existing row through both symbolic encoders and the exact checker. Do not call an LLM. Preserve the
-original text and hash beside the normalized text and hash. Report pre/post diagnosis for every row,
-the exact-valid count, invalid-symbol and invalid-domain counts, and the number of rows that an
-environment-indexed grammar can address.
+Start from the 21 targetable Exp6755 rows. Generate exact-preserving counterfactual error variants
+for undefined variables, invalid clauses, non-binary values, duplicates, missing evidence, and
+premature terminals. Preserve the source problem, source output hash, mutation operator, and exact
+failure receipt. The task must produce at least 36 parseable exact-invalid rows across every held
+family without reading an answer during mutation.
 
-**Deliverable:** `results/experiment_6755_lossless_gguf_output_reparse.json`
+**Deliverable:** `results/experiment_6768_targetable_proof_panel_expansion.json`
 
-### Exp 6756: Environment-indexed proof grammar fixture
+### Exp 6769: Environment-indexed proof grammar fixture v2
 
-Implement a bounded decode-time grammar for the certificate DSL. Instantiate valid `xN` variables,
-`cN` clause IDs, binary values, uniqueness state, and prefix-dependent remaining slots from each
-CNF environment. Add a draft-conditioned rendering interface, but do not run the SOTA panel yet.
-Test static CFG, environment-indexed, and draft-conditioned paths on exact fixtures and adversarial
-ghost references. The fixture passes only if every emitted string parses, no out-of-environment
-reference is reachable, valid exact certificates remain representable, and the runtime mask path is
-actually invoked.
+Build the runtime grammar over the expanded panel. Bind variables, clause IDs, domains, uniqueness,
+and remaining required slots to the current problem. Prove that valid SAT and UNSAT certificates
+remain reachable and that ghost references are unreachable. Record actual runtime mask calls. A
+post-hoc filter does not pass.
 
-**Deliverable:** `results/experiment_6756_environment_indexed_proof_grammar_fixture.json`
+**Deliverable:** `results/experiment_6769_environment_indexed_proof_grammar_v2.json`
 
-### Exp 6757: Three-model DCCD environment-grammar A/B
+### Exp 6770: Three-model DCCD environment-grammar A/B v2
 
-On a frozen hardness- and family-stratified subset, run Qwen3.6-35B-A3B, Gemma-4-31B, and
-Gemma-4-26B-A4B sequentially. Compare three matched arms: repaired one-shot output, static grammar,
-and draft-conditioned environment-indexed grammar. Match instance, seed, maximum total generated
-tokens, context, and exact-check budget. Emit every model-instance-arm row. Measure transport
-validity, exact certificate validity, semantic correctness, abstention, invalid references,
-latency, and generated tokens. Positive credit requires exact-valid improvement, not parseability
-alone.
+Run repaired direct output, static grammar, and draft-conditioned environment grammar on the same
+frozen panel with Qwen3.6-35B-A3B, Gemma-4-31B, and Gemma-4-26B-A4B. Match total generation tokens,
+context, seeds, and exact-check budgets. The headline is paired exact-valid yield. Parseability is a
+secondary metric.
 
-**Deliverable:** `results/experiment_6757_dccd_environment_grammar_ab.json`
+**Deliverable:** `results/experiment_6770_dccd_environment_grammar_ab_v2.json`
 
-### Exp 6758: Independent proof-transport audit
+### Exp 6771: Independent proof transport and localization audit
 
-Cold-recompute Exp6757 with an independently implemented parser and exact checker. Verify that the
-grammar runtime was invoked, that no answer or current-row exact feature entered the prompt or mask,
-and that budget matching held. Measure paired exact-valid deltas, semantic error, abstention,
-support contraction, and proof-preserving relabeling consistency. Open the diagnostic branch only
-when each held family has at least two diagnosis classes and the panel has at least 24 parseable
-exact-invalid rows.
+Use a cold parser, checker, and reducer that do not import the producer's parsing, checking, or
+aggregation functions. Recompute every arm result. Audit runtime invocation, budget equality,
+answer leakage, support contraction, proof-preserving relabeling, and the smallest responsible
+grammar-conflict region.
 
-**Deliverable:** `results/experiment_6758_proof_transport_independent_audit.json`
+**Deliverable:** `results/experiment_6771_proof_transport_localization_audit.json`
 
-## Phase 2: Diagnostic energy and exact repair
+### Exp 6772: Claim-localized prefix-backtracking repair A/B
 
-### Exp 6759: Held-family oracle-distinct diagnostic energy v2
+Compare no repair, matched full regeneration, and bounded prefix backtracking from the audited
+grammar-conflict region. Use Qwen3.6-35B-A3B and Gemma-4-31B. The repair selector may use only
+pre-oracle grammar and certificate structure. Exact authority checks the final candidate. Positive
+credit requires a paired gain over full regeneration without more harmful flips or support loss.
 
-Train a compact structural energy on the audited proof rows. Compare dual-encoding structure,
-single-encoding structure, and an undifferentiated scalar baseline on family-disjoint tests and
-proof-preserving relabelings. The model may use prefix state, grammar rejection location, encoder
-disagreement, and structural counts. It may not use the answer, label, exact-valid bit, exact checker
-trace, solver conflicts, or current-row repair outcome. The repair branch opens only if held-family
-reasoning-error AUROC is at least 0.65 and the leakage audit finds zero prohibited features.
+**Deliverable:** `results/experiment_6772_claim_localized_prefix_backtracking_ab.json`
 
-**Deliverable:** `results/experiment_6759_oracle_distinct_diagnostic_energy_v2.json`
+## Phase 2: Run prospective continuous self-learning
 
-### Exp 6760: Diagnostic prefix-backtracking repair A/B
+### Exp 6773: Task-owned SOTA memory lease and artifact contract
 
-On a frozen set of at least 24 parseable exact-invalid candidates, compare no repair, matched full
-regeneration, and diagnostic prefix backtracking. Pair model, instance, seed, prompt, original
-candidate, total token budget, and exact-verifier budget. Use Qwen3.6-35B-A3B and Gemma-4-31B as
-headline models. The learned energy selects a prefix; exact authority only checks the final result.
-Positive credit requires the paired lower confidence bound over full regeneration to exceed zero
-without a higher harmful-flip rate or support contraction.
+Validate the ready Exp6761 stream, then load Qwen3.6-35B-A3B and Gemma-4-31B one at a time under the
+existing receipt-scoped GPU lease. Record exact `model_specs`, first-token inference, peak VRAM,
+teardown, VRAM recovery, and stream hashes. This task repairs the two failed Exp6762 checks and the
+`model_specs` contract mismatch. It makes no learning claim.
 
-**Deliverable:** `results/experiment_6760_prefix_backtracking_repair_ab.json`
+**Deliverable:** `results/experiment_6773_csl_owned_lease_contract.json`
 
-## Phase 3: Continuous self-learning through procedural memory
+### Exp 6774: Procedural versus trace memory prospective A/B v2
 
-### Exp 6761: Capacity-controlled procedural memory stream
+Run no-memory, detailed-trace, and procedural-memory arms across all six frozen event orders. Keep
+each episode read-only. Apply exact-approved transactions only between episodes. Match storage,
+top-k, context, decode, and update budgets. Measure prequential yield, hard-case yield, retention,
+forgetting, support, commits, rejects, actual retrieval, and action influence.
 
-Build a chronological, non-saturating constraint stream with known reusable procedures, detailed
-trajectory counterparts, naive distractors, held families, hard cases, poison candidates, and six
-preregistered orders. Freeze exact admissibility opportunities so the experiment cannot finish with
-zero eligible commits. Keep active episodes read-only. Each between-episode transaction records a
-parent hash, evidence hash, representation type, scope, TTL, admission reason, inverse patch, and
-restart receipt. The fixture must prove nonzero accept and reject opportunities before evaluation.
+**Deliverable:** `results/experiment_6774_procedural_vs_trace_csl_ab_v2.json`
 
-**Deliverable:** `results/experiment_6761_procedural_memory_stream.json`
+### Exp 6775: Independent continuous-learning durability audit v2
 
-### Exp 6762: Procedural versus trace memory prospective A/B
+Recompute Exp6774 from raw rows and state receipts in a fresh process. Check chronology, capacity,
+actual memory use, order-level intervals, hard-case harm, historical loss, poison, restart, and
+byte-exact rollback. Stored but unused lessons do not support a learning claim.
 
-Compare frozen no-memory, detailed trajectory memory, and abstract procedural constraint memory on
-the same six chronological orders. Fix storage bytes, top-k retrieval, context tokens, update
-opportunities, and exact authority across memory arms. Use Qwen3.6-35B-A3B for acquisition and both
-Qwen3.6 and Gemma-4-31B for held-out transfer. Record prequential exact yield, hard-case yield,
-best@k and effective support, actual retrieval, action influence, commits, rejects, negative
-transfer, forgetting, token cost, restarts, and rollbacks. No weights change.
+**Deliverable:** `results/experiment_6775_csl_durability_audit_v2.json`
 
-**Deliverable:** `results/experiment_6762_procedural_vs_trace_csl_ab.json`
+## Phase 3: Produce ARC supervisor and tool-loop evidence
 
-### Exp 6763: Cold hard-case, forgetting, and poison audit
+### Exp 6776: Window-120 shadow-supervisor evidence accrual
 
-Recompute Exp6762 from raw rows in a fresh process. Verify chronological isolation, order-level
-intervals, capacity equality, actual memory use, commit hashes, future-evidence denial, restart from
-each boundary, poison rejection, byte-exact rollback, support preservation, and hard-case
-performance. Positive credit requires a procedural-memory order-level lower bound above zero, no
-anchor forgetting, no hard-case regression beyond the preregistered margin, zero admitted poison,
-and nonzero exact commits and rejects.
+Run the production live path with the trajectory supervisor in shadow mode and a window of 120.
+Checkpoint each cell and install the long-run death receipt. Accrue the missing firings toward ten
+per arm, then run `scripts/arc_supervisor_refine.py`. Shadow mode must not change scored actions.
 
-**Deliverable:** `results/experiment_6763_csl_hard_case_forgetting_audit.json`
+**Deliverable:** `results/experiment_6776_arc_shadow_supervisor_accrual.json`
 
-## Phase 4: Live-path and hardware-facing evidence
+### Exp 6777: Live selfparse tool-gap transport receipt
 
-### Exp 6764: Exclusive full-load ARC preflight
+Run one bounded production selfparse session. Prove that `tool_gap_events`, including an empty list,
+survives from the live induction loop to the result artifact and that `scripts/arc_tool_gap_refine.py`
+ingests the artifact. Observing a real gap is useful but is not required for a transport pass.
 
-Use the existing receipt-scoped `GpuLease`. Inspect both RTX 3090 devices and acquire the least-used
-eligible device without killing or preempting unrelated work. In the leased subprocess, set the
-32K context, load the immutable Qwen3.8 ARC generator, run one bounded production selfparse tool
-call, unload, release, and prove VRAM recovery. Run a Qwen3.6-35B-A3B transport canary under the same
-lease policy. This is an admission and teardown receipt, not an ARC quality result.
+**Deliverable:** `results/experiment_6777_arc_tool_gap_transport.json`
 
-**Deliverable:** `results/experiment_6764_arc_exclusive_load_preflight.json`
+### Exp 6778: Selfparse actions-to-progress A/B
 
-### Exp 6765: Live object-table fetch-on-demand A/B v2
+Extend arm isolation so `CARNOT_ARC_INDUCE_TOOL_LOOP` is saved, set, and restored. Run the production
+live path with control truly unset and treatment set to `selfparse`. Pair games, seeds, action
+budgets, and model hashes. Measure actions to level-up and no-progress censoring. Record
+memorization as an observation, not a penalty. Do not award a new solve.
 
-Rerun the frozen 20-game paired comparison only after Exp6764 proves an exclusive full load. Compare
-the default inline object table against table-absent plus production `find_objects` fetch. Keep the
-immutable Qwen3.8 generator, 32K context, games, seeds, budgets, and public agent route fixed. Use
-Qwen3.6 only as a non-headline transport canary. Measure prompt tokens, tool calls, useful fetch
-rate, transition utility, and `change_fidelity`. Adoption requires positive realized token savings
-and non-inferiority within the frozen within-arm noise floor. This makes no game-level solve claim.
+**Deliverable:** `results/experiment_6778_arc_selfparse_actions_to_progress_ab.json`
 
-**Deliverable:** `results/experiment_6765_object_table_fetch_ab_v2.json`
+### Exp 6779: Independent ARC adoption and refinement audit
 
-### Exp 6766: Independent Thermalizer trajectory audit
+Cold-recompute the actions-to-progress comparison, verify environment isolation, replay level-up
+receipts, confirm tool-gap ingestion, and inspect the updated supervisor recommendation. Recommend
+promote, retain-default-off, or retire. The task must not enable a flag or change the submission
+kernel.
 
-Cold-recompute the Exp6751 factor and trajectory claims with a separately implemented exact
-enumerator and direct sampler. Verify topology, precision, normalization, seed, and compiler
-provenance. Compare independent factor fitting, context matching, and trajectory refinement at
-depths 1, 2, 4, and 8. The compiler under test must not share the evaluator implementation. Report
-conditional KL and trajectory total variation per factor and seed. Classify circular evidence
-correctly. This remains simulator-only and makes no speed, power, FPGA, X0, or Z1 claim.
+**Deliverable:** `results/experiment_6779_arc_tool_supervisor_adoption_audit.json`
 
-**Deliverable:** `results/experiment_6766_thermalizer_independent_trajectory_audit.json`
+## Phase 4: Milestone disposition
 
-### Exp 6767: V589 branch disposition and PRD gap update
+### Exp 6780: V590 branch disposition and PRD gap update
 
-Read every available milestone artifact, including gate-blocked branches. Recompute headlines from
-rows, run adversarial and row-consistency checks, classify each branch, and state which of the three
-PRD gaps narrowed. Keep proof transport, diagnostic repair, continuous memory, ARC, and stochastic
-portability separate. The capstone is ungated and may not convert missing evidence into success.
+Run after every other task is terminal. It is intentionally ungated. Recompute comparative claims
+from rows, preserve missing and blocked artifacts, and classify the FR12, FR11, and ARC gaps as
+narrowed, unchanged, widened, or blocked. Reconcile the evidence and operations documents without
+activating a successor roadmap.
 
-**Deliverable:** `results/experiment_6767_v589_branch_disposition.json`
+**Deliverable:** `results/experiment_6780_v590_branch_disposition.json`
 
 ## Dependency graph
 
 ```text
-Exp6755 lossless output reparse
-  └── Exp6756 environment-indexed grammar fixture
-        └── Exp6757 three-model grammar A/B
-              └── Exp6758 independent transport audit
-                    └── Exp6759 diagnostic energy v2
-                          └── Exp6760 prefix-backtracking A/B
+Proof:
+  6768 ──► 6769 ──► 6770 ──► 6771 ──► 6772
 
-Exp6761 procedural memory stream
-  └── Exp6762 procedural-versus-trace CSL A/B
-        └── Exp6763 hard-case/forgetting/poison audit
+Continuous self-learning:
+  6773 ──► 6774 ──► 6775
 
-Exp6764 exclusive full-load ARC preflight
-  └── Exp6765 live object-table A/B v2
+ARC live evidence:
+  6776 ──► 6777 ──► 6778 ──► 6779
 
-Exp6766 independent Thermalizer audit       (independent)
-
-Exp6760 ─┐
-Exp6763 ─┼──► Exp6767 branch disposition    (ungated)
-Exp6765 ─┤
-Exp6766 ─┘
+Milestone close:
+  6768..6779 terminal ──► 6780 (ungated synthesis)
 ```
 
-Structured conductor gates use fields emitted verbatim by their upstream prompts:
+No branch gates another branch. A proof failure cannot suppress memory or ARC. A GPU admission
+failure in memory cannot suppress proof work. The capstone records every terminal state.
 
-- `transport_reparse_ready`
-- `environment_grammar_targetable_rows`
-- `dynamic_proof_grammar_ready`
-- `proof_transport_ab_completed`
-- `proof_transport_audit_ready`
-- `diagnostic_panel_ready`
-- `heldout_reasoning_error_auroc`
-- `oracle_leakage_detected`
-- `procedural_memory_stream_ready`
-- `prospective_csl_completed`
-- `arc_exclusive_load_ready`
+## Hardware and runtime requirements
 
-Every blocked task-owned outcome records the failed check and observed value in
-`gate_check_summary`. Every task declares the closed `verdict_class` enum. Every comparison emits
-one `rows` entry per model, instance, arm, order, event, game, factor, depth, or seed as applicable.
+| Resource | Tasks | Requirement and boundary |
+|---|---|---|
+| Two RTX 3090 GPUs | 6770, 6772, 6773, 6774, 6776-6778 | Use task-owned receipt-scoped leases. Load one GGUF per GPU session unless an ARC task explicitly isolates one arm per card. Do not signal unrelated processes. Record device UUID, model hash, CUDA offload, peak VRAM, teardown, and recovery. |
+| Local GGUF cache | 6770, 6772, 6773, 6774 | Required headline models are `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and, for Exp6770, `unsloth/gemma-4-26B-A4B-it-GGUF`. Embedded tokenizers and exact files must resolve before a run. |
+| ARC generator | 6776-6778 | Keep `unsloth/Qwen3.8-27B-GGUF` as the immutable scored ARC generator. Include Qwen3.6-35B-A3B as the mandated transport canary and keep its rows out of Qwen3.8 quality reducers. |
+| CPU, RAM, disk | All | Use exact solvers, cold reducers, and atomic JSON writes locally. Preserve enough RAM and disk for one model, sharded ARC checkpoints, raw rows, and state journals. |
+| KV260 | None | Its terminal latency transcript and synthesis flag already satisfy the continuity terminal state. No new bitstream redesign is allowed. |
+| PolarFire | None | Its hash-verified Carnot dispatch already satisfies the continuity terminal state. |
+| GateMate | None | No new operator-authored physical-state receipt exists after Exp6559. Repeating the same zero-command audit would be a doomed rerun. The next hardware action stays blocked until physical state changes. |
+| Extropic TSU | None | No physical device is available. No TSU speed, power, or availability claim is permitted. |
 
-## Local model policy
+## Milestone exit criteria
 
-Every experiment that invokes an LLM names at least one mandated local model in `MODEL_SPECS`:
-
-| Role | Model |
-|---|---|
-| Flagship MoE | `unsloth/Qwen3.6-35B-A3B-GGUF` |
-| Flagship dense | `unsloth/gemma-4-31B-it-GGUF` |
-| Middle MoE | `unsloth/gemma-4-26B-A4B-it-GGUF` |
-| Immutable scored ARC generator | `unsloth/Qwen3.8-27B-GGUF` |
-
-The proof panel uses all three mandated families as headline models. The CSL comparison uses Qwen
-and the dense Gemma. ARC keeps Qwen3.8 as the immutable scored generator and uses Qwen3.6 only for
-transport. Legacy `Qwen/Qwen3.5-0.8B` and `google/gemma-4-E4B-it` may appear only as labeled CPU
-smoke tests. They cannot satisfy readiness, comparative, or headline gates.
-
-## Hardware requirements
-
-| Work | Required substrate | Expected use | Claim boundary |
-|---|---|---|---|
-| Exp6755, Exp6756, Exp6758, Exp6759 | CPU, local disk, exact solver toolchain | Lossless replay, grammar fixtures, exact checks, compact energy | No LLM or accelerator claim |
-| Exp6757, Exp6760 | Dual RTX 3090 host; cached three mandated GGUFs; llama.cpp CUDA | Sequential model loads with explicit device, VRAM, and runtime-mask receipts | No cross-model speed claim |
-| Exp6761, Exp6763 | CPU, local disk, atomic memory store | Stream generation and cold replay | No weight-learning claim |
-| Exp6762 | Dual RTX 3090 host; cached Qwen3.6 and Gemma-4-31B GGUFs | Sequential acquisition and transfer panels | Tier-2 memory only; no weight update |
-| Exp6764, Exp6765 | One exclusively leased RTX 3090; cached Qwen3.8 and Qwen3.6; 32K context | Full load, selfparse transport, paired live ARC run, teardown | No game-level solve or source-derived claim |
-| Exp6766 | CPU/JAX or installed Torx/THRML simulator; exact enumeration | Small factors and trajectories at depth at most 8 | Simulator/compiler fidelity only; no physical TSU |
-| Exp6767 | CPU and local artifacts | Row replay and audits | No pooled scientific success claim |
-
-KV260, GateMate, and PolarFire remain continuity tracks. Their reachable state has not changed, so
-`.589` schedules no unchanged board probe. Extropic Z1 access remains a 2027 prospect. No task may
-infer physical acceleration, power, or energy from simulator timing.
-
-## Execution order and failure isolation
-
-The conductor order is Exp6755 through Exp6767. The order is not a global dependency chain. The
-proof, memory, ARC, and stochastic roots are independent. Only scientifically necessary producer-
-consumer pairs use `gated_on`. Exp6767 is deliberately ungated and must preserve every blocked or
-missing branch.
-
-Fresh IDs are used throughout. Every recovered scope declares the exact prior verdict, explains
-the changed mechanism or newly shipped prerequisite, and sets `retire_if_same_verdict: true`. No
-task references a retired upstream ID. The capstone uses the standing 2026-05-29 continuation
-override.
-
-The roadmap keeps `{project_root}` and `{date}` placeholders because the conductor contract requires
-them. No new task treats unrendered planner placeholders as a scientific blocker. Hardware tasks do
-not kill, preempt, or adopt unrelated processes. If an exclusive device is unavailable, Exp6764
-writes a blocked artifact and Exp6765 skips before its agent call.
-
-The legacy `audit_roadmap_gates.py` still hardcodes every Codex task to `gpt-5.5`. It therefore
-reports routing-only findings for the formulaic tasks that the current operator directive assigns to
-`gpt-5.6-sol`. The roadmap schema accepts those routes, the gate cross-reference audit reports zero
-field failures, and the exclusion-manifest lint is authoritative for failed-scope activation. This
-milestone records the validator mismatch and does not edit the audit tool.
-
-## Exit criteria
-
-Milestone `.589` is complete when all thirteen tasks reach a terminal artifact or honest conductor
-gate record and Exp6767 classifies every branch. Scientific success is branch-specific:
-
-- **FR12 transport:** the environment-indexed or draft-conditioned arm improves paired exact-valid
-  yield over repaired one-shot output without increased semantic error, prohibited leakage, or
-  preregistered support contraction.
-- **FR12 repair:** held-family AUROC is at least 0.65 with zero oracle leakage, followed by a prefix-
-  backtracking lower confidence bound above zero over full regeneration and no harmful-flip rise.
-- **FR11:** procedural memory earns a positive order-level lower bound over both no memory and
-  detailed traces, with nonzero commits and rejects, retained support, no anchor or hard-case
-  regression, zero admitted poison, durable restart, and byte-exact rollback.
-- **ARC:** an exclusive full-load receipt completes, then fetch-on-demand saves tokens while
-  remaining non-inferior on `change_fidelity`. No solve claim is needed.
-- **Portability:** the independent evaluator reproduces a trajectory-error reduction and the tested
-  compiler is distinct from its evaluator. Otherwise the branch remains circular, null, or partial.
+- Every task from Exp6768 through Exp6780 has a terminal artifact or an explicit capstone missing-row
+  entry.
+- Every comparative task emits per-unit rows and passes cold row recomputation.
+- Every blocked verdict includes `gate_check_summary` with the failed check and observed value.
+- Every artifact declares `verdict_class` from the closed enum.
+- Every local LLM task records exact model IDs, paths, hashes, tokenizer source, device, and teardown.
+- FR12 progress requires exact-valid gain, not format gain alone.
+- FR11 progress requires prospective order-level benefit, nonzero admits and rejects, actual memory
+  use, retention, support, poison, restart, and rollback gates.
+- ARC adoption requires a cold actions-to-progress result. Transport success alone cannot enable a
+  flag.
+- `research-roadmap.yaml` and `scripts/research_conductor.py` remain unchanged.
 
 ## Explicitly deferred
 
-- Weight-updating continual learning, LoRA, RLVR, or foundation-model retraining.
-- Adaptive KAN knot insertion or deletion until active Tier-2 memory earns a clean prospective
-  result and supplies a non-circular signal.
-- EBT- or Kona-scale latent reasoning training and proprietary Kona comparisons.
-- External-text Phase-D energy scoring, which remains retired.
-- Physical TSU, FPGA, NPU, or board speed and power claims.
-- A second schema-only or prompt-only ConstraintIR rerun.
-- New ARC level solves, duplicate registry targets, game-source inspection, offline ground-truth
-  BFS, or hand-built per-game adapters.
-- External publication, model upload, leaderboard submission, or other operator-only action.
+- Learned diagnostic energy is deferred until the runtime grammar and cold localization audit show
+  enough diverse exact-invalid rows. `.590` uses structural grammar conflicts for repair selection.
+- The object-table fetch A/B is deferred. It already consumed hours and does not answer the current
+  actions-to-progress question.
+- Weight-changing continual learning remains Tier 3/4 work. `.590` tests Tier 2 external memory.
+- KAN restructuring waits for a non-circular online learning signal.
+- Physical TSU work waits for authenticated device access.
+- New FPGA bitstream design and duplicate public-game solves remain out of scope.
