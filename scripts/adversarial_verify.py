@@ -284,6 +284,7 @@ DETERMINISTIC_VERIFIER_SUBSTRATES = (
     "transactional_exact_conflict_memory_and_cpu_mapping_no_llm",
     "deterministic CPU exact-checker transactional fixture",
     "CPU exact chronological decision fixture, no LLM",
+    "CPU prospective Tier-2 constraint-memory controller, no LLM",
     "fresh_process_no_llm_transaction_audit",
 )
 DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001

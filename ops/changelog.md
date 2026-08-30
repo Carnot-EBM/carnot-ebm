@@ -1,5 +1,16 @@
 # Carnot — Changelog
 
+## 2026-08-30 — Exp6791 deterministic substrate floor repair (REQ-VERIFY-5933)
+
+- Registered the exact Exp6791 prospective CPU constraint-memory substrate as
+  deterministic verifier work, assigning the existing nonzero JSON-work floor
+  without broadening the unknown-substrate fallback.
+- Reconciled the Exp6791 implementation status and verifier regression mapping.
+- Verification: conductor-equivalent smart subset `111 passed, 1 warning`; all
+  adversarial verifier tests `432 passed`; Exp6791 scoped coverage `543/543`
+  statements (100%); focused spec traceability passed. No test or
+  `scripts/research_conductor.py` change was made.
+
 ## 2026-08-28 — Seven verdict_class writers: finished runs declare null, not partial (REQ-CONDUCTOR-VERDICT-3)
 
 - Corrected the seven modules that declared `verdict_class: partial` on runs

@@ -12,6 +12,7 @@ from scripts import adversarial_verify as av
 
 
 SUBSTRATE = "CPU exact chronological decision fixture, no LLM"
+ONLINE_SUBSTRATE = "CPU prospective Tier-2 constraint-memory controller, no LLM"
 
 
 def test_req_verify_5933_constraint_routing_substrate_has_deterministic_floor() -> None:
@@ -39,6 +40,41 @@ def test_scenario_verify_5933_exp6790_artifact_has_no_substrate_warning(
                 "inference_substrate": SUBSTRATE,
                 "duration_s": 0.01,
                 "random_seed": 6790000,
+                "reproducibility_checksum": "sha256:control",
+            }
+        ),
+        encoding="utf-8",
+    )
+    kinds = {flag["kind"] for flag in av.verify_artifact(path)["flags"]}
+    assert "SUBSTRATE_HAS_NO_DURATION_FLOOR" not in kinds
+    assert "DURATION_TOO_SHORT" not in kinds
+
+
+def test_req_verify_5933_online_constraint_memory_has_deterministic_floor() -> None:
+    """REQ-VERIFY-5933 classifies the required Exp6791 CPU controller value."""
+
+    floor = av.duration_floor_for_artifact({"inference_substrate": ONLINE_SUBSTRATE})
+    assert floor == {
+        "substrate": ONLINE_SUBSTRATE,
+        "min_duration_s": av.DETERMINISTIC_VERIFIER_MIN_DURATION_S,
+        "reason": "deterministic_verifier",
+    }
+
+
+def test_scenario_verify_5933_exp6791_artifact_has_no_substrate_warning(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-VERIFY-5933 keeps the prospective CPU controller on its small floor."""
+
+    path = tmp_path / "artifact.json"
+    path.write_text(
+        json.dumps(
+            {
+                "experiment_id": "experiment_6791_online_constraint_memory_control",
+                "honest_verdict": "complete: prospective CPU controller control",
+                "inference_substrate": ONLINE_SUBSTRATE,
+                "duration_s": 0.01,
+                "random_seed": 6791030,
                 "reproducibility_checksum": "sha256:control",
             }
         ),

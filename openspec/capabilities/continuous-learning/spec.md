@@ -8242,3 +8242,159 @@ And `gate_check_summary` SHALL preserve the failed check and observed value.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-CL-6790 and SCENARIO-CL-6790-* | Planned: `python/carnot/experiment_6790_chronological_constraint_routing_stream.py`; `scripts/experiments/experiment_6790_chronological_constraint_routing_stream.py`; terminal artifact `results/experiment_6790_chronological_constraint_routing_stream.json`. | Planned: `tests/python/test_experiment_6790_chronological_constraint_routing_stream.py`. |
+
+## REQ-CL-6791: Prospective Compositional Online Constraint-Routing A/B
+
+Given Exp6790 provides a ready five-order constraint-routing stream
+When Exp6791 runs for planning date 20260830
+Then it SHALL compare `frozen_controller`, `compositional_online`,
+`random_update_placebo`, and `retrieval_disabled_online`
+And it SHALL write
+`results/experiment_6791_compositional_online_constraint_routing_ab.json`.
+
+Exp6791 SHALL freeze the four arms, component algorithms, capacity, thresholds,
+update cadence, seeds, route budget, order hashes, and stopping rule before the
+first action. The online arms SHALL log separate factor-admission, retrieval,
+and route-selection state. The placebo SHALL match the online write count and
+logical storage bytes. It SHALL assign update targets from earlier events in
+the same frozen stratum. The retrieval-disabled arm SHALL commit the same exact
+factors as the compositional arm, but SHALL return no retrieved factor.
+
+For each order, event, and arm, Exp6791 SHALL snapshot isolated state before
+route selection. It SHALL record retrieved factor IDs and controller state. It
+SHALL freeze one legal route before it reveals the exact Exp6790 receipt. No
+arm SHALL write while the current action is active. An accepted factor SHALL
+commit only after the exact receipt. It SHALL include a type, source event,
+source position, evidence hash, target route, and exact provenance. Every
+commit SHALL have restart and byte-exact rollback evidence.
+
+Exp6791 SHALL record later factor reads. For each retrieved factor, it SHALL
+select a route again with that factor disabled against the same snapshot. It
+SHALL record whether this byte-identical counterfactual changes the action.
+Component attribution SHALL separate admission, retrieval, and route selection.
+
+All headline metrics SHALL derive from the stored rows and transaction
+receipts. Metrics SHALL include held-future utility net of route cost, route
+success, missed hard dependencies, hard-case harm, old-family retention,
+unique-action support, writes, later reads, action changes, and rollback.
+Paired effects SHALL use order-event keys. The lower confidence bound SHALL use
+a seeded bootstrap over the five order-level online-minus-frozen effects.
+
+Preconditions SHALL require `constraint_routing_stream_ready=true`, all five
+frozen order hashes, positive headroom in every order, only legal live route
+actions, hidden-receipt separation, and writable isolated transaction stores.
+A failed check SHALL write
+`complete_blocked_online_constraint_routing_ab`. It SHALL name the failed check
+and observed value in `gate_check_summary`. It SHALL contain no event rows and
+SHALL not run a reduced-order substitute.
+
+`compositional_csl_completed` SHALL be true when every planned row,
+transaction, aggregate, and component attribution is complete. Effect direction
+SHALL not control completion. A positive verdict SHALL require nonzero online
+writes, later reads, and action changes in every order. It SHALL also require an
+online-minus-frozen held-future utility lower bound above zero, an online win
+over the placebo in every order, and no preregistered hard-case, retention, or
+support harm. A complete result without that evidence SHALL use
+`verdict_class=null`. Failed preconditions SHALL use `blocked`. Leakage,
+cross-arm state, missing rows, or an unplanned substitute SHALL use
+`disqualified`.
+
+The terminal artifact SHALL include `field_principles`,
+`inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `source_artifact_hash`, `frozen_manifest`,
+`arm_definitions`, `component_definitions`, `transaction_capacity`, `rows`,
+`transaction_receipts`, `writes_by_arm_order`, `later_reads_by_arm_order`,
+`action_changes_by_arm_order`, `component_action_attribution`,
+`held_future_utility_by_arm_order`, `online_minus_frozen_order_effects`,
+`online_minus_frozen_lcb`, `online_minus_placebo_order_effects`,
+`hard_case_harm_by_arm_order`, `retention_by_arm_order`,
+`action_support_by_arm_order`, `future_feature_violations`,
+`active_event_write_violations`, `compositional_csl_completed`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `inference_substrate` SHALL equal
+`CPU prospective Tier-2 constraint-memory controller, no LLM`.
+`verifier_is_oracle` SHALL be false because the exact receipt arrives only
+after the route is frozen. `verdict_class` SHALL use only `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+`honest_verdict` SHALL start with an approved terminal prefix.
+
+### SCENARIO-CL-6791-ARM-ISOLATION: Every Arm Owns Distinct State
+
+Given one frozen order
+When all four arms run
+Then each arm SHALL use a distinct transaction path and state hash lineage
+And the frozen arm SHALL have zero reads and writes.
+
+### SCENARIO-CL-6791-READ-ONLY: Active Events Cannot Write
+
+Given an arm has started the current event
+When route selection reads its snapshot
+Then a write attempt SHALL fail
+And the state bytes SHALL remain unchanged until the exact receipt arrives.
+
+### SCENARIO-CL-6791-BETWEEN-EVENT-COMMIT: Updates Follow Receipts
+
+Given a factor passes admission after one exact receipt
+When the next event starts
+Then the prior commit MAY appear in the next snapshot
+And it SHALL never appear in its own action snapshot.
+
+### SCENARIO-CL-6791-COMPONENT-ATTRIBUTION: Components Stay Separately Measurable
+
+Given the compositional arm changes an action
+When admission, retrieval, or route selection is disabled in turn
+Then Exp6791 SHALL record each counterfactual action from the same snapshot.
+
+### SCENARIO-CL-6791-PLACEBO: Random Updates Match Activity
+
+Given the online arm admits one factor
+When the placebo updates at the same boundary
+Then both arms SHALL write one fixed-size slot
+And the placebo target SHALL name an earlier event in the same stratum.
+
+### SCENARIO-CL-6791-RETRIEVAL-DISABLE: Retrieval Ablation Is Exact
+
+Given the online and retrieval-disabled arms receive the same exact factors
+When they select the next route
+Then their committed factor IDs SHALL match
+And only the retrieval-disabled arm SHALL report an empty retrieval result.
+
+### SCENARIO-CL-6791-FUTURE-LEAKAGE: Future Receipts Stay Hidden
+
+Given an order has not reached one event or held-future family
+When any arm snapshots state
+Then every visible factor SHALL come from a smaller order position
+And no held-future factor SHALL appear before that family's first event.
+
+### SCENARIO-CL-6791-PAIRED-KEYS: Every Cell Has One Paired Key
+
+Given five orders, 240 events, and four arms
+When Exp6791 finishes
+Then it SHALL emit exactly 4,800 unique row keys
+And each order-event pair SHALL contain all four arms.
+
+### SCENARIO-CL-6791-RESTART-ROLLBACK: Commits Are Recoverable
+
+Given any accepted transaction
+When a fresh store opens the state and applies the inverse patch
+Then restart bytes SHALL match committed bytes
+And rollback bytes SHALL match the exact parent bytes.
+
+### SCENARIO-CL-6791-ROW-VERDICT: Rows Own Aggregates And Verdicts
+
+Given a complete artifact
+When a cold reducer recomputes metrics and positive-credit gates
+Then every stored aggregate and verdict SHALL match the recomputed value.
+
+### SCENARIO-CL-6791-BLOCKED: Failed Preconditions Have No Fallback
+
+Given one owned precondition fails
+When Exp6791 builds its terminal artifact
+Then `rows` and `transaction_receipts` SHALL be empty
+And `gate_check_summary` SHALL retain the failed check and observed value.
+
+## Implementation Status (REQ-CL-6791)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6791 and SCENARIO-CL-6791-* | Implemented: `python/carnot/experiment_6791_compositional_online_constraint_routing_ab.py`; `scripts/experiments/experiment_6791_compositional_online_constraint_routing_ab.py`; terminal artifact `results/experiment_6791_compositional_online_constraint_routing_ab.json`. | Implemented: `tests/python/test_experiment_6791_compositional_online_constraint_routing_ab.py`. |
