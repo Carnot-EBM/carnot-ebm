@@ -1,0 +1,2353 @@
+{
+  "schema": "carnot.experiment_6776.arc_shadow_supervisor_accrual.v1",
+  "experiment": 6776,
+  "title": "Window-120 shadow-supervisor evidence accrual",
+  "run_date": "20260830",
+  "status": "complete_blocked_shadow_supervisor_accrual",
+  "field_principles": {
+    "schema": "A versioned schema lets consumers reject incompatible evidence.",
+    "experiment": "The experiment number binds the artifact to REQ-ARC-WMTE-6776.",
+    "title": "The title states that this is shadow evidence, not a flag activation.",
+    "run_date": "The planning date fixes the frozen run period.",
+    "status": "The status separates ready, partial, disqualified, and blocked outcomes.",
+    "field_principles": "Each required field states why an auditor needs it.",
+    "inference_substrate": "The substrate excludes CPU, remote, legacy, and helper-only runs.",
+    "duration_s": "Monotonic wall time exposes skipped live work.",
+    "random_seed": "The complete cell seed schedule makes action choices repeatable.",
+    "reproducibility_checksum": "One digest binds models, panel, code, ledger, manifest, and rows.",
+    "model_specs": "Exact repository, file, hash, role, and tokenizer pins prevent substitution.",
+    "models_used": "Only models that produced a live row appear as used.",
+    "live_model_invoked": "First-token evidence distinguishes a live model from a dry receipt.",
+    "frozen_manifest": "Games, seeds, budgets, prompts, sampling, and order are fixed before inference.",
+    "rows": "One cell-and-arm row keeps the full live or blocked denominator visible.",
+    "gpu_receipts": "Lease, offload, VRAM, process, and recovery facts prove owned CUDA work.",
+    "death_receipts": "Signal and process attribution makes an interrupted cell diagnosable.",
+    "shard_receipts": "Atomic block, firing, and completion checkpoints preserve progress.",
+    "supervisor_window": "The value 120 makes a stagnation window reachable within the budget.",
+    "supervisor_mode": "Shadow mode records counterfactuals without applying redirects.",
+    "action_hash_invariance": "Paired action hashes detect any scored behavior change.",
+    "firings_before_by_arm": "The applied ledger baseline prevents shadow inflation.",
+    "firings_after_by_arm": "Post-tool applied counts show exactly what ingestion changed.",
+    "evidence_floor_met_by_arm": "Per-arm booleans state whether ten applied firings exist.",
+    "supervisor_refinement_receipt": "Tool hashes, dedupe, Wilson rows, and recommendation make refinement auditable.",
+    "shadow_supervisor_transport_ready": "Exp6777 consumes this exact transport-and-invariance gate.",
+    "solve_claim": "False prevents a replay receipt from becoming a new solve claim.",
+    "source_receipts": "Hashes and explicit prohibitions show no game source or offline BFS use.",
+    "gate_check_summary": "A blocked or failed result names the exact check and observed value.",
+    "preconditions_checked": "Host, route, registry, model, helper, and resource observations remain inspectable.",
+    "verifier_is_oracle": "False states that transport readiness is not a correctness oracle.",
+    "verdict_class": "A closed class prevents an unsupported result from becoming positive.",
+    "honest_verdict": "A terminal prefix states readiness and evidence limits without inflation."
+  },
+  "inference_substrate": "production E3AgentPolicy on task-owned local CUDA GGUF",
+  "duration_s": 35.274636,
+  "random_seed": {
+    "cell_seed_schedule": [
+      2026083001,
+      2026083002,
+      2026083003,
+      2026083004,
+      2026083001,
+      2026083002,
+      2026083003,
+      2026083004,
+      2026083001,
+      2026083099
+    ],
+    "frozen_science_seeds": [
+      2026083001,
+      2026083002,
+      2026083003,
+      2026083004
+    ],
+    "canary_seed": 2026083099
+  },
+  "reproducibility_checksum": "sha256:1ecb5f4903afa72049a880c99f27bb88001bfba66634afdc99191841d5e8f4be",
+  "model_specs": [
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator",
+      "repo_substr": "Qwen3.8-27B",
+      "filename": "Qwen3.8-27B-Q4_K_M.gguf",
+      "expected_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "required_vram_mb": 17815,
+      "max_tokens": 1024,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "model_size_bytes": 17106775008,
+      "resolved": true,
+      "tokenizer": {
+        "source": "llama.cpp_embedded_gguf",
+        "loadable": true,
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)"
+      },
+      "decode_tokens": 4096
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "repo_substr": "Qwen3.6-35B-A3B",
+      "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "expected_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "required_vram_mb": 22610,
+      "max_tokens": 512,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_size_bytes": 22134528992,
+      "resolved": true,
+      "tokenizer": {
+        "source": "llama.cpp_embedded_gguf",
+        "loadable": true,
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)"
+      },
+      "decode_tokens": 512
+    }
+  ],
+  "models_used": [],
+  "live_model_invoked": false,
+  "frozen_manifest": {
+    "schema": "carnot.experiment_6776.arc_shadow_supervisor_accrual.v1.frozen_manifest",
+    "requirement": "REQ-ARC-WMTE-6776",
+    "games": [
+      "tu93",
+      "ar25"
+    ],
+    "public_registry_games_checked": [
+      "ar25",
+      "bp35",
+      "cd82",
+      "cn04",
+      "dc22",
+      "ft09",
+      "g50t",
+      "ka59",
+      "lf52",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "re86",
+      "s5i5",
+      "sb26",
+      "sc25",
+      "sk48",
+      "sp80",
+      "su15",
+      "tn36",
+      "tr87",
+      "tu93",
+      "vc33",
+      "wa30"
+    ],
+    "seeds": [
+      2026083001,
+      2026083002,
+      2026083003,
+      2026083004
+    ],
+    "canary_seed": 2026083099,
+    "action_budget": 399,
+    "canary_action_budget": 140,
+    "action_block": 20,
+    "supervisor_window": 120,
+    "supervisor_mode": "shadow",
+    "context_requested": 32768,
+    "prompt_contract": "production E3AgentPolicy prompt builders; no task-authored game prompt",
+    "sampling": {
+      "generator_seed_per_cell": true,
+      "mtp": false,
+      "kv_quant": "q8_0",
+      "no_think_prefix": "/no_think\\n",
+      "decode_tokens_by_role": {
+        "immutable_scored_arc_generator": 4096,
+        "flagship_moe_transport_canary": 512
+      }
+    },
+    "cell_order": "listed order; one fresh worker, lease, port, and model session per cell",
+    "cells": [
+      {
+        "cell_id": "science:tu93:2026083001:shadow",
+        "cell_kind": "science",
+        "game": "tu93",
+        "seed": 2026083001,
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "model_role": "immutable_scored_arc_generator",
+        "action_budget": 399,
+        "supervisor_observation": "shadow",
+        "invariance_pair_id": "tu93:2026083001"
+      },
+      {
+        "cell_id": "science:tu93:2026083002:shadow",
+        "cell_kind": "science",
+        "game": "tu93",
+        "seed": 2026083002,
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "model_role": "immutable_scored_arc_generator",
+        "action_budget": 399,
+        "supervisor_observation": "shadow",
+        "invariance_pair_id": null
+      },
+      {
+        "cell_id": "science:tu93:2026083003:shadow",
+        "cell_kind": "science",
+        "game": "tu93",
+        "seed": 2026083003,
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "model_role": "immutable_scored_arc_generator",
+        "action_budget": 399,
+        "supervisor_observation": "shadow",
+        "invariance_pair_id": null
+      },
+      {
+        "cell_id": "science:tu93:2026083004:shadow",
+        "cell_kind": "science",
+        "game": "tu93",
+        "seed": 2026083004,
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "model_role": "immutable_scored_arc_generator",
+        "action_budget": 399,
+        "supervisor_observation": "shadow",
+        "invariance_pair_id": null
+      },
+      {
+        "cell_id": "science:ar25:2026083001:shadow",
+        "cell_kind": "science",
+        "game": "ar25",
+        "seed": 2026083001,
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "model_role": "immutable_scored_arc_generator",
+        "action_budget": 399,
+        "supervisor_observation": "shadow",
+        "invariance_pair_id": null
+      },
+      {
+        "cell_id": "science:ar25:2026083002:shadow",
+        "cell_kind": "science",
+        "game": "ar25",
+        "seed": 2026083002,
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "model_role": "immutable_scored_arc_generator",
+        "action_budget": 399,
+        "supervisor_observation": "shadow",
+        "invariance_pair_id": null
+      },
+      {
+        "cell_id": "science:ar25:2026083003:shadow",
+        "cell_kind": "science",
+        "game": "ar25",
+        "seed": 2026083003,
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "model_role": "immutable_scored_arc_generator",
+        "action_budget": 399,
+        "supervisor_observation": "shadow",
+        "invariance_pair_id": null
+      },
+      {
+        "cell_id": "science:ar25:2026083004:shadow",
+        "cell_kind": "science",
+        "game": "ar25",
+        "seed": 2026083004,
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "model_role": "immutable_scored_arc_generator",
+        "action_budget": 399,
+        "supervisor_observation": "shadow",
+        "invariance_pair_id": null
+      },
+      {
+        "cell_id": "canary:tu93:2026083001:shadow_off",
+        "cell_kind": "shadow_off_canary",
+        "game": "tu93",
+        "seed": 2026083001,
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "model_role": "immutable_scored_arc_generator",
+        "action_budget": 399,
+        "supervisor_observation": "off",
+        "invariance_pair_id": "tu93:2026083001"
+      },
+      {
+        "cell_id": "transport:ar25:2026083099:shadow",
+        "cell_kind": "transport_canary",
+        "game": "ar25",
+        "seed": 2026083099,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_role": "flagship_moe_transport_canary",
+        "action_budget": 140,
+        "supervisor_observation": "shadow",
+        "invariance_pair_id": null
+      }
+    ],
+    "quality_reducer_model_role": "immutable_scored_arc_generator",
+    "excluded_quality_model_role": "flagship_moe_transport_canary",
+    "solve_target": null,
+    "solve_claim": false,
+    "game_source_access": false,
+    "game_adapter_added": false,
+    "offline_bfs_used": false,
+    "manifest_sha256": "sha256:6e4188a2cef3daa4f28389d92bf527f0393cca62986600ebf786210722f006e5"
+  },
+  "rows": [
+    {
+      "row_id": "science:tu93:2026083001:shadow:drop_goal_bias",
+      "cell_id": "science:tu93:2026083001:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083001,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "drop_goal_bias",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:47b5846ad1d68e3c72adb8b36b8c649568ee0d47e883f36c6cb3223d5f357889",
+      "row_sha256": "sha256:fda607ee87f752501081a8c3d1810eb09316528d85ecb6d94b12832c452e7802"
+    },
+    {
+      "row_id": "science:tu93:2026083001:shadow:allow_reinduction",
+      "cell_id": "science:tu93:2026083001:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083001,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "allow_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:47b5846ad1d68e3c72adb8b36b8c649568ee0d47e883f36c6cb3223d5f357889",
+      "row_sha256": "sha256:81ef4169696f1550570e631a5e0bdd8cfa3c852edc08b39b6b4a94acb721a3d4"
+    },
+    {
+      "row_id": "science:tu93:2026083001:shadow:force_exploration_diversity",
+      "cell_id": "science:tu93:2026083001:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083001,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "force_exploration_diversity",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:47b5846ad1d68e3c72adb8b36b8c649568ee0d47e883f36c6cb3223d5f357889",
+      "row_sha256": "sha256:5e2695a99c7901e6a7423b7d588fa1ed8ab3d0f4f01ebd204a1fda51dc1e3362"
+    },
+    {
+      "row_id": "science:tu93:2026083001:shadow:tool_loop_reinduction",
+      "cell_id": "science:tu93:2026083001:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083001,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "tool_loop_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:47b5846ad1d68e3c72adb8b36b8c649568ee0d47e883f36c6cb3223d5f357889",
+      "row_sha256": "sha256:ff3b12ab6c67fa2cb14a6fff591176d9e7232b8a132ecb8e462f6920459bf8b3"
+    },
+    {
+      "row_id": "science:tu93:2026083002:shadow:drop_goal_bias",
+      "cell_id": "science:tu93:2026083002:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083002,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "drop_goal_bias",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:a00d8cb5c33d25d58adcfac2c1d711e256edbad8b2c86a5c5cfe8a259a2fdade",
+      "row_sha256": "sha256:d83bf55d0e580c8d14ccbd193a41e305af279b6c00e762e1695c1520f2503e83"
+    },
+    {
+      "row_id": "science:tu93:2026083002:shadow:allow_reinduction",
+      "cell_id": "science:tu93:2026083002:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083002,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "allow_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:a00d8cb5c33d25d58adcfac2c1d711e256edbad8b2c86a5c5cfe8a259a2fdade",
+      "row_sha256": "sha256:97b1be6e932c44d6f672197e84a081041bc86bb715597880f0078411c777c9b0"
+    },
+    {
+      "row_id": "science:tu93:2026083002:shadow:force_exploration_diversity",
+      "cell_id": "science:tu93:2026083002:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083002,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "force_exploration_diversity",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:a00d8cb5c33d25d58adcfac2c1d711e256edbad8b2c86a5c5cfe8a259a2fdade",
+      "row_sha256": "sha256:5be537064c934b17d70c17469b288235149851bf7e5b721c0803e9c76b295fd2"
+    },
+    {
+      "row_id": "science:tu93:2026083002:shadow:tool_loop_reinduction",
+      "cell_id": "science:tu93:2026083002:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083002,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "tool_loop_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:a00d8cb5c33d25d58adcfac2c1d711e256edbad8b2c86a5c5cfe8a259a2fdade",
+      "row_sha256": "sha256:902ade19c3616c29ee84966d8f0c0a7f8b9252b1826aa5ea14f7ed69fda73939"
+    },
+    {
+      "row_id": "science:tu93:2026083003:shadow:drop_goal_bias",
+      "cell_id": "science:tu93:2026083003:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083003,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "drop_goal_bias",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:07c8064cdc3136fd7320f087751abb9c4c6c07923cb6f1210fa95c4556b4fb48",
+      "row_sha256": "sha256:159cec695ee6abc43aa0324b5832b95e06c0b398c663a1fd41a480cbf7749e18"
+    },
+    {
+      "row_id": "science:tu93:2026083003:shadow:allow_reinduction",
+      "cell_id": "science:tu93:2026083003:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083003,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "allow_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:07c8064cdc3136fd7320f087751abb9c4c6c07923cb6f1210fa95c4556b4fb48",
+      "row_sha256": "sha256:08af7260bfe1436f2c5324ac34245943fe5f0b378b85c3a448933ce2980f671a"
+    },
+    {
+      "row_id": "science:tu93:2026083003:shadow:force_exploration_diversity",
+      "cell_id": "science:tu93:2026083003:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083003,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "force_exploration_diversity",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:07c8064cdc3136fd7320f087751abb9c4c6c07923cb6f1210fa95c4556b4fb48",
+      "row_sha256": "sha256:0fb64b8759644d5ef9a2db25681ce3c71203f3e89475497b730cf95e10cdccbc"
+    },
+    {
+      "row_id": "science:tu93:2026083003:shadow:tool_loop_reinduction",
+      "cell_id": "science:tu93:2026083003:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083003,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "tool_loop_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:07c8064cdc3136fd7320f087751abb9c4c6c07923cb6f1210fa95c4556b4fb48",
+      "row_sha256": "sha256:8c05757623b1c2d005dc3db4edd6716b587d3398587c84eeb6c517c9646303b3"
+    },
+    {
+      "row_id": "science:tu93:2026083004:shadow:drop_goal_bias",
+      "cell_id": "science:tu93:2026083004:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083004,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "drop_goal_bias",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:f4fc545f82083193e6280c893ffca0689cfcde980ef4f428badb1efe90dde4ef",
+      "row_sha256": "sha256:e206a5d263dbaac91e681411971038e6ff30a455d9418422a76eaf2ae60c254f"
+    },
+    {
+      "row_id": "science:tu93:2026083004:shadow:allow_reinduction",
+      "cell_id": "science:tu93:2026083004:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083004,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "allow_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:f4fc545f82083193e6280c893ffca0689cfcde980ef4f428badb1efe90dde4ef",
+      "row_sha256": "sha256:8e8e57f69cb8793c3d04f2cbe2ec6b2396b73c910c36afa16181eeea3252d3a6"
+    },
+    {
+      "row_id": "science:tu93:2026083004:shadow:force_exploration_diversity",
+      "cell_id": "science:tu93:2026083004:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083004,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "force_exploration_diversity",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:f4fc545f82083193e6280c893ffca0689cfcde980ef4f428badb1efe90dde4ef",
+      "row_sha256": "sha256:f3fc3d00d76c8d05cea569a7bbadb6f41158452798f562218a374fcfe3720990"
+    },
+    {
+      "row_id": "science:tu93:2026083004:shadow:tool_loop_reinduction",
+      "cell_id": "science:tu93:2026083004:shadow",
+      "cell_kind": "science",
+      "game": "tu93",
+      "seed": 2026083004,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "tool_loop_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:f4fc545f82083193e6280c893ffca0689cfcde980ef4f428badb1efe90dde4ef",
+      "row_sha256": "sha256:c3d95d27d1a54b6168e5e21d7a7a7e23c1c225504fd81b83027161b48dc9d9d9"
+    },
+    {
+      "row_id": "science:ar25:2026083001:shadow:drop_goal_bias",
+      "cell_id": "science:ar25:2026083001:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083001,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "drop_goal_bias",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:3c7478d720b258e2e30c0b426570e7d20d0d6b709f1797afdad60389ef70730a",
+      "row_sha256": "sha256:3d714fefbdeb82cd9dbfd890a1a44e02556d7eae40b968b36e52b32f148668c7"
+    },
+    {
+      "row_id": "science:ar25:2026083001:shadow:allow_reinduction",
+      "cell_id": "science:ar25:2026083001:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083001,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "allow_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:3c7478d720b258e2e30c0b426570e7d20d0d6b709f1797afdad60389ef70730a",
+      "row_sha256": "sha256:f6e1a0f46953a8019f333a9a9dab77c5aa9e5cb92fc5effbc4830b1ce6ad6d12"
+    },
+    {
+      "row_id": "science:ar25:2026083001:shadow:force_exploration_diversity",
+      "cell_id": "science:ar25:2026083001:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083001,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "force_exploration_diversity",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:3c7478d720b258e2e30c0b426570e7d20d0d6b709f1797afdad60389ef70730a",
+      "row_sha256": "sha256:e830de8b36f74d6abdb6fd7281037f051e2d42ade027e535399200ce25aa6b14"
+    },
+    {
+      "row_id": "science:ar25:2026083001:shadow:tool_loop_reinduction",
+      "cell_id": "science:ar25:2026083001:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083001,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "tool_loop_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:3c7478d720b258e2e30c0b426570e7d20d0d6b709f1797afdad60389ef70730a",
+      "row_sha256": "sha256:b48cf3c6b7bdd6fae63bb3c8273c09888de15531f08116017cd48a4fe384fe7d"
+    },
+    {
+      "row_id": "science:ar25:2026083002:shadow:drop_goal_bias",
+      "cell_id": "science:ar25:2026083002:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083002,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "drop_goal_bias",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:d72266f6481319659f708fd70e3dc525efff5593923f8e6734f13f53441d6d01",
+      "row_sha256": "sha256:9ae36f3d421a19662dd3f773a4f6301e15eed86766fc2274bdc596be5c02facd"
+    },
+    {
+      "row_id": "science:ar25:2026083002:shadow:allow_reinduction",
+      "cell_id": "science:ar25:2026083002:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083002,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "allow_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:d72266f6481319659f708fd70e3dc525efff5593923f8e6734f13f53441d6d01",
+      "row_sha256": "sha256:39be572ee8d5754fab27c0f4b091978ead71bf47f38069051d0187c816685bb3"
+    },
+    {
+      "row_id": "science:ar25:2026083002:shadow:force_exploration_diversity",
+      "cell_id": "science:ar25:2026083002:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083002,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "force_exploration_diversity",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:d72266f6481319659f708fd70e3dc525efff5593923f8e6734f13f53441d6d01",
+      "row_sha256": "sha256:34c5f89298214050ccb8eb14ab7bf7bcbb92cd05382dcf7a98a52f0684cc0bee"
+    },
+    {
+      "row_id": "science:ar25:2026083002:shadow:tool_loop_reinduction",
+      "cell_id": "science:ar25:2026083002:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083002,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "tool_loop_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:d72266f6481319659f708fd70e3dc525efff5593923f8e6734f13f53441d6d01",
+      "row_sha256": "sha256:e4c63eddca47c2c8bce01b0b211d2ab3736f83e9a16b8ac0d0610c8a21fa0173"
+    },
+    {
+      "row_id": "science:ar25:2026083003:shadow:drop_goal_bias",
+      "cell_id": "science:ar25:2026083003:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083003,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "drop_goal_bias",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:2bdcfcba296a409d809ec724b2f330806b0403ea1fcbf240cfe5b93ab535106e",
+      "row_sha256": "sha256:cbe6a9216ed81fda71b82c9253edfaa0eb2fb634feb1a90f2b42c07148bb0a52"
+    },
+    {
+      "row_id": "science:ar25:2026083003:shadow:allow_reinduction",
+      "cell_id": "science:ar25:2026083003:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083003,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "allow_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:2bdcfcba296a409d809ec724b2f330806b0403ea1fcbf240cfe5b93ab535106e",
+      "row_sha256": "sha256:7b0fafdec0311182d4d2a4afeede2a111543cf0a7ecbf43f8caea7bc5da31075"
+    },
+    {
+      "row_id": "science:ar25:2026083003:shadow:force_exploration_diversity",
+      "cell_id": "science:ar25:2026083003:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083003,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "force_exploration_diversity",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:2bdcfcba296a409d809ec724b2f330806b0403ea1fcbf240cfe5b93ab535106e",
+      "row_sha256": "sha256:49e75eb53a6d7fd06c66e9e3c8d5eac2f7a154f3c2ac154565ede6d421c16d5b"
+    },
+    {
+      "row_id": "science:ar25:2026083003:shadow:tool_loop_reinduction",
+      "cell_id": "science:ar25:2026083003:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083003,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "tool_loop_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:2bdcfcba296a409d809ec724b2f330806b0403ea1fcbf240cfe5b93ab535106e",
+      "row_sha256": "sha256:729784d6b00f19881f36649c6c133a2ac1c34b797ab5d3669e827027cdc92116"
+    },
+    {
+      "row_id": "science:ar25:2026083004:shadow:drop_goal_bias",
+      "cell_id": "science:ar25:2026083004:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083004,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "drop_goal_bias",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:1b433c61d57a79df136d01f18d8fc500dea38bf050e3d0aeb21ee0f975ebdd4f",
+      "row_sha256": "sha256:837014c5db4707e593f1a506b5aceef6e103f6b248efa3acacc6372b067164b1"
+    },
+    {
+      "row_id": "science:ar25:2026083004:shadow:allow_reinduction",
+      "cell_id": "science:ar25:2026083004:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083004,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "allow_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:1b433c61d57a79df136d01f18d8fc500dea38bf050e3d0aeb21ee0f975ebdd4f",
+      "row_sha256": "sha256:8b8029a832956e1344a604f880371656e4787c487c2cf63538530adc172f3d29"
+    },
+    {
+      "row_id": "science:ar25:2026083004:shadow:force_exploration_diversity",
+      "cell_id": "science:ar25:2026083004:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083004,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "force_exploration_diversity",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:1b433c61d57a79df136d01f18d8fc500dea38bf050e3d0aeb21ee0f975ebdd4f",
+      "row_sha256": "sha256:33071a78c9267632b3308a5b3cd704421756184aa62557651a8225e6db0b7a12"
+    },
+    {
+      "row_id": "science:ar25:2026083004:shadow:tool_loop_reinduction",
+      "cell_id": "science:ar25:2026083004:shadow",
+      "cell_kind": "science",
+      "game": "ar25",
+      "seed": 2026083004,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "tool_loop_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:1b433c61d57a79df136d01f18d8fc500dea38bf050e3d0aeb21ee0f975ebdd4f",
+      "row_sha256": "sha256:e7ee73ba5cd015124a95d997477a74108e0f5dfd8084bee1d3d97e9ae529c6a7"
+    },
+    {
+      "row_id": "canary:tu93:2026083001:shadow_off:drop_goal_bias",
+      "cell_id": "canary:tu93:2026083001:shadow_off",
+      "cell_kind": "shadow_off_canary",
+      "game": "tu93",
+      "seed": 2026083001,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "drop_goal_bias",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "off",
+      "supervisor_window_observed": null,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:86067ff61fd69ff1656081c4344716399cd7e597c79ca14989949c127a54b440",
+      "row_sha256": "sha256:d72c5e6983a7a8cbf9d9215a6884812fb88e83c85c2d55a3da89177003302eca"
+    },
+    {
+      "row_id": "canary:tu93:2026083001:shadow_off:allow_reinduction",
+      "cell_id": "canary:tu93:2026083001:shadow_off",
+      "cell_kind": "shadow_off_canary",
+      "game": "tu93",
+      "seed": 2026083001,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "allow_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "off",
+      "supervisor_window_observed": null,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:86067ff61fd69ff1656081c4344716399cd7e597c79ca14989949c127a54b440",
+      "row_sha256": "sha256:cfc69be54246879ecec1bd29a6cdb8c8fc7c59c93b3cd83b471aa60cc9b02ac6"
+    },
+    {
+      "row_id": "canary:tu93:2026083001:shadow_off:force_exploration_diversity",
+      "cell_id": "canary:tu93:2026083001:shadow_off",
+      "cell_kind": "shadow_off_canary",
+      "game": "tu93",
+      "seed": 2026083001,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "force_exploration_diversity",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "off",
+      "supervisor_window_observed": null,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:86067ff61fd69ff1656081c4344716399cd7e597c79ca14989949c127a54b440",
+      "row_sha256": "sha256:43ad666a3006d68efd2486f1fda6fb3b54ac1dd546886e7f209b8578af59f964"
+    },
+    {
+      "row_id": "canary:tu93:2026083001:shadow_off:tool_loop_reinduction",
+      "cell_id": "canary:tu93:2026083001:shadow_off",
+      "cell_kind": "shadow_off_canary",
+      "game": "tu93",
+      "seed": 2026083001,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_role": "immutable_scored_arc_generator",
+      "supervisor_arm": "tool_loop_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "off",
+      "supervisor_window_observed": null,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:86067ff61fd69ff1656081c4344716399cd7e597c79ca14989949c127a54b440",
+      "row_sha256": "sha256:2a1198a026e70f00f73b961713067d6bb42c51433a93f1847ab1a3d937ab989f"
+    },
+    {
+      "row_id": "transport:ar25:2026083099:shadow:drop_goal_bias",
+      "cell_id": "transport:ar25:2026083099:shadow",
+      "cell_kind": "transport_canary",
+      "game": "ar25",
+      "seed": 2026083099,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe_transport_canary",
+      "supervisor_arm": "drop_goal_bias",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:944b8498ce200deaae39d10dd59475fa711187784d1461a610b39c881236d88a",
+      "row_sha256": "sha256:167d6c0dca90041054638fb8002e1f16efcd8ea54c15c99cdeaa35f80d26b70a"
+    },
+    {
+      "row_id": "transport:ar25:2026083099:shadow:allow_reinduction",
+      "cell_id": "transport:ar25:2026083099:shadow",
+      "cell_kind": "transport_canary",
+      "game": "ar25",
+      "seed": 2026083099,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe_transport_canary",
+      "supervisor_arm": "allow_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:944b8498ce200deaae39d10dd59475fa711187784d1461a610b39c881236d88a",
+      "row_sha256": "sha256:3c86c6a00a65648e31627dd4a719d2f9e439b4dddd231869edeca1e1a2631884"
+    },
+    {
+      "row_id": "transport:ar25:2026083099:shadow:force_exploration_diversity",
+      "cell_id": "transport:ar25:2026083099:shadow",
+      "cell_kind": "transport_canary",
+      "game": "ar25",
+      "seed": 2026083099,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe_transport_canary",
+      "supervisor_arm": "force_exploration_diversity",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:944b8498ce200deaae39d10dd59475fa711187784d1461a610b39c881236d88a",
+      "row_sha256": "sha256:a9f417ce6173d7dfa3438935dac6e5947166a62169d6eee876d2e3caf87222b3"
+    },
+    {
+      "row_id": "transport:ar25:2026083099:shadow:tool_loop_reinduction",
+      "cell_id": "transport:ar25:2026083099:shadow",
+      "cell_kind": "transport_canary",
+      "game": "ar25",
+      "seed": 2026083099,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe_transport_canary",
+      "supervisor_arm": "tool_loop_reinduction",
+      "arm_fired": 0,
+      "arm_helped_counterfactual": 0,
+      "arm_redirect_receipts": [],
+      "supervisor_mode_observed": "shadow",
+      "supervisor_window_observed": 120,
+      "actions_observed": 0,
+      "scored_action_hash": null,
+      "live_model_invoked": false,
+      "first_token_observed": false,
+      "worker_pid": null,
+      "llama_server_pid": null,
+      "teardown_passed": false,
+      "shard_count": 0,
+      "failure_class": "preflight_blocked:exclusive_gpu_without_unrelated_compute",
+      "solve_claim": false,
+      "cell_receipt_sha256": "sha256:944b8498ce200deaae39d10dd59475fa711187784d1461a610b39c881236d88a",
+      "row_sha256": "sha256:084fc5646a979a817ac222c73d43aab2d8c1501da3f9a859e428b1b91130cd7e"
+    }
+  ],
+  "gpu_receipts": [
+    {
+      "cell_id": "science:tu93:2026083001:shadow",
+      "receipt": null
+    },
+    {
+      "cell_id": "science:tu93:2026083002:shadow",
+      "receipt": null
+    },
+    {
+      "cell_id": "science:tu93:2026083003:shadow",
+      "receipt": null
+    },
+    {
+      "cell_id": "science:tu93:2026083004:shadow",
+      "receipt": null
+    },
+    {
+      "cell_id": "science:ar25:2026083001:shadow",
+      "receipt": null
+    },
+    {
+      "cell_id": "science:ar25:2026083002:shadow",
+      "receipt": null
+    },
+    {
+      "cell_id": "science:ar25:2026083003:shadow",
+      "receipt": null
+    },
+    {
+      "cell_id": "science:ar25:2026083004:shadow",
+      "receipt": null
+    },
+    {
+      "cell_id": "canary:tu93:2026083001:shadow_off",
+      "receipt": null
+    },
+    {
+      "cell_id": "transport:ar25:2026083099:shadow",
+      "receipt": null
+    }
+  ],
+  "death_receipts": [
+    {
+      "cell_id": "science:tu93:2026083001:shadow",
+      "receipt": {
+        "installed": false,
+        "path": null,
+        "signal_receipt": null
+      }
+    },
+    {
+      "cell_id": "science:tu93:2026083002:shadow",
+      "receipt": {
+        "installed": false,
+        "path": null,
+        "signal_receipt": null
+      }
+    },
+    {
+      "cell_id": "science:tu93:2026083003:shadow",
+      "receipt": {
+        "installed": false,
+        "path": null,
+        "signal_receipt": null
+      }
+    },
+    {
+      "cell_id": "science:tu93:2026083004:shadow",
+      "receipt": {
+        "installed": false,
+        "path": null,
+        "signal_receipt": null
+      }
+    },
+    {
+      "cell_id": "science:ar25:2026083001:shadow",
+      "receipt": {
+        "installed": false,
+        "path": null,
+        "signal_receipt": null
+      }
+    },
+    {
+      "cell_id": "science:ar25:2026083002:shadow",
+      "receipt": {
+        "installed": false,
+        "path": null,
+        "signal_receipt": null
+      }
+    },
+    {
+      "cell_id": "science:ar25:2026083003:shadow",
+      "receipt": {
+        "installed": false,
+        "path": null,
+        "signal_receipt": null
+      }
+    },
+    {
+      "cell_id": "science:ar25:2026083004:shadow",
+      "receipt": {
+        "installed": false,
+        "path": null,
+        "signal_receipt": null
+      }
+    },
+    {
+      "cell_id": "canary:tu93:2026083001:shadow_off",
+      "receipt": {
+        "installed": false,
+        "path": null,
+        "signal_receipt": null
+      }
+    },
+    {
+      "cell_id": "transport:ar25:2026083099:shadow",
+      "receipt": {
+        "installed": false,
+        "path": null,
+        "signal_receipt": null
+      }
+    }
+  ],
+  "shard_receipts": [
+    {
+      "cell_id": "science:tu93:2026083001:shadow",
+      "receipts": []
+    },
+    {
+      "cell_id": "science:tu93:2026083002:shadow",
+      "receipts": []
+    },
+    {
+      "cell_id": "science:tu93:2026083003:shadow",
+      "receipts": []
+    },
+    {
+      "cell_id": "science:tu93:2026083004:shadow",
+      "receipts": []
+    },
+    {
+      "cell_id": "science:ar25:2026083001:shadow",
+      "receipts": []
+    },
+    {
+      "cell_id": "science:ar25:2026083002:shadow",
+      "receipts": []
+    },
+    {
+      "cell_id": "science:ar25:2026083003:shadow",
+      "receipts": []
+    },
+    {
+      "cell_id": "science:ar25:2026083004:shadow",
+      "receipts": []
+    },
+    {
+      "cell_id": "canary:tu93:2026083001:shadow_off",
+      "receipts": []
+    },
+    {
+      "cell_id": "transport:ar25:2026083099:shadow",
+      "receipts": []
+    }
+  ],
+  "supervisor_window": 120,
+  "supervisor_mode": "shadow",
+  "action_hash_invariance": {
+    "method": "not run because preconditions failed",
+    "expected_pair_ids": [],
+    "pairs": [],
+    "passed": false
+  },
+  "firings_before_by_arm": {
+    "drop_goal_bias": 2,
+    "allow_reinduction": 2,
+    "force_exploration_diversity": 2,
+    "tool_loop_reinduction": 0
+  },
+  "firings_after_by_arm": {
+    "drop_goal_bias": 2,
+    "allow_reinduction": 2,
+    "force_exploration_diversity": 2,
+    "tool_loop_reinduction": 0
+  },
+  "evidence_floor_met_by_arm": {
+    "drop_goal_bias": false,
+    "allow_reinduction": false,
+    "force_exploration_diversity": false,
+    "tool_loop_reinduction": false
+  },
+  "supervisor_refinement_receipt": {
+    "tool": "scripts/arc_supervisor_refine.py",
+    "ran": false,
+    "reason": "precondition_failed",
+    "exit_code": null,
+    "inputs": [],
+    "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_supervisor_refinement_ledger.json",
+    "ledger_sha256_before": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197",
+    "ledger_sha256_after": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197",
+    "entry_ids_before": [
+      "sha256:4528ffc805ebe4bf0c35f7085cb631a59f228901e12f53e2b350ec7748fae26c",
+      "sha256:56984731d95aa868eb4d5ef34264621b62d7da64dea5a3f906d49c27af892739",
+      "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
+      "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
+      "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
+      "sha256:cd18591a0431271b3e93826e0fcb9f7f0798569cbbf35433b7fb0f27089f1bc3",
+      "sha256:d2dd6bd53afef43caaba612e72e2e274b473a3b5a7443d3d6e36f1f3ee3eef66",
+      "sha256:d6f4876125b38a7d8b2658952aa09b9e1c55414d483414b2434329123e507004",
+      "sha256:fa1fa4e4ea79e841bea8be06a805fb4d670761ed44e89bce13372c6b0f013908"
+    ],
+    "entry_ids_after": [
+      "sha256:4528ffc805ebe4bf0c35f7085cb631a59f228901e12f53e2b350ec7748fae26c",
+      "sha256:56984731d95aa868eb4d5ef34264621b62d7da64dea5a3f906d49c27af892739",
+      "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
+      "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
+      "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
+      "sha256:cd18591a0431271b3e93826e0fcb9f7f0798569cbbf35433b7fb0f27089f1bc3",
+      "sha256:d2dd6bd53afef43caaba612e72e2e274b473a3b5a7443d3d6e36f1f3ee3eef66",
+      "sha256:d6f4876125b38a7d8b2658952aa09b9e1c55414d483414b2434329123e507004",
+      "sha256:fa1fa4e4ea79e841bea8be06a805fb4d670761ed44e89bce13372c6b0f013908"
+    ],
+    "deduplicated": true,
+    "ingest_counts": {
+      "files_read": 0,
+      "rows_seen": 0,
+      "applied_new": 0,
+      "applied_duplicate": 0,
+      "shadow_observed": 0
+    },
+    "firings_before_by_arm": {
+      "drop_goal_bias": 2,
+      "allow_reinduction": 2,
+      "force_exploration_diversity": 2,
+      "tool_loop_reinduction": 0
+    },
+    "recommendation": {
+      "schema": "carnot.arc.supervisor_refinement_recommendation.v1",
+      "generated_at": "2026-08-30T12:33:14+00:00",
+      "status": "insufficient_evidence",
+      "contract": {
+        "min_fired_per_arm": 10,
+        "wilson_z": 1.6448536269514722,
+        "rules": [
+          "retire_candidate: fired >= floor and helped == 0",
+          "raise_priority_candidate: arm and pooled others both at floor, arm lower bound > others upper bound",
+          "new_arm_specification: a receipt fired every arm and still recorded stagnations_unredirected > 0"
+        ]
+      },
+      "recommendation_only": true,
+      "causal_caveat": "resolved_by_levelup records that a level-up FOLLOWED a redirect inside the same progress-free span. One level-up credits every pending redirect (observed live 2026-08-27: two arms credited by one level-up). It is not evidence of cause. A human applies these, or nobody does.",
+      "evidence": {
+        "receipts": 9,
+        "redirects": 6,
+        "games": [
+          "ar25",
+          "tu93"
+        ],
+        "stagnations_unredirected_total": 0
+      },
+      "per_arm": [
+        {
+          "arm": "drop_goal_bias",
+          "fired": 2,
+          "helped": 1,
+          "help_follow_rate": 0.5,
+          "wilson_lower": 0.120866,
+          "wilson_upper": 0.879134,
+          "actions_to_levelup": [
+            233
+          ],
+          "meets_floor": false,
+          "floor_shortfall": 8
+        },
+        {
+          "arm": "allow_reinduction",
+          "fired": 2,
+          "helped": 1,
+          "help_follow_rate": 0.5,
+          "wilson_lower": 0.120866,
+          "wilson_upper": 0.879134,
+          "actions_to_levelup": [
+            113
+          ],
+          "meets_floor": false,
+          "floor_shortfall": 8
+        },
+        {
+          "arm": "force_exploration_diversity",
+          "fired": 2,
+          "helped": 1,
+          "help_follow_rate": 0.5,
+          "wilson_lower": 0.120866,
+          "wilson_upper": 0.879134,
+          "actions_to_levelup": [
+            63
+          ],
+          "meets_floor": false,
+          "floor_shortfall": 8
+        },
+        {
+          "arm": "tool_loop_reinduction",
+          "fired": 0,
+          "helped": 0,
+          "help_follow_rate": null,
+          "wilson_lower": 0.0,
+          "wilson_upper": 1.0,
+          "actions_to_levelup": [],
+          "meets_floor": false,
+          "floor_shortfall": 10
+        }
+      ],
+      "recommendations": [],
+      "new_arm_specification": null
+    }
+  },
+  "shadow_supervisor_transport_ready": false,
+  "solve_claim": false,
+  "source_receipts": {
+    "exp6752": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6752_arc_code_carrying_tool_preflight.json",
+      "sha256": "sha256:33b94922df0508944053432960a8163a3fdccf3eb7bd8ce93200c1e7e59a4b2e"
+    },
+    "exp6647": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6647_receipt_scoped_admission_boundary.json",
+      "sha256": "sha256:ad79510853e20772eeafee01d6f9a45dcba21d82f06ebaa4df155842d1e986b3"
+    },
+    "architecture_map": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/_bmad/architecture.md",
+      "sha256": "sha256:0fae19927a4c1b416795f7700ccd6ebb55f8b251627f0afb1e7122d10b2919ef"
+    },
+    "solve_registry": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947"
+    },
+    "refinement_ledger": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_supervisor_refinement_ledger.json",
+      "sha256_before": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197",
+      "sha256_after": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197"
+    },
+    "agent_source": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py",
+      "sha256": "sha256:1106d26e7d0bc8a2c1e21e62e715774c09e20194773d44c8258c7c3349e38adf"
+    },
+    "supervisor_source": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_trajectory_supervisor.py",
+      "sha256": "sha256:b4763f89da8e551c14ad96b6b62356af018e53f5aeb1680750b1feb3bf4147bf"
+    },
+    "game_source_accessed": false,
+    "offline_bfs_used": false,
+    "game_adapter_added": false,
+    "solve_registry_edited": false
+  },
+  "gate_check_summary": {
+    "passed": false,
+    "failed_check": "exclusive_gpu_without_unrelated_compute",
+    "expected": "one RTX 3090 with no active compute owner and at least 22610 MiB free",
+    "observed": [
+      {
+        "index": 0,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_total_mb": 24576,
+        "memory_used_mb": 18155,
+        "memory_free_mb": 5969,
+        "temperature_c": 81,
+        "utilization_pct": 95,
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3306606,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 17884
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3542419,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_total_mb": 24576,
+        "memory_used_mb": 19228,
+        "memory_free_mb": 4896,
+        "temperature_c": 76,
+        "utilization_pct": 73,
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3452377,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 536
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3452459,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 18416
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3542419,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ]
+      }
+    ]
+  },
+  "preconditions_checked": {
+    "all_passed": false,
+    "checks": [
+      {
+        "check": "exp6752_preflight_ready",
+        "expected": true,
+        "observed": true,
+        "validator_errors": [],
+        "passed": true
+      },
+      {
+        "check": "exp6647_task_owned_admission",
+        "expected": 1.0,
+        "observed": 1.0,
+        "validator_errors": [],
+        "passed": true
+      },
+      {
+        "check": "exact_cached_model:unsloth/Qwen3.8-27B-GGUF",
+        "expected": {
+          "filename": "Qwen3.8-27B-Q4_K_M.gguf",
+          "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+        },
+        "observed": {
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "resolved": true
+        },
+        "passed": true
+      },
+      {
+        "check": "embedded_tokenizer:unsloth/Qwen3.8-27B-GGUF",
+        "expected": "llama.cpp_embedded_gguf",
+        "observed": {
+          "source": "llama.cpp_embedded_gguf",
+          "loadable": true,
+          "detail": "embedded GGUF tokenizer OK (7 tokens on probe)"
+        },
+        "passed": true
+      },
+      {
+        "check": "context_32k_support:unsloth/Qwen3.8-27B-GGUF",
+        "expected": {
+          "context_at_least": 32768
+        },
+        "observed": {
+          "prior_context": 32768,
+          "prior_model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "current_model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+        },
+        "passed": true
+      },
+      {
+        "check": "exact_cached_model:unsloth/Qwen3.6-35B-A3B-GGUF",
+        "expected": {
+          "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+        },
+        "observed": {
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "resolved": true
+        },
+        "passed": true
+      },
+      {
+        "check": "embedded_tokenizer:unsloth/Qwen3.6-35B-A3B-GGUF",
+        "expected": "llama.cpp_embedded_gguf",
+        "observed": {
+          "source": "llama.cpp_embedded_gguf",
+          "loadable": true,
+          "detail": "embedded GGUF tokenizer OK (7 tokens on probe)"
+        },
+        "passed": true
+      },
+      {
+        "check": "context_32k_support:unsloth/Qwen3.6-35B-A3B-GGUF",
+        "expected": {
+          "context_at_least": 32768
+        },
+        "observed": {
+          "prior_context": 32768,
+          "prior_model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "current_model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+        },
+        "passed": true
+      },
+      {
+        "check": "two_fixed_rtx3090_identities",
+        "expected": {
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": "NVIDIA GeForce RTX 3090",
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9": "NVIDIA GeForce RTX 3090"
+        },
+        "observed": {
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": "NVIDIA GeForce RTX 3090",
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9": "NVIDIA GeForce RTX 3090"
+        },
+        "passed": true
+      },
+      {
+        "check": "llama_cpp_cuda",
+        "expected": true,
+        "observed": {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "exists": true,
+          "executable": true,
+          "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+          "dynamic_link": {
+            "command": [
+              "ldd",
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+            ],
+            "exit_code": 0,
+            "duration_s": 0.005673,
+            "stdout": "\tlinux-vdso.so.1 (0x00007f55ce620000)\n\tlibllama-server-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so (0x00007f55cda00000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007f55cd400000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007f55cd8b3000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007f55cd000000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007f55ce5da000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007f55cce43000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007f55c9400000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007f55cd329000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007f55c2800000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007f55ccd29000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007f55c2000000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007f55c1c00000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007f55c26f7000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f55ce5a3000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f55c1800000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007f55ce622000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007f55c1f90000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007f55c1400000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007f55bdc00000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007f5598600000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007f55ce59a000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007f55ce595000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007f55ce590000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007f55c26bb000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007f55c1b06000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007f55ce580000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007f559849f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007f55c93dd000)\n",
+            "stderr": ""
+          },
+          "cuda_linked": true,
+          "python_cuda_offload": true
+        },
+        "passed": true
+      },
+      {
+        "check": "gpu_lease_api",
+        "expected": true,
+        "observed": {
+          "acquire": true,
+          "transition": true,
+          "release": true
+        },
+        "passed": true
+      },
+      {
+        "check": "ports_free",
+        "expected": 2,
+        "observed": {
+          "33893": true,
+          "47255": true
+        },
+        "passed": true
+      },
+      {
+        "check": "ram_and_disk",
+        "expected": {
+          "ram_available_bytes_at_least": 68719476736,
+          "disk_free_bytes_at_least": 1073741824
+        },
+        "observed": {
+          "cpu_count": 24,
+          "platform": "Linux-7.2.0-1-cachyos-x86_64-with-glibc2.44",
+          "ram_total_bytes": 134304591872,
+          "ram_available_bytes": 98839539712,
+          "disk_total_bytes": 3953289023488,
+          "disk_free_bytes": 1065175429120
+        },
+        "passed": true
+      },
+      {
+        "check": "production_selfparse_imports",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "least_used_eligible_rtx3090",
+        "expected": {
+          "free_vram_mb_at_least": 22610
+        },
+        "observed": null,
+        "passed": false
+      },
+      {
+        "check": "production_e3_policy_path",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "supervisor_default_window_and_shadow",
+        "expected": {
+          "window": 120,
+          "applies": false
+        },
+        "observed": {
+          "window": 120,
+          "applies": false
+        },
+        "passed": true
+      },
+      {
+        "check": "supervisor_applied_flag_unset",
+        "expected": null,
+        "observed": null,
+        "passed": true
+      },
+      {
+        "check": "death_receipt_helper",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "architecture_map_fresh",
+        "expected": "0 to 30 days old",
+        "observed": "2026-08-26",
+        "age_days": 4,
+        "passed": true
+      },
+      {
+        "check": "registry_precheck_all_public_games_no_new_target",
+        "expected": {
+          "public_games": [
+            "ar25",
+            "bp35",
+            "cd82",
+            "cn04",
+            "dc22",
+            "ft09",
+            "g50t",
+            "ka59",
+            "lf52",
+            "lp85",
+            "ls20",
+            "m0r0",
+            "r11l",
+            "re86",
+            "s5i5",
+            "sb26",
+            "sc25",
+            "sk48",
+            "sp80",
+            "su15",
+            "tn36",
+            "tr87",
+            "tu93",
+            "vc33",
+            "wa30"
+          ],
+          "solve_target": null
+        },
+        "observed": {
+          "games_present": [],
+          "solve_target": null
+        },
+        "passed": false
+      },
+      {
+        "check": "exclusive_gpu_without_unrelated_compute",
+        "expected": "one RTX 3090 with no active compute owner and at least 22610 MiB free",
+        "observed": [
+          {
+            "index": 0,
+            "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "name": "NVIDIA GeForce RTX 3090",
+            "memory_total_mb": 24576,
+            "memory_used_mb": 18155,
+            "memory_free_mb": 5969,
+            "temperature_c": 81,
+            "utilization_pct": 95,
+            "active_compute_processes": [
+              {
+                "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+                "pid": 3306606,
+                "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+                "used_memory_mb": 17884
+              },
+              {
+                "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+                "pid": 3542419,
+                "process_name": ".venv/bin/python",
+                "used_memory_mb": 256
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "name": "NVIDIA GeForce RTX 3090",
+            "memory_total_mb": 24576,
+            "memory_used_mb": 19228,
+            "memory_free_mb": 4896,
+            "temperature_c": 76,
+            "utilization_pct": 73,
+            "active_compute_processes": [
+              {
+                "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+                "pid": 3452377,
+                "process_name": ".venv/bin/python",
+                "used_memory_mb": 536
+              },
+              {
+                "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+                "pid": 3452459,
+                "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+                "used_memory_mb": 18416
+              },
+              {
+                "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+                "pid": 3542419,
+                "process_name": ".venv/bin/python",
+                "used_memory_mb": 256
+              }
+            ]
+          }
+        ],
+        "passed": false
+      },
+      {
+        "check": "current_refinement_ledger",
+        "expected": "carnot.arc.supervisor_refinement_ledger.v1",
+        "observed": "carnot.arc.supervisor_refinement_ledger.v1",
+        "entries": 9,
+        "passed": true
+      }
+    ],
+    "models": [
+      {
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "role": "immutable_scored_arc_generator",
+        "repo_substr": "Qwen3.8-27B",
+        "filename": "Qwen3.8-27B-Q4_K_M.gguf",
+        "expected_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "required_vram_mb": 17815,
+        "max_tokens": 1024,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_size_bytes": 17106775008,
+        "resolved": true,
+        "tokenizer": {
+          "source": "llama.cpp_embedded_gguf",
+          "loadable": true,
+          "detail": "embedded GGUF tokenizer OK (7 tokens on probe)"
+        },
+        "decode_tokens": 4096
+      },
+      {
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "role": "flagship_moe_transport_canary",
+        "repo_substr": "Qwen3.6-35B-A3B",
+        "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "expected_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "required_vram_mb": 22610,
+        "max_tokens": 512,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "model_size_bytes": 22134528992,
+        "resolved": true,
+        "tokenizer": {
+          "source": "llama.cpp_embedded_gguf",
+          "loadable": true,
+          "detail": "embedded GGUF tokenizer OK (7 tokens on probe)"
+        },
+        "decode_tokens": 512
+      }
+    ],
+    "device_inventory_before": [
+      {
+        "index": 0,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_total_mb": 24576,
+        "memory_used_mb": 18155,
+        "memory_free_mb": 5969,
+        "temperature_c": 81,
+        "utilization_pct": 95,
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3306606,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 17884
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3542419,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_total_mb": 24576,
+        "memory_used_mb": 19228,
+        "memory_free_mb": 4896,
+        "temperature_c": 76,
+        "utilization_pct": 73,
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3452377,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 536
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3452459,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 18416
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3542419,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ]
+      }
+    ],
+    "device_inventory_commands": {
+      "devices": {
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,temperature.gpu,utilization.gpu",
+          "--format=csv,noheader,nounits"
+        ],
+        "exit_code": 0,
+        "duration_s": 0.039063,
+        "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 24576, 18155, 5969, 81, 95\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 24576, 19228, 4896, 76, 73\n",
+        "stderr": ""
+      },
+      "processes": {
+        "command": [
+          "nvidia-smi",
+          "--query-compute-apps=gpu_uuid,pid,process_name,used_memory",
+          "--format=csv,noheader,nounits"
+        ],
+        "exit_code": 0,
+        "duration_s": 0.028595,
+        "stdout": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab, 3306606, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 17884\nGPU-b52387a2-c625-de87-8d34-e6f64e684bab, 3542419, .venv/bin/python, 256\nGPU-7971baff-9583-eaa6-2292-393f930a28f9, 3452377, .venv/bin/python, 536\nGPU-7971baff-9583-eaa6-2292-393f930a28f9, 3452459, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 18416\nGPU-7971baff-9583-eaa6-2292-393f930a28f9, 3542419, .venv/bin/python, 256\n",
+        "stderr": ""
+      }
+    },
+    "device_selection_receipt": {
+      "rank_policy": [
+        "free_vram_desc",
+        "temperature_asc",
+        "active_compute_asc"
+      ],
+      "frozen_free_vram_threshold_mb": 22610,
+      "evaluated_devices": [
+        {
+          "index": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_total_mb": 24576,
+          "memory_used_mb": 18155,
+          "memory_free_mb": 5969,
+          "temperature_c": 81,
+          "utilization_pct": 95,
+          "active_compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 3306606,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 17884
+            },
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 3542419,
+              "process_name": ".venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "active_compute_count": 2,
+          "eligible": false,
+          "ineligibility_reasons": [
+            "free_vram_below_frozen_floor"
+          ]
+        },
+        {
+          "index": 1,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_total_mb": 24576,
+          "memory_used_mb": 19228,
+          "memory_free_mb": 4896,
+          "temperature_c": 76,
+          "utilization_pct": 73,
+          "active_compute_processes": [
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 3452377,
+              "process_name": ".venv/bin/python",
+              "used_memory_mb": 536
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 3452459,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 18416
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 3542419,
+              "process_name": ".venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "active_compute_count": 3,
+          "eligible": false,
+          "ineligibility_reasons": [
+            "free_vram_below_frozen_floor"
+          ]
+        }
+      ],
+      "ranked_eligible_devices": [],
+      "eligible_device_count": 0,
+      "selected_device": null
+    },
+    "ports": [
+      33893,
+      47255
+    ],
+    "llama_cpp": {
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "exists": true,
+      "executable": true,
+      "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "dynamic_link": {
+        "command": [
+          "ldd",
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+        ],
+        "exit_code": 0,
+        "duration_s": 0.005673,
+        "stdout": "\tlinux-vdso.so.1 (0x00007f55ce620000)\n\tlibllama-server-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so (0x00007f55cda00000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007f55cd400000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007f55cd8b3000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007f55cd000000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007f55ce5da000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007f55cce43000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007f55c9400000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007f55cd329000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007f55c2800000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007f55ccd29000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007f55c2000000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007f55c1c00000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007f55c26f7000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f55ce5a3000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f55c1800000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007f55ce622000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007f55c1f90000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007f55c1400000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007f55bdc00000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007f5598600000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007f55ce59a000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007f55ce595000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007f55ce590000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007f55c26bb000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007f55c1b06000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007f55ce580000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007f559849f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007f55c93dd000)\n",
+        "stderr": ""
+      },
+      "cuda_linked": true,
+      "python_cuda_offload": true
+    },
+    "resources": {
+      "cpu_count": 24,
+      "platform": "Linux-7.2.0-1-cachyos-x86_64-with-glibc2.44",
+      "ram_total_bytes": 134304591872,
+      "ram_available_bytes": 98839539712,
+      "disk_total_bytes": 3953289023488,
+      "disk_free_bytes": 1065175429120
+    },
+    "source_receipts": {
+      "exp6752": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6752_arc_code_carrying_tool_preflight.json",
+        "sha256": "sha256:33b94922df0508944053432960a8163a3fdccf3eb7bd8ce93200c1e7e59a4b2e"
+      },
+      "exp6647": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6647_receipt_scoped_admission_boundary.json",
+        "sha256": "sha256:ad79510853e20772eeafee01d6f9a45dcba21d82f06ebaa4df155842d1e986b3"
+      },
+      "architecture_map": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/_bmad/architecture.md",
+        "sha256": "sha256:0fae19927a4c1b416795f7700ccd6ebb55f8b251627f0afb1e7122d10b2919ef"
+      },
+      "solve_registry": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+        "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947"
+      },
+      "refinement_ledger": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_supervisor_refinement_ledger.json",
+        "sha256": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197"
+      }
+    }
+  },
+  "verifier_is_oracle": false,
+  "verdict_class": "blocked",
+  "honest_verdict": "complete_blocked_shadow_supervisor_accrual:exclusive_gpu_without_unrelated_compute"
+}

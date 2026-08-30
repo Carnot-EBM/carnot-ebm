@@ -28676,6 +28676,66 @@ legacy route, or reduced denominator.
 |---|---|---|
 | REQ-ARC-WMTE-6765 and SCENARIO-ARC-WMTE-6765-* | Planned in `python/carnot/experiment_6765_object_table_fetch_ab_v2.py` and `scripts/experiments/experiment_6765_object_table_fetch_ab_v2.py`. | Planned in `tests/python/test_experiment_6765_object_table_fetch_ab_v2.py`. |
 
+### REQ-ARC-WMTE-6776: Window-120 Shadow-Supervisor Evidence Accrual
+
+The experiment SHALL run bounded public replay cells through the production
+`E3AgentPolicy` path. It SHALL leave `CARNOT_ARC_TRAJECTORY_SUPERVISOR` unset
+and set `CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW=120`. Each live cell SHALL
+use a fresh task-owned process, CUDA GGUF session, death receipt, and atomic
+progress shard. The scored Qwen3.8-27B rows and the Qwen3.6-35B-A3B transport
+canary SHALL remain separate.
+
+The artifact SHALL keep one row for each frozen cell and supervisor arm. It
+SHALL record exact model pins, process and GPU ownership, action hashes,
+shadow receipts, teardown, shard progress, and the existing refinement tool's
+deduplicated result. Shadow receipts SHALL NOT be relabeled as applied
+firings. Evidence below ten applied firings per arm is an honest partial
+result. The experiment SHALL make no solve target and no solve claim.
+
+If any registry, route, architecture, model, tokenizer, CUDA, lease, port,
+memory, disk, or helper check fails, no model worker SHALL start. The command
+SHALL write a terminal `complete_blocked_shadow_supervisor_accrual` artifact
+whose `gate_check_summary` names the failed check and observed value.
+
+#### SCENARIO-ARC-WMTE-6776-1: window and shadow invariance
+
+- GIVEN the supervisor flag is unset and the window is 120
+- WHEN the same frozen replay canary is run with shadow observation and with
+  the no-firing control
+- THEN the scored action hashes match and no redirect mutates policy state.
+
+#### SCENARIO-ARC-WMTE-6776-2: cell durability and firing receipts
+
+- GIVEN one admitted frozen cell
+- WHEN actions run and a shadow arm fires
+- THEN an atomic shard records every action block and firing
+- AND the death receipt names the worker process if a catchable signal arrives
+- AND the final rows contain one receipt for every supervisor arm.
+
+#### SCENARIO-ARC-WMTE-6776-3: applied-only refinement remains deduplicated
+
+- GIVEN byte-identical copies of the new shadow rows
+- WHEN `scripts/arc_supervisor_refine.py` ingests them
+- THEN the ledger does not duplicate a row
+- AND shadow firings do not increase applied fired counts
+- AND the artifact records the pre/post hashes and recommendation.
+
+#### SCENARIO-ARC-WMTE-6776-4: exact models and teardown
+
+- GIVEN an admitted live run
+- WHEN scored and transport-canary cells finish
+- THEN their embedded-tokenizer GGUF hashes match the two mandated model pins
+- AND every owned worker and llama-server PID exits
+- AND the lease, port, and VRAM recovery receipts pass.
+
+#### SCENARIO-ARC-WMTE-6776-5: blocked resources fail closed
+
+- GIVEN a required GPU has an unrelated compute owner or too little free VRAM
+- WHEN preconditions run
+- THEN no model worker starts
+- AND the complete blocked artifact keeps the frozen denominator
+- AND `shadow_supervisor_transport_ready` and `solve_claim` are false.
+
 ### REQ-ARC-WMTE-6780: The supervisor's default window must permit firing
 
 The trajectory supervisor's default stagnation window SHALL be below the run's action budget,
