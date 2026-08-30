@@ -6465,3 +6465,10 @@ The critical path for milestone .250:
 - theme: compute-only execution exposed failed accelerator engagement and missing task-level timing
 - key result: honest operational negative — both GPUs were idle with compute-bound work present; the longest task is known, but its cause and any parallel-model runner miss have no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.592
+
+- exp_range: no data available this milestone
+- theme: fast synthesis-only execution exposed the causal limits of modification-time reconstruction
+- key result: honest operational negative — 12 synthesis-only experiments completed in 1.2 minutes; compute-task GPU efficiency and parallel-model runner engagement had no data available this milestone
+- acceptance: no data available this milestone
