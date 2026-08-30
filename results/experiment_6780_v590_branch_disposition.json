@@ -1,0 +1,2255 @@
+{
+  "adversarial_findings": [
+    {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6768_targetable_proof_panel_expansion.json",
+      "exp_id": 6768,
+      "flag_count": 1,
+      "flags": [
+        {
+          "detail": "inference_substrate='deterministic_local_certificate_mutation_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.",
+          "kind": "SUBSTRATE_NO_LLM_BY_NAME",
+          "severity": "warn"
+        }
+      ],
+      "gate_version": "afdf258f012a9fe9a9876108674a8299cc3bd583ae3a423713a57b232e612103",
+      "honest_verdict": "complete: targetable exact-invalid fixture ready with 126 cold-replayed rows; th",
+      "loaded": true,
+      "max_severity": 1,
+      "title": "Exact-invalid targetable proof panel expansion"
+    },
+    {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6769_environment_indexed_proof_grammar_v2.json",
+      "exp_id": 6769,
+      "flag_count": 1,
+      "flags": [
+        {
+          "detail": "no_ghost_violations=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "gate_version": "afdf258f012a9fe9a9876108674a8299cc3bd583ae3a423713a57b232e612103",
+      "honest_verdict": "complete: environment-indexed SAT and UNSAT support remained reachable with zero",
+      "loaded": true,
+      "max_severity": 0,
+      "title": "Environment-indexed runtime proof grammar v2"
+    },
+    {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6770_dccd_environment_grammar_ab_v2.json",
+      "exp_id": 6770,
+      "flag_count": 0,
+      "flags": [],
+      "gate_version": "afdf258f012a9fe9a9876108674a8299cc3bd583ae3a423713a57b232e612103",
+      "honest_verdict": "complete_blocked_proof_transport_ab_v2: precondition one_model_vram observed Fal",
+      "loaded": true,
+      "max_severity": -1,
+      "title": "DCCD environment grammar A/B v2"
+    },
+    {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6771_proof_transport_localization_audit.json",
+      "blocked_gate_artifact": true,
+      "flag_count": 0,
+      "flags": [],
+      "gate_version": "afdf258f012a9fe9a9876108674a8299cc3bd583ae3a423713a57b232e612103",
+      "loaded": true,
+      "max_severity": -1
+    },
+    {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6773_csl_owned_lease_contract.json",
+      "exp_id": "experiment_6773_csl_owned_lease_contract",
+      "flag_count": 0,
+      "flags": [],
+      "gate_version": "afdf258f012a9fe9a9876108674a8299cc3bd583ae3a423713a57b232e612103",
+      "honest_verdict": "complete_blocked_csl_owned_lease_contract",
+      "loaded": true,
+      "max_severity": -1,
+      "title": ""
+    },
+    {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6776_arc_shadow_supervisor_accrual.json",
+      "exp_id": 6776,
+      "flag_count": 0,
+      "flags": [],
+      "gate_version": "afdf258f012a9fe9a9876108674a8299cc3bd583ae3a423713a57b232e612103",
+      "honest_verdict": "complete_blocked_shadow_supervisor_accrual:exclusive_gpu_without_unrelated_compu",
+      "loaded": true,
+      "max_severity": -1,
+      "title": "Window-120 shadow-supervisor evidence accrual"
+    },
+    {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6777_arc_tool_gap_transport.json",
+      "blocked_gate_artifact": true,
+      "flag_count": 0,
+      "flags": [],
+      "gate_version": "afdf258f012a9fe9a9876108674a8299cc3bd583ae3a423713a57b232e612103",
+      "loaded": true,
+      "max_severity": -1
+    }
+  ],
+  "arc_disposition": {
+    "adoption": {
+      "cold_audit_passed": false,
+      "decision": "unavailable",
+      "row_citation": {
+        "cause": "no_eligible_comparative_rows",
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean_delta": null,
+        "pair_count": 0,
+        "value": null
+      },
+      "transport_is_not_adoption_evidence": true
+    },
+    "adoption_positive": false,
+    "disposition": "blocked",
+    "positive": false,
+    "solve_claim": false,
+    "supervisor": {
+      "eligible_rows": 0,
+      "evidence_floor_met_by_arm": {
+        "allow_reinduction": false,
+        "drop_goal_bias": false,
+        "force_exploration_diversity": false,
+        "tool_loop_reinduction": false
+      },
+      "firings": 0,
+      "transport_ready": false
+    },
+    "tool_gap": {
+      "analyzer_ingest_passed": false,
+      "events": 0,
+      "transport_ready": false
+    }
+  },
+  "artifact_summaries": [
+    {
+      "artifact": "results/experiment_6768_targetable_proof_panel_expansion.json",
+      "exit_code": 1,
+      "summary_excerpt": "==============================================================================\nARTIFACT  experiment_6768_targetable_proof_panel_expansion.json\n------------------------------------------------------------------------------\n  verdict          : complete: targetable exact-invalid fixture ready with 126 cold-replayed rows; this is not a model-quality claim\n  flagged_adversarial (stamped): None   |   LIVE re-check: warn\n  acceptance gates :\n      [?   ] gate_check_summary = {'all_passed': True, 'checks': [{'check': 'exp6755_transport_reparse_ready', 'expected': True, 'observed': True, 'passed': True}, {'check': 'exp6755_row_count', 'expected': 216, 'observed': 216, 'passed': True}, {'check': 'exp6755_unique_row_ids', 'expected': 216, 'observed': 216, 'passed': True}, {'check': 'exp6755_raw_and_normalized_hashes', 'expected': 216, 'observed': 216, 'passed': True}, {'check': 'exp6755_targetable_source_rows', 'expected': 21, 'observed': 21, 'passed': True}, {'check': 'exp6745_artifact_hash_lineage', 'expected': 'sha256:d9f8cad418dbc3890ddcb8a799d8b7951362084b3f1e58e41cfca35ec1a3cdd7', 'observed': 'sha256:d9f8cad418dbc3890ddcb8a799d8b7951362084b3f1e58e41cfca35ec1a3cdd7', 'passed': True}, {'check': 'exp6745_source_row_lineage', 'expected': [], 'observed': [], 'passed': True}, {'check': 'exp6744_cnf_lineage', 'expected': [], 'observed': [], 'passed': True}, {'check': 'minimum_panel_rows', 'expected': '>=36', 'observed': 126, 'passed': True}, {'check': 'held_family_coverage', 'expected': {'expander_tseitin': '>=2', 'ladder_tseitin': '>=2', 'pigeonhole_anchor': '>=2'}, 'observed': {'expander_tseitin': 24, 'ladder_tseitin': 72, 'pigeonhole_anchor': 30}, 'passed': True}, {'check': 'target_error_class_coverage', 'expected': {'duplicate_evidence': '>=2', 'invalid_clause': '>=2', 'missing_evidence': '>=2', 'non_binary_value': '>=2', 'premature_terminal': '>=2', 'undefined_variable': '>=2'}, 'observed': {'duplicate_evidence': 21, 'invalid_clause': 21, 'missing_evidence': 21, 'non_bina",
+      "summary_sha256": "sha256:8b5e7e7eb08325137c7ccbe10607e4bdb44eb29651ff36390781bd9c02660ae1",
+      "task_id": "exp6768"
+    },
+    {
+      "artifact": "results/experiment_6769_environment_indexed_proof_grammar_v2.json",
+      "exit_code": 0,
+      "summary_excerpt": "==============================================================================\nARTIFACT  experiment_6769_environment_indexed_proof_grammar_v2.json\n------------------------------------------------------------------------------\n  verdict          : complete: environment-indexed SAT and UNSAT support remained reachable with zero ghost violations; no live SOTA comparison was run\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = {'all_passed': True, 'checks': [{'check': 'preconditions', 'expected': True, 'observed': True, 'passed': True}, {'check': 'static_cfg_compile', 'expected': True, 'observed': True, 'passed': True}, {'check': 'runtime_invocation', 'expected': True, 'observed': True, 'passed': True}, {'check': 'no_ghost', 'expected': True, 'observed': True, 'passed': True}, {'check': 'valid_sat_reachable', 'expected': True, 'observed': True, 'passed': True}, {'check': 'valid_unsat_reachable', 'expected': True, 'observed': True, 'passed': True}, {'check': 'parser', 'expected': True, 'observed': True, 'passed': True}, {'check': 'exact_authority_separation', 'expected': True, 'observed': True, 'passed': True}, {'check': 'determinism', 'expected': True, 'observed': True, 'passed': True}, {'check': 'focused_tests', 'expected': True, 'observed': True, 'passed': True}, {'check': 'scoped_coverage_run', 'expected': True, 'observed': True, 'passed': True}, {'check': 'scoped_coverage', 'expected': True, 'observed': True, 'passed': True}, {'check': 'spec_coverage', 'expected': True, 'observed': True, 'passed': True}, {'check': 'ruff_check', 'expected': True, 'observed': True, 'passed': True}, {'check': 'format_check', 'expected': True, 'observed': True, 'passed': True}], 'failed_checks': []}\n  duration_s       : 16.803   substrate: deterministic_automaton_no_llm\n  duration floor   : deterministic_automaton_no_llm >=0.0001s (no_llm_declared)\n  adversarial flags:\n      [info    ] IMPLAUSIBLE_PERFECT: no_ghost_v",
+      "summary_sha256": "sha256:0bcd8294670a1bd47856959cf867b21132a9e62baf0350cbe11bd8ad6b1edf0c",
+      "task_id": "exp6769"
+    },
+    {
+      "artifact": "results/experiment_6770_dccd_environment_grammar_ab_v2.json",
+      "exit_code": 0,
+      "summary_excerpt": "==============================================================================\nARTIFACT  experiment_6770_dccd_environment_grammar_ab_v2.json\n------------------------------------------------------------------------------\n  verdict          : complete_blocked_proof_transport_ab_v2: precondition one_model_vram observed False.\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = {'all_preconditions_passed': False, 'cold_recomputation_agreed': False, 'expected': True, 'failed_check': 'one_model_vram', 'observed': False, 'rows_complete': False, 'teardown_passed': False}\n  duration_s       : 61.45445   substrate: local llama.cpp CUDA GGUF with invoked runtime grammar\n  duration floor   : none\n  adversarial flags: none\n==============================================================================",
+      "summary_sha256": "sha256:89a98798ae8a5205dad4e3620b35c067a2409b957945807c52e67bb2a1c50ebb",
+      "task_id": "exp6770"
+    },
+    {
+      "artifact": "results/experiment_6771_proof_transport_localization_audit.json",
+      "exit_code": 0,
+      "summary_excerpt": "==============================================================================\nARTIFACT  experiment_6771_proof_transport_localization_audit.json\n------------------------------------------------------------------------------\n  verdict          : blocked_gate_check_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = 'gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6770-dccd-environment-grammar-ab-v2.proof_transport_ab_completed (actual=False == expected=True)'\n  duration_s       : 0.0   substrate: None\n  duration floor   : none\n  adversarial flags: none\n==============================================================================",
+      "summary_sha256": "sha256:c6953c10897b29599c50dbad71c4066739c365a4120f15a71ecefc59c259c2e5",
+      "task_id": "exp6771"
+    },
+    {
+      "artifact": "results/experiment_6773_csl_owned_lease_contract.json",
+      "exit_code": 0,
+      "summary_excerpt": "==============================================================================\nARTIFACT  experiment_6773_csl_owned_lease_contract.json\n------------------------------------------------------------------------------\n  verdict          : complete_blocked_csl_owned_lease_contract\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = {'checks': {'capacity_contract': True, 'frozen_stream_contract': True, 'gpu_lease_api': True, 'least_used_eligible_rtx3090': False, 'llama_cpp_cuda': True, 'models_resolved': True, 'order_count': True, 'planning_date_matches': True, 'poison_receipts': True, 'ports_available': True, 'ram_and_disk': True, 'read_only_episode': True, 'restart_receipts': True, 'rollback_receipts': True, 'source_artifact_hash': True, 'stream_hash': True, 'stream_ready': True, 'transaction_schema': True, 'two_fixed_rtx3090_identities': True, 'upstream_validator': True}, 'failed_checks': ['least_used_eligible_rtx3090'], 'failures': [{'check': 'least_used_eligible_rtx3090', 'expected': {'free_vram_mb_at_least': 22610}, 'observed': None}]}\n  duration_s       : 34.523882   substrate: task-owned local llama.cpp CUDA GGUF preflight\n  duration floor   : none\n  adversarial flags: none\n==============================================================================",
+      "summary_sha256": "sha256:1f28016cf5e0102962e3f8007d4b8681eb429c1adb8ccf58bbec626f09586141",
+      "task_id": "exp6773"
+    },
+    {
+      "artifact": "results/experiment_6776_arc_shadow_supervisor_accrual.json",
+      "exit_code": 0,
+      "summary_excerpt": "==============================================================================\nARTIFACT  experiment_6776_arc_shadow_supervisor_accrual.json\n------------------------------------------------------------------------------\n  verdict          : complete_blocked_shadow_supervisor_accrual:exclusive_gpu_without_unrelated_compute\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = {'passed': False, 'failed_check': 'exclusive_gpu_without_unrelated_compute', 'expected': 'one RTX 3090 with no active compute owner and at least 22610 MiB free', 'observed': [{'index': 0, 'uuid': 'GPU-b52387a2-c625-de87-8d34-e6f64e684bab', 'name': 'NVIDIA GeForce RTX 3090', 'memory_total_mb': 24576, 'memory_used_mb': 18155, 'memory_free_mb': 5969, 'temperature_c': 81, 'utilization_pct': 95, 'active_compute_processes': [{'gpu_uuid': 'GPU-b52387a2-c625-de87-8d34-e6f64e684bab', 'pid': 3306606, 'process_name': '/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server', 'used_memory_mb': 17884}, {'gpu_uuid': 'GPU-b52387a2-c625-de87-8d34-e6f64e684bab', 'pid': 3542419, 'process_name': '.venv/bin/python', 'used_memory_mb': 256}]}, {'index': 1, 'uuid': 'GPU-7971baff-9583-eaa6-2292-393f930a28f9', 'name': 'NVIDIA GeForce RTX 3090', 'memory_total_mb': 24576, 'memory_used_mb': 19228, 'memory_free_mb': 4896, 'temperature_c': 76, 'utilization_pct': 73, 'active_compute_processes': [{'gpu_uuid': 'GPU-7971baff-9583-eaa6-2292-393f930a28f9', 'pid': 3452377, 'process_name': '.venv/bin/python', 'used_memory_mb': 536}, {'gpu_uuid': 'GPU-7971baff-9583-eaa6-2292-393f930a28f9', 'pid': 3452459, 'process_name': '/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server', 'used_memory_mb': 18416}, {'gpu_uuid': 'GPU-7971baff-9583-eaa6-2292-393f930a28f9', 'pid': 3542419, 'process_name': '.venv/bin/python', 'used_memory_mb': 256}]}]}\n  duration_s       : 35.274636   substrate: production E3AgentPolicy on task-owned local CUDA GGUF\n  duration floor   : ",
+      "summary_sha256": "sha256:9ab063583cc5bb7fe30eb227232e904dd40c679c3f7de131187106cc879274e7",
+      "task_id": "exp6776"
+    },
+    {
+      "artifact": "results/experiment_6777_arc_tool_gap_transport.json",
+      "exit_code": 0,
+      "summary_excerpt": "==============================================================================\nARTIFACT  experiment_6777_arc_tool_gap_transport.json\n------------------------------------------------------------------------------\n  verdict          : blocked_gate_check_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = 'gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6776-arc-shadow-supervisor-accrual.shadow_supervisor_transport_ready (actual=False == expected=True)'\n  duration_s       : 0.0   substrate: None\n  duration floor   : none\n  adversarial flags: none\n==============================================================================",
+      "summary_sha256": "sha256:3f1392af3da572174c206be6cc7edf5fac88832678619a7335a322526b8ee62a",
+      "task_id": "exp6777"
+    }
+  ],
+  "available_artifacts": [
+    {
+      "path": "results/experiment_6768_targetable_proof_panel_expansion.json",
+      "sha256": "sha256:5e44fd4db55e11c99f0f5720aa5815bf26135f5b0801e3687ebf1095a1ee180d",
+      "task_id": "exp6768",
+      "terminal": true
+    },
+    {
+      "path": "results/experiment_6769_environment_indexed_proof_grammar_v2.json",
+      "sha256": "sha256:f8e8dc42d23b6e136beb6b5eb073b617326e20694bace4bac5cea23491015278",
+      "task_id": "exp6769",
+      "terminal": true
+    },
+    {
+      "path": "results/experiment_6770_dccd_environment_grammar_ab_v2.json",
+      "sha256": "sha256:47d4b724a8fed526e1ea18fb7f6f110547ce0e5ddecf165d5d708f6e1e890b00",
+      "task_id": "exp6770",
+      "terminal": true
+    },
+    {
+      "path": "results/experiment_6771_proof_transport_localization_audit.json",
+      "sha256": "sha256:e23debc86c259aa2d0df645931b0a8ff32287c82b38f64aaf95c79891d580463",
+      "task_id": "exp6771",
+      "terminal": true
+    },
+    {
+      "path": "results/experiment_6773_csl_owned_lease_contract.json",
+      "sha256": "sha256:3e384dc443fb1a03475d27d4f1e8f2fa5d895b2af69fc5d5d38092bd2f660cc1",
+      "task_id": "exp6773",
+      "terminal": true
+    },
+    {
+      "path": "results/experiment_6776_arc_shadow_supervisor_accrual.json",
+      "sha256": "sha256:5832b0982069bebcc5ef5729094bf97aa97f1564c9f7c25eb536e79c69fbaaf7",
+      "task_id": "exp6776",
+      "terminal": true
+    },
+    {
+      "path": "results/experiment_6777_arc_tool_gap_transport.json",
+      "sha256": "sha256:0e30a3c833d79ba8ea6c937c7d4530d39f39224fc386b8e6e4ddd8dc3ee1d9c9",
+      "task_id": "exp6777",
+      "terminal": true
+    }
+  ],
+  "branch_rows": [
+    {
+      "adversarial_finding_count": 0,
+      "branch": "proof",
+      "branch_disposition": "partial",
+      "claim_boundary": "Fixture and grammar readiness do not prove live exact-valid gain or localized repair.",
+      "headline": {
+        "proof": {
+          "comparison_rows": 0,
+          "dynamic_proof_grammar_ready": true,
+          "exact_valid_rate_by_arm": {},
+          "grammar_rows": 45,
+          "no_ghost_violations": 0,
+          "paired_exact_valid_effects": {
+            "cause": "no_eligible_comparative_rows",
+            "denominator": 0,
+            "source_headline_ignored": {
+              "dccd_environment-minus-repaired_direct": 0.0,
+              "dccd_environment-minus-static_grammar": 0.0,
+              "static_grammar-minus-repaired_direct": 0.0
+            },
+            "value": null
+          },
+          "panel_rows": 126,
+          "proof_transport_ab_completed": false,
+          "runtime_mask_invocation_count": 924,
+          "targetable_panel_ready": true,
+          "valid_sat_reachable": true,
+          "valid_unsat_reachable": true
+        },
+        "repair": {
+          "harmful_flips_by_arm": {},
+          "paired_exact_valid_effect": {
+            "cause": "no_eligible_comparative_rows",
+            "ci95_high": null,
+            "ci95_low": null,
+            "mean_delta": null,
+            "pair_count": 0,
+            "value": null
+          },
+          "proof_transport_audit_ready": false,
+          "repair_panel_ready": false,
+          "repair_rows": 0,
+          "source_interval_ignored": null,
+          "support_loss_by_arm": {}
+        }
+      },
+      "next_action": "Exclude the repeated GPU-starved proof comparison route until an owned RTX 3090 is available.",
+      "row_consistency_finding_count": 2,
+      "row_type": "branch",
+      "task_ids": [
+        "exp6768",
+        "exp6769",
+        "exp6770",
+        "exp6771",
+        "exp6772"
+      ],
+      "task_verdict_classes": {
+        "exp6768": "positive",
+        "exp6769": "positive",
+        "exp6770": "blocked",
+        "exp6771": "blocked",
+        "exp6772": "blocked"
+      },
+      "verdict_class": "partial"
+    },
+    {
+      "adversarial_finding_count": 0,
+      "branch": "continuous_memory",
+      "branch_disposition": "blocked",
+      "claim_boundary": "Storage receipts do not prove prospective learning without all cold durability gates.",
+      "headline": {
+        "cold_audit_completed": false,
+        "csl_live_preflight_ready": false,
+        "historical_loss_by_arm": {},
+        "live_model_invoked": false,
+        "preflight_rows": 11,
+        "prequential_yield_by_arm": {},
+        "procedural_minus_no_memory_order_effect": {
+          "cause": "no_eligible_comparative_rows",
+          "ci95_high": null,
+          "ci95_low": null,
+          "mean_delta": null,
+          "pair_count": 0,
+          "value": null
+        },
+        "procedural_minus_trace_order_effect": {
+          "cause": "no_eligible_comparative_rows",
+          "ci95_high": null,
+          "ci95_low": null,
+          "mean_delta": null,
+          "pair_count": 0,
+          "value": null
+        },
+        "prospective_csl_completed": false,
+        "prospective_rows": 0,
+        "required_positive_gates": {
+          "activity": false,
+          "hard_case": false,
+          "poison": false,
+          "restart": false,
+          "retention": false,
+          "rollback": false,
+          "support": false
+        },
+        "transaction_activity": {
+          "action_influences": 0,
+          "commits": 0,
+          "rejects": 0,
+          "retrievals": 0,
+          "rollbacks": 0
+        }
+      },
+      "next_action": "Exclude the repeated GPU-capacity preflight route until one model has an owned lease.",
+      "row_consistency_finding_count": 0,
+      "row_type": "branch",
+      "task_ids": [
+        "exp6773",
+        "exp6774",
+        "exp6775"
+      ],
+      "task_verdict_classes": {
+        "exp6773": "blocked",
+        "exp6774": "blocked",
+        "exp6775": "blocked"
+      },
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_finding_count": 0,
+      "branch": "arc",
+      "branch_disposition": "blocked",
+      "claim_boundary": "Supervisor and tool transport do not prove adoption without a cold actions-to-progress effect.",
+      "headline": {
+        "actions_to_progress_ab_completed": false,
+        "actions_to_progress_by_arm": {},
+        "actions_to_progress_rows": 0,
+        "adoption_decision": "unavailable",
+        "adoption_positive": false,
+        "cold_actions_to_progress_audit_passed": false,
+        "declared_firings_after_by_arm": {
+          "allow_reinduction": 2,
+          "drop_goal_bias": 2,
+          "force_exploration_diversity": 2,
+          "tool_loop_reinduction": 0
+        },
+        "eligible_supervisor_rows": 0,
+        "evidence_floor_met_by_arm": {
+          "allow_reinduction": false,
+          "drop_goal_bias": false,
+          "force_exploration_diversity": false,
+          "tool_loop_reinduction": false
+        },
+        "row_recomputed_firings": 0,
+        "row_recomputed_helped": 0,
+        "selfparse_minus_control_actions_effect": {
+          "cause": "no_eligible_comparative_rows",
+          "ci95_high": null,
+          "ci95_low": null,
+          "mean_delta": null,
+          "pair_count": 0,
+          "value": null
+        },
+        "shadow_supervisor_transport_ready": false,
+        "solve_claim": false,
+        "supervisor_rows": 40,
+        "tool_gap_analyzer_ingest_passed": false,
+        "tool_gap_event_count": 0,
+        "tool_gap_transport_ready": false
+      },
+      "next_action": "Keep supervisor and selfparse default-off until a cold actions-to-progress audit exists.",
+      "row_consistency_finding_count": 2,
+      "row_type": "branch",
+      "task_ids": [
+        "exp6776",
+        "exp6777",
+        "exp6778",
+        "exp6779"
+      ],
+      "task_verdict_classes": {
+        "exp6776": "blocked",
+        "exp6777": "blocked",
+        "exp6778": "blocked",
+        "exp6779": "blocked"
+      },
+      "verdict_class": "blocked"
+    },
+    {
+      "adversarial_finding_count": 0,
+      "branch": "execution_contract",
+      "branch_disposition": "partial",
+      "claim_boundary": "The capstone closes task accounting. It is not a verifier or a science vote.",
+      "headline": {
+        "capstone_path": "results/experiment_6780_v590_branch_disposition.json",
+        "expected_task_count": 13,
+        "successor_roadmap_activated": false
+      },
+      "next_action": "Hand terminal evidence to the separate document reconciler; do not activate a successor roadmap.",
+      "row_consistency_finding_count": 0,
+      "row_type": "branch",
+      "task_ids": [
+        "exp6780"
+      ],
+      "task_verdict_classes": {
+        "exp6780": "partial"
+      },
+      "verdict_class": "partial"
+    }
+  ],
+  "docs_reconciled": [
+    {
+      "path": "research-complete.yaml",
+      "status": "delegated_to_separate_conductor_reconciler",
+      "updated": false
+    },
+    {
+      "path": "_bmad/traceability.md",
+      "status": "delegated_to_separate_conductor_reconciler",
+      "updated": false
+    },
+    {
+      "path": "ops/status.md",
+      "status": "delegated_to_separate_conductor_reconciler",
+      "updated": false
+    },
+    {
+      "path": "ops/changelog.md",
+      "status": "delegated_to_separate_conductor_reconciler",
+      "updated": false
+    }
+  ],
+  "duration_s": 14.20602,
+  "expected_task_ids": [
+    "exp6768-targetable-proof-panel-expansion",
+    "exp6769-environment-indexed-proof-grammar-v2",
+    "exp6770-dccd-environment-grammar-ab-v2",
+    "exp6771-proof-transport-localization-audit",
+    "exp6772-claim-localized-prefix-backtracking-ab",
+    "exp6773-csl-owned-lease-contract",
+    "exp6774-procedural-vs-trace-csl-ab-v2",
+    "exp6775-csl-durability-audit-v2",
+    "exp6776-arc-shadow-supervisor-accrual",
+    "exp6777-arc-tool-gap-transport",
+    "exp6778-arc-selfparse-actions-to-progress-ab",
+    "exp6779-arc-tool-supervisor-adoption-audit",
+    "exp6780-v590-branch-disposition"
+  ],
+  "experiment": 6780,
+  "field_principles": {
+    "adversarial_findings": "Preserves critical, warning, circular, and provenance concerns.",
+    "arc_disposition": "Separates supervisor and transport receipts from adoption evidence.",
+    "available_artifacts": "Names terminal source files that the reducer could inspect.",
+    "branch_rows": "Keeps proof, memory, ARC, and execution conclusions independent.",
+    "docs_reconciled": "States which evidence documents this run changed or delegated.",
+    "duration_s": "Records monotonic wall time so the synthesis work has a measurable receipt.",
+    "expected_task_ids": "Keeps every planned task visible even when its deliverable is absent.",
+    "field_principles": "States why each required field exists so an audit can detect a copied shell.",
+    "fr11_disposition": "Requires every cold durability gate before positive learning credit.",
+    "fr12_disposition": "Separates proof certification from generation and repair evidence.",
+    "gate_check_summary": "Retains the failed check and observed value for every blocked row.",
+    "hardware_disposition": "Records CUDA receipts while forbidding a physical TSU inference.",
+    "honest_verdict": "Provides a terminal summary that preserves every incomplete branch.",
+    "inference_substrate": "Separates local evidence synthesis from a live model or hardware run.",
+    "milestone": "Pins every conclusion to the V590 evidence window.",
+    "missing_artifacts": "Prevents missing or nonterminal evidence from becoming narrative success.",
+    "prd_gap_disposition": "Classifies each ranked PRD gap with direct row citations.",
+    "prior_verdict_recurrences": "Checks each retire-if-same declaration against the current outcome.",
+    "protected_files_unchanged": "Proves the synthesis did not edit the conductor or active roadmap.",
+    "random_seed": "Fixes the synthesis reducer seed for deterministic replay.",
+    "recurring_blockers": "Links repeated blockers to the project ledger instead of hiding them.",
+    "reproducibility_checksum": "Binds the roadmap, sources, code, audits, and recomputed rows.",
+    "retirement_recommendations": "Names repeated routes that need an exclusion-manifest entry.",
+    "row_recomputed_headlines": "Stores only comparative values rebuilt from eligible raw rows.",
+    "rows": "Provides one auditable disposition row for each experiment.",
+    "verdict_class": "Uses a closed class so downstream tools do not infer a favorable state.",
+    "verdict_row_consistency_findings": "Shows when raw rows do not support a source headline.",
+    "verifier_is_oracle": "States that this synthesis is not a correctness oracle."
+  },
+  "fr11_disposition": {
+    "disposition": "blocked",
+    "positive": false,
+    "required_positive_gates": {
+      "activity": false,
+      "hard_case": false,
+      "poison": false,
+      "restart": false,
+      "retention": false,
+      "rollback": false,
+      "support": false
+    },
+    "row_citations": {
+      "historical_loss_by_arm": {},
+      "procedural_minus_no_memory": {
+        "cause": "no_eligible_comparative_rows",
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean_delta": null,
+        "pair_count": 0,
+        "value": null
+      },
+      "procedural_minus_trace": {
+        "cause": "no_eligible_comparative_rows",
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean_delta": null,
+        "pair_count": 0,
+        "value": null
+      },
+      "prospective_rows": 0,
+      "transaction_activity": {
+        "action_influences": 0,
+        "commits": 0,
+        "rejects": 0,
+        "retrievals": 0,
+        "rollbacks": 0
+      }
+    }
+  },
+  "fr12_disposition": {
+    "certification_fixture": {
+      "dynamic_proof_grammar_ready": true,
+      "targetable_panel_ready": true
+    },
+    "disposition": "partial",
+    "generation": {
+      "completed": false,
+      "row_citation": {
+        "cause": "no_eligible_comparative_rows",
+        "denominator": 0,
+        "source_headline_ignored": {
+          "dccd_environment-minus-repaired_direct": 0.0,
+          "dccd_environment-minus-static_grammar": 0.0,
+          "static_grammar-minus-repaired_direct": 0.0
+        },
+        "value": null
+      }
+    },
+    "positive": false,
+    "repair": {
+      "harmful_flips": {},
+      "row_citation": {
+        "cause": "no_eligible_comparative_rows",
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean_delta": null,
+        "pair_count": 0,
+        "value": null
+      },
+      "row_count": 0
+    }
+  },
+  "gate_check_summary": [
+    {
+      "check": "one_model_vram",
+      "expected": true,
+      "observed": false,
+      "passed": false,
+      "reason": "failed_named_check",
+      "task_id": "exp6770"
+    },
+    {
+      "check": "proof_transport_ab_completed",
+      "expected": true,
+      "observed": false,
+      "passed": false,
+      "reason": "actual=False == expected=True",
+      "task_id": "exp6771"
+    },
+    {
+      "check": "exp6771.proof_transport_audit_ready",
+      "expected": true,
+      "observed": null,
+      "passed": false,
+      "reason": "upstream_gate_blocked_or_missing",
+      "task_id": "exp6772"
+    },
+    {
+      "check": "exp6771.repair_panel_ready",
+      "expected": true,
+      "observed": null,
+      "passed": false,
+      "reason": "upstream_gate_blocked_or_missing",
+      "task_id": "exp6772"
+    },
+    {
+      "check": "least_used_eligible_rtx3090",
+      "expected": {
+        "free_vram_mb_at_least": 22610
+      },
+      "observed": null,
+      "passed": false,
+      "reason": "failed_named_check",
+      "task_id": "exp6773"
+    },
+    {
+      "check": "exp6773.csl_live_preflight_ready",
+      "expected": true,
+      "observed": false,
+      "passed": false,
+      "reason": "upstream_gate_blocked_or_missing",
+      "task_id": "exp6774"
+    },
+    {
+      "check": "exp6774.prospective_csl_completed",
+      "expected": true,
+      "observed": null,
+      "passed": false,
+      "reason": "upstream_gate_blocked_or_missing",
+      "task_id": "exp6775"
+    },
+    {
+      "check": "exclusive_gpu_without_unrelated_compute",
+      "expected": "one RTX 3090 with no active compute owner and at least 22610 MiB free",
+      "observed": [
+        {
+          "active_compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 3306606,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 17884
+            },
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 3542419,
+              "process_name": ".venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "index": 0,
+          "memory_free_mb": 5969,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 18155,
+          "name": "NVIDIA GeForce RTX 3090",
+          "temperature_c": 81,
+          "utilization_pct": 95,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        {
+          "active_compute_processes": [
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 3452377,
+              "process_name": ".venv/bin/python",
+              "used_memory_mb": 536
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 3452459,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 18416
+            },
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 3542419,
+              "process_name": ".venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "index": 1,
+          "memory_free_mb": 4896,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 19228,
+          "name": "NVIDIA GeForce RTX 3090",
+          "temperature_c": 76,
+          "utilization_pct": 73,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "passed": false,
+      "reason": "failed_named_check",
+      "task_id": "exp6776"
+    },
+    {
+      "check": "shadow_supervisor_transport_ready",
+      "expected": true,
+      "observed": false,
+      "passed": false,
+      "reason": "actual=False == expected=True",
+      "task_id": "exp6777"
+    },
+    {
+      "check": "exp6777.tool_gap_transport_ready",
+      "expected": true,
+      "observed": null,
+      "passed": false,
+      "reason": "upstream_gate_blocked_or_missing",
+      "task_id": "exp6778"
+    },
+    {
+      "check": "exp6778.actions_to_progress_ab_completed",
+      "expected": true,
+      "observed": null,
+      "passed": false,
+      "reason": "upstream_gate_blocked_or_missing",
+      "task_id": "exp6779"
+    }
+  ],
+  "hardware_disposition": {
+    "cuda_live_science_completed": false,
+    "cuda_receipts": [
+      {
+        "gate_failures": [
+          {
+            "check": "one_model_vram",
+            "expected": true,
+            "observed": false,
+            "passed": false,
+            "reason": "failed_named_check",
+            "task_id": "exp6770"
+          }
+        ],
+        "live_model_invoked": false,
+        "model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "task_id": "exp6770"
+      },
+      {
+        "gate_failures": [
+          {
+            "check": "least_used_eligible_rtx3090",
+            "expected": {
+              "free_vram_mb_at_least": 22610
+            },
+            "observed": null,
+            "passed": false,
+            "reason": "failed_named_check",
+            "task_id": "exp6773"
+          }
+        ],
+        "live_model_invoked": false,
+        "model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "task_id": "exp6773"
+      },
+      {
+        "gate_failures": [
+          {
+            "check": "exclusive_gpu_without_unrelated_compute",
+            "expected": "one RTX 3090 with no active compute owner and at least 22610 MiB free",
+            "observed": [
+              {
+                "active_compute_processes": [
+                  {
+                    "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+                    "pid": 3306606,
+                    "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+                    "used_memory_mb": 17884
+                  },
+                  {
+                    "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+                    "pid": 3542419,
+                    "process_name": ".venv/bin/python",
+                    "used_memory_mb": 256
+                  }
+                ],
+                "index": 0,
+                "memory_free_mb": 5969,
+                "memory_total_mb": 24576,
+                "memory_used_mb": 18155,
+                "name": "NVIDIA GeForce RTX 3090",
+                "temperature_c": 81,
+                "utilization_pct": 95,
+                "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+              },
+              {
+                "active_compute_processes": [
+                  {
+                    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+                    "pid": 3452377,
+                    "process_name": ".venv/bin/python",
+                    "used_memory_mb": 536
+                  },
+                  {
+                    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+                    "pid": 3452459,
+                    "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+                    "used_memory_mb": 18416
+                  },
+                  {
+                    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+                    "pid": 3542419,
+                    "process_name": ".venv/bin/python",
+                    "used_memory_mb": 256
+                  }
+                ],
+                "index": 1,
+                "memory_free_mb": 4896,
+                "memory_total_mb": 24576,
+                "memory_used_mb": 19228,
+                "name": "NVIDIA GeForce RTX 3090",
+                "temperature_c": 76,
+                "utilization_pct": 73,
+                "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+              }
+            ],
+            "passed": false,
+            "reason": "failed_named_check",
+            "task_id": "exp6776"
+          }
+        ],
+        "live_model_invoked": false,
+        "model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/Qwen3.8-27B-GGUF"
+        ],
+        "task_id": "exp6776"
+      }
+    ],
+    "inherited_v589_circular_evidence": [
+      {
+        "adversarial_finding_count": 1,
+        "branch": "stochastic_portability",
+        "branch_disposition": "circular_positive",
+        "claim_boundary": "The independent audit is simulator-only and preserves circular verifier semantics.",
+        "headline": {
+          "direct_sampler_crosscheck": {
+            "api_path": "carnot.experiment_6766_thermalizer_independent_trajectory_audit.sample_trajectory_tv",
+            "evaluator_path": "direct_sampler",
+            "exact_in_ci99_count": 190,
+            "exact_in_ci99_rate": 0.989583333333333,
+            "external_sampler": null,
+            "external_sampler_invoked": false,
+            "external_sampler_note": "The audit uses Python random.Random directly. Torx and THRML are not invoked.",
+            "maximum_absolute_tv_error": 0.014045276615022,
+            "mean_absolute_tv_error": 0.00228032511290819,
+            "observed_row_count": 192,
+            "passed": true,
+            "planned_row_count": 192,
+            "samples_per_row": [
+              4096
+            ],
+            "total_sample_count": 786432
+          },
+          "direct_sampler_rows": {
+            "denominator": 192,
+            "numerator": 192,
+            "rate": 1.0
+          },
+          "evaluator_distinct": true,
+          "exact_rows": {
+            "denominator": 192,
+            "numerator": 192,
+            "rate": 1.0
+          },
+          "independent_trajectory_audit_completed": true,
+          "mean_conditional_kl_by_method": {
+            "context_matched": {
+              "denominator": 64,
+              "value": 0.08461557734791243
+            },
+            "independent_factor": {
+              "denominator": 64,
+              "value": 0.13778894693836746
+            },
+            "trajectory_refinement": {
+              "denominator": 64,
+              "value": 0.08718529840344148
+            }
+          },
+          "mean_trajectory_tv_by_method": {
+            "context_matched": {
+              "denominator": 64,
+              "value": 0.2594914781375937
+            },
+            "independent_factor": {
+              "denominator": 64,
+              "value": 0.3175259469226538
+            },
+            "trajectory_refinement": {
+              "denominator": 64,
+              "value": 0.2577378894135453
+            }
+          },
+          "paired_all_depth_deltas": {
+            "context_matched": {
+              "ci95_high": 0.0763818178229396,
+              "ci95_low": 0.0396871197471805,
+              "improved_pair_count": 42,
+              "interval_excludes_zero": true,
+              "interval_method": "paired_t_95",
+              "mean_independent_minus_method_tv": 0.05803446878506004,
+              "pair_count": 64,
+              "tied_pair_count": 20,
+              "worsened_pair_count": 2
+            },
+            "trajectory_refinement": {
+              "ci95_high": 0.0788305434218421,
+              "ci95_low": 0.0407455715963748,
+              "improved_pair_count": 44,
+              "interval_excludes_zero": true,
+              "interval_method": "paired_t_95",
+              "mean_independent_minus_method_tv": 0.05978805750910849,
+              "pair_count": 64,
+              "tied_pair_count": 16,
+              "worsened_pair_count": 4
+            }
+          },
+          "simulator_only": true,
+          "verifier_is_oracle": true
+        },
+        "next_action": "Keep simulator-only evidence; require non-oracle refinement semantics before portability promotion.",
+        "recurring_blocker_count": 0,
+        "row_consistency_finding_count": 1,
+        "row_type": "branch",
+        "task_ids": [
+          "exp6766"
+        ],
+        "task_verdict_classes": {
+          "exp6766": "circular_positive"
+        },
+        "verdict_class": "circular_positive"
+      }
+    ],
+    "physical_tsu_claim": false,
+    "tsu_boundary": "No physical Extropic TSU, latency, power, or availability receipt exists."
+  },
+  "honest_verdict": "complete_partial: V590 narrowed the proof fixture and runtime grammar gap, while exact generation, localized repair, prospective continuous memory, and ARC actions-to-progress evidence remained blocked or missing; no branch metrics were pooled.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.08.590",
+  "missing_artifacts": [
+    {
+      "artifact_state": "missing",
+      "gate_failures": [
+        {
+          "check": "exp6771.proof_transport_audit_ready",
+          "expected": true,
+          "observed": null,
+          "passed": false,
+          "reason": "upstream_gate_blocked_or_missing",
+          "task_id": "exp6772"
+        },
+        {
+          "check": "exp6771.repair_panel_ready",
+          "expected": true,
+          "observed": null,
+          "passed": false,
+          "reason": "upstream_gate_blocked_or_missing",
+          "task_id": "exp6772"
+        }
+      ],
+      "path": "results/experiment_6772_claim_localized_prefix_backtracking_ab.json",
+      "task_id": "exp6772",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_state": "missing",
+      "gate_failures": [
+        {
+          "check": "exp6773.csl_live_preflight_ready",
+          "expected": true,
+          "observed": false,
+          "passed": false,
+          "reason": "upstream_gate_blocked_or_missing",
+          "task_id": "exp6774"
+        }
+      ],
+      "path": "results/experiment_6774_procedural_vs_trace_csl_ab_v2.json",
+      "task_id": "exp6774",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_state": "missing",
+      "gate_failures": [
+        {
+          "check": "exp6774.prospective_csl_completed",
+          "expected": true,
+          "observed": null,
+          "passed": false,
+          "reason": "upstream_gate_blocked_or_missing",
+          "task_id": "exp6775"
+        }
+      ],
+      "path": "results/experiment_6775_csl_durability_audit_v2.json",
+      "task_id": "exp6775",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_state": "missing",
+      "gate_failures": [
+        {
+          "check": "exp6777.tool_gap_transport_ready",
+          "expected": true,
+          "observed": null,
+          "passed": false,
+          "reason": "upstream_gate_blocked_or_missing",
+          "task_id": "exp6778"
+        }
+      ],
+      "path": "results/experiment_6778_arc_selfparse_actions_to_progress_ab.json",
+      "task_id": "exp6778",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_state": "missing",
+      "gate_failures": [
+        {
+          "check": "exp6778.actions_to_progress_ab_completed",
+          "expected": true,
+          "observed": null,
+          "passed": false,
+          "reason": "upstream_gate_blocked_or_missing",
+          "task_id": "exp6779"
+        }
+      ],
+      "path": "results/experiment_6779_arc_tool_supervisor_adoption_audit.json",
+      "task_id": "exp6779",
+      "verdict_class": "blocked"
+    }
+  ],
+  "pooled_milestone_success_score": null,
+  "prd_gap_disposition": [
+    {
+      "artifact_citations": [
+        "results/experiment_6768_targetable_proof_panel_expansion.json",
+        "results/experiment_6769_environment_indexed_proof_grammar_v2.json",
+        "results/experiment_6770_dccd_environment_grammar_ab_v2.json"
+      ],
+      "branch_verdict": "partial",
+      "disposition": "narrowed",
+      "gap": "FR12 certifies proofs but cannot yet produce or repair exact certificates reliably.",
+      "rank": 1,
+      "row_citations": {
+        "comparative_effects": {
+          "cause": "no_eligible_comparative_rows",
+          "denominator": 0,
+          "source_headline_ignored": {
+            "dccd_environment-minus-repaired_direct": 0.0,
+            "dccd_environment-minus-static_grammar": 0.0,
+            "static_grammar-minus-repaired_direct": 0.0
+          },
+          "value": null
+        },
+        "grammar_rows": 45,
+        "panel_rows": 126
+      }
+    },
+    {
+      "artifact_citations": [
+        "results/experiment_6773_csl_owned_lease_contract.json",
+        "results/experiment_6774_procedural_vs_trace_csl_ab_v2.json",
+        "results/experiment_6775_csl_durability_audit_v2.json"
+      ],
+      "branch_verdict": "blocked",
+      "disposition": "blocked",
+      "gap": "FR11 has transactional storage but no prospective continuous-learning result.",
+      "rank": 2,
+      "row_citations": {
+        "prospective_rows": 0,
+        "required_positive_gates": {
+          "activity": false,
+          "hard_case": false,
+          "poison": false,
+          "restart": false,
+          "retention": false,
+          "rollback": false,
+          "support": false
+        },
+        "transaction_activity": {
+          "action_influences": 0,
+          "commits": 0,
+          "rejects": 0,
+          "retrievals": 0,
+          "rollbacks": 0
+        }
+      }
+    },
+    {
+      "artifact_citations": [
+        "results/experiment_6776_arc_shadow_supervisor_accrual.json",
+        "results/experiment_6777_arc_tool_gap_transport.json",
+        "results/experiment_6778_arc_selfparse_actions_to_progress_ab.json",
+        "results/experiment_6779_arc_tool_supervisor_adoption_audit.json"
+      ],
+      "branch_verdict": "blocked",
+      "disposition": "blocked",
+      "gap": "The live ARC agent lacks audited supervisor and selfparse actions-to-progress evidence.",
+      "rank": 3,
+      "row_citations": {
+        "actions_effect": {
+          "cause": "no_eligible_comparative_rows",
+          "ci95_high": null,
+          "ci95_low": null,
+          "mean_delta": null,
+          "pair_count": 0,
+          "value": null
+        },
+        "adoption_decision": "unavailable",
+        "eligible_supervisor_rows": 0,
+        "tool_gap_transport_ready": false
+      }
+    }
+  ],
+  "prior_verdict_recurrences": [
+    {
+      "branch": "proof",
+      "current_verdict": "complete: targetable exact-invalid fixture ready with 126 cold-replayed rows; this is not a model-quality claim",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp6756-environment-indexed-proof-grammar-fixture",
+      "prior_verdict": "blocked_gate_check_failed: exp6755 environment_grammar_targetable_rows observed 21, expected at least 24",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6768"
+    },
+    {
+      "branch": "proof",
+      "current_verdict": "complete: environment-indexed SAT and UNSAT support remained reachable with zero ghost violations; no live SOTA comparison was run",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp6756-environment-indexed-proof-grammar-fixture",
+      "prior_verdict": "blocked_gate_check_failed: exp6755 environment_grammar_targetable_rows observed 21, expected at least 24",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6769"
+    },
+    {
+      "branch": "proof",
+      "current_verdict": "complete: environment-indexed SAT and UNSAT support remained reachable with zero ghost violations; no live SOTA comparison was run",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
+      "prior_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6769"
+    },
+    {
+      "branch": "proof",
+      "current_verdict": "complete_blocked_proof_transport_ab_v2: precondition one_model_vram observed False.",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp6757-dccd-environment-grammar-ab",
+      "prior_verdict": "GATE_BLOCK: preempted after exp6756 retired on the 21 below 24 targetable-row gate; no artifact was produced",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6770"
+    },
+    {
+      "branch": "proof",
+      "current_verdict": "complete_blocked_proof_transport_ab_v2: precondition one_model_vram observed False.",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
+      "prior_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6770"
+    },
+    {
+      "branch": "proof",
+      "current_verdict": "blocked_gate_check_failed",
+      "disposition": "retire_same_verdict_route",
+      "prior_experiment_id": "exp6758-proof-transport-independent-audit",
+      "prior_verdict": "blocked_gate_check_failed: upstream exp6757 artifact was not found",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": true,
+      "task_id": "exp6771"
+    },
+    {
+      "branch": "proof",
+      "current_verdict": "blocked_gate_check_failed",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp6570-proof-obligation-independent-audit",
+      "prior_verdict": "blocked_proof_obligation_independent_audit: provenance, spans, compiler, exact release, harm, and cost were not replayable",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6771"
+    },
+    {
+      "branch": "proof",
+      "current_verdict": "complete_blocked_missing_artifact: planned deliverable is absent",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp6760-prefix-backtracking-repair-ab",
+      "prior_verdict": "blocked_gate_check_failed: both diagnostic-energy gates failed because exp6759 artifact was not found",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6772"
+    },
+    {
+      "branch": "proof",
+      "current_verdict": "complete_blocked_missing_artifact: planned deliverable is absent",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp6651-failure-localized-suffix-regeneration",
+      "prior_verdict": "blocked_gate_check_failed",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6772"
+    },
+    {
+      "branch": "continuous_memory",
+      "current_verdict": "complete_blocked_csl_owned_lease_contract",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp6762-procedural-vs-trace-csl-ab",
+      "prior_verdict": "complete_blocked_procedural_csl_ab: one_model_vram=false and task_owned_lease=false",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6773"
+    },
+    {
+      "branch": "continuous_memory",
+      "current_verdict": "complete_blocked_missing_artifact: planned deliverable is absent",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp6762-procedural-vs-trace-csl-ab",
+      "prior_verdict": "complete_blocked_procedural_csl_ab: one_model_vram=false and task_owned_lease=false",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6774"
+    },
+    {
+      "branch": "continuous_memory",
+      "current_verdict": "complete_blocked_missing_artifact: planned deliverable is absent",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp6749-prospective-support-preserving-csl-ab",
+      "prior_verdict": "complete_prospective_csl_null: all planned cells completed without a support-preserving gain",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6774"
+    },
+    {
+      "branch": "continuous_memory",
+      "current_verdict": "complete_blocked_missing_artifact: planned deliverable is absent",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp6763-csl-hard-case-forgetting-audit",
+      "prior_verdict": "blocked_gate_check_failed: exp6762 prospective_csl_completed was false",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6775"
+    },
+    {
+      "branch": "continuous_memory",
+      "current_verdict": "complete_blocked_missing_artifact: planned deliverable is absent",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp6750-csl-durability-support-poison-audit",
+      "prior_verdict": "complete_null_csl_audit: no positive order-level CSL effect recomputed",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6775"
+    },
+    {
+      "branch": "arc",
+      "current_verdict": "complete_blocked_shadow_supervisor_accrual:exclusive_gpu_without_unrelated_compute",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp6682-arc-held-family-supervisor-ab",
+      "prior_verdict": "blocked: held-family supervisor A/B is partial because verification_failure; no transition benefit or solve is claimed",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6776"
+    },
+    {
+      "branch": "arc",
+      "current_verdict": "blocked_gate_check_failed",
+      "disposition": "retire_same_verdict_route",
+      "prior_experiment_id": "exp6730-arc-context-tool-preflight",
+      "prior_verdict": "blocked_gate_check_failed: upstream exp6729 v587_contract_ready was false",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": true,
+      "task_id": "exp6777"
+    },
+    {
+      "branch": "arc",
+      "current_verdict": "complete_blocked_missing_artifact: planned deliverable is absent",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp6473-tool-loop-compaction-pilot-ab",
+      "prior_verdict": "complete: compaction pilot A/B measured on 13 paired live cells; one or more gates failed and the pilot signal was not a claim",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6778"
+    },
+    {
+      "branch": "arc",
+      "current_verdict": "complete_blocked_missing_artifact: planned deliverable is absent",
+      "disposition": "changed_or_not_executed",
+      "prior_experiment_id": "exp6682-arc-held-family-supervisor-ab",
+      "prior_verdict": "blocked: held-family supervisor A/B is partial because verification_failure; no transition benefit or solve is claimed",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": false,
+      "task_id": "exp6779"
+    },
+    {
+      "branch": "execution_contract",
+      "current_verdict": "complete_partial: V590 narrowed the proof fixture and runtime grammar gap, while exact generation, localized repair, prospective continuous memory, and ARC actions-to-progress evidence remained blocked or missing; no branch metrics were pooled.",
+      "disposition": "retire_same_verdict_route",
+      "prior_experiment_id": "exp6767-v589-branch-disposition",
+      "prior_verdict": "complete_partial: V589 preserved narrowed proof transport, blocked repair, blocked continuous memory, blocked ARC quality, circular simulator portability, and no pooled success claim.",
+      "retire_if_same_verdict": true,
+      "same_verdict_condition_fired": true,
+      "task_id": "exp6780"
+    }
+  ],
+  "protected_files_unchanged": [
+    {
+      "note": "read-only input to Exp6780 synthesis",
+      "path": "scripts/research_conductor.py",
+      "sha256_current": "sha256:63c64c3af372e48f64df08f979467d0cb150849ec87f3625aa0310d4c8b88508",
+      "unchanged": true
+    },
+    {
+      "note": "read-only input to Exp6780 synthesis",
+      "path": "research-roadmap.yaml",
+      "sha256_current": "sha256:1b7da807af90ea56f8c6371674d2f600ce01a8ec933c1bfb011d640dd90554fd",
+      "unchanged": true
+    }
+  ],
+  "random_seed": 6780,
+  "recurring_blockers": {
+    "blocked_task_count": 55,
+    "diagnostic_coverage": {
+      "with_reason": 55
+    },
+    "recurring": [
+      {
+        "blocker": "blocked_gate_check_failed",
+        "count": 30,
+        "hits": [
+          {
+            "artifact": "experiment_6606_gemma4_31b_direct_headroom.json",
+            "milestone": "2026.08.576",
+            "reason": "N prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failure"
+          },
+          {
+            "artifact": "experiment_6609_two_level_constrained_decoding.json",
+            "milestone": "2026.08.576",
+            "reason": "N of N gate(s) failed; first failure: <task>.headroom_benchmark_ready_score (actual=N.N == expected=N.N)"
+          },
+          {
+            "artifact": "experiment_6617_gpu_lease_phase_receipts.json",
+            "milestone": "2026.08.577",
+            "reason": "N of N gate(s) failed; first failure: <task>.execution_contract_ready_score (actual=N.N == expected=N.N)"
+          },
+          {
+            "artifact": "experiment_6620_gpu_lease_phase_receipts.json",
+            "milestone": "2026.08.578",
+            "reason": "N of N gate(s) failed; first failure: <task>.activation_contract_ready_score (actual=N.N == expected=N.N)"
+          },
+          {
+            "artifact": "experiment_6622_qwen36_direct_headroom.json",
+            "milestone": "2026.08.578",
+            "reason": "N of N gate(s) failed; first failure: <task>.qwen_admission_ready_score (upstream artifact not found for task "
+          },
+          {
+            "artifact": "experiment_6624_delayed_two_level_decoding.json",
+            "milestone": "2026.08.578",
+            "reason": "N of N gate(s) failed; first failure: <task>.constrained_decoding_ready_score (upstream artifact not found for"
+          },
+          {
+            "artifact": "experiment_6627_spectral_integrity_repair.json",
+            "milestone": "2026.08.578",
+            "reason": "N of N gate(s) failed; first failure: <task>.activation_contract_ready_score (actual=N.N == expected=N.N)"
+          },
+          {
+            "artifact": "experiment_6634_mandated_model_admission.json",
+            "milestone": "2026.08.579",
+            "reason": "N of N gate(s) failed; first failure: <task>.gpu_lease_scheduler_ready_score (actual=N.N == expected=N.N)"
+          },
+          {
+            "artifact": "experiment_6636_delayed_two_level_decoding.json",
+            "milestone": "2026.08.579",
+            "reason": "N of N gate(s) failed; first failure: <task>.headroom_ready_score (upstream artifact not found for task id '<t"
+          },
+          {
+            "artifact": "experiment_6651_failure_localized_suffix_regeneration.json",
+            "milestone": "2026.08.580",
+            "reason": "N of N gate(s) failed; first failure: <task>.regeneration_headroom_count (actual=N >= expected=N)"
+          },
+          {
+            "artifact": "experiment_6658_thermodynamic_schedule_ab.json",
+            "milestone": "2026.08.580",
+            "reason": "N of N gate(s) failed; first failure: <task>.ising_reference_ready (actual=False == expected=True)"
+          },
+          {
+            "artifact": "experiment_6662_triggered_structured_tail_ab.json",
+            "milestone": "2026.08.581",
+            "reason": "N of N gate(s) failed; first failure: <task>.triggered_tail_fixture_ready (actual=False == expected=True)"
+          },
+          {
+            "artifact": "experiment_6677_triggered_tail_independent_audit.json",
+            "milestone": "2026.08.582",
+            "reason": "N of N gate(s) failed; first failure: <task>.triggered_tail_ab_ready (actual=False in expected=[True])"
+          },
+          {
+            "artifact": "experiment_6679_prequential_cross_family_csl_ab.json",
+            "milestone": "2026.08.582",
+            "reason": "N of N gate(s) failed; first failure: <task>.constraint_family_stream_ready (actual=False in expected=[True])"
+          },
+          {
+            "artifact": "experiment_6685_autocorrelation_schedule_ab.json",
+            "milestone": "2026.08.582",
+            "reason": "N of N gate(s) failed; first failure: <task>.torx_factor_parity_ready (actual=False in expected=[True])"
+          },
+          {
+            "artifact": "experiment_6690_exact_planning_fixture_audit.json",
+            "milestone": "2026.08.583",
+            "reason": "N of N gate(s) failed; first failure: <task>.planning_fixture_ready (upstream artifact not found for task id '"
+          },
+          {
+            "artifact": "experiment_6692_structural_plan_energy.json",
+            "milestone": "2026.08.583",
+            "reason": "N of N gate(s) failed; first failure: <task>.proposal_corpus_ready (upstream artifact not found for task id '<"
+          },
+          {
+            "artifact": "experiment_6694_energy_backtracking_audit.json",
+            "milestone": "2026.08.583",
+            "reason": "N of N gate(s) failed; first failure: <task>.backtracking_ab_ready (upstream artifact not found for task id '<"
+          },
+          {
+            "artifact": "experiment_6696_prequential_online_energy_ab.json",
+            "milestone": "2026.08.583",
+            "reason": "N of N gate(s) failed; first failure: <task>.online_energy_fixture_ready (upstream artifact not found for task"
+          },
+          {
+            "artifact": "experiment_6705_structural_plan_energy.json",
+            "milestone": "2026.08.584",
+            "reason": "N of N gate(s) failed; first failure: <task>.proposal_bank_ready (upstream artifact not found for task id '<ta"
+          },
+          {
+            "artifact": "experiment_6718_sota_planning_proposal_bank.json",
+            "milestone": "2026.08.585",
+            "reason": "N of N gate(s) failed; first failure: <task>.planning_fixture_audit_passed (upstream artifact not found for ta"
+          },
+          {
+            "artifact": "experiment_6730_arc_context_tool_preflight.json",
+            "milestone": "2026.08.587",
+            "reason": "N of N gate(s) failed; first failure: <task>.vN_contract_ready (actual=False == expected=True)"
+          },
+          {
+            "artifact": "experiment_6732_object_table_ab_cold_audit.json",
+            "milestone": "2026.08.587",
+            "reason": "N of N gate(s) failed; first failure: <task>.object_table_ab_completed (upstream artifact not found for task i"
+          },
+          {
+            "artifact": "experiment_6733_hardness_controlled_certificate_stream.json",
+            "milestone": "2026.08.587",
+            "reason": "N of N gate(s) failed; first failure: <task>.vN_contract_ready (actual=False == expected=True)"
+          },
+          {
+            "artifact": "experiment_6735_oracle_distinct_diagnostic_energy.json",
+            "milestone": "2026.08.587",
+            "reason": "N of N gate(s) failed; first failure: <task>.dual_encoding_corpus_ready (upstream artifact not found for task "
+          },
+          {
+            "artifact": "experiment_6747_diagnostic_energy_localized_repair_ab.json",
+            "milestone": "2026.08.588",
+            "reason": "N of N gate(s) failed; first failure: <task>.heldout_reasoning_error_auroc (numeric comparison rejected becaus"
+          },
+          {
+            "artifact": "experiment_6756_environment_indexed_proof_grammar_fixture.json",
+            "milestone": "2026.08.589",
+            "reason": "N of N gate(s) failed; first failure: <task>.environment_grammar_targetable_rows (actual=N >= expected=N)"
+          },
+          {
+            "artifact": "experiment_6758_proof_transport_independent_audit.json",
+            "milestone": "2026.08.589",
+            "reason": "N of N gate(s) failed; first failure: <task>.proof_transport_ab_completed (upstream artifact not found for tas"
+          },
+          {
+            "artifact": "experiment_6760_prefix_backtracking_repair_ab.json",
+            "milestone": "2026.08.589",
+            "reason": "N of N gate(s) failed; first failure: <task>.heldout_reasoning_error_auroc (upstream artifact not found for ta"
+          },
+          {
+            "artifact": "experiment_6763_csl_hard_case_forgetting_audit.json",
+            "milestone": "2026.08.589",
+            "reason": "gate-unsat(final): N of N gate(s) failed; first failure: <task>.prospective_csl_completed (actual=False == exp"
+          }
+        ]
+      }
+    ],
+    "window": 14
+  },
+  "reproducibility_checksum": "sha256:5eda1696c344b05f3e49edccb5fa8b404c99661772df9ddeab2e8174bbde7e6c",
+  "retirement_recommendations": [
+    {
+      "branch": "proof",
+      "current_task_id": "exp6771",
+      "prior_experiment_id": "exp6758-proof-transport-independent-audit",
+      "reason": "retire_if_same_verdict=true and the normalized terminal verdict recurred",
+      "recommendation": "add_to_exclusion_manifest",
+      "scope": "exp6758-proof-transport-independent-audit_to_exp6771_same_verdict"
+    },
+    {
+      "branch": "arc",
+      "current_task_id": "exp6777",
+      "prior_experiment_id": "exp6730-arc-context-tool-preflight",
+      "reason": "retire_if_same_verdict=true and the normalized terminal verdict recurred",
+      "recommendation": "add_to_exclusion_manifest",
+      "scope": "exp6730-arc-context-tool-preflight_to_exp6777_same_verdict"
+    },
+    {
+      "branch": "execution_contract",
+      "current_task_id": "exp6780",
+      "prior_experiment_id": "exp6767-v589-branch-disposition",
+      "reason": "retire_if_same_verdict=true and the normalized terminal verdict recurred",
+      "recommendation": "add_to_exclusion_manifest",
+      "scope": "exp6767-v589-branch-disposition_to_exp6780_same_verdict"
+    }
+  ],
+  "roadmap_precondition": {
+    "fallback_reason": "research-roadmap-next.yaml_missing",
+    "inspected_path": "research-roadmap-next.yaml",
+    "next_roadmap_present": false,
+    "selected_path": "research-roadmap.yaml",
+    "selected_sha256": "sha256:1b7da807af90ea56f8c6371674d2f600ce01a8ec933c1bfb011d640dd90554fd"
+  },
+  "row_recomputed_headlines": {
+    "arc": {
+      "actions_to_progress_ab_completed": false,
+      "actions_to_progress_by_arm": {},
+      "actions_to_progress_rows": 0,
+      "adoption_decision": "unavailable",
+      "adoption_positive": false,
+      "cold_actions_to_progress_audit_passed": false,
+      "declared_firings_after_by_arm": {
+        "allow_reinduction": 2,
+        "drop_goal_bias": 2,
+        "force_exploration_diversity": 2,
+        "tool_loop_reinduction": 0
+      },
+      "eligible_supervisor_rows": 0,
+      "evidence_floor_met_by_arm": {
+        "allow_reinduction": false,
+        "drop_goal_bias": false,
+        "force_exploration_diversity": false,
+        "tool_loop_reinduction": false
+      },
+      "row_recomputed_firings": 0,
+      "row_recomputed_helped": 0,
+      "selfparse_minus_control_actions_effect": {
+        "cause": "no_eligible_comparative_rows",
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean_delta": null,
+        "pair_count": 0,
+        "value": null
+      },
+      "shadow_supervisor_transport_ready": false,
+      "solve_claim": false,
+      "supervisor_rows": 40,
+      "tool_gap_analyzer_ingest_passed": false,
+      "tool_gap_event_count": 0,
+      "tool_gap_transport_ready": false
+    },
+    "continuous_memory": {
+      "cold_audit_completed": false,
+      "csl_live_preflight_ready": false,
+      "historical_loss_by_arm": {},
+      "live_model_invoked": false,
+      "preflight_rows": 11,
+      "prequential_yield_by_arm": {},
+      "procedural_minus_no_memory_order_effect": {
+        "cause": "no_eligible_comparative_rows",
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean_delta": null,
+        "pair_count": 0,
+        "value": null
+      },
+      "procedural_minus_trace_order_effect": {
+        "cause": "no_eligible_comparative_rows",
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean_delta": null,
+        "pair_count": 0,
+        "value": null
+      },
+      "prospective_csl_completed": false,
+      "prospective_rows": 0,
+      "required_positive_gates": {
+        "activity": false,
+        "hard_case": false,
+        "poison": false,
+        "restart": false,
+        "retention": false,
+        "rollback": false,
+        "support": false
+      },
+      "transaction_activity": {
+        "action_influences": 0,
+        "commits": 0,
+        "rejects": 0,
+        "retrievals": 0,
+        "rollbacks": 0
+      }
+    },
+    "execution_contract": {
+      "capstone_path": "results/experiment_6780_v590_branch_disposition.json",
+      "expected_task_count": 13,
+      "successor_roadmap_activated": false
+    },
+    "proof": {
+      "comparison_rows": 0,
+      "dynamic_proof_grammar_ready": true,
+      "exact_valid_rate_by_arm": {},
+      "grammar_rows": 45,
+      "no_ghost_violations": 0,
+      "paired_exact_valid_effects": {
+        "cause": "no_eligible_comparative_rows",
+        "denominator": 0,
+        "source_headline_ignored": {
+          "dccd_environment-minus-repaired_direct": 0.0,
+          "dccd_environment-minus-static_grammar": 0.0,
+          "static_grammar-minus-repaired_direct": 0.0
+        },
+        "value": null
+      },
+      "panel_rows": 126,
+      "proof_transport_ab_completed": false,
+      "runtime_mask_invocation_count": 924,
+      "targetable_panel_ready": true,
+      "valid_sat_reachable": true,
+      "valid_unsat_reachable": true
+    },
+    "repair": {
+      "harmful_flips_by_arm": {},
+      "paired_exact_valid_effect": {
+        "cause": "no_eligible_comparative_rows",
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean_delta": null,
+        "pair_count": 0,
+        "value": null
+      },
+      "proof_transport_audit_ready": false,
+      "repair_panel_ready": false,
+      "repair_rows": 0,
+      "source_interval_ignored": null,
+      "support_loss_by_arm": {}
+    }
+  },
+  "rows": [
+    {
+      "artifact_sha256": "sha256:5e44fd4db55e11c99f0f5720aa5815bf26135f5b0801e3687ebf1095a1ee180d",
+      "artifact_state": "present",
+      "branch": "proof",
+      "duration_s": 1.621103,
+      "gate_failures": [],
+      "honest_verdict": "complete: targetable exact-invalid fixture ready with 126 cold-replayed rows; this is not a model-quality claim",
+      "inference_substrate": "deterministic_local_certificate_mutation_no_llm",
+      "manifest_task_id": "exp6768-targetable-proof-panel-expansion",
+      "model_ids": [],
+      "next_action": "follow_branch_disposition",
+      "order": 1,
+      "path": "results/experiment_6768_targetable_proof_panel_expansion.json",
+      "raw_row_count": 126,
+      "raw_rows_available": true,
+      "row_type": "experiment",
+      "source_error": null,
+      "status": "complete",
+      "summary_receipt": {
+        "artifact": "results/experiment_6768_targetable_proof_panel_expansion.json",
+        "exit_code": 1,
+        "summary_excerpt": "==============================================================================\nARTIFACT  experiment_6768_targetable_proof_panel_expansion.json\n------------------------------------------------------------------------------\n  verdict          : complete: targetable exact-invalid fixture ready with 126 cold-replayed rows; this is not a model-quality claim\n  flagged_adversarial (stamped): None   |   LIVE re-check: warn\n  acceptance gates :\n      [?   ] gate_check_summary = {'all_passed': True, 'checks': [{'check': 'exp6755_transport_reparse_ready', 'expected': True, 'observed': True, 'passed': True}, {'check': 'exp6755_row_count', 'expected': 216, 'observed': 216, 'passed': True}, {'check': 'exp6755_unique_row_ids', 'expected': 216, 'observed': 216, 'passed': True}, {'check': 'exp6755_raw_and_normalized_hashes', 'expected': 216, 'observed': 216, 'passed': True}, {'check': 'exp6755_targetable_source_rows', 'expected': 21, 'observed': 21, 'passed': True}, {'check': 'exp6745_artifact_hash_lineage', 'expected': 'sha256:d9f8cad418dbc3890ddcb8a799d8b7951362084b3f1e58e41cfca35ec1a3cdd7', 'observed': 'sha256:d9f8cad418dbc3890ddcb8a799d8b7951362084b3f1e58e41cfca35ec1a3cdd7', 'passed': True}, {'check': 'exp6745_source_row_lineage', 'expected': [], 'observed': [], 'passed': True}, {'check': 'exp6744_cnf_lineage', 'expected': [], 'observed': [], 'passed': True}, {'check': 'minimum_panel_rows', 'expected': '>=36', 'observed': 126, 'passed': True}, {'check': 'held_family_coverage', 'expected': {'expander_tseitin': '>=2', 'ladder_tseitin': '>=2', 'pigeonhole_anchor': '>=2'}, 'observed': {'expander_tseitin': 24, 'ladder_tseitin': 72, 'pigeonhole_anchor': 30}, 'passed': True}, {'check': 'target_error_class_coverage', 'expected': {'duplicate_evidence': '>=2', 'invalid_clause': '>=2', 'missing_evidence': '>=2', 'non_binary_value': '>=2', 'premature_terminal': '>=2', 'undefined_variable': '>=2'}, 'observed': {'duplicate_evidence': 21, 'invalid_clause': 21, 'missing_evidence': 21, 'non_bina",
+        "summary_sha256": "sha256:8b5e7e7eb08325137c7ccbe10607e4bdb44eb29651ff36390781bd9c02660ae1",
+        "task_id": "exp6768"
+      },
+      "task_id": "exp6768",
+      "terminal": true,
+      "title": "Exact-invalid targetable proof panel expansion",
+      "valid_json": true,
+      "verdict_class": "positive"
+    },
+    {
+      "artifact_sha256": "sha256:f8e8dc42d23b6e136beb6b5eb073b617326e20694bace4bac5cea23491015278",
+      "artifact_state": "present",
+      "branch": "proof",
+      "duration_s": 16.803,
+      "gate_failures": [],
+      "honest_verdict": "complete: environment-indexed SAT and UNSAT support remained reachable with zero ghost violations; no live SOTA comparison was run",
+      "inference_substrate": "deterministic_automaton_no_llm",
+      "manifest_task_id": "exp6769-environment-indexed-proof-grammar-v2",
+      "model_ids": [],
+      "next_action": "follow_branch_disposition",
+      "order": 2,
+      "path": "results/experiment_6769_environment_indexed_proof_grammar_v2.json",
+      "raw_row_count": 45,
+      "raw_rows_available": true,
+      "row_type": "experiment",
+      "source_error": null,
+      "status": "complete",
+      "summary_receipt": {
+        "artifact": "results/experiment_6769_environment_indexed_proof_grammar_v2.json",
+        "exit_code": 0,
+        "summary_excerpt": "==============================================================================\nARTIFACT  experiment_6769_environment_indexed_proof_grammar_v2.json\n------------------------------------------------------------------------------\n  verdict          : complete: environment-indexed SAT and UNSAT support remained reachable with zero ghost violations; no live SOTA comparison was run\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = {'all_passed': True, 'checks': [{'check': 'preconditions', 'expected': True, 'observed': True, 'passed': True}, {'check': 'static_cfg_compile', 'expected': True, 'observed': True, 'passed': True}, {'check': 'runtime_invocation', 'expected': True, 'observed': True, 'passed': True}, {'check': 'no_ghost', 'expected': True, 'observed': True, 'passed': True}, {'check': 'valid_sat_reachable', 'expected': True, 'observed': True, 'passed': True}, {'check': 'valid_unsat_reachable', 'expected': True, 'observed': True, 'passed': True}, {'check': 'parser', 'expected': True, 'observed': True, 'passed': True}, {'check': 'exact_authority_separation', 'expected': True, 'observed': True, 'passed': True}, {'check': 'determinism', 'expected': True, 'observed': True, 'passed': True}, {'check': 'focused_tests', 'expected': True, 'observed': True, 'passed': True}, {'check': 'scoped_coverage_run', 'expected': True, 'observed': True, 'passed': True}, {'check': 'scoped_coverage', 'expected': True, 'observed': True, 'passed': True}, {'check': 'spec_coverage', 'expected': True, 'observed': True, 'passed': True}, {'check': 'ruff_check', 'expected': True, 'observed': True, 'passed': True}, {'check': 'format_check', 'expected': True, 'observed': True, 'passed': True}], 'failed_checks': []}\n  duration_s       : 16.803   substrate: deterministic_automaton_no_llm\n  duration floor   : deterministic_automaton_no_llm >=0.0001s (no_llm_declared)\n  adversarial flags:\n      [info    ] IMPLAUSIBLE_PERFECT: no_ghost_v",
+        "summary_sha256": "sha256:0bcd8294670a1bd47856959cf867b21132a9e62baf0350cbe11bd8ad6b1edf0c",
+        "task_id": "exp6769"
+      },
+      "task_id": "exp6769",
+      "terminal": true,
+      "title": "Environment-indexed proof grammar fixture v2",
+      "valid_json": true,
+      "verdict_class": "positive"
+    },
+    {
+      "artifact_sha256": "sha256:47d4b724a8fed526e1ea18fb7f6f110547ce0e5ddecf165d5d708f6e1e890b00",
+      "artifact_state": "present",
+      "branch": "proof",
+      "duration_s": 61.45445,
+      "gate_failures": [
+        {
+          "check": "one_model_vram",
+          "expected": true,
+          "observed": false,
+          "passed": false,
+          "reason": "failed_named_check",
+          "task_id": "exp6770"
+        }
+      ],
+      "honest_verdict": "complete_blocked_proof_transport_ab_v2: precondition one_model_vram observed False.",
+      "inference_substrate": "local llama.cpp CUDA GGUF with invoked runtime grammar",
+      "manifest_task_id": "exp6770-dccd-environment-grammar-ab-v2",
+      "model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "next_action": "follow_branch_disposition",
+      "order": 3,
+      "path": "results/experiment_6770_dccd_environment_grammar_ab_v2.json",
+      "raw_row_count": 0,
+      "raw_rows_available": false,
+      "row_type": "experiment",
+      "source_error": null,
+      "status": "complete_blocked_proof_transport_ab_v2",
+      "summary_receipt": {
+        "artifact": "results/experiment_6770_dccd_environment_grammar_ab_v2.json",
+        "exit_code": 0,
+        "summary_excerpt": "==============================================================================\nARTIFACT  experiment_6770_dccd_environment_grammar_ab_v2.json\n------------------------------------------------------------------------------\n  verdict          : complete_blocked_proof_transport_ab_v2: precondition one_model_vram observed False.\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = {'all_preconditions_passed': False, 'cold_recomputation_agreed': False, 'expected': True, 'failed_check': 'one_model_vram', 'observed': False, 'rows_complete': False, 'teardown_passed': False}\n  duration_s       : 61.45445   substrate: local llama.cpp CUDA GGUF with invoked runtime grammar\n  duration floor   : none\n  adversarial flags: none\n==============================================================================",
+        "summary_sha256": "sha256:89a98798ae8a5205dad4e3620b35c067a2409b957945807c52e67bb2a1c50ebb",
+        "task_id": "exp6770"
+      },
+      "task_id": "exp6770",
+      "terminal": true,
+      "title": "Three-model DCCD environment-grammar A/B v2",
+      "valid_json": true,
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_sha256": "sha256:e23debc86c259aa2d0df645931b0a8ff32287c82b38f64aaf95c79891d580463",
+      "artifact_state": "present",
+      "branch": "proof",
+      "duration_s": 0.0,
+      "gate_failures": [
+        {
+          "check": "proof_transport_ab_completed",
+          "expected": true,
+          "observed": false,
+          "passed": false,
+          "reason": "actual=False == expected=True",
+          "task_id": "exp6771"
+        }
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "inference_substrate": null,
+      "manifest_task_id": "exp6771-proof-transport-localization-audit",
+      "model_ids": [],
+      "next_action": "follow_branch_disposition",
+      "order": 4,
+      "path": "results/experiment_6771_proof_transport_localization_audit.json",
+      "raw_row_count": 0,
+      "raw_rows_available": false,
+      "row_type": "experiment",
+      "source_error": null,
+      "status": "blocked",
+      "summary_receipt": {
+        "artifact": "results/experiment_6771_proof_transport_localization_audit.json",
+        "exit_code": 0,
+        "summary_excerpt": "==============================================================================\nARTIFACT  experiment_6771_proof_transport_localization_audit.json\n------------------------------------------------------------------------------\n  verdict          : blocked_gate_check_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = 'gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6770-dccd-environment-grammar-ab-v2.proof_transport_ab_completed (actual=False == expected=True)'\n  duration_s       : 0.0   substrate: None\n  duration floor   : none\n  adversarial flags: none\n==============================================================================",
+        "summary_sha256": "sha256:c6953c10897b29599c50dbad71c4066739c365a4120f15a71ecefc59c259c2e5",
+        "task_id": "exp6771"
+      },
+      "task_id": "exp6771",
+      "terminal": true,
+      "title": "Independent proof transport and localization audit",
+      "valid_json": true,
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_sha256": null,
+      "artifact_state": "missing",
+      "branch": "proof",
+      "duration_s": null,
+      "gate_failures": [
+        {
+          "check": "exp6771.proof_transport_audit_ready",
+          "expected": true,
+          "observed": null,
+          "passed": false,
+          "reason": "upstream_gate_blocked_or_missing",
+          "task_id": "exp6772"
+        },
+        {
+          "check": "exp6771.repair_panel_ready",
+          "expected": true,
+          "observed": null,
+          "passed": false,
+          "reason": "upstream_gate_blocked_or_missing",
+          "task_id": "exp6772"
+        }
+      ],
+      "honest_verdict": "complete_blocked_missing_artifact: planned deliverable is absent",
+      "inference_substrate": null,
+      "manifest_task_id": "exp6772-claim-localized-prefix-backtracking-ab",
+      "model_ids": [],
+      "next_action": "follow_branch_disposition",
+      "order": 5,
+      "path": "results/experiment_6772_claim_localized_prefix_backtracking_ab.json",
+      "raw_row_count": 0,
+      "raw_rows_available": false,
+      "row_type": "experiment",
+      "source_error": "file_missing",
+      "status": "missing",
+      "summary_receipt": null,
+      "task_id": "exp6772",
+      "terminal": true,
+      "title": "Claim-localized prefix-backtracking repair A/B",
+      "valid_json": false,
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_sha256": "sha256:3e384dc443fb1a03475d27d4f1e8f2fa5d895b2af69fc5d5d38092bd2f660cc1",
+      "artifact_state": "present",
+      "branch": "continuous_memory",
+      "duration_s": 34.523882,
+      "gate_failures": [
+        {
+          "check": "least_used_eligible_rtx3090",
+          "expected": {
+            "free_vram_mb_at_least": 22610
+          },
+          "observed": null,
+          "passed": false,
+          "reason": "failed_named_check",
+          "task_id": "exp6773"
+        }
+      ],
+      "honest_verdict": "complete_blocked_csl_owned_lease_contract",
+      "inference_substrate": "task-owned local llama.cpp CUDA GGUF preflight",
+      "manifest_task_id": "exp6773-csl-owned-lease-contract",
+      "model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "next_action": "follow_branch_disposition",
+      "order": 6,
+      "path": "results/experiment_6773_csl_owned_lease_contract.json",
+      "raw_row_count": 11,
+      "raw_rows_available": true,
+      "row_type": "experiment",
+      "source_error": null,
+      "status": "blocked",
+      "summary_receipt": {
+        "artifact": "results/experiment_6773_csl_owned_lease_contract.json",
+        "exit_code": 0,
+        "summary_excerpt": "==============================================================================\nARTIFACT  experiment_6773_csl_owned_lease_contract.json\n------------------------------------------------------------------------------\n  verdict          : complete_blocked_csl_owned_lease_contract\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = {'checks': {'capacity_contract': True, 'frozen_stream_contract': True, 'gpu_lease_api': True, 'least_used_eligible_rtx3090': False, 'llama_cpp_cuda': True, 'models_resolved': True, 'order_count': True, 'planning_date_matches': True, 'poison_receipts': True, 'ports_available': True, 'ram_and_disk': True, 'read_only_episode': True, 'restart_receipts': True, 'rollback_receipts': True, 'source_artifact_hash': True, 'stream_hash': True, 'stream_ready': True, 'transaction_schema': True, 'two_fixed_rtx3090_identities': True, 'upstream_validator': True}, 'failed_checks': ['least_used_eligible_rtx3090'], 'failures': [{'check': 'least_used_eligible_rtx3090', 'expected': {'free_vram_mb_at_least': 22610}, 'observed': None}]}\n  duration_s       : 34.523882   substrate: task-owned local llama.cpp CUDA GGUF preflight\n  duration floor   : none\n  adversarial flags: none\n==============================================================================",
+        "summary_sha256": "sha256:1f28016cf5e0102962e3f8007d4b8681eb429c1adb8ccf58bbec626f09586141",
+        "task_id": "exp6773"
+      },
+      "task_id": "exp6773",
+      "terminal": true,
+      "title": "Task-owned SOTA memory lease and artifact contract",
+      "valid_json": true,
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_sha256": null,
+      "artifact_state": "missing",
+      "branch": "continuous_memory",
+      "duration_s": null,
+      "gate_failures": [
+        {
+          "check": "exp6773.csl_live_preflight_ready",
+          "expected": true,
+          "observed": false,
+          "passed": false,
+          "reason": "upstream_gate_blocked_or_missing",
+          "task_id": "exp6774"
+        }
+      ],
+      "honest_verdict": "complete_blocked_missing_artifact: planned deliverable is absent",
+      "inference_substrate": null,
+      "manifest_task_id": "exp6774-procedural-vs-trace-csl-ab-v2",
+      "model_ids": [],
+      "next_action": "follow_branch_disposition",
+      "order": 7,
+      "path": "results/experiment_6774_procedural_vs_trace_csl_ab_v2.json",
+      "raw_row_count": 0,
+      "raw_rows_available": false,
+      "row_type": "experiment",
+      "source_error": "file_missing",
+      "status": "missing",
+      "summary_receipt": null,
+      "task_id": "exp6774",
+      "terminal": true,
+      "title": "Procedural versus trace memory prospective A/B v2",
+      "valid_json": false,
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_sha256": null,
+      "artifact_state": "missing",
+      "branch": "continuous_memory",
+      "duration_s": null,
+      "gate_failures": [
+        {
+          "check": "exp6774.prospective_csl_completed",
+          "expected": true,
+          "observed": null,
+          "passed": false,
+          "reason": "upstream_gate_blocked_or_missing",
+          "task_id": "exp6775"
+        }
+      ],
+      "honest_verdict": "complete_blocked_missing_artifact: planned deliverable is absent",
+      "inference_substrate": null,
+      "manifest_task_id": "exp6775-csl-durability-audit-v2",
+      "model_ids": [],
+      "next_action": "follow_branch_disposition",
+      "order": 8,
+      "path": "results/experiment_6775_csl_durability_audit_v2.json",
+      "raw_row_count": 0,
+      "raw_rows_available": false,
+      "row_type": "experiment",
+      "source_error": "file_missing",
+      "status": "missing",
+      "summary_receipt": null,
+      "task_id": "exp6775",
+      "terminal": true,
+      "title": "Independent continuous-learning durability audit v2",
+      "valid_json": false,
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_sha256": "sha256:5832b0982069bebcc5ef5729094bf97aa97f1564c9f7c25eb536e79c69fbaaf7",
+      "artifact_state": "present",
+      "branch": "arc",
+      "duration_s": 35.274636,
+      "gate_failures": [
+        {
+          "check": "exclusive_gpu_without_unrelated_compute",
+          "expected": "one RTX 3090 with no active compute owner and at least 22610 MiB free",
+          "observed": [
+            {
+              "active_compute_processes": [
+                {
+                  "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+                  "pid": 3306606,
+                  "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+                  "used_memory_mb": 17884
+                },
+                {
+                  "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+                  "pid": 3542419,
+                  "process_name": ".venv/bin/python",
+                  "used_memory_mb": 256
+                }
+              ],
+              "index": 0,
+              "memory_free_mb": 5969,
+              "memory_total_mb": 24576,
+              "memory_used_mb": 18155,
+              "name": "NVIDIA GeForce RTX 3090",
+              "temperature_c": 81,
+              "utilization_pct": 95,
+              "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+            },
+            {
+              "active_compute_processes": [
+                {
+                  "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+                  "pid": 3452377,
+                  "process_name": ".venv/bin/python",
+                  "used_memory_mb": 536
+                },
+                {
+                  "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+                  "pid": 3452459,
+                  "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+                  "used_memory_mb": 18416
+                },
+                {
+                  "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+                  "pid": 3542419,
+                  "process_name": ".venv/bin/python",
+                  "used_memory_mb": 256
+                }
+              ],
+              "index": 1,
+              "memory_free_mb": 4896,
+              "memory_total_mb": 24576,
+              "memory_used_mb": 19228,
+              "name": "NVIDIA GeForce RTX 3090",
+              "temperature_c": 76,
+              "utilization_pct": 73,
+              "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+            }
+          ],
+          "passed": false,
+          "reason": "failed_named_check",
+          "task_id": "exp6776"
+        }
+      ],
+      "honest_verdict": "complete_blocked_shadow_supervisor_accrual:exclusive_gpu_without_unrelated_compute",
+      "inference_substrate": "production E3AgentPolicy on task-owned local CUDA GGUF",
+      "manifest_task_id": "exp6776-arc-shadow-supervisor-accrual",
+      "model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/Qwen3.8-27B-GGUF"
+      ],
+      "next_action": "follow_branch_disposition",
+      "order": 9,
+      "path": "results/experiment_6776_arc_shadow_supervisor_accrual.json",
+      "raw_row_count": 40,
+      "raw_rows_available": true,
+      "row_type": "experiment",
+      "source_error": null,
+      "status": "complete_blocked_shadow_supervisor_accrual",
+      "summary_receipt": {
+        "artifact": "results/experiment_6776_arc_shadow_supervisor_accrual.json",
+        "exit_code": 0,
+        "summary_excerpt": "==============================================================================\nARTIFACT  experiment_6776_arc_shadow_supervisor_accrual.json\n------------------------------------------------------------------------------\n  verdict          : complete_blocked_shadow_supervisor_accrual:exclusive_gpu_without_unrelated_compute\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = {'passed': False, 'failed_check': 'exclusive_gpu_without_unrelated_compute', 'expected': 'one RTX 3090 with no active compute owner and at least 22610 MiB free', 'observed': [{'index': 0, 'uuid': 'GPU-b52387a2-c625-de87-8d34-e6f64e684bab', 'name': 'NVIDIA GeForce RTX 3090', 'memory_total_mb': 24576, 'memory_used_mb': 18155, 'memory_free_mb': 5969, 'temperature_c': 81, 'utilization_pct': 95, 'active_compute_processes': [{'gpu_uuid': 'GPU-b52387a2-c625-de87-8d34-e6f64e684bab', 'pid': 3306606, 'process_name': '/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server', 'used_memory_mb': 17884}, {'gpu_uuid': 'GPU-b52387a2-c625-de87-8d34-e6f64e684bab', 'pid': 3542419, 'process_name': '.venv/bin/python', 'used_memory_mb': 256}]}, {'index': 1, 'uuid': 'GPU-7971baff-9583-eaa6-2292-393f930a28f9', 'name': 'NVIDIA GeForce RTX 3090', 'memory_total_mb': 24576, 'memory_used_mb': 19228, 'memory_free_mb': 4896, 'temperature_c': 76, 'utilization_pct': 73, 'active_compute_processes': [{'gpu_uuid': 'GPU-7971baff-9583-eaa6-2292-393f930a28f9', 'pid': 3452377, 'process_name': '.venv/bin/python', 'used_memory_mb': 536}, {'gpu_uuid': 'GPU-7971baff-9583-eaa6-2292-393f930a28f9', 'pid': 3452459, 'process_name': '/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server', 'used_memory_mb': 18416}, {'gpu_uuid': 'GPU-7971baff-9583-eaa6-2292-393f930a28f9', 'pid': 3542419, 'process_name': '.venv/bin/python', 'used_memory_mb': 256}]}]}\n  duration_s       : 35.274636   substrate: production E3AgentPolicy on task-owned local CUDA GGUF\n  duration floor   : ",
+        "summary_sha256": "sha256:9ab063583cc5bb7fe30eb227232e904dd40c679c3f7de131187106cc879274e7",
+        "task_id": "exp6776"
+      },
+      "task_id": "exp6776",
+      "terminal": true,
+      "title": "Window-120 shadow-supervisor evidence accrual",
+      "valid_json": true,
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_sha256": "sha256:0e30a3c833d79ba8ea6c937c7d4530d39f39224fc386b8e6e4ddd8dc3ee1d9c9",
+      "artifact_state": "present",
+      "branch": "arc",
+      "duration_s": 0.0,
+      "gate_failures": [
+        {
+          "check": "shadow_supervisor_transport_ready",
+          "expected": true,
+          "observed": false,
+          "passed": false,
+          "reason": "actual=False == expected=True",
+          "task_id": "exp6777"
+        }
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "inference_substrate": null,
+      "manifest_task_id": "exp6777-arc-tool-gap-transport",
+      "model_ids": [],
+      "next_action": "follow_branch_disposition",
+      "order": 10,
+      "path": "results/experiment_6777_arc_tool_gap_transport.json",
+      "raw_row_count": 0,
+      "raw_rows_available": false,
+      "row_type": "experiment",
+      "source_error": null,
+      "status": "blocked",
+      "summary_receipt": {
+        "artifact": "results/experiment_6777_arc_tool_gap_transport.json",
+        "exit_code": 0,
+        "summary_excerpt": "==============================================================================\nARTIFACT  experiment_6777_arc_tool_gap_transport.json\n------------------------------------------------------------------------------\n  verdict          : blocked_gate_check_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = 'gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6776-arc-shadow-supervisor-accrual.shadow_supervisor_transport_ready (actual=False == expected=True)'\n  duration_s       : 0.0   substrate: None\n  duration floor   : none\n  adversarial flags: none\n==============================================================================",
+        "summary_sha256": "sha256:3f1392af3da572174c206be6cc7edf5fac88832678619a7335a322526b8ee62a",
+        "task_id": "exp6777"
+      },
+      "task_id": "exp6777",
+      "terminal": true,
+      "title": "Live selfparse tool-gap transport receipt",
+      "valid_json": true,
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_sha256": null,
+      "artifact_state": "missing",
+      "branch": "arc",
+      "duration_s": null,
+      "gate_failures": [
+        {
+          "check": "exp6777.tool_gap_transport_ready",
+          "expected": true,
+          "observed": null,
+          "passed": false,
+          "reason": "upstream_gate_blocked_or_missing",
+          "task_id": "exp6778"
+        }
+      ],
+      "honest_verdict": "complete_blocked_missing_artifact: planned deliverable is absent",
+      "inference_substrate": null,
+      "manifest_task_id": "exp6778-arc-selfparse-actions-to-progress-ab",
+      "model_ids": [],
+      "next_action": "follow_branch_disposition",
+      "order": 11,
+      "path": "results/experiment_6778_arc_selfparse_actions_to_progress_ab.json",
+      "raw_row_count": 0,
+      "raw_rows_available": false,
+      "row_type": "experiment",
+      "source_error": "file_missing",
+      "status": "missing",
+      "summary_receipt": null,
+      "task_id": "exp6778",
+      "terminal": true,
+      "title": "Selfparse actions-to-progress A/B",
+      "valid_json": false,
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_sha256": null,
+      "artifact_state": "missing",
+      "branch": "arc",
+      "duration_s": null,
+      "gate_failures": [
+        {
+          "check": "exp6778.actions_to_progress_ab_completed",
+          "expected": true,
+          "observed": null,
+          "passed": false,
+          "reason": "upstream_gate_blocked_or_missing",
+          "task_id": "exp6779"
+        }
+      ],
+      "honest_verdict": "complete_blocked_missing_artifact: planned deliverable is absent",
+      "inference_substrate": null,
+      "manifest_task_id": "exp6779-arc-tool-supervisor-adoption-audit",
+      "model_ids": [],
+      "next_action": "follow_branch_disposition",
+      "order": 12,
+      "path": "results/experiment_6779_arc_tool_supervisor_adoption_audit.json",
+      "raw_row_count": 0,
+      "raw_rows_available": false,
+      "row_type": "experiment",
+      "source_error": "file_missing",
+      "status": "missing",
+      "summary_receipt": null,
+      "task_id": "exp6779",
+      "terminal": true,
+      "title": "Independent ARC tool and supervisor adoption audit",
+      "valid_json": false,
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_sha256": null,
+      "artifact_state": "current_synthesis",
+      "branch": "execution_contract",
+      "duration_s": null,
+      "gate_failures": [],
+      "honest_verdict": "complete_partial: V590 narrowed the proof fixture and runtime grammar gap, while exact generation, localized repair, prospective continuous memory, and ARC actions-to-progress evidence remained blocked or missing; no branch metrics were pooled.",
+      "inference_substrate": null,
+      "manifest_task_id": "exp6780-v590-branch-disposition",
+      "model_ids": [],
+      "next_action": "synthesize_terminal_evidence",
+      "order": 13,
+      "path": "results/experiment_6780_v590_branch_disposition.json",
+      "raw_row_count": 0,
+      "raw_rows_available": false,
+      "row_type": "experiment",
+      "source_error": null,
+      "status": "current_synthesis",
+      "summary_receipt": null,
+      "task_id": "exp6780",
+      "terminal": true,
+      "title": "V590 branch disposition and PRD gap update",
+      "valid_json": true,
+      "verdict_class": "partial"
+    }
+  ],
+  "run_date": "2026-08-30",
+  "schema": "carnot.v590_branch_disposition.v1",
+  "status": "complete_partial",
+  "successor_roadmap_activated": false,
+  "title": "V590 branch disposition and PRD gap update",
+  "verdict_class": "partial",
+  "verdict_row_consistency_findings": [
+    {
+      "artifact": "results/experiment_6768_targetable_proof_panel_expansion.json",
+      "blocking_count": 0,
+      "findings": [],
+      "status": "ok",
+      "task_id": "exp6768",
+      "warning_count": 0
+    },
+    {
+      "artifact": "results/experiment_6769_environment_indexed_proof_grammar_v2.json",
+      "blocking_count": 0,
+      "findings": [],
+      "status": "ok",
+      "task_id": "exp6769",
+      "warning_count": 0
+    },
+    {
+      "artifact": "results/experiment_6770_dccd_environment_grammar_ab_v2.json",
+      "blocking_count": 0,
+      "findings": [
+        "no recognised row container"
+      ],
+      "status": "skipped",
+      "task_id": "exp6770",
+      "warning_count": 1
+    },
+    {
+      "artifact": "results/experiment_6771_proof_transport_localization_audit.json",
+      "blocking_count": 0,
+      "findings": [
+        "no recognised row container"
+      ],
+      "status": "skipped",
+      "task_id": "exp6771",
+      "warning_count": 1
+    },
+    {
+      "artifact": "results/experiment_6773_csl_owned_lease_contract.json",
+      "blocking_count": 0,
+      "findings": [],
+      "status": "ok",
+      "task_id": "exp6773",
+      "warning_count": 0
+    },
+    {
+      "artifact": "results/experiment_6776_arc_shadow_supervisor_accrual.json",
+      "blocking_count": 1,
+      "findings": [
+        "ALL_ROWS_NULL: 40 row(s) and not one numeric value among ['scored_action_hash'] -- the verdict summarises nothing measured"
+      ],
+      "status": "findings",
+      "task_id": "exp6776",
+      "warning_count": 0
+    },
+    {
+      "artifact": "results/experiment_6777_arc_tool_gap_transport.json",
+      "blocking_count": 0,
+      "findings": [
+        "no recognised row container"
+      ],
+      "status": "skipped",
+      "task_id": "exp6777",
+      "warning_count": 1
+    }
+  ],
+  "verifier_is_oracle": false
+}
