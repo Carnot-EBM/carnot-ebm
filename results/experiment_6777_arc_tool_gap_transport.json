@@ -1,0 +1,51 @@
+{
+  "experiment": 6777,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-30",
+  "started_at": "2026-08-30T12:37:55.141891+00:00",
+  "finished_at": "2026-08-30T12:37:55.141891+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Live selfparse tool-gap transport receipt",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=False == expected=True",
+  "failed_upstream": "exp6776-arc-shadow-supervisor-accrual",
+  "failed_field": "shadow_supervisor_transport_ready",
+  "failed_operator": "==",
+  "failed_expected": true,
+  "failed_expected_type": "bool",
+  "failed_observed": false,
+  "failed_observed_type": "bool",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6776_arc_shadow_supervisor_accrual.json",
+  "failed_evidence_sha256": "sha256:5832b0982069bebcc5ef5729094bf97aa97f1564c9f7c25eb536e79c69fbaaf7",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=False == expected=True",
+    "failed_upstream": "exp6776-arc-shadow-supervisor-accrual",
+    "failed_field": "shadow_supervisor_transport_ready",
+    "failed_operator": "==",
+    "failed_expected": true,
+    "failed_expected_type": "bool",
+    "failed_observed": false,
+    "failed_observed_type": "bool",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6776_arc_shadow_supervisor_accrual.json",
+    "failed_evidence_sha256": "sha256:5832b0982069bebcc5ef5729094bf97aa97f1564c9f7c25eb536e79c69fbaaf7"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6776-arc-shadow-supervisor-accrual.shadow_supervisor_transport_ready (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6776-arc-shadow-supervisor-accrual",
+      "artifact_field": "shadow_supervisor_transport_ready",
+      "op": "==",
+      "expected": true,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": false,
+      "reason": "actual=False == expected=True",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6776_arc_shadow_supervisor_accrual.json",
+      "artifact_sha256": "sha256:5832b0982069bebcc5ef5729094bf97aa97f1564c9f7c25eb536e79c69fbaaf7"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
