@@ -59552,3 +59552,95 @@ schema, emits no invented measurement rows, and records observed failures.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6766 and SCENARIO-REPORT-6766-* | Implemented (`python/carnot/experiment_6766_thermalizer_independent_trajectory_audit.py`, `scripts/experiments/experiment_6766_thermalizer_independent_trajectory_audit.py`) | Implemented (`tests/python/test_experiment_6766_thermalizer_independent_trajectory_audit.py`) |
+
+### REQ-REPORT-6767: V589 Branch Disposition SHALL Preserve Terminal Evidence
+
+Exp6767 SHALL synthesize milestone `2026.08.589` from the active roadmap,
+the V589 design, every available V589 artifact from Exp6755 through Exp6766,
+and the V588 branch disposition. It SHALL list all thirteen expected task IDs
+and deliverables. Missing, blocked, invalid, or current-synthesis artifacts
+SHALL remain explicit rows. They SHALL NOT suppress the capstone artifact.
+
+The synthesis SHALL emit one experiment row per expected task and one branch
+row for proof transport, repair, continuous memory, ARC, stochastic
+portability, and infrastructure. Each branch row SHALL carry its own verdict
+class, branch disposition, and next action. The capstone SHALL NOT average,
+vote, or pool unrelated branch metrics.
+
+The synthesis SHALL recompute proof exact-valid deltas, diagnostic AUROC and
+leakage availability, repair intervals and harmful flips, CSL order-level
+intervals and transaction activity, ARC token savings and non-inferiority, and
+stochastic trajectory deltas and evaluator independence from rows when rows
+exist. Missing denominators and source-headline disagreements SHALL remain
+visible in `row_recomputed_headlines`; prose SHALL NOT repair them.
+
+The synthesis SHALL run `scripts/summarize_artifact.py`,
+`scripts/adversarial_verify.py`, `scripts/verdict_row_consistency_lint.py`,
+and `scripts/recurring_blocker_ledger.py` without changing source artifacts.
+It SHALL preserve warnings, critical findings, circularity, no-headroom,
+stale-stamp, missing-row, and blocked-gate findings as evidence.
+
+The synthesis SHALL classify the three V589 PRD gaps as `narrowed`,
+`unchanged`, `widened`, or `blocked` with direct artifact and row citations.
+FR11 SHALL be positive only when the cold audit passes activity, support,
+hard-case, poison, restart, and rollback gates. Recovered scope with
+`retire_if_same_verdict=true` SHALL be named for retirement if the same
+verdict recurs.
+
+The artifact SHALL be written atomically to
+`results/experiment_6767_v589_branch_disposition.json`. It SHALL include
+`field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `milestone`, `expected_task_ids`,
+`available_artifacts`, `missing_artifacts`, `rows`, `branch_rows`,
+`row_recomputed_headlines`, `adversarial_findings`,
+`verdict_row_consistency_findings`, `recurring_blockers`,
+`prior_verdict_recurrences`, `retirement_recommendations`,
+`prd_gap_disposition`, `fr12_disposition`, `fr11_disposition`,
+`live_hardware_disposition`, `docs_reconciled`,
+`protected_files_unchanged`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. It SHALL use
+`cold_local_artifact_and_row_synthesis_no_llm`.
+
+#### SCENARIO-REPORT-6767-PRECONDITIONS: Expected Tasks Stay Visible
+
+**Given** the active V589 roadmap and design parse
+**When** Exp6767 builds experiment rows
+**Then** all thirteen expected task IDs and deliverables are present
+**And** missing Exp6757 or Exp6759 artifacts become explicit missing rows.
+
+**Spec traces:** REQ-REPORT-6767, REQ-HARNESS-008
+
+#### SCENARIO-REPORT-6767-ROW-RECOMPUTATION: Branch Headlines Replay
+
+**Given** upstream artifacts contain raw rows or blocked receipts
+**When** Exp6767 recomputes branch evidence
+**Then** each available denominator, mean, rate, interval, and delta derives
+from rows or remains null with its missing-evidence cause.
+
+**Spec traces:** REQ-REPORT-6767
+
+#### SCENARIO-REPORT-6767-BRANCH-ISOLATION: No Pooled Claim Is Emitted
+
+**Given** V589 has proof, repair, memory, ARC, stochastic, and infrastructure
+branches
+**When** Exp6767 writes the branch rows
+**Then** each branch receives one local verdict class and next action
+**And** no pooled milestone success score is emitted.
+
+**Spec traces:** REQ-REPORT-6767
+
+#### SCENARIO-REPORT-6767-VALIDATORS: Findings Remain Evidence
+
+**Given** adversarial verification, row consistency, and recurring-blocker
+checks produce warnings or blocks
+**When** Exp6767 builds its artifact
+**Then** those findings are retained without rewriting source artifacts or
+promoting blocked science.
+
+**Spec traces:** REQ-REPORT-6767
+
+## Implementation Status (REQ-REPORT-6767)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6767 and SCENARIO-REPORT-6767-* | Planned (`python/carnot/experiment_6767_v589_branch_disposition.py`, `scripts/experiments/experiment_6767_v589_branch_disposition.py`) | Planned (`tests/python/test_experiment_6767_v589_branch_disposition.py`) |
