@@ -23511,3 +23511,123 @@ precondition or readiness check stays visible in `gate_check_summary`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6769 and SCENARIO-VERIFY-6769-* | Planned (`python/carnot/experiment_6769_environment_indexed_proof_grammar_v2.py`, `scripts/experiments/experiment_6769_environment_indexed_proof_grammar_v2.py`) | Planned (`tests/python/test_experiment_6769_environment_indexed_proof_grammar_v2.py`) |
+
+### REQ-VERIFY-6770: Paired Three-Model Proof Transport A/B V2
+
+Exp6770 SHALL compare repaired direct output, static grammar, and
+draft-conditioned environment-indexed grammar on one frozen panel. The panel
+SHALL contain at least 36 Exp6768 rows. It SHALL cover every held family, size,
+error class, SAT and UNSAT role, and base and relabel role. Every model-instance
+cell SHALL use a fixed seed, rotated arm order, one prompt contract, one context
+limit, one temperature policy, one stop policy, one exact-check budget, and an
+equal total generated-token ceiling. The draft-conditioned arm SHALL split its
+ceiling between a free semantic draft and a constrained render.
+
+The three mandated models SHALL be
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Exp6770 SHALL call
+`cached_sota_pair()` before it resolves the third model. It SHALL bind each
+model to an exact cached GGUF path, file hash, embedded tokenizer receipt,
+role, and limit. It SHALL require local llama.cpp CUDA offload, a task-owned
+GPU lease, enough one-model VRAM, free ports, exact authority, RAM, and disk.
+It SHALL load one model at a time. It SHALL tear down and prove VRAM recovery
+before it starts the next model. A missing precondition SHALL atomically write
+a full `complete_blocked_proof_transport_ab_v2` artifact. It SHALL not use a
+legacy CPU model or remote inference as a headline fallback.
+
+The static and draft-conditioned arms SHALL pass a grammar object to the live
+llama.cpp generation call. The draft-conditioned render grammar SHALL be built
+from the current row environment and draft only. It SHALL not use answer labels,
+exact outcomes, solver traces, exact certificates, or post-hoc candidate
+filtering. A constrained arm SHALL be disqualified if its retained runtime
+receipt does not prove a live grammar-policy call, or if it used a fixture,
+substituted model, answer-conditioned mask, or post-hoc filter.
+
+Every model-instance-arm row SHALL retain the raw output and hash, parsed proof,
+both encoder receipts, exact result, semantic outcome, latency, prompt and output
+tokens, total budget, device, peak VRAM, seed, stop reason, runtime grammar
+receipt, and failure. Failed and abstaining rows SHALL stay in the frozen
+denominator. Row-derived reducers SHALL report exact-valid yield, semantic
+correctness, parseability, abstention, invalid references, invalid domains,
+support contraction, token cost, latency, and paired exact-valid and semantic
+deltas. They SHALL group results by arm, model, family, size, error class, and
+relabel role. Solver conflicts SHALL remain metadata.
+
+The terminal artifact SHALL be
+`results/experiment_6770_dccd_environment_grammar_ab_v2.json`. It SHALL contain
+`field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `model_specs`, `models_used`, `live_model_invoked`,
+`frozen_manifest`, `gpu_receipts`, `rows`,
+`runtime_mask_invocations_by_arm`, `exact_valid_rate_by_arm`,
+`semantic_correct_rate_by_arm`, `paired_exact_valid_deltas`,
+`support_contraction_by_arm`, `proof_transport_ab_completed`, `claim_boundary`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. Field principles SHALL explain every artifact field.
+`proof_transport_ab_completed` SHALL be true only when every planned row is
+attributable, a cold aggregate recomputation agrees, and every model teardown
+passes. A completed null result is complete. The honest verdict SHALL start
+with an allowed terminal prefix.
+
+#### SCENARIO-VERIFY-6770-PAIRING: Every Cell Has Three Matched Arms
+
+**Given** the frozen panel, model order, arm rotation, and seed schedule
+**When** Exp6770 constructs and reduces rows
+**Then** every model-instance cell has exactly one row per arm, no failed row is
+dropped, and paired deltas compare the same model, instance, and seed.
+
+**Spec traces:** REQ-VERIFY-6770
+
+#### SCENARIO-VERIFY-6770-RUNTIME: Grammar Arms Invoke Live Policies
+
+**Given** static and environment-indexed constrained arms
+**When** llama.cpp generates their retained outputs
+**Then** each call receives the intended grammar object, records actual policy
+invocations, and fails qualification for fixture, post-hoc, substituted-model,
+or answer-conditioned execution.
+
+**Spec traces:** REQ-VERIFY-6770
+
+#### SCENARIO-VERIFY-6770-BUDGET: Total Generation And Exact Checks Match
+
+**Given** one paired model-instance cell
+**When** all three arms complete or fail
+**Then** each row keeps the same total generated-token ceiling and exact-check
+budget, while the draft-conditioned row records its frozen draft/render split.
+
+**Spec traces:** REQ-VERIFY-6770
+
+#### SCENARIO-VERIFY-6770-TEARDOWN: One Model Owns VRAM At A Time
+
+**Given** a task-owned lease and three resolved GGUFs
+**When** sequential model sessions run
+**Then** every session records ownership, CUDA offload, peak VRAM, process exit,
+lease release, and VRAM recovery before the next session starts.
+
+**Spec traces:** REQ-VERIFY-6770
+
+#### SCENARIO-VERIFY-6770-COLD: Independent Reduction Replays Headline Metrics
+
+**Given** all retained rows and the frozen manifest
+**When** a fresh reducer recomputes aggregates without producer caches
+**Then** exact and semantic rates, paired effects, support contraction, group
+summaries, and completion agree byte-for-byte with the artifact fields.
+
+**Spec traces:** REQ-VERIFY-6770
+
+#### SCENARIO-VERIFY-6770-BLOCKED: Failed Preconditions Produce Full Evidence
+
+**Given** any failed upstream, model, tokenizer, CUDA, lease, VRAM, port, exact
+authority, RAM, or disk precondition
+**When** Exp6770 stops before first-token inference
+**Then** it writes the complete required schema with empty rows,
+`live_model_invoked=false`, `proof_transport_ab_completed=false`,
+`verdict_class=blocked`, and the failed observed value in `gate_check_summary`.
+
+**Spec traces:** REQ-VERIFY-6770
+
+## Implementation Status (REQ-VERIFY-6770)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6770 and SCENARIO-VERIFY-6770-* | Planned (`python/carnot/experiment_6770_dccd_environment_grammar_ab_v2.py`, `scripts/experiments/experiment_6770_dccd_environment_grammar_ab_v2.py`; terminal artifact `results/experiment_6770_dccd_environment_grammar_ab_v2.json`) | Planned (`tests/python/test_experiment_6770_dccd_environment_grammar_ab_v2.py`) |
