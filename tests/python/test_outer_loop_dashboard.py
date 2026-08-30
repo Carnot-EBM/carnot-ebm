@@ -181,7 +181,10 @@ def test_generalization_says_not_measured_rather_than_zero(tmp_path, monkeypatch
             {"game": "cc33", "reproduced_levels": 7, "solve_provenance": "development_proxy"}
         )
     )
-    assert m.generalization_levels() == {"measured": False, "levels": 0, "games": 0}
+    gen = m.generalization_levels()
+    # Field checks, not dict equality: the shape gained a `source` key and an exact-match
+    # assertion breaks on every future field without telling you anything useful.
+    assert (gen["measured"], gen["levels"], gen["games"]) == (False, 0, 0)
     assert "not measured" in m.render([])
 
 
@@ -203,4 +206,69 @@ def test_generalization_counts_only_live_self_discovery(tmp_path, monkeypatch) -
             {"game": "ee55", "reproduced_levels": 99, "solve_provenance": "development_proxy"}
         )
     )
-    assert m.generalization_levels() == {"measured": True, "levels": 3, "games": 1}
+    gen = m.generalization_levels()
+    assert (gen["measured"], gen["levels"], gen["games"]) == (True, 3, 1)
+
+
+# --- Worker walk + provenance on the generalization number (2026-08-30) ----------------------
+
+
+def test_the_generalization_number_carries_policy_and_age(tmp_path, monkeypatch) -> None:
+    """A 48-day-old `policy=explorer` floor was being shown as the current e3 measurement.
+
+    A number without its provenance is how a stale floor becomes a headline.
+    """
+    m = _module()
+    monkeypatch.setattr(m, "REPO", tmp_path)
+    (tmp_path / "results").mkdir()
+    (tmp_path / "results" / "arc_leaderboard_eval.json").write_text(
+        json.dumps({"policy": "explorer", "live_levels": 5, "per_game": {"a": 1, "b": 2}})
+    )
+    gen = m.generalization_levels()
+    assert gen["policy"] == "explorer"
+    assert isinstance(gen["age_days"], int)
+    out = m.render([])
+    assert "policy=explorer" in out and "d old]" in out
+
+
+def test_the_leaderboard_source_is_preferred_over_solve_artifacts(tmp_path, monkeypatch) -> None:
+    """Reading only arc_loop_solve_*.json left this stuck at "not measured" forever, because the
+    adapter-free eval writes a different file."""
+    m = _module()
+    monkeypatch.setattr(m, "REPO", tmp_path)
+    (tmp_path / "results").mkdir()
+    (tmp_path / "results" / "arc_leaderboard_eval.json").write_text(
+        json.dumps({"policy": "e3", "live_levels": 12, "per_game": {}})
+    )
+    (tmp_path / "results" / "arc_loop_solve_zz99.json").write_text(
+        json.dumps(
+            {"game": "zz99", "reproduced_levels": 99, "solve_provenance": "development_proxy"}
+        )
+    )
+    assert m.generalization_levels()["levels"] == 12
+
+
+def test_zero_live_levels_does_not_count_as_measured(tmp_path, monkeypatch) -> None:
+    m = _module()
+    monkeypatch.setattr(m, "REPO", tmp_path)
+    (tmp_path / "results").mkdir()
+    (tmp_path / "results" / "arc_leaderboard_eval.json").write_text(
+        json.dumps({"policy": "e3", "live_levels": 0})
+    )
+    assert m.generalization_levels()["measured"] is False
+
+
+def test_the_worker_walk_finds_a_descendant_not_the_supervisor(monkeypatch) -> None:
+    """The 2026-08-30 misreading: the dashboard showed a parent asleep in poll while the real
+    work ran two levels down at 99% CPU."""
+    m = _module()
+    monkeypatch.setattr(m, "_run", lambda *a: "4242, 17884 MiB")
+    monkeypatch.setattr(m.Path, "read_text", lambda self, **k: "4242 (x) S 999", raising=False)
+    assert m.gpu_worker_for(999) == 4242
+
+
+def test_a_job_with_no_gpu_worker_says_so(monkeypatch) -> None:
+    m = _module()
+    monkeypatch.setattr(m, "_run", lambda *a: "")
+    monkeypatch.setattr(m, "pid_alive", lambda pid: True)
+    assert "no GPU worker" in m.render([("j", os.getpid(), None)])
