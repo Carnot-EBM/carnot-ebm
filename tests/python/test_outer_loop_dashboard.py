@@ -68,7 +68,7 @@ def test_a_dead_job_with_no_receipt_says_so_explicitly(tmp_path) -> None:
     rather than shown as a blank.
     """
     out = _module().render([("ab", 999_999_999, tmp_path / "absent.json")])
-    assert "NO receipt" in out
+    assert "ARMED but ABSENT" in out
     assert "REQ-INFRA-6830" in out
 
 
@@ -299,3 +299,29 @@ def test_the_walk_prefers_the_busiest_descendant_not_the_first(monkeypatch) -> N
     monkeypatch.setattr(m.Path, "read_text", fake_read, raising=False)
     # 500 is the launcher (a holder, and its own descendant); 600 is its busy worker.
     assert m.gpu_worker_for(500) == 600
+
+
+def test_an_unarmed_job_reports_unknown_not_a_violent_death() -> None:
+    """The 2026-08-30 miscall: a job that exited CLEANLY, after writing its result, was
+    reported as SIGKILL/OOM because no receipt existed. An absent receipt is evidence only
+    when a receipt was ARMED; otherwise it is silence."""
+    out = _module().render([("job", 999_999_999, None)])
+    assert "no receipt was armed" in out
+    assert "UNKNOWN" in out
+    assert "SIGKILL" not in out
+
+
+def test_the_freshest_per_run_eval_beats_the_stale_flat_file(tmp_path, monkeypatch) -> None:
+    """A 48-day-old `policy=explorer` number was shown while a fresh `policy=e3` result sat
+    unread in arc_leaderboard_eval_runs/."""
+    m = _module()
+    monkeypatch.setattr(m, "REPO", tmp_path)
+    (tmp_path / "results" / "arc_leaderboard_eval_runs").mkdir(parents=True)
+    (tmp_path / "results" / "arc_leaderboard_eval.json").write_text(
+        json.dumps({"policy": "explorer", "live_levels": 5, "per_game": {"a": 1}})
+    )
+    (tmp_path / "results" / "arc_leaderboard_eval_runs" / "fresh.json").write_text(
+        json.dumps({"policy": "e3", "live_levels": 2, "per_game": [{"game": "cd82"}]})
+    )
+    gen = m.generalization_levels()
+    assert (gen["policy"], gen["levels"]) == ("e3", 2)
