@@ -7269,6 +7269,57 @@ unidentified external `exit=143`/SIGTERM (2026-08-09, the 2026-08-27 `supwindow`
 into one story without evidence** — that is how a plausible cause becomes a recorded fact, which
 this project has already done twice this week.
 
+**CORRECTION 2026-08-30 07:28Z — BOTH OBSERVATIONS ABOVE ARE WRONG. exp6753 IS HEALTHY.**
+
+Appended, not rewritten, per never-prune: the reasoning above is preserved because the way it
+failed is more useful than the conclusion it reached.
+
+Measured at 07:27Z, before killing anything:
+
+```
+llama-server 3306606   99.4% CPU   state R (running)   17,884 MiB on GPU 0
+child python 3301909    5.0% CPU   blocked in poll, socket -> llama-server
+parent       3301833    0.3% CPU   blocked in poll, waiting on the child
+```
+
+and its server log, mtime = that same minute:
+
+```
+325.24.235.827 I slot print_timing: id 3 | task 718922 | n_decoded = 1714, tg = 38.31 t/s
+```
+
+**It is decoding at 38.3 tokens/second and has been throughout.** There is no stall.
+
+**Error 1 — measured the wrong process.** `35.21 CPU-seconds, unchanged for three hours` is the
+SUPERVISING PARENT, which correctly does nothing but wait. The work lives in a grandchild
+process. A three-tier harness (driver -> arm process -> llama-server) makes the parent's CPU time
+meaningless as a progress signal, and `wchan = poll` on a supervisor is the NORMAL state, not
+evidence of anything.
+
+**Error 2 — read the wrong log.** The "log-silent while alive" claim came from the `nohup` runner
+log, which is quiet because the run's own output goes to
+`/tmp/carnot_llama_server_logs/llama_server_p<port>_<ts>.log`. That file was being appended
+continuously the entire time. Found by reading `/proc/<server-pid>/fd`, which is where the answer
+was available from the first hour.
+
+**Error 3 — the conductor's independent failures were treated as confirmation.** `Live
+object-table fetch-on-demand A/B v2` really did hit the wall-clock cap twice, and that felt like
+a second harness reproducing the same stall. It is not: a codex task has an ~80-minute cap and
+this generation runs for hours, so the cap tells us the task is LONG, not that it is stuck. Two
+observations agreeing does not make either one evidence when both are consistent with the benign
+explanation.
+
+**The generalisable lesson, which is the only durable part of this entry:** liveness, CPU time,
+GPU utilisation and log mtime are four different questions, and each must be asked of the RIGHT
+process. Before declaring a job stalled, find the process actually doing the work
+(`nvidia-smi --query-compute-apps`, then walk ppid), read ITS log (via `/proc/<pid>/fd`), and
+check ITS io counters. This cost four hourly reports asserting a stall that never existed, and
+came within one command of killing a healthy five-hour run.
+
+Item B's log-silence observation about the 2026-08-29 holdout A/B is NOT retracted — that run's
+shard genuinely advanced six hours past its runner log's last write, which is a different and
+still-unexplained shape. But it should be re-examined with the same lens before anyone trusts it.
+
 **Tasks.** (1) Diagnose what exp6753's driver is polling for — a `py-spy dump` on the live pid,
 or an strace, before killing it, since the stall is reproducible and the evidence is currently
 sitting in memory. (2) Decide whether the object-table question is worth a third attempt at all;
