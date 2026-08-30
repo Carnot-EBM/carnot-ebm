@@ -16819,3 +16819,4 @@ The l |
 | 2026-08-30 07:54 UTC | Milestone 2026.08.590 activated | OK | 13 tasks queued |
 | 2026-08-30 08:21 UTC | Exact-invalid targetable proof panel expansion | OK | 101 passed, 1 warning in 18.30s |
 | 2026-08-30 08:46 UTC | Environment-indexed proof grammar fixture v2 | OK | 107 passed, 1 warning in 15.72s |
+| 2026-08-30 09:13 UTC | Three-model DCCD environment-grammar A/B v2 | OK | 99 passed, 1 warning in 14.19s |
