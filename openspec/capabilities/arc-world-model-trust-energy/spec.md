@@ -28584,3 +28584,87 @@ false.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6764 and SCENARIO-ARC-WMTE-6764-* | Implemented (`python/carnot/experiment_6764_arc_exclusive_load_preflight.py`; `scripts/experiments/experiment_6764_arc_exclusive_load_preflight.py`) | Implemented (`tests/python/test_experiment_6764_arc_exclusive_load_preflight.py`; 31 focused tests, 100% new-module statement coverage) |
+
+### REQ-ARC-WMTE-6765: Exclusive-Load Object-Table Fetch A/B Rerun
+
+Exp6765 SHALL rerun the Exp6753 paired comparison only after a valid Exp6764
+artifact reports `arc_exclusive_load_ready=true`. It SHALL freeze the same 20
+games, seeds 6100 through 6102, arm order, prompts, 32768-cell context, action
+and tool budgets, selfparse schema, model hashes, sampling configuration, and
+within-arm noise floor. The science model SHALL remain the immutable
+`unsloth/Qwen3.8-27B-GGUF`. The Qwen3.6 model SHALL remain a separately typed
+transport canary and SHALL not enter a quality reducer.
+
+Each planned row SHALL run in a fresh task-owned session on the eligible device
+selected by the Exp6764 lease policy. The session SHALL acquire a UUID-bound
+lease before model load. It SHALL tear down its owned llama.cpp process, release
+the lease, and prove VRAM recovery before the next arm or seed starts. It SHALL
+never signal an unrelated process. A failed lease, load, teardown, or recovery
+SHALL stop the remaining live run and keep the full planned denominator visible.
+
+The inline arm SHALL use the production object table. The fetch-on-demand arm
+SHALL omit only that table and SHALL keep production `find_objects` available.
+The model SHALL choose every tool name and argument from its public observations.
+No per-game query, game source, hidden state, offline BFS, or solve trace may
+enter a prompt or tool request. Both arms SHALL use the public
+`make_carnot_agent` factory, `E3AgentPolicy`, production selfparse parser, and
+shared dispatcher.
+
+Every row SHALL retain its public observation receipt, prompt text and token
+count, tool requests, bounded responses, action trace, transition receipt,
+latency, device, peak VRAM, lease lifecycle, failure, teardown, and row checksum.
+The artifact SHALL derive prompt tokens by arm, tool calls by arm, useful-fetch
+rate, transition-utility delta, prompt-token savings, change fidelity by arm,
+paired delta and interval, harmful regressions, and within-arm variance from the
+rows. A useful fetch requires a successful bounded `find_objects` result in a
+model turn before a later successful engine submission.
+
+`object_table_ab_completed` SHALL describe complete attributable rows, not
+adoption. Adoption SHALL require positive realized prompt-token savings and a
+change-fidelity interval whose lower endpoint is no worse than the frozen
+non-inferiority margin. `solve_claim` SHALL remain false. No registry row may be
+added. If any precondition fails, the artifact SHALL use
+`complete_blocked_object_table_ab_v2` with a gate entry that names the failed
+check and observed value. It SHALL not use a fallback model, CPU, remote route,
+legacy route, or reduced denominator.
+
+#### SCENARIO-ARC-WMTE-6765-FROZEN-PAIRING
+
+- GIVEN the Exp6753 design and Exp6764 admission receipt
+- WHEN Exp6765 builds its manifest and row plan
+- THEN all 120 Qwen3.8 science rows and two separately typed Qwen3.6 canary rows
+  keep the frozen games, seeds, arm rotation, budgets, model hashes, and context
+
+#### SCENARIO-ARC-WMTE-6765-PRODUCTION-FETCH
+
+- GIVEN one paired prompt
+- WHEN the treatment prompt is built and the model calls `find_objects`
+- THEN only the inline table is absent, and the production selfparse parser and
+  shared dispatcher retain the model-selected typed arguments and bounded result
+
+#### SCENARIO-ARC-WMTE-6765-LEASED-SESSION
+
+- GIVEN an eligible physical UUID
+- WHEN one row runs
+- THEN its owned lease, model load, CUDA receipt, teardown, release, and VRAM
+  recovery finish before the next row starts, with no unrelated process signaled
+
+#### SCENARIO-ARC-WMTE-6765-REDUCTION-AND-CLAIM-BOUNDARY
+
+- GIVEN complete attributable rows
+- WHEN the reducer runs
+- THEN it excludes canary quality values, derives all metrics from rows, separates
+  completion from adoption, keeps `solve_claim=false`, and makes no registry edit
+
+#### SCENARIO-ARC-WMTE-6765-BLOCKED
+
+- GIVEN any failed exclusive-load, frozen-design, model, host, or route check
+- WHEN the parent command runs
+- THEN no model worker starts and a full-denominator blocked artifact names the
+  failed check and observed value without fallback
+
+## Implementation Status (REQ-ARC-WMTE-6765)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6765 and SCENARIO-ARC-WMTE-6765-* | Planned in `python/carnot/experiment_6765_object_table_fetch_ab_v2.py` and `scripts/experiments/experiment_6765_object_table_fetch_ab_v2.py`. | Planned in `tests/python/test_experiment_6765_object_table_fetch_ab_v2.py`. |
