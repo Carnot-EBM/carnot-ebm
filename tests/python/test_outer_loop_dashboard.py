@@ -222,7 +222,13 @@ def test_the_generalization_number_carries_policy_and_age(tmp_path, monkeypatch)
     monkeypatch.setattr(m, "REPO", tmp_path)
     (tmp_path / "results").mkdir()
     (tmp_path / "results" / "arc_leaderboard_eval.json").write_text(
-        json.dumps({"policy": "explorer", "live_levels": 5, "per_game": {"a": 1, "b": 2}})
+        json.dumps(
+            {
+                "policy": "explorer",
+                "live_levels": 5,
+                "per_game": [{"game": "a", "levels": 3}, {"game": "b", "levels": 2}],
+            }
+        )
     )
     gen = m.generalization_levels()
     assert gen["policy"] == "explorer"
@@ -238,7 +244,7 @@ def test_the_leaderboard_source_is_preferred_over_solve_artifacts(tmp_path, monk
     monkeypatch.setattr(m, "REPO", tmp_path)
     (tmp_path / "results").mkdir()
     (tmp_path / "results" / "arc_leaderboard_eval.json").write_text(
-        json.dumps({"policy": "e3", "live_levels": 12, "per_game": {}})
+        json.dumps({"policy": "e3", "live_levels": 12, "per_game": [{"game": "q", "levels": 12}]})
     )
     (tmp_path / "results" / "arc_loop_solve_zz99.json").write_text(
         json.dumps(
@@ -311,17 +317,73 @@ def test_an_unarmed_job_reports_unknown_not_a_violent_death() -> None:
     assert "SIGKILL" not in out
 
 
-def test_the_freshest_per_run_eval_beats_the_stale_flat_file(tmp_path, monkeypatch) -> None:
-    """A 48-day-old `policy=explorer` number was shown while a fresh `policy=e3` result sat
-    unread in arc_leaderboard_eval_runs/."""
+def test_a_fresh_e3_run_beats_a_stale_explorer_flat_file(tmp_path, monkeypatch) -> None:
+    """CORRECTED 2026-08-30. This test previously asserted FRESHEST-WINS, which was wrong: an
+    empty misfired batch, being newer, replaced a genuine measurement with "not measured". The
+    rule is now union-across-batches within a single policy, preferring e3 -- so a stale
+    `explorer` floor is excluded because it is a different agent, not because it is old."""
     m = _module()
     monkeypatch.setattr(m, "REPO", tmp_path)
     (tmp_path / "results" / "arc_leaderboard_eval_runs").mkdir(parents=True)
     (tmp_path / "results" / "arc_leaderboard_eval.json").write_text(
-        json.dumps({"policy": "explorer", "live_levels": 5, "per_game": {"a": 1}})
+        json.dumps(
+            {"policy": "explorer", "live_levels": 5, "per_game": [{"game": "old", "levels": 5}]}
+        )
     )
     (tmp_path / "results" / "arc_leaderboard_eval_runs" / "fresh.json").write_text(
-        json.dumps({"policy": "e3", "live_levels": 2, "per_game": [{"game": "cd82"}]})
+        json.dumps({"policy": "e3", "live_levels": 2, "per_game": [{"game": "cd82", "levels": 2}]})
     )
     gen = m.generalization_levels()
     assert (gen["policy"], gen["levels"]) == ("e3", 2)
+
+
+def _run_file(root, name, policy, rows):
+    d = root / "results" / "arc_leaderboard_eval_runs"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / name).write_text(json.dumps({"policy": policy, "per_game": rows}))
+
+
+def test_batches_are_unioned_not_freshest_wins(tmp_path, monkeypatch) -> None:
+    """The eval must run in batches (it writes only at the end), each covering DIFFERENT games,
+    so the measurement is their union."""
+    m = _module()
+    monkeypatch.setattr(m, "REPO", tmp_path)
+    _run_file(tmp_path, "a.json", "e3", [{"game": "cd82", "levels": 2}])
+    _run_file(tmp_path, "b.json", "e3", [{"game": "r11l", "levels": 1}])
+    gen = m.generalization_levels()
+    assert (gen["levels"], gen["games"]) == (3, 2)
+
+
+def test_an_empty_batch_does_not_erase_a_real_measurement(tmp_path, monkeypatch) -> None:
+    """The regression that prompted this: a misfired batch wrote per_game: [] and, being
+    NEWER, replaced a genuine result with "not measured". A newer file is not a better one."""
+    m = _module()
+    monkeypatch.setattr(m, "REPO", tmp_path)
+    _run_file(tmp_path, "real.json", "e3", [{"game": "cd82", "levels": 2}])
+    _run_file(tmp_path, "zzz_empty.json", "e3", [])
+    gen = m.generalization_levels()
+    assert gen["measured"] is True
+    assert gen["levels"] == 2
+
+
+def test_policies_are_never_pooled(tmp_path, monkeypatch) -> None:
+    """`explorer` is the no-LLM floor and `e3` the full cascade -- different agents. Summing
+    them invents a number neither measured. e3 wins when present."""
+    m = _module()
+    monkeypatch.setattr(m, "REPO", tmp_path)
+    _run_file(tmp_path, "old_floor.json", "explorer", [{"game": "x", "levels": 5}])
+    _run_file(tmp_path, "new_e3.json", "e3", [{"game": "cd82", "levels": 2}])
+    gen = m.generalization_levels()
+    assert gen["policy"] == "e3"
+    assert (gen["levels"], gen["games"]) == (2, 1)
+
+
+def test_a_re_measure_updates_only_that_game(tmp_path, monkeypatch) -> None:
+    m = _module()
+    monkeypatch.setattr(m, "REPO", tmp_path)
+    _run_file(
+        tmp_path, "a.json", "e3", [{"game": "cd82", "levels": 2}, {"game": "r11l", "levels": 1}]
+    )
+    _run_file(tmp_path, "b.json", "e3", [{"game": "cd82", "levels": 4}])
+    gen = m.generalization_levels()
+    assert (gen["levels"], gen["games"]) == (5, 2)
