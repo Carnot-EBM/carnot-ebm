@@ -18299,3 +18299,4 @@ activity gate, explicit concurrency metadata, conditional runner selection,
 and monotonic phase timing. Estimated time savings is 0% because the sources
 do not measure the effect of these changes.
 - 2026-08-30: Fail-closed roadmap agent-model dispatch contract (⚠️ Blocked) — honest_verdict=complete_blocked_dispatch_contract; results/experiment_6784_agent_model_dispatch_contract.json
+- 2026-08-30: Parent-owned durable row checkpoint and resume contract (✅ Complete) — honest_verdict=complete_durable_checkpoint_ready: 9-row interruption and exact 15-row resume passed; results/experiment_6785_durable_row_checkpoint_contract.json
