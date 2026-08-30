@@ -18266,3 +18266,4 @@ reduction.
 - 2026-08-30: Environment-indexed proof grammar fixture v2 (✅ Complete) — honest_verdict=complete: environment-indexed SAT and UNSAT support remained reachable with zero ghost violations; no live SOTA comparison was run; results/experiment_6769_environment_indexed_proof_grammar_v2.json
 - 2026-08-30: Three-model DCCD environment-grammar A/B v2 (⚠️ Blocked) — honest_verdict=complete_blocked_proof_transport_ab_v2: precondition one_model_vram observed False.; results/experiment_6770_dccd_environment_grammar_ab_v2.json
 - 2026-08-30: Task-owned SOTA memory lease and artifact contract (⚠️ Blocked) — honest_verdict=complete_blocked_csl_owned_lease_contract; results/experiment_6773_csl_owned_lease_contract.json
+- 2026-08-30: Task-owned SOTA memory lease and artifact contract (⚠️ Blocked) — honest_verdict=complete_blocked_csl_owned_lease_contract; results/experiment_6773_csl_owned_lease_contract.json
