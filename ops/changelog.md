@@ -18285,3 +18285,4 @@ concurrent loading of 2 or more models or a missed DualGPURunner dispatch.
 Automatic batches of 8-16 questions are the first tooling action. The 75%
 savings estimate is the lower bound implied by the stated 4x batching gain.
 It applies only to batched inference, not total milestone wall time.
+- 2026-08-30: Sequential mandated-GGUF ownership and runtime admission (⚠️ Blocked) — honest_verdict=complete_blocked_sequential_sota_runtime: no model completed owned CUDA admission.; results/experiment_6782_sequential_sota_runtime_admission.json
