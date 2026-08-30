@@ -1,3 +1,87 @@
+## V591 Planner Refresh - 2026-08-30
+
+This sweep follows terminal milestone `2026.08.590`. It rechecks the requested 2025-2026 arXiv
+topics, OpenReview, Hugging Face Papers, GitHub repositories, Semantic Scholar citation trails for
+EBT `2507.02092` and ARM-EBM `2512.15605`, Extropic, and Logical Intelligence. The search found no
+public checkpoint, exact authority, or hardware interface that should replace Carnot's pinned local
+GGUF and exact-checker stack. It did sharpen the controls for the blocked live branches and expose
+one bounded neural-constraint bridge.
+
+### Findings selected for V591
+
+- **Variation in Verification: Understanding Verification Dynamics in Large Language Models** -
+  arXiv:2509.17995, https://arxiv.org/abs/2509.17995; OpenReview:
+  https://openreview.net/forum?id=DcEuBwrWnB. Verification accuracy changes with generator family,
+  verifier family, and problem difficulty. Carnot hook: freeze generator and exact-difficulty strata
+  before the live proof A/B. Report per-model and per-stratum effects. Do not infer a general repair
+  gain from one pooled number.
+- **Decode-Time Grammars** - arXiv:2607.18357,
+  https://arxiv.org/abs/2607.18357; **Draft-Conditioned Constrained Decoding** -
+  arXiv:2603.03305, https://arxiv.org/abs/2603.03305; and **Thinking Before Constraining** -
+  arXiv:2601.07525, https://arxiv.org/abs/2601.07525. These methods agree on a useful boundary:
+  preserve semantic planning before exact structural enforcement. Carnot hook: reuse the proven
+  environment-indexed grammar from Exp6769, then run one task-owned sequential GGUF panel. Keep
+  exact certificate validity as the headline and support contraction as a harm metric.
+- **Memoir: Should a Model Write to Its Memory While It Thinks?** - arXiv:2607.20792,
+  https://arxiv.org/abs/2607.20792, and **When Continual Learning Moves to Memory** -
+  arXiv:2604.27003, https://arxiv.org/abs/2604.27003. Memoir reports a fixed-budget learning-speed
+  penalty from same-iteration memory rewrites. The memory study places stability and plasticity in
+  representation and retrieval. Carnot hook: freeze memory within each episode, commit exact-
+  certified procedural records between episodes, and require a counterfactual retrieval-disable arm
+  to prove that retrieved memory changed an action.
+- **AS2: Attention-Based Soft Answer Sets** - arXiv:2603.18436,
+  https://arxiv.org/abs/2603.18436. AS2 preserves declarative constraint groups inside a
+  differentiable fixed-point operator and validates final Sudoku assignments with Clingo. Carnot
+  hook: build a bounded CPU prototype over the frozen proof-constraint groups. Compare soft
+  fixed-point proposals with a parameter-matched non-structural control. Let the independent exact
+  checker evaluate both. This is not a rerun of the retired FSNet/SnareNet headline or a claim that
+  a soft residual proves correctness.
+- **From Accuracy to Robustness: A Study of Rule- and Model-based Verifiers in Mathematical
+  Reasoning** - withdrawn ICLR 2026 submission,
+  https://openreview.net/forum?id=ZBhZT307xx. The reported rule-verifier false negatives and learned-
+  verifier reward hacking reinforce a two-sided audit. Carnot hook: test exact checker conformance
+  on representation variants and test learned or soft proposals for gaming. Neither proposal path
+  receives release authority.
+
+### Secondary and hardware checks
+
+- **Semantic Scholar:** the EBT trail includes Memoir, Solver-Hard, Fixed-Point Reasoners, LoopUS,
+  and latent-energy follow-ons. The ARM-EBM trail still leads through Distributional EBMs, LoopUS,
+  false-first-step planning, and application-specific work. No citing record exposes a stronger
+  matching-base local checkpoint or an oracle-distinct exact authority. No citation-count claim is
+  made.
+- **Hugging Face Papers and GitHub:** current constrained-decoding, speculative-verification, KAN,
+  and EBM repositories provide implementation references. None supersedes Carnot's runtime grammar,
+  exact checker, pinned GGUF resolver, or transactional memory interfaces. Add no dependency only
+  for novelty.
+- **Extropic:** the first-party summer update reports Torx, a Thermalizers compiler preview, a
+  taped-out Z1 with 269,568 pbits, 16-neighbor connectivity, greater-than-50-MHz sampling, and
+  claimed power below one watt: https://extropic.ai/writing/from-one-to-one-billion. Early device
+  access remains planned for 2027. V591 makes no physical TSU speed, power, or availability claim.
+- **Logical Intelligence:** Kona 1.0 still describes global scoring over editable continuous traces
+  and partial-trace localization: https://logicalintelligence.com/blog/energy-based-models-for-reasoning.
+  The public site exposes no weights, training recipe, or local runner. Kona remains architecture
+  context, not an executable baseline.
+- **Local hardware:** both RTX 3090 cards, the Strix `gfx1150` integrated GPU, and all three mandated
+  GGUF families are visible on the planning host. The RTX cards were occupied during `.590` and
+  free during this refresh. That change is an execution-window fact, not a permanent capability.
+  V591 therefore requires receipt-scoped ownership, bounded wait, sequential full-load sessions,
+  and honest blocked artifacts. It does not weaken model, offload, or exact-evidence gates.
+
+### V591 planning impact
+
+- Run one shared resource admission task, then keep proof, memory, and ARC evidence independent.
+- Reuse the completed Exp6768 panel and Exp6769 grammar. Do not rebuild them or lower a gate.
+- Collapse each live branch into one bounded producer plus one cold audit. This limits gate cascades
+  and lets an environmental block retire only the repeated execution attempt.
+- Make continuous self-learning prospective, read-only within episodes, transactional between
+  episodes, and action-attributed through a retrieval-disable counterfactual.
+- Repair the ARC supervisor arm accounting first. Then run the required `window=120`,
+  `tool_gap_events`, and actions-to-progress evidence in one live panel without claiming a new game
+  solve.
+- Keep the AS2-inspired soft fixed-point prototype independent of GPU outcomes and exact-authority
+  preserving. Treat it as a Phase-3 bridge, not a verifier replacement.
+
 ## V590 Planner Refresh - 2026-08-30
 
 This sweep follows the terminal `2026.08.589` milestone. It covers the requested 2025-2026 arXiv

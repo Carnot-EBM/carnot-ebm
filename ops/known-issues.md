@@ -19257,3 +19257,11 @@ loses utility, firing in production, with no route to a decision.
 **Read the two mechanisms apart.** An `arms_used` list that omits it is not evidence it did not
 fire; the ledger's per-arm table is about the OTHER supervisor. This is the second time the two
 were conflated in one session.
+
+## OPERATOR-ATTENTION 2026-08-30: stop authority reaped an orphaned llama-server
+
+pid 3452459: ppid=1, non-service cgroup, port 8919 referenced by no live process, no established connections, age 368 min -> terminated
+
+Every reap condition and its value:
+ppid=1, non-service cgroup, port 8919 referenced by no live process, no established connections, age 368 min.
+Actor: scripts/run_stop_authority.py (REQ-CONDUCTOR-AUTHORITY-1). If this kill was wrong, set CARNOT_STOP_AUTHORITY_ALLOW=1 in the server's environment at launch.

@@ -16834,3 +16834,5 @@ The l |
 | 2026-08-30 13:08 UTC | V590 branch disposition and PRD gap update | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6780_v590_br |
 | 2026-08-30 13:34 UTC | V590 branch disposition and PRD gap update | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6780_v590_br |
 | 2026-08-30 13:48 UTC | V590 branch disposition and PRD gap update | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6780_v590_br |
+| 2026-08-30 14:10 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 3452459 (port 8919) reparented to init, no live process references its |
+| 2026-08-30 14:41 UTC | STOP-AUTHORITY: ORPHAN_SERVER_REAPED | WARN | pid 3452459: ppid=1, non-service cgroup, port 8919 referenced by no live process |

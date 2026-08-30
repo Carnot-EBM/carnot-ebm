@@ -1,0 +1,283 @@
+milestone: 2026.08.591
+milestone_title: Owned execution, attributed learning, and live progress
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+- id: exp6781-v591-sota-delta-contract
+  title: V591 SOTA delta and retirement-aware method contract
+  track: research-planning
+  priority: high
+  agent_type: gemini
+  model: gemini-3.1-pro-preview
+  requires_gpu: false
+  max_turns: 30
+  estimated_wall_time_min: 60
+  milestone: 2026.08.591
+  deliverable: results/experiment_6781_v591_sota_delta_contract.json
+  prompt: |
+    CONTEXT:
+    The planning sweep recorded a V591 refresh at the top of research-references.md. Carnot needs
+    one execution-time source delta because 2025-2026 EBM, verification, constrained decoding,
+    continual-learning, KAN, Ising, and hardware work changes quickly. Novelty is not enough. A
+    method must address a V591 gap, have a public primary source, preserve exact authority, and not
+    reopen retired scope.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md and {project_root}/_bmad/prd.md
+    - {project_root}/research-references.md, V591 Planner Refresh
+    - {project_root}/research-hardware-wishlist.md
+    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+    - {project_root}/ops/exclusion_manifest.yaml and
+      {project_root}/ops/lineage-retirements/
+    - {project_root}/results/experiment_6780_v590_branch_disposition.json
+
+    TASK:
+    Run a dated source-delta scan and produce a retirement-aware method contract for V591. Search
+    the required primary and secondary sources. Add only new, promising findings to
+    research-references.md. Map every promoted method to one V591 task or a documented later
+    milestone. Do not add a dependency only for novelty.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require the V591 design document, the V591 planner refresh, and the exclusion
+       manifest to parse. On failure write complete_blocked_v591_sota_delta with the failed check
+       and observed value in gate_check_summary, then stop.
+    1. Search arXiv for 2025-2026 work on EBM reasoning, neural constraint satisfaction, Ising ML,
+       hallucination verification, KANs, constrained decoding, accelerated sampling, and online
+       constraint learning. Record query, access date, paper ID, version, and primary URL.
+    2. Check OpenReview, Hugging Face Papers, GitHub repositories, Extropic writing, Logical
+       Intelligence, and Semantic Scholar citation trails for EBT 2507.02092 and ARM-EBM
+       2512.15605. Treat mirrors and product posts as secondary evidence.
+    3. Deduplicate against research-references.md. Classify every candidate as promoted,
+       watch-only, duplicate, inaccessible, retired-scope, authority-circular, or unrelated.
+    4. For each promoted item, name the V591 task, exact mechanism, falsifiable metric, authority
+       boundary, and hardware need. Do not alter experiment scope from this source scan.
+    5. If a genuinely new promoted item exists, append a dated execution delta to
+       research-references.md. If none exists, record a clean negative delta in the artifact.
+    6. Run focused tests for the source ledger and JSON artifact. Run lint, spec coverage, and
+       adversarial verification where applicable.
+    7. REQUIRED ARTIFACT FIELDS: field_principles (one-line purpose for every required field);
+       inference_substrate (primary-source web and repository review, no inference model);
+       duration_s (monotonic task wall time); random_seed (fixed source ordering seed);
+       reproducibility_checksum (hash of queries, source rows, and roadmap); source_queries (all
+       dated queries); rows (one row per candidate source); semantic_scholar_checks (EBT and
+       ARM-EBM trail receipts without unstable count claims); promoted_methods (task mapping and
+       falsifiable hook); deferred_methods (reason and revisit condition); rejected_methods
+       (duplicate, retired, circular, inaccessible, or unrelated reason); references_updated
+       (boolean and exact inserted heading); sota_ingestion_ready (true when every source and
+       disposition is attributable); gate_check_summary (failed check and observed value for any
+       blocked_* verdict); verifier_is_oracle (false); verdict_class (closed enum: positive |
+       circular_positive | null | blocked | disqualified | partial); and honest_verdict (terminal
+       result; MUST start with complete: / complete_ / success: / success_ / passed: / passed_ /
+       shipped: / shipped_).
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6781_v591_sota_delta_contract.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp6782-sequential-sota-runtime-admission
+  title: Sequential mandated-GGUF ownership and runtime admission
+  track: infrastructure
+  priority: critical
+  model: opus
+  requires_gpu: true
+  max_turns: 100
+  estimated_wall_time_min: 180
+  per_unit_rows: true
+  milestone: 2026.08.591
+  deliverable: results/experiment_6782_sequential_sota_runtime_admission.json
+  prompt: |
+    CONTEXT:
+    Exp6770, Exp6773, and Exp6776 all stopped on RTX ownership or free-VRAM checks. The same host
+    later showed both RTX 3090 cards free. That is a transient execution-window fact, not a new
+    scientific result. V591 needs one reusable contract that resolves every mandated GGUF, waits
+    for an owned card, loads one model at a time, proves real first-token CUDA inference, tears the
+    model down, and recovers VRAM. The task must never kill protected training or serving work.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/scripts/experiment_template.py and cached_sota_pair()
+    - {project_root}/python/carnot/inference/sota_models.py
+    - {project_root}/python/carnot/conductor/gpu_lease.py
+    - {project_root}/results/experiment_6770_dccd_environment_grammar_ab_v2.json
+    - {project_root}/results/experiment_6773_csl_owned_lease_contract.json
+    - {project_root}/results/experiment_6776_arc_shadow_supervisor_accrual.json
+    - {project_root}/results/experiment_6764_arc_exclusive_load_preflight.json
+    - {project_root}/scripts/run_stop_authority.py and protected-process rules in
+      {project_root}/scripts/experiment_template.py
+
+    TASK:
+    Implement and run a sequential, receipt-scoped local CUDA admission for all three mandated SOTA
+    GGUF families. Use a bounded lease wait. Emit model-specific readiness even if a later model
+    blocks. This task proves execution capability only. It makes no proof, memory, or ARC claim.
+
+    MODEL_SPECS:
+    - unsloth/Qwen3.6-35B-A3B-GGUF: flagship MoE admission model.
+    - unsloth/gemma-4-31B-it-GGUF: flagship dense admission model.
+    - unsloth/gemma-4-26B-A4B-it-GGUF: middle MoE admission model.
+    Resolve exact cached GGUF files and embedded tokenizers. Use llama.cpp CUDA. Small legacy
+    models, remote APIs, CPU-only generation, and the Strix integrated GPU cannot satisfy readiness.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require two fixed RTX 3090 UUIDs, llama.cpp CUDA offload, GpuLease APIs, all
+       three cached model paths, tokenizers, file hashes, sufficient RAM and disk, and unused task
+       ports. On failure write complete_blocked_sequential_sota_runtime with gate_check_summary.
+    1. Confirm or add narrow REQ-* anchors in the inference and research-reporting specs. Write
+       focused tests for resolver identity, bounded wait, ownership, protected-process refusal,
+       model checkpointing, first-token proof, teardown, and blocked artifacts before live work.
+    2. Freeze model order and one small deterministic canary prompt. Use the same context, output
+       token limit, seed, and llama.cpp parameters for all models where model syntax permits.
+    3. Poll for at most 20 minutes for one eligible card. Acquire it by UUID with a receipt-scoped
+       lease. Do not SIGTERM, SIGKILL, stop, or reuse an unowned process. Record every poll.
+    4. For each model, start a fresh process, load with CUDA offload, generate at least one
+       non-fixture token, record device and peak VRAM, close the backend, exit the worker, and prove
+       VRAM recovery. Release and reacquire the lease only through the ownership API.
+    5. Atomically checkpoint after each model. A later block must preserve earlier row evidence.
+       Set qwen36_runtime_ready, gemma31_runtime_ready, and gemma26_runtime_ready only from that
+       model's owned load, first-token, teardown, and recovery receipts.
+    6. Set all_mandated_runtime_ready only when all three model-specific fields are true. This is
+       the exact field consumed by Exp6783. Exp6787 consumes qwen36_runtime_ready.
+    7. Run focused tests, lint, spec coverage, the applicable CUDA E2E check, adversarial
+       verification, and row-consistency lint.
+    8. REQUIRED ARTIFACT FIELDS: field_principles (one-line purpose for every required field);
+       inference_substrate (local llama.cpp CUDA with receipt-scoped RTX lease); duration_s
+       (monotonic task wall time); random_seed (fixed canary seed); reproducibility_checksum (hash
+       of model manifest, code, and rows); MODEL_SPECS (the three declared hub IDs and roles);
+       model_specs (resolved paths, hashes, tokenizers, contexts, and limits); models_used (models
+       that produced real tokens); live_model_invoked (true after any real first token); rows (one
+       row per lease poll, model load, inference, teardown, and recovery); gpu_receipts (UUID,
+       owner, process, offload, VRAM, and release); protected_process_actions (must be empty);
+       qwen36_runtime_ready (exact field consumed by Exp6787); gemma31_runtime_ready;
+       gemma26_runtime_ready; all_mandated_runtime_ready (exact field consumed by Exp6783);
+       gate_check_summary (failed check and observed value for any blocked_* verdict);
+       verifier_is_oracle (false); verdict_class (closed enum: positive | circular_positive | null
+       | blocked | disqualified | partial); and honest_verdict (terminal result; MUST start with
+       complete: / complete_ / success: / success_ / passed: / passed_ / shipped: / shipped_).
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6782_sequential_sota_runtime_admission.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+    - experiment_id: exp6770-dccd-environment-grammar-ab-v2
+      verdict: 'complete_blocked_proof_transport_ab_v2: precondition one_model_vram observed False.'
+      addressed_by: 'This task separates resource admission from proof science, waits for a receipt-owned card, checkpoints each model, and proves teardown before any comparative branch runs.'
+      retire_if_same_verdict: true
+    - experiment_id: exp6773-csl-owned-lease-contract
+      verdict: complete_blocked_csl_owned_lease_contract
+      addressed_by: 'The new contract uses a bounded lease queue and model-specific checkpoints instead of requiring the least-used card to be eligible at one instant.'
+      retire_if_same_verdict: true
+    - experiment_id: exp6776-arc-shadow-supervisor-accrual
+      verdict: 'complete_blocked_shadow_supervisor_accrual:exclusive_gpu_without_unrelated_compute'
+      addressed_by: 'The admission task records external owners and waits without killing them; it no longer mixes ARC accrual with the resource test.'
+      retire_if_same_verdict: true
+
+- id: exp6783-owned-proof-generation-ab
+  title: Owned three-model exact proof-generation A/B
+  track: verifiable-reasoning
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: true
+  max_turns: 50
+  estimated_wall_time_min: 420
+  per_unit_rows: true
+  milestone: 2026.08.591
+  deliverable: results/experiment_6783_owned_proof_generation_ab.json
+  gated_on:
+    - upstream: exp6782-sequential-sota-runtime-admission
+      artifact_field: all_mandated_runtime_ready
+      op: '=='
+      value: true
+  prompt: |
+    CONTEXT:
+    Exp6768 produced 126 cold-replayed exact-invalid rows. Exp6769 proved an invoked environment-
+    indexed grammar with SAT and UNSAT support and zero ghost violations. Exp6770 did not run its
+    model panel because the cards were occupied. Exp6782 now supplies the owned sequential runtime
+    contract. Decode-Time Grammars, DCCD, and Thinking Before Constraining motivate free semantic
+    planning followed by exact structural enforcement. Variation in Verification requires model
+    and exact-difficulty strata.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/scripts/experiment_template.py and cached_sota_pair()
+    - {project_root}/results/experiment_6768_targetable_proof_panel_expansion.json
+    - {project_root}/results/experiment_6769_environment_indexed_proof_grammar_v2.json
+    - {project_root}/results/experiment_6770_dccd_environment_grammar_ab_v2.json
+    - {project_root}/results/experiment_6782_sequential_sota_runtime_admission.json
+    - {project_root}/python/carnot/verify/dccd_multihop.py
+    - {project_root}/python/carnot/experiment_6745_certificate_encoder_a.py and
+      {project_root}/python/carnot/experiment_6745_certificate_encoder_b.py
+    - Primary sources arXiv 2607.18357, 2603.03305, 2601.07525, and 2509.17995.
+
+    TASK:
+    Run a paired three-arm, three-model local GGUF comparison on a frozen 36-unit proof panel.
+    Compare direct generation, static grammar, and draft-conditioned environment grammar under
+    matched total budgets. Report exact certificate validity as the headline and keep syntax,
+    semantic error class, support, cost, and latency as separate outcomes.
+
+    MODEL_SPECS:
+    - unsloth/Qwen3.6-35B-A3B-GGUF: flagship MoE headline model.
+    - unsloth/gemma-4-31B-it-GGUF: flagship dense headline model.
+    - unsloth/gemma-4-26B-A4B-it-GGUF: middle MoE headline model.
+    Use the exact Exp6782 files and tokenizers. Load one model per fresh worker under a task-owned
+    lease. Remote, CPU-only, integrated-GPU, or legacy-small-model rows are smoke tests only.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require all_mandated_runtime_ready=true; validate the Exp6768 and Exp6769
+       hashes; freeze 36 units balanced by family, exact difficulty, SAT/UNSAT role, error class,
+       and relabel role; and reacquire an owned RTX lease. On failure write
+       complete_blocked_owned_proof_generation_ab with gate_check_summary and no headline fallback.
+    1. Confirm or add narrow REQ-* anchors. Write focused tests for pairing, model identity,
+       grammar invocation, budget matching, resumable checkpoints, teardown, and blocked artifacts.
+    2. Freeze unit IDs, model order, rotating arm order, seeds, prompts, context, output ceilings,
+       DCCD draft/render split, stop rules, exact-check counts, and wall-time limits.
+    3. Run all 324 planned cells: 36 units by three models by three arms. Direct generation receives
+       no grammar. Static grammar receives syntax constraints only. The DCCD arm drafts freely and
+       then invokes the Exp6769 environment-indexed mask during rendering.
+    4. Disqualify a constrained row that uses post-hoc filtering, a canned certificate, an answer-
+       conditioned mask, a ground-truth proof, a substituted model, or an unowned process.
+    5. Preserve raw bytes, decoded text, hashes, parsed proof, both encoder receipts, exact result,
+       semantic result, mask calls, generated tokens, latency, device, peak VRAM, seed, and stop
+       reason for every cell. Atomically checkpoint after each unit and model.
+    6. Derive exact-valid rate, semantic-correct rate, parseability, abstention, invalid references,
+       invalid domains, support contraction, harmful flips, token cost, and latency by arm, model,
+       family, exact-difficulty stratum, and relabel role. Do not use solver conflicts as a model-
+       difficulty scalar.
+    7. Set proof_generation_ab_completed when every planned row is attributable, cold aggregate
+       recomputation agrees, and all model workers recover VRAM. Completion does not require a
+       positive arm delta. Exp6784 consumes this exact field.
+    8. Run focused tests, lint, spec coverage, applicable CUDA E2E checks, adversarial verification,
+       and row-consistency lint.
+    9. REQUIRED ARTIFACT FIELDS: field_principles (one-line purpose for every required field);
+       inference_substrate (local llama.cpp CUDA GGUF with invoked runtime grammar); duration_s
+       (monotonic task wall time); random_seed (frozen paired seed schedule);
+       reproducibility_checksum (hash of manifest, code, models, and rows); MODEL_SPECS (declared
+       hub IDs and roles); model_specs (resolved identities, hashes, tokenizers, and budgets);
+       models_used (all models that produced rows); live_model_invoked (real first-token evidence);
+       frozen_manifest (units, strata, arms, orders, and budgets); gpu_receipts (lease, offload,
+       VRAM, teardown, and recovery); rows (every model-unit-arm cell);
+       runtime_mask_invocations_by_arm (actual token-policy calls); exact_valid_rate_by_arm
+       (row-derived headline); paired_exact_valid_deltas (paired effects); metrics_by_model_family
+       (generator-specific effects); metrics_by_exact_difficulty (difficulty strata);
+       support_contraction_by_arm (valid-support loss); harmful_flips_by_arm (baseline-valid harm);
+       proof_generation_ab_completed (exact field consumed by Exp6784); gate_check_summary (failed
+       check and observed value for any blocked_* verdict); verifier_is_oracle (false because exact
+       authority evaluates but does not generate); verdict_class (closed enum: positive |
+       circular_positive | null | blocked | disqualified | partial); and honest_verdict (terminal
+       result; MUST start with complete: / complete_ / success: / success_ / passed: / passed_ /
+       shipped: / shipped_).
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6783_owned_proof_generation_ab.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+    - experiment_id: exp6770-dccd-environment-grammar-ab-v2
+      verdict: 'complete_blocked_proof_transport_ab_v2: precondition one_model_vram observed False.'
+      addressed_by: 'Exp6782 now proves all three model identities, owned first-token inference, teardown, and recovery before this checkpointed comparison starts.'
+      retire_if_same_verdict: true
+    - experiment_id: exp6757-dccd-environment-grammar-ab
+      verdict: 'GATE_BLOCK: preempted after exp6756 retired on the 21 below 24 targetable-row gate; no artifact was produced'
+      addressed_by: 'Exp6768 and Exp6769 are now completed in-roadmap prerequisites with 126 target rows and an invoked no-ghost grammar, so the old missing-panel chain no longer exists.'
+      retire_if_same_verdict: true
