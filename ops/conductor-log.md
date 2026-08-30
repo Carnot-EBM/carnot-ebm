@@ -16811,3 +16811,4 @@ The l |
 | 2026-08-30 03:55 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 3335761 serves '7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e |
 | 2026-08-30 05:18 UTC | Live object-table fetch-on-demand A/B v2 | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: t."""
      pla |
+| 2026-08-30 05:48 UTC | Independent Thermalizer factor-to-trajectory audit | OK | 109 passed, 1 warning in 22.80s |
