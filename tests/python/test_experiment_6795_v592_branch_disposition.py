@@ -145,7 +145,10 @@ def test_fixed_point_recomputation_requires_matched_non_oracle_rows() -> None:
     assert result["positive_gate"] is True
 
     source_result = recompute_fixed_point(
-        source_rows + [_fixed_row("grouped_fixed_point", "orphan", 3)], []
+        source_rows
+        + [_fixed_row("grouped_fixed_point", "orphan", 3)]
+        + [{"arm": "irrelevant_control", "paired_key": "ignored"}],
+        [],
     )
     assert source_result["evidence_authority"] == "source_rows"
     assert source_result["oracle_leakage_free"] is True
@@ -166,6 +169,20 @@ def test_csl_recomputation_stops_at_blocked_cold_audit() -> None:
     assert result["cold_causal_audit_passed"] is False
     assert result["promotion_gate"] is False
 
+    incomplete_controls = recompute_csl(
+        [
+            {
+                "arm": "compositional_online",
+                "order_id": "online_only",
+                "held_future": True,
+                "route_utility": 1.0,
+            }
+        ],
+        {},
+    )
+    assert incomplete_controls["order_effects"] == []
+    assert incomplete_controls["held_future_online_minus_placebo"]["n"] == 0
+
 
 def test_temporal_recomputation_uses_audit_and_rejects_failed_law() -> None:
     """SCENARIO-CAPSTONE-6795-BRANCHES: matched work also needs target-law fidelity."""
@@ -184,7 +201,24 @@ def test_temporal_recomputation_uses_audit_and_rejects_failed_law() -> None:
             "temperature": 1.0,
             "seed": 9,
             "effective_samples_per_update": 0.1,
-        }
+        },
+        {"arm": "irrelevant_control", "graph_id": "ignored"},
+        {
+            "arm": "temporal_exchange",
+            "graph_id": "no_zero_control",
+            "temperature": 1.0,
+            "seed": 11,
+            "effective_samples_per_update": 0.2,
+            "update_count": 100,
+        },
+        {
+            "arm": "ordinary_gibbs",
+            "graph_id": "no_zero_control",
+            "temperature": 1.0,
+            "seed": 11,
+            "effective_samples_per_update": 0.1,
+            "update_count": 100,
+        },
     ]
     assert recompute_temporal_exchange(incomplete, [])["evidence_authority"] == "source_rows"
 
