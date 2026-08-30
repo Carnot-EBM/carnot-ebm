@@ -16827,3 +16827,4 @@ The l |
 | 2026-08-30 11:53 UTC | Task-owned SOTA memory lease and artifact contract | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6773_csl_own |
 | 2026-08-30 11:55 UTC | Procedural versus trace memory prospective A/B v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6773-csl-owned-lease-contract) |
 | 2026-08-30 11:55 UTC | Independent continuous-learning durability audit v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6774-procedural-vs-trace-csl-ab-v2) |
+| 2026-08-30 12:35 UTC | Window-120 shadow-supervisor evidence accrual | OK | 89 passed, 1 warning in 11.39s |
