@@ -23594,6 +23594,131 @@ sets readiness false, and identifies the observed failure in
 |---|---|---|
 | REQ-VERIFY-6787 and SCENARIO-VERIFY-6787-* | Implemented (`python/carnot/experiment_6787_group_aware_soft_fixed_point.py`, `scripts/experiments/experiment_6787_group_aware_soft_fixed_point.py`; terminal artifact `results/experiment_6787_group_aware_soft_fixed_point.json`) | Implemented (`tests/python/test_experiment_6787_group_aware_soft_fixed_point.py`; group identity, bounded recurrence, finite values, decoding, split isolation, oracle refusal, blocking, and fresh replay) |
 
+### REQ-VERIFY-6788: Structural Fixed-Point Value SHALL Use A Paired Flat Control
+
+Exp6788 SHALL compare the ready Exp6787 grouped proposer with a flat recurrent
+control. The control SHALL receive the same legal flattened observations. It
+SHALL not read group adjacency or dependency edges. Both arms SHALL use the
+same five seeds, initialization schedule, optimizer updates, candidate count,
+iteration cap, and CPU wall-time envelope. Trainable parameter counts SHALL
+differ by no more than five percent.
+
+The run SHALL stop before fitting when Exp6787 is not ready, source hashes
+drift, the frozen splits or five seeds drift, proposal features fail their
+contract, or the planned 640 rows exceed the CPU wall budget. A stopped run
+SHALL write `complete_blocked_fixed_point_control_ab`. It SHALL include every
+required field, no smaller fallback rows, and the failed check with its
+observed value in `gate_check_summary`.
+
+The frozen development and held-topology unit IDs SHALL run under both arms
+for every seed. Each unit-seed-arm row SHALL preserve its paired key, raw
+candidate vectors, candidate hashes, residual, group-message presence, stop
+reason, iteration count, parameter count, optimizer updates, timing, exact
+post-proposal outcomes, nearest-valid distance, and hard-negative AUROC. The
+flat arm SHALL never emit a group or dependency message.
+
+The exact checker SHALL run only after proposal. It SHALL use the frozen
+Exp6786 graph authority. It SHALL compute exact validity, dependency failures,
+nearest-valid distance, and hard-negative labels without changing either
+proposal arm. `verifier_is_oracle` SHALL be false because this authority does
+not propose or train.
+
+Rows SHALL use the Exp6785 parent-owned durable checkpoint contract. Resume
+SHALL suppress completed cells and preserve their payload hashes. Aggregate
+metrics SHALL cold-recompute from attributable rows. Paired bootstrap samples
+SHALL resample units inside each topology family, keep all seed and arm pairs
+together, and then average family effects.
+
+`fixed_point_comparison_completed` SHALL be true when all 640 planned cells
+are attributable, each pair has both arms, the checkpoint is complete, and a
+fresh process reproduces the aggregate hash. A complete null or negative
+comparison SHALL also set this field true.
+
+A positive result SHALL require the grouped-minus-flat exact-valid 95 percent
+lower confidence bound to exceed zero. It SHALL also require matched
+parameters and compute, support contraction no larger than the frozen margin,
+and no convergence harm. Otherwise, a complete comparison SHALL use a null
+verdict. The result SHALL never infer model value from exact checking alone.
+
+The artifact SHALL include `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_hashes`, `frozen_manifest`, `arm_definitions`,
+`parameter_counts_by_arm`, `optimization_steps_by_arm`,
+`candidate_budget_by_arm`, `rows`, `metrics_by_arm`, `metrics_by_topology`,
+`paired_exact_valid_delta`, `paired_exact_valid_delta_ci95`,
+`dependency_violation_delta`, `distance_to_valid_delta`,
+`hard_negative_auroc_by_arm`, `unique_valid_support_by_arm`,
+`support_contraction`, `paired_key_count`, `fixed_point_comparison_completed`,
+`checkpoint_receipt`, `cold_recompute_agreement`, `decision_gates`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. Each required field SHALL have a one-line purpose in
+`field_principles`. `inference_substrate` SHALL declare paired CPU neural
+proposal with independent exact evaluation and no LLM. `verdict_class` SHALL
+use only `positive`, `circular_positive`, `null`, `blocked`, `disqualified`,
+or `partial`. A terminal `honest_verdict` SHALL start with `complete:`,
+`complete_`, `success:`, `success_`, `passed:`, `passed_`, `shipped:`, or
+`shipped_`.
+
+### SCENARIO-VERIFY-6788-ARM-ISOLATION: Flat Recurrence Ignores Topology
+
+**Given** equal flattened state and legal observations with changed group or
+dependency topology
+**When** the flat control performs one recurrent update
+**Then** its output stays equal, its group-message presence is false, and the
+grouped arm remains a separate model instance.
+
+**Spec traces:** REQ-VERIFY-6788
+
+### SCENARIO-VERIFY-6788-PAIRED-BUDGETS: Every Pair Uses Matched Resources
+
+**Given** the frozen units and five rotated seeds
+**When** the paired manifest is built
+**Then** every unit-seed key has both arms, parameter counts differ by at most
+five percent, and optimizer updates and candidate budgets match exactly.
+
+**Spec traces:** REQ-VERIFY-6788
+
+### SCENARIO-VERIFY-6788-EXACT-SEPARATION: Authority Runs After Proposal
+
+**Given** raw candidates from either arm
+**When** the independent exact evaluator scores them
+**Then** exact labels and distances are appended after proposal and no score or
+receipt can enter recurrence, training, stopping, or decoding.
+
+**Spec traces:** REQ-VERIFY-6788
+
+### SCENARIO-VERIFY-6788-CHECKPOINT-RESUME: Completed Cells Run Once
+
+**Given** a checkpoint with a strict prefix of complete paired cells
+**When** the experiment resumes with the same frozen manifest
+**Then** existing payload hashes stay unchanged and only pending cells run.
+
+**Spec traces:** REQ-VERIFY-6788, REQ-INFRA-6785
+
+### SCENARIO-VERIFY-6788-PAIRED-INFERENCE: Headline Metrics Recompute From Rows
+
+**Given** every attributable row
+**When** a fresh process bootstraps units inside topology families
+**Then** confidence intervals, topology effects, support, convergence, and
+headline deltas agree with a cold row-only recomputation.
+
+**Spec traces:** REQ-VERIFY-6788
+
+### SCENARIO-VERIFY-6788-BLOCKED: Failed Preconditions Forbid A Smaller Run
+
+**Given** a failed readiness, hash, split, seed, feature, or wall-budget check
+**When** Exp6788 starts
+**Then** it writes `complete_blocked_fixed_point_control_ab`, emits no rows,
+sets completion false, and records the observed failed check.
+
+**Spec traces:** REQ-VERIFY-6788
+
+## Implementation Status (REQ-VERIFY-6788)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6788 and SCENARIO-VERIFY-6788-* | Planned (`python/carnot/experiment_6788_soft_fixed_point_structural_control_ab.py`, `scripts/experiments/experiment_6788_soft_fixed_point_structural_control_ab.py`) | Planned (`tests/python/test_experiment_6788_soft_fixed_point_structural_control_ab.py`) |
+
 ### SCENARIO-VERIFY-6745-DUAL: Independent Encodings Control Diagnosis
 
 **Given** a parseable certificate
