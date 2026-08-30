@@ -18286,3 +18286,15 @@ Automatic batches of 8-16 questions are the first tooling action. The 75%
 savings estimate is the lower bound implied by the stated 4x batching gain.
 It applies only to batched inference, not total milestone wall time.
 - 2026-08-30: Sequential mandated-GGUF ownership and runtime admission (⚠️ Blocked) — honest_verdict=complete_blocked_sequential_sota_runtime: no model completed owned CUDA admission.; results/experiment_6782_sequential_sota_runtime_admission.json
+
+## 2026-08-30 — Milestone 2026.08.591 operational retrospective
+
+The locked record covers 2 compute-bound completions in 0.5 minutes. The
+longest listed task was Sequential mandated-GGUF ownership and runtime
+admission at 1 minute, but no data available this milestone explains its phase
+cost. Both GPUs reported 0% utilization, so compute use was inefficient. No
+data available this milestone shows concurrent model loading or a missed
+DualGPURunner dispatch. The next tooling work should add an accelerator
+activity gate, explicit concurrency metadata, conditional runner selection,
+and monotonic phase timing. Estimated time savings is 0% because the sources
+do not measure the effect of these changes.
