@@ -306,6 +306,70 @@ CONDUCTOR_SCOPE_IDS = {
 }
 
 
+#: Name fragments identifying which backend a model belongs to. Prefix matching, NOT an
+#: exhaustive table -- a table drifts narrower than its concept, the failure mode this
+#: repository keeps rediscovering. A future `gpt-6-*` must not read as foreign to codex.
+_MODEL_FAMILY_HINTS: dict[str, tuple[str, ...]] = {
+    "codex": ("gpt-", "o1", "o3", "o4"),
+    "claude": ("claude", "opus", "sonnet", "haiku"),
+    "gemini": ("gemini",),
+}
+
+
+def _model_belongs_to(model: str, agent: str) -> bool:
+    """Does this model plausibly belong to `agent`'s backend?
+
+    Unknown models return True -- fail toward LEAVING THE PLAN ALONE. A wrongly-kept model fails
+    loudly at dispatch, exactly as the incident did. A wrongly-REPLACED one silently runs a
+    different model and reports a result, so the artifact would claim a substrate that never ran.
+    """
+
+    hints = _MODEL_FAMILY_HINTS.get(agent)
+    if not hints:
+        return True
+    lowered = model.strip().lower()
+    if any(lowered.startswith(h) for h in hints):
+        return True
+    return not any(
+        lowered.startswith(h)
+        for other, hs in _MODEL_FAMILY_HINTS.items()
+        if other != agent
+        for h in hs
+    )
+
+
+def coerced_model(
+    original_agent: str | None,
+    coerced_agent: str | None,
+    task_model: str | None,
+    agent_default_model: str | None,
+) -> str | None:
+    """The model a task should use once its agent has been coerced (REQ-INFRA-6850).
+
+    THE INVARIANT: a coerced task never keeps a model belonging to the agent it was coerced AWAY
+    FROM. Handing the new agent its own default (or None, letting the callee choose) is always
+    safe; carrying the old model across never is.
+
+    INCIDENT 2026-08-30. The coercion block rewrote `task_agent_type` in four places and never
+    touched `task_model`, read further up. A task planned `agent_type: gemini` +
+    `model: gemini-3.1-pro-preview` was correctly flipped to codex, then invoked with the Gemini
+    model name and died on `Model metadata for 'gemini-3.1-pro-preview' not found` -- 15 times
+    across 5 dates since 2026-07-01, always exactly 3 per date, one task burning its whole retry
+    budget and retiring for a reason unrelated to its merits.
+
+    Worth stating because it argues FOR the fix rather than against the coercion: the safety net
+    worked and still caused this. Uncoerced, the task fails as gemini and is legible; coerced, it
+    fails as CODEX with an error that reads like a codex problem, which is why five occurrences
+    went untraced. A half-applied coercion is worse than none.
+    """
+
+    if not coerced_agent or coerced_agent == original_agent:
+        return task_model
+    if task_model and not _model_belongs_to(task_model, coerced_agent):
+        return agent_default_model
+    return task_model
+
+
 def claimed_by_other_sessions(
     staged: list[str],
     claims: dict[str, list[str]],
@@ -6582,6 +6646,8 @@ def research_step(
     # regardless of the conductor's startup AGENT_TYPE. Multi-agent routing
     # per openspec/change-proposals/multi-agent-routing.md.
     task_agent_type = task.get("agent_type")
+    # Remembered so the model is coerced alongside the agent below (REQ-INFRA-6850).
+    _planned_agent_type = task_agent_type
     # 2026-05-03 23:30Z operator directive: enforce codex on experiments when
     # weekly Claude quota is constrained. Operator at 85% with 2.5 days to
     # reset; the .95 planner Sonnet emitted agent_type:claude on 11/13 tasks
@@ -6692,7 +6758,13 @@ def research_step(
         prompt,
         max_turns=task_max_turns,
         timeout=1200,
-        model_override=task_model,
+        # COERCE THE MODEL ALONGSIDE THE AGENT (REQ-INFRA-6850). Without this, a task planned
+        # for gemini and coerced to codex reached the CLI still carrying
+        # `gemini-3.1-pro-preview` and died on "Model metadata not found" -- 15 times across 5
+        # dates. See `coerced_model`.
+        model_override=coerced_model(
+            _planned_agent_type, task_agent_type, task_model, os.environ.get("AGENT_MODEL")
+        ),
         deliverable_path=task.get("deliverable"),
         agent_type_override=task_agent_type,
     )
