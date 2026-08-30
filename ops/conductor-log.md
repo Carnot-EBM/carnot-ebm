@@ -16850,3 +16850,4 @@ The l |
 | 2026-08-30 17:14 UTC | Fail-closed roadmap agent-model dispatch contract | FAIL | No file changes produced |
 | 2026-08-30 17:33 UTC | Parent-owned durable row checkpoint and resume con | OK | 96 passed, 1 warning in 19.45s |
 | 2026-08-30 17:55 UTC | Exact constraint-dependency graph and hard-negativ | OK | 91 passed, 1 warning in 18.15s |
+| 2026-08-30 18:20 UTC | Group-aware soft fixed-point proposer | OK | 92 passed, 1 warning in 19.51s |
