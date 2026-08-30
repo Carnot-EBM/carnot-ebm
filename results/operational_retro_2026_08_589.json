@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.589",
+  "generated_at": "2026-08-30T06:37:51Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 3.4,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 5,
+  "slowest_experiments": [
+    {
+      "experiment": "Exclusive full-load ARC preflight and teardown receipt",
+      "duration_minutes": 1.63,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Procedural versus trace memory prospective A/B",
+      "duration_minutes": 1.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Live object-table fetch-on-demand A/B v2",
+      "duration_minutes": 0.37,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V589 branch disposition and PRD gap update",
+      "duration_minutes": 0.32,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Lossless GGUF output boundary and 216-row reparse",
+      "duration_minutes": 0.04,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 11 experiments in 3.4 minutes, including 5 compute-bound experiments. Exclusive full-load ARC preflight and teardown receipt was the longest listed compute task at 1.63 minutes, followed by Procedural versus trace memory prospective A/B at 1.0 minute; no data available this milestone identifies why they took longest.",
+  "bottlenecks_identified": [
+    "Disk-mtime reconstruction does not attribute elapsed time to launch, model load, inference, or teardown phases, so the cause of the longest compute durations is unknown.",
+    "The GPU report is a point-in-time host snapshot rather than task-owned telemetry, limiting per-experiment utilization analysis even though the locked compute-idle indicator is false.",
+    "No data available this milestone records concurrent model count or runner identity, so DualGPURunner eligibility and engagement cannot be evaluated."
+  ],
+  "improvements_suggested": [
+    "Emit task-owned monotonic timestamps for launch, model load, inference, artifact write, and teardown phases.",
+    "Attach sampled GPU utilization, process identity, device assignment, model count, and runner identity to each compute experiment receipt.",
+    "Add device-aware queue scheduling that may place a separate ready single-model experiment on an idle second GPU without requiring DualGPURunner for single-model tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Replace disk-mtime-only reconstruction with task-owned monotonic phase timing.",
+    "Record per-task accelerator samples, model concurrency, runner identity, and device assignment in launch receipts.",
+    "Use device-aware scheduling for independent ready compute experiments when another GPU is idle."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "GPU 0 was actively utilized while the locked compute-task idle indicator remained false, so GPU idle is not identified as a bottleneck. No data available this milestone shows a compute-bound task loading two or more models in parallel, so no DualGPURunner failure can be claimed; the proposed tooling would make both phase cost and runner applicability directly observable."
+}
