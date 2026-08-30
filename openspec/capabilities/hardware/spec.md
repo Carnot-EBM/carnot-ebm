@@ -245,6 +245,87 @@ category, unavailable internal reference, or failed required verification check,
 
 ---
 
+### REQ-HW-6766: Independent Thermalizer Trajectory Audit
+
+Experiment 6766 SHALL cold-audit the serialized Exp6751 compiler output. The
+audit evaluator SHALL live in a separate module. It SHALL NOT import Exp6751
+normalization, enumeration, sampling, trajectory, fitting, or reducer code.
+
+- REQ-HW-6766-PRECONDITIONS: The audit SHALL first parse Exp6751. It SHALL
+  require all raw rows and frozen topology, precision, seed, factor, context,
+  and trajectory receipts. It SHALL prove that every planned state space has
+  at most 20,000 paths. A failed check SHALL write
+  `complete_blocked_thermalizer_audit` with the observed value.
+- REQ-HW-6766-INDEPENDENCE: The audit SHALL record compiler and evaluator
+  module identities, code hashes, imports, dependency edges, shared callable
+  objects, and method objectives. `evaluator_distinct` SHALL be a bare boolean.
+- REQ-HW-6766-EXACT: A standard-library evaluator SHALL independently build
+  the compiled conditionals. It SHALL enumerate target and compiled paths at
+  depths 1, 2, 4, and 8. It SHALL recompute normalization, conditional KL, and
+  trajectory total variation without calling Exp6751 code.
+- REQ-HW-6766-SAMPLER: A second standard-library path SHALL sample target
+  trajectories with frozen seeds. It SHALL estimate trajectory total variation
+  from target-to-compiled likelihood ratios. It SHALL record sample counts,
+  intervals, errors against exact values, and the exact API path used.
+- REQ-HW-6766-ROWS: The artifact SHALL retain one row for every factor,
+  context, method, precision, topology, depth, seed bundle, and evaluator path.
+  All means, intervals, cross-checks, and paired differences SHALL derive only
+  from these rows.
+- REQ-HW-6766-CIRCULARITY: Exact evaluation is held-out for independent factor
+  fitting and context matching. Trajectory refinement consumes the same mean
+  exact trajectory-TV objective as its mechanism. Those exact evaluator rows
+  SHALL be circular. `verifier_is_oracle` SHALL derive from row circularity. A
+  completed positive artifact with any circular row SHALL use
+  `verdict_class=circular_positive` at best.
+- REQ-HW-6766-COMPLETION: `independent_trajectory_audit_completed` SHALL be
+  true only when the full cold row grid and sampler cross-check are
+  attributable. A non-circular positive result also requires a preregistered
+  paired trajectory reduction whose 95 percent interval excludes zero and
+  `evaluator_distinct=true`.
+- REQ-HW-6766-BOUNDARY: The artifact SHALL describe a local simulator and
+  compiler cold audit with no physical TSU. It SHALL make no speed, power, X0,
+  Z1, FPGA, physical-hardware, or production claim.
+
+Required artifact fields are `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_sha256`, `compiler_provenance`, `evaluator_provenance`,
+`dependency_graph_receipt`, `evaluator_distinct`, `rows`,
+`conditional_kl_by_factor`, `trajectory_tv_by_depth`,
+`paired_trajectory_deltas`, `direct_sampler_crosscheck`,
+`normalization_mismatches`, `topology_mismatches`, `precision_mismatches`,
+`independent_trajectory_audit_completed`, `claim_boundary`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL explain every top-level field.
+
+### SCENARIO-HW-6766-COLD-REPRODUCTION
+
+**Given:** Complete serialized Exp6751 rows and frozen receipts,
+**When:** the separate exact evaluator and direct sampler process every row,
+**Then:** all cold metrics and aggregates replay from audit rows, and compiler
+dependencies remain absent from the evaluator import graph.
+
+### SCENARIO-HW-6766-CIRCULAR-REFINEMENT
+
+**Given:** trajectory refinement selected candidates with mean exact
+trajectory total variation over the same depths,
+**When:** Exp6766 classifies each evaluator row,
+**Then:** exact trajectory-refinement rows are circular, sampler rows are not,
+and the top-level oracle boolean and verdict class derive from those rows.
+
+### SCENARIO-HW-6766-FAIL-CLOSED
+
+**Given:** a missing raw row, receipt mismatch, unbounded path space, imported
+Exp6751 helper, or incomplete evaluator grid,
+**When:** Exp6766 validates the audit,
+**Then:** completion is false and `gate_check_summary` records the failed check,
+expected value, and observed value.
+
+**Implementation status:** Implemented (Exp 6766;
+`python/carnot/experiment_6766_thermalizer_independent_trajectory_audit.py`,
+`tests/python/test_experiment_6766_thermalizer_independent_trajectory_audit.py`)
+
+---
+
 ### REQ-HW-6121
 
 **Title:** Exp6121 GateMate changed-state gate MUST skip unchanged DirtyJTAG detects and permit only one non-destructive IDCODE detect after a dated physical receipt

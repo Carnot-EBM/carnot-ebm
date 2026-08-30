@@ -59515,3 +59515,40 @@ transactions, and teardown evidence while excluding measured duration.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6762 and SCENARIO-REPORT-6762-* | Implemented (`python/carnot/experiment_6762_procedural_vs_trace_csl_ab.py`, `scripts/experiments/experiment_6762_procedural_vs_trace_csl_ab.py`) | Implemented (`tests/python/test_experiment_6762_procedural_vs_trace_csl_ab.py`) |
+
+### REQ-REPORT-6766: Independent Trajectory Evidence SHALL Be Row-Derived
+
+Exp6766 SHALL atomically write
+`results/experiment_6766_thermalizer_independent_trajectory_audit.json`. It
+SHALL retain the complete exact and direct-sampler evaluator grid. It SHALL
+derive all means, intervals, paired differences, completion state, oracle
+state, and verdict class only from those rows and frozen receipts.
+
+The artifact SHALL include every field required by REQ-HW-6766. Its
+reproducibility checksum SHALL bind the source artifact hash, evaluator code,
+dependency receipt, frozen seeds, rows, and row-derived aggregates. It SHALL
+exclude measured duration. The final write SHALL use an atomic replacement.
+
+#### SCENARIO-REPORT-6766-ATOMIC: Readers Observe One Complete Cold Audit
+
+**Given** complete source receipts, exact rows, sampler rows, provenance, and
+row-derived aggregates
+**When** Exp6766 validates and publishes the artifact
+**Then** readers observe one complete JSON object and the checksum replays.
+
+**Spec traces:** REQ-REPORT-6766, REQ-HW-6766
+
+#### SCENARIO-REPORT-6766-BLOCKED: Failed Cold Preconditions Stay Visible
+
+**Given** one source, isolation, bound, receipt, or grid precondition fails
+**When** Exp6766 writes its terminal artifact
+**Then** it uses `complete_blocked_thermalizer_audit`, keeps the complete
+schema, emits no invented measurement rows, and records observed failures.
+
+**Spec traces:** REQ-REPORT-6766, SCENARIO-HW-6766-FAIL-CLOSED
+
+## Implementation Status (REQ-REPORT-6766)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6766 and SCENARIO-REPORT-6766-* | Implemented (`python/carnot/experiment_6766_thermalizer_independent_trajectory_audit.py`, `scripts/experiments/experiment_6766_thermalizer_independent_trajectory_audit.py`) | Implemented (`tests/python/test_experiment_6766_thermalizer_independent_trajectory_audit.py`) |
