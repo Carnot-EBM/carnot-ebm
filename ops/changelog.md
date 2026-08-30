@@ -18262,3 +18262,4 @@ DualGPURunner dispatch. Task-owned phase timing, accelerator samples, launch
 metadata, and device-aware scheduling are the next tooling priorities;
 estimated savings remains 0% because the evidence does not quantify a causal
 reduction.
+- 2026-08-30: Exact-invalid targetable proof panel expansion (✅ Complete) — honest_verdict=complete: targetable exact-invalid fixture ready with 126 cold-replayed rows; this is not a model-quality claim; results/experiment_6768_targetable_proof_panel_expansion.json
