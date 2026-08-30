@@ -8398,3 +8398,96 @@ And `gate_check_summary` SHALL retain the failed check and observed value.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-CL-6791 and SCENARIO-CL-6791-* | Implemented: `python/carnot/experiment_6791_compositional_online_constraint_routing_ab.py`; `scripts/experiments/experiment_6791_compositional_online_constraint_routing_ab.py`; terminal artifact `results/experiment_6791_compositional_online_constraint_routing_ab.json`. | Implemented: `tests/python/test_experiment_6791_compositional_online_constraint_routing_ab.py`. |
+
+## REQ-CL-6792: Independent CSL Causal And Safety Cold Audit
+
+Given Exp6791 claims a complete compositional self-learning comparison,
+When Exp6792 runs for planning date 20260830,
+Then it SHALL read checked-in evidence in a fresh CPU process without an LLM.
+It SHALL not import Exp6791 producer code or trust its headline aggregates.
+It SHALL write
+`results/experiment_6792_csl_causal_safety_cold_audit.json`.
+
+Before replay, Exp6792 SHALL require `compositional_csl_completed=true`, one
+complete row for each event, arm, and all five orders, exact source hashes,
+raw parent and new-state transaction byte snapshots, and exact receipt hashes.
+One missing prerequisite SHALL stop the audit before causal or safety replay.
+The blocked artifact SHALL use status `complete_blocked_csl_causal_audit`.
+Its `gate_check_summary` SHALL name each failed check and its observed value.
+
+A complete audit SHALL recompute writes, later reads, action changes, component
+attribution, utility, route cost, retention, hard-case harm, support, and
+order-level confidence bounds from raw rows. For each credited factor, it SHALL
+replay the later event with only that factor disabled. Causal credit SHALL
+require a changed selected route and an exact-receipt utility difference. It
+SHALL also replay every event with retrieval disabled.
+
+A complete audit SHALL reject outcome-false poison, relation poison, stale
+receipts, duplicate IDs, and tombstone reappearance. No attack SHALL be
+admitted or change an action. It SHALL restart at frozen transaction
+boundaries, require exact state bytes and next actions, force capacity
+eviction, and recheck old-family retention and hard cases after each phase.
+It SHALL trigger rollback with one controlled harmful update. Rollback SHALL
+restore prior bytes, retrievals, route action, and metrics. Attack evidence
+SHALL remain in the artifact.
+
+The artifact SHALL include `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_hashes`, `rows`, `cold_recomputed_metrics`,
+`headline_differences`, `credited_factor_count`,
+`factors_with_changed_action_witness`, `retrieval_disable_effects`,
+`poison_attack_results`, `admitted_poison_count`, `influenced_poison_count`,
+`restart_byte_identity`, `restart_action_identity`,
+`capacity_eviction_receipts`, `retention_after_phase`,
+`hard_case_harm_after_phase`, `rollback_byte_identity`,
+`rollback_action_identity`, `source_verdict_supported`,
+`csl_causal_audit_completed`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `inference_substrate` SHALL equal
+`fresh-process CPU causal and safety replay, no LLM`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL use only `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+`honest_verdict` SHALL start with an approved terminal prefix.
+
+### SCENARIO-CL-6792-PRECONDITIONS: Missing Raw Bytes Stop The Audit
+
+Given a source omits parent or new-state transaction byte snapshots,
+When Exp6792 checks its prerequisites,
+Then it SHALL record the missing byte fields and stop before all replay work.
+
+### SCENARIO-CL-6792-COLD-RECOMPUTE: Raw Rows Own Every Metric
+
+Given all prerequisites pass,
+When Exp6792 recomputes the comparison,
+Then raw event rows and exact receipts SHALL own every metric and order effect.
+
+### SCENARIO-CL-6792-CAUSAL: Credit Requires An Action And Utility Witness
+
+Given one factor receives causal credit,
+When only that factor is disabled against the same bytes,
+Then the selected route and exact-receipt utility SHALL both change.
+
+### SCENARIO-CL-6792-SAFETY: Attacks Cannot Enter Or Influence Memory
+
+Given each preregistered poison, stale, duplicate, and tombstone attack,
+When admission and later retrieval run,
+Then admitted and influenced poison counts SHALL both remain zero.
+
+### SCENARIO-CL-6792-DURABILITY: Restart, Eviction, And Rollback Preserve State
+
+Given frozen boundaries, capacity pressure, and one harmful update,
+When Exp6792 restarts and rolls back,
+Then bytes, next actions, retrievals, retention, hard cases, and metrics SHALL
+match their required prior values.
+
+### SCENARIO-CL-6792-TERMINAL: Completion Does Not Depend On Effect Sign
+
+Given all audit rows and controls finish,
+When the source effect is positive, null, or rejected,
+Then `csl_causal_audit_completed` SHALL be true. Positive support SHALL require
+every source, causal, durability, and safety gate to pass.
+
+## Implementation Status (REQ-CL-6792)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6792 and SCENARIO-CL-6792-* | Planned: `python/carnot/experiment_6792_csl_causal_safety_cold_audit.py`; `scripts/experiments/experiment_6792_csl_causal_safety_cold_audit.py`; terminal artifact `results/experiment_6792_csl_causal_safety_cold_audit.json`. | Planned: `tests/python/test_experiment_6792_csl_causal_safety_cold_audit.py`. |

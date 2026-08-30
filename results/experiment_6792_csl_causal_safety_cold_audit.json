@@ -1,0 +1,211 @@
+{
+  "admitted_poison_count": 0,
+  "capacity_eviction_receipts": [],
+  "cold_recomputed_metrics": {},
+  "credited_factor_count": 0,
+  "csl_causal_audit_completed": false,
+  "duration_s": 0.300828,
+  "experiment_id": "experiment_6792_csl_causal_safety_cold_audit",
+  "factors_with_changed_action_witness": [],
+  "field_principles": {
+    "admitted_poison_count": "No poison can enter durable memory.",
+    "capacity_eviction_receipts": "Eviction receipts expose every removed record.",
+    "cold_recomputed_metrics": "Raw rows must own metrics after prerequisites pass.",
+    "credited_factor_count": "The count includes only action and utility witnesses.",
+    "csl_causal_audit_completed": "Completion depends on work, not effect sign.",
+    "duration_s": "Measured wall time shows that prerequisite checks ran.",
+    "experiment_id": "The stable ID binds the artifact to this cold audit.",
+    "factors_with_changed_action_witness": "Each credited factor needs an action witness.",
+    "field_principles": "Each field states the evidence boundary it protects.",
+    "gate_check_summary": "Each failure keeps its expected and observed value.",
+    "hard_case_harm_after_phase": "Hard cases are checked after each phase.",
+    "headline_differences": "Cold values must be compared with source headlines.",
+    "honest_verdict": "A terminal prefix lets automation classify the result.",
+    "inference_substrate": "The audit uses a fresh CPU process and no LLM.",
+    "influenced_poison_count": "No poison can change a later action.",
+    "poison_attack_results": "Attack rows must remain visible after rejection.",
+    "random_seed": "The fixed seed owns later replay and confidence sampling.",
+    "reproducibility_checksum": "The checksum detects drift in stable audit evidence.",
+    "restart_action_identity": "Restarted state must choose the same next action.",
+    "restart_byte_identity": "Restarted state must match exact prior bytes.",
+    "retention_after_phase": "Old-family retention is checked after each phase.",
+    "retrieval_disable_effects": "The global control isolates retrieval effects.",
+    "rollback_action_identity": "Rollback must restore retrieval and action behavior.",
+    "rollback_byte_identity": "Rollback must restore exact prior bytes.",
+    "rows": "Rows hold source replays, causal controls, and attacks after admission.",
+    "run_date": "The fixed date prevents silent protocol drift.",
+    "schema": "The version makes incompatible audit payloads fail closed.",
+    "source_artifact_hashes": "Exact file hashes bind every checked-in source.",
+    "source_verdict_supported": "Positive support needs every causal and safety gate.",
+    "status": "The status separates a source block from a complete replay.",
+    "verdict_class": "A closed class prevents an ambiguous terminal claim.",
+    "verifier_is_oracle": "False keeps the audit separate from outcome authority."
+  },
+  "gate_check_summary": {
+    "all_passed": false,
+    "checks": [
+      {
+        "check": "compositional_csl_completed",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "complete_per_event_rows",
+        "expected": {
+          "complete_rows": 4800,
+          "row_count": 4800,
+          "singleton_cells": 4800,
+          "transaction_receipt_count": 4800,
+          "unique_cells": 4800,
+          "unique_row_keys": 4800
+        },
+        "observed": {
+          "complete_rows": 4800,
+          "row_count": 4800,
+          "singleton_cells": 4800,
+          "transaction_receipt_count": 4800,
+          "unique_cells": 4800,
+          "unique_row_keys": 4800
+        },
+        "passed": true
+      },
+      {
+        "check": "source_hashes",
+        "expected": {
+          "artifact_hashes": {
+            "experiment_6750": "sha256:0982dc35c3fe4ba084d5b64b2909750bedc5c33602922d4eb52d8ac9adc9d0d0",
+            "experiment_6763": "sha256:134025c66c4b08b57be2b73013a8b35d3c0a4c9b33d9b77ea3542b3c2260a7e0",
+            "experiment_6790": "sha256:2f2cf984ac9d4dcf4be0fc211329022bc773d3cfd88bb861aaec474e9c53aeb4",
+            "experiment_6791": "sha256:bf07395629a10ec9ec434c2f8bac809ac9729e921ebf1e55f10268ea10e27d99"
+          },
+          "exp6791_source_artifact_hash": "sha256:2f2cf984ac9d4dcf4be0fc211329022bc773d3cfd88bb861aaec474e9c53aeb4"
+        },
+        "observed": {
+          "artifact_hashes": {
+            "experiment_6750": "sha256:0982dc35c3fe4ba084d5b64b2909750bedc5c33602922d4eb52d8ac9adc9d0d0",
+            "experiment_6763": "sha256:134025c66c4b08b57be2b73013a8b35d3c0a4c9b33d9b77ea3542b3c2260a7e0",
+            "experiment_6790": "sha256:2f2cf984ac9d4dcf4be0fc211329022bc773d3cfd88bb861aaec474e9c53aeb4",
+            "experiment_6791": "sha256:bf07395629a10ec9ec434c2f8bac809ac9729e921ebf1e55f10268ea10e27d99"
+          },
+          "exp6791_source_artifact_hash": "sha256:2f2cf984ac9d4dcf4be0fc211329022bc773d3cfd88bb861aaec474e9c53aeb4"
+        },
+        "passed": true
+      },
+      {
+        "check": "transaction_byte_snapshots",
+        "expected": {
+          "byte_hash_matches": 3189,
+          "committed_receipts": 3189,
+          "new_state_byte_snapshots": 3189,
+          "parent_byte_snapshots": 3189
+        },
+        "observed": {
+          "byte_hash_matches": 0,
+          "committed_receipts": 3189,
+          "new_state_byte_snapshots": 0,
+          "parent_byte_snapshots": 0
+        },
+        "passed": false
+      },
+      {
+        "check": "exact_receipt_hashes",
+        "expected": {
+          "expected_rows": 4800,
+          "matching_rows": 4800
+        },
+        "observed": {
+          "expected_rows": 4800,
+          "matching_rows": 4800
+        },
+        "passed": true
+      },
+      {
+        "check": "all_five_orders",
+        "expected": {
+          "order_count": 5,
+          "order_hashes": {
+            "order_1": "sha256:eb1b5e209eb223964c68e0b479ed5f0c339a41c40fdbb7bf743c831722b55183",
+            "order_2": "sha256:58c7ecf2ce649ad058c96d192c8667945f11ebe185516855f504417e67f08ddd",
+            "order_3": "sha256:259b36180d68a5c7214078f3659c42b55bb663ee4ab82ec1b81226c7c815ccf4",
+            "order_4": "sha256:b3a2752bf52c4ca72ed084b21ada328a154b4504979f369f7cc6a9682704cf39",
+            "order_5": "sha256:ac41cb8ac831556cca9e2fb2a0ebebd966cb567be7e294ca8201d0f81f32d14e"
+          },
+          "rows_per_order": {
+            "order_1": 960,
+            "order_2": 960,
+            "order_3": 960,
+            "order_4": 960,
+            "order_5": 960
+          }
+        },
+        "observed": {
+          "order_count": 5,
+          "order_hashes": {
+            "order_1": "sha256:eb1b5e209eb223964c68e0b479ed5f0c339a41c40fdbb7bf743c831722b55183",
+            "order_2": "sha256:58c7ecf2ce649ad058c96d192c8667945f11ebe185516855f504417e67f08ddd",
+            "order_3": "sha256:259b36180d68a5c7214078f3659c42b55bb663ee4ab82ec1b81226c7c815ccf4",
+            "order_4": "sha256:b3a2752bf52c4ca72ed084b21ada328a154b4504979f369f7cc6a9682704cf39",
+            "order_5": "sha256:ac41cb8ac831556cca9e2fb2a0ebebd966cb567be7e294ca8201d0f81f32d14e"
+          },
+          "rows_per_order": {
+            "order_1": 960,
+            "order_2": 960,
+            "order_3": 960,
+            "order_4": 960,
+            "order_5": 960
+          }
+        },
+        "passed": true
+      }
+    ],
+    "failed_checks": [
+      "transaction_byte_snapshots"
+    ],
+    "failures": [
+      {
+        "check": "transaction_byte_snapshots",
+        "expected": {
+          "byte_hash_matches": 3189,
+          "committed_receipts": 3189,
+          "new_state_byte_snapshots": 3189,
+          "parent_byte_snapshots": 3189
+        },
+        "observed": {
+          "byte_hash_matches": 0,
+          "committed_receipts": 3189,
+          "new_state_byte_snapshots": 0,
+          "parent_byte_snapshots": 0
+        },
+        "passed": false
+      }
+    ]
+  },
+  "hard_case_harm_after_phase": {},
+  "headline_differences": {},
+  "honest_verdict": "complete_blocked_csl_causal_audit: transaction_byte_snapshots expected {'committed_receipts': 3189, 'parent_byte_snapshots': 3189, 'new_state_byte_snapshots': 3189, 'byte_hash_matches': 3189}, observed {'committed_receipts': 3189, 'parent_byte_snapshots': 0, 'new_state_byte_snapshots': 0, 'byte_hash_matches': 0}",
+  "inference_substrate": "fresh-process CPU causal and safety replay, no LLM",
+  "influenced_poison_count": 0,
+  "poison_attack_results": [],
+  "random_seed": 6792030,
+  "reproducibility_checksum": "sha256:47a335bdf0b7715ba9eb364426dc1f8b94710b711cf254b138de5a5f3f65ee16",
+  "restart_action_identity": null,
+  "restart_byte_identity": null,
+  "retention_after_phase": {},
+  "retrieval_disable_effects": [],
+  "rollback_action_identity": null,
+  "rollback_byte_identity": null,
+  "rows": [],
+  "run_date": "20260830",
+  "schema": "carnot.experiment_6792.csl_causal_safety_cold_audit.v1",
+  "source_artifact_hashes": {
+    "experiment_6750": "sha256:0982dc35c3fe4ba084d5b64b2909750bedc5c33602922d4eb52d8ac9adc9d0d0",
+    "experiment_6763": "sha256:134025c66c4b08b57be2b73013a8b35d3c0a4c9b33d9b77ea3542b3c2260a7e0",
+    "experiment_6790": "sha256:2f2cf984ac9d4dcf4be0fc211329022bc773d3cfd88bb861aaec474e9c53aeb4",
+    "experiment_6791": "sha256:bf07395629a10ec9ec434c2f8bac809ac9729e921ebf1e55f10268ea10e27d99"
+  },
+  "source_verdict_supported": false,
+  "status": "complete_blocked_csl_causal_audit",
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}
