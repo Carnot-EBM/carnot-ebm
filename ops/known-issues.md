@@ -7221,6 +7221,58 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-08-30 (outer-loop) — THREE SHIPPED TOOL/SUPERVISOR CAPABILITIES HAVE NO PATH TO EVIDENCE
+
+All three are built, default-off, and registered `unevaluated` in `ops/arc_flag_ledger.yaml`.
+None can be promoted or retired, because nothing queued produces the measurement each needs.
+The plans exist in `ops/status.md` prose, which the planner does not read as a task source.
+
+**1. The trajectory supervisor cannot fire at its default window.** `_make_trajectory_supervisor`
+reads `CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW` defaulting to **400**, which is the action budget
+— a stagnation window essentially cannot complete before a run ends. The refinement tool
+(REQ-ARC-WMTE-6720) needs **10 firings per arm** and has 2, so it correctly reports INSUFFICIENT
+EVIDENCE and will keep doing so forever at this setting.
+
+*Task:* run supervised ARC runs at `WINDOW=120` and re-run `scripts/arc_supervisor_refine.py`.
+Cheap, because the supervisor runs in SHADOW mode on every run (REQ-ARC-WMTE-6660) — lowering the
+window populates the ledger WITHOUT changing scored behaviour. This is the lowest-cost unlock of
+the three and it gates the other two's usefulness.
+
+**2. Tool-gap generation has no live rows.** REQ-ARC-WMTE-6770 landed 2026-08-29; the capture path
+is wired into the primary live induction, the candidate registry ships empty by design, and NO
+result artifact yet carries `tool_gap_events`. The mechanism was fixed after review found no env
+configuration let the agent both run the loop and record gaps — but "fixed" and "observed
+working" are different states, and this is the former.
+
+*Task:* one live ARC run with `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse`, then confirm
+`tool_gap_events` reaches an artifact and `scripts/arc_tool_gap_refine.py` ingests it. Verifying
+the wiring fires end-to-end is the deliverable; finding an actual gap is a bonus.
+
+**3. The tool loop has no shipping evidence, and the holdout A/B cannot supply it.** The
+selfparse transport gate PASSED at ceiling (20/20 attempt, 20/20 parse-to-dispatch), proving the
+transport RUNS — never that it HELPS. `submission_kernel/main.py:225` correctly still pins
+`repair`. The resumed holdout A/B banked 38 of 39 tool-arm cells before the process was killed,
+but it scores holdout generalization and records NO level progress, and per the 2026-08-29
+operator directive run-time memorization is acceptable when levels are banked. So a holdout
+result cannot decide the kernel flip.
+
+*Task:* the actions-to-progress A/B scoped in
+`docs/research-notes/actions-to-progress-tool-loop-ab-scope-2026-08-30.md` — control (loop unset)
+versus treatment (`selfparse`), metric actions-to-level-up, memorization recorded as an
+observation not a penalty. NOTE THE TRAP recorded there: `apply_arm` saves and restores exactly
+three env vars and not `CARNOT_ARC_INDUCE_TOOL_LOOP`, so setting it outside that mechanism leaks
+into the control arm and compares a loop against a loop.
+
+**Why this is one entry and not three.** They are one dependency chain: tool use needs the
+actions-to-progress result to justify a kernel flip; the supervisor's fourth arm
+(`tool_loop_reinduction`, REQ-ARC-WMTE-6760) is gated on that same evidence; and tool-gap
+generation needs live runs with the loop ON to have anything to analyse. Item 1 is cheapest and
+unblocks the ledger the other two will be judged against.
+
+**Do NOT close any of these by enabling a flag.** Every one is default-off deliberately, and the
+point is to measure before trusting, not to ship on a gate that only proved the mechanism runs.
+
+
 ### NEW 2026-07-27 — RUNNING THE FULL PYTHON TEST SUITE MUTATES 45 TRACKED ARTIFACTS AND STRIPS FABRICATION-GATE STAMPS (pre-existing; found, reported, NOT fixed)
 
 **Symptom.** `pytest tests/python` rewrites tracked files under `results/` while it runs. Observed

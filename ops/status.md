@@ -1,5 +1,47 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-08-30 (outer-loop: the three shipped tool/supervisor
+capabilities were audited for whether they can actually produce evidence. All
+three are built, default-off, and `unevaluated` in the flag ledger; none had a
+queued path to the measurement it needs. Queued as a single MANDATORY-NEXT-MILESTONE
+entry in `ops/known-issues.md` dated 2026-08-30, because the planner reads that
+file as a task source and does NOT read this one.
+
+**What is actually blocked, and why:**
+
+1. **Supervisor cannot fire at its default window.** `_make_trajectory_supervisor`
+   defaults `CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW` to 400 — the action budget —
+   so a stagnation window cannot complete before a run ends. The refinement tool
+   needs 10 firings per arm and has 2, so INSUFFICIENT EVIDENCE is permanent at
+   this setting. Cheapest unlock of the three: the supervisor runs in SHADOW mode
+   on every run, so `WINDOW=120` fills the ledger without changing scored
+   behaviour.
+2. **Tool-gap generation has no live rows.** REQ-ARC-WMTE-6770 landed 2026-08-29
+   and no artifact yet carries `tool_gap_events`. The F2 review finding (no env
+   configuration let the agent both run the loop and record gaps) was fixed, but
+   fixed and observed-working are different states.
+3. **Tool use has no shipping evidence.** The selfparse gate proved the transport
+   RUNS (20/20 attempt, 20/20 parse-to-dispatch), not that it HELPS. The kernel
+   correctly still pins `repair`. The resumed holdout A/B banked 38/39 tool-arm
+   cells before being killed, but it scores holdout generalization with NO level
+   progress — and per the 2026-08-29 operator directive, run-time memorization is
+   acceptable when levels are banked, so a holdout result cannot decide the flip.
+
+**Corrections made while auditing this, both mine:** an earlier claim that this
+document's What's Next was "stale by 47 milestones" was WRONG — it read a
+historical block under a 2026-08-27 prior-update header as if current; the file is
+append-at-top with history preserved per never-prune. And an earlier claim that
+zero supervisor redirects had ever fired was WRONG — it scanned `results/*.json`
+and missed `ops/arc_supervisor_refinement_ledger.json`, which the refinement tool
+actually reads: 9 receipts, 6 redirects, 2 fired / 1 helped per arm. Below the
+evidence floor is a different and better state than empty.
+
+**A/B status:** `results/holdout_equalized_ab_selfparse_20260829` holds 38 of 39
+tool-arm cells (selfparse transport, GPU 1). The process died ~19:21 local with no
+identifiable killer — see REQ-INFRA-6830, which makes the next such death
+self-describing rather than naming a culprit we cannot evidence. The data is
+intact and usable; the control arm was never run.)
+
 **Last Updated:** 2026-08-29 (REQ-CONDUCTOR-GATECASCADE-1: gate-cascade
 settlement shipped from a worktree session after the evening GATE_BLOCK
 cycling. Root confirmed: exp6756's gate read a FROZEN shortfall (21 < 24)
