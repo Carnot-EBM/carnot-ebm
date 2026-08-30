@@ -1,0 +1,1856 @@
+{
+  "schema": "carnot.experiment_6764.arc_exclusive_load_preflight.v1",
+  "experiment": 6764,
+  "title": "Exclusive ARC 32K CUDA load and selfparse admission preflight",
+  "run_date": "20260830",
+  "status": "complete",
+  "field_principles": {
+    "schema": "A versioned shape lets readers reject incompatible receipts.",
+    "experiment": "The identifier binds this file to Exp6764.",
+    "title": "The title states the admission-only scope.",
+    "run_date": "The planning date anchors the requested hardware check.",
+    "status": "The status separates ready, partial, and blocked runs.",
+    "field_principles": "Each field states why it is needed.",
+    "inference_substrate": "The value excludes CPU, remote, and substituted inference.",
+    "duration_s": "Monotonic wall time makes real work visible.",
+    "random_seed": "The fixed seed makes model requests repeatable.",
+    "reproducibility_checksum": "The checksum detects receipt or input drift.",
+    "models_used": "Exact paths and hashes prevent model substitution.",
+    "live_model_invoked": "Readiness requires both real local decodes.",
+    "rows": "One row per model phase keeps lifecycle evidence atomic.",
+    "device_inventory_before": "The initial inventory exposes unrelated work and capacity.",
+    "device_selection_receipt": "The receipt proves frozen least-used selection.",
+    "lease_owner_receipts": "PID and start time bind each lease to its worker.",
+    "phase_rows": "Ordered monotonic rows prove the complete lease lifecycle.",
+    "gpu_receipts": "Separate model receipts prevent timing and evidence pooling.",
+    "runtime_context_by_model": "Observed context distinguishes load evidence from intent.",
+    "production_selfparse_receipt": "Parser, dispatch, bound, and transcript evidence prove the live route.",
+    "owned_processes_terminated": "A true value rules out an owned process leak.",
+    "lease_release_receipts": "Durable releases prove the selected device was returned.",
+    "vram_recovery_receipts": "Before and after samples prove owned VRAM returned.",
+    "unrelated_processes_signaled": "An empty list proves the no-preemption boundary.",
+    "arc_exclusive_load_ready": "The all-admission boolean requires both complete canaries.",
+    "claim_boundary": "The boundary prevents admission evidence from becoming a quality claim.",
+    "gate_check_summary": "Blocked results retain each failed check and observed value.",
+    "verifier_is_oracle": "False states that this transport receipt is not a correctness oracle.",
+    "verdict_class": "A closed class makes the result machine-readable.",
+    "honest_verdict": "The terminal text states readiness or an owned block.",
+    "preconditions_checked": "The full gate record explains why workers did or did not start.",
+    "owned_process_receipts": "Process identities show which task-owned PIDs ended."
+  },
+  "inference_substrate": "task-owned local llama.cpp CUDA GGUF",
+  "duration_s": 97.939927,
+  "random_seed": 6764,
+  "reproducibility_checksum": "sha256:ed95f61d2180115276e5c2eb045e302a32f7b470cffcd6c9f97bef7cf440d6e6",
+  "models_used": [
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "repo_substr": "Qwen3.8-27B",
+      "filename": "Qwen3.8-27B-Q4_K_M.gguf",
+      "expected_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "required_vram_mb": 17815,
+      "max_tokens": 1024,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "model_size_bytes": 17106775008,
+      "resolved": true,
+      "tokenizer": {
+        "source": "llama.cpp_embedded_gguf",
+        "loadable": true,
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)"
+      }
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "repo_substr": "Qwen3.6-35B-A3B",
+      "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "expected_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "required_vram_mb": 22610,
+      "max_tokens": 512,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_size_bytes": 22134528992,
+      "resolved": true,
+      "tokenizer": {
+        "source": "llama.cpp_embedded_gguf",
+        "loadable": true,
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)"
+      }
+    }
+  ],
+  "live_model_invoked": true,
+  "rows": [
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 0,
+      "phase": "preflight",
+      "previous_phase": null,
+      "monotonic_ns": 341948474807611,
+      "event_checksum": "sha256:61be9aad2b795e984d03396ba3387de271e839a9ef80de6572f447020274e49c",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 1,
+      "phase": "admitted",
+      "previous_phase": "preflight",
+      "monotonic_ns": 341948475206229,
+      "event_checksum": "sha256:3370fe08a7cfb32f72dc7e3d2c4be9ddae39b1e5f8457ac3bd4547327c1f337d",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 2,
+      "phase": "loading",
+      "previous_phase": "admitted",
+      "monotonic_ns": 341948476643433,
+      "event_checksum": "sha256:3521bdd2b4be69c1fce21d720db1a975ff4c7fb476c018c9bb97f4fb644c2a00",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 3,
+      "phase": "resident",
+      "previous_phase": "loading",
+      "monotonic_ns": 341960628949982,
+      "event_checksum": "sha256:46867d302acb2167835923824cdd0d4968f953759a0674a9abe7c4356c92dcc8",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 4,
+      "phase": "inferencing",
+      "previous_phase": "resident",
+      "monotonic_ns": 341960629804815,
+      "event_checksum": "sha256:075c2e034ec41bb121888d27f44bfc1f044ad1a6b483da3c4383766d77178c05",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 5,
+      "phase": "unloading",
+      "previous_phase": "inferencing",
+      "monotonic_ns": 341971591389275,
+      "event_checksum": "sha256:4f2e8e45babfe66d73dac63e5e04a7bfc37356d73bc0166c3e30bd21d9efc1ac",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 6,
+      "phase": "validating",
+      "previous_phase": "unloading",
+      "monotonic_ns": 341972060630208,
+      "event_checksum": "sha256:e4fecc9dfb6f7524672b7fbdaad1d2e704d465838740fad0ec53a17e4fbf64a2",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 7,
+      "phase": "terminal_complete",
+      "previous_phase": "validating",
+      "monotonic_ns": 341972061026010,
+      "event_checksum": "sha256:de385a0911f70ab8a4370f568525e24dd8052cca38df2117332f286d09eee550",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 0,
+      "phase": "preflight",
+      "previous_phase": null,
+      "monotonic_ns": 341972924917554,
+      "event_checksum": "sha256:e48d38d78b14e85f385b52038aaf5667f53d13345b7dec2b410b64d688540bf7",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 1,
+      "phase": "admitted",
+      "previous_phase": "preflight",
+      "monotonic_ns": 341972925288169,
+      "event_checksum": "sha256:0ad0eb0ef913a753b211243eab8ff1f3d7290f72a3048b007039fef926d2828f",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 2,
+      "phase": "loading",
+      "previous_phase": "admitted",
+      "monotonic_ns": 341972926652296,
+      "event_checksum": "sha256:bbb3b1f8c67d7e481bf49ab90595d4c93a71636a4a46c2540dd75e443789136c",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 3,
+      "phase": "resident",
+      "previous_phase": "loading",
+      "monotonic_ns": 341985069296290,
+      "event_checksum": "sha256:ceb4a6e0796ba818444bfa46c20596ff5c14b382815db433b5acd2a0ac9fa214",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 4,
+      "phase": "inferencing",
+      "previous_phase": "resident",
+      "monotonic_ns": 341985070130955,
+      "event_checksum": "sha256:949c93e19326bf00a6f336cf6b0bcbc82df0e617fc3903bda1b3544cb22f977c",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 5,
+      "phase": "unloading",
+      "previous_phase": "inferencing",
+      "monotonic_ns": 341988754916397,
+      "event_checksum": "sha256:65603dcf074642f882f259c393613f0984121e0bcb2cb5e5a395f6cf1dec84c2",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 6,
+      "phase": "validating",
+      "previous_phase": "unloading",
+      "monotonic_ns": 341989228699034,
+      "event_checksum": "sha256:bdae01ec4fc52cab901c625d5d83fb5b3cfb99ff05deb1f4b7b33b0636817b17",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 7,
+      "phase": "terminal_complete",
+      "previous_phase": "validating",
+      "monotonic_ns": 341989229227164,
+      "event_checksum": "sha256:0e1bd4cd35fbe17664e01f35046ab1dbb18b102448c789418203fc19e0dee1ee",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    }
+  ],
+  "device_inventory_before": [
+    {
+      "index": 0,
+      "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "name": "NVIDIA GeForce RTX 3090",
+      "memory_total_mb": 24576,
+      "memory_used_mb": 18155,
+      "memory_free_mb": 5969,
+      "temperature_c": 80,
+      "utilization_pct": 98,
+      "active_compute_processes": [
+        {
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "pid": 2936366,
+          "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "used_memory_mb": 17884
+        },
+        {
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "pid": 3261882,
+          "process_name": ".venv/bin/python",
+          "used_memory_mb": 256
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "name": "NVIDIA GeForce RTX 3090",
+      "memory_total_mb": 24576,
+      "memory_used_mb": 266,
+      "memory_free_mb": 23859,
+      "temperature_c": 52,
+      "utilization_pct": 0,
+      "active_compute_processes": [
+        {
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "pid": 3261882,
+          "process_name": ".venv/bin/python",
+          "used_memory_mb": 256
+        }
+      ]
+    }
+  ],
+  "device_selection_receipt": {
+    "rank_policy": [
+      "free_vram_desc",
+      "temperature_asc",
+      "active_compute_asc"
+    ],
+    "frozen_free_vram_threshold_mb": 22610,
+    "evaluated_devices": [
+      {
+        "index": 0,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_total_mb": 24576,
+        "memory_used_mb": 18155,
+        "memory_free_mb": 5969,
+        "temperature_c": 80,
+        "utilization_pct": 98,
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 2936366,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 17884
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3261882,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ],
+        "active_compute_count": 2,
+        "eligible": false,
+        "ineligibility_reasons": [
+          "free_vram_below_frozen_floor"
+        ]
+      },
+      {
+        "index": 1,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_total_mb": 24576,
+        "memory_used_mb": 266,
+        "memory_free_mb": 23859,
+        "temperature_c": 52,
+        "utilization_pct": 0,
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3261882,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ],
+        "active_compute_count": 1,
+        "eligible": true,
+        "ineligibility_reasons": []
+      }
+    ],
+    "ranked_eligible_devices": [
+      {
+        "index": 1,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_total_mb": 24576,
+        "memory_used_mb": 266,
+        "memory_free_mb": 23859,
+        "temperature_c": 52,
+        "utilization_pct": 0,
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3261882,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ],
+        "active_compute_count": 1,
+        "eligible": true,
+        "ineligibility_reasons": []
+      }
+    ],
+    "eligible_device_count": 1,
+    "selected_device": {
+      "index": 1,
+      "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "name": "NVIDIA GeForce RTX 3090",
+      "memory_total_mb": 24576,
+      "memory_used_mb": 266,
+      "memory_free_mb": 23859,
+      "temperature_c": 52,
+      "utilization_pct": 0,
+      "active_compute_processes": [
+        {
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "pid": 3261882,
+          "process_name": ".venv/bin/python",
+          "used_memory_mb": 256
+        }
+      ],
+      "active_compute_count": 1,
+      "eligible": true,
+      "ineligibility_reasons": []
+    }
+  },
+  "lease_owner_receipts": [
+    {
+      "task_id": "exp6764-Qwen3.8-27B-GGUF",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "pid": 3261996,
+      "pid_start_ticks": 34194774,
+      "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+      "argv_digest": "sha256:94aab322fcad8cffc56d31861bf0e293bc20609ce63b400b8f9ee38de476477f",
+      "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "token_digest": "sha256:fbf5548cb8aa8cb0ea9a7966e9fe11abb31917e2acc29528e03a814142bb63f5",
+      "token_opaque": true,
+      "token_length": 43,
+      "acquired_monotonic_ns": 341948474807611,
+      "expires_monotonic_ns": 343148474807611,
+      "recovery": {
+        "performed": false,
+        "signals_sent": []
+      },
+      "signals_sent": []
+    },
+    {
+      "task_id": "exp6764-Qwen3.6-35B-A3B-GGUF",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "pid": 3262432,
+      "pid_start_ticks": 34197221,
+      "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+      "argv_digest": "sha256:38e138f08f5ab211a87139f9c4d7e366961417ef4daa5030e3601511bf5b12d5",
+      "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+      "token_opaque": true,
+      "token_length": 43,
+      "acquired_monotonic_ns": 341972924917554,
+      "expires_monotonic_ns": 343172924917554,
+      "recovery": {
+        "performed": false,
+        "signals_sent": []
+      },
+      "signals_sent": []
+    }
+  ],
+  "phase_rows": [
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 0,
+      "phase": "preflight",
+      "previous_phase": null,
+      "monotonic_ns": 341948474807611,
+      "event_checksum": "sha256:61be9aad2b795e984d03396ba3387de271e839a9ef80de6572f447020274e49c",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 1,
+      "phase": "admitted",
+      "previous_phase": "preflight",
+      "monotonic_ns": 341948475206229,
+      "event_checksum": "sha256:3370fe08a7cfb32f72dc7e3d2c4be9ddae39b1e5f8457ac3bd4547327c1f337d",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 2,
+      "phase": "loading",
+      "previous_phase": "admitted",
+      "monotonic_ns": 341948476643433,
+      "event_checksum": "sha256:3521bdd2b4be69c1fce21d720db1a975ff4c7fb476c018c9bb97f4fb644c2a00",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 3,
+      "phase": "resident",
+      "previous_phase": "loading",
+      "monotonic_ns": 341960628949982,
+      "event_checksum": "sha256:46867d302acb2167835923824cdd0d4968f953759a0674a9abe7c4356c92dcc8",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 4,
+      "phase": "inferencing",
+      "previous_phase": "resident",
+      "monotonic_ns": 341960629804815,
+      "event_checksum": "sha256:075c2e034ec41bb121888d27f44bfc1f044ad1a6b483da3c4383766d77178c05",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 5,
+      "phase": "unloading",
+      "previous_phase": "inferencing",
+      "monotonic_ns": 341971591389275,
+      "event_checksum": "sha256:4f2e8e45babfe66d73dac63e5e04a7bfc37356d73bc0166c3e30bd21d9efc1ac",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 6,
+      "phase": "validating",
+      "previous_phase": "unloading",
+      "monotonic_ns": 341972060630208,
+      "event_checksum": "sha256:e4fecc9dfb6f7524672b7fbdaad1d2e704d465838740fad0ec53a17e4fbf64a2",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "ordinal": 7,
+      "phase": "terminal_complete",
+      "previous_phase": "validating",
+      "monotonic_ns": 341972061026010,
+      "event_checksum": "sha256:de385a0911f70ab8a4370f568525e24dd8052cca38df2117332f286d09eee550",
+      "owner_pid": 3261996,
+      "owner_pid_start_ticks": 34194774,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 0,
+      "phase": "preflight",
+      "previous_phase": null,
+      "monotonic_ns": 341972924917554,
+      "event_checksum": "sha256:e48d38d78b14e85f385b52038aaf5667f53d13345b7dec2b410b64d688540bf7",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 1,
+      "phase": "admitted",
+      "previous_phase": "preflight",
+      "monotonic_ns": 341972925288169,
+      "event_checksum": "sha256:0ad0eb0ef913a753b211243eab8ff1f3d7290f72a3048b007039fef926d2828f",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 2,
+      "phase": "loading",
+      "previous_phase": "admitted",
+      "monotonic_ns": 341972926652296,
+      "event_checksum": "sha256:bbb3b1f8c67d7e481bf49ab90595d4c93a71636a4a46c2540dd75e443789136c",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 3,
+      "phase": "resident",
+      "previous_phase": "loading",
+      "monotonic_ns": 341985069296290,
+      "event_checksum": "sha256:ceb4a6e0796ba818444bfa46c20596ff5c14b382815db433b5acd2a0ac9fa214",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 4,
+      "phase": "inferencing",
+      "previous_phase": "resident",
+      "monotonic_ns": 341985070130955,
+      "event_checksum": "sha256:949c93e19326bf00a6f336cf6b0bcbc82df0e617fc3903bda1b3544cb22f977c",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 5,
+      "phase": "unloading",
+      "previous_phase": "inferencing",
+      "monotonic_ns": 341988754916397,
+      "event_checksum": "sha256:65603dcf074642f882f259c393613f0984121e0bcb2cb5e5a395f6cf1dec84c2",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 6,
+      "phase": "validating",
+      "previous_phase": "unloading",
+      "monotonic_ns": 341989228699034,
+      "event_checksum": "sha256:bdae01ec4fc52cab901c625d5d83fb5b3cfb99ff05deb1f4b7b33b0636817b17",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "ordinal": 7,
+      "phase": "terminal_complete",
+      "previous_phase": "validating",
+      "monotonic_ns": 341989229227164,
+      "event_checksum": "sha256:0e1bd4cd35fbe17664e01f35046ab1dbb18b102448c789418203fc19e0dee1ee",
+      "owner_pid": 3262432,
+      "owner_pid_start_ticks": 34197221,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    }
+  ],
+  "gpu_receipts": [
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "immutable_scored_arc_generator_full_load",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "inference_substrate": "task-owned local llama.cpp CUDA GGUF",
+      "llama_cpp_cuda": true,
+      "server_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "server_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "device": {
+        "index": 1,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_total_mb": 24576,
+        "memory_used_mb": 266,
+        "memory_free_mb": 23859,
+        "temperature_c": 52,
+        "utilization_pct": 0,
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3261882,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ],
+        "active_compute_count": 1,
+        "eligible": true,
+        "ineligibility_reasons": []
+      },
+      "worker_process": {
+        "pid": 3261996,
+        "pid_start_ticks": 34194774,
+        "exit_code": 0,
+        "absent_after_exit": true,
+        "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "sha256:1e126ec4c09a539f4abb7b4e5cb826a1875d37bbee55c2ec374f540df297f9c9",
+        "timeout_cleanup": {}
+      },
+      "model_process": {
+        "pid": 3262040,
+        "pid_start_ticks": 34194855,
+        "parent_pid": 3261996,
+        "executable": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "exit_code": 0,
+        "absent_after_exit": true
+      },
+      "lease_owner": {
+        "task_id": "exp6764-Qwen3.8-27B-GGUF",
+        "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "pid": 3261996,
+        "pid_start_ticks": 34194774,
+        "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+        "argv_digest": "sha256:94aab322fcad8cffc56d31861bf0e293bc20609ce63b400b8f9ee38de476477f",
+        "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "token_digest": "sha256:fbf5548cb8aa8cb0ea9a7966e9fe11abb31917e2acc29528e03a814142bb63f5",
+        "token_opaque": true,
+        "token_length": 43,
+        "acquired_monotonic_ns": 341948474807611,
+        "expires_monotonic_ns": 343148474807611,
+        "recovery": {
+          "performed": false,
+          "signals_sent": []
+        },
+        "signals_sent": []
+      },
+      "phase_history": [
+        {
+          "details": {
+            "recovery_performed": false
+          },
+          "event_checksum": "sha256:61be9aad2b795e984d03396ba3387de271e839a9ef80de6572f447020274e49c",
+          "monotonic_ns": 341948474807611,
+          "owner_token_digest": "sha256:fbf5548cb8aa8cb0ea9a7966e9fe11abb31917e2acc29528e03a814142bb63f5",
+          "phase": "preflight",
+          "previous_event_checksum": null,
+          "previous_phase": null
+        },
+        {
+          "details": {},
+          "event_checksum": "sha256:3370fe08a7cfb32f72dc7e3d2c4be9ddae39b1e5f8457ac3bd4547327c1f337d",
+          "monotonic_ns": 341948475206229,
+          "owner_token_digest": "sha256:fbf5548cb8aa8cb0ea9a7966e9fe11abb31917e2acc29528e03a814142bb63f5",
+          "phase": "admitted",
+          "previous_event_checksum": "sha256:61be9aad2b795e984d03396ba3387de271e839a9ef80de6572f447020274e49c",
+          "previous_phase": "preflight"
+        },
+        {
+          "details": {},
+          "event_checksum": "sha256:3521bdd2b4be69c1fce21d720db1a975ff4c7fb476c018c9bb97f4fb644c2a00",
+          "monotonic_ns": 341948476643433,
+          "owner_token_digest": "sha256:fbf5548cb8aa8cb0ea9a7966e9fe11abb31917e2acc29528e03a814142bb63f5",
+          "phase": "loading",
+          "previous_event_checksum": "sha256:3370fe08a7cfb32f72dc7e3d2c4be9ddae39b1e5f8457ac3bd4547327c1f337d",
+          "previous_phase": "admitted"
+        },
+        {
+          "details": {
+            "vram_resident_mb": 18127
+          },
+          "event_checksum": "sha256:46867d302acb2167835923824cdd0d4968f953759a0674a9abe7c4356c92dcc8",
+          "monotonic_ns": 341960628949982,
+          "owner_token_digest": "sha256:fbf5548cb8aa8cb0ea9a7966e9fe11abb31917e2acc29528e03a814142bb63f5",
+          "phase": "resident",
+          "previous_event_checksum": "sha256:3521bdd2b4be69c1fce21d720db1a975ff4c7fb476c018c9bb97f4fb644c2a00",
+          "previous_phase": "loading"
+        },
+        {
+          "details": {},
+          "event_checksum": "sha256:075c2e034ec41bb121888d27f44bfc1f044ad1a6b483da3c4383766d77178c05",
+          "monotonic_ns": 341960629804815,
+          "owner_token_digest": "sha256:fbf5548cb8aa8cb0ea9a7966e9fe11abb31917e2acc29528e03a814142bb63f5",
+          "phase": "inferencing",
+          "previous_event_checksum": "sha256:46867d302acb2167835923824cdd0d4968f953759a0674a9abe7c4356c92dcc8",
+          "previous_phase": "resident"
+        },
+        {
+          "details": {},
+          "event_checksum": "sha256:4f2e8e45babfe66d73dac63e5e04a7bfc37356d73bc0166c3e30bd21d9efc1ac",
+          "monotonic_ns": 341971591389275,
+          "owner_token_digest": "sha256:fbf5548cb8aa8cb0ea9a7966e9fe11abb31917e2acc29528e03a814142bb63f5",
+          "phase": "unloading",
+          "previous_event_checksum": "sha256:075c2e034ec41bb121888d27f44bfc1f044ad1a6b483da3c4383766d77178c05",
+          "previous_phase": "inferencing"
+        },
+        {
+          "details": {
+            "exit_code": 0,
+            "unload_observed": true,
+            "vram_after_mb": 266
+          },
+          "event_checksum": "sha256:e4fecc9dfb6f7524672b7fbdaad1d2e704d465838740fad0ec53a17e4fbf64a2",
+          "monotonic_ns": 341972060630208,
+          "owner_token_digest": "sha256:fbf5548cb8aa8cb0ea9a7966e9fe11abb31917e2acc29528e03a814142bb63f5",
+          "phase": "validating",
+          "previous_event_checksum": "sha256:4f2e8e45babfe66d73dac63e5e04a7bfc37356d73bc0166c3e30bd21d9efc1ac",
+          "previous_phase": "unloading"
+        },
+        {
+          "details": {},
+          "event_checksum": "sha256:de385a0911f70ab8a4370f568525e24dd8052cca38df2117332f286d09eee550",
+          "monotonic_ns": 341972061026010,
+          "owner_token_digest": "sha256:fbf5548cb8aa8cb0ea9a7966e9fe11abb31917e2acc29528e03a814142bb63f5",
+          "phase": "terminal_complete",
+          "previous_event_checksum": "sha256:e4fecc9dfb6f7524672b7fbdaad1d2e704d465838740fad0ec53a17e4fbf64a2",
+          "previous_phase": "validating"
+        }
+      ],
+      "lease_release": {
+        "released": true,
+        "phase": "terminal_complete",
+        "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "pid": 3261996,
+        "pid_start_ticks": 34194774,
+        "checksum": "sha256:995d5a028de8a2f88990b54c52f5e5256824915983539153f17b19dfbedb7bd7",
+        "signals_sent": []
+      },
+      "runtime_context": 32768,
+      "gpu_layers": {
+        "requested": 999,
+        "offloaded": 66,
+        "total": 66
+      },
+      "peak_owned_vram_mb": 17878,
+      "resident_owned_vram_mb": 17856,
+      "duration_s": 23.852402,
+      "live_model_invoked": true,
+      "first_token_observed": true,
+      "production_selfparse": {
+        "production_route": "induce_with_tool_loop/selfparse/dispatch_tool",
+        "raw_emission": "<tool_call>\n<function=find_objects>\n<parameter=t>\n0\n</parameter>\n<parameter=which>\nbefore\n</parameter>\n<parameter=predicate_code>\ndef accept(obj):\n    return obj['color'] in (2, 4) and obj['pixel_count'] >= 2\n</parameter>\n<parameter=max_objects>\n8\n</parameter>\n</function>\n</tool_call>",
+        "raw_emission_sha256": "sha256:7c5e45a4922e0fe9dbf9c29992ee8dd9162b6122435c9902536a8039bc4921c5",
+        "parsed_tool": "find_objects",
+        "parsed_arguments": {
+          "t": 0,
+          "which": "before",
+          "predicate_code": "def accept(obj):\n    return obj['color'] in (2, 4) and obj['pixel_count'] >= 2",
+          "max_objects": 8
+        },
+        "dispatch_result": {
+          "ok": true,
+          "t": 0,
+          "which": "before",
+          "predicate_applied": true,
+          "n_components_scanned": 6,
+          "n_objects_matched": 2,
+          "objects": [
+            {
+              "color": 2,
+              "pixel_count": 3,
+              "bbox": [
+                1,
+                1,
+                2,
+                2
+              ],
+              "centroid": [
+                1.3333,
+                1.3333
+              ],
+              "height": 2,
+              "width": 2
+            },
+            {
+              "color": 4,
+              "pixel_count": 3,
+              "bbox": [
+                4,
+                1,
+                4,
+                3
+              ],
+              "centroid": [
+                4.0,
+                2.0
+              ],
+              "height": 1,
+              "width": 3
+            }
+          ],
+          "truncated": false,
+          "response_bytes": 385
+        },
+        "bounded_response": "<tool_response>\n{\"ok\": true, \"t\": 0, \"which\": \"before\", \"predicate_applied\": true, \"n_components_scanned\": 6, \"n_objects_matched\": 2, \"objects\": [{\"color\": 2, \"pixel_count\": 3, \"bbox\": [1, 1, 2, 2], \"centroid\": [1.3333, 1.3333], \"height\": 2, \"width\": 2}, {\"color\": 4, \"pixel_count\": 3, \"bbox\": [4, 1, 4, 3], \"centroid\": [4.0, 2.0], \"height\": 1, \"width\": 3}], \"truncated\": false, \"response_bytes\": 385}\n</tool_response>",
+        "bounded_response_bytes": 418,
+        "bounded_response_sha256": "sha256:ef4c0a46ae03b7438a629519aceee61011231c6588c1f2499dd9162958443fd0",
+        "transcript_sha256": "sha256:e75e06e7722e94fc3338abc9a6cad2d60ed99172bd10f4418493d3ea6a74183f",
+        "blocks_seen": 1,
+        "blocks_unparsed": 0,
+        "success": true
+      },
+      "vram_recovery": {
+        "before_used_mb": 266,
+        "after_used_mb": 266,
+        "absolute_delta_mb": 0,
+        "tolerance_mb": 512,
+        "owned_pid_present": false,
+        "passed": true,
+        "observed_monotonic_ns": 341972060365291
+      },
+      "full_load": true,
+      "transport_canary": false,
+      "owned_cleanup": {
+        "pid": 3262040,
+        "terminate_sent": true,
+        "kill_sent": false,
+        "exit_code": 0,
+        "absent_after_exit": true,
+        "unrelated_processes_signaled": []
+      },
+      "unrelated_processes_signaled": [],
+      "errors": [],
+      "receipt_sha256": "sha256:7c1a867c51dc300b832a21a0f0341475dd0f8f5b45db47b29ff4a3ffde97958d"
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "flagship_moe_transport_canary",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "inference_substrate": "task-owned local llama.cpp CUDA GGUF",
+      "llama_cpp_cuda": true,
+      "server_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "server_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "device": {
+        "index": 1,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_total_mb": 24576,
+        "memory_used_mb": 266,
+        "memory_free_mb": 23859,
+        "temperature_c": 52,
+        "utilization_pct": 0,
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3261882,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ],
+        "active_compute_count": 1,
+        "eligible": true,
+        "ineligibility_reasons": []
+      },
+      "worker_process": {
+        "pid": 3262432,
+        "pid_start_ticks": 34197221,
+        "exit_code": 0,
+        "absent_after_exit": true,
+        "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "sha256:1e126ec4c09a539f4abb7b4e5cb826a1875d37bbee55c2ec374f540df297f9c9",
+        "timeout_cleanup": {}
+      },
+      "model_process": {
+        "pid": 3262476,
+        "pid_start_ticks": 34197299,
+        "parent_pid": 3262432,
+        "executable": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "exit_code": 0,
+        "absent_after_exit": true
+      },
+      "lease_owner": {
+        "task_id": "exp6764-Qwen3.6-35B-A3B-GGUF",
+        "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "pid": 3262432,
+        "pid_start_ticks": 34197221,
+        "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+        "argv_digest": "sha256:38e138f08f5ab211a87139f9c4d7e366961417ef4daa5030e3601511bf5b12d5",
+        "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+        "token_opaque": true,
+        "token_length": 43,
+        "acquired_monotonic_ns": 341972924917554,
+        "expires_monotonic_ns": 343172924917554,
+        "recovery": {
+          "performed": false,
+          "signals_sent": []
+        },
+        "signals_sent": []
+      },
+      "phase_history": [
+        {
+          "details": {
+            "recovery_performed": false
+          },
+          "event_checksum": "sha256:e48d38d78b14e85f385b52038aaf5667f53d13345b7dec2b410b64d688540bf7",
+          "monotonic_ns": 341972924917554,
+          "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+          "phase": "preflight",
+          "previous_event_checksum": null,
+          "previous_phase": null
+        },
+        {
+          "details": {},
+          "event_checksum": "sha256:0ad0eb0ef913a753b211243eab8ff1f3d7290f72a3048b007039fef926d2828f",
+          "monotonic_ns": 341972925288169,
+          "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+          "phase": "admitted",
+          "previous_event_checksum": "sha256:e48d38d78b14e85f385b52038aaf5667f53d13345b7dec2b410b64d688540bf7",
+          "previous_phase": "preflight"
+        },
+        {
+          "details": {},
+          "event_checksum": "sha256:bbb3b1f8c67d7e481bf49ab90595d4c93a71636a4a46c2540dd75e443789136c",
+          "monotonic_ns": 341972926652296,
+          "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+          "phase": "loading",
+          "previous_event_checksum": "sha256:0ad0eb0ef913a753b211243eab8ff1f3d7290f72a3048b007039fef926d2828f",
+          "previous_phase": "admitted"
+        },
+        {
+          "details": {
+            "vram_resident_mb": 21899
+          },
+          "event_checksum": "sha256:ceb4a6e0796ba818444bfa46c20596ff5c14b382815db433b5acd2a0ac9fa214",
+          "monotonic_ns": 341985069296290,
+          "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+          "phase": "resident",
+          "previous_event_checksum": "sha256:bbb3b1f8c67d7e481bf49ab90595d4c93a71636a4a46c2540dd75e443789136c",
+          "previous_phase": "loading"
+        },
+        {
+          "details": {},
+          "event_checksum": "sha256:949c93e19326bf00a6f336cf6b0bcbc82df0e617fc3903bda1b3544cb22f977c",
+          "monotonic_ns": 341985070130955,
+          "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+          "phase": "inferencing",
+          "previous_event_checksum": "sha256:ceb4a6e0796ba818444bfa46c20596ff5c14b382815db433b5acd2a0ac9fa214",
+          "previous_phase": "resident"
+        },
+        {
+          "details": {},
+          "event_checksum": "sha256:65603dcf074642f882f259c393613f0984121e0bcb2cb5e5a395f6cf1dec84c2",
+          "monotonic_ns": 341988754916397,
+          "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+          "phase": "unloading",
+          "previous_event_checksum": "sha256:949c93e19326bf00a6f336cf6b0bcbc82df0e617fc3903bda1b3544cb22f977c",
+          "previous_phase": "inferencing"
+        },
+        {
+          "details": {
+            "exit_code": 0,
+            "unload_observed": true,
+            "vram_after_mb": 266
+          },
+          "event_checksum": "sha256:bdae01ec4fc52cab901c625d5d83fb5b3cfb99ff05deb1f4b7b33b0636817b17",
+          "monotonic_ns": 341989228699034,
+          "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+          "phase": "validating",
+          "previous_event_checksum": "sha256:65603dcf074642f882f259c393613f0984121e0bcb2cb5e5a395f6cf1dec84c2",
+          "previous_phase": "unloading"
+        },
+        {
+          "details": {},
+          "event_checksum": "sha256:0e1bd4cd35fbe17664e01f35046ab1dbb18b102448c789418203fc19e0dee1ee",
+          "monotonic_ns": 341989229227164,
+          "owner_token_digest": "sha256:7dce0c737487c424aa5038fd094a885b3843f882ebe444e0aabb6e8bd2f5b8c9",
+          "phase": "terminal_complete",
+          "previous_event_checksum": "sha256:bdae01ec4fc52cab901c625d5d83fb5b3cfb99ff05deb1f4b7b33b0636817b17",
+          "previous_phase": "validating"
+        }
+      ],
+      "lease_release": {
+        "released": true,
+        "phase": "terminal_complete",
+        "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "pid": 3262432,
+        "pid_start_ticks": 34197221,
+        "checksum": "sha256:f736a2797ebee4e577503d03d435ee396f8c69ce580a170d4e756be449c4d0dc",
+        "signals_sent": []
+      },
+      "runtime_context": 32768,
+      "gpu_layers": {
+        "requested": 999,
+        "offloaded": 41,
+        "total": 41
+      },
+      "peak_owned_vram_mb": 21650,
+      "resident_owned_vram_mb": 21628,
+      "duration_s": 16.527644,
+      "live_model_invoked": true,
+      "first_token_observed": true,
+      "production_selfparse": {
+        "production_route": "induce_with_tool_loop/selfparse/dispatch_tool",
+        "raw_emission": "<tool_call>\n<function=find_objects>\n<parameter=t>\n0\n</parameter>\n<parameter=which>\nbefore\n</parameter>\n<parameter=predicate_code>\ndef accept(obj):\n    return obj['color'] in (2, 4) and obj['pixel_count'] >= 2\n</parameter>\n<parameter=max_objects>\n8\n</parameter>\n</function>\n</tool_call>",
+        "raw_emission_sha256": "sha256:7c5e45a4922e0fe9dbf9c29992ee8dd9162b6122435c9902536a8039bc4921c5",
+        "parsed_tool": "find_objects",
+        "parsed_arguments": {
+          "t": 0,
+          "which": "before",
+          "predicate_code": "def accept(obj):\n    return obj['color'] in (2, 4) and obj['pixel_count'] >= 2",
+          "max_objects": 8
+        },
+        "dispatch_result": {
+          "ok": true,
+          "t": 0,
+          "which": "before",
+          "predicate_applied": true,
+          "n_components_scanned": 6,
+          "n_objects_matched": 2,
+          "objects": [
+            {
+              "color": 2,
+              "pixel_count": 3,
+              "bbox": [
+                1,
+                1,
+                2,
+                2
+              ],
+              "centroid": [
+                1.3333,
+                1.3333
+              ],
+              "height": 2,
+              "width": 2
+            },
+            {
+              "color": 4,
+              "pixel_count": 3,
+              "bbox": [
+                4,
+                1,
+                4,
+                3
+              ],
+              "centroid": [
+                4.0,
+                2.0
+              ],
+              "height": 1,
+              "width": 3
+            }
+          ],
+          "truncated": false,
+          "response_bytes": 385
+        },
+        "bounded_response": "<tool_response>\n{\"ok\": true, \"t\": 0, \"which\": \"before\", \"predicate_applied\": true, \"n_components_scanned\": 6, \"n_objects_matched\": 2, \"objects\": [{\"color\": 2, \"pixel_count\": 3, \"bbox\": [1, 1, 2, 2], \"centroid\": [1.3333, 1.3333], \"height\": 2, \"width\": 2}, {\"color\": 4, \"pixel_count\": 3, \"bbox\": [4, 1, 4, 3], \"centroid\": [4.0, 2.0], \"height\": 1, \"width\": 3}], \"truncated\": false, \"response_bytes\": 385}\n</tool_response>",
+        "bounded_response_bytes": 418,
+        "bounded_response_sha256": "sha256:ef4c0a46ae03b7438a629519aceee61011231c6588c1f2499dd9162958443fd0",
+        "transcript_sha256": "sha256:e75e06e7722e94fc3338abc9a6cad2d60ed99172bd10f4418493d3ea6a74183f",
+        "blocks_seen": 1,
+        "blocks_unparsed": 0,
+        "success": true
+      },
+      "vram_recovery": {
+        "before_used_mb": 266,
+        "after_used_mb": 266,
+        "absolute_delta_mb": 0,
+        "tolerance_mb": 512,
+        "owned_pid_present": false,
+        "passed": true,
+        "observed_monotonic_ns": 341989228156858
+      },
+      "full_load": false,
+      "transport_canary": true,
+      "owned_cleanup": {
+        "pid": 3262476,
+        "terminate_sent": true,
+        "kill_sent": false,
+        "exit_code": 0,
+        "absent_after_exit": true,
+        "unrelated_processes_signaled": []
+      },
+      "unrelated_processes_signaled": [],
+      "errors": [],
+      "receipt_sha256": "sha256:0ab0fcf188933d5e56062180b030b968c873d8047819c4313e7f47826b7026f9"
+    }
+  ],
+  "runtime_context_by_model": {
+    "unsloth/Qwen3.8-27B-GGUF": 32768,
+    "unsloth/Qwen3.6-35B-A3B-GGUF": 32768
+  },
+  "production_selfparse_receipt": {
+    "unsloth/Qwen3.8-27B-GGUF": {
+      "production_route": "induce_with_tool_loop/selfparse/dispatch_tool",
+      "raw_emission": "<tool_call>\n<function=find_objects>\n<parameter=t>\n0\n</parameter>\n<parameter=which>\nbefore\n</parameter>\n<parameter=predicate_code>\ndef accept(obj):\n    return obj['color'] in (2, 4) and obj['pixel_count'] >= 2\n</parameter>\n<parameter=max_objects>\n8\n</parameter>\n</function>\n</tool_call>",
+      "raw_emission_sha256": "sha256:7c5e45a4922e0fe9dbf9c29992ee8dd9162b6122435c9902536a8039bc4921c5",
+      "parsed_tool": "find_objects",
+      "parsed_arguments": {
+        "t": 0,
+        "which": "before",
+        "predicate_code": "def accept(obj):\n    return obj['color'] in (2, 4) and obj['pixel_count'] >= 2",
+        "max_objects": 8
+      },
+      "dispatch_result": {
+        "ok": true,
+        "t": 0,
+        "which": "before",
+        "predicate_applied": true,
+        "n_components_scanned": 6,
+        "n_objects_matched": 2,
+        "objects": [
+          {
+            "color": 2,
+            "pixel_count": 3,
+            "bbox": [
+              1,
+              1,
+              2,
+              2
+            ],
+            "centroid": [
+              1.3333,
+              1.3333
+            ],
+            "height": 2,
+            "width": 2
+          },
+          {
+            "color": 4,
+            "pixel_count": 3,
+            "bbox": [
+              4,
+              1,
+              4,
+              3
+            ],
+            "centroid": [
+              4.0,
+              2.0
+            ],
+            "height": 1,
+            "width": 3
+          }
+        ],
+        "truncated": false,
+        "response_bytes": 385
+      },
+      "bounded_response": "<tool_response>\n{\"ok\": true, \"t\": 0, \"which\": \"before\", \"predicate_applied\": true, \"n_components_scanned\": 6, \"n_objects_matched\": 2, \"objects\": [{\"color\": 2, \"pixel_count\": 3, \"bbox\": [1, 1, 2, 2], \"centroid\": [1.3333, 1.3333], \"height\": 2, \"width\": 2}, {\"color\": 4, \"pixel_count\": 3, \"bbox\": [4, 1, 4, 3], \"centroid\": [4.0, 2.0], \"height\": 1, \"width\": 3}], \"truncated\": false, \"response_bytes\": 385}\n</tool_response>",
+      "bounded_response_bytes": 418,
+      "bounded_response_sha256": "sha256:ef4c0a46ae03b7438a629519aceee61011231c6588c1f2499dd9162958443fd0",
+      "transcript_sha256": "sha256:e75e06e7722e94fc3338abc9a6cad2d60ed99172bd10f4418493d3ea6a74183f",
+      "blocks_seen": 1,
+      "blocks_unparsed": 0,
+      "success": true
+    },
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "production_route": "induce_with_tool_loop/selfparse/dispatch_tool",
+      "raw_emission": "<tool_call>\n<function=find_objects>\n<parameter=t>\n0\n</parameter>\n<parameter=which>\nbefore\n</parameter>\n<parameter=predicate_code>\ndef accept(obj):\n    return obj['color'] in (2, 4) and obj['pixel_count'] >= 2\n</parameter>\n<parameter=max_objects>\n8\n</parameter>\n</function>\n</tool_call>",
+      "raw_emission_sha256": "sha256:7c5e45a4922e0fe9dbf9c29992ee8dd9162b6122435c9902536a8039bc4921c5",
+      "parsed_tool": "find_objects",
+      "parsed_arguments": {
+        "t": 0,
+        "which": "before",
+        "predicate_code": "def accept(obj):\n    return obj['color'] in (2, 4) and obj['pixel_count'] >= 2",
+        "max_objects": 8
+      },
+      "dispatch_result": {
+        "ok": true,
+        "t": 0,
+        "which": "before",
+        "predicate_applied": true,
+        "n_components_scanned": 6,
+        "n_objects_matched": 2,
+        "objects": [
+          {
+            "color": 2,
+            "pixel_count": 3,
+            "bbox": [
+              1,
+              1,
+              2,
+              2
+            ],
+            "centroid": [
+              1.3333,
+              1.3333
+            ],
+            "height": 2,
+            "width": 2
+          },
+          {
+            "color": 4,
+            "pixel_count": 3,
+            "bbox": [
+              4,
+              1,
+              4,
+              3
+            ],
+            "centroid": [
+              4.0,
+              2.0
+            ],
+            "height": 1,
+            "width": 3
+          }
+        ],
+        "truncated": false,
+        "response_bytes": 385
+      },
+      "bounded_response": "<tool_response>\n{\"ok\": true, \"t\": 0, \"which\": \"before\", \"predicate_applied\": true, \"n_components_scanned\": 6, \"n_objects_matched\": 2, \"objects\": [{\"color\": 2, \"pixel_count\": 3, \"bbox\": [1, 1, 2, 2], \"centroid\": [1.3333, 1.3333], \"height\": 2, \"width\": 2}, {\"color\": 4, \"pixel_count\": 3, \"bbox\": [4, 1, 4, 3], \"centroid\": [4.0, 2.0], \"height\": 1, \"width\": 3}], \"truncated\": false, \"response_bytes\": 385}\n</tool_response>",
+      "bounded_response_bytes": 418,
+      "bounded_response_sha256": "sha256:ef4c0a46ae03b7438a629519aceee61011231c6588c1f2499dd9162958443fd0",
+      "transcript_sha256": "sha256:e75e06e7722e94fc3338abc9a6cad2d60ed99172bd10f4418493d3ea6a74183f",
+      "blocks_seen": 1,
+      "blocks_unparsed": 0,
+      "success": true
+    }
+  },
+  "owned_processes_terminated": true,
+  "lease_release_receipts": [
+    {
+      "released": true,
+      "phase": "terminal_complete",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "pid": 3261996,
+      "pid_start_ticks": 34194774,
+      "checksum": "sha256:995d5a028de8a2f88990b54c52f5e5256824915983539153f17b19dfbedb7bd7",
+      "signals_sent": []
+    },
+    {
+      "released": true,
+      "phase": "terminal_complete",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "pid": 3262432,
+      "pid_start_ticks": 34197221,
+      "checksum": "sha256:f736a2797ebee4e577503d03d435ee396f8c69ce580a170d4e756be449c4d0dc",
+      "signals_sent": []
+    }
+  ],
+  "vram_recovery_receipts": [
+    {
+      "before_used_mb": 266,
+      "after_used_mb": 266,
+      "absolute_delta_mb": 0,
+      "tolerance_mb": 512,
+      "owned_pid_present": false,
+      "passed": true,
+      "observed_monotonic_ns": 341972060365291
+    },
+    {
+      "before_used_mb": 266,
+      "after_used_mb": 266,
+      "absolute_delta_mb": 0,
+      "tolerance_mb": 512,
+      "owned_pid_present": false,
+      "passed": true,
+      "observed_monotonic_ns": 341989228156858
+    }
+  ],
+  "unrelated_processes_signaled": [],
+  "arc_exclusive_load_ready": true,
+  "claim_boundary": "Transport and teardown admission only. It measures no ARC quality, claims no solve, and keeps model timings unpooled.",
+  "gate_check_summary": [
+    {
+      "check": "model_admission:unsloth/Qwen3.8-27B-GGUF",
+      "expected": "complete owned CUDA load, selfparse, teardown, release, recovery",
+      "observed": {
+        "failures": []
+      },
+      "passed": true
+    },
+    {
+      "check": "model_admission:unsloth/Qwen3.6-35B-A3B-GGUF",
+      "expected": "complete owned CUDA load, selfparse, teardown, release, recovery",
+      "observed": {
+        "failures": []
+      },
+      "passed": true
+    },
+    {
+      "check": "unrelated_processes_signaled",
+      "expected": [],
+      "observed": [],
+      "passed": true
+    }
+  ],
+  "verifier_is_oracle": false,
+  "verdict_class": "positive",
+  "honest_verdict": "complete_arc_exclusive_load_ready",
+  "preconditions_checked": {
+    "all_passed": true,
+    "checks": [
+      {
+        "check": "exp6752_preflight_ready",
+        "expected": true,
+        "observed": true,
+        "validator_errors": [],
+        "passed": true
+      },
+      {
+        "check": "exp6647_task_owned_admission",
+        "expected": 1.0,
+        "observed": 1.0,
+        "validator_errors": [],
+        "passed": true
+      },
+      {
+        "check": "exact_cached_model:unsloth/Qwen3.8-27B-GGUF",
+        "expected": {
+          "filename": "Qwen3.8-27B-Q4_K_M.gguf",
+          "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+        },
+        "observed": {
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "resolved": true
+        },
+        "passed": true
+      },
+      {
+        "check": "embedded_tokenizer:unsloth/Qwen3.8-27B-GGUF",
+        "expected": "llama.cpp_embedded_gguf",
+        "observed": {
+          "source": "llama.cpp_embedded_gguf",
+          "loadable": true,
+          "detail": "embedded GGUF tokenizer OK (7 tokens on probe)"
+        },
+        "passed": true
+      },
+      {
+        "check": "context_32k_support:unsloth/Qwen3.8-27B-GGUF",
+        "expected": {
+          "context_at_least": 32768
+        },
+        "observed": {
+          "prior_context": 32768,
+          "prior_model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "current_model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+        },
+        "passed": true
+      },
+      {
+        "check": "exact_cached_model:unsloth/Qwen3.6-35B-A3B-GGUF",
+        "expected": {
+          "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+        },
+        "observed": {
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "resolved": true
+        },
+        "passed": true
+      },
+      {
+        "check": "embedded_tokenizer:unsloth/Qwen3.6-35B-A3B-GGUF",
+        "expected": "llama.cpp_embedded_gguf",
+        "observed": {
+          "source": "llama.cpp_embedded_gguf",
+          "loadable": true,
+          "detail": "embedded GGUF tokenizer OK (7 tokens on probe)"
+        },
+        "passed": true
+      },
+      {
+        "check": "context_32k_support:unsloth/Qwen3.6-35B-A3B-GGUF",
+        "expected": {
+          "context_at_least": 32768
+        },
+        "observed": {
+          "prior_context": 32768,
+          "prior_model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "current_model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+        },
+        "passed": true
+      },
+      {
+        "check": "two_fixed_rtx3090_identities",
+        "expected": {
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": "NVIDIA GeForce RTX 3090",
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9": "NVIDIA GeForce RTX 3090"
+        },
+        "observed": {
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": "NVIDIA GeForce RTX 3090",
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9": "NVIDIA GeForce RTX 3090"
+        },
+        "passed": true
+      },
+      {
+        "check": "llama_cpp_cuda",
+        "expected": true,
+        "observed": {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "exists": true,
+          "executable": true,
+          "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+          "dynamic_link": {
+            "command": [
+              "ldd",
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+            ],
+            "exit_code": 0,
+            "duration_s": 0.006452,
+            "stdout": "\tlinux-vdso.so.1 (0x00007fea62e39000)\n\tlibllama-server-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so (0x00007fea62200000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007fea61c00000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007fea620b3000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007fea61800000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007fea62df3000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007fea61643000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007fea5dc00000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007fea61b29000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007fea57000000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007fea61529000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007fea56800000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007fea56400000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007fea56ef7000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007fea62dbc000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007fea56000000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007fea62e3b000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007fea56790000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007fea55c00000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007fea52400000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007fea2ce00000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007fea62db3000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007fea62dae000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007fea62da9000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007fea62d6d000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007fea56306000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007fea620a3000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007fea2cc9f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007fea5dbdd000)\n",
+            "stderr": ""
+          },
+          "cuda_linked": true,
+          "python_cuda_offload": true
+        },
+        "passed": true
+      },
+      {
+        "check": "gpu_lease_api",
+        "expected": true,
+        "observed": {
+          "acquire": true,
+          "transition": true,
+          "release": true
+        },
+        "passed": true
+      },
+      {
+        "check": "ports_free",
+        "expected": 2,
+        "observed": {
+          "57167": true,
+          "43407": true
+        },
+        "passed": true
+      },
+      {
+        "check": "ram_and_disk",
+        "expected": {
+          "ram_available_bytes_at_least": 68719476736,
+          "disk_free_bytes_at_least": 1073741824
+        },
+        "observed": {
+          "cpu_count": 24,
+          "platform": "Linux-7.2.0-1-cachyos-x86_64-with-glibc2.44",
+          "ram_total_bytes": 134304591872,
+          "ram_available_bytes": 107560230912,
+          "disk_total_bytes": 3953289023488,
+          "disk_free_bytes": 1066132754432
+        },
+        "passed": true
+      },
+      {
+        "check": "production_selfparse_imports",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "least_used_eligible_rtx3090",
+        "expected": {
+          "free_vram_mb_at_least": 22610
+        },
+        "observed": {
+          "index": 1,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "memory_free_mb": 23859,
+          "temperature_c": 52,
+          "utilization_pct": 0,
+          "active_compute_processes": [
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 3261882,
+              "process_name": ".venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "active_compute_count": 1,
+          "eligible": true,
+          "ineligibility_reasons": []
+        },
+        "passed": true
+      }
+    ],
+    "models": [
+      {
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "role": "immutable_scored_arc_generator_full_load",
+        "repo_substr": "Qwen3.8-27B",
+        "filename": "Qwen3.8-27B-Q4_K_M.gguf",
+        "expected_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "required_vram_mb": 17815,
+        "max_tokens": 1024,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_size_bytes": 17106775008,
+        "resolved": true,
+        "tokenizer": {
+          "source": "llama.cpp_embedded_gguf",
+          "loadable": true,
+          "detail": "embedded GGUF tokenizer OK (7 tokens on probe)"
+        }
+      },
+      {
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "role": "flagship_moe_transport_canary",
+        "repo_substr": "Qwen3.6-35B-A3B",
+        "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "expected_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "required_vram_mb": 22610,
+        "max_tokens": 512,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "model_size_bytes": 22134528992,
+        "resolved": true,
+        "tokenizer": {
+          "source": "llama.cpp_embedded_gguf",
+          "loadable": true,
+          "detail": "embedded GGUF tokenizer OK (7 tokens on probe)"
+        }
+      }
+    ],
+    "device_inventory_before": [
+      {
+        "index": 0,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_total_mb": 24576,
+        "memory_used_mb": 18155,
+        "memory_free_mb": 5969,
+        "temperature_c": 80,
+        "utilization_pct": 98,
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 2936366,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 17884
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3261882,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_total_mb": 24576,
+        "memory_used_mb": 266,
+        "memory_free_mb": 23859,
+        "temperature_c": 52,
+        "utilization_pct": 0,
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3261882,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ]
+      }
+    ],
+    "device_inventory_commands": {
+      "devices": {
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,temperature.gpu,utilization.gpu",
+          "--format=csv,noheader,nounits"
+        ],
+        "exit_code": 0,
+        "duration_s": 0.03637,
+        "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 24576, 18155, 5969, 80, 98\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 24576, 266, 23859, 52, 0\n",
+        "stderr": ""
+      },
+      "processes": {
+        "command": [
+          "nvidia-smi",
+          "--query-compute-apps=gpu_uuid,pid,process_name,used_memory",
+          "--format=csv,noheader,nounits"
+        ],
+        "exit_code": 0,
+        "duration_s": 0.027516,
+        "stdout": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab, 2936366, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 17884\nGPU-b52387a2-c625-de87-8d34-e6f64e684bab, 3261882, .venv/bin/python, 256\nGPU-7971baff-9583-eaa6-2292-393f930a28f9, 3261882, .venv/bin/python, 256\n",
+        "stderr": ""
+      }
+    },
+    "device_selection_receipt": {
+      "rank_policy": [
+        "free_vram_desc",
+        "temperature_asc",
+        "active_compute_asc"
+      ],
+      "frozen_free_vram_threshold_mb": 22610,
+      "evaluated_devices": [
+        {
+          "index": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_total_mb": 24576,
+          "memory_used_mb": 18155,
+          "memory_free_mb": 5969,
+          "temperature_c": 80,
+          "utilization_pct": 98,
+          "active_compute_processes": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 2936366,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 17884
+            },
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "pid": 3261882,
+              "process_name": ".venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "active_compute_count": 2,
+          "eligible": false,
+          "ineligibility_reasons": [
+            "free_vram_below_frozen_floor"
+          ]
+        },
+        {
+          "index": 1,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "memory_free_mb": 23859,
+          "temperature_c": 52,
+          "utilization_pct": 0,
+          "active_compute_processes": [
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 3261882,
+              "process_name": ".venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "active_compute_count": 1,
+          "eligible": true,
+          "ineligibility_reasons": []
+        }
+      ],
+      "ranked_eligible_devices": [
+        {
+          "index": 1,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "memory_free_mb": 23859,
+          "temperature_c": 52,
+          "utilization_pct": 0,
+          "active_compute_processes": [
+            {
+              "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+              "pid": 3261882,
+              "process_name": ".venv/bin/python",
+              "used_memory_mb": 256
+            }
+          ],
+          "active_compute_count": 1,
+          "eligible": true,
+          "ineligibility_reasons": []
+        }
+      ],
+      "eligible_device_count": 1,
+      "selected_device": {
+        "index": 1,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "name": "NVIDIA GeForce RTX 3090",
+        "memory_total_mb": 24576,
+        "memory_used_mb": 266,
+        "memory_free_mb": 23859,
+        "temperature_c": 52,
+        "utilization_pct": 0,
+        "active_compute_processes": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 3261882,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 256
+          }
+        ],
+        "active_compute_count": 1,
+        "eligible": true,
+        "ineligibility_reasons": []
+      }
+    },
+    "ports": [
+      57167,
+      43407
+    ],
+    "llama_cpp": {
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "exists": true,
+      "executable": true,
+      "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "dynamic_link": {
+        "command": [
+          "ldd",
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+        ],
+        "exit_code": 0,
+        "duration_s": 0.006452,
+        "stdout": "\tlinux-vdso.so.1 (0x00007fea62e39000)\n\tlibllama-server-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so (0x00007fea62200000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007fea61c00000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007fea620b3000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007fea61800000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007fea62df3000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007fea61643000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007fea5dc00000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007fea61b29000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007fea57000000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007fea61529000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007fea56800000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007fea56400000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007fea56ef7000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007fea62dbc000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007fea56000000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007fea62e3b000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007fea56790000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007fea55c00000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007fea52400000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007fea2ce00000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007fea62db3000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007fea62dae000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007fea62da9000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007fea62d6d000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007fea56306000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007fea620a3000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007fea2cc9f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007fea5dbdd000)\n",
+        "stderr": ""
+      },
+      "cuda_linked": true,
+      "python_cuda_offload": true
+    },
+    "resources": {
+      "cpu_count": 24,
+      "platform": "Linux-7.2.0-1-cachyos-x86_64-with-glibc2.44",
+      "ram_total_bytes": 134304591872,
+      "ram_available_bytes": 107560230912,
+      "disk_total_bytes": 3953289023488,
+      "disk_free_bytes": 1066132754432
+    },
+    "source_receipts": {
+      "exp6752": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6752_arc_code_carrying_tool_preflight.json",
+        "sha256": "sha256:33b94922df0508944053432960a8163a3fdccf3eb7bd8ce93200c1e7e59a4b2e"
+      },
+      "exp6647": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6647_receipt_scoped_admission_boundary.json",
+        "sha256": "sha256:ad79510853e20772eeafee01d6f9a45dcba21d82f06ebaa4df155842d1e986b3"
+      }
+    }
+  },
+  "owned_process_receipts": [
+    {
+      "pid": 3261996,
+      "pid_start_ticks": 34194774,
+      "exit_code": 0,
+      "absent_after_exit": true,
+      "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "sha256:1e126ec4c09a539f4abb7b4e5cb826a1875d37bbee55c2ec374f540df297f9c9",
+      "timeout_cleanup": {}
+    },
+    {
+      "pid": 3262040,
+      "pid_start_ticks": 34194855,
+      "parent_pid": 3261996,
+      "executable": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "exit_code": 0,
+      "absent_after_exit": true
+    },
+    {
+      "pid": 3262432,
+      "pid_start_ticks": 34197221,
+      "exit_code": 0,
+      "absent_after_exit": true,
+      "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "sha256:1e126ec4c09a539f4abb7b4e5cb826a1875d37bbee55c2ec374f540df297f9c9",
+      "timeout_cleanup": {}
+    },
+    {
+      "pid": 3262476,
+      "pid_start_ticks": 34197299,
+      "parent_pid": 3262432,
+      "executable": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "exit_code": 0,
+      "absent_after_exit": true
+    }
+  ]
+}

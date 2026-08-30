@@ -289,6 +289,11 @@ def test_scenario_infra_6764_cleanup_targets_only_owned_child(survives_term: boo
     assert receipt["unrelated_processes_signaled"] == []
     assert process.terminate_calls == 1
     assert process.kill_calls == int(survives_term)
+    exited = _OwnedProcess(survives_term=False)
+    exited.returncode = 0
+    exited_receipt = exp.terminate_owned_process(exited)
+    assert exited_receipt["absent_after_exit"] is True
+    assert exited.terminate_calls == 0
 
 
 def test_scenario_arc_wmte_6764_production_selfparse_dispatch_is_real() -> None:
@@ -384,6 +389,47 @@ def test_scenario_infra_6764_blocked_artifact_stops_before_workers(tmp_path: Pat
     assert json.loads((tmp_path / "blocked.json").read_text()) == artifact
 
 
+def test_scenario_infra_6764_missing_exact_model_writes_blocked_artifact(tmp_path: Path) -> None:
+    """SCENARIO-INFRA-6764-BLOCKED-ARTIFACT retains a missing-model observation."""
+    models = _models(tmp_path)
+    models[0].update(
+        model_path=None,
+        model_sha256="missing",
+        model_size_bytes=0,
+        resolved=False,
+        tokenizer={
+            "source": "llama.cpp_embedded_gguf",
+            "loadable": False,
+            "detail": "exact cached GGUF missing",
+        },
+    )
+    selection = exp.rank_eligible_devices(_devices())
+    preflight = _preflight(models, selection)
+    preflight["all_passed"] = False
+    preflight["checks"].append(
+        {
+            "check": "exact_cached_model:qwen3.8_27b",
+            "expected": exp.MODEL_SPECS[0]["expected_sha256"],
+            "observed": "missing",
+            "passed": False,
+        }
+    )
+    calls = []
+    artifact = exp.run(
+        result_path=tmp_path / "missing-model.json",
+        date="20260829",
+        preflight_fn=lambda: preflight,
+        worker_runner=lambda *args, **kwargs: calls.append((args, kwargs)),
+        clock=iter((1_000, 2_000)).__next__,
+    )
+    assert calls == []
+    assert artifact["honest_verdict"] == "complete_blocked_arc_exclusive_load"
+    assert artifact["gate_check_summary"] == [preflight["checks"][-1]]
+    assert artifact["models_used"][0]["model_sha256"] == "missing"
+    assert exp.validate_artifact(artifact) == []
+    assert json.loads((tmp_path / "missing-model.json").read_text()) == artifact
+
+
 def test_scenario_arc_wmte_6764_admission_only_complete_artifact(tmp_path: Path) -> None:
     """SCENARIO-ARC-WMTE-6764-ADMISSION-ONLY reduces lifecycle evidence, not quality."""
     models = _models(tmp_path)
@@ -402,6 +448,7 @@ def test_scenario_arc_wmte_6764_admission_only_complete_artifact(tmp_path: Path)
     assert artifact["arc_exclusive_load_ready"] is True
     assert artifact["verdict_class"] == "positive"
     assert artifact["honest_verdict"] == "complete_arc_exclusive_load_ready"
+    assert artifact["model_specs"] == artifact["models_used"]
     assert artifact["runtime_context_by_model"] == {row["model_id"]: 32_768 for row in receipts}
     assert len(artifact["lease_owner_receipts"]) == 2
     assert len(artifact["lease_release_receipts"]) == 2
@@ -1108,6 +1155,7 @@ def test_req_infra_6764_artifact_validator_failure_matrix(tmp_path: Path) -> Non
         "claim_boundary": lambda row: row.update(claim_boundary="quality"),
         "duration_s": lambda row: row.update(duration_s=-1),
         "models_used": lambda row: row["models_used"][0].update(model_sha256="bad"),
+        "model_specs": lambda row: row.update(model_specs=[]),
         "device_selection_receipt": lambda row: row.update(device_selection_receipt={}),
         "arc_exclusive_load_ready": lambda row: row.update(arc_exclusive_load_ready=False),
         "rows": lambda row: row.update(rows=[]),
@@ -1172,6 +1220,15 @@ def test_req_infra_6764_run_fail_closed_and_cli_entries(
         )
 
     monkeypatch.setattr(exp, "validate_artifact", lambda artifact: [])
+    no_selection = deepcopy(preflight)
+    no_selection["device_selection_receipt"]["selected_device"] = None
+    no_selection_artifact = exp.run(
+        result_path=tmp_path / "no-selection.json",
+        preflight_fn=lambda: no_selection,
+        clock=iter((1, 2)).__next__,
+    )
+    assert no_selection_artifact["gpu_receipts"] == []
+
     model_path = tmp_path / "worker-model.json"
     device_path = tmp_path / "worker-device.json"
     output_path = tmp_path / "worker-output.json"
