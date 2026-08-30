@@ -1637,3 +1637,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
 - artifact: results/experiment_6776_arc_shadow_supervisor_accrual.json
+
+## experiment_6780_v590_branch_disposition.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag(s) ['NONTERMINAL_DECLARED_ARTIFACT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+- artifact: results/experiment_6780_v590_branch_disposition.json
