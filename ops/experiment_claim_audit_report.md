@@ -12,31 +12,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CLAIM_SUPPORTED | 1 |
-| NO_CLAIM | 7 |
+| NO_CLAIM | 6 |
+| SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_6760_prefix_backtracking_repair_ab.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable; the artifact makes no comparative claim about prefix-backtracking repair.
-
-## WAS THAT CHECKED
-No. The experiment was blocked at `conductor_pre_gate` before any A/B data was produced.
-
-## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"duration_s": 0.0`; `"failed_observed": null`; `"blocked_at_layer": "conductor_pre_gate"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6761_procedural_memory_stream.json
+## experiment_6768_targetable_proof_panel_expansion.json
 
 **NO_CLAIM**
 
@@ -47,106 +26,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative or scientific claim to falsify; only the procedural-readiness receipt could fail, through any false readiness gate, unequal capacity, chronology leakage, insufficient accept/reject opportunities, restart mismatch, rollback failure, or mishandled poison fixture.
+The operational readiness statement would fail if any of the 126 fixtures cold-replayed differently, passed exact validation, duplicated another row, or failed to cover its declared error class; there is no model-quality or comparative claim to refute.
 
 ## WAS THAT CHECKED
-Yes. Those conditions are covered by `gate_check_summary`, per-order opportunity counts, capacity fields, transaction rows, and restart, rollback, and poison receipts.
+Yes. The cold-replay receipt checks all 126 rows for mismatches, while the panel summaries check exact validity, duplication, and coverage across error classes and proof families.
 
 ## EVIDENCE
-`complete_procedural_memory_stream_ready`; `procedural_memory_stream_ready`; `true`; `failed_checks`; `[]`; `verdict_class`; `circular_positive`; `A closed class prevents fixture readiness from becoming a science claim.`; `verifier_is_oracle`; `false`
+`honest_verdict`: `complete: targetable exact-invalid fixture ready with 126 cold-replayed rows; this is not a model-quality claim`; `inference_substrate`: `deterministic_local_certificate_mutation_no_llm`; `replayed_row_count`: `126`; `mismatches`: `[]`; `all_passed`: `true`; `exact_valid_mutations`: `0`; `duplicate_rows`: `0`; `targetable_panel_ready`: `true`; `verifier_is_oracle`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6762_procedural_vs_trace_csl_ab.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No comparative claim exists to falsify; a future claim that procedural memory outperforms rivals would be refuted if the procedural arm tied or lost to detailed-trajectory or no-memory controls on valid rows.
-
-## WAS THAT CHECKED
-No. Execution stopped at failed preconditions, so no comparative rows or arm outcomes were produced.
-
-## EVIDENCE
-`honest_verdict`: `complete_blocked_procedural_csl_ab: owned precondition failed`; `live_model_invoked`: `false`; `prospective_csl_completed`: `false`; `rows`: `[]`; `failed_checks`: `one_model_vram`, `task_owned_lease`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6763_csl_hard_case_forgetting_audit.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no experimental outcome claim to falsify. The receipt’s implicit gate assertion would be refuted if the prerequisite were observed as true or the gate passed.
-
-## WAS THAT CHECKED
-Yes, in `gates_evaluated`; the sole prerequisite was explicitly compared with its expected value. No hard-case, forgetting, or poison audit was executed.
-
-## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_expected`: `true`; `failed_observed`: `false`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6764_arc_exclusive_load_preflight.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No comparative or quality proposition is asserted. The limited operational receipt would fail if either model lacked a complete CUDA load, 32K runtime context, first token, successful selfparse dispatch, teardown, lease release, VRAM recovery, or if an unrelated process were signaled.
-
-## WAS THAT CHECKED
-Yes, for both model admissions in `gpu_receipts` and `gate_check_summary`; this was an operational readiness check, not a method-value experiment.
-
-## EVIDENCE
-`claim_boundary` `Transport and teardown admission only. It measures no ARC quality, claims no solve, and keeps model timings unpooled.` `runtime_context` `32768` `first_token_observed` `true` `success` `true` `released` `true` `passed` `true` `unrelated_processes_signaled` `[]` `verifier_is_oracle` `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6765_object_table_fetch_ab_v2.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative claim to falsify; live paired rows showing fetch-on-demand inferior, superior, or tied would merely answer the planned question.
-
-## WAS THAT CHECKED
-No. The model was never invoked, all displayed rows stopped at preflight, and the comparative metrics were not computed.
-
-## EVIDENCE
-`status` is `blocked`; `live_model_invoked` is `false`; `stop_reason` is `preflight_blocked`; `mean_prompt_token_savings`, `change_fidelity_delta`, and `change_fidelity_interval` are `null`; `object_table_ab_completed` and `adoption_gate_passed` are `false`; `honest_verdict` is `complete_blocked_object_table_ab_v2`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6766_thermalizer_independent_trajectory_audit.json
+## experiment_6769_environment_indexed_proof_grammar_v2.json
 
 **CLAIM_SUPPORTED**
 
@@ -154,41 +45,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-An independent simulator evaluator reproduced a trajectory-TV reduction for context matching, while trajectory refinement received no non-circular value claim.
+The environment-indexed grammar kept valid SAT and UNSAT witnesses reachable across the tested size bins while emitting zero out-of-environment symbols.
 
 ## WHAT WOULD REFUTE IT
-Context matching tying or losing to the independent-factor baseline—shown by a nonpositive paired TV difference or a confidence interval including zero—or the direct sampler materially disagreeing with the exact evaluator would refute the claim.
+An environment-indexed support row with an exact-valid SAT or UNSAT witness that was not candidate- or terminal-reachable, or any nonzero ghost-symbol violation, would refute the claim.
 
 ## WAS THAT CHECKED
-Yes. Paired comparisons against `independent_factor` include ties and worsened rows, so failure was possible; the reported intervals exclude zero at the shown depths. A 192-row direct-sampler cross-check also tested the exact evaluator. Circularity was identified specifically for `trajectory_refinement`, not credited as evidence of value.
+Yes. The per-mode support receipts checked SAT and UNSAT witnesses in each reported size bin, and the artifact separately counted ghost violations. The static CFG ties on preserved support, so the artifact demonstrates reachability and exclusion—not comparative added value, which it explicitly does not claim.
 
 ## EVIDENCE
-`honest_verdict`: `complete: the independent evaluator reproduced the context-matching trajectory reduction; trajectory refinement remains exact-objective circular; simulator only`
-
-`method`: `context_matched`
-
-`mean_independent_minus_method_tv`: `0.057389814199323`, `0.0659517153362909`, `0.0537530735194788`
-
-`interval_excludes_zero`: `true`
-
-`worsened_pair_count`: `2`
-
-`methods_consuming_exact_evaluator_outcome`: `trajectory_refinement`
-
-`verifier_is_oracle`: `true`
-
-`exact_in_ci99_count`: `190`
-
-`observed_row_count`: `192`
-
-`passed`: `true`
-
-`claim_boundary`: `simulator-only; no speed, power, X0, Z1, FPGA, or physical-hardware claim`
+`"honest_verdict": "complete: environment-indexed SAT and UNSAT support remained reachable with zero ghost violations; no live SOTA comparison was run"`; `"valid_sat_reachable": true`; `"valid_unsat_reachable": true`; `"no_ghost_violations": 0`; `"support_preserved": true`; `"candidate_reachable": true`; `"terminal_reachable": true`; `"exact_valid": true`; `"verifier_is_oracle": false`; `"inference_substrate": "deterministic_automaton_no_llm"`; `"scope": "one exact-valid witness; no proof-language enumeration claimed"`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6767_v589_branch_disposition.json
+## experiment_6770_dccd_environment_grammar_ab_v2.json
 
 **NO_CLAIM**
 
@@ -199,13 +70,105 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-As a synthesis receipt, it would be contradicted by its own rows showing completed repair, prospective continuous-memory results, live ARC quality measurements, non-oracle portability evidence, or an emitted pooled-success claim while the headline reports those outcomes as blocked, circular, or absent.
+For the intended comparative claim, attributable paired rows showing `dccd_environment` tying or losing to `static_grammar` or `repaired_direct` on exact validity or semantic correctness would refute added value.
 
 ## WAS THAT CHECKED
-Yes. The branch summaries and recomputed headlines check each disposition, while the artifact reports no row/headline mismatches.
+No. Execution stopped at a failed precondition before inference, producing no rows; the reported zero deltas therefore provide no comparative test.
 
 ## EVIDENCE
-`"The capstone is a synthesis receipt. It is not a verifier or a pooled science claim."`; `"complete_partial: V589 preserved narrowed proof transport, blocked repair, blocked continuous memory, blocked ARC quality, circular simulator portability, and no pooled success claim."`; `"repair_completed": false`; `"prospective_rows": 0`; `"live_quality_rows"` with `"numerator": 0`; `"simulator_only": true`; `"verifier_is_oracle": true`; `"pooled_success_claim_emitted": false`; `"row_headline_mismatches": []`
+`"verdict_class"`: `"blocked"`; `"live_model_invoked"`: `false`; `"proof_transport_ab_completed"`: `false`; `"rows"`: `[]`; `"models_used"`: `[]`; `"failed_check"`: `"one_model_vram"`; `"rows_complete"`: `false`
 
 ## RECOMMENDATION
 KEEP
+
+## experiment_6771_proof_transport_localization_audit.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No substantive experimental claim is made. The administrative blocked status would be refuted if the upstream gate had observed `proof_transport_ab_completed` as true or recorded the gate as passed.
+
+## WAS THAT CHECKED
+Yes. The sole prerequisite was checked in `gates_evaluated`; it failed before the experiment ran, so no comparative or value claim was tested.
+
+## EVIDENCE
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_field": "proof_transport_ab_completed"`; `"failed_expected": true`; `"failed_observed": false`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6773_csl_owned_lease_contract.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+This is an admission receipt, not a comparative or value claim. Its reported blocked state would be contradicted by an eligible selected GPU or actual live-model execution.
+
+## WAS THAT CHECKED
+Yes. The device-selection receipt, gate summary, invocation flag, and model-use receipts check those possibilities.
+
+## EVIDENCE
+`"verdict_class": "blocked"`, `"status": "blocked"`, `"eligible_device_count": 0`, `"selected_device": null`, `"live_model_invoked": false`, `"models_used": []`, `"verifier_is_oracle": false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6776_arc_shadow_supervisor_accrual.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative or value claim to falsify; a supervisor-benefit claim would be refuted by valid live rows showing no advantage or harm versus a serious no-supervisor baseline.
+
+## WAS THAT CHECKED
+No. Preconditions blocked inference, so no live actions, invariance pairs, supervisor effects, or comparative outcomes were observed.
+
+## EVIDENCE
+`"status": "complete_blocked_shadow_supervisor_accrual"`; `"models_used": []`; `"live_model_invoked": false`; `"actions_observed": 0`; `"method": "not run because preconditions failed"`; `"passed": false`; `"status": "insufficient_evidence"`; `"shadow_supervisor_transport_ready": false`; `"solve_claim": false`; `"verdict_class": "blocked"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6777_arc_tool_gap_transport.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable: this is a blocked gate receipt, not a substantive comparative or value claim.
+
+## WAS THAT CHECKED
+No; the experiment was blocked before execution at the upstream gate.
+
+## EVIDENCE
+`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `title`: `Live selfparse tool-gap transport receipt`; `honest_verdict`: `blocked_gate_check_failed`; `expected`: `true`; `actual`: `false`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6780_v590_branch_disposition.json
+
+**SKIPPED_ALREADY_FLAGGED**
