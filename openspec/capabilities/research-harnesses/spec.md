@@ -9933,3 +9933,43 @@ substitute CPU, remote, legacy, or different-model inference.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-INFRA-6764 and SCENARIO-INFRA-6764-* | Implemented (`python/carnot/experiment_6764_arc_exclusive_load_preflight.py`) | Implemented (`tests/python/test_experiment_6764_arc_exclusive_load_preflight.py`; 31 focused tests, 100% new-module statement coverage) |
+
+### REQ-INFRA-6830: A signalled long-running job leaves a receipt naming its killer
+
+A long-running measurement SHALL install a death receipt. On a catchable termination signal it
+SHALL write the signal number and name, its pid and ppid, elapsed seconds, and a caller-supplied
+progress value; it SHALL then re-raise the signal's default action so the job stays as stoppable
+as it was before.
+
+#### SCENARIO-INFRA-6830-A: the signal is named
+- GIVEN a job with a receipt installed
+- WHEN it is sent SIGTERM
+- THEN a receipt records `signal_name: "SIGTERM"` and the job still dies of that signal
+
+#### SCENARIO-INFRA-6830-B: progress is recorded
+- GIVEN a job 38 cells into 39
+- WHEN it is killed
+- THEN the receipt says so, because "killed at 38/39" is a different finding from "killed"
+
+#### SCENARIO-INFRA-6830-C: a failing progress callback does not cost the receipt
+- GIVEN a progress callback that raises
+- WHEN the job is killed
+- THEN the receipt is still written, carrying the callback's error
+
+#### SCENARIO-INFRA-6830-D: SIGKILL leaves nothing, and that absence is the signal
+- GIVEN a job with a receipt installed
+- WHEN it is SIGKILLed
+- THEN no receipt exists, and its absence indicates SIGKILL, the OOM killer, or a kernel event
+
+Rationale: a 7-hour GPU measurement died at 38/39 cells on 2026-08-29 and nothing in the
+repository could say what killed it — the server log stopped mid-decode at 23.37 tok/s, the
+runner log stopped with no traceback, there was no OOM trace, and `run_stop_authority.py`, which
+logs every action it takes, had written no actor row. The same state was first recorded
+2026-08-09 as "exit-143, sender never identified". This does NOT identify the killer; it makes
+the next death self-describing, which is the precondition for identifying one. Three reapers
+exist in this project, each with its own exemption list, and choosing the one whose comments
+best fit the symptom is how a wrong cause becomes recorded fact.
+
+Implementation status: implemented 2026-08-30
+(`python/carnot/testing/long_run_receipt.py`; `tests/python/test_long_run_receipt.py`, 6 tests
+in real child processes, 5/5 mutations RED).
