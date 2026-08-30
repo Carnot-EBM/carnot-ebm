@@ -1,0 +1,51 @@
+{
+  "experiment": 6771,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-30",
+  "started_at": "2026-08-30T09:15:55.022877+00:00",
+  "finished_at": "2026-08-30T09:15:55.022877+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Independent proof transport and localization audit",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=False == expected=True",
+  "failed_upstream": "exp6770-dccd-environment-grammar-ab-v2",
+  "failed_field": "proof_transport_ab_completed",
+  "failed_operator": "==",
+  "failed_expected": true,
+  "failed_expected_type": "bool",
+  "failed_observed": false,
+  "failed_observed_type": "bool",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6770_dccd_environment_grammar_ab_v2.json",
+  "failed_evidence_sha256": "sha256:47d4b724a8fed526e1ea18fb7f6f110547ce0e5ddecf165d5d708f6e1e890b00",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=False == expected=True",
+    "failed_upstream": "exp6770-dccd-environment-grammar-ab-v2",
+    "failed_field": "proof_transport_ab_completed",
+    "failed_operator": "==",
+    "failed_expected": true,
+    "failed_expected_type": "bool",
+    "failed_observed": false,
+    "failed_observed_type": "bool",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6770_dccd_environment_grammar_ab_v2.json",
+    "failed_evidence_sha256": "sha256:47d4b724a8fed526e1ea18fb7f6f110547ce0e5ddecf165d5d708f6e1e890b00"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6770-dccd-environment-grammar-ab-v2.proof_transport_ab_completed (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6770-dccd-environment-grammar-ab-v2",
+      "artifact_field": "proof_transport_ab_completed",
+      "op": "==",
+      "expected": true,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": false,
+      "reason": "actual=False == expected=True",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6770_dccd_environment_grammar_ab_v2.json",
+      "artifact_sha256": "sha256:47d4b724a8fed526e1ea18fb7f6f110547ce0e5ddecf165d5d708f6e1e890b00"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
