@@ -16848,3 +16848,4 @@ The l |
 | 2026-08-30 17:07 UTC | Fail-closed roadmap agent-model dispatch contract | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6784_agent_m |
 | 2026-08-30 17:10 UTC | Fail-closed roadmap agent-model dispatch contract | FAIL | No file changes produced |
 | 2026-08-30 17:14 UTC | Fail-closed roadmap agent-model dispatch contract | FAIL | No file changes produced |
+| 2026-08-30 17:33 UTC | Parent-owned durable row checkpoint and resume con | OK | 96 passed, 1 warning in 19.45s |
