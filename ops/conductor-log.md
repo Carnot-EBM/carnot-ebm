@@ -16803,3 +16803,4 @@ The l |
 | 2026-08-30 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | capstone_milestone_rot_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on cap |
 | 2026-08-30 00:23 UTC | Exclusive full-load ARC preflight and teardown rec | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ad"),
 +        |
+| 2026-08-30 00:40 UTC | Exclusive full-load ARC preflight and teardown rec | OK | 113 passed, 1 warning in 8.76s |
