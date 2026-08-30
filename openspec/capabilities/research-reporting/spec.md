@@ -59825,4 +59825,4 @@ enum. The honest verdict SHALL use a terminal prefix.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-REPORT-6780 and SCENARIO-REPORT-6780-* | Planned (`python/carnot/experiment_6780_v590_branch_disposition.py`, `scripts/experiments/experiment_6780_v590_branch_disposition.py`) | Planned (`tests/python/test_experiment_6780_v590_branch_disposition.py`) |
+| REQ-REPORT-6780 and SCENARIO-REPORT-6780-* | Implemented (`python/carnot/experiment_6780_v590_branch_disposition.py`, `scripts/experiments/experiment_6780_v590_branch_disposition.py`) | Implemented (`tests/python/test_experiment_6780_v590_branch_disposition.py`; 100% scoped statement coverage) |
