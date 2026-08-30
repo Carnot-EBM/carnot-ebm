@@ -16852,3 +16852,4 @@ The l |
 | 2026-08-30 17:55 UTC | Exact constraint-dependency graph and hard-negativ | OK | 91 passed, 1 warning in 18.15s |
 | 2026-08-30 18:20 UTC | Group-aware soft fixed-point proposer | OK | 92 passed, 1 warning in 19.51s |
 | 2026-08-30 18:55 UTC | Group-aware fixed point versus parameter-matched f | OK | 92 passed, 1 warning in 33.85s |
+| 2026-08-30 19:19 UTC | Cold fixed-point authority and shortcut audit | OK | 92 passed, 1 warning in 28.32s |
