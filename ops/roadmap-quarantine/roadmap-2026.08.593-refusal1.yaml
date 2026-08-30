@@ -414,11 +414,6 @@ tasks:
 
     Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6800_real_output_fixed_point_transfer_ab.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  prior_failures:
-    - experiment_id: exp5490-csl-kan-fixed-point-update-ledger-v498
-      verdict: 'blocked_gate_check_failed'
-      addressed_by: 'Exp6786, Exp6788, and Exp6789 shipped, and Exp6799 is a current same-milestone producer. This task tests a frozen grouped-versus-flat proposer on real-output probes, not the blocked CSL KAN update-ledger chain.'
-      retire_if_same_verdict: true
 
 - id: exp6801-real-output-fixed-point-cold-audit
   title: Cold real-output fixed-point authority and shortcut audit
@@ -493,8 +488,3 @@ tasks:
 
     Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6801_real_output_fixed_point_cold_audit.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  prior_failures:
-    - experiment_id: exp5490-csl-kan-fixed-point-update-ledger-v498
-      verdict: 'blocked_gate_check_failed'
-      addressed_by: 'Exp6800 is the current same-milestone producer and reports model_output_fixed_point_comparison_completed. This cold audit does not depend on Exp5488 or retry the blocked CSL KAN update-ledger chain.'
-      retire_if_same_verdict: true
