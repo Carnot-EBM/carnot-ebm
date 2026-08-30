@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.590",
+  "generated_at": "2026-08-30T13:56:18.154Z",
+  "retro_type": "operational_in_progress",
+  "summary": "Eight experiments completed in 2.7 minutes; five were compute-bound. Three compute-bound entries tied for the longest listed duration at 1 minute, but no data available this milestone explains their phase costs.",
+  "total_wall_time_minutes": 2.7,
+  "experiments_completed": 8,
+  "slowest_experiments": [
+    {
+      "experiment": "Three-model DCCD environment-grammar A/B v2",
+      "duration_minutes": 1.02,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Window-120 shadow-supervisor evidence accrual",
+      "duration_minutes": 0.59,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Task-owned SOTA memory lease and artifact contract",
+      "duration_minutes": 0.58,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Environment-indexed proof grammar fixture v2",
+      "duration_minutes": 0.28,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V590 branch disposition and PRD gap update",
+      "duration_minutes": 0.19,
+      "compute_bound": false
+    }
+  ],
+  "bottlenecks_identified": [
+    "GPU 0 was idle at 0% utilization while GPU 1 was at 85% during the compute-bound milestone snapshot. This left one accelerator unused.",
+    "The disk-mtime reconstruction reports whole-minute values for the listed entries. Three compute-bound entries therefore tied at 1 minute, and no data available this milestone identifies their slow phase.",
+    "The GPU snapshot detected a single Python inference process. It did not provide task-level batching, model-concurrency, or runner-identity evidence."
+  ],
+  "improvements_suggested": [
+    "Batch 8-16 questions per forward pass for compute inference. The GPU report estimates a 4-8x throughput improvement.",
+    "When a task loads 2 or more models concurrently, place the second model on idle GPU 0. Do not enforce DualGPURunner for a one-model task.",
+    "Add task-owned phase timestamps, GPU samples, loaded-model count, and runner identity to each compute launch receipt. This will expose phase costs and DualGPURunner eligibility."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add automatic 8-16 question batching to the inference launcher.",
+    "Add device-aware placement for a second concurrently loaded model so GPU 0 can contribute.",
+    "Record task-scoped phase timing, GPU utilization, model concurrency, and runner identity."
+  ],
+  "compute_bound_experiments_count": 5,
+  "gpu_idle_on_compute_bound_tasks": true,
+  "estimated_time_savings_pct": 75,
+  "meta_reflection": "The 75% estimate is the lower-bound runtime reduction implied by the stated 4x batching improvement. It applies to batched inference, not the full 2.7-minute milestone, because no data available this milestone gives the batched share or explains the longest tasks. No data available this milestone establishes concurrent loading of 2 or more models or a missed DualGPURunner dispatch.",
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false
+}
