@@ -59740,3 +59740,89 @@ rows.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6773 and SCENARIO-REPORT-6773-* | Planned (`python/carnot/experiment_6773_csl_owned_lease_contract.py`, `scripts/experiments/experiment_6773_csl_owned_lease_contract.py`) | Planned (`tests/python/test_experiment_6773_csl_owned_lease_contract.py`) |
+
+### REQ-REPORT-6780: V590 Branch Disposition SHALL Preserve Terminal Evidence
+
+Exp6780 SHALL synthesize milestone `2026.08.590` from the active roadmap,
+the V590 design, the V589 branch disposition, and every available artifact
+from Exp6768 through Exp6779. It SHALL list all thirteen expected task IDs
+and deliverables. A missing, blocked, invalid, or current capstone artifact
+SHALL remain an explicit experiment row. It SHALL not block publication of
+the capstone artifact.
+
+The synthesis SHALL emit one branch row for proof, continuous memory, ARC,
+and the execution contract. It SHALL recompute proof exact-valid effects,
+repair intervals and harmful flips, continuous-memory order effects and
+transaction activity, ARC actions-to-progress effects, supervisor evidence,
+tool-gap transport, and adoption decisions from raw rows. If eligible rows
+do not exist, the value SHALL be null and the cause SHALL be explicit.
+Metrics from different branches SHALL not be averaged, voted, or pooled.
+
+The synthesis SHALL retain all summarizer, adversarial verifier, verdict-row
+consistency, and recurring-blocker findings. It SHALL preserve circular,
+no-headroom, stale-stamp, missing-field, missing-row, blocked-gate, warning,
+and critical states. It SHALL classify each of the three V590 PRD gaps as
+`narrowed`, `unchanged`, `widened`, or `blocked` with direct row citations.
+
+FR11 SHALL be positive only if a cold audit passes activity, retention,
+support, hard-case, poison, restart, and rollback gates. ARC adoption SHALL
+be positive only if the cold actions-to-progress audit supports adoption.
+Transport evidence alone SHALL not support ARC adoption. A repeated verdict
+with `retire_if_same_verdict=true` SHALL produce a mechanical retirement
+recommendation for the exclusion manifest.
+
+The artifact SHALL be written atomically to
+`results/experiment_6780_v590_branch_disposition.json`. It SHALL include
+`field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `milestone`, `expected_task_ids`,
+`available_artifacts`, `missing_artifacts`, `rows`, `branch_rows`,
+`row_recomputed_headlines`, `adversarial_findings`,
+`verdict_row_consistency_findings`, `recurring_blockers`,
+`prior_verdict_recurrences`, `retirement_recommendations`,
+`prd_gap_disposition`, `fr12_disposition`, `fr11_disposition`,
+`arc_disposition`, `hardware_disposition`, `docs_reconciled`,
+`protected_files_unchanged`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. The verdict class SHALL use the closed
+enum. The honest verdict SHALL use a terminal prefix.
+
+#### SCENARIO-REPORT-6780-PRECONDITIONS: Every Planned Task Stays Visible
+
+**Given** the V590 roadmap contains Exp6768 through Exp6780
+**When** Exp6780 loads available artifacts
+**Then** all thirteen tasks appear once
+**And** absent or nonterminal deliverables become explicit missing rows.
+
+**Spec traces:** REQ-REPORT-6780, REQ-HARNESS-008
+
+#### SCENARIO-REPORT-6780-ROW-RECOMPUTATION: Claims Follow Eligible Rows
+
+**Given** a source artifact contains raw comparative rows
+**When** Exp6780 recomputes its branch headline
+**Then** the reported denominator and effect derive from those rows
+**And** zero eligible rows produce a null value with a cause.
+
+**Spec traces:** REQ-REPORT-6780
+
+#### SCENARIO-REPORT-6780-BRANCH-ISOLATION: Branches Stay Independent
+
+**Given** proof, continuous memory, ARC, and execution evidence differ
+**When** Exp6780 builds branch rows and PRD gap dispositions
+**Then** each branch keeps its own verdict and next action
+**And** no pooled milestone score or successor roadmap is emitted.
+
+**Spec traces:** REQ-REPORT-6780
+
+#### SCENARIO-REPORT-6780-VALIDATION: Findings And Blocks Stay Auditable
+
+**Given** source checks report warnings, blocked gates, or missing rows
+**When** Exp6780 validates and publishes the artifact
+**Then** those findings and observed gate values remain in the artifact
+**And** protected files remain unchanged.
+
+**Spec traces:** REQ-REPORT-6780
+
+## Implementation Status (REQ-REPORT-6780)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6780 and SCENARIO-REPORT-6780-* | Planned (`python/carnot/experiment_6780_v590_branch_disposition.py`, `scripts/experiments/experiment_6780_v590_branch_disposition.py`) | Planned (`tests/python/test_experiment_6780_v590_branch_disposition.py`) |
