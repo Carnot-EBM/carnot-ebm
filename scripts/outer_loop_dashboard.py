@@ -216,38 +216,65 @@ def generalization_levels() -> dict:
     # Reading only arc_loop_solve_*.json would leave this line stuck at "not measured" forever
     # even after that run lands, because they are different files.
     total, games = 0, 0
-    # The eval writes a PER-RUN file under arc_leaderboard_eval_runs/ and only sometimes updates
-    # the flat arc_leaderboard_eval.json. Reading only the flat file showed a 48-day-old
-    # `policy=explorer` number while a fresh `policy=e3` result sat unread beside it.
-    candidates = sorted(
-        (REPO / "results" / "arc_leaderboard_eval_runs").glob("*.json"),
-        key=lambda q: q.stat().st_mtime,
-        reverse=True,
-    )
+    # UNION ACROSS BATCHES, not freshest-wins. The eval must be run in small batches (it
+    # writes only at the end, so one long invocation risks hours producing nothing), and each
+    # batch covers DIFFERENT games -- so the measurement is their union, deduplicated by game.
+    #
+    # Freshest-wins was the first version and it regressed immediately: an empty misfire batch
+    # (`live_levels: 0`, `per_game: []`) was newer than the real cd82 result and replaced a
+    # genuine measurement with "not measured". A newer file is not a better one.
+    # AND NEVER POOL ACROSS POLICIES. `explorer` is the no-LLM tier-1 floor and `e3` is the full
+    # cascade -- different agents, so summing their levels invents a number neither measured.
+    # The first union version reported "policy=e3,explorer", mixing a 48-day-old floor into a
+    # fresh result. Same discipline as refusing to pool the native and selfparse transports.
+    per_game_levels: dict[str, int] = {}
+    policies: set[str] = set()
+    newest_mtime = 0.0
+    preferred: str | None = None
+    runs = sorted((REPO / "results" / "arc_leaderboard_eval_runs").glob("*.json"))
     flat = REPO / "results" / "arc_leaderboard_eval.json"
     if flat.exists():
-        candidates.append(flat)
-    lb = candidates[0] if candidates else flat
-    if lb.exists():
+        runs.append(flat)
+    for path in runs:
         try:
-            d = json.loads(lb.read_text())
-            live = d.get("live_levels")
-            if isinstance(live, int) and live > 0:
-                per = d.get("per_game")
-                # AGE AND POLICY TRAVEL WITH THE NUMBER. The first version of this branch
-                # reported a 48-day-old `policy=explorer` result -- the no-LLM tier-1 floor --
-                # as though it were the current adapter-free e3 measurement. A number without
-                # its provenance is how a stale floor becomes a headline.
-                return {
-                    "measured": True,
-                    "levels": live,
-                    "games": len(per) if isinstance(per, (list, dict)) else 0,
-                    "source": "leaderboard_eval",
-                    "policy": str(d.get("policy", "?")),
-                    "age_days": int((time.time() - lb.stat().st_mtime) // 86400),
-                }
+            d = json.loads(path.read_text())
         except (OSError, json.JSONDecodeError):
-            pass
+            continue
+        rows = d.get("per_game")
+        if not isinstance(rows, list) or not rows:
+            continue  # an empty batch contributes nothing; it does not erase other batches
+        policy = str(d.get("policy", "?"))
+        if preferred is None:
+            # "e3" is the full competition cascade and the only policy that answers the
+            # hidden-game question; anything else is a floor and must not be mixed into it.
+            preferred = (
+                "e3"
+                if any(
+                    str(json.loads(q.read_text()).get("policy")) == "e3" for q in runs if q.exists()
+                )
+                else policy
+            )
+        if policy != preferred:
+            continue
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            game = str(row.get("game", "")).strip()
+            levels = row.get("levels")
+            if game and isinstance(levels, int):
+                # Later files win PER GAME, so a re-measure updates that game only.
+                per_game_levels[game] = levels
+        policies.add(str(d.get("policy", "?")))
+        newest_mtime = max(newest_mtime, path.stat().st_mtime)
+    if per_game_levels:
+        return {
+            "measured": True,
+            "levels": sum(per_game_levels.values()),
+            "games": len(per_game_levels),
+            "source": "leaderboard_eval",
+            "policy": ",".join(sorted(policies)),
+            "age_days": int((time.time() - newest_mtime) // 86400),
+        }
     for path in sorted((REPO / "results").glob("arc_loop_solve_*.json")):
         try:
             d = json.loads(path.read_text())
