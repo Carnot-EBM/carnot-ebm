@@ -1622,3 +1622,13 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
 - artifact: results/experiment_6765_object_table_fetch_ab_v2.json
+
+## experiment_6770_dccd_environment_grammar_ab_v2.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+- artifact: results/experiment_6770_dccd_environment_grammar_ab_v2.json
+
+## experiment_6773_csl_owned_lease_contract.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+- artifact: results/experiment_6773_csl_owned_lease_contract.json

@@ -99,9 +99,7 @@ def _stream_fixture() -> dict:
             "commit_timing": "after_exact_result_closes_episode",
         },
         "restart_receipts": [{"bytes_match": True, "hash_match": True}],
-        "rollback_receipts": [
-            {"inverse_patch_applied": True, "byte_identical": True}
-        ],
+        "rollback_receipts": [{"inverse_patch_applied": True, "byte_identical": True}],
         "poison_fixture_receipts": [
             {
                 "committed": False,
@@ -433,13 +431,32 @@ def test_req_cl_6773_collects_every_precondition_before_loading(
     }
 
 
+def test_req_infra_6773_live_device_selector_refreshes_inventory(monkeypatch) -> None:
+    """REQ-INFRA-6773 selects from a new two-device inventory before a load."""
+    inventory = {
+        "devices": _devices(),
+        "device_query": {"exit_code": 0},
+        "process_query": {"exit_code": 0},
+    }
+    monkeypatch.setattr(exp.infra, "nvidia_smi_inventory", lambda: inventory)
+    selection = exp.select_device_before_load()
+    assert selection["selected_device"]["index"] == 1
+    assert selection["inventory_commands"] == {
+        "devices": {"exit_code": 0},
+        "processes": {"exit_code": 0},
+    }
+
+
 @pytest.mark.parametrize(
     ("mutate", "failed_check"),
     [
         (lambda row: row.update(procedural_memory_stream_ready=False), "stream_ready"),
         (lambda row: row.update(order_count=5), "order_count"),
         (lambda row: row["stream_manifest"].update(stream_hash="sha256:bad"), "stream_hash"),
-        (lambda row: row["capacity_contract"]["arms"]["procedural_lesson"].update(top_k=9), "capacity_contract"),
+        (
+            lambda row: row["capacity_contract"]["arms"]["procedural_lesson"].update(top_k=9),
+            "capacity_contract",
+        ),
         (lambda row: row.update(read_only_episode_enforced=False), "read_only_episode"),
         (lambda row: row["transaction_schema"].update(version=2), "transaction_schema"),
         (lambda row: row.update(restart_receipts=[]), "restart_receipts"),
@@ -658,9 +675,30 @@ def test_req_infra_6773_partial_lifecycle_does_not_claim_readiness(tmp_path: Pat
     assert artifact["csl_live_preflight_ready"] is False
     assert artifact["verdict_class"] == "partial"
     assert artifact["models_used"] == models
-    assert "model_lifecycle:" + models[1]["model_id"] in artifact["gate_check_summary"][
-        "failed_checks"
-    ]
+    assert (
+        "model_lifecycle:" + models[1]["model_id"]
+        in artifact["gate_check_summary"]["failed_checks"]
+    )
+
+
+def test_req_report_6773_live_invocation_records_the_first_observed_token(
+    tmp_path: Path,
+) -> None:
+    """REQ-REPORT-6773 records live use even when later lifecycle admission fails."""
+    models = _model_records(tmp_path)
+    fixture = _stream_fixture()
+    receipt = _gpu_receipt(models[0], 0, error="recovery")
+    artifact = exp.build_artifact(
+        date=exp.RUN_DATE,
+        preconditions=_preconditions(models, fixture),
+        gpu_receipts=[receipt],
+        code_receipts={"module": f"sha256:{91:064x}"},
+        started_ns=10,
+        finished_ns=20,
+    )
+    assert artifact["models_used"] == [models[0]]
+    assert artifact["live_model_invoked"] is True
+    assert artifact["csl_live_preflight_ready"] is False
 
 
 def test_req_infra_6773_vram_recovery_receipt_uses_frozen_tolerance() -> None:
@@ -805,8 +843,18 @@ def test_req_infra_6773_live_worker_owns_lease_and_runs_one_token(tmp_path: Path
     snapshots = iter(
         [
             {**device, "owned_pid_present": False, "owned_pid_vram_mb": 0},
-            {**device, "memory_used_mb": 18500, "owned_pid_present": True, "owned_pid_vram_mb": 18000},
-            {**device, "memory_used_mb": 18600, "owned_pid_present": True, "owned_pid_vram_mb": 18100},
+            {
+                **device,
+                "memory_used_mb": 18500,
+                "owned_pid_present": True,
+                "owned_pid_vram_mb": 18000,
+            },
+            {
+                **device,
+                "memory_used_mb": 18600,
+                "owned_pid_present": True,
+                "owned_pid_vram_mb": 18100,
+            },
             {**device, "memory_used_mb": 520, "owned_pid_present": False, "owned_pid_vram_mb": 0},
         ]
     )
@@ -833,6 +881,42 @@ def test_req_infra_6773_live_worker_owns_lease_and_runs_one_token(tmp_path: Path
     assert lease_box["lease"].phases == list(exp.COMPLETE_PHASE_SEQUENCE)
     assert receipt["lease_release"]["released"] is True
     assert receipt["vram_recovery"]["passed"] is True
+
+
+def test_req_infra_6773_live_worker_rechecks_device_before_acquiring_lease(
+    tmp_path: Path,
+) -> None:
+    """REQ-INFRA-6773 refuses a device that lost eligibility before its load."""
+    model = _model_records(tmp_path)[0]
+    device = _devices()[1]
+    changed = {
+        **device,
+        "memory_used_mb": 18_000,
+        "memory_free_mb": 6_000,
+        "owned_pid_present": False,
+        "owned_pid_vram_mb": 0,
+    }
+    lease_called = False
+
+    def lease_factory(**kwargs):
+        nonlocal lease_called
+        del kwargs
+        lease_called = True
+        raise AssertionError("an ineligible device must not acquire a lease")
+
+    receipt = exp.run_live_model_worker(
+        model,
+        device,
+        prompt="fixture prompt",
+        lease_runtime_dir=tmp_path / "leases",
+        llama_factory=_FakeLlama,
+        lease_factory=lease_factory,
+        snapshot_fn=lambda *_: deepcopy(changed),
+        sleep_fn=lambda _: None,
+    )
+    assert lease_called is False
+    assert receipt["errors"] == ["RuntimeError: selected_device_recheck_failed"]
+    assert receipt["first_token_canary"]["first_token_observed"] is False
 
 
 def test_req_infra_6773_live_worker_failure_releases_a_blocked_lease(tmp_path: Path) -> None:
@@ -878,9 +962,24 @@ def test_req_infra_6773_live_worker_imports_llama_and_retries_recovery(
     snapshots = iter(
         [
             {**device, "owned_pid_present": False, "owned_pid_vram_mb": 0},
-            {**device, "memory_used_mb": 18000, "owned_pid_present": True, "owned_pid_vram_mb": 17500},
-            {**device, "memory_used_mb": 18100, "owned_pid_present": True, "owned_pid_vram_mb": 17600},
-            {**device, "memory_used_mb": 18000, "owned_pid_present": True, "owned_pid_vram_mb": 17500},
+            {
+                **device,
+                "memory_used_mb": 18000,
+                "owned_pid_present": True,
+                "owned_pid_vram_mb": 17500,
+            },
+            {
+                **device,
+                "memory_used_mb": 18100,
+                "owned_pid_present": True,
+                "owned_pid_vram_mb": 17600,
+            },
+            {
+                **device,
+                "memory_used_mb": 18000,
+                "owned_pid_present": True,
+                "owned_pid_vram_mb": 17500,
+            },
             {**device, "memory_used_mb": 500, "owned_pid_present": False, "owned_pid_vram_mb": 0},
         ]
     )
@@ -926,8 +1025,18 @@ def test_req_infra_6773_live_worker_rejects_missing_cuda_or_token(
         snapshots = iter(
             [
                 {**device, "owned_pid_present": False, "owned_pid_vram_mb": 0},
-                {**device, "memory_used_mb": 18000, "owned_pid_present": True, "owned_pid_vram_mb": 17500},
-                {**device, "memory_used_mb": 18100, "owned_pid_present": True, "owned_pid_vram_mb": 17600},
+                {
+                    **device,
+                    "memory_used_mb": 18000,
+                    "owned_pid_present": True,
+                    "owned_pid_vram_mb": 17500,
+                },
+                {
+                    **device,
+                    "memory_used_mb": 18100,
+                    "owned_pid_present": True,
+                    "owned_pid_vram_mb": 17600,
+                },
                 {**device, "owned_pid_present": False, "owned_pid_vram_mb": 0},
             ]
         )
@@ -941,7 +1050,11 @@ def test_req_infra_6773_live_worker_rejects_missing_cuda_or_token(
         snapshot_fn=lambda *_: next(snapshots),
         sleep_fn=lambda _: None,
     )
-    marker = "owner_bound_cuda_residency_missing" if failure == "residency" else "first_token_not_observed"
+    marker = (
+        "owner_bound_cuda_residency_missing"
+        if failure == "residency"
+        else "first_token_not_observed"
+    )
     assert marker in receipt["errors"][0]
 
 
@@ -967,8 +1080,18 @@ def test_req_infra_6773_live_worker_records_teardown_and_lease_errors(tmp_path: 
     snapshots = iter(
         [
             {**device, "owned_pid_present": False, "owned_pid_vram_mb": 0},
-            {**device, "memory_used_mb": 18000, "owned_pid_present": True, "owned_pid_vram_mb": 17500},
-            {**device, "memory_used_mb": 18100, "owned_pid_present": True, "owned_pid_vram_mb": 17600},
+            {
+                **device,
+                "memory_used_mb": 18000,
+                "owned_pid_present": True,
+                "owned_pid_vram_mb": 17500,
+            },
+            {
+                **device,
+                "memory_used_mb": 18100,
+                "owned_pid_present": True,
+                "owned_pid_vram_mb": 17600,
+            },
             {**device, "owned_pid_present": False, "owned_pid_vram_mb": 0},
         ]
     )
@@ -1018,6 +1141,7 @@ def test_req_cl_6773_run_stops_on_preflight_and_runs_workers_sequentially(tmp_pa
         result_path=ready_path,
         date=exp.RUN_DATE,
         preflight_fn=lambda: _preconditions(models, fixture),
+        device_selector=lambda: exp.rank_eligible_devices(_devices()),
         worker_runner=worker,
         code_receipt_fn=lambda: {"module": f"sha256:{91:064x}"},
         clock=iter([10, 20]).__next__,
@@ -1025,6 +1149,73 @@ def test_req_cl_6773_run_stops_on_preflight_and_runs_workers_sequentially(tmp_pa
     assert sequence == [row["model_id"] for row in models]
     assert ready["csl_live_preflight_ready"] is True
     assert json.loads(ready_path.read_text())["model_specs"] == models
+
+
+def test_req_infra_6773_run_reselects_the_least_used_device_before_each_model(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-INFRA-6773-SEQUENTIAL refreshes device choice after recovery."""
+    models = _model_records(tmp_path)
+    fixture = _stream_fixture()
+    devices = _devices()
+    selections = iter(
+        [
+            {"selected_device": deepcopy(devices[1])},
+            {"selected_device": deepcopy(devices[0])},
+        ]
+    )
+    observed_uuids = []
+
+    def worker(model, device, prompt, runtime_dir):
+        del prompt, runtime_dir
+        observed_uuids.append(device["uuid"])
+        index = [row["model_id"] for row in models].index(model["model_id"])
+        receipt = _gpu_receipt(model, index)
+        receipt["device"] = deepcopy(device)
+        receipt["lease_owner"]["device_uuid"] = device["uuid"]
+        receipt["lease_release"]["device_uuid"] = device["uuid"]
+        receipt["receipt_sha256"] = exp.gpu_receipt_checksum(receipt)
+        return receipt
+
+    artifact = exp.run(
+        result_path=tmp_path / "reselected.json",
+        date=exp.RUN_DATE,
+        preflight_fn=lambda: _preconditions(models, fixture),
+        device_selector=lambda: next(selections),
+        worker_runner=worker,
+        code_receipt_fn=lambda: {"module": f"sha256:{91:064x}"},
+        clock=iter([10, 20]).__next__,
+    )
+    assert observed_uuids == [devices[1]["uuid"], devices[0]["uuid"]]
+    assert artifact["csl_live_preflight_ready"] is True
+
+
+def test_req_infra_6773_run_stops_when_refreshed_devices_are_ineligible(
+    tmp_path: Path,
+) -> None:
+    """REQ-INFRA-6773 retains a changed device gate instead of loading a model."""
+    models = _model_records(tmp_path)
+    fixture = _stream_fixture()
+    workers = []
+    selection = {"selected_device": None, "eligible_devices": []}
+    artifact = exp.run(
+        result_path=tmp_path / "device-blocked.json",
+        date=exp.RUN_DATE,
+        preflight_fn=lambda: _preconditions(models, fixture),
+        device_selector=lambda: selection,
+        worker_runner=lambda *args: workers.append(args),
+        code_receipt_fn=lambda: {"module": f"sha256:{91:064x}"},
+        clock=iter([10, 20]).__next__,
+    )
+    assert workers == []
+    assert artifact["status"] == "partial"
+    assert artifact["live_model_invoked"] is False
+    device_failure = next(
+        row
+        for row in artifact["gate_check_summary"]["failures"]
+        if str(row["check"]).startswith("device_recheck:")
+    )
+    assert device_failure["observed"] == selection
 
 
 def test_req_cl_6773_run_stops_after_first_failed_lifecycle(tmp_path: Path) -> None:
@@ -1041,6 +1232,7 @@ def test_req_cl_6773_run_stops_after_first_failed_lifecycle(tmp_path: Path) -> N
         result_path=tmp_path / "partial.json",
         date=exp.RUN_DATE,
         preflight_fn=lambda: _preconditions(models, fixture),
+        device_selector=lambda: exp.rank_eligible_devices(_devices()),
         worker_runner=worker,
         code_receipt_fn=lambda: {"module": f"sha256:{91:064x}"},
         clock=iter([10, 20]).__next__,
@@ -1049,7 +1241,9 @@ def test_req_cl_6773_run_stops_after_first_failed_lifecycle(tmp_path: Path) -> N
     assert artifact["verdict_class"] == "partial"
 
 
-def test_req_infra_6773_parent_worker_records_logs_and_recovery(tmp_path: Path, monkeypatch) -> None:
+def test_req_infra_6773_parent_worker_records_logs_and_recovery(
+    tmp_path: Path, monkeypatch
+) -> None:
     """REQ-INFRA-6773 parent-binds worker exit, offload logs, and recovery."""
     model = _model_records(tmp_path)[0]
     device = _devices()[1]
@@ -1161,19 +1355,22 @@ def test_req_report_6773_worker_entry_and_cli_errors(tmp_path: Path, monkeypatch
     assert json.loads(output_path.read_text())["prompt"] == "canary"
 
     monkeypatch.setattr(exp, "_worker_entry", lambda *args: 7)
-    assert exp.main(
-        [
-            "--worker",
-            "--worker-model",
-            str(model_path),
-            "--worker-device",
-            str(device_path),
-            "--worker-prompt",
-            str(prompt_path),
-            "--worker-output",
-            str(output_path),
-        ]
-    ) == 7
+    assert (
+        exp.main(
+            [
+                "--worker",
+                "--worker-model",
+                str(model_path),
+                "--worker-device",
+                str(device_path),
+                "--worker-prompt",
+                str(prompt_path),
+                "--worker-output",
+                str(output_path),
+            ]
+        )
+        == 7
+    )
     with pytest.raises(SystemExit):
         exp.main(["--worker"])
 
