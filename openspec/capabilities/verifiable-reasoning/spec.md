@@ -23422,3 +23422,92 @@ remain present in the planned corpus row.
 `exact_valid`.
 
 **Spec traces:** REQ-VERIFY-6745
+
+### REQ-VERIFY-6769: Environment-Indexed Runtime Proof Grammar V2
+
+Exp6769 SHALL require a ready Exp6768 panel with at least 36 rows. Every held
+family and target error class SHALL be present. A local grammar backend and the
+independent exact checker SHALL import before evaluation starts. A failed check
+SHALL write a full `complete_blocked_dynamic_grammar_v2` artifact with the
+failed check and observed value.
+
+For each CNF, the runtime environment SHALL contain only its variable symbols,
+clause symbols, binary value domain, selected claim branch, remaining required
+slots, used symbols, and completion state. It SHALL exclude answer labels,
+current-row exact outcomes, solver traces, and ground-truth certificates. A
+prefix-dependent policy SHALL invoke a token mask before each emitted token.
+The mask SHALL prevent undefined symbols, invalid values, duplicate evidence,
+incomplete terminals, extra text, and invalid claim transitions from entering
+the emitted prefix.
+
+The experiment SHALL compare a static CFG, the environment-indexed mask, and a
+draft-conditioned renderer on exact-valid fixtures and adversarial inputs. The
+renderer SHALL use only the draft and runtime environment. It SHALL not call the
+exact checker or create missing proof evidence. Invalid or incomplete drafts MAY
+render as `ABSTAIN`. The exact checker MAY evaluate a completed output only
+after the mask or renderer returns.
+
+For every supported size bin, at least one exact-valid SAT certificate and one
+exact-valid UNSAT certificate SHALL remain reachable through the runtime mask.
+This is a witness-based support check. It SHALL not claim enumeration of all
+valid proofs. Readiness SHALL require live mask calls, zero ghost violations,
+SAT and UNSAT reachability, strict parser acceptance, exact-authority
+separation, deterministic replay, and passing focused tests.
+
+The terminal artifact SHALL be
+`results/experiment_6769_environment_indexed_proof_grammar_v2.json`. It SHALL
+include `field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `source_artifact_sha256`, `gamma_schema`, `rows`,
+`runtime_mask_invocation_count`, `no_ghost_violations`,
+`valid_sat_reachable`, `valid_unsat_reachable`,
+`support_contraction_receipts`, `exact_authority_features_in_grammar`,
+`dynamic_proof_grammar_ready`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `verifier_is_oracle` SHALL be false.
+The inference substrate SHALL identify an invoked local runtime grammar fixture
+with no LLM. The verdict class SHALL use the closed project vocabulary. The
+honest verdict SHALL start with an allowed terminal prefix.
+
+### SCENARIO-VERIFY-6769-MASK: Invalid Tokens Are Unreachable
+
+**Given** one CNF-indexed environment and an adversarial token sequence
+**When** the static and environment-indexed policies resolve every prefix
+**Then** the environment policy invokes its live mask and rejects the first
+ghost, invalid-domain, duplicate, incomplete, extra, confusable, or invalid
+transition token before that token enters the emitted prefix.
+
+**Spec traces:** REQ-VERIFY-6769
+
+### SCENARIO-VERIFY-6769-DRAFT: Rendering Has No Exact Authority
+
+**Given** a free model draft and the answer-blind runtime environment
+**When** the draft-conditioned renderer creates a constrained output
+**Then** it preserves only evidence already present in the draft, calls no exact
+checker, and uses `ABSTAIN` when the draft cannot complete a valid structure.
+
+**Spec traces:** REQ-VERIFY-6769
+
+### SCENARIO-VERIFY-6769-SUPPORT: Exact Witnesses Survive The Mask
+
+**Given** one archived exact-valid SAT witness and one archived exact-valid
+UNSAT witness for each supported size bin
+**When** each witness is replayed through a fresh environment-indexed session
+**Then** every token and the terminal remain reachable, and the independent
+post-generation checker confirms each completed certificate.
+
+**Spec traces:** REQ-VERIFY-6769
+
+### SCENARIO-VERIFY-6769-ARTIFACT: Readiness Is Row-Derived
+
+**Given** the mode, fixture, attack, invocation, support, parser, authority, and
+determinism receipts
+**When** Exp6769 builds or validates its terminal artifact
+**Then** every gate is recomputed from retained evidence and any failed
+precondition or readiness check stays visible in `gate_check_summary`.
+
+**Spec traces:** REQ-VERIFY-6769
+
+## Implementation Status (REQ-VERIFY-6769)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6769 and SCENARIO-VERIFY-6769-* | Planned (`python/carnot/experiment_6769_environment_indexed_proof_grammar_v2.py`, `scripts/experiments/experiment_6769_environment_indexed_proof_grammar_v2.py`) | Planned (`tests/python/test_experiment_6769_environment_indexed_proof_grammar_v2.py`) |
