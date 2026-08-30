@@ -1,0 +1,42 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.591",
+  "generated_at": "2026-08-30T15:47:37.337Z",
+  "retro_type": "operational_in_progress",
+  "summary": "The locked milestone record contains 2 compute-bound completions over 0.5 minutes. Sequential mandated-GGUF ownership and runtime admission was the longest listed task at 1 minute; both GPUs were idle at 0% utilization, while no data available this milestone explains the duration or proves a parallel multi-model DualGPURunner miss.",
+  "total_wall_time_minutes": 0.5,
+  "experiments_completed": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Sequential mandated-GGUF ownership and runtime admission",
+      "duration_minutes": 0.51,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Owned three-model exact proof-generation A/B",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "bottlenecks_identified": [
+    "Both GPUs were at 0% utilization while the milestone contained compute-bound work, so accelerator engagement was ineffective.",
+    "Sequential mandated-GGUF ownership and runtime admission was the longest listed experiment at 1 minute, but no data available this milestone identifies which phase caused the delay.",
+    "The 0-minute three-model A/B entry and disk-mtime reconstruction do not reveal phase timing or whether the models ran concurrently."
+  ],
+  "improvements_suggested": [
+    "Add a compute-launch activity gate that samples GPU utilization after runtime admission and emits task-owned diagnostics when all requested accelerators remain idle.",
+    "Require task manifests to declare model concurrency, and route only concurrent multi-model work through DualGPURunner.",
+    "Record monotonic timestamps for ownership, model load, CUDA admission, inference, and teardown so reconstructed durations can be assigned to a phase."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Gate compute launches on observed accelerator activity and fail fast with task-owned diagnostics when utilization remains idle.",
+    "Make model concurrency explicit and select DualGPURunner automatically only for parallel multi-model tasks.",
+    "Capture task-scoped monotonic phase timing from ownership through teardown."
+  ],
+  "compute_bound_experiments_count": 2,
+  "gpu_idle_on_compute_bound_tasks": true,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence identifies idle compute capacity, but it cannot assign the 1-minute duration to a runtime phase or establish concurrent model loading. Estimated savings is 0% because no timing entry measures the effect of a proposed change.",
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false
+}
