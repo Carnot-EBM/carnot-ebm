@@ -18263,3 +18263,4 @@ metadata, and device-aware scheduling are the next tooling priorities;
 estimated savings remains 0% because the evidence does not quantify a causal
 reduction.
 - 2026-08-30: Exact-invalid targetable proof panel expansion (✅ Complete) — honest_verdict=complete: targetable exact-invalid fixture ready with 126 cold-replayed rows; this is not a model-quality claim; results/experiment_6768_targetable_proof_panel_expansion.json
+- 2026-08-30: Environment-indexed proof grammar fixture v2 (✅ Complete) — honest_verdict=complete: environment-indexed SAT and UNSAT support remained reachable with zero ghost violations; no live SOTA comparison was run; results/experiment_6769_environment_indexed_proof_grammar_v2.json
