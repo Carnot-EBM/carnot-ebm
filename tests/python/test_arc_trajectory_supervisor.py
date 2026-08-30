@@ -658,3 +658,62 @@ def test_the_ledger_reports_the_new_arm_so_it_can_be_finetuned(monkeypatch) -> N
     monkeypatch.setenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", "1")
     sup = TrajectorySupervisor(window=3, reinduction_evidence_floor=0)
     assert ARM_TOOL_LOOP_REINDUCTION in sup.receipt()["arm_outcomes"]
+
+
+# --- The window default must let the supervisor fire (REQ-ARC-WMTE-6780, 2026-08-30) ---------
+# The default was 400, which IS the action budget, so a stagnation window could not complete
+# before a run ended. Measured across three runs
+# (docs/research-notes/arc-induction-round-records-fine-read-2026-08-27.md):
+#   window 400 applied -> 0 firings; window 400 shadow -> 0 firings; window 120 -> 2 per cell.
+# The cross-run refinement tool needs 10 firings per arm; it had 2 and would have stayed there.
+
+
+def test_the_default_window_is_below_the_action_budget(monkeypatch) -> None:
+    """400 equals the budget, so the window could never close. This is the whole bug."""
+    from carnot.agentic.arc_competition_agent import _make_trajectory_supervisor
+
+    monkeypatch.delenv("CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW", raising=False)
+    supervisor, _applies = _make_trajectory_supervisor()
+    assert supervisor.window < 400
+    assert supervisor.window == 120
+
+
+def test_the_default_stays_shadow_so_lowering_it_changes_nothing_scored(monkeypatch) -> None:
+    """The safety argument, pinned.
+
+    `observe()` runs unconditionally at the call site and only application is gated, so a lower
+    window changes what is RECORDED on every run and changes scored behaviour only for a run
+    that opts in. If this ever defaults to applied, the window change stops being free.
+    """
+    from carnot.agentic.arc_competition_agent import _make_trajectory_supervisor
+
+    monkeypatch.delenv("CARNOT_ARC_TRAJECTORY_SUPERVISOR", raising=False)
+    _supervisor, applies = _make_trajectory_supervisor()
+    assert applies is False
+
+
+def test_the_env_override_still_wins(monkeypatch) -> None:
+    """A measured default must not take the override away from a future experiment."""
+    from carnot.agentic.arc_competition_agent import _make_trajectory_supervisor
+
+    monkeypatch.setenv("CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW", "37")
+    supervisor, _applies = _make_trajectory_supervisor()
+    assert supervisor.window == 37
+
+
+def test_an_arm_actually_fires_within_the_default_window() -> None:
+    """The end the change exists for: firings reach the ledger the refinement tool reads."""
+    sup = TrajectorySupervisor(window=120, reinduction_evidence_floor=0)
+    snap = TrajectorySnapshot(
+        level=0,
+        goal_bias_installed=True,
+        induced=True,
+        induction_attempts=1,
+        new_transitions_since_induction=500,
+        diversity_active=False,
+    )
+    for _ in range(400):  # one action budget
+        sup.observe(snap)
+    receipt = sup.receipt()
+    assert receipt["redirects"], "no redirect fired inside a full action budget"
+    assert sum(o["fired"] for o in receipt["arm_outcomes"].values()) > 0

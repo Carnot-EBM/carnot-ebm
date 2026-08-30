@@ -28668,3 +28668,32 @@ legacy route, or reduced denominator.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6765 and SCENARIO-ARC-WMTE-6765-* | Planned in `python/carnot/experiment_6765_object_table_fetch_ab_v2.py` and `scripts/experiments/experiment_6765_object_table_fetch_ab_v2.py`. | Planned in `tests/python/test_experiment_6765_object_table_fetch_ab_v2.py`. |
+
+### REQ-ARC-WMTE-6780: The supervisor's default window must permit firing
+
+The trajectory supervisor's default stagnation window SHALL be below the run's action budget,
+so a window can complete and a redirect can reach the ledger the cross-run refinement tool reads.
+The `CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW` override SHALL continue to win.
+
+#### SCENARIO-ARC-WMTE-6780-A: the default permits a firing
+- GIVEN no window override
+- WHEN a level stagnates for a full action budget
+- THEN at least one arm fires and appears in `arm_outcomes`
+
+#### SCENARIO-ARC-WMTE-6780-B: lowering it changes nothing scored
+- GIVEN `CARNOT_ARC_TRAJECTORY_SUPERVISOR` is unset
+- WHEN the supervisor is constructed
+- THEN it runs in SHADOW mode, recording redirects without applying them
+
+Rationale: the default was 400, which IS the action budget, so a stagnation window could
+essentially never complete and the refinement tool (REQ-ARC-WMTE-6720, floor 10 firings per arm)
+sat at 2 reporting INSUFFICIENT EVIDENCE — an honest answer to a question the setting made
+unanswerable. Measured across three runs
+(`docs/research-notes/arc-induction-round-records-fine-read-2026-08-27.md`): window 400 applied
+gave 0 firings, window 400 shadow gave 0 firings, window 120 gave 2 redirects per cell. Safe
+because `observe()` runs unconditionally at the call site and only `_apply_trajectory_redirect`
+is gated on `applies`.
+
+Implementation status: implemented 2026-08-30
+(`python/carnot/agentic/arc_competition_agent.py:_make_trajectory_supervisor`;
+`tests/python/test_arc_trajectory_supervisor.py`, 38 tests, 3/3 mutations RED).
