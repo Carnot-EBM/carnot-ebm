@@ -16855,3 +16855,5 @@ The l |
 | 2026-08-30 19:19 UTC | Cold fixed-point authority and shortcut audit | OK | 92 passed, 1 warning in 28.32s |
 | 2026-08-30 19:49 UTC | Chronological constraint-routing opportunity strea | OK | 96 passed, 1 warning in 31.60s |
 | 2026-08-30 20:18 UTC | Conductor self-edit reverted | WARN | working-tree edit to research_conductor.py reverted; diff at 20260830T201812Z.pa |
+| 2026-08-30 20:33 UTC | Compositional online constraint-routing comparison | OK | 111 passed, 1 warning in 43.77s |
+| 2026-08-30 20:35 UTC | Conductor re-exec: fresh committed source | OK | 63c64c3af372 -> 765dc53838c6; argv preserved |
