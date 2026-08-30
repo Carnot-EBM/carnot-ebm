@@ -131,10 +131,14 @@ def public_set_efficiency() -> dict:
 
     HONEST SCOPE, and it is the whole reason this returns a dict rather than a number:
 
-    * AGGREGATE, NOT PER-LEVEL. The stored `solution` is one flat move list for reaching
-      `reached_level`, so this compares total moves against the summed human baseline for the
-      levels reached. The real rule scores each level separately. This cannot be quoted as a
-      competition score.
+    * IT MEASURES A REPLAY, NOT A DISCOVERY. This is the finding that stopped the first version
+      shipping. The stored `solution` is the BANKED WINNING PATH, so it is 1.2x-5.3x SHORTER than
+      the human baseline and every game pins the score to its 1.0 cap. A uniform 1.000 is the
+      IMPLAUSIBLE_PERFECT shape: real arithmetic over the wrong quantity. The competition scores
+      the actions spent DURING an attempt, exploration included; the length of a saved answer is
+      not that, and cannot approximate it.
+    * AGGREGATE, NOT PER-LEVEL. One flat move list covers all levels reached, while the real rule
+      scores each level separately.
     * DEVELOPMENT PROXY. Every solve artifact carries
       `solve_provenance: development_proxy` -- the offline twin driven by hand-built per-game
       adapters. It says nothing about the live agent on a game it has never seen.
@@ -147,6 +151,7 @@ def public_set_efficiency() -> dict:
     char = results / "arc_agi3_game_characterization.json"
     baselines: dict[str, list] = {}
     if char.exists():
+
         def _walk(o):
             if isinstance(o, dict):
                 if "game_id" in o and "baseline_actions" in o:
@@ -156,6 +161,7 @@ def public_set_efficiency() -> dict:
             elif isinstance(o, list):
                 for v in o:
                     _walk(v)
+
         try:
             _walk(json.loads(char.read_text()))
         except (OSError, json.JSONDecodeError):
@@ -175,14 +181,18 @@ def public_set_efficiency() -> dict:
         if not isinstance(moves, list) or not moves or not base or not isinstance(reached, int):
             missing += 1
             continue
-        s = efficiency_score(sum(base[: max(1, reached)]), len(moves))
-        if s is None:
+        human, agent = sum(base[: max(1, reached)]), len(moves)
+        if human <= 0 or agent <= 0:
             missing += 1
         else:
-            scores.append(s)
+            # The RAW ratio, uncapped. Capping is what hid the degeneracy: every game clamped to
+            # 1.0 and the headline read like a perfect score. Uncapped, the same data says
+            # "the saved path is ~2.8x shorter than human exploration", which is true and is
+            # obviously not a capability claim.
+            scores.append(human / agent)
     del yaml  # imported only to prove availability alongside the rest of the harness
     return {
-        "mean": (sum(scores) / len(scores)) if scores else None,
+        "mean_ratio": (sum(scores) / len(scores)) if scores else None,
         "covered": len(scores),
         "missing": missing,
         "provenance": sorted(p for p in provenances if p and p != "None"),
@@ -267,20 +277,27 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
             L.append(f"              {k}")
 
     eff = public_set_efficiency()
-    if eff["mean"] is not None:
+    if eff["mean_ratio"] is not None:
         prov = ",".join(eff["provenance"]) or "unknown"
-        L.append(f"efficiency  {eff['mean']:.3f} aggregate over {eff['covered']} game(s), "
-                 f"{eff['missing']} unmeasured  [{prov}; NOT a competition score]")
+        L.append(
+            f"efficiency  DISCOVERY COST NOT MEASURED. banked replay is "
+            f"{eff['mean_ratio']:.1f}x shorter than human over {eff['covered']} game(s), "
+            f"{eff['missing']} unmeasured [{prov}]"
+        )
     else:
         L.append(f"efficiency  not measured ({eff['missing']} game(s) lack a move list)")
 
     gen = generalization_levels()
     if gen["measured"]:
-        L.append(f"generaliz.  {gen['levels']} level(s) across {gen['games']} game(s) "
-                 f"by live self-discovery")
+        L.append(
+            f"generaliz.  {gen['levels']} level(s) across {gen['games']} game(s) "
+            f"by live self-discovery"
+        )
     else:
-        L.append("generaliz.  not measured -- no solve carries "
-                 "solve_provenance=live_agent_self_discovery")
+        L.append(
+            "generaliz.  not measured -- no solve carries "
+            "solve_provenance=live_agent_self_discovery"
+        )
 
     head = _run("git", "log", "-1", "--format=%h %ad %s", "--date=format:%m-%d %H:%M")
     L.append(f"head        {head[:70]}")

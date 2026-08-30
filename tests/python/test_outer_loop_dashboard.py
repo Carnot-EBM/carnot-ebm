@@ -10,6 +10,7 @@ rather than read.
 from __future__ import annotations
 
 import importlib.util
+import json
 import os
 import sys
 from datetime import UTC, datetime, timedelta
@@ -94,3 +95,112 @@ def test_the_header_carries_the_actual_date() -> None:
     """The report must state the date it was produced -- the drift this exists to stop."""
     out = _module().render([])
     assert datetime.now(UTC).strftime("%Y-%m-%d") in out
+
+
+# --- Efficiency and generalization lines (2026-08-30) -----------------------------------------
+# The operator asked for an efficiency score and a submission score. The first version computed
+# the competition's capped rule over banked solve artifacts and returned a uniform 1.000 -- real
+# arithmetic over the wrong quantity, because the stored `solution` is a WINNING PATH REPLAYED and
+# is 1.2x-5.3x shorter than a human who had to explore. A submission score was declined outright:
+# all 25 public games are cleared by hand-built per-game adapters that do not transfer, so a
+# public number would read as a hidden-game prediction it cannot support.
+
+
+def test_efficiency_score_matches_the_competition_rule() -> None:
+    """Kept because the rule itself is right; what was wrong was the data fed to it."""
+    m = _module()
+    assert m.efficiency_score(10, 20) == 0.25
+    assert m.efficiency_score(20, 10) == 1.0  # capped at human parity
+    assert m.efficiency_score(0, 10) is None
+    assert m.efficiency_score(10, 0) is None
+
+
+def test_a_missing_side_is_none_not_zero() -> None:
+    """An unmeasured level and a maximally inefficient one are different findings.
+
+    Averaging the second into a headline is how a coverage gap becomes a bad score.
+    """
+    assert _module().efficiency_score(5, 0) is None
+
+
+def test_the_efficiency_line_refuses_to_claim_discovery_cost(tmp_path, monkeypatch) -> None:
+    """The degeneracy guard. A banked replay must never be rendered as an efficiency score."""
+    m = _module()
+    monkeypatch.setattr(m, "REPO", tmp_path)
+    (tmp_path / "results").mkdir()
+    (tmp_path / "results" / "arc_agi3_game_characterization.json").write_text(
+        json.dumps({"games": [{"game_id": "aa11-x", "baseline_actions": [100, 100]}]})
+    )
+    (tmp_path / "results" / "arc_loop_solve_aa11.json").write_text(
+        json.dumps(
+            {
+                "game": "aa11-x",
+                "reached_level": 2,
+                "solution": ["a"] * 20,
+                "solve_provenance": "development_proxy",
+            }
+        )
+    )
+    out = m.render([])
+    assert "DISCOVERY COST NOT MEASURED" in out
+    assert "10.0x shorter than human" in out  # 200/20, uncapped
+
+
+def test_the_ratio_is_uncapped_so_degeneracy_stays_visible(tmp_path, monkeypatch) -> None:
+    """Capping is what hid the bug: every game clamped to 1.0 and read as a perfect score."""
+    m = _module()
+    monkeypatch.setattr(m, "REPO", tmp_path)
+    (tmp_path / "results").mkdir()
+    (tmp_path / "results" / "arc_agi3_game_characterization.json").write_text(
+        json.dumps({"games": [{"game_id": "bb22-y", "baseline_actions": [500]}]})
+    )
+    (tmp_path / "results" / "arc_loop_solve_bb22.json").write_text(
+        json.dumps(
+            {
+                "game": "bb22-y",
+                "reached_level": 1,
+                "solution": ["a"] * 10,
+                "solve_provenance": "development_proxy",
+            }
+        )
+    )
+    assert m.public_set_efficiency()["mean_ratio"] == 50.0
+
+
+def test_generalization_says_not_measured_rather_than_zero(tmp_path, monkeypatch) -> None:
+    """A public-set count is a DIFFERENT quantity and must not stand in for a hidden-game one.
+
+    Zero would read as a measured result; "not measured" is the honest state while every solve
+    carries development_proxy.
+    """
+    m = _module()
+    monkeypatch.setattr(m, "REPO", tmp_path)
+    (tmp_path / "results").mkdir()
+    (tmp_path / "results" / "arc_loop_solve_cc33.json").write_text(
+        json.dumps(
+            {"game": "cc33", "reproduced_levels": 7, "solve_provenance": "development_proxy"}
+        )
+    )
+    assert m.generalization_levels() == {"measured": False, "levels": 0, "games": 0}
+    assert "not measured" in m.render([])
+
+
+def test_generalization_counts_only_live_self_discovery(tmp_path, monkeypatch) -> None:
+    m = _module()
+    monkeypatch.setattr(m, "REPO", tmp_path)
+    (tmp_path / "results").mkdir()
+    (tmp_path / "results" / "arc_loop_solve_dd44.json").write_text(
+        json.dumps(
+            {
+                "game": "dd44",
+                "reproduced_levels": 3,
+                "solve_provenance": "live_agent_self_discovery",
+            }
+        )
+    )
+    (tmp_path / "results" / "arc_loop_solve_ee55.json").write_text(
+        json.dumps(
+            {"game": "ee55", "reproduced_levels": 99, "solve_provenance": "development_proxy"}
+        )
+    )
+    assert m.generalization_levels() == {"measured": True, "levels": 3, "games": 1}
