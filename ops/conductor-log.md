@@ -16820,3 +16820,5 @@ The l |
 | 2026-08-30 08:21 UTC | Exact-invalid targetable proof panel expansion | OK | 101 passed, 1 warning in 18.30s |
 | 2026-08-30 08:46 UTC | Environment-indexed proof grammar fixture v2 | OK | 107 passed, 1 warning in 15.72s |
 | 2026-08-30 09:13 UTC | Three-model DCCD environment-grammar A/B v2 | OK | 99 passed, 1 warning in 14.19s |
+| 2026-08-30 09:15 UTC | Independent proof transport and localization audit | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6770-dccd-environmen |
+| 2026-08-30 09:18 UTC | Claim-localized prefix-backtracking repair A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6771-proof-transport-localization-audit,  |
