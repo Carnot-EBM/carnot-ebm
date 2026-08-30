@@ -1207,7 +1207,24 @@ def _make_trajectory_supervisor():
 
     from carnot.agentic.arc_trajectory_supervisor import TrajectorySupervisor
 
-    window = int(os.environ.get("CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW", "400"))
+    # DEFAULT 120, lowered from 400 on 2026-08-30 (REQ-ARC-WMTE-6780).
+    #
+    # 400 IS THE ACTION BUDGET. A stagnation window of 400 actions essentially cannot complete
+    # before a run ends, so the supervisor could not fire and the cross-run refinement tool
+    # (REQ-ARC-WMTE-6720, floor of 10 firings per arm) was stuck at 2 and reporting INSUFFICIENT
+    # EVIDENCE permanently -- an honest answer to a question the setting made unanswerable.
+    #
+    # Measured, not assumed (docs/research-notes/arc-induction-round-records-fine-read-2026-08-27.md):
+    #   supon      window 400, applied -> 0 firings
+    #   supshadow  window 400, shadow  -> 0 firings
+    #   supwindow  window 120, applied -> 2 redirects per cell
+    #
+    # Safe because SHADOW IS THE DEFAULT. `observe()` runs unconditionally at the call site and
+    # only `_apply_trajectory_redirect` is gated on `applies`, so this changes what gets RECORDED
+    # on every run and changes scored behaviour only for a run that sets
+    # CARNOT_ARC_TRAJECTORY_SUPERVISOR=1. A run that DOES set it now gets redirects sooner --
+    # that is the point, and it is why the value is measured rather than picked.
+    window = int(os.environ.get("CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW", "120"))
     applies = os.environ.get("CARNOT_ARC_TRAJECTORY_SUPERVISOR") == "1"
     return TrajectorySupervisor(window=window), applies
 
