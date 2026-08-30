@@ -18298,3 +18298,4 @@ DualGPURunner dispatch. The next tooling work should add an accelerator
 activity gate, explicit concurrency metadata, conditional runner selection,
 and monotonic phase timing. Estimated time savings is 0% because the sources
 do not measure the effect of these changes.
+- 2026-08-30: Fail-closed roadmap agent-model dispatch contract (⚠️ Blocked) — honest_verdict=complete_blocked_dispatch_contract; results/experiment_6784_agent_model_dispatch_contract.json
