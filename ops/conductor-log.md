@@ -16813,3 +16813,4 @@ The l |
      pla |
 | 2026-08-30 05:48 UTC | Independent Thermalizer factor-to-trajectory audit | OK | 109 passed, 1 warning in 22.80s |
 | 2026-08-30 06:14 UTC | V589 branch disposition and PRD gap update | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6767_v589_br |
+| 2026-08-30 06:23 UTC | V589 branch disposition and PRD gap update | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6767_v589_br |
