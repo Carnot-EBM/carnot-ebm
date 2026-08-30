@@ -278,6 +278,41 @@ def test_scenario_report_6767_validator_findings_are_preserved(
     assert len(calls) == 4
 
 
+def test_scenario_report_6767_validator_parsers_ignore_nonfinding_lines(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-REPORT-6767-VALIDATORS: parser noise is not promoted to findings."""
+
+    assert exp._parse_row_lint_findings("plain line\n[BLOCK] real\ntrailer") == ["[BLOCK] real"]
+
+    def fake_ledger(_args: list[str], _root: Path) -> tuple[int, str]:
+        return 0, "  RECURRING (2+ times):\n    not-a-count\n    x2  blocked_gate"
+
+    monkeypatch.setattr(exp, "_run_command", fake_ledger)
+    assert exp.run_recurring_blockers(REPO)["recurring"] == ["x2  blocked_gate"]
+
+    wrapper_path = REPO / "scripts/experiments/experiment_6767_v589_branch_disposition.py"
+    saved_path = list(sys.path)
+    saved_module = sys.modules.get("carnot.experiment_6767_v589_branch_disposition")
+    sys.modules["carnot.experiment_6767_v589_branch_disposition"] = exp
+    for path in (REPO, REPO / "python"):
+        if str(path) not in sys.path:
+            sys.path.insert(0, str(path))
+    spec = importlib.util.spec_from_file_location("exp6767_wrapper_present", wrapper_path)
+    assert spec and spec.loader
+    wrapper = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(wrapper)
+    finally:
+        sys.path = saved_path
+        if saved_module is None:
+            sys.modules.pop("carnot.experiment_6767_v589_branch_disposition", None)
+        else:
+            sys.modules["carnot.experiment_6767_v589_branch_disposition"] = saved_module
+    assert wrapper.main(["--validate", "--output", str(tmp_path / "missing.json")]) == 1
+
+
 def test_req_report_6767_missing_or_mutated_inputs_fail_closed(
     current_inputs: tuple[list[dict], dict[str, dict]],
     tmp_path: Path,
@@ -473,6 +508,84 @@ def test_req_report_6767_synthetic_nonblocked_row_recomputes() -> None:
         [{"evaluator_path": "direct_sampler", "method": "independent_factor", "trajectory_tv": 1.0}]
     )
     assert paired["context_matched"]["pair_count"] == 0
+
+
+def test_req_report_6767_sparse_row_shapes_stay_explicit() -> None:
+    """REQ-REPORT-6767: sparse rows stay local instead of being repaired by prose."""
+
+    assert exp._model_ids({"models_used": [{}, None, ""], "rows": [{"model": {}}]}) == []
+
+    arc = exp.recompute_arc(
+        {
+            "exp6764": _present({"arc_exclusive_load_ready": True}),
+            "exp6765": _present(
+                {
+                    "object_table_ab_completed": True,
+                    "rows": [
+                        {
+                            "row_kind": "science",
+                            "arm": "table_inline",
+                            "prompt_tokens": "100",
+                            "change_fidelity": "0.90",
+                            "failure_class": None,
+                            "live_model_invoked": False,
+                        }
+                    ],
+                }
+            ),
+        }
+    )
+    assert arc["ab_science_rows"] == {"numerator": 1, "denominator": 1, "rate": 1.0}
+    assert arc["mean_prompt_token_savings"] is None
+    assert arc["change_fidelity_by_arm"] == {}
+
+    paired = exp._paired_trajectory_deltas(
+        [
+            {
+                "evaluator_path": "exact_enumerator",
+                "method": "independent_factor",
+                "trajectory_tv": "unknown",
+            },
+            {
+                "evaluator_path": "exact_enumerator",
+                "method": "independent_factor",
+                "trajectory_tv": 0.4,
+                "factor_id": "f1",
+            },
+            {
+                "evaluator_path": "exact_enumerator",
+                "method": "context_matched",
+                "trajectory_tv": 0.3,
+                "factor_id": "other",
+            },
+        ]
+    )
+    assert paired["context_matched"]["pair_count"] == 0
+
+    stochastic = exp.recompute_stochastic(
+        {
+            "exp6766": _present(
+                {
+                    "rows": [
+                        {
+                            "evaluator_path": "exact_enumerator",
+                            "method": "independent_factor",
+                            "trajectory_tv": "unknown",
+                            "conditional_kl": 0.2,
+                        },
+                        {
+                            "evaluator_path": "exact_enumerator",
+                            "method": "context_matched",
+                            "trajectory_tv": 0.1,
+                            "conditional_kl": "unknown",
+                        },
+                    ]
+                }
+            )
+        }
+    )
+    assert stochastic["mean_trajectory_tv_by_method"]["context_matched"]["value"] == 0.1
+    assert stochastic["mean_conditional_kl_by_method"]["independent_factor"]["value"] == 0.2
 
 
 def test_scenario_report_6767_validator_and_validation_edges(
