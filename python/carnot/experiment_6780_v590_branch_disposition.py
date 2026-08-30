@@ -10,7 +10,7 @@ Spec refs: REQ-REPORT-6780 and SCENARIO-REPORT-6780-*.
 from __future__ import annotations
 
 import argparse
-from collections import Counter, defaultdict
+from collections import defaultdict
 from collections.abc import Mapping, Sequence
 import copy
 import hashlib
@@ -334,15 +334,42 @@ def load_source_artifacts(root: Path, planned: Sequence[Mapping[str, Any]]) -> d
                 "error": str(exc),
             }
             continue
+        terminal = _source_payload_is_terminal(payload)
         sources[task_id] = {
-            "artifact_state": "present",
+            "artifact_state": "present" if terminal else "nonterminal",
             "valid_json": True,
             "payload": payload,
             "sha256": sha256_file(path),
             "path": path_text,
-            "error": None,
+            "error": None if terminal else "source_artifact_nonterminal",
         }
     return sources
+
+
+def _source_payload_is_terminal(payload: Mapping[str, Any]) -> bool:
+    """Accept only source states that clearly say the producer has stopped."""
+
+    terminal_stems = (
+        "complete",
+        "success",
+        "passed",
+        "shipped",
+        "blocked",
+        "gate_block",
+        "failed",
+        "flagged",
+        "retired",
+        "null",
+        "partial",
+        "disqualified",
+    )
+    for value in (payload.get("status"), payload.get("honest_verdict")):
+        text = str(value or "").strip().lower()
+        if any(
+            text == stem or text.startswith((f"{stem}_", f"{stem}:")) for stem in terminal_stems
+        ):
+            return True
+    return False
 
 
 def _payload(record: Mapping[str, Any] | None) -> Mapping[str, Any]:
@@ -484,7 +511,9 @@ def recompute_proof(sources: Mapping[str, Mapping[str, Any]]) -> JsonDict:
         "no_ghost_violations": grammar.get("no_ghost_violations"),
         "comparison_rows": len(rows),
         "proof_transport_ab_completed": bool(comparison.get("proof_transport_ab_completed")),
-        "exact_valid_rate_by_arm": _arm_rates(rows, "exact_valid"),
+        "exact_valid_rate_by_arm": _arm_rates(rows, "exact_valid")
+        if rows
+        else _mean([], "no_eligible_comparative_rows"),
         "paired_exact_valid_effects": effects,
     }
 
@@ -496,13 +525,21 @@ def recompute_repair(sources: Mapping[str, Mapping[str, Any]]) -> JsonDict:
     repair = _payload(sources.get("exp6772"))
     rows = _rows(repair)
     effect = paired_effect(rows, "prefix_backtracking", "full_regeneration", "exact_valid")
+    harmful = paired_effect(rows, "prefix_backtracking", "full_regeneration", "harmful_flip")
+    support = paired_effect(rows, "prefix_backtracking", "full_regeneration", "support_loss")
     return {
         "proof_transport_audit_ready": bool(audit.get("proof_transport_audit_ready")),
         "repair_panel_ready": bool(audit.get("repair_panel_ready")),
         "repair_rows": len(rows),
         "paired_exact_valid_effect": effect,
-        "harmful_flips_by_arm": _arm_rates(rows, "harmful_flip"),
-        "support_loss_by_arm": _arm_rates(rows, "support_loss"),
+        "paired_harmful_flip_effect": harmful,
+        "paired_support_loss_effect": support,
+        "harmful_flips_by_arm": _arm_rates(rows, "harmful_flip")
+        if rows
+        else _mean([], "no_eligible_repair_rows"),
+        "support_loss_by_arm": _arm_rates(rows, "support_loss")
+        if rows
+        else _mean([], "no_eligible_repair_rows"),
         "source_interval_ignored": repair.get("paired_interval") or repair.get("repair_interval"),
     }
 
@@ -514,7 +551,7 @@ def recompute_continuous_memory(sources: Mapping[str, Mapping[str, Any]]) -> Jso
     comparison = _payload(sources.get("exp6774"))
     audit = _payload(sources.get("exp6775"))
     rows = _rows(comparison)
-    activity = {
+    activity: JsonDict = {
         name: 0 for name in ("commits", "rejects", "rollbacks", "retrievals", "action_influences")
     }
     source_keys = {
@@ -528,6 +565,12 @@ def recompute_continuous_memory(sources: Mapping[str, Mapping[str, Any]]) -> Jso
         for target, source in source_keys.items():
             value = _number(row.get(source))
             activity[target] += int(value or 0)
+    if not rows:
+        activity = {
+            name: None
+            for name in ("commits", "rejects", "rollbacks", "retrievals", "action_influences")
+        }
+        activity["cause"] = "no_eligible_prospective_rows"
     audit_gates = audit.get("audit_gates") if isinstance(audit.get("audit_gates"), Mapping) else {}
     gates = {
         "activity": bool(comparison.get("prospective_csl_completed"))
@@ -548,14 +591,18 @@ def recompute_continuous_memory(sources: Mapping[str, Mapping[str, Any]]) -> Jso
         "live_model_invoked": bool(preflight.get("live_model_invoked")),
         "prospective_rows": len(rows),
         "prospective_csl_completed": bool(comparison.get("prospective_csl_completed")),
-        "prequential_yield_by_arm": _arm_means(rows, "prequential_yield"),
+        "prequential_yield_by_arm": _arm_means(rows, "prequential_yield")
+        if rows
+        else _mean([], "no_eligible_prospective_rows"),
         "procedural_minus_no_memory_order_effect": paired_effect(
             rows, "procedural_memory", "no_memory", "prequential_yield"
         ),
         "procedural_minus_trace_order_effect": paired_effect(
             rows, "procedural_memory", "detailed_trace", "prequential_yield"
         ),
-        "historical_loss_by_arm": _arm_means(rows, "historical_loss"),
+        "historical_loss_by_arm": _arm_means(rows, "historical_loss")
+        if rows
+        else _mean([], "no_eligible_prospective_rows"),
         "transaction_activity": activity,
         "cold_audit_completed": bool(audit.get("cold_audit_completed")),
         "required_positive_gates": gates,
@@ -579,34 +626,48 @@ def recompute_arc(sources: Mapping[str, Mapping[str, Any]]) -> JsonDict:
     effect = paired_effect(action_rows, "selfparse", "control_unset", "actions_to_progress")
     decision = str(audit.get("adoption_decision") or "unavailable")
     cold_pass = bool(audit.get("cold_actions_to_progress_audit_passed"))
+    tool_gap_events = transport.get("tool_gap_events")
+    tool_gap_event_count = len(tool_gap_events) if isinstance(tool_gap_events, list) else None
+    supervisor_evidence_cause = None if eligible_supervisor else "no_eligible_live_supervisor_rows"
     return {
         "supervisor_rows": len(supervisor_rows),
         "eligible_supervisor_rows": len(eligible_supervisor),
         "shadow_supervisor_transport_ready": bool(
             supervisor.get("shadow_supervisor_transport_ready")
         ),
-        "row_recomputed_firings": sum(
-            int(row.get("arm_fired") or 0) for row in eligible_supervisor
-        ),
+        "row_recomputed_firings": sum(int(row.get("arm_fired") or 0) for row in eligible_supervisor)
+        if eligible_supervisor
+        else None,
         "row_recomputed_helped": sum(
             int(row.get("arm_helped_counterfactual") or 0) for row in eligible_supervisor
-        ),
+        )
+        if eligible_supervisor
+        else None,
+        "supervisor_evidence_cause": supervisor_evidence_cause,
         "declared_firings_after_by_arm": supervisor.get("firings_after_by_arm") or {},
         "evidence_floor_met_by_arm": supervisor.get("evidence_floor_met_by_arm") or {},
         "tool_gap_transport_ready": bool(transport.get("tool_gap_transport_ready")),
-        "tool_gap_event_count": len(transport.get("tool_gap_events") or []),
+        "tool_gap_event_count": tool_gap_event_count,
+        "tool_gap_event_count_cause": None
+        if isinstance(tool_gap_events, list)
+        else "tool_gap_events_missing",
         "tool_gap_analyzer_ingest_passed": bool(transport.get("analyzer_ingest_passed")),
         "actions_to_progress_rows": len(action_rows),
         "actions_to_progress_ab_completed": bool(
             comparison.get("actions_to_progress_ab_completed")
         ),
-        "actions_to_progress_by_arm": _arm_means(action_rows, "actions_to_progress"),
+        "actions_to_progress_by_arm": _arm_means(action_rows, "actions_to_progress")
+        if action_rows
+        else _mean([], "no_eligible_actions_to_progress_rows"),
         "selfparse_minus_control_actions_effect": effect,
         "cold_actions_to_progress_audit_passed": cold_pass,
         "adoption_decision": decision,
         "adoption_positive": cold_pass
         and decision == "promote"
-        and effect.get("pair_count", 0) > 0,
+        and bool(comparison.get("actions_to_progress_ab_completed"))
+        and effect.get("pair_count", 0) > 0
+        and effect.get("mean_delta") is not None
+        and effect["mean_delta"] < 0,
         "solve_claim": bool(
             supervisor.get("solve_claim")
             or comparison.get("solve_claim")
@@ -652,6 +713,8 @@ def _declared_class(record: Mapping[str, Any]) -> str:
     if state == "invalid":
         return "disqualified"
     if state == "current_synthesis":
+        return "partial"
+    if state == "nonterminal":
         return "partial"
     if state == "missing":
         return "blocked"
@@ -781,6 +844,8 @@ def build_experiment_rows(
             declared = "complete_blocked_missing_artifact: planned deliverable is absent"
         elif state == "invalid":
             declared = "complete_disqualified_invalid_artifact: source JSON could not be loaded"
+        elif state == "nonterminal":
+            declared = "complete_partial_nonterminal_artifact: source producer has not stopped"
         elif state == "current_synthesis":
             declared = HONEST_VERDICT
         source_rows = _rows(payload)
@@ -794,7 +859,9 @@ def build_experiment_rows(
                 "branch": plan["branch"],
                 "path": plan["path"],
                 "artifact_state": state,
-                "terminal": state in {"present", "missing", "invalid", "current_synthesis"},
+                "terminal": state
+                in {"present", "missing", "invalid", "nonterminal", "current_synthesis"},
+                "source_artifact_terminal": state == "present",
                 "valid_json": bool(record.get("valid_json")),
                 "artifact_sha256": record.get("sha256"),
                 "status": payload.get("status") or state,
@@ -844,15 +911,24 @@ def _branch_class(
                 "dccd_environment-minus-repaired_direct", {}
             )
             repair = headlines["repair"]["paired_exact_valid_effect"]
+            harmful = headlines["repair"].get("paired_harmful_flip_effect", {})
+            support = headlines["repair"].get("paired_support_loss_effect", {})
             return (
                 "positive"
-                if (delta.get("mean_delta") or 0) > 0 and (repair.get("mean_delta") or 0) > 0
+                if (delta.get("mean_delta") or 0) > 0
+                and (repair.get("mean_delta") or 0) > 0
+                and harmful.get("pair_count", 0) > 0
+                and harmful.get("mean_delta") is not None
+                and harmful["mean_delta"] <= 0
+                and support.get("pair_count", 0) > 0
+                and support.get("mean_delta") is not None
+                and support["mean_delta"] <= 0
                 else "null"
             )
         return "partial" if "positive" in classes else "blocked"
     if branch == "continuous_memory":
         gates = headlines[branch]["required_positive_gates"]
-        if all(gates.values()):
+        if headlines[branch]["cold_audit_completed"] and all(gates.values()):
             return "positive"
         return "blocked" if "blocked" in classes else "null"
     if branch == "arc":
@@ -871,12 +947,6 @@ def build_branch_rows(
     """Build four independent branch rows with local verdicts and actions."""
 
     by_task = {str(row["task_id"]): row for row in rows}
-    adv_paths = Counter(
-        str(row.get("artifact"))
-        for row in adversarial_findings
-        if row.get("flag_count", 0) or row.get("flags")
-    )
-    row_paths = Counter(str(row.get("artifact")) for row in row_findings if row.get("findings"))
     out = []
     for branch in BRANCH_ORDER:
         task_ids = BRANCH_TASKS[branch]
@@ -899,8 +969,16 @@ def build_branch_rows(
                 "verdict_class": verdict,
                 "branch_disposition": verdict,
                 "headline": headline,
-                "adversarial_finding_count": sum(adv_paths[path] for path in paths),
-                "row_consistency_finding_count": sum(row_paths[path] for path in paths),
+                "adversarial_finding_count": sum(
+                    int(finding.get("flag_count") or len(finding.get("flags") or []))
+                    for finding in adversarial_findings
+                    if any(str(finding.get("artifact", "")).endswith(path) for path in paths)
+                ),
+                "row_consistency_finding_count": sum(
+                    len(finding.get("findings") or [])
+                    for finding in row_findings
+                    if any(str(finding.get("artifact", "")).endswith(path) for path in paths)
+                ),
                 "claim_boundary": CLAIM_BOUNDARIES[branch],
                 "next_action": NEXT_ACTIONS[branch],
             }
@@ -976,10 +1054,18 @@ def build_fr12_disposition(headlines: Mapping[str, Any], branch_class: str) -> J
     repair = headlines["repair"]
     comparison = proof["paired_exact_valid_effects"]
     direct = comparison.get("dccd_environment-minus-repaired_direct", {})
+    harmful = repair["paired_harmful_flip_effect"]
+    support = repair["paired_support_loss_effect"]
     positive = (
         proof["proof_transport_ab_completed"]
         and (direct.get("mean_delta") or 0) > 0
         and (repair["paired_exact_valid_effect"].get("mean_delta") or 0) > 0
+        and harmful.get("pair_count", 0) > 0
+        and harmful.get("mean_delta") is not None
+        and harmful["mean_delta"] <= 0
+        and support.get("pair_count", 0) > 0
+        and support.get("mean_delta") is not None
+        and support["mean_delta"] <= 0
     )
     return {
         "positive": bool(positive),
@@ -995,6 +1081,8 @@ def build_fr12_disposition(headlines: Mapping[str, Any], branch_class: str) -> J
         "repair": {
             "row_count": repair["repair_rows"],
             "row_citation": repair["paired_exact_valid_effect"],
+            "harmful_flip_effect": harmful,
+            "support_loss_effect": support,
             "harmful_flips": repair["harmful_flips_by_arm"],
         },
     }
@@ -1006,8 +1094,9 @@ def build_fr11_disposition(headlines: Mapping[str, Any], branch_class: str) -> J
     memory = headlines["continuous_memory"]
     gates = memory["required_positive_gates"]
     return {
-        "positive": all(gates.values()),
+        "positive": memory["cold_audit_completed"] and all(gates.values()),
         "disposition": branch_class,
+        "cold_audit_completed": memory["cold_audit_completed"],
         "required_positive_gates": gates,
         "row_citations": {
             "prospective_rows": memory["prospective_rows"],
@@ -1234,6 +1323,75 @@ def collect_audits(root: Path, sources: Mapping[str, Mapping[str, Any]]) -> Json
     }
 
 
+def collect_self_audits(root: Path, artifact_path: Path) -> tuple[JsonDict, JsonDict]:
+    """Audit the published capstone so its own conflicts remain visible."""
+
+    verifier = _load_script_module(root, "adversarial_verify")
+    lint = _load_script_module(root, "verdict_row_consistency_lint")
+    adversarial = verifier.verify_artifact(artifact_path)
+    status, findings = lint.check_artifact(artifact_path)
+    row_report = {
+        "task_id": CAPSTONE_TASK_ID,
+        "artifact": str(artifact_path),
+        "status": status,
+        "findings": findings,
+        "blocking_count": sum(
+            any(finding.startswith(prefix) for prefix in lint.HARD_CLASSES) for finding in findings
+        ),
+        "warning_count": sum(
+            not any(finding.startswith(prefix) for prefix in lint.HARD_CLASSES)
+            for finding in findings
+        ),
+    }
+    return adversarial, row_report
+
+
+def reconcile_self_audits(
+    artifact: Mapping[str, Any],
+    adversarial_report: Mapping[str, Any],
+    row_report: Mapping[str, Any],
+    root: Path,
+    *,
+    duration_s: float,
+) -> JsonDict:
+    """Add measured self-audit output and rebuild dependent branch receipts."""
+
+    out = copy.deepcopy(dict(artifact))
+    adversarial = [
+        row
+        for row in out.get("adversarial_findings", [])
+        if not isinstance(row, Mapping) or row.get("exp_id") != 6780
+    ]
+    adversarial.append(dict(adversarial_report))
+    row_findings = [
+        row
+        for row in out.get("verdict_row_consistency_findings", [])
+        if not isinstance(row, Mapping) or row.get("task_id") != CAPSTONE_TASK_ID
+    ]
+    row_findings.append(dict(row_report))
+    out["adversarial_findings"] = adversarial
+    out["verdict_row_consistency_findings"] = row_findings
+    out["branch_rows"] = build_branch_rows(
+        out["rows"], out["row_recomputed_headlines"], adversarial, row_findings
+    )
+    critical = [
+        dict(flag)
+        for flag in adversarial_report.get("flags", [])
+        if isinstance(flag, Mapping) and flag.get("severity") == "critical"
+    ]
+    out["flagged_adversarial"] = bool(critical)
+    out["corrigendum_pending"] = [
+        {
+            **flag,
+            "disposition": "preserved_required_partial_terminal_contract_conflict",
+        }
+        for flag in critical
+    ]
+    out["duration_s"] = round(float(duration_s), 6)
+    out["reproducibility_checksum"] = reproducibility_checksum(out, root)
+    return out
+
+
 def _hardware_disposition(root: Path, sources: Mapping[str, Mapping[str, Any]]) -> JsonDict:
     prior = {}
     prior_path = root / PRIOR_DISPOSITION_PATH
@@ -1369,7 +1527,7 @@ def build_artifact(
             "gate_failures": row["gate_failures"],
         }
         for row in rows
-        if row["artifact_state"] in {"missing", "invalid"}
+        if row["artifact_state"] in {"missing", "invalid", "nonterminal"}
     ]
     elapsed = duration_s if duration_s is not None else time.monotonic() - started
     artifact: JsonDict = {
@@ -1476,6 +1634,7 @@ def atomic_write_json(path: Path, artifact: Mapping[str, Any]) -> None:
 def main(argv: Sequence[str] | None = None) -> int:
     """Build, validate, and atomically publish the requested V590 artifact."""
 
+    started = time.monotonic()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--date", default=PLANNING_DATE)
     parser.add_argument("--root", type=Path, default=REPO_ROOT)
@@ -1499,9 +1658,29 @@ def main(argv: Sequence[str] | None = None) -> int:
         raise ValueError(f"invalid V590 artifact: {findings}")
     output = args.output if args.output.is_absolute() else root / args.output
     atomic_write_json(output, artifact)
+    canonical_output = (root / RESULT_PATH).resolve()
+    if not args.no_external_audits and output.resolve() == canonical_output:
+        self_adversarial, self_row = collect_self_audits(root, output.resolve())
+        artifact = reconcile_self_audits(
+            artifact,
+            self_adversarial,
+            self_row,
+            root,
+            duration_s=time.monotonic() - started,
+        )
+        findings = validate_artifact(artifact, root)
+        if findings:
+            raise ValueError(f"invalid V590 artifact after self-audit: {findings}")
+        atomic_write_json(output, artifact)
     reloaded = json.loads(output.read_text(encoding="utf-8"))
     if validate_artifact(reloaded, root):
         raise ValueError("atomic V590 artifact failed cold reload")
+    if not args.no_external_audits and output.resolve() == canonical_output:
+        final_adversarial, final_row = collect_self_audits(root, output.resolve())
+        if final_adversarial.get("flags") != self_adversarial.get("flags"):
+            raise ValueError("final V590 adversarial self-audit changed after reconciliation")
+        if final_row.get("findings") != self_row.get("findings"):
+            raise ValueError("final V590 row self-audit changed after reconciliation")
     print(json.dumps({"artifact": str(output), "honest_verdict": HONEST_VERDICT}, sort_keys=True))
     return 0
 

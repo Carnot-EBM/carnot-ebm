@@ -91,15 +91,20 @@ def test_source_loader_preserves_present_missing_invalid_and_current(tmp_path: P
         {"task_id": "exp6768", "path": "results/good.json"},
         {"task_id": "exp6769", "path": "results/bad.json"},
         {"task_id": "exp6770", "path": "results/missing.json"},
+        {"task_id": "exp6771", "path": "results/running.json"},
         {"task_id": "exp6780", "path": exp.RESULT_PATH.as_posix()},
     ]
     (tmp_path / "results").mkdir()
     (tmp_path / "results/good.json").write_text('{"status":"complete"}', encoding="utf-8")
     (tmp_path / "results/bad.json").write_text("[]", encoding="utf-8")
+    (tmp_path / "results/running.json").write_text(
+        '{"status":"running","rows":[{"metric":1}]}', encoding="utf-8"
+    )
     sources = exp.load_source_artifacts(tmp_path, planned)
     assert sources["exp6768"]["artifact_state"] == "present"
     assert sources["exp6769"]["artifact_state"] == "invalid"
     assert sources["exp6770"]["artifact_state"] == "missing"
+    assert sources["exp6771"]["artifact_state"] == "nonterminal"
     assert sources["exp6780"]["artifact_state"] == "current_synthesis"
 
 
@@ -189,6 +194,25 @@ def test_missing_comparative_rows_are_null_not_zero() -> None:
     assert proof["paired_exact_valid_effects"]["cause"] == "no_eligible_comparative_rows"
     assert proof["paired_exact_valid_effects"]["value"] is None
     assert repair["paired_exact_valid_effect"]["value"] is None
+
+
+def test_missing_memory_and_arc_rows_are_null_not_measured_zero() -> None:
+    """SCENARIO-REPORT-6780-ROW-RECOMPUTATION: missing counts stay unknown."""
+
+    sources = _empty_sources()
+    memory = exp.recompute_continuous_memory(sources)
+    arc = exp.recompute_arc(sources)
+    assert memory["prequential_yield_by_arm"] == {
+        "value": None,
+        "denominator": 0,
+        "cause": "no_eligible_prospective_rows",
+    }
+    assert memory["transaction_activity"]["commits"] is None
+    assert memory["transaction_activity"]["cause"] == "no_eligible_prospective_rows"
+    assert arc["row_recomputed_firings"] is None
+    assert arc["supervisor_evidence_cause"] == "no_eligible_live_supervisor_rows"
+    assert arc["tool_gap_event_count"] is None
+    assert arc["tool_gap_event_count_cause"] == "tool_gap_events_missing"
 
 
 def test_continuous_memory_recomputes_order_effects_activity_and_loss() -> None:
@@ -298,6 +322,94 @@ def test_arc_adoption_requires_cold_actions_to_progress_not_transport() -> None:
     assert arc["selfparse_minus_control_actions_effect"]["mean_delta"] == -2.5
     assert arc["adoption_positive"] is True
 
+    worse = copy.deepcopy(sources)
+    worse["exp6778"] = _record(
+        {
+            "rows": [
+                {"pair_id": "a", "arm": "control_unset", "actions_to_progress": 8},
+                {"pair_id": "a", "arm": "selfparse", "actions_to_progress": 12},
+            ],
+            "actions_to_progress_ab_completed": True,
+        }
+    )
+    assert exp.recompute_arc(worse)["adoption_positive"] is False
+
+
+def test_fr11_and_fr12_positive_credit_requires_cold_and_safety_gates() -> None:
+    """REQ-REPORT-6780: positive branch credit requires every stated gate."""
+
+    sources = _empty_sources()
+    sources["exp6774"] = _record(
+        {
+            "prospective_csl_completed": True,
+            "rows": [
+                {
+                    "order_id": "o1",
+                    "arm": "no_memory",
+                    "prequential_yield": 0.4,
+                    "commits": 0,
+                    "rejects": 0,
+                    "retrieval_count": 0,
+                    "action_influence_count": 0,
+                },
+                {
+                    "order_id": "o1",
+                    "arm": "procedural_memory",
+                    "prequential_yield": 0.7,
+                    "commits": 1,
+                    "rejects": 1,
+                    "retrieval_count": 1,
+                    "action_influence_count": 1,
+                },
+            ],
+        }
+    )
+    sources["exp6775"] = _record(
+        {
+            "cold_audit_completed": False,
+            "audit_gates": {name: True for name in exp.FR11_GATES},
+        }
+    )
+    memory = exp.recompute_continuous_memory(sources)
+    fr11 = exp.build_fr11_disposition({"continuous_memory": memory}, "null")
+    assert all(memory["required_positive_gates"].values())
+    assert fr11["positive"] is False
+
+    sources["exp6770"] = _record(
+        {
+            "proof_transport_ab_completed": True,
+            "rows": [
+                {"pair_id": "p1", "arm": "repaired_direct", "exact_valid": False},
+                {"pair_id": "p1", "arm": "dccd_environment", "exact_valid": True},
+            ],
+        }
+    )
+    sources["exp6772"] = _record(
+        {
+            "rows": [
+                {
+                    "pair_id": "p1",
+                    "arm": "full_regeneration",
+                    "exact_valid": False,
+                    "harmful_flip": False,
+                    "support_loss": False,
+                },
+                {
+                    "pair_id": "p1",
+                    "arm": "prefix_backtracking",
+                    "exact_valid": True,
+                    "harmful_flip": True,
+                    "support_loss": False,
+                },
+            ]
+        }
+    )
+    headlines = exp.recompute_headlines(sources)
+    fr12 = exp.build_fr12_disposition(headlines, "null")
+    assert headlines["repair"]["paired_exact_valid_effect"]["mean_delta"] == 1.0
+    assert headlines["repair"]["paired_harmful_flip_effect"]["mean_delta"] == 1.0
+    assert fr12["positive"] is False
+
 
 def test_actual_source_rows_preserve_terminal_and_missing_states() -> None:
     """SCENARIO-REPORT-6780-PRECONDITIONS: the live V590 roster is complete."""
@@ -398,6 +510,56 @@ def test_artifact_build_is_valid_deterministic_and_honest() -> None:
         REPO, "20260830", audit_bundle=_audit_bundle(), duration_s=9.5
     )
     assert changed_duration["reproducibility_checksum"] == artifact["reproducibility_checksum"]
+
+
+def test_self_audit_reconciliation_preserves_critical_and_row_findings() -> None:
+    """SCENARIO-REPORT-6780-VALIDATION: the capstone keeps its own audit flags."""
+
+    artifact = exp.build_artifact(REPO, "20260830", audit_bundle=_audit_bundle(), duration_s=1.0)
+    self_adversarial = {
+        "artifact": str(REPO / exp.RESULT_PATH),
+        "loaded": True,
+        "exp_id": 6780,
+        "flag_count": 2,
+        "flags": [
+            {
+                "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+                "severity": "critical",
+                "detail": "partial marker present",
+            },
+            {
+                "kind": "VERDICT_PREFIX_CLASS_CONTRADICTION",
+                "severity": "warn",
+                "detail": "complete_partial conflicts with partial",
+            },
+        ],
+    }
+    self_row = {
+        "task_id": "exp6780",
+        "artifact": str(REPO / exp.RESULT_PATH),
+        "status": "findings",
+        "findings": ["ALL_ROWS_NULL: disposition rows are not outcome rows"],
+        "blocking_count": 1,
+        "warning_count": 0,
+    }
+    reconciled = exp.reconcile_self_audits(
+        artifact,
+        self_adversarial,
+        self_row,
+        REPO,
+        duration_s=2.0,
+    )
+    assert reconciled["flagged_adversarial"] is True
+    assert reconciled["corrigendum_pending"][0]["kind"] == "NONTERMINAL_DECLARED_ARTIFACT"
+    assert reconciled["adversarial_findings"][-1] == self_adversarial
+    assert reconciled["verdict_row_consistency_findings"][-1] == self_row
+    execution = next(
+        row for row in reconciled["branch_rows"] if row["branch"] == "execution_contract"
+    )
+    assert execution["adversarial_finding_count"] == 2
+    assert execution["row_consistency_finding_count"] == 1
+    assert reconciled["duration_s"] == 2.0
+    assert exp.validate_artifact(reconciled, REPO) == []
 
 
 def test_validator_rejects_schema_enum_rows_prefix_and_checksum() -> None:
@@ -561,8 +723,16 @@ def test_invalid_source_row_and_all_branch_classifier_outcomes() -> None:
                 "dccd_environment-minus-repaired_direct": {"mean_delta": 0.2}
             },
         },
-        "repair": {"repair_rows": 2, "paired_exact_valid_effect": {"mean_delta": 0.1}},
-        "continuous_memory": {"required_positive_gates": {"activity": True}},
+        "repair": {
+            "repair_rows": 2,
+            "paired_exact_valid_effect": {"mean_delta": 0.1},
+            "paired_harmful_flip_effect": {"pair_count": 2, "mean_delta": 0.0},
+            "paired_support_loss_effect": {"pair_count": 2, "mean_delta": 0.0},
+        },
+        "continuous_memory": {
+            "cold_audit_completed": True,
+            "required_positive_gates": {"activity": True},
+        },
         "arc": {"adoption_positive": True},
     }
     assert (
@@ -583,6 +753,28 @@ def test_invalid_source_row_and_all_branch_classifier_outcomes() -> None:
         exp._branch_class("arc", [{"verdict_class": "disqualified"}], positive_headlines)
         == "disqualified"
     )
+
+
+def test_branch_rows_count_absolute_audit_paths() -> None:
+    """SCENARIO-REPORT-6780-VALIDATION: source findings stay branch-visible."""
+
+    planned, _ = exp.load_planned_tasks(REPO)
+    sources = exp.load_source_artifacts(REPO, planned)
+    rows = exp.build_experiment_rows(planned, sources)
+    branches = exp.build_branch_rows(
+        rows,
+        exp.recompute_headlines(sources),
+        [
+            {
+                "artifact": str(REPO / exp.TASK_PATHS["exp6768"]),
+                "flag_count": 1,
+                "flags": [{"severity": "warn"}],
+            }
+        ],
+        [],
+    )
+    proof = next(row for row in branches if row["branch"] == "proof")
+    assert proof["adversarial_finding_count"] == 1
 
 
 def test_external_audit_bundle_and_skip_paths(monkeypatch: pytest.MonkeyPatch) -> None:
