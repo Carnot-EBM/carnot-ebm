@@ -16932,3 +16932,7 @@ The l |
 | 2026-08-31 19:21 UTC | Chronological causal-edge verified-memory stream | OK | 107 passed, 1 warning in 10.54s |
 | 2026-08-31 19:47 UTC | Residual-pressure verified-memory continuous-learn | FAIL | Codex CLI error: Stalled after 600s silence. Last output: xp.SCRIPT_RELATIVE_ |
 | 2026-08-31 19:50 UTC | Residual-pressure verified-memory continuous-learn | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-08-31 20:00 UTC | STOP-AUTHORITY: ORPHAN_SERVER_REAPED | WARN | pid 3762817: ppid=1, non-service cgroup, port 8919 referenced by no live process |
+| 2026-08-31 20:09 UTC | Residual-pressure verified-memory continuous-learn | FAIL | Codex CLI error: Stalled after 600s silence. Last output: -eaa6-2292-393f930a |
+| 2026-08-31 20:11 UTC | Leave-one-model-family-out verified-memory portabi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6828-residual-pressure-verified-memory-ab |
+| 2026-08-31 20:11 UTC | Sealed exogenous verified-memory acceptance audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6828-residual-pressure-verified-memory-ab |

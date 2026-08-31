@@ -97,6 +97,7 @@ def test_scenario_cl_6828_preconditions_accept_complete_stream(source: dict) -> 
         ("rejected", "rejected_operations"),
         ("reads", "later_reads"),
         ("serializer", "canonical_serializer"),
+        ("source_hash", "source_artifact_hash"),
         ("disk", "sufficient_disk"),
         ("ram", "sufficient_ram"),
     ],
@@ -110,6 +111,7 @@ def test_scenario_cl_6828_preconditions_fail_closed(
     """SCENARIO-CL-6828-PRECONDITIONS keeps exact failed-gate evidence."""
 
     changed = deepcopy(source)
+    source_path = SOURCE_PATH
     overrides = {"disk_free_bytes": 10**9, "ram_available_bytes": 10**9}
     if fault == "ready":
         changed["verified_memory_stream_ready"] = False
@@ -127,12 +129,14 @@ def test_scenario_cl_6828_preconditions_fail_closed(
         changed["later_read_opportunity_count"] = 0
     elif fault == "serializer":
         changed["operation_schema"]["canonical_encoding"] = "platform JSON"
+    elif fault == "source_hash":
+        source_path = tmp_path / "missing-source.json"
     elif fault == "disk":
         overrides["disk_free_bytes"] = 0
     else:
         overrides["ram_available_bytes"] = 0
 
-    summary = exp.check_preconditions(changed, SOURCE_PATH, resource_overrides=overrides)
+    summary = exp.check_preconditions(changed, source_path, resource_overrides=overrides)
     failed = next(check for check in summary["checks"] if check["check"] == failed_check)
     assert summary["passed"] is False
     assert failed["passed"] is False
@@ -140,7 +144,7 @@ def test_scenario_cl_6828_preconditions_fail_closed(
 
     blocked = exp.build_artifact(
         changed,
-        source_path=SOURCE_PATH,
+        source_path=source_path,
         state_root=tmp_path,
         run_date="20260831",
         duration_s=0.25,
@@ -207,6 +211,8 @@ def test_scenario_cl_6828_episode_commit_restart_and_rollback(tmp_path: Path) ->
     )
     restart = restarted.restart_receipt("boundary-1", receipt["new_state_sha256"])
     assert restart["bytes_identity"] is True
+    assert restart["next_action_identity"] == restarted.next_action_identity()
+    assert restart["predecessor_receipt"] == receipt["receipt_sha256"]
     assert restarted.state_bytes() == exp.decode_bytes(receipt["new_state_bytes"])
 
     rollback = restarted.rollback(receipt)
@@ -246,12 +252,19 @@ def test_scenario_cl_6828_admission_rejects_stale_capacity_and_support(tmp_path:
             exact_receipt={"accepted": True},
             sealed_accept=False,
         ),
+        store.commit(
+            _proposal("p5", "a", {"pressure": 0.0}, store.state_hash()),
+            event_id="e5",
+            exact_receipt=None,
+            sealed_accept=True,
+        ),
     ]
     assert first["accepted"] is True
     assert {receipt["reason"] for receipt in rejected} == {
         "capacity_exceeded",
         "stale_parent",
         "sealed_support_rejected",
+        "exact_receipt_missing",
     }
     assert all(receipt["accepted"] is False for receipt in rejected)
     assert all(receipt["parent_state_bytes"] == receipt["new_state_bytes"] for receipt in rejected)
@@ -362,6 +375,11 @@ def test_validation_write_and_entry_points(
     exp.write_artifact(result_path, artifact)
     assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
     assert exp.main(["--validate", "--result-path", str(result_path)]) == 0
+
+    generated_path = tmp_path / "generated.json"
+    monkeypatch.setattr(exp, "build_artifact", lambda *args, **kwargs: artifact)
+    assert exp.main(["--date", "20260831", "--result-path", str(generated_path)]) == 0
+    assert json.loads(generated_path.read_text(encoding="utf-8")) == artifact
 
     script = REPO_ROOT / exp.SCRIPT_RELATIVE_PATH
     monkeypatch.setattr(

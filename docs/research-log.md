@@ -6493,3 +6493,10 @@ The critical path for milestone .250:
 - theme: one compute task formed the critical path while reconstructed timing hid its phase costs
 - key result: honest operational negative — active accelerator use avoided a compute-idle fault, but the slow phase and parallel-model runner eligibility have no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.596
+
+- exp_range: no data available this milestone
+- theme: minute-rounded fallback timing obscured task phases and accelerator attribution
+- key result: honest operational negative — the sole compute-bound stream was reported at zero minutes, with no task-window evidence for a GPU efficiency fault or parallel-runner miss
+- acceptance: no data available this milestone

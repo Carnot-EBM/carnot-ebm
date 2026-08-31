@@ -1,0 +1,52 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.596",
+  "generated_at": "2026-08-31T20:15:45Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.0,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Selective-arbiter authority attack shard",
+      "duration_minutes": 0.02,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Selective-arbiter cold row replay shard",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Chronological causal-edge verified-memory stream",
+      "duration_minutes": 0.01,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Sealed selective-arbiter adoption receipt",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Four experiments completed within the reported 0.0-minute milestone window, including one compute-bound experiment. Chronological causal-edge verified-memory stream was the sole and therefore longest compute-bound entry, reported at 0 minutes; the data gives no cause for its duration. No compute-task GPU-idle condition is recorded, and the snapshot does not establish accelerator efficiency or a runner-selection failure during execution.",
+  "bottlenecks_identified": [
+    "Minute-rounded fallback timing reports all four entries at 0 minutes, preventing meaningful critical-path ranking or causal diagnosis.",
+    "The GPU report is not correlated with the compute task's execution window, so the snapshot cannot establish task-time accelerator efficiency.",
+    "Model-concurrency and runner-selection metadata are absent, so DualGPURunner eligibility or a missed dispatch cannot be determined."
+  ],
+  "improvements_suggested": [
+    "Persist task-owned monotonic phase timing at sub-minute precision for every experiment.",
+    "Sample accelerator utilization during each compute task and attach the samples to that task's artifact.",
+    "Record loaded-model concurrency and the selected runner in launch receipts, choosing DualGPURunner only when concurrent model loading makes it applicable."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add task-owned phase clocks to expose setup, inference, validation, and artifact-write costs.",
+    "Join task-window GPU telemetry to each compute-bound experiment artifact.",
+    "Emit model-concurrency and runner-selection evidence in every compute launch receipt."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone completed too quickly at the reported precision to support a quantified speedup. Better task-correlated observability is the highest-leverage improvement because it would turn an ambiguous zero-minute reconstruction and point-in-time GPU snapshot into evidence that can guide scheduling changes."
+}

@@ -18392,3 +18392,15 @@ Estimated time savings is 0% because the data includes no timed alternative.
 - 2026-08-31: Sealed selective-arbiter adoption receipt (✅ Complete) — honest_verdict=complete: sealed audits support selective-arbiter deployment adoption; results/experiment_6826_selective_arbiter_sealed_adoption.json
 - 2026-08-31: Frozen chronological causal-edge memory stream (✅ Complete) — honest_verdict=complete: frozen chronological causal-edge memory stream is ready; no learning ran; results/experiment_6827_chronological_causal_edge_memory_stream.json
 - 2026-08-31: Chronological causal-edge verified-memory stream (✅ Complete) — honest_verdict=complete: frozen chronological causal-edge memory stream is ready; no learning ran; results/experiment_6827_chronological_causal_edge_memory_stream.json
+
+## 2026-08-31 — Milestone 2026.08.596 operational retrospective
+
+Four experiments completed in 0.0 reconstructed minutes, including one
+compute-bound task. Chronological causal-edge verified-memory stream was the
+sole compute-bound entry and was reported at 0 minutes, so the supplied timing
+cannot explain its runtime. The locked artifact records no compute-task GPU-idle
+condition; the GPU report is not tied to the task's execution interval, and no
+model-concurrency evidence establishes DualGPURunner eligibility or a missed
+dispatch. Add task-owned phase clocks, task-window accelerator samples, and
+launch receipts for runner and concurrency selection. Estimated time savings is
+0% because no positive-duration bottleneck or timed alternative is available.
