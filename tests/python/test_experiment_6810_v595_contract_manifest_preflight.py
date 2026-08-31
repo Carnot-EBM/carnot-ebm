@@ -185,3 +185,105 @@ def test_req_6810_cli_writes_only_the_requested_atomic_artifact(
     (tmp_path / "roadmap.yaml").write_text(malformed, encoding="utf-8")
     with pytest.raises(ValueError, match="top-level roadmap"):
         exp.audit_task_contracts([], exp.parse_design(REPO / exp.DESIGN_PATH))
+
+
+def test_req_6810_defensive_inputs_and_nonready_contracts_fail_closed(
+    tmp_path: Path,
+    roadmap: dict[str, object],
+) -> None:
+    """REQ-CONSTRAINT-6810 rejects malformed source and incomplete contract shapes."""
+
+    sequence_yaml = tmp_path / "sequence.yaml"
+    sequence_yaml.write_text("- not\n- a\n- roadmap\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="top-level roadmap"):
+        exp.load_yaml_mapping(sequence_yaml)
+
+    assert exp.requirement_section("## REQ-OTHER: unrelated\n", "REQ-MISSING") == ""
+    with pytest.raises(ValueError, match="tasks must be a list"):
+        exp.audit_task_contracts(
+            {"milestone": "2026.08.595", "tasks": None},
+            exp.parse_design(REPO / exp.DESIGN_PATH),
+        )
+    assert exp._required_fields_block("No artifact field section.") == ""
+
+    fake_repo = tmp_path / "fake-repo"
+    (fake_repo / "ops").mkdir(parents=True)
+    (fake_repo / "ops/exclusion_manifest.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "retired": ["invalid-row", {"experiment_id": 2091}],
+                "retired_experiments": [],
+                "retired_extras": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    assert "exp2091" in exp.retired_experiment_ids(fake_repo)
+
+    incomplete = deepcopy(roadmap)
+    incomplete["tasks"][0]["prompt"] += "\nUncontracted tail."
+    artifact = exp.build_artifact(REPO, "20260831", 0.25, roadmap=incomplete)
+    assert artifact["v595_contract_map_ready"] is False
+    assert artifact["gate_check_summary"]
+    assert exp.validate_artifact(artifact) == []
+
+
+def test_req_6810_artifact_validator_names_each_invalid_contract(
+    roadmap: dict[str, object],
+) -> None:
+    """REQ-AGENTIC-6810-1 keeps ready and blocked artifact failures explicit."""
+
+    ready = exp.build_artifact(REPO, "20260831", 0.25, roadmap=roadmap)
+    missing = deepcopy(ready)
+    missing.pop("schema")
+    errors = exp.validate_artifact(missing)
+    assert "missing_required_fields:schema" in errors
+    assert "field_principles_do_not_cover_artifact" in errors
+
+    invalid_ready = deepcopy(ready)
+    invalid_ready.update(
+        {
+            "verdict_class": "unknown",
+            "verifier_is_oracle": True,
+            "task_count": 0,
+            "roadmap_identity": {},
+            "gate_check_summary": [{"passed": False}],
+            "honest_verdict": "not terminal",
+        }
+    )
+    errors = exp.validate_artifact(invalid_ready)
+    assert "verdict_class_outside_closed_enum" in errors
+    assert "verifier_is_oracle_must_be_false" in errors
+    assert "ready_artifact_row_or_task_count_mismatch" in errors
+    assert "ready_artifact_roadmap_identity_mismatch" in errors
+    assert "ready_artifact_has_failed_gate_summary" in errors
+    assert "ready_artifact_verdict_is_not_terminal" in errors
+
+    wrong = deepcopy(roadmap)
+    wrong["milestone"] = "2026.08.594"
+    invalid_blocked = exp.build_artifact(REPO, "20260831", 0.25, roadmap=wrong)
+    invalid_blocked.update(
+        {
+            "verdict_class": "null",
+            "gate_check_summary": [],
+            "honest_verdict": "complete: wrong blocked shape",
+        }
+    )
+    errors = exp.validate_artifact(invalid_blocked)
+    assert "blocked_artifact_verdict_class_mismatch" in errors
+    assert "blocked_artifact_missing_gate_summary" in errors
+    assert "blocked_artifact_honest_verdict_mismatch" in errors
+
+
+def test_req_6810_cli_refuses_to_write_invalid_artifact(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """REQ-CL-6810 makes validation failure terminal before atomic output."""
+
+    output = tmp_path / "must-not-exist.json"
+    monkeypatch.setattr(exp, "validate_artifact", lambda _artifact: ["forced_error"])
+    assert exp.main(
+        ["--date", "20260831", "--project-root", str(REPO), "--output", str(output)]
+    ) == 1
+    assert not output.exists()
