@@ -68,14 +68,12 @@ def test_scenario_constraint_6813_lexicographic_dominance() -> None:
     authority_order = _select(
         [
             _candidate(0, binding=[1, 0], soft=10**30),
-            _candidate(1, binding=[0, 1], soft=-10**30),
+            _candidate(1, binding=[0, 1], soft=-(10**30)),
         ]
     )
     assert authority_order["selected_candidate_id"] == "candidate_1"
 
-    soft_order = _select(
-        [_candidate(0, binding=[1], soft=3), _candidate(1, binding=[1], soft=4)]
-    )
+    soft_order = _select([_candidate(0, binding=[1], soft=3), _candidate(1, binding=[1], soft=4)])
     assert soft_order["selected_candidate_id"] == "candidate_1"
 
 
@@ -340,10 +338,27 @@ def test_req_constraint_6813_feature_attack_cannot_change_selection() -> None:
     attacked[1].update(
         {
             "model_id": "other-family",
-            "exact_utility": -10**30,
+            "exact_utility": -(10**30),
             "future_outcome": "loss",
             "harmful_selection": True,
         }
     )
 
     assert _select(attacked)["selected_candidate_id"] == clean["selected_candidate_id"]
+
+
+def test_req_constraint_6813_defensive_selection_and_empty_reducers() -> None:
+    """REQ-CONSTRAINT-6813 fails closed on authority, arms, and empty evidence."""
+
+    authority = _candidate(0)
+    authority["authority_preserved"] = False
+    assert exp.candidate_conflict(authority)["first_conflict"] == "authority_spoof"
+
+    with pytest.raises(ValueError, match="unknown arm"):
+        _select([_candidate(0)], arm="oracle_arm")
+
+    empty_false = exp.false_intervention_metric([], alpha=0.05)
+    assert empty_false["upper_bound"] is None
+    progress, retry = exp.derive_paired_deltas([], seed=681302, resamples=10)
+    assert progress["estimate"] is None
+    assert retry["estimate"] is None
