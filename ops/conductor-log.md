@@ -16931,3 +16931,4 @@ The l |
 | 2026-08-31 18:28 UTC | Sealed selective-arbiter adoption receipt | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-31 19:21 UTC | Chronological causal-edge verified-memory stream | OK | 107 passed, 1 warning in 10.54s |
 | 2026-08-31 19:47 UTC | Residual-pressure verified-memory continuous-learn | FAIL | Codex CLI error: Stalled after 600s silence. Last output: xp.SCRIPT_RELATIVE_ |
+| 2026-08-31 19:50 UTC | Residual-pressure verified-memory continuous-learn | SKIP | Pre-tests failing, self-heal failed:  |
