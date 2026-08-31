@@ -16888,3 +16888,5 @@ The l |
 | 2026-08-31 05:26 UTC | Transactional symbolic route learning A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6806-typed-route-program-stream) |
 | 2026-08-31 05:26 UTC | Leave-one-model-family-out route portability | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6807-transactional-route-program-ab) |
 | 2026-08-31 05:26 UTC | Independent byte, support, and rollback audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6807-transactional-route-program-ab, exp6 |
+| 2026-08-31 06:24 UTC | Plan next milestone | FAIL | Codex CLI error: m-stream) |
+| 2026-08-31 05:26 UTC | Leave-one-model-family- |

@@ -55,3 +55,9 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-08-29 | qa_layer_authenticity_audit | capstone_milestone_rot_lint.py | SILENT_NON_FIRING | OPEN | |
 | 2026-08-30 | qa_layer_authenticity_audit | exclusion_manifest_lint.py | SILENT_NON_FIRING | OPEN | |
 | 2026-08-30 | qa_layer_authenticity_audit | adversarial_verify.py::_is_timestamp_field | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_add_variant_denominators_from_value | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_finite_float | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_has_positive_control_null_metric | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_is_positive_control_null_claim | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_positive_control_failed_or_unchecked | REAL_BUG | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::check_false_negative_risk | SILENT_NON_FIRING | OPEN | |
