@@ -44,6 +44,13 @@ reuse or finish the already separated tool-loop batches without pooling their co
   a better abstention decision. Carnot hook: keep tool-gap typed transport separate from the
   actions-to-progress estimand. A parseable tool request is a transport receipt, not evidence that
   the live action helped.
+- **Delayed Verification Destabilizes Multi-Agent LLM Belief: Instability Thresholds and Optimal
+  Corrector Placement** - arXiv:2606.27409, https://arxiv.org/abs/2606.27409; submitted 2026-06-25.
+  The paper models verifier delay as delayed graph consensus. It reports dose-delay oscillation
+  across five open models, while grounded factual correction makes truth an absorbing boundary.
+  Carnot hook: add a delayed-correction event order to the residual-memory shards. Keep exact
+  verifier truth grounded, log correction dose and delay per row, and treat oscillation as a safety
+  failure even if the final aggregate recovers.
 - **The thermodynamic freedom of a thermodynamic computer** - arXiv:2608.27938,
   https://arxiv.org/abs/2608.27938; submitted 2026-08-28. A simulated thermodynamic computer reaches
   comparable classification accuracy under multiple inference protocols, with explicit speed,
@@ -67,20 +74,28 @@ reuse or finish the already separated tool-loop batches without pooling their co
 - **OpenReview:** *From Accuracy to Robustness* reports rule-verifier false negatives on equivalent
   mathematical answers and learned-verifier reward hacking:
   https://openreview.net/forum?id=ZBhZT307xx. The ICLR 2026 EBT record remains architecture context,
-  while verifier-guided self-play submissions still rely on verifier authority that Carnot must
+  while an ICLR 2026 neuro-symbolic instruction-verification submission frames instruction following
+  as a CSP with symbolic and neural routes: https://openreview.net/forum?id=RZGs4OAH6g. OpenReview's
+  browser challenge blocked a fresh forum-body read, so only the indexed paper record informs this
+  sweep. Verifier-guided self-play submissions still rely on verifier authority that Carnot must
   audit independently. V597 therefore retains exact row truth and a sealed acceptance boundary.
 - **Hugging Face Papers:** recent verification pages include pairwise self-verification, stepwise
-  evidence checks, and delayed constraint application. They support separating generation,
-  transport, and verification, but a jointly trained self-verifier is circular for release
-  authority. No Hugging Face finding replaces the exact cold audit.
+  evidence checks, delayed constraint application, and HalluScan's 72-configuration detector study:
+  https://huggingface.co/papers/2605.02443. The June delayed-verification paper also appeared in the
+  daily feed: https://huggingface.co/papers/2606.27409. These results support separating generation,
+  transport, and verification. A jointly trained self-verifier remains circular for release
+  authority, so no Hugging Face finding replaces the exact cold audit.
 - **Semantic Scholar citation check:** the public API returned HTTP 429 for both EBT `2507.02092`
   and ARM-EBM `2512.15605` during this sweep. The last successful V596 receipts were 35 and eight
   citing records, respectively; V597 does not present those stale counts as a new measurement. No
   newly verified citation supplied an open local general verifier.
 - **GitHub discovery:** the paper-owned Fast Weight Attention repository and the official EBT and
-  Extropic THRML repositories remain the only implementation references promoted here. Search also
-  surfaced young third-party thermodynamic emulators, but none supplied independent hardware
-  receipts. V597 adds no third-party runtime dependency.
+  Extropic THRML repositories remain the only implementation references promoted here. The current
+  GitHub trending page had no EBM, KAN, or constraint-solver project that justified a dependency.
+  Search also surfaced the paper-owned energy-based fine-tuning code at
+  https://github.com/sjelassi/ebft_openrlhf, but its README warns that joint actor-critic training is
+  not rigorously tested. It does not displace Carnot's frozen-model, external-memory design. V597
+  adds no third-party runtime dependency.
 - **Extropic:** the 2026-08-03 first-party update still exposes Torx and THRML software, previews
   Thermalizers, and reports a taped-out 269,568-pbit Z1 with 2027 early-access targets:
   https://extropic.ai/writing/from-one-to-one-billion. The 2026-07-29 funding announcement does not

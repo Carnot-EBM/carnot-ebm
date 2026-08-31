@@ -72,3 +72,9 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-08-31 | experiment_claim_audit | experiment_6813_selective_priority_arbiter_ab.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_arm_numeric_value | SILENT_NON_FIRING | OPEN | |
 | 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_passing_positive_control_key | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_legitimate_pair | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_is_declared_honest_zero_delta | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::check_implausible_perfect | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::check_sign_anomaly | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_has_compute_bound_marker | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_inference_substrate_text | SILENT_NON_FIRING | OPEN | |

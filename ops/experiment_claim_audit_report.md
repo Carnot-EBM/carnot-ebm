@@ -12,8 +12,8 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CLAIM_SUPPORTED | 3 |
-| NO_CLAIM | 2 |
-| CANNOT_DETERMINE | 2 |
+| CLAIM_OVERSTATED | 1 |
+| NO_CLAIM | 3 |
 | SKIPPED_ALREADY_FLAGGED | 1 |
 
 ## experiment_6811_operational_obligation_automaton_v3.json
@@ -27,13 +27,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No observation could refute a live-benefit or level-solve claim because the artifact explicitly makes neither; a failed readiness component, failed gate, replay mismatch, or hard violation would instead refute its limited fixture-readiness statement.
+The limited operational-readiness assertion would be falsified by a failed readiness component, a failed gate, non-identical replay receipts, an accepted malformed mutation, or a hard violation; none would refute live benefit or solving because neither is claimed.
 
 ## WAS THAT CHECKED
-Yes, for fixture readiness: the artifact reports gate, schema, compiler, replay, compatibility, attack, deterministic-byte, and hard-violation checks. No comparative value or live-solving test was required because no such claim was made.
+Yes, for fixture readiness: separate schema, compiler, replay, compatibility, attack, gate, and hard-violation results could have failed. No comparative value or live-solve test was attempted, appropriately matching the artifact’s null scope.
 
 ## EVIDENCE
-`"honest_verdict"`: `"complete: deterministic source-free operational-obligation fixture ready; no live benefit or level solve claimed"`; `"solve_claim"`: `false`; `"verdict_class"`: `"null"`; `"operational_automaton_fixture_ready"`: `true`; `"failed_checks"`: `[]`; `"passed"`: `true`; `"hard_violation_count"`: `0`; `"verifier_is_oracle"`: `false`; `"inference_substrate"`: `"deterministic CPU automaton, no LLM"`
+`"honest_verdict"`: `"complete: deterministic source-free operational-obligation fixture ready; no live benefit or level solve claimed"`; `"verdict_class"`: `"null"`; `"solve_claim"`: `false`; `"solve_provenance"`: `"development_proxy"`; `"operational_automaton_fixture_ready"`: `true`; `"failed_checks"`: `[]`; `"hard_violation_count"`: `0`; `"attack_coverage"`: `true`; `"backward_compatibility"`: `true`; `"compiler"`: `true`; `"replay"`: `true`; `"schema"`: `true`; `"failed_closed"`: `true`; `"outcome"`: `"rejected"`; `"fresh_process"`: `true`; `"hashes_byte_identical"`: `true`.
 
 ## RECOMMENDATION
 KEEP
@@ -46,45 +46,65 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-All 576 authentic rows are ready, and direct-typed operational preservation exceeds compressed prose.
+All 576 authentic rows are ready, and direct-typed handoffs achieve higher operational-preservation rates than compressed prose.
 
 ## WHAT WOULD REFUTE IT
-A direct-typed operational-preservation rate less than or equal to compressed prose, or incomplete/inauthentic retained rows, would refute the claim.
+A direct-typed operational-preservation rate equal to or below the compressed-prose rate, or incomplete/invalid rows being included in the claimed 576-row corpus.
 
 ## WAS THAT CHECKED
-Yes. The arm-level preservation aggregates show 23/288 for direct typed versus 8/288 for compressed prose, while the terminal gates check row completeness, exact row checks, raw bytes, checkpoints, and model coverage. Readiness was explicitly independent of the effect’s direction, so the comparison could have failed.
+Yes. Both arms were scored over 288 rows using the row-level operational-preservation field, completeness was checked against 576 planned rows, and corpus readiness was independent of the effect direction.
 
 ## EVIDENCE
-`honest_verdict`: `complete: all 576 authentic rows are ready; direct typed preservation exceeds compressed prose`; `operational_preservation_by_arm`; `direct_typed`; `numerator`: `23`; `denominator`: `288`; `rate`: `0.0798611111111111`; `compressed_prose`; `numerator`: `8`; `denominator`: `288`; `rate`: `0.027777777777777776`; `effect_sign_controls_readiness`: `false`; `rows_complete`: `true`; `row_checks_exact`: `true`; `raw_bytes_complete`: `true`; `checkpoint_cells_complete`: `true`; `verifier_is_oracle`: `false`
+`"planned_row_count": 576`; `"rows_complete": true`; `"row_checks_exact": true`; `"effect_sign_controls_readiness": false`; `"operational_handoff_corpus_ready": true`; `"operational_preservation_by_arm"`; `"direct_typed"`; `"numerator": 23`; `"rate": 0.0798611111111111`; `"compressed_prose"`; `"numerator": 8`; `"rate": 0.027777777777777776`; `"operational_preserved": false`; `"verifier_is_oracle": false`
 
 ## RECOMMENDATION
 KEEP
 
 ## experiment_6813_selective_priority_arbiter_ab.json
 
-**CANNOT_DETERMINE**
-
-> Audit-integrity guard: quoted evidence [' In an exhibited row with ', ', while its paired flat arm has ', '. Aggregate ', ' for flat reject-and-retry. The reported ', ' has '] does not appear in the artifact, so this verdict was downgraded and must not be acted on.
+**CLAIM_OVERSTATED**
 
 ## VERDICT
 CLAIM_OVERSTATED
 
 ## THE HEADLINE CLAIM
-Selective priority provides a positive held-replay benefit over flat reject-and-retry.
+Selective priority provides a positive effect on held exact replay.
 
 ## WHAT WOULD REFUTE IT
-A base-preserving first-valid policy—preserve an already-valid proposal, otherwise accept the first fully valid candidate—tying or beating selective priority on paired held progress would refute the claimed added value of priority ordering.
+A base-preserving first-valid comparator—preserve an already-valid base, otherwise accept the first fully valid candidate—tying or beating selective priority on paired progress, retry cost, false interventions, or safety would refute added value from priority ordering itself; a nonpositive paired progress lower bound or increased harmful selections would also refute the stated gate.
 
 ## WAS THAT CHECKED
-No. The only comparator is a first-valid arm that, unlike selective priority, does not preserve a valid base proposal. Thus the experiment compares two policy changes at once and does not give the priority-ordering claim a serious chance to fail. The paired held test did allow selective priority to lose against that weaker arm, but it cannot isolate which policy difference produced the win.
+No. Held paired outcomes, equal budgets, harms, and confidence bounds were checked, but the only rival was a first-valid arm that lacks selective priority’s base-preservation behavior. Thus the experiment did not isolate priority ordering against the cheapest serious baseline.
 
 ## EVIDENCE
-The comparator is defined as `flat_reject_retry`: `Inspect the same candidates in frozen order. Reject any failed constraint and accept the first fully valid candidate.` The tested arm is defined as `selective_priority`: `Preserve a valid base byte string. Otherwise choose the exact hard-binding-soft lexicographic minimum with a stable index tie.` In an exhibited row with `base_already_valid` equal to `true`, selective priority has `selected_candidate_id` equal to `base_proposal` and `accepted_progress` equal to `1`, while its paired flat arm has `abstention` equal to `true`, `false_intervention` equal to `true`, and `accepted_progress` equal to `0`. Aggregate `false_intervention_rate_by_arm` is `0.0` for selective priority and `0.6428571428571429` for flat reject-and-retry. The reported `paired_progress_delta` has `direction` `selective_minus_flat`, `estimate` `0.125`, and `lower_bound` `0.0763888888888889`.
+`"selective_priority": "Preserve a valid base byte string. Otherwise choose the exact hard-binding-soft lexicographic minimum with a stable index tie."`; `"flat_reject_retry": "Inspect the same candidates in frozen order. Reject any failed constraint and accept the first fully valid candidate."`; `"headline_split": "held"`; `"estimate": 0.125`; `"lower_bound": 0.0763888888888889`; `"false_intervention_rate_by_arm"`; `"selective_priority"`; `"rate": 0.0`; `"flat_reject_retry"`; `"rate": 0.6428571428571429`; `"harmful_selections_by_arm"`; `"rate": 0.0`; `"equal_observed_work": true`
 
 ## RECOMMENDATION
 ADD_MISSING_CONTROL
 
 ## experiment_6823_v595_branch_disposition.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+For its limited receipt function, an available terminal row being omitted or a branch being promoted despite missing or excluded evidence would refute the artifact’s completeness and disposition statements.
+
+## WAS THAT CHECKED
+Yes. The artifact records task rows, eligibility, exclusions, terminal-class totals, source hashes, failed gate checks, and blocked branch dispositions. It explicitly declines a solve or comparative-value claim.
+
+## EVIDENCE
+`honest_verdict` `complete_partial: V595 preserved every available terminal row; one or more branches remain blocked by named missing or excluded independent evidence.` `solve_claim` `false` `verdict_class` `partial` `task_count` `14` `flagged` `2` `missing` `9` `positive` `2` `disposition` `blocked` `eligible_for_positive_claim` `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6824_selective_arbiter_cold_row_replay.json
 
 **CLAIM_SUPPORTED**
 
@@ -92,43 +112,19 @@ ADD_MISSING_CONTROL
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-V595 preserved all available terminal rows while keeping branches blocked where independent evidence was missing or excluded.
+Cold replay supports the bounded claim that selective priority improves accepted progress and retry cost over flat reject-and-retry without increasing measured safety violations or losing legal support.
 
 ## WHAT WOULD REFUTE IT
-A present terminal artifact omitted from the rows, an ineligible or missing row counted as positive evidence, or a branch advanced despite a failed evidence gate would refute the claim.
+A nonpositive selective-minus-flat paired progress effect, a confidence lower bound at or below zero, unequal budgets, any accepted hard violation or harmful-selection increase, lost legal support, or excessive false intervention would falsify the claim.
 
 ## WAS THAT CHECKED
-Yes. The artifact reconciles the 14-task design and execution manifests, hashes expected source artifacts, records missing and flagged evidence, recomputes eligibility, and blocks affected branches.
+Yes. The paired arm comparison, confidence interval, matched budgets, hard violations, harmful selections, legal support, false interventions, and full row coverage were independently recomputed. The artifact does not test broader superiority over a valid-base-preserving, first-legal-candidate baseline, so the claim remains specific to `flat_reject_retry`.
 
 ## EVIDENCE
-`"honest_verdict": "complete_partial: V595 preserved every available terminal row; one or more branches remain blocked by named missing or excluded independent evidence."`; `"design_task_count": 14`; `"executed_task_count": 14`; `"task_count": 14`; `"differences": []`; `"matches": true`; `"eligible_for_positive_claim": false`; `"exclusion_reason": "terminal_class=flagged"`; `"observed": "file_missing"`; `"disposition": "blocked"`; `"verdict_class": "partial"`; `"solve_claim": false`; `"verifier_is_oracle": false`
+`paired_progress_delta`, `direction`, `selective_minus_flat`, `estimate`, `0.125`, `lower_bound`, `0.0763888888888889`, `mismatched_pair_ids`, `[]`, `hard_violation_rate_by_arm`, `0.0`, `harmful_selections_by_arm`, `0.0`, `legal_support_by_arm`, `1.0`, `false_intervention_upper_limit`, `0.2`, `upper_bound`, `0.12064330476584559`, `all_producer_rows_recomputed`, `true`, `verifier_is_oracle`, `false`
 
 ## RECOMMENDATION
 KEEP
-
-## experiment_6824_selective_arbiter_cold_row_replay.json
-
-**CANNOT_DETERMINE**
-
-> Audit-integrity guard: quoted evidence [', while ', '. The corresponding ', ' numerators are also ', ' matches the false-intervention difference: ', ' versus ', '. The only named arms are '] does not appear in the artifact, so this verdict was downgraded and must not be acted on.
-
-## VERDICT
-CLAIM_OVERSTATED
-
-## THE HEADLINE CLAIM
-The cold replay supports a positive value claim for `selective_priority` over `flat_reject_retry`, increasing accepted progress without safety or support loss.
-
-## WHAT WOULD REFUTE IT
-A matched baseline that preserves an already-valid base proposal and otherwise uses flat reject/retry would tie or beat selective priority. Likewise, no improvement among rows where the base was not already valid would show that the full arbiter adds nothing beyond that trivial guard.
-
-## WAS THAT CHECKED
-No. The artifact compares only selective priority with unconditional flat reject/retry; it provides neither the validity-preserving flat baseline nor a paired progress analysis stratified by whether the base was already valid. Thus the serious tie condition was not given a real chance to appear.
-
-## EVIDENCE
-The `selective_priority` accepted-progress mean is `0.19444444444444445`, exactly `28` of `144`, while `flat_reject_retry` is `0.06944444444444445`, exactly `10` of `144`. The corresponding `safe_action_identity_by_arm` numerators are also `28` and `10`, and the progress difference `0.125` matches the false-intervention difference: `18` versus `0`. Both arms have hard-violation rates of `0.0`, harmful-selection rates of `0.0`, and legal-support rates of `1.0`. The only named arms are `selective_priority` and `flat_reject_retry`.
-
-## RECOMMENDATION
-ADD_MISSING_CONTROL
 
 ## experiment_6825_selective_arbiter_authority_attacks.json
 
@@ -138,16 +134,16 @@ ADD_MISSING_CONTROL
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Independent mutation tests support the selective arbiter’s hard-authority boundary, without establishing adoption value.
+Independent mutation attacks support the selective arbiter’s hard-authority boundary, without establishing adoption value.
 
 ## WHAT WOULD REFUTE IT
-An applicable mutation that was accepted despite a hard or binding authority violation, allowed a prohibited feature to influence selection, altered required safe-action bytes, failed to reject corrupted row evidence, or produced different fresh-process replay rows.
+Any applicable attack producing a failure, accepting a hard-authority violation, responding to a prohibited label, failing open under row-integrity mutation, altering required safe-action bytes, or producing nonidentical fresh-process replay rows.
 
 ## WAS THAT CHECKED
-Yes. The artifact reports applicable priority, certificate, prohibited-feature, safe-action, and row-integrity attacks, plus a byte-identical fresh-process replay; all reported zero failures or the expected fail-closed behavior.
+Yes. Applicable priority, certificate, prohibited-feature, row-integrity, and safe-action attacks report zero failures; representative rows expose local outcomes; and fresh-process replay checks byte identity. Non-applicable rows are separated through applicability counts.
 
 ## EVIDENCE
-`hard_authority_supported`: `true`; `adoption_decision`: `not_evaluated`; `verifier_is_oracle`: `false`; `imports_exp6813`: `false`; `failed_count`: `0`; `influence_detected`: `false`; `failed_closed`: `true`; `byte_identity_enforced`: `true`; `fresh_process`: `true`; `byte_identical`: `true`; `authority_attack_shard_complete`: `true`; `honest_verdict`: `complete: independent mutations support the hard authority boundary; adoption was not evaluated`
+`"hard_authority_supported": true`; `"adoption_decision": "not_evaluated"`; `"verifier_is_oracle": false`; `"failed_count": 0`; `"influence_detected": false`; `"failed_closed": true`; `"byte_identity_enforced": true`; `"byte_identical": true`; `"accepted_hard_violation": false`; `"authority_attack_shard_complete": true`; `"verdict_class": "positive"`
 
 ## RECOMMENDATION
 KEEP
@@ -167,13 +163,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-A failed readiness gate, incomplete or noncanonical chronology, leakage of sealed fields, broken family isolation, or missing required operation coverage would refute the artifact’s construction/readiness statement.
+For the artifact’s operational readiness assertion, incomplete chronology, noncanonical rows, exposed sealed fields, failed family isolation, or absent operation/read coverage would refute readiness; no learning-effect or comparative claim exists to refute.
 
 ## WAS THAT CHECKED
-Yes. The gate summary checked source preconditions, chronology and row counts, canonical rows, sealed fields, family isolation, headroom, and operation outcomes; all reported passing. No learning-effect or comparative claim was made or tested.
+Yes. The gate checks cover source preconditions, chronology, canonical rows, sealed fields, family isolation, headroom, and operation outcomes.
 
 ## EVIDENCE
-`honest_verdict`: `complete: frozen chronological causal-edge memory stream is ready; no learning ran`; `status`: `complete_chronological_causal_edge_memory_stream`; `verified_memory_stream_ready`: `true`; `failed_checks`: `[]`; `passed`: `true`; `verifier_is_oracle`: `false`
+`"honest_verdict"`: `"complete: frozen chronological causal-edge memory stream is ready; no learning ran"`; `"status"`: `"complete_chronological_causal_edge_memory_stream"`; `"verified_memory_stream_ready"`: `true`; `"failed_checks"`: `[]`; `"passed"`: `true`; `"inference_substrate"`: `"CPU transformation of frozen authentic outputs, no LLM"`; `"verifier_is_oracle"`: `false`
 
 ## RECOMMENDATION
 KEEP
