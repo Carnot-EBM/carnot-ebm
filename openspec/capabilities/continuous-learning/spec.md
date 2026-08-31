@@ -8907,3 +8907,164 @@ And SHALL not imply that the stream verifier is an oracle.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-6827 and SCENARIO-CL-6827-* | Implemented: `python/carnot/experiment_6827_chronological_causal_edge_memory_stream.py`, task-owned wrapper, and terminal artifact. | Implemented: 107-test conductor-equivalent shard passes; Exp6827 module and wrapper have 514/514 statements covered; focused spec coverage, artifact validation, adversarial verification, verdict-row lint, Ruff, format, mypy, and root-clutter checks pass. |
+
+## REQ-CL-6828: Residual-Pressure Verified-Memory A/B
+
+Exp6828 SHALL compare four equal-capacity external-memory arms over the full
+Exp6827 stream. The arms SHALL be frozen memory, finite-gain residual pressure,
+raw signed-violation accumulation, and seeded random exact-valid updates. The
+experiment SHALL use all five frozen orders and all frozen development and
+held-future events. It SHALL not invoke an LLM or change a GGUF weight. It SHALL
+write `results/experiment_6828_residual_pressure_verified_memory_ab.json`
+through
+`scripts/experiments/experiment_6828_residual_pressure_verified_memory_ab.py`.
+The implementation SHALL live in
+`python/carnot/experiment_6828_residual_pressure_verified_memory_ab.py`.
+
+Before evaluation, Exp6828 SHALL require
+`verified_memory_stream_ready=true`, complete order and split manifests,
+positive finite headroom, admissible and rejected operations, later reads, one
+canonical serializer, and sufficient disk and RAM. It SHALL also require the
+Exp6827 source hash. A failed check SHALL stop the complete stream. The blocked
+artifact SHALL use `complete_blocked_residual_pressure_verified_memory_ab`,
+contain no rows or transactions, set `route_learning_ab_complete=false`, and
+keep each failed check, expected value, and observed value in
+`gate_check_summary`. It SHALL not shrink or replace the stream.
+
+Exp6828 SHALL freeze capacity, gains, decay, update cadence, proposals,
+eviction, five order hashes, seeds, and all acceptance thresholds before the
+first event. Public constants SHALL use development rows only. Each active
+episode SHALL select an action from one immutable snapshot. The exact local
+receipt SHALL become visible only after the action. A memory proposal SHALL
+occur only after the episode ends. A commit SHALL occur only after the proposal
+passes its exact receipt and the external sealed support harness.
+
+The residual arm SHALL update projected pressure with a finite gain and decay.
+The raw arm SHALL accumulate the frozen signed violation signal without a
+decay term. The random arm SHALL use only seeded exact-valid proposals. The
+frozen arm SHALL not write. Every arm SHALL declare the same finite capacity,
+cadence, proposal budget, eviction rule, and action threshold. The active
+episode SHALL reject every write attempt.
+
+Before each commit, the sealed harness SHALL check current utility, protected
+retention anchors, hard cases, and held-future reachable support. It SHALL
+return only accept or reject to the learner. A rejected update SHALL preserve
+the parent bytes. Threshold harm after a tentative commit SHALL restore the
+exact parent bytes and parent action. Held-future fields, exact future
+receipts, family-oracle fields, and final acceptance SHALL never enter a public
+decision snapshot.
+
+Every transaction SHALL preserve canonical parent and new bytes, their hashes,
+the predecessor receipt, arm, order, event, operation diff, pressure state,
+residual state, and exact admission receipt. Task-owned checkpoints SHALL bind
+complete frozen boundaries. A restarted store SHALL recover the same bytes,
+next action, and predecessor. Rollback SHALL restore the exact parent bytes.
+
+Exp6828 SHALL test credited write-read-action-outcome edges by removing,
+substituting, and reordering them. Causal credit SHALL require an admitted
+write, an actual later retrieval, a changed action, and a nonzero exact outcome
+effect. An operation without this full chain SHALL remain uncredited.
+
+The positive gate SHALL require a paired held-future lower confidence bound
+above zero, no support contraction, no protected-retention harm, no hard-case
+harm, nonzero causal-factor witnesses, stale-pressure release, and complete
+transaction bytes. `route_learning_ab_complete` SHALL depend only on complete
+rows, transactions, checkpoints, and teardown. It SHALL not depend on effect
+sign. This field is the exact completion input for Exp6829 and Exp6830.
+
+The artifact SHALL include `schema`, `experiment_id`, `title`, `run_date`,
+`status`, `openspec_requirement_ids`, `replay_commands`, `field_principles`,
+`inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `continuous_self_learning_task`, `MODEL_SPECS`,
+`model_weight_immutability_receipt`, `source_artifact_hashes`,
+`frozen_manifest`, `arm_definitions`, `residual_update_contract`,
+`checkpoint_receipts`, `rows`, `transaction_schema`,
+`transaction_receipts`, `commits_by_arm`, `rejects_by_arm`,
+`later_reads_by_arm`, `action_influence_by_arm`, `exact_utility_by_arm`,
+`held_future_support_by_arm`, `retention_by_arm`,
+`hard_case_effect_by_arm`, `stale_pressure_release_by_arm`,
+`causal_edge_counterfactuals`, `paired_residual_deltas`,
+`causal_factor_witnesses`, `rollback_receipts`,
+`acceptance_gate_positive`, `route_learning_ab_complete`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one principle for every
+top-level field. `inference_substrate` SHALL equal
+`CPU external program learning over frozen authentic outputs`. `MODEL_SPECS`
+SHALL contain the three source GGUF families. `verifier_is_oracle` SHALL be
+false. `verdict_class` SHALL use only `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL use an approved
+terminal prefix and SHALL agree with row-derived gates.
+
+### SCENARIO-CL-6828-PRECONDITIONS: An Owned Failure Stops The Full Stream
+
+Given one readiness, order, split, headroom, operation, read, serializer,
+source-hash, disk, or RAM check fails,
+When Exp6828 evaluates preconditions,
+Then it SHALL write the complete blocked artifact without rows or transactions
+And the gate summary SHALL preserve the failed check and its observed value.
+
+### SCENARIO-CL-6828-UPDATES: Residual And Raw Pressure Stay Distinct
+
+Given the same frozen signed receipt sequence,
+When the two learning arms update pressure,
+Then residual pressure SHALL use the finite-gain projection and decay
+And raw pressure SHALL use cumulative signed violations without decay.
+
+### SCENARIO-CL-6828-EPISODES: Active Episodes Are Read-Only
+
+Given one arm has frozen its episode snapshot,
+When any code attempts a memory write before the exact outcome is revealed,
+Then the store SHALL reject that write
+And its canonical state bytes SHALL remain unchanged.
+
+### SCENARIO-CL-6828-ADMISSION: Commits Follow Exact And Sealed Receipts
+
+Given an episode has ended and its exact local receipt is available,
+When an arm proposes a memory operation,
+Then commit SHALL require exact-valid operation bytes and sealed support
+acceptance
+And a rejected or harmful proposal SHALL preserve or restore its parent bytes.
+
+### SCENARIO-CL-6828-CAPACITY: All Arms Have One Frozen Budget
+
+Given the four arm definitions,
+When Exp6828 creates isolated order stores,
+Then every store SHALL use the same capacity, cadence, proposal limit, and
+eviction rule
+And the random arm SHALL never bypass exact admission.
+
+### SCENARIO-CL-6828-TRANSACTIONS: Canonical Lineage Survives Recovery
+
+Given one admitted operation and one frozen checkpoint boundary,
+When the store restarts or rolls back,
+Then parent and new bytes SHALL match their hashes and predecessor
+And rollback SHALL restore the exact parent bytes and next action.
+
+### SCENARIO-CL-6828-FUTURE-SEAL: Future Fields Cannot Guide An Action
+
+Given a public event snapshot,
+When the action policy reads its keys,
+Then no denied future, outcome, support, audit, or acceptance key SHALL exist
+And the sealed harness SHALL return only one acceptance bit to the learner.
+
+### SCENARIO-CL-6828-CAUSAL-CREDIT: Credit Needs The Complete Later Chain
+
+Given an admitted write is read by a later event,
+When remove, substitute, and reorder counterfactuals run,
+Then credit SHALL require a changed action and a nonzero exact outcome effect
+And every incomplete chain SHALL remain uncredited.
+
+### SCENARIO-CL-6828-VERDICT: Completion Does Not Depend On Effect Sign
+
+Given all order-arm-event rows, transactions, checkpoints, and teardown
+receipts are complete,
+When Exp6828 computes its terminal fields,
+Then `route_learning_ab_complete` SHALL be true for positive or null effects
+And positive SHALL require every predeclared gain, support, safety, causal,
+release, and byte-completeness gate.
+
+## Implementation Status (REQ-CL-6828)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-6828 and SCENARIO-CL-6828-* | Planned: Exp6828 module, task-owned wrapper, and terminal artifact. | Planned: focused tests and full Python suite. |

@@ -16930,3 +16930,4 @@ The l |
 | 2026-08-31 18:00 UTC | Selective-arbiter authority attack shard | OK | 111 passed, 1 warning in 15.75s |
 | 2026-08-31 18:28 UTC | Sealed selective-arbiter adoption receipt | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-31 19:21 UTC | Chronological causal-edge verified-memory stream | OK | 107 passed, 1 warning in 10.54s |
+| 2026-08-31 19:47 UTC | Residual-pressure verified-memory continuous-learn | FAIL | Codex CLI error: Stalled after 600s silence. Last output: xp.SCRIPT_RELATIVE_ |
