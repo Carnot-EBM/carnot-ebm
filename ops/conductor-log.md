@@ -16906,3 +16906,4 @@ The l |
 | 2026-08-31 11:06 UTC | Selective priority arbiter versus flat retry A/B | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-08-31 11:34 UTC | Selective priority arbiter versus flat retry A/B | OK | 95 passed, 1 warning in 13.00s |
 | 2026-08-31 12:00 UTC | Independent selective-arbiter authority audit | FAIL | Codex CLI error: Wall-clock+idle timeout after 1381s (600s silence). Last out |
+| 2026-08-31 12:03 UTC | Independent selective-arbiter authority audit | SKIP | Pre-tests failing, self-heal failed:  |
