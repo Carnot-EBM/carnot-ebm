@@ -16881,3 +16881,10 @@ The l |
 | 2026-08-31 05:10 UTC | Plan milestone 2026.08.594 | OK | 8 tasks proposed |
 | 2026-08-31 05:12 UTC | Milestone 2026.08.594 activated | OK | 8 tasks queued |
 | 2026-08-31 05:21 UTC | Typed operational-obligation automaton v2 | OK | cache hit: 100 passed, 1 warning in 76.54s (0:01:16) |
+| 2026-08-31 05:24 UTC | Three-model operational-handoff proposal corpus | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6802-operational-obl |
+| 2026-08-31 05:26 UTC | Priority arbiter versus flat reject-and-retry A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6803-sota-operational-handoff-corpus) |
+| 2026-08-31 05:26 UTC | Independent priority-arbiter authority audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6804-priority-arbiter-ab) |
+| 2026-08-31 05:26 UTC | Chronological typed route-program stream | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6805-priority-arbiter-cold-audit) |
+| 2026-08-31 05:26 UTC | Transactional symbolic route learning A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6806-typed-route-program-stream) |
+| 2026-08-31 05:26 UTC | Leave-one-model-family-out route portability | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6807-transactional-route-program-ab) |
+| 2026-08-31 05:26 UTC | Independent byte, support, and rollback audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6807-transactional-route-program-ab, exp6 |
