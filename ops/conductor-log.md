@@ -16922,3 +16922,5 @@ The l |
 | 2026-08-31 13:53 UTC | V595 evidence synthesis and branch disposition | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6823_v595_br |
 | 2026-08-31 14:06 UTC | V595 evidence synthesis and branch disposition | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6823_v595_br |
 | 2026-08-31 14:26 UTC | V595 evidence synthesis and branch disposition | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6823_v595_br |
+| 2026-08-31 16:06 UTC | Plan milestone 2026.08.596 | OK | 7 tasks proposed |
+| 2026-08-31 16:09 UTC | Milestone 2026.08.596 activated | OK | 7 tasks queued |
