@@ -16869,3 +16869,4 @@ The l |
 | 2026-08-30 23:57 UTC | Plan milestone 2026.08.593 | OK | 6 tasks proposed |
 | 2026-08-31 00:00 UTC | Milestone 2026.08.593 activated | OK | 6 tasks queued |
 | 2026-08-31 00:06 UTC | Fail-closed agent-model dispatch requalification | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6796_agent_m |
+| 2026-08-31 00:10 UTC | Fail-closed agent-model dispatch requalification | FAIL | No file changes produced |
