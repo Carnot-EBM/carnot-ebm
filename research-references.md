@@ -1,3 +1,113 @@
+## V597 Planner Refresh - 2026-08-31
+
+This sweep follows terminal milestone `2026.08.596`. Exp6824 independently replayed the
+selective-arbiter rows. Exp6825 then completed bounded authority attacks after one timeout and a
+pre-test repair. Exp6826 issued an `enable` decision, but its `0.0199` second receipt was quarantined
+by `DURATION_TOO_SHORT`; it is not clean adoption authority. Exp6827 produced 4,320 chronological
+causal-edge memory rows and explicitly reported that no learning ran. Exp6828 stalled twice without
+a terminal artifact, so Exp6829 and Exp6830 gate-blocked. V597 must repair the procedural receipt,
+measure compositional obligation saturation on the existing authentic handoff path, and execute
+continuous learning as checkpointed shards rather than another monolith. The live ARC branch must
+reuse or finish the already separated tool-loop batches without pooling their configurations.
+
+### Findings selected for V597
+
+- **Harness Continual Learning: Continual Adaptation Beyond Model Parameters** - arXiv:2608.19013,
+  https://arxiv.org/abs/2608.19013; submitted 2026-08-19. The paper treats prompts, memory, tools,
+  capability maps, and routers as the learned harness around frozen foundation models. Its guarded
+  evolution separates update proposals from commitment and checks current improvement, historical
+  retention, and validity before adoption. Carnot hook: keep all three GGUF families frozen, learn
+  only bounded external memory, and commit through the sealed exact harness after each episode.
+- **Fast Weight Attention for Continual Learning** - arXiv:2608.27763,
+  https://arxiv.org/abs/2608.27763; submitted 2026-08-27; code at
+  https://github.com/yifanzhang-pro/fast-weight-attention. The paper distinguishes read-after-write
+  temporal alignment, plasticity, forgetting, and bounded rehearsal. Carnot hook: make event timing
+  and stale-pressure decay explicit in the residual-memory kernel. Run the learner in two durable
+  event-order shards, with restart hashes and fixed capacity, rather than one long process.
+- **Large Language Models Can Follow Instructions, But Not Many at Once: Phase Transitions in
+  Compositional Constraint Satisfaction** - arXiv:2608.12426,
+  https://arxiv.org/abs/2608.12426; submitted 2026-08-12. Constraint Saturation Evaluation varies
+  simultaneous constraint count and scores every constraint with deterministic rules. It reports a
+  multiplicative collapse in all-constraint success even when individual constraints remain usable.
+  Carnot hook: extend the Exp6811/Exp6812 operational-obligation path with frozen obligation counts,
+  exact per-obligation checks, and all-obligation success across Qwen3.6, dense Gemma-4, and MoE
+  Gemma-4. Do not substitute an LLM judge.
+- **Beyond Local Accuracy: A Protocol-Level Identifiability Audit for Controlled LLM Reasoning
+  Evaluation** - arXiv:2608.13326, https://arxiv.org/abs/2608.13326; submitted 2026-08-13. The paper
+  tests whether an observation support separates policies with different target behavior and can
+  synthesize a smaller identifying support. Carnot hook: cold-audit whether the obligation-count
+  cells and live control/treatment cells identify the intended selective and causal estimands before
+  interpreting pooled accuracy or progress.
+- **Repair, Not Improvement: Decomposing Constrained Decoding in Tool-Call Abstention** -
+  arXiv:2608.13959, https://arxiv.org/abs/2608.13959; submitted 2026-08-14. The study separates stop
+  behavior, format repair, and tool judgment, and shows that repairing unreadable form does not imply
+  a better abstention decision. Carnot hook: keep tool-gap typed transport separate from the
+  actions-to-progress estimand. A parseable tool request is a transport receipt, not evidence that
+  the live action helped.
+- **The thermodynamic freedom of a thermodynamic computer** - arXiv:2608.27938,
+  https://arxiv.org/abs/2608.27938; submitted 2026-08-28. A simulated thermodynamic computer reaches
+  comparable classification accuracy under multiple inference protocols, with explicit speed,
+  dissipation, and Wasserstein-efficiency tradeoffs. Carnot hook: retain protocol and accuracy as
+  separate axes in future TSU receipts. This is simulation evidence, not a reason to put unavailable
+  hardware on V597's blocking path.
+- **An Embedded RISC-V Evaluation of Kolmogorov--Arnold Networks in Hard-Constrained Recurrent
+  Physics-Informed Models** - arXiv:2608.00737, https://arxiv.org/abs/2608.00737. The reported
+  B-spline KAN residual branches were 4.7x-14.5x slower and 4.7x-18.7x more energy-intensive than
+  matched MLP branches on a scalar RISC-V core, with worse INT8 trajectory stability. Carnot hook:
+  do not add KAN or embedded deployment work merely from parameter-count claims. V597 keeps the
+  already tested external symbolic memory and exact verifiers.
+
+### Requested primary and secondary checks
+
+- **arXiv:** the 2025-2026 sweep covered energy-based reasoning and verification, neural constraint
+  satisfaction, Ising methods, hallucination mitigation, KANs, constrained generation, hardware
+  sampling, and continual learning. The actionable delta is guarded harness commitment, explicit
+  read-after-write timing, compositional saturation cells, and protocol-level identifiability. The
+  newer thermodynamic-efficiency result remains a hardware-watch item.
+- **OpenReview:** *From Accuracy to Robustness* reports rule-verifier false negatives on equivalent
+  mathematical answers and learned-verifier reward hacking:
+  https://openreview.net/forum?id=ZBhZT307xx. The ICLR 2026 EBT record remains architecture context,
+  while verifier-guided self-play submissions still rely on verifier authority that Carnot must
+  audit independently. V597 therefore retains exact row truth and a sealed acceptance boundary.
+- **Hugging Face Papers:** recent verification pages include pairwise self-verification, stepwise
+  evidence checks, and delayed constraint application. They support separating generation,
+  transport, and verification, but a jointly trained self-verifier is circular for release
+  authority. No Hugging Face finding replaces the exact cold audit.
+- **Semantic Scholar citation check:** the public API returned HTTP 429 for both EBT `2507.02092`
+  and ARM-EBM `2512.15605` during this sweep. The last successful V596 receipts were 35 and eight
+  citing records, respectively; V597 does not present those stale counts as a new measurement. No
+  newly verified citation supplied an open local general verifier.
+- **GitHub discovery:** the paper-owned Fast Weight Attention repository and the official EBT and
+  Extropic THRML repositories remain the only implementation references promoted here. Search also
+  surfaced young third-party thermodynamic emulators, but none supplied independent hardware
+  receipts. V597 adds no third-party runtime dependency.
+- **Extropic:** the 2026-08-03 first-party update still exposes Torx and THRML software, previews
+  Thermalizers, and reports a taped-out 269,568-pbit Z1 with 2027 early-access targets:
+  https://extropic.ai/writing/from-one-to-one-billion. The 2026-07-29 funding announcement does not
+  change Carnot's access state. V597 makes no Z1 throughput, power, or execution claim.
+- **Logical Intelligence:** the current Kona 1.0 page still describes a globally scored continuous
+  constraint layer beneath LLM interfaces: https://logicalintelligence.com/kona-ebms-energy-based-models.
+  It exposes no weights, local runner, training recipe, or reproducible benchmark harness. Kona
+  remains a PRD-level architecture comparator, not a V597 dependency.
+- **Hardware inventory:** the dual RTX 3090 workstation remains the only headline local LLM
+  substrate. KV260 and GateMate receipts are terminal, PolarFire is opportunistic, and no changed
+  board or TSU access receipt exists. V597 puts physical accelerator work outside the blocking DAG.
+
+### V597 planning impact
+
+- Reissue the Exp6826 adoption decision under an explicit aggregation substrate and measured
+  task-owned clock before downstream code treats it as clean authority.
+- Measure compositional obligation saturation on a bounded, exact fixture using all three mandated
+  local GGUF families. Report per-obligation and all-obligation success and cold identifiability.
+- Split the failed Exp6828 learner by event order. Use guarded propose-evaluate-commit updates,
+  fixed capacity, read-after-write receipts, stale-pressure release, checkpoints, and a cold sealed
+  family-portability audit.
+- Inventory existing live ARC rows first. Reuse byte-identical completed cells, fill only frozen
+  shortfalls, keep control and treatment in separate task-owned processes, and interpret tool
+  transport separately from causal progress.
+- Gate only on artifact completeness. End with an ungated cold disposition that preserves null,
+  harmful, blocked, disqualified, and partial branches without relabeling them as success.
+
 ## V596 Planner Refresh - 2026-08-31
 
 This sweep follows terminal milestone `2026.08.595`. Exp6811 produced a deterministic,

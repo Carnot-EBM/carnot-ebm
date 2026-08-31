@@ -3,15 +3,15 @@
 
 # qa_layer_authenticity_audit_report — 2026-08-31
 
-Scanned 4 of 20 selected unit(s) with codex as the hostile reviewer. Guards (20): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 5 of 20 selected unit(s) with codex as the hostile reviewer. Guards (20): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 4 of 20 unit(s); rotation advances by 4 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 5 of 20 unit(s); rotation advances by 5 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 0 |
+| `CLEAN` | 1 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
 | `SILENT_NON_FIRING` | 1 |
@@ -21,14 +21,14 @@ Scanned 4 of 20 selected unit(s) with codex as the hostile reviewer. Guards (20)
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_arm_numeric_value` — A real artifact arm containing `"accuracy": {"principle": "Held-out evaluation accuracy.", "value": 0.997}` should supply the accuracy-like value for fabrication checking, but this extractor returns `None`.
+- `adversarial_verify.py::_passing_positive_control_key` — results/experiment_4177_decisive_headroom_controlled_moat_test.json` contains the real top-level field: ```json {"positive_control_confirmed": true} ``` With no matching `*_control_passed` top-level key, the function returns `None` despite the artifact explicitly declaring a confirmed positive control.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_arm_numeric_value` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_passing_positive_control_key` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_arm_numeric_value
+## adversarial_verify.py::_passing_positive_control_key
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -36,45 +36,85 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CLAIM
-`Extract the accuracy-like value from a flat or nested arm entry.`
+`Return a top-level passing positive-control key if the artifact declares one.`
 
 ## FINDINGS
-1. `metric = value.get(metric_key)` assumes each recognized metric is a bare finite number. A principle-wrapped metric is passed to `_is_finite_number(metric)`, rejected, and silently converted to no result.
-2. The implementation is narrower than its claim: it supports a flat number or one mapping level containing bare numbers, not an accuracy value nested inside an annotation wrapper.
-3. The terminal `return None` conflates “no metric exists,” “unsupported shape,” “unrecognized metric name,” and “recognized metric wrapped by project convention.” Unless the caller separately diagnoses those cases, a failed extraction is indistinguishable from permission to skip downstream validation.
-4. `CONDITION_ARM_METRIC_KEYS` represents the concept of accuracy-like metric names, but its definition and tests are not provided. Its omissions and whether any individual entry is deletable with the suite still green cannot be determined.
-5. There are no free-text substring rules, negation-sensitive checks, numeric thresholds, absolute paths, writes, or measurements in this function. No findings apply to those classes.
+1. `if (kl == "positive_control_passed" or kl.endswith("_control_passed")) and value is True:` assumes a bare built-in boolean. A principle-wrapped true silently fails; lists and None are likewise treated as non-passing without validation. `kl = key.lower()` also assumes string keys, acceptable for JSON but unsafe for arbitrary Python dictionaries.
+
+2. `kl.endswith("_control_passed")` is right-anchored, but semantically boundary-blind: it accepts every kind of control, including explicitly negative controls, as positive-control evidence. There is no free-text scan, but the key-name scan is context-blind.
+
+3. There are no numeric thresholds or off-by-one comparisons. `value is True` correctly rejects numeric 1, but its exact-type requirement causes the wrapper failure above.
+
+4. The implementation is both narrower and broader than its claim: narrower because it recognizes only one exact spelling or one suffix and cannot unwrap annotated values; broader because the suffix does not establish that the matched control is positive.
+
+5. The alternation stands in for “a top-level declaration that a positive control passed.” It omits the real confirmation-style member identified under MISSED INPUT while admitting semantically unrelated control types.
+
+6. `kl == "positive_control_passed"` is decorative and provably deletable: that exact string already satisfies `kl.endswith("_control_passed")`. Deleting the equality arm cannot change behavior, so every test remains green; focused adversarial-verifier tests also lack a direct suffix-only case.
+
+7. The terminal `return None` conflates an unrecognized declaration with no declaration. It does not disable the enclosing fabrication check—the current caller withholds an exemption—so class F is absent, but the silent false-positive quarantine path remains.
+
+8. The function performs no path computation, filesystem writes, tracked-state mutation, duration measurement, or other side effect. Classes D, E, and G are absent.
 
 ## COUNTEREXAMPLE
-False negative:
-```python
+```json
 {
-    "accuracy": {
-        "principle": "Held-out accuracy measured on the frozen evaluation set.",
-        "value": 0.997
-    }
+  "positive_control_passed": false,
+  "negative_control_passed": true
 }
 ```
-The function returns `None`, so an implausible 0.997 accuracy can escape any downstream plausibility check that skips absent values.
+
+The function returns `"negative_control_passed"`, falsely reporting a passing positive control despite the explicit positive control having failed.
 
 ## MISSED INPUT
-A real artifact arm containing `"accuracy": {"principle": "Held-out evaluation accuracy.", "value": 0.997}` should supply the accuracy-like value for fabrication checking, but this extractor returns `None`.
+`results/experiment_4177_decisive_headroom_controlled_moat_test.json` contains the real top-level field:
+
+```json
+{"positive_control_confirmed": true}
+```
+
+With no matching `*_control_passed` top-level key, the function returns `None` despite the artifact explicitly declaring a confirmed positive control.
 
 ## RECOMMENDATION
-ADD_FIELD_UNWRAP
+NEEDS_REDESIGN
 
 ## RATIONALE
-The recognized field is found, but `_is_finite_number(metric)` rejects its project-standard annotated representation and `return None` hides why extraction failed. Unwrap annotated values before numeric validation and distinguish unsupported shapes from genuinely absent metrics.
+The helper silently misses valid project-native declarations while accepting any suffix-shaped control as positive evidence. That creates both false quarantines and a route for unvalidated nulls to receive an exemption. Replace suffix guessing with normalized field unwrapping plus an explicit positive-control schema, then mutation-test every accepted and rejected form.
 
 
-## adversarial_verify.py::check_degenerate_controls
-
-(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
-
-## adversarial_verify.py::_is_declared_honest_null
+## adversarial_verify.py::_delta_key_covers_pair
 
 (audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
 
-## adversarial_verify.py::_has_control_treatment_qualifier
+## adversarial_verify.py::_is_heldout_firstwin_null_delta_pair
+
+**Verdict:** `CLEAN`
+
+## VERDICT
+CLEAN
+
+## CLAIM
+`True for the retargeted A4 first-win baseline-vs-integrated equality.`
+
+## FINDINGS
+none found
+
+## COUNTEREXAMPLE
+none constructed
+
+## MISSED INPUT
+none found
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The function performs case-insensitive, exact set equality; it has no substring, negation, threshold, path, write, measurement, or permissive-default behavior. Its parameters explicitly require strings, and no artifact-field extraction or test suite was provided to justify attributing wrapper handling or missing mutation coverage to this function.
+
+
+## adversarial_verify.py::_declared_null_delta_descriptor
+
+(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
+
+## adversarial_verify.py::_declared_arc_nondegenerate_firstwin_null_descriptor
 
 (audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)

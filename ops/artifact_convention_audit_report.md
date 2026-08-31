@@ -9,72 +9,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 7 |
-| AGGREGATE_ONLY | 1 |
-
-## experiment_6801_real_output_fixed_point_cold_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Grouped fixed-point performance differs only marginally from the flat recurrent control across transformations, with every reported 95% clustered confidence interval including zero.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6802_operational_obligation_automaton_v2.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because the required `openspec/capabilities/agentic-verification/spec.md` source artifact did not exist.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6803_sota_operational_handoff_corpus.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The task was blocked because `operational_automaton_fixture_ready` was `false` but expected to be `true`.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6810_v595_contract_manifest_preflight.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The V595 owned contracts and active execution manifest agree, so `v595_contract_map_ready` is true.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+| CHECKABLE | 6 |
+| AGGREGATE_ONLY | 2 |
 
 ## experiment_6811_operational_obligation_automaton_v3.json
 
@@ -84,7 +20,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The deterministic source-free operational-obligation fixture is ready, with no live benefit or level solve claimed.
+The deterministic source-free operational-obligation fixture is ready, with all readiness gates passed and no live-benefit or level-solve claim.
 
 ## WHAT IS MISSING
 nothing
@@ -103,7 +39,7 @@ CHECKABLE
 no claim
 
 ## WHAT IS MISSING
-nothing
+nothing; the artifact contains receipt fields such as `"cell_id"`, `"checkpoint_sha256"`, `"row_sha256"`, `"atomic"`, and `"resumed"`, but no comparative claim or blocked verdict.
 
 ## THE CHECK A READER CANNOT DO
 none
@@ -116,10 +52,10 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The selective-priority arm passed the positive gate by improving held accepted progress over flat-reject-retry without increased harmful selections, hard violations, family-support loss, or excessive false intervention.
+Selective priority passed the positive gate on held exact replay, outperforming flat reject-retry on accepted progress.
 
 ## WHAT IS MISSING
-nothing; per-unit metrics are recorded in `"rows"` using fields including `"pair_id"`, `"split"`, `"arm"`, `"accepted_progress"`, `"false_intervention"`, `"harmful_selection"`, and `"accepted_hard_violation"`, while `"gate_check_summary"` records named checks and observed values.
+nothing
 
 ## THE CHECK A READER CANNOT DO
 none
@@ -132,10 +68,74 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The selective-priority arm passed its positive gate by outperforming flat-reject-retry, while other branches remain blocked by named missing evidence.
+The selective-priority arm beat flat-reject-retry by 0.125 mean paired progress and passed its positive gate, although the overall synthesis remains partial and branches are blocked by named missing evidence.
 
 ## WHAT IS MISSING
-Per-unit paired metric rows underlying `"row_recomputed_claims.selective_arbiter"`; the present `"rows"` contain only task and branch summaries, while `"paired_progress_delta"`, `"accepted_progress_by_arm"`, and `"retry_cost_by_arm"` are aggregates.
+Per-unit paired rows for the 144 comparisons, including each unit’s identifier, arm-level progress values, retry costs, false-intervention outcome, and eligibility status; `"row_recomputed_claims"` provides only aggregates, while `"rows"` contains task/branch summaries rather than experimental-unit metrics.
 
 ## THE CHECK A READER CANNOT DO
-Did the reported mean paired-progress improvement of 0.125 occur broadly across the 144 pairs, or was it driven by a small number of outliers or units with unusual headroom?
+Was the reported 0.125 improvement broad across the 144 pairs, or driven by a small number of outliers or units with unequal headroom?
+
+## experiment_6824_selective_arbiter_cold_row_replay.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The cold row replay supports the positive verdict that `selective_priority` outperformed `flat_reject_retry` and passed the acceptance gate.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6825_selective_arbiter_authority_attacks.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Independent mutation results support the hard authority boundary, while adoption was not evaluated.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6826_selective_arbiter_sealed_adoption.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+The selective-priority arm improved paired progress over flat-reject-retry sufficiently to pass utility and enable deployment adoption.
+
+## WHAT IS MISSING
+Per-pair progress metrics or deltas for all 144 units are missing; `"rows"` contains only criterion-level summaries, while `"paired_progress_delta"` records only `"estimate"`, bounds, and `"pair_count"`.
+
+## THE CHECK A READER CANNOT DO
+Did improvement occur broadly across the 144 pairs, or was the positive pooled estimate driven by a few outliers while most pairs were unchanged or worse?
+
+## experiment_6827_chronological_causal_edge_memory_stream.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The frozen chronological causal-edge memory stream is complete and ready, and no learning ran.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none

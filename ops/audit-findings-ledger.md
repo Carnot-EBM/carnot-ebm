@@ -71,3 +71,4 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_documented_identical_controls | SILENT_NON_FIRING | OPEN | |
 | 2026-08-31 | experiment_claim_audit | experiment_6813_selective_priority_arbiter_ab.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_arm_numeric_value | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_passing_positive_control_key | SILENT_NON_FIRING | OPEN | |

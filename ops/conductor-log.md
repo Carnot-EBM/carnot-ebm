@@ -16936,3 +16936,4 @@ The l |
 | 2026-08-31 20:09 UTC | Residual-pressure verified-memory continuous-learn | FAIL | Codex CLI error: Stalled after 600s silence. Last output: -eaa6-2292-393f930a |
 | 2026-08-31 20:11 UTC | Leave-one-model-family-out verified-memory portabi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6828-residual-pressure-verified-memory-ab |
 | 2026-08-31 20:11 UTC | Sealed exogenous verified-memory acceptance audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6828-residual-pressure-verified-memory-ab |
+| 2026-08-31 22:07 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 2242s (600s silence). Last out |
