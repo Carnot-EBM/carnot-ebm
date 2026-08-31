@@ -24075,3 +24075,141 @@ authority, RAM, or disk precondition
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6770 and SCENARIO-VERIFY-6770-* | Planned (`python/carnot/experiment_6770_dccd_environment_grammar_ab_v2.py`, `scripts/experiments/experiment_6770_dccd_environment_grammar_ab_v2.py`; terminal artifact `results/experiment_6770_dccd_environment_grammar_ab_v2.json`) | Planned (`tests/python/test_experiment_6770_dccd_environment_grammar_ab_v2.py`) |
+
+### REQ-VERIFY-6799: Frozen Model Outputs SHALL Produce Formally Calibrated Constraint Probes
+
+Exp6799 SHALL transform frozen authentic outputs from Exp6745 through the
+lossless Exp6755 dual-encoding replay. It SHALL not invoke an LLM or change a
+source output. Before transformation, it SHALL verify exact source hashes,
+all three authentic local-GGUF receipts, exact model IDs, complete source
+rows, output bytes and hashes, two parser receipts, exact-check authority,
+and at least 96 eligible SAT source cases. Eligible cases SHALL span
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. They SHALL span every frozen constraint
+family. A failed check SHALL write `complete_blocked_model_output_probe_fixture`
+with the full required schema, empty rows, and the observed failure in
+`gate_check_summary`. A synthetic or reduced-model fallback is forbidden.
+
+Each eligible source case SHALL keep its source case and stream IDs, exact
+output envelope, decoded output bytes, both hashes, source artifact hash,
+constraint family, model family, model hub ID, producer encodings, lossless
+replay encodings, and translation-versus-reasoning diagnosis. Encoder
+disagreement SHALL be `translation_disagreement`. It SHALL never become a
+model reasoning error.
+
+Each source case SHALL create one base, one refinement, and one restructuring
+graph. The base SHALL use the frozen source CNF. Refinement SHALL add one valid
+unary constraint. It SHALL strictly shrink the exact valid set while keeping
+the variable set, representation, and dependency topology unchanged.
+Restructuring SHALL replace one dependency constraint or, when every single
+source clause is formally redundant, one two-clause dependency block. It SHALL keep variable
+count, clause count, and clause-width multiset fixed. It SHALL change the
+dependency topology. Its exact valid set SHALL be incomparable with the base
+set: each set SHALL contain at least one assignment absent from the other.
+This proof SHALL distinguish restructuring from refinement.
+
+The refinement and restructuring variants SHALL use the same variable count
+and exact enumeration budget. They SHALL use the same power-of-two
+solution-count band. Their serialized graph lengths SHALL differ by no more
+than `max(32 bytes, 10 percent)`. Their literal-check work SHALL differ by no
+more than 10 percent. Their structural difficulty scores SHALL differ by no
+more than two. These tolerances SHALL be frozen before case construction.
+Every source group SHALL record a matching receipt.
+
+Every graph SHALL enumerate its complete valid set. It SHALL produce one exact
+valid witness row and one binary-domain-valid assignment that fails at least
+one cross-variable clause. The two rows SHALL share source, transformation,
+split, case-cluster, graph, and proposal features. Exact labels, valid sets,
+valid-set hashes, exact counts, source model identity, split, and diagnosis
+SHALL not enter proposal features.
+
+Development and held-case splits SHALL be frozen by source stream case, not by
+model row. All model rows and all three transformations for one case SHALL stay
+in one split. Both splits SHALL contain every required model and constraint
+family. Graph and valid-set hashes SHALL replay in a fresh process.
+
+The fixture SHALL attack solution-preserving variable renames, source-model
+label shuffles, parser disagreement, duplicate cases, refinement mislabeled as
+restructuring, and exact-label leakage. Rename attacks SHALL preserve exact
+semantics after inverse mapping. Model-label shuffles SHALL leave proposal
+feature and graph hashes unchanged. All other attacks SHALL be detected.
+
+The terminal artifact SHALL be
+`results/experiment_6799_model_output_formal_constraint_probes.json`. It SHALL
+include `field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `source_artifact_hashes`, `source_model_specs`,
+`live_llm_invoked`, `transformation_contract`, `feature_allowlist`,
+`feature_denylist`, `split_manifest`, `matching_receipts`,
+`dual_encoding_diagnostics`, `exact_replay_receipts`, `graph_hashes`, `rows`,
+`model_output_constraint_probe_ready`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. Each field SHALL
+have a one-line purpose in `field_principles`. `inference_substrate` SHALL
+declare a CPU transformation of frozen authentic mandated-GGUF outputs with no
+new LLM. `live_llm_invoked` and `verifier_is_oracle` SHALL be false.
+`verdict_class` SHALL use only `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. A terminal `honest_verdict` SHALL
+start with an allowed terminal prefix.
+
+#### SCENARIO-VERIFY-6799-GENERATOR: Frozen Outputs Produce Paired Graphs
+
+**Given** complete Exp6745 and Exp6755 source artifacts with authentic
+three-model provenance
+**When** Exp6799 selects eligible cases and builds the frozen groups
+**Then** at least 96 cases retain exact output and dual-encoding provenance,
+invoke no LLM, and each gets base, refinement, and restructuring graphs.
+
+**Spec traces:** REQ-VERIFY-6799
+
+#### SCENARIO-VERIFY-6799-ENUMERATION: Operation Classes Are Formally Distinct
+
+**Given** one complete source group
+**When** every graph is exactly enumerated
+**Then** refinement is a strict subset with unchanged topology,
+restructuring changes topology with incomparable support, nuisance tolerances
+pass, and each graph has valid and local-pass cross-dependency-fail rows.
+
+**Spec traces:** REQ-VERIFY-6799
+
+#### SCENARIO-VERIFY-6799-SPLITS: Cases Never Cross The Held Boundary
+
+**Given** all eligible source and model rows
+**When** development and held-case manifests are frozen
+**Then** one stream case appears in exactly one split, all related rows stay
+together, and both splits cover every required model and constraint family.
+
+**Spec traces:** REQ-VERIFY-6799
+
+#### SCENARIO-VERIFY-6799-MUTATIONS: Shortcut And Mislabel Attacks Fail
+
+**Given** a ready artifact or one frozen mutation
+**When** Exp6799 checks renames, model-label shuffles, parser disagreement,
+duplicates, operation proofs, and feature leakage
+**Then** only semantics-preserving renames and metadata-only model shuffles
+leave graph evidence unchanged, and every corrupting mutation is rejected.
+
+**Spec traces:** REQ-VERIFY-6799
+
+#### SCENARIO-VERIFY-6799-REPLAY: Fresh Enumeration Reproduces Every Hash
+
+**Given** every frozen base, refinement, and restructuring graph
+**When** a fresh CPU process enumerates each graph
+**Then** every graph hash, valid-set hash, exact count, and replay receipt
+matches the producer process.
+
+**Spec traces:** REQ-VERIFY-6799
+
+#### SCENARIO-VERIFY-6799-BLOCKED: Missing Authentic Evidence Stops The Fixture
+
+**Given** a source hash drift, missing model stratum, incomplete row, parser
+failure, unavailable exact check, or fewer than 96 eligible cases
+**When** Exp6799 evaluates preconditions
+**Then** it writes `complete_blocked_model_output_probe_fixture`, emits no
+rows, sets readiness false, and names every failed observed check.
+
+**Spec traces:** REQ-VERIFY-6799
+
+## Implementation Status (REQ-VERIFY-6799)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6799 and SCENARIO-VERIFY-6799-* | Implemented (`python/carnot/experiment_6799_model_output_formal_constraint_probes.py`, `scripts/experiments/experiment_6799_model_output_formal_constraint_probes.py`; terminal artifact `results/experiment_6799_model_output_formal_constraint_probes.json`) | Implemented (`tests/python/test_experiment_6799_model_output_formal_constraint_probes.py`; 11 focused tests, 100% new-module statement coverage) |
