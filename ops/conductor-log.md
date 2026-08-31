@@ -16877,3 +16877,4 @@ The l |
 | 2026-08-31 01:40 UTC | Independent byte-grounded CSL causal and safety au | OK | 98 passed, 1 warning in 43.34s |
 | 2026-08-31 02:23 UTC | Formally calibrated model-output constraint probes | OK | 92 passed, 1 warning in 43.21s |
 | 2026-08-31 03:05 UTC | Frozen grouped fixed point versus flat control on  | OK | 95 passed, 1 warning in 332.35s (0:05:32) |
+| 2026-08-31 03:49 UTC | Cold real-output fixed-point authority and shortcu | OK | 100 passed, 1 warning in 76.54s (0:01:16) |
