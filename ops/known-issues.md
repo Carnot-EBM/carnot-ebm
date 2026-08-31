@@ -7221,6 +7221,41 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-08-31 (outer-loop) — GENERATOR-PROVENANCE HELPERS ARE LANDED BUT NOT WIRED; 4 ARTIFACT REBUILDS BLOCK THE CALL SITE
+
+`python/carnot/agentic/arc_eval_provenance.py` (REQ-ARC-WMTE-6790) is landed and tested — 6
+tests, 4/4 mutations RED — and is currently INERT. Nothing calls it.
+
+**Why it is not wired.** Editing `scripts/arc_leaderboard_eval.py` makes 5 artifacts stale that
+cite it as provenance, and `artifact-freshness-lint` refuses the commit until each is rebuilt and
+diffed. That guard is correct and is the one whose fail-open was fixed on 2026-08-29; working
+around it was not an option.
+
+`results/outer_loop_arc_max_actions_answer_20260726.json` was rebuilt and diffed already: **7
+fields moved, all bookkeeping** (build timestamp, git head, the SHA and byte count of the edited
+file, duration). ZERO measured values moved; the answer line was identical
+(`central=4000 conservative=2000 gates_passed=True`). So the wiring is additive and the remaining
+four should diff the same way — but "should" is not "did".
+
+**Remaining rebuilds:** `arc_gateway_card_ground_truth_20260727`,
+`arc_per_level_reset_attribution_20260726`, `outer_loop_arc_gateway_rescore_20260726`,
+`outer_loop_arc_gateway_accurate_rescore_20260726`.
+
+**The prepared diff is `eval_wiring.patch` in the session scratchpad** — 44 lines, adding
+`generator_provenance`/`completions_consumed`/`llm_reached` to each row. It will be lost when the
+session ends; regenerating it is ~10 minutes against the docstrings in
+`arc_eval_provenance.py`.
+
+**A test guards the gap rather than hiding it.**
+`test_the_call_site_assertion_is_deliberately_absent_until_the_wiring_lands` FAILS the moment the
+wiring lands, and its docstring carries the exact assertions to restore. This is deliberately the
+"implemented beside the call site" shape this session caught three times — acceptable only
+because it is stated, queued, and self-announcing rather than assumed finished.
+
+**Until it is wired, `arc_leaderboard_eval` rows still carry no generator provenance**, so any
+multi-game run remains uninterpretable in the way the 2026-08-31 nine-game run was.
+
+
 ### NEW 2026-08-31 (outer-loop, MEASURED) — THE ADAPTER-FREE EVAL RECORDS NO PER-GAME GENERATOR PROVENANCE, SO A 9-GAME RUN IS UNINTERPRETABLE
 
 A 22-hour adapter-free run of `scripts/arc_leaderboard_eval.py --policy e3` over the CLAIMED set
