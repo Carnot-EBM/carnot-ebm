@@ -8727,3 +8727,47 @@ And positive SHALL require all causal and safety gates.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-CL-6798 and SCENARIO-CL-6798-* | Implemented: `python/carnot/experiment_6798_csl_causal_safety_byte_audit.py`; `scripts/experiments/experiment_6798_csl_causal_safety_byte_audit.py`; terminal artifact `results/experiment_6798_csl_causal_safety_byte_audit.json`. | Implemented: `tests/python/test_experiment_6798_csl_causal_safety_byte_audit.py`; 658/658 statements covered. |
+
+## REQ-CL-6810: V595 Transactional Verified Memory Ownership
+
+The continuous-learning capability SHALL own the V595
+`transactional verified memory` contract. The implementing task is
+`exp6816-residual-pressure-route-learning-ab`. It SHALL write
+`results/experiment_6816_residual_pressure_route_learning_ab.json`.
+The downstream completion gate is `residual_route_learning_completed`.
+
+An active episode SHALL read one immutable memory snapshot. Typed add, revise,
+soft-delete, retrieve, filter, and restore operations SHALL commit only between
+episodes. The exact local receipt remains authoritative. Each commit SHALL bind
+canonical parent bytes, new bytes, hashes, operation identity, predecessor,
+inverse or rollback target, and the later read that could influence an action.
+Model weights SHALL remain unchanged.
+
+The memory SHALL fail closed on an active-episode write, invalid operation,
+stale parent, future evidence, family label, poison, duplicate operation,
+capacity breach, support contraction, retention harm, hard-case harm, restart
+mismatch, or rollback mismatch. A failed owned precondition SHALL produce
+`complete_blocked_residual_pressure_route_learning_ab`. The artifact SHALL name
+the failed check, expected value, and observed value in `gate_check_summary`.
+The completion field SHALL remain false and the parent bytes SHALL remain
+active.
+
+### SCENARIO-CL-6810-RECEIPT-BEFORE-COMMIT
+
+**Given** an immutable active-episode snapshot and a proposed typed operation
+**When** the episode closes
+**Then** no durable bytes change until the exact local receipt passes every
+admission and safety check.
+
+### SCENARIO-CL-6810-ROLLBACK-IDENTITY
+
+**Given** a committed operation causes support, retention, or hard-case harm
+**When** the rollback boundary runs
+**Then** the restored memory and next action match the canonical parent bytes
+and action exactly.
+
+## Implementation Status (REQ-CL-6810)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-6810 and SCENARIO-CL-6810-* | Planned: Exp6816 and `results/experiment_6816_residual_pressure_route_learning_ab.json`. | Planned after Exp6810 contract preflight. |

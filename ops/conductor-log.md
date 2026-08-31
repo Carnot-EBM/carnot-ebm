@@ -16893,3 +16893,6 @@ The l |
 | 2026-08-31 07:52 UTC | Plan milestone 2026.08.595 | OK | 9 tasks proposed |
 | 2026-08-31 07:55 UTC | Milestone 2026.08.595 activated | OK | 9 tasks queued |
 | 2026-08-31 07:57 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 3762817 (port 8919) reparented to init, no live process references its |
+| 2026-08-31 08:08 UTC | Owned-spec and execution-manifest recovery preflig | FAIL | Codex CLI error:  exp.main(["--validate", "--output", str(output)]) == 0
++
++  |

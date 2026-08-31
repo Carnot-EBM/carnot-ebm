@@ -794,3 +794,64 @@ artifact
 and censoring separately, reports whether the upper bound fits 12 hours, keeps
 `MAX_ACTIONS`, shipped flags, and `ops/arc_solve_registry.yaml` byte-identical,
 and records no public solve credit.
+
+### REQ-AGENTIC-6810-1: V595 Operational-Obligation Interface Ownership
+
+The agentic harness SHALL own the V595 `operational-obligation interface`.
+The implementing task is `exp6811-operational-obligation-automaton-v3`.
+It SHALL write
+`results/experiment_6811_operational_obligation_automaton_v3.json`.
+The downstream completion gate is `operational_automaton_fixture_ready`.
+
+Each obligation SHALL contain its prerequisite, authority, fallback,
+execution consequence, and priority. The exact post-action receipts remain
+authoritative. A learned proposal, soft score, or strategy record SHALL NOT
+override a hard constraint or a binding authority order.
+
+The interface SHALL fail closed on an absent authority, missing fallback,
+ambiguous prerequisite, consequence deletion, unknown priority, duplicate
+identity, or non-canonical replay. A failed owned precondition SHALL produce
+`complete_blocked_operational_obligation_automaton_v3`. The artifact SHALL
+name the failed check, expected value, and observed value in
+`gate_check_summary`. The readiness field SHALL remain false.
+
+#### SCENARIO-AGENTIC-6810-1-OWNED-INTERFACE
+
+**Given** the existing agentic-harness owner and the Exp6811 task contract
+**When** V595 compiles operational obligations
+**Then** the five-part schema, exact authority boundary, artifact path,
+completion field, and fail-closed behavior remain machine-checkable.
+
+### REQ-AGENTIC-6810-2: V595 Live Stepwise Strategy Path Ownership
+
+The agentic harness SHALL own the V595 `live stepwise strategy path`.
+The implementing task is `exp6819-arc-stepwise-strategy-accrual`.
+It SHALL write `results/experiment_6819_arc_stepwise_strategy_accrual.json`.
+The downstream completion gate is `stepwise_strategy_accrual_ready`.
+
+The production path SHALL use `make_carnot_agent` and `E3AgentPolicy` with
+adapters disabled. Strategy retrieval is read-only and cannot authorize
+actions. Exact next-action outcomes and the operational-obligation interface
+remain the release authority. Active episodes SHALL NOT persist strategy
+writes.
+
+The path SHALL fail closed on a missing owned obligation fixture, occupied
+task lease, wrong model, adapter use, source access, process-isolation loss,
+incomplete rows, or active-episode write. A failed owned precondition SHALL
+produce `complete_blocked_arc_stepwise_strategy_accrual`. The artifact SHALL
+name the failed check, expected value, and observed value in
+`gate_check_summary`. The readiness field SHALL remain false.
+
+#### SCENARIO-AGENTIC-6810-2-READ-ONLY-LIVE-PATH
+
+**Given** a task-owned live process and an immutable strategy snapshot
+**When** the production policy requests stepwise strategy guidance
+**Then** the strategy can rank or advise only, exact action authority remains
+external, and no active-episode write can enter durable state.
+
+## Implementation Status (REQ-AGENTIC-6810-1 and REQ-AGENTIC-6810-2)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-AGENTIC-6810-1 | Planned: Exp6811 and `results/experiment_6811_operational_obligation_automaton_v3.json`. | Planned after Exp6810 contract preflight. |
+| REQ-AGENTIC-6810-2 | Planned: Exp6819 and `results/experiment_6819_arc_stepwise_strategy_accrual.json`. | Planned after Exp6810 contract preflight. |

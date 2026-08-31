@@ -1660,3 +1660,40 @@ The observed state count includes the terminal layer.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6715 and SCENARIO-CONSTRAINT-6715-* | Implemented (`python/carnot/experiment_6715_bounded_exact_replay_audit.py`) | Implemented (`tests/python/test_experiment_6715_bounded_exact_replay_audit.py`; 13 focused tests; 100% scoped statement coverage) |
+
+### REQ-CONSTRAINT-6810: V595 Exact Priority Arbiter Ownership
+
+The constraint-verification capability SHALL own the V595
+`exact priority arbiter`. The implementing task is
+`exp6813-selective-priority-arbiter-ab`. It SHALL write
+`results/experiment_6813_selective_priority_arbiter_ab.json`.
+The downstream completion gate is `selective_arbiter_ab_completed`.
+
+The arbiter SHALL preserve an already-valid proposal byte for byte. Otherwise,
+it SHALL compare candidates in exact lexicographic order: hard feasibility,
+binding obligations in declared authority order, then soft progress. The exact
+transition evaluator remains authoritative. A learned score, model identity,
+future outcome, or exact utility label SHALL NOT become a proposal-time
+authority.
+
+The arbiter SHALL fail closed on an accepted hard violation, priority
+inversion, stale prerequisite, authority spoof, missing fallback, weakened
+consequence, unavailable legal candidate, incomplete certificate, budget
+mismatch, or undeclared selection feature. A failed owned precondition SHALL
+produce `complete_blocked_selective_priority_arbiter_ab`. The artifact SHALL
+name the failed check, expected value, and observed value in
+`gate_check_summary`. The completion field SHALL remain false.
+
+#### SCENARIO-CONSTRAINT-6810-LEXICOGRAPHIC-AUTHORITY
+
+**Given** frozen candidates with hard, binding, and soft obligations
+**When** the V595 arbiter selects or abstains
+**Then** finite soft value cannot compensate for a hard violation, safe input
+bytes remain unchanged, and each rejection names its first higher-priority
+conflict.
+
+## Implementation Status (REQ-CONSTRAINT-6810)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6810 and SCENARIO-CONSTRAINT-6810-* | Planned: Exp6813 and `results/experiment_6813_selective_priority_arbiter_ab.json`. | Planned after Exp6810 contract preflight. |
