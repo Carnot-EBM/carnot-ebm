@@ -1,0 +1,138 @@
+{
+  "experiment": 6796,
+  "schema": "agent_model_dispatch_requalification_v1",
+  "run_date": "2026-08-31",
+  "status": "blocked",
+  "field_principles": {
+    "field_principles": "Explain why each required result field exists.",
+    "inference_substrate": "Disclose that this result uses only local static inspection.",
+    "duration_s": "Record monotonic wall time for the complete precondition audit.",
+    "random_seed": "Fix the planned mutation order for a reproducible requalification.",
+    "reproducibility_checksum": "Bind the source state, matrix state, manifest state, and rows to one digest.",
+    "compatibility_matrix": "State the maintained routes, or why requalification could not read them.",
+    "rows": "Record one result for every real or adversarial pair that was evaluated.",
+    "exp6781_reproduced": "Show whether the incident route was rejected for the expected stable reason.",
+    "v593_task_count": "State how many tasks the required V593 manifest declares.",
+    "v593_pairs_audited": "State how many V593 task routes were audited before dispatch.",
+    "supported_pairs_passed": "Show whether every supported explicit and default route passed.",
+    "cross_family_pairs_rejected": "Show whether every cross-family route failed closed.",
+    "unknown_pairs_rejected": "Show whether every unknown route failed closed.",
+    "mutation_fail_closed_receipts": "Prove each temporary manifest mutation returned nonzero before dispatch.",
+    "validation_commands": "Record each executed validation command and its exact exit code.",
+    "dispatch_contract_ready": "Provide the exact downstream-readable activation decision.",
+    "gate_check_summary": "Name each failed precondition and its observed value.",
+    "verifier_is_oracle": "Prevent a static local audit from being described as an independent oracle.",
+    "verdict_class": "Classify the terminal outcome with the closed result enum.",
+    "honest_verdict": "Give a terminal result with the required trusted prefix."
+  },
+  "inference_substrate": "static local YAML/Python audit, no inference",
+  "duration_s": 0.0531415970181115,
+  "random_seed": 6796,
+  "reproducibility_checksum": "sha256:f9a7c8d7f19e4fd33e7162081cceea2b695003ec7d41db984653a412e358dc5e",
+  "checksum_inputs": {
+    "source": [
+      {
+        "path": "results/experiment_6784_agent_model_dispatch_contract.json",
+        "exists": true,
+        "sha256": "d99422e5fb123c9ef3498789c16b00bd315999bee2ab8ebd7ac858acfec3ab84"
+      },
+      {
+        "path": "scripts/agent_model_compatibility.py",
+        "exists": false,
+        "sha256": null
+      },
+      {
+        "path": "scripts/roadmap_schema.py",
+        "exists": true,
+        "sha256": "8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7"
+      },
+      {
+        "path": "scripts/audit_roadmap_gates.py",
+        "exists": true,
+        "sha256": "c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9"
+      },
+      {
+        "path": "scripts/validate_prior_failures.py",
+        "exists": true,
+        "sha256": "ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519"
+      },
+      {
+        "path": "scripts/conductor_gates.py",
+        "exists": true,
+        "sha256": "d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca"
+      },
+      {
+        "path": "ops/exclusion_manifest.yaml",
+        "exists": true,
+        "sha256": "28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+      }
+    ],
+    "matrix": {
+      "agent_families": [],
+      "model_patterns": [],
+      "reason_codes": [],
+      "state": "not_requalified_because_precondition_failed"
+    },
+    "manifest": {
+      "path": "research-roadmap-next.yaml",
+      "exists": false,
+      "sha256": null,
+      "state": "missing"
+    },
+    "rows": []
+  },
+  "compatibility_matrix": {
+    "agent_families": [],
+    "model_patterns": [],
+    "reason_codes": [],
+    "state": "not_requalified_because_precondition_failed"
+  },
+  "rows": [],
+  "exp6781_reproduced": false,
+  "v593_task_count": 0,
+  "v593_pairs_audited": 0,
+  "supported_pairs_passed": false,
+  "cross_family_pairs_rejected": false,
+  "unknown_pairs_rejected": false,
+  "mutation_fail_closed_receipts": [],
+  "validation_commands": [
+    {
+      "command": "test -f research-roadmap-next.yaml",
+      "working_directory": "/home/ianblenke/github.com/ianblenke/carnot",
+      "exit_code": 1,
+      "purpose": "Enforce the required exact-manifest precondition before any requalification or dispatch."
+    }
+  ],
+  "dispatch_contract_ready": false,
+  "gate_check_summary": {
+    "passed": false,
+    "failed_check": "required_dispatch_requalification_inputs_exist_and_parse",
+    "expected": {
+      "research-roadmap-next.yaml": "existing YAML mapping for the exact V593 manifest",
+      "scripts/agent_model_compatibility.py": "existing parseable Python compatibility implementation"
+    },
+    "observed": {
+      "research-roadmap-next.yaml": {
+        "exists": false,
+        "parses_as": null,
+        "active_roadmap_observation": "research-roadmap.yaml declares milestone 2026.08.593"
+      },
+      "scripts/agent_model_compatibility.py": {
+        "exists": false,
+        "parses_as": null,
+        "exp6784_recorded_state": "not_created_because_precondition_failed"
+      }
+    },
+    "passed_checks": {
+      "results/experiment_6784_agent_model_dispatch_contract.json": "JSON mapping",
+      "scripts/roadmap_schema.py": "Python AST",
+      "scripts/audit_roadmap_gates.py": "Python AST",
+      "scripts/validate_prior_failures.py": "Python AST",
+      "scripts/conductor_gates.py": "Python AST",
+      "ops/exclusion_manifest.yaml": "YAML mapping"
+    }
+  },
+  "verifier_is_oracle": false,
+  "verdict_class": "blocked",
+  "honest_verdict": "complete_blocked_dispatch_requalification"
+}
