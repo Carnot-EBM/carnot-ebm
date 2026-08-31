@@ -18334,6 +18334,7 @@ task phases. The next tooling priorities are task-owned monotonic phase
 telemetry, dependency-aware parallel synthesis dispatch, and a task-scoped
 launch receipt. Estimated time savings is 0% because the supplied data does
 not quantify a causal reduction.
+
 - 2026-08-31: Fail-closed agent-model dispatch requalification (⚠️ Blocked) — honest_verdict=complete_blocked_dispatch_requalification; results/experiment_6796_agent_model_dispatch_requalification.json
 - 2026-08-31: Canonical transaction-byte replay fixture (⚠️ Research Finding) — honest_verdict=complete_transaction_byte_snapshot_fixture_ready: 3,189 commits retain verified canonical parent and new state bytes; results/experiment_6797_canonical_transaction_byte_replay.json
 - 2026-08-31: Byte-grounded CSL causal and safety cold audit (✅ Complete) — independently replayed 3,189 canonical transaction snapshots and 4,800 actions, matched every Exp6791 headline, credited 116 factors, rejected eight attacks with zero admitted or influential poison, and preserved restart/rollback identity; honest_verdict=complete_positive: byte replay verified causal route and utility witnesses with zero admitted or influential poison; results/experiment_6798_csl_causal_safety_byte_audit.json
@@ -18341,3 +18342,14 @@ not quantify a causal reduction.
 - 2026-08-31: Formally calibrated model-output constraint probes (✅ Complete) — honest_verdict=complete: frozen authentic outputs produced exact paired formal probes; results/experiment_6799_model_output_formal_constraint_probes.json
 - 2026-08-31: Frozen grouped fixed point versus flat control on real outputs (⚠️ Research Finding) — honest_verdict=complete: frozen real-output comparison finished without the preregistered positive effect; results/experiment_6800_real_output_fixed_point_transfer_ab.json
 - 2026-08-31: Cold real-output fixed-point authority and shortcut audit (⚠️ Research Finding) — honest_verdict=complete_disqualified: authority or shortcut checks failed; results/experiment_6801_real_output_fixed_point_cold_audit.json
+
+## 2026-08-31 — Milestone 2026.08.593 operational retrospective
+
+The milestone completed 6 experiments in 4.7 minutes. Two were compute-bound.
+Frozen grouped fixed point versus flat control on real outputs took 4.04
+minutes, but the fallback timing does not show why. The GPU evidence records no
+compute-bound idle defect. It also does not establish a parallel multi-model
+run or a missed DualGPURunner launch. Add task-phase timing and task-window GPU
+receipts. Add 8-16 question batching when one model serves multiple prompts.
+The estimated milestone savings remains 0% because the evidence does not show
+how much of the slow run can use batching.

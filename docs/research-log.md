@@ -6472,3 +6472,10 @@ The critical path for milestone .250:
 - theme: fast synthesis-only execution exposed the causal limits of modification-time reconstruction
 - key result: honest operational negative — 12 synthesis-only experiments completed in 1.2 minutes; compute-task GPU efficiency and parallel-model runner engagement had no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.593
+
+- exp_range: no data available this milestone
+- theme: a compute-heavy execution tail exposed missing phase and accelerator attribution
+- key result: honest operational negative — accelerator activity was present, but the data cannot explain the longest compute run or establish a parallel multi-model runner miss
+- acceptance: no data available this milestone

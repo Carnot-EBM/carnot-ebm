@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.593",
+  "generated_at": "2026-08-31T03:55:52Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 4.7,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Frozen grouped fixed point versus flat control on real outputs",
+      "duration_minutes": 4.04,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Canonical transaction-byte replay fixture",
+      "duration_minutes": 0.32,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Independent byte-grounded CSL causal and safety audit",
+      "duration_minutes": 0.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Formally calibrated model-output constraint probes",
+      "duration_minutes": 0.1,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Cold real-output fixed-point authority and shortcut audit",
+      "duration_minutes": 0.1,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 6 experiments in 4.7 minutes, including 2 compute-bound runs. Frozen grouped fixed point versus flat control on real outputs was the longest at 4.04 minutes, and the supplied evidence records no compute-bound GPU-idle defect.",
+  "bottlenecks_identified": [
+    "Frozen grouped fixed point versus flat control on real outputs dominated the measured wall time at 4.04 minutes, but the supplied data does not identify the responsible phase.",
+    "Disk-mtime reconstruction provides no queue, model-load, inference, verification, or artifact-write timing, so it cannot explain the compute tail.",
+    "The point-in-time GPU report does not link accelerator activity or batching opportunities to task phases."
+  ],
+  "improvements_suggested": [
+    "Add task-scoped monotonic timers for queue, model load, inference, verification, and artifact write phases.",
+    "Emit a compute launch receipt with task identity, model count, selected GPU, and utilization samples from the task window.",
+    "Batch 8-16 questions per forward pass when one model serves multiple prompts, then measure the realized speedup.",
+    "Schedule independent single-model runs across both GPUs when two ready tasks exist; keep a single-model task on one GPU.",
+    "Record DualGPURunner eligibility and selection only when a task loads 2 or more models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument task phases and task-window GPU use with one compute launch receipt.",
+    "Add configurable 8-16 question batching to the single-model inference path.",
+    "Dispatch two ready single-model compute tasks to separate GPUs without forcing DualGPURunner."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The main lesson is an observability gap, not a GPU-idle defect. The next retrospective needs task-owned phase and accelerator receipts before it can attribute the compute tail or quantify savings."
+}
