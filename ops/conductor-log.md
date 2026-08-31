@@ -16912,3 +16912,4 @@ The l |
 | 2026-08-31 12:29 UTC | Residual-pressure transactional route learning A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6815-verified-memory-operation-stream) |
 | 2026-08-31 12:29 UTC | Leave-one-model-family-out route-memory portabilit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6816-residual-pressure-route-learning-ab) |
 | 2026-08-31 12:29 UTC | Independent local-and-global route-memory audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6816-residual-pressure-route-learning-ab, |
+| 2026-08-31 12:55 UTC | Stepwise read-only strategy-supervisor accrual | FAIL | Codex CLI error: Stalled after 600s silence. Last output: pter_and_process_gu |
