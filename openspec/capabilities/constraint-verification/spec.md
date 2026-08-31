@@ -1697,3 +1697,78 @@ conflict.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6810 and SCENARIO-CONSTRAINT-6810-* | Planned: Exp6813 and `results/experiment_6813_selective_priority_arbiter_ab.json`. | Planned after Exp6810 contract preflight. |
+
+### REQ-CONSTRAINT-6812: Authentic Paired Operational Handoff Corpus
+
+The constraint-verification capability SHALL produce an authentic local-model
+proposal corpus for the Exp6811 owned operational-obligation contract. The
+corpus SHALL freeze at least 48 source-free scenarios before inference. The
+scenarios SHALL cover stale prerequisites, competing authorities, fallback,
+execution consequence, already-safe proposals, and soft conflict. Each
+scenario SHALL have a direct typed handoff and a compressed prose handoff with
+the same UTF-8 byte length.
+
+The producer SHALL invoke exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` through local llama.cpp CUDA GGUF inference.
+It SHALL run sequential task-owned GPU phases and SHALL NOT call a provider
+API, pass a GGUF repository to `AutoTokenizer`, shrink a model, or substitute a
+model. A bounded load failure SHALL write
+`complete_blocked_sota_operational_handoff_corpus_v2`, name the failed gate,
+and stop without pooling an incomplete model phase into the headline corpus.
+
+Scenario, seed, token, candidate, stop, and retry budgets SHALL match between
+the two arms. The producer SHALL freeze both prompt byte strings before
+inference and retain their hashes and immutable bytes. It SHALL retain raw
+output bytes, first-token evidence, file hashes, GPU ownership and offload
+receipts, VRAM, process identifiers, separate acquisition, load, inference,
+and teardown durations, and teardown evidence.
+
+The parser SHALL apply the frozen response schema without extraction, repair,
+or regeneration. The exact Exp6811 compiler and transition checker SHALL act
+only after generation. Every model-scenario-seed-arm-candidate unit SHALL have
+one row, including a parse-failure candidate slot. Rows SHALL retain all five
+operational contract fields, parse state, hard and binding preservation,
+already-safe identity, candidate diversity, legal support, and retry demand.
+
+The producer SHALL append each model-scenario-arm cell to an atomic durable
+checkpoint. Resume SHALL require a byte-identical frozen manifest. The field
+`operational_handoff_corpus_ready` SHALL be true exactly when every planned row,
+raw byte receipt, exact check, required model phase, and teardown receipt is
+complete. Readiness SHALL be independent of the sign of an arm comparison.
+The corpus is a development proxy and SHALL make no live ARC solve claim.
+
+#### SCENARIO-CONSTRAINT-6812-FROZEN-PAIRS: Complete Length-Matched Prompt Pairs
+
+**Given** the six required scenario families and matched generation budgets
+**When** Exp6812 freezes its manifest before inference
+**Then** it contains at least 48 source-free scenarios, both prompt byte
+strings for every scenario, equal UTF-8 lengths within every pair, and all
+planned model-scenario-seed-arm-candidate identities.
+
+**Spec traces:** REQ-CONSTRAINT-6812
+
+#### SCENARIO-CONSTRAINT-6812-EXACT-POSTCHECK: Raw Output Precedes Authority
+
+**Given** one immutable local-model output for a frozen cell
+**When** Exp6812 parses and evaluates its candidate slots
+**Then** parsing performs no repair, the Exp6811 exact contract is applied only
+after generation, and every row records parse state and operational evidence.
+
+**Spec traces:** REQ-CONSTRAINT-6812
+
+#### SCENARIO-CONSTRAINT-6812-RESUME-AND-READINESS: Exact Completion Is the Gate
+
+**Given** an interrupted or completed sequential model phase
+**When** Exp6812 resumes or computes its terminal readiness
+**Then** resume accepts only the identical manifest and readiness requires all
+planned rows, raw bytes, exact models, checks, and teardown receipts regardless
+of measured effect sign.
+
+**Spec traces:** REQ-CONSTRAINT-6812
+
+## Implementation Status (REQ-CONSTRAINT-6812)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6812 and SCENARIO-CONSTRAINT-6812-* | Implemented (`python/carnot/experiment_6812_sota_operational_handoff_corpus_v2.py`; `results/experiment_6812_sota_operational_handoff_corpus_v2.json`). | Implemented (`tests/python/test_experiment_6812_sota_operational_handoff_corpus_v2.py`; 29 focused tests; 100% scoped statement coverage; three-model local llama.cpp CUDA E2E). |
