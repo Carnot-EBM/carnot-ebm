@@ -18335,3 +18335,4 @@ telemetry, dependency-aware parallel synthesis dispatch, and a task-scoped
 launch receipt. Estimated time savings is 0% because the supplied data does
 not quantify a causal reduction.
 - 2026-08-31: Fail-closed agent-model dispatch requalification (⚠️ Blocked) — honest_verdict=complete_blocked_dispatch_requalification; results/experiment_6796_agent_model_dispatch_requalification.json
+- 2026-08-31: Canonical transaction-byte replay fixture (⚠️ Research Finding) — honest_verdict=complete_transaction_byte_snapshot_fixture_ready: 3,189 commits retain verified canonical parent and new state bytes; results/experiment_6797_canonical_transaction_byte_replay.json
