@@ -2005,3 +2005,125 @@ headlines are compared within the frozen tolerance.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6814 and SCENARIO-CONSTRAINT-6814-* | Planned: `python/carnot/experiment_6814_selective_priority_arbiter_cold_audit.py` and the task-owned script wrapper. | Planned focused tests and 100% scoped coverage. |
+
+### REQ-CONSTRAINT-6824: Bounded Selective Arbiter Cold Row Replay
+
+Exp6824 SHALL run a deterministic CPU replay without an LLM. It SHALL read
+the frozen Exp6811, Exp6812, and Exp6813 artifacts. It SHALL not import the
+Exp6813 producer, reducer, or verdict code. It SHALL write
+`results/experiment_6824_selective_arbiter_cold_row_replay.json` through
+`scripts/experiments/experiment_6824_selective_arbiter_cold_row_replay.py`.
+Its independent modules SHALL be
+`python/carnot/experiment_6824_cold_parser.py`,
+`python/carnot/experiment_6824_cold_arbiter.py`,
+`python/carnot/experiment_6824_cold_reducer.py`, and
+`python/carnot/experiment_6824_selective_arbiter_cold_row_replay.py`.
+
+The replay SHALL require readable raw-byte manifests, exactly 576 complete
+source rows, valid source hashes, the frozen Exp6813 arm manifest, and
+`selective_arbiter_ab_completed=true`. A failed precondition SHALL write
+`complete_blocked_selective_arbiter_cold_row_replay`. The blocked artifact
+SHALL contain no replay rows. Its `gate_check_summary` SHALL name each failed
+check, expected value, and observed value. It SHALL then stop before replay.
+
+A fresh parser SHALL decode each raw API byte stream and strict proposal JSON.
+A fresh arbiter SHALL rebuild prerequisite, authority, fallback, consequence,
+and priority checks from the frozen scenario manifest. It SHALL order
+obligations by hard class, binding authority order, and soft value. It SHALL
+preserve an already-valid proposal byte for byte. The two arms SHALL use the
+same candidate, exact-check, outcome-check, retry, work-unit, and CPU budgets.
+
+A fresh reducer SHALL join each pair by frozen row identity. It SHALL
+recompute every Exp6813 row and every held per-arm metric. It SHALL also
+recompute paired deltas, deterministic confidence intervals, false
+intervention, safe-action identity, exact hard violations, legal support, and
+certificate completeness. It SHALL compare all producer headlines with a
+frozen numerical tolerance. Agreement SHALL not control completion.
+
+The artifact SHALL contain one cold row for each of the 576 Exp6813 rows. It
+SHALL also contain explicit deletion and duplicate-row audit cases. The audit
+cases SHALL show that either fault stops aggregate reduction. The
+`cold_replay_shard_complete` field SHALL depend on complete row coverage,
+source hash identity, independent source modules, and complete recomputation.
+It SHALL not depend on a positive, null, harmful, or contradictory result.
+
+The artifact SHALL contain `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_hashes`, `independent_parser_id`, `independent_arbiter_id`,
+`independent_reducer_id`, `rows`, `row_coverage`,
+`aggregate_recomputation`, `headline_differences`, `budget_recomputation`,
+`safe_action_identity_recomputation`, `hard_violation_recomputation`,
+`false_intervention_recomputation`, `source_verdict_supported`,
+`cold_replay_shard_complete`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. The verdict class SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`.
+
+#### SCENARIO-CONSTRAINT-6824-PRECONDITIONS: Missing Frozen Evidence Stops Replay
+
+**Given** a missing raw manifest, source row, source hash, frozen arm manifest,
+or producer completion flag
+**When** Exp6824 checks its inputs
+**Then** it writes a complete blocked artifact with expected and observed
+values and no cold replay rows.
+
+**Spec traces:** REQ-CONSTRAINT-6824
+
+#### SCENARIO-CONSTRAINT-6824-PARSER: Raw Bytes Are Parsed Without Producer Code
+
+**Given** one frozen raw API response and its proposal-byte receipt
+**When** the independent parser decodes and parses the response
+**Then** the exact proposal bytes and two strict candidate slots are rebuilt
+without extraction, repair, coercion, or a producer import.
+
+**Spec traces:** REQ-CONSTRAINT-6824
+
+#### SCENARIO-CONSTRAINT-6824-ORDER-AND-IDENTITY: Authority Precedes Progress
+
+**Given** hard, binding, and soft obligations plus an already-valid proposal
+**When** the independent arbiter evaluates each arm
+**Then** hard and authority-ordered binding checks precede soft value and the
+selective arm preserves the safe action bytes exactly.
+
+**Spec traces:** REQ-CONSTRAINT-6824
+
+#### SCENARIO-CONSTRAINT-6824-BUDGETS-AND-JOINS: Paired Work Is Exact
+
+**Given** complete frozen candidates and both comparison arms
+**When** rows are joined and reduced
+**Then** each pair has both arms once and all allowed work budgets match.
+
+**Spec traces:** REQ-CONSTRAINT-6824
+
+#### SCENARIO-CONSTRAINT-6824-INTERVALS: Paired Arithmetic Is Deterministic
+
+**Given** held paired progress, retry, and false-intervention values
+**When** the independent reducer uses the frozen audit seed
+**Then** the estimates, bootstrap intervals, and Wilson upper bounds are
+deterministic and are derived only from joined cold rows.
+
+**Spec traces:** REQ-CONSTRAINT-6824
+
+#### SCENARIO-CONSTRAINT-6824-ROW-FAULTS: Deletion And Duplication Fail Closed
+
+**Given** one complete cold replay roster
+**When** one row is deleted or one row identity is duplicated
+**Then** aggregate reduction stops and the artifact retains one explicit audit
+case for each fault.
+
+**Spec traces:** REQ-CONSTRAINT-6824
+
+#### SCENARIO-CONSTRAINT-6824-AGGREGATION: Cold Rows Own Every Headline
+
+**Given** all 576 recomputed rows and the two row-fault audit cases
+**When** Exp6824 reduces producer headlines
+**Then** each metric, interval, budget receipt, and headline difference is a
+fresh row-derived computation and completion remains independent of agreement.
+
+**Spec traces:** REQ-CONSTRAINT-6824
+
+## Implementation Status (REQ-CONSTRAINT-6824)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6824 and SCENARIO-CONSTRAINT-6824-* | Planned: independent parser, arbiter, reducer, orchestrator, and task-owned script. | Planned focused tests and 100% scoped coverage. |
