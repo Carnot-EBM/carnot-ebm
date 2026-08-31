@@ -16874,3 +16874,4 @@ The l |
 | 2026-08-31 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | exclusion_manifest_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on exclusi |
 | 2026-08-31 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_timestamp_field age-week 0: OPEN 1 days: SILENT_NON_F |
 | 2026-08-31 00:38 UTC | Canonical transaction-byte replay fixture | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLO |
+| 2026-08-31 01:40 UTC | Independent byte-grounded CSL causal and safety au | OK | 98 passed, 1 warning in 43.34s |
