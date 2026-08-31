@@ -16903,3 +16903,4 @@ The l |
 | 2026-08-31 10:32 UTC | Three-model operational-handoff proposal corpus v2 | OK | 110 passed, 1 warning in 17.07s |
 | 2026-08-31 11:03 UTC | Selective priority arbiter versus flat retry A/B | FAIL | Codex CLI error: Stalled after 600s silence. Last output: ed[1].update(
 +     |
+| 2026-08-31 11:06 UTC | Selective priority arbiter versus flat retry A/B | SKIP | Pre-tests failing, self-heal failed:  |
