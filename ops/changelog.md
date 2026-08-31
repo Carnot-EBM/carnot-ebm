@@ -18353,3 +18353,4 @@ run or a missed DualGPURunner launch. Add task-phase timing and task-window GPU
 receipts. Add 8-16 question batching when one model serves multiple prompts.
 The estimated milestone savings remains 0% because the evidence does not show
 how much of the slow run can use batching.
+- 2026-08-31: Typed operational-obligation automaton v2 (⚠️ Blocked) — honest_verdict=complete_blocked_operational_obligation_automaton; results/experiment_6802_operational_obligation_automaton_v2.json
