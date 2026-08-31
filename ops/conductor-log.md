@@ -16914,3 +16914,8 @@ The l |
 | 2026-08-31 12:29 UTC | Independent local-and-global route-memory audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6816-residual-pressure-route-learning-ab, |
 | 2026-08-31 12:55 UTC | Stepwise read-only strategy-supervisor accrual | FAIL | Codex CLI error: Stalled after 600s silence. Last output: pter_and_process_gu |
 | 2026-08-31 12:57 UTC | Stepwise read-only strategy-supervisor accrual | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-08-31 13:19 UTC | Stepwise read-only strategy-supervisor accrual | FAIL | Codex CLI error: Stalled after 600s silence. Last output: ading")
+    lease.t |
+| 2026-08-31 13:21 UTC | Live selfparse tool-gap obligation transport v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6819-arc-stepwise-strategy-accrual) |
+| 2026-08-31 13:21 UTC | Obligation-routed actions-to-progress A/B v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6820-arc-tool-gap-obligation-transport-v2 |
+| 2026-08-31 13:21 UTC | Independent ARC causal adoption audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6819-arc-stepwise-strategy-accrual, exp68 |

@@ -225,3 +225,7 @@ CHECK_TIMED_OUT
 
 - On July 17, the host published an analysis of 500 failed submissions: roughly one-third had no traceable visible notebook error, nearly 20% required a GPU that had not been enabled, and remaining causes—each below 5%—included missing datasets/dependencies, logic errors, CUDA OOM, using the public API instead of competition settings, and writing to read-only `/kaggle/input`. [Official Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
 
+## 2026-08-31 13:13 UTC -- check failed
+
+CHECK_TIMED_OUT
+
