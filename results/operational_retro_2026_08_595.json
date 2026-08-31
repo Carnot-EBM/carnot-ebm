@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.595",
+  "generated_at": "2026-08-31T14:32:38Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 15.9,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Three-model operational-handoff proposal corpus v2",
+      "duration_minutes": 15.9,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Typed operational-obligation automaton v3",
+      "duration_minutes": 0.02,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Selective priority arbiter versus flat retry A/B",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V595 evidence synthesis and branch disposition",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Owned-spec and execution-manifest recovery preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Five experiments finished in 15.9 minutes. The only compute-bound experiment occupied 15.9 minutes, and the locked compute-task GPU-idle indicator is false.",
+  "bottlenecks_identified": [
+    "Three-model operational-handoff proposal corpus v2 was the only compute-bound experiment and occupied 15.9 minutes, equal to the full reconstructed milestone window.",
+    "Disk-mtime reconstruction has no task-phase timing, so no data available this milestone explains the compute-bound experiment's duration."
+  ],
+  "improvements_suggested": [
+    "Record monotonic task and phase timestamps so the next retrospective can locate the slow phase without disk-mtime inference.",
+    "Attach GPU samples, loaded-model count, and runner identity to each compute-task launch receipt.",
+    "Add readiness-aware accelerator placement that sends a second eligible model workload to GPU 0; use DualGPURunner only when 2 or more models are loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add task-owned monotonic phase timing for compute launches.",
+    "Emit a launch receipt with task-linked GPU activity, loaded-model count, and runner identity.",
+    "Dispatch a second eligible model workload to the unused GPU, with DualGPURunner gated on actual parallel model loading."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The bounded data establishes critical-path concentration and active compute use, but it does not establish the slow phase or parallel-runner eligibility. The recommendations therefore improve attribution and conditional device placement without claiming a measured speedup."
+}

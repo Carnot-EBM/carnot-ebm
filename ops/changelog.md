@@ -18368,6 +18368,18 @@ is configurable batches of 8-16 questions per forward pass, backed by
 task-owned phase timing, GPU samples, model-concurrency metadata, and runner
 identity. Estimated milestone-wide savings is 0% because the supplied evidence
 does not measure the batched share of execution.
+
+## 2026-08-31 — Milestone 2026.08.595 operational retrospective
+
+The milestone completed 5 experiments in 15.9 reconstructed minutes. One was
+compute-bound. Three-model operational-handoff proposal corpus v2 occupied the
+full window, but no data available this milestone identifies its slow phase.
+GPU 1 was active at 85%, and the locked compute-task idle field is false. The
+record does not establish parallel model loading or a missed DualGPURunner
+dispatch. Add task-owned phase clocks and launch receipts. The receipts must
+join GPU activity, loaded-model count, and runner identity. Add conditional
+placement on the unused device when another eligible model workload is ready.
+Estimated time savings is 0% because the data includes no timed alternative.
 - 2026-08-31: Owned-spec and execution-manifest recovery preflight (⚠️ Research Finding) — honest_verdict=complete: V595 owned contracts and active execution manifest agree; results/experiment_6810_v595_contract_manifest_preflight.json
 - 2026-08-31: Typed operational-obligation automaton v3 (⚠️ Research Finding) — honest_verdict=complete: deterministic source-free operational-obligation fixture ready; no live benefit or level solve claimed; results/experiment_6811_operational_obligation_automaton_v3.json
 - 2026-08-31: Three-model operational-handoff proposal corpus v2 (✅ Complete) — honest_verdict=complete: all 576 authentic rows are ready; direct typed preservation exceeds compressed prose; results/experiment_6812_sota_operational_handoff_corpus_v2.json
