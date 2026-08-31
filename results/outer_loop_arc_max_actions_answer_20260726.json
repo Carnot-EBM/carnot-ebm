@@ -61,7 +61,7 @@
  "title": "The MAX_ACTIONS answer: LLM-ON contention measured (not imported), the budget->score curve re-priced in the GATEWAY-CHARGED unit, and the early-stop lever priced on its benefit side",
  "run_date": "2026-07-26",
  "run_date_convention": "session-local (America/New_York); see build_timestamp_utc",
- "build_timestamp_utc": "2026-08-22T20:54:10Z",
+ "build_timestamp_utc": "2026-08-31T22:47:33Z",
  "schema": "carnot.arc_max_actions_answer.v1",
  "inference_substrate": "aggregation_from_upstream_artifacts",
  "inference_substrate_principle": "An analyser pass inherits its methodology from the artifacts it cites; declaring it as live inference would borrow credibility this file has not earned, and declaring it as a dict makes the classifier unable to read it at all.",
@@ -120,7 +120,7 @@
   }
  ],
  "measurement_wall_s_basis": "one value per ROW FILE with explicit precedence (`elapsed_s` before `measurement_wall_s`), asserted to be unambiguous (no file carries both). NOT a sum of per-cell `wall_s`, which undercounts ~25% because it omits per-cell setup.",
- "duration_s": 0.715,
+ "duration_s": 0.502,
  "random_seed": 20260724,
  "verifier_is_oracle": false,
  "verifier_is_oracle_principle": "No verifier-value or moat claim is made here; this measures WALL CLOCK and re-prices a score. Recorded because the circularity discipline requires the field on any artifact that could be read as a verifier claim.",
@@ -7653,7 +7653,7 @@
   "principle": "a scope block whose stated p-floor is ABOVE a p the same artifact reports is an internal contradiction that reads as a methodology violation; deriving the floor and checking it makes the drift fail the build instead of misleading a reader."
  },
  "provenance": {
-  "git_head": "b766697b0cee358a897d5b2ff31f18edf3abcc2d",
+  "git_head": "2c4635d19ba04639830437abf144accd5cb7a216",
   "code": [
    {
     "path": "scripts/analyze_arc_max_actions_answer.py",
@@ -7672,13 +7672,13 @@
    },
    {
     "path": "scripts/arc_scored_path_lever_harness.py",
-    "sha256": "ee5e787b3ebb42354403ba1587d6f73d8f752d8f0c2a98ecb6f9e6f1b82057b3",
-    "bytes": 65419
+    "sha256": "e197c847903702b5a1fe71cb8f754c3713377d02cd2f270dec87330c12d4bbf2",
+    "bytes": 74559
    },
    {
     "path": "scripts/arc_leaderboard_eval.py",
-    "sha256": "2c41f6878d4fa5bf7b517d152a068ff83026befe37783e8232b259c68b05c512",
-    "bytes": 55286
+    "sha256": "13c53548beea2e47e5efee1aa3e97feacdb669670bcc2024b38ef12f721a09f6",
+    "bytes": 56375
    }
   ],
   "rows_sources": {

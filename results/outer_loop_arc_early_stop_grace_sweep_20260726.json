@@ -5592,6 +5592,13 @@
         "reason": "The 2026-08-17 repair-mode change touches only _maybe_recall_gated_resample: when CARNOT_ARC_INDUCE_TOOL_LOOP=repair, the REQ-6410 recall-gated resample routes its re-draw through the tool loop instead of a plain re-induce. Both gates are default OFF -- the resample itself requires CARNOT_ARC_RECALL_RESAMPLE, and repair additionally requires the tool-loop var set to the literal 'repair'. With neither set, the method returns on its existing early path and behaviour is byte-identical.",
         "sha256_now": "46e0c5f1df72b81fca6e2d38297af4766ae2266a60563553b533f197a8cb8426",
         "sha256_was": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_leaderboard_eval.py",
+        "sha256_was": "2c41f6878d4fa5bf7b517d152a068ff83026befe37783e8232b259c68b05c512",
+        "sha256_now": "13c53548beea2e47e5efee1aa3e97feacdb669670bcc2024b38ef12f721a09f6",
+        "reason": "REQ-ARC-WMTE-6790 added per-game generator provenance fields to run_game's returned row. Purely additive: no existing key, computation or ordering changed.",
+        "evidence": "A/B rebuild 2026-08-31 on arc_gateway_card_ground_truth: the same artifact rebuilt with the wiring applied and with it reverted differed in 56 fields, 54 clocks/hashes and 2 rebuild mechanics, with ZERO measured values differing. The wiring cannot move a number it only appends. Rebuilding this sweep was not used to clear the lint because it also drifted on arc_competition_agent.py, and a rebuild would publish that unrelated drift as though this commit caused it."
       }
     ]
   },

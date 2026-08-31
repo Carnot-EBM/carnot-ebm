@@ -99,32 +99,38 @@ def test_a_policy_without_counters_yields_an_empty_snapshot() -> None:
     assert completion_counters(_Policy(_Prop())) == {}
 
 
-def test_the_call_site_assertion_is_deliberately_absent_until_the_wiring_lands() -> None:
-    """THE CALL SITE IS NOT WIRED YET, ON PURPOSE, AND THIS RECORDS WHY.
+def test_run_game_rows_carry_generator_provenance_fields() -> None:
+    """The call-site wiring for REQ-ARC-WMTE-6790, landed 2026-08-31.
 
-    Editing `scripts/arc_leaderboard_eval.py` makes 5 artifacts stale that cite it as
-    provenance, and `artifact-freshness-lint` correctly refuses the commit until each is rebuilt
-    and diffed. One was rebuilt already and moved ZERO measured values -- only build timestamp,
-    git head, and the SHA/bytes of the edited file -- so the change is additive. The remaining
-    four are queued.
-
-    So this module ships tested and INERT. That is the exact "implemented beside the call site"
-    shape this session caught three times, and it is acceptable ONLY because it is stated here
-    and queued in ops/known-issues.md rather than assumed to be finished.
-
-    WHEN THE WIRING LANDS, REPLACE THIS TEST with the assertions it displaced:
-
-        src = SCRIPT.read_text()
-        assert '"generator_provenance": _gen_prov,' in src
-        assert '"completions_consumed": _consumed,' in src
-        assert '"llm_reached": bool(_consumed.get("completions", 0) > 0),' in src
-        assert "_counters_before = completion_counters(policy)" in src
-        assert "_counters_after = completion_counters(policy)" in src
-
-    The prepared diff is in the session scratchpad as `eval_wiring.patch`.
+    These are SOURCE-STRING checks, not behavioral checks: importing the script costs ~557MB
+    (see the module docstring of `arc_eval_provenance`), so a fake-policy test through the real
+    `run_game` is not affordable here. That limit is real -- a rewrite that keeps these exact
+    lines but changes behavior around them passes. Each assertion is newline-anchored to its
+    exact indentation so commenting a line out goes RED, and two ORDER assertions pin the
+    placements that mutation review showed matter (see the ordering block below).
     """
 
     src = SCRIPT.read_text()
-    assert "generator_provenance" not in src, (
-        "the wiring has landed -- restore the call-site assertions in this test"
-    )
+    # Newline + exact indentation: a commented-out copy of the line no longer matches.
+    assert '\n        "generator_provenance": _gen_prov,' in src
+    assert '\n        "completions_consumed": _consumed,' in src
+    assert '\n        "llm_reached": bool(_consumed.get("completions", 0) > 0),' in src
+    assert "\n    _counters_before = completion_counters(policy)" in src
+    assert "\n    _counters_after = completion_counters(policy)" in src
+    # Sixth assertion, beyond the five the placeholder displaced. Mutation testing showed
+    # replacing this call with a constant dict left the suite GREEN under the original five.
+    assert "\n    _gen_prov = generator_provenance(policy)" in src
+
+    # ORDER matters, and string presence alone cannot see it (adversarial review, 2026-08-31):
+    # 1. The before-counter snapshot must sit BEFORE the game loop starts, or every delta is 0
+    #    and llm_reached is permanently False.
+    # 2. The provenance snapshot must sit AFTER the loop: E3AgentPolicy builds its proposer
+    #    lazily on first use inside the loop, so a before-loop snapshot confidently reports
+    #    "no proposer" on rows where the LLM was reached.
+    i_before = src.index("_counters_before = completion_counters(policy)")
+    i_loop_start = src.index("frames, latest, actions = [], None, 0")
+    i_after = src.index("_counters_after = completion_counters(policy)")
+    i_prov = src.index("_gen_prov = generator_provenance(policy)")
+    assert i_before < i_loop_start, "counters-before must precede the game loop"
+    assert i_after > i_loop_start, "counters-after must follow the game loop"
+    assert i_prov > i_after, "provenance must be snapshotted after the loop (lazy proposer)"

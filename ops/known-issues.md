@@ -7255,6 +7255,65 @@ because it is stated, queued, and self-announcing rather than assumed finished.
 **Until it is wired, `arc_leaderboard_eval` rows still carry no generator provenance**, so any
 multi-game run remains uninterpretable in the way the 2026-08-31 nine-game run was.
 
+**UPDATE 2026-08-31 (outer-loop, later same day) — THE WIRING IS LANDED. Two of the four queued
+rebuilds moved MEASURED values and were NOT committed; the cause is proven to be prior
+`arc_competition_agent.py` drift, not the wiring.** Append-only record of what happened:
+
+- The prepared 44-line diff applied clean, but its provenance snapshot was in the WRONG PLACE,
+  and an adversarial review caught it before commit. The diff took
+  `_gen_prov = generator_provenance(policy)` BEFORE the game loop; `E3AgentPolicy` builds its
+  proposer LAZILY on first use inside the loop, so on the default e3 arm every row would have
+  read `resolved: false / "no proposer"` while `llm_reached` could simultaneously read true —
+  the uninterpretability this feature exists to kill, re-emitted as a confident wrong answer.
+  Fixed before landing: the provenance snapshot now sits AFTER the loop, next to the
+  counters-after snapshot. The counter placement was already correct (before = {} for a
+  lazily-created proposer still yields the right delta).
+- `run_game` now snapshots `completion_counters(policy)` before and after the game loop, reads
+  provenance after it, and emits `generator_provenance`, `completions_consumed`, and
+  `llm_reached` on every per-game row.
+- The self-failing test was replaced by `test_run_game_rows_carry_generator_provenance_fields`.
+  These are SOURCE-STRING checks, stated as such — a behavioral test through the real
+  `run_game` costs a ~557MB import (the reason the helpers live in their own module). To narrow
+  that honestly-stated gap: every assertion is newline-anchored to its exact indentation (a
+  commented-out line goes RED), a sixth assertion names the `_gen_prov` assignment (a constant
+  substitution went GREEN without it), and two ORDER assertions pin counters-before ahead of
+  the loop and provenance after it. All 11 mutations go RED (5 deletions, 3 constant
+  substitutions, 1 comment-out, 2 placement moves), file restored byte-identical each time.
+- `outer_loop_arc_gateway_rescore_20260726`: rebuilt. 17 fields moved, ALL bookkeeping
+  (run_date, git heads, dependency sha/bytes/mtime, duration, checksum, and the recorded sha of
+  the peer artifact, which had itself moved in git since July). Zero measured values. Committed
+  together with this update.
+- `outer_loop_arc_gateway_accurate_rescore_20260726`: rebuilt. 13 fields moved, all bookkeeping.
+  Zero measured values. Its recorded sha for the cited gateway_rescore artifact points at the
+  version rebuilt in this same commit, so both land together. Committed together with this
+  update.
+- `outer_loop_arc_max_actions_answer_20260726`: re-drifted by this edit, rebuilt again. 7 fields
+  moved, all bookkeeping — same shape as the precedent rebuild. The answer line is unchanged
+  (`central=4000 conservative=2000 gates_passed=True`). Committed together with this update.
+- `arc_gateway_card_ground_truth_20260727`: its rebuild is a LIVE 48-cell re-run, and it MOVED
+  MEASURED VALUES. Only 23/48 cells reproduce the persisted July trajectories (gate_4 fails);
+  the headline moved (model wrong on 19/44 cells vs the committed 17/44; REAL median optimism
+  0.02481 vs 0.018097; negative-sign cells 5 vs 6, tu93@b2000 leaving and s5i5@b2000 entering).
+  An A/B control rebuild with the wiring REVERTED produced the IDENTICAL verdict and identical
+  measured values (56 diffs between the two rebuilds: 54 clocks/hashes, 2 rebuild-mechanics
+  fields, 0 measurements). So the movement is the accumulated `arc_competition_agent.py` drift —
+  this artifact was already stale at HEAD on that dependency, in the lint's BACKLOG bucket — and
+  NOT the wiring. The rebuild was restored from HEAD and NOT committed: that correction belongs
+  to whoever changed the agent, with its own review, not smuggled under a wiring commit.
+- `arc_per_level_reset_attribution_20260726`: same class. Its capture was run to a SCRATCH
+  output only; its own built-in pure-addition proof reports `pure_addition: false` with 79
+  number-bearing diffs over 18 matched cells (trajectory hashes and efficiencies moved). The
+  committed artifact was left untouched and NOT rebuilt in place, for the same reason as above.
+- Worktree gap found on the way: `environment_files/`, `data/arc_transition_corpus/`, and
+  `results/experiment_4629_live_frame_change_cnn.pt` are untracked and exist only in the main
+  checkout. A live-capture rebuild in a fresh worktree either fails outright (the offline arcade
+  scans zero games) or silently degrades (the frame-change scorer loads inert). Temporary
+  symlinks were used for the rebuilds and removed after.
+- Standing debt this leaves OPEN: the live-capture artifacts above (plus the ~10 other BACKLOG
+  entries the freshness lint lists) still need a rebuild-and-diff owned by the
+  `arc_competition_agent.py` change stream. Their July numbers describe July agent behavior; the
+  current agent demonstrably walks different trajectories on the same seeds.
+
 
 ### NEW 2026-08-31 (outer-loop, MEASURED) — THE ADAPTER-FREE EVAL RECORDS NO PER-GAME GENERATOR PROVENANCE, SO A 9-GAME RUN IS UNINTERPRETABLE
 

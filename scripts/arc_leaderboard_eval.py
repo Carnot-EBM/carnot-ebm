@@ -60,6 +60,10 @@ sys.path.insert(0, str(REPO / "python"))
 
 from arcengine import GameAction
 from carnot.agentic import arc_solver_kit as kit
+from carnot.agentic.arc_eval_provenance import (
+    completion_counters,
+    generator_provenance,
+)
 from carnot.agentic.arc_competition_agent import (
     CLAIMED,
     CarnotAgentPolicy,
@@ -588,6 +592,7 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
 
         env = VariantEnv(env, game, variant, reflect=reflect)
     base = _baseline_actions(env, game)
+    _counters_before = completion_counters(policy)
     frames, latest, actions = [], None, 0
     start = None
     best = None
@@ -910,8 +915,23 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
         except Exception as exc:
             eff_card = None
             eff_card_error = f"{type(exc).__name__}: {str(exc)[:120]}"
+    _counters_after = completion_counters(policy)
+    # Snapshot provenance AFTER the loop, never before it. E3AgentPolicy builds its proposer
+    # LAZILY on first use inside the loop, so a before-loop snapshot reads "no proposer" on
+    # every default-arm row even when the LLM was reached (adversarial review, 2026-08-31).
+    _gen_prov = generator_provenance(policy)
+    _consumed = {
+        k: _counters_after.get(k, 0) - _counters_before.get(k, 0)
+        for k in set(_counters_before) | set(_counters_after)
+    }
     return {
         "game": game,
+        # GENERATOR PROVENANCE (2026-08-31). Without these two fields a row cannot be read as an
+        # e3 result at all -- see `generator_provenance`. `completions_consumed == 0` means no
+        # model was reached for this game, whatever the levels say.
+        "generator_provenance": _gen_prov,
+        "completions_consumed": _consumed,
+        "llm_reached": bool(_consumed.get("completions", 0) > 0),
         "levels": levels,
         "reached": reached,
         "actions": actions,
