@@ -1,3 +1,87 @@
+## V595 Planner Refresh - 2026-08-31
+
+This sweep follows terminal milestone `2026.08.594`. Exp6802 passed its deterministic
+prechecks but blocked because `openspec/capabilities/agentic-verification/spec.md` does not
+exist. Its required readiness field was therefore false. Exp6803 honored that field and blocked,
+and the conductor skipped Exp6804 through Exp6809. This was a contract-location failure, not a
+negative result for the action arbiter or the transactional route learner. V595 must repair the
+owned OpenSpec anchor, isolate branches so one missing artifact cannot erase the whole milestone,
+and then recover the unrun science with explicit prior-failure records.
+
+### Findings selected for V595
+
+- **Selective Safety Steering via Value-Filtered Decoding** - arXiv:2605.14746,
+  https://arxiv.org/abs/2605.14746; submitted 2026-05-14. The method filters interventions with a
+  value threshold and gives an explicit bound on false interventions. Carnot hook: treat exact
+  action arbitration as a selective intervention problem. Report hard-violation prevention and
+  unnecessary intervention on already-valid proposals. A priority arbiter is useful only if it
+  preserves hard obligations without needlessly changing safe actions.
+- **Residual-Controlled Multiplier Learning for Stochastic Constrained Decision-Making** -
+  arXiv:2606.07088, https://arxiv.org/abs/2606.07088; submitted 2026-06-05. RCML separates the
+  pressure that corrects the current decision from a finite-gain residual that updates multiplier
+  memory. This lets stale constraint pressure decay after feasibility returns. Carnot hook: add a
+  residual-pressure control to the typed chronological route learner. Compare it with raw violation
+  accumulation and no-write controls under exact rollback, support-retention, and restart checks.
+  The external program may learn; the GGUF weights stay frozen.
+- **AdaMEM: Test-Time Adaptive Memory for Language Agents** - arXiv:2606.05684,
+  https://arxiv.org/abs/2606.05684; ICML 2026; code at
+  https://github.com/yunx-z/AdaMEM. AdaMEM combines long-term trajectory memory with transient,
+  stepwise strategy synthesis. Carnot hook: compare episode-start static guidance with stepwise
+  read-only strategy retrieval on the live ARC path. Do not persist same-episode rewrites. Admit a
+  durable route update only between episodes after exact transition and held-future checks.
+- **Verifiable Memory: Learning Unified Memory Management with Local and Global Verifiers for
+  Large Language Model Agents** - arXiv:2608.03137,
+  https://arxiv.org/abs/2608.03137; submitted 2026-08-04; code at
+  https://github.com/Sun-SYSU-24/VerMem. VerMem gives one policy explicit memory operations and
+  combines local transition checks with global terminal-memory checks. Carnot hook: expose the
+  existing route store as a small typed operation set with local exact receipts and a cold global
+  audit. Use deterministic validators as acceptance authority. Learned or same-model verifiers may
+  rank proposals but cannot certify writes.
+
+### Requested secondary, citation, repository, and product checks
+
+- **OpenReview:** FSNet and Bisection Projection continue to support an exact feasibility-repair
+  boundary. Selective Value-Filtered Decoding adds the more useful V595 metric: unnecessary
+  intervention on proposals that already satisfy all hard obligations. No OpenReview result
+  justifies replacing Carnot's deterministic validators with a neural certificate.
+- **Hugging Face Papers:** current verifier pages include LLM-as-a-Verifier, FineVerify, and recent
+  memory benchmarks. They support finer-grained diagnostics, but same-model verification is
+  circular for acceptance. V595 uses exact local receipts and an independent cold audit.
+- **Semantic Scholar citation check:** the EBT `2507.02092` trail still surfaces EBT-Policy,
+  NRGPT, planning-as-descent, and the finding that agents often fail to use world-model tools
+  strategically. The ARM-EBM `2512.15605` paper is now an ICML 2026 paper and still supplies a
+  soft-Bellman interpretation, not a local executable verifier. Neither citation trail closes the
+  action-transport or continual-memory evidence gap.
+- **GitHub discovery:** the official AdaMEM and VerMem repositories are the only newly promoted
+  implementations. Their reusable design signals are stepwise transient strategy state and typed
+  verifier-gated memory operations. Carnot should reproduce those ideas inside its existing store
+  and live policy, not add a second memory framework.
+- **Extropic:** the 2026-08-03 first-party update remains current:
+  https://extropic.ai/writing/from-one-to-one-billion. Torx is public, Thermalizers is a preview,
+  Z1 is taped out, and external Z1 systems target 2027. V595 makes no TSU execution, power,
+  throughput, or energy-efficiency claim.
+- **Logical Intelligence:** the current Kona page still describes a proprietary global constraint
+  layer without weights, a local runner, or a reproducible training recipe:
+  https://logicalintelligence.com/kona-ebms-energy-based-models. Kona remains architecture context.
+- **Hardware inventory:** dual RTX 3090 GPUs remain the required local GGUF substrate. KV260 and
+  GateMate have terminal receipts, PolarFire is opportunistic, and no physical board belongs on the
+  blocking path.
+
+### V595 planning impact
+
+- Repair the OpenSpec owner first. The operational-obligation requirement must live in an existing
+  capability spec, and the roadmap must test that exact path before any downstream gate.
+- Recover the three-model action corpus and exact priority arbiter. Add false-intervention rate,
+  safe-action preservation, and row-level conflict certificates to the matched-budget comparison.
+- Recover continuous self-learning with typed operations, residual-pressure updates, local receipts,
+  between-episode commits, future-support checks, and a cold global audit.
+- Run a separate live ARC branch after the shared contract fixture is ready. Compare static guidance
+  with stepwise read-only strategy retrieval, then test typed tool-gap routing and actions-to-progress.
+  Do not claim a game-level solve, inspect source, run offline ground-truth search, or build a
+  per-game adapter.
+- End with an ungated synthesis task so every branch receives a terminal disposition even when a
+  hardware or model gate blocks.
+
 ## V594 Planner Refresh - 2026-08-31
 
 This sweep follows terminal milestone `2026.08.593`. Exp6798 independently replayed 3,189

@@ -12,7 +12,8 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CLAIM_SUPPORTED | 2 |
-| NO_CLAIM | 5 |
+| CLAIM_REFUTED_BY_OWN_DATA | 1 |
+| NO_CLAIM | 4 |
 | SKIPPED_ALREADY_FLAGGED | 1 |
 
 ## experiment_6796_agent_model_dispatch_requalification.json
@@ -26,13 +27,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable; the artifact reports a blocked precondition audit and makes no comparative or value claim about dispatch requalification.
+No falsifying observation applies because the artifact reports a blocked precondition audit, not a positive or comparative claim about dispatch requalification.
 
 ## WAS THAT CHECKED
-No substantive method claim was tested; no pairs were audited and no result rows were produced.
+No comparative claim was checked; no routes were evaluated and no result rows were produced.
 
 ## EVIDENCE
-`"status": "blocked"`, `"rows": []`, `"v593_pairs_audited": 0`, `"dispatch_contract_ready": false`, `"verdict_class": "blocked"`, `"honest_verdict": "complete_blocked_dispatch_requalification"`
+`status` `blocked` `rows` `[]` `v593_pairs_audited` `0` `dispatch_contract_ready` `false` `verdict_class` `blocked` `honest_verdict` `complete_blocked_dispatch_requalification`
 
 ## RECOMMENDATION
 KEEP
@@ -43,25 +44,25 @@ KEEP
 
 ## experiment_6798_csl_causal_safety_byte_audit.json
 
-**CLAIM_SUPPORTED**
+**CLAIM_REFUTED_BY_OWN_DATA**
 
 ## VERDICT
-CLAIM_SUPPORTED
+CLAIM_REFUTED_BY_OWN_DATA
 
 ## THE HEADLINE CLAIM
-Independent byte replay verified causal route and utility witnesses, with zero admitted or influential poison.
+Byte replay verified causal route and utility witnesses with zero admitted or influential poison.
 
 ## WHAT WOULD REFUTE IT
-Any replay mismatch, a credited same-parent counterfactual showing no action or utility effect, any admitted or influential poison, or the retrieval-disabled control tying or beating the method on utility.
+A poison-attack phase causing harm despite zero poison admission—for example, capacity pressure evicting active state and changing hard-case outcomes from unharmed to harmed.
 
 ## WAS THAT CHECKED
-Yes. Action, utility, receipt, counterfactual-witness, and poison checks could fail; the retrieval-disabled control was also evaluated across five orders and lost on held-future utility in every order. The capacity-pressure harm result would refute a broader “no harm under pressure” claim, but the headline does not make that claim.
+Yes, under `hard_case_harm_after_phase` and `capacity_eviction_receipts`; the refutation occurred after capacity pressure and disappeared after rollback.
 
 ## EVIDENCE
-`all_actions_replayed`: `true`; `all_utilities_replayed`: `true`; `all_receipt_hashes_matched`: `true`; `all_passed`: `true`; `failed_checks`: `[]`; `action_errors`: `[]`; `utility_errors`: `[]`; `receipt_errors`: `[]`; `admitted_poison_count`: `0`; `credited_factor_count`: `116`; `same_parent_bytes`: `true`; `action_changed`: `true`; `utility_difference`: `1.25`. Under `held_future_utility_by_arm_order`, `compositional_online` has `mean_utility` values `0.578125`, `0.578125`, `0.5625`, `0.5625`, and `0.5625`, versus `retrieval_disabled_online` values `0.21875`, `0.234375`, `0.28125`, `0.203125`, and `0.20625`. `hard_case_harm_after_phase` records `capacity_pressure`: `true`.
+`admitted_poison_count`: `0`; `hard_case_harm_after_phase`; `baseline`: `false`; `capacity_pressure`: `true`; `rollback`: `false`; `capacity_eviction_receipts`; `reason`: `capacity_pressure_fifo`
 
 ## RECOMMENDATION
-KEEP
+CORRECT_THE_RECORD
 
 ## experiment_6799_model_output_formal_constraint_probes.json
 
@@ -71,16 +72,16 @@ KEEP
 NO_CLAIM
 
 ## THE HEADLINE CLAIM
-no claim
+Frozen authentic outputs produced exact paired formal probes.
 
 ## WHAT WOULD REFUTE IT
-For the artifact’s limited receipt assertion, a replay mismatch, unauthenticated or replaced source output, failed pairing gate, or invalid formal-operation proof would refute successful construction; none would test comparative method value because no such value claim is made.
+A source-output hash mismatch or replacement, a failed fresh-process replay, a missing or invalid probe member, failure to distinguish the formal operations, or failure of the declared pairing tolerances would refute this execution-receipt claim.
 
 ## WAS THAT CHECKED
-Yes. Source hashes, fresh-process replay matches, matching tolerances, operation proofs, and adversarial mutation receipts provide failure paths for the receipt assertion. No comparative baseline or added-value test was called for by the headline.
+Yes. Source hashes and inference provenance, fresh-process exact replays, operation proofs, matching receipts, gate summaries, and adversarial mutation receipts provided opportunities for those failures. This remains a receipt claim, not a comparative claim of method value or generalization.
 
 ## EVIDENCE
-`honest_verdict`: `complete: frozen authentic outputs produced exact paired formal probes`; `inference_substrate`: `deterministic_verifier -- CPU transform of frozen authentic mandated-GGUF outputs; no new LLM inference and no source-output replacement`; `live_llm_invoked`: `false`; `fresh_process`: `true`; `matches`: `true`; `all_tolerances_passed`: `true`; `operation_class_distinction_proved`: `true`; `verifier_is_oracle`: `false`
+`honest_verdict`: `complete: frozen authentic outputs produced exact paired formal probes`; `inference_substrate`: `deterministic_verifier -- CPU transform of frozen authentic mandated-GGUF outputs; no new LLM inference and no source-output replacement`; `live_llm_invoked`: `false`; `fresh_process`: `true`; `matches`: `true`; `operation_class_distinction_proved`: `true`; `all_tolerances_passed`: `true`; `all_passed`: `true`; `failed_checks`: `[]`; `model_output_constraint_probe_ready`: `true`; `verifier_is_oracle`: `false`
 
 ## RECOMMENDATION
 KEEP
@@ -96,35 +97,35 @@ CLAIM_SUPPORTED
 The frozen real-output comparison completed without the preregistered positive effect.
 
 ## WHAT WOULD REFUTE IT
-A completed matched comparison showing the grouped arm’s preregistered exact-valid lower bound above zero, with required harm gates passing and the terminal positive gate true, would refute the null headline; an incomplete grid would refute its completion claim.
+A positive grouped-minus-flat restructuring effect whose clustered 95% confidence-interval lower bound exceeded zero, while all preregistered harm and validity gates passed.
 
 ## WAS THAT CHECKED
-Yes. The decision gates report the effect bounds and terminal positive decision, while the checkpoint receipt compares completed and planned rows and lists pending rows. The matched flat recurrent arm gave the grouped method a real opportunity to win.
+Yes. The artifact reports the paired clustered restructuring interval and the explicit preregistered decision gates; the positive outcome was possible but did not occur.
 
 ## EVIDENCE
-The artifact reports `positive` as `false`. The `restructuring_exact_valid_lower_bound` is `-0.0037037037`, and `restructuring_exact_valid_lower_bound_above_zero` is `false`. The refinement confidence interval is `lower` `-0.0037037037`, `point` `0.000617284`, and `upper` `0.0055555556`; restructuring is `lower` `-0.0037037037`, `point` `0.0015432099`, and `upper` `0.0074074074`. It also reports `no_refinement_harm` as `false` and `no_support_harm` as `false`. Both `candidate_budget_by_arm` values are `4365`, and the arms share `parameter_count_per_arm` `91`. Completion is supported by `complete` `true`, `completed_row_count` `2910`, `planned_row_count` `2910`, and `pending_row_ids` `[]`. The terminal value is `complete: frozen real-output comparison finished without the preregistered positive effect`.
+`"honest_verdict": "complete: frozen real-output comparison finished without the preregistered positive effect"`; `"positive": false`; `"restructuring_exact_valid_lower_bound": -0.0037037037`; `"restructuring_exact_valid_lower_bound_above_zero": false`; `"lower": -0.0037037037`; `"upper": 0.0074074074`; `"no_refinement_harm": false`; `"no_support_harm": false`; `"candidate_budget_by_arm"`; `"flat_recurrent_control": 4365`; `"grouped_fixed_point": 4365`; `"parameter_count_per_arm": 91`; `"transfer_updates": 0`; `"verifier_is_oracle": "False states that exact checking never proposes or fits."`
 
 ## RECOMMENDATION
 KEEP
 
 ## experiment_6801_real_output_fixed_point_cold_audit.json
 
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+The fixed-point result is disqualified because authority or shortcut checks failed.
 
 ## WHAT WOULD REFUTE IT
-No falsifying observation can be specified because the supplied artifact states no headline proposition about the comparative value of `grouped_fixed_point`.
+A model-identity permutation that materially changed the measured effects, plus a robust grouped-fixed-point advantage over the flat recurrent control—especially confidence intervals excluding zero—would refute the disqualification.
 
 ## WAS THAT CHECKED
-No; the artifact reports comparative measurements and controls but contains no explicit headline claim or success criterion to test.
+Yes. The model-ID permutation left the global effects unchanged, the identical-arm control tied exactly, the serious flat recurrent comparator matched or beat grouped fixed point on exact validity, and every reported transformation confidence interval includes zero.
 
 ## EVIDENCE
-`grouped_fixed_point` `flat_recurrent_control` `complete_disqualified: authority or shortcut checks failed`
+`global_effect_unchanged`: `true`; `proposal_input_hash_unchanged`: `true`; `paired_exact_valid_delta`: `0.0`; `flat_recurrent_control`; `grouped_fixed_point`; base `exact_valid_rate` values `0.0323024055` and `0.0302405498`; base interval `lower`: `-0.0074074074`, `upper`: `0.0037037037`; refinement interval `lower`: `-0.0037037037`, `upper`: `0.0058641975`; restructuring interval `lower`: `-0.0043209877`, `upper`: `0.0077160494`.
 
 ## RECOMMENDATION
 KEEP
@@ -140,13 +141,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative claim exists to falsify; the recorded blocker would be contradicted if the required specification existed with the required requirement anchors and the source gate passed.
+Not applicable: the artifact makes no comparative, performance, solve, or added-value claim; it records an operationally blocked run.
 
 ## WAS THAT CHECKED
-Yes, in `gate_check_summary`; the required specification precondition was checked and failed before compilation or row evaluation.
+No efficacy refutation was applicable or checked because no automaton was built and no rows were evaluated. The operational blocker itself was checked in `gate_check_summary`.
 
 ## EVIDENCE
-`"solve_claim": false`, `"verdict_class": "blocked"`, `"status": "complete_blocked_operational_obligation_automaton"`, `"operational_automaton_fixture_ready": false`
+`"solve_claim"`: `false`; `"verdict_class"`: `"blocked"`; `"rows"`: `[]`; `"attack_results"`: `[]`; `"operational_automaton_fixture_ready"`: `false`; `"state"`: `"not_built_because_precondition_failed"`; `"failed_check"`: `"required_agentic_verification_spec_exists"`
 
 ## RECOMMENDATION
 KEEP
@@ -162,13 +163,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Nothing: this is a blocked-gate receipt, not a completed experiment asserting a comparative result.
+No substantive comparative or value claim exists to falsify; the artifact is only a blocked-gate receipt.
 
 ## WAS THAT CHECKED
-No; execution stopped at the pre-gate, so no method, oracle, rival, or scored rows were evaluated.
+No; the experiment stopped at `conductor_pre_gate` before producing or evaluating the proposed corpus.
 
 ## EVIDENCE
-`status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`
+`"status"`: `"blocked"`; `"honest_verdict"`: `"blocked_gate_check_failed"`; `"failed_field"`: `"operational_automaton_fixture_ready"`; `"failed_expected"`: `true`; `"failed_observed"`: `false`; `"blocked_at_layer"`: `"conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP

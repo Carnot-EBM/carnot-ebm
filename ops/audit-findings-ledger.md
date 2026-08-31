@@ -61,3 +61,11 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_is_positive_control_null_claim | SILENT_NON_FIRING | OPEN | |
 | 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_positive_control_failed_or_unchecked | REAL_BUG | OPEN | |
 | 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::check_false_negative_risk | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | experiment_claim_audit | experiment_6798_csl_causal_safety_byte_audit.json | CLAIM_REFUTED_BY_OWN_DATA | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_is_comparative_claim | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::check_ceiling_saturation | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_metric_from_top_or_pass_rates | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_metric_items_from_top_or_pass_rates | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::check_degenerate_separation | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_is_control_arm_key | SILENT_NON_FIRING | OPEN | |
+| 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_documented_identical_controls | SILENT_NON_FIRING | OPEN | |
