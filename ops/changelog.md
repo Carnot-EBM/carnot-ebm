@@ -18334,3 +18334,4 @@ task phases. The next tooling priorities are task-owned monotonic phase
 telemetry, dependency-aware parallel synthesis dispatch, and a task-scoped
 launch receipt. Estimated time savings is 0% because the supplied data does
 not quantify a causal reduction.
+- 2026-08-31: Fail-closed agent-model dispatch requalification (⚠️ Blocked) — honest_verdict=complete_blocked_dispatch_requalification; results/experiment_6796_agent_model_dispatch_requalification.json
