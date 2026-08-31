@@ -1900,3 +1900,108 @@ of measured effect sign.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6812 and SCENARIO-CONSTRAINT-6812-* | Implemented (`python/carnot/experiment_6812_sota_operational_handoff_corpus_v2.py`; `results/experiment_6812_sota_operational_handoff_corpus_v2.json`). | Implemented (`tests/python/test_experiment_6812_sota_operational_handoff_corpus_v2.py`; 29 focused tests; 100% scoped statement coverage; three-model local llama.cpp CUDA E2E). |
+
+### REQ-CONSTRAINT-6814: Independent Selective Arbiter Cold Audit
+
+Exp6814 SHALL run in a fresh CPU process. It SHALL read the frozen Exp6811,
+Exp6812, and Exp6813 artifacts without importing the Exp6813 producer. It SHALL
+write `results/experiment_6814_selective_priority_arbiter_cold_audit.json`.
+
+The audit SHALL check `selective_arbiter_ab_completed`, exact source hashes,
+raw proposal bytes and hashes, complete source and comparison rows, matched
+budgets, and frozen manifests before replay. A failed precondition SHALL write
+`complete_blocked_selective_arbiter_cold_audit`. The blocked artifact SHALL
+retain `gate_check_summary`, contain no cold rows, keep
+`selective_arbiter_audit_completed` false, and stop before arbitration.
+
+The audit SHALL decode the raw API byte streams and parse proposal bytes with
+an independent parser. It SHALL rebuild the five-part obligation contracts,
+authority order, prerequisite state, fallbacks, and transition outcomes from
+the frozen scenario manifest. It SHALL independently replay the selective and
+flat arms. It SHALL recompute all per-arm and paired headlines, confidence
+intervals, false intervention, safe-action byte identity, certificates,
+budgets, hard safety, and utility from cold rows. It SHALL compare each
+producer headline with a frozen tight tolerance. Completion SHALL not depend
+on the effect sign.
+
+The audit SHALL inject priority inversion, stale prerequisite, wrong
+authority, fallback deletion, consequence weakening, tie reorder, raw byte
+mutation, model labels, exact-valid labels, utility, and future outcomes.
+Proposal-time influence from a prohibited field SHALL disqualify the claim.
+Every authority attack SHALL fail closed. Every rejection certificate SHALL
+name the first unsatisfied higher-priority obligation. An already-valid base
+proposal SHALL remain byte-identical and SHALL not count as an intervention.
+
+The artifact SHALL contain `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_sha256s`, `independent_parser_id`, `independent_arbiter_id`,
+`independent_reducer_id`, `rows`, `aggregate_recomputation`,
+`headline_differences`, `budget_recomputation`, `priority_attack_results`,
+`prohibited_feature_findings`, `false_intervention_recomputation`,
+`certificate_findings`, `hard_safety_supported`, `utility_claim_supported`,
+`source_verdict_supported`, `selective_arbiter_audit_completed`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. The verdict class SHALL be one of `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+
+#### SCENARIO-CONSTRAINT-6814-PRECONDITIONS: Missing Frozen Evidence Stops Replay
+
+**Given** a missing completion flag, raw byte receipt, source hash, comparison
+row, budget match, or frozen manifest
+**When** Exp6814 checks its inputs
+**Then** it writes a complete blocked artifact with expected and observed
+values and no cold rows.
+
+**Spec traces:** REQ-CONSTRAINT-6814
+
+#### SCENARIO-CONSTRAINT-6814-INDEPENDENT: Raw Bytes Own the Cold Replay
+
+**Given** complete frozen artifacts
+**When** Exp6814 runs its parser, arbiter, transition evaluator, and reducer
+**Then** no Exp6813 implementation is imported and every headline derives
+from one cold row per source unit and arm.
+
+**Spec traces:** REQ-CONSTRAINT-6814
+
+#### SCENARIO-CONSTRAINT-6814-AUTHORITY: Attacks Cannot Change Selection
+
+**Given** an allowed proposal-time input and one injected prohibited feature
+or contract mutation
+**When** the independent arbiter selects or abstains
+**Then** prohibited labels have no influence and each contract attack fails
+closed with a local certificate.
+
+**Spec traces:** REQ-CONSTRAINT-6814
+
+#### SCENARIO-CONSTRAINT-6814-SAFE-NO-OP: Valid Bases Keep Exact Bytes
+
+**Given** a base proposal that the independent evaluator classifies as valid
+**When** both arms replay the frozen unit
+**Then** false intervention uses the cold validity label and the selective arm
+preserves the base action bytes exactly.
+
+**Spec traces:** REQ-CONSTRAINT-6814
+
+#### SCENARIO-CONSTRAINT-6814-AGGREGATION: Rows Own Every Claim
+
+**Given** all cold replay and attack rows
+**When** Exp6814 reduces safety, utility, budgets, intervals, and certificates
+**Then** all artifact claims equal a fresh reduction and all producer
+headlines are compared within the frozen tolerance.
+
+**Spec traces:** REQ-CONSTRAINT-6814
+
+#### SCENARIO-CONSTRAINT-6814-COMPLETION: Effect Sign Is Independent
+
+**Given** a complete cold replay with valid authority and aggregation
+**When** the paired utility effect is positive, null, or harmful
+**Then** `selective_arbiter_audit_completed` remains true and
+`source_verdict_supported` follows only the recomputed cold decision.
+
+**Spec traces:** REQ-CONSTRAINT-6814
+
+## Implementation Status (REQ-CONSTRAINT-6814)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6814 and SCENARIO-CONSTRAINT-6814-* | Planned: `python/carnot/experiment_6814_selective_priority_arbiter_cold_audit.py` and the task-owned script wrapper. | Planned focused tests and 100% scoped coverage. |
