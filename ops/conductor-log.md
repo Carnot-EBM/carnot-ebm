@@ -16866,3 +16866,5 @@ The l |
 | 2026-08-30 23:48 UTC | Plan milestone 2026.08.593 | OK | 6 tasks proposed |
 | 2026-08-30 23:51 UTC | Activation REFUSED: milestone 2026.08.593 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-08-30 23:51 UTC | Activation replan 1/2: 2026.08.593 | OK | refused roadmap quarantined to roadmap-2026.08.593-refusal1.yaml; replanning wit |
+| 2026-08-30 23:57 UTC | Plan milestone 2026.08.593 | OK | 6 tasks proposed |
+| 2026-08-31 00:00 UTC | Milestone 2026.08.593 activated | OK | 6 tasks queued |
