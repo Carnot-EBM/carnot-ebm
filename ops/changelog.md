@@ -18369,3 +18369,4 @@ task-owned phase timing, GPU samples, model-concurrency metadata, and runner
 identity. Estimated milestone-wide savings is 0% because the supplied evidence
 does not measure the batched share of execution.
 - 2026-08-31: Owned-spec and execution-manifest recovery preflight (⚠️ Research Finding) — honest_verdict=complete: V595 owned contracts and active execution manifest agree; results/experiment_6810_v595_contract_manifest_preflight.json
+- 2026-08-31: Typed operational-obligation automaton v3 (⚠️ Research Finding) — honest_verdict=complete: deterministic source-free operational-obligation fixture ready; no live benefit or level solve claimed; results/experiment_6811_operational_obligation_automaton_v3.json
