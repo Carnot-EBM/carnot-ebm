@@ -18,7 +18,20 @@ that matters (finding F2); that was fixed and has still never been OBSERVED
 working. Seven empty rows cannot distinguish "the model never wants a tool it
 lacks" from "we have barely looked".
 
-**The open trade, for the operator:** four batches remain. Adding
+**RESOLVED 2026-08-31 00:24Z — the operator took the split.** Batches 1-2
+(`r11l,lp85`, `ls20,wa30`) stay with the loop OFF: four games of efficiency on
+one consistent config. Batches 3-5 (`sp80,su15`, `tu93,cn04`, `m0r0,sk48`) run
+with `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse` to give the tool-gap mechanism its
+first live population. Handover is by a watcher that waits for the
+`ls20-wa30-*.json` file to appear rather than a timer — the eval writes only at
+the end of a batch, so the file is the only reliable completion signal and a
+timed kill would discard hours exactly as exp6753 did.
+
+**The two halves must never be pooled.** Different configuration, different
+measurement; same discipline that keeps the native and selfparse transport cells
+in separate run directories.
+
+**Superseded — the original trade as written:** four batches remain. Adding
 `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse` to them would give eight games of live
 tool-loop induction and the gap ledger its first population — but those batches
 would then measure a DIFFERENT configuration from batch 1, so their efficiency
