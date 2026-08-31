@@ -16876,3 +16876,4 @@ The l |
 | 2026-08-31 00:38 UTC | Canonical transaction-byte replay fixture | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLO |
 | 2026-08-31 01:40 UTC | Independent byte-grounded CSL causal and safety au | OK | 98 passed, 1 warning in 43.34s |
 | 2026-08-31 02:23 UTC | Formally calibrated model-output constraint probes | OK | 92 passed, 1 warning in 43.21s |
+| 2026-08-31 03:05 UTC | Frozen grouped fixed point versus flat control on  | OK | 95 passed, 1 warning in 332.35s (0:05:32) |
