@@ -23831,6 +23831,147 @@ sets completion false, and names the observed failure in `gate_check_summary`.
 |---|---|---|
 | REQ-VERIFY-6789 and SCENARIO-VERIFY-6789-* | Planned (`python/carnot/experiment_6789_soft_fixed_point_cold_authority_audit.py`, `scripts/experiments/experiment_6789_soft_fixed_point_cold_authority_audit.py`) | Planned (`tests/python/test_experiment_6789_soft_fixed_point_cold_authority_audit.py`) |
 
+### REQ-VERIFY-6800: Frozen Fixed-Point Arms SHALL Transfer To Real Model Outputs
+
+Exp6800 SHALL reconstruct the grouped fixed-point arm and the parameter-matched
+flat recurrent arm from only the frozen Exp6786 train split. It SHALL use the
+five Exp6787 seeds and the Exp6788 initialization, optimizer, update count,
+unroll count, iteration cap, candidate count, features, and decoder. Before it
+reads any Exp6799 proposal graph, it SHALL reproduce every preregistered Exp6788
+candidate hash. A mismatch SHALL stop the run without fitting another model.
+
+The run SHALL require the exact Exp6799 readiness field, exact source hashes,
+all 97 paired source cases, all three transformations, all three source models,
+all three constraint families, both Exp6799 splits, five frozen seeds, both
+arms, equal parameter counts, equal optimization counts, equal candidate
+budgets, the legal feature contract, and the planned CPU wall budget. A failed
+gate SHALL write `complete_blocked_real_output_fixed_point_transfer`. The
+blocked artifact SHALL contain all required fields, no rows, false completion,
+and a `gate_check_summary` that records every failed gate.
+
+After reproduction, both arms SHALL freeze. Exp6799 graphs, source model IDs,
+exact labels, valid assignments, held outcomes, parser diagnoses, and checker
+receipts SHALL not enter fitting, early stopping, convergence, candidate
+selection, or decoding. Source model and family values MAY enter row identity
+and post-proposal strata only. Each proposal SHALL use the same legal graph
+projection, seed, parameter count, iteration cap, candidate budget, and CPU
+wall envelope for both arms.
+
+The run SHALL execute all 2,910 case, transformation, seed, and arm cells. It
+SHALL use the Exp6785 durable parent checkpoint contract. Resume SHALL preserve
+completed payload hashes and execute only pending cells. Each row SHALL record
+the source model, family, case, split, transformation, seed, arm, candidates,
+convergence, residual, candidate work, and runtime.
+
+The independent Exp6799 exact checker SHALL run only after candidate hashes are
+frozen. It SHALL append exact validity, dependency violations, nearest-valid
+distance, valid support, and an unchanged-candidate receipt. It SHALL not send
+any result to the proposal path. `verifier_is_oracle` SHALL remain false.
+
+All aggregate claims SHALL derive from rows. The comparison SHALL report arm
+metrics by transformation, source model, family, case, and seed. It SHALL use
+case-clustered paired intervals for grouped minus flat. It SHALL report
+refinement and restructuring separately. A positive verdict SHALL require the
+restructuring exact-valid lower bound to exceed zero. It SHALL also require no
+preregistered refinement, support, convergence, or work harm. Completion SHALL
+not depend on the effect sign.
+
+The run SHALL include group-ID permutation, dependency-edge removal,
+source-model identity removal, surface relabeling, identical-arm, and
+hard-negative controls. Each control result SHALL derive from proposal or exact
+outcomes stored in rows. An identical-arm control SHALL recompute a zero paired
+effect.
+
+The artifact SHALL include `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_hashes`, `training_isolation_receipts`,
+`v592_reproduction_receipts`, `frozen_arm_definitions`,
+`parameter_counts_by_arm`, `optimization_steps_by_arm`,
+`candidate_budget_by_arm`, `feature_allowlist`, `feature_denylist`,
+`metrics_by_transformation_model_family`, `paired_exact_valid_deltas`,
+`clustered_confidence_intervals`, `support_contraction`,
+`convergence_harm`, `work_matching`, `destructive_control_results`, `rows`,
+`model_output_fixed_point_comparison_completed`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. Each required
+field SHALL have a one-line purpose in `field_principles`.
+`inference_substrate` SHALL declare a frozen CPU PyTorch recipe with no LLM
+invocation. `verdict_class` SHALL use only `positive`, `circular_positive`,
+`null`, `blocked`, `disqualified`, or `partial`. A terminal `honest_verdict`
+SHALL start with `complete:`, `complete_`, `success:`, `success_`, `passed:`,
+`passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-VERIFY-6800-TRAIN-ISOLATION: Real Outputs Never Fit The Arms
+
+**Given** the frozen Exp6786 training units and the Exp6799 transfer graphs
+**When** Exp6800 reconstructs and freezes both arms
+**Then** every training receipt names only Exp6786 train units and no Exp6799
+identity, label, split outcome, diagnosis, or exact field reaches fitting.
+
+**Spec traces:** REQ-VERIFY-6800
+
+### SCENARIO-VERIFY-6800-MATCHED-ARMS: V592 Hashes Reproduce Before Transfer
+
+**Given** the original five seeds and frozen Exp6787 and Exp6788 settings
+**When** both arms reconstruct from the Exp6786 train split
+**Then** all preregistered Exp6788 candidate hashes reproduce before Exp6799 is
+read and both arms freeze with equal parameters, updates, iterations, and
+candidate budgets.
+
+**Spec traces:** REQ-VERIFY-6800
+
+### SCENARIO-VERIFY-6800-EXACT-AUTHORITY: Exact Checks Follow Proposal
+
+**Given** a frozen proposal row from either arm
+**When** the independent Exp6799 checker evaluates its candidates
+**Then** candidate hashes remain unchanged and exact results never affect
+fitting, stopping, convergence, candidate selection, or decoding.
+
+**Spec traces:** REQ-VERIFY-6800
+
+### SCENARIO-VERIFY-6800-CLUSTERED-INFERENCE: Cases Own Paired Uncertainty
+
+**Given** the full real-output row grid
+**When** Exp6800 computes grouped-minus-flat effects
+**Then** it keeps seed and arm pairs inside each source case, clusters intervals
+by case, and reports refinement and restructuring effects separately across
+models and families.
+
+**Spec traces:** REQ-VERIFY-6800
+
+### SCENARIO-VERIFY-6800-CHECKPOINT-RESUME: Completed Cells Stay Immutable
+
+**Given** a durable checkpoint with a strict prefix of planned cells
+**When** Exp6800 resumes with the same manifest
+**Then** completed payload hashes remain unchanged and only pending cells run.
+
+**Spec traces:** REQ-VERIFY-6800, REQ-INFRA-6785
+
+### SCENARIO-VERIFY-6800-DESTRUCTIVE-CONTROLS: Structure And Identity Stay Separate
+
+**Given** all paired proposal and exact rows
+**When** the six frozen controls run
+**Then** each control derives from rows, source-model removal changes no
+proposal input, identical arms have zero effect, and hard negatives measure
+cross-clause failure after local domains pass.
+
+**Spec traces:** REQ-VERIFY-6800
+
+### SCENARIO-VERIFY-6800-BLOCKED: Failed Authority Forbids A Smaller Run
+
+**Given** readiness, hash, grid, reproduction, feature, budget, or matching
+failure
+**When** Exp6800 evaluates preconditions
+**Then** it writes `complete_blocked_real_output_fixed_point_transfer`, emits no
+rows, sets completion false, and records all observed failures.
+
+**Spec traces:** REQ-VERIFY-6800
+
+## Implementation Status (REQ-VERIFY-6800)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6800 and SCENARIO-VERIFY-6800-* | Planned (`python/carnot/experiment_6800_real_output_fixed_point_transfer_ab.py`, `scripts/experiments/experiment_6800_real_output_fixed_point_transfer_ab.py`) | Planned (`tests/python/test_experiment_6800_real_output_fixed_point_transfer_ab.py`) |
+
 ### SCENARIO-VERIFY-6745-DUAL: Independent Encodings Control Diagnosis
 
 **Given** a parseable certificate
