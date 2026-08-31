@@ -16929,3 +16929,4 @@ The l |
 | 2026-08-31 17:22 UTC | Selective-arbiter authority attack shard | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-08-31 18:00 UTC | Selective-arbiter authority attack shard | OK | 111 passed, 1 warning in 15.75s |
 | 2026-08-31 18:28 UTC | Sealed selective-arbiter adoption receipt | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-31 19:21 UTC | Chronological causal-edge verified-memory stream | OK | 107 passed, 1 warning in 10.54s |
