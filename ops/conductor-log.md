@@ -16907,3 +16907,8 @@ The l |
 | 2026-08-31 11:34 UTC | Selective priority arbiter versus flat retry A/B | OK | 95 passed, 1 warning in 13.00s |
 | 2026-08-31 12:00 UTC | Independent selective-arbiter authority audit | FAIL | Codex CLI error: Wall-clock+idle timeout after 1381s (600s silence). Last out |
 | 2026-08-31 12:03 UTC | Independent selective-arbiter authority audit | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-08-31 12:27 UTC | Independent selective-arbiter authority audit | FAIL | Codex CLI error: Wall-clock+idle timeout after 1270s (600s silence). Last out |
+| 2026-08-31 12:29 UTC | Chronological verified-memory operation stream | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6814-selective-priority-arbiter-cold-audi |
+| 2026-08-31 12:29 UTC | Residual-pressure transactional route learning A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6815-verified-memory-operation-stream) |
+| 2026-08-31 12:29 UTC | Leave-one-model-family-out route-memory portabilit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6816-residual-pressure-route-learning-ab) |
+| 2026-08-31 12:29 UTC | Independent local-and-global route-memory audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6816-residual-pressure-route-learning-ab, |
