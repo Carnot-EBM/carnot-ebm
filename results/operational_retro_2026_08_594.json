@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.08.594",
-  "generated_at": "2026-08-31T05:29:04Z",
+  "generated_at": "2026-08-31T06:38:38Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0.3,
   "experiments_completed": 2,
@@ -21,23 +21,23 @@
   "gpu_idle_on_compute_bound_tasks": false,
   "reconstructed_from_disk_mtime": true,
   "timing_integrity_mismatch": false,
-  "summary": "The milestone recorded 2 completed experiments in 0.3 minutes, with 1 compute-bound experiment. The compute entry is at the timing floor, while the protected compute-task GPU-idle indicator is false.",
+  "summary": "The locked record covers 2 completed experiments in 0.3 minutes: 1 compute-bound task and 1 synthesis-only task. The compute-bound entry was recorded at 0.0 minutes, and the locked compute-task GPU-idle indicator is false.",
   "bottlenecks_identified": [
-    "Disk-mtime reconstruction placed the compute-bound experiment at 0.0 minutes, so no data available this milestone identifies which execution phase consumed its time.",
-    "The point-in-time GPU state is not joined to experiment phase boundaries, leaving task-scoped accelerator attribution unavailable.",
-    "No data available this milestone records whether 2 or more models were loaded in parallel or which runner handled them."
+    "The disk-mtime fallback recorded the compute-bound experiment at 0.0 minutes, so no data available this milestone explains which execution phase took the longest.",
+    "The GPU snapshot is not tied to task start, phase, and finish boundaries, so it cannot establish utilization efficiency throughout the compute task.",
+    "No data available this milestone establishes that 2 or more models were loaded in parallel or records runner selection, so a DualGPURunner dispatch failure cannot be assessed."
   ],
   "improvements_suggested": [
-    "Add automatic batches of 8-16 questions per forward pass to the single-process inference path and measure the realized throughput change.",
-    "Write monotonic queue, load, inference, verification, and artifact-write timestamps into each experiment receipt.",
-    "Attach experiment identity and start/end boundaries to GPU utilization samples.",
-    "Record loaded-model count and parallel-versus-sequential mode, selecting DualGPURunner only when 2 or more models are loaded in parallel."
+    "Batch 8-16 questions per forward pass on the single inference process and record the realized throughput change.",
+    "Capture monotonic queue, model-load, inference, verification, and artifact-write timestamps in each task receipt.",
+    "Join task identity and phase boundaries to GPU utilization samples.",
+    "Persist loaded-model count, sequential-versus-parallel mode, and runner identity; use the second GPU only when 2 or more models are actually loaded in parallel."
   ],
   "top_3_highest_leverage_actions": [
-    "Introduce configurable 8-16 question batching for inference.",
-    "Replace disk-mtime-only diagnosis with task-owned monotonic phase receipts.",
-    "Persist task-window GPU samples, loaded-model concurrency, and runner selection together."
+    "Add configurable 8-16 question batching to the inference path.",
+    "Replace timing-floor diagnosis with task-owned monotonic phase telemetry.",
+    "Record task-scoped GPU samples, model concurrency, and runner selection in one launch receipt."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The evidence excludes a locked compute-idle finding but cannot explain the compute task's phase costs or establish a missed parallel-model runner dispatch. Batching is the clearest measured tooling hypothesis; milestone-wide savings remain unquantified, so the estimate stays at 0%."
+  "meta_reflection": "The snapshot shows active compute on one GPU and therefore does not support a compute-idle defect, but it cannot explain the task's phase costs. Batching is the clearest throughput change suggested by the evidence; milestone-wide savings remain unmeasured, so the estimate stays at 0%."
 }
