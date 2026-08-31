@@ -8431,8 +8431,9 @@ It SHALL trigger rollback with one controlled harmful update. Rollback SHALL
 restore prior bytes, retrievals, route action, and metrics. Attack evidence
 SHALL remain in the artifact.
 
-The artifact SHALL include `field_principles`, `inference_substrate`,
-`duration_s`, `random_seed`, `reproducibility_checksum`,
+The artifact SHALL include `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`,
 `source_artifact_hashes`, `rows`, `cold_recomputed_metrics`,
 `headline_differences`, `credited_factor_count`,
 `factors_with_changed_action_witness`, `retrieval_disable_effects`,
@@ -8534,8 +8535,9 @@ reads, 721 compositional online action changes, 3,189 total commits, and all
 stored order summaries. These values are identity checks, not new scientific
 claims.
 
-The artifact SHALL include `field_principles`, `inference_substrate`,
-`duration_s`, `random_seed`, `reproducibility_checksum`,
+The artifact SHALL include `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`,
 `source_artifact_hashes`, `frozen_manifest`, `arm_definitions`, `order_hashes`,
 `checkpoint_receipts`, `transaction_schema`, `transaction_receipts`,
 `committed_transaction_count`, `parent_byte_snapshot_count`,
@@ -8597,3 +8599,131 @@ And `gate_check_summary` SHALL name the failed check and observed value.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-CL-6797 and SCENARIO-CL-6797-* | Planned: `python/carnot/experiment_6797_canonical_transaction_byte_replay.py`; `scripts/experiments/experiment_6797_canonical_transaction_byte_replay.py`; terminal artifact `results/experiment_6797_canonical_transaction_byte_replay.json`. | Planned: `tests/python/test_experiment_6797_canonical_transaction_byte_replay.py`. |
+
+## REQ-CL-6798: Byte-Grounded CSL Causal And Safety Cold Audit
+
+Given Exp6797 supplies canonical parent and new state bytes for each committed
+transaction,
+When Exp6798 runs for execution date 20260831,
+Then it SHALL audit the complete replay in a fresh deterministic CPU process
+And it SHALL not import Exp6797 or Exp6791 producer code
+And it SHALL write
+`results/experiment_6798_csl_causal_safety_byte_audit.json`.
+
+Before replay, Exp6798 SHALL require
+`transaction_byte_snapshot_fixture_ready=true`, the exact Exp6797 artifact
+hash, its exact Exp6790 and Exp6791 source hashes, 4,800 unique rows, five
+order hashes, 3,189 committed transactions, 3,189 parent snapshots, 3,189 new
+snapshots, and 3,189 matching byte hashes. One failed check SHALL stop the
+audit. The artifact SHALL use a `complete_blocked_*` status and verdict. Its
+`rows` and `chain_replay_receipts` SHALL be empty. Its `gate_check_summary`
+SHALL keep every failed check with expected and observed values. A reduced
+audit is not permitted.
+
+Exp6798 SHALL implement its own canonical serializer, hash functions, state
+decoder, route evaluator, factor retrieval, route selector, metric reducer,
+and confidence calculation. It SHALL decode each committed parent and new
+snapshot. It SHALL verify both hashes. It SHALL verify each isolated chain.
+It SHALL replay all 4,800 actions from decoded state and legal observations.
+It SHALL recompute exact route success, route cost, utility, writes, later
+reads, action changes, held-future effects, retention, hard-case harm, action
+support, and the five-order confidence lower bound from rows and exact
+receipts. Producer headline values SHALL be comparison inputs only.
+
+For each credited factor, Exp6798 SHALL replay a later event from its parent
+state bytes with only that factor removed. It SHALL also replay that event
+with retrieval disabled. Credit SHALL require a changed route and a nonzero
+exact-receipt utility difference. Writes without both witnesses SHALL remain
+uncredited and SHALL be reported separately.
+
+Exp6798 SHALL inject future receipts, poisoned factors, stale parents,
+valid bytes owned by the wrong arm, capacity pressure, eviction reorder, byte
+corruption, and duplicate commits. No poisoned or invalid factor SHALL enter
+active state or change an action. Capacity pressure SHALL emit eviction
+receipts. Exp6798 SHALL restart at every preregistered transaction boundary
+and compare state bytes and next actions. Retention or hard-case harm SHALL
+trigger rollback. Rollback SHALL restore the declared parent bytes and action.
+
+The artifact SHALL include `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `source_artifact_hashes`,
+`transaction_byte_counts`,
+`chain_replay_receipts`, `cold_recomputed_metrics`,
+`headline_differences`, `factors_with_changed_action_witness`,
+`credited_factor_count`, `retrieval_disable_effects`,
+`poison_attack_results`, `admitted_poison_count`,
+`influenced_poison_count`, `capacity_eviction_receipts`,
+`restart_byte_identity`, `restart_action_identity`,
+`rollback_byte_identity`, `rollback_action_identity`,
+`retention_after_phase`, `hard_case_harm_after_phase`, `rows`,
+`source_verdict_supported`, `csl_causal_audit_completed`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `inference_substrate` SHALL equal
+`independent deterministic CPU byte replay, no LLM`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL use only
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL start with an approved terminal prefix.
+
+`csl_causal_audit_completed` SHALL be true after the full audit even when the
+effect is null. A positive result SHALL require every source, chain, replay,
+causal, safety, capacity, restart, rollback, retention, and hard-case gate to
+pass. A complete replay with no credited effect SHALL use `null`. A source
+contradiction, future leakage, admitted poison, influenced poison, byte
+corruption, or chain corruption SHALL use `disqualified`.
+
+### SCENARIO-CL-6798-PRECONDITIONS: Missing Snapshot Evidence Stops Replay
+
+Given one fixture flag, hash, row, order, commit, snapshot, or byte hash is
+missing,
+When Exp6798 evaluates preconditions,
+Then it SHALL write a complete blocked artifact with no replay rows
+And every failed check SHALL keep its expected and observed values.
+
+### SCENARIO-CL-6798-SERIALIZER: Independent Bytes Round-Trip Exactly
+
+Given a canonical state snapshot,
+When Exp6798 decodes and serializes it without producer code,
+Then the new bytes SHALL equal the stored bytes
+And its SHA-256 hash SHALL equal the stored hash.
+
+### SCENARIO-CL-6798-CHAIN-REPLAY: Every State And Action Replays
+
+Given all committed transactions and legal event observations,
+When Exp6798 reconstructs each arm-order chain,
+Then every parent SHALL extend the prior new state
+And every replayed action and exact utility SHALL match its row.
+
+### SCENARIO-CL-6798-CAUSAL-CREDIT: Credit Needs Two Exact Witnesses
+
+Given one stored factor is read by a later event,
+When Exp6798 removes only that factor from the later parent bytes,
+Then it SHALL credit the factor only if the action changes
+And the exact receipt gives a nonzero utility difference.
+
+### SCENARIO-CL-6798-ATTACKS: Invalid State Cannot Enter Or Influence
+
+Given each preregistered leakage, poison, stale, ownership, capacity, reorder,
+corruption, and duplicate attack,
+When Exp6798 applies its independent admission and chain checks,
+Then invalid state SHALL be rejected without changing accepted bytes or action.
+
+### SCENARIO-CL-6798-RESTART-ROLLBACK: Recovery Restores Bytes And Actions
+
+Given every preregistered restart boundary and one harm-triggering capacity
+phase,
+When Exp6798 restarts and rolls back,
+Then restart and rollback bytes SHALL be exact
+And the next selected actions SHALL be exact.
+
+### SCENARIO-CL-6798-TERMINAL: Completion Is Independent Of Effect Sign
+
+Given all replay and attack rows complete,
+When Exp6798 classifies the result,
+Then `csl_causal_audit_completed` SHALL be true for positive or null effects
+And positive SHALL require all causal and safety gates.
+
+## Implementation Status (REQ-CL-6798)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6798 and SCENARIO-CL-6798-* | Implemented: `python/carnot/experiment_6798_csl_causal_safety_byte_audit.py`; `scripts/experiments/experiment_6798_csl_causal_safety_byte_audit.py`; terminal artifact `results/experiment_6798_csl_causal_safety_byte_audit.json`. | Implemented: `tests/python/test_experiment_6798_csl_causal_safety_byte_audit.py`; 658/658 statements covered. |

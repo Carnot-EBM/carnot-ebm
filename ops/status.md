@@ -9195,3 +9195,20 @@ fail-open on a fail-closed gate). Branch worktree-agent-a092d79bdf0704db3,
 NOT merged to main per coordinator hold. Next: coordinator review, then
 merge; first selfparse rows with tool_gap_events feed
 scripts/arc_tool_gap_refine.py.
+
+## 2026-08-31 — Exp6798 byte-grounded CSL cold audit
+
+Exp6798 now completes positively from independent canonical-byte replay. The
+cold reducer exactly matches all Exp6791 headline metrics after correcting the
+hard/challenge partition and fixed-top-k factor counterfactual semantics. It
+credits 116 factors with changed-action and nonzero exact-utility witnesses,
+replays 4,800 action rows, rejects all eight attacks, admits and influences
+zero poison, and preserves restart and rollback byte/action identity.
+
+The 542 MB Exp6797 receipt fixture is split in a child process and streamed
+from a temporary JSONL sidecar, keeping per-test RSS below the 500 MB watchdog
+without a skip marker. The focused suite passes 17 tests and covers all 658
+module statements. The applicable E2E is the experiment runner plus artifact
+validation; the training, PyO3, cross-language serialization, packaged
+generate/verify/repair, hardware, and SMGI scenarios do not apply to this
+deterministic CPU evidence replay. `scripts/research_conductor.py` is unchanged.
