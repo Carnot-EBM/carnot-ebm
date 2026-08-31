@@ -59878,3 +59878,85 @@ models used, live invocation, gate summary, rows, and checksum
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6782 and SCENARIO-REPORT-6782-* | Planned (`python/carnot/experiment_6782_sequential_sota_runtime_admission.py`, `scripts/experiments/experiment_6782_sequential_sota_runtime_admission.py`) | Planned (`tests/python/test_experiment_6782_sequential_sota_runtime_admission.py`) |
+
+### REQ-REPORT-6823: V595 Branch Disposition SHALL Preserve Every Planned State
+
+Exp6823 SHALL synthesize milestone `2026.08.595` without running an
+experiment or invoking an LLM. It SHALL compare the four-phase design with the
+executed roadmap. It SHALL preserve exactly fourteen task identities from
+Exp6810 through Exp6823. Each identity SHALL have one task row. A missing,
+malformed, blocked, disqualified, partial, or adversarially flagged artifact
+SHALL remain explicit. Such evidence SHALL not support a positive claim.
+
+The synthesis SHALL hash the design, roadmap, four owned specifications, both
+validator sources, and every exact expected artifact path from Exp6810 through
+Exp6822. A missing path SHALL have a null hash and an explicit state. The
+manifest comparison SHALL record differences in phases, task IDs, gates,
+deliverables, models, and the owned requirement map.
+
+The synthesis SHALL recompute eligible hard-safety, utility, transport,
+memory-causality, portability, and live-progress headlines from source rows.
+It SHALL keep these evidence classes separate. It SHALL emit one branch row
+for the selective arbiter, verified route memory, and live ARC. It SHALL not
+average, vote, or pool branch metrics.
+
+Each branch SHALL receive one disposition from `adopt`, `narrow`, `retire`, or
+`blocked`. Adoption SHALL require eligible positive producer evidence and its
+independent cold audit. A clean null SHALL narrow or retire the branch. A
+missing audit, resource block, invalid artifact, or excluded flagged result
+SHALL block the affected branch.
+
+The artifact SHALL be written atomically to
+`results/experiment_6823_v595_branch_disposition.json`. It SHALL include
+`field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `source_artifact_hashes`, `roadmap_identity`,
+`contract_owner_map`, `rows`, `task_count`, `terminal_class_counts`,
+`gate_check_summary`, `adversarial_findings`, `row_recomputed_claims`,
+`manifest_comparison`, `selective_arbiter_disposition`,
+`verified_route_memory_disposition`, `live_arc_disposition`,
+`disposition_enum`, `solve_claim`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. The checksum SHALL bind inputs, rows, commands, and output.
+It SHALL exclude measured duration and its own value. `task_count` SHALL equal
+fourteen. `solve_claim` and `verifier_is_oracle` SHALL be false.
+
+#### SCENARIO-REPORT-6823-IDENTITY: Fourteen Tasks Stay Visible
+
+**Given** the V595 design and executed roadmap
+**When** Exp6823 builds task rows
+**Then** Exp6810 through Exp6823 each appear once
+**And** every missing or invalid exact path keeps its own state and hash.
+
+**Spec traces:** REQ-REPORT-6823, REQ-HARNESS-008
+
+#### SCENARIO-REPORT-6823-ELIGIBILITY: Excluded Evidence Cannot Become Positive
+
+**Given** blocked, disqualified, partial, or flagged source evidence
+**When** Exp6823 recomputes claims from rows
+**Then** the evidence remains in its task row and validator findings
+**And** it does not enter a positive branch reducer.
+
+**Spec traces:** REQ-REPORT-6823
+
+#### SCENARIO-REPORT-6823-MANIFEST: Design Differences Stay Explicit
+
+**Given** the four design phases and the executed task manifest
+**When** Exp6823 compares IDs, gates, deliverables, models, and owners
+**Then** each mismatch records its expected and observed value
+**And** no mismatch prevents the ungated synthesis artifact.
+
+**Spec traces:** REQ-REPORT-6823
+
+#### SCENARIO-REPORT-6823-DISPOSITION: Every Branch Closes Independently
+
+**Given** each branch has producer and cold-audit evidence requirements
+**When** Exp6823 issues the final decisions
+**Then** each branch receives one closed disposition
+**And** absent independent evidence produces `blocked` only for that branch.
+
+**Spec traces:** REQ-REPORT-6823
+
+## Implementation Status (REQ-REPORT-6823)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6823 and SCENARIO-REPORT-6823-* | Implemented (`python/carnot/experiment_6823_v595_branch_disposition.py`, `scripts/experiments/experiment_6823_v595_branch_disposition.py`, `results/experiment_6823_v595_branch_disposition.json`) | Implemented (`tests/python/test_experiment_6823_v595_branch_disposition.py`; 100% scoped statement coverage) |

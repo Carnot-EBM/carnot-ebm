@@ -1,0 +1,1395 @@
+{
+  "adversarial_findings": [
+    {
+      "detail": "duration_s=0.02710077300434932 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "task_id": "exp6810",
+      "validator": "adversarial"
+    },
+    {
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "task_id": "exp6810",
+      "validator": "adversarial"
+    },
+    {
+      "detail": "inference_substrate='deterministic CPU automaton, no LLM' matches no duration-floor recognizer, so duration_s=1.480705920024775 was NOT checked against any floor. A declaration is an affirmative claim about what ran; an unrecognized one is unverified, not verified. Add a recognizer plus floor for this substrate, or correct the declaration to an existing one.",
+      "kind": "SUBSTRATE_HAS_NO_DURATION_FLOOR",
+      "severity": "warn",
+      "task_id": "exp6811",
+      "validator": "adversarial"
+    }
+  ],
+  "contract_owner_map": {
+    "exact priority arbiter": {
+      "artifact_path": "results/experiment_6813_selective_priority_arbiter_ab.json",
+      "authority_boundary": "transition evaluator remains authoritative.",
+      "failure_behavior": "complete_blocked_selective_priority_arbiter_ab",
+      "gate_field": "selective_arbiter_ab_completed",
+      "implementing_task": "exp6813-selective-priority-arbiter-ab",
+      "requirement": "REQ-CONSTRAINT-6810",
+      "spec_path": "openspec/capabilities/constraint-verification/spec.md"
+    },
+    "live stepwise strategy path": {
+      "artifact_path": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
+      "authority_boundary": "Exact next-action outcomes",
+      "failure_behavior": "complete_blocked_arc_stepwise_strategy_accrual",
+      "gate_field": "stepwise_strategy_accrual_ready",
+      "implementing_task": "exp6819-arc-stepwise-strategy-accrual",
+      "requirement": "REQ-AGENTIC-6810-2",
+      "spec_path": "openspec/capabilities/agentic-harness/spec.md"
+    },
+    "operational-obligation interface": {
+      "artifact_path": "results/experiment_6811_operational_obligation_automaton_v3.json",
+      "authority_boundary": "The exact post-action receipts remain",
+      "failure_behavior": "complete_blocked_operational_obligation_automaton_v3",
+      "gate_field": "operational_automaton_fixture_ready",
+      "implementing_task": "exp6811-operational-obligation-automaton-v3",
+      "requirement": "REQ-AGENTIC-6810-1",
+      "spec_path": "openspec/capabilities/agentic-harness/spec.md"
+    },
+    "transactional verified memory": {
+      "artifact_path": "results/experiment_6816_residual_pressure_route_learning_ab.json",
+      "authority_boundary": "The exact local receipt remains authoritative.",
+      "failure_behavior": "complete_blocked_residual_pressure_route_learning_ab",
+      "gate_field": "residual_route_learning_completed",
+      "implementing_task": "exp6816-residual-pressure-route-learning-ab",
+      "requirement": "REQ-CL-6810",
+      "spec_path": "openspec/capabilities/continuous-learning/spec.md"
+    }
+  },
+  "disposition_enum": [
+    "adopt",
+    "narrow",
+    "retire",
+    "blocked"
+  ],
+  "duration_s": 0.947960504970979,
+  "field_principles": {
+    "adversarial_findings": "Validator findings remain visible and cannot be laundered away.",
+    "contract_owner_map": "Existing specifications keep authority with the contract that owns it.",
+    "disposition_enum": "A closed decision set prevents an ambiguous branch outcome.",
+    "duration_s": "Measured wall time distinguishes a real audit from an invented duration.",
+    "field_principles": "Each field explains why it exists, so schema compliance remains meaningful.",
+    "gate_check_summary": "Expected and observed values make incomplete evidence diagnosable.",
+    "honest_verdict": "A terminal and bounded sentence states what the available evidence supports.",
+    "inference_substrate": "The substrate proves that this task only aggregates checked-in evidence.",
+    "live_arc_disposition": "Live progress receives a decision independent of transport readiness.",
+    "manifest_comparison": "Design differences remain explicit even though this synthesis is ungated.",
+    "random_seed": "A fixed audit seed makes any ordered reduction repeatable.",
+    "reproducibility_checksum": "One checksum binds the inputs, rows, commands, and output.",
+    "roadmap_identity": "The milestone and range prevent evidence from another plan entering this audit.",
+    "row_recomputed_claims": "Headlines come from eligible source rows instead of copied prose.",
+    "rows": "Task and branch rows let a reader audit every inclusion and decision.",
+    "selective_arbiter_disposition": "The arbiter receives a decision independent of memory and ARC.",
+    "solve_claim": "False prevents this synthesis from becoming a game-level solve claim.",
+    "source_artifact_hashes": "Exact hashes stop later file changes from silently changing this disposition.",
+    "task_count": "The fixed count prevents a missing task from disappearing from the denominator.",
+    "terminal_class_counts": "Separate counts prevent blocked or flagged work from becoming success.",
+    "verdict_class": "The closed class states the evidence limit of the synthesis itself.",
+    "verified_route_memory_disposition": "Memory causality and portability receive their own decision.",
+    "verifier_is_oracle": "False keeps exact environment outcomes as the correctness authority."
+  },
+  "gate_check_summary": [
+    {
+      "check": "eligible_terminal_evidence",
+      "expected": "positive or null clean terminal evidence",
+      "observed": "flagged",
+      "task_id": "exp6810"
+    },
+    {
+      "check": "eligible_terminal_evidence",
+      "expected": "positive or null clean terminal evidence",
+      "observed": "flagged",
+      "task_id": "exp6811"
+    },
+    {
+      "check": "exp6814.exact_terminal_artifact",
+      "expected": "results/experiment_6814_selective_priority_arbiter_cold_audit.json",
+      "observed": "file_missing",
+      "task_id": "exp6814"
+    },
+    {
+      "check": "exp6815.exact_terminal_artifact",
+      "expected": "results/experiment_6815_verified_memory_operation_stream.json",
+      "observed": "file_missing",
+      "task_id": "exp6815"
+    },
+    {
+      "check": "exp6816.exact_terminal_artifact",
+      "expected": "results/experiment_6816_residual_pressure_route_learning_ab.json",
+      "observed": "file_missing",
+      "task_id": "exp6816"
+    },
+    {
+      "check": "exp6817.exact_terminal_artifact",
+      "expected": "results/experiment_6817_route_memory_portability.json",
+      "observed": "file_missing",
+      "task_id": "exp6817"
+    },
+    {
+      "check": "exp6818.exact_terminal_artifact",
+      "expected": "results/experiment_6818_route_memory_global_cold_audit.json",
+      "observed": "file_missing",
+      "task_id": "exp6818"
+    },
+    {
+      "check": "exp6819.exact_terminal_artifact",
+      "expected": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
+      "observed": "file_missing",
+      "task_id": "exp6819"
+    },
+    {
+      "check": "exp6820.exact_terminal_artifact",
+      "expected": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
+      "observed": "file_missing",
+      "task_id": "exp6820"
+    },
+    {
+      "check": "exp6821.exact_terminal_artifact",
+      "expected": "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json",
+      "observed": "file_missing",
+      "task_id": "exp6821"
+    },
+    {
+      "check": "exp6822.exact_terminal_artifact",
+      "expected": "results/experiment_6822_arc_causal_adoption_audit.json",
+      "observed": "file_missing",
+      "task_id": "exp6822"
+    }
+  ],
+  "honest_verdict": "complete_partial: V595 preserved every available terminal row; one or more branches remain blocked by named missing or excluded independent evidence.",
+  "inference_substrate": "CPU aggregation from upstream artifacts, no LLM",
+  "live_arc_disposition": {
+    "branch": "live_arc",
+    "disposition": "blocked",
+    "failed_checks": [
+      {
+        "check": "live_arc.exp6819.eligible_terminal_evidence",
+        "expected": "eligible positive or null terminal evidence",
+        "observed": "missing"
+      },
+      {
+        "check": "live_arc.exp6820.eligible_terminal_evidence",
+        "expected": "eligible positive or null terminal evidence",
+        "observed": "missing"
+      },
+      {
+        "check": "live_arc.exp6821.eligible_terminal_evidence",
+        "expected": "eligible positive or null terminal evidence",
+        "observed": "missing"
+      },
+      {
+        "check": "live_arc.exp6822.eligible_terminal_evidence",
+        "expected": "eligible positive or null terminal evidence",
+        "observed": "missing"
+      }
+    ],
+    "independent_cold_audit_required": true,
+    "next_action": "Keep the branch blocked until the named terminal evidence exists.",
+    "positive_gate_recomputed": false,
+    "required_tasks": [
+      "exp6819",
+      "exp6820",
+      "exp6821",
+      "exp6822"
+    ],
+    "source_verdict_classes": [
+      "missing",
+      "missing",
+      "missing",
+      "missing"
+    ]
+  },
+  "manifest_comparison": {
+    "deliverables": [
+      {
+        "design": "results/experiment_6810_v595_contract_manifest_preflight.json",
+        "executed": "results/experiment_6810_v595_contract_manifest_preflight.json",
+        "expected": "results/experiment_6810_v595_contract_manifest_preflight.json",
+        "matches": true,
+        "task_id": "exp6810"
+      },
+      {
+        "design": "results/experiment_6811_operational_obligation_automaton_v3.json",
+        "executed": "results/experiment_6811_operational_obligation_automaton_v3.json",
+        "expected": "results/experiment_6811_operational_obligation_automaton_v3.json",
+        "matches": true,
+        "task_id": "exp6811"
+      },
+      {
+        "design": "results/experiment_6812_sota_operational_handoff_corpus_v2.json",
+        "executed": "results/experiment_6812_sota_operational_handoff_corpus_v2.json",
+        "expected": "results/experiment_6812_sota_operational_handoff_corpus_v2.json",
+        "matches": true,
+        "task_id": "exp6812"
+      },
+      {
+        "design": "results/experiment_6813_selective_priority_arbiter_ab.json",
+        "executed": "results/experiment_6813_selective_priority_arbiter_ab.json",
+        "expected": "results/experiment_6813_selective_priority_arbiter_ab.json",
+        "matches": true,
+        "task_id": "exp6813"
+      },
+      {
+        "design": "results/experiment_6814_selective_priority_arbiter_cold_audit.json",
+        "executed": "results/experiment_6814_selective_priority_arbiter_cold_audit.json",
+        "expected": "results/experiment_6814_selective_priority_arbiter_cold_audit.json",
+        "matches": true,
+        "task_id": "exp6814"
+      },
+      {
+        "design": "results/experiment_6815_verified_memory_operation_stream.json",
+        "executed": "results/experiment_6815_verified_memory_operation_stream.json",
+        "expected": "results/experiment_6815_verified_memory_operation_stream.json",
+        "matches": true,
+        "task_id": "exp6815"
+      },
+      {
+        "design": "results/experiment_6816_residual_pressure_route_learning_ab.json",
+        "executed": "results/experiment_6816_residual_pressure_route_learning_ab.json",
+        "expected": "results/experiment_6816_residual_pressure_route_learning_ab.json",
+        "matches": true,
+        "task_id": "exp6816"
+      },
+      {
+        "design": "results/experiment_6817_route_memory_portability.json",
+        "executed": "results/experiment_6817_route_memory_portability.json",
+        "expected": "results/experiment_6817_route_memory_portability.json",
+        "matches": true,
+        "task_id": "exp6817"
+      },
+      {
+        "design": "results/experiment_6818_route_memory_global_cold_audit.json",
+        "executed": "results/experiment_6818_route_memory_global_cold_audit.json",
+        "expected": "results/experiment_6818_route_memory_global_cold_audit.json",
+        "matches": true,
+        "task_id": "exp6818"
+      },
+      {
+        "design": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
+        "executed": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
+        "expected": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
+        "matches": true,
+        "task_id": "exp6819"
+      },
+      {
+        "design": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
+        "executed": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
+        "expected": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
+        "matches": true,
+        "task_id": "exp6820"
+      },
+      {
+        "design": "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json",
+        "executed": "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json",
+        "expected": "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json",
+        "matches": true,
+        "task_id": "exp6821"
+      },
+      {
+        "design": "results/experiment_6822_arc_causal_adoption_audit.json",
+        "executed": "results/experiment_6822_arc_causal_adoption_audit.json",
+        "expected": "results/experiment_6822_arc_causal_adoption_audit.json",
+        "matches": true,
+        "task_id": "exp6822"
+      },
+      {
+        "design": "results/experiment_6823_v595_branch_disposition.json",
+        "executed": "results/experiment_6823_v595_branch_disposition.json",
+        "expected": "results/experiment_6823_v595_branch_disposition.json",
+        "matches": true,
+        "task_id": "exp6823"
+      }
+    ],
+    "design_phase_count": 4,
+    "design_task_count": 14,
+    "differences": [],
+    "executed_task_count": 14,
+    "gates": [
+      {
+        "executed": [],
+        "expected": [],
+        "matches": true,
+        "task_id": "exp6810"
+      },
+      {
+        "executed": [
+          [
+            "exp6810",
+            "v595_contract_map_ready"
+          ]
+        ],
+        "expected": [
+          [
+            "exp6810",
+            "v595_contract_map_ready"
+          ]
+        ],
+        "matches": true,
+        "task_id": "exp6811"
+      },
+      {
+        "executed": [
+          [
+            "exp6811",
+            "operational_automaton_fixture_ready"
+          ]
+        ],
+        "expected": [
+          [
+            "exp6811",
+            "operational_automaton_fixture_ready"
+          ]
+        ],
+        "matches": true,
+        "task_id": "exp6812"
+      },
+      {
+        "executed": [
+          [
+            "exp6812",
+            "operational_handoff_corpus_ready"
+          ]
+        ],
+        "expected": [
+          [
+            "exp6812",
+            "operational_handoff_corpus_ready"
+          ]
+        ],
+        "matches": true,
+        "task_id": "exp6813"
+      },
+      {
+        "executed": [
+          [
+            "exp6813",
+            "selective_arbiter_ab_completed"
+          ]
+        ],
+        "expected": [
+          [
+            "exp6813",
+            "selective_arbiter_ab_completed"
+          ]
+        ],
+        "matches": true,
+        "task_id": "exp6814"
+      },
+      {
+        "executed": [
+          [
+            "exp6812",
+            "operational_handoff_corpus_ready"
+          ],
+          [
+            "exp6814",
+            "selective_arbiter_audit_completed"
+          ]
+        ],
+        "expected": [
+          [
+            "exp6812",
+            "operational_handoff_corpus_ready"
+          ],
+          [
+            "exp6814",
+            "selective_arbiter_audit_completed"
+          ]
+        ],
+        "matches": true,
+        "task_id": "exp6815"
+      },
+      {
+        "executed": [
+          [
+            "exp6815",
+            "verified_memory_stream_ready"
+          ]
+        ],
+        "expected": [
+          [
+            "exp6815",
+            "verified_memory_stream_ready"
+          ]
+        ],
+        "matches": true,
+        "task_id": "exp6816"
+      },
+      {
+        "executed": [
+          [
+            "exp6816",
+            "residual_route_learning_completed"
+          ]
+        ],
+        "expected": [
+          [
+            "exp6816",
+            "residual_route_learning_completed"
+          ]
+        ],
+        "matches": true,
+        "task_id": "exp6817"
+      },
+      {
+        "executed": [
+          [
+            "exp6816",
+            "residual_route_learning_completed"
+          ],
+          [
+            "exp6817",
+            "route_memory_portability_completed"
+          ]
+        ],
+        "expected": [
+          [
+            "exp6816",
+            "residual_route_learning_completed"
+          ],
+          [
+            "exp6817",
+            "route_memory_portability_completed"
+          ]
+        ],
+        "matches": true,
+        "task_id": "exp6818"
+      },
+      {
+        "executed": [
+          [
+            "exp6811",
+            "operational_automaton_fixture_ready"
+          ]
+        ],
+        "expected": [
+          [
+            "exp6811",
+            "operational_automaton_fixture_ready"
+          ]
+        ],
+        "matches": true,
+        "task_id": "exp6819"
+      },
+      {
+        "executed": [
+          [
+            "exp6819",
+            "stepwise_strategy_accrual_ready"
+          ]
+        ],
+        "expected": [
+          [
+            "exp6819",
+            "stepwise_strategy_accrual_ready"
+          ]
+        ],
+        "matches": true,
+        "task_id": "exp6820"
+      },
+      {
+        "executed": [
+          [
+            "exp6820",
+            "tool_gap_obligation_transport_ready"
+          ],
+          [
+            "exp6814",
+            "selective_arbiter_audit_completed"
+          ]
+        ],
+        "expected": [
+          [
+            "exp6820",
+            "tool_gap_obligation_transport_ready"
+          ],
+          [
+            "exp6814",
+            "selective_arbiter_audit_completed"
+          ]
+        ],
+        "matches": true,
+        "task_id": "exp6821"
+      },
+      {
+        "executed": [
+          [
+            "exp6819",
+            "stepwise_strategy_accrual_ready"
+          ],
+          [
+            "exp6820",
+            "tool_gap_obligation_transport_ready"
+          ],
+          [
+            "exp6821",
+            "actions_to_progress_ab_completed"
+          ]
+        ],
+        "expected": [
+          [
+            "exp6819",
+            "stepwise_strategy_accrual_ready"
+          ],
+          [
+            "exp6820",
+            "tool_gap_obligation_transport_ready"
+          ],
+          [
+            "exp6821",
+            "actions_to_progress_ab_completed"
+          ]
+        ],
+        "matches": true,
+        "task_id": "exp6822"
+      },
+      {
+        "executed": [],
+        "expected": [],
+        "matches": true,
+        "task_id": "exp6823"
+      }
+    ],
+    "matches": true,
+    "models": [
+      {
+        "agent_model": "opus",
+        "executed_prompt_models": [],
+        "expected_research_models": [],
+        "matches": true,
+        "task_id": "exp6810"
+      },
+      {
+        "agent_model": "gpt-5.6-sol",
+        "executed_prompt_models": [],
+        "expected_research_models": [],
+        "matches": true,
+        "task_id": "exp6811"
+      },
+      {
+        "agent_model": "opus",
+        "executed_prompt_models": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "expected_research_models": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "matches": true,
+        "task_id": "exp6812"
+      },
+      {
+        "agent_model": "gpt-5.6-sol",
+        "executed_prompt_models": [],
+        "expected_research_models": [],
+        "matches": true,
+        "task_id": "exp6813"
+      },
+      {
+        "agent_model": "gpt-5.6-sol",
+        "executed_prompt_models": [],
+        "expected_research_models": [],
+        "matches": true,
+        "task_id": "exp6814"
+      },
+      {
+        "agent_model": "gpt-5.6-sol",
+        "executed_prompt_models": [],
+        "expected_research_models": [],
+        "matches": true,
+        "task_id": "exp6815"
+      },
+      {
+        "agent_model": "gpt-5.6-sol",
+        "executed_prompt_models": [],
+        "expected_research_models": [],
+        "matches": true,
+        "task_id": "exp6816"
+      },
+      {
+        "agent_model": "gpt-5.6-sol",
+        "executed_prompt_models": [],
+        "expected_research_models": [],
+        "matches": true,
+        "task_id": "exp6817"
+      },
+      {
+        "agent_model": "gpt-5.6-sol",
+        "executed_prompt_models": [],
+        "expected_research_models": [],
+        "matches": true,
+        "task_id": "exp6818"
+      },
+      {
+        "agent_model": "opus",
+        "executed_prompt_models": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "expected_research_models": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "matches": true,
+        "task_id": "exp6819"
+      },
+      {
+        "agent_model": "opus",
+        "executed_prompt_models": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "expected_research_models": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "matches": true,
+        "task_id": "exp6820"
+      },
+      {
+        "agent_model": "opus",
+        "executed_prompt_models": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "expected_research_models": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "matches": true,
+        "task_id": "exp6821"
+      },
+      {
+        "agent_model": "gpt-5.6-sol",
+        "executed_prompt_models": [],
+        "expected_research_models": [],
+        "matches": true,
+        "task_id": "exp6822"
+      },
+      {
+        "agent_model": "gpt-5.6-sol",
+        "executed_prompt_models": [],
+        "expected_research_models": [],
+        "matches": true,
+        "task_id": "exp6823"
+      }
+    ],
+    "owned_req_map_expected": {
+      "exact priority arbiter": {
+        "gate_field": "selective_arbiter_ab_completed",
+        "implementing_task": "exp6813-selective-priority-arbiter-ab",
+        "requirement": "REQ-CONSTRAINT-6810",
+        "spec_path": "openspec/capabilities/constraint-verification/spec.md"
+      },
+      "live stepwise strategy path": {
+        "gate_field": "stepwise_strategy_accrual_ready",
+        "implementing_task": "exp6819-arc-stepwise-strategy-accrual",
+        "requirement": "REQ-AGENTIC-6810-2",
+        "spec_path": "openspec/capabilities/agentic-harness/spec.md"
+      },
+      "operational-obligation interface": {
+        "gate_field": "operational_automaton_fixture_ready",
+        "implementing_task": "exp6811-operational-obligation-automaton-v3",
+        "requirement": "REQ-AGENTIC-6810-1",
+        "spec_path": "openspec/capabilities/agentic-harness/spec.md"
+      },
+      "transactional verified memory": {
+        "gate_field": "residual_route_learning_completed",
+        "implementing_task": "exp6816-residual-pressure-route-learning-ab",
+        "requirement": "REQ-CL-6810",
+        "spec_path": "openspec/capabilities/continuous-learning/spec.md"
+      }
+    },
+    "owned_req_map_observed": {
+      "exact priority arbiter": {
+        "artifact_path": "results/experiment_6813_selective_priority_arbiter_ab.json",
+        "authority_boundary": "transition evaluator remains authoritative.",
+        "failure_behavior": "complete_blocked_selective_priority_arbiter_ab",
+        "gate_field": "selective_arbiter_ab_completed",
+        "implementing_task": "exp6813-selective-priority-arbiter-ab",
+        "requirement": "REQ-CONSTRAINT-6810",
+        "spec_path": "openspec/capabilities/constraint-verification/spec.md"
+      },
+      "live stepwise strategy path": {
+        "artifact_path": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
+        "authority_boundary": "Exact next-action outcomes",
+        "failure_behavior": "complete_blocked_arc_stepwise_strategy_accrual",
+        "gate_field": "stepwise_strategy_accrual_ready",
+        "implementing_task": "exp6819-arc-stepwise-strategy-accrual",
+        "requirement": "REQ-AGENTIC-6810-2",
+        "spec_path": "openspec/capabilities/agentic-harness/spec.md"
+      },
+      "operational-obligation interface": {
+        "artifact_path": "results/experiment_6811_operational_obligation_automaton_v3.json",
+        "authority_boundary": "The exact post-action receipts remain",
+        "failure_behavior": "complete_blocked_operational_obligation_automaton_v3",
+        "gate_field": "operational_automaton_fixture_ready",
+        "implementing_task": "exp6811-operational-obligation-automaton-v3",
+        "requirement": "REQ-AGENTIC-6810-1",
+        "spec_path": "openspec/capabilities/agentic-harness/spec.md"
+      },
+      "transactional verified memory": {
+        "artifact_path": "results/experiment_6816_residual_pressure_route_learning_ab.json",
+        "authority_boundary": "The exact local receipt remains authoritative.",
+        "failure_behavior": "complete_blocked_residual_pressure_route_learning_ab",
+        "gate_field": "residual_route_learning_completed",
+        "implementing_task": "exp6816-residual-pressure-route-learning-ab",
+        "requirement": "REQ-CL-6810",
+        "spec_path": "openspec/capabilities/continuous-learning/spec.md"
+      }
+    }
+  },
+  "random_seed": 6823,
+  "reproducibility_checksum": "sha256:f00095ee5c6d8b5aef5890fea9c5bd2aa9c7419b5a23d528a68817e4ee71d832",
+  "roadmap_identity": {
+    "design_sha256": "sha256:4cf6f23dc1b36689122515835d8af69be80653430b6f2144db1071f6cb2c4f62",
+    "executed_roadmap_sha256": "sha256:cc0f206d5f367e49d1cca2b2282c3d8194968e03cb6341c35cb62e44a72b9ba8",
+    "execution_date": "20260831",
+    "first_experiment": 6810,
+    "last_experiment": 6823,
+    "milestone": "2026.08.595"
+  },
+  "row_recomputed_claims": {
+    "live_arc": {
+      "hard_safety": {
+        "false_intervention_count": 0,
+        "hard_violation_count": 0
+      },
+      "positive_gate": false,
+      "progress": {
+        "cause": "no_eligible_paired_rows",
+        "control_minus_treatment_actions": null,
+        "eligible_row_count": 0,
+        "pair_count": 0
+      },
+      "solve_claim": false,
+      "transport": {
+        "eligible_row_count": 0,
+        "ready": null
+      }
+    },
+    "selective_arbiter": {
+      "eligible_row_count": 288,
+      "false_intervention": {
+        "flat_reject_retry": {
+          "denominator": 28,
+          "numerator": 18,
+          "rate": 0.6428571428571429
+        },
+        "selective_priority": {
+          "denominator": 28,
+          "numerator": 0,
+          "rate": 0.0
+        }
+      },
+      "hard_safety": {
+        "flat_reject_retry": {
+          "denominator": 144,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "selective_priority": {
+          "denominator": 144,
+          "numerator": 0,
+          "rate": 0.0
+        }
+      },
+      "harmful_selection": {
+        "flat_reject_retry": {
+          "denominator": 144,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "selective_priority": {
+          "denominator": 144,
+          "numerator": 0,
+          "rate": 0.0
+        }
+      },
+      "positive_gate": true,
+      "utility": {
+        "accepted_progress_by_arm": {
+          "flat_reject_retry": 0.06944444444444445,
+          "selective_priority": 0.19444444444444445
+        },
+        "flat_minus_selective_retry_delta": {
+          "cause": null,
+          "mean": 0.125,
+          "pair_count": 144
+        },
+        "paired_progress_delta": {
+          "cause": null,
+          "mean": 0.125,
+          "pair_count": 144
+        },
+        "retry_cost_by_arm": {
+          "flat_reject_retry": 0.9305555555555556,
+          "selective_priority": 0.8055555555555556
+        }
+      }
+    },
+    "verified_route_memory": {
+      "causality": {
+        "credited_writes": 0
+      },
+      "eligible_row_count": 0,
+      "portability": {
+        "eligible_row_count": 0,
+        "mean_by_arm": {},
+        "residual_minus_frozen": null
+      },
+      "positive_gate": false,
+      "safety": {
+        "fields": [
+          "support_harm",
+          "retention_harm",
+          "hard_case_harm"
+        ],
+        "harm_count": 0
+      },
+      "utility": {
+        "mean_by_arm": {},
+        "residual_minus_frozen": null
+      }
+    }
+  },
+  "rows": [
+    {
+      "adversarial_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6810_v595_contract_manifest_preflight.json",
+        "exp_id": "experiment_6810_v595_contract_manifest_preflight",
+        "flag_count": 2,
+        "flags": [
+          {
+            "detail": "duration_s=0.02710077300434932 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "gate_version": "43342df44fda3e22fbbfe67a9098637ae35dcfc98308d2d1834cc37754212541",
+        "honest_verdict": "complete: V595 owned contracts and active execution manifest agree",
+        "loaded": true,
+        "max_severity": 2,
+        "title": ""
+      },
+      "artifact_state": "present",
+      "eligible_for_positive_claim": false,
+      "exclusion_reason": "terminal_class=flagged",
+      "gate_check_summary": [],
+      "manifest_task_id": "exp6810-v595-contract-manifest-preflight",
+      "path": "results/experiment_6810_v595_contract_manifest_preflight.json",
+      "row_type": "task",
+      "row_verdict_report": {
+        "findings": [],
+        "status": "ok"
+      },
+      "source_row_count": 18,
+      "source_sha256": "sha256:f3a6b52a526123ad59d69eb9398fbe11278fd7e6798bed06f71e33887ea19687",
+      "source_verdict_class": "null",
+      "task_id": "exp6810",
+      "terminal_class": "flagged"
+    },
+    {
+      "adversarial_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6811_operational_obligation_automaton_v3.json",
+        "exp_id": "experiment_6811_operational_obligation_automaton_v3",
+        "flag_count": 1,
+        "flags": [
+          {
+            "detail": "inference_substrate='deterministic CPU automaton, no LLM' matches no duration-floor recognizer, so duration_s=1.480705920024775 was NOT checked against any floor. A declaration is an affirmative claim about what ran; an unrecognized one is unverified, not verified. Add a recognizer plus floor for this substrate, or correct the declaration to an existing one.",
+            "kind": "SUBSTRATE_HAS_NO_DURATION_FLOOR",
+            "severity": "warn"
+          }
+        ],
+        "gate_version": "43342df44fda3e22fbbfe67a9098637ae35dcfc98308d2d1834cc37754212541",
+        "honest_verdict": "complete: deterministic source-free operational-obligation fixture ready; no liv",
+        "loaded": true,
+        "max_severity": 1,
+        "title": ""
+      },
+      "artifact_state": "present",
+      "eligible_for_positive_claim": false,
+      "exclusion_reason": "terminal_class=flagged",
+      "gate_check_summary": [],
+      "manifest_task_id": "exp6811-operational-obligation-automaton-v3",
+      "path": "results/experiment_6811_operational_obligation_automaton_v3.json",
+      "row_type": "task",
+      "row_verdict_report": {
+        "findings": [],
+        "status": "ok"
+      },
+      "source_row_count": 1289,
+      "source_sha256": "sha256:8e776a3eb887cb0565af6ba0970c84ab54e2a196f4d1b738515071f8e7b3922f",
+      "source_verdict_class": "null",
+      "task_id": "exp6811",
+      "terminal_class": "flagged"
+    },
+    {
+      "adversarial_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6812_sota_operational_handoff_corpus_v2.json",
+        "exp_id": "6812",
+        "flag_count": 0,
+        "flags": [],
+        "gate_version": "43342df44fda3e22fbbfe67a9098637ae35dcfc98308d2d1834cc37754212541",
+        "honest_verdict": "complete: all 576 authentic rows are ready; direct typed preservation exceeds co",
+        "loaded": true,
+        "max_severity": -1,
+        "title": "SOTA operational handoff corpus v2"
+      },
+      "artifact_state": "present",
+      "eligible_for_positive_claim": true,
+      "exclusion_reason": null,
+      "gate_check_summary": [],
+      "manifest_task_id": "exp6812-sota-operational-handoff-corpus-v2",
+      "path": "results/experiment_6812_sota_operational_handoff_corpus_v2.json",
+      "row_type": "task",
+      "row_verdict_report": {
+        "findings": [],
+        "status": "ok"
+      },
+      "source_row_count": 576,
+      "source_sha256": "sha256:a830b416ef9243d7175a634effa8dd7b742642c90c3c2b89081d677a9b82d6ea",
+      "source_verdict_class": "positive",
+      "task_id": "exp6812",
+      "terminal_class": "positive"
+    },
+    {
+      "adversarial_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6813_selective_priority_arbiter_ab.json",
+        "exp_id": "6813",
+        "flag_count": 0,
+        "flags": [],
+        "gate_version": "43342df44fda3e22fbbfe67a9098637ae35dcfc98308d2d1834cc37754212541",
+        "honest_verdict": "complete: selective priority positive gate passed on held exact replay",
+        "loaded": true,
+        "max_severity": -1,
+        "title": "Selective priority arbiter A/B"
+      },
+      "artifact_state": "present",
+      "eligible_for_positive_claim": true,
+      "exclusion_reason": null,
+      "gate_check_summary": [],
+      "manifest_task_id": "exp6813-selective-priority-arbiter-ab",
+      "path": "results/experiment_6813_selective_priority_arbiter_ab.json",
+      "row_type": "task",
+      "row_verdict_report": {
+        "findings": [],
+        "status": "ok"
+      },
+      "source_row_count": 576,
+      "source_sha256": "sha256:57428383446edd81252cb04e02620d4ddf5451cf85bc69d31ab0ce789d8804cf",
+      "source_verdict_class": "positive",
+      "task_id": "exp6813",
+      "terminal_class": "positive"
+    },
+    {
+      "adversarial_report": null,
+      "artifact_state": "missing",
+      "eligible_for_positive_claim": false,
+      "exclusion_reason": "terminal_class=missing",
+      "gate_check_summary": [
+        {
+          "check": "exp6814.exact_terminal_artifact",
+          "expected": "results/experiment_6814_selective_priority_arbiter_cold_audit.json",
+          "observed": "file_missing"
+        }
+      ],
+      "manifest_task_id": "exp6814-selective-priority-arbiter-cold-audit",
+      "path": "results/experiment_6814_selective_priority_arbiter_cold_audit.json",
+      "row_type": "task",
+      "row_verdict_report": null,
+      "source_row_count": 0,
+      "source_sha256": null,
+      "source_verdict_class": "missing",
+      "task_id": "exp6814",
+      "terminal_class": "missing"
+    },
+    {
+      "adversarial_report": null,
+      "artifact_state": "missing",
+      "eligible_for_positive_claim": false,
+      "exclusion_reason": "terminal_class=missing",
+      "gate_check_summary": [
+        {
+          "check": "exp6815.exact_terminal_artifact",
+          "expected": "results/experiment_6815_verified_memory_operation_stream.json",
+          "observed": "file_missing"
+        }
+      ],
+      "manifest_task_id": "exp6815-verified-memory-operation-stream",
+      "path": "results/experiment_6815_verified_memory_operation_stream.json",
+      "row_type": "task",
+      "row_verdict_report": null,
+      "source_row_count": 0,
+      "source_sha256": null,
+      "source_verdict_class": "missing",
+      "task_id": "exp6815",
+      "terminal_class": "missing"
+    },
+    {
+      "adversarial_report": null,
+      "artifact_state": "missing",
+      "eligible_for_positive_claim": false,
+      "exclusion_reason": "terminal_class=missing",
+      "gate_check_summary": [
+        {
+          "check": "exp6816.exact_terminal_artifact",
+          "expected": "results/experiment_6816_residual_pressure_route_learning_ab.json",
+          "observed": "file_missing"
+        }
+      ],
+      "manifest_task_id": "exp6816-residual-pressure-route-learning-ab",
+      "path": "results/experiment_6816_residual_pressure_route_learning_ab.json",
+      "row_type": "task",
+      "row_verdict_report": null,
+      "source_row_count": 0,
+      "source_sha256": null,
+      "source_verdict_class": "missing",
+      "task_id": "exp6816",
+      "terminal_class": "missing"
+    },
+    {
+      "adversarial_report": null,
+      "artifact_state": "missing",
+      "eligible_for_positive_claim": false,
+      "exclusion_reason": "terminal_class=missing",
+      "gate_check_summary": [
+        {
+          "check": "exp6817.exact_terminal_artifact",
+          "expected": "results/experiment_6817_route_memory_portability.json",
+          "observed": "file_missing"
+        }
+      ],
+      "manifest_task_id": "exp6817-route-memory-portability",
+      "path": "results/experiment_6817_route_memory_portability.json",
+      "row_type": "task",
+      "row_verdict_report": null,
+      "source_row_count": 0,
+      "source_sha256": null,
+      "source_verdict_class": "missing",
+      "task_id": "exp6817",
+      "terminal_class": "missing"
+    },
+    {
+      "adversarial_report": null,
+      "artifact_state": "missing",
+      "eligible_for_positive_claim": false,
+      "exclusion_reason": "terminal_class=missing",
+      "gate_check_summary": [
+        {
+          "check": "exp6818.exact_terminal_artifact",
+          "expected": "results/experiment_6818_route_memory_global_cold_audit.json",
+          "observed": "file_missing"
+        }
+      ],
+      "manifest_task_id": "exp6818-route-memory-global-cold-audit",
+      "path": "results/experiment_6818_route_memory_global_cold_audit.json",
+      "row_type": "task",
+      "row_verdict_report": null,
+      "source_row_count": 0,
+      "source_sha256": null,
+      "source_verdict_class": "missing",
+      "task_id": "exp6818",
+      "terminal_class": "missing"
+    },
+    {
+      "adversarial_report": null,
+      "artifact_state": "missing",
+      "eligible_for_positive_claim": false,
+      "exclusion_reason": "terminal_class=missing",
+      "gate_check_summary": [
+        {
+          "check": "exp6819.exact_terminal_artifact",
+          "expected": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
+          "observed": "file_missing"
+        }
+      ],
+      "manifest_task_id": "exp6819-arc-stepwise-strategy-accrual",
+      "path": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
+      "row_type": "task",
+      "row_verdict_report": null,
+      "source_row_count": 0,
+      "source_sha256": null,
+      "source_verdict_class": "missing",
+      "task_id": "exp6819",
+      "terminal_class": "missing"
+    },
+    {
+      "adversarial_report": null,
+      "artifact_state": "missing",
+      "eligible_for_positive_claim": false,
+      "exclusion_reason": "terminal_class=missing",
+      "gate_check_summary": [
+        {
+          "check": "exp6820.exact_terminal_artifact",
+          "expected": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
+          "observed": "file_missing"
+        }
+      ],
+      "manifest_task_id": "exp6820-arc-tool-gap-obligation-transport-v2",
+      "path": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
+      "row_type": "task",
+      "row_verdict_report": null,
+      "source_row_count": 0,
+      "source_sha256": null,
+      "source_verdict_class": "missing",
+      "task_id": "exp6820",
+      "terminal_class": "missing"
+    },
+    {
+      "adversarial_report": null,
+      "artifact_state": "missing",
+      "eligible_for_positive_claim": false,
+      "exclusion_reason": "terminal_class=missing",
+      "gate_check_summary": [
+        {
+          "check": "exp6821.exact_terminal_artifact",
+          "expected": "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json",
+          "observed": "file_missing"
+        }
+      ],
+      "manifest_task_id": "exp6821-arc-obligation-actions-to-progress-ab-v2",
+      "path": "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json",
+      "row_type": "task",
+      "row_verdict_report": null,
+      "source_row_count": 0,
+      "source_sha256": null,
+      "source_verdict_class": "missing",
+      "task_id": "exp6821",
+      "terminal_class": "missing"
+    },
+    {
+      "adversarial_report": null,
+      "artifact_state": "missing",
+      "eligible_for_positive_claim": false,
+      "exclusion_reason": "terminal_class=missing",
+      "gate_check_summary": [
+        {
+          "check": "exp6822.exact_terminal_artifact",
+          "expected": "results/experiment_6822_arc_causal_adoption_audit.json",
+          "observed": "file_missing"
+        }
+      ],
+      "manifest_task_id": "exp6822-arc-causal-adoption-audit",
+      "path": "results/experiment_6822_arc_causal_adoption_audit.json",
+      "row_type": "task",
+      "row_verdict_report": null,
+      "source_row_count": 0,
+      "source_sha256": null,
+      "source_verdict_class": "missing",
+      "task_id": "exp6822",
+      "terminal_class": "missing"
+    },
+    {
+      "adversarial_report": null,
+      "artifact_state": "current_synthesis",
+      "eligible_for_positive_claim": false,
+      "exclusion_reason": "terminal_class=current_synthesis",
+      "gate_check_summary": [],
+      "manifest_task_id": "exp6823-v595-branch-disposition",
+      "path": "results/experiment_6823_v595_branch_disposition.json",
+      "row_type": "task",
+      "row_verdict_report": null,
+      "source_row_count": 0,
+      "source_sha256": null,
+      "source_verdict_class": "partial",
+      "task_id": "exp6823",
+      "terminal_class": "current_synthesis"
+    },
+    {
+      "branch": "selective_arbiter",
+      "disposition": "blocked",
+      "failed_checks": [
+        {
+          "check": "selective_arbiter.exp6814.eligible_terminal_evidence",
+          "expected": "eligible positive or null terminal evidence",
+          "observed": "missing"
+        }
+      ],
+      "independent_cold_audit_required": true,
+      "next_action": "Keep the branch blocked until the named terminal evidence exists.",
+      "positive_gate_recomputed": true,
+      "required_tasks": [
+        "exp6813",
+        "exp6814"
+      ],
+      "row_type": "branch",
+      "source_verdict_classes": [
+        "positive",
+        "missing"
+      ]
+    },
+    {
+      "branch": "verified_route_memory",
+      "disposition": "blocked",
+      "failed_checks": [
+        {
+          "check": "verified_route_memory.exp6816.eligible_terminal_evidence",
+          "expected": "eligible positive or null terminal evidence",
+          "observed": "missing"
+        },
+        {
+          "check": "verified_route_memory.exp6817.eligible_terminal_evidence",
+          "expected": "eligible positive or null terminal evidence",
+          "observed": "missing"
+        },
+        {
+          "check": "verified_route_memory.exp6818.eligible_terminal_evidence",
+          "expected": "eligible positive or null terminal evidence",
+          "observed": "missing"
+        }
+      ],
+      "independent_cold_audit_required": true,
+      "next_action": "Keep the branch blocked until the named terminal evidence exists.",
+      "positive_gate_recomputed": false,
+      "required_tasks": [
+        "exp6816",
+        "exp6817",
+        "exp6818"
+      ],
+      "row_type": "branch",
+      "source_verdict_classes": [
+        "missing",
+        "missing",
+        "missing"
+      ]
+    },
+    {
+      "branch": "live_arc",
+      "disposition": "blocked",
+      "failed_checks": [
+        {
+          "check": "live_arc.exp6819.eligible_terminal_evidence",
+          "expected": "eligible positive or null terminal evidence",
+          "observed": "missing"
+        },
+        {
+          "check": "live_arc.exp6820.eligible_terminal_evidence",
+          "expected": "eligible positive or null terminal evidence",
+          "observed": "missing"
+        },
+        {
+          "check": "live_arc.exp6821.eligible_terminal_evidence",
+          "expected": "eligible positive or null terminal evidence",
+          "observed": "missing"
+        },
+        {
+          "check": "live_arc.exp6822.eligible_terminal_evidence",
+          "expected": "eligible positive or null terminal evidence",
+          "observed": "missing"
+        }
+      ],
+      "independent_cold_audit_required": true,
+      "next_action": "Keep the branch blocked until the named terminal evidence exists.",
+      "positive_gate_recomputed": false,
+      "required_tasks": [
+        "exp6819",
+        "exp6820",
+        "exp6821",
+        "exp6822"
+      ],
+      "row_type": "branch",
+      "source_verdict_classes": [
+        "missing",
+        "missing",
+        "missing",
+        "missing"
+      ]
+    }
+  ],
+  "selective_arbiter_disposition": {
+    "branch": "selective_arbiter",
+    "disposition": "blocked",
+    "failed_checks": [
+      {
+        "check": "selective_arbiter.exp6814.eligible_terminal_evidence",
+        "expected": "eligible positive or null terminal evidence",
+        "observed": "missing"
+      }
+    ],
+    "independent_cold_audit_required": true,
+    "next_action": "Keep the branch blocked until the named terminal evidence exists.",
+    "positive_gate_recomputed": true,
+    "required_tasks": [
+      "exp6813",
+      "exp6814"
+    ],
+    "source_verdict_classes": [
+      "positive",
+      "missing"
+    ]
+  },
+  "solve_claim": false,
+  "source_artifact_hashes": {
+    "openspec/capabilities/agentic-harness/spec.md": "sha256:e4106b44b0f2303395178f14df7a5fc50b4161415e283d21b9ef2413fbb33953",
+    "openspec/capabilities/constraint-verification/spec.md": "sha256:f0e234aeef0b11f3aed7b80163aa3788500b09b393fb6793de62f9ab63421dff",
+    "openspec/capabilities/continuous-learning/spec.md": "sha256:558b466726118d520da97cedbb22051e3e695421df301cf99eb235d813074b42",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:c2d18102e2e95130c35e391ef297983eaaf3d7442d73957d2eef7d95efa98266",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4cf6f23dc1b36689122515835d8af69be80653430b6f2144db1071f6cb2c4f62",
+    "research-roadmap.yaml": "sha256:cc0f206d5f367e49d1cca2b2282c3d8194968e03cb6341c35cb62e44a72b9ba8",
+    "results/experiment_6810_v595_contract_manifest_preflight.json": "sha256:f3a6b52a526123ad59d69eb9398fbe11278fd7e6798bed06f71e33887ea19687",
+    "results/experiment_6811_operational_obligation_automaton_v3.json": "sha256:8e776a3eb887cb0565af6ba0970c84ab54e2a196f4d1b738515071f8e7b3922f",
+    "results/experiment_6812_sota_operational_handoff_corpus_v2.json": "sha256:a830b416ef9243d7175a634effa8dd7b742642c90c3c2b89081d677a9b82d6ea",
+    "results/experiment_6813_selective_priority_arbiter_ab.json": "sha256:57428383446edd81252cb04e02620d4ddf5451cf85bc69d31ab0ce789d8804cf",
+    "results/experiment_6814_selective_priority_arbiter_cold_audit.json": null,
+    "results/experiment_6815_verified_memory_operation_stream.json": null,
+    "results/experiment_6816_residual_pressure_route_learning_ab.json": null,
+    "results/experiment_6817_route_memory_portability.json": null,
+    "results/experiment_6818_route_memory_global_cold_audit.json": null,
+    "results/experiment_6819_arc_stepwise_strategy_accrual.json": null,
+    "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json": null,
+    "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json": null,
+    "results/experiment_6822_arc_causal_adoption_audit.json": null,
+    "scripts/adversarial_verify.py": "sha256:0ad8258770e60f0173e9cdd1438ebb04a406cabdcc69ad1c971992241ebca6b1",
+    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+  },
+  "task_count": 14,
+  "terminal_class_counts": {
+    "current_synthesis": 1,
+    "flagged": 2,
+    "missing": 9,
+    "positive": 2
+  },
+  "verdict_class": "partial",
+  "verified_route_memory_disposition": {
+    "branch": "verified_route_memory",
+    "disposition": "blocked",
+    "failed_checks": [
+      {
+        "check": "verified_route_memory.exp6816.eligible_terminal_evidence",
+        "expected": "eligible positive or null terminal evidence",
+        "observed": "missing"
+      },
+      {
+        "check": "verified_route_memory.exp6817.eligible_terminal_evidence",
+        "expected": "eligible positive or null terminal evidence",
+        "observed": "missing"
+      },
+      {
+        "check": "verified_route_memory.exp6818.eligible_terminal_evidence",
+        "expected": "eligible positive or null terminal evidence",
+        "observed": "missing"
+      }
+    ],
+    "independent_cold_audit_required": true,
+    "next_action": "Keep the branch blocked until the named terminal evidence exists.",
+    "positive_gate_recomputed": false,
+    "required_tasks": [
+      "exp6816",
+      "exp6817",
+      "exp6818"
+    ],
+    "source_verdict_classes": [
+      "missing",
+      "missing",
+      "missing"
+    ]
+  },
+  "verifier_is_oracle": false
+}
