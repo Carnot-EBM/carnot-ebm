@@ -16896,3 +16896,4 @@ The l |
 | 2026-08-31 08:08 UTC | Owned-spec and execution-manifest recovery preflig | FAIL | Codex CLI error:  exp.main(["--validate", "--output", str(output)]) == 0
 +
 +  |
+| 2026-08-31 08:11 UTC | Owned-spec and execution-manifest recovery preflig | SKIP | Pre-tests failing, self-heal failed:  |
