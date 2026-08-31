@@ -18368,3 +18368,4 @@ is configurable batches of 8-16 questions per forward pass, backed by
 task-owned phase timing, GPU samples, model-concurrency metadata, and runner
 identity. Estimated milestone-wide savings is 0% because the supplied evidence
 does not measure the batched share of execution.
+- 2026-08-31: Owned-spec and execution-manifest recovery preflight (⚠️ Research Finding) — honest_verdict=complete: V595 owned contracts and active execution manifest agree; results/experiment_6810_v595_contract_manifest_preflight.json
