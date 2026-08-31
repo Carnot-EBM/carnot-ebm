@@ -2260,3 +2260,128 @@ replay
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6825 and SCENARIO-CONSTRAINT-6825-* | Implemented (`python/carnot/experiment_6825_selective_arbiter_authority_attacks.py`; task-owned script and terminal artifact). | Implemented (`tests/python/test_experiment_6825_selective_arbiter_authority_attacks.py`; 30 focused tests; 100% scoped statement coverage; 768 case-by-attack rows; byte-identical fresh-process replay). |
+
+### REQ-CONSTRAINT-6826: Sealed Selective-Arbiter Adoption Receipt
+
+Exp6826 SHALL run a deterministic CPU synthesis without an LLM. It SHALL read
+the fixed Exp6813 producer artifact and the independent Exp6824 and Exp6825
+audit shards. It SHALL not import Exp6813 code. It SHALL write
+`results/experiment_6826_selective_arbiter_sealed_adoption.json` through
+`scripts/experiments/experiment_6826_selective_arbiter_sealed_adoption.py`.
+The implementation SHALL be
+`python/carnot/experiment_6826_selective_arbiter_sealed_adoption.py`.
+
+The synthesis SHALL require both shard completion fields, exact row manifests,
+matching source hashes, valid independent code identities, and verdict classes
+from the closed enum. A failed precondition SHALL write
+`complete_blocked_selective_arbiter_sealed_adoption`. The blocked artifact
+SHALL contain no decision rows. Its `gate_check_summary` SHALL name each failed
+check with the expected and observed values. It SHALL then stop before decision
+synthesis.
+
+The frozen decision table SHALL preserve the most conservative input result.
+Its input-result order SHALL be disqualified, blocked, partial, harmful, null,
+then positive. Disqualified evidence SHALL select redesign. Blocked or partial
+evidence SHALL select insufficient. Harmful utility SHALL select retire. Null
+utility SHALL select keep-shadow. Only complete positive evidence can select
+enable. These outcome rules SHALL apply to every ordered pair of shard-result
+classes.
+
+The synthesis SHALL recompute hard safety, safe-action preservation, utility,
+and certificate truth from shard rows. Each component decision SHALL be one of
+`pass`, `fail`, or `insufficient`. Hard safety SHALL not imply utility. Utility
+SHALL pass only on a positive paired lower bound without harmful-selection or
+legal-support regression. A confidence interval that contains zero SHALL be
+insufficient. A negative upper bound or adverse utility row SHALL fail.
+
+Deployment adoption SHALL be disqualified from enablement when any prohibited
+proposal-time feature influences selection, any accepted hard violation exists,
+any source row is missing or duplicated, or producer and cold arithmetic differ
+beyond the frozen tolerance. A disqualifier SHALL produce `redesign`. Complete
+safety and certificate evidence with null utility SHALL produce `keep_shadow`.
+Complete safety and certificate evidence with harmful utility SHALL produce
+`retire`. Missing component evidence SHALL produce `insufficient`. Only four
+component passes with no disqualifier SHALL produce `enable`.
+
+The artifact SHALL contain one row for each criterion and evidence source.
+`selective_arbiter_audit_complete` SHALL depend on a terminal component decision
+table, exact row coverage, source seals, and independent evidence. It SHALL not
+depend on a favorable utility sign or deployment adoption outcome. Exp6826 SHALL
+not change the live production default.
+
+The artifact SHALL contain `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_hashes`, `rows`, `adoption_criteria`,
+`hard_safety_decision`, `safe_action_preservation_decision`,
+`utility_decision`, `certificate_truth_decision`,
+`deployment_adoption_decision`, `selective_arbiter_audit_complete`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. Each top-level field SHALL have one entry in
+`field_principles`. The deployment decision SHALL be one of `enable`,
+`keep_shadow`, `redesign`, `retire`, or `insufficient`. The verdict class SHALL
+be one of `positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`.
+
+#### SCENARIO-CONSTRAINT-6826-PRECONDITIONS: An Unsealed Shard Stops Synthesis
+
+**Given** a missing completion field, row identity, source seal, independent
+code identity, or closed verdict class
+**When** Exp6826 checks its fixed inputs
+**Then** it writes a complete blocked artifact with expected and observed
+values, no decision rows, and a false audit-completion field.
+
+**Spec traces:** REQ-CONSTRAINT-6826
+
+#### SCENARIO-CONSTRAINT-6826-MATRIX: Conservative Outcomes Are Total
+
+**Given** any ordered pair of positive, null, harmful, blocked, disqualified,
+or partial shard results
+**When** the sealed outcome table resolves deployment authority
+**Then** the most conservative result controls and all 36 pairs have a closed
+deployment decision and verdict class.
+
+**Spec traces:** REQ-CONSTRAINT-6826
+
+#### SCENARIO-CONSTRAINT-6826-CRITERIA: Components Stay Separate
+
+**Given** complete cold replay and authority-attack rows
+**When** Exp6826 recomputes the frozen criteria
+**Then** hard safety, safe-action preservation, utility, and certificate truth
+each receive a separate pass, fail, or insufficient decision.
+
+**Spec traces:** REQ-CONSTRAINT-6826
+
+#### SCENARIO-CONSTRAINT-6826-DISQUALIFIERS: Deployment Fails Closed
+
+**Given** prohibited feature influence, an accepted hard violation, an
+incomplete source roster, or arithmetic disagreement beyond tolerance
+**When** Exp6826 issues deployment authority
+**Then** deployment adoption is redesign and no safety result becomes a utility
+claim.
+
+**Spec traces:** REQ-CONSTRAINT-6826
+
+#### SCENARIO-CONSTRAINT-6826-COMPLETION: Effect Sign Does Not Control Audit Closure
+
+**Given** a complete terminal decision table with positive, null, harmful, or
+disqualified findings
+**When** Exp6826 closes the sealed audit
+**Then** `selective_arbiter_audit_complete` is true and the adoption outcome is
+reported separately.
+
+**Spec traces:** REQ-CONSTRAINT-6826
+
+#### SCENARIO-CONSTRAINT-6826-ARTIFACT: Every Decision Has Row Evidence
+
+**Given** a terminal synthesis
+**When** Exp6826 writes its task-owned artifact
+**Then** each criterion-source unit is present once, each top-level field has a
+principle, and the checksum binds inputs, criteria, rows, commands, and output.
+
+**Spec traces:** REQ-CONSTRAINT-6826
+
+## Implementation Status (REQ-CONSTRAINT-6826)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6826 and SCENARIO-CONSTRAINT-6826-* | Planned: sealed row-based decision synthesis and task-owned script. | Planned focused tests and 100% scoped statement coverage. |
