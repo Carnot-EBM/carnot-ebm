@@ -8771,3 +8771,139 @@ and action exactly.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-6810 and SCENARIO-CL-6810-* | Planned: Exp6816 and `results/experiment_6816_residual_pressure_route_learning_ab.json`. | Planned after Exp6810 contract preflight. |
+
+## REQ-CL-6827: Frozen Chronological Causal-Edge Memory Stream
+
+Exp6827 SHALL transform the complete Exp6812 authentic operational-handoff
+corpus and the terminal Exp6826 sealed-arbiter receipt on CPU. It SHALL not
+invoke an LLM or learn parameters. It SHALL write
+`results/experiment_6827_chronological_causal_edge_memory_stream.json` through
+`scripts/experiments/experiment_6827_chronological_causal_edge_memory_stream.py`.
+The implementation SHALL live in
+`python/carnot/experiment_6827_chronological_causal_edge_memory_stream.py`.
+
+Before stream construction, Exp6827 SHALL require
+`selective_arbiter_audit_complete=true`, all three mandated GGUF families, all
+288 raw-output hashes, terminal component decisions, unique chronological
+keys, at least one legal alternative per event, and decision snapshots with no
+future field. It SHALL bind both source artifacts by their raw file hashes. A
+failed check SHALL stop construction. The terminal artifact SHALL use status
+`complete_blocked_chronological_causal_edge_memory_stream`, contain no rows,
+set `verified_memory_stream_ready=false`, and report each failed check with its
+expected and observed values in `gate_check_summary`.
+
+The public operation grammar SHALL contain typed `add`, `revise`,
+`soft_delete`, `retrieve`, `filter`, and `restore` operations. Each operation
+SHALL declare an exact precondition, deterministic effect, inverse or rollback
+target, and canonical bytes. Memory SHALL have equal finite capacity for every
+family and order. Active decision snapshots SHALL be deeply read-only. A
+soft-deleted record SHALL be hidden from normal retrieval. Only the sealed
+harness authority SHALL restore it. Safe missing retrievals and empty filters
+SHALL be accepted no-ops. Conflicts, stale revisions, unauthorized restores,
+and capacity breaches SHALL be rejected without changing state bytes.
+
+Exp6827 SHALL freeze exactly five deterministic chronological orders before
+stream evaluation. It SHALL keep memory state isolated by source family and
+SHALL not pool family observations. It SHALL freeze development and held-future
+partitions, a hard-case manifest, and three leave-one-family-out rotations.
+Each decision snapshot SHALL contain only the feature allowlist and past memory
+state. Outcome, utility, support, retention, hard-case, later-read, audit,
+family-oracle, and final-acceptance fields SHALL remain sealed until after the
+decision. Final acceptance values SHALL remain in a hidden harness view.
+
+The stream SHALL generate typed write-read-action-outcome candidate edges. For
+each event, order, source family, and counterfactual kind, it SHALL emit one
+public row. The counterfactual kinds SHALL be exactly `remove`, `substitute`,
+and `reorder`. Inapplicable units SHALL be explicit safe no-ops. Applicable
+units SHALL preserve the baseline edge identity and report the public
+counterfactual transformation without exposing hidden final acceptance.
+
+The complete stream SHALL contain nonzero legal alternatives, safe no-op
+events, conflicts, admissible writes, rejected writes, later retrieval
+opportunities, capacity pressure, and stale-pressure recovery. Readiness SHALL
+depend only on complete chronology, positive finite headroom, sealed-field
+isolation, and canonical-byte validation. It SHALL not depend on the Exp6826
+deployment adoption outcome or on a favorable causal effect.
+
+The artifact SHALL include `schema`, `experiment_id`, `title`, `run_date`,
+`status`, `openspec_requirement_ids`, `replay_commands`, `field_principles`,
+`inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `source_artifact_hashes`, `operation_schema`,
+`local_receipt_schema`, `capacity_contract`, `split_manifest`,
+`sealed_field_manifest`, `order_hashes`, `feature_allowlist`,
+`feature_denylist`, `causal_edge_schema`, `counterfactual_manifest`, `rows`,
+`headroom_metrics`, `admissible_operation_count`,
+`rejected_operation_count`, `later_read_opportunity_count`,
+`verified_memory_stream_ready`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+plain-language principle for every top-level field. `inference_substrate` SHALL
+equal `CPU transformation of frozen authentic outputs, no LLM`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL use only `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+`honest_verdict` SHALL start with an approved terminal prefix.
+
+### SCENARIO-CL-6827-PRECONDITIONS: Missing Frozen Evidence Stops Construction
+
+Given one audit, family, raw hash, terminal decision, chronological key, legal
+alternative, or no-future-field check fails,
+When Exp6827 checks its two frozen inputs,
+Then it SHALL emit the complete blocked artifact with no rows
+And the gate summary SHALL record the failed check, expected value, and
+observed value.
+
+### SCENARIO-CL-6827-OPERATIONS: Typed Effects And Receipts Are Exact
+
+Given a family-isolated fixed-capacity memory and one public typed operation,
+When Exp6827 evaluates the operation,
+Then its exact preconditions SHALL determine admission before mutation
+And its receipt SHALL bind canonical parent bytes, operation bytes, new bytes,
+effect, and inverse or rollback target.
+
+### SCENARIO-CL-6827-VISIBILITY: Delete And Restore Preserve Authority
+
+Given an active record is soft-deleted,
+When normal retrieval or restoration is requested,
+Then normal retrieval SHALL hide the record
+And only sealed harness authority SHALL restore it without a capacity breach.
+
+### SCENARIO-CL-6827-SNAPSHOTS: Decisions Read Past State Only
+
+Given one chronological event boundary,
+When Exp6827 freezes its decision snapshot,
+Then the snapshot SHALL reject nested mutation
+And its public feature keys SHALL be disjoint from the feature denylist.
+
+### SCENARIO-CL-6827-ORDERS: Family-Isolated Chronology Is Complete
+
+Given all 288 authentic events,
+When Exp6827 freezes five orders and all partitions,
+Then each order SHALL contain every event exactly once within its source family
+And the held-future and leave-one-family-out manifests SHALL remain unchanged.
+
+### SCENARIO-CL-6827-COUNTERFACTUALS: Three Causal Edge Tests Are Frozen
+
+Given an accepted write with a later read-action witness,
+When Exp6827 emits counterfactual units,
+Then remove SHALL omit the write, substitute SHALL use its legal alternative,
+And reorder SHALL move the read before the write without changing source-family
+ownership.
+
+### SCENARIO-CL-6827-SERIALIZATION: Canonical Bytes Are Stable
+
+Given identical operation, state, row, and command inputs,
+When Exp6827 serializes or hashes them twice,
+Then canonical bytes and SHA-256 values SHALL match exactly
+And the reproducibility checksum SHALL exclude measured wall time.
+
+### SCENARIO-CL-6827-READINESS: Completion Is Independent Of Adoption
+
+Given complete rows, positive headroom, sealed fields, and canonical bytes,
+When Exp6827 computes `verified_memory_stream_ready`,
+Then readiness SHALL be true for every terminal Exp6826 adoption decision
+And SHALL not imply that the stream verifier is an oracle.
+
+## Implementation Status (REQ-CL-6827)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-6827 and SCENARIO-CL-6827-* | Implemented: `python/carnot/experiment_6827_chronological_causal_edge_memory_stream.py`, task-owned wrapper, and terminal artifact. | Implemented: 107-test conductor-equivalent shard passes; Exp6827 module and wrapper have 514/514 statements covered; focused spec coverage, artifact validation, adversarial verification, verdict-row lint, Ruff, format, mypy, and root-clutter checks pass. |

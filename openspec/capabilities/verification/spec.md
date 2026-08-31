@@ -106,7 +106,7 @@ corpus live controls.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-VERIFY-5933 | Implemented (`scripts/adversarial_verify.py`, `results/experiment_5933_aggregation_substrate_qa_repair.json`) | Implemented (`tests/python/test_adversarial_verify_substrate_classification_5933.py`, `tests/python/test_adversarial_verify_constraint_routing_stream_substrate.py`) |
+| REQ-VERIFY-5933 | Implemented (`scripts/adversarial_verify.py`, `results/experiment_5933_aggregation_substrate_qa_repair.json`) | Implemented (`tests/python/test_adversarial_verify_substrate_classification_5933.py`, `tests/python/test_adversarial_verify_constraint_routing_stream_substrate.py`, `tests/python/test_experiment_6827_chronological_causal_edge_memory_stream.py`) |
 
 ### REQ-VERIFY-6593: No-LLM Substrate Recognition SHALL State The Concept, Not Enumerate It
 

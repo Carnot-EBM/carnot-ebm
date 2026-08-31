@@ -1,6 +1,20 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-08-30
+**Last Updated:** 2026-08-31
+
+**Operational Note:** 2026-08-31 Exp6827 regression repair reconciled
+`REQ-VERIFY-5933` and `REQ-CL-6827`. The exact required CPU-only frozen-output
+transform now receives the deterministic-verifier floor, and the task-owned
+replay commands use working scoped-coverage and root-clutter invocations. The
+original conductor-equivalent shard passes (`107 passed`), and Exp6827 scoped
+statement coverage is 100% (`514/514`). Artifact validation, adversarial
+verification, verdict-row consistency, focused spec coverage, Ruff, format,
+mypy, and root-clutter checks pass. A separate all-adversarial sweep completed
+all 432 assertions but hit the existing peak-RSS watchdog while its corpus scan
+parsed the 542 MB Exp6797 artifact; no assertion failed. No test was skipped,
+weakened, deleted, or reverted, and `scripts/research_conductor.py` was not
+modified. Repository-wide reconciliation remains blocked by 1,178 pre-existing
+tests without spec references; the focused Exp6827 spec-coverage check passes.
 
 **Operational Note:** 2026-08-30 Exp6791 substrate-floor regression repair
 reconciled `REQ-VERIFY-5933` and `REQ-CL-6791`. The exact prospective CPU

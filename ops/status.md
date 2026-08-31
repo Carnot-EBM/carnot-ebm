@@ -9212,3 +9212,24 @@ module statements. The applicable E2E is the experiment runner plus artifact
 validation; the training, PyO3, cross-language serialization, packaged
 generate/verify/repair, hardware, and SMGI scenarios do not apply to this
 deterministic CPU evidence replay. `scripts/research_conductor.py` is unchanged.
+
+## 2026-08-31 — Exp6827 chronological causal-edge memory stream
+
+Exp6827 now transforms all 288 authentic Exp6812 handoff events and the sealed
+Exp6826 receipt into 4,320 family-isolated chronological counterfactual rows.
+The terminal artifact is ready, with 975 admitted operations, 465 exact
+rejections, 255 later-read opportunities, and positive pressure, conflict,
+safe-no-op, legal-alternative, and stale-recovery headroom. No LLM or parameter
+learning ran.
+
+The required `CPU transformation of frozen authentic outputs, no LLM`
+declaration is registered on the shared deterministic-verifier floor. The
+original 107-test failing shard passes, and scoped coverage is 514/514
+statements. The runner, artifact validator, adversarial verifier, verdict-row
+lint, focused spec coverage, Ruff, format, mypy, and root-clutter checks pass.
+No training, PyO3, cross-language serialization, packaged verifier, hardware,
+or SMGI E2E path changed; the applicable E2E is the task-owned runner plus
+artifact validation. `scripts/research_conductor.py` is unchanged.
+Repository-wide reconciliation remains blocked by the existing 1,178-test
+spec-traceability backlog; the Exp6827 test module has complete requirement
+references and passes its focused coverage gate.
