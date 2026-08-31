@@ -16925,3 +16925,4 @@ The l |
 | 2026-08-31 16:06 UTC | Plan milestone 2026.08.596 | OK | 7 tasks proposed |
 | 2026-08-31 16:09 UTC | Milestone 2026.08.596 activated | OK | 7 tasks queued |
 | 2026-08-31 16:54 UTC | Selective-arbiter cold row replay shard | OK | 95 passed, 1 warning in 12.85s |
+| 2026-08-31 17:20 UTC | Selective-arbiter authority attack shard | FAIL | Codex CLI error: Wall-clock+idle timeout after 1368s (600s silence). Last out |

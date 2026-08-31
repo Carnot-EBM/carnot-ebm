@@ -2127,3 +2127,136 @@ fresh row-derived computation and completion remains independent of agreement.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6824 and SCENARIO-CONSTRAINT-6824-* | Planned: independent parser, arbiter, reducer, orchestrator, and task-owned script. | Planned focused tests and 100% scoped coverage. |
+
+### REQ-CONSTRAINT-6825: Independent Selective-Arbiter Authority Attacks
+
+Exp6825 SHALL run a fresh-process deterministic CPU mutation audit without an
+LLM. It SHALL read the frozen Exp6811 obligation schema, the Exp6812 raw source
+rows, and the Exp6813 completion receipt. It SHALL not import the Exp6813
+producer or reducer. It SHALL write
+`results/experiment_6825_selective_arbiter_authority_attacks.json` through
+`scripts/experiments/experiment_6825_selective_arbiter_authority_attacks.py`.
+The independent implementation SHALL be
+`python/carnot/experiment_6825_selective_arbiter_authority_attacks.py`.
+
+The audit SHALL require the exact frozen obligation schema, matching source
+artifact hashes, one valid raw representative cell for every frozen source
+scenario, and `selective_arbiter_ab_completed=true`. A failed precondition
+SHALL write `complete_blocked_selective_arbiter_authority_attacks`. The blocked
+artifact SHALL contain no attack rows. Its `gate_check_summary` SHALL name each
+failed check with the expected and observed values. It SHALL stop before the
+mutation audit.
+
+The independent harness SHALL rebuild obligation records and the hard,
+binding, then soft priority order from the public contract. Source outputs
+SHALL identify audit cases, but producer decisions SHALL not define expected
+selections. The allowlist SHALL contain proposal-time public fields only. The
+denylist SHALL contain model labels, exact-valid labels, outcomes, utility,
+and future fields.
+
+Every frozen source scenario SHALL receive priority inversion, authority
+spoofing, stale prerequisite, fallback deletion, consequence weakening, tie
+reorder, canonical-byte mutation, no-candidate, safe-action mutation,
+model-label influence, exact-valid-label influence, future-outcome leakage,
+row deletion, duplicate-row, row reorder, and fabricated-certificate attacks.
+The artifact SHALL contain one row for every source-scenario and attack pair.
+An attack that does not apply to one scenario SHALL retain an explicit row and
+SHALL not replace the applicable positive-control rows for that attack.
+
+Hard and binding violations SHALL fail closed. A safe proposal SHALL remain
+byte-identical unless a higher-priority obligation proves intervention is
+necessary. Rejection certificates SHALL name the first unsatisfied
+higher-priority obligation. Deleted, duplicated, or reordered source-case
+rosters SHALL fail integrity validation. Denied feature injection SHALL not
+change a selection.
+
+`hard_authority_supported` SHALL report the row-supported authority finding.
+It SHALL remain separate from adoption. `authority_attack_shard_complete`
+SHALL depend only on full source-by-attack row coverage, complete applicable
+attack coverage, independent code identity, source seals, and a byte-identical
+fresh-process replay. It SHALL not depend on whether the authority finding
+passes or fails. Exp6825 SHALL make no deployment or adoption decision.
+
+The artifact SHALL contain `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_hashes`, `independent_attack_harness_id`,
+`feature_allowlist`, `feature_denylist`, `rows`,
+`priority_attack_results`, `safe_action_attack_results`,
+`certificate_attack_results`, `prohibited_feature_findings`,
+`row_integrity_attacks`, `hard_authority_supported`,
+`authority_attack_shard_complete`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. The verdict class
+SHALL be one of `positive`, `circular_positive`, `null`, `blocked`,
+`disqualified`, or `partial`.
+
+#### SCENARIO-CONSTRAINT-6825-PRECONDITIONS: Missing Frozen Evidence Stops Attacks
+
+**Given** a missing obligation schema, source seal, representative raw row, or
+producer completion flag
+**When** Exp6825 checks its inputs
+**Then** it writes a complete blocked artifact with expected and observed
+values, no attack rows, and a false shard-completion field.
+
+**Spec traces:** REQ-CONSTRAINT-6825
+
+#### SCENARIO-CONSTRAINT-6825-PRIORITY: Hard And Binding Authority Fail Closed
+
+**Given** a high-soft candidate that violates a hard or authority-ordered
+binding obligation
+**When** priority, authority, prerequisite, fallback, or consequence data is
+mutated
+**Then** the harness rejects the unsafe choice or rejects the changed contract
+before selection.
+
+**Spec traces:** REQ-CONSTRAINT-6825
+
+#### SCENARIO-CONSTRAINT-6825-SAFE-BYTES: Safe Actions And Stable Ties Are Exact
+
+**Given** an already-safe proposal or equal legal candidates
+**When** output bytes or candidate list order is changed
+**Then** the safe proposal keeps its exact canonical bytes and the frozen lower
+candidate index wins the tie.
+
+**Spec traces:** REQ-CONSTRAINT-6825
+
+#### SCENARIO-CONSTRAINT-6825-CERTIFICATES: Local Conflict Truth Is Recomputed
+
+**Given** a rejected candidate or a no-candidate result
+**When** its certificate is generated or fabricated
+**Then** the valid certificate names the first local higher-priority conflict
+and the fabricated certificate fails validation.
+
+**Spec traces:** REQ-CONSTRAINT-6825
+
+#### SCENARIO-CONSTRAINT-6825-FEATURES: Prohibited Labels Have No Influence
+
+**Given** the same proposal-time public fields and counterfactually swapped
+model, exact-valid, or future-outcome labels
+**When** the independent harness selects an action
+**Then** the selected candidate and selected bytes stay unchanged.
+
+**Spec traces:** REQ-CONSTRAINT-6825
+
+#### SCENARIO-CONSTRAINT-6825-ROW-INTEGRITY: Roster Mutations Fail Closed
+
+**Given** the frozen ordered source-case roster
+**When** one source case is deleted, duplicated, or reordered
+**Then** roster validation fails and names the integrity fault.
+
+**Spec traces:** REQ-CONSTRAINT-6825
+
+#### SCENARIO-CONSTRAINT-6825-COMPLETION: Coverage Is Independent Of Findings
+
+**Given** every source-case and mutation row plus a byte-identical fresh-process
+replay
+**When** the harness reduces pass or fail findings
+**Then** `authority_attack_shard_complete` is true for complete evidence and
+`hard_authority_supported` separately reports the finding.
+
+**Spec traces:** REQ-CONSTRAINT-6825
+
+## Implementation Status (REQ-CONSTRAINT-6825)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6825 and SCENARIO-CONSTRAINT-6825-* | Planned: independent authority mutation harness and task-owned script. | Planned focused tests and 100% scoped coverage. |
