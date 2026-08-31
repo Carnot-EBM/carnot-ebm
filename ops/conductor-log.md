@@ -16880,3 +16880,4 @@ The l |
 | 2026-08-31 03:49 UTC | Cold real-output fixed-point authority and shortcu | OK | 100 passed, 1 warning in 76.54s (0:01:16) |
 | 2026-08-31 05:10 UTC | Plan milestone 2026.08.594 | OK | 8 tasks proposed |
 | 2026-08-31 05:12 UTC | Milestone 2026.08.594 activated | OK | 8 tasks queued |
+| 2026-08-31 05:21 UTC | Typed operational-obligation automaton v2 | OK | cache hit: 100 passed, 1 warning in 76.54s (0:01:16) |
