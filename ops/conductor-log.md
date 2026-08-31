@@ -16890,3 +16890,6 @@ The l |
 | 2026-08-31 05:26 UTC | Independent byte, support, and rollback audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6807-transactional-route-program-ab, exp6 |
 | 2026-08-31 06:24 UTC | Plan next milestone | FAIL | Codex CLI error: m-stream) |
 | 2026-08-31 05:26 UTC | Leave-one-model-family- |
+| 2026-08-31 07:52 UTC | Plan milestone 2026.08.595 | OK | 9 tasks proposed |
+| 2026-08-31 07:55 UTC | Milestone 2026.08.595 activated | OK | 9 tasks queued |
+| 2026-08-31 07:57 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 3762817 (port 8919) reparented to init, no live process references its |
