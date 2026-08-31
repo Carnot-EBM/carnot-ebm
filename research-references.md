@@ -1,3 +1,108 @@
+## V594 Planner Refresh - 2026-08-31
+
+This sweep follows terminal milestone `2026.08.593`. Exp6798 independently replayed 3,189
+transaction snapshots and 4,800 actions. It credited 116 factors, found no admitted or influential
+poison, and reproduced restart and rollback bytes exactly. Exp6800 found no preregistered positive
+fixed-point effect on authentic model outputs. Exp6801 then disqualified the headline because the
+positive row gate failed and one operation label violated the frozen contract. The next milestone
+must preserve the successful transactional learner, retire that failed text-energy intervention,
+and move exact constraints into the live action path.
+
+### Findings selected for V594
+
+- **CEDAR: Automata as Verifiable Interfaces for Language-Guided Embodied Action** -
+  arXiv:2608.27797, https://arxiv.org/abs/2608.27797; submitted 2026-08-28. CEDAR converts skills
+  and persistent task constraints into deterministic finite automata. It composes them by
+  intersection and uses failing execution traces for correction. Carnot hook: compile live ARC
+  action, tool, and supervisor obligations into a task-neutral event automaton. The automaton may
+  reject or annotate a proposed action before execution. It must not read game source, use an
+  offline ground-truth search, or solve a game for the live agent.
+- **Program Learning with Verifiable Rewards: Symbolic Backpropagation for Post-Training LLMs** -
+  arXiv:2608.28421, https://arxiv.org/abs/2608.28421; submitted 2026-08-28. PLVR places learned
+  reasoning outside model weights as an inspectable typed program. It propagates required input
+  ontologies backward through primitive signatures and gives each program step a contract verdict.
+  Carnot hook: learn a small route program over exact action receipts instead of tuning the frozen
+  GGUF model. Keep the program chronological, typed, byte-replayable, and portable across source
+  models. Compare it with frozen, random-update, and type-only search controls.
+- **xTRUCE: A Provably Safe Arbiter for Multi-xApp Conflict Mitigation in Agentic O-RAN** -
+  arXiv:2608.28532, https://arxiv.org/abs/2608.28532; submitted 2026-08-28. xTRUCE separates hard
+  physical limits, operator rules, and relaxable targets. It reconciles structured proposals in
+  priority order and returns conflict certificates. Carnot hook: use an exact priority arbiter for
+  action proposals from the three mandated local GGUF families. Test hard-obligation preservation,
+  accepted progress, retry cost, and certificate usefulness. The exact arbiter remains the release
+  authority. No learned energy may override a hard constraint.
+- **When "Must" Becomes "Maybe": Constraint Weakening in LLM Agent Workflows** -
+  arXiv:2608.24569, https://arxiv.org/abs/2608.24569; submitted 2026-08-25. The study shows that
+  summaries and plans can retain blocker text while removing its binding force. It reports that an
+  explicit four-field state record restores operational preservation in its controlled setting.
+  Carnot hook: every action obligation must carry prerequisite, authority, fallback, and execution
+  consequence as typed fields. Test byte-identical direct handoff against prose compression before
+  any live ARC intervention.
+- **Verifier-Induced Support Reshaping in On-Policy Optimization** - arXiv:2608.00220,
+  https://arxiv.org/abs/2608.00220; submitted 2026-07-31. On-policy verifier training can improve
+  pass-at-one while reducing the set of prompts with any success under repeated sampling. Carnot
+  hook: the V594 continuous learner must report both selected-action gain and future reachable
+  support. Roll back a write when it improves the current route but harms held-future best-at-k or
+  exact-valid support.
+- **Stay Within Your Bounds: Distance-Guided Decoding for Guaranteed Context-Free Grammar
+  Compliance** - arXiv:2608.28229, https://arxiv.org/abs/2608.28229; submitted 2026-08-28. The
+  method adds distance-to-acceptance summaries to prefix-feasibility checks so a finite token budget
+  cannot end on an extendable but incomplete prefix. Carnot hook: retain this as a future decoding
+  control for structured action transport. V594 does not reopen the retired finite-ID GGUF proof
+  transport branch.
+- **Integrated Hardware Annealing based on Langevin Dynamics for Ising Machines** -
+  arXiv:2608.26100, https://arxiv.org/abs/2608.26100; submitted 2026-08-26. The work reports a
+  65-nm circuit simulation for stochastic hardware annealing. Carnot hook: retain the schedule as a
+  simulator reference. The paper provides no receipt for Carnot's installed FPGA boards and does
+  not justify a new blocking hardware task.
+
+### Requested secondary, citation, repository, and product checks
+
+- **OpenReview:** ICLR 2026 constrained-infilling work formalizes completion feasibility for
+  partial structured outputs. It supports the automaton boundary, but the current local GGUF path
+  does not expose the required diffusion or token-level decoding controls. No OpenReview method
+  replaces the exact post-action receipt used in V594.
+- **Hugging Face Papers:** SymDiag (`2608.08786`) reinforces the need to distinguish translation
+  errors from reasoning errors through dual symbolic encodings. Verifier-induced support reshaping
+  (`2608.00220`) and constraint weakening (`2608.24569`) change V594 directly: preserve future
+  support and encode operational force, not only semantic content.
+- **Semantic Scholar citation check:** the public search still surfaces EBT `2507.02092` and
+  ARM-EBM `2512.15605` derivatives rather than a reproducible general verifier that supersedes the
+  local stack. A direct 2026 citation of ARM-EBM is the ACL work on energy-based Gibbs training for
+  diffusion LLMs. It needs weight training and does not fit the frozen GGUF live path. No citation
+  count is claimed because the API returned a rate-limit response during this sweep.
+- **GitHub discovery:** `opendilab/awesome-RLVR` is a current map of verifier-learning methods.
+  `process-intelligence-research/optimization-over-KANs` exposes deterministic optimization over
+  trained KANs, and `julianhoever/KANLib` offers a newer modular KAN implementation. Neither closes
+  the immediate live-action receipt or continuous route-learning gap. Carnot keeps its audited KAEM
+  and exact solver stack.
+- **Extropic:** the 2026-08-03 first-party update remains the latest technical release:
+  https://extropic.ai/writing/from-one-to-one-billion. It reports Torx, a Thermalizers preview, and
+  a taped-out Z1 with 269,568 pbits. Planned external access is in 2027. V594 makes no Z1, X0,
+  latency, throughput, power, or energy-efficiency claim.
+- **Logical Intelligence:** the public Kona 1.0 material still presents a proprietary global
+  constraint model and an LLM-plus-reasoner split:
+  https://logicalintelligence.com/kona-ebms-energy-based-models. It exposes no weights, local API,
+  training recipe, or reproducible benchmark harness. Kona remains a product comparator.
+- **Hardware inventory:** dual RTX 3090 GPUs remain the only headline local GGUF substrate. KV260
+  and GateMate have terminal receipts. PolarFire is opportunistic. No board task belongs on V594's
+  blocking path.
+
+### V594 planning impact
+
+- Stop the authentic-output fixed-point repair branch. Preserve Exp6800 and Exp6801 as null and
+  disqualified evidence. Do not tune a new score on those rows.
+- Build a typed operational-obligation contract and an exact event automaton. First prove direct
+  handoff and compression behavior on frozen rows. Then attach the same monitor to the live agent.
+- Generate structured proposals with all three mandated GGUF families. Compare priority arbitration
+  with flat reject-and-retry under matched candidate, token, and wall-clock budgets.
+- Extend the independently audited transactional store into an inspectable typed route program.
+  Learn only from chronological exact receipts. Report held-future benefit, reachable support,
+  write attribution, poison rejection, restart identity, and rollback identity.
+- Close the existing ARC supervisor, tool-gap, and actions-to-progress evidence debt with the live
+  agent's own attempts and runtime reverse engineering. Use durable checkpoints and exact config
+  separation. Never use game source, offline ground-truth search, or a hand-built per-game adapter.
+
 ## V593 Planner Refresh - 2026-08-30
 
 This sweep follows terminal milestone `2026.08.592`. Exp6788 and Exp6789 established a positive,
