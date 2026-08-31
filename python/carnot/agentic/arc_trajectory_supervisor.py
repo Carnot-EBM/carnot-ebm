@@ -13,9 +13,17 @@ See docs/research-notes/avo-adaptation-for-local-generator-2026-08-21.md.
 from __future__ import annotations
 
 import os
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+import hashlib
+import json
 from typing import Any
+
+
+OBLIGATION_SCHEMA = "carnot.arc.operational_obligation.v3"
+AUTOMATON_SCHEMA = "carnot.arc.operational_obligation_automaton.v3"
+EVENT_SCHEMA = "carnot.arc.operational_obligation_events.v3"
+PRIORITY_ORDER = ("hard", "binding", "soft")
 
 # The closed arm vocabulary, in firing order. Order is a diagnosis ladder:
 # an installed goal bias that survived a whole stagnant window is steering
@@ -362,3 +370,556 @@ class TraceAutomatonSupervisor:
             "blocked_valid_actions": sum(int(row["blocked_valid_action"]) for row in self._rows),
             "rows": list(self._rows),
         }
+
+
+class OperationalObligationError(ValueError):
+    """Reject an ambiguous contract with one stable machine-readable code.
+
+    The code is part of the receipt. Callers do not have to parse explanatory
+    prose to decide whether a contract failed closed.
+    """
+
+    def __init__(self, code: str, detail: str = "") -> None:
+        self.code = code
+        message = code if not detail else f"{code}: {detail}"
+        super().__init__(message)
+
+
+def canonical_json_bytes(value: Any) -> bytes:
+    """Encode JSON once so hashes and fresh processes compare exact bytes."""
+
+    return json.dumps(
+        value,
+        ensure_ascii=True,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+
+
+def _sha256_bytes(value: bytes) -> str:
+    return "sha256:" + hashlib.sha256(value).hexdigest()
+
+
+def canonical_obligation_bytes(obligations: Sequence[Mapping[str, Any]]) -> bytes:
+    """Wrap obligation records in the one accepted v3 source envelope."""
+
+    return canonical_json_bytes(
+        {"obligations": [dict(record) for record in obligations], "schema": OBLIGATION_SCHEMA}
+    )
+
+
+def canonical_event_bytes(events: Sequence[Mapping[str, Any]]) -> bytes:
+    """Wrap replay events in the one accepted v3 event envelope."""
+
+    return canonical_json_bytes(
+        {"events": [dict(event) for event in events], "schema": EVENT_SCHEMA}
+    )
+
+
+def _require_exact_keys(
+    value: Mapping[str, Any],
+    expected: set[str],
+    *,
+    code: str,
+) -> None:
+    if set(value) != expected:
+        raise OperationalObligationError(
+            code,
+            f"expected={sorted(expected)!r} observed={sorted(value)!r}",
+        )
+
+
+def _require_sorted_fact_list(value: Any, *, code: str, field: str) -> list[str]:
+    if not isinstance(value, list) or any(not isinstance(item, str) or not item for item in value):
+        raise OperationalObligationError(code, f"{field} must be a string list")
+    if value != sorted(value) or len(value) != len(set(value)):
+        raise OperationalObligationError(code, f"{field} must be sorted and unique")
+    return value
+
+
+def _validate_action(action: Any, *, code: str) -> None:
+    if not isinstance(action, Mapping):
+        raise OperationalObligationError(code, "action must be an object")
+    _require_exact_keys(action, {"data", "kind"}, code=code)
+    kind = action.get("kind")
+    if isinstance(kind, bool) or not isinstance(kind, (int, str)) or kind == "":
+        raise OperationalObligationError(code, "action kind must be a nonempty string or integer")
+    try:
+        canonical_json_bytes(action)
+    except (TypeError, ValueError) as exc:
+        raise OperationalObligationError(code, "action data is not canonical JSON") from exc
+
+
+def _validate_obligation(record: Any) -> None:
+    if not isinstance(record, Mapping):
+        raise OperationalObligationError("invalid_obligation", "record must be an object")
+    _require_exact_keys(
+        record,
+        {"action", "contract", "obligation_id"},
+        code="invalid_obligation_fields",
+    )
+    obligation_id = record.get("obligation_id")
+    if not isinstance(obligation_id, str) or not obligation_id:
+        raise OperationalObligationError("invalid_obligation_id")
+    _validate_action(record.get("action"), code="invalid_action")
+
+    contract = record.get("contract")
+    if not isinstance(contract, Mapping):
+        raise OperationalObligationError("invalid_contract")
+    required_contract_fields = {
+        "authority",
+        "execution_consequence",
+        "fallback",
+        "prerequisite",
+        "priority",
+    }
+    missing = required_contract_fields - set(contract)
+    missing_codes = {
+        "authority": "absent_authority",
+        "execution_consequence": "consequence_deletion",
+        "fallback": "missing_fallback",
+        "prerequisite": "ambiguous_prerequisite",
+        "priority": "unknown_priority",
+    }
+    if missing:
+        first = sorted(missing)[0]
+        raise OperationalObligationError(missing_codes[first])
+    _require_exact_keys(contract, required_contract_fields, code="invalid_contract_fields")
+
+    prerequisite = contract["prerequisite"]
+    if not isinstance(prerequisite, Mapping):
+        raise OperationalObligationError("ambiguous_prerequisite")
+    _require_exact_keys(
+        prerequisite,
+        {"all_of", "none_of"},
+        code="ambiguous_prerequisite",
+    )
+    all_of = _require_sorted_fact_list(
+        prerequisite["all_of"],
+        code="ambiguous_prerequisite",
+        field="all_of",
+    )
+    none_of = _require_sorted_fact_list(
+        prerequisite["none_of"],
+        code="ambiguous_prerequisite",
+        field="none_of",
+    )
+    if set(all_of) & set(none_of):
+        raise OperationalObligationError("ambiguous_prerequisite", "fact appears in both sets")
+
+    authority = contract["authority"]
+    if not isinstance(authority, Mapping):
+        raise OperationalObligationError("absent_authority")
+    _require_exact_keys(authority, {"issuer", "order"}, code="absent_authority")
+    issuer = authority.get("issuer")
+    order = authority.get("order")
+    if not isinstance(issuer, str) or not issuer:
+        raise OperationalObligationError("absent_authority")
+    if isinstance(order, bool) or not isinstance(order, int) or order < 0:
+        raise OperationalObligationError("invalid_authority_order")
+
+    fallback = contract["fallback"]
+    if not isinstance(fallback, Mapping):
+        raise OperationalObligationError("missing_fallback")
+    _require_exact_keys(fallback, {"action", "reason"}, code="missing_fallback")
+    _validate_action(fallback.get("action"), code="missing_fallback")
+    if not isinstance(fallback.get("reason"), str) or not fallback["reason"]:
+        raise OperationalObligationError("missing_fallback")
+
+    consequence = contract["execution_consequence"]
+    if not isinstance(consequence, Mapping):
+        raise OperationalObligationError("consequence_deletion")
+    _require_exact_keys(consequence, {"add", "remove"}, code="consequence_deletion")
+    add = _require_sorted_fact_list(
+        consequence["add"],
+        code="consequence_deletion",
+        field="add",
+    )
+    remove = _require_sorted_fact_list(
+        consequence["remove"],
+        code="consequence_deletion",
+        field="remove",
+    )
+    if not add and not remove:
+        raise OperationalObligationError("consequence_deletion")
+    if set(add) & set(remove):
+        raise OperationalObligationError("ambiguous_consequence")
+
+    priority = contract["priority"]
+    if not isinstance(priority, Mapping):
+        raise OperationalObligationError("unknown_priority")
+    _require_exact_keys(priority, {"class", "weight"}, code="unknown_priority")
+    priority_class = priority.get("class")
+    weight = priority.get("weight")
+    if priority_class not in PRIORITY_ORDER:
+        raise OperationalObligationError("unknown_priority")
+    if isinstance(weight, bool) or not isinstance(weight, int):
+        raise OperationalObligationError("invalid_priority_weight")
+    if priority_class == "soft" and weight <= 0:
+        raise OperationalObligationError("invalid_priority_weight")
+    if priority_class != "soft" and weight != 0:
+        raise OperationalObligationError("invalid_priority_weight")
+
+
+def _reject_unbounded_cycles(obligations: Sequence[Mapping[str, Any]]) -> None:
+    producers: dict[str, set[str]] = {}
+    for record in obligations:
+        consequence = record["contract"]["execution_consequence"]
+        for fact in consequence["add"]:
+            producers.setdefault(fact, set()).add(record["obligation_id"])
+    edges: dict[str, set[str]] = {record["obligation_id"]: set() for record in obligations}
+    for record in obligations:
+        target = record["obligation_id"]
+        for fact in record["contract"]["prerequisite"]["all_of"]:
+            for source in producers.get(fact, set()):
+                edges[source].add(target)
+
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(node: str) -> None:
+        if node in visiting:
+            raise OperationalObligationError("unbounded_cycle", node)
+        if node in visited:
+            return
+        visiting.add(node)
+        for child in sorted(edges[node]):
+            visit(child)
+        visiting.remove(node)
+        visited.add(node)
+
+    for obligation_id in sorted(edges):
+        visit(obligation_id)
+
+
+def compile_operational_obligations(source: bytes) -> dict[str, Any]:
+    """Compile canonical five-field contracts to a deterministic automaton.
+
+    Strict bytes make an audit meaningful. If a producer changes whitespace or
+    list order, the compiler refuses the source instead of silently normalizing
+    a different contract into the expected hash.
+    """
+
+    if not isinstance(source, bytes):
+        raise OperationalObligationError("non_canonical_serialization", "source must be bytes")
+    try:
+        payload = json.loads(source.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise OperationalObligationError("non_canonical_serialization") from exc
+    if canonical_json_bytes(payload) != source:
+        raise OperationalObligationError("non_canonical_serialization")
+    if not isinstance(payload, Mapping):
+        raise OperationalObligationError("invalid_obligation_envelope")
+    _require_exact_keys(
+        payload,
+        {"obligations", "schema"},
+        code="invalid_obligation_envelope",
+    )
+    if payload.get("schema") != OBLIGATION_SCHEMA:
+        raise OperationalObligationError("unsupported_obligation_schema")
+    obligations = payload.get("obligations")
+    if not isinstance(obligations, list) or not obligations:
+        raise OperationalObligationError("empty_obligation_set")
+    for record in obligations:
+        _validate_obligation(record)
+    identities = [record["obligation_id"] for record in obligations]
+    if len(identities) != len(set(identities)):
+        raise OperationalObligationError("duplicate_obligation_id")
+    if identities != sorted(identities):
+        raise OperationalObligationError("non_canonical_obligation_order")
+    _reject_unbounded_cycles(obligations)
+
+    compiled: dict[str, Any] = {
+        "initial_state": "awaiting_event",
+        "obligations": obligations,
+        "priority_order": list(PRIORITY_ORDER),
+        "schema": AUTOMATON_SCHEMA,
+        "source_hash": _sha256_bytes(source),
+        "states": ["awaiting_event", "selected", "fallback", "no_op", "conflict"],
+        "transitions": [
+            {"from": "awaiting_event", "to": "conflict", "when": "invalid_event"},
+            {"from": "awaiting_event", "to": "fallback", "when": "no_candidate"},
+            {"from": "awaiting_event", "to": "no_op", "when": "selected_no_state_change"},
+            {"from": "awaiting_event", "to": "selected", "when": "selected_state_change"},
+        ],
+    }
+    compiled["automaton_hash"] = _sha256_bytes(canonical_json_bytes(compiled))
+    return compiled
+
+
+def _priority_key(record: Mapping[str, Any]) -> tuple[int, int, str]:
+    contract = record["contract"]
+    return (
+        PRIORITY_ORDER.index(contract["priority"]["class"]),
+        contract["authority"]["order"],
+        record["obligation_id"],
+    )
+
+
+class OperationalObligationSupervisor:
+    """Evaluate v3 events through exact authority and priority rules."""
+
+    def __init__(self, compiled_automaton: Mapping[str, Any]) -> None:
+        compiled = json.loads(canonical_json_bytes(compiled_automaton))
+        if compiled.get("schema") != AUTOMATON_SCHEMA:
+            raise OperationalObligationError("unsupported_automaton_schema")
+        expected = compile_operational_obligations(
+            canonical_obligation_bytes(compiled.get("obligations") or [])
+        )
+        if compiled != expected:
+            raise OperationalObligationError("compiled_automaton_mismatch")
+        self.compiled_automaton = compiled
+        self._obligations = {record["obligation_id"]: record for record in compiled["obligations"]}
+
+    @staticmethod
+    def _prerequisite_active(record: Mapping[str, Any], facts: set[str]) -> bool:
+        prerequisite = record["contract"]["prerequisite"]
+        return set(prerequisite["all_of"]).issubset(facts) and not (
+            set(prerequisite["none_of"]) & facts
+        )
+
+    @staticmethod
+    def _candidate_matches(candidate: Mapping[str, Any], record: Mapping[str, Any]) -> bool:
+        return (
+            candidate["action"] == record["action"]
+            and record["contract"]["authority"]["issuer"] in candidate["authority_chain"]
+        )
+
+    def _validate_event(self, event: Any, expected_sequence: int) -> None:
+        if not isinstance(event, Mapping):
+            raise OperationalObligationError("invalid_event")
+        _require_exact_keys(
+            event,
+            {"candidates", "event_id", "obligation_ids", "observed_facts", "sequence"},
+            code="invalid_event_fields",
+        )
+        if event.get("sequence") != expected_sequence:
+            raise OperationalObligationError("replay_reorder")
+        if not isinstance(event.get("event_id"), str) or not event["event_id"]:
+            raise OperationalObligationError("invalid_event_id")
+        obligations = _require_sorted_fact_list(
+            event.get("obligation_ids"),
+            code="non_canonical_event",
+            field="obligation_ids",
+        )
+        if any(obligation_id not in self._obligations for obligation_id in obligations):
+            raise OperationalObligationError("unknown_obligation_id")
+        _require_sorted_fact_list(
+            event.get("observed_facts"),
+            code="non_canonical_event",
+            field="observed_facts",
+        )
+        candidates = event.get("candidates")
+        if not isinstance(candidates, list):
+            raise OperationalObligationError("invalid_candidates")
+        candidate_ids: list[str] = []
+        for candidate in candidates:
+            if not isinstance(candidate, Mapping):
+                raise OperationalObligationError("invalid_candidate")
+            _require_exact_keys(
+                candidate,
+                {"action", "authority_chain", "candidate_id", "soft_progress"},
+                code="invalid_candidate_fields",
+            )
+            candidate_id = candidate.get("candidate_id")
+            if not isinstance(candidate_id, str) or not candidate_id:
+                raise OperationalObligationError("invalid_candidate_id")
+            candidate_ids.append(candidate_id)
+            _validate_action(candidate.get("action"), code="invalid_candidate_action")
+            authorities = _require_sorted_fact_list(
+                candidate.get("authority_chain"),
+                code="invalid_candidate_authority",
+                field="authority_chain",
+            )
+            if not authorities:
+                raise OperationalObligationError("invalid_candidate_authority")
+            progress = candidate.get("soft_progress")
+            if isinstance(progress, bool) or not isinstance(progress, int):
+                raise OperationalObligationError("invalid_soft_progress")
+        if len(candidate_ids) != len(set(candidate_ids)):
+            raise OperationalObligationError("duplicate_candidate_id")
+
+    def _evaluate_event(self, event: Mapping[str, Any], facts: set[str]) -> dict[str, Any]:
+        facts.update(event["observed_facts"])
+        declared = [self._obligations[item] for item in event["obligation_ids"]]
+        active = [record for record in declared if self._prerequisite_active(record, facts)]
+        hard = [record for record in active if record["contract"]["priority"]["class"] == "hard"]
+        binding = sorted(
+            (record for record in active if record["contract"]["priority"]["class"] == "binding"),
+            key=lambda record: (
+                record["contract"]["authority"]["order"],
+                record["obligation_id"],
+            ),
+        )
+        energies: list[dict[str, Any]] = []
+        conflicts: list[dict[str, Any]] = []
+        legal_candidates: list[
+            tuple[tuple[Any, ...], Mapping[str, Any], list[Mapping[str, Any]]]
+        ] = []
+
+        for candidate in sorted(event["candidates"], key=lambda item: item["candidate_id"]):
+            matched = [record for record in active if self._candidate_matches(candidate, record)]
+            same_action = [record for record in active if candidate["action"] == record["action"]]
+            spoofed = [
+                record
+                for record in same_action
+                if record["contract"]["authority"]["issuer"] not in candidate["authority_chain"]
+            ]
+            hard_count = sum(int(record not in matched) for record in hard)
+            binding_vector = [int(record not in matched) for record in binding]
+            soft_score = candidate["soft_progress"] + sum(
+                record["contract"]["priority"]["weight"]
+                for record in matched
+                if record["contract"]["priority"]["class"] == "soft"
+            )
+            energy = [hard_count, binding_vector, -soft_score]
+            accepted = hard_count == 0 and bool(matched) and not spoofed
+            energies.append(
+                {
+                    "accepted": accepted,
+                    "candidate_id": candidate["candidate_id"],
+                    "energy": energy,
+                }
+            )
+            if accepted:
+                key = (hard_count, tuple(binding_vector), -soft_score, candidate["candidate_id"])
+                legal_candidates.append((key, candidate, matched))
+            else:
+                reason = (
+                    "authority_spoof"
+                    if spoofed
+                    else "hard_violation"
+                    if hard_count
+                    else "unbound_candidate"
+                )
+                conflicts.append(
+                    {
+                        "candidate_id": candidate["candidate_id"],
+                        "first_conflict": (
+                            spoofed[0]["obligation_id"]
+                            if spoofed
+                            else hard[0]["obligation_id"]
+                            if hard_count
+                            else None
+                        ),
+                        "reason": reason,
+                    }
+                )
+
+        legal_candidates.sort(key=lambda item: item[0])
+        legal_actions = sorted(
+            {canonical_json_bytes(item[1]["action"]).decode("utf-8") for item in legal_candidates}
+        )
+        state_before_execution = canonical_json_bytes(sorted(facts))
+        selected_candidate_id: str | None = None
+        selected_energy: list[Any] | None = None
+        hard_violation_count = 0
+
+        if legal_candidates:
+            key, candidate, matched = legal_candidates[0]
+            selected_candidate_id = candidate["candidate_id"]
+            selected_action = candidate["action"]
+            selected_energy = [key[0], list(key[1]), key[2]]
+            hard_violation_count = int(key[0])
+            for record in matched:
+                consequence = record["contract"]["execution_consequence"]
+                facts.difference_update(consequence["remove"])
+                facts.update(consequence["add"])
+            state_bytes = canonical_json_bytes(sorted(facts))
+            changed = state_bytes != state_before_execution
+            certificate = {
+                "kind": "selected" if changed else "no_op",
+                "reason": "exact_lexicographic_minimum"
+                if changed
+                else "execution_consequence_already_satisfied",
+            }
+        else:
+            selected_record = min(declared, key=_priority_key) if declared else None
+            selected_action = (
+                selected_record["contract"]["fallback"]["action"]
+                if selected_record is not None
+                else {"data": None, "kind": "NOOP"}
+            )
+            state_bytes = state_before_execution
+            changed = False
+            if not active:
+                reason = "stale_prerequisite"
+            elif any(item["reason"] == "authority_spoof" for item in conflicts):
+                reason = "authority_spoof"
+            else:
+                reason = "no_legal_candidate"
+            certificate = {"kind": "no_candidate", "reason": reason}
+
+        conflict_bytes = canonical_json_bytes(conflicts)
+        legal_action_bytes = canonical_json_bytes(legal_actions)
+        selected_action_bytes = canonical_json_bytes(selected_action)
+        row: dict[str, Any] = {
+            "candidate_energies": energies,
+            "certificate": certificate,
+            "conflict_certificate_bytes": conflict_bytes.decode("utf-8"),
+            "conflict_certificates": conflicts,
+            "event_id": event["event_id"],
+            "hard_violation_count": hard_violation_count,
+            "legal_action_bytes": legal_action_bytes.decode("utf-8"),
+            "legal_action_set": [json.loads(item) for item in legal_actions],
+            "selected_action": selected_action,
+            "selected_action_bytes": selected_action_bytes.decode("utf-8"),
+            "selected_candidate_id": selected_candidate_id,
+            "selected_energy": selected_energy,
+            "sequence": event["sequence"],
+            "state_bytes": state_bytes.decode("utf-8"),
+            "state_changed": changed,
+            "state_hash": _sha256_bytes(state_bytes),
+        }
+        row["row_hash"] = _sha256_bytes(canonical_json_bytes(row))
+        return row
+
+    def replay(
+        self,
+        event_source: bytes,
+        *,
+        initial_facts: Sequence[str] = (),
+    ) -> list[dict[str, Any]]:
+        """Replay canonical events and retain exact state and decision bytes."""
+
+        if not isinstance(event_source, bytes):
+            raise OperationalObligationError("non_canonical_event_serialization")
+        try:
+            payload = json.loads(event_source.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise OperationalObligationError("non_canonical_event_serialization") from exc
+        if canonical_json_bytes(payload) != event_source:
+            raise OperationalObligationError("non_canonical_event_serialization")
+        if not isinstance(payload, Mapping):
+            raise OperationalObligationError("invalid_event_envelope")
+        _require_exact_keys(payload, {"events", "schema"}, code="invalid_event_envelope")
+        if payload.get("schema") != EVENT_SCHEMA:
+            raise OperationalObligationError("unsupported_event_schema")
+        events = payload.get("events")
+        if not isinstance(events, list):
+            raise OperationalObligationError("invalid_event_envelope")
+        event_ids: set[str] = set()
+        facts = set(
+            _require_sorted_fact_list(
+                sorted(initial_facts), code="invalid_initial_facts", field="initial_facts"
+            )
+        )
+        rows: list[dict[str, Any]] = []
+        for sequence, event in enumerate(events):
+            self._validate_event(event, sequence)
+            if event["event_id"] in event_ids:
+                raise OperationalObligationError("duplicate_event_id")
+            event_ids.add(event["event_id"])
+            rows.append(self._evaluate_event(event, facts))
+        return rows
+
+
+def read_supervisor_contract(contract: Mapping[str, Any]) -> Any:
+    """Read legacy v1 or compiled v3 without changing either contract."""
+
+    schema = contract.get("schema")
+    if schema == "carnot.arc.trace_fsm.v1":
+        return TraceAutomatonSupervisor(contract)
+    if schema == AUTOMATON_SCHEMA:
+        return OperationalObligationSupervisor(contract)
+    raise OperationalObligationError("unsupported_supervisor_contract", str(schema))

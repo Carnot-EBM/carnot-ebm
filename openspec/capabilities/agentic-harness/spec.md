@@ -808,6 +808,42 @@ execution consequence, and priority. The exact post-action receipts remain
 authoritative. A learned proposal, soft score, or strategy record SHALL NOT
 override a hard constraint or a binding authority order.
 
+The canonical v3 record SHALL use `carnot.arc.operational_obligation.v3`.
+Each record SHALL have one unique `obligation_id`, one canonical action, and
+one `contract` object with exactly these five fields:
+`prerequisite`, `authority`, `fallback`, `execution_consequence`, and
+`priority`. Prerequisites SHALL contain sorted `all_of` and `none_of` fact
+sets. The sets SHALL have no duplicate or shared fact. Authority SHALL name a
+nonempty issuer and a nonnegative order. Fallback SHALL name a canonical
+action and a reason. An execution consequence SHALL contain sorted `add` and
+`remove` fact sets, with at least one effect and no shared fact. Priority
+SHALL be `hard`, `binding`, or `soft`. A soft priority SHALL have a finite
+positive integer weight. Other priorities SHALL have weight zero.
+
+The compiler SHALL accept canonical JSON bytes only. It SHALL reject changed
+key spacing, changed record order, changed fact order, duplicate identities,
+or an effect-to-prerequisite cycle that has no explicit finite bound. It SHALL
+emit a deterministic v3 event automaton with a content hash. The v1
+`carnot.arc.trace_fsm.v1` reader and its existing behavior SHALL remain
+available.
+
+For each event, the automaton SHALL compute exact candidate energy as a tuple:
+hard-violation count first, the binding-obligation vector in declared
+authority order second, and negative soft progress last. Candidate identity
+SHALL break a complete tie. A finite soft value SHALL never change a nonzero
+hard component into an accepted action. Every accepted candidate SHALL have
+zero hard violations. When no candidate is legal, the automaton SHALL emit a
+`no_candidate` certificate and the declared fallback. When the selected
+consequence does not change canonical state bytes, it SHALL emit a `no_op`
+certificate.
+
+Replay SHALL require unique event identities and contiguous declared event
+order. It SHALL reject stale prerequisites, spoofed authority, duplicate
+events, and reordered events with named conflict certificates. A fresh Python
+process SHALL rebuild the compiler and replay receipts. Canonical state bytes,
+legal action sets, selected actions, conflict certificates, and their hashes
+SHALL match the parent process byte for byte.
+
 The interface SHALL fail closed on an absent authority, missing fallback,
 ambiguous prerequisite, consequence deletion, unknown priority, duplicate
 identity, or non-canonical replay. A failed owned precondition SHALL produce
@@ -821,6 +857,33 @@ name the failed check, expected value, and observed value in
 **When** V595 compiles operational obligations
 **Then** the five-part schema, exact authority boundary, artifact path,
 completion field, and fail-closed behavior remain machine-checkable.
+
+#### SCENARIO-AGENTIC-6810-1-CANONICAL-COMPILER
+
+**Given** canonical v3 obligations with hard, binding, and soft priorities
+**When** the owned supervisor compiles and evaluates candidates
+**Then** hard feasibility precedes binding authority order and soft progress,
+all accepted actions have zero hard violations, and canonical bytes and hashes
+are deterministic.
+
+#### SCENARIO-AGENTIC-6810-1-CERTIFICATES-AND-COMPATIBILITY
+
+**Given** an unavailable candidate, an effect that is already present, and a
+valid v1 trace automaton
+**When** the supervisor reads each input
+**Then** it emits exact `no_candidate` and `no_op` certificates for v3 and
+preserves the v1 reader behavior.
+
+#### SCENARIO-AGENTIC-6810-1-ATTACKS-AND-FRESH-REPLAY
+
+**Given** unknown priority, missing authority or fallback, ambiguous
+prerequisite, deleted consequence, duplicate identity, unbounded cycle,
+non-canonical bytes, priority inversion, stale prerequisite, authority spoof,
+fallback loss, consequence weakening, duplicate event, or replay reorder
+**When** compile or replay validates the mutation
+**Then** the mutation fails closed with a named reason, while a fresh-process
+clean replay has byte-identical states, legal actions, selections,
+certificates, and hashes.
 
 ### REQ-AGENTIC-6810-2: V595 Live Stepwise Strategy Path Ownership
 
