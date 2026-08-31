@@ -16919,3 +16919,4 @@ The l |
 | 2026-08-31 13:21 UTC | Live selfparse tool-gap obligation transport v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6819-arc-stepwise-strategy-accrual) |
 | 2026-08-31 13:21 UTC | Obligation-routed actions-to-progress A/B v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6820-arc-tool-gap-obligation-transport-v2 |
 | 2026-08-31 13:21 UTC | Independent ARC causal adoption audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6819-arc-stepwise-strategy-accrual, exp68 |
+| 2026-08-31 13:53 UTC | V595 evidence synthesis and branch disposition | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6823_v595_br |
