@@ -1698,6 +1698,134 @@ conflict.
 |---|---|---|
 | REQ-CONSTRAINT-6810 and SCENARIO-CONSTRAINT-6810-* | Planned: Exp6813 and `results/experiment_6813_selective_priority_arbiter_ab.json`. | Planned after Exp6810 contract preflight. |
 
+### REQ-CONSTRAINT-6813: Deterministic Selective Priority Arbiter A/B
+
+Exp6813 SHALL read the complete Exp6812 proposal corpus without invoking a
+model. It SHALL stop with `complete_blocked_selective_priority_arbiter_ab` when
+the corpus readiness flag, all three required model families, raw byte hashes,
+paired candidate rows, or the Exp6811 compiler receipt is absent or invalid.
+The blocked artifact SHALL contain no comparison rows. Its
+`gate_check_summary` SHALL name each failed check with its expected and
+observed value.
+
+The experiment SHALL freeze development scenario IDs and held scenario IDs
+before it reduces any outcome. It SHALL derive each fitted public constant
+from development rows only. The held rows SHALL supply every headline rate and
+paired interval. Each source model, scenario, seed, and handoff encoding SHALL
+form one candidate set. Both comparison arms SHALL receive the same set in the
+same frozen order.
+
+The selective arm SHALL first check candidate zero as the base proposal. If
+the base has valid syntax, zero hard violations, zero binding shortfall, and
+exact proposal-time support, the arm SHALL preserve its action bytes. It SHALL
+not replace a valid base to gain soft value. Otherwise, it SHALL reject every
+hard violation and minimize the tuple of hard violations, binding shortfall in
+declared authority order, negative clipped soft score, and frozen candidate
+index. The last component gives a stable tie. If no hard-safe supported
+candidate exists, the arm SHALL abstain to the declared fallback.
+
+The flat arm SHALL inspect candidates in frozen order. It SHALL reject a
+candidate after a syntax, hard, binding, support, or authority failure. It
+SHALL accept the first candidate with no such failure. If none exists, it
+SHALL abstain to the declared fallback. Both arms SHALL have equal candidate,
+proposal-time exact-check, retry-cap, outcome-check, work-unit, and CPU
+allowances. Realized sequential retries and measured latency remain outcomes;
+they are not budget permissions.
+
+Selection SHALL use only parsed proposal bytes, frozen order, the declared
+obligation contract, observed facts, parse state, exact hard count, declared
+authority-order binding vector, and proposed soft score. Selection SHALL not
+use model identity, model family, scenario identity, exact answer, future
+outcome, post-selection progress, harmful-selection label, or exact utility.
+The exact transition evaluator SHALL run after selection and outside both arms.
+
+Every model-scenario-seed-handoff-arm unit SHALL record selected bytes,
+legality, post-selection progress, realized retries, candidate evidence,
+conflict or no-op certificate, false intervention, safe-action byte identity,
+abstention, work, and measured latency. A rejection certificate SHALL name the
+first unsatisfied higher-priority item. False intervention means changing a
+base proposal that the frozen validity test already classified as valid.
+
+The positive gate SHALL require zero accepted hard violations, the held
+false-intervention upper bound at or below its frozen limit, a positive held
+paired lower bound for progress improvement or retry improvement, no required
+model-family support loss, and no increase in harmful selection. A completed
+null result is valid. `selective_arbiter_ab_completed` SHALL depend only on
+complete rows, equal budgets, deterministic reduction, passed attacks, and the
+frozen manifest. It SHALL not depend on the effect sign.
+
+#### SCENARIO-CONSTRAINT-6813-LEXICOGRAPHIC: Hard and Binding Authority Dominate Soft Value
+
+**Given** a hard-violating candidate with unbounded finite soft score and a
+hard-safe candidate with lower soft score
+**When** the selective arbiter compares the frozen set
+**Then** it rejects the hard violation, respects the authority-ordered binding
+vector, and uses soft score only after the higher-priority components tie.
+
+**Spec traces:** REQ-CONSTRAINT-6813
+
+#### SCENARIO-CONSTRAINT-6813-STABLE-TIE: Frozen Order Resolves Exact Ties
+
+**Given** two supported candidates with identical hard, binding, and clipped
+soft components
+**When** the selective arbiter compares them more than once
+**Then** it selects the lower frozen candidate index each time.
+
+**Spec traces:** REQ-CONSTRAINT-6813
+
+#### SCENARIO-CONSTRAINT-6813-NO-LEGAL: Missing Support Produces Abstention
+
+**Given** a candidate set with no hard-safe supported candidate
+**When** either arm completes its bounded checks
+**Then** it selects no candidate, returns the declared fallback bytes, and
+emits a complete no-legal-candidate certificate.
+
+**Spec traces:** REQ-CONSTRAINT-6813
+
+#### SCENARIO-CONSTRAINT-6813-NO-OP: A Valid Base Is Byte-Preserved
+
+**Given** candidate zero is already valid
+**When** the selective arm runs
+**Then** its selected action bytes equal the base action bytes, false
+intervention is false, and the certificate identifies a preserved no-op.
+
+**Spec traces:** REQ-CONSTRAINT-6813
+
+#### SCENARIO-CONSTRAINT-6813-CERTIFICATE: First Conflict Is Complete
+
+**Given** a rejected base with more than one lower-priority defect
+**When** the arbiter explains its intervention
+**Then** the certificate names the first syntax, hard, or authority-ordered
+binding conflict and does not substitute a later soft shortfall.
+
+**Spec traces:** REQ-CONSTRAINT-6813
+
+#### SCENARIO-CONSTRAINT-6813-ACCOUNTING: Safe Changes and Budgets Are Exact
+
+**Given** paired selective and flat rows over the same frozen candidate set
+**When** Exp6813 reduces false intervention and work
+**Then** only changes to valid base bytes enter the false-intervention
+numerator and both arms retain equal frozen work allowances and observed exact
+check counts.
+
+**Spec traces:** REQ-CONSTRAINT-6813
+
+#### SCENARIO-CONSTRAINT-6813-COMPLETION: Effect Sign Does Not Control Readiness
+
+**Given** all source units, budget receipts, reducers, attacks, and manifest
+checks are complete
+**When** the held paired effect is positive, zero, or negative
+**Then** `selective_arbiter_ab_completed` is true and `verdict_class` reports
+the measured effect without changing completion.
+
+**Spec traces:** REQ-CONSTRAINT-6813
+
+## Implementation Status (REQ-CONSTRAINT-6813)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6813 and SCENARIO-CONSTRAINT-6813-* | Planned: `python/carnot/experiment_6813_selective_priority_arbiter_ab.py`. | Planned focused tests and scoped coverage. |
+
 ### REQ-CONSTRAINT-6812: Authentic Paired Operational Handoff Corpus
 
 The constraint-verification capability SHALL produce an authentic local-model

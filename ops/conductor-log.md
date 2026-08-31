@@ -16901,3 +16901,5 @@ The l |
 | 2026-08-31 09:25 UTC | Typed operational-obligation automaton v3 | OK | 123 passed, 1 warning in 15.42s |
 | 2026-08-31 10:12 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 21309 serves 'ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d |
 | 2026-08-31 10:32 UTC | Three-model operational-handoff proposal corpus v2 | OK | 110 passed, 1 warning in 17.07s |
+| 2026-08-31 11:03 UTC | Selective priority arbiter versus flat retry A/B | FAIL | Codex CLI error: Stalled after 600s silence. Last output: ed[1].update(
++     |
