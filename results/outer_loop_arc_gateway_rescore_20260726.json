@@ -1,7 +1,7 @@
 {
  "experiment": "outer_loop_arc_gateway_rescore_20260726",
  "title": "Gateway-accurate re-scoring: the uncharged-RESET defect, bounded over 1401 recorded rows and then MEASURED exactly on matched live re-runs",
- "run_date": "2026-07-29T14:36:02Z",
+ "run_date": "2026-08-31T22:47:20Z",
  "schema": "carnot.arc_gateway_rescore.v1",
  "defect_under_measurement": {
   "gateway_charges_a_reset": "arc_agi/scorecard.py:701-704 inc_reset_count -> `self.resets[i] += 1` AND `self.actions[i] += 1`; reached from update_scorecard:839-843",
@@ -88,7 +88,7 @@
  "independent_implementation_crosscheck": {
   "peer_artifact": "results/outer_loop_arc_reset_charge_attribution_20260726.json",
   "available": true,
-  "peer_sha256": "cf2ae7ad2ea0debab2e55c45dce4e2d8ad58d4320f568db3755ad7aa0ec3dd5d",
+  "peer_sha256": "1f467e4b2ecacf390c29df06d87b49c1474c3fbed7a8c048dc7756605aaf2e7c",
   "field_by_field_peer_vs_mine": {
    "n_rows_total": {
     "peer": 1401,
@@ -965,39 +965,39 @@
    "available": true
   }
  ],
- "git_head": "a283217433c2e4b69781a293a6d17a32f47f8855",
+ "git_head": "2c4635d19ba04639830437abf144accd5cb7a216",
  "provenance": {
-  "git_head": "a283217433c2e4b69781a293a6d17a32f47f8855",
+  "git_head": "2c4635d19ba04639830437abf144accd5cb7a216",
   "code": [
    {
     "path": "scripts/arc_gateway_rescore.py",
     "sha256": "b232f19a7ff8c32bb207703001650639438de78d6c20a44f7a9b75d628c95370",
     "bytes": 21859,
-    "mtime_utc": "2026-07-27T00:04:02Z"
+    "mtime_utc": "2026-08-31T22:13:35Z"
    },
    {
     "path": "scripts/arc_gateway_exact_attribution.py",
     "sha256": "b401b6367c794c47b1719bf360bed37150ddd30d1435034619bb881fc08a8348",
     "bytes": 6977,
-    "mtime_utc": "2026-07-26T23:28:49Z"
+    "mtime_utc": "2026-08-31T22:13:35Z"
    },
    {
     "path": "scripts/analyze_arc_gateway_rescore.py",
-    "sha256": "1e6611431826041c24df65fb659de19e2a118eafd96d338b37ceb9e75936e154",
-    "bytes": 45412,
-    "mtime_utc": "2026-07-27T00:04:02Z"
+    "sha256": "5a7291ed02ef74321c379f77331c0b755771d6599df055ff80fedc94deab83c3",
+    "bytes": 46129,
+    "mtime_utc": "2026-08-31T22:13:35Z"
    },
    {
     "path": "scripts/arc_leaderboard_eval.py",
-    "sha256": "04d09695c4eb4e59e85d16be5d7526e3c224bcc0bfe16af5bc5e74fb22deda02",
-    "bytes": 53382,
-    "mtime_utc": "2026-07-27T05:03:34Z"
+    "sha256": "13c53548beea2e47e5efee1aa3e97feacdb669670bcc2024b38ef12f721a09f6",
+    "bytes": 56375,
+    "mtime_utc": "2026-08-31T22:47:00Z"
    },
    {
     "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
-    "bytes": 376234,
-    "mtime_utc": "2026-07-29T14:20:59Z"
+    "sha256": "1106d26e7d0bc8a2c1e21e62e715774c09e20194773d44c8258c7c3349e38adf",
+    "bytes": 530038,
+    "mtime_utc": "2026-08-31T22:13:30Z"
    }
   ],
   "rows_sources": {
@@ -1281,9 +1281,9 @@
    }
   ]
  },
- "duration_s": 1.748,
+ "duration_s": 1.069,
  "duration_s_principle": "THIS ANALYSER'S runtime only. It is NOT the measurement clock -- Part A's clock is `measurement_wall_s` (sum of upstream row-file elapsed_s) and Part B's is `part_b_measurement_wall_s`. Conflating them is the 2026-07-26 failure this field's annotation exists to prevent.",
  "inference_substrate": "aggregation_from_upstream_artifacts",
  "inference_substrate_principle": "the artifact as a whole is an aggregation over persisted rows plus a cited live sub-measurement; the live half declares its own substrate inside `part_b_exact_attribution_live`.",
- "reproducibility_checksum": "8e2123304c6120873fd80eb4d56716b287ec3d6f541e68ad04b864c5b9dad325"
+ "reproducibility_checksum": "048d3146ebab7565560b97b3f91f8cbd402a1e3e3d72788766102025e247a96c"
 }
