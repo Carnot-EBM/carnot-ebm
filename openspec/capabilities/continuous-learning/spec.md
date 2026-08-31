@@ -8491,3 +8491,109 @@ every source, causal, durability, and safety gate to pass.
 | Requirement | Python | Tests |
 |-------------|--------|-------|
 | REQ-CL-6792 and SCENARIO-CL-6792-* | Planned: `python/carnot/experiment_6792_csl_causal_safety_cold_audit.py`; `scripts/experiments/experiment_6792_csl_causal_safety_cold_audit.py`; terminal artifact `results/experiment_6792_csl_causal_safety_cold_audit.json`. | Planned: `tests/python/test_experiment_6792_csl_causal_safety_cold_audit.py`. |
+
+## REQ-CL-6797: Canonical Transaction Byte Replay
+
+Given Exp6791 completed 4,800 frozen comparison cells but omitted state bytes,
+When Exp6797 runs for execution date 20260831,
+Then it SHALL re-execute the exact Exp6791 mechanism on a deterministic CPU
+And it SHALL write
+`results/experiment_6797_canonical_transaction_byte_replay.json`.
+
+Exp6797 SHALL verify the checked-in Exp6790 and Exp6791 file hashes before it
+starts replay. It SHALL also verify 4,800 unique cells, five frozen order
+hashes, four exact arm definitions, 3,189 source commits, one canonical JSON
+serializer, and sufficient disk and memory. One failed check SHALL stop all
+replay. The blocked artifact SHALL use
+`complete_blocked_transaction_byte_replay`. Its `gate_check_summary` SHALL keep
+the failed check and observed value. A reduced replay is not permitted.
+
+Exp6797 SHALL use the Exp6791 arms, seeds, orders, thresholds, capacity,
+opportunity stream, update cadence, action policy, and controls without a new
+learner. Each arm-order store SHALL remain isolated. The active event SHALL be
+read-only. A write SHALL occur only after the exact receipt for that event.
+
+Each committed receipt SHALL carry a reversible base64 encoding of the exact
+canonical parent state bytes and new state bytes. It SHALL carry matching
+SHA-256 hashes, order, arm, event, position, transaction identity, chain index,
+chain predecessor, and receipt hash. Exp6797 SHALL decode both snapshots and
+verify both hashes at the commit boundary. It SHALL never infer state bytes
+from a hash.
+
+Exp6797 SHALL use a parent-owned atomic checkpoint outside worker temporary
+directories. The parent SHALL stop the first worker after one fixed complete
+order prefix. A fresh process SHALL resume only pending orders. The resume
+SHALL skip each complete prefix cell exactly once. A changed manifest,
+conflicting row, incomplete row, or duplicate commit SHALL not change accepted
+checkpoint bytes.
+
+Exp6797 SHALL pair all replay rows with Exp6791. Routes, rewards, utilities,
+reads, writes, and transaction decisions SHALL match. Row reduction SHALL
+reproduce 1,063 compositional online writes, 3,132 compositional online later
+reads, 721 compositional online action changes, 3,189 total commits, and all
+stored order summaries. These values are identity checks, not new scientific
+claims.
+
+The artifact SHALL include `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_hashes`, `frozen_manifest`, `arm_definitions`, `order_hashes`,
+`checkpoint_receipts`, `transaction_schema`, `transaction_receipts`,
+`committed_transaction_count`, `parent_byte_snapshot_count`,
+`new_state_byte_snapshot_count`, `byte_hash_match_count`,
+`replay_identity_checks`, `attack_results`, `rows`,
+`transaction_byte_snapshot_fixture_ready`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`deterministic CPU transactional replay, no LLM`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL use only `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+`honest_verdict` SHALL start with an approved terminal prefix.
+
+### SCENARIO-CL-6797-CANONICAL-BYTES: Encoding Round-Trips Exact State
+
+Given one committed transaction boundary,
+When its parent and new state snapshots are encoded and decoded,
+Then both decoded byte strings SHALL equal the originals
+And both stored hashes SHALL equal hashes recomputed from decoded bytes.
+
+### SCENARIO-CL-6797-BYTE-CHAIN: Every Commit Extends Its Owned Store
+
+Given committed receipts for one arm and order,
+When Exp6797 verifies them in commit order,
+Then each parent snapshot SHALL equal the prior new snapshot
+And each predecessor SHALL equal the prior receipt hash.
+
+### SCENARIO-CL-6797-FRESH-RESUME: A Fixed Prefix Survives Interruption
+
+Given the first worker has published one complete order,
+When the parent interrupts it and starts a fresh process,
+Then 960 complete cells SHALL be skipped exactly once
+And the new process SHALL publish only the four pending orders.
+
+### SCENARIO-CL-6797-IDENTITY: Replay Preserves Exp6791 Evidence
+
+Given all five replay orders are complete,
+When rows and transactions are paired with Exp6791,
+Then all 4,800 cells and all order summaries SHALL be identical
+And the row reducer SHALL reproduce the frozen activity counts.
+
+### SCENARIO-CL-6797-ATTACKS: Corruption Cannot Change Accepted Bytes
+
+Given byte-flip, receipt-reorder, stale-parent, wrong-arm, duplicate-commit,
+cross-arm-access, interrupted-write, and manifest-mismatch attacks,
+When each attack reaches its validation boundary,
+Then each attack SHALL fail closed
+And accepted committed bytes SHALL remain unchanged.
+
+### SCENARIO-CL-6797-BLOCKED: A Failed Precondition Has No Replay Rows
+
+Given one authority, identity, serializer, or resource check fails,
+When Exp6797 builds its terminal artifact,
+Then rows and transaction receipts SHALL be empty
+And `gate_check_summary` SHALL name the failed check and observed value.
+
+## Implementation Status (REQ-CL-6797)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6797 and SCENARIO-CL-6797-* | Planned: `python/carnot/experiment_6797_canonical_transaction_byte_replay.py`; `scripts/experiments/experiment_6797_canonical_transaction_byte_replay.py`; terminal artifact `results/experiment_6797_canonical_transaction_byte_replay.json`. | Planned: `tests/python/test_experiment_6797_canonical_transaction_byte_replay.py`. |

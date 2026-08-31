@@ -16871,3 +16871,5 @@ The l |
 | 2026-08-31 00:06 UTC | Fail-closed agent-model dispatch requalification | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6796_agent_m |
 | 2026-08-31 00:10 UTC | Fail-closed agent-model dispatch requalification | FAIL | No file changes produced |
 | 2026-08-31 00:15 UTC | Fail-closed agent-model dispatch requalification | FAIL | No file changes produced |
+| 2026-08-31 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | exclusion_manifest_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on exclusi |
+| 2026-08-31 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_timestamp_field age-week 0: OPEN 1 days: SILENT_NON_F |
