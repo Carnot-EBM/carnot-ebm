@@ -23972,6 +23972,121 @@ rows, sets completion false, and records all observed failures.
 |---|---|---|
 | REQ-VERIFY-6800 and SCENARIO-VERIFY-6800-* | Planned (`python/carnot/experiment_6800_real_output_fixed_point_transfer_ab.py`, `scripts/experiments/experiment_6800_real_output_fixed_point_transfer_ab.py`) | Planned (`tests/python/test_experiment_6800_real_output_fixed_point_transfer_ab.py`) |
 
+### REQ-VERIFY-6801: Real-Output Fixed-Point Transfer SHALL Pass An Independent Cold Audit
+
+Exp6801 SHALL load frozen JSON and checkpoint bytes without importing the
+Exp6800 producer or fitting either arm. It SHALL use only Python standard
+library code. It SHALL require a completed Exp6800 comparison, exact source
+hashes, all planned rows, unique paired keys, complete model, family,
+transformation, and split strata, and frozen training receipts. A failed gate
+SHALL write `complete_blocked_real_output_fixed_point_audit`. It SHALL emit no
+audit rows, set `model_output_fixed_point_audit_completed` false, and record
+all observed failures in `gate_check_summary`.
+
+The audit SHALL rebuild every Exp6799 CNF graph from its serialized clauses.
+It SHALL enumerate each exact valid set without reading serialized exact
+assignments as authority. It SHALL recompute graph hashes, valid-set hashes,
+operation labels, candidate validity, dependency violations, nearest-valid
+distance, valid support, convergence, candidate work, and runtime from frozen
+rows. Refinement SHALL be a strict subset of base with unchanged dependency
+topology. Restructuring SHALL change topology and have support incomparable
+with base.
+
+The audit SHALL derive every Exp6800 headline from rows. It SHALL recompute
+case-clustered paired intervals with all models and seeds retained inside each
+source case. It SHALL also report a restructuring-minus-refinement interaction
+and its case-clustered interval. It SHALL compare cold values with source
+headlines and classify every discrepancy.
+
+The audit SHALL prove that fitting used only Exp6786 train units. It SHALL scan
+training receipts, frozen definitions, proposal inputs, checkpoint envelopes,
+threshold declarations, and decode inputs. The scan SHALL reject Exp6799 IDs,
+source model labels, exact assignments, valid sets, held outcomes, parser
+diagnoses, and checker feedback in fitting or proposal authority. Static or
+runtime oracle leakage SHALL disqualify the source claim.
+
+The audit SHALL run eight destructive controls. These are duplicate-case
+removal, model-ID permutation, transformation-label swap, solution-preserving
+surface relabeling, group permutation, dependency-edge deletion, identical
+arms, and an injected aggregate contradiction. Each control SHALL be derived
+from serialized graphs and rows. It SHALL not refit an arm. Each audited source
+unit and each aggregate control SHALL have one attributable audit row.
+
+A positive cold verdict SHALL require the row-derived positive gate and all
+authority and shortcut checks to pass. A complete supported null source SHALL
+use `null`. Unsupported evidence SHALL use `partial` or `disqualified` as the
+record requires. Complete audits SHALL set
+`model_output_fixed_point_audit_completed` true even when they reject the
+source verdict.
+
+The artifact SHALL include `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_hashes`, `independent_evaluator_hash`, `row_grid_receipts`,
+`exact_recomputed_metrics`, `headline_differences`,
+`clustered_confidence_intervals`, `training_isolation_receipts`,
+`oracle_feature_violations`, `duplicate_case_checks`,
+`destructive_control_results`, `source_verdict_supported`, `rows`,
+`model_output_fixed_point_audit_completed`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. Every field SHALL
+have a short purpose in `field_principles`. `inference_substrate` SHALL declare
+an independent CPU exact audit with no LLM. `verifier_is_oracle` SHALL be false.
+`verdict_class` SHALL use only `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. A terminal `honest_verdict` SHALL start
+with an allowed terminal prefix.
+
+#### SCENARIO-VERIFY-6801-INDEPENDENT-EXACT: Serialized Graphs Own Exact Authority
+
+**Given** all frozen Exp6799 graph definitions and Exp6800 candidate rows
+**When** a fresh standard-library process enumerates graph semantics
+**Then** every graph, valid set, label, distance, support, and row metric is
+recomputed without a producer import or serialized exact-answer authority.
+
+**Spec traces:** REQ-VERIFY-6801
+
+#### SCENARIO-VERIFY-6801-CLUSTERED: Source Cases Own Inference
+
+**Given** repeated models and seeds for each underlying source case
+**When** paired effects and the transformation interaction are bootstrapped
+**Then** source cases are the resampling units and repeated rows stay inside
+their source-case cluster.
+
+**Spec traces:** REQ-VERIFY-6801
+
+#### SCENARIO-VERIFY-6801-ISOLATION: Real Outputs Never Reach Fitting
+
+**Given** training receipts, frozen definitions, proposal evidence, and the
+durable checkpoint
+**When** the cold audit scans all fitting and decode inputs
+**Then** only Exp6786 train IDs are present and no identity, exact, held, parser,
+or checker authority reaches fitting or proposal selection.
+
+**Spec traces:** REQ-VERIFY-6801
+
+#### SCENARIO-VERIFY-6801-CONTROLS: Topology Is Separated From Shortcuts
+
+**Given** the complete audited row grid
+**When** all eight destructive controls execute without fitting
+**Then** duplicates, identity, labels, surface names, groups, edges, arm
+identity, and aggregate trust each receive a deterministic result row.
+
+**Spec traces:** REQ-VERIFY-6801
+
+#### SCENARIO-VERIFY-6801-BLOCKED: Missing Authority Stops The Audit
+
+**Given** a false completion flag, source hash drift, a missing planned row, an
+unpaired key, incomplete strata, or a non-frozen training receipt
+**When** Exp6801 checks preconditions
+**Then** it writes the complete blocked status, emits no rows, sets completion
+false, and preserves every observed failed gate.
+
+**Spec traces:** REQ-VERIFY-6801
+
+## Implementation Status (REQ-VERIFY-6801)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6801 and SCENARIO-VERIFY-6801-* | Implemented (`python/carnot/experiment_6801_real_output_fixed_point_cold_audit.py`, `scripts/experiments/experiment_6801_real_output_fixed_point_cold_audit.py`) | Implemented (`tests/python/test_experiment_6801_real_output_fixed_point_cold_audit.py`) |
+
 ### SCENARIO-VERIFY-6745-DUAL: Independent Encodings Control Diagnosis
 
 **Given** a parseable certificate
