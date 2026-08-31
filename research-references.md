@@ -1,3 +1,107 @@
+## V596 Planner Refresh - 2026-08-31
+
+This sweep follows terminal milestone `2026.08.595`. Exp6811 produced a deterministic,
+source-free operational-obligation fixture. Exp6812 then produced 576 authentic rows from all
+three mandated local GGUF families, and Exp6813 reported a positive selective-priority result on
+those frozen rows. The independent Exp6814 audit timed out without a terminal artifact. Its
+failure cascade skipped Exp6815 through Exp6818. The independent live branch also timed out at
+Exp6819 and skipped Exp6820 through Exp6822. Exp6823 preserved the partial record, but it did not
+close either evidence gap. V596 must split the two failed monoliths into bounded shards, keep
+acceptance authority outside the learner, and use durable task-owned checkpoints for every live
+cell.
+
+### Findings selected for V596
+
+- **Self-Authored Verification Is Unreliable in Heuristic Self-Improving Agents** -
+  arXiv:2607.24300, https://arxiv.org/abs/2607.24300; submitted 2026-07-27. The paper defines the
+  verifier-deployment gap and introduces a Sealed Exogenous Acceptance Loop. A candidate may keep
+  its own tests, but a fixed harness-side audit compares it with the incumbent. The learner cannot
+  inspect or rewrite that audit. Carnot hook: split the selective-arbiter audit into independent
+  row replay and authority-attack shards. Use a third task to issue the adoption decision. Apply
+  the same external acceptance rule to continuous memory writes. This paper's SEAL acronym is not
+  the older Self-Adaptive Learning method already indexed below.
+- **CaSKG: Counterfactual-Causal Skill Graphs for Scalable Agent Skill Retrieval** -
+  arXiv:2608.25500, https://arxiv.org/abs/2608.25500; submitted 2026-08-26; code at
+  https://github.com/ZhiyuanLi218/Caskg. CaSKG calibrates procedural graph edges with remove,
+  substitute, and reorder counterfactuals before retrieval. Carnot hook: treat verified-memory
+  relations as typed causal edges. Admit an edge only when chronological write-read-action
+  witnesses and counterfactual deletion agree. Exact receipts, not an optional LLM judge, remain
+  the write authority.
+- **LoopArena: Benchmarking Models as Runtime Controllers for Loop Engineering** -
+  arXiv:2608.28281, https://arxiv.org/abs/2608.28281; submitted 2026-08-28; code at
+  https://github.com/AMAP-ML/LoopArena. LoopArena separates a controller from a fixed worker and
+  evaluates next-step control contracts before expensive full runs. Carnot hook: evaluate the ARC
+  supervisor first in cheap shadow and replay cells. Freeze controller inputs, decisions, and stop
+  reasons. Run the expensive actions-to-progress cells only after the transport contract is ready.
+- **Parser States Already Know: Structure-Conditioned KV Persistence for Structured
+  Generation** - arXiv:2608.28276, https://arxiv.org/abs/2608.28276; submitted 2026-08-28.
+  PASK uses parser state to protect schema-critical KV entries under a reduced KV budget. Carnot
+  hook: preserve parser and obligation state in live receipts and measure it separately from
+  semantic utility. The method needs model-side KV controls that the current llama.cpp experiment
+  path does not expose, so V596 records it as a future acceleration control and makes no PASK
+  performance claim.
+- **Fast Weight Attention for Continual Learning** - arXiv:2608.27763,
+  https://arxiv.org/abs/2608.27763; submitted 2026-08-27; code at
+  https://github.com/yifanzhang-pro/fast-weight-attention. The paper separates temporal alignment,
+  bounded plasticity, forgetting, and rehearsal in an online recurrent update. Carnot hook: retain
+  explicit read-after-write timing and bounded state in the external verified-memory experiment.
+  V596 keeps GGUF weights frozen and does not claim method parity with fast-weight training.
+- **J-Zero: Unified Challenger--Solver--Judge Co-Evolution from Zero Data** -
+  arXiv:2608.26582, https://arxiv.org/abs/2608.26582; submitted 2026-08-27. J-Zero reports sustained
+  challenger, solver, and judge co-evolution using preference orderings derived from generation
+  procedures. Carnot hook: use it as a negative design control. A co-adapting judge may rank
+  candidates, but it cannot certify memory writes or deployment. The sealed exact harness remains
+  outside every learned component.
+
+### Requested primary and secondary checks
+
+- **arXiv:** the 2025-2026 sweep covered EBMs for reasoning, neural constraint satisfaction,
+  Ising methods, hallucination mitigation, KANs, constrained generation, hardware sampling, and
+  continual learning. The actionable new delta is the external-acceptance requirement, causal
+  memory-edge testing, and bounded controller evaluation above. Geometry-Constrained KANs
+  (`2608.25807`) are promising for interpretable threshold-like edges, but they do not close
+  V596's missing independent audit or live causal evidence. Integrated hardware annealing
+  (`2608.26100`) remains a circuit-simulation reference only.
+- **OpenReview:** the public API returned HTTP 403 during this sweep. The previously indexed 2026
+  constrained-generation and EBM submissions remain consistent with exact feasibility projection.
+  No accessible OpenReview result supplied reproducible evidence that should replace Carnot's
+  deterministic release authority.
+- **Hugging Face Papers:** the 2026-08-31 daily feed surfaced LoopArena, Fast Weight Attention,
+  J-Zero, and several agent-memory papers. LoopArena changes the live experiment order. J-Zero
+  reinforces the need to keep a co-adapting judge below the release boundary.
+- **Semantic Scholar citation check:** the EBT `2507.02092` endpoint returned 35 citing records and
+  the ARM-EBM `2512.15605` endpoint returned eight. The directly relevant records remain
+  Solver-Hard, Memoir, Fixed-Point Reasoners, LoopUS, Distributional EBMs, and false-first-step
+  planning. Counts are discovery receipts, not impact claims. No citation supplies a local general
+  verifier that supersedes the exact stack.
+- **GitHub discovery:** the promoted repositories are the paper-owned LoopArena and CaSKG code,
+  plus the already tracked official EBT implementation. Other recent repositories were small or
+  unrelated to Carnot's authority boundary. V596 adds no third-party runtime dependency.
+- **Extropic:** the first-party writing page still points to the 2026-08-03 Torx, Thermalizers, and
+  taped-out Z1 update at https://extropic.ai/writing/from-one-to-one-billion. External Z1 access
+  remains a 2027 target. V596 makes no TSU execution, throughput, power, or energy claim.
+- **Logical Intelligence:** the current site presents Kona 1.0 for global constraint reasoning and
+  Aleph as a verification harness: https://logicalintelligence.com/kona-ebms-energy-based-models.
+  It still exposes no model weights, local runner, training recipe, or reproducible Kona benchmark
+  harness. Kona remains architecture context, not an experimental dependency.
+- **Hardware inventory:** dual RTX 3090 GPUs remain the only headline local inference substrate.
+  KV260 and GateMate have terminal receipts. PolarFire is opportunistic. V596 puts no physical
+  accelerator on a blocking path.
+
+### V596 planning impact
+
+- Split Exp6814's failed cold audit into a row-replay shard, an authority-attack shard, and a small
+  adoption receipt. A timeout in one shard cannot erase the other result.
+- Recover FR11 on Exp6812's frozen three-family corpus. Learn only bounded external memory state.
+  Require canonical transactions, counterfactual causal edges, held-future support, rollback, and
+  a sealed exogenous audit.
+- Recover the live supervisor, tool-gap, and actions-to-progress evidence debt with small durable
+  cells. Separate control and treatment accrual into distinct task-owned processes before a cold
+  merge. Never inspect game source, use an offline ground-truth search, or claim a level solve.
+- Gate only on artifact readiness and completeness. Never gate on a positive effect. End with an
+  ungated disposition task that preserves positive, null, harmful, blocked, disqualified, and
+  partial evidence.
+
 ## V595 Planner Refresh - 2026-08-31
 
 This sweep follows terminal milestone `2026.08.594`. Exp6802 passed its deterministic

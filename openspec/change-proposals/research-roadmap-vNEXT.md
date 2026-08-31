@@ -1,345 +1,343 @@
-# Carnot Research Roadmap vNEXT: Verified Action Memory and Live Causal Control
+# Carnot Research Roadmap vNEXT: Sealed Verified Learning and Bounded Live Control
 
 **Created:** 2026-08-31  
-**Milestone:** 2026.08.595  
-**Status:** Planned. Activate after milestone 2026.08.594 is terminal.  
-**Supersedes:** The 2026.08.594 plan in this path.  
-**Experiment range:** Exp6810-Exp6823  
-**Informed by:** Exp6776-Exp6779, Exp6797-Exp6809, Selective Value-Filtered
-Decoding (`2605.14746`), RCML (`2606.07088`), AdaMEM (`2606.05684`), VerMem
-(`2608.03137`), CEDAR (`2608.27797`), PLVR (`2608.28421`), and xTRUCE
-(`2608.28532`).
+**Milestone:** 2026.08.596  
+**Status:** Planned. Activate after milestone 2026.08.595 is terminal.  
+**Supersedes:** The 2026.08.595 plan in this path.  
+**Experiment range:** Exp6824-Exp6837  
+**Informed by:** Exp6797-Exp6798, Exp6811-Exp6814, Exp6819-Exp6823, the Sealed
+Exogenous Acceptance Loop (`2607.24300`), CaSKG (`2608.25500`), LoopArena
+(`2608.28281`), PASK (`2608.28276`), Fast Weight Attention (`2608.27763`),
+VerMem (`2608.03137`), RCML (`2606.07088`), and Selective Value-Filtered
+Decoding (`2605.14746`).
 
-## What 2026.08.594 Proved
+## What 2026.08.595 Proved
 
 | Result | Experiment | Finding |
 |---|---:|---|
-| The deterministic prechecks work | 6802 | The v2 automaton task verified its code, source artifacts, registry, and runtime inputs before implementation. |
-| The roadmap named the wrong spec owner | 6802 | The task required `openspec/capabilities/agentic-verification/spec.md`. That file does not exist. The readiness field was correctly set to false. |
-| Structured gates fail closed | 6803 | The conductor read `operational_automaton_fixture_ready=false` and wrote a terminal blocked artifact before model load. |
-| One bad root gate erased the active milestone | 6804-6809 | The conductor preemptively skipped six tasks after the root branch retired. No arbitration, route-learning, portability, or cold-audit science ran. |
-| The plan and active manifest diverged | Milestone | The vNEXT document described 13 tasks through Exp6814. The activated YAML contained eight tasks through Exp6809. The live ARC and disposition phases never entered the execution manifest. |
+| The typed obligation fixture is ready | 6811 | The deterministic, source-free automaton passed its focused verification. It makes no live benefit claim. |
+| The authentic three-family corpus is ready | 6812 | All 576 planned rows completed through local llama.cpp CUDA with Qwen3.6-35B-A3B, Gemma-4-31B, and Gemma-4-26B-A4B. Direct typed handoff preserved more operational force than compressed prose. |
+| Selective priority arbitration is promising | 6813 | The held exact replay passed its predeclared positive gate. It reported zero accepted hard violations and retained already-safe actions better than flat retry. |
+| The arbiter claim is not independently adopted | 6814 | The monolithic cold audit timed out twice and wrote no terminal artifact. The Exp6813 result remains producer-authored evidence. |
+| Authentic continuous learning did not run | 6815-6818 | The conductor skipped the complete branch after Exp6814 retired. No negative FR11 result was produced. |
+| The live controller branch remains unmeasured | 6819-6822 | Exp6819 timed out twice. Tool-gap transport, actions-to-progress, and the adoption audit were then skipped. |
+| The milestone record is partial | 6823 | The disposition artifact preserved available rows and named missing evidence. It did not close the independent-audit or live-control gaps. |
+| The preflight is quarantined | 6810 | Adversarial verification marked its duration and methodology inconsistent with compute-bound strings. It cannot support a headline. |
 
-Milestone .594 did not test its scientific claims. It exposed two planning defects: the spec path
-had no owner, and the active manifest did not match the design. Those defects are now explicit
-inputs to V595. They do not count as negative evidence for the priority arbiter, typed route
-learning, or the live ARC mechanism.
+Milestone .595 established a useful producer result and a real three-model corpus. It did not
+establish independent authority, authentic continual benefit, or live causal progress. The two
+failed tasks were too broad for their execution envelope. V596 changes experiment granularity
+before it changes the methods.
 
 ## The Three Largest Gaps to the PRD Vision
 
-### Gap 1: exact verification does not yet improve authentic actions
+### Gap 1: the exact action arbiter lacks independent authority
 
-FR12 requires a constraint layer that changes behavior and keeps exact authority. Carnot has
-deterministic validators and authentic local-model outputs. It has not shown that an action arbiter
-can prevent hard violations, retain already-safe actions, and improve progress or retry cost.
+FR12 requires deterministic constraints to remain release authority. Exp6813 is positive, but its
+own implementation also produced the rows, metrics, and verdict. A fresh process has not rebuilt
+the obligations, recomputed the comparisons, or attacked the priority boundary. Carnot cannot
+adopt the arbiter until those duties are separated.
 
-### Gap 2: continuous self-learning is causal but not authentic and portable
+### Gap 2: continuous self-learning is not yet authentic, portable, and externally accepted
 
-FR11 has a byte-replayable transactional learner. Its strongest causal result still comes from a
-frozen routing stream. Carnot has not shown continuous, verifier-gated improvement on authentic
-mandated-GGUF proposals. It also lacks cross-model portability and a global cold memory audit.
+FR11 requires improvement from experience without forgetting constraints. Exp6798 proved causal
+transaction safety on a frozen routing stream. Exp6812 now supplies authentic proposals from all
+three mandated model families. The missing result is a bounded external memory learner that uses
+those proposals, transfers across model families, preserves held-future support, and accepts writes
+through an audit the learner cannot edit.
 
-### Gap 3: live ARC mechanisms have transport receipts but no causal progress result
+### Gap 3: live supervisor and tool mechanisms still have no causal progress evidence
 
-The production agent can emit selfparse tool calls. The supervisor can write refinement receipts.
-The last window-120 accrual blocked on an occupied GPU. The tool-gap and actions-to-progress tasks
-then gate-blocked. Carnot still needs a process-isolated, row-complete A/B on the live path.
+The trajectory supervisor, tool-gap capture, and selfparse loop exist and remain default off. The
+known-issues ledger names the required evidence, but Exp6819 was too large and erased the rest of
+the branch. Carnot needs small durable shadow cells, a typed transport receipt, isolated control
+and treatment accrual, and a cold merge. No task may solve a game for the agent.
 
-## Planning Repair Before Research
+## Research Delta and Design Consequences
 
-V595 does not create another vague capability name. It maps each contract to an existing owner:
+- The Sealed Exogenous Acceptance Loop (`2607.24300`) makes external acceptance a first-class
+  boundary. The learner may propose tests and memory edits. It cannot inspect, author, or rewrite
+  the final held-future audit.
+- CaSKG (`2608.25500`) motivates remove, substitute, and reorder counterfactuals for procedural
+  memory edges. Carnot admits only edges with chronological write-read-action-outcome witnesses and
+  matching exact counterfactual effects.
+- LoopArena (`2608.28281`) motivates cheap controller-contract evaluation before a full live run.
+  V596 evaluates supervisor decisions in shadow and replay cells before actions-to-progress.
+- PASK (`2608.28276`) motivates preserving parser and obligation state in receipts. V596 does not
+  implement KV persistence because the current llama.cpp path does not expose the required
+  controls.
+- Fast Weight Attention (`2608.27763`) reinforces explicit temporal alignment and bounded state.
+  V596 applies those controls to external memory and keeps every GGUF weight frozen.
+- J-Zero (`2608.26582`) is a caution for the authority boundary. A co-adapting judge may rank
+  proposals. It may not certify deployment or a durable memory write.
 
-| Contract | Existing owner |
-|---|---|
-| Live operational obligations, action seam, process isolation | `openspec/capabilities/agentic-harness/spec.md` |
-| Exact priority arbitration and conflict certificates | `openspec/capabilities/constraint-verification/spec.md` |
-| Transactional route memory and rollback | `openspec/capabilities/continuous-learning/spec.md` |
-
-Exp6810 verifies these paths, writes the missing REQ anchors, and proves that the planned task set,
-experiment range, gates, and deliverables match the activated YAML. Exp6811 then reruns the blocked
-automaton scope against those real owners. This separates contract repair from the scientific run.
-
-## Research Delta
-
-The new source sweep changes four parts of the design.
-
-- Selective Value-Filtered Decoding makes false intervention a first-class metric. The arbiter must
-  preserve safe proposals as well as reject unsafe ones.
-- RCML separates current correction pressure from finite-gain memory. The route learner will compare
-  residual-pressure updates with raw violation accumulation. Stale pressure must decay after
-  feasibility returns.
-- AdaMEM uses transient stepwise strategy state. The live ARC branch will compare static
-  episode-start guidance with stepwise read-only strategy retrieval. It will not persist writes
-  during the active episode.
-- VerMem combines local transition checks with global memory checks. Carnot will expose a small
-  typed memory-operation set. Exact local receipts control commits. A fresh-process global audit
-  checks terminal coherence, rollback, retention, and poison behavior.
-
-These ideas extend the V594 pivot. They do not reopen learned text-energy repair. They keep the
-frozen GGUF models as generators and keep exact validators as release authorities.
-
-## V595 Architecture
+## Target Architecture
 
 ```text
-Existing OpenSpec owners
- agentic-harness │ constraint-verification │ continuous-learning
-        └──────────────────┬───────────────────────┘
-                           ▼
-             owned REQ map + manifest preflight
-                           │
-                           ▼
-        typed obligation schema + exact event automaton
-                           │
-            ┌──────────────┴────────────────┐
-            │                               │
-            ▼                               ▼
-  Three mandated GGUF families       Production E3AgentPolicy
-  structured action proposals        live attempts, no adapters
-            │                               │
-            ▼                               ▼
-  exact selective priority arbiter   stepwise read-only strategy
-  hard > binding > soft              selfparse tool-gap transport
-  conflict + no-op certificates      exact next-action outcomes
-            │                               │
-            ▼                               ▼
-  typed verified memory operations   actions-to-progress A/B
-  local receipt before commit               │
-  residual-pressure update                  │
-  between-episode transaction               │
-            └──────────────┬────────────────┘
-                           ▼
-             independent fresh-process audits
-                           │
-                           ▼
-              adopt │ narrow │ retire │ blocked
+Frozen authentic evidence
+  Exp6811 typed obligation automaton
+  Exp6812 three-family proposal corpus
+  Exp6813 producer arbiter result
+                  |
+                  v
+        +-----------------------+
+        | Independent authority |
+        | Exp6824 row replay     |
+        | Exp6825 attack shard   |
+        +-----------+-----------+
+                    |
+                    v
+        Exp6826 sealed adoption receipt
+                    |
+                    v
+  +--------------------------------------------------+
+  | External continuous verified memory             |
+  | Exp6827 chronological typed stream               |
+  | Exp6828 residual-pressure learning A/B           |
+  | Exp6829 leave-one-family-out portability         |
+  | Exp6830 sealed exogenous causal audit            |
+  +--------------------------------------------------+
+
+Independent live branch
+  Exp6831 supervisor shadow accrual --> Exp6832 refine receipt
+  Exp6833 tool-gap typed transport
+                     |
+                     v
+          +----------+----------+
+          |                     |
+  Exp6834 control accrual  Exp6835 treatment accrual
+          |                     |
+          +----------+----------+
+                     v
+          Exp6836 cold causal merge
+
+  all terminal evidence, including blocks and nulls
+                     |
+                     v
+          Exp6837 ungated disposition
 ```
 
-The exact automaton and exact post-action receipts remain authoritative. The learned external
-program may rank legal proposals or select legal memory operations. It may not override a hard
-constraint. The live agent must discover progress from its own attempts and runtime reverse
-engineering.
+The exact validators remain outside all learned components. A learned score may order candidates
+inside the exact feasible set. It may not override a hard obligation, certify its own memory write,
+or define the outcome used to credit that write.
 
-## Phase 1: Contract Recovery and Selective Action Arbitration
+## Phase 1: Split Independent Authority Audit
 
-### Exp6810: Owned-spec and execution-manifest recovery preflight
+### Exp6824: Selective-arbiter cold row replay shard
 
-Audit the .594 failure, map every planned contract to an existing capability spec, and add the
-needed REQ anchors. Verify that V595 has exactly 14 tasks, Exp6810 through Exp6823, with unique
-deliverables and resolvable gate fields. This task writes no scientific claim.
+Use a fresh parser, arbiter, reducer, and interval implementation. Reparse the raw Exp6812 bytes and
+recompute every Exp6813 row and headline. Do not import the producer module. This task performs no
+adversarial mutation and no LLM inference.
 
-**Deliverable:** `results/experiment_6810_v595_contract_manifest_preflight.json`
+**Deliverable:** `results/experiment_6824_selective_arbiter_cold_row_replay.json`
 
-### Exp6811: Typed operational-obligation automaton v3
+### Exp6825: Selective-arbiter authority attack shard
 
-Recover Exp6802 against the owned specs. Add the canonical prerequisite, authority, fallback,
-consequence, and priority record to the existing supervisor. Compile it to a deterministic event
-automaton and exact lexicographic energy. Prove v1 compatibility, canonical replay, fail-closed
-attacks, and exact field readiness on frozen source-free traces.
+Attack priority inversion, authority spoofing, stale prerequisites, fallback loss, consequence
+weakening, safe-action mutation, row deletion, model-label leakage, and future-outcome leakage. Use
+small deterministic fixtures plus source rows. Do not recompute all confidence intervals.
 
-**Deliverable:** `results/experiment_6811_operational_obligation_automaton_v3.json`
+**Deliverable:** `results/experiment_6825_selective_arbiter_authority_attacks.json`
 
-### Exp6812: Three-model operational-handoff proposal corpus v2
+### Exp6826: Sealed arbiter adoption receipt
 
-Invoke all three mandated local GGUF families. Generate paired proposals under direct typed and
-length-matched compressed handoffs. Freeze prompts, model files, seeds, raw bytes, and exact checks.
-Measure operational preservation, hard violations, parse completion, safe-proposal headroom, and
-retry demand. This is not a live ARC solve.
+Read the two independent shards and Exp6813. Recompute only the decision table. Issue separate
+closed decisions for hard safety, safe-action preservation, utility, certificate truth, and
+deployment adoption. A complete null or disqualification is valid.
 
-**Deliverable:** `results/experiment_6812_sota_operational_handoff_corpus_v2.json`
+**Deliverable:** `results/experiment_6826_selective_arbiter_sealed_adoption.json`
 
-### Exp6813: Selective priority arbiter A/B
+## Phase 2: Authentic Continuous Self-Learning
 
-Compare the exact priority arbiter with flat reject-and-retry under matched candidate, check, and
-wall budgets. Add a frozen no-intervention path for already-valid proposals. Measure hard-violation
-prevention, accepted progress, retry cost, false intervention, safe-action identity, certificate
-coverage, abstention, and latency. Completion does not require a positive effect.
+### Exp6827: Chronological causal-edge memory stream
 
-**Deliverable:** `results/experiment_6813_selective_priority_arbiter_ab.json`
+Transform Exp6812 proposals and independently audited receipts into a bounded chronological stream.
+Define typed add, revise, soft-delete, retrieve, filter, and restore operations. Seal future fields
+at decision time. Add CaSKG-style remove, substitute, and reorder counterfactuals for candidate
+memory edges. This task prepares evidence and does not learn.
 
-### Exp6814: Independent selective-arbiter authority audit
+**Deliverable:** `results/experiment_6827_chronological_causal_edge_memory_stream.json`
 
-Reparse raw bytes and replay both arms in a fresh module. Recompute every headline. Attack priority,
-authority, stale prerequisites, missing fallback, consequence weakening, model identity, future
-outcomes, and unnecessary intervention accounting. Separate hard safety from utility.
+### Exp6828: Residual-pressure verified-memory A/B
 
-**Deliverable:** `results/experiment_6814_selective_priority_arbiter_cold_audit.json`
+This is the milestone's required continuous self-learning experiment. Compare frozen memory,
+residual-pressure learning, raw violation accumulation, and random exact-valid updates at equal
+capacity. Commit only between episodes. Store canonical parent and new bytes. Roll back retention,
+hard-case, or held-future support harm. Keep all GGUF weights immutable.
 
-## Phase 2: Verifier-Gated Continuous Self-Learning
+**Deliverable:** `results/experiment_6828_residual_pressure_verified_memory_ab.json`
 
-### Exp6815: Chronological verified-memory operation stream
+### Exp6829: Leave-one-model-family-out memory portability
 
-Convert authentic proposal and arbiter receipts into a chronological stream. Represent route memory
-with typed add, revise, soft-delete, retrieve, filter, and restore operations. Seal future outcomes.
-Freeze development, held-future, hard-case, and leave-one-model-family-out splits. Require headroom,
-legal alternative routes, and both admitted and rejected operations.
+Train external memory state on two source families and evaluate the third without family-specific
+fitting. Recompute utility, support, retention, causal edge influence, and state-size parity for all
+three rotations. Preserve null and harmful transfers.
 
-**Deliverable:** `results/experiment_6815_verified_memory_operation_stream.json`
+**Deliverable:** `results/experiment_6829_verified_memory_family_portability.json`
 
-### Exp6816: Residual-pressure transactional route learning A/B
+### Exp6830: Sealed exogenous memory acceptance audit
 
-Compare four equal-capacity arms: frozen memory, residual-pressure route learning, raw violation
-accumulation, and random valid updates. Make the active episode read-only. Commit only between
-episodes after an exact local receipt. Store canonical parent and new bytes. Roll back support,
-retention, or hard-case harm. Credit only later action changes with exact utility witnesses.
+Use fresh reducers and a hidden held-future manifest that the learner did not read. Delete each
+credited write, substitute its edge, and reorder eligible events. Verify canonical lineage,
+rollback, restart, bounded capacity, poison rejection, family portability, and actual later action
+influence. Issue a closed FR11 decision without using the learner's self-authored score.
 
-**Deliverable:** `results/experiment_6816_residual_pressure_route_learning_ab.json`
+**Deliverable:** `results/experiment_6830_sealed_exogenous_memory_audit.json`
 
-### Exp6817: Leave-one-model-family-out route-memory portability
+## Phase 3: Bounded Live Controller Evidence
 
-Learn on two mandated model families and evaluate the third, then rotate. Freeze program bytes
-before held-family outcomes. Compare residual-pressure, frozen, and raw-accumulation arms. Measure
-exact utility, reachable support, constraint preservation, retention, cost, and stale-pressure
-release for every rotation.
+### Exp6831: Supervisor window-120 shadow accrual
 
-**Deliverable:** `results/experiment_6817_route_memory_portability.json`
+Run small production shadow cells with the trajectory-supervisor window set to 120. Reuse compatible
+durable rows first. Freeze controller inputs, next-step decisions, stop reasons, action hashes, and
+worker outcomes. Use the local Qwen3.6 flagship MoE. Write checkpoints outside temporary
+directories after every cell.
 
-### Exp6818: Independent local-and-global route-memory audit
+**Deliverable:** `results/experiment_6831_supervisor_window120_shadow_accrual.json`
 
-Cold-decode every transaction and operation. Recompute local transition validity and global terminal
-memory coherence. Remove each credited write and disable later retrieval. Attack poison, future
-leakage, stale parents, cross-family labels, duplicate operations, restart, rollback, capacity, and
-aggregate row deletion.
+### Exp6832: Supervisor refinement decision receipt
 
-**Deliverable:** `results/experiment_6818_route_memory_global_cold_audit.json`
+Run the existing supervisor refinement tool on Exp6831. Recompute firing counts and arm metrics
+with a fresh reducer. Issue one enable, keep-shadow, redesign, or retire decision. Do not run an
+LLM and do not change production defaults.
 
-## Phase 3: Live ARC Stepwise Strategy and Causal Control
+**Deliverable:** `results/experiment_6832_supervisor_refinement_receipt.json`
 
-### Exp6819: Stepwise read-only strategy-supervisor accrual
+### Exp6833: Selfparse tool-gap typed transport cell
 
-Reuse compatible durable external-evaluation rows first. Then run only the bounded top-up needed for
-the frozen evidence floor. Compare episode-start static guidance with stepwise read-only strategy
-retrieval in shadow mode. Preserve action hashes in shadow rows. Active rows need exact next-action
-outcomes. Use the production Qwen3.6 flagship MoE.
+Run one typed canary and the smallest production selfparse cell needed for an end-to-end receipt.
+Prove serialization, analyzer ingestion, ledger update, default-off behavior, source denial, and
+adapter absence. An empty natural event list is valid only when the canary covers every required
+field.
 
-**Deliverable:** `results/experiment_6819_arc_stepwise_strategy_accrual.json`
+**Deliverable:** `results/experiment_6833_selfparse_tool_gap_transport_cell.json`
 
-### Exp6820: Live selfparse tool-gap obligation transport v2
+### Exp6834: Actions-to-progress control accrual
 
-Run one production selfparse cell and a typed canary. Prove that all operational fields and strategy
-receipts survive live serialization, analyzer ingestion, and ledger update. Keep default-off behavior
-unchanged. An empty natural event list is valid only when the typed canary proves the path.
+Run only the frozen control cells. Leave `CARNOT_ARC_INDUCE_TOOL_LOOP` unset inside each process.
+Record raw actions, exact progress events, censoring, model receipts, and durable checkpoints. This
+task makes no treatment comparison and no solve claim.
 
-**Deliverable:** `results/experiment_6820_arc_tool_gap_obligation_transport_v2.json`
+**Deliverable:** `results/experiment_6834_actions_to_progress_control_accrual.json`
 
-### Exp6821: Obligation-routed actions-to-progress A/B v2
+### Exp6835: Actions-to-progress treatment accrual
 
-Run matched live control and treatment processes. The control has the tool loop unset. The treatment
-uses selfparse, stepwise read-only strategy retrieval, and the audited selective arbiter. Match games,
-seeds, actions, model, token limits, and censoring. Measure progress rate, restricted mean actions,
-harm, false interventions, and hard violations. Make no game-level solve claim.
+Run only the matched treatment cells. Use selfparse, the frozen supervisor decision, and the
+audited selective arbiter only when their adoption receipts permit it. Match the control manifest
+exactly. Keep active episodes read-only. This task makes no pooled comparison and no solve claim.
 
-**Deliverable:** `results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json`
+**Deliverable:** `results/experiment_6835_actions_to_progress_treatment_accrual.json`
 
-### Exp6822: Independent ARC causal adoption audit
+### Exp6836: Independent live causal merge and adoption audit
 
-Use fresh reducers to replay Exp6819 through Exp6821. Verify process isolation, exact outcomes,
-source prohibition, adapter absence, solve provenance, ledger updates, row-derived headlines, and
-protected files. Issue one closed decision for the supervisor, stepwise strategy, tool transport,
-and action arbiter.
+Reparse the control and treatment bytes with fresh reducers. Verify process isolation, environment
+separation, registry protection, source prohibition, adapter absence, censoring, row-derived
+headlines, and protected defaults. Compare progress rate, restricted mean actions, hard violations,
+harm, and false interventions. Issue component-level decisions.
 
-**Deliverable:** `results/experiment_6822_arc_causal_adoption_audit.json`
+**Deliverable:** `results/experiment_6836_live_controller_causal_merge_audit.json`
 
 ## Phase 4: Milestone Disposition
 
-### Exp6823: V595 evidence synthesis and branch disposition
+### Exp6837: V596 sealed evidence disposition
 
-Read all 14 terminal artifacts, including blocked and disqualified results. Recompute claims from
-rows. Compare the executed manifest with this plan. Decide the future of the selective arbiter,
-verified route memory, and live ARC path. Reconcile OpenSpec, traceability, status, changelog, and
-known issues. This task is deliberately ungated.
+Read all 14 terminal artifact paths. Preserve absent, blocked, disqualified, null, harmful, partial,
+and positive branches. Recompute the evidence table from rows and decide the future of the selective
+arbiter, verified memory, supervisor, tool transport, and selfparse action path. Reconcile owned
+OpenSpec requirements and operational evidence documents. This task is deliberately ungated.
 
-**Deliverable:** `results/experiment_6823_v595_branch_disposition.json`
+**Deliverable:** `results/experiment_6837_v596_sealed_evidence_disposition.json`
 
 ## Dependency Graph
 
 ```text
-Exp6810 owned-spec + manifest preflight
-   └── Exp6811 obligation automaton v3
-         ├── Exp6812 three-model handoff corpus
-         │     └── Exp6813 selective-arbiter A/B
-         │           └── Exp6814 cold authority audit
-         │                 └── Exp6815 verified-memory stream
-         │                       └── Exp6816 residual route learning
-         │                             ├── Exp6817 portability
-         │                             └──────────────┐
-         │                                            ▼
-         │                                      Exp6818 global cold audit
-         │
-         └── Exp6819 live stepwise-strategy accrual
-               └── Exp6820 live tool-gap transport
-                     └── Exp6821 actions-to-progress A/B ◄── Exp6814 audit
-                           └── Exp6822 ARC adoption audit
+Exp6824 row replay ---------+
+                            +--> Exp6826 sealed adoption --> Exp6827 memory stream
+Exp6825 authority attacks --+                                  |
+                                                               v
+                                                    Exp6828 learning A/B
+                                                               |
+                                                               v
+                                                    Exp6829 portability
+                                                               |
+                                                               v
+                                                    Exp6830 sealed audit
 
-All terminal results, including blocked branches ─────────► Exp6823 disposition
+Exp6831 supervisor accrual --> Exp6832 refinement receipt ------+
+                                                                |
+Exp6833 tool-gap transport --> Exp6834 control accrual ----------+--> Exp6836 causal merge
+                            \-> Exp6835 treatment accrual --------+
+
+Exp6837 disposition is ungated and reads every fixed artifact path.
 ```
 
-Every structured gate targets a field declared verbatim in the upstream task. Gates test contract,
-artifact, or transport completeness. They do not require a positive scientific result. Exp6823 has
-no gate, so a blocked branch still receives a terminal disposition.
+All gates test readiness or completeness. No downstream task is gated on a positive effect. The
+live branch is independent of the memory branch. Exp6837 runs even when any upstream task blocks.
 
-## Acceptance Rules
+## Acceptance and Evidence Rules
 
-- Every task writes its declared artifact on success, null, block, disqualification, or partial
-  completion.
-- Every comparative task emits one row for each model, scenario, arm, seed, order, game, operation,
-  or attack needed to recompute the claim.
-- Every artifact carries `verdict_class` with the closed enum `positive | circular_positive | null |
-  blocked | disqualified | partial` next to `honest_verdict`.
-- Every blocked verdict records the failed check, expected value, and observed value in
-  `gate_check_summary`.
-- Every LLM task includes at least one mandated local GGUF in `MODEL_SPECS`. Exp6812 uses all three.
-  Exp6819 through Exp6821 use `unsloth/Qwen3.6-35B-A3B-GGUF`.
-- Legacy small models may run CPU smoke tests only. Their rows cannot support a headline.
-- GGUF tasks use llama.cpp embedded tokenizer and native chat templates. They never send a GGUF
-  repository to `AutoTokenizer`.
-- Exact validators remain external release authorities. A learned score, route program, memory
-  policy, or same-model vote may not certify itself.
-- The route-memory learner keeps model weights frozen. It commits external state only between
-  episodes after exact receipts.
-- Live ARC tasks run a registry precheck and record `solve_provenance`. Only
-  `live_agent_self_discovery` could support a solve, but V595 makes no game-level solve claim.
-- No task reads game source, runs offline ground-truth BFS, builds a per-game adapter, or re-solves a
-  registry-complete level.
-- Every repeated scope carries complete `prior_failures`. The same verdict retires the new attempt.
+1. Every comparative claim has row-level evidence for each model, event, order, seed, arm, or cell.
+2. Every artifact declares `verdict_class` with the closed enum `positive | circular_positive |
+   null | blocked | disqualified | partial`.
+3. Every blocked artifact declares `gate_check_summary` with the failed check, expected value, and
+   observed value.
+4. Every artifact declares one principle per field and identifies its inference substrate.
+5. The independent audits do not import producer reducers or verdict code.
+6. The continuous learner stores canonical parent and new bytes for every write. Active episodes
+   are read-only. GGUF weights remain immutable.
+7. A positive FR11 result requires later retrieval, changed action, exact outcome benefit, retained
+   hard cases, no held-future support contraction, rollback identity, and a sealed external audit.
+8. Live rows use only the agent's own attempts and runtime reverse engineering. Game source,
+   offline ground-truth search, and hand-built per-game adapters are prohibited.
+9. No V596 task claims a game-level solve. ARC artifacts still report `solve_claim=false` and
+   `solve_provenance=live_agent_self_discovery` for credited live rows.
+10. A learned score may rank candidates only inside the exact feasible set. It never overrides a
+    hard obligation or certifies its own write.
+11. Every live task writes an atomic checkpoint after each bounded cell to a durable path outside
+    `TemporaryDirectory`. The manifest hash controls resume.
+12. Exp6837 preserves every result class and is never positivity-gated.
 
 ## Hardware Requirements
 
-| Experiments | Substrate | Requirement | Estimate |
-|---|---|---|---:|
-| 6810-6811 | CPU | Existing specs, supervisor, frozen traces, schema and manifest checks | 1-3 h each |
-| 6812 | Dual RTX 3090, sequential phases | Local llama.cpp CUDA; Qwen3.6-35B-A3B, Gemma-4-31B, Gemma-4-26B-A4B; task-owned leases | 4-8 h |
-| 6813-6815 | CPU | Frozen raw bytes, exact simulators, independent reducers | 2-4 h each |
-| 6816-6818 | CPU | Transaction store, canonical bytes, chronological replay | 3-6 h each |
-| 6819-6821 | RTX 3090 | Production Qwen3.6 GGUF, task-owned server, durable cell checkpoints, bounded top-up | 4-12 h each |
-| 6822-6823 | CPU | Fresh-process audits and documentation reconciliation | 2-4 h each |
+### Required
 
-The two RTX 3090 boards are the only headline inference substrate. Tasks must not kill or reuse an
-external operator process. They wait through the lease mechanism and stop with a terminal blocked
-artifact if the bounded lease fails. KV260 and GateMate already have terminal receipts. PolarFire is
-opportunistic. Extropic Z1 access targets 2027. No FPGA, ROCm, NPU, WebGPU, or TSU task is on the
-V595 blocking path.
+- Two local NVIDIA RTX 3090 GPUs for bounded llama.cpp CUDA cells.
+- Existing cached GGUFs and immutable file hashes:
+  - `unsloth/Qwen3.6-35B-A3B-GGUF`
+  - `unsloth/gemma-4-31B-it-GGUF`
+  - `unsloth/gemma-4-26B-A4B-it-GGUF`
+- Sufficient local disk for Exp6812 raw bytes, durable per-cell checkpoints, and live action logs.
+- Task-owned GPU leases, process receipts, CUDA offload receipts, and clean teardown.
 
-## Explicitly Deferred
+### CPU-only work
 
-- Another text-energy, fixed-point, or learned-score repair on the Exp6799 corpus.
-- Finite-ID proof transport and grammar-decoding branches.
-- Weight updates to any mandated GGUF model.
-- Same-model verifier acceptance or neural replacement of exact certificates.
-- New ARC level solves, game-source inspection, offline ground-truth search, or per-game adapters.
-- New FPGA or thermodynamic-hardware claims without new physical access.
-- Open-ended memory-schema search. V595 tests a frozen typed operation set.
+- Exp6824-Exp6830, Exp6832, Exp6836, and Exp6837 use frozen rows and deterministic CPU reducers.
+- Exp6831, Exp6833, Exp6834, and Exp6835 use the Qwen3.6 flagship through local llama.cpp CUDA.
+- No provider API is allowed.
+
+### Not on the blocking path
+
+- KV260 and GateMate already have terminal continuity receipts.
+- PolarFire remains opportunistic.
+- Extropic Z1 external access remains a 2027 target.
+- V596 makes no FPGA, TSU, latency, throughput, power, or energy-efficiency claim.
+
+## Explicit Deferrals and Exclusions
+
+- Do not reopen the retired Phase-D generated-text or log-probability scorer.
+- Do not reopen finite-ID proof transport or substitute grammar compliance for semantic validity.
+- Do not train or mutate GGUF weights.
+- Do not implement PASK without real model-side KV persistence controls.
+- Do not promote a KAN, Ising, FPGA, or thermodynamic method without a task-relevant causal gap.
+- Do not use a same-model or co-adapting judge as release authority.
+- Do not solve an ARC level, inspect game source, use offline ground-truth BFS, or build a per-game
+  adapter.
+- Do not change the production ARC default from `repair` until Exp6836 issues a clean adoption
+  receipt.
 
 ## Milestone Exit
 
-V595 is terminal when all 14 tasks have terminal artifacts and Exp6823 gives a closed disposition
-for every branch. A positive product claim additionally needs one row-derived, cold-audited result:
-
-1. the selective arbiter preserves every hard obligation, stays within the false-intervention bound,
-   and improves accepted progress or retry cost;
-2. residual-pressure route memory improves held-future exact utility without support, retention, or
-   hard-case harm and survives byte, poison, restart, rollback, and portability audits; or
-3. the live ARC treatment improves actions-to-progress with zero hard-obligation harm under
-   process-isolated `live_agent_self_discovery` provenance.
-
-A clean null or a diagnosed resource block is valid evidence. It narrows or retires the branch. It
-does not become a positive claim.
+V596 is terminal when all 14 task paths contain a terminal artifact or an explicit conductor gate
+record and Exp6837 has assigned a disposition to every branch. The milestone succeeds as research
+even if every effect is null, harmful, blocked, or disqualified, provided the independent evidence
+is complete and the failed monoliths are not silently proposed again.
