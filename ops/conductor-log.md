@@ -16927,3 +16927,4 @@ The l |
 | 2026-08-31 16:54 UTC | Selective-arbiter cold row replay shard | OK | 95 passed, 1 warning in 12.85s |
 | 2026-08-31 17:20 UTC | Selective-arbiter authority attack shard | FAIL | Codex CLI error: Wall-clock+idle timeout after 1368s (600s silence). Last out |
 | 2026-08-31 17:22 UTC | Selective-arbiter authority attack shard | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-08-31 18:00 UTC | Selective-arbiter authority attack shard | OK | 111 passed, 1 warning in 15.75s |
