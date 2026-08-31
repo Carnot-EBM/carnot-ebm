@@ -16897,3 +16897,4 @@ The l |
 +
 +  |
 | 2026-08-31 08:11 UTC | Owned-spec and execution-manifest recovery preflig | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-08-31 08:37 UTC | Owned-spec and execution-manifest recovery preflig | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
