@@ -170,11 +170,6 @@ tasks:
 
     Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6832_operational_obligation_saturation_fixture.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  prior_failures:
-    - experiment_id: exp6802-operational-obligation-automaton-v2
-      verdict: 'complete_blocked_operational_obligation_automaton'
-      addressed_by: 'Exp6802 blocked because the planned agentic-verification spec did not exist. Exp6810 and Exp6811 shipped the owned agentic-harness contract and a ready v3 fixture. This attempt measures a new obligation-count saturation axis over that fixture.'
-      retire_if_same_verdict: true
 
 - id: exp6833-sota-operational-obligation-saturation-corpus
   title: Three-family operational-obligation saturation corpus
@@ -264,19 +259,6 @@ tasks:
 
     Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6833_sota_operational_obligation_saturation_corpus.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  prior_failures:
-    - experiment_id: exp6556-sota-constraint-saturation-intervention-ab
-      verdict: 'complete_sota_constraint_saturation_intervention_positive: phase curve, bounded exact fallback benefit beyond longer flat, zero harmful intervention, charged cost, and receipts close'
-      addressed_by: 'Exp6556 measured generic constraint saturation plus bounded intervention. This task uses the newer operational prerequisite, authority, fallback, consequence, and priority schema. It runs no intervention and measures representation preservation.'
-      retire_if_same_verdict: true
-    - experiment_id: exp6802-operational-obligation-automaton-v2
-      verdict: 'complete_blocked_operational_obligation_automaton'
-      addressed_by: 'Exp6802 blocked on a missing spec. Exp6810 and Exp6811 shipped the owned contract and ready fixture. Exp6833 gates on a new exact saturation fixture built from that working lineage.'
-      retire_if_same_verdict: true
-    - experiment_id: exp6803-sota-operational-handoff-corpus
-      verdict: 'blocked_gate_check_failed'
-      addressed_by: 'Exp6803 never ran because Exp6802 readiness was false. Exp6811 and Exp6812 later completed the fixture and a 576-row three-family corpus. This task extends that working path to 900 frozen count-by-arm rows with durable checkpoints.'
-      retire_if_same_verdict: true
 
 - id: exp6834-operational-saturation-identifiability-audit
   title: Cold operational-saturation identifiability audit

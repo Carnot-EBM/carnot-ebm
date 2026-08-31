@@ -16937,3 +16937,6 @@ The l |
 | 2026-08-31 20:11 UTC | Leave-one-model-family-out verified-memory portabi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6828-residual-pressure-verified-memory-ab |
 | 2026-08-31 20:11 UTC | Sealed exogenous verified-memory acceptance audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6828-residual-pressure-verified-memory-ab |
 | 2026-08-31 22:07 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 2242s (600s silence). Last out |
+| 2026-08-31 23:19 UTC | Plan milestone 2026.08.597 | OK | 4 tasks proposed |
+| 2026-08-31 23:21 UTC | Activation REFUSED: milestone 2026.08.597 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-31 23:21 UTC | Activation replan 1/2: 2026.08.597 | OK | refused roadmap quarantined to roadmap-2026.08.597-refusal1.yaml; replanning wit |
