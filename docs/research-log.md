@@ -6479,3 +6479,10 @@ The critical path for milestone .250:
 - theme: a compute-heavy execution tail exposed missing phase and accelerator attribution
 - key result: honest operational negative — accelerator activity was present, but the data cannot explain the longest compute run or establish a parallel multi-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.594
+
+- exp_range: no data available this milestone
+- theme: a sub-minute mixed milestone exposed the limits of fallback timing and task-scoped accelerator attribution
+- key result: honest operational negative — the only compute task reached the timing floor without a compute-idle finding, while its phase cause and parallel-model runner applicability remain unknown
+- acceptance: no data available this milestone

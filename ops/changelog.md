@@ -18353,4 +18353,18 @@ run or a missed DualGPURunner launch. Add task-phase timing and task-window GPU
 receipts. Add 8-16 question batching when one model serves multiple prompts.
 The estimated milestone savings remains 0% because the evidence does not show
 how much of the slow run can use batching.
+
 - 2026-08-31: Typed operational-obligation automaton v2 (⚠️ Blocked) — honest_verdict=complete_blocked_operational_obligation_automaton; results/experiment_6802_operational_obligation_automaton_v2.json
+
+## 2026-08-31 — Milestone 2026.08.594 operational retrospective
+
+The milestone recorded 2 experiments in 0.3 minutes, including 1 compute-bound
+entry. Three-model operational-handoff proposal corpus was the only, and thus
+longest, compute task at 0.0 minutes; no data available this milestone explains
+its phase costs. The locked compute-task GPU-idle indicator is false. No data
+available this milestone establishes that 2 or more models were loaded in
+parallel or that an eligible task missed DualGPURunner. The next tooling change
+is configurable batches of 8-16 questions per forward pass, backed by
+task-owned phase timing, GPU samples, model-concurrency metadata, and runner
+identity. Estimated milestone-wide savings is 0% because the supplied evidence
+does not measure the batched share of execution.
