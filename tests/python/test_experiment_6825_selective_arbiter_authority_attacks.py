@@ -159,9 +159,7 @@ def test_scenario_constraint_6825_priority_and_authority_fail_closed(
     """SCENARIO-CONSTRAINT-6825-PRIORITY blocks soft and spoofed authority."""
 
     case = _case(source_cases, "competing_authorities")
-    obligations = attacks.rebuild_obligations(
-        case["scenario"], case["obligation_schema"]
-    )
+    obligations = attacks.rebuild_obligations(case["scenario"], case["obligation_schema"])
     assert [row["priority_class"] for row in obligations] == ["hard", "binding"]
     assert [row["authority_order"] for row in obligations] == [0, 1]
 
@@ -319,9 +317,7 @@ def test_scenario_constraint_6825_complete_matrix_and_summaries(
         for case in source_cases
         for attack_id in attacks.ATTACK_IDS
     }
-    assert {(row["source_case_id"], row["attack_id"]) for row in attack_rows} == (
-        expected_pairs
-    )
+    assert {(row["source_case_id"], row["attack_id"]) for row in attack_rows} == (expected_pairs)
     reduced = attacks.summarize_attack_rows(
         attack_rows,
         [row["source_case_id"] for row in source_cases],
@@ -430,9 +426,7 @@ def test_scenario_constraint_6825_blocked_artifact_has_no_rows(
     assert artifact["verdict_class"] == "blocked"
     assert artifact["authority_attack_shard_complete"] is False
     assert artifact["rows"] == []
-    assert artifact["gate_check_summary"]["failed_checks"] == [
-        "selective_arbiter_ab_completed"
-    ]
+    assert artifact["gate_check_summary"]["failed_checks"] == ["selective_arbiter_ab_completed"]
     assert set(artifact["field_principles"]) == set(artifact)
 
 
@@ -457,9 +451,9 @@ def test_req_constraint_6825_write_and_cli_use_explicit_output(
         "fresh_process_replay",
         lambda paths, rows: _fresh_receipt(rows),
     )
-    assert attacks.main(
-        ["--date", "20260831", "--root", str(REPO_ROOT), "--output", str(output)]
-    ) == 0
+    assert (
+        attacks.main(["--date", "20260831", "--root", str(REPO_ROOT), "--output", str(output)]) == 0
+    )
     payload = json.loads(output.read_text(encoding="utf-8"))
     assert payload["authority_attack_shard_complete"] is True
     assert payload["run_date"] == "20260831"
@@ -469,3 +463,130 @@ def test_req_constraint_6825_write_and_cli_use_explicit_output(
         json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
     assert len(expected) == 64
+
+
+def test_req_constraint_6825_malformed_public_inputs_fail_closed(
+    sources: dict[str, dict], source_cases: list[dict]
+) -> None:
+    """REQ-CONSTRAINT-6825 covers malformed raw, schema, and binding inputs."""
+
+    assert attacks._valid_raw_receipt({}) is False
+    assert (
+        attacks._representative_cells(
+            {
+                "frozen_manifest": {"scenarios": "invalid"},
+                "raw_output_manifest": [],
+                "rows": [],
+            }
+        )
+        == []
+    )
+
+    scenario = sources["exp6812"]["frozen_manifest"]["scenarios"][0]
+    receipt = next(
+        row
+        for row in sources["exp6812"]["raw_output_manifest"]
+        if row["scenario_id"] == scenario["scenario_id"] and row["arm"] == "direct_typed"
+    )
+    one_row = next(
+        row for row in sources["exp6812"]["rows"] if row["cell_id"] == receipt["cell_id"]
+    )
+    assert (
+        attacks._representative_cells(
+            {
+                "frozen_manifest": {"scenarios": [scenario]},
+                "raw_output_manifest": [receipt],
+                "rows": [one_row],
+            }
+        )
+        == []
+    )
+
+    invalid_schema = {"exp6811": {"obligation_schema": {}}, "exp6812": {}}
+    with pytest.raises(attacks.AuthorityAttackError, match="schema"):
+        attacks.build_source_cases(invalid_schema)
+    missing_rows = {
+        "exp6811": {"obligation_schema": attacks.EXPECTED_OBLIGATION_SCHEMA},
+        "exp6812": {},
+    }
+    with pytest.raises(attacks.AuthorityAttackError, match="representative"):
+        attacks.build_source_cases(missing_rows)
+
+    competing = _case(source_cases, "competing_authorities")
+    incomplete = attacks._reference_candidates(competing["scenario"])[0]
+    incomplete["parse_state"] = "incomplete"
+    assert (
+        attacks._evaluate_candidate(
+            competing["scenario"], competing["obligation_schema"], incomplete
+        )["first_conflict"]
+        == "response_schema"
+    )
+    binding_only = attacks._reference_candidates(competing["scenario"])[0]
+    binding_only["authority_chain"] = ["system_authority"]
+    binding_evidence = attacks._evaluate_candidate(
+        competing["scenario"], competing["obligation_schema"], binding_only
+    )
+    assert binding_evidence["hard_violation_count"] == 0
+    assert binding_evidence["first_conflict"].endswith("_binding")
+    with pytest.raises(attacks.AuthorityAttackError, match="unknown attack"):
+        attacks.run_attack(competing, "unknown", source_cases)
+
+
+def test_scenario_constraint_6825_disqualified_and_schema_guards(
+    sources: dict[str, dict],
+    source_cases: list[dict],
+    attack_rows: list[dict],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """SCENARIO-CONSTRAINT-6825-COMPLETION retains adverse and invalid results."""
+
+    changed_rows = [dict(row) for row in attack_rows]
+    changed_rows[0]["passed"] = False
+    adverse = attacks.build_artifact(
+        sources,
+        source_paths=SOURCE_PATHS,
+        run_date="20260831",
+        duration_s=1.0,
+        source_cases=source_cases,
+        attack_rows=changed_rows,
+        fresh_process_receipt=_fresh_receipt(changed_rows),
+    )
+    assert adverse["authority_attack_shard_complete"] is True
+    assert adverse["hard_authority_supported"] is False
+    assert adverse["verdict_class"] == "disqualified"
+
+    blocked_sources = {
+        **sources,
+        "exp6813": {**sources["exp6813"], "selective_arbiter_ab_completed": False},
+    }
+    with monkeypatch.context() as patch:
+        patch.setattr(attacks, "REQUIRED_ARTIFACT_FIELDS", ("missing",))
+        with pytest.raises(attacks.AuthorityAttackError, match="field set"):
+            attacks.build_artifact(
+                blocked_sources,
+                source_paths=SOURCE_PATHS,
+                run_date="20260831",
+                duration_s=1.0,
+            )
+    with monkeypatch.context() as patch:
+        principles = dict(attacks.FIELD_PRINCIPLES)
+        del principles["adoption_decision"]
+        patch.setattr(attacks, "FIELD_PRINCIPLES", principles)
+        with pytest.raises(attacks.AuthorityAttackError, match="one principle"):
+            attacks.build_artifact(
+                blocked_sources,
+                source_paths=SOURCE_PATHS,
+                run_date="20260831",
+                duration_s=1.0,
+            )
+
+
+def test_req_constraint_6825_replay_cli_success_and_block(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """REQ-CONSTRAINT-6825 runs fresh replay and blocks an unsealed root."""
+
+    assert attacks.main(["--root", str(REPO_ROOT), "--replay-only"]) == 0
+    replay = json.loads(capsys.readouterr().out)
+    assert replay["rows_sha256"].startswith("sha256:")
+    assert attacks._replay_only(tmp_path) == 2

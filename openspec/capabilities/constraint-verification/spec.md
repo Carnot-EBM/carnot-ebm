@@ -2259,4 +2259,4 @@ replay
 
 | Requirement | Implementation | Verification |
 |---|---|---|
-| REQ-CONSTRAINT-6825 and SCENARIO-CONSTRAINT-6825-* | Planned: independent authority mutation harness and task-owned script. | Planned focused tests and 100% scoped coverage. |
+| REQ-CONSTRAINT-6825 and SCENARIO-CONSTRAINT-6825-* | Implemented (`python/carnot/experiment_6825_selective_arbiter_authority_attacks.py`; task-owned script and terminal artifact). | Implemented (`tests/python/test_experiment_6825_selective_arbiter_authority_attacks.py`; 30 focused tests; 100% scoped statement coverage; 768 case-by-attack rows; byte-identical fresh-process replay). |
