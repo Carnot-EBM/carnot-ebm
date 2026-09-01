@@ -105,6 +105,34 @@ Not checked: whether exp6845's tool-gap audit is pinned the same way. It returne
 shape (`tool_gap_audit_complete_score` 1, `tool_gap_effect_eligible_score` 0, gate failing on zero
 obligations), so it is worth checking before anyone assumes a tool-loop run would unblock it.
 
+
+**IN FLIGHT 2026-09-01 23:35Z — r11l is 22% past the longest prior game and its progress is not
+observable.** The cd82/r11l run (pid 727618, eval child 727651) has been on its FIRST game for
+8h56m. Prior comparable runs: ls20 7h19m (2443 actions), wa30 6h31m (2478 actions). r11l itself
+previously completed in 2121 actions.
+
+Liveness is confirmed and is not the question: the worker holds ~674% CPU, tokens decode at
+~20 t/s, and llama-server `/slots` shows slot 1 `is_processing: true` on two samples 25s apart.
+
+**What cannot be seen, and this is the point.** Nothing exposes the ACTION count mid-run. The
+per-game row (with `actions`, `levels`, and now `trajectory_supervisor`) is written only when the
+game ends. So "advancing slowly through its 2500-action budget" and "looping on induction that
+never returns a usable answer" look identical from outside. This is the same class as the
+supervisor being silent by construction, recorded earlier today, and it will recur on every long
+game until a mid-run progress signal exists.
+
+**Why the loop hypothesis is not idle.** The completed ls20/wa30 run returned
+`reasoning_only: 24` of `chat_completions: 24` with `chars_final: 0` on BOTH games — every LLM
+call produced reasoning and no answer (`qwen_channel_failure_not_competence_failure`, exp5798). If
+that repeats here, the induction tier is again contributing nothing and the run is re-measuring
+the non-LLM path at a cost of 9+ hours.
+
+**Decision point, so this does not drift.** The 2500-action budget bounds the game, so no
+intervention now. If r11l has not banked its partial by 2026-09-02 03:00Z (roughly 12h on one
+game, about 64% past the longest prior game), treat it as pathological rather than slow: kill the
+run, keep whatever the partial holds, and read `completions_consumed` first to check whether the
+answer-channel failure recurred.
+
 **Proposed, not built:** move the artifact write inside the per-game loop so each
 game banks independently. Small and safe, but it cannot help a run already in
 flight (the module is imported once at start), so it should be done between runs.
