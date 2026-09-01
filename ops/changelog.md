@@ -18406,3 +18406,4 @@ launch receipts for runner and concurrency selection. Estimated time savings is
 0% because no positive-duration bottleneck or timed alternative is available.
 - 2026-09-01: V597 evidence-admissibility and execution contract (✅ Complete) — honest_verdict=complete_v597_evidence_admissibility: selective-arbiter authority and causal-edge inputs are procedurally admissible; no learning ran; results/experiment_6831_v597_evidence_admissibility_contract.json
 - 2026-09-01: Exact operational-obligation saturation fixture (⚠️ Research Finding) — honest_verdict=complete_operational_obligation_saturation_fixture: deterministic source-free fixture ready; no model ran; results/experiment_6832_operational_obligation_saturation_fixture.json
+- 2026-09-01: Three-family operational-obligation saturation corpus (✅ Complete) — honest_verdict=complete_positive_sota_operational_saturation_corpus; results/experiment_6833_sota_operational_obligation_saturation_corpus.json
