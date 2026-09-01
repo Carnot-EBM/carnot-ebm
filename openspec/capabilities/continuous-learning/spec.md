@@ -9182,3 +9182,132 @@ surface form SHALL remain explicit and hash-bound.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-6836 and SCENARIO-CL-6836-* | Planned: deterministic guard compiled from the Exp6836 typed obligation program. | Planned: focused guard, failure, and control tests. |
+
+## REQ-CL-6839: Bounded Residual-Memory Kernel Canary
+
+The system SHALL implement a deterministic CPU residual-memory kernel canary
+over the frozen Exp6827 chronological causal-edge stream. The canary SHALL
+invoke no LLM, mutate no model weights, and run only a bounded 96-event fixed
+slice before any full-stream comparison. It SHALL compare exactly four arms:
+`no_memory`, `read_only_memory`, `random_admission`, and
+`verified_residual_admission`.
+
+Before any canary transition, Exp6839 SHALL require
+`v598_evidence_root_ready_score=1`, the complete 4,320-row Exp6827 stream,
+stable order and split hashes, exact later outcome identities for the 96-event
+slice, and nonzero decision headroom. A failed check SHALL write a terminal
+blocked artifact with `complete_blocked_residual_memory_kernel` in
+`honest_verdict`, no transition rows, zero readiness scores, and failed checks
+with observed values in `gate_check_summary`.
+
+Each arm-event transition SHALL freeze the proposed action and action dose
+before revealing the later outcome. The row SHALL store the event identity,
+arm, frozen decision hash, proposed action, exact later outcome identity, signed
+outcome direction, action dose, admission decision, and post-transition state
+hash. Memory admission SHALL occur only after the exact later outcome is
+available. Action-level credit SHALL be assigned only from the external later
+outcome direction, the pre-reveal action dose, and the arm-local admitted
+memory state.
+
+The kernel SHALL keep state bounded, deterministic, and restartable. It SHALL
+persist canonical state bytes, force one restart, force one stale expiry, force
+one invalid update rejection, force one rollback, reject duplicate events
+without state mutation, and recover from a simulated partial checkpoint by
+loading the last complete checkpoint. The final state hash SHALL match a clean
+replay hash. `residual_memory_kernel_ready_score` SHALL depend only on
+state-machine, persistence, restart, expiry, rollback, duplicate, and replay
+correctness. It SHALL not claim held-future benefit from the canary.
+
+The artifact SHALL include `schema`, `experiment_id`, `title`, `run_date`,
+`status`, `openspec_requirement_ids`, `replay_commands`, `field_principles`,
+`preconditions_checked`, `inference_substrate`, `duration_s`,
+`continuous_self_learning_task`, `source_artifact_hashes`, `random_seed`,
+`reproducibility_checksum`, `kernel_state_schema`, `rows`,
+`exact_outcome_credit_rows`, `admission_rows`,
+`capacity_and_eviction_receipts`, `stale_decay_receipts`, `restart_receipt`,
+`rollback_receipt`, `clean_replay_state_hash`,
+`residual_memory_kernel_ready_score`,
+`csl_kernel_execution_complete_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL contain one principle for every top-level field.
+`inference_substrate` SHALL equal
+`CPU prospective Tier-2 constraint-memory controller, no LLM`.
+`continuous_self_learning_task` SHALL be true. `verifier_is_oracle` SHALL be
+false. `verdict_class` SHALL use only `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL be terminal and
+start with `complete_`.
+
+### SCENARIO-CL-6839-PRECONDITIONS: Missing Frozen Inputs Block The Canary
+
+Given missing V598 readiness, an incomplete Exp6827 stream, drifted order or
+split hashes, missing later outcomes, or zero decision headroom,
+When Exp6839 checks its frozen sources,
+Then it SHALL emit `complete_blocked_residual_memory_kernel` with no transition
+rows
+And `gate_check_summary` SHALL report each failed check and observed value.
+
+### SCENARIO-CL-6839-CHRONOLOGY: Decisions Freeze Before Later Outcomes
+
+Given one fixed canary event and one arm-local state snapshot,
+When Exp6839 proposes an action,
+Then the decision hash and dose SHALL be frozen before the later outcome is
+revealed
+And the decision inputs SHALL exclude exact outcome and admission fields.
+
+### SCENARIO-CL-6839-PROPOSAL-IDENTITY: Public Inputs Own Action Identity
+
+Given identical public event, arm, seed, and parent state hash,
+When Exp6839 proposes twice,
+Then the proposed action, action dose, and proposal hash SHALL match exactly
+And a changed arm or parent state SHALL change the proposal hash.
+
+### SCENARIO-CL-6839-CREDIT: Exact Later Outcome Direction Owns Credit
+
+Given a frozen pre-reveal action and an external later outcome identity,
+When Exp6839 evaluates credit,
+Then signed credit SHALL equal signed direction times bounded action dose
+And zero direction or zero dose SHALL produce zero credited effect.
+
+### SCENARIO-CL-6839-BOUNDS: Admission, Dose, Capacity, And Eviction Are Bounded
+
+Given a memory arm reaches capacity or proposes an out-of-bound dose,
+When Exp6839 evaluates admission,
+Then invalid proposals SHALL be rejected without state mutation
+And accepted entries SHALL remain within dose bounds while deterministic
+eviction keeps active entries at or below capacity.
+
+### SCENARIO-CL-6839-STALE: Stale Decay Expires Old Entries
+
+Given admitted entries older than the stale horizon,
+When Exp6839 advances chronology,
+Then stale entries SHALL expire with a receipt
+And the post-expiry state hash SHALL bind the reduced state.
+
+### SCENARIO-CL-6839-RECOVERY: Persistence, Restart, Rollback, And Crash Recovery Are Exact
+
+Given persisted canonical state bytes and a simulated partial checkpoint,
+When Exp6839 restarts or rolls back,
+Then it SHALL load the last complete checkpoint, ignore the partial file,
+restore exact parent bytes on rollback, and match the clean replay final hash.
+
+### SCENARIO-CL-6839-DUPLICATES: Duplicate Event Delivery Is Idempotent
+
+Given an already processed arm-event pair,
+When Exp6839 receives it again,
+Then the duplicate SHALL be rejected without changing state bytes.
+
+### SCENARIO-CL-6839-VERDICT: Readiness Does Not Claim Held-Future Benefit
+
+Given all canary rows, admission receipts, stale receipts, restart receipts,
+rollback receipts, duplicate checks, and clean replay hashes are complete,
+When Exp6839 computes terminal fields,
+Then `residual_memory_kernel_ready_score` SHALL be one from state-machine
+correctness only
+And `verdict_class` SHALL remain `null` unless a later full comparison proves
+held-future benefit.
+
+## Implementation Status (REQ-CL-6839)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-6839 and SCENARIO-CL-6839-* | Planned: `python/carnot/experiment_6839_bounded_residual_memory_kernel.py`; `scripts/experiments/experiment_6839_bounded_residual_memory_kernel.py`; `results/experiment_6839_bounded_residual_memory_kernel.json`. | Planned: focused state-machine, artifact, coverage, lint, and deterministic audit checks. |
