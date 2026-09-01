@@ -3170,3 +3170,125 @@ readiness.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6837 and SCENARIO-CONSTRAINT-6837-* | Planned: output-free local llama.cpp CUDA forced-sequence scoring with blocked preflight output. | Planned: focused tests cover preconditions, token alignment, masked scoring, raw receipts, checkpoint restart, model isolation, and artifact readiness. |
+
+## REQ-CONSTRAINT-6849: Typed Program Isomorphic Authority Audit
+
+The system SHALL build Exp6849 as a deterministic CPU authority audit. It
+SHALL require `v599_evidence_contract_ready_score=1`. It SHALL also require
+readable Exp6836 raw fixture material and the Exp6847 discrepancy rows. A
+failed precondition SHALL write
+`complete_blocked_typed_program_isomorphic_authority_audit`. The blocked
+artifact SHALL name the failed check, expected value, and observed value in
+`gate_check_summary`.
+
+Exp6849 SHALL parse the raw typed programs stored in Exp6836. It SHALL not
+import the Exp6836 reducer. A fresh reducer SHALL construct unique candidate,
+pair, atom, view, transform, and row identifiers. It SHALL reject duplicate
+identifiers, semantic aliases, atom omissions, impossible programs, and row
+collisions.
+
+The fresh reducer SHALL compile exact energy, satisfaction, memory admission,
+ARC action admission, and per-atom diagnostics from one typed source. It SHALL
+recompile every view on each base row and each transformed row. All compiled
+views SHALL use the same atom identities and SHALL return the same pass or fail
+decision.
+
+Exp6849 SHALL apply identifier permutations, atom renames, label swaps, row
+reorderings, surface paraphrases, duplicate removal, and one-atom semantic
+mutations. Isomorphic transforms SHALL preserve exact labels. One-atom semantic
+mutations SHALL change exact labels. Duplicate removal SHALL preserve one
+canonical semantic candidate and SHALL remove every alias.
+
+Exp6849 SHALL freeze a sanitized candidate-pair manifest for Exp6851. The
+manifest SHALL include raw sequence inputs. It SHALL store no model scores. It
+SHALL not claim token equality without tokenizer receipts.
+
+The exact checker SHALL be the authority. The terminal artifact SHALL be
+`results/experiment_6849_typed_program_isomorphic_authority_audit.json`. It
+SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `random_seed`,
+`reproducibility_checksum`, `rows`, `fresh_reducer_manifest`,
+`candidate_identity_manifest`, `collision_witnesses`,
+`compiled_view_parity_rows`, `isomorphic_transform_manifest`,
+`semantic_mutation_rows`, `duplicate_removal_results`,
+`sanitized_candidate_pair_manifest`, `authority_audit_complete_score`,
+`typed_program_authority_ready_score`, `isomorphic_fixture_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. One principle SHALL exist for every top-level field. The
+inference substrate SHALL be `deterministic CPU exact compilation`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL use the closed
+terminal vocabulary. `honest_verdict` SHALL start with `complete_`.
+
+`typed_program_authority_ready_score` and `isomorphic_fixture_ready_score`
+SHALL equal one only when exact parity, identity uniqueness, transform
+invariance, duplicate removal, and semantic mutation gates pass. These fields
+SHALL not depend on a learned score or a model score.
+
+### SCENARIO-CONSTRAINT-6849-PRECONDITIONS: Missing Authority Inputs Block
+
+Given an invalid V599 contract gate, unreadable Exp6836 fixture material, or
+missing Exp6847 discrepancy rows,
+When Exp6849 evaluates preconditions,
+Then it SHALL emit the complete blocked artifact with no audit rows and the
+exact failed check in `gate_check_summary`.
+
+### SCENARIO-CONSTRAINT-6849-DUPLICATE-IDS: Duplicate Identities Fail Closed
+
+Given two records with the same identifier,
+When the fresh reducer validates an identity namespace,
+Then it SHALL reject the records and SHALL emit a collision witness.
+
+### SCENARIO-CONSTRAINT-6849-SEMANTIC-ALIAS: Semantic Aliases Are Removed
+
+Given different candidate identifiers with the same typed semantics,
+When the fresh reducer sanitizes the fixture,
+Then it SHALL keep one canonical candidate and record each removed alias.
+
+### SCENARIO-CONSTRAINT-6849-ATOM-OMISSION: Omitted Atoms Fail Closed
+
+Given a candidate that omits one required atom,
+When the exact checker recompiles all views,
+Then energy SHALL be positive and every Boolean view SHALL reject the
+candidate.
+
+### SCENARIO-CONSTRAINT-6849-IMPOSSIBLE: Impossible Programs Fail Closed
+
+Given a typed program with no legal action set,
+When the fresh reducer compiles the program,
+Then it SHALL mark the program impossible and SHALL not label any candidate as
+compatible.
+
+### SCENARIO-CONSTRAINT-6849-ROW-COLLISION: Row Identities Are Unique
+
+Given two rows with the same row identifier or semantic row identity,
+When fixture integrity is checked,
+Then readiness SHALL remain zero and the artifact SHALL record the collision.
+
+### SCENARIO-CONSTRAINT-6849-ISOMORPHIC: Isomorphic Labels Stay Stable
+
+Given a base row and an identifier permutation, atom rename, label swap, row
+reordering, surface paraphrase, or duplicate-removal transform,
+When the exact checker evaluates both rows,
+Then the candidate labels SHALL be equal after the transform mapping is
+applied.
+
+### SCENARIO-CONSTRAINT-6849-REDUCER-MUTATION: Semantic Mutations Must Flip
+
+Given a compatible candidate and a one-atom semantic mutation,
+When the exact checker recompiles every view,
+Then the candidate label SHALL change from compatible to incompatible. A
+reducer that ignores the mutation SHALL fail the readiness gate.
+
+### SCENARIO-CONSTRAINT-6849-SANITIZED-FIXTURE: Exp6851 Input Is Score-Free
+
+Given all authority gates pass,
+When Exp6849 freezes the candidate-pair manifest,
+Then each candidate, pair, row, atom, view, and transform identity SHALL be
+unique. The manifest SHALL store raw sequence inputs and no model scores. Token
+equality SHALL remain unclaimed without tokenizer receipts.
+
+## Implementation Status (REQ-CONSTRAINT-6849)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6849 and SCENARIO-CONSTRAINT-6849-* | Implemented: fresh deterministic reducer and sanitized isomorphic fixture. | Implemented: focused tests, scoped 100% coverage, artifact verification, mutation checks, and repository audits. |
