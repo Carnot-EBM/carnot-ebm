@@ -17018,3 +17018,4 @@ The l |
 | 2026-09-01 18:11 UTC | Independent compatibility shortcut and claim-autho | OK | 107 passed, 1 warning in 11.00s |
 | 2026-09-01 18:29 UTC | Risk-sensitive memory opportunity and headroom fix | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-01 18:52 UTC | Risk-sensitive abstention-aware online memory cont | OK | 119 passed, 1 warning in 12.85s |
+| 2026-09-01 19:29 UTC | Counterfactual memory-write credit and negative-tr | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6855_counter |
