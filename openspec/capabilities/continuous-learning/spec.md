@@ -9746,3 +9746,156 @@ identity-unique, family-balanced, and contain nonzero safe-selection headroom,
 When Exp6853 computes its terminal result,
 Then `memory_headroom_nonzero_score` SHALL equal one
 And `risk_sensitive_stream_ready_score` SHALL equal one.
+
+## REQ-CL-6854: Risk-Sensitive Abstention Memory Controller
+
+The system SHALL replay Exp6853 decisions in chronological order with a small
+fixed-feature contextual bandit. The selectable actions SHALL be
+`verified_memory`, `no_memory`, and `abstain`. The controller SHALL use a
+pessimistic confidence score and deterministic tie-breaking. It SHALL update
+only its bounded external policy state. It SHALL NOT use residual pressure,
+post-outcome features, a learned LLM judge, or model-weight updates.
+
+Before replay, Exp6854 SHALL require
+`risk_sensitive_stream_ready_score=1`, stable row hashes, complete exact later
+outcomes, at least two actions with observed headroom, and a clean controller
+state. A failed check SHALL write
+`complete_blocked_risk_sensitive_abstention_memory_controller`. The blocked
+artifact SHALL set `risk_sensitive_controller_complete_score=0` and SHALL name
+the failed check and observed value in `gate_check_summary`.
+
+For each decision, the controller SHALL receive only its fixed pre-outcome
+context. It SHALL serialize the chosen action, context hash, and policy state
+hash before the exact later outcome becomes available. Delayed feedback SHALL
+reference the frozen action receipt. Each update SHALL clamp loss and state to
+the declared bounds.
+
+The risk matrix SHALL penalize harmful memory injection more than missed reuse
+and more than abstention when memory would have helped. Exp6854 SHALL compare
+the learned policy with no-memory, always-memory, abstain-only,
+random-admission, and read-only fixed controls on the same decision identities.
+It SHALL report sensitivity to each declared fixed risk ratio.
+
+The controller SHALL checkpoint at bounded intervals. Checkpoints SHALL use
+stable bytes and a content hash. Restart from a checkpoint SHALL produce the
+same final controller bytes as uninterrupted replay. Corrupt checkpoints SHALL
+fail closed. A poison update SHALL remain bounded, and rollback SHALL restore
+the exact parent bytes. Controller state size, checkpoint storage growth, and
+update latency SHALL be recorded.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `random_seed`,
+`reproducibility_checksum`, `rows`, `controller_schema`, `risk_matrix`,
+`pre_outcome_action_receipts`, `exact_feedback_receipts`, `update_rows`,
+`checkpoint_manifest`, `restart_equivalence_results`, `rollback_results`,
+`state_size_rows`, `latency_rows`, `per_arm_summary`, `held_future_effect`,
+`false_positive_injection_rate`, `abstention_rate`, `risk_sensitivity_rows`,
+`risk_sensitive_controller_complete_score`, `controller_benefit_gate_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `inference_substrate` SHALL equal
+`deterministic CPU online contextual bandit replay`. `verifier_is_oracle`
+SHALL be false. `verdict_class` SHALL use only `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+`honest_verdict` SHALL start with `complete_` and SHALL be supported by rows.
+
+`risk_sensitive_controller_complete_score` SHALL depend only on execution and
+receipt completeness. `controller_benefit_gate_score` SHALL remain separate.
+The benefit gate SHALL require positive held-future effect against no-memory
+and a bounded false-positive injection rate.
+
+### SCENARIO-CL-6854-PRECONDITIONS: Invalid Inputs Block Replay
+
+Given fixture readiness, a row hash, exact later authority, action headroom, or
+clean initial state check fails,
+When Exp6854 checks its inputs,
+Then it SHALL emit the blocked terminal artifact
+And `gate_check_summary` SHALL name the failed check and observed value.
+
+### SCENARIO-CL-6854-ACTION-FREEZE: Choice Precedes Outcome Reveal
+
+Given one chronological decision and its sealed later outcome,
+When the controller chooses an action,
+Then it SHALL serialize the action receipt and policy state hash first
+And no outcome or learner field SHALL occur in the decision context.
+
+### SCENARIO-CL-6854-DELAYED-FEEDBACK: Updates Reference Frozen Choices
+
+Given feedback becomes available after a later sequence position,
+When the controller applies that feedback,
+Then the update SHALL reference the frozen action receipt
+And the controller SHALL reject feedback without a pending frozen decision.
+
+### SCENARIO-CL-6854-ASYMMETRIC-LOSS: Harmful Injection Costs More
+
+Given a harmful-memory outcome and a helpful-memory outcome,
+When the fixed risk matrix computes losses,
+Then harmful verified-memory loss SHALL exceed missed-reuse loss
+And it SHALL exceed helpful-case abstention loss for every sensitivity ratio.
+
+### SCENARIO-CL-6854-ABSTENTION: Weak Evidence Uses The Safety Arm
+
+Given an unknown or unsupported context,
+When the controller computes pessimistic scores,
+Then it SHALL select `abstain`
+And the receipt SHALL state the conservative fallback reason.
+
+### SCENARIO-CL-6854-UNSEEN-CONTEXT: Unknown Features Do Not Leak
+
+Given a family or correction status outside the fixed feature schema,
+When the controller encodes the context,
+Then it SHALL mark the context unseen
+And it SHALL NOT extend the feature vector or read an outcome field.
+
+### SCENARIO-CL-6854-CAPACITY: Policy State Stays Bounded
+
+Given updates exceed the declared per-action capacity,
+When more feedback arrives,
+Then counts and sufficient statistics SHALL remain within fixed bounds
+And pending feedback SHALL not exceed its fixed capacity.
+
+### SCENARIO-CL-6854-CHECKPOINT-CORRUPTION: Invalid Bytes Fail Closed
+
+Given a checkpoint byte or payload hash changes,
+When the controller loads the checkpoint,
+Then loading SHALL raise a corruption error
+And no partial state SHALL become active.
+
+### SCENARIO-CL-6854-RESTART-EQUIVALENCE: Restart Is Byte-Identical
+
+Given a checkpoint at a fixed chronological boundary,
+When replay resumes from that checkpoint,
+Then the final controller bytes SHALL equal uninterrupted replay bytes.
+
+### SCENARIO-CL-6854-ROLLBACK: Poison Restores Parent State
+
+Given a bounded poison update after a saved checkpoint,
+When rollback loads the saved checkpoint,
+Then the restored controller bytes SHALL equal the parent bytes
+And no foundation-model weight file SHALL change.
+
+### SCENARIO-CL-6854-TIE-BREAKING: Equal Scores Are Deterministic
+
+Given two or more actions have equal pessimistic scores,
+When the controller selects an action,
+Then it SHALL prefer `abstain`, then `no_memory`, then `verified_memory`.
+
+### SCENARIO-CL-6854-CONTROLS: Policies Share Decision Identities
+
+Given a complete replay row,
+When Exp6854 evaluates the learned policy and fixed controls,
+Then every policy SHALL receive one metric for the same decision identity
+And no control SHALL change the learned controller state.
+
+### SCENARIO-CL-6854-GATES: Completion And Benefit Stay Separate
+
+Given all decisions and receipts are complete but held-future benefit is not
+positive or false-positive injection exceeds its bound,
+When Exp6854 computes terminal gates,
+Then `risk_sensitive_controller_complete_score` SHALL equal one
+And `controller_benefit_gate_score` SHALL equal zero.
+
+## Implementation Status (REQ-CL-6854)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-6854 and SCENARIO-CL-6854-* | Planned: `python/carnot/continuous_learning.py`; `python/carnot/experiment_6854_risk_sensitive_abstention_memory_controller.py`; `scripts/experiments/experiment_6854_risk_sensitive_abstention_memory_controller.py`; `results/experiment_6854_risk_sensitive_abstention_memory_controller.json`. | Planned: focused controller tests, new-code coverage, full Python tests, Ruff, OpenSpec coverage, adversarial verification, artifact convention, verdict-row consistency, leakage, and root-clutter checks. |
