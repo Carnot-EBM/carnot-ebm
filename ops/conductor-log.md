@@ -17014,3 +17014,4 @@ The l |
 | 2026-09-01 15:42 UTC | Independent typed-program isomorphic authority aud | OK | 113 passed, 1 warning in 13.35s |
 | 2026-09-01 16:13 UTC | Three-family forced-sequence scoring admission can | OK | 102 passed, 1 warning in 11.69s |
 | 2026-09-01 17:07 UTC | Three-family isomorphic fixed-sequence compatibili | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6851_three_f |
+| 2026-09-01 17:31 UTC | Three-family isomorphic fixed-sequence compatibili | OK | cache hit: 98 passed, 1 warning in 12.38s |
