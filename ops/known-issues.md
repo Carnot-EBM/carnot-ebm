@@ -61,6 +61,53 @@ TRUNCATES long paths with a leading `...`, so the substring never appeared. Use
 `git show --name-only`. That is the fourth check this session that returned a clean-looking answer
 without actually looking.
 
+
+**RATE UPDATE 2026-09-01 16:40Z (RESTORED 22:40Z — see the note at the end).** The list grew
+21 -> 23 in six hours, still 23 of 23 self-served:
+
+| commit | task | string added |
+|---|---|---|
+| `0b13d0bc29` | exp6843 live ARC evidence inventory | `read_only_live_artifact_inventory` |
+| `03e3a11234` | exp6844 supervisor outcome-credit audit | `deterministic_cpu_live_receipt_audit_no_llm` |
+
+Each added its own substrate string in the same commit as its own artifact, verified with
+`git show --name-only`. Roughly two per six hours at the current cadence.
+
+**The counter-example matters as much as the rate.** exp6849 declared `deterministic CPU exact
+compilation`, drew the `SUBSTRATE_HAS_NO_DURATION_FLOOR` warn, and did NOT add its string. Its
+artifact carries the warn honestly. So this is a channel some tasks use and others decline, and any
+lint written for it must expect legitimate warns to persist rather than treating a warn as a defect
+to clear.
+
+**Why this says RESTORED.** This entry was committed at 16:40Z as `9d5ee85bac` and the commit
+landed with its MESSAGE but WITHOUT this text — pre-commit's stash window dropped the file content
+after a hook failure, leaving a commit that describes a record it did not make. Found at 22:40Z
+while looking for an anchor. An audit of all nine known-issues commits made today found this was
+the only one affected; the other eight are present at HEAD. The lesson is that a green commit is
+not evidence the content landed: verify with `git show <sha>:<path>`, which is now done for this
+one.
+
+**CAPSTONE SKIP-CHECK: RECURRED, AND THE NEWEST MODULES ARE THE OFFENDERS (22:31Z).**
+`experiment_6860_v599_independent_capstone` contains `flagged_adversarial` zero times, like exp6847
+before it, and its task roll-up carries `"passed": true` rows for THREE quarantined artifacts:
+exp6853, exp6856, exp6857. Per-task rows rather than criteria, so the shape differs from exp6847
+while the violation is the same.
+
+The 13:40Z framing ("roughly a quarter of them") was too kind. Across 135 capstone modules:
+
+| population | lacking the check |
+|---|---|
+| all 135 | 34 (25%) |
+| newest 15 | 8 (53%) |
+| **last 4 consecutive** | **4 (100%)** |
+
+exp6615 (v576), exp6659 (v580), exp6847 (v598), exp6860 (v599). Not a legacy tail — new capstones
+have stopped inheriting the check, and the two most recent both consumed flagged artifacts.
+
+That changes the fix. Grandfathering the existing 34 would exempt precisely the newest offenders.
+Requiring the check only on capstone modules ADDED OR MODIFIED from now on fires on zero existing
+files and catches the next one at authoring time. Filed, not built.
+
 **REALIZED 2026-09-01 13:40Z — the orphaned stamp reached a milestone capstone, and it counted.**
 
 The chain predicted in this entry has now completed, with a victim:
