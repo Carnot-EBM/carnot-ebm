@@ -2846,3 +2846,92 @@ completeness and the explicit disposition only.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6834 and SCENARIO-CONSTRAINT-6834-* | Planned: independent parser, reducer, finite support audit, and task-owned wrapper. | Planned: focused tests, scoped 100% coverage, and cold artifact verification. |
+
+
+## REQ-CONSTRAINT-6835: V598 Terminal Evidence Freeze
+
+The system SHALL build Exp6835 as a deterministic CPU evidence root for V598.
+It SHALL read the terminal Exp6831, Exp6832, Exp6833, and Exp6834 artifacts.
+Before any row reduction, it SHALL require all four artifacts to be readable,
+their SHA-256 hashes to match the frozen source hashes, Exp6833 to contain
+exactly 900 unique model, scenario, and arm row identities, Exp6832 to contain
+exactly 150 unique scenario identities, Exp6833 to be corpus-ready, Exp6834 to
+be audit-complete, and owned source files to match their recorded hashes. A
+failed check SHALL write
+`complete_blocked_v598_terminal_evidence_freeze`. The blocked artifact SHALL
+record the failed check and observed value in `gate_check_summary`.
+
+The freeze SHALL reparse every Exp6833 raw output receipt with a fresh
+deterministic parser. It SHALL not import the Exp6833 or Exp6834 reduction
+path. It SHALL classify one row for every model, prompt arm, scenario, and
+obligation atom. Each row SHALL separate protocol failure, omission,
+contradiction, atom pass, and joint pass. Malformed output SHALL be a protocol
+failure. A parseable output that omits the expected atom SHALL be an omission.
+A parseable output that selects a conflicting action for the same resource
+SHALL be a contradiction. Atom pass SHALL remain separate from joint pass.
+
+The freeze SHALL recompute target-cell accounting from the source artifacts.
+It SHALL report observed target cells, missing target cells, collision
+witnesses, and a compatible-policy lower bound. It SHALL preserve the Exp6834
+null when generated-answer semantic preservation remains unidentified. It
+SHALL set `v598_evidence_root_ready_score` to `1` only when the evidence root
+is complete and immutable. This readiness field is not a positive scientific
+result.
+
+The terminal artifact SHALL be
+`results/experiment_6835_v598_terminal_evidence_freeze.json`. It SHALL include
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `reproducibility_checksum`, `rows`,
+`failure_taxonomy`, `observed_target_cells`, `missing_target_cells`,
+`collision_witnesses`, `compatible_policy_lower_bound`,
+`source_null_preserved`, `obligation_failure_taxonomy_complete_score`,
+`v598_evidence_root_ready_score`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. One principle SHALL exist for every
+top-level field. The inference substrate SHALL declare deterministic CPU
+replay. `verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL be terminal, row-supported, and start with
+`complete_`.
+
+### SCENARIO-CONSTRAINT-6835-PRECONDITIONS: Invalid Sources Stop The Freeze
+
+Given a missing row, duplicate identity, hash drift, unreadable artifact, or
+owned-source hash drift,
+When Exp6835 checks its frozen inputs,
+Then it SHALL write the complete blocked artifact with the exact failed check
+and SHALL not emit source obligation rows.
+
+### SCENARIO-CONSTRAINT-6835-FRESH-PARSER: Raw Bytes Are Reparsed Without Reducers
+
+Given Exp6833 raw-output byte receipts,
+When Exp6835 classifies rows,
+Then parser status and selected action identifiers SHALL come from Exp6835
+code only, with no Exp6833 or Exp6834 reducer imports.
+
+### SCENARIO-CONSTRAINT-6835-TAXONOMY: Obligation Outcomes Stay Separated
+
+Given malformed output, omitted expected atoms, conflicting selected actions,
+and correct expected atoms,
+When Exp6835 emits obligation rows,
+Then it SHALL label protocol failure, omission, contradiction, atom pass, and
+joint pass as separate fields.
+
+### SCENARIO-CONSTRAINT-6835-ACCOUNTING: Target Support Is Recomputed
+
+Given complete source artifacts,
+When Exp6835 builds its evidence root,
+Then observed target cells, missing target cells, collision witnesses, and the
+compatible-policy lower bound SHALL match the finite V597 support audit.
+
+### SCENARIO-CONSTRAINT-6835-NULL-PRESERVATION: Readiness Is Not A Result
+
+Given Exp6834 reports `not_separated`,
+When Exp6835 completes the immutable evidence root,
+Then it SHALL preserve the source null, set readiness only as an evidence
+integrity field, and SHALL NOT convert readiness into a positive verdict.
+
+## Implementation Status (REQ-CONSTRAINT-6835)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6835 and SCENARIO-CONSTRAINT-6835-* | Implemented: deterministic CPU evidence freeze with a fresh parser and atom taxonomy. | Implemented: focused tests, scoped 100% coverage, artifact verification, and lint checks. |
