@@ -70,6 +70,23 @@ release at least 21.5 GB before starting `scripts/arc_scored_path_lever_harness.
 refuses to launch rather than fall back to the iGPU path, which times out. It uses the lever
 harness because that one records the receipt; the eval does not.
 
+
+**LIMIT ON THE QUEUED RUN, checked 2026-09-01 12:40Z — it will not unblock exp6844 by itself.**
+`python/carnot/experiment_6844_supervisor_action_outcome_credit_audit.py` pins its input to a
+single frozen path, `results/experiment_6681_arc_post_redirect_outcomes.json`, hardcoded at lines
+143, 393, 590 and 738. It is not a glob over applied receipts. So the queued cd82/r11l run can
+produce all the level-up-credited redirects in the world and exp6844's `headroom_nonzero` gate
+will still observe False, because it never looks at the new artifact.
+
+Producing the evidence is therefore necessary and NOT sufficient. A follow-on audit has to name
+the new artifact as its source. Recorded because the failure mode is silent: a later session sees
+a fresh supervised run land, re-runs the audit, gets the same blocked verdict, and concludes the
+run failed rather than that the audit was pointed elsewhere.
+
+Not checked: whether exp6845's tool-gap audit is pinned the same way. It returned the identical
+shape (`tool_gap_audit_complete_score` 1, `tool_gap_effect_eligible_score` 0, gate failing on zero
+obligations), so it is worth checking before anyone assumes a tool-loop run would unblock it.
+
 **Proposed, not built:** move the artifact write inside the per-game loop so each
 game banks independently. Small and safe, but it cannot help a run already in
 flight (the module is imported once at start), so it should be done between runs.
