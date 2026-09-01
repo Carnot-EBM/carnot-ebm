@@ -18433,3 +18433,15 @@ timed alternative is attributable to this execution window.
 - 2026-09-01: Typed obligation shadow monitor at the canonical ARC seam (⚠️ Research Finding) — honest_verdict=complete_null_typed_arc_shadow_monitor_ready_default_off_no_solve_claim; results/experiment_6846_typed_arc_shadow_monitor.json
 - 2026-09-01: V598 independent adversarial capstone and next-step disposition (⚠️ Research Finding) — honest_verdict=complete_partial_v598_independent_capstone_all_branch_states_preserved; results/experiment_6847_v598_independent_capstone.json
 - 2026-09-01: V598 independent adversarial capstone and next-step disposition (⚠️ Research Finding) — honest_verdict=complete_null_v598_independent_capstone_all_branch_states_preserved; results/experiment_6847_v598_independent_capstone.json
+
+## 2026-09-01 — Milestone 2026.09.598 operational retrospective
+
+Across a 0.7-minute reconstructed window, 12 experiments finished and one was
+compute-bound. Three-family output-free obligation compatibility margins used
+0.68 minutes. No data available this milestone identifies the costly phase.
+The compute-task idle flag is false, and the GPU snapshot reports 74% use on
+GPU 1. The idle GPU 0 does not prove a fault because no data available this
+milestone shows two or more models loaded in parallel. Therefore, the evidence
+does not support a missed DualGPURunner dispatch. Add batches of 8-16 questions
+to the single-model inference path. Also emit task-owned phase, GPU, model-count,
+and runner receipts. Estimated savings is 0% until a timed alternative exists.

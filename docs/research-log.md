@@ -6507,3 +6507,10 @@ The critical path for milestone .250:
 - theme: an operational-saturation corpus dominated reconstructed wall time while task-phase accelerator attribution remained unavailable
 - key result: honest operational negative — the longest compute task took 8.75 minutes without a compute-bound GPU-idle finding, but the timing does not explain why or establish parallel-model runner eligibility
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.598
+
+- exp_range: no data available this milestone
+- theme: sub-minute mixed execution concentrated elapsed time in one compute entry while leaving its internal work invisible
+- key result: the compute entry used 0.68 of the 0.7-minute window and did not register GPU idle; no data available this milestone identifies a slow phase or a simultaneous-model dispatch case
+- acceptance: no data available this milestone

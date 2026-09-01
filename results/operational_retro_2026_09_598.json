@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.598",
+  "generated_at": "2026-09-01T13:17:24Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.7,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Three-family output-free obligation compatibility margins",
+      "duration_minutes": 0.68,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V598 independent adversarial capstone and next-step disposition",
+      "duration_minutes": 0.02,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V598 terminal evidence freeze and omission decomposition",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Typed obligation program and matched candidate fixture",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bounded exact-outcome residual-memory kernel canary",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 12 experiments in 0.7 minutes, and one was compute-bound. Three-family output-free obligation compatibility margins was the longest compute entry at 0.68 minutes; the locked indicator reports no compute-task GPU idle.",
+  "bottlenecks_identified": [
+    "Three-family output-free obligation compatibility margins formed the measured critical path at 0.68 minutes; no data available this milestone identifies which phase caused that duration.",
+    "Disk-mtime reconstruction does not provide phase timing or task-window accelerator attribution."
+  ],
+  "improvements_suggested": [
+    "Add configurable batches of 8-16 questions to the single-model inference path.",
+    "Emit monotonic phase timings and task-window GPU samples for each compute-bound task.",
+    "Record loaded-model count and selected runner at launch so DualGPURunner eligibility is auditable."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Batch 8-16 compatible questions per forward pass on single-model inference tasks.",
+    "Join phase timings and GPU samples to the compute task that produced them.",
+    "Write model-count and runner-selection fields into each launch receipt."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence identifies the critical-path entry but does not explain its internal cost or show a simultaneous multi-model launch. The savings estimate remains conservative until a timed batching comparison is available."
+}
