@@ -1,5 +1,29 @@
 # Carnot — Operational Status
 
+**In flight (2026-09-01 02:20Z):** supervised live run, pid 374980, started
+2026-08-31 20:01Z, games `ls20,wa30`, policy e3, budget 2500, adapter-free.
+Purpose: accrue APPLIED trajectory-supervisor receipts toward the refinement
+floor of 10 firings per arm, now that the window default is 120 (REQ-ARC-WMTE-6780;
+at the old 400 it never fired). Worker 375086 healthy at 2h17m, 632% CPU,
+17.1 tok/s. Still on the first game.
+
+**This run reports nothing until it finishes, by construction.** The trajectory
+supervisor has no logger and no print, so `grep redirect` over its log returns 0
+whether it fired or not — do not read that as zero firings. The eval's
+`_write_json_atomic` sits outside the per-game loop, so one artifact lands after
+BOTH games. At the ~5.4h/game measured on cd82 that is ~11h with nothing banked
+in between; a death at hour 10 loses both games' receipts, and the death receipt
+records stage and game names only, not arm outcomes. Judge liveness from the
+worker process, never from log content or receipt presence.
+
+**Proposed, not built:** move the artifact write inside the per-game loop so each
+game banks independently. Small and safe, but it cannot help a run already in
+flight (the module is imported once at start), so it should be done between runs.
+
+---
+
+**Superseded 2026-09-01 — the run below completed; kept per never-prune.**
+
 **In flight (2026-08-30 23:36Z):** adapter-free live-agent eval, 5 batches x 2
 games on GPU 1 (`scripts/arc_leaderboard_eval.py --policy e3`, pid 3762592).
 Batch 1 (`r11l,lp85`) at 3h20m; each batch writes its own file under
