@@ -2385,3 +2385,84 @@ principle, and the checksum binds inputs, criteria, rows, commands, and output.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6826 and SCENARIO-CONSTRAINT-6826-* | Planned: sealed row-based decision synthesis and task-owned script. | Planned focused tests and 100% scoped statement coverage. |
+
+## REQ-CONSTRAINT-6831: V597 Selective-Arbiter Evidence Admissibility
+
+The system SHALL issue a fresh evidence-admissibility contract from readable,
+terminal Exp6813 and Exp6824 through Exp6827 artifacts whose bytes remain
+stable throughout the run. The task SHALL verify complete unique source rows,
+closed verdict classes, embedded source seals, and required completion fields
+before reducing any evidence. A failed precondition SHALL stop the reduction
+and write `complete_blocked_v597_evidence_admissibility` with an exact failed
+check, expected value, and observed value in `gate_check_summary`.
+
+The task SHALL independently reduce Exp6813, Exp6824, and Exp6825 data into
+separate hard-safety, safe-action-identity, certificate-truth, utility, and
+adoption decisions. The reduction SHALL use a closed conservative decision
+table for positive, null, harmful, blocked, disqualified, and partial evidence.
+Exp6826 SHALL remain a quarantined comparator and SHALL never supply decision
+logic or deployment authority. Procedural receipt admissibility SHALL depend on
+complete admissible authority evidence, not on a positive utility effect.
+
+The terminal artifact SHALL declare only
+`aggregation_from_upstream_artifacts` as its inference substrate. It SHALL
+record task-owned start, read, recompute, write, and verify clocks, process and
+command launch identity, accelerator samples, stable source hashes, criterion
+rows, a reproducibility checksum, one principle for every declared field, and
+`verifier_is_oracle=false`.
+
+### SCENARIO-CONSTRAINT-6831-PRECONDITIONS: Missing Or Incomplete Evidence Stops
+
+Given a required source is unreadable, nonterminal, incomplete, or missing a
+required source row,
+When Exp6831 checks its inputs,
+Then it SHALL write the complete blocked artifact and SHALL not reduce rows.
+
+### SCENARIO-CONSTRAINT-6831-HASH-STABILITY: Source Drift Stops
+
+Given a source artifact changes between the initial read and final verification,
+When Exp6831 compares task-owned source hashes,
+Then it SHALL report the drift as the blocking gate and SHALL issue no authority.
+
+### SCENARIO-CONSTRAINT-6831-FRESH-REDUCTION: Authority Comes From Source Data
+
+Given complete Exp6813, Exp6824, and Exp6825 rows,
+When Exp6831 recomputes the authority table,
+Then safety, identity, certificate, utility, and adoption SHALL be separate
+row-supported decisions and SHALL not import the Exp6826 decision procedure.
+
+### SCENARIO-CONSTRAINT-6831-CONSERVATIVE-TABLE: Findings Propagate Fail Closed
+
+Given any combination of positive, null, harmful, blocked, disqualified, and
+partial component findings,
+When Exp6831 derives adoption,
+Then disqualified SHALL require redesign, harmful SHALL retire the candidate,
+blocked or partial SHALL remain insufficient, null SHALL remain shadow-only,
+and only all-positive evidence SHALL enable adoption.
+
+### SCENARIO-CONSTRAINT-6831-QUARANTINE: Flagged Receipt Has No Authority
+
+Given Exp6826 carries an adversarial duration flag,
+When Exp6831 records it as a comparator,
+Then its disposition SHALL remain quarantined and its decisions SHALL not be
+consumed as selective-arbiter authority.
+
+### SCENARIO-CONSTRAINT-6831-CLOCKS: Task-Owned Phases Are Ordered
+
+Given one Exp6831 execution,
+When it records start, read, recompute, write, and verify phases,
+Then every phase SHALL carry an ordered task-owned clock and `duration_s` SHALL
+cover the measured task wall time.
+
+### SCENARIO-CONSTRAINT-6831-ADMISSIBILITY: Effect Sign Does Not Grant Authority
+
+Given a complete authority audit with any utility effect sign,
+When Exp6831 derives `selective_arbiter_receipt_admissible`,
+Then the field SHALL reflect procedural completeness and authority admissibility
+rather than the presence of a positive utility effect.
+
+## Implementation Status (REQ-CONSTRAINT-6831)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6831 and SCENARIO-CONSTRAINT-6831-* | Implemented: fresh evidence reducer, task-owned wrapper, and terminal artifact contract. | Implemented: 43 focused tests pass and the 482-statement reducer has 100% scoped coverage. |

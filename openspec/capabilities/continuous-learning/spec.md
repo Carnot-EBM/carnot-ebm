@@ -9068,3 +9068,66 @@ release, and byte-completeness gate.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-6828 and SCENARIO-CL-6828-* | Planned: Exp6828 module, task-owned wrapper, and terminal artifact. | Planned: focused tests and full Python suite. |
+
+## REQ-CL-6831: V597 Causal-Edge Stream Input Admissibility
+
+The system SHALL validate Exp6827 as an immutable input stream without running
+learning. Validation SHALL cover all 4,320 row identities and hash fields, order
+hashes, family split membership, canonical three-row counterfactual
+transactions, family rotation, the sealed-field manifest, and recomputed
+nonzero headroom counts. Parent/new hashes SHALL preserve rejected and read-only
+transactions and SHALL change only for admitted mutating operations.
+
+The system SHALL separately confirm that the upstream artifact declares no
+learning ran and exposes no weight-update receipt. Exp6831 SHALL emit one row
+for every stream-readiness criterion and derive `csl_inputs_admissible` and
+`v597_contract_ready` from complete admissible inputs, not from any learned
+effect. These exact booleans SHALL be suitable for downstream Exp6835 and
+Exp6832 consumption respectively.
+
+### SCENARIO-CL-6831-ROW-HASHES: Every Stream Row Has Stable Identity
+
+Given the frozen Exp6827 rows,
+When Exp6831 validates row and state hashes,
+Then all rows SHALL have unique canonical identities and every declared digest
+SHALL have the required SHA-256 form.
+
+### SCENARIO-CL-6831-ORDERS-AND-SPLITS: Order And Split Identity Recompute
+
+Given the five frozen order manifests and three family splits,
+When Exp6831 reconstructs their identities from rows,
+Then every order hash, event position, split label, and split count SHALL agree.
+
+### SCENARIO-CL-6831-TRANSACTIONS: Counterfactual Rows Form Canonical Triples
+
+Given one order-family-operation source unit,
+When Exp6831 validates its transactions,
+Then exactly observed, removal, and alternative rows SHALL agree on receipt and
+state identity while preserving the canonical parent-to-new chain.
+
+### SCENARIO-CL-6831-ROTATIONS-AND-SEALS: Held-Out Families And Fields Stay Sealed
+
+Given the three leave-one-family-out rotations,
+When Exp6831 validates them,
+Then every family SHALL be held out once and no denied future or outcome field
+SHALL appear in the decision feature manifest or stream rows.
+
+### SCENARIO-CL-6831-HEADROOM: Readiness Requires Recomputed Nonzero Opportunity
+
+Given the canonical operation stream,
+When Exp6831 recomputes capacity, conflict, later-read, legal-alternative,
+safe-no-op, and stale-recovery opportunities,
+Then every required count SHALL be nonzero and SHALL equal the source summary.
+
+### SCENARIO-CL-6831-NO-LEARNING: Validation Cannot Become A Learning Claim
+
+Given immutable Exp6827 source bytes,
+When Exp6831 validates learning preconditions,
+Then it SHALL confirm immutable weights and the upstream no-learning statement
+and SHALL not claim that training or weight updates occurred.
+
+## Implementation Status (REQ-CL-6831)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-6831 and SCENARIO-CL-6831-* | Implemented: immutable stream validator within Exp6831. | Implemented: focused row, order, split, transaction, seal, headroom, and no-learning mutation tests pass. |
