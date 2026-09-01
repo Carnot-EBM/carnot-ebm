@@ -285,6 +285,7 @@ DETERMINISTIC_VERIFIER_SUBSTRATES = (
     "deterministic CPU exact-checker transactional fixture",
     "CPU exact chronological decision fixture, no LLM",
     "CPU prospective Tier-2 constraint-memory controller, no LLM",
+    "deterministic CPU chronological comparison",
     "CPU transformation of frozen authentic outputs, no LLM",
     "fresh_process_no_llm_transaction_audit",
 )

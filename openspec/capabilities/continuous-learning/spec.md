@@ -9412,3 +9412,127 @@ And `csl_shard_a_complete_score` SHALL remain separate from effect estimates.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-6840 and SCENARIO-CL-6840-* | Planned: `python/carnot/experiment_6840_residual_memory_chronological_shard_a.py`; `scripts/experiments/experiment_6840_residual_memory_chronological_shard_a.py`; `results/experiment_6840_residual_memory_chronological_shard_a.json`. | Planned: focused shard, coverage, lint, OpenSpec, adversarial, artifact, verdict-row, and root-clutter checks. |
+
+## REQ-CL-6841: Residual-Memory Delayed-Correction Shard B
+
+Exp6841 SHALL run the independent deterministic chronological comparison
+shard over the frozen Exp6827 event orders 3 and 4. These zero-based order IDs
+map to `order_4` and `order_5`. The shard SHALL invoke no LLM, mutate no model
+weights, and SHALL not import Exp6840 aggregates. It SHALL compare exactly four
+memory arms: `no_memory`, `read_only_memory`, `random_admission`, and
+`verified_residual_memory`.
+
+Before any decision, Exp6841 SHALL require
+`residual_memory_kernel_ready_score=1`, complete assigned orders, stable source
+hashes, exact later outcomes, delayed-correction headroom, and no overlap with
+Exp6840 identities. A failed check SHALL write status
+`complete_blocked_residual_memory_shard_b`, emit no comparison rows, set
+`csl_shard_b_complete_score=0.0`, and record each failed check and observed
+value in `gate_check_summary`.
+
+Each event, arm, and seed row SHALL freeze proposal inputs, memory reads, and
+the action dose before later outcomes are revealed. Outcome direction SHALL
+apply only after the exact later receipt. Credit SHALL be attributed to each
+action from that revealed direction, the frozen dose, and the arm-local prior
+state. The shard SHALL record rejected, revised, expired, committed, and
+rolled-back memory entries.
+
+The delayed-correction cells SHALL report whether exact later evidence revises
+stale memory and jointly wrong memory safely. Stale replacement SHALL tombstone
+the stale entry before committing its exact correction. Joint-error correction
+SHALL revise both wrong component memories from the same exact later receipt.
+Rollback SHALL restore the exact pre-correction state bytes and checkpoint
+restart SHALL match a clean replay.
+
+The artifact SHALL include `schema`, `experiment_id`, `title`, `run_date`,
+`status`, `openspec_requirement_ids`, `replay_commands`, `field_principles`,
+`preconditions_checked`, `inference_substrate`, `duration_s`,
+`continuous_self_learning_task`, `source_artifact_hashes`, `random_seeds`,
+`reproducibility_checksum`, `split_manifest`, `arm_contracts`, `rows`,
+`held_future_results`, `delayed_correction_results`,
+`correction_latency_results`, `residual_error_results`,
+`memory_state_transitions`, `negative_transfer_results`, `headroom_summary`,
+`checkpoint_manifest`, `csl_shard_b_complete_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one principle for every
+top-level field. `inference_substrate` SHALL equal
+`deterministic CPU chronological comparison`. `continuous_self_learning_task`
+SHALL be true. `verifier_is_oracle` SHALL be false. `verdict_class` SHALL use
+only `positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL be terminal, row-supported, and start with
+`complete_`.
+
+### SCENARIO-CL-6841-PRECONDITIONS: Shard B Fails Closed
+
+Given the residual kernel gate, assigned order coverage, source hash, exact
+outcome, delayed headroom, or Exp6840 overlap check fails,
+When Exp6841 checks its frozen inputs,
+Then it SHALL write `complete_blocked_residual_memory_shard_b`
+And `gate_check_summary` SHALL include the failed check and observed value.
+
+### SCENARIO-CL-6841-SHARD-DISJOINTNESS: Shard B Does Not Reuse Shard A
+
+Given Exp6827 contains the first shard orders and the second shard orders,
+When Exp6841 selects rows,
+Then selected identities SHALL come only from `order_4` and `order_5`
+And they SHALL be disjoint from the `order_1`, `order_2`, and `order_3`
+identities used by Exp6840.
+
+### SCENARIO-CL-6841-REVEAL-TIMING: Exact Outcomes Stay Hidden Until Receipt
+
+Given one event, arm, seed, and parent memory state,
+When Exp6841 freezes a decision row,
+Then proposal material and memory reads SHALL contain only public event fields
+and prior memory records
+And exact outcome fields SHALL be absent until after reveal.
+
+### SCENARIO-CL-6841-DELAYED-CREDIT: Exact Later Receipts Own Direction
+
+Given a frozen pre-reveal action in a delayed-correction cell,
+When Exp6841 reveals the exact later outcome,
+Then action-level credit SHALL use only that outcome direction and frozen dose
+And the row SHALL record the reveal delay and correction latency.
+
+### SCENARIO-CL-6841-STALE-REPLACEMENT: Stale Memory Revises Safely
+
+Given a stale-prerequisite cell and an arm-local stale memory entry,
+When exact later evidence arrives,
+Then the stale entry SHALL expire or revise before the correction commits
+And the transition receipt SHALL record `expired` or `revised`.
+
+### SCENARIO-CL-6841-JOINT-ERROR-CORRECTION: Jointly Wrong Memory Revises Safely
+
+Given a competing-authorities or soft-conflict cell with two wrong memory
+components,
+When exact later evidence arrives,
+Then both wrong components SHALL be revised or tombstoned from the same receipt
+And no correction SHALL read another arm's state.
+
+### SCENARIO-CL-6841-ROLLBACK: Correction Rollback Restores Bytes
+
+Given a committed correction and its pre-correction checkpoint,
+When Exp6841 forces rollback,
+Then the restored bytes SHALL match the checkpoint hash
+And the rolled-back transition SHALL be recorded.
+
+### SCENARIO-CL-6841-CHECKPOINT-RESTART: Restart Matches Clean Replay
+
+Given persisted shard state bytes,
+When Exp6841 restarts at the fixed checkpoint boundary,
+Then loaded state hashes SHALL match persisted hashes
+And final clean replay hashes SHALL match the live run.
+
+### SCENARIO-CL-6841-METRICS: Receipts Drive Completion
+
+Given all planned rows and receipts exist,
+When Exp6841 computes terminal metrics,
+Then held-future performance, correction latency, residual error, negative
+transfer, and no-headroom summaries SHALL be row-derived by family and order
+And `csl_shard_b_complete_score` SHALL depend only on planned cells and
+receipts.
+
+## Implementation Status (REQ-CL-6841)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-6841 and SCENARIO-CL-6841-* | Planned: `python/carnot/experiment_6841_residual_memory_delayed_correction_shard_b.py`; `scripts/experiments/experiment_6841_residual_memory_delayed_correction_shard_b.py`; `results/experiment_6841_residual_memory_delayed_correction_shard_b.json`. | Planned: focused shard, delayed-correction, rollback, coverage, lint, OpenSpec, adversarial, artifact, verdict-row, and root-clutter checks. |
