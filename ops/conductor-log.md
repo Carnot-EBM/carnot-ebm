@@ -16993,3 +16993,5 @@ The l |
 | 2026-09-01 05:30 UTC | Typed obligation program and matched candidate fix | OK | 103 passed, 1 warning in 16.93s |
 | 2026-09-01 06:53 UTC | Three-family output-free obligation compatibility  | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: esult-path", s |
 | 2026-09-01 07:15 UTC | Three-family output-free obligation compatibility  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6837_three_f |
+| 2026-09-01 08:37 UTC | Three-family output-free obligation compatibility  | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ad-suite failu |
+| 2026-09-01 08:39 UTC | Independent obligation compatibility shortcut and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6837-three-family-output-free-compatibili |
