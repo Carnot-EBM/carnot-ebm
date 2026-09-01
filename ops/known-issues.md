@@ -4,6 +4,48 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-09-01: the nested incident the determination lint's scope limit anticipated — 78 acknowledgements destroyed and restored
+
+`scripts/determination_preservation_lint.py` states its scope limit plainly: Rule 3 checks
+TOP-LEVEL keys only, because marker-shaped names occur ~11,260 times nested inside per-row
+records that a legitimate re-run rewrites wholesale. It ends: "All three confirmed incidents
+were top-level. If a future incident is nested, widen deliberately rather than pre-emptively."
+
+**This is that incident.** Adding a `freshness_acknowledgement` to three artifacts, I wrote
+`lst[:] = [e for e in lst if e.get("path") != dep] + [ack]` — replacing every prior entry for
+the same dependency instead of appending. That destroyed 49 prior acknowledgements in
+`outer_loop_arc_gateway_accurate_rescore_20260726.json`, 28 in
+`outer_loop_arc_gateway_rescore_20260726.json`, and 1 in
+`outer_loop_arc_max_actions_answer_20260726.json` — 78 recorded review judgements, including a
+hand-written 2026-08-17 entry whose prose evidence cited a specific commit range. All were
+restored from git and re-verified in order; the repair commit's diff against the pre-damage
+original is +32 insertions, 0 deletions.
+
+**Why nothing caught it.** The damage was at `provenance.freshness_acknowledgements`, one level
+down. The lint could not see it by design. The same commit also reformatted the three files from
+`indent=1` to `indent=2`, producing a 12,000-line diff that would have made the deletions
+invisible to a human reviewer — the destruction was hidden inside a whitespace rewrite. That
+combination is what makes this worth a rule rather than a note.
+
+**The proposed widening, narrow on purpose.** Protect ONLY a top-level `provenance` object's
+`freshness_acknowledgements` list — never all nested provenance, and never per-row bookkeeping.
+That specific path is unambiguously a review output, is never rewritten per row, and legitimate
+rebuilds already preserve it through `preserve_freshness_acknowledgements()` in the analyser
+scripts. So the lint would fire only when something failed to use that helper, which is the
+defect itself. The author's cry-wolf objection does not apply to this one path.
+
+The regression test is already written by the incident: an artifact whose
+`provenance.freshness_acknowledgements` goes from 49 entries to 1 must refuse the commit.
+
+NOT IMPLEMENTED. Filed rather than built, deliberately: widening a guard needs a mutation proof
+and a corpus A/B, and this was found at 03:10 UTC immediately after the destructive slip it
+describes. Building a guard while tired, in the same session that proved the tiredness, is how
+the next silent-non-firing pattern list gets written.
+
+**Working rule until then:** when editing any acknowledgement or corrigendum list, APPEND. Never
+filter-and-replace. Diff against the pre-edit original and confirm deletions are zero before
+staging, and never let a reformat share a commit with a content edit to an evidence file.
+
 ### NEW 2026-09-01: the conductor's checkpoint commit ignores scope claims and skips every hook
 
 Observed live. An outer-loop session declared `scripts/adversarial_verify.py` at 01:38 UTC,
