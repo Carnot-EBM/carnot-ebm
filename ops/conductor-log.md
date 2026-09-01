@@ -16995,3 +16995,4 @@ The l |
 | 2026-09-01 07:15 UTC | Three-family output-free obligation compatibility  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6837_three_f |
 | 2026-09-01 08:37 UTC | Three-family output-free obligation compatibility  | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ad-suite failu |
 | 2026-09-01 08:39 UTC | Independent obligation compatibility shortcut and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6837-three-family-output-free-compatibili |
+| 2026-09-01 09:01 UTC | Bounded exact-outcome residual-memory kernel canar | OK | 96 passed, 1 warning in 20.92s |
