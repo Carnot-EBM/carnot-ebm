@@ -6500,3 +6500,10 @@ The critical path for milestone .250:
 - theme: minute-rounded fallback timing obscured task phases and accelerator attribution
 - key result: honest operational negative — the sole compute-bound stream was reported at zero minutes, with no task-window evidence for a GPU efficiency fault or parallel-runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.597
+
+- exp_range: no data available this milestone
+- theme: an operational-saturation corpus dominated reconstructed wall time while task-phase accelerator attribution remained unavailable
+- key result: honest operational negative — the longest compute task took 8.75 minutes without a compute-bound GPU-idle finding, but the timing does not explain why or establish parallel-model runner eligibility
+- acceptance: no data available this milestone

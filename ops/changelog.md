@@ -18408,3 +18408,14 @@ launch receipts for runner and concurrency selection. Estimated time savings is
 - 2026-09-01: Exact operational-obligation saturation fixture (⚠️ Research Finding) — honest_verdict=complete_operational_obligation_saturation_fixture: deterministic source-free fixture ready; no model ran; results/experiment_6832_operational_obligation_saturation_fixture.json
 - 2026-09-01: Three-family operational-obligation saturation corpus (✅ Complete) — honest_verdict=complete_positive_sota_operational_saturation_corpus; results/experiment_6833_sota_operational_obligation_saturation_corpus.json
 - 2026-09-01: Cold operational-saturation identifiability audit (⚠️ Research Finding) — honest_verdict=complete_null_operational_field_preservation_not_identified; results/experiment_6834_operational_saturation_identifiability_audit.json
+
+## 2026-09-01 — Milestone 2026.08.597 operational retrospective
+
+Four experiments ran in an 8.8-minute reconstructed window, including two
+compute-bound tasks. Three-family operational-obligation saturation corpus set
+the 8.75-minute critical path, but phase causality and task-scoped accelerator
+attribution are unavailable. The compute-task GPU-idle indicator is false, and
+the evidence does not establish a parallel multi-model launch or a missed
+DualGPURunner selection. Prioritize task-phase telemetry, launch receipts, and
+8-16 question batching; estimated milestone-wide savings remains 0% because no
+timed alternative is attributable to this execution window.

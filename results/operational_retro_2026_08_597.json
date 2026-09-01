@@ -1,0 +1,52 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.597",
+  "generated_at": "2026-09-01T03:21:10Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 8.8,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Three-family operational-obligation saturation corpus",
+      "duration_minutes": 8.75,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Cold operational-saturation identifiability audit",
+      "duration_minutes": 0.02,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exact operational-obligation saturation fixture",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V597 evidence-admissibility and execution contract",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Four experiments completed in 8.8 minutes, and two were compute-bound. The 8.75-minute Three-family operational-obligation saturation corpus was the measured critical path; the locked indicator records no GPU-idle condition on compute-bound tasks.",
+  "bottlenecks_identified": [
+    "Three-family operational-obligation saturation corpus formed the measured critical path at 8.75 minutes, but the supplied timing has no phase attribution and therefore does not explain why it took longest.",
+    "Disk-mtime reconstruction does not correlate task phases with accelerator samples, so end-to-end GPU efficiency cannot be resolved from the monitor snapshot.",
+    "Loaded-model concurrency and runner identity were not recorded, leaving DualGPURunner eligibility unobservable."
+  ],
+  "improvements_suggested": [
+    "Batch 8-16 compatible questions per forward pass when one model serves multiple prompts.",
+    "Record monotonic task-phase timings and task-correlated GPU samples for each compute-bound experiment.",
+    "Emit a launch receipt containing loaded-model count, runner identity, and device placement; place an independent concurrent model workload on the unused device only when one is ready."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add monotonic phase clocks and task-correlated GPU samples to compute-bound execution.",
+    "Add configurable 8-16 question batching to the single-model inference path.",
+    "Record model concurrency and runner selection, then schedule independent concurrent model work across available devices when eligible."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "No data available this milestone attributes the longest task to a specific phase or establishes that any compute-bound task loaded two or more models in parallel. A missed DualGPURunner engagement therefore cannot be identified, and the 0% savings estimate reflects the absence of a timed alternative attributable to the milestone window."
+}
