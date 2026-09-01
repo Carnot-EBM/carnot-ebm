@@ -18430,3 +18430,4 @@ timed alternative is attributable to this execution window.
 - 2026-09-01: Live ARC evidence inventory and immutable stratum freeze (⚠️ Research Finding) — honest_verdict=complete_live_arc_inventory_terminal_evidence_only_no_solve_claim; results/experiment_6843_live_arc_evidence_stratum_freeze.json
 - 2026-09-01: ARC supervisor executable-action outcome-credit audit (⚠️ Blocked) — honest_verdict=complete_blocked_supervisor_outcome_credit_audit; results/experiment_6844_supervisor_action_outcome_credit_audit.json
 - 2026-09-01: ARC tool-gap transport and causal-support audit (⚠️ Blocked) — honest_verdict=complete_blocked_tool_gap_causal_support_audit; results/experiment_6845_tool_gap_causal_support_audit.json
+- 2026-09-01: Typed obligation shadow monitor at the canonical ARC seam (⚠️ Research Finding) — honest_verdict=complete_null_typed_arc_shadow_monitor_ready_default_off_no_solve_claim; results/experiment_6846_typed_arc_shadow_monitor.json
