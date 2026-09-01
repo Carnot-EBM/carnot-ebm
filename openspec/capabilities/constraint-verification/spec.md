@@ -2717,3 +2717,132 @@ and SHALL not depend on model accuracy.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6833 and SCENARIO-CONSTRAINT-6833-* | Planned: live local llama.cpp CUDA corpus producer and task-owned wrapper. | Planned: focused tests and the full local CUDA run. |
+
+
+## REQ-CONSTRAINT-6834: Cold Operational-Saturation Identifiability Audit
+
+The system SHALL provide a deterministic CPU audit that reads the frozen
+Exp6832 fixture and Exp6833 corpus without calling an LLM. Before reduction,
+the audit SHALL require `operational_saturation_corpus_ready=true`, exactly 900
+unique model, scenario, and arm rows, complete raw-output byte receipts, frozen
+fixture and model hashes, equal decode budgets, authentic task-owned process
+receipts, and complete teardown. A failed check SHALL write
+`complete_blocked_operational_saturation_identifiability_audit`. The blocked
+artifact SHALL name the first failed check, expected value, and observed value
+in `gate_check_summary`, then stop before row reduction.
+
+The audit SHALL use a fresh strict JSON parser and an independent
+reimplementation of the Exp6832 prerequisite, authority, fallback,
+execution-consequence, priority, and exact joint contracts. The audit module
+SHALL not import Exp6833 scoring or aggregate code. It SHALL decode every raw
+output receipt, check its length and SHA-256, parse without repair, and
+recompute every available obligation field and joint decision. Producer scores
+and aggregates SHALL not provide audit authority.
+
+The reducer SHALL report field success by model, prompt arm, obligation count,
+obligation type, and interaction class. It SHALL report joint success and
+parse failure as separate outcomes. It SHALL use scenario-matched arm pairs
+and scenario-level bootstrap units with a frozen seed. Headline saturation
+curves SHALL remain separate for each model family. Saturation means declining
+joint success as obligation count increases. Interaction penalties SHALL be
+reported separately from count decay.
+
+The audit SHALL define the finite target policy as all operational field
+decisions for every model, scenario, arm, obligation, and field cell. A parsed
+row observes its field cells. A transport failure does not observe latent field
+preservation. The audit SHALL enumerate the compatible binary policy class
+symbolically, compute a minimum identifying support certificate, and report
+constructive policy collisions when the current support is not identifying.
+Each collision SHALL name two policies with the same observed signature and a
+different target field value. It SHALL also name the smallest added cell that
+separates that pair.
+
+The audit SHALL run deletion, duplicate, row-order, model-label, prompt-label,
+and checker-mutation attacks. Deletion and duplicate attacks SHALL reject bad
+coverage. Order and label permutations SHALL preserve invariant results after
+canonical relabeling. Model-label masking SHALL detect loss of unpooled model
+identity. Checker mutation SHALL change or invalidate at least one recomputed
+decision. `operational_saturation_audit_complete` SHALL depend on complete cold
+recomputation, all required attacks, and an explicit identifiability
+disposition. It SHALL not depend on the sign of an arm effect or decay.
+
+The terminal artifact SHALL include `field_principles`,
+`preconditions_checked`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `source_artifact_hashes`,
+`independent_parser_id`, `independent_reducer_id`, `per_unit_rows`,
+`row_coverage`, `per_obligation_metrics`, `joint_success_metrics`,
+`parse_failure_metrics`, `interaction_penalties`, `saturation_curves`,
+`paired_arm_effects`, `identifiability_result`,
+`minimum_identifying_support`, `collision_witnesses`, `attack_results`,
+`operational_saturation_audit_complete`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. One principle
+SHALL exist for every top-level field. The inference substrate SHALL declare a
+fresh-process deterministic CPU audit with no LLM. The reproducibility checksum
+SHALL bind both source files, the independent module and wrapper, every source
+and attack row, the frozen commands, and all deterministic output while
+excluding measured duration. `verifier_is_oracle` SHALL be false.
+`verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL be terminal and
+start with `complete_`.
+
+### SCENARIO-CONSTRAINT-6834-PRECONDITIONS: Invalid Corpus Stops Reduction
+
+Given a missing readiness gate, row, byte receipt, hash, budget receipt,
+process receipt, or teardown receipt,
+When Exp6834 checks its frozen inputs,
+Then it SHALL write the complete blocked artifact with the exact failed gate
+and SHALL emit no reduced source rows.
+
+### SCENARIO-CONSTRAINT-6834-INDEPENDENT-TRUTH: Raw Bytes Control Decisions
+
+Given all 900 raw-output receipts and the Exp6832 public contract,
+When Exp6834 decodes, parses, and checks them,
+Then every parse, field, and joint result SHALL come from fresh code and SHALL
+not consume Exp6833 scores or aggregates as authority.
+
+### SCENARIO-CONSTRAINT-6834-MATCHED-INFERENCE: Units Stay Paired And Unpooled
+
+Given typed and compressed rows for each model and scenario,
+When Exp6834 computes effects and intervals,
+Then arm effects SHALL use matched scenario units, bootstrap resampling SHALL
+resample scenarios, count order SHALL be 1, 2, 4, 6, and 8, and model-family
+headline curves SHALL remain separate.
+
+### SCENARIO-CONSTRAINT-6834-SATURATION: Decay Is Not Parse Failure
+
+Given recomputed joint decisions and transport outcomes,
+When Exp6834 reports saturation,
+Then joint-success decay SHALL use all rows, parse failure SHALL have a separate
+metric, and interaction penalties SHALL compare matched interaction classes at
+fixed model, arm, and count.
+
+### SCENARIO-CONSTRAINT-6834-IDENTIFIABILITY: Missing Field Support Emits Collisions
+
+Given the finite model, scenario, arm, obligation, and field target cells,
+When Exp6834 groups binary behavior policies by their observed field signature,
+Then it SHALL report whether support identifies all target cells, a minimum
+support certificate, every missing-cell class, constructive collisions, and a
+one-cell separator for each reported witness.
+
+### SCENARIO-CONSTRAINT-6834-ATTACKS: Audit Invariants Fail Closed
+
+Given deletion, duplication, order, model-label, prompt-label, and checker
+mutations,
+When Exp6834 re-runs its coverage and reduction invariants,
+Then missing or duplicate identities and masked model labels SHALL be detected,
+order and semantic label permutations SHALL remain invariant after canonical
+mapping, and checker mutations SHALL not preserve the complete result.
+
+### SCENARIO-CONSTRAINT-6834-COMPLETENESS: Effect Sign Does Not Control Completion
+
+Given a cold recomputation with any measured effect sign and either an
+identifying or non-identifying support disposition,
+When Exp6834 computes its terminal completion gate,
+Then `operational_saturation_audit_complete` SHALL depend on procedural
+completeness and the explicit disposition only.
+
+## Implementation Status (REQ-CONSTRAINT-6834)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6834 and SCENARIO-CONSTRAINT-6834-* | Planned: independent parser, reducer, finite support audit, and task-owned wrapper. | Planned: focused tests, scoped 100% coverage, and cold artifact verification. |
