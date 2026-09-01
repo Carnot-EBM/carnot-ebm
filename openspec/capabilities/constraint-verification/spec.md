@@ -3036,3 +3036,137 @@ for measured duration.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6836 and SCENARIO-CONSTRAINT-6836-* | Planned: deterministic typed obligation program and fixed-sequence candidate fixture. | Planned: focused tests, scoped 100% coverage, artifact verification, and lint checks. |
+
+## REQ-CONSTRAINT-6837: Output-Free Compatibility Sequence Scoring
+
+The system SHALL score the frozen Exp6836 compatible and violation candidate
+pairs with local llama.cpp CUDA forced-sequence scoring. It SHALL use exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL fit no probe, generate no answer,
+use no LLM judge, and make no HSRM parity claim.
+
+Before inference, the producer SHALL call `cached_sota_pair()`. It SHALL
+require all three exact GGUF files and hashes, embedded GGUF tokenizer
+metadata, token log-probability support, CUDA, a task-owned exclusive GPU
+lease, free ports, sufficient disk, both Exp6836 readiness fields equal to 1,
+and one live forced-score canary per model. Any failed check SHALL write
+`complete_blocked_output_free_compatibility`. The blocked artifact SHALL
+record the exact failed check, expected value, and observed value in
+`gate_check_summary`.
+
+The producer SHALL run one task-owned model process at a time. It SHALL record
+the command, PID, process start time, port, GPU UUID, visible devices, model
+hash, tokenizer hash, first score, final score, and clean teardown. It SHALL
+observe unrelated processes but never interrupt them. Rows from one model
+process SHALL not be attributed to another model.
+
+Each fixed sequence SHALL be scored without sampling, repair, generation,
+grammar constraints, or answer feedback. The prompt tokens SHALL be masked out.
+Each margin SHALL store every candidate token id and token log-probability used
+in the compatible and violation scores. The producer SHALL require equal-token
+pairing within the model tokenizer before computing a margin. It SHALL emit raw
+receipts for every scored candidate.
+
+The producer SHALL checkpoint bounded batches. On restart it SHALL verify row
+hashes and run only missing row identities. It SHALL never regenerate complete
+rows.
+
+The terminal artifact SHALL be
+`results/experiment_6837_three_family_output_free_compatibility.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `model_specs`, `models_used`, `model_artifact_hashes`,
+`tokenizer_receipts`, `process_receipts`, `accelerator_samples`,
+`random_seed`, `source_artifact_hashes`, `reproducibility_checksum`, `rows`,
+`per_model_results`, `per_atom_results`, `joint_results`,
+`shortcut_control_cells`, `checkpoint_manifest`, `method_parity_limits`,
+`obligation_compatibility_stream_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. One principle
+SHALL exist for every top-level field. The inference substrate SHALL be
+`live_local_llama_cpp_cuda_forced_sequence_scoring`. `verifier_is_oracle` SHALL
+be false. `verdict_class` SHALL be one of `positive`, `circular_positive`,
+`null`, `blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL be
+terminal, row-supported, and start with `complete_`.
+
+`obligation_compatibility_stream_ready_score` SHALL depend only on authentic
+receipts and row completeness. Effect estimates SHALL stay separate. Lower
+compatible-sequence energy SHALL not be reported as proof of truth. Margins
+SHALL be reported by model, atom family, obligation count, compatible label
+position, prompt length, candidate length, and permutation. The producer SHALL
+not pool models as exchangeable samples.
+
+Field principles SHALL be:
+`field_principles`: Documents why each required field exists.
+`preconditions_checked`: Names every live gate and the exact observed value.
+`inference_substrate`: Distinguishes forced scoring from answer generation.
+`duration_s`: Makes skipped or implausibly short work visible.
+`model_specs`: Freezes the mandated model identities.
+`models_used`: Shows which models actually ran.
+`model_artifact_hashes`: Binds model bytes to scored rows.
+`tokenizer_receipts`: Proves native GGUF tokenization and lengths.
+`process_receipts`: Proves task-owned process identity and teardown.
+`accelerator_samples`: Records CUDA device and lease observations.
+`random_seed`: Makes batch ordering and canaries reproducible.
+`source_artifact_hashes`: Binds Exp6836 and implementation inputs.
+`reproducibility_checksum`: Detects drift across code, source, model, and rows.
+`rows`: Stores every scored model and candidate-pair margin.
+`per_model_results`: Keeps model families separate.
+`per_atom_results`: Reports atom-family margins without pooling models.
+`joint_results`: Reports joint and impossible-case margins separately.
+`shortcut_control_cells`: Audits label position, length, prompt, and permutation cues.
+`checkpoint_manifest`: Proves restart skips complete rows.
+`method_parity_limits`: States this is not HSRM and not truth proof.
+`obligation_compatibility_stream_ready_score`: Gates only on receipts and rows.
+`gate_check_summary`: Names the failed gate in blocked artifacts.
+`verifier_is_oracle`: Keeps exact labels external to model scores.
+`verdict_class`: Uses the closed terminal class vocabulary.
+`honest_verdict`: Gives a terminal complete-prefixed outcome.
+
+### SCENARIO-CONSTRAINT-6837-PRECONDITIONS: Failed Gates Stop Scoring
+
+Given any missing model, hash, tokenizer metadata, log-probability support,
+CUDA, lease, free port, disk budget, Exp6836 readiness field, or canary,
+When Exp6837 evaluates preconditions,
+Then it SHALL write `complete_blocked_output_free_compatibility` with exact
+expected and observed values and SHALL emit no margin rows.
+
+### SCENARIO-CONSTRAINT-6837-FORCED-SCORING: Candidate Scores Use Token Logprobs
+
+Given one compatible and one violation candidate with equal tokenizer length,
+When Exp6837 scores the pair,
+Then the row SHALL include prompt-masked candidate token ids, token
+log-probabilities, compatible score, violation score, and their margin.
+
+### SCENARIO-CONSTRAINT-6837-TOKEN-ALIGNMENT: Pairing Is Equal-Token Only
+
+Given a matched pair whose compatible and violation candidates tokenize to
+different lengths,
+When Exp6837 prepares the row,
+Then the row SHALL be rejected or blocked before a margin is computed.
+
+### SCENARIO-CONSTRAINT-6837-CHECKPOINT-RESTART: Complete Rows Are Immutable
+
+Given a checkpoint with valid row hashes for some identities,
+When Exp6837 restarts,
+Then it SHALL verify those hashes, skip complete identities, and score only
+missing identities.
+
+### SCENARIO-CONSTRAINT-6837-PROCESS-OWNERSHIP: Models Are Isolated
+
+Given three mandated model specs,
+When Exp6837 runs sequential model phases,
+Then each phase SHALL have one task-owned process receipt, no process identity
+reuse across models, and a clean teardown receipt.
+
+### SCENARIO-CONSTRAINT-6837-ARTIFACT: Readiness Is Receipt And Row Complete
+
+Given all expected model-pair rows and authentic receipts,
+When Exp6837 builds the terminal artifact,
+Then readiness SHALL be one only when rows, raw receipts, checkpoints, model
+isolation, and teardown are complete; margin direction SHALL not control
+readiness.
+
+## Implementation Status (REQ-CONSTRAINT-6837)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6837 and SCENARIO-CONSTRAINT-6837-* | Planned: output-free local llama.cpp CUDA forced-sequence scoring with blocked preflight output. | Planned: focused tests cover preconditions, token alignment, masked scoring, raw receipts, checkpoint restart, model isolation, and artifact readiness. |

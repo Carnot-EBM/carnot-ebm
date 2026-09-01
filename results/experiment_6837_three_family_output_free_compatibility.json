@@ -1,0 +1,494 @@
+{
+  "accelerator_samples": [
+    {
+      "free_vram_mb": "23859",
+      "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "index": "0",
+      "name": "NVIDIA GeForce RTX 3090",
+      "owned_by_task": false,
+      "total_vram_mb": "24576"
+    },
+    {
+      "free_vram_mb": "702",
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "index": "1",
+      "name": "NVIDIA GeForce RTX 3090",
+      "owned_by_task": false,
+      "total_vram_mb": "24576"
+    }
+  ],
+  "checkpoint_manifest": {
+    "checkpoint_hash": "sha256:0bb2c327304e17c98f8cca942a880210b88ebaf45f2d0b57216f83cacbcc7ad4",
+    "complete_row_count": 0,
+    "expected_row_count": 0,
+    "missing_row_count": 0,
+    "resumed_row_count": 0,
+    "row_hashes": {},
+    "rows": [],
+    "schema": "carnot.experiment_6837.three_family_output_free_compatibility.v1.checkpoint"
+  },
+  "duration_s": 40.757,
+  "experiment_id": 6837,
+  "field_principles": {
+    "accelerator_samples": "Records CUDA device and lease observations.",
+    "checkpoint_manifest": "Proves restart skips complete rows.",
+    "duration_s": "Makes skipped or implausibly short work visible.",
+    "field_principles": "Documents why each required field exists.",
+    "gate_check_summary": "Names the failed gate in blocked artifacts.",
+    "honest_verdict": "Gives a terminal complete-prefixed outcome.",
+    "inference_substrate": "Distinguishes forced scoring from answer generation.",
+    "joint_results": "Reports joint and impossible-case margins separately.",
+    "method_parity_limits": "States this is not HSRM and not truth proof.",
+    "model_artifact_hashes": "Binds model bytes to scored rows.",
+    "model_specs": "Freezes the mandated model identities.",
+    "models_used": "Shows which models actually ran.",
+    "obligation_compatibility_stream_ready_score": "Gates only on receipts and rows.",
+    "per_atom_results": "Reports atom-family margins without pooling models.",
+    "per_model_results": "Keeps model families separate.",
+    "preconditions_checked": "Names every live gate and the exact observed value.",
+    "process_receipts": "Proves task-owned process identity and teardown.",
+    "random_seed": "Makes batch ordering and canaries reproducible.",
+    "reproducibility_checksum": "Detects drift across code, source, model, and rows.",
+    "rows": "Stores every scored model and candidate-pair margin.",
+    "shortcut_control_cells": "Audits label position, length, prompt, and permutation cues.",
+    "source_artifact_hashes": "Binds Exp6836 and implementation inputs.",
+    "tokenizer_receipts": "Proves native GGUF tokenization and lengths.",
+    "verdict_class": "Uses the closed terminal class vocabulary.",
+    "verifier_is_oracle": "Keeps exact labels external to model scores."
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "cached_sota_pair_called",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "all_three_exact_gguf_files",
+        "expected": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "observed": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "passed": true
+      },
+      {
+        "check": "model_hashes_present",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "native_tokenizer_metadata",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "token_log_probability_support",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "cuda_available",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "exclusive_gpu_leases",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "free_ports",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "sufficient_disk",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "exp6836_typed_obligation_program_ready_score",
+        "expected": 1,
+        "observed": 1,
+        "passed": true
+      },
+      {
+        "check": "exp6836_obligation_pair_fixture_ready_score",
+        "expected": 1,
+        "observed": 1,
+        "passed": true
+      },
+      {
+        "check": "live_canary_per_model",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      }
+    ],
+    "expected": true,
+    "failed_check": "exclusive_gpu_leases",
+    "observed": false,
+    "passed": false
+  },
+  "honest_verdict": "complete_blocked_output_free_compatibility",
+  "inference_substrate": "live_local_llama_cpp_cuda_forced_sequence_scoring",
+  "joint_results": [],
+  "method_parity_limits": {
+    "effect_estimate_is_truth_proof": false,
+    "fits_probe": false,
+    "generates_answers": false,
+    "hsrm_reproduction": false,
+    "step_boundary_hidden_states_available": false,
+    "truth_authority": "Exp6836 exact labels are external.",
+    "uses_llm_judge": false
+  },
+  "model_artifact_hashes": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "family": "qwen3_6_35b_a3b",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "family": "gemma4_26b_a4b_it",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "family": "gemma4_31b_it",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
+    }
+  },
+  "model_specs": [
+    {
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "cached_sota_pair_called": true,
+      "cached_sota_pair_hf_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "context_length": 8192,
+      "family": "qwen3_6_35b_a3b",
+      "gpu": 0,
+      "headline_eligible": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "local_model_present": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "tokenizer_receipt": {
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "loadable": true,
+        "model_path_hash": "sha256:6f682e0d9878ebd3211620f00fb8a28d4d2aa124d238a3fbfe038220455a504c",
+        "receipt_hash": "sha256:4029a0283776665ba0709d4f589e69106a9be001e2d182952a315c678ba2346f",
+        "source": "embedded_gguf_llama_cpp_vocab_only"
+      }
+    },
+    {
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "cached_sota_pair_called": true,
+      "cached_sota_pair_hf_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "context_length": 8192,
+      "family": "gemma4_31b_it",
+      "gpu": 1,
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "local_model_present": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "role": "dense",
+      "tokenizer_receipt": {
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "loadable": true,
+        "model_path_hash": "sha256:330c00a9ca503ff3a01df8db6bd046991f1f849b7436ced943721312827a6200",
+        "receipt_hash": "sha256:7b9e54f38e666d2c03ce0dde2dddc68647382a683df4e63ee1d834eb6ba3ae24",
+        "source": "embedded_gguf_llama_cpp_vocab_only"
+      }
+    },
+    {
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "cached_sota_pair_called": true,
+      "cached_sota_pair_hf_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "context_length": 8192,
+      "family": "gemma4_26b_a4b_it",
+      "gpu": 1,
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "local_model_present": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "tokenizer_receipt": {
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "loadable": true,
+        "model_path_hash": "sha256:3f7cc310b05e1efc7816fca37c1e612177b3ff237d6a2ea648af336062a3cbe9",
+        "receipt_hash": "sha256:5a72e5a368ee89a30d592ff53d5c6b4d19395140c463275d08b509fdafbed575",
+        "source": "embedded_gguf_llama_cpp_vocab_only"
+      }
+    }
+  ],
+  "models_used": [],
+  "obligation_compatibility_stream_ready_score": 0,
+  "per_atom_results": [],
+  "per_model_results": [],
+  "preconditions_checked": {
+    "accelerator_samples": [
+      {
+        "free_vram_mb": "23859",
+        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "index": "0",
+        "name": "NVIDIA GeForce RTX 3090",
+        "owned_by_task": false,
+        "total_vram_mb": "24576"
+      },
+      {
+        "free_vram_mb": "702",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "index": "1",
+        "name": "NVIDIA GeForce RTX 3090",
+        "owned_by_task": false,
+        "total_vram_mb": "24576"
+      }
+    ],
+    "blocked_reasons": [
+      "exclusive_gpu_leases",
+      "live_canary_per_model"
+    ],
+    "canary": {
+      "ok": false,
+      "reason": "prior_precondition_failed",
+      "skipped": true
+    },
+    "checks": [
+      {
+        "check": "cached_sota_pair_called",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "all_three_exact_gguf_files",
+        "expected": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "observed": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "passed": true
+      },
+      {
+        "check": "model_hashes_present",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "native_tokenizer_metadata",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "token_log_probability_support",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "cuda_available",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "exclusive_gpu_leases",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "free_ports",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "sufficient_disk",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "exp6836_typed_obligation_program_ready_score",
+        "expected": 1,
+        "observed": 1,
+        "passed": true
+      },
+      {
+        "check": "exp6836_obligation_pair_fixture_ready_score",
+        "expected": 1,
+        "observed": 1,
+        "passed": true
+      },
+      {
+        "check": "live_canary_per_model",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      }
+    ],
+    "cuda": {
+      "nvidia_smi": {
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,uuid,name",
+          "--format=csv,noheader"
+        ],
+        "duration_s": 0.025615,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090\n"
+      },
+      "ok": true,
+      "torch_cuda_available": true,
+      "torch_detail": "torch_device_count=2"
+    },
+    "date": "20260901",
+    "disk": {
+      "available_mb": 1013818,
+      "ok": true,
+      "required_mb": 1024
+    },
+    "free_ports": [
+      43241,
+      60513,
+      49607
+    ],
+    "output_paths": {
+      "checkpoint_parent_writable": true,
+      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6837_three_family_output_free_compatibility.checkpoint.json",
+      "result_parent_writable": true,
+      "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6837_three_family_output_free_compatibility.json"
+    },
+    "preconditions_ready": false,
+    "python": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "version": "3.12.13"
+    },
+    "schema": "carnot.experiment_6837.three_family_output_free_compatibility.v1.preconditions",
+    "token_log_probability_support": {
+      "detail": "llama_cpp.Llama.eval present",
+      "ok": true
+    },
+    "unrelated_compute_processes_observed": [
+      {
+        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "pid": "534404",
+        "used_memory_mb": "256"
+      },
+      {
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "pid": "375005",
+        "used_memory_mb": "4730"
+      },
+      {
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "pid": "375086",
+        "used_memory_mb": "18416"
+      },
+      {
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "pid": "534404",
+        "used_memory_mb": "256"
+      }
+    ]
+  },
+  "process_receipts": [],
+  "random_seed": 6837,
+  "reproducibility_checksum": "sha256:1f3eb6f07a1cf7a76e9253765b0deb5932ee2b553a0fbaa1ac3ebd2fe8162329",
+  "rows": [],
+  "run_date": "20260901",
+  "schema": "carnot.experiment_6837.three_family_output_free_compatibility.v1",
+  "shortcut_control_cells": [],
+  "source_artifact_hashes": {
+    "exp6836": {
+      "path": "results/experiment_6836_typed_obligation_program_fixture.json",
+      "sha256": "sha256:8657359ae7dcdf508ae141426d145bc75565119685a7ef841fc0cc9aa567d33c"
+    },
+    "module": {
+      "path": "python/carnot/experiment_6837_three_family_output_free_compatibility.py",
+      "sha256": "sha256:80b600c56dd0318bd430d54dd19e362a19873693f471dfb4572af8f32b590203"
+    },
+    "spec": {
+      "path": "openspec/capabilities/constraint-verification/spec.md",
+      "sha256": "sha256:b7d8815ca868cbb1fb6885e742c46e7ba660981683f61bfbd8f194d6dfdc2108"
+    },
+    "wrapper": {
+      "path": "scripts/experiments/experiment_6837_three_family_output_free_compatibility.py",
+      "sha256": "sha256:d22535233a0374b8c94acecf641742c41ca1fe5805d61d63f5df0b253b94e226"
+    }
+  },
+  "status": "blocked",
+  "tokenizer_receipts": [
+    {
+      "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+      "family": "qwen3_6_35b_a3b",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loadable": true,
+      "model_path_hash": "sha256:6f682e0d9878ebd3211620f00fb8a28d4d2aa124d238a3fbfe038220455a504c",
+      "receipt_hash": "sha256:4029a0283776665ba0709d4f589e69106a9be001e2d182952a315c678ba2346f",
+      "source": "embedded_gguf_llama_cpp_vocab_only"
+    },
+    {
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "family": "gemma4_31b_it",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "loadable": true,
+      "model_path_hash": "sha256:330c00a9ca503ff3a01df8db6bd046991f1f849b7436ced943721312827a6200",
+      "receipt_hash": "sha256:7b9e54f38e666d2c03ce0dde2dddc68647382a683df4e63ee1d834eb6ba3ae24",
+      "source": "embedded_gguf_llama_cpp_vocab_only"
+    },
+    {
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "family": "gemma4_26b_a4b_it",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loadable": true,
+      "model_path_hash": "sha256:3f7cc310b05e1efc7816fca37c1e612177b3ff237d6a2ea648af336062a3cbe9",
+      "receipt_hash": "sha256:5a72e5a368ee89a30d592ff53d5c6b4d19395140c463275d08b509fdafbed575",
+      "source": "embedded_gguf_llama_cpp_vocab_only"
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}
