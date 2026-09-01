@@ -59372,6 +59372,95 @@ states its own narrowed or not-narrowed disposition.
 |---|---|---|
 | REQ-REPORT-6754 and SCENARIO-REPORT-6754-* | Planned (`python/carnot/experiment_6754_v588_branch_disposition.py`, `scripts/experiments/experiment_6754_v588_branch_disposition.py`) | Planned (`tests/python/test_experiment_6754_v588_branch_disposition.py`) |
 
+### REQ-RESEARCH-6847: V598 Independent Capstone SHALL Preserve Every Branch State
+
+Exp6847 SHALL synthesize milestone `2026.09.598` from
+`research-roadmap.yaml`, the milestone document
+`openspec/change-proposals/research-roadmap-vNEXT.md`, and every V598 artifact
+that exists at execution time. It SHALL record the prompt-listed
+`research-roadmap-next.yaml` path as missing when absent, but SHALL not block
+the capstone when the active roadmap and milestone document parse. It SHALL
+invoke no LLM and SHALL use deterministic CPU independent synthesis under the
+reviewed `aggregation_from_upstream_artifacts_no_llm` substrate.
+
+The reducer SHALL inventory every planned Exp6835 through Exp6847 artifact.
+Missing, unreadable, invalid JSON, nonterminal, blocked, null, partial,
+disqualified, and circular-positive states SHALL become explicit rows. A
+missing upstream artifact SHALL not erase its task, branch, prior-failure
+context, or allowed claim.
+
+The reducer SHALL not import producer acceptance decisions. For every available
+source artifact it SHALL recompute all acceptance criteria that can be checked
+from per-unit rows, source-artifact receipts, gate-check rows, and exact
+source fields. It SHALL compare recomputed values with stored producer fields
+and preserve any disagreement in result rows instead of repairing it by prose.
+
+The artifact SHALL issue separate dispositions for typed compatibility,
+learning-kernel execution, held-future continuous self-learning, supervisor
+credit, tool-gap support, and the typed ARC shadow monitor. It SHALL not rescue
+one branch with evidence from another configuration or mechanism. It SHALL
+check every roadmap `prior_failures` entry and recommend mechanical retirement
+when the same verdict recurs under that task's branch-local evidence.
+
+The artifact SHALL write one row per experiment and acceptance criterion. Each
+row SHALL state the evidence, expected value, observed value, status, verdict
+class, allowed claim, and whether the value was recomputed or unavailable. The
+`v598_disposition_complete_score` SHALL measure full coverage of those branch
+dispositions and planned artifact inventory, not positive scientific outcomes.
+
+The artifact SHALL be written atomically to
+`results/experiment_6847_v598_independent_capstone.json`. It SHALL include
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `reproducibility_checksum`,
+`artifact_inventory`, `rows`, `typed_compatibility_disposition`,
+`learning_kernel_disposition`, `continuous_self_learning_disposition`,
+`supervisor_credit_disposition`, `tool_gap_disposition`,
+`arc_shadow_monitor_disposition`, `prior_failure_retirement_decisions`,
+`allowed_claims`, `forbidden_claims`, `next_milestone_recommendation`,
+`v598_disposition_complete_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+
+#### SCENARIO-RESEARCH-6847-MISSING-ARTIFACTS
+
+Given the V598 roadmap and milestone document parse and one upstream artifact is
+absent, when Exp6847 builds the inventory, then the task receives an explicit
+missing artifact row, its branch disposition stays terminal, and the capstone
+still writes a complete artifact.
+
+#### SCENARIO-RESEARCH-6847-HASH-AND-GATE-REPLAY
+
+Given a source artifact with per-unit rows, source-artifact receipts, and
+acceptance fields, when Exp6847 recomputes criteria, then source hashes,
+expected values, observed values, pass or fail state, and producer aggregate
+disagreements are recorded without importing the producer acceptance decision.
+
+#### SCENARIO-RESEARCH-6847-CLOSED-VERDICTS
+
+Given upstream artifacts whose terminal classes include positive,
+circular-positive, null, blocked, disqualified, and partial states, when Exp6847
+classifies rows and branches, then each state remains in the closed enum and
+circular evidence cannot become an ordinary positive.
+
+#### SCENARIO-RESEARCH-6847-BRANCH-INDEPENDENCE
+
+Given typed compatibility, learning, supervisor, tool-gap, and ARC-shadow
+evidence from different configurations, when Exp6847 emits dispositions, then
+each branch receives exactly one evidence-bounded next action and no branch is
+upgraded by another branch's successful readiness field.
+
+#### SCENARIO-RESEARCH-6847-RETIREMENT
+
+Given a roadmap `prior_failures` entry whose verdict recurs in branch-local
+evidence, when Exp6847 compares current terminal states, then it recommends
+mechanical retirement for that repeated failure and otherwise records why the
+failure did not recur.
+
+## Implementation Status (REQ-RESEARCH-6847)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RESEARCH-6847 and SCENARIO-RESEARCH-6847-* | Implemented (`python/carnot/experiment_6847_v598_independent_capstone.py`, `scripts/experiments/experiment_6847_v598_independent_capstone.py`) | Implemented (`tests/python/test_experiment_6847_v598_independent_capstone.py`) |
+
 ### REQ-REPORT-6755: Lossless Reparse Receipts SHALL Be Atomic And Recomputable
 
 Exp6755 SHALL atomically write
