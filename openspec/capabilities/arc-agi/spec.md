@@ -1489,3 +1489,86 @@ completion.
 **Then** `solve_claim=false`, `verdict_class` is drawn from the closed verdict
 set, complete no-effect inventories use `verdict_class=null`, and
 `honest_verdict` starts with `complete_` while making no game-level solve claim.
+
+## REQ-ARC-6844: Supervisor Action Outcome Credit Audit
+
+Experiment 6844 SHALL audit supervisor action credit only from frozen receipt
+artifacts. It SHALL not launch a live ARC run. It SHALL recompute rows from
+exact action and outcome receipts. It SHALL not import prior benefit,
+adoption, or readiness aggregates as outcome truth.
+
+The producer SHALL require `arc_inventory_complete_score=1`, at least one
+eligible supervisor cell, immutable attempts, exact later outcomes, action
+identities, temporal order, matched cells, and nonzero matched headroom before
+it can mark supervisor effect eligibility. If a gate fails, it SHALL still
+write a terminal `complete_blocked_supervisor_outcome_credit_audit` artifact.
+The blocked artifact SHALL include `gate_check_summary` with the failed check,
+expected value, and observed value.
+
+The reducer SHALL emit each eligible redirect and each matched control with
+game, run, model, policy, budget, supervisor mode, action, receipt, next state,
+later exact outcome, dose, and headroom. Dose SHALL attach to the specific
+applied action identity. Direction SHALL come from the exact later trajectory
+outcome. A row with no progress and no regression SHALL be recorded as
+abstention, not as a benefit.
+
+The analysis SHALL compare only matched cells. It SHALL keep configurations
+with different games, tool-loop states, supervisor modes, policies, models, or
+budgets in separate strata. It SHALL report unmatched configurations as
+diagnostics rather than pairing them. It SHALL report transition progress,
+regression, abstention, invalid-action rate, and uncertainty by stratum.
+
+The artifact SHALL write
+`results/experiment_6844_supervisor_action_outcome_credit_audit.json` with
+these top-level fields: `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`reproducibility_checksum`, `per_game_results`, `configuration_strata`,
+`exact_outcome_join_results`, `action_credit_results`, `headroom_results`,
+`unmatched_cell_results`, `transition_progress_results`,
+`invalid_action_results`, `supervisor_causal_audit_complete_score`,
+`supervisor_effect_eligible_score`, `solve_claim`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+
+`inference_substrate` SHALL identify deterministic CPU live-receipt audit work.
+`supervisor_causal_audit_complete_score` SHALL be derived from artifact
+completeness. `supervisor_effect_eligible_score` SHALL be 1 only when matching,
+timing, headroom, and exact outcome gates pass. That score SHALL mean
+eligibility only. It SHALL not mean the effect is positive. `solve_claim` SHALL
+be false. `verifier_is_oracle` SHALL be false because exact later outcomes are
+external receipts. A complete no-solve, no-effect-eligibility audit SHALL use
+`verdict_class=blocked` when any required gate fails, otherwise `verdict_class`
+SHALL be `null`.
+
+### SCENARIO-ARC-6844-ACTION-OUTCOME-JOIN
+
+**Given** exact live outcome rows with proposal, application, environment step,
+and outcome identities
+**When** Exp6844 reduces action credit rows
+**Then** every redirect and matched control keeps the same identity chain,
+records the applied action, links dose to that action, and assigns direction
+from the later outcome.
+
+### SCENARIO-ARC-6844-GATES-FAIL-CLOSED
+
+**Given** missing receipts, duplicate identities, invalid temporal order,
+partial verification failure, or zero matched headroom
+**When** Exp6844 evaluates preconditions
+**Then** it writes `complete_blocked_supervisor_outcome_credit_audit`, sets
+`supervisor_effect_eligible_score=0`, and records the failed check and observed
+value in `gate_check_summary`.
+
+### SCENARIO-ARC-6844-STRATA-NOT-POOLED
+
+**Given** rows from different games, models, policies, budgets, tool-loop
+states, or supervisor modes
+**When** Exp6844 compares redirects with controls
+**Then** only rows in the same stratum are compared, and unmatched cells stay in
+`unmatched_cell_results`.
+
+### SCENARIO-ARC-6844-HASHES-NO-SOLVE
+
+**Given** the same frozen source artifacts
+**When** Exp6844 rebuilds the audit
+**Then** source hashes, row hashes, and the reproducibility checksum are stable;
+`solve_claim=false`; `verifier_is_oracle=false`; and `honest_verdict` starts
+with `complete_`.

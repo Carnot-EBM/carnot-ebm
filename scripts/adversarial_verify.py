@@ -290,6 +290,7 @@ DETERMINISTIC_VERIFIER_SUBSTRATES = (
     "CPU transformation of frozen authentic outputs, no LLM",
     "fresh_process_no_llm_transaction_audit",
     "read_only_live_artifact_inventory",
+    "deterministic_cpu_live_receipt_audit_no_llm",
 )
 DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
 NO_LLM_DECLARED_MIN_DURATION_S = 0.0001

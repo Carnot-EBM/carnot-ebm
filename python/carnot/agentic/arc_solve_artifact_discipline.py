@@ -26,6 +26,9 @@ ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE = (
 )
 ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE = "canonical_live_e3_supervisor_ab_no_new_llm"
 READ_ONLY_LIVE_ARTIFACT_INVENTORY_SUBSTRATE = "read_only_live_artifact_inventory"
+DETERMINISTIC_CPU_LIVE_RECEIPT_AUDIT_NO_LLM_SUBSTRATE = (
+    "deterministic_cpu_live_receipt_audit_no_llm"
+)
 LIVE_LLM_SUBSTRATE = "live_llm_inference"
 
 SUBSTRATE_DURATION_FLOORS = {
@@ -38,6 +41,7 @@ SUBSTRATE_DURATION_FLOORS = {
     ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE: 0.01,
     ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE: 0.01,
     READ_ONLY_LIVE_ARTIFACT_INVENTORY_SUBSTRATE: 0.0001,
+    DETERMINISTIC_CPU_LIVE_RECEIPT_AUDIT_NO_LLM_SUBSTRATE: 0.0001,
     LIVE_LLM_SUBSTRATE: 60.0,
 }
 
@@ -90,6 +94,8 @@ FIELD_PRINCIPLES = {
         "canonical_live_e3_supervisor_ab_no_new_llm"
         "; read-only live ARC evidence inventory uses "
         "read_only_live_artifact_inventory"
+        "; deterministic CPU live-receipt audits use "
+        "deterministic_cpu_live_receipt_audit_no_llm"
     ),
     "duration_s": "bare float; must meet the selected substrate floor",
     "template_shipped": "bare bool: the helper + lint + tests landed green",
@@ -255,6 +261,7 @@ __all__ = [
     "ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE",
     "ARC_SUPERVISOR_RECEIPT_REPLAY_SUBSTRATE",
     "ArtifactDisciplineIssue",
+    "DETERMINISTIC_CPU_LIVE_RECEIPT_AUDIT_NO_LLM_SUBSTRATE",
     "FIELD_PRINCIPLES",
     "LIVE_LLM_SUBSTRATE",
     "READ_ONLY_LIVE_ARTIFACT_INVENTORY_SUBSTRATE",
