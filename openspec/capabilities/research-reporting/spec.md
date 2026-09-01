@@ -59461,6 +59461,118 @@ failure did not recur.
 |---|---|---|
 | REQ-RESEARCH-6847 and SCENARIO-RESEARCH-6847-* | Implemented (`python/carnot/experiment_6847_v598_independent_capstone.py`, `scripts/experiments/experiment_6847_v598_independent_capstone.py`) | Implemented (`tests/python/test_experiment_6847_v598_independent_capstone.py`) |
 
+### REQ-REPORT-6848: V599 Method-Change Evidence Contract SHALL Be Immutable And Fail Closed
+
+Exp6848 SHALL build a deterministic CPU evidence replay from the terminal V598
+artifacts Exp6836, Exp6837, Exp6842, Exp6843, Exp6844, Exp6845, and Exp6847.
+It SHALL not run a V598 mechanism, import an Exp6836 or Exp6847 reducer, invoke
+an LLM, or convert operational readiness into scientific benefit. Exp6838 MAY
+remain absent only when the conductor log contains its explicit V598 gate skip.
+
+The reducer SHALL compute a hash for each immutable input. It SHALL preserve a
+clean missing-artifact inventory and compare pinned hashes during validation.
+An unreadable required artifact, a required artifact without a terminal verdict,
+an unexplained missing artifact, or a changed pinned hash SHALL produce
+`complete_blocked_v599_method_change_evidence_contract`. The blocked artifact
+SHALL set `v599_evidence_contract_ready_score` to zero and SHALL name each failed
+check and its observed value in `gate_check_summary`.
+
+The reducer SHALL independently count Exp6836 candidate occurrences, unique
+candidate identities, and duplicate identities. It SHALL compute compile parity
+without importing a producer reducer. When Exp6836 and Exp6847 disagree, Exp6847
+SHALL control V599 readiness. The disagreement SHALL remain explicit in
+`producer_auditor_disagreements` and in one or more evidence rows.
+
+The contract SHALL freeze the Exp6837 resource-admission block, including zero
+scientific rows and the failed exclusive-lease and live-canary checks. It SHALL
+freeze Exp6842 held-future harmful-learning counts, Exp6844 zero-headroom action
+rows, and Exp6845 zero-obligation rows. A complete audit score SHALL not become a
+benefit or effect-readiness claim.
+
+The contract SHALL define one `dynamic_evidence_schema`. The schema SHALL cover
+immutable hashes, execution-time artifact manifests, generator identity, model
+identity, process ownership, exact outcome authority, and conductor skips.
+Stored absolute paths SHALL be descriptive only. A later ARC audit SHALL select
+repo-relative artifacts discovered at execution time and SHALL reject records
+whose required provenance is absent.
+
+Each promoted V599 reference SHALL be checked against its primary page. Each
+`reference_verification_rows` entry SHALL record the primary title, identifier,
+submission date, method delta, Carnot hook, access boundary, and whether the
+planner title matches. A verified identifier with a planner-title mismatch SHALL
+remain usable as context only and SHALL preserve the mismatch. No source SHALL
+add an execution dependency only for novelty.
+
+The artifact SHALL be written atomically to
+`results/experiment_6848_v599_method_change_evidence_contract.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `reproducibility_checksum`, `rows`,
+`producer_auditor_disagreements`, `terminal_branch_manifest`,
+`conductor_skip_manifest`, `retired_mechanism_manifest`,
+`changed_mechanism_manifest`, `source_access_boundaries`,
+`dynamic_evidence_schema`, `reference_verification_rows`,
+`v599_evidence_contract_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`inference_substrate` SHALL equal `deterministic CPU evidence replay`.
+`verifier_is_oracle` SHALL be false. Every verdict class SHALL use the closed
+enum `positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. A nonblocked terminal artifact SHALL use a row-supported
+`complete_` honest-verdict prefix and a null top-level verdict class.
+
+#### SCENARIO-REPORT-6848-SOURCE-DRIFT
+
+**Given** an immutable source hash pinned by the V599 contract
+**When** validation observes different bytes at that source path
+**Then** readiness is zero, the artifact is blocked, and the failed check records
+the expected hash and the observed hash.
+
+**Spec traces:** REQ-REPORT-6848
+
+#### SCENARIO-REPORT-6848-PRODUCER-AUDITOR-DISAGREEMENT
+
+**Given** Exp6836 reports ready scores of one and Exp6847 recomputes them as zero
+**When** Exp6848 independently counts duplicated candidate identities and replays
+compile parity
+**Then** Exp6847 controls readiness and all producer values remain beside the
+independent observed values.
+
+**Spec traces:** REQ-REPORT-6848
+
+#### SCENARIO-REPORT-6848-MISSING-ARTIFACT
+
+**Given** a required V598 artifact is absent and has no explicit conductor skip
+**When** Exp6848 checks preconditions
+**Then** it writes a blocked terminal artifact with a zero readiness score and a
+missing-artifact row instead of inventing evidence.
+
+**Spec traces:** REQ-REPORT-6848
+
+#### SCENARIO-REPORT-6848-STALE-HARDCODED-PATH
+
+**Given** a stored absolute source path is stale and an execution-time manifest
+contains a provenance-qualified repo-relative path
+**When** a downstream audit resolves the candidate
+**Then** it ignores the stored absolute path and uses the newly discovered path.
+If no qualified discovered path exists, the candidate is ineligible.
+
+**Spec traces:** REQ-REPORT-6848
+
+#### SCENARIO-REPORT-6848-TERMINAL-NULL-PRESERVATION
+
+**Given** a complete V598 audit has a null verdict and a harmful or zero-effect
+scientific outcome
+**When** Exp6848 classifies the terminal branch
+**Then** it preserves the null source verdict, records the harmful or zero-effect
+decision separately, and does not promote readiness or benefit.
+
+**Spec traces:** REQ-REPORT-6848
+
+## Implementation Status (REQ-REPORT-6848)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6848 and SCENARIO-REPORT-6848-* | Implemented (`python/carnot/experiment_6848_v599_method_change_evidence_contract.py`, `scripts/experiments/experiment_6848_v599_method_change_evidence_contract.py`; terminal artifact `results/experiment_6848_v599_method_change_evidence_contract.json`) | Implemented (`tests/python/test_experiment_6848_v599_method_change_evidence_contract.py`; 33 focused tests; 100% module statement coverage) |
+
 ### REQ-REPORT-6755: Lossless Reparse Receipts SHALL Be Atomic And Recomputable
 
 Exp6755 SHALL atomically write

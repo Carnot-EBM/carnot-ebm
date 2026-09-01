@@ -1,0 +1,1123 @@
+{
+  "changed_mechanism_manifest": [
+    {
+      "change": "fresh identities plus permutation, label, and duplicate-removal invariance",
+      "consumers": [
+        "exp6849"
+      ],
+      "contract_gate": "v599_evidence_contract_ready_score",
+      "mechanism_id": "independent_isomorphic_typed_authority"
+    },
+    {
+      "change": "lease and one canary per model before scientific scoring",
+      "consumers": [
+        "exp6850"
+      ],
+      "contract_gate": "v599_evidence_contract_ready_score",
+      "mechanism_id": "separate_task_owned_scoring_admission"
+    },
+    {
+      "change": "verified-memory, no-memory, and abstain under exact later outcomes",
+      "consumers": [
+        "exp6853",
+        "exp6854",
+        "exp6855",
+        "exp6856"
+      ],
+      "contract_gate": "v599_evidence_contract_ready_score",
+      "mechanism_id": "risk_sensitive_memory_opportunity_selection"
+    },
+    {
+      "change": "execution-time provenance manifest with headroom and first-party obligations",
+      "consumers": [
+        "exp6857",
+        "exp6858",
+        "exp6859"
+      ],
+      "contract_gate": "v599_evidence_contract_ready_score",
+      "mechanism_id": "dynamic_live_arc_receipt_routing"
+    }
+  ],
+  "conductor_skip_manifest": [
+    {
+      "log_line_sha256": "sha256:e83ed61e74d056e9dd37f47f9403c164a82b482e72ec3203be0aac5a8eff2085",
+      "log_path": "ops/conductor-log.md",
+      "outcome": "GATE_BLOCK",
+      "reason": "Pre-emptive skip: upstream retired (exp6837-three-family-output-free-compatibili",
+      "task_id": "exp6838",
+      "timestamp": "2026-09-01 08:39 UTC",
+      "upstream_task_id": "exp6837"
+    }
+  ],
+  "duration_s": 0.90975,
+  "dynamic_evidence_schema": {
+    "execution_time_discovery_rule": {
+      "cross_configuration_pooling_allowed": false,
+      "hard_coded_exp6681_allowed": false,
+      "missing_provenance_action": "ineligible",
+      "selection": "repo_relative_provenance_qualified_manifest_at_execution_time",
+      "stored_absolute_paths_authoritative": false
+    },
+    "frozen_source_rule": {
+      "hash_drift_action": "block",
+      "mutable_source_may_replace_frozen_source": false,
+      "selection": "contract_path_and_sha256"
+    },
+    "properties": {
+      "conductor_skip": {
+        "required_fields": [
+          "task_id",
+          "timestamp",
+          "outcome",
+          "reason",
+          "upstream_task_id",
+          "log_line_sha256"
+        ]
+      },
+      "dynamic_artifact_manifest": {
+        "required_fields": [
+          "discovered_path",
+          "artifact_family",
+          "file_sha256",
+          "terminal_class",
+          "discovered_at"
+        ]
+      },
+      "exact_outcome_authority": {
+        "required_fields": [
+          "authority_kind",
+          "receipt_id",
+          "observed_at",
+          "state_before_sha256",
+          "state_after_sha256",
+          "outcome",
+          "source_sha256"
+        ]
+      },
+      "generator_identity": {
+        "required_fields": [
+          "generator_id",
+          "implementation_sha256",
+          "configuration_sha256"
+        ]
+      },
+      "immutable_hashes": {
+        "required_fields": [
+          "source_id",
+          "path",
+          "file_sha256",
+          "immutable"
+        ]
+      },
+      "model_identity": {
+        "required_fields": [
+          "model_id",
+          "model_artifact_sha256",
+          "tokenizer_sha256"
+        ]
+      },
+      "process_ownership": {
+        "required_fields": [
+          "pid",
+          "ppid",
+          "process_start",
+          "command_sha256",
+          "task_owned",
+          "lease_id",
+          "teardown_receipt"
+        ]
+      }
+    },
+    "required": [
+      "immutable_hashes",
+      "dynamic_artifact_manifest",
+      "generator_identity",
+      "model_identity",
+      "process_ownership",
+      "exact_outcome_authority",
+      "conductor_skip"
+    ],
+    "schema_id": "carnot.v599.dynamic_evidence_provenance.v1"
+  },
+  "exp6836_independent_recomputation": {
+    "auditor_reducer_imported": false,
+    "candidate_identities_unique": false,
+    "candidate_occurrence_count": 16,
+    "compile_receipt_count": 16,
+    "controlling_authority": "exp6847",
+    "declared_candidate_count": 8,
+    "duplicate_candidate_identities": [
+      {
+        "candidate_id": "cand-6836-00-a",
+        "occurrences": 2
+      },
+      {
+        "candidate_id": "cand-6836-00-b",
+        "occurrences": 2
+      },
+      {
+        "candidate_id": "cand-6836-01-a",
+        "occurrences": 2
+      },
+      {
+        "candidate_id": "cand-6836-01-b",
+        "occurrences": 2
+      },
+      {
+        "candidate_id": "cand-6836-02-a",
+        "occurrences": 2
+      },
+      {
+        "candidate_id": "cand-6836-02-b",
+        "occurrences": 2
+      },
+      {
+        "candidate_id": "cand-6836-03-a",
+        "occurrences": 2
+      },
+      {
+        "candidate_id": "cand-6836-03-b",
+        "occurrences": 2
+      }
+    ],
+    "duplicate_candidate_identity_count": 8,
+    "fresh_compile_parity_before_authority_control": false,
+    "producer_reducer_imported": false,
+    "recomputed_compile_parity": false,
+    "recomputed_obligation_pair_fixture_ready_score": 0,
+    "recomputed_typed_obligation_program_ready_score": 0,
+    "semantic_compile_checks_passed": true,
+    "unique_candidate_identity_count": 8,
+    "unique_compile_candidate_identity_count": 8
+  },
+  "experiment_id": "exp6848-v599-method-change-evidence-contract",
+  "field_principles": {
+    "changed_mechanism_manifest": "Each open V599 branch names the mechanism change and exact consumer.",
+    "conductor_skip_manifest": "A missing gated artifact is acceptable only with a hash-bound skip record.",
+    "duration_s": "Wall-clock time distinguishes an executed replay from static boilerplate.",
+    "dynamic_evidence_schema": "One provenance schema governs hashes, identities, ownership, outcomes, and skips.",
+    "exp6836_independent_recomputation": "Fresh identity counts expose duplicate candidates before V599 scoring.",
+    "experiment_id": "A unique identity prevents this contract from being confused with V598 evidence.",
+    "field_principles": "Every top-level field explains why it exists.",
+    "frozen_v598_results": "Terminal resource, harm, headroom, and obligation results cannot become benefit.",
+    "gate_check_summary": "Every blocked contract records the failed check and observed value.",
+    "honest_verdict": "A complete_ prefix gives the conductor an unambiguous terminal result.",
+    "inference_substrate": "The task replays CPU evidence and does not invoke an LLM.",
+    "milestone": "The milestone bounds every decision to V599.",
+    "preconditions_checked": "Missing, unreadable, nonterminal, and drifted evidence fails closed.",
+    "producer_auditor_disagreements": "Conflicting readiness values remain visible with controlling authority.",
+    "random_seed": "A fixed seed records that no sampled decision entered this deterministic replay.",
+    "reference_verification_rows": "Primary-page receipts verify identifiers while preserving title or date drift.",
+    "reproducibility_checksum": "A stable digest binds all evidence decisions except measured duration.",
+    "result_path": "The roadmap-defined path gives downstream tasks one stable evidence root.",
+    "retired_mechanism_manifest": "Harmful or authority-invalid mechanisms cannot silently recur.",
+    "rows": "Each source, disputed field, method decision, and skip has a checkable row.",
+    "run_date": "The supplied execution date makes the freeze time explicit.",
+    "schema": "The schema fixes the V599 evidence-root shape for downstream consumers.",
+    "source_access_boundaries": "Local evidence, network context, and dynamic discovery have separate authority.",
+    "source_artifact_hashes": "Content hashes pin immutable V598 inputs and implementation provenance.",
+    "spec_refs": "Requirement anchors connect the artifact to its tests.",
+    "status": "Status reports contract completion without claiming scientific benefit.",
+    "terminal_branch_manifest": "Source verdicts stay distinct from V599 method decisions.",
+    "v599_evidence_contract_ready_score": "This is a completeness gate for Exp6849, Exp6850, Exp6853, and Exp6857, not a benefit score.",
+    "verdict_class": "The closed verdict enum prevents readiness from being relabeled as positivity.",
+    "verifier_is_oracle": "The reducer audits evidence but cannot validate its own scientific conclusions."
+  },
+  "frozen_v598_results": {
+    "exp6837_resource_block": {
+      "compatibility_ready_score": 0,
+      "exclusive_gpu_leases": false,
+      "live_canary_per_model": false,
+      "scientific_row_count": 0
+    },
+    "exp6842_harmful_learning": {
+      "continuous_self_learning_ready_score": 0.0,
+      "held_future_rows": 540,
+      "losses": 69,
+      "mean_effect_vs_no_memory": -0.118519,
+      "wins": 5
+    },
+    "exp6844_zero_headroom": {
+      "action_row_count": 60,
+      "nonzero_headroom_action_row_count": 0,
+      "supervisor_effect_eligible_score": 0,
+      "zero_headroom_action_row_count": 60
+    },
+    "exp6845_zero_obligations": {
+      "obligation_row_count": 0,
+      "stratum_count": 20,
+      "tool_gap_effect_eligible_score": 0,
+      "zero_obligation_stratum_count": 20
+    }
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "source.exp6836.readable_terminal",
+        "expected": "present_terminal",
+        "observed": "present",
+        "passed": true
+      },
+      {
+        "check": "source.exp6837.readable_terminal",
+        "expected": "present_terminal",
+        "observed": "present",
+        "passed": true
+      },
+      {
+        "check": "source.exp6842.readable_terminal",
+        "expected": "present_terminal",
+        "observed": "present",
+        "passed": true
+      },
+      {
+        "check": "source.exp6843.readable_terminal",
+        "expected": "present_terminal",
+        "observed": "present",
+        "passed": true
+      },
+      {
+        "check": "source.exp6844.readable_terminal",
+        "expected": "present_terminal",
+        "observed": "present",
+        "passed": true
+      },
+      {
+        "check": "source.exp6845.readable_terminal",
+        "expected": "present_terminal",
+        "observed": "present",
+        "passed": true
+      },
+      {
+        "check": "source.exp6847.readable_terminal",
+        "expected": "present_terminal",
+        "observed": "present",
+        "passed": true
+      },
+      {
+        "check": "exp6838.explicit_conductor_skip",
+        "expected": "GATE_BLOCK",
+        "observed": "GATE_BLOCK",
+        "passed": true
+      },
+      {
+        "check": "exp6836.controlling_compile_parity",
+        "expected": false,
+        "observed": false,
+        "passed": true
+      },
+      {
+        "check": "exp6836.controlling_typed_readiness",
+        "expected": 0,
+        "observed": 0,
+        "passed": true
+      },
+      {
+        "check": "exp6837.resource_block_frozen",
+        "expected": {
+          "compatibility_ready_score": 0,
+          "exclusive_gpu_leases": false,
+          "live_canary_per_model": false,
+          "scientific_row_count": 0
+        },
+        "observed": {
+          "compatibility_ready_score": 0,
+          "exclusive_gpu_leases": false,
+          "live_canary_per_model": false,
+          "scientific_row_count": 0
+        },
+        "passed": true
+      },
+      {
+        "check": "exp6842.harmful_learning_frozen",
+        "expected": {
+          "held_future_rows": 540,
+          "losses": 69,
+          "mean": -0.118519,
+          "wins": 5
+        },
+        "observed": {
+          "continuous_self_learning_ready_score": 0.0,
+          "held_future_rows": 540,
+          "losses": 69,
+          "mean_effect_vs_no_memory": -0.118519,
+          "wins": 5
+        },
+        "passed": true
+      },
+      {
+        "check": "exp6844.zero_headroom_frozen",
+        "expected": {
+          "action_rows": 60,
+          "effect_ready": 0,
+          "zero_headroom_rows": 60
+        },
+        "observed": {
+          "action_row_count": 60,
+          "nonzero_headroom_action_row_count": 0,
+          "supervisor_effect_eligible_score": 0,
+          "zero_headroom_action_row_count": 60
+        },
+        "passed": true
+      },
+      {
+        "check": "exp6845.zero_obligations_frozen",
+        "expected": {
+          "effect_ready": 0,
+          "obligation_rows": 0,
+          "zero_obligation_strata": 20
+        },
+        "observed": {
+          "obligation_row_count": 0,
+          "stratum_count": 20,
+          "tool_gap_effect_eligible_score": 0,
+          "zero_obligation_stratum_count": 20
+        },
+        "passed": true
+      },
+      {
+        "check": "promoted_reference_identifiers",
+        "expected": 8,
+        "observed": 8,
+        "passed": true
+      }
+    ],
+    "failed_check": null,
+    "failed_checks": [],
+    "observed": "all checks pass",
+    "passed": true
+  },
+  "honest_verdict": "complete_null_v599_method_change_evidence_contract_ready_changed_mechanisms_only",
+  "inference_substrate": "deterministic CPU evidence replay",
+  "milestone": "2026.09.599",
+  "preconditions_checked": {
+    "checks": [
+      {
+        "check": "source.exp6836.readable_terminal",
+        "expected": "present_terminal",
+        "observed": "present",
+        "passed": true
+      },
+      {
+        "check": "source.exp6837.readable_terminal",
+        "expected": "present_terminal",
+        "observed": "present",
+        "passed": true
+      },
+      {
+        "check": "source.exp6842.readable_terminal",
+        "expected": "present_terminal",
+        "observed": "present",
+        "passed": true
+      },
+      {
+        "check": "source.exp6843.readable_terminal",
+        "expected": "present_terminal",
+        "observed": "present",
+        "passed": true
+      },
+      {
+        "check": "source.exp6844.readable_terminal",
+        "expected": "present_terminal",
+        "observed": "present",
+        "passed": true
+      },
+      {
+        "check": "source.exp6845.readable_terminal",
+        "expected": "present_terminal",
+        "observed": "present",
+        "passed": true
+      },
+      {
+        "check": "source.exp6847.readable_terminal",
+        "expected": "present_terminal",
+        "observed": "present",
+        "passed": true
+      },
+      {
+        "check": "exp6838.explicit_conductor_skip",
+        "expected": "GATE_BLOCK",
+        "observed": "GATE_BLOCK",
+        "passed": true
+      },
+      {
+        "check": "exp6836.controlling_compile_parity",
+        "expected": false,
+        "observed": false,
+        "passed": true
+      },
+      {
+        "check": "exp6836.controlling_typed_readiness",
+        "expected": 0,
+        "observed": 0,
+        "passed": true
+      },
+      {
+        "check": "exp6837.resource_block_frozen",
+        "expected": {
+          "compatibility_ready_score": 0,
+          "exclusive_gpu_leases": false,
+          "live_canary_per_model": false,
+          "scientific_row_count": 0
+        },
+        "observed": {
+          "compatibility_ready_score": 0,
+          "exclusive_gpu_leases": false,
+          "live_canary_per_model": false,
+          "scientific_row_count": 0
+        },
+        "passed": true
+      },
+      {
+        "check": "exp6842.harmful_learning_frozen",
+        "expected": {
+          "held_future_rows": 540,
+          "losses": 69,
+          "mean": -0.118519,
+          "wins": 5
+        },
+        "observed": {
+          "continuous_self_learning_ready_score": 0.0,
+          "held_future_rows": 540,
+          "losses": 69,
+          "mean_effect_vs_no_memory": -0.118519,
+          "wins": 5
+        },
+        "passed": true
+      },
+      {
+        "check": "exp6844.zero_headroom_frozen",
+        "expected": {
+          "action_rows": 60,
+          "effect_ready": 0,
+          "zero_headroom_rows": 60
+        },
+        "observed": {
+          "action_row_count": 60,
+          "nonzero_headroom_action_row_count": 0,
+          "supervisor_effect_eligible_score": 0,
+          "zero_headroom_action_row_count": 60
+        },
+        "passed": true
+      },
+      {
+        "check": "exp6845.zero_obligations_frozen",
+        "expected": {
+          "effect_ready": 0,
+          "obligation_rows": 0,
+          "zero_obligation_strata": 20
+        },
+        "observed": {
+          "obligation_row_count": 0,
+          "stratum_count": 20,
+          "tool_gap_effect_eligible_score": 0,
+          "zero_obligation_stratum_count": 20
+        },
+        "passed": true
+      },
+      {
+        "check": "promoted_reference_identifiers",
+        "expected": 8,
+        "observed": 8,
+        "passed": true
+      }
+    ],
+    "explained_missing_artifacts": [
+      "exp6838"
+    ],
+    "llm_invoked": false,
+    "missing_artifact_inventory": [],
+    "readable_terminal_artifact_count": 7,
+    "required_terminal_artifact_count": 7,
+    "v598_mechanism_rerun": false
+  },
+  "producer_auditor_disagreements": [
+    {
+      "auditor_value": false,
+      "controlling_authority": "exp6847",
+      "field": "compile_parity",
+      "producer_value": true,
+      "reason": "candidate identities repeat across label-swap rows"
+    },
+    {
+      "auditor_value": 0,
+      "controlling_authority": "exp6847",
+      "field": "obligation_pair_fixture_ready_score",
+      "producer_value": 1,
+      "reason": "unique candidate identity authority did not pass"
+    },
+    {
+      "auditor_value": 0,
+      "controlling_authority": "exp6847",
+      "field": "typed_obligation_program_ready_score",
+      "producer_value": 1,
+      "reason": "compile parity and fixture readiness did not survive independent reduction"
+    }
+  ],
+  "random_seed": 6848,
+  "reference_verification_rows": [
+    {
+      "access_boundary": "context_only_no_dependency",
+      "carnot_hook": "Replace the harmful residual rule with a bounded selector labeled by exact later outcomes.",
+      "date": "2026-04-30",
+      "dependency_added": false,
+      "identifier": "arXiv:2604.27283",
+      "identifier_verified": true,
+      "method_delta": "Treat memory use, no-memory, and abstention as risk-sensitive actions.",
+      "planner_date": "2026-04-30",
+      "planner_date_matches_primary": true,
+      "planner_title": "Learning When to Remember: Risk-Sensitive Contextual Bandits for Abstention-Aware Memory Retrieval in LLM-Based Coding Agents",
+      "planner_title_matches_primary": true,
+      "primary_page": "arXiv abstract record",
+      "primary_url": "https://arxiv.org/abs/2604.27283",
+      "title": "Learning When to Remember: Risk-Sensitive Contextual Bandits for Abstention-Aware Memory Retrieval in LLM-Based Coding Agents",
+      "verified_on": "2026-09-01"
+    },
+    {
+      "access_boundary": "context_only_no_dependency",
+      "carnot_hook": "Require identity, label, permutation, and duplicate-removal invariance before scoring.",
+      "date": "2026-04-16",
+      "dependency_added": false,
+      "identifier": "arXiv:2604.15149",
+      "identifier_verified": true,
+      "method_delta": "Isomorphic Perturbation Testing detects extensional verifier shortcuts.",
+      "planner_date": "2026-04-16",
+      "planner_date_matches_primary": true,
+      "planner_title": "LLMs Gaming Verifiers: RLVR can Lead to Reward Hacking",
+      "planner_title_matches_primary": true,
+      "primary_page": "arXiv abstract record",
+      "primary_url": "https://arxiv.org/abs/2604.15149",
+      "title": "LLMs Gaming Verifiers: RLVR can Lead to Reward Hacking",
+      "verified_on": "2026-09-01"
+    },
+    {
+      "access_boundary": "context_only_no_dependency",
+      "carnot_hook": "Credit only valid action coalitions with exact outcomes and nonzero headroom.",
+      "date": "2026-07-18",
+      "dependency_added": false,
+      "identifier": "arXiv:2607.16999",
+      "identifier_verified": true,
+      "method_delta": "Counterfactual coalition values separate policy effects from environmental luck.",
+      "planner_date": "2026-07-18",
+      "planner_date_matches_primary": true,
+      "planner_title": "Counterfactual Shapley Credit Assignment",
+      "planner_title_matches_primary": true,
+      "primary_page": "arXiv abstract record",
+      "primary_url": "https://arxiv.org/abs/2607.16999",
+      "title": "Counterfactual Shapley Credit Assignment",
+      "verified_on": "2026-09-01"
+    },
+    {
+      "access_boundary": "context_only_no_dependency",
+      "carnot_hook": "Keep obligation atoms and action receipts as the verification unit.",
+      "date": "2026-08-12",
+      "dependency_added": false,
+      "identifier": "arXiv:2608.11994",
+      "identifier_verified": true,
+      "method_delta": "Targeted falsification allocates verification to decision-critical claims.",
+      "planner_date": "2026-08-12",
+      "planner_date_matches_primary": true,
+      "planner_title": "Claim-Level Reliability Assessment for Efficient Test-Time Reasoning",
+      "planner_title_matches_primary": true,
+      "primary_page": "arXiv abstract record",
+      "primary_url": "https://arxiv.org/abs/2608.11994",
+      "title": "Claim-Level Reliability Assessment for Efficient Test-Time Reasoning",
+      "verified_on": "2026-09-01"
+    },
+    {
+      "access_boundary": "context_only_no_dependency",
+      "carnot_hook": "Measure intervention, preserve, and abstain on matched opportunities.",
+      "date": "2026-06-18",
+      "dependency_added": false,
+      "identifier": "arXiv:2606.19808",
+      "identifier_verified": true,
+      "method_delta": "Selective verification compares preserve and intervention actions under a budget.",
+      "planner_date": "2026-06-18",
+      "planner_date_matches_primary": true,
+      "planner_title": "Think Again or Think Longer? Selective Verification for Budget-Aware Reasoning",
+      "planner_title_matches_primary": true,
+      "primary_page": "arXiv abstract record",
+      "primary_url": "https://arxiv.org/abs/2606.19808",
+      "title": "Think Again or Think Longer? Selective Verification for Budget-Aware Reasoning",
+      "verified_on": "2026-09-01"
+    },
+    {
+      "access_boundary": "context_only_no_dependency",
+      "carnot_hook": "Keep model-derived updates as negative controls and freeze GGUF weights.",
+      "date": "2026-08-31",
+      "dependency_added": false,
+      "identifier": "arXiv:2608.31046",
+      "identifier_verified": true,
+      "method_delta": "Teacher-attributed gains can arise from teacher-free tail-token suppression.",
+      "planner_date": "2026-08-31",
+      "planner_date_matches_primary": true,
+      "planner_title": "Does On-Policy Distillation Really Distill? From Noisy Teacher to Self-Improvement",
+      "planner_title_matches_primary": true,
+      "primary_page": "arXiv abstract record",
+      "primary_url": "https://arxiv.org/abs/2608.31046",
+      "title": "Does On-Policy Distillation Really Distill? From Noisy Teacher to Self-Improvement",
+      "verified_on": "2026-09-01"
+    },
+    {
+      "access_boundary": "context_only_no_dependency",
+      "carnot_hook": "Use reconstruction only as diagnosis; never replace authentic live receipts.",
+      "date": "2026-08-31",
+      "dependency_added": false,
+      "identifier": "arXiv:2608.30461",
+      "identifier_verified": true,
+      "method_delta": "RetroGen reconstructs candidate process traces from final artifacts and evidence.",
+      "planner_date": "2026-08-31",
+      "planner_date_matches_primary": true,
+      "planner_title": "RetroGen: Scaling Retrospective Process Supervision for Reliable Agentic Reasoning",
+      "planner_title_matches_primary": false,
+      "primary_page": "arXiv abstract record",
+      "primary_url": "https://arxiv.org/abs/2608.30461",
+      "title": "From Final Artifacts to Trajectories: Retrospective Process Supervision for Evidence-Grounded Long-Form Generation",
+      "verified_on": "2026-09-01"
+    },
+    {
+      "access_boundary": "context_only_no_dependency",
+      "carnot_hook": "Carry source, reachability, intervention, outcome, and retirement provenance together.",
+      "date": "2026-08-30",
+      "dependency_added": false,
+      "identifier": "arXiv:2608.29596",
+      "identifier_verified": true,
+      "method_delta": "The paper defines a lifecycle for reusable procedural skill artifacts.",
+      "planner_date": "2026-08-28",
+      "planner_date_matches_primary": false,
+      "planner_title": "Agentic Skills in the Wild: A Comprehensive Study of Reusable Skill Artifacts",
+      "planner_title_matches_primary": false,
+      "primary_page": "arXiv abstract record",
+      "primary_url": "https://arxiv.org/abs/2608.29596",
+      "title": "Towards a Systems Foundation for Agentic Skills: Architecture, Lifecycle, and Security",
+      "verified_on": "2026-09-01"
+    }
+  ],
+  "reproducibility_checksum": "sha256:e0bcae68c41770ef2e5d892998f49ff546a82ba75bd025113fcc91ac3e42eb83",
+  "result_path": "results/experiment_6848_v599_method_change_evidence_contract.json",
+  "retired_mechanism_manifest": [
+    {
+      "evidence": "Exp6847 compile parity and both readiness scores control at zero.",
+      "mechanism_id": "exp6836_producer_self_authorized_candidate_identity",
+      "retirement": "retired_as_v599_authority"
+    },
+    {
+      "evidence": {
+        "compatibility_ready_score": 0,
+        "exclusive_gpu_leases": false,
+        "live_canary_per_model": false,
+        "scientific_row_count": 0
+      },
+      "mechanism_id": "combined_resource_admission_and_three_family_scoring",
+      "retirement": "retired_same_shape_retry"
+    },
+    {
+      "evidence": {
+        "continuous_self_learning_ready_score": 0.0,
+        "held_future_rows": 540,
+        "losses": 69,
+        "mean_effect_vs_no_memory": -0.118519,
+        "wins": 5
+      },
+      "mechanism_id": "nonselective_verified_residual_memory",
+      "retirement": "retired_harmful_learning_rule"
+    },
+    {
+      "evidence": {
+        "action_row_count": 60,
+        "nonzero_headroom_action_row_count": 0,
+        "supervisor_effect_eligible_score": 0,
+        "zero_headroom_action_row_count": 60
+      },
+      "mechanism_id": "supervisor_credit_without_nonzero_headroom",
+      "retirement": "retired_zero_effect_opportunity"
+    },
+    {
+      "evidence": {
+        "obligation_row_count": 0,
+        "stratum_count": 20,
+        "tool_gap_effect_eligible_score": 0,
+        "zero_obligation_stratum_count": 20
+      },
+      "mechanism_id": "tool_gap_credit_without_first_party_obligation",
+      "retirement": "retired_zero_obligation_input"
+    },
+    {
+      "evidence": "Execution-time manifests replace pinned Exp6681 selection.",
+      "mechanism_id": "hard_coded_arc_source_path",
+      "retirement": "retired_stale_discovery_rule"
+    }
+  ],
+  "rows": [
+    {
+      "allowed_claim": "terminal source state only",
+      "evidence_authority": "sha256:8657359ae7dcdf508ae141426d145bc75565119685a7ef841fc0cc9aa567d33c",
+      "expected_value": "readable_terminal_hash_pinned",
+      "observed_value": "present",
+      "row_id": "source.exp6836",
+      "row_kind": "source",
+      "source_id": "exp6836",
+      "status": "preserved",
+      "verdict_class": "null"
+    },
+    {
+      "allowed_claim": "terminal source state only",
+      "evidence_authority": "sha256:ef9de93a3a0060ddeaaf09acdf60ba8c3888dd8521f3f4f526c14c95fa03eef9",
+      "expected_value": "readable_terminal_hash_pinned",
+      "observed_value": "present",
+      "row_id": "source.exp6837",
+      "row_kind": "source",
+      "source_id": "exp6837",
+      "status": "preserved",
+      "verdict_class": "blocked"
+    },
+    {
+      "allowed_claim": "terminal source state only",
+      "evidence_authority": "sha256:7297bf588fbaf0e3a3c29f3705964dfe9af180433e630c668300af17f3672cca",
+      "expected_value": "readable_terminal_hash_pinned",
+      "observed_value": "present",
+      "row_id": "source.exp6842",
+      "row_kind": "source",
+      "source_id": "exp6842",
+      "status": "preserved",
+      "verdict_class": "null"
+    },
+    {
+      "allowed_claim": "terminal source state only",
+      "evidence_authority": "sha256:ac0168c5c312a0d4f9b35c879534b3de89f804d5a9fc5297f5a6ccfe3d91aa98",
+      "expected_value": "readable_terminal_hash_pinned",
+      "observed_value": "present",
+      "row_id": "source.exp6843",
+      "row_kind": "source",
+      "source_id": "exp6843",
+      "status": "preserved",
+      "verdict_class": "null"
+    },
+    {
+      "allowed_claim": "terminal source state only",
+      "evidence_authority": "sha256:b19a7981b9d7e587f42ad3be42cabeda45aff08046a3064c90396f1502cf1b71",
+      "expected_value": "readable_terminal_hash_pinned",
+      "observed_value": "present",
+      "row_id": "source.exp6844",
+      "row_kind": "source",
+      "source_id": "exp6844",
+      "status": "preserved",
+      "verdict_class": "blocked"
+    },
+    {
+      "allowed_claim": "terminal source state only",
+      "evidence_authority": "sha256:9e67fe0bffdc29cda3a396326e0885598cba1640d6d27e753539d65b07ad9d9d",
+      "expected_value": "readable_terminal_hash_pinned",
+      "observed_value": "present",
+      "row_id": "source.exp6845",
+      "row_kind": "source",
+      "source_id": "exp6845",
+      "status": "preserved",
+      "verdict_class": "blocked"
+    },
+    {
+      "allowed_claim": "terminal source state only",
+      "evidence_authority": "sha256:93327adc8c400ccddf8a1ac4cc7642352447c0451f37884503f67e79dfe3ae4d",
+      "expected_value": "readable_terminal_hash_pinned",
+      "observed_value": "present",
+      "row_id": "source.exp6847",
+      "row_kind": "source",
+      "source_id": "exp6847",
+      "status": "preserved",
+      "verdict_class": "null"
+    },
+    {
+      "allowed_claim": "Exp6847 controls V599 readiness.",
+      "evidence_authority": "exp6847",
+      "expected_value": true,
+      "observed_value": false,
+      "row_id": "disputed.exp6836.compile_parity",
+      "row_kind": "disputed_field",
+      "source_id": "exp6836",
+      "status": "producer_auditor_disagreement",
+      "verdict_class": "disqualified"
+    },
+    {
+      "allowed_claim": "Exp6847 controls V599 readiness.",
+      "evidence_authority": "exp6847",
+      "expected_value": 1,
+      "observed_value": 0,
+      "row_id": "disputed.exp6836.obligation_pair_fixture_ready_score",
+      "row_kind": "disputed_field",
+      "source_id": "exp6836",
+      "status": "producer_auditor_disagreement",
+      "verdict_class": "disqualified"
+    },
+    {
+      "allowed_claim": "Exp6847 controls V599 readiness.",
+      "evidence_authority": "exp6847",
+      "expected_value": 1,
+      "observed_value": 0,
+      "row_id": "disputed.exp6836.typed_obligation_program_ready_score",
+      "row_kind": "disputed_field",
+      "source_id": "exp6836",
+      "status": "producer_auditor_disagreement",
+      "verdict_class": "disqualified"
+    },
+    {
+      "allowed_claim": "method change only; no benefit promotion",
+      "evidence_authority": "v598_terminal_artifact",
+      "expected_value": "preserve_terminal_result_and_change_mechanism",
+      "observed_value": {
+        "compatibility_ready_score": 0,
+        "exclusive_gpu_leases": false,
+        "live_canary_per_model": false,
+        "scientific_row_count": 0
+      },
+      "row_id": "method.resource_admission_block",
+      "row_kind": "method_decision",
+      "source_id": "resource_admission_block",
+      "status": "frozen",
+      "verdict_class": "blocked"
+    },
+    {
+      "allowed_claim": "method change only; no benefit promotion",
+      "evidence_authority": "v598_terminal_artifact",
+      "expected_value": "preserve_terminal_result_and_change_mechanism",
+      "observed_value": {
+        "continuous_self_learning_ready_score": 0.0,
+        "held_future_rows": 540,
+        "losses": 69,
+        "mean_effect_vs_no_memory": -0.118519,
+        "wins": 5
+      },
+      "row_id": "method.harmful_residual_memory",
+      "row_kind": "method_decision",
+      "source_id": "harmful_residual_memory",
+      "status": "frozen",
+      "verdict_class": "null"
+    },
+    {
+      "allowed_claim": "method change only; no benefit promotion",
+      "evidence_authority": "v598_terminal_artifact",
+      "expected_value": "preserve_terminal_result_and_change_mechanism",
+      "observed_value": {
+        "action_row_count": 60,
+        "nonzero_headroom_action_row_count": 0,
+        "supervisor_effect_eligible_score": 0,
+        "zero_headroom_action_row_count": 60
+      },
+      "row_id": "method.zero_supervisor_headroom",
+      "row_kind": "method_decision",
+      "source_id": "zero_supervisor_headroom",
+      "status": "frozen",
+      "verdict_class": "blocked"
+    },
+    {
+      "allowed_claim": "method change only; no benefit promotion",
+      "evidence_authority": "v598_terminal_artifact",
+      "expected_value": "preserve_terminal_result_and_change_mechanism",
+      "observed_value": {
+        "obligation_row_count": 0,
+        "stratum_count": 20,
+        "tool_gap_effect_eligible_score": 0,
+        "zero_obligation_stratum_count": 20
+      },
+      "row_id": "method.zero_tool_gap_obligations",
+      "row_kind": "method_decision",
+      "source_id": "zero_tool_gap_obligations",
+      "status": "frozen",
+      "verdict_class": "blocked"
+    },
+    {
+      "allowed_claim": "method change only; no benefit promotion",
+      "evidence_authority": "v598_terminal_artifact",
+      "expected_value": "preserve_terminal_result_and_change_mechanism",
+      "observed_value": "hard-coded artifact paths retired",
+      "row_id": "method.execution_time_arc_discovery",
+      "row_kind": "method_decision",
+      "source_id": "execution_time_arc_discovery",
+      "status": "frozen",
+      "verdict_class": "null"
+    },
+    {
+      "allowed_claim": "skip classification only; no audit result",
+      "evidence_authority": "sha256:e83ed61e74d056e9dd37f47f9403c164a82b482e72ec3203be0aac5a8eff2085",
+      "expected_value": "GATE_BLOCK",
+      "observed_value": "GATE_BLOCK",
+      "row_id": "skip.exp6838",
+      "row_kind": "conductor_skip",
+      "source_id": "exp6838",
+      "status": "terminal_skip_preserved",
+      "verdict_class": "blocked"
+    }
+  ],
+  "run_date": "20260901",
+  "schema": "carnot.experiment_6848.v599_method_change_evidence_contract.v1",
+  "source_access_boundaries": [
+    {
+      "access": "local_read_only_hash_pinned",
+      "authority": "exact stored outcomes and terminal branch state",
+      "source_class": "terminal_v598_artifacts"
+    },
+    {
+      "access": "local_append_only_log_line_hash_pinned",
+      "authority": "task skip state only; no scientific result",
+      "source_class": "v598_conductor_skip"
+    },
+    {
+      "access": "network_verified_then_frozen_context_only",
+      "authority": "title, identifier, date, and method context only",
+      "source_class": "promoted_primary_pages"
+    },
+    {
+      "access": "execution_time_repo_relative_discovery_read_only",
+      "authority": "only after full provenance-schema qualification",
+      "source_class": "future_arc_artifacts"
+    }
+  ],
+  "source_artifact_hashes": {
+    "conductor_log": {
+      "file_sha256": "sha256:e2c7970c083b8bede69b04379678dfd72cc62c3009a803961d00a6fd359cda48",
+      "immutable": false,
+      "path": "ops/conductor-log.md"
+    },
+    "exp6836": {
+      "file_sha256": "sha256:8657359ae7dcdf508ae141426d145bc75565119685a7ef841fc0cc9aa567d33c",
+      "immutable": true,
+      "path": "results/experiment_6836_typed_obligation_program_fixture.json"
+    },
+    "exp6837": {
+      "file_sha256": "sha256:ef9de93a3a0060ddeaaf09acdf60ba8c3888dd8521f3f4f526c14c95fa03eef9",
+      "immutable": true,
+      "path": "results/experiment_6837_three_family_output_free_compatibility.json"
+    },
+    "exp6842": {
+      "file_sha256": "sha256:7297bf588fbaf0e3a3c29f3705964dfe9af180433e630c668300af17f3672cca",
+      "immutable": true,
+      "path": "results/experiment_6842_sealed_memory_pathway_portability_audit.json"
+    },
+    "exp6843": {
+      "file_sha256": "sha256:ac0168c5c312a0d4f9b35c879534b3de89f804d5a9fc5297f5a6ccfe3d91aa98",
+      "immutable": true,
+      "path": "results/experiment_6843_live_arc_evidence_stratum_freeze.json"
+    },
+    "exp6844": {
+      "file_sha256": "sha256:b19a7981b9d7e587f42ad3be42cabeda45aff08046a3064c90396f1502cf1b71",
+      "immutable": true,
+      "path": "results/experiment_6844_supervisor_action_outcome_credit_audit.json"
+    },
+    "exp6845": {
+      "file_sha256": "sha256:9e67fe0bffdc29cda3a396326e0885598cba1640d6d27e753539d65b07ad9d9d",
+      "immutable": true,
+      "path": "results/experiment_6845_tool_gap_causal_support_audit.json"
+    },
+    "exp6847": {
+      "file_sha256": "sha256:93327adc8c400ccddf8a1ac4cc7642352447c0451f37884503f67e79dfe3ae4d",
+      "immutable": true,
+      "path": "results/experiment_6847_v598_independent_capstone.json"
+    },
+    "experiment_wrapper": {
+      "file_sha256": "sha256:06a9237c52e943fd589f28c307e3d9b4e2b13068d3b05a0e26ba8016606a2354",
+      "immutable": false,
+      "path": "scripts/experiments/experiment_6848_v599_method_change_evidence_contract.py"
+    },
+    "focused_tests": {
+      "file_sha256": "sha256:03bbb770ecee480ac277881e2d96dac83055c5ad4de7457bbf9e0aabe80d52e0",
+      "immutable": false,
+      "path": "tests/python/test_experiment_6848_v599_method_change_evidence_contract.py"
+    },
+    "implementation_module": {
+      "file_sha256": "sha256:d894d7eb367264ca6bcc77ab9572fe08c92de10c044b6b99035a8de24ca79b0e",
+      "immutable": false,
+      "path": "python/carnot/experiment_6848_v599_method_change_evidence_contract.py"
+    },
+    "reporting_spec": {
+      "file_sha256": "sha256:19d27086b80126e9904463c89a4074653c7eb4e2b09f248a1693efc55dc6aa53",
+      "immutable": false,
+      "path": "openspec/capabilities/research-reporting/spec.md"
+    },
+    "research_note": {
+      "file_sha256": "sha256:f6898883c23e2bbb73918ae344be20248c89d78deae8d7077a5c76bf6f10a219",
+      "immutable": false,
+      "path": "docs/research-notes/v599-method-change-contract.md"
+    },
+    "v599_references": {
+      "file_sha256": "sha256:44e25790be9ea2c490a9b80a73a3a637bb4cab86377fad7095e02d5078136bcc",
+      "immutable": true,
+      "path": "research-references.md"
+    }
+  },
+  "spec_refs": [
+    "REQ-REPORT-6848",
+    "SCENARIO-REPORT-6848-SOURCE-DRIFT",
+    "SCENARIO-REPORT-6848-PRODUCER-AUDITOR-DISAGREEMENT",
+    "SCENARIO-REPORT-6848-MISSING-ARTIFACT",
+    "SCENARIO-REPORT-6848-STALE-HARDCODED-PATH",
+    "SCENARIO-REPORT-6848-TERMINAL-NULL-PRESERVATION"
+  ],
+  "status": "complete",
+  "terminal_branch_manifest": [
+    {
+      "artifact_state": "present",
+      "benefit_claim_allowed": false,
+      "scientific_disposition": "typed_authority_disqualified",
+      "source_honest_verdict": "complete_null_typed_obligation_program_fixture_ready_no_model_scores",
+      "source_id": "exp6836",
+      "source_verdict_class": "null",
+      "verdict_class": "null"
+    },
+    {
+      "artifact_state": "present",
+      "benefit_claim_allowed": false,
+      "scientific_disposition": "resource_block_preserved_no_model_result",
+      "source_honest_verdict": "complete_blocked_output_free_compatibility",
+      "source_id": "exp6837",
+      "source_verdict_class": "blocked",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_state": "present",
+      "benefit_claim_allowed": false,
+      "scientific_disposition": "harmful_learning_rule_retired",
+      "source_honest_verdict": "complete_null_sealed_memory_audit_complete_ready_score_zero",
+      "source_id": "exp6842",
+      "source_verdict_class": "null",
+      "verdict_class": "null"
+    },
+    {
+      "artifact_state": "present",
+      "benefit_claim_allowed": false,
+      "scientific_disposition": "inventory_null_preserved_dynamic_discovery_required",
+      "source_honest_verdict": "complete_live_arc_inventory_terminal_evidence_only_no_solve_claim",
+      "source_id": "exp6843",
+      "source_verdict_class": "null",
+      "verdict_class": "null"
+    },
+    {
+      "artifact_state": "present",
+      "benefit_claim_allowed": false,
+      "scientific_disposition": "zero_headroom_effect_block_preserved",
+      "source_honest_verdict": "complete_blocked_supervisor_outcome_credit_audit",
+      "source_id": "exp6844",
+      "source_verdict_class": "blocked",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_state": "present",
+      "benefit_claim_allowed": false,
+      "scientific_disposition": "zero_obligation_effect_block_preserved",
+      "source_honest_verdict": "complete_blocked_tool_gap_causal_support_audit",
+      "source_id": "exp6845",
+      "source_verdict_class": "blocked",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_state": "present",
+      "benefit_claim_allowed": false,
+      "scientific_disposition": "independent_capstone_controls_disputed_fields",
+      "source_honest_verdict": "complete_null_v598_independent_capstone_all_branch_states_preserved",
+      "source_id": "exp6847",
+      "source_verdict_class": "null",
+      "verdict_class": "null"
+    }
+  ],
+  "v599_evidence_contract_ready_score": 1,
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}
