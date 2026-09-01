@@ -10099,6 +10099,14 @@ police, and SHALL decide rather than raise when a field is principle-annotated.
 - THEN the guard returns a verdict rather than raising TypeError, which would remove the guard
   rather than failing it closed
 
+#### SCENARIO-VERIFY-6802-D: a training claim with no tool named is still compute-bound
+- GIVEN an artifact whose `honest_verdict` is `dualgpu_retrain_validated` and whose
+  `duration_s` is 1.73, naming no model, framework, or runner anywhere
+- THEN DURATION_TOO_SHORT fires
+- AND a retrospective that merely LISTS such an experiment does not become compute-bound
+- AND an honest `blocked_*` verdict mentioning a retrain does not become compute-bound,
+  because it reports that nothing ran
+
 Rationale: QA-layer audit 2026-08-31. `roc_auc` does not contain "auroc" as a substring, the
 increase-expected list omitted rates entirely, and `int()` on a wrapped field raised. Two further
 findings in the same report were REFUTED by running their inputs against the live guards, so

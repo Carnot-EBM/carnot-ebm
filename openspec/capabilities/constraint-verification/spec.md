@@ -2588,3 +2588,127 @@ output or an expected model result.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6832 and SCENARIO-CONSTRAINT-6832-* | Implemented: deterministic CPU fixture producer and task-owned wrapper. | Implemented: focused tests cover schema, balance, semantics, permutations, exact sets, safe and impossible cases, checks, leakage, readiness, and blocked gates. |
+
+## REQ-CONSTRAINT-6833: Live SOTA Operational-Obligation Saturation Corpus
+
+The system SHALL run every frozen Exp6832 scenario once for each prompt arm
+and each mandated model. The mandated models SHALL be
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. A complete corpus SHALL contain exactly
+900 unique model, scenario, and arm identities.
+
+Before inference, the producer SHALL call `cached_sota_pair()`. It SHALL
+require the three exact GGUF files, frozen file hashes, embedded tokenizer
+metadata, embedded chat templates, a CUDA device, an exclusive task-owned GPU
+lease, free task-owned ports, sufficient disk, and
+`operational_saturation_fixture_ready=true`. It SHALL run a one-token live
+CUDA canary for each model. Any failed check SHALL write
+`complete_blocked_sota_operational_saturation_corpus`. The blocked artifact
+SHALL record the exact expected and observed values in `gate_check_summary`.
+The producer SHALL not use a smaller model, cached output, simulation, or an
+API substitute.
+
+The producer SHALL start one task-owned llama.cpp CUDA process at a time unless
+independent GPU leases prove safe concurrency. It SHALL record the command,
+PID, process start time, port, physical GPU UUID, visible devices, first token,
+final token, and clean teardown for each model. It SHALL not attach to an
+unrelated process. Each model phase SHALL use a separate process and lease.
+
+Both prompt arms SHALL use the same frozen temperature, seed, stop rules,
+context size, and maximum output tokens. The producer SHALL disable repair,
+content-changing retries, grammar constraints, and answer feedback. It SHALL
+capture the GGUF tokenizer metadata and chat template used by llama.cpp.
+
+The producer SHALL preserve prompt bytes, raw output bytes, parsed fields,
+parse status, each exact obligation result, the exact joint result, token
+counts, latency, process identity, model identity, and exact checker hash for
+every row. Exp6832 field checkers and joint checker SHALL be the only scoring
+authority. The producer SHALL not use an LLM judge or producer aggregate as
+authority.
+
+The producer SHALL checkpoint after bounded prompt batches and after each
+model. A restart SHALL validate the manifest and stored row hashes. It SHALL
+continue only missing identities and SHALL never regenerate a completed row.
+Rows from one model process SHALL not be attributed to another model process.
+
+The terminal artifact SHALL include `field_principles`,
+`preconditions_checked`, `inference_substrate`, `duration_s`, `phase_clocks`,
+`random_seed`, `reproducibility_checksum`, `MODEL_SPECS`, `process_receipts`,
+`accelerator_samples`, `checkpoint_manifest`, `per_unit_rows`, `row_coverage`,
+`budget_parity`, `exact_scores`, `descriptive_aggregates`,
+`operational_saturation_corpus_ready`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. One principle
+SHALL exist for every top-level field. The reproducibility checksum SHALL bind
+the fixture, model files, rows, code, commands, and raw output. The artifact
+SHALL set `inference_substrate` to `live_llm_inference` and
+`verifier_is_oracle` to false.
+
+`operational_saturation_corpus_ready` SHALL depend on exactly 900 complete
+unique rows, authentic process receipts, equal budgets, exact scoring, valid
+checkpoints, and clean teardown. Accuracy SHALL not control readiness. The
+artifact SHALL report descriptive aggregates only because Exp6834 owns the
+inferential audit. `verdict_class` SHALL be one of `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+`honest_verdict` SHALL be terminal and start with `complete_`.
+
+### SCENARIO-CONSTRAINT-6833-PREFLIGHT: Failed Live Gates Stop Inference
+
+Given any missing model, hash, tokenizer, template, CUDA, lease, port, disk,
+fixture, or canary gate,
+When Exp6833 runs preflight,
+Then it SHALL write the complete blocked artifact with exact observed values
+and SHALL start no corpus generation.
+
+### SCENARIO-CONSTRAINT-6833-DISPATCH: Each Model Owns Its Process
+
+Given the three mandated model specifications,
+When Exp6833 runs sequential model phases,
+Then every row SHALL name the exact model file and owning process and no model
+SHALL reuse another model's process identity.
+
+### SCENARIO-CONSTRAINT-6833-BUDGET: Prompt Arms Have Equal Decode Budgets
+
+Given both Exp6832 prompt arms,
+When the producer sends their requests,
+Then temperature, seed, stop rules, context size, and maximum output tokens
+SHALL be equal and no repair or answer feedback SHALL occur.
+
+### SCENARIO-CONSTRAINT-6833-CHECKPOINT: Restart Preserves Completed Rows
+
+Given a durable checkpoint with valid completed row hashes,
+When a model phase restarts,
+Then it SHALL skip completed identities and generate only missing identities.
+
+### SCENARIO-CONSTRAINT-6833-RAW-BYTES: Evidence Is Byte Exact
+
+Given one live completion,
+When Exp6833 stores its row,
+Then the row SHALL retain prompt and raw output bytes with matching lengths and
+SHA-256 hashes.
+
+### SCENARIO-CONSTRAINT-6833-SCORING: Exp6832 Checkers Are Authority
+
+Given any parseable or unparseable model output,
+When Exp6833 scores the row,
+Then it SHALL preserve parse status and every Exp6832 obligation and joint
+result without repair or LLM judgment.
+
+### SCENARIO-CONSTRAINT-6833-TEARDOWN: Owned Servers Exit Cleanly
+
+Given a task-owned llama.cpp process,
+When its model phase ends or fails,
+Then Exp6833 SHALL stop only that process, confirm its absence, release its GPU
+lease, and record final-token and teardown receipts.
+
+### SCENARIO-CONSTRAINT-6833-READINESS: Completeness Controls Readiness
+
+Given all expected model, scenario, and arm identities,
+When Exp6833 computes the terminal gate,
+Then readiness SHALL require 900 valid rows and authentic execution evidence
+and SHALL not depend on model accuracy.
+
+## Implementation Status (REQ-CONSTRAINT-6833)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6833 and SCENARIO-CONSTRAINT-6833-* | Planned: live local llama.cpp CUDA corpus producer and task-owned wrapper. | Planned: focused tests and the full local CUDA run. |

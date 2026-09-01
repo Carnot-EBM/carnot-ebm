@@ -16982,3 +16982,6 @@ The l |
 | 2026-09-01 00:06 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_inference_substrate_text age-week 0: OPEN 1 days: SILENT |
 | 2026-09-01 00:07 UTC | V597 evidence-admissibility and execution contract | OK | 124 passed, 1 warning in 13.86s |
 | 2026-09-01 00:35 UTC | Exact operational-obligation saturation fixture | OK | 109 passed, 1 warning in 13.45s |
+| 2026-09-01 01:38 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 398658 serves 'gemma-4-31B-it-Q4_K_M.gguf', live pin is 'Qwen3.8-27B'  |
+| 2026-09-01 01:58 UTC | Three-family operational-obligation saturation cor | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: odels)]
++    p |

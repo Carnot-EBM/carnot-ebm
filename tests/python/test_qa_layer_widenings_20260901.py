@@ -1,4 +1,4 @@
-"""Spec: REQ-VERIFY-6802, SCENARIO-VERIFY-6802-A, SCENARIO-VERIFY-6802-B, SCENARIO-VERIFY-6802-C
+"""Spec: REQ-VERIFY-6802, SCENARIO-VERIFY-6802-A, SCENARIO-VERIFY-6802-B, SCENARIO-VERIFY-6802-C, SCENARIO-VERIFY-6802-D
 
 QA-layer audit 2026-08-31: three guards were narrower than the concepts they named.
 
@@ -87,3 +87,68 @@ def test_unwrap_leaves_a_bare_value_alone() -> None:
     assert av._unwrapped_scalar(3) == 3
     assert av._unwrapped_scalar({"principle": "p", "value": 7}) == 7
     assert av._unwrapped_scalar({"no_value_key": 1}) == {"no_value_key": 1}
+
+
+# --- SCENARIO-VERIFY-6802-D: a training claim with no tool named ---------------------------
+# The fourth finding from the same audit, held back from the first commit because widening
+# the compute-bound marker changes which artifacts face the duration floor at all. Measured
+# before landing: 16 artifacts newly flagged across the 5,915-artifact corpus, every one a
+# retrain claiming completion in 1.7 to 31 seconds.
+
+
+def test_a_retrain_verdict_with_no_tool_named_is_compute_bound() -> None:
+    """The origin artifact. It named no model, framework, or runner, so the marker missed it."""
+    artifact = {
+        "experiment": 746,
+        "title": "DualGPU EORM+JEPA Retrain - production rollout and speedup validation",
+        "honest_verdict": "dualgpu_retrain_validated",
+        "duration_s": 1.73,
+    }
+    assert av._has_compute_bound_marker(artifact) is True
+    flags: list[av.Flag] = []
+    av.check_duration_vs_claim(artifact, flags)
+    assert [f.kind for f in flags] == ["DURATION_TOO_SHORT"]
+
+
+def test_a_retrospective_that_lists_a_retrain_is_not_compute_bound() -> None:
+    """Why the scan is restricted to self-describing fields.
+
+    A whole-blob scan made retrospectives and closeout artifacts compute-bound because they
+    name the experiments they summarise. Measured: 13 such false positives.
+    """
+    artifact = {
+        "experiment": "1215_milestone_retro_94",
+        "honest_verdict": "milestone_94_clean_sweep_13_of_13",
+        "tasks_completed": ["exp664 dualgpu retrain", "exp746 eorm retrain"],
+        "duration_s": 0.1,
+    }
+    assert av._has_compute_bound_marker(artifact) is False
+
+
+def test_an_honest_blocked_retrain_is_not_compute_bound() -> None:
+    """A blocked verdict reports that nothing ran. Flagging it would punish the honesty."""
+    artifact = {
+        "honest_verdict": "complete: blocked_model_not_cached_retrain",
+        "duration_s": 0.05,
+    }
+    assert av._has_compute_bound_marker(artifact) is False
+
+
+def test_a_principle_wrapped_verdict_still_counts() -> None:
+    """Any field may be principle-annotated, so read through the wrapper."""
+    artifact = {
+        "honest_verdict": {"principle": "self-declared terminal state", "value": "retrain_done"},
+        "duration_s": 2.0,
+    }
+    assert av._has_compute_bound_marker(artifact) is True
+
+
+def test_infrastructure_work_on_gpus_is_not_a_training_claim() -> None:
+    """Why the token list holds one word.
+
+    `dualgpu` and `gpu` were measured and rejected. A harness patch or an enforcement audit
+    names the hardware without ever running a job; adding those words flagged 13 of them.
+    """
+    for verdict in ("all_patched", "harness_audit_complete", "zombie_detected"):
+        artifact = {"title": f"dual GPU harness work", "honest_verdict": verdict, "duration_s": 2.0}
+        assert av._has_compute_bound_marker(artifact) is False, verdict

@@ -2183,10 +2183,48 @@ def check_sign_anomaly(d: dict[str, Any], flags: list[Flag]) -> None:
             )
 
 
+#: Words that mean "a training run happened here", used ONLY against the fields in
+#: SELF_DESCRIBING_FIELDS below. Kept to one word on purpose. "dualgpu" and "gpu" were
+#: measured and rejected: they name infrastructure work (harness patches, enforcement
+#: audits) as often as a real run, and adding them flagged 13 artifacts that never trained.
+COMPUTE_CLAIM_TOKENS = ("retrain",)
+
+#: The fields in which an artifact describes ITSELF. A retrospective that lists a training
+#: experiment is not a training run, so these words only count when the artifact says them
+#: about its own work -- not anywhere in the blob.
+SELF_DESCRIBING_FIELDS = ("title", "honest_verdict", "experiment", "experiment_name", "name")
+
+
+def _claims_compute_in_own_identity(d: dict[str, Any]) -> bool:
+    """Does this artifact say, about itself, that it ran a training job?
+
+    An honest `blocked_*` verdict is excluded. Such an artifact is reporting that nothing
+    ran, which is the opposite of a compute claim, and flagging it would punish the exact
+    honesty the Pre-Launch Preconditions Discipline asks for.
+    """
+    if _is_precondition_check_only_blocked(d):
+        return False
+    parts = []
+    for key in SELF_DESCRIBING_FIELDS:
+        value = _unwrapped_scalar(d.get(key))
+        if isinstance(value, str):
+            parts.append(value.lower())
+    haystack = " ".join(parts)
+    return any(token in haystack for token in COMPUTE_CLAIM_TOKENS)
+
+
 def _has_compute_bound_marker(d: dict[str, Any]) -> bool:
-    """Walk dict for any compute-bound marker string."""
+    """Is this artifact subject to the compute-bound duration and methodology rules?
+
+    Two ways to qualify. It names a model, a framework, or a runner anywhere in the blob.
+    Or it claims a training run in its own title or verdict, with no tool named at all --
+    the gap that let experiment_746 declare `dualgpu_retrain_validated` in 1.73 seconds
+    and pass. See REQ-VERIFY-6802.
+    """
     text = json.dumps(d)
-    return any(m in text for m in COMPUTE_BOUND_MARKERS)
+    if any(m in text for m in COMPUTE_BOUND_MARKERS):
+        return True
+    return _claims_compute_in_own_identity(d)
 
 
 def _inference_substrate_text(d: dict[str, Any]) -> str:
