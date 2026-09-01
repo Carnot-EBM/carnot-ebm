@@ -18446,3 +18446,4 @@ does not support a missed DualGPURunner dispatch. Add batches of 8-16 questions
 to the single-model inference path. Also emit task-owned phase, GPU, model-count,
 and runner receipts. Estimated savings is 0% until a timed alternative exists.
 - 2026-09-01: V599 method-change and evidence contract (⚠️ Research Finding) — honest_verdict=complete_null_v599_method_change_evidence_contract_ready_changed_mechanisms_only; results/experiment_6848_v599_method_change_evidence_contract.json
+- 2026-09-01: Independent typed-program isomorphic authority audit (⚠️ Research Finding) — honest_verdict=complete_null_typed_program_isomorphic_authority_ready_no_model_scores; results/experiment_6849_typed_program_isomorphic_authority_audit.json
