@@ -1,369 +1,265 @@
-# Research Roadmap V597: Guarded Constraint Memory and Live Causal Control
+# Research Roadmap V598: Typed Constraint Energy, Executable Memory Credit, and Live ARC Attribution
 
-**Milestone:** `2026.08.597`  
-**Planned:** 2026-08-31  
-**Scope:** 14 experiments in four phases  
-**Primary requirements:** FR11 continuous self-learning, FR12 verifiable reasoning, live ARC
-generalization, and exact external release authority
+**Milestone:** 2026.09.598  
+**Planned:** 2026-09-01  
+**Experiments:** Exp6835-Exp6847  
+**North star:** A live agent discovers useful structure from its own attempts. An external energy layer checks constraints, routes feedback, and learns only from later exact outcomes.
 
 ## Executive Summary
 
-Milestone `2026.08.596` recovered the independent selective-arbiter replay and authority-attack
-evidence. It also produced a complete chronological causal-edge memory stream. It did not produce a
-clean adoption receipt, a continuous-learning result, a portability audit, or new live ARC causal
-evidence.
+V597 closed its four-task plan. It established a clean evidence contract, built a 150-scenario operational-obligation fixture, collected 900 local-SOTA model rows, and then found that the generated-answer corpus cannot identify semantic field preservation. The failed identifiability result is useful. It says the next milestone must leave the retired generated-answer transport lane.
 
-V597 closes those gaps with bounded work units:
+V598 moves to a non-generation surface. It compiles typed obligations into one executable program. The program exposes an exact scalar energy, a satisfaction predicate, an admission guard, an action guard, and diagnostics. It then measures local-model compatibility with fixed, equal-token candidate sequences. No answer generation and no learned judge define truth.
 
-1. reissue the flagged selective-arbiter decision under a valid measured aggregation receipt;
-2. test whether the authentic operational-obligation handoff survives increasing simultaneous
-   obligation count on all three mandated local GGUF families;
-3. execute the failed residual-memory learner as two checkpointed event-order shards and submit the
-   merged state to a sealed family-portability audit; and
-4. inventory, reuse, and complete the live supervisor, tool-gap, control, and treatment cells before
-   an independent causal merge.
+The same typed program becomes the contract for a bounded continuous self-learning kernel. Exact later outcomes assign credit to memory actions. Two chronological shards test whether verified residual memory improves held-future decisions without leakage. A sealed audit checks durability, portability, and failure pathways.
 
-No learned score is release authority. Exact checkers, immutable row manifests, fresh reducers,
-canonical transaction bytes, and sealed held-future checks retain that role.
+The ARC phase does not launch another long run or claim a game solve. It freezes the evidence that exists at execution time. It keeps tool-loop, supervisor, model, and game strata separate. It audits whether supervisor and tool-gap actions have exact later outcome support. It then replays the typed program as a default-off shadow monitor at the canonical live seam.
 
-## What V596 Proved
+## What V597 Proved
 
-The active V596 roadmap contained seven tasks, Exp6824 through Exp6830.
+1. **The evidence root is usable.** Exp6831 separated CPU aggregation from live inference. It kept the flagged Exp6826 receipt quarantined. It validated the 4,320-row Exp6827 causal-edge stream without claiming that learning ran.
 
-- **Exp6824 proved cold row reproducibility.** A fresh parser and reducer supported the Exp6813
-  selective-arbiter producer verdict.
-- **Exp6825 proved the bounded authority attacks can complete.** It timed out once, then completed
-  the fresh authority mutation shard with 111 passing checks.
-- **Exp6826 did not provide clean adoption authority.** It reported `enable`, but its measured
-  duration was `0.0199` seconds under a compute-like substrate label. Adversarial verification
-  quarantined it as `DURATION_TOO_SHORT`.
-- **Exp6827 proved the frozen learning input exists.** It emitted 4,320 chronological causal-edge
-  rows with five event orders, counterfactuals, exact receipts, and a true readiness field. Its own
-  verdict correctly says that no learning ran.
-- **Exp6828 did not complete.** Two Codex attempts stalled after 600 seconds of silence and emitted
-  no terminal artifact.
-- **Exp6829 and Exp6830 did not run.** Their structured gates blocked after Exp6828 retired.
-- **V596 produced no live ARC result.** The earlier design document described a live branch, but the
-  activated YAML ended at Exp6830. Existing external live batches remain inputs, not V596 evidence.
+2. **The operational fixture is exact and broad enough for diagnosis.** Exp6832 created 150 scenarios across obligation counts 1, 2, 4, 6, and 8. Each scenario has deterministic field and joint checkers.
 
-The scientific boundary is therefore narrow: selective arbitration has independent component
-support, and the verified-memory stream is ready. Continuous improvement, family portability, and
-live causal action improvement remain open.
+3. **Generated-answer transport fails before high-count semantics can be measured.** Exp6833 produced all 900 planned rows across the three mandated GGUF families. Qwen3.6 parsed 65 of 300 outputs and jointly passed 37. It parsed no rows at obligation counts 4, 6, or 8. Both Gemma families produced nonempty output but zero parsed rows.
+
+4. **The corpus does not identify semantic field preservation.** Exp6834 observed only 395 of 18,900 target field cells. It found 18,505 missing cells, at least `2^18505` compatible preservation policies, and 290 collision witnesses. Its honest verdict was `complete_null_operational_field_preservation_not_identified`.
+
+5. **The next experiment must change the measurement surface.** More grammar tuning, parser repair, or finite generated-answer retries would repeat a retired mechanism. V598 uses forced-sequence scalar compatibility and exact executable checks instead.
 
 ## Three Biggest Gaps to the PRD Vision
 
-### Gap 1: Exact handoff is shallow under composed obligations
+### Gap 1: Typed constraints do not yet survive the model boundary
 
-Exp6812 provides 576 authentic rows from Qwen3.6, dense Gemma-4, and MoE Gemma-4. Most rows carry one
-contract and the remainder carry two. Earlier Exp6427 tested generic constraint saturation, but it
-did not test the newer operational handoff schema with prerequisites, authority, fallback,
-consequence, and priority. The PRD requires reliable translation from instructions into checkable
-constraints, not only success on shallow contract sets.
+FR12 requires a verifier that converts stated rules into checkable structure. Carnot has exact operational atoms and checkers. It does not yet have a clean, non-generation measure of whether current local models assign more support to a constraint-compatible action than to a matched violation. It also lacks one compiled object that binds the score, predicate, guard, and diagnostic.
 
-V597 adds a bounded operational-obligation saturation fixture, authentic three-family generation,
-and a zero-call identifiability audit. This is a new schema and estimand, not a rerun of Exp6429's
-verification-cost replay.
+V598 closes the measurement part of this gap. It does not claim that model compatibility is causal control.
 
-### Gap 2: Continuous self-learning has a stream but no learning result
+### Gap 2: The continuous-learning loop has events but no admitted learning result
 
-FR11 requires persistent improvement from verified experience with rollback and regression
-protection. Exp6827 supplies the chronological stream, but Exp6828 never executed to a terminal
-artifact. Prior prospective CSL evidence was null. V597 must show whether a finite-gain residual
-memory controller can improve held-future action utility without support contraction, forgetting,
-future leakage, or self-authored acceptance.
+FR11 requires chronological propose, evaluate, commit, validate, persist, and roll back behavior. Exp6827 supplies 4,320 immutable causal-edge events. Exp6828 never produced a terminal artifact after two bounded attempts. Earlier factor learning was row-complete but null on held-future benefit.
 
-V597 uses guarded harness evolution from Harness Continual Learning and explicit read-after-write,
-plasticity, forgetting, and bounded rehearsal concepts from Fast Weight Attention. The GGUF weights
-stay immutable. Only bounded external memory changes.
+V598 replaces the stalled monolith with a small deterministic kernel and two restartable shards. Exact later outcomes assign action-level credit. A sealed reducer decides whether the effect is durable and portable.
 
-### Gap 3: The live agent has transport features but no matched causal action evidence
+### Gap 3: Live ARC mechanisms lack clean causal attribution
 
-The live ARC agent can carry supervisor and tool-gap state, but the default supervisor window is too
-large to accrue enough interventions. Tool-gap rows have not reached the durable evidence ledger,
-and tool transport has not shown that actions improve progress. Current long-running batches use
-different configurations and cannot be pooled.
+The canonical live agent now has a trajectory supervisor and a self-parse tool loop. Available evidence spans different games and configurations. A supervised `ls20`/`wa30` run was still active when this roadmap was planned. Pooling loop-on and loop-off rows would be invalid. Re-solving a known game or using outer-loop reverse engineering would also miss the north star.
 
-V597 inventories the existing task-owned row stores, freezes a reusable manifest, fills only exact
-shortfalls, and keeps control and treatment accrual in separate processes. Parseable tool output is
-reported as transport, not improvement. The live agent must enter through `make_carnot_agent()` and
-`E3AgentPolicy`; no game source, offline ground-truth search, hand adapter, or level solve is allowed.
+V598 freezes the terminal evidence available at execution time. It audits only matched or explicitly stratified cells. It credits no solve. It improves the live path by adding a default-off typed shadow monitor that the canonical agent can later reach.
 
 ## Research Findings That Change the Design
 
-The source ledger is `research-references.md`, section `V597 Planner Refresh`.
+The full source notes are in `research-references.md`, section **V598 Planner Refresh - 2026-09-01**.
 
-| Finding | Design consequence |
-|---|---|
-| Harness Continual Learning, arXiv:2608.19013 | Candidate memory changes are proposed separately from sealed commit. Current gain, historical retention, and validity are checked before adoption. |
-| Fast Weight Attention, arXiv:2608.27763 | Event timing, read-after-write order, finite capacity, forgetting, and rehearsal are explicit artifact fields. The learner is split by frozen event order. |
-| Constraint Saturation Evaluation, arXiv:2608.12426 | Operational handoff is measured by simultaneous obligation count with deterministic per-obligation and joint checks. |
-| Protocol-level identifiability audit, arXiv:2608.13326 | The cold audits must show that frozen observation cells separate the target policies before pooled effects are interpreted. |
-| Repair, Not Improvement, arXiv:2608.13959 | Tool syntax, obligation transport, action selection, and progress are separate outcomes. Form repair cannot headline as causal improvement. |
-| Thermodynamic freedom, arXiv:2608.27938 | Future TSU work must separate accuracy, protocol, speed, and dissipation. It does not create current hardware access. |
-| Embedded RISC-V KAN evaluation, arXiv:2608.00737 | No KAN or embedded task is added from parameter-count claims. Existing exact symbolic state is the deployment default. |
+- [LLM Judges Verify Presence, Not Absence](https://arxiv.org/abs/2608.31016) reports that omission checks improve when a system first enumerates required facts and then checks each fact. V598 uses explicit obligation atoms and per-atom diagnostics.
+- [HSRM](https://arxiv.org/abs/2608.30841) reports compact hidden-state reward models at reasoning-step boundaries. Carnot's current `llama.cpp` path exposes only a narrower final-token or final-layer surface. V598 therefore runs a method-parity precondition and does not label fixed-sequence margins as an HSRM reproduction.
+- [S3Gym](https://arxiv.org/abs/2608.31100) finds that self-improvement depends on memory route and can show negative transfer. V598 includes no-memory, read-only, random-admission, and verified-residual arms plus leave-one-family-out tests.
+- [SUN Programs](https://arxiv.org/abs/2608.31167) compiles typed executable programs into reusable costs, predicates, rewards, guards, and diagnostics. V598 adopts this compile-once interface for constraints, memory, and ARC shadow checks.
+- [TASPO](https://arxiv.org/abs/2608.31077) separates exact outcome direction from fine-grained action credit. V598 assigns credit only after an exact later outcome and records the dose per action.
+- [Causal Memory for Self-Evolving Agents](https://arxiv.org/abs/2608.30198) emphasizes persistent error pathways and joint repair. V598 audits poison, stale-credit, latent-error, and joint-failure pathways.
+- [Learned Multiscale Sampling](https://arxiv.org/abs/2608.31114) is relevant to future Ising sampling work. It is a watch item, not a V598 dependency, because this milestone has no sampling bottleneck that justifies a new sampler.
+
+Secondary checks found no execution-ready replacement. Semantic Scholar throttled the EBT and ARM-EBM citation queries. Extropic still describes 2027 developer access. Logical Intelligence does not publish Kona weights or a local runner. OpenReview, Hugging Face Papers, and GitHub discovery did not expose a better supported dependency for this milestone.
 
 ## Target Architecture
 
-```text
-                         exact external authority
-                                  |
-    Exp6824 cold rows ----+        |        +---- Exp6825 attacks
-                          v        v        v
-                    Exp6831 admissibility receipt
-                         |                 |
-             +-----------+                 +------------------+
-             |                                                  |
-             v                                                  v
-   operational composition branch                    guarded CSL branch
-   Exp6832 exact fixture                              Exp6835 kernel canary
-             |                                                  |
-             v                                    +-------------+-------------+
-   Exp6833 three-family corpus                    v                           v
-             |                              Exp6836 shard A             Exp6837 shard B
-             v                                    +-------------+-------------+
-   Exp6834 cold identifiability                                  |
-                                                                 v
-                                                   Exp6838 sealed merge +
-                                                   family portability audit
+```mermaid
+flowchart LR
+    A[Exact operational atoms] --> B[Typed obligation program]
+    B --> C[Scalar energy]
+    B --> D[Satisfaction predicate]
+    B --> E[Memory admission guard]
+    B --> F[ARC action shadow guard]
+    B --> G[Per-atom diagnostics]
 
-   existing live row stores
-             |
-             v
-   Exp6839 inventory + frozen reuse manifest
-       |              |                 |
-       v              v                 v
-   Exp6840         Exp6841          Exp6842 control
-   supervisor      tool transport          |
-       +--------------+--------------------+----> Exp6843 treatment
-                                                   |
-                                                   v
-                                    Exp6844 ungated cold causal disposition
-                                       reads every branch, positive or not
+    H[Fixed equal-token candidates] --> I[Local SOTA forced-sequence scoring]
+    C --> I
+    I --> J[Compatibility margin audit]
+
+    K[Exp6827 chronological events] --> L[Bounded residual-memory kernel]
+    E --> L
+    M[Exact later outcomes] --> N[Action-level credit]
+    N --> L
+    L --> O[Shard A]
+    L --> P[Shard B]
+    O --> Q[Sealed durability and portability audit]
+    P --> Q
+
+    R[Canonical live ARC receipts] --> S[Immutable evidence inventory]
+    S --> T[Supervisor causal audit]
+    S --> U[Tool-gap transport audit]
+    F --> V[Default-off ARC shadow monitor]
+    S --> V
+
+    J --> W[Independent V598 disposition]
+    Q --> W
+    T --> W
+    U --> W
+    V --> W
 ```
 
-The arrows mean artifact completeness, not a required positive effect. Exp6844 is deliberately
-ungated and records missing, blocked, null, harmful, disqualified, and partial branches.
+This is an evidence architecture. A lower energy is not truth. An exact checker defines task truth. A model margin is only a compatibility signal. A memory effect is causal only when a chronological comparison and later exact outcome support it. An ARC row is useful only in its own configuration stratum.
 
 ## Model Contract
 
-Every task that invokes an LLM uses at least one current mandated local GGUF. Legacy small models
-may be used only for CPU smoke tests and cannot support a headline result.
+Exp6837 is the only task that needs live LLM inference. Its `MODEL_SPECS` must include all three mandated local families:
 
-| Role | Required model |
-|---|---|
-| Flagship MoE | `unsloth/Qwen3.6-35B-A3B-GGUF` |
-| Flagship dense | `unsloth/gemma-4-31B-it-GGUF` |
-| Middle MoE | `unsloth/gemma-4-26B-A4B-it-GGUF` |
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-Exp6833 uses all three. Live ARC fill cells use Qwen3.6 as the primary local policy model and may use
-the other two only when the frozen manifest requires a family control. Every live task records the
-exact hub ID, GGUF revision and hash, quantization, embedded tokenizer receipt, chat template,
-decode limits, process identity, GPU identity, and raw output hash. The implementation must call
-`cached_sota_pair()` before any fallback path.
+The task uses one model at a time under a task-owned CUDA lease. It stores raw token identifiers, token log-probabilities, model hashes, tokenizer hashes, and fixed candidate hashes. Legacy small models may run only as CPU smoke tests. They cannot support the headline result.
 
-## Phase 1: Authority and Compositional Handoff
+## Phase 1: Typed Obligation Energy
 
-### Exp6831: V597 evidence-admissibility contract
+### Exp6835: Terminal evidence freeze and omission decomposition
 
-Recompute the Exp6826 adoption criteria from immutable Exp6813, Exp6824, and Exp6825 artifacts under
-an explicit `aggregation_from_upstream_artifacts` substrate. Measure task-owned phase clocks and
-write a new artifact; do not mutate Exp6826. Separately validate Exp6827 hashes and readiness. The
-task emits `selective_arbiter_receipt_admissible`, `csl_inputs_admissible`, and
-`v597_contract_ready`.
+Reparse every Exp6833 row with fresh code. Separate protocol failure, omission, contradiction, and joint semantic failure. Preserve the Exp6834 null. This task creates the immutable evidence root for V598.
 
-### Exp6832: Operational-obligation saturation fixture
+### Exp6836: Typed obligation program and matched candidate fixture
 
-Extend the owned constraint-verification spec first. Build source-free scenarios with frozen
-simultaneous obligation counts `1, 2, 4, 6, 8`, independent and interacting obligations, prompt
-permutations, exact legal action sets, and deterministic field-level checkers. The fixture contains
-no model output and no answer leakage.
+Compile the existing obligation schema into one typed executable object. Freeze equal-token correct and violating candidate sequences. Include permutation, identifier, length, and label-swap controls. The fixture contains no model output.
 
-### Exp6833: Three-family operational saturation corpus
+### Exp6837: Three-family output-free compatibility margins
 
-Run the exact Exp6832 prompt matrix through all three mandated GGUF families. Compare direct typed
-handoff with compressed prose under equal decode budgets and no repair. Use one task-owned process
-per model, durable model and batch checkpoints, and explicit teardown receipts. Emit every prompt,
-raw output, parsed field, exact obligation decision, joint decision, and timing row.
+Score every fixed candidate sequence with all three mandated local GGUF families. Compare exact conditional log-likelihood margins per atom and per joint program. Do not generate answers. Do not fit a probe. Do not use a learned judge.
 
-### Exp6834: Cold identifiability and saturation audit
+### Exp6838: Independent shortcut and identifiability audit
 
-Use fresh parsing and aggregation code. Recompute per-obligation success, all-obligation success,
-interaction penalties, and decay by count and model family. Test whether the frozen support
-separates policies that preserve versus lose operational fields. Report minimum identifying support
-and constructive collision witnesses. No producer aggregate or verdict has authority.
+Recompute margins without importing the producer reducer. Attack candidate identity, token length, prompt length, row order, labels, model scale, and score normalization. State whether any compatibility claim is identifiable.
 
-## Phase 2: Guarded Continuous Self-Learning
+## Phase 2: Continuous Self-Learning from Exact Outcome Credit
 
-### Exp6835: Checkpointed residual-memory kernel canary
+### Exp6839: Bounded residual-memory kernel canary
 
-Implement and test the bounded four-arm runner before the long stream executes. Arms are frozen
-memory, finite-gain residual pressure, raw violation accumulation, and random exact-valid updates.
-The canary uses a deterministic micro-stream and proves read-only active episodes, post-outcome
-proposal, sealed accept/reject commitment, fixed capacity, stale-pressure release, canonical bytes,
-restart, rollback, task-owned phase clocks, and accelerator sampling receipts.
+Implement a small propose, evaluate, credit, commit, persist, restart, and rollback kernel. Use exact later outcomes for direction and action-level credit for dose. The canary is deterministic and bounded. It replaces the stalled Exp6828 monolith.
 
-### Exp6836 and Exp6837: Event-order learner shards
+### Exp6840: Chronological learner shard A
 
-Run the shared kernel on disjoint frozen Exp6827 event orders. Exp6836 owns orders 0-2. Exp6837 owns
-orders 3-4. Each process writes immutable checkpoints at event boundaries and a terminal shard
-artifact independent of the effect sign. Neither shard fits on held-future labels or sees the other
-shard's outcomes.
+Run causal-edge orders 0-2 with no-memory, read-only, random-admission, and verified-residual arms. Freeze all decisions before their later outcomes are revealed.
 
-### Exp6838: Sealed merge and family-portability audit
+### Exp6841: Chronological learner shard B
 
-Fresh reducers replay both shards, every transaction, every rollback, and every causal
-write-read-action-outcome chain. Run all three leave-one-family-out rotations without held-family
-fitting. Apply remove, substitute, and reorder counterfactuals to credited causal edges. The sealed
-harness issues separate decisions for transaction authenticity, held-future gain, support,
-retention, hard cases, portability, and FR11 adoption.
+Run orders 3-4 and delayed-correction cells with the same arms. Check whether stale or jointly wrong memories are revised after exact evidence.
 
-Positive FR11 evidence requires a paired held-future lower bound above zero, no support contraction,
-no protected-retention or hard-case harm, nonzero later action influence, exact rollback and restart,
-and positive portability on every family rotation. Completion never depends on meeting that gate.
+### Exp6842: Sealed merge, pathway, and portability audit
 
-## Phase 3: Bounded Live ARC Accrual
+Use a fresh reducer. Replay both shards. Run delete, substitute, reorder, poison, restart, rollback, and leave-one-family-out attacks. A positive class requires held-future benefit, calibrated dose, durability, and no forbidden leakage.
 
-### Exp6839: Live evidence inventory
+This phase directly implements the research program's **Continuous Self-Learning** priority. It covers exact validation, bounded memory, chronological updates, durable state, rollback, and negative-transfer checks.
 
-Inventory the current holdout-equalized and selfparse row stores. Validate configuration hashes,
-model identities, tool-loop state, supervisor window, game/session identities, row completeness, and
-cross-arm contamination. Freeze cells that can be reused byte-for-byte. Mark mismatched
-configurations as separate strata. Emit exact shortfalls; do not pool or regenerate valid cells.
+## Phase 3: Live ARC Attribution and Reachable Shadow Control
 
-### Exp6840: Supervisor shadow and refinement receipt
+### Exp6843: Live evidence inventory and immutable stratum freeze
 
-Reuse valid supervisor rows, then fill only frozen shortfalls at `WINDOW=120` through the live agent.
-Accrue enough intervention and non-intervention rows to estimate precision and abstention. Freeze a
-deterministic refinement table from development rows and evaluate held rows once. This task does not
-enable the supervisor default and claims no game solve.
+Inventory only artifacts that are terminal at execution time. Record live-process state but do not wait for or interrupt a run. Separate tool-loop on and off, supervisor applied and shadow, model, game, budget, and policy cells. This task makes no solve claim.
 
-### Exp6841: Tool-gap obligation transport
+### Exp6844: Supervisor executable-action outcome-credit audit
 
-Reuse or minimally fill live selfparse cells. Prove that a detected gap becomes a typed obligation,
-survives the live policy boundary, reaches the tool request, and returns an exact tool receipt.
-Measure missing, duplicate, stale, and malformed obligations. Do not interpret parseability or tool
-invocation as progress.
+Audit eligible supervisor actions against exact later trajectory outcomes. Compare only matched cells or report the result by stratum. Direction comes from the exact outcome. Credit dose belongs to the specific redirect action.
 
-### Exp6842 and Exp6843: Separate control and treatment accrual
+### Exp6845: Tool-gap transport and causal-support audit
 
-Exp6842 owns tool-loop-off control cells. Exp6843 owns obligation-routed tool-loop-on treatment
-cells. The environment is saved and restored inside each task so state cannot leak across arms.
-Both use identical frozen games, seeds, budgets, policy constructor, and pre-action observations.
-They emit action, exact transition, progress, cost, stop reason, and configuration receipts per
-attempt. They remain separate processes and artifacts.
+Trace each tool-gap obligation to its request, tool receipt, agent-visible response, next action, and later progress. Keep transport success distinct from utility. Keep loop-on and loop-off batches separate.
 
-## Phase 4: Ungated Cold Causal Disposition
+### Exp6846: Typed shadow monitor at the canonical live seam
 
-### Exp6844: Independent live merge and milestone disposition
+Wire the typed obligation program into the canonical supervisor and tool-gap seam in default-off shadow mode. Replay frozen receipts. Measure exact agreement, false interventions, missed violations, and latency. Do not launch a new game run. Do not claim policy benefit or a level solve.
 
-Use fresh reducers to join paired control and treatment rows only when all identity fields match.
-Recompute actions-to-progress, regression, unsafe-action, tool-use, supervisor precision, cost, and
-survival metrics. Run protocol identifiability and contamination attacks before interpreting any
-effect. Then synthesize the authority, compositional handoff, CSL, and live branches into a closed
-milestone disposition.
+## Phase 4: Ungated Independent Disposition
 
-The task is ungated. Missing or incomplete upstream work becomes explicit `partial` or `blocked`
-evidence with `gate_check_summary`; it is not omitted.
+### Exp6847: V598 adversarial capstone
+
+Read every terminal V598 artifact that exists. Recompute each branch disposition. Preserve null, blocked, partial, and disqualified results. Recommend one next action per branch and retire unchanged failures.
 
 ## Conductor Execution Order
 
 | Order | Experiment | Phase | GPU | Headline question |
-|---:|---|---|:---:|---|
-| 1 | Exp6831 | 1 | No | Are the arbiter and CSL inputs procedurally admissible? |
-| 2 | Exp6832 | 1 | No | Is the operational saturation fixture exact and leakage-free? |
-| 3 | Exp6833 | 1 | Yes | Do three SOTA families preserve composed operational obligations? |
-| 4 | Exp6834 | 1 | No | Are the saturation observations independently identifiable? |
-| 5 | Exp6835 | 2 | No | Is the guarded residual kernel restart-safe and bounded? |
-| 6 | Exp6836 | 2 | No | What happens on chronological orders 0-2? |
-| 7 | Exp6837 | 2 | No | What happens on chronological orders 3-4? |
-| 8 | Exp6838 | 2 | No | Does any gain survive sealed replay and family holdout? |
-| 9 | Exp6839 | 3 | No | Which live cells are reusable and which are missing? |
-| 10 | Exp6840 | 3 | Yes | Does a shorter supervisor window produce useful held decisions? |
-| 11 | Exp6841 | 3 | Yes | Does a typed tool-gap obligation traverse the live path? |
-| 12 | Exp6842 | 3 | Yes | What is the frozen tool-loop-off control record? |
-| 13 | Exp6843 | 3 | Yes | What is the matched obligation-routed treatment record? |
-| 14 | Exp6844 | 4 | No | Is the paired live effect identified, and what is V597's disposition? |
+|---:|---|---:|:---:|---|
+| 1 | Exp6835 | 1 | No | What exactly failed in V597 output transport? |
+| 2 | Exp6836 | 1 | No | Can one typed program bind cost, truth, guards, and diagnostics? |
+| 3 | Exp6837 | 1 | Yes | Do local SOTA models prefer fixed compatible actions without generation? |
+| 4 | Exp6838 | 1 | No | Is that preference identifiable after shortcut attacks? |
+| 5 | Exp6839 | 2 | No | Can the learning loop execute, persist, restart, and roll back? |
+| 6 | Exp6840 | 2 | No | Does verified residual memory help held-future orders 0-2? |
+| 7 | Exp6841 | 2 | No | Does it help later orders and survive delayed correction? |
+| 8 | Exp6842 | 2 | No | Is any benefit durable, portable, and non-circular? |
+| 9 | Exp6843 | 3 | No | Which live ARC cells are actually comparable? |
+| 10 | Exp6844 | 3 | No | Do supervisor actions have exact later outcome support? |
+| 11 | Exp6845 | 3 | No | Does tool-gap transport reach useful next actions? |
+| 12 | Exp6846 | 3 | No | Can typed constraints observe the canonical live seam safely? |
+| 13 | Exp6847 | 4 | No | Which branches advance, remain null, or retire? |
 
 ## Dependency Graph
 
 ```text
-6831 -> 6832 -> 6833 -> 6834
-  |
-  +----> 6835 -> 6836 --+
-               -> 6837 --+-> 6838
+Exp6835 -> Exp6836 -> Exp6837 -> Exp6838
+    |
+    +----> Exp6839 -> Exp6840 --+
+                 \-> Exp6841 --+-> Exp6842
+    |
+    +----> Exp6843 -> Exp6844
+                    \-> Exp6845
 
-6839 -> 6840 --+
-     -> 6841 --+-> 6843
-     -> 6842 --+
+Exp6836 -----------+
+                    +-> Exp6846
+Exp6843 -----------+
 
-6844 reads 6831-6843 but has no structured gate.
+Exp6835..Exp6846 ----------------> Exp6847
 ```
 
-Structured gates use these exact producer fields:
-
-| Producer | Field | Consumers |
-|---|---|---|
-| Exp6831 | `v597_contract_ready` | Exp6832 |
-| Exp6831 | `csl_inputs_admissible` | Exp6835 |
-| Exp6832 | `operational_saturation_fixture_ready` | Exp6833 |
-| Exp6833 | `operational_saturation_corpus_ready` | Exp6834 |
-| Exp6835 | `residual_kernel_ready` | Exp6836, Exp6837 |
-| Exp6836 | `csl_shard_a_complete` | Exp6838 |
-| Exp6837 | `csl_shard_b_complete` | Exp6838 |
-| Exp6839 | `live_inventory_ready` | Exp6840, Exp6841, Exp6842 |
-| Exp6840 | `supervisor_receipt_ready` | Exp6843 |
-| Exp6841 | `tool_gap_transport_ready` | Exp6843 |
-
-Every field above is required in its producer artifact and is true from completeness, not from a
-positive scientific effect.
+Structured conductor gates use only completeness or readiness fields. They never require a positive scientific effect. Exp6847 is ungated so a blocked upstream task cannot erase the milestone disposition.
 
 ## Hardware Requirements
 
 ### Required
 
-- dual NVIDIA RTX 3090 GPUs for local GGUF inference;
-- the three cached mandated GGUF repositories and embedded tokenizer metadata;
-- local llama.cpp CUDA execution with task-owned server or process receipts;
-- sufficient CPU and RAM for 4,320-row memory replays and cold reducers;
-- durable disk space for raw outputs, checkpoints, canonical transactions, and paired live rows.
+- CPU, RAM, and local storage for deterministic fixtures, replay, audits, and tests.
+- Both available RTX 3090 GPUs for Exp6837 scheduling flexibility.
+- Cached GGUF files for all three mandated model families.
+- Enough free VRAM to run one model at a time under a task-owned lease.
+- Local `llama.cpp` with CUDA and token log-probability support.
 
 ### Scheduling
 
-- Exp6833 runs one model-owned process at a time unless the existing executor proves independent
-  one-GPU leases. It checkpoints after every model and prompt batch.
-- Exp6840 through Exp6843 use exclusive task-owned GPU leases. They never attach to an unrelated
-  inference server.
-- CPU replay tasks sample task-window GPU state and record that no hidden accelerator work was
-  credited.
-- Every nontrivial task records wall-clock, phase-clock, launch, checkpoint, teardown, and
-  accelerator-sample receipts.
+- Exp6837 must check current GPU processes, UUIDs, free VRAM, ports, and model hashes.
+- It must not interrupt an unrelated live ARC process.
+- If exclusive resources are unavailable, it emits a terminal blocked artifact with `gate_check_summary`.
+- It checkpoints after bounded row batches and tears down only its own processes.
+- All other experiments are CPU-first and may run after their declared dependencies.
 
-### Explicitly outside the blocking path
+### Explicitly Outside the Blocking Path
 
-- KV260 and GateMate already have terminal receipts;
-- PolarFire remains opportunistic without a changed-state receipt;
-- Extropic Z1 access remains a 2027 target;
-- no FPGA, RISC-V, KAN, thermodynamic simulator, or remote service is required for V597.
+- No FPGA bitstream work is planned. Existing FPGA paths are terminal or opportunistic.
+- No Extropic hardware is required. TSU access is not available.
+- No Kona weights or runner are assumed.
+- No dual-GPU tensor-parallel claim is required.
+- No new live ARC run is launched by this milestone.
 
 ## Evidence and Safety Rules
 
-- Every comparative task emits `rows` or `per_game_results` for every unit.
-- Every task declares `verdict_class` from the closed enum and a terminal `honest_verdict`.
-- Every blocked task records `gate_check_summary` with the exact failed check and observed value.
-- All gates name fields emitted by tasks in this roadmap with identical spelling.
-- No LLM judge, model confidence, self-verifier, or producer verdict controls exact acceptance.
-- Continuous-learning episodes are read-only until the exact outcome is revealed.
-- Memory writes are bounded, canonical, restartable, reversible, and committed only by the sealed
-  external harness.
-- Live ARC tasks use `solve_claim=false`. They improve the live path and make no level-solve claim.
-- Existing rows are reused only when every configuration and identity hash matches.
-- Control and treatment configuration differences remain separate strata and are never pooled.
-- A positive result must survive cold recomputation, shortcut attacks, and the declared acceptance
-  conjunction. A null or harmful result is still complete.
+1. Every artifact declares `verdict_class` from the closed enum.
+2. Every comparative task emits one per-unit row with arm metrics.
+3. Every blocked verdict names the failed check and observed value in `gate_check_summary`.
+4. Every declared artifact field has a matching principle.
+5. Exact checkers define truth. The tested verifier is never its own oracle.
+6. Fixed-sequence model margins are compatibility evidence, not proof of correctness.
+7. Continuous-learning rows are chronological. Later outcomes cannot affect earlier proposals.
+8. Memory writes are bounded, attributed, persistent, and reversible.
+9. ARC rows remain separated by game, model, policy, budget, tool-loop, and supervisor configuration.
+10. No task reads game source, runs offline ground-truth BFS, builds a per-game adapter, or claims a level solve.
+11. Existing live processes are observed but never interrupted.
+12. Every task runs focused tests, lint, OpenSpec coverage, adversarial verification, artifact audits, and root-clutter checks.
 
 ## Milestone Completion Contract
 
-V597 is complete when all 14 conductor tasks have terminal records, including structured gate
-blocks when prerequisites genuinely fail, and Exp6844 records a closed disposition for every
-branch. The milestone is scientifically positive only if at least one branch meets its preregistered
-effect gate under independent authority. Operational completion does not imply that outcome.
+V598 is complete when all 13 tasks have terminal artifacts or explicit conductor skip records and Exp6847 has issued an evidence-preserving disposition.
+
+A positive milestone does not require every branch to win. The strongest valid outcomes are:
+
+- an identifiable, shortcut-resistant fixed-sequence compatibility margin;
+- a held-future residual-memory benefit that survives sealed durability and portability attacks;
+- a matched ARC supervisor or tool-gap action effect with exact later outcome support; or
+- a safe, default-off typed ARC shadow monitor with low false-intervention rate.
+
+A null or blocked result is also complete when it names the failed precondition, preserves per-unit evidence, and retires an unchanged failed mechanism. The milestone must not convert transport, correlation, circular verification, or development-proxy evidence into a causal or solve claim.

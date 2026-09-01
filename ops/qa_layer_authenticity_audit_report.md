@@ -3,9 +3,9 @@
 
 # qa_layer_authenticity_audit_report — 2026-08-31
 
-Scanned 7 of 20 selected unit(s) with codex as the hostile reviewer. Guards (20): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 5 of 20 selected unit(s) with codex as the hostile reviewer. Guards (20): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 7 of 20 unit(s); rotation advances by 7 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 5 of 20 unit(s); rotation advances by 5 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
@@ -14,335 +14,241 @@ Scanned 7 of 20 selected unit(s) with codex as the hostile reviewer. Guards (20)
 | `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 6 |
+| `SILENT_NON_FIRING` | 4 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 1 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_legitimate_pair` — json { "energy_weighted_vote_auroc": 0.731, "self_consistency_auroc": 0.731 } ``` This realistic same-corpus, same-family strategy tie receives no legitimacy exemption because the same-family taxonomy omits AUROC.
-- `adversarial_verify.py::_is_declared_honest_zero_delta` — json { "auroc_delta": { "principle": "Report the measured paired AUROC change.", "value": 0.0 }, "null_delta_methodology_note": { "principle": "Document how the null was measured.", "value": "A paired bootstrap interval included zero." }, "positive_control_passed": { "principle": "Confirm the analysis can detect a known effect.", "value": true } } ``` With `k = "auroc_delta"`, this returns false b
-- `adversarial_verify.py::check_implausible_perfect` — {"roc_auc": 1.0, "n_samples": 400}` receives no flag even though it reports a perfect AUROC on a realistic evaluation set.
-- `adversarial_verify.py::check_sign_anomaly` — {"initial_pass_rate": 0.80, "final_pass_rate": 0.60} Pass rate is a real project metric that should increase, but neither vocabulary recognizes it, so the regression produces no flag.
-- `adversarial_verify.py::_has_compute_bound_marker` — results/experiment_746_dualgpu_eorm_jepa_retrain.json: {"honest_verdict":"dualgpu_retrain_validated","duration_s":1.73,"n_gpus_detected":2,"eorm_device":"cuda:0","jepa_device":"cuda:1"}
-- `adversarial_verify.py::_inference_substrate_text` — {"inference_substrate":{"kind":"embedding_only","provider":"Azure OpenAI","value":"prod-eastus-17"}}
+- `worktree_import_guard.py` — tests/archive/test_weight_steering.py collected from a worktree while `carnot.__file__` resolves to the main checkout
+- `capstone_milestone_rot_lint.py` — python/carnot/experiment_7000_v581_capstone.py` with frozen milestone `2026.08.581`, live roadmap milestone `2026.08.582`, and the positive-equality guard-clause shape shown above.
+- `harness_integrity_lint.py` — scripts/artifact_freshness_lint.py` modified only in the working tree after scope declaration; it changes a pre-commit verdict but is absent from `SEALED_PATHS`, so the guard does not inspect it.
+- `substrate_alias_evidence_lint.py` — A staged, previously absent allowlist member with no evidence: ```diff NO_LLM_SUBSTRATE_ALIASES = ( + "simulation", ) ``` This is an actual value shape already present in the project’s allowlist, but it does not end in `_no_llm` and therefore cannot fire the guard.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_legitimate_pair` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_declared_honest_zero_delta` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_implausible_perfect` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_sign_anomaly` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_has_compute_bound_marker` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_inference_substrate_text` — **SILENT_NON_FIRING**
+- `worktree_import_guard.py` — **SILENT_NON_FIRING**
+- `capstone_milestone_rot_lint.py` — **SILENT_NON_FIRING**
+- `harness_integrity_lint.py` — **SILENT_NON_FIRING**
+- `substrate_alias_evidence_lint.py` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::check_tautology
-
-(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
-
-## adversarial_verify.py::_legitimate_pair
+## worktree_import_guard.py
 
 **Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
 SILENT_NON_FIRING
 
-## CLAIM
-The docstring claims to identify `Pairs where bit-identity is structurally legitimate.`
+## CONCEPT
+Prevent test runs from reporting results when the tested `carnot` package was imported from a checkout other than the checkout containing the tests.
 
 ## FINDINGS
-1. Silent non-firing: `same_family_suffixes = ("_accuracy", "_solve_rate", "_pass_rate", "_cross_family_delta")` represents same-family research metrics but omits common families including AUROC, F1, precision, recall, and exact match. A realistic AUROC pair therefore returns false even though the adjacent rationale explicitly treats same-family coincidence as legitimate.
-
-2. There are no dictionary-field reads or calls resembling d.get in this function. `def _legitimate_pair(k1: str, k2: str) -> bool:` requires bare string keys; passing None, a list, or a wrapped dictionary would crash at `if k1.startswith(k2) or k2.startswith(k1):`, but principle-wrapped field values are not directly relevant to a function operating on field names.
-
-3. `if k1.startswith(k2) or k2.startswith(k1):` is boundary-blind. Combined with `if k1.endswith(s) or k2.endswith(s):`, it does not require the longer key to equal the shorter key plus the recognized suffix; arbitrary intervening text is permitted, so an unrelated longer word beginning with the shorter key can suppress detection.
-
-4. The paired-prefix comparison contains a real slicing bug: `if k1[len(a) :] == k2[len(b) :] or k1[len(b) :] == k2[len(a) :]:` evaluates both prefix-length orientations regardless of which orientation matched. Because the paired prefixes have unequal lengths, the wrong-orientation comparison can strip characters from both metric names and make different suffixes compare equal.
-
-5. The constants in `paired_prefixes = (("initial_", "final_"), ("baseline_", "best_"))` include underscore boundaries and therefore do not themselves match inside longer words. The defect is the subsequent wrong-prefix slicing, not their boundary syntax.
-
-6. `if k1.endswith(s) and k2.endswith(s):` is semantically overbroad. Sharing `_accuracy`, `_solve_rate`, `_pass_rate`, or `_cross_family_delta` does not establish that two keys describe the same corpus, aggregation, or experimental condition; unrelated train/test or task-specific metrics are automatically exempted.
-
-7. `repro_markers = ("rescore", "re_score", "reproduc", "replicat", "cleanroom", "clean_room")` is both boundary-blind and context-blind. `if any(m in kl1 for m in repro_markers) or any(m in kl2 for m in repro_markers):` accepts a marker anywhere in either key, including inside a longer token or a negated status, and never establishes that one key actually reproduces the other.
-
-8. The reproduction rule contradicts its own structural premise by requiring only one marked key. A reproduction runtime, attempt count, failure status, or not-attempted field can exempt equality with an entirely unrelated metric.
-
-9. There are no numeric thresholds or comparison-operator boundary errors. The relevant boundary defect is instead the unequal-prefix slicing described above.
-
-10. The implementation is simultaneously broader and narrower than its claim: broad marker and suffix rules accept identities that are not structurally legitimate, while finite taxonomies silently reject legitimate families and naming conventions they omit.
-
-11. Pattern-list audit: `legit_suffixes = ("_abs", "_pct", "_ratio", "_mean", "_var", "_std", "_min", "_max")` stands for derived or summary-statistic suffixes but omits median, sum, count, and quantile variants; `paired_prefixes = (("initial_", "final_"), ("baseline_", "best_"))` stands for paired experimental states but omits pre/post and before/after; `same_family_suffixes = ("_accuracy", "_solve_rate", "_pass_rate", "_cross_family_delta")` stands for metric families but omits AUROC, F1, precision, recall, and exact match; `repro_markers = ("rescore", "re_score", "reproduc", "replicat", "cleanroom", "clean_room")` stands for independent verification but omits rerun, reevaluation, repeat, and verification terminology; `nested_clock_pair = {"duration_s", "measurement_wall_s"}` stands for nested clocks but omits ordinary aliases such as total-wall and inference-wall measurements.
-
-12. Mutation coverage cannot be determined without the test suite. Static overlap is present: paired-prefix tests using one of the four same-family suffixes would still pass after deleting the paired-prefix branch, and reproduction tests using those suffixes would still pass after deleting the reproduction branch; tests must use non-overlapping names to kill those mutations. No complete branch is provably deletable from the supplied code alone.
-
-13. The function computes no absolute path, performs no write, and cannot mutate tracked artifacts or operator-curated documentation.
-
-14. The terminal `return False` is safe for an exemption predicate: an unrecognized pair is not declared legitimate. It does conflate unrecognized pairs with known-illegitimate pairs, but it does not create the terminal no-check permission pattern described in class F unless an unseen caller reverses the function’s apparent meaning.
-
-15. No duration, counter, or other measured value is computed here, so class G does not apply.
+1. The concept is checkout identity across tests and imported package, independent of where those tests reside.
+2. Silent non-firing: line 68 merely defines `check`; this file installs no repository-wide pytest hook. A test under tests/archive therefore loads neither guarded sibling conftest, so the guard never executes. No permissive line is reached—the missing invocation is the failure.
+3. Pattern narrowing: `tests_root / "python" / "carnot"` is a definition of this repository's canonical package location, not a sample. The exact override value in `os.environ.get(OVERRIDE_ENV) == "1"` is also deliberate; there are no open-ended token lists, sets, tuples, or regexes.
+4. Scope holes: only callers of `check` are protected. Tests outside the two wired conftest subtrees—including tests/archive, tests/quarantine, script-local tests, direct test scripts, and non-pytest runners—are invisible; nothing in this file supplies alternate coverage.
+5. Accidental bypass: a legitimate run can export the override and leave it inherited by later automation; lines 71–72 then return before comparing paths. Running pytest against an unguarded test directory is an even quieter bypass because no override is needed.
+6. Executable branch coverage is otherwise strong: exact equality, foreign paths, nested paths, the raising branch, exact override, and non-exact override are tested. No executable rule appears deletable while retaining the suite, but the wiring test enumerates only the two known conftests, so it cannot detect an uncovered third test tree.
+7. No hardcoded absolute write target exists. Paths come from arguments, and the guard performs no writes.
+8. Machinery errors fail closed: there is no exception handler or clean fallback around `.resolve()` or comparison, so an exception propagates and aborts collection. No subprocess or JSON path exists.
+9. There is no disabling default recognizer branch. The only `return None` follows exact canonical equality at lines 56–57; every other path returns a rejection reason.
+10. No duration, count, size, or other work metric is consumed.
+11. The guard is read-only. Its natural tests use path values, environment monkeypatching, and source reads; they do not write tracked research or operator-curated state.
 
 ## COUNTEREXAMPLE
-```json
-{
-  "metrics": {
-    "initial_loss": 0.42,
-    "final_all_loss": 0.42,
-    "rescore_not_attempted_delta": 0.17,
-    "primary_delta": 0.17
-  }
-}
-```
-The first pair is falsely declared legitimate by the wrong-orientation prefix slicing. The second is falsely declared legitimate merely because a key contains a reproduction marker, despite explicitly saying the rescore was not attempted.
+From a fresh worktree whose shared virtual environment imports the main checkout:
+
+`/main/.venv/bin/pytest -o addopts= tests/archive/test_weight_steering.py`
+
+That real archive test imports `carnot`, but tests/archive is a sibling of both guarded conftest trees, so pytest never imports this guard and may report green against `/main/python/carnot`.
 
 ## MISSED INPUT
-```json
-{
-  "energy_weighted_vote_auroc": 0.731,
-  "self_consistency_auroc": 0.731
-}
-```
-This realistic same-corpus, same-family strategy tie receives no legitimacy exemption because the same-family taxonomy omits AUROC.
+tests/archive/test_weight_steering.py collected from a worktree while `carnot.__file__` resolves to the main checkout
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-Adding one suffix will not repair rules that infer structural relationships from loose prefixes and a marker appearing in either key. The unequal-prefix slicing is an immediate correctness bug, while `same_family_suffixes` and `repro_markers` create both silent omissions and dangerously broad exemptions. The implementation needs explicit parsed relationships plus mutation tests that isolate every branch.
+The path comparison itself is fail-closed and conceptually complete, but its protection depends on every test-bearing directory remembering to call `check`. Install the check through a repository-root conftest or automatically loaded pytest plugin, then test collection from every supported test tree, including the archive path.
 
 
-## adversarial_verify.py::_is_declared_honest_zero_delta
+## capstone_milestone_rot_lint.py
 
 **Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
 SILENT_NON_FIRING
 
-## CLAIM
-`True for explicit zero deltas documented as measured honest nulls.`
+## CONCEPT
+Prevent capstone modules from refusing to run after the live roadmap advances beyond the milestone identifier frozen into the capstone.
 
 ## FINDINGS
-1. Silent non-firing: legitimate delta families absent from the marker tuple return false, and principle-wrapped passing controls also fail the identity checks. The concrete missed artifact is below.
+1. A conventional guard clause that returns when milestones match and raises afterward is missed. The decisive rule is `if any(isinstance(b, ast.Raise) for b in ast.walk(n)):` because a sibling raise is outside the conditional subtree; execution reaches `return None`, and `if line is not None:` treats that as permission.
 
-2. Field extraction is unsafe throughout. `d.get("solve_claimed") is False` and `d.get("offline_reproduced") is False` reject wrapped booleans. `d.get("bare_control_passed") is True`, `d.get("positive_control_passed") is True`, and `d.get("false_negative_risk_checked") is True` have the same defect. `int(d.get("level_credit_delta") or 0) == 0` raises on wrapped dicts and nonempty lists, while `dict(d.get("field_provenance") or {})` either misreads wrappers or raises on incompatible values. `if not d.get("null_delta_methodology_note"):` accepts any nonempty dict or list without examining its value.
+2. `MILESTONE_CONST` samples assignment syntax rather than defining frozen milestones: it omits annotated, parenthesized, computed, or imported bindings. The `MILESTONE` identifier is likewise narrower than the semantic concept.
 
-3. Boundary matching is broken. `if "delta" not in kl:` recognizes the token inside longer words, while `marker in kl` allows metric markers to match inside unrelated identifiers. In particular, the literal marker `actions` can match as part of a longer word.
+3. The `research-roadmap.yaml` marker defines the target file, but `ast.Assign` and literal/name discovery sample only some access forms. Annotated constants, imported loaders, composed paths, and cross-function data flow are omitted. The `ast.Assert`, `ast.If`, and `ast.Raise` branches similarly sample refusal behavior while omitting sibling raises, helper-mediated failures, exit calls, and other control-flow forms.
 
-4. The methodology-note check is negation-blind. `if not d.get("null_delta_methodology_note"):` tests only truthiness, so text explicitly saying that no methodology was performed passes the documentation gate.
+4. Scope is limited to the non-recursive `.glob("experiment_*capstone*.py")` default and explicit inputs satisfying `p.suffix == ".py"`. Differently named or nested capstones, module-level checks, renamed files outside the glob, and checks split across functions are not covered; nothing in this file compensates for those holes.
 
-5. Numeric validation is wrong. Although `int(d.get("level_credit_delta") or 0) == 0` accepts exact zero, it also truncates nonzero fractional values toward zero and treats missing, null, empty-string, and other falsy values as zero. Worse, the general branch never reads the delta value at all, so it can declare an arbitrary nonzero value an honest zero.
+5. Accidental bypasses include extracting roadmap loading into a helper, rewriting the mismatch as a positive guard clause, annotating the milestone constant, committing with --no-verify, or renaming a capstone outside the filename convention. The script also reads working-tree files rather than staged blobs when invoked without a hook runner that isolates staged content.
 
-6. The hardcoded marker tuple stands for metric families eligible to be documented honest null deltas, but omits AUROC deltas and other ordinary research metrics. The three hardcoded control fields stand for evidence against a false null, but omit the project-sanctioned wrapped forms of those same controls.
+6. The six focused tests cover alias-based conditional raising, assertion, and three negative cases, but not sibling raises, annotated bindings, interprocedural flow, direct-literal roadmap reads, asynchronous functions, errors, or `main`. Deleting lines 87–92 of `_reads_roadmap`, the `ast.AsyncFunctionDef` route, or the CLI behavior in `main` would leave the focused suite green.
 
-7. The implementation is simultaneously narrower and broader than its claim: `if kl == "level_credit_delta":` and the marker tuple exclude valid field names and representations, while the general `return any(` accepts matching names without establishing a zero delta or a substantive methodology note.
+7. No hardcoded absolute path exists: `Path(__file__).resolve().parents[1]` derives the checkout. The guard performs no filesystem writes.
 
-8. Mutation-test coverage cannot be determined from the supplied function because no tests are included. No marker is logically double-covered by another listed marker, so none is provably decorative from this code alone.
+8. File and parser failures are explicitly fail-open: `except (OSError, SyntaxError):` executes `continue`. An unreadable or malformed requested capstone can therefore produce the same success result as a checked-clean file.
 
-9. There is no absolute path, filesystem write, tracked-state mutation, or operator-document mutation in this function. A natural unit test requires only in-memory dictionaries.
+9. Default branches disable checking. `if not MILESTONE_CONST.search(text):` skips unfamiliar milestone bindings, `if not _reads_roadmap(node, aliases):` skips unfamiliar roadmap access, and terminal `return None` approves every refusal form the recognizer was not taught.
 
-10. This is not a permissive terminal-default chain: unrecognized inputs resolve to false rather than skipping through a null return. However, that false result is indistinguishable from recognized evidence that merely failed validation, making taxonomy gaps silent.
-
-11. No duration, counter, or other work measurement is computed here, so the metric-before-work defect does not apply.
+10. No duration, count, size, or other work metric is consumed, so no pre-work measurement defect exists. The guard only reads source and prints output; its tests write under temporary paths rather than tracked project state.
 
 ## COUNTEREXAMPLE
 ```python
-k = "context_compactions_delta"
-d = {
-    "context_compactions_delta": 4,
-    "null_delta_methodology_note": (
-        "No null-delta methodology was run; this field is diagnostic only."
-    ),
-    "bare_control_passed": True,
-}
+# python/carnot/experiment_7000_v581_capstone.py
+from pathlib import Path
+import yaml
+
+MILESTONE = "2026.08.581"
+ROADMAP_RELATIVE_PATH = "research-roadmap.yaml"
+
+def build_artifact():
+    roadmap = yaml.safe_load(Path(ROADMAP_RELATIVE_PATH).read_text())
+    if roadmap["milestone"] == MILESTONE:
+        return {"milestone": MILESTONE}
+    raise ValueError("live roadmap moved")
 ```
 
-This returns true: `actions` matches inside `compactions`, the negated note is truthy, and the nonzero value is never inspected.
+The guard returns no violations because the raise is a sibling of the conditional.
 
 ## MISSED INPUT
-```json
-{
-  "auroc_delta": {
-    "principle": "Report the measured paired AUROC change.",
-    "value": 0.0
-  },
-  "null_delta_methodology_note": {
-    "principle": "Document how the null was measured.",
-    "value": "A paired bootstrap interval included zero."
-  },
-  "positive_control_passed": {
-    "principle": "Confirm the analysis can detect a known effect.",
-    "value": true
-  }
-}
+`python/carnot/experiment_7000_v581_capstone.py` with frozen milestone `2026.08.581`, live roadmap milestone `2026.08.582`, and the positive-equality guard-clause shape shown above.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The guard recognizes one AST arrangement rather than the forbidden behavior, so an ordinary control-flow refactor changes a detected violation into approval. Unreadable and unparsable inputs are also reported clean. Detection needs control/data-flow awareness, fail-closed input handling, and isolated regression tests for every accepted refusal form.
+
+
+## harness_integrity_lint.py
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CONCEPT
+Prevent a scoped session from committing undeclared paths or silently changing verdict-determining harness files unless those exact files were explicitly unsealed beforehand.
+
+## FINDINGS
+1. The stated concept is broader than staged-path matching: it requires an immutable pre-work scope plus protection of every file capable of changing another file’s verdict.
+
+2. Silent non-firing occurs in several concrete ways. Lines 537–548 overwrite both `scope` and `seals` when the same run ID re-declares, allowing work already performed to become retroactively authorized and a weakened sealed file to become its own new baseline. Lines 674–681 skip scope judging when multiple live records exist and the environment variable is absent; `contested_paths` compounds this at lines 450–451 with `return {}`, so the eventual `return 0` at lines 774–775 approves the unverified commit. Lines 612–616 also collect unseals from stale declarations, and line 706 consequently skips a live seal indefinitely.
+
+3. `SEALED_PATHS` is a sample, not a definition of “files whose modification changes the verdict”; omitted members include hooked guards such as scripts/artifact_freshness_lint.py, scripts/arc_count_integrity_lint.py, scripts/canonical_url_lint.py, their tests, pyproject.toml, and other test infrastructure. The `*?/[]!-` classifier is also heuristic: it calls `-` and `*/*` universal although neither matches the whole repository, while broad character-class patterns are omitted. By contrast, `*?[`, `HEAD_ANCHOR`, `RUN_ID_ENV`, `.scope.json`, and the `declaration`/`head` anchor choices are protocol definitions, not samples; no regex exists.
+
+4. Scope holes: line 593 makes the guard inert with no declaration; unstaged non-sealed files are never examined; added and deleted staged paths are covered, but line 226 uses `--name-only`, which reports only the destination of a detected rename and hides the source deletion. All directories and file types are covered only once their reported path is staged. The file claims sibling coverage only for operator-curated documentation; it provides no evidence that omitted harness files, unstaged ordinary files, absent declarations, or bypassed hooks are covered elsewhere.
+
+5. Ordinary bypasses include forgetting to execute the printed export command, having two agents declare simultaneously, re-running `--declare` after a refusal, allowing a stale declaration containing an unseal to remain, releasing the scope, committing with --no-verify, or renaming an out-of-scope file into an in-scope destination. A careless `git add -A` under missing identity is therefore exactly the event the guard names but may approve.
+
+6. The 78 targeted tests pass, but none tests immutable re-declaration, stale unseal leakage, rename-source enforcement, or completeness of the production `SEALED_PATHS`; every individual production tuple member can be deleted because the fixture replaces the tuple. Worse, tests explicitly require unidentified multi-scope commits to pass, so that silent default is locked in as expected behavior. In overlap detection, `pattern in theirs` and the final mutual `fnmatch.fnmatch` arm double-cover the only identical-glob case; either appears deletable with the suite still green.
+
+7. No hardcoded absolute write target exists. Line 99 derives `REPO` using `Path(__file__).resolve().parents[1]`, so declarations and releases operate on the current clone or worktree rather than an operator-specific checkout.
+
+8. Failure direction is mixed. Git-index failure and unreadable declaration JSON fail closed, but `_sha256` uses `except OSError:` followed by `return None`, conflating unreadable with absent; an absent-at-declaration path that later appears but remains unreadable can compare equal and pass. `_scope_files` likewise treats a false `SCOPES.is_dir()` result as no declarations, after which line 593 returns clean.
+
+8b. The disabling default is explicit: `contested_paths` ends identification failure with `return {}`, while line 680 makes every scope decline to judge when more than one live record exists. The silently exempt class is any staged set committed without `CARNOT_AGENT_SCOPE_ID` while multiple declarations are live.
+
+8c. No duration, count, or size metric is consumed. `datetime.now(UTC)` records declaration and judging instants, so there is no pre-work measurement masquerading as completed-work evidence.
+
+9. `declare` writes and overwrites the fixed derived path ops/.agent_scopes/<run-id>.scope.json, and `release` deletes it; this is gitignored operational state rather than a committed historical artifact, although the overwrite is the scope-resealing vulnerability above. The inspected tests redirect these writes to temporary repositories and do not mutate results, OpenSpec, output, tracked ops records, or operator-curated documents.
+
+## COUNTEREXAMPLE
+Set `CARNOT_AGENT_SCOPE_ID=task-7`, declare `--run-id task-7 --scope ops/status.md`, modify and stage `ops/status.md`, weaken `scripts/determination_preservation_lint.py` without staging it, then repeat the identical declaration before `--check`. The second declaration hashes the weakened guard as the expected seal, and the check exits 0.
+
+## MISSED INPUT
+`scripts/artifact_freshness_lint.py` modified only in the working tree after scope declaration; it changes a pre-commit verdict but is absent from `SEALED_PATHS`, so the guard does not inspect it.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The guard cannot enforce “declared before” because the declaration and its seal baseline are freely replaceable after the work. Missing identity, stale global unseals, rename-source loss, and a sample-sized `SEALED_PATHS` then provide independent routes to a silent `return 0`.
+
+
+## substrate_alias_evidence_lint.py
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CONCEPT
+Refuse any staged commit that adds a value to the fabrication gate’s no-LLM allowlist without a test naming it or a dated explanatory acknowledgement.
+
+## FINDINGS
+1. The guard does not compare old and new membership of `NO_LLM_SUBSTRATE_ALIASES`; it guesses widening from added string literals anywhere in the file.
+
+2. Silent non-firing: line 59 recognizes only lowercase quoted values ending exactly in `_no_llm`. A nonconforming value added directly to the tuple produces no aliases, and line 157’s `if not aliases:` followed by `return 0` approves it.
+
+3. A normal constant-based addition also escapes. Line 83 scans only the added line for a literal, so adding an existing constant name to the tuple yields no match. Additionally, line 78 collects matching literals from all of HEAD—not merely the allowlist—and line 84 suppresses an alias previously mentioned in a constant, comment, or unrelated structure.
+
+4. Pattern audit: the suffix regex is a sample, not a definition. Existing allowlist members prove the domain includes omitted forms such as `simulation`, `cached_sota_event_energy_calibration`, `chronological_exact_admitted_factor_learning_no_new_llm`, and `primary_source_metadata_and_local_ledger_synthesis_no_experiment_llm`. It also omits constant references, tuple unpacking, composed expressions, and any syntactically different string that evaluates to an allowlisted value. The paths `scripts/adversarial_verify.py`, `tests/python`, and `ops/substrate_alias_acks.md` are policy definitions; the added-line markers are unified-diff definitions.
+
+5. Scope holes: only the staged diff for `scripts/adversarial_verify.py` is inspected. Unstaged rewrites, a renamed or relocated gate, helper modules supplying allowlist values, runtime mutation, and commits made with hooks disabled are outside its reach; this file contains no secondary coverage for them.
+
+6. Evidence is read from the working tree rather than the staged index. A partially staged commit can stage the alias while leaving an unstaged or untracked test containing it; the guard passes although the commit carries no evidence. An ordinary call to `main()` with no staged gate diff also returns success regardless of working-tree changes.
+
+7. Evidence validation is only substring matching. Line 91’s `if alias in ack_text:` accepts an undated mention, a mention without justification, or the alias occurring inside a longer alias. Line 94’s `if alias in body:` similarly accepts comments, unrelated fixtures, and pre-existing incidental text.
+
+8. Untested or decorative branches: deleting `alias not in added` should leave the suite green because its “detected once” fixture contains the literal only once. The `line.startswith("+++")` exclusion is also decorative under its test because the header contains no quoted alias. The `if not aliases:` branch is behaviorally redundant with the later `if not unsupported:` branch. Tests replace `_run_git` and `collect_evidence_texts`, so their real subprocess-error and filesystem-reading branches can be removed or broken without those tests detecting it.
+
+9. There is no hardcoded absolute filesystem target. `PROJECT_ROOT = Path(__file__).resolve().parents[1]` derives the checkout, and the guard performs no writes.
+
+10. Machinery errors mostly fail closed: `except GitUnavailable as exc:` ends in `return 1`. Evidence-read failures use `except OSError:` with `continue` or `ack_text = ""`, which causes missing evidence and therefore refusal. Unhandled decoding or parsing exceptions also produce a non-zero hook failure rather than a clean result.
+
+11. Default-check disablement exists at `if not aliases:` / `return 0`, with equivalent permission later at `if not unsupported:` / `return 0`. Every allowlist change the recognizer fails to model is therefore approved as “nothing to check.”
+
+12. No duration, count, or size metric is consumed, so the pre-work measurement defect does not apply. Neither the guard nor its present tests write tracked results, specifications, outputs, operations records, or curated documentation.
+
+## COUNTEREXAMPLE
+HEAD contains an existing declaration outside the allowlist:
+
+```python
+REPLAY_SUBSTRATE = "recycled_fixture_replay_no_llm"
 ```
 
-With `k = "auroc_delta"`, this returns false because AUROC is absent from the marker taxonomy and the passing control is wrapped.
+The staged diff widens the tuple without evidence:
 
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The predicate silently rejects valid wrapped evidence and legitimate metric families while accepting nonzero or explicitly undocumented values through coercion, truthiness, and substring coincidence. Both false quarantine and false clearance are therefore possible. Fixing this requires centralized field unwrapping, typed zero validation, boundary-safe metric recognition, and branch-specific tests.
-
-
-## adversarial_verify.py::check_implausible_perfect
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`check_implausible_perfect` claims to `Detect implausibly perfect metrics (TPR/acc=1.0, error=0.0).`
-
-## FINDINGS
-1. **A — silent non-firing:** A common roc_auc field containing 1.0 is ignored because the score list contains `auroc`, which is a different spelling. The function silently returns with no flag, indistinguishable from a genuine pass.
-
-2. **Field extraction:** `if not _is_finite_number(v):` examines the raw value, followed by `vf = float(v)`. A principle-wrapped dict, nested metrics dict, list, or None is never unwrapped; it is either skipped or causes conversion failure. Likewise, `n = d.get("n_samples") or d.get("n_adversarial_examples") or 0` passes wrapped values directly to `int(n)`; conversion failure changes the count to zero and disables the score check. `kl = k.lower()` also assumes string keys, although that agrees with the declared type and normal JSON objects.
-
-3. **Substring-boundary bugs:** `if any(s in kl for s in perfect_score_fields) and vf == 1.0:` does not match metric-name tokens; it matches arbitrary character sequences. The token tpr matches inside postprocessing, and f1 matches inside bf16. Configuration fields such as accuracy_threshold or target_precision are also treated as observed metrics. The corresponding error check, `if any(s in kl for s in perfect_error_fields) and vf == 0.0:`, similarly treats any occurrence of loss, error, or delta as semantic proof that the field is an error metric.
-
-4. **Negation and context blindness:** `if "baseline" not in kl and "zero" not in kl:` exempts names merely containing those strings. A nonbaseline_loss field or a zero_shot_loss field containing 0.0 is therefore suppressed even though neither name declares a zero-valued baseline. Conversely, the function does not inspect free-text verdicts at all, so phrase-level negation is not applicable here.
-
-5. **Threshold defect:** `if n > 0 and n < 1000:` excludes exactly 1,000 samples and every larger sample. The docstring states no such upper boundary, and a perfect score generally becomes more suspicious as the evaluated sample grows, not less. Missing, wrapped, or unrecognized sample counts also become zero and disable the check.
-
-6. **Claim mismatch:** The implementation is narrower than `Detect implausibly perfect metrics (TPR/acc=1.0, error=0.0).` because it only handles top-level bare numeric values, recognized name substrings, and—for score metrics—a recognized positive count below 1,000. It is simultaneously broader because unrelated numeric fields whose names merely contain a listed character sequence are flagged.
-
-7. **Pattern lists narrower than their concepts:** `perfect_score_fields` represents bounded performance metrics whose perfect value is suspicious, but omits roc_auc, specificity, dice, IoU, MCC, and true_positive_rate. `perfect_error_fields` represents zero-is-perfect error metrics, but omits mse, rmse, mae, nll, and failure_rate. The two sample-count reads represent sample-size fields but omit common names such as num_samples, sample_count, num_examples, and n_eval_samples. The baseline and zero substring markers represent declared baselines, but omit control, reference, and null while wrongly accepting negated or compound uses of the existing markers.
-
-8. **Untested-pattern determination:** No tests were supplied, so deletion survival cannot be established honestly. No individual tuple member is logically subsumed by every neighboring member; none can be named as definitely decorative from this excerpt alone.
-
-9. **Absolute paths and tracked-state mutation:** This function contains no paths or filesystem writes. Its only visible mutation is `flags.append(`, so classes D and E are not present in the supplied code; omitted tests cannot be audited.
-
-10. **Default disables checking:** Any unrecognized metric name, wrapped or nested metric, or score with an unavailable count falls through without appending a flag. The caller receives exactly the same unchanged flag list as for a verified non-perfect artifact, so unverified and passed inputs are indistinguishable.
-
-11. **Measurement timing:** The function computes no duration, counter, or measurement of work. Class G is not present.
-
-## COUNTEREXAMPLE
-`{"postprocessing_version": 1.0, "n_samples": 64}` is falsely flagged because `tpr` occurs inside `postprocessing`.
-
-## MISSED INPUT
-`{"roc_auc": 1.0, "n_samples": 400}` receives no flag even though it reports a perfect AUROC on a realistic evaluation set.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The check conflates substring coincidence with metric identity while silently ignoring annotated, nested, aliased, and large-sample metrics. Its unchanged-output default makes those unsupported cases look exactly like genuine passes, which is unsafe for fabrication-detection infrastructure.
-
-
-## adversarial_verify.py::check_sign_anomaly
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`Detect optimization that went the wrong direction.`
-
-## FINDINGS
-1. Silent non-firing: metrics outside the two vocabularies leave both direction booleans false, append no flag, and are indistinguishable from a genuine pass. The real project field pass_rate is one omitted maximization metric.
-2. The prefix pair `k.startswith("initial_")` and `"final_" + ik[len("initial_") :]` represents before/after optimization measurements but omits real conventions such as ece_before/ece_after and pre/post fields.
-3. The minimization list `("energy", "loss", "error", "violation", "regret")` omits entropy, cost, objective, residual, distance, perplexity, NLL, and calibration error. The maximization list `("accuracy", "reward", "score", "lift")` omits pass rate, success rate, AUROC, F1, recall, precision, fitness, and confidence.
-4. Substring matching is unsafe: `m in metric_name.lower()` has no token boundaries. It therefore interprets inaccuracy as accuracy and lossless as loss, producing false positives for honest improvements.
-5. Context is also ambiguous when a metric name matches both lists. Because `if decrease_expected and fv > iv:` is followed by `elif increase_expected and fv < iv:`, either direction can be flagged for a compound metric containing one token from each category.
-6. Field extraction assumes bare scalar numbers. `init_keys = [k for k in d if k.startswith("initial_") and _is_finite_number(d[k])]` and `if fk not in d or not _is_finite_number(d[fk]):` silently discard principle-wrapped dictionaries, lists, and None; this function itself neither unwraps nor reports unsupported shapes.
-7. The strict comparisons are correct: `fv > iv` and `fv < iv` exclude equality, which is not movement in the wrong direction. No off-by-one defect exists here.
-8. The implementation is substantially narrower than its docstring: it detects only top-level, finite, initial/final pairs whose names happen to contain one of nine tokens. Unknown metrics fail open without an “unrecognized direction” result.
-9. The rule is behaviorally untested. With the entire function disabled, all 432 dedicated adversarial-verifier behavioral tests passed; the command failed only on unrelated coverage-policy and memory-leak teardown checks. Consequently every prefix, token, and direction branch is deletable without a relevant assertion failing.
-10. No free-text verdict scanning, absolute path, filesystem write, tracked-artifact mutation, or measurement computation occurs here. Classes D, E, and G do not apply.
-
-## COUNTEREXAMPLE
-{"initial_inaccuracy": 0.20, "final_inaccuracy": 0.10}
-
-This honest reduction in inaccuracy is falsely flagged as a maximization failure because “accuracy” occurs inside “inaccuracy.”
-
-## MISSED INPUT
-{"initial_pass_rate": 0.80, "final_pass_rate": 0.60}
-
-Pass rate is a real project metric that should increase, but neither vocabulary recognizes it, so the regression produces no flag.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The token lists are simultaneously incomplete and semantically unsafe: unknown objectives silently pass while longer words containing a listed token can be assigned the wrong direction. The broad claim `Detect optimization that went the wrong direction.` requires explicit objective-direction metadata, supported-shape validation, and fail-visible handling for unrecognized metrics.
-
-
-## adversarial_verify.py::_has_compute_bound_marker
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`Walk dict for any compute-bound marker string.` claims that the helper detects compute-bound marker text anywhere in an artifact.
-
-## FINDINGS
-1. Silent non-firing (A/F): results/experiment_746_dualgpu_eorm_jepa_retrain.json records two GPUs, cuda:0 and cuda:1, and 1.73 seconds for retraining, yet `_has_compute_bound_marker` returns false, the duration floor is absent, and the duration check emits no flag. An unknown compute vocabulary is therefore indistinguishable from a genuine pass.
-2. Field extraction (1): there is no individual field read. `text = json.dumps(d)` accepts JSON wrappers, lists, and nulls, but blindly scans annotation principles, keys, historical receipts, and values alike instead of interpreting field semantics.
-3. Substring boundaries (2): `return any(m in text for m in COMPUTE_BOUND_MARKERS)` has no token boundaries. The marker torch therefore matches the unrelated word torchlight; DualGPURunner matches MockDualGPURunnerFactory; GGUF matches NON_GGUF.
-4. Negation blindness (3): because the entire serialization is searched, statements that torch.cuda was not invoked, correctly avoided, or merely checked for still count as positive compute evidence.
-5. Narrow taxonomy (B): `COMPUTE_BOUND_MARKERS` stands in for evidence of real hardware/model computation, but omits ordinary members including cuda:0, cuda:1, CUDA, live_gpu, vLLM, llama-server, and generic GPU device declarations. Matching is also case-sensitive.
-6. Claim mismatch (4/5): there is no numeric threshold or off-by-one comparison here. The implementation is both narrower than the claim because it misses common and case-varied markers, and broader because it matches substrings, keys, annotations, and negated text rather than actual compute declarations.
-7. Untested/decorative rule (C): the torch.cuda marker is behaviorally deletable because every occurrence already contains the broader torch marker. No behavioral test can distinguish its presence; deleting it leaves the predicate unchanged.
-8. Side effects (D/E/G): none. The function contains no path computation, writes, fixed artifact target, duration threshold, counter, or measurement timing.
-
-## COUNTEREXAMPLE
-{"honest_verdict":"complete: CPU-only policy audit; torch.cuda was explicitly not invoked","methodology":{"principle":"Confirm torch.cuda is not used","value":"static JSON inspection"},"duration_s":0.25}
-
-This honest CPU-only artifact is classified as compute-bound and can receive a 60-second duration flag.
-
-## MISSED INPUT
-results/experiment_746_dualgpu_eorm_jepa_retrain.json: {"honest_verdict":"dualgpu_retrain_validated","duration_s":1.73,"n_gpus_detected":2,"eorm_device":"cuda:0","jepa_device":"cuda:1"}
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Whole-object serialization plus an unscoped, case-sensitive substring list produces both negation-driven false positives and ordinary CUDA/GPU false negatives. The real dual-GPU retraining artifact proves that `return any(m in text for m in COMPUTE_BOUND_MARKERS)` can silently disable downstream duration enforcement. Detection must become schema-aware and context-sensitive, with explicit handling for declarations, negation, annotations, and unknown compute substrates.
-
-
-## adversarial_verify.py::_inference_substrate_text
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`Return the top-level declared substrate as a stripped string.`
-
-## FINDINGS
-1. Silent non-firing: `if isinstance(value, dict) and "value" in value:` mistakes any structured substrate containing a value key for a principle wrapper. It discards every sibling field—including workload-category metadata—and returns a plausible scalar, so callers cannot distinguish corrupted extraction from a genuine pass.
-2. Field-shape handling is unsafe. `value = value.get("value")` unwraps based only on one key, while `return str(value or "").strip()` converts lists and unrecognized dictionaries to Python representations and collapses valid falsey values such as zero to the same empty string used for a missing declaration.
-3. No free-text substring, negation, numeric-threshold, or boundary checks exist here. `"value" in value` is exact dictionary-key membership, not substring matching.
-4. The implementation differs from its claim: it does not reliably return the complete top-level declaration. For structured mappings it may return only one arbitrarily named member.
-5. There are no hardcoded token lists, prefixes, or regex alternations. The wrapper recognizer nevertheless omits the documented principle marker that would distinguish an annotation wrapper from an ordinary structured value.
-6. The test suite was not provided, so deletion survival cannot be established. The unwrapping branch is not logically double-covered by another branch.
-7. There are no paths, writes, recognizer defaults, counters, durations, or measured operations here; classes D, E, F, and G do not apply.
-
-## COUNTEREXAMPLE
-```json
-{
-  "inference_substrate": {
-    "kind": "embedding_only",
-    "provider": "Azure OpenAI",
-    "value": "prod-eastus-17"
-  }
-}
+```diff
+ NO_LLM_SUBSTRATE_ALIASES = (
++    REPLAY_SUBSTRATE,
+ )
 ```
-This returns only `prod-eastus-17`, silently discarding the embedding-only classification that a duration-floor recognizer needs.
+
+The added line has no quoted literal, so line 83 finds nothing and the guard exits successfully.
 
 ## MISSED INPUT
-`{"inference_substrate":{"kind":"embedding_only","provider":"Azure OpenAI","value":"prod-eastus-17"}}`
+A staged, previously absent allowlist member with no evidence:
+
+```diff
+ NO_LLM_SUBSTRATE_ALIASES = (
++    "simulation",
+ )
+```
+
+This is an actual value shape already present in the project’s allowlist, but it does not end in `_no_llm` and therefore cannot fire the guard.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-`if isinstance(value, dict) and "value" in value:` uses an ambiguous payload key as the entire wrapper discriminator. Combined with `return str(value or "").strip()`, malformed or structured declarations degrade into plausible text or absence instead of being preserved or rejected, allowing downstream checks to remain silently inactive.
+The implementation recognizes textual naming conventions rather than semantic changes to allowlist membership. Normal constant references and already-existing non-suffix values receive a green result, while unstaged substring evidence can falsely authenticate a staged commit. The guard should compare resolved allowlist values between HEAD and the staged index and validate evidence from that same index.
 
+
+## determination_preservation_lint.py
+
+(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)

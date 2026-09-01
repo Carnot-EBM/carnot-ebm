@@ -1,3 +1,119 @@
+## V598 Planner Refresh - 2026-09-01
+
+This sweep follows terminal milestone `2026.08.597`. Exp6831 reissued the evidence-admissibility
+contract on a valid aggregation substrate. Exp6832 built the exact operational-obligation fixture.
+Exp6833 then produced 900 authentic rows from all three mandated local GGUF families. Only 65 rows
+parsed and only 37 passed every obligation. All 65 parseable rows came from Qwen3.6. Both Gemma
+families produced zero parseable rows, and Qwen3.6 produced no parseable rows at obligation counts
+4, 6, or 8. Exp6834 found that the observed 395 of 18,900 target cells left `2^18505` compatible
+policy completions. Its identifiability disposition was `not_separated`, and its honest verdict was
+`complete_null_operational_field_preservation_not_identified`. These results establish a real
+obligation-saturation corpus, not an identified semantic-collapse claim. V598 must separate omission,
+transport, and compatibility evidence without reopening the retired generated-answer retry lane.
+
+### Findings selected for V598
+
+- **LLM Judges Verify Presence, Not Absence: Omission Blindness in AI Clinical Notes and What
+  Recovers It** - arXiv:2608.31016, https://arxiv.org/abs/2608.31016; submitted 2026-08-31. Across
+  eight judge designs, the paper reports much weaker paired discrimination for omissions than for
+  added or altered content. It recovers omission detection by first listing established facts and
+  then checking the output against each fact. Carnot hook: compile every operational obligation
+  into an immutable atom ledger and check each expected atom independently. The exact ledger is
+  release authority. An LLM judge is not.
+- **HSRM: Hidden-State Reward Models for Test-Time Verification** - arXiv:2608.30841,
+  https://arxiv.org/abs/2608.30841; submitted 2026-08-31. HSRM reads frozen-generator states at
+  reasoning-step boundaries and trains a small ranker from outcome labels. It reports parity or
+  better than a larger text energy verifier in 15 of 16 settings. Carnot hook: test an output-free,
+  fixed-sequence compatibility margin over the V597 obligation atoms. The local llama.cpp path
+  exposes only final-token or final-layer vectors and token scores, not HSRM's intermediate states.
+  Therefore V598 must not claim HSRM parity. It must use equal-token candidates, label swaps,
+  identifier controls, and a cold shortcut audit. Prior final-layer probes and paired embeddings
+  remain null or disqualified evidence.
+- **S3Gym: Can LLMs Turn Self-Testing and Self-Judging into Self-Improvement?** -
+  arXiv:2608.31100, https://arxiv.org/abs/2608.31100; submitted 2026-08-31. S3Gym separates
+  permissive exploration from strict held-out evaluation in executable environments. It finds that
+  summary memory helps only when experience compresses into reusable strategy, while raw history is
+  better for state-contingent tasks and parameter training can cause severe negative transfer.
+  Carnot hook: keep model weights frozen. Compare bounded exact-admitted memory with read-only and
+  no-memory controls. Credit self-learning only through later executable actions, held-family gain,
+  retention, and rollback.
+- **SUN: Persistent Programs For Language-Grounded Control-to-Learning-to-Real Policies** -
+  arXiv:2608.31167, https://arxiv.org/abs/2608.31167; submitted 2026-08-31. SUN defines task
+  semantics once in a typed executable and compiles them into aligned costs, satisfaction
+  predicates, rewards, transition guards, and diagnostics. Carnot hook: compile the same immutable
+  operational-obligation atoms into an exact energy, satisfaction checker, memory-admission guard,
+  ARC shadow guard, and audit diagnostic. Verify semantic equivalence across all compiled views.
+  Keep exact predicates above learned or model-derived scores.
+- **Reconciling Process Supervision with Outcome-Based Credit in Agentic Policy Optimization** -
+  arXiv:2608.31077, https://arxiv.org/abs/2608.31077; submitted 2026-08-31. TASPO keeps verified
+  trajectory outcomes as the update direction while redistributing credit at executable-action
+  granularity. Carnot hook: the residual-memory learner may use atom compatibility as a proposal
+  signal, but exact later outcomes determine update sign and average dose. Emit one credit row per
+  executable action. Do not train from token-level likelihood shifts alone.
+- **When Errors Become Memories: Causal Pathway Tracing in Multi-Turn Memory-Augmented LLMs** -
+  arXiv:2608.30198, https://arxiv.org/abs/2608.30198; submitted 2026-08-31. The paper separates
+  internal memory-update and external feedback pathways and finds that memory-update errors persist
+  longer. Its interventions expose latent errors after natural responses appear repaired. Carnot
+  hook: add memory-write deletion, question-only repair, joint repair, delayed probe, and tombstone
+  attacks to the sealed residual-memory audit.
+- **Overcoming critical slowing down in frustrated spin systems by learned multiscale sampling** -
+  arXiv:2608.31114, https://arxiv.org/abs/2608.31114; submitted 2026-08-31. The paper reports
+  learned wavelet-conditional sampling with logarithmic scale depth on a frustrated soft-spin
+  system, while making accuracy depend on the learned conditional EBM. Carnot hook: retain this as
+  a future sampler reference. It does not justify a V598 FPGA or TSU task because the current gap is
+  verified action and memory evidence, not sampler throughput.
+
+### Requested primary and secondary checks
+
+- **arXiv:** the 2025-2026 sweep covered EBMs for reasoning and verification, neural constraints,
+  Ising methods, hallucination detection, KANs, constrained generation, hardware sampling, and
+  continual learning. The actionable 2026-08-31 delta is atom-first omission checking,
+  output-free verification, typed executable semantics, executable-action credit, and causal
+  memory-path attacks.
+- **OpenReview:** current ICLR, ICML, NeurIPS, and TMLR records continue to support incremental
+  verification, automata-guided constraints, and verifier-assisted search. HSRM is the stronger
+  fresh local design lead. No OpenReview record supplies a matching-base checkpoint for Carnot's
+  three mandated GGUF families or replaces deterministic acceptance authority.
+- **Hugging Face Papers:** the direct pages for the newest 2026-08-31 arXiv records were not yet
+  indexed during this sweep. The current daily feed adds no reproducible matching-base verifier.
+  Carnot uses the primary arXiv records and invents no Hugging Face popularity claim.
+- **Semantic Scholar citation check:** the public API returned HTTP 429 for both EBT `2507.02092`
+  and ARM-EBM `2512.15605`. Retain the dated V596 receipts of 35 and eight visible citing records.
+  Do not present those stale counts as a new measurement. No newly verified citation supplied an
+  open local general verifier.
+- **GitHub discovery:** the current Python trending page and EBM, Ising, constraint-solver, and KAN
+  topic pages exposed no maintained dependency that supersedes Carnot's pinned llama.cpp, exact
+  checker, transactional store, or sampler stack. The newest selected papers did not expose a
+  paper-owned repository that should be vendored for V598. Add no dependency for novelty alone.
+- **Extropic:** the first-party writing page still lists the 2026-08-03 Torx, Thermalizers, and Z1
+  update as current: https://extropic.ai/writing/from-one-to-one-billion. Z1 has 2027 early-access
+  targets. V598 makes no TSU execution, latency, power, throughput, or availability claim.
+- **Logical Intelligence:** the current Kona 1.0 page still presents a non-generative constraint
+  layer beneath LLM interfaces: https://logicalintelligence.com/kona-ebms-energy-based-models. It
+  exposes no public weights, training recipe, or reproducible local runner. Kona remains an
+  architecture comparator.
+- **KAN and attached hardware:** the new KAN records do not close the immediate obligation,
+  continuous-learning, or live-agent evidence gaps. KV260 and GateMate have terminal receipts.
+  PolarFire remains opportunistic. No physical board belongs on V598's blocking path.
+
+### V598 planning impact
+
+- Freeze V597 as a transport-and-support result. Do not rerun generated finite identifiers,
+  grammar constraints, parser retries, stop tuning, or other retired answer-transport variants.
+- Build an exact atom ledger and a SUN-style typed executable contract. Test semantic equivalence
+  across energy, predicate, update-guard, ARC-shadow, and diagnostic views.
+- Measure one output-free, fixed-sequence compatibility stream on all three mandated GGUF families.
+  Use scalar margins and explicit shortcut controls. A positive learned or model-derived margin is
+  oracle-distinct; exact labels remain evaluation authority.
+- Execute continuous self-learning as a small deterministic kernel and two durable chronological
+  shards. Assign credit to executable actions from later exact outcomes. Keep weights frozen and
+  audit negative transfer, poison, causal pathways, restart, and rollback.
+- Inventory the already-running live ARC supervisor batch before any new live call. Reuse separated
+  tool-loop-off and tool-loop-on rows. Audit supervisor and tool-gap effects without pooling changed
+  configurations or claiming a level solve.
+- End with an ungated cold disposition. Missing live rows, null compatibility, harmful memory, and
+  disqualified shortcuts remain terminal evidence rather than cascade failures.
+
 ## V597 Planner Refresh - 2026-08-31
 
 This sweep follows terminal milestone `2026.08.596`. Exp6824 independently replayed the
