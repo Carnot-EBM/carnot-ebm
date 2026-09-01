@@ -2466,3 +2466,125 @@ rather than the presence of a positive utility effect.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6831 and SCENARIO-CONSTRAINT-6831-* | Implemented: fresh evidence reducer, task-owned wrapper, and terminal artifact contract. | Implemented: 43 focused tests pass and the 482-statement reducer has 100% scoped coverage. |
+
+## REQ-CONSTRAINT-6832: Frozen Operational-Obligation Saturation Fixture
+
+The system SHALL build a source-free deterministic fixture at simultaneous
+obligation counts 1, 2, 4, 6, and 8. Each count SHALL contain exactly 30
+scenarios. Fifteen scenarios SHALL use independent obligations. Fifteen
+scenarios SHALL use interacting obligations. At count 1, an interacting case
+means that the obligation fields interact with candidate or state data. Counts
+above 1 SHALL also include interactions between obligations.
+
+Each scenario SHALL use the Exp6811 prerequisite, authority, fallback,
+execution-consequence, and priority fields. It SHALL have immutable scenario,
+template, permutation, obligation, action, and exact legal-action identifiers.
+Every scenario SHALL have one unique exact action set. The fixture SHALL cover
+constructive actions, safe no-op actions, and intentional impossibility with a
+fail-closed action.
+
+Each semantic template SHALL have three deterministic prompt permutations.
+Every permutation SHALL preserve the same source information and exact action
+set. Each permutation SHALL have direct typed-handoff and compressed-prose
+arms. The arms SHALL use the same output schema. Prompts SHALL contain no
+answer key, hidden outcome, dependency label, checker term, or order cue.
+
+The fixture SHALL parse exact JSON without extraction or repair. It SHALL
+provide deterministic prerequisite, authority, fallback,
+execution-consequence, and priority checks for each obligation. It SHALL also
+provide one joint all-obligation check. The producer SHALL validate these
+checks against legal, violation, omission, conflict, and reorder candidates
+for every scenario.
+
+Before generation, the producer SHALL require `v597_contract_ready=true` in
+the frozen Exp6831 artifact. It SHALL require the exact frozen Exp6811 file
+hash, schema, source hashes, obligation schema, automaton hash, and canonical
+obligation-source hash. It SHALL require a clean worktree for the consumed
+Exp6811 and Exp6831 source artifacts and the Exp6811 automaton source. A failed
+check SHALL write
+`complete_blocked_operational_obligation_saturation_fixture`. The blocked
+artifact SHALL name the failed check, expected value, and observed value in
+`gate_check_summary`, then stop before scenario generation.
+
+The terminal artifact SHALL include `field_principles`,
+`preconditions_checked`, `inference_substrate`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, `source_artifact_hashes`, `obligation_schema`,
+`obligation_counts`, `scenario_manifest`, `prompt_arm_manifest`, `scenarios`,
+`checker_manifest`, `checker_mutation_results`, `leakage_audit`,
+`legal_action_headroom`, `operational_saturation_fixture_ready`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. One principle SHALL exist for every top-level field. The
+reproducibility checksum SHALL bind the schema, owned code, scenarios, and
+output while excluding measured duration. The inference substrate SHALL state
+that fixture generation uses deterministic CPU code and no LLM.
+
+### SCENARIO-CONSTRAINT-6832-PRECONDITIONS: Source Drift Stops Generation
+
+Given a missing V597 gate, changed Exp6811 identity, or dirty consumed source,
+When Exp6832 checks its inputs,
+Then it SHALL write the complete blocked artifact with the exact failed gate
+and SHALL emit no scenarios or checker results.
+
+### SCENARIO-CONSTRAINT-6832-BALANCE: Counts And Dependency Cells Are Exact
+
+Given obligation counts 1, 2, 4, 6, and 8,
+When Exp6832 freezes its scenario manifest,
+Then each count SHALL contain 30 identities with a 15/15 split between
+independent and interacting obligations.
+
+### SCENARIO-CONSTRAINT-6832-TYPED-SEMANTICS: Every Field Has Exact Meaning
+
+Given one frozen scenario,
+When its action set is derived,
+Then every obligation SHALL consume all five typed contract fields and SHALL
+resolve to a constructive, no-op, preempted fallback, or fail-closed action.
+
+### SCENARIO-CONSTRAINT-6832-PERMUTATION: Order Does Not Change Truth
+
+Given the three permutations of one semantic template,
+When prompts and candidate responses are reordered,
+Then both prompt arms SHALL retain equal information and all check results and
+the exact action set SHALL remain unchanged.
+
+### SCENARIO-CONSTRAINT-6832-UNIQUE-SOLUTION: Exact Sets Have No Ambiguity
+
+Given every satisfiable, intentionally impossible, or already-safe scenario,
+When the deterministic resolver evaluates its candidates,
+Then exactly one action set SHALL pass the joint check and it SHALL be nonempty.
+
+### SCENARIO-CONSTRAINT-6832-SAFE-FAIL-CLOSED: Boundary Cases Stay Useful
+
+Given an already-safe scenario or an intentionally impossible scenario,
+When the exact resolver runs,
+Then the safe case SHALL select only its no-op fallbacks and the impossible
+case SHALL select only its scenario fail-closed action.
+
+### SCENARIO-CONSTRAINT-6832-CHECKERS: Field And Joint Checks Reject Mutations
+
+Given legal, violation, omission, conflict, and reorder candidates for every
+scenario,
+When the field and joint checks run,
+Then legal and reorder candidates SHALL pass and the other candidates SHALL
+fail without repair.
+
+### SCENARIO-CONSTRAINT-6832-LEAKAGE: Prompts Expose Only Task Information
+
+Given both prompt arms for every permutation,
+When the leakage audit scans their bytes,
+Then no prompt SHALL expose an exact action set, fixture-only label, hidden
+outcome, answer key, checker term, or order cue.
+
+### SCENARIO-CONSTRAINT-6832-READINESS: Fixture Quality Controls Readiness
+
+Given all frozen scenarios and checker mutations,
+When Exp6832 computes readiness,
+Then `operational_saturation_fixture_ready` SHALL depend only on source gates,
+exact count balance, equal information, leakage, checker completeness,
+nonzero required headroom, and stable hashes. It SHALL not depend on model
+output or an expected model result.
+
+## Implementation Status (REQ-CONSTRAINT-6832)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6832 and SCENARIO-CONSTRAINT-6832-* | Implemented: deterministic CPU fixture producer and task-owned wrapper. | Implemented: focused tests cover schema, balance, semantics, permutations, exact sets, safe and impossible cases, checks, leakage, readiness, and blocked gates. |
