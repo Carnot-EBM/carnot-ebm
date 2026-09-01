@@ -17004,3 +17004,4 @@ The l |
 | 2026-09-01 11:28 UTC | ARC supervisor executable-action outcome-credit au | OK | 112 passed, 1 warning in 14.41s |
 | 2026-09-01 11:54 UTC | ARC tool-gap transport and causal-support audit | OK | 96 passed, 1 warning in 10.73s |
 | 2026-09-01 12:27 UTC | Typed obligation shadow monitor at the canonical A | OK | 151 passed, 1 warning in 30.36s |
+| 2026-09-01 13:02 UTC | V598 independent adversarial capstone and next-ste | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6847_v598_in |
