@@ -302,6 +302,42 @@ will refuse it.
 · commits `1c9fdb53f2`, `48b9d444d3` · CLAUDE.md "Pre-Launch Preconditions
 Discipline", "Test-Run Record Integrity Discipline".
 
+
+**APPEND 2026-09-01: agents ARE running it, because the docs tell them to, and it costs hours.**
+
+Observed live 06:00-08:00Z. Two consecutive conductor children each ran the full suite: one
+reached 25% in about an hour, the next 59% in 1h18m. Roughly 2.5 hours of conductor slot spent on
+a suite this very entry records as RED, with the agent narrating "unrelated failures" throughout.
+
+**No task asked for it.** Of the 13 prompts in milestone 2026.09.598, zero mention a full-suite
+pytest; the single test-command mention is a scoped path
+(`tests/python/test_arc_trajectory_supervisor`). The agent nonetheless called it "the required
+command", and it was not wrong to think so — CLAUDE.md's Build/Test/Deploy section instructs
+exactly `pytest tests/python --cov=python/carnot --cov-report=term-missing --cov-fail-under=100`.
+
+**So the two layers of our own instructions contradict each other.** The harness deliberately
+refuses this command — `run_tests(full=False)` at every call site, two of them commented "full
+suite hangs", as recorded above. The agent-facing documentation still prescribes it. An agent
+following the project's written verify step does the exact thing the harness avoids as unsafe.
+
+**The documented command is worse than unusable.** It carries `--cov`, and pytest under coverage
+aborts on this repository (exit 134, JAX/absl double-init — the `--no-cov` workaround is already
+project knowledge). So the command as written would die before finishing, and the command as
+actually run takes hours and cannot pass. This agent dropped `--cov` on its own initiative, which
+is the only reason it got as far as 59%.
+
+**Base rate, stated honestly.** 100 full-suite narration lines in 24 hours, all inside three
+consecutive hours. This is a concentrated current episode, NOT established as chronic. Do not
+read it as a daily cost until more days are counted.
+
+**What it would take to fix, none of it done here.** CLAUDE.md is operator-curated, so the
+reconciliation is an operator decision, not an autonomous edit. The candidate resolutions: point
+the documented verify step at the scoped subset the harness actually runs; or drop `--cov` from
+the documented command so it at least terminates; or state plainly in the docs that the full
+suite is known-RED and is not a gate. Any of the three removes the contradiction. Choosing among
+them is the operator's call.
+
+
 ### NEW 2026-08-18: the scored induce budget cannot be spent inside the scored induce timeout, and concurrency widens the gap
 
 **The arithmetic.** `scripts/kaggle/submission_kernel/main.py:589-590` sets
