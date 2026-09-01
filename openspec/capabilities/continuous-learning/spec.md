@@ -9536,3 +9536,125 @@ receipts.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-6841 and SCENARIO-CL-6841-* | Planned: `python/carnot/experiment_6841_residual_memory_delayed_correction_shard_b.py`; `scripts/experiments/experiment_6841_residual_memory_delayed_correction_shard_b.py`; `results/experiment_6841_residual_memory_delayed_correction_shard_b.json`. | Planned: focused shard, delayed-correction, rollback, coverage, lint, OpenSpec, adversarial, artifact, verdict-row, and root-clutter checks. |
+
+## REQ-CL-6842: Sealed Memory Pathway Portability Audit
+
+Exp6842 SHALL run a deterministic CPU sealed audit over the terminal Exp6840
+and Exp6841 shard artifacts. It SHALL invoke no LLM, import no producer
+aggregate, mutate no model weights, and recompute source-row effects from the
+checked-in shard rows.
+
+Before any reduction, Exp6842 SHALL require `csl_shard_a_complete_score=1`,
+`csl_shard_b_complete_score=1`, stable source hashes, disjoint source
+identities, complete arm rows, and exact outcome receipts. A failed check SHALL
+write status `complete_blocked_sealed_memory_audit`, emit no audit rows, set
+`sealed_csl_audit_complete_score=0.0`, set
+`continuous_self_learning_ready_score=0.0`, and record each failed check and
+observed value in `gate_check_summary`.
+
+For every source row, Exp6842 SHALL recompute paired effects by family, order,
+arm, and seed against the matched no-memory row. The audit SHALL separate wins,
+ties, losses, no-headroom rows, and uncertainty before any pooled summary. A
+losing family or order SHALL remain visible in `fresh_reduction_results`,
+`negative_transfer_results`, and `leave_one_family_out_results`.
+
+Exp6842 SHALL run deletion, substitution, reorder, poison, stale-credit, latent
+error, restart, rollback, capacity, and leave-one-family-out checks. Memory
+deletion SHALL remove action dose. Substitution SHALL invert the action
+direction. Reorder SHALL prove order identity changes while aggregate counts
+stay stable. Poison and stale-credit injections SHALL be bounded and SHALL NOT
+improve readiness. Latent-error rows SHALL record whether joint errors persist,
+repair, expire, or roll back. Restarted persisted state SHALL match clean replay
+bytes, and rollback SHALL restore the parent state hash. Leave-one-family-out
+rows SHALL run for every eligible family.
+
+The audit SHALL set `sealed_csl_audit_complete_score=1.0` only when every
+precondition, attack, durability check, capacity check, and leave-one-family-out
+split is complete. It SHALL set
+`continuous_self_learning_ready_score=1.0` only when held-future benefit,
+durability, portability, calibrated dose, and leakage gates all pass. Null or
+harmful memory evidence SHALL produce `verdict_class="null"` with a terminal
+`complete_` honest verdict instead of a positive readiness score.
+
+The artifact SHALL include `schema`, `experiment_id`, `title`, `run_date`,
+`status`, `openspec_requirement_ids`, `replay_commands`, `field_principles`,
+`preconditions_checked`, `inference_substrate`, `duration_s`,
+`continuous_self_learning_task`, `source_artifact_hashes`, `random_seeds`,
+`reproducibility_checksum`, `source_identity_summary`, `rows`,
+`fresh_reduction_results`, `deletion_results`, `substitution_results`, `reorder_results`,
+`poison_results`, `stale_credit_results`, `latent_error_pathways`,
+`restart_durability_results`, `rollback_results`,
+`leave_one_family_out_results`, `negative_transfer_results`,
+`action_dose_calibration`, `capacity_results`,
+`sealed_csl_audit_complete_score`, `continuous_self_learning_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one principle for every
+top-level field. `inference_substrate` SHALL equal
+`deterministic CPU sealed audit`. `continuous_self_learning_task` SHALL be
+true. `verifier_is_oracle` SHALL be false. `verdict_class` SHALL use only
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL be terminal, row-supported, and start with
+`complete_`.
+
+### SCENARIO-CL-6842-PRECONDITIONS: Incomplete Shards Block The Audit
+
+Given either shard score, source hash, identity-disjointness check, arm-row
+coverage, or exact outcome receipt check fails,
+When Exp6842 checks its sealed inputs,
+Then it SHALL write `complete_blocked_sealed_memory_audit`
+And `gate_check_summary` SHALL include the failed check and observed value.
+
+### SCENARIO-CL-6842-FRESH-REDUCTION: Effects Recompute From Rows
+
+Given complete Exp6840 and Exp6841 source rows,
+When Exp6842 recomputes paired effects,
+Then every source row SHALL have a matched no-memory baseline by shard, source
+event, and seed
+And results SHALL be grouped by family, order, arm, and seed with wins, ties,
+losses, no-headroom rows, and uncertainty.
+
+### SCENARIO-CL-6842-SHARD-IDENTITY: Source Shards Stay Independent
+
+Given Exp6840 and Exp6841 were produced as independent chronological shards,
+When Exp6842 reads their source identities,
+Then their source event identities SHALL be disjoint
+And no reducer row SHALL import a pooled producer aggregate.
+
+### SCENARIO-CL-6842-ATTACKS: Memory Edits Do Not Create Readiness
+
+Given baseline audit rows,
+When deletion, substitution, reorder, poison, stale-credit, latent-error,
+capacity, and rollback attacks run,
+Then every attack SHALL emit row-supported results
+And bounded poison or stale credit SHALL fail the readiness gate.
+
+### SCENARIO-CL-6842-DURABILITY: Restart And Rollback Preserve Bytes
+
+Given a persisted sealed audit state,
+When Exp6842 restarts from that state and compares with clean replay,
+Then the state hash SHALL match clean replay
+And rollback SHALL restore the recorded parent hash.
+
+### SCENARIO-CL-6842-PORTABILITY: Leave-One-Family-Out Does Not Hide Harm
+
+Given every eligible family in both shards,
+When Exp6842 leaves one family out,
+Then each split SHALL report held-future benefit, negative transfer, and sample
+counts separately
+And a harmful or nonportable split SHALL force
+`continuous_self_learning_ready_score=0.0`.
+
+### SCENARIO-CL-6842-READY: Readiness Is Fully Conjunctive
+
+Given all audit attacks complete but any held-future, durability, portability,
+dose-calibration, or leakage gate fails,
+When Exp6842 computes the terminal verdict,
+Then `sealed_csl_audit_complete_score` SHALL be `1.0`
+And `continuous_self_learning_ready_score` SHALL be `0.0`
+And `honest_verdict` SHALL start with `complete_`.
+
+## Implementation Status (REQ-CL-6842)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-6842 and SCENARIO-CL-6842-* | Planned: `python/carnot/experiment_6842_sealed_memory_pathway_portability_audit.py`; `scripts/experiments/experiment_6842_sealed_memory_pathway_portability_audit.py`; `results/experiment_6842_sealed_memory_pathway_portability_audit.json`. | Planned: focused sealed audit, coverage, lint, OpenSpec, adversarial, artifact, verdict-row, and root-clutter checks. |
