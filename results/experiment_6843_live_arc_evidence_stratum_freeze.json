@@ -1,0 +1,2079 @@
+{
+  "arc_inventory_complete_score": 1,
+  "configuration_strata": {
+    "count": 13,
+    "strata": [
+      "unknown|S_llmon|399|ar25|unknown|applied",
+      "unknown|S_llmon|399|tu93|unknown|applied",
+      "unsloth/Qwen3.8-27B-GGUF|e3|2500|cd82|off_or_unobserved|unobserved",
+      "unsloth/Qwen3.8-27B-GGUF|e3|2500|lp85|off_or_unobserved|unobserved",
+      "unsloth/Qwen3.8-27B-GGUF|e3|2500|ls20|off_or_unobserved|unobserved",
+      "unsloth/Qwen3.8-27B-GGUF|e3|2500|m0r0|selfparse|unobserved",
+      "unsloth/Qwen3.8-27B-GGUF|e3|2500|r11l|off_or_unobserved|unobserved",
+      "unsloth/Qwen3.8-27B-GGUF|e3|2500|sk48|selfparse|unobserved",
+      "unsloth/Qwen3.8-27B-GGUF|e3|2500|sp80|off_or_unobserved|unobserved",
+      "unsloth/Qwen3.8-27B-GGUF|e3|2500|sp80|selfparse|unobserved",
+      "unsloth/Qwen3.8-27B-GGUF|e3|2500|su15|off_or_unobserved|unobserved",
+      "unsloth/Qwen3.8-27B-GGUF|e3|2500|su15|selfparse|unobserved",
+      "unsloth/Qwen3.8-27B-GGUF|e3|2500|wa30|off_or_unobserved|unobserved"
+    ]
+  },
+  "duration_s": 0.016385155031457543,
+  "experiment_id": "exp6843-live-arc-evidence-stratum-freeze",
+  "field_principles": {
+    "arc_inventory_complete_score": "A complete score means provenance is inventoried, not that ARC was solved.",
+    "configuration_strata": "Distinct model, policy, budget, game, tool, and supervisor strata stay separate.",
+    "duration_s": "Wall time exposes interrupted or skipped execution.",
+    "experiment_id": "The identifier binds the file to REQ-ARC-6843.",
+    "field_principles": "Each top-level field states why an auditor needs it.",
+    "gate_check_summary": "A failed gate names the check, expected value, and observed value.",
+    "honest_verdict": "The terminal complete_ prefix states the evidence boundary.",
+    "incomplete_artifact_manifest": "Partial, missing, and unreadable files are ineligible.",
+    "inference_substrate": "The substrate says this is a read-only inventory, not inference.",
+    "preconditions_checked": "The gates stop source drift before row eligibility is counted.",
+    "process_observations": "Live processes are recorded as observations, not evidence rows.",
+    "reproducibility_checksum": "One digest binds the non-timing inventory content.",
+    "rows": "One row per run and game keeps configurations separated.",
+    "run_date": "The date fixes this execution-time inventory.",
+    "schema": "The schema lets downstream readers reject incompatible inventories.",
+    "solve_claim": "False prevents an inventory from becoming a game solve claim.",
+    "source_artifact_hashes": "File hashes bind every terminal or missing source observation.",
+    "status": "The status separates a complete inventory from a blocked gate.",
+    "supervisor_cells_ready_score": "A count-derived readiness flag makes no effect claim.",
+    "supervisor_eligible_cells": "The exact supervisor receipt count drives readiness only.",
+    "terminal_artifact_manifest": "Terminal files are named without trusting their claims.",
+    "tool_gap_cells_ready_score": "A count-derived readiness flag makes no effect claim.",
+    "tool_gap_eligible_cells": "The exact tool-gap receipt count drives readiness only.",
+    "unmatched_cell_reasons": "Ineligible cells remain visible with a reason.",
+    "verdict_class": "A closed verdict class prevents unsupported positives.",
+    "verifier_is_oracle": "False states that this audit does not adjudicate solutions."
+  },
+  "gate_check_summary": {
+    "expected": "all gates pass",
+    "failed_check": null,
+    "observed": "all gates pass",
+    "passed": true
+  },
+  "honest_verdict": "complete_live_arc_inventory_terminal_evidence_only_no_solve_claim",
+  "incomplete_artifact_manifest": [
+    {
+      "artifact_family": "tool_gap_artifact",
+      "exists": false,
+      "file_sha256": null,
+      "name": "tool_gap_ledger_missing",
+      "path": "ops/arc_tool_gap_ledger.json",
+      "producer_configuration": {
+        "honest_verdict": null,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": "FileNotFoundError",
+      "size_bytes": null,
+      "terminal_class": "missing_artifact"
+    },
+    {
+      "artifact_family": "tool_gap_artifact",
+      "exists": false,
+      "file_sha256": null,
+      "name": "upstream_exp6820_missing",
+      "path": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
+      "producer_configuration": {
+        "honest_verdict": null,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": "FileNotFoundError",
+      "size_bytes": null,
+      "terminal_class": "missing_artifact"
+    }
+  ],
+  "inference_substrate": "read_only_live_artifact_inventory",
+  "preconditions_checked": [
+    {
+      "check": "v598_evidence_root_ready_score",
+      "expected": 1,
+      "observed": 1,
+      "passed": true
+    },
+    {
+      "check": "arc_registry_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "ops_status_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "canonical_path_source_identity",
+      "expected": {
+        "agent_source_hash": "sha256:1106d26e7d0bc8a2c1e21e62e715774c09e20194773d44c8258c7c3349e38adf",
+        "agent_source_readable": true,
+        "canonical_doc_names_entrypoint": true,
+        "canonical_doc_readable": true,
+        "supervisor_source_hash": "sha256:6ed5bb95a0a194eb7bf2eb51dc8008aa100088b9e8e7b0386250d7943b27e123",
+        "supervisor_source_readable": true
+      },
+      "observed": {
+        "agent_source_hash": "sha256:1106d26e7d0bc8a2c1e21e62e715774c09e20194773d44c8258c7c3349e38adf",
+        "agent_source_readable": true,
+        "canonical_doc_names_entrypoint": true,
+        "canonical_doc_readable": true,
+        "supervisor_source_hash": "sha256:6ed5bb95a0a194eb7bf2eb51dc8008aa100088b9e8e7b0386250d7943b27e123",
+        "supervisor_source_readable": true
+      },
+      "passed": true
+    }
+  ],
+  "process_observations": [
+    {
+      "command": ".venv/bin/python /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/ad0c053d-41df-446e-99d6-d71368a47030/scratchpad/supervised_run.py /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/ad0c053d-41df-446e-99d6-d71368a47030/scratchpad/supervised_receipt.json",
+      "elapsed": "10:40:44",
+      "observation_role": "in_flight_process",
+      "observed_configuration": {
+        "budget": null,
+        "games": [],
+        "model_id": null,
+        "policy": null,
+        "supervisor_state": "unobserved",
+        "tool_loop_state": "off_or_unobserved"
+      },
+      "observed_env_keys": [],
+      "pid": 374980,
+      "ppid": 1,
+      "read_only_commands": [
+        "ps -eo pid,ppid,lstart,stat,etime,args --sort=pid"
+      ],
+      "start_time": "Mon Aug 31 20:01:11 2026",
+      "state": "SNl"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_leaderboard_eval.py --policy e3 --only ls20,wa30 --budget 2500",
+      "elapsed": "10:40:44",
+      "observation_role": "in_flight_process",
+      "observed_configuration": {
+        "budget": 2500,
+        "games": [
+          "ls20",
+          "wa30"
+        ],
+        "model_id": null,
+        "policy": "e3",
+        "supervisor_state": "applied",
+        "tool_loop_state": "off_or_unobserved"
+      },
+      "observed_env_keys": [
+        "CARNOT_ARC_GENERATOR_CUDA_GPU",
+        "CARNOT_ARC_INDUCE_N_CTX",
+        "CARNOT_ARC_TRAJECTORY_SUPERVISOR",
+        "CUDA_VISIBLE_DEVICES"
+      ],
+      "pid": 375005,
+      "ppid": 374980,
+      "read_only_commands": [
+        "ps -eo pid,ppid,lstart,stat,etime,args --sort=pid"
+      ],
+      "start_time": "Mon Aug 31 20:01:12 2026",
+      "state": "SNl"
+    },
+    {
+      "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server -m /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf -ngl 999 -c 49152 --port 8919 --host 127.0.0.1 --cache-type-k q8_0 --cache-type-v q8_0 -ot blk\\.(0)\\.ffn_(gate|up|down)\\.weight=CPU",
+      "elapsed": "10:40:30",
+      "observation_role": "in_flight_process",
+      "observed_configuration": {
+        "budget": null,
+        "games": [],
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "policy": null,
+        "supervisor_state": "applied",
+        "tool_loop_state": "off_or_unobserved"
+      },
+      "observed_env_keys": [
+        "CARNOT_ARC_GENERATOR_CUDA_GPU",
+        "CARNOT_ARC_INDUCE_N_CTX",
+        "CARNOT_ARC_TRAJECTORY_SUPERVISOR",
+        "CUDA_VISIBLE_DEVICES"
+      ],
+      "pid": 375086,
+      "ppid": 375005,
+      "read_only_commands": [
+        "ps -eo pid,ppid,lstart,stat,etime,args --sort=pid"
+      ],
+      "start_time": "Mon Aug 31 20:01:25 2026",
+      "state": "RNl"
+    }
+  ],
+  "reproducibility_checksum": "sha256:09aa0158ca0b3e603ec2f65a5b16a7b0835d14a11e64ff39add65eef1b4eb921",
+  "rows": [
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "budget": 2500,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "cd82",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "policy": "e3",
+      "producer_configuration": {
+        "actions_recorded": 2459,
+        "charged_actions": 2500,
+        "complete": null,
+        "games_mode": "claimed",
+        "levels_recorded": 2,
+        "random_seed": 20260719
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:789679a96b48a44cd5462a756eef41302a616b68e6ea00aede7381abbd2c627a",
+      "run_id": "cd82-ft09-ka59-3452377",
+      "source_artifact_sha256": "sha256:d9c5a734dae9b1dfb2c9d0921acee06cfc4f25012d40a8be133ea9b059421202",
+      "source_path": "results/arc_leaderboard_eval_runs/cd82-ft09-ka59-3452377.json",
+      "stratum_identity": "leaderboard_trajectory|cd82-ft09-ka59-3452377|cd82|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete",
+      "supervisor_receipt_complete": false,
+      "supervisor_receipt_sha256": null,
+      "supervisor_state": "unobserved",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "off_or_unobserved",
+      "trajectory_frame_count": 2500,
+      "trajectory_receipt_complete": true,
+      "trajectory_sha256": "sha256:73eedb3c27502de6a5ad1dd3210a51f13ea13b349697c9c939d3f219fb2d56ad"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "budget": 2500,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "r11l",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "policy": "e3",
+      "producer_configuration": {
+        "actions_recorded": 2121,
+        "charged_actions": 2311,
+        "complete": null,
+        "games_mode": "claimed",
+        "levels_recorded": 2,
+        "random_seed": 20260719
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:c9f839ba1163f199d58e8ffa1c63ea4b63a8e0caf3ec6408156ee1b87b24ec20",
+      "run_id": "lp85-r11l-3762597",
+      "source_artifact_sha256": "sha256:6a4ef8195bf141decd3c6811213a8117f720c689dbd6e90d8bf5031411478c0f",
+      "source_path": "results/arc_leaderboard_eval_runs/lp85-r11l-3762597.json",
+      "stratum_identity": "leaderboard_trajectory|lp85-r11l-3762597|r11l|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete",
+      "supervisor_receipt_complete": false,
+      "supervisor_receipt_sha256": null,
+      "supervisor_state": "unobserved",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "off_or_unobserved",
+      "trajectory_frame_count": 2311,
+      "trajectory_receipt_complete": true,
+      "trajectory_sha256": "sha256:a8c64457e1540a7d672f6c6428a70b6871f89c981b0b449160b29327738161a9"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "budget": 2500,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "lp85",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "policy": "e3",
+      "producer_configuration": {
+        "actions_recorded": 1719,
+        "charged_actions": 1763,
+        "complete": null,
+        "games_mode": "claimed",
+        "levels_recorded": 1,
+        "random_seed": 20260719
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:0d31d1bdec5c770a6226896bf9fc6b7208e4261dbd49f626a4322e3655e596b0",
+      "run_id": "lp85-r11l-3762597",
+      "source_artifact_sha256": "sha256:6a4ef8195bf141decd3c6811213a8117f720c689dbd6e90d8bf5031411478c0f",
+      "source_path": "results/arc_leaderboard_eval_runs/lp85-r11l-3762597.json",
+      "stratum_identity": "leaderboard_trajectory|lp85-r11l-3762597|lp85|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete",
+      "supervisor_receipt_complete": false,
+      "supervisor_receipt_sha256": null,
+      "supervisor_state": "unobserved",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "off_or_unobserved",
+      "trajectory_frame_count": 1763,
+      "trajectory_receipt_complete": true,
+      "trajectory_sha256": "sha256:c60941da86f56874f1a870214c40c2a4ee5df0ad55a4fbf2f31dcabed5481446"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "budget": 2500,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "ls20",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "policy": "e3",
+      "producer_configuration": {
+        "actions_recorded": 2443,
+        "charged_actions": 2500,
+        "complete": null,
+        "games_mode": "claimed",
+        "levels_recorded": 0,
+        "random_seed": 20260719
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:6bd019bc8fff186b96fbde4807aadb136a037871bb1b922739e2f06620c3d5d6",
+      "run_id": "ls20-wa30-4186462",
+      "source_artifact_sha256": "sha256:566503be73de79d39070d58a266dd4f9133c051ae4e8e08ff1488f21e6022328",
+      "source_path": "results/arc_leaderboard_eval_runs/ls20-wa30-4186462.json",
+      "stratum_identity": "leaderboard_trajectory|ls20-wa30-4186462|ls20|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete",
+      "supervisor_receipt_complete": false,
+      "supervisor_receipt_sha256": null,
+      "supervisor_state": "unobserved",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "off_or_unobserved",
+      "trajectory_frame_count": 2500,
+      "trajectory_receipt_complete": true,
+      "trajectory_sha256": "sha256:730887aee0338ac190cd20279d8eb40e9828e8169c0d3645ce0880610975c3eb"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "budget": 2500,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "wa30",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "policy": "e3",
+      "producer_configuration": {
+        "actions_recorded": 2464,
+        "charged_actions": 2500,
+        "complete": null,
+        "games_mode": "claimed",
+        "levels_recorded": 0,
+        "random_seed": 20260719
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:4dad9793b7bc9833a814683c4f6e62b632d19fe906eb7bcea4128687a2d0c8e8",
+      "run_id": "ls20-wa30-4186462",
+      "source_artifact_sha256": "sha256:566503be73de79d39070d58a266dd4f9133c051ae4e8e08ff1488f21e6022328",
+      "source_path": "results/arc_leaderboard_eval_runs/ls20-wa30-4186462.json",
+      "stratum_identity": "leaderboard_trajectory|ls20-wa30-4186462|wa30|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete",
+      "supervisor_receipt_complete": false,
+      "supervisor_receipt_sha256": null,
+      "supervisor_state": "unobserved",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "off_or_unobserved",
+      "trajectory_frame_count": 2500,
+      "trajectory_receipt_complete": true,
+      "trajectory_sha256": "sha256:68553441f37a8ec1316314800e48af62682e59c0969be57d31ab5cd6274465cf"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "budget": 2500,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "m0r0",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "policy": "e3",
+      "producer_configuration": {
+        "actions_recorded": 2479,
+        "charged_actions": 2500,
+        "complete": null,
+        "games_mode": "claimed",
+        "levels_recorded": 0,
+        "random_seed": 20260719
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:19ec1c78314ce1188779900ff5192e200e84c9f7cb7241cffcb4e8b622364a71",
+      "run_id": "m0r0-sk48-132287",
+      "source_artifact_sha256": "sha256:d1e17456bd9fc423830275c5037eef80b00eb8a2e910f6232151e2ae487a5adc",
+      "source_path": "results/arc_leaderboard_eval_runs/m0r0-sk48-132287.json",
+      "stratum_identity": "leaderboard_trajectory|m0r0-sk48-132287|m0r0|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete",
+      "supervisor_receipt_complete": false,
+      "supervisor_receipt_sha256": null,
+      "supervisor_state": "unobserved",
+      "tool_gap_calls_total": 11,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": true,
+      "tool_gap_receipt_count": 1,
+      "tool_loop_state": "selfparse",
+      "trajectory_frame_count": 2500,
+      "trajectory_receipt_complete": true,
+      "trajectory_sha256": "sha256:8f523a39ba1162a48661c807c8ec1fba9f25fcecfa6e35f62529815fc0ef4959"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "budget": 2500,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "sk48",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "policy": "e3",
+      "producer_configuration": {
+        "actions_recorded": 2481,
+        "charged_actions": 2500,
+        "complete": null,
+        "games_mode": "claimed",
+        "levels_recorded": 0,
+        "random_seed": 20260719
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:10750bd16776a6a913ea51f39dd5e976be40ef400d796c33b4fd12f9676cb003",
+      "run_id": "m0r0-sk48-132287",
+      "source_artifact_sha256": "sha256:d1e17456bd9fc423830275c5037eef80b00eb8a2e910f6232151e2ae487a5adc",
+      "source_path": "results/arc_leaderboard_eval_runs/m0r0-sk48-132287.json",
+      "stratum_identity": "leaderboard_trajectory|m0r0-sk48-132287|sk48|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete",
+      "supervisor_receipt_complete": false,
+      "supervisor_receipt_sha256": null,
+      "supervisor_state": "unobserved",
+      "tool_gap_calls_total": 3,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": true,
+      "tool_gap_receipt_count": 1,
+      "tool_loop_state": "selfparse",
+      "trajectory_frame_count": 2500,
+      "trajectory_receipt_complete": true,
+      "trajectory_sha256": "sha256:f87b3cec29f0d6dd5b54491dab62e48b988f45bf7cd0e5e85d83be2e11a610ec"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "budget": 2500,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "sp80",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "policy": "e3",
+      "producer_configuration": {
+        "actions_recorded": 1603,
+        "charged_actions": 1643,
+        "complete": null,
+        "games_mode": "claimed",
+        "levels_recorded": 1,
+        "random_seed": 20260719
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:1266a9798bdc06af9547ce5dfab92bba98b67a998891dbc93dca0e3924b19d49",
+      "run_id": "sp80-su15-70215",
+      "source_artifact_sha256": "sha256:728b90009f9a1332abc64d6080d154fb3122cae545813a508a01926d8a675017",
+      "source_path": "results/arc_leaderboard_eval_runs/sp80-su15-70215.json",
+      "stratum_identity": "leaderboard_trajectory|sp80-su15-70215|sp80|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete",
+      "supervisor_receipt_complete": false,
+      "supervisor_receipt_sha256": null,
+      "supervisor_state": "unobserved",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "off_or_unobserved",
+      "trajectory_frame_count": 1643,
+      "trajectory_receipt_complete": true,
+      "trajectory_sha256": "sha256:68a0d7395f9968da3310b2e3387ecaaf14b25994fe6724b3427cc09bef496c00"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "budget": 2500,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "su15",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "policy": "e3",
+      "producer_configuration": {
+        "actions_recorded": 1739,
+        "charged_actions": 1779,
+        "complete": null,
+        "games_mode": "claimed",
+        "levels_recorded": 1,
+        "random_seed": 20260719
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:61fb5824c49afa93ed07b6b325e7f6428cc5f6c092494be439e748fd53c52590",
+      "run_id": "sp80-su15-70215",
+      "source_artifact_sha256": "sha256:728b90009f9a1332abc64d6080d154fb3122cae545813a508a01926d8a675017",
+      "source_path": "results/arc_leaderboard_eval_runs/sp80-su15-70215.json",
+      "stratum_identity": "leaderboard_trajectory|sp80-su15-70215|su15|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete",
+      "supervisor_receipt_complete": false,
+      "supervisor_receipt_sha256": null,
+      "supervisor_state": "unobserved",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "off_or_unobserved",
+      "trajectory_frame_count": 1779,
+      "trajectory_receipt_complete": true,
+      "trajectory_sha256": "sha256:70d553177cbceb57eebdacd2982216a0e5662a903886277c8a9867c79a741ad0"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "budget": 2500,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "sp80",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "policy": "e3",
+      "producer_configuration": {
+        "actions_recorded": 1603,
+        "charged_actions": 1643,
+        "complete": null,
+        "games_mode": "claimed",
+        "levels_recorded": 1,
+        "random_seed": 20260719
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:e6a4f13bd1f5ccef80afaed74ef9086c5288363624671cdad0dee99b8f64599f",
+      "run_id": "sp80-su15-70505",
+      "source_artifact_sha256": "sha256:7f30eeb42e814789161c6935dd8b2d178163df413dd1e65d32b0d4b9707a2d61",
+      "source_path": "results/arc_leaderboard_eval_runs/sp80-su15-70505.json",
+      "stratum_identity": "leaderboard_trajectory|sp80-su15-70505|sp80|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete",
+      "supervisor_receipt_complete": false,
+      "supervisor_receipt_sha256": null,
+      "supervisor_state": "unobserved",
+      "tool_gap_calls_total": 10,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": true,
+      "tool_gap_receipt_count": 1,
+      "tool_loop_state": "selfparse",
+      "trajectory_frame_count": 1643,
+      "trajectory_receipt_complete": true,
+      "trajectory_sha256": "sha256:68a0d7395f9968da3310b2e3387ecaaf14b25994fe6724b3427cc09bef496c00"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "budget": 2500,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "su15",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "policy": "e3",
+      "producer_configuration": {
+        "actions_recorded": 1786,
+        "charged_actions": 1822,
+        "complete": null,
+        "games_mode": "claimed",
+        "levels_recorded": 1,
+        "random_seed": 20260719
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:958e04385505df2c33b5c3f306680cc2f96f9908a1d05e2d4ea79d07c2f8cb83",
+      "run_id": "sp80-su15-70505",
+      "source_artifact_sha256": "sha256:7f30eeb42e814789161c6935dd8b2d178163df413dd1e65d32b0d4b9707a2d61",
+      "source_path": "results/arc_leaderboard_eval_runs/sp80-su15-70505.json",
+      "stratum_identity": "leaderboard_trajectory|sp80-su15-70505|su15|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete",
+      "supervisor_receipt_complete": false,
+      "supervisor_receipt_sha256": null,
+      "supervisor_state": "unobserved",
+      "tool_gap_calls_total": 6,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": true,
+      "tool_gap_receipt_count": 1,
+      "tool_loop_state": "selfparse",
+      "trajectory_frame_count": 1822,
+      "trajectory_receipt_complete": true,
+      "trajectory_sha256": "sha256:fbda8473a733106d5753cb83526b9ed626e7ffbbc3da9b8ac898479b30054791"
+    },
+    {
+      "artifact_family": "supervisor_refinement_ledger",
+      "budget": 399,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "tu93",
+      "model_id": "unknown",
+      "policy": "S_llmon",
+      "producer_configuration": {
+        "levels_recorded": 1,
+        "recommendation_status": "insufficient_evidence",
+        "seed": 20260725,
+        "window": 400
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:7be4ffe39d1e05418837d2d1eec4baa70d71632f889dc1a824283713302a930f",
+      "run_id": "sha256:4528ffc805ebe4bf0c35f7085cb631a59f228901e12f53e2b350ec7748fae26c",
+      "source_artifact_sha256": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197",
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:4528ffc805ebe4bf0c35f7085cb631a59f228901e12f53e2b350ec7748fae26c|tu93|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_receipt_complete": true,
+      "supervisor_receipt_sha256": "sha256:ba17cb6903314307308e0cf6c8daefdb988b7fcf933fa1983ea8f72d782335ac",
+      "supervisor_state": "applied",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "unknown",
+      "trajectory_frame_count": 0,
+      "trajectory_receipt_complete": false,
+      "trajectory_sha256": null
+    },
+    {
+      "artifact_family": "supervisor_refinement_ledger",
+      "budget": 399,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "ar25",
+      "model_id": "unknown",
+      "policy": "S_llmon",
+      "producer_configuration": {
+        "levels_recorded": 1,
+        "recommendation_status": "insufficient_evidence",
+        "seed": 20260725,
+        "window": 400
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:8f912625a2d7e86e4977a8056a8fcadef10fe557541b076d5a28991c908108ce",
+      "run_id": "sha256:56984731d95aa868eb4d5ef34264621b62d7da64dea5a3f906d49c27af892739",
+      "source_artifact_sha256": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197",
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:56984731d95aa868eb4d5ef34264621b62d7da64dea5a3f906d49c27af892739|ar25|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_receipt_complete": true,
+      "supervisor_receipt_sha256": "sha256:7a78b5ae3ee5cdfeda78906902ac7e4aae8a8b582e7e66775e943a320026b875",
+      "supervisor_state": "applied",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "unknown",
+      "trajectory_frame_count": 0,
+      "trajectory_receipt_complete": false,
+      "trajectory_sha256": null
+    },
+    {
+      "artifact_family": "supervisor_refinement_ledger",
+      "budget": 399,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "tu93",
+      "model_id": "unknown",
+      "policy": "S_llmon",
+      "producer_configuration": {
+        "levels_recorded": 2,
+        "recommendation_status": "insufficient_evidence",
+        "seed": 20260726,
+        "window": 120
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:481715bfed38762c6a2b40c9100d213144b50fd64a176cd60a5fadcdd425a959",
+      "run_id": "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
+      "source_artifact_sha256": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197",
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9|tu93|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_receipt_complete": true,
+      "supervisor_receipt_sha256": "sha256:c055ed41d73debcac91ab7513a6747f54678e3f28592a24f23be82396470aa24",
+      "supervisor_state": "applied",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "unknown",
+      "trajectory_frame_count": 0,
+      "trajectory_receipt_complete": false,
+      "trajectory_sha256": null
+    },
+    {
+      "artifact_family": "supervisor_refinement_ledger",
+      "budget": 399,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "tu93",
+      "model_id": "unknown",
+      "policy": "S_llmon",
+      "producer_configuration": {
+        "levels_recorded": 2,
+        "recommendation_status": "insufficient_evidence",
+        "seed": 20260724,
+        "window": 120
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:210f7c3b5bd3b64d2fc818ac875e647d85f25b5ac2c54772cfd3439acce0aa6a",
+      "run_id": "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
+      "source_artifact_sha256": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197",
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f|tu93|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_receipt_complete": true,
+      "supervisor_receipt_sha256": "sha256:05400ca8fccf62d8fd6b4f7dadaec3078bc32fa3fb91a6ff183b996fc455f7f0",
+      "supervisor_state": "applied",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "unknown",
+      "trajectory_frame_count": 0,
+      "trajectory_receipt_complete": false,
+      "trajectory_sha256": null
+    },
+    {
+      "artifact_family": "supervisor_refinement_ledger",
+      "budget": 399,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "tu93",
+      "model_id": "unknown",
+      "policy": "S_llmon",
+      "producer_configuration": {
+        "levels_recorded": 1,
+        "recommendation_status": "insufficient_evidence",
+        "seed": 20260725,
+        "window": 120
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:b651c18810d545933482707d7db1819b2b6d59a43bae24e96e984b0aa5a46850",
+      "run_id": "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
+      "source_artifact_sha256": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197",
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8|tu93|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_receipt_complete": true,
+      "supervisor_receipt_sha256": "sha256:9d377b359fa1db9204a16fae6c834afd18ff7c4f522ce9139ca0a48a0dfc2023",
+      "supervisor_state": "applied",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "unknown",
+      "trajectory_frame_count": 0,
+      "trajectory_receipt_complete": false,
+      "trajectory_sha256": null
+    },
+    {
+      "artifact_family": "supervisor_refinement_ledger",
+      "budget": 399,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "tu93",
+      "model_id": "unknown",
+      "policy": "S_llmon",
+      "producer_configuration": {
+        "levels_recorded": 2,
+        "recommendation_status": "insufficient_evidence",
+        "seed": 20260724,
+        "window": 400
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:b02ee7a6daee60480caaa1461f5a1f737eb47581d94cfd65d42637c375db4e24",
+      "run_id": "sha256:cd18591a0431271b3e93826e0fcb9f7f0798569cbbf35433b7fb0f27089f1bc3",
+      "source_artifact_sha256": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197",
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:cd18591a0431271b3e93826e0fcb9f7f0798569cbbf35433b7fb0f27089f1bc3|tu93|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_receipt_complete": true,
+      "supervisor_receipt_sha256": "sha256:cc9039e735483d44ce0c95fccca354cef763b9931838bb110eb86fe9362a3245",
+      "supervisor_state": "applied",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "unknown",
+      "trajectory_frame_count": 0,
+      "trajectory_receipt_complete": false,
+      "trajectory_sha256": null
+    },
+    {
+      "artifact_family": "supervisor_refinement_ledger",
+      "budget": 399,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "tu93",
+      "model_id": "unknown",
+      "policy": "S_llmon",
+      "producer_configuration": {
+        "levels_recorded": 2,
+        "recommendation_status": "insufficient_evidence",
+        "seed": 20260726,
+        "window": 400
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:2c63d885cf35922912a4d08a518c16833265383010dd9553b073e4fef794ad58",
+      "run_id": "sha256:d2dd6bd53afef43caaba612e72e2e274b473a3b5a7443d3d6e36f1f3ee3eef66",
+      "source_artifact_sha256": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197",
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:d2dd6bd53afef43caaba612e72e2e274b473a3b5a7443d3d6e36f1f3ee3eef66|tu93|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_receipt_complete": true,
+      "supervisor_receipt_sha256": "sha256:eeeddd95f939a77b443fc0e5003e3bdae7f551deaa08b140874b07bbdff24739",
+      "supervisor_state": "applied",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "unknown",
+      "trajectory_frame_count": 0,
+      "trajectory_receipt_complete": false,
+      "trajectory_sha256": null
+    },
+    {
+      "artifact_family": "supervisor_refinement_ledger",
+      "budget": 399,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "ar25",
+      "model_id": "unknown",
+      "policy": "S_llmon",
+      "producer_configuration": {
+        "levels_recorded": 1,
+        "recommendation_status": "insufficient_evidence",
+        "seed": 20260724,
+        "window": 400
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:7919973c5ba3c1654024ac047e70f53bbc259ac382bb43d07c4050048a9893fc",
+      "run_id": "sha256:d6f4876125b38a7d8b2658952aa09b9e1c55414d483414b2434329123e507004",
+      "source_artifact_sha256": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197",
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:d6f4876125b38a7d8b2658952aa09b9e1c55414d483414b2434329123e507004|ar25|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_receipt_complete": true,
+      "supervisor_receipt_sha256": "sha256:0b6d3b0598197f4b31874261a6e232bb7c208505d9115ebcaf147d21657a4189",
+      "supervisor_state": "applied",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "unknown",
+      "trajectory_frame_count": 0,
+      "trajectory_receipt_complete": false,
+      "trajectory_sha256": null
+    },
+    {
+      "artifact_family": "supervisor_refinement_ledger",
+      "budget": 399,
+      "eligibility": {
+        "mechanism_effect_claim": false,
+        "run_game_complete": true,
+        "terminal_artifact": true
+      },
+      "game": "ar25",
+      "model_id": "unknown",
+      "policy": "S_llmon",
+      "producer_configuration": {
+        "levels_recorded": 0,
+        "recommendation_status": "insufficient_evidence",
+        "seed": 20260726,
+        "window": 400
+      },
+      "receipt_completeness": "complete",
+      "row_sha256": "sha256:b139a6b34f7276cc2c53ef38e1f5bade8c30371a45f96fcef9a7130aee72449e",
+      "run_id": "sha256:fa1fa4e4ea79e841bea8be06a805fb4d670761ed44e89bce13372c6b0f013908",
+      "source_artifact_sha256": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197",
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:fa1fa4e4ea79e841bea8be06a805fb4d670761ed44e89bce13372c6b0f013908|ar25|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_receipt_complete": true,
+      "supervisor_receipt_sha256": "sha256:e4c5813906e23771d0bd7abf071517fc4f3b833c6e1854a6fe99119f3db02d0c",
+      "supervisor_state": "applied",
+      "tool_gap_calls_total": 0,
+      "tool_gap_event_count": 0,
+      "tool_gap_receipt_complete": false,
+      "tool_gap_receipt_count": 0,
+      "tool_loop_state": "unknown",
+      "trajectory_frame_count": 0,
+      "trajectory_receipt_complete": false,
+      "trajectory_sha256": null
+    }
+  ],
+  "run_date": "20260901",
+  "schema": "carnot.experiment_6843.live_arc_evidence_stratum_freeze.v1",
+  "solve_claim": false,
+  "source_artifact_hashes": {
+    "arc_competition_agent_source": {
+      "artifact_family": "precondition_source",
+      "exists": true,
+      "file_sha256": "sha256:1106d26e7d0bc8a2c1e21e62e715774c09e20194773d44c8258c7c3349e38adf",
+      "name": "arc_competition_agent_source",
+      "path": "python/carnot/agentic/arc_competition_agent.py",
+      "producer_configuration": {
+        "honest_verdict": null,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 530038,
+      "terminal_class": "incomplete_artifact"
+    },
+    "arc_leaderboard_eval_source": {
+      "artifact_family": "precondition_source",
+      "exists": true,
+      "file_sha256": "sha256:6db6e235b0453cd13d3b412c00e7686fc0bbe77afae310f96866787e4c870cd3",
+      "name": "arc_leaderboard_eval_source",
+      "path": "scripts/arc_leaderboard_eval.py",
+      "producer_configuration": {
+        "honest_verdict": null,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 58266,
+      "terminal_class": "incomplete_artifact"
+    },
+    "arc_registry": {
+      "artifact_family": "precondition_source",
+      "exists": true,
+      "file_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "name": "arc_registry",
+      "path": "ops/arc_solve_registry.yaml",
+      "producer_configuration": {
+        "honest_verdict": null,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 462740,
+      "terminal_class": "incomplete_artifact"
+    },
+    "arc_trajectory_supervisor_source": {
+      "artifact_family": "precondition_source",
+      "exists": true,
+      "file_sha256": "sha256:6ed5bb95a0a194eb7bf2eb51dc8008aa100088b9e8e7b0386250d7943b27e123",
+      "name": "arc_trajectory_supervisor_source",
+      "path": "python/carnot/agentic/arc_trajectory_supervisor.py",
+      "producer_configuration": {
+        "honest_verdict": null,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 40131,
+      "terminal_class": "incomplete_artifact"
+    },
+    "canonical_path_doc": {
+      "artifact_family": "precondition_source",
+      "exists": true,
+      "file_sha256": "sha256:d9c6b033897f6435880546573dff45111f88fc42c66aa12fd13762d10d877444",
+      "name": "canonical_path_doc",
+      "path": "ops/arc-live-agent-canonical-path.md",
+      "producer_configuration": {
+        "honest_verdict": null,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 3681,
+      "terminal_class": "incomplete_artifact"
+    },
+    "experiment_6843_module_source": {
+      "artifact_family": "precondition_source",
+      "exists": true,
+      "file_sha256": "sha256:b1155358f0e348b7e9dd0196cbedefc2d502b81cf560a29d848e7f9a3db62daa",
+      "name": "experiment_6843_module_source",
+      "path": "python/carnot/experiment_6843_live_arc_evidence_stratum_freeze.py",
+      "producer_configuration": {
+        "honest_verdict": null,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 39915,
+      "terminal_class": "incomplete_artifact"
+    },
+    "experiment_6843_wrapper_source": {
+      "artifact_family": "precondition_source",
+      "exists": true,
+      "file_sha256": "sha256:8d8c19960fb7ed9aaa2b0f299297a5833496efb123fd7db2f2d1cf7299ccb6cc",
+      "name": "experiment_6843_wrapper_source",
+      "path": "scripts/experiments/experiment_6843_live_arc_evidence_stratum_freeze.py",
+      "producer_configuration": {
+        "honest_verdict": null,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 203,
+      "terminal_class": "incomplete_artifact"
+    },
+    "leaderboard:cd82-ft09-ka59-3452377.json": {
+      "artifact_family": "leaderboard_trajectory",
+      "exists": true,
+      "file_sha256": "sha256:d9c5a734dae9b1dfb2c9d0921acee06cfc4f25012d40a8be133ea9b059421202",
+      "name": "leaderboard:cd82-ft09-ka59-3452377.json",
+      "path": "results/arc_leaderboard_eval_runs/cd82-ft09-ka59-3452377.json",
+      "producer_configuration": {
+        "budget": 2500,
+        "experiment": "arc_leaderboard_eval",
+        "games": [
+          "cd82"
+        ],
+        "games_mode": "claimed",
+        "honest_verdict": "complete_leaderboard_eval_2_levels_0_gaps",
+        "per_game_count": 1,
+        "policy": "e3",
+        "random_seed": 20260719,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 1725743,
+      "terminal_class": "complete_terminal"
+    },
+    "leaderboard:ft09-ka59-3760545.json": {
+      "artifact_family": "leaderboard_trajectory",
+      "exists": true,
+      "file_sha256": "sha256:f5a6ba4f08f70463ba69ff165fa85b5517b8f5b47cac213e03eed1064a903956",
+      "name": "leaderboard:ft09-ka59-3760545.json",
+      "path": "results/arc_leaderboard_eval_runs/ft09-ka59-3760545.json",
+      "producer_configuration": {
+        "budget": 2500,
+        "experiment": "arc_leaderboard_eval",
+        "games": [],
+        "games_mode": "claimed",
+        "honest_verdict": "complete_leaderboard_eval_0_levels_0_gaps",
+        "per_game_count": 0,
+        "policy": "e3",
+        "random_seed": 20260719,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 384,
+      "terminal_class": "complete_terminal"
+    },
+    "leaderboard:lp85-r11l-3762597.json": {
+      "artifact_family": "leaderboard_trajectory",
+      "exists": true,
+      "file_sha256": "sha256:6a4ef8195bf141decd3c6811213a8117f720c689dbd6e90d8bf5031411478c0f",
+      "name": "leaderboard:lp85-r11l-3762597.json",
+      "path": "results/arc_leaderboard_eval_runs/lp85-r11l-3762597.json",
+      "producer_configuration": {
+        "budget": 2500,
+        "experiment": "arc_leaderboard_eval",
+        "games": [
+          "r11l",
+          "lp85"
+        ],
+        "games_mode": "claimed",
+        "honest_verdict": "complete_leaderboard_eval_3_levels_0_gaps",
+        "per_game_count": 2,
+        "policy": "e3",
+        "random_seed": 20260719,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 2832638,
+      "terminal_class": "complete_terminal"
+    },
+    "leaderboard:ls20-wa30-4186462.json": {
+      "artifact_family": "leaderboard_trajectory",
+      "exists": true,
+      "file_sha256": "sha256:566503be73de79d39070d58a266dd4f9133c051ae4e8e08ff1488f21e6022328",
+      "name": "leaderboard:ls20-wa30-4186462.json",
+      "path": "results/arc_leaderboard_eval_runs/ls20-wa30-4186462.json",
+      "producer_configuration": {
+        "budget": 2500,
+        "experiment": "arc_leaderboard_eval",
+        "games": [
+          "ls20",
+          "wa30"
+        ],
+        "games_mode": "claimed",
+        "honest_verdict": "complete_leaderboard_eval_0_levels_2_gaps",
+        "per_game_count": 2,
+        "policy": "e3",
+        "random_seed": 20260719,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 3389667,
+      "terminal_class": "complete_terminal"
+    },
+    "leaderboard:m0r0-sk48-132287.json": {
+      "artifact_family": "leaderboard_trajectory",
+      "exists": true,
+      "file_sha256": "sha256:d1e17456bd9fc423830275c5037eef80b00eb8a2e910f6232151e2ae487a5adc",
+      "name": "leaderboard:m0r0-sk48-132287.json",
+      "path": "results/arc_leaderboard_eval_runs/m0r0-sk48-132287.json",
+      "producer_configuration": {
+        "budget": 2500,
+        "experiment": "arc_leaderboard_eval",
+        "games": [
+          "m0r0",
+          "sk48"
+        ],
+        "games_mode": "claimed",
+        "honest_verdict": "complete_leaderboard_eval_0_levels_2_gaps",
+        "per_game_count": 2,
+        "policy": "e3",
+        "random_seed": 20260719,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 3812906,
+      "terminal_class": "complete_terminal"
+    },
+    "leaderboard:sp80-su15-70215.json": {
+      "artifact_family": "leaderboard_trajectory",
+      "exists": true,
+      "file_sha256": "sha256:728b90009f9a1332abc64d6080d154fb3122cae545813a508a01926d8a675017",
+      "name": "leaderboard:sp80-su15-70215.json",
+      "path": "results/arc_leaderboard_eval_runs/sp80-su15-70215.json",
+      "producer_configuration": {
+        "budget": 2500,
+        "experiment": "arc_leaderboard_eval",
+        "games": [
+          "sp80",
+          "su15"
+        ],
+        "games_mode": "claimed",
+        "honest_verdict": "complete_leaderboard_eval_2_levels_0_gaps",
+        "per_game_count": 2,
+        "policy": "e3",
+        "random_seed": 20260719,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 2440955,
+      "terminal_class": "complete_terminal"
+    },
+    "leaderboard:sp80-su15-70505.json": {
+      "artifact_family": "leaderboard_trajectory",
+      "exists": true,
+      "file_sha256": "sha256:7f30eeb42e814789161c6935dd8b2d178163df413dd1e65d32b0d4b9707a2d61",
+      "name": "leaderboard:sp80-su15-70505.json",
+      "path": "results/arc_leaderboard_eval_runs/sp80-su15-70505.json",
+      "producer_configuration": {
+        "budget": 2500,
+        "experiment": "arc_leaderboard_eval",
+        "games": [
+          "sp80",
+          "su15"
+        ],
+        "games_mode": "claimed",
+        "honest_verdict": "complete_leaderboard_eval_2_levels_0_gaps",
+        "per_game_count": 2,
+        "policy": "e3",
+        "random_seed": 20260719,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 2574289,
+      "terminal_class": "complete_terminal"
+    },
+    "ops_status": {
+      "artifact_family": "precondition_source",
+      "exists": true,
+      "file_sha256": "sha256:dbaab7c4c555522bbe7cb788cd985a1cede005c81f073dc364f591aadd52bfea",
+      "name": "ops_status",
+      "path": "ops/status.md",
+      "producer_configuration": {
+        "honest_verdict": null,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 1235852,
+      "terminal_class": "incomplete_artifact"
+    },
+    "supervisor_exp6524": {
+      "artifact_family": "supervisor_artifact",
+      "exists": true,
+      "file_sha256": "sha256:9a5be26b06c816bcbff219ca60c53202e976de1802aa18c061e259a06117a65a",
+      "name": "supervisor_exp6524",
+      "path": "results/experiment_6524_arc_supervisor_redirect_generalization.json",
+      "producer_configuration": {
+        "honest_verdict": "blocked: missing outcome-bearing live trajectory-supervisor receipts",
+        "random_seed": 6524,
+        "status": "blocked_missing_outcome_bearing_live_receipts",
+        "verdict_class": "blocked"
+      },
+      "read_error": null,
+      "size_bytes": 41905,
+      "terminal_class": "blocked_terminal"
+    },
+    "supervisor_exp6558": {
+      "artifact_family": "supervisor_artifact",
+      "exists": true,
+      "file_sha256": "sha256:ad305673325f8d87c124e8d5fb85b8ad9369eb8f5f18297ba6946ffce25a74dd",
+      "name": "supervisor_exp6558",
+      "path": "results/experiment_6558_arc_live_redirect_ledger_reachability.json",
+      "producer_configuration": {
+        "honest_verdict": "complete: live receipt path reachable, firings inspected, no supported policy change",
+        "random_seed": 6558,
+        "status": "complete_live_redirect_ledger_reachable_no_policy_change",
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 66194,
+      "terminal_class": "complete_terminal"
+    },
+    "supervisor_exp6656": {
+      "artifact_family": "supervisor_artifact",
+      "exists": true,
+      "file_sha256": "sha256:913052fa24153337e8716ee24609bec3466f0e945d8351ccd8cdda77da3d1a2e",
+      "name": "supervisor_exp6656",
+      "path": "results/experiment_6656_arc_trace_automaton_live_loo.json",
+      "producer_configuration": {
+        "honest_verdict": "blocked: the canonical E3 action seam applied held-family redirects, but the archived transport has no exact outcomes after changed actions; no live-policy benefit, game solve, or level solve is claimed",
+        "random_seed": {
+          "evaluation_seed_schedule": [
+            6656001,
+            6656002,
+            6656003
+          ],
+          "held_families": [
+            "tn36",
+            "tr87",
+            "vc33"
+          ],
+          "learner_seed": 6656,
+          "train_families": [
+            "ft09",
+            "lp85"
+          ]
+        },
+        "status": "blocked_archived_transport_lacks_redirect_outcomes",
+        "verdict_class": "blocked"
+      },
+      "read_error": null,
+      "size_bytes": 20026228,
+      "terminal_class": "blocked_terminal"
+    },
+    "supervisor_exp6682": {
+      "artifact_family": "supervisor_artifact",
+      "exists": true,
+      "file_sha256": "sha256:5c8b07486a0ff9a543ce093374a67f2935f553cc1ef7d048b6561ff9a1996d57",
+      "name": "supervisor_exp6682",
+      "path": "results/experiment_6682_arc_held_family_supervisor_ab.json",
+      "producer_configuration": {
+        "honest_verdict": "blocked: held-family supervisor A/B is partial because verification_failure; no transition benefit or solve is claimed",
+        "random_seed": {
+          "analysis_seed": 6682881,
+          "arm_order_seed": 6682991,
+          "attack_seed": 6682999,
+          "episode_seeds_requested": [
+            6682001,
+            6682002,
+            6682003
+          ],
+          "online_environment_seed_effective": false
+        },
+        "status": "complete_arc_supervisor_ab_partial",
+        "verdict_class": "partial"
+      },
+      "read_error": null,
+      "size_bytes": 95590596,
+      "terminal_class": "blocked_terminal"
+    },
+    "supervisor_ledger": {
+      "artifact_family": "supervisor_refinement_ledger",
+      "exists": true,
+      "file_sha256": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197",
+      "name": "supervisor_ledger",
+      "path": "ops/arc_supervisor_refinement_ledger.json",
+      "producer_configuration": {
+        "honest_verdict": null,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 8570,
+      "terminal_class": "complete_terminal"
+    },
+    "tool_gap_ledger_missing": {
+      "artifact_family": "tool_gap_artifact",
+      "exists": false,
+      "file_sha256": null,
+      "name": "tool_gap_ledger_missing",
+      "path": "ops/arc_tool_gap_ledger.json",
+      "producer_configuration": {
+        "honest_verdict": null,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": "FileNotFoundError",
+      "size_bytes": null,
+      "terminal_class": "missing_artifact"
+    },
+    "upstream_exp6681": {
+      "artifact_family": "source_artifact",
+      "exists": true,
+      "file_sha256": "sha256:bf61e50970530a9844103e59f702c68e32a8aba12f78b1c68dd6154685b9107a",
+      "name": "upstream_exp6681",
+      "path": "results/experiment_6681_arc_post_redirect_outcomes.json",
+      "producer_configuration": {
+        "honest_verdict": "complete: every applied held-family redirect has one exact live next-outcome row (30 eligible); this is transport evidence with no solve claim",
+        "random_seed": {
+          "attack_order_seed": 6681999,
+          "episode_seeds_requested": [
+            6681001,
+            6681002,
+            6681003
+          ],
+          "held_families": [
+            "tn36",
+            "tr87",
+            "vc33"
+          ],
+          "online_environment_seed_effective": false,
+          "online_seed_limit": "Arcade ONLINE does not transmit make(seed=...) to the remote wrapper"
+        },
+        "status": "complete_arc_outcome_transport_ready",
+        "verdict_class": "null"
+      },
+      "read_error": null,
+      "size_bytes": 54272816,
+      "terminal_class": "complete_terminal"
+    },
+    "upstream_exp6776": {
+      "artifact_family": "supervisor_artifact",
+      "exists": true,
+      "file_sha256": "sha256:5832b0982069bebcc5ef5729094bf97aa97f1564c9f7c25eb536e79c69fbaaf7",
+      "name": "upstream_exp6776",
+      "path": "results/experiment_6776_arc_shadow_supervisor_accrual.json",
+      "producer_configuration": {
+        "experiment": 6776,
+        "honest_verdict": "complete_blocked_shadow_supervisor_accrual:exclusive_gpu_without_unrelated_compute",
+        "model_specs_sha256": "sha256:43f7dc5653a58e275c1f9c0316353cf6d0dfaf92814901b4614ad162e13f5d01",
+        "random_seed": {
+          "canary_seed": 2026083099,
+          "cell_seed_schedule": [
+            2026083001,
+            2026083002,
+            2026083003,
+            2026083004,
+            2026083001,
+            2026083002,
+            2026083003,
+            2026083004,
+            2026083001,
+            2026083099
+          ],
+          "frozen_science_seeds": [
+            2026083001,
+            2026083002,
+            2026083003,
+            2026083004
+          ]
+        },
+        "shadow_supervisor_transport_ready": false,
+        "status": "complete_blocked_shadow_supervisor_accrual",
+        "supervisor_mode": "shadow",
+        "supervisor_window": 120,
+        "verdict_class": "blocked"
+      },
+      "read_error": null,
+      "size_bytes": 92650,
+      "terminal_class": "blocked_terminal"
+    },
+    "upstream_exp6777": {
+      "artifact_family": "tool_gap_artifact",
+      "exists": true,
+      "file_sha256": "sha256:0e30a3c833d79ba8ea6c937c7d4530d39f39224fc386b8e6e4ddd8dc3ee1d9c9",
+      "name": "upstream_exp6777",
+      "path": "results/experiment_6777_arc_tool_gap_transport.json",
+      "producer_configuration": {
+        "experiment": 6777,
+        "honest_verdict": "blocked_gate_check_failed",
+        "status": "blocked",
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 2375,
+      "terminal_class": "blocked_terminal"
+    },
+    "upstream_exp6820_missing": {
+      "artifact_family": "tool_gap_artifact",
+      "exists": false,
+      "file_sha256": null,
+      "name": "upstream_exp6820_missing",
+      "path": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
+      "producer_configuration": {
+        "honest_verdict": null,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": "FileNotFoundError",
+      "size_bytes": null,
+      "terminal_class": "missing_artifact"
+    },
+    "v598_root": {
+      "artifact_family": "precondition_source",
+      "exists": true,
+      "file_sha256": "sha256:d2a6cf80b19f37aa14ab7151a8e836ad8340f8cb74c2bddca38df6fed27611a2",
+      "name": "v598_root",
+      "path": "results/experiment_6835_v598_terminal_evidence_freeze.json",
+      "producer_configuration": {
+        "honest_verdict": "complete_null_v598_terminal_evidence_freeze_source_null_preserved",
+        "random_seed": 6835,
+        "status": "complete",
+        "verdict_class": "null"
+      },
+      "read_error": null,
+      "size_bytes": 10476124,
+      "terminal_class": "complete_terminal"
+    }
+  },
+  "status": "complete_live_arc_inventory",
+  "supervisor_cells_ready_score": 1,
+  "supervisor_eligible_cells": {
+    "count": 9,
+    "exact_count_rule": "count rows where supervisor_receipt_complete is true",
+    "row_ids": [
+      "supervisor_refinement_ledger|sha256:4528ffc805ebe4bf0c35f7085cb631a59f228901e12f53e2b350ec7748fae26c|tu93|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_refinement_ledger|sha256:56984731d95aa868eb4d5ef34264621b62d7da64dea5a3f906d49c27af892739|ar25|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_refinement_ledger|sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9|tu93|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_refinement_ledger|sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f|tu93|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_refinement_ledger|sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8|tu93|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_refinement_ledger|sha256:cd18591a0431271b3e93826e0fcb9f7f0798569cbbf35433b7fb0f27089f1bc3|tu93|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_refinement_ledger|sha256:d2dd6bd53afef43caaba612e72e2e274b473a3b5a7443d3d6e36f1f3ee3eef66|tu93|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_refinement_ledger|sha256:d6f4876125b38a7d8b2658952aa09b9e1c55414d483414b2434329123e507004|ar25|unknown|S_llmon|399|unknown|applied|complete",
+      "supervisor_refinement_ledger|sha256:fa1fa4e4ea79e841bea8be06a805fb4d670761ed44e89bce13372c6b0f013908|ar25|unknown|S_llmon|399|unknown|applied|complete"
+    ]
+  },
+  "terminal_artifact_manifest": [
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "exists": true,
+      "file_sha256": "sha256:d9c5a734dae9b1dfb2c9d0921acee06cfc4f25012d40a8be133ea9b059421202",
+      "name": "leaderboard:cd82-ft09-ka59-3452377.json",
+      "path": "results/arc_leaderboard_eval_runs/cd82-ft09-ka59-3452377.json",
+      "producer_configuration": {
+        "budget": 2500,
+        "experiment": "arc_leaderboard_eval",
+        "games": [
+          "cd82"
+        ],
+        "games_mode": "claimed",
+        "honest_verdict": "complete_leaderboard_eval_2_levels_0_gaps",
+        "per_game_count": 1,
+        "policy": "e3",
+        "random_seed": 20260719,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 1725743,
+      "terminal_class": "complete_terminal"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "exists": true,
+      "file_sha256": "sha256:f5a6ba4f08f70463ba69ff165fa85b5517b8f5b47cac213e03eed1064a903956",
+      "name": "leaderboard:ft09-ka59-3760545.json",
+      "path": "results/arc_leaderboard_eval_runs/ft09-ka59-3760545.json",
+      "producer_configuration": {
+        "budget": 2500,
+        "experiment": "arc_leaderboard_eval",
+        "games": [],
+        "games_mode": "claimed",
+        "honest_verdict": "complete_leaderboard_eval_0_levels_0_gaps",
+        "per_game_count": 0,
+        "policy": "e3",
+        "random_seed": 20260719,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 384,
+      "terminal_class": "complete_terminal"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "exists": true,
+      "file_sha256": "sha256:6a4ef8195bf141decd3c6811213a8117f720c689dbd6e90d8bf5031411478c0f",
+      "name": "leaderboard:lp85-r11l-3762597.json",
+      "path": "results/arc_leaderboard_eval_runs/lp85-r11l-3762597.json",
+      "producer_configuration": {
+        "budget": 2500,
+        "experiment": "arc_leaderboard_eval",
+        "games": [
+          "r11l",
+          "lp85"
+        ],
+        "games_mode": "claimed",
+        "honest_verdict": "complete_leaderboard_eval_3_levels_0_gaps",
+        "per_game_count": 2,
+        "policy": "e3",
+        "random_seed": 20260719,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 2832638,
+      "terminal_class": "complete_terminal"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "exists": true,
+      "file_sha256": "sha256:566503be73de79d39070d58a266dd4f9133c051ae4e8e08ff1488f21e6022328",
+      "name": "leaderboard:ls20-wa30-4186462.json",
+      "path": "results/arc_leaderboard_eval_runs/ls20-wa30-4186462.json",
+      "producer_configuration": {
+        "budget": 2500,
+        "experiment": "arc_leaderboard_eval",
+        "games": [
+          "ls20",
+          "wa30"
+        ],
+        "games_mode": "claimed",
+        "honest_verdict": "complete_leaderboard_eval_0_levels_2_gaps",
+        "per_game_count": 2,
+        "policy": "e3",
+        "random_seed": 20260719,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 3389667,
+      "terminal_class": "complete_terminal"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "exists": true,
+      "file_sha256": "sha256:d1e17456bd9fc423830275c5037eef80b00eb8a2e910f6232151e2ae487a5adc",
+      "name": "leaderboard:m0r0-sk48-132287.json",
+      "path": "results/arc_leaderboard_eval_runs/m0r0-sk48-132287.json",
+      "producer_configuration": {
+        "budget": 2500,
+        "experiment": "arc_leaderboard_eval",
+        "games": [
+          "m0r0",
+          "sk48"
+        ],
+        "games_mode": "claimed",
+        "honest_verdict": "complete_leaderboard_eval_0_levels_2_gaps",
+        "per_game_count": 2,
+        "policy": "e3",
+        "random_seed": 20260719,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 3812906,
+      "terminal_class": "complete_terminal"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "exists": true,
+      "file_sha256": "sha256:728b90009f9a1332abc64d6080d154fb3122cae545813a508a01926d8a675017",
+      "name": "leaderboard:sp80-su15-70215.json",
+      "path": "results/arc_leaderboard_eval_runs/sp80-su15-70215.json",
+      "producer_configuration": {
+        "budget": 2500,
+        "experiment": "arc_leaderboard_eval",
+        "games": [
+          "sp80",
+          "su15"
+        ],
+        "games_mode": "claimed",
+        "honest_verdict": "complete_leaderboard_eval_2_levels_0_gaps",
+        "per_game_count": 2,
+        "policy": "e3",
+        "random_seed": 20260719,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 2440955,
+      "terminal_class": "complete_terminal"
+    },
+    {
+      "artifact_family": "leaderboard_trajectory",
+      "exists": true,
+      "file_sha256": "sha256:7f30eeb42e814789161c6935dd8b2d178163df413dd1e65d32b0d4b9707a2d61",
+      "name": "leaderboard:sp80-su15-70505.json",
+      "path": "results/arc_leaderboard_eval_runs/sp80-su15-70505.json",
+      "producer_configuration": {
+        "budget": 2500,
+        "experiment": "arc_leaderboard_eval",
+        "games": [
+          "sp80",
+          "su15"
+        ],
+        "games_mode": "claimed",
+        "honest_verdict": "complete_leaderboard_eval_2_levels_0_gaps",
+        "per_game_count": 2,
+        "policy": "e3",
+        "random_seed": 20260719,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 2574289,
+      "terminal_class": "complete_terminal"
+    },
+    {
+      "artifact_family": "supervisor_artifact",
+      "exists": true,
+      "file_sha256": "sha256:9a5be26b06c816bcbff219ca60c53202e976de1802aa18c061e259a06117a65a",
+      "name": "supervisor_exp6524",
+      "path": "results/experiment_6524_arc_supervisor_redirect_generalization.json",
+      "producer_configuration": {
+        "honest_verdict": "blocked: missing outcome-bearing live trajectory-supervisor receipts",
+        "random_seed": 6524,
+        "status": "blocked_missing_outcome_bearing_live_receipts",
+        "verdict_class": "blocked"
+      },
+      "read_error": null,
+      "size_bytes": 41905,
+      "terminal_class": "blocked_terminal"
+    },
+    {
+      "artifact_family": "supervisor_artifact",
+      "exists": true,
+      "file_sha256": "sha256:ad305673325f8d87c124e8d5fb85b8ad9369eb8f5f18297ba6946ffce25a74dd",
+      "name": "supervisor_exp6558",
+      "path": "results/experiment_6558_arc_live_redirect_ledger_reachability.json",
+      "producer_configuration": {
+        "honest_verdict": "complete: live receipt path reachable, firings inspected, no supported policy change",
+        "random_seed": 6558,
+        "status": "complete_live_redirect_ledger_reachable_no_policy_change",
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 66194,
+      "terminal_class": "complete_terminal"
+    },
+    {
+      "artifact_family": "supervisor_artifact",
+      "exists": true,
+      "file_sha256": "sha256:913052fa24153337e8716ee24609bec3466f0e945d8351ccd8cdda77da3d1a2e",
+      "name": "supervisor_exp6656",
+      "path": "results/experiment_6656_arc_trace_automaton_live_loo.json",
+      "producer_configuration": {
+        "honest_verdict": "blocked: the canonical E3 action seam applied held-family redirects, but the archived transport has no exact outcomes after changed actions; no live-policy benefit, game solve, or level solve is claimed",
+        "random_seed": {
+          "evaluation_seed_schedule": [
+            6656001,
+            6656002,
+            6656003
+          ],
+          "held_families": [
+            "tn36",
+            "tr87",
+            "vc33"
+          ],
+          "learner_seed": 6656,
+          "train_families": [
+            "ft09",
+            "lp85"
+          ]
+        },
+        "status": "blocked_archived_transport_lacks_redirect_outcomes",
+        "verdict_class": "blocked"
+      },
+      "read_error": null,
+      "size_bytes": 20026228,
+      "terminal_class": "blocked_terminal"
+    },
+    {
+      "artifact_family": "supervisor_artifact",
+      "exists": true,
+      "file_sha256": "sha256:5c8b07486a0ff9a543ce093374a67f2935f553cc1ef7d048b6561ff9a1996d57",
+      "name": "supervisor_exp6682",
+      "path": "results/experiment_6682_arc_held_family_supervisor_ab.json",
+      "producer_configuration": {
+        "honest_verdict": "blocked: held-family supervisor A/B is partial because verification_failure; no transition benefit or solve is claimed",
+        "random_seed": {
+          "analysis_seed": 6682881,
+          "arm_order_seed": 6682991,
+          "attack_seed": 6682999,
+          "episode_seeds_requested": [
+            6682001,
+            6682002,
+            6682003
+          ],
+          "online_environment_seed_effective": false
+        },
+        "status": "complete_arc_supervisor_ab_partial",
+        "verdict_class": "partial"
+      },
+      "read_error": null,
+      "size_bytes": 95590596,
+      "terminal_class": "blocked_terminal"
+    },
+    {
+      "artifact_family": "supervisor_refinement_ledger",
+      "exists": true,
+      "file_sha256": "sha256:e8228308a930ef6e42da26d1ae061769cad266e0e0f1454c02cd58aea37fc197",
+      "name": "supervisor_ledger",
+      "path": "ops/arc_supervisor_refinement_ledger.json",
+      "producer_configuration": {
+        "honest_verdict": null,
+        "status": null,
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 8570,
+      "terminal_class": "complete_terminal"
+    },
+    {
+      "artifact_family": "source_artifact",
+      "exists": true,
+      "file_sha256": "sha256:bf61e50970530a9844103e59f702c68e32a8aba12f78b1c68dd6154685b9107a",
+      "name": "upstream_exp6681",
+      "path": "results/experiment_6681_arc_post_redirect_outcomes.json",
+      "producer_configuration": {
+        "honest_verdict": "complete: every applied held-family redirect has one exact live next-outcome row (30 eligible); this is transport evidence with no solve claim",
+        "random_seed": {
+          "attack_order_seed": 6681999,
+          "episode_seeds_requested": [
+            6681001,
+            6681002,
+            6681003
+          ],
+          "held_families": [
+            "tn36",
+            "tr87",
+            "vc33"
+          ],
+          "online_environment_seed_effective": false,
+          "online_seed_limit": "Arcade ONLINE does not transmit make(seed=...) to the remote wrapper"
+        },
+        "status": "complete_arc_outcome_transport_ready",
+        "verdict_class": "null"
+      },
+      "read_error": null,
+      "size_bytes": 54272816,
+      "terminal_class": "complete_terminal"
+    },
+    {
+      "artifact_family": "supervisor_artifact",
+      "exists": true,
+      "file_sha256": "sha256:5832b0982069bebcc5ef5729094bf97aa97f1564c9f7c25eb536e79c69fbaaf7",
+      "name": "upstream_exp6776",
+      "path": "results/experiment_6776_arc_shadow_supervisor_accrual.json",
+      "producer_configuration": {
+        "experiment": 6776,
+        "honest_verdict": "complete_blocked_shadow_supervisor_accrual:exclusive_gpu_without_unrelated_compute",
+        "model_specs_sha256": "sha256:43f7dc5653a58e275c1f9c0316353cf6d0dfaf92814901b4614ad162e13f5d01",
+        "random_seed": {
+          "canary_seed": 2026083099,
+          "cell_seed_schedule": [
+            2026083001,
+            2026083002,
+            2026083003,
+            2026083004,
+            2026083001,
+            2026083002,
+            2026083003,
+            2026083004,
+            2026083001,
+            2026083099
+          ],
+          "frozen_science_seeds": [
+            2026083001,
+            2026083002,
+            2026083003,
+            2026083004
+          ]
+        },
+        "shadow_supervisor_transport_ready": false,
+        "status": "complete_blocked_shadow_supervisor_accrual",
+        "supervisor_mode": "shadow",
+        "supervisor_window": 120,
+        "verdict_class": "blocked"
+      },
+      "read_error": null,
+      "size_bytes": 92650,
+      "terminal_class": "blocked_terminal"
+    },
+    {
+      "artifact_family": "tool_gap_artifact",
+      "exists": true,
+      "file_sha256": "sha256:0e30a3c833d79ba8ea6c937c7d4530d39f39224fc386b8e6e4ddd8dc3ee1d9c9",
+      "name": "upstream_exp6777",
+      "path": "results/experiment_6777_arc_tool_gap_transport.json",
+      "producer_configuration": {
+        "experiment": 6777,
+        "honest_verdict": "blocked_gate_check_failed",
+        "status": "blocked",
+        "verdict_class": null
+      },
+      "read_error": null,
+      "size_bytes": 2375,
+      "terminal_class": "blocked_terminal"
+    }
+  ],
+  "tool_gap_cells_ready_score": 1,
+  "tool_gap_eligible_cells": {
+    "count": 4,
+    "exact_count_rule": "count rows where tool_gap_receipt_complete is true",
+    "row_ids": [
+      "leaderboard_trajectory|m0r0-sk48-132287|m0r0|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete",
+      "leaderboard_trajectory|m0r0-sk48-132287|sk48|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete",
+      "leaderboard_trajectory|sp80-su15-70505|sp80|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete",
+      "leaderboard_trajectory|sp80-su15-70505|su15|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete"
+    ]
+  },
+  "unmatched_cell_reasons": [
+    {
+      "game": "cd82",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "supervisor_receipt_missing_or_unobserved",
+        "tool_gap_receipt_missing_or_unobserved"
+      ],
+      "source_path": "results/arc_leaderboard_eval_runs/cd82-ft09-ka59-3452377.json",
+      "stratum_identity": "leaderboard_trajectory|cd82-ft09-ka59-3452377|cd82|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete"
+    },
+    {
+      "game": "r11l",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "supervisor_receipt_missing_or_unobserved",
+        "tool_gap_receipt_missing_or_unobserved"
+      ],
+      "source_path": "results/arc_leaderboard_eval_runs/lp85-r11l-3762597.json",
+      "stratum_identity": "leaderboard_trajectory|lp85-r11l-3762597|r11l|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete"
+    },
+    {
+      "game": "lp85",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "supervisor_receipt_missing_or_unobserved",
+        "tool_gap_receipt_missing_or_unobserved"
+      ],
+      "source_path": "results/arc_leaderboard_eval_runs/lp85-r11l-3762597.json",
+      "stratum_identity": "leaderboard_trajectory|lp85-r11l-3762597|lp85|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete"
+    },
+    {
+      "game": "ls20",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "supervisor_receipt_missing_or_unobserved",
+        "tool_gap_receipt_missing_or_unobserved"
+      ],
+      "source_path": "results/arc_leaderboard_eval_runs/ls20-wa30-4186462.json",
+      "stratum_identity": "leaderboard_trajectory|ls20-wa30-4186462|ls20|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete"
+    },
+    {
+      "game": "wa30",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "supervisor_receipt_missing_or_unobserved",
+        "tool_gap_receipt_missing_or_unobserved"
+      ],
+      "source_path": "results/arc_leaderboard_eval_runs/ls20-wa30-4186462.json",
+      "stratum_identity": "leaderboard_trajectory|ls20-wa30-4186462|wa30|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete"
+    },
+    {
+      "game": "m0r0",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "supervisor_receipt_missing_or_unobserved"
+      ],
+      "source_path": "results/arc_leaderboard_eval_runs/m0r0-sk48-132287.json",
+      "stratum_identity": "leaderboard_trajectory|m0r0-sk48-132287|m0r0|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete"
+    },
+    {
+      "game": "sk48",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "supervisor_receipt_missing_or_unobserved"
+      ],
+      "source_path": "results/arc_leaderboard_eval_runs/m0r0-sk48-132287.json",
+      "stratum_identity": "leaderboard_trajectory|m0r0-sk48-132287|sk48|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete"
+    },
+    {
+      "game": "sp80",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "supervisor_receipt_missing_or_unobserved",
+        "tool_gap_receipt_missing_or_unobserved"
+      ],
+      "source_path": "results/arc_leaderboard_eval_runs/sp80-su15-70215.json",
+      "stratum_identity": "leaderboard_trajectory|sp80-su15-70215|sp80|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete"
+    },
+    {
+      "game": "su15",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "supervisor_receipt_missing_or_unobserved",
+        "tool_gap_receipt_missing_or_unobserved"
+      ],
+      "source_path": "results/arc_leaderboard_eval_runs/sp80-su15-70215.json",
+      "stratum_identity": "leaderboard_trajectory|sp80-su15-70215|su15|unsloth/Qwen3.8-27B-GGUF|e3|2500|off_or_unobserved|unobserved|complete"
+    },
+    {
+      "game": "sp80",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "supervisor_receipt_missing_or_unobserved"
+      ],
+      "source_path": "results/arc_leaderboard_eval_runs/sp80-su15-70505.json",
+      "stratum_identity": "leaderboard_trajectory|sp80-su15-70505|sp80|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete"
+    },
+    {
+      "game": "su15",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "supervisor_receipt_missing_or_unobserved"
+      ],
+      "source_path": "results/arc_leaderboard_eval_runs/sp80-su15-70505.json",
+      "stratum_identity": "leaderboard_trajectory|sp80-su15-70505|su15|unsloth/Qwen3.8-27B-GGUF|e3|2500|selfparse|unobserved|complete"
+    },
+    {
+      "game": "tu93",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "tool_gap_receipt_missing_or_unobserved",
+        "trajectory_receipt_missing"
+      ],
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:4528ffc805ebe4bf0c35f7085cb631a59f228901e12f53e2b350ec7748fae26c|tu93|unknown|S_llmon|399|unknown|applied|complete"
+    },
+    {
+      "game": "ar25",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "tool_gap_receipt_missing_or_unobserved",
+        "trajectory_receipt_missing"
+      ],
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:56984731d95aa868eb4d5ef34264621b62d7da64dea5a3f906d49c27af892739|ar25|unknown|S_llmon|399|unknown|applied|complete"
+    },
+    {
+      "game": "tu93",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "tool_gap_receipt_missing_or_unobserved",
+        "trajectory_receipt_missing"
+      ],
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9|tu93|unknown|S_llmon|399|unknown|applied|complete"
+    },
+    {
+      "game": "tu93",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "tool_gap_receipt_missing_or_unobserved",
+        "trajectory_receipt_missing"
+      ],
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f|tu93|unknown|S_llmon|399|unknown|applied|complete"
+    },
+    {
+      "game": "tu93",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "tool_gap_receipt_missing_or_unobserved",
+        "trajectory_receipt_missing"
+      ],
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8|tu93|unknown|S_llmon|399|unknown|applied|complete"
+    },
+    {
+      "game": "tu93",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "tool_gap_receipt_missing_or_unobserved",
+        "trajectory_receipt_missing"
+      ],
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:cd18591a0431271b3e93826e0fcb9f7f0798569cbbf35433b7fb0f27089f1bc3|tu93|unknown|S_llmon|399|unknown|applied|complete"
+    },
+    {
+      "game": "tu93",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "tool_gap_receipt_missing_or_unobserved",
+        "trajectory_receipt_missing"
+      ],
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:d2dd6bd53afef43caaba612e72e2e274b473a3b5a7443d3d6e36f1f3ee3eef66|tu93|unknown|S_llmon|399|unknown|applied|complete"
+    },
+    {
+      "game": "ar25",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "tool_gap_receipt_missing_or_unobserved",
+        "trajectory_receipt_missing"
+      ],
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:d6f4876125b38a7d8b2658952aa09b9e1c55414d483414b2434329123e507004|ar25|unknown|S_llmon|399|unknown|applied|complete"
+    },
+    {
+      "game": "ar25",
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "tool_gap_receipt_missing_or_unobserved",
+        "trajectory_receipt_missing"
+      ],
+      "source_path": "ops/arc_supervisor_refinement_ledger.json",
+      "stratum_identity": "supervisor_refinement_ledger|sha256:fa1fa4e4ea79e841bea8be06a805fb4d670761ed44e89bce13372c6b0f013908|ar25|unknown|S_llmon|399|unknown|applied|complete"
+    },
+    {
+      "game": null,
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "missing_artifact"
+      ],
+      "source_path": "ops/arc_tool_gap_ledger.json",
+      "stratum_identity": null
+    },
+    {
+      "game": null,
+      "ineligible_for_effect_claim": true,
+      "reasons": [
+        "missing_artifact"
+      ],
+      "source_path": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
+      "stratum_identity": null
+    }
+  ],
+  "verdict_class": "partial",
+  "verifier_is_oracle": false
+}

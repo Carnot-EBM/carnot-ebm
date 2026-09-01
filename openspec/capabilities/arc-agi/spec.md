@@ -1401,3 +1401,83 @@ the meaning of every later cell in the same sweep.
 **Then** that engine has a declared entry module, and a test fails if the two
 lists disagree, because an undeclared engine falls back to another engine's
 closure and silently under-reports its own reach.
+
+## REQ-ARC-6843: Live ARC Evidence Stratum Freeze
+
+Experiment 6843 SHALL freeze an immutable inventory of terminal live-agent ARC
+evidence available at execution time. The inventory SHALL separate model,
+policy, game, budget, run identity, tool-loop state, supervisor state, and
+receipt completeness. It SHALL treat in-flight processes as observations only.
+It SHALL not wait for, stop, signal, lease, or otherwise alter a live process.
+
+The producer SHALL require `v598_evidence_root_ready_score=1`, readable ARC
+registry and status files, and a readable canonical live-path source identity
+before any complete inventory verdict. If a gate fails, it SHALL still write a
+terminal `complete_blocked_live_arc_inventory` artifact with
+`gate_check_summary` naming the failed check, expected value, and observed
+value. The current live run does not need to finish.
+
+The producer SHALL inventory terminal supervisor, tool-gap, trajectory, and
+leaderboard artifacts by file bytes, source hash, schema/status, and producer
+configuration. It SHALL not import producer claims as ground truth. It SHALL
+reject incomplete artifacts from eligible rows and list them in
+`incomplete_artifact_manifest`.
+
+The artifact SHALL write
+`results/experiment_6843_live_arc_evidence_stratum_freeze.json` with these
+top-level fields: `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`process_observations`, `reproducibility_checksum`, `rows`,
+`terminal_artifact_manifest`, `incomplete_artifact_manifest`,
+`configuration_strata`, `supervisor_eligible_cells`, `tool_gap_eligible_cells`,
+`unmatched_cell_reasons`, `arc_inventory_complete_score`,
+`supervisor_cells_ready_score`, `tool_gap_cells_ready_score`, `solve_claim`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`.
+
+`arc_inventory_complete_score` SHALL be 1 only when all preconditions pass, at
+least one terminal row exists, duplicate run-game-stratum identities are absent,
+all row hashes are present, and all unmatched cells are explicitly explained.
+`supervisor_cells_ready_score` and `tool_gap_cells_ready_score` SHALL be derived
+from exact eligible cell counts. These readiness fields SHALL not claim an ARC
+solve or mechanism effect. `solve_claim` SHALL be false and
+`verifier_is_oracle` SHALL be false.
+
+### SCENARIO-ARC-6843-TERMINAL-DETECTION
+
+**Given** complete, partial, blocked, and missing ARC artifacts
+**When** Exp6843 classifies them
+**Then** only terminal complete artifacts can produce eligible rows, blocked
+artifacts remain terminal but ineligible, and partial or missing artifacts go to
+`incomplete_artifact_manifest`.
+
+### SCENARIO-ARC-6843-STRATUM-SEPARATION
+
+**Given** two terminal rows for the same game with different model, policy,
+budget, supervisor mode, or tool-loop state
+**When** Exp6843 builds rows
+**Then** the rows remain separate and duplicate identities in the same complete
+stratum fail closed.
+
+### SCENARIO-ARC-6843-PROCESS-OBSERVATION
+
+**Given** a live ARC process and its model worker
+**When** Exp6843 samples process state
+**Then** it records PID, command, start time, state, and observed configuration
+without sending signals, changing leases, deleting locks, or waiting for
+completion.
+
+### SCENARIO-ARC-6843-CHECKSUMS
+
+**Given** the same terminal artifacts and process observations
+**When** Exp6843 rebuilds the artifact
+**Then** each source artifact hash and row hash is stable, and the top-level
+`reproducibility_checksum` ignores only timing fields.
+
+### SCENARIO-ARC-6843-NO-SOLVE-CLAIM
+
+**Given** terminal leaderboard rows and supervisor/tool-gap receipts
+**When** Exp6843 emits readiness scores
+**Then** `solve_claim=false`, `verdict_class` is drawn from the closed verdict
+set, and `honest_verdict` starts with `complete_` while making no game-level
+solve claim.
