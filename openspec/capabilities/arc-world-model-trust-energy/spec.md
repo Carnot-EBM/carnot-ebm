@@ -28764,3 +28764,36 @@ is gated on `applies`.
 Implementation status: implemented 2026-08-30
 (`python/carnot/agentic/arc_competition_agent.py:_make_trajectory_supervisor`;
 `tests/python/test_arc_trajectory_supervisor.py`, 38 tests, 3/3 mutations RED).
+
+### REQ-ARC-WMTE-6850: A multi-game eval banks each game as it finishes
+
+`scripts/arc_leaderboard_eval.py` SHALL write a partial record after every completed game, to a
+run-scoped path, and SHALL reserve the tracked sweep file for a completed run.
+
+#### SCENARIO-ARC-WMTE-6850-A: game one is on disk before game two starts
+- GIVEN a run over two games
+- WHEN the second game begins
+- THEN a partial record already exists carrying the first game's row, `complete: false`, and
+  `games_completed: 1`
+
+#### SCENARIO-ARC-WMTE-6850-B: a death mid-run does not lose the finished game
+- GIVEN a run whose second game raises
+- THEN the first game's record survives on disk
+- AND its `honest_verdict` carries NO terminal prefix, so the reconciler cannot read an
+  interrupted run as a completed one
+
+#### SCENARIO-ARC-WMTE-6850-C: a partial never claims the tracked sweep file
+- GIVEN a full sweep with no `--only`
+- THEN every partial goes to the gitignored `*_runs/` directory
+- AND only the final, complete record is written to `results/arc_leaderboard_eval.json`
+- AND the partial is removed once that record exists
+
+Rationale: 2026-09-01. The single write sat outside the per-game loop, so a two-game run at
+roughly 5.4 hours per game (measured on cd82, 19,543s) produced nothing for about 11 hours and a
+crash at hour 10 lost both games, including the trajectory-supervisor receipts they existed to
+gather. The tracked-path rule is not incidental: writing a partial there would replace a full
+sweep with an in-progress one, which is how the 25-game sweep of commit f2b82c89a6 was destroyed.
+
+Implementation status: implemented 2026-09-01 (`scripts/arc_leaderboard_eval.py`;
+`tests/python/test_arc_eval_partial_write.py`, 4 tests, 5/5 mutations RED, including a mutation
+that restores the original write-at-the-end and fails 3 of them).

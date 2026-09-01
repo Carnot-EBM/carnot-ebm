@@ -39,6 +39,7 @@ import random
 import sys
 import time
 from pathlib import Path
+from typing import Any
 
 REPO = Path(__file__).resolve().parents[1]
 
@@ -1036,6 +1037,54 @@ def main() -> int:
     )
     rows, total_levels, total_eff, gaps = [], 0, 0.0, []
     live_levels_sum, oracle_sum, gap_sum = 0, 0, 0
+
+    def _payload(verdict: str, *, complete: bool) -> dict[str, Any]:
+        """Build the result record. One builder so the partial and the final cannot drift.
+
+        Two copies of this dict is how a partial ends up missing the field a reader needs.
+        """
+        return {
+            "experiment": "arc_live_oracle_gap"
+            if games_mode == "oracle"
+            else "arc_leaderboard_eval",
+            "games_mode": games_mode,
+            "policy": policy_kind,
+            "budget": budget,
+            "random_seed": seed,
+            "live_levels": live_levels_sum if games_mode == "oracle" else total_levels,
+            "oracle_levels": oracle_sum,
+            "gap": gap_sum,
+            "efficiency_sum": round(total_eff, 4),
+            "open_gaps": gaps,
+            "per_game": rows,
+            "complete": complete,
+            "games_completed": len(rows),
+            "games_planned": len(games),
+            "inference_substrate": "offline_sim_no_quota_frame_only_live_agent",
+            "honest_verdict": verdict,
+        }
+
+    # BANK EACH GAME AS IT FINISHES (2026-09-01).
+    #
+    # The final write below runs after the whole loop. A two-game run at roughly 5.4 hours per
+    # game therefore produced nothing for about 11 hours, and a crash at hour 10 lost both
+    # games -- including every trajectory-supervisor receipt they had accrued, which is the
+    # evidence such runs exist to gather.
+    #
+    # The partial ALWAYS goes to the run-scoped, gitignored directory, never to the tracked
+    # sweep file, even on a full sweep. Writing a partial to the tracked path would replace a
+    # complete sweep with an in-progress one -- the exact record loss that commit f2b82c89a6's
+    # 25-game sweep suffered in 2026-08 and that the block below this loop exists to prevent.
+    _sweep_name = (
+        "arc_live_oracle_gap.json" if games_mode == "oracle" else "arc_leaderboard_eval.json"
+    )
+    _partial_dir = REPO / "results" / (_sweep_name[: -len(".json")] + "_runs")
+    _partial_dir.mkdir(parents=True, exist_ok=True)
+    _partial = (
+        _partial_dir
+        / f"{'-'.join(sorted(only.split(','))) if only else 'sweep'}-{os.getpid()}.partial.json"
+    )
+
     for game in games:
         t0 = time.time()
         r = run_game(
@@ -1062,6 +1111,16 @@ def main() -> int:
             f"eff={r['efficiency']:.4f} nav_reset={r['reset_replay_steps']} "
             f"nav_fwhr={r['forward_walk_hit_rate']:.4f}{extra}  [{time.time() - t0:.0f}s]",
             flush=True,
+        )
+        _write_json_atomic(
+            _partial,
+            json.dumps(
+                _payload(
+                    f"partial_{len(rows)}_of_{len(games)}_games_run_in_progress",
+                    complete=False,
+                ),
+                indent=2,
+            ),
         )
     if games_mode == "oracle":
         print(
@@ -1096,9 +1155,6 @@ def main() -> int:
     # So: a subset run writes a RUN-SCOPED file and leaves the sweep alone. Only a genuine full
     # sweep may claim the tracked path, and it does so atomically.
     _is_subset = bool(only)
-    _sweep_name = (
-        "arc_live_oracle_gap.json" if games_mode == "oracle" else "arc_leaderboard_eval.json"
-    )
     if _is_subset:
         _runs = REPO / "results" / (_sweep_name[: -len(".json")] + "_runs")
         _runs.mkdir(parents=True, exist_ok=True)
@@ -1106,30 +1162,12 @@ def main() -> int:
         out = _runs / f"{_tag}-{os.getpid()}.json"
     else:
         out = REPO / "results" / _sweep_name
-    _write_json_atomic(
-        out,
-        json.dumps(
-            {
-                "experiment": "arc_live_oracle_gap"
-                if games_mode == "oracle"
-                else "arc_leaderboard_eval",
-                "games_mode": games_mode,
-                "policy": policy_kind,
-                "budget": budget,
-                "random_seed": seed,
-                "live_levels": live_levels_sum if games_mode == "oracle" else total_levels,
-                "oracle_levels": oracle_sum,
-                "gap": gap_sum,
-                "efficiency_sum": round(total_eff, 4),
-                "open_gaps": gaps,
-                "per_game": rows,
-                "inference_substrate": "offline_sim_no_quota_frame_only_live_agent",
-                "honest_verdict": verdict,
-            },
-            indent=2,
-        ),
-    )
+    _write_json_atomic(out, json.dumps(_payload(verdict, complete=True), indent=2))
     print(f"  wrote {out.relative_to(REPO)}", flush=True)
+    # The crash-insurance copy has served its purpose; the real record now exists. Removing it
+    # stops a later reader globbing this directory from finding a stale partial beside a
+    # finished run.
+    _partial.unlink(missing_ok=True)
     return 0
 
 
