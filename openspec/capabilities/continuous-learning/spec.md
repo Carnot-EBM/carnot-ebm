@@ -9899,3 +9899,153 @@ And `controller_benefit_gate_score` SHALL equal zero.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-6854 and SCENARIO-CL-6854-* | Planned: `python/carnot/continuous_learning.py`; `python/carnot/experiment_6854_risk_sensitive_abstention_memory_controller.py`; `scripts/experiments/experiment_6854_risk_sensitive_abstention_memory_controller.py`; `results/experiment_6854_risk_sensitive_abstention_memory_controller.json`. | Planned: focused controller tests, new-code coverage, full Python tests, Ruff, OpenSpec coverage, adversarial verification, artifact convention, verdict-row consistency, leakage, and root-clutter checks. |
+
+## REQ-CL-6855: Counterfactual Memory Credit Audit
+
+The system SHALL independently replay the bounded external-policy writes from
+Exp6854. A write SHALL mean one observed update receipt that changes only the
+controller's sufficient statistics. The audit SHALL use a fresh reducer and
+replay engine. It SHALL NOT import Exp6854's aggregate calculator.
+
+Before replay, Exp6855 SHALL require
+`risk_sensitive_controller_complete_score=1`, stable decision and state
+hashes, complete exact later outcomes, and a declared valid-counterfactual
+contract. A failed check SHALL write
+`complete_blocked_counterfactual_memory_credit_audit`. The blocked artifact
+SHALL set `counterfactual_memory_audit_complete_score=0` and SHALL name each
+failed check and observed value in `gate_check_summary`.
+
+The valid-counterfactual contract SHALL permit deletion only when the fresh
+reducer reconstructs every later selection state with the observed exogenous
+decision order, contexts, action availability, and exact outcomes unchanged.
+Substitution SHALL use an exact observed donor write with compatible features
+and action. Order replay SHALL change only exchangeable writes at the same
+reveal boundary. The audit SHALL reject missing support, duplicate writes,
+invalid coalitions, and a divergent state path. It SHALL not infer an
+unobserved environmental outcome.
+
+Each target decision SHALL use a bounded window of eligible prior writes. A
+window with at most eight writes SHALL use exact coalition enumeration. A
+larger window SHALL use seeded bounded permutations and SHALL report a
+convergence interval. Every row SHALL name its method. An approximation SHALL
+never be labeled exact.
+
+The audit SHALL compare learned selection with `no_memory`, `always_memory`,
+`random_admission`, `abstain`, and `placebo_context` policies on the same
+chronological decisions. Every control SHALL preserve action availability.
+The placebo policy SHALL permute only a declared pre-outcome feature. The
+audit SHALL report controller selection skill separately from stream
+composition and environmental luck.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `random_seed`,
+`reproducibility_checksum`, `rows`, `valid_counterfactual_contract`,
+`deletion_rows`, `substitution_rows`, `coalition_rows`,
+`approximation_receipts`, `unsupported_counterfactual_rows`,
+`placebo_control_rows`, `per_write_credit_summary`, `harmful_write_count`,
+`redundant_write_count`, `interaction_witnesses`, `selection_skill_effect`,
+`stream_luck_effect`, `counterfactual_memory_audit_complete_score`,
+`causal_memory_credit_eligible_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`deterministic CPU counterfactual replay`. `verifier_is_oracle` SHALL be false.
+`verdict_class` SHALL use only `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL start with
+`complete_` and SHALL be supported by terminal rows.
+
+The audit SHALL classify each supported write as `helpful`, `harmful`,
+`redundant`, `interaction_only`, or `zero_headroom`. Unsupported writes SHALL
+remain separate. A positive aggregate SHALL not remove a harmful write. Causal
+credit eligibility SHALL depend on replay and support. Benefit eligibility and
+benefit values SHALL remain separate from causal eligibility.
+
+### SCENARIO-CL-6855-PRECONDITIONS: Invalid Evidence Blocks The Audit
+
+Given the controller score, a decision hash, a state hash, an exact outcome,
+or the valid-counterfactual contract fails,
+When Exp6855 checks its source evidence,
+Then it SHALL emit the blocked terminal artifact
+And `gate_check_summary` SHALL name the failed check and observed value.
+
+### SCENARIO-CL-6855-INVALID-COALITION: Coalitions Use Eligible Writes Once
+
+Given a coalition contains an ineligible write or repeats a write,
+When the fresh replay engine validates the coalition,
+Then it SHALL reject the coalition
+And SHALL not emit causal credit for it.
+
+### SCENARIO-CL-6855-MISSING-SUPPORT: Unobserved Transitions Stay Unsupported
+
+Given deletion, substitution, or order replay lacks an exact supported
+transition,
+When Exp6855 evaluates the counterfactual,
+Then it SHALL add an `unsupported_counterfactual_rows` entry
+And its causal credit and benefit fields SHALL remain ineligible.
+
+### SCENARIO-CL-6855-STATE-PATH-DIVERGENCE: Reconstruction Fails Closed
+
+Given a counterfactual state becomes nonfinite, exceeds bounds, or does not
+reach the declared target boundary,
+When Exp6855 reconstructs the later state,
+Then the counterfactual SHALL be unsupported
+And no later outcome SHALL be invented.
+
+### SCENARIO-CL-6855-DUPLICATE-WRITE: Write Identities Are Unique
+
+Given two source updates have the same write identity,
+When Exp6855 validates the chronological write ledger,
+Then the audit SHALL block before counterfactual replay.
+
+### SCENARIO-CL-6855-INTERACTION: Joint Credit Does Not Hide Interactions
+
+Given a write has zero leave-one-out effect but a nonzero coalition marginal,
+When Exp6855 reduces per-write evidence,
+Then it SHALL classify the write as `interaction_only`
+And SHALL emit an interaction witness with the supporting coalition.
+
+### SCENARIO-CL-6855-PLACEBO: Placebo Context Cannot Earn Causal Credit
+
+Given a seeded permutation changes only the declared placebo feature,
+When Exp6855 replays the placebo policy,
+Then decision identities, action availability, chronology, and exact outcomes
+SHALL remain unchanged
+And placebo rows SHALL not enter per-write causal credit.
+
+### SCENARIO-CL-6855-ZERO-HEADROOM: Exact Zero Headroom Stays Separate
+
+Given the exact source row has `safe_selection_headroom=0`,
+When Exp6855 assigns per-write evidence for that target,
+Then the row SHALL be marked `zero_headroom`
+And causal replay eligibility SHALL remain separate from benefit eligibility.
+
+### SCENARIO-CL-6855-METHODS: Exact And Approximate Methods Stay Distinct
+
+Given an eligible window contains at most eight writes,
+When Exp6855 computes coalition credit,
+Then it SHALL enumerate every coalition exactly.
+Given a larger eligible window,
+When Exp6855 computes bounded permutation credit,
+Then it SHALL report the seed, permutation count, and convergence interval
+And SHALL label the method as approximate.
+
+### SCENARIO-CL-6855-CONTROLS: Policy Effects Preserve Matched Opportunities
+
+Given the learned and control policies receive the same decision stream,
+When Exp6855 reduces their row metrics,
+Then each policy SHALL contain one metric per decision in chronological order
+And the audit SHALL separate learned-minus-placebo selection skill from the
+no-memory stream baseline.
+
+### SCENARIO-CL-6855-GATES: Completeness And Credit Stay Separate
+
+Given all supported replays finish but no write has benefit-eligible causal
+credit,
+When Exp6855 computes terminal gates,
+Then `counterfactual_memory_audit_complete_score` SHALL equal one
+And `causal_memory_credit_eligible_score` SHALL equal zero.
+
+## Implementation Status (REQ-CL-6855)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-6855 and SCENARIO-CL-6855-* | Planned: `python/carnot/experiment_6855_counterfactual_memory_credit_audit.py`; `scripts/experiments/experiment_6855_counterfactual_memory_credit_audit.py`; `results/experiment_6855_counterfactual_memory_credit_audit.json`. | Planned: focused counterfactual replay, new-code coverage, full Python tests, Ruff, OpenSpec coverage, adversarial verification, artifact convention, verdict-row consistency, counterfactual validity, and root-clutter checks. |
