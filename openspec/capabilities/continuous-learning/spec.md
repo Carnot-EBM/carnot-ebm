@@ -9658,3 +9658,91 @@ And `honest_verdict` SHALL start with `complete_`.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-6842 and SCENARIO-CL-6842-* | Planned: `python/carnot/experiment_6842_sealed_memory_pathway_portability_audit.py`; `scripts/experiments/experiment_6842_sealed_memory_pathway_portability_audit.py`; `results/experiment_6842_sealed_memory_pathway_portability_audit.json`. | Planned: focused sealed audit, coverage, lint, OpenSpec, adversarial, artifact, verdict-row, and root-clutter checks. |
+
+## REQ-CL-6853: Risk-Sensitive Memory Opportunity Fixture
+
+The system SHALL build a deterministic chronological fixture from Exp6827
+decision rows and the exact later outcomes in Exp6840 and Exp6841. The builder
+SHALL NOT import Exp6842 code, Exp6842 rows, residual doses, residual updates,
+predicted directions, admission decisions, or learner decisions. Each fixture
+row SHALL contain one stable decision identity, one observed action, the three
+available actions, a fixed pre-outcome context, and one exact later outcome.
+
+The fixed actions SHALL be `verified_memory`, `no_memory`, and `abstain`.
+`random_admission` and `always_memory` SHALL be comparison baselines only. The
+fixture SHALL record action availability and observed potential-outcome support.
+It SHALL NOT create an unobserved action outcome.
+
+The pre-outcome context SHALL contain features for relevance, uncertainty,
+exact compatibility, age, correction status, family, capacity, false-positive
+risk, and cost. A provenance manifest SHALL identify the source field or fixed
+rule for each feature. Outcome identities, outcome hashes, signed outcomes,
+effects, headroom labels, and learner decisions SHALL not occur in the decision
+context.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `random_seed`,
+`reproducibility_checksum`, `rows`, `decision_context_schema`,
+`feature_provenance_manifest`, `action_manifest`, `outcome_authority_manifest`,
+`chronological_split_manifest`, `leakage_attack_results`,
+`decision_headroom_rows`, `helpful_memory_count`, `harmful_memory_count`,
+`abstention_opportunity_count`, `memory_headroom_nonzero_score`,
+`risk_sensitive_stream_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`deterministic CPU chronological fixture construction`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL use only `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+`honest_verdict` SHALL start with `complete_`.
+
+### SCENARIO-CL-6853-PRECONDITIONS: Invalid Evidence Blocks The Fixture
+
+Given `v599_evidence_contract_ready_score` is not one, a chronological source
+is unreadable, a decision identity is unstable, or a later outcome is missing,
+When Exp6853 checks its source evidence,
+Then it SHALL write
+`complete_blocked_risk_sensitive_memory_opportunity_fixture`
+And `gate_check_summary` SHALL name each failed check and observed value.
+
+### SCENARIO-CL-6853-LEAKAGE: Decision Context Excludes Outcomes
+
+Given a decision context schema or row contains a denied outcome field,
+When Exp6853 runs leakage attacks,
+Then the fixture SHALL fail closed
+And `risk_sensitive_stream_ready_score` SHALL equal zero.
+
+### SCENARIO-CL-6853-DUPLICATES: Decisions Have Stable Unique Identities
+
+Given two rows have the same decision identity,
+When Exp6853 validates the chronological fixture,
+Then the duplicate SHALL block readiness.
+
+### SCENARIO-CL-6853-ACTIONS: All First-Class Actions Are Available
+
+Given an opportunity row omits `verified_memory`, `no_memory`, or `abstain`,
+When Exp6853 validates action availability,
+Then the row SHALL be invalid
+And no potential outcome SHALL be fabricated for an unsupported action.
+
+### SCENARIO-CL-6853-HEADROOM: Safe Selection Has Positive Controls
+
+Given exact later outcomes include helpful, harmful, ambiguous, delayed
+correction, and zero-headroom opportunities,
+When Exp6853 measures each decision and stratum,
+Then it SHALL record both zero and nonzero safe-selection headroom
+And readiness SHALL require helpful and harmful memory counts above zero.
+
+### SCENARIO-CL-6853-FAMILY-BALANCE: No Family Dominates The Fixture
+
+Given the source includes the three required model families,
+When Exp6853 measures family counts,
+Then each family SHALL contribute the same decision count
+And any imbalance SHALL block readiness.
+
+### SCENARIO-CL-6853-READY: Readiness Is Fully Conjunctive
+
+Given rows are chronological, outcome-complete, nonleaking, action-complete,
+identity-unique, family-balanced, and contain nonzero safe-selection headroom,
+When Exp6853 computes its terminal result,
+Then `memory_headroom_nonzero_score` SHALL equal one
+And `risk_sensitive_stream_ready_score` SHALL equal one.
