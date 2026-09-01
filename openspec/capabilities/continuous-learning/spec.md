@@ -9311,3 +9311,104 @@ held-future benefit.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-6839 and SCENARIO-CL-6839-* | Planned: `python/carnot/experiment_6839_bounded_residual_memory_kernel.py`; `scripts/experiments/experiment_6839_bounded_residual_memory_kernel.py`; `results/experiment_6839_bounded_residual_memory_kernel.json`. | Planned: focused state-machine, artifact, coverage, lint, and deterministic audit checks. |
+
+## REQ-CL-6840: Residual-Memory Chronological Shard A
+
+Exp6840 SHALL run the first deterministic chronological comparison shard over
+the frozen Exp6827 event orders 0, 1, and 2. These zero-based order IDs map to
+`order_1`, `order_2`, and `order_3`. The shard SHALL invoke no LLM, mutate no
+model weights, and SHALL not pool with the later second shard. It SHALL compare
+exactly four memory routes: `no_memory`, `read_only_memory`,
+`random_admission`, and `verified_residual_memory`.
+
+Before any decision, Exp6840 SHALL require
+`residual_memory_kernel_ready_score=1`, complete assigned orders, stable source
+hashes, exact later outcomes, nonzero headroom, and disjoint held-future
+identities. A failed check SHALL write status
+`complete_blocked_residual_memory_shard_a`, emit no comparison rows, set
+`csl_shard_a_complete_score=0.0`, and record each failed check and observed
+value in `gate_check_summary`.
+
+Each event, arm, and seed row SHALL freeze proposal inputs and memory reads
+before later outcomes are revealed. Compute budget, nominal capacity budget,
+event order, and seed schedule SHALL be equal across all arms. Outcome
+direction and action-level credit SHALL be assigned only after reveal. Any
+memory update without a source event, action identity, and later exact outcome
+SHALL reject without mutation.
+
+The shard SHALL report every row by family, zero-based order index, arm, seed,
+available headroom, memory dose, action, exact outcome, held-future metrics,
+capacity use, and negative transfer. It SHALL report wins, ties, losses, and
+no-headroom rows. It SHALL keep effect estimates separate from completion and
+acceptance gates. `csl_shard_a_complete_score` SHALL depend only on planned row
+count and receipt completeness.
+
+The artifact SHALL include `schema`, `experiment_id`, `title`, `run_date`,
+`status`, `openspec_requirement_ids`, `replay_commands`, `field_principles`,
+`preconditions_checked`, `inference_substrate`, `duration_s`,
+`continuous_self_learning_task`, `source_artifact_hashes`, `random_seeds`,
+`reproducibility_checksum`, `split_manifest`, `arm_contracts`, `rows`,
+`held_future_results`, `regret_results`, `abstention_results`,
+`calibration_results`, `memory_dose_results`, `negative_transfer_results`,
+`headroom_summary`, `checkpoint_manifest`, `csl_shard_a_complete_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one principle for every
+top-level field. `inference_substrate` SHALL equal
+`deterministic CPU chronological comparison`. `continuous_self_learning_task`
+SHALL be true. `verifier_is_oracle` SHALL be false. `verdict_class` SHALL use
+only `positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL be terminal, row-supported, and start with
+`complete_`.
+
+### SCENARIO-CL-6840-PRECONDITIONS: Shard A Fails Closed
+
+Given the residual kernel gate, assigned order coverage, source hash, exact
+outcome, headroom, or held-future disjointness check fails,
+When Exp6840 checks its frozen inputs,
+Then it SHALL write `complete_blocked_residual_memory_shard_a`
+And `gate_check_summary` SHALL include the failed check and observed value.
+
+### SCENARIO-CL-6840-ISOLATION: Decisions Cannot Read Later Outcomes
+
+Given one event, arm, seed, and parent memory state,
+When Exp6840 freezes a decision row,
+Then proposal material and memory reads SHALL contain only public event fields
+and prior memory records
+And exact outcome fields SHALL be absent until after reveal.
+
+### SCENARIO-CL-6840-PARITY: Arms And Seeds Share Work Budgets
+
+Given shard A starts,
+When rows are built,
+Then every assigned event SHALL appear once for every arm and seed
+And every arm SHALL expose the same compute budget, nominal capacity budget,
+and seed schedule.
+
+### SCENARIO-CL-6840-CREDIT: Exact Later Outcomes Own Updates
+
+Given a frozen pre-reveal action,
+When Exp6840 reveals the exact later outcome,
+Then action-level credit SHALL use only that outcome direction and frozen dose
+And invalid updates missing source event, action identity, or exact outcome
+SHALL reject without mutation.
+
+### SCENARIO-CL-6840-RESTART: Checkpoint Replay Is Exact
+
+Given persisted shard state bytes,
+When Exp6840 restarts at the fixed checkpoint boundary,
+Then loaded state hashes SHALL match persisted hashes
+And final clean replay hashes SHALL match the live run.
+
+### SCENARIO-CL-6840-METRICS: Row Completeness Drives Completion
+
+Given all planned rows and receipts exist,
+When Exp6840 computes terminal metrics,
+Then held-future accuracy, regret, abstention, calibration, memory dose,
+capacity, and negative-transfer summaries SHALL be row-derived
+And `csl_shard_a_complete_score` SHALL remain separate from effect estimates.
+
+## Implementation Status (REQ-CL-6840)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-6840 and SCENARIO-CL-6840-* | Planned: `python/carnot/experiment_6840_residual_memory_chronological_shard_a.py`; `scripts/experiments/experiment_6840_residual_memory_chronological_shard_a.py`; `results/experiment_6840_residual_memory_chronological_shard_a.json`. | Planned: focused shard, coverage, lint, OpenSpec, adversarial, artifact, verdict-row, and root-clutter checks. |
