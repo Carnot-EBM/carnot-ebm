@@ -4,6 +4,60 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-09-01: an honest artifact was quarantined today because model names are its DATA
+
+`results/experiment_6840_residual_memory_chronological_shard_a.json` carries
+`flagged_adversarial: true` with a CRITICAL `DURATION_TOO_SHORT`. It is honest. Every one of its
+six acceptance checks passed, its verdict is an honest null
+(`complete_null_residual_memory_shard_a_rows_and_receipts_complete`), and its declared substrate
+is `deterministic CPU chronological comparison`, for which 0.038s is entirely plausible.
+
+**Why it was flagged.** `_has_compute_bound_marker()` scans `json.dumps(artifact)` — the WHOLE
+blob. This experiment's subject matter is model families, so the names appear as row labels and
+event identifiers in its data:
+
+    "family": "unsloth/Qwen3.6-35B-A3B-GGUF"
+    "event_id": "unsloth--gemma-4-26B-A4B-it-GGUF|stale_prerequisites-02|seed-681202"
+
+Four markers matched (`unsloth/`, `Qwen3.6-`, `gemma-4-`, `GGUF`), so the artifact was classified
+compute-bound and given the 60s `live_model` floor. **The scan cannot distinguish "I ran this
+model" from "this model name is a value in my dataset."**
+
+**Present harm, not theoretical.** Per the fabrication gate, capstones, evidence tables and any
+headline aggregation MUST skip artifacts carrying `flagged_adversarial: true`. So an honest
+result with six passing checks is now excluded from milestone 2026.09.598's aggregation, and the
+task logged FLAGGED rather than OK.
+
+**This is the same disease as the fix made earlier tonight, in the untouched half.** REQ-VERIFY-6802
+added a compute-claim clause and deliberately restricted it to self-describing fields
+(`title`, `honest_verdict`, `experiment`), because a retrospective that LISTS a training run is
+not a training run — a whole-blob version of that clause made 13 retros compute-bound. The
+identical argument applies to the original marker list, which was left whole-blob. The new clause
+was verified NOT to be the cause here: `_has_compute_bound_marker` returns True both before and
+after that change, and `_claims_compute_in_own_identity` does not fire on this artifact.
+
+**Population, explicitly an upper bound and NOT a defect count.** Across 7,078 top-level
+artifacts, 222 are CRITICAL-flagged while every compute marker sits outside the declaration
+fields (`model_specs`, `target_model`, `inference_substrate`, `models`, `model`, `generator`).
+That heuristic is crude — an artifact may declare its model under a key not in that list — and
+several in the list are honestly-blocked runs (`deferred_to_gpu`, `gpu_required`,
+`live_benchmark_needs_human_trigger`) where nothing ran and a short duration is correct. Treat
+222 as the population where this mechanism COULD misfire. Only exp6840 is confirmed, by tracing
+the matched strings to their positions in the data.
+
+**Interaction with the substrate-string gap filed at 05:38Z.** Same root cause, opposite
+direction. There, an unrecognised substrate (`gpu`) got NO floor and a 3.5ms compute claim passed.
+Here, an unrecognised substrate (`deterministic CPU chronological comparison`) plus a data-borne
+marker got the STRICTEST floor and quarantined honest work. Free-text substrate strings make the
+recogniser fail both ways.
+
+**Not fixed here.** The narrow candidate is to require a compute marker to appear in a
+DECLARATION field rather than anywhere in the blob, mirroring what REQ-VERIFY-6802 did for its own
+clause. That inverts which artifacts are subject to the duration floor corpus-wide, so it needs a
+measured A/B of what stops being flagged before anyone touches it — the same standard the earlier
+change was held to. Whether exp6840's stamp should be retracted via the sanctioned
+`*_cleared_note` route is an operator decision.
+
 ### NEW 2026-09-01: a test re-runs yosys and overwrites a tracked artifact on every full-suite run
 
 Caught live at 07:35Z while a conductor codex child was running the full suite. `git status`
