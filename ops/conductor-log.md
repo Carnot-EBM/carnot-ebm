@@ -16999,3 +16999,4 @@ The l |
 | 2026-09-01 09:23 UTC | Residual-memory chronological comparison shard A | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-01 09:47 UTC | Residual-memory delayed-correction comparison shar | OK | 96 passed, 1 warning in 34.33s |
 | 2026-09-01 10:16 UTC | Sealed residual-memory pathway and family-portabil | OK | 95 passed, 1 warning in 66.30s (0:01:06) |
+| 2026-09-01 10:45 UTC | Live ARC evidence inventory and immutable stratum  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6843_live_ar |
