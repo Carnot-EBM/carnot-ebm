@@ -17013,3 +17013,4 @@ The l |
 | 2026-09-01 15:14 UTC | V599 method-change and evidence contract | OK | 114 passed, 1 warning in 19.38s |
 | 2026-09-01 15:42 UTC | Independent typed-program isomorphic authority aud | OK | 113 passed, 1 warning in 13.35s |
 | 2026-09-01 16:13 UTC | Three-family forced-sequence scoring admission can | OK | 102 passed, 1 warning in 11.69s |
+| 2026-09-01 17:07 UTC | Three-family isomorphic fixed-sequence compatibili | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6851_three_f |
