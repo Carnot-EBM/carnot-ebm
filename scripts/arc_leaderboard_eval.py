@@ -581,6 +581,31 @@ def _read_gateway_card(arc, game: str) -> dict:
         return {"gateway_card_read_error": f"{type(exc).__name__}: {str(exc)[:120]}"}
 
 
+def supervisor_row_field(policy) -> dict[str, Any]:
+    """The row's `trajectory_supervisor` value. Never absent, never None.
+
+    WHY THIS EXISTS HERE (2026-09-01). This eval is the live-path harness, and it collected NO
+    supervisor evidence at all: `trajectory_supervisor_diagnostics()` had exactly three callers,
+    and every one of them was unusable for a live applied run. The lever harness is frozen on a
+    RETIRED generator and refuses to start; exp6776 is hardcoded to shadow mode, and a shadow
+    receipt is not redirect evidence; exp6558 only reduces receipts others produce. So a 13.8-hour
+    live run on 2026-09-01 produced two rows with no supervisor field, and the refinement ledger
+    could not move however long the loop ran.
+
+    The shape is copied deliberately from `arc_scored_path_lever_harness.supervisor_row_field`,
+    including its failure handling: a raising diagnostics call becomes an error marker rather than
+    taking the row down, because an absent field reads as zero to a flat consumer and that
+    ambiguity cost a full day of wrong A/B reporting on 2026-08-21.
+    """
+    try:
+        d = policy.trajectory_supervisor_diagnostics()
+    except Exception as exc:  # instrumentation must never mask the run itself
+        return {"error": f"{type(exc).__name__}:{exc}"}
+    if not isinstance(d, dict):
+        return {"error": f"non_dict_diagnostics:{type(d).__name__}"}
+    return d
+
+
 def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) -> dict:
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
@@ -933,6 +958,9 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
         "generator_provenance": _gen_prov,
         "completions_consumed": _consumed,
         "llm_reached": bool(_consumed.get("completions", 0) > 0),
+        # REQ-ARC-WMTE-6640 rule 5: emitted on EVERY row, both paths, so a consumer can tell
+        # "supervisor off" from "supervisor absent". See supervisor_row_field above.
+        "trajectory_supervisor": supervisor_row_field(policy),
         "levels": levels,
         "reached": reached,
         "actions": actions,
