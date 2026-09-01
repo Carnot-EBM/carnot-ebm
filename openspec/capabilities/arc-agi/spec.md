@@ -1572,3 +1572,91 @@ states, or supervisor modes
 **Then** source hashes, row hashes, and the reproducibility checksum are stable;
 `solve_claim=false`; `verifier_is_oracle=false`; and `honest_verdict` starts
 with `complete_`.
+
+## REQ-ARC-6845: Tool-Gap Causal Support Audit
+
+Experiment 6845 SHALL audit tool-gap obligations from frozen terminal ARC
+artifacts. It SHALL not launch a live ARC run. It SHALL keep request transport,
+tool receipt, agent-visible response, next action, and later outcome as separate
+links.
+
+The producer SHALL require `arc_inventory_complete_score=1`, at least one
+terminal tool-gap cell, immutable raw transcript hashes, request and response
+identities, agent-visible receipt text, next-action receipts, exact later
+outcomes, duplicate-free identities, temporal order, same-configuration
+matching, and nonzero headroom before effect eligibility can be 1. If a gate
+fails, it SHALL still write a terminal
+`complete_blocked_tool_gap_causal_support_audit` artifact. The blocked artifact
+SHALL include `gate_check_summary` with the failed check, expected value, and
+observed value.
+
+The reducer SHALL build a fresh obligation ledger. Each obligation row SHALL
+record the missing fact, requested tool, actual call, exact response,
+agent-visible text, next action, and later exact outcome. A transport receipt
+SHALL not imply utility. A visible response with no changed next action SHALL
+count as transport success but not as use.
+
+The analysis SHALL keep each run configuration in its own stratum. Loop-off
+`r11l`/`lp85` and `ls20`/`wa30` evidence SHALL remain separate from loop-on
+`sp80`/`su15`, `tu93`/`cn04`, and `m0r0`/`sk48` evidence unless execution-time
+receipts prove exact parity. Unmatched and no-headroom rows SHALL be reported as
+diagnostics rather than pooled.
+
+The artifact SHALL write
+`results/experiment_6845_tool_gap_causal_support_audit.json` with these
+top-level fields: `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`reproducibility_checksum`, `per_game_results`, `configuration_strata`,
+`obligation_ledger`, `request_receipt_joins`, `agent_visibility_results`,
+`next_action_results`, `later_outcome_results`, `transport_results`,
+`utility_results`, `headroom_results`, `unmatched_cell_results`,
+`tool_gap_audit_complete_score`, `tool_gap_effect_eligible_score`,
+`solve_claim`, `gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`.
+
+`inference_substrate` SHALL identify deterministic CPU transcript audit work.
+`tool_gap_audit_complete_score` SHALL be derived from audit completeness.
+`tool_gap_effect_eligible_score` SHALL be 1 only when valid joins, timing,
+matching, exact outcomes, and headroom gates pass. That score SHALL mean
+eligibility only. It SHALL not mean the effect is positive. `solve_claim` SHALL
+be false. `verifier_is_oracle` SHALL be false. A complete no-solve,
+no-effect-eligibility audit SHALL use `verdict_class=blocked` when any required
+gate fails; otherwise `verdict_class` SHALL be `null`.
+
+### SCENARIO-ARC-6845-REQUEST-RECEIPT-JOIN
+
+**Given** a tool-gap obligation with request, call, response, and transcript
+identities
+**When** Exp6845 reduces the row
+**Then** the request-to-receipt join is explicit, duplicate-free, and hash-bound.
+
+### SCENARIO-ARC-6845-VISIBILITY-NEXT-ACTION
+
+**Given** a tool response that was rendered back to the agent
+**When** Exp6845 measures utility
+**Then** transport success, response use, and next-action change are reported as
+separate metrics.
+
+### SCENARIO-ARC-6845-GATES-FAIL-CLOSED
+
+**Given** missing outcomes, missing identities, invalid timing, duplicate
+identities, no terminal tool-gap cells, or zero headroom
+**When** Exp6845 evaluates gates
+**Then** it writes `complete_blocked_tool_gap_causal_support_audit`, sets
+`tool_gap_effect_eligible_score=0`, and records the failed check and observed
+value in `gate_check_summary`.
+
+### SCENARIO-ARC-6845-STRATA-NOT-POOLED
+
+**Given** loop-off and loop-on rows for the same model, policy, and budget
+**When** Exp6845 builds strata
+**Then** rows remain separated by game, run, model, policy, budget, tool-loop
+state, supervisor state, and requested tool.
+
+### SCENARIO-ARC-6845-HASHES-NO-SOLVE
+
+**Given** the same frozen source artifacts
+**When** Exp6845 rebuilds the audit
+**Then** source hashes, raw transcript hashes, row hashes, and the
+reproducibility checksum are stable; `solve_claim=false`;
+`verifier_is_oracle=false`; and `honest_verdict` starts with `complete_`.
