@@ -1,0 +1,642 @@
+{
+  "agent_delivery_rows": [
+    {
+      "hop_identity": "sha256:ac1ed3e902d000c4579aac19771d000047b38ce3b2e44341dc6105b159c73f55",
+      "hop_kind": "agent_delivery",
+      "payload": {
+        "agent_visible": true,
+        "visible_text": "{\"error\": \"unknown tool 'missing_grid_tool'; available: ['run_engine_on_transitions', 'query_region', 'diff_grids', 'run_goal_on_states', 'find_objects', 'list_transitions']\", \"ok\": false}"
+      },
+      "payload_sha256": "sha256:9f77420874dc03579a433973e94ea652d9fa03a8ef2f395825e06c620ab0e319",
+      "previous_hop_identity": "sha256:88a3a340f9ce37c37fa3ea86555871350363253543999c5f92ed3c88f8281ea8",
+      "provenance_class": "fixture",
+      "receipt_identity": "sha256:774623452d0320dba1fbbc4619d0a138906386300bd269d614590199a6dd2e9b",
+      "source_sha256": "sha256:612a231cfccd058e999807bf6c47551e5d3dade117ed40065b7d4acabc71ae1a",
+      "timestamp": "2026-09-01T01:00:04Z"
+    }
+  ],
+  "canonical_seam_manifest": [
+    {
+      "live_entrypoint": "make_carnot_agent -> E3AgentPolicy.next_move",
+      "reachable": true,
+      "required_tokens": [
+        "receipt_transport",
+        "record_dispatch"
+      ],
+      "seam": "tool_dispatch",
+      "source_sha256": "sha256:c2228bcfe2c51a038874633ee6845d2471250c13efad717899e49289a188992e",
+      "symbol": "carnot.agentic.arc_induction_tools.dispatch_tool"
+    },
+    {
+      "live_entrypoint": "make_carnot_agent -> E3AgentPolicy.next_move",
+      "reachable": true,
+      "required_tokens": [
+        "receipt_transport",
+        "record_delivery"
+      ],
+      "seam": "agent_visible_delivery",
+      "source_sha256": "sha256:42fec34b0a56094741d623ce90bab746fc0a9b6b5b186fd45cfb9359b8959d9d",
+      "symbol": "carnot.agentic.arc_induction_tool_loop.induce_with_tool_loop"
+    },
+    {
+      "live_entrypoint": "make_carnot_agent -> E3AgentPolicy.next_move",
+      "reachable": true,
+      "required_tokens": [
+        "_record_first_party_tool_gap_outcome",
+        "_record_first_party_tool_gap_next_action"
+      ],
+      "seam": "canonical_next_action_and_outcome",
+      "source_sha256": "sha256:f9cb99f8d3891559855012b1890e191b884740c1ead6832b42d639a3e850ea81",
+      "symbol": "carnot.agentic.arc_competition_agent.E3AgentPolicy.next_move"
+    }
+  ],
+  "deduplication_results": {
+    "byte_identical_detected": true,
+    "conflicting_duplicate_quarantined": true,
+    "conflicting_join_closed": true
+  },
+  "default_off_verified": true,
+  "duration_s": 0.009633,
+  "exact_outcome_rows": [
+    {
+      "hop_identity": "sha256:a55d31fb0c51bd3a07c5e0a4f81191ed7860c587f26aa90f9ea3d56b9abff6ee",
+      "hop_kind": "exact_outcome",
+      "payload": {
+        "exact": true,
+        "level_after": 1,
+        "state_sha256": "sha256:d171e738b7cf358323c3e86dc17c99e85c6c60a9c07560c7de5b0457c84fce1e",
+        "valid_headroom": false
+      },
+      "payload_sha256": "sha256:68e4b0aca400ec12114b5128e5a2c975e428d90936a52f878a7ba6a7abba2e30",
+      "previous_hop_identity": "sha256:b5f096dc8f163c243fec66baefbf859efe1312dfa6debfb34768ff4903144d65",
+      "provenance_class": "fixture",
+      "receipt_identity": "sha256:774623452d0320dba1fbbc4619d0a138906386300bd269d614590199a6dd2e9b",
+      "source_sha256": "sha256:f9cb99f8d3891559855012b1890e191b884740c1ead6832b42d639a3e850ea81",
+      "timestamp": "2026-09-01T01:00:09Z"
+    }
+  ],
+  "experiment_id": "experiment_6859",
+  "field_principles": {
+    "agent_delivery_rows": "agent_delivery_rows is required for the REQ-ARC-6859 audit contract.",
+    "canonical_seam_manifest": "Reachability proves that the contract is not a detached adapter.",
+    "deduplication_results": "Repeated bytes deduplicate while conflicting identities quarantine.",
+    "default_off_verified": "Unset configuration must preserve action identity and write nothing.",
+    "duration_s": "Wall time exposes skipped fixture or replay work.",
+    "exact_outcome_rows": "exact_outcome_rows is required for the REQ-ARC-6859 audit contract.",
+    "experiment_id": "experiment_id is required for the REQ-ARC-6859 audit contract.",
+    "field_principles": "field_principles is required for the REQ-ARC-6859 audit contract.",
+    "game_level_solve_count": "No live rollout means zero new game-level solves.",
+    "gap_detection_rows": "gap_detection_rows is required for the REQ-ARC-6859 audit contract.",
+    "gate_check_summary": "gate_check_summary is required for the REQ-ARC-6859 audit contract.",
+    "honest_verdict": "The terminal verdict states the exact supported evidence boundary.",
+    "inference_substrate": "The run uses canonical seams, fixtures, and terminal replay. It launches no game.",
+    "join_completeness_rows": "Complete joins do not imply response use, progress, or causal effect.",
+    "next_action_rows": "next_action_rows is required for the REQ-ARC-6859 audit contract.",
+    "preconditions_checked": "preconditions_checked is required for the REQ-ARC-6859 audit contract.",
+    "provenance_class_rows": "Fixture, replay, proxy, reconstructed, and authentic rows cannot be pooled.",
+    "receipt_schema": "The schema fixes hop names, identity rules, and provenance classes.",
+    "reproducibility_checksum": "reproducibility_checksum is required for the REQ-ARC-6859 audit contract.",
+    "request_rows": "request_rows is required for the REQ-ARC-6859 audit contract.",
+    "restart_results": "Restart must preserve complete and pending receipt identities.",
+    "rows": "Gap chains and hop metrics stay visible as separate row kinds.",
+    "run_date": "run_date is required for the REQ-ARC-6859 audit contract.",
+    "schema": "schema is required for the REQ-ARC-6859 audit contract.",
+    "solve_claim": "solve_claim is required for the REQ-ARC-6859 audit contract.",
+    "solve_claimed": "Receipt wiring cannot become a solve claim.",
+    "source_artifact_hashes": "Hashes bind the router, schema, and exact seam sources.",
+    "status": "status is required for the REQ-ARC-6859 audit contract.",
+    "tool_gap_live_effect_claim_eligible_score": "Only exact authentic-live used responses with headroom can open effect eligibility.",
+    "tool_gap_receipt_contract_ready_score": "Readiness measures schema and reachable transport completeness only.",
+    "tool_response_rows": "tool_response_rows is required for the REQ-ARC-6859 audit contract.",
+    "verdict_class": "verdict_class is required for the REQ-ARC-6859 audit contract.",
+    "verifier_is_oracle": "The reducer checks receipts; it does not define game correctness."
+  },
+  "game_level_solve_count": 0,
+  "gap_detection_rows": [
+    {
+      "hop_identity": "sha256:bc59953452ecaca708108e2a888cce1e55ee53e7f77138e0d1a82396d2338eb0",
+      "hop_kind": "gap_detection",
+      "payload": {
+        "gap_kind": "unknown_tool",
+        "requested_tool": "missing_grid_tool"
+      },
+      "payload_sha256": "sha256:8b3e6a9f420af856fba7bb3bd3ad1c7b37153a5639e925ab97879fdf33344431",
+      "previous_hop_identity": null,
+      "provenance_class": "fixture",
+      "receipt_identity": "sha256:774623452d0320dba1fbbc4619d0a138906386300bd269d614590199a6dd2e9b",
+      "source_sha256": "sha256:c2228bcfe2c51a038874633ee6845d2471250c13efad717899e49289a188992e",
+      "timestamp": "2026-09-01T01:00:01Z"
+    },
+    {
+      "hop_identity": "sha256:4ceca701f4cc61f8ff1b80bc80c3a218bf509452ecfad2944b0414d735afe038",
+      "hop_kind": "gap_detection",
+      "payload": {
+        "gap_kind": "tool_error",
+        "requested_tool": "list_transitions"
+      },
+      "payload_sha256": "sha256:a2267e34f4491151d8361cdcf63c42db8d34c3b5e2197114141fcc2ba590fbd2",
+      "previous_hop_identity": null,
+      "provenance_class": "fixture",
+      "receipt_identity": "sha256:96d2c917df583e8b682d4b7aba697e6f72a992a4246e0b9c51d6f118d8449122",
+      "source_sha256": "sha256:c2228bcfe2c51a038874633ee6845d2471250c13efad717899e49289a188992e",
+      "timestamp": "2026-09-01T01:00:05Z"
+    }
+  ],
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "arc_receipt_router_complete_score",
+        "expected": 1,
+        "observed": 1,
+        "passed": true
+      },
+      {
+        "check": "canonical_live_seam",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "stable_receipt_schema",
+        "expected": "carnot.arc.first_party_tool_gap_receipt.v1",
+        "observed": "carnot.arc.first_party_tool_gap_receipt.v1",
+        "passed": true
+      },
+      {
+        "check": "game_source_files_read",
+        "expected": [],
+        "observed": [],
+        "passed": true
+      },
+      {
+        "check": "new_live_rollout_count",
+        "expected": 0,
+        "observed": 0,
+        "passed": true
+      }
+    ],
+    "expected": "all checks pass",
+    "failed_check": null,
+    "observed": "all checks pass",
+    "passed": true
+  },
+  "honest_verdict": "complete_first_party_tool_gap_receipt_contract_ready_no_live_effect_claim",
+  "inference_substrate": "canonical_live_seam_default_off_fixture_and_terminal_replay",
+  "join_completeness_rows": [
+    {
+      "agent_visible": true,
+      "causal_eligible": false,
+      "exact_outcome": true,
+      "join_complete": true,
+      "next_action_recorded": true,
+      "provenance_class": "fixture",
+      "quarantine_reason": null,
+      "receipt_identity": "sha256:774623452d0320dba1fbbc4619d0a138906386300bd269d614590199a6dd2e9b",
+      "response_used": null,
+      "source": "fixture",
+      "valid_headroom": false
+    },
+    {
+      "agent_visible": false,
+      "causal_eligible": false,
+      "exact_outcome": false,
+      "join_complete": false,
+      "next_action_recorded": false,
+      "provenance_class": "fixture",
+      "quarantine_reason": null,
+      "receipt_identity": "sha256:96d2c917df583e8b682d4b7aba697e6f72a992a4246e0b9c51d6f118d8449122",
+      "response_used": null,
+      "source": "fixture",
+      "valid_headroom": false
+    }
+  ],
+  "next_action_rows": [
+    {
+      "hop_identity": "sha256:b5f096dc8f163c243fec66baefbf859efe1312dfa6debfb34768ff4903144d65",
+      "hop_kind": "next_action",
+      "payload": {
+        "action": [
+          2,
+          null
+        ],
+        "action_changed": null,
+        "action_identity": "sha256:6812f71b121d94ad3209a41685d8acc66c04d1478cd3fed0aefd58ab0648b021",
+        "level_before": 0,
+        "response_used": null
+      },
+      "payload_sha256": "sha256:f4a35eefdbc2b620337d75dfffa48d9f645020d9544637ca9d601c37563d6b15",
+      "previous_hop_identity": "sha256:ac1ed3e902d000c4579aac19771d000047b38ce3b2e44341dc6105b159c73f55",
+      "provenance_class": "fixture",
+      "receipt_identity": "sha256:774623452d0320dba1fbbc4619d0a138906386300bd269d614590199a6dd2e9b",
+      "source_sha256": "sha256:f9cb99f8d3891559855012b1890e191b884740c1ead6832b42d639a3e850ea81",
+      "timestamp": "2026-09-01T01:00:08Z"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "arc_receipt_router_complete_score",
+      "expected": 1,
+      "observed": 1,
+      "passed": true
+    },
+    {
+      "check": "canonical_live_seam",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "stable_receipt_schema",
+      "expected": "carnot.arc.first_party_tool_gap_receipt.v1",
+      "observed": "carnot.arc.first_party_tool_gap_receipt.v1",
+      "passed": true
+    },
+    {
+      "check": "game_source_files_read",
+      "expected": [],
+      "observed": [],
+      "passed": true
+    },
+    {
+      "check": "new_live_rollout_count",
+      "expected": 0,
+      "observed": 0,
+      "passed": true
+    }
+  ],
+  "provenance_class_rows": [
+    {
+      "live_effect_eligible_count": 0,
+      "provenance_class": "fixture",
+      "row_count": 2
+    },
+    {
+      "live_effect_eligible_count": 0,
+      "provenance_class": "terminal_replay",
+      "row_count": 0
+    },
+    {
+      "live_effect_eligible_count": 0,
+      "provenance_class": "authentic_live",
+      "row_count": 0
+    },
+    {
+      "live_effect_eligible_count": 0,
+      "provenance_class": "reconstructed",
+      "row_count": 0
+    },
+    {
+      "live_effect_eligible_count": 0,
+      "provenance_class": "development_proxy",
+      "row_count": 0
+    },
+    {
+      "live_effect_eligible_count": 0,
+      "provenance_class": "terminal_replay",
+      "row_count": 0
+    }
+  ],
+  "receipt_schema": {
+    "hop_fields": [
+      "receipt_identity",
+      "hop_identity",
+      "hop_kind",
+      "timestamp",
+      "source_sha256",
+      "payload_sha256",
+      "previous_hop_identity",
+      "payload"
+    ],
+    "immutable_identity_field": "receipt_identity",
+    "provenance_classes": [
+      "fixture",
+      "terminal_replay",
+      "authentic_live",
+      "reconstructed",
+      "development_proxy"
+    ],
+    "required_hops": [
+      "gap_detection",
+      "request",
+      "tool_response",
+      "agent_delivery",
+      "next_action",
+      "exact_outcome"
+    ],
+    "schema": "carnot.arc.first_party_tool_gap_receipt.v1"
+  },
+  "reproducibility_checksum": "sha256:7686605491afd917fa632fbecc4dda4c349bcbcd08604dbe55e33ea0a6d0114b",
+  "request_rows": [
+    {
+      "hop_identity": "sha256:35aabcb4bcb31ea87fff77705281c07ce44d19a8ff139f6245862201514f2bdf",
+      "hop_kind": "request",
+      "payload": {
+        "arguments": "{\"region\":3}",
+        "decision_point_identity": "rejected",
+        "requested_tool": "missing_grid_tool"
+      },
+      "payload_sha256": "sha256:44292b5e4bba570e3ccab9f87cc300e02530460e9aa197c19555e553821c1432",
+      "previous_hop_identity": "sha256:bc59953452ecaca708108e2a888cce1e55ee53e7f77138e0d1a82396d2338eb0",
+      "provenance_class": "fixture",
+      "receipt_identity": "sha256:774623452d0320dba1fbbc4619d0a138906386300bd269d614590199a6dd2e9b",
+      "source_sha256": "sha256:c2228bcfe2c51a038874633ee6845d2471250c13efad717899e49289a188992e",
+      "timestamp": "2026-09-01T01:00:02Z"
+    },
+    {
+      "hop_identity": "sha256:d2339749552c53b2a0c72f04093e7914fea404948c031395737ea54f79553721",
+      "hop_kind": "request",
+      "payload": {
+        "arguments": "{}",
+        "decision_point_identity": "tool-error-hidden",
+        "requested_tool": "list_transitions"
+      },
+      "payload_sha256": "sha256:62dc2d432366123e8013e1104c269c3bb6ab8c052406247890deb4c6dc054374",
+      "previous_hop_identity": "sha256:4ceca701f4cc61f8ff1b80bc80c3a218bf509452ecfad2944b0414d735afe038",
+      "provenance_class": "fixture",
+      "receipt_identity": "sha256:96d2c917df583e8b682d4b7aba697e6f72a992a4246e0b9c51d6f118d8449122",
+      "source_sha256": "sha256:c2228bcfe2c51a038874633ee6845d2471250c13efad717899e49289a188992e",
+      "timestamp": "2026-09-01T01:00:06Z"
+    }
+  ],
+  "restart_results": {
+    "identity_stable": true,
+    "pending_chain_preserved": true,
+    "persisted_row_count": 2,
+    "reloaded_row_count": 2
+  },
+  "rows": [
+    {
+      "action_changed": null,
+      "agent_visible": true,
+      "attempt_identity": "fixture-attempt-6859",
+      "causal_eligible": false,
+      "decision_point_identity": "rejected",
+      "exact_outcome": true,
+      "first_party": true,
+      "game_id": "fixture-game",
+      "gap_kind": "unknown_tool",
+      "hops": {
+        "agent_delivery": {
+          "hop_identity": "sha256:ac1ed3e902d000c4579aac19771d000047b38ce3b2e44341dc6105b159c73f55",
+          "hop_kind": "agent_delivery",
+          "payload": {
+            "agent_visible": true,
+            "visible_text": "{\"error\": \"unknown tool 'missing_grid_tool'; available: ['run_engine_on_transitions', 'query_region', 'diff_grids', 'run_goal_on_states', 'find_objects', 'list_transitions']\", \"ok\": false}"
+          },
+          "payload_sha256": "sha256:9f77420874dc03579a433973e94ea652d9fa03a8ef2f395825e06c620ab0e319",
+          "previous_hop_identity": "sha256:88a3a340f9ce37c37fa3ea86555871350363253543999c5f92ed3c88f8281ea8",
+          "receipt_identity": "sha256:774623452d0320dba1fbbc4619d0a138906386300bd269d614590199a6dd2e9b",
+          "source_sha256": "sha256:612a231cfccd058e999807bf6c47551e5d3dade117ed40065b7d4acabc71ae1a",
+          "timestamp": "2026-09-01T01:00:04Z"
+        },
+        "exact_outcome": {
+          "hop_identity": "sha256:a55d31fb0c51bd3a07c5e0a4f81191ed7860c587f26aa90f9ea3d56b9abff6ee",
+          "hop_kind": "exact_outcome",
+          "payload": {
+            "exact": true,
+            "level_after": 1,
+            "state_sha256": "sha256:d171e738b7cf358323c3e86dc17c99e85c6c60a9c07560c7de5b0457c84fce1e",
+            "valid_headroom": false
+          },
+          "payload_sha256": "sha256:68e4b0aca400ec12114b5128e5a2c975e428d90936a52f878a7ba6a7abba2e30",
+          "previous_hop_identity": "sha256:b5f096dc8f163c243fec66baefbf859efe1312dfa6debfb34768ff4903144d65",
+          "receipt_identity": "sha256:774623452d0320dba1fbbc4619d0a138906386300bd269d614590199a6dd2e9b",
+          "source_sha256": "sha256:f9cb99f8d3891559855012b1890e191b884740c1ead6832b42d639a3e850ea81",
+          "timestamp": "2026-09-01T01:00:09Z"
+        },
+        "gap_detection": {
+          "hop_identity": "sha256:bc59953452ecaca708108e2a888cce1e55ee53e7f77138e0d1a82396d2338eb0",
+          "hop_kind": "gap_detection",
+          "payload": {
+            "gap_kind": "unknown_tool",
+            "requested_tool": "missing_grid_tool"
+          },
+          "payload_sha256": "sha256:8b3e6a9f420af856fba7bb3bd3ad1c7b37153a5639e925ab97879fdf33344431",
+          "previous_hop_identity": null,
+          "receipt_identity": "sha256:774623452d0320dba1fbbc4619d0a138906386300bd269d614590199a6dd2e9b",
+          "source_sha256": "sha256:c2228bcfe2c51a038874633ee6845d2471250c13efad717899e49289a188992e",
+          "timestamp": "2026-09-01T01:00:01Z"
+        },
+        "next_action": {
+          "hop_identity": "sha256:b5f096dc8f163c243fec66baefbf859efe1312dfa6debfb34768ff4903144d65",
+          "hop_kind": "next_action",
+          "payload": {
+            "action": [
+              2,
+              null
+            ],
+            "action_changed": null,
+            "action_identity": "sha256:6812f71b121d94ad3209a41685d8acc66c04d1478cd3fed0aefd58ab0648b021",
+            "level_before": 0,
+            "response_used": null
+          },
+          "payload_sha256": "sha256:f4a35eefdbc2b620337d75dfffa48d9f645020d9544637ca9d601c37563d6b15",
+          "previous_hop_identity": "sha256:ac1ed3e902d000c4579aac19771d000047b38ce3b2e44341dc6105b159c73f55",
+          "receipt_identity": "sha256:774623452d0320dba1fbbc4619d0a138906386300bd269d614590199a6dd2e9b",
+          "source_sha256": "sha256:f9cb99f8d3891559855012b1890e191b884740c1ead6832b42d639a3e850ea81",
+          "timestamp": "2026-09-01T01:00:08Z"
+        },
+        "request": {
+          "hop_identity": "sha256:35aabcb4bcb31ea87fff77705281c07ce44d19a8ff139f6245862201514f2bdf",
+          "hop_kind": "request",
+          "payload": {
+            "arguments": "{\"region\":3}",
+            "decision_point_identity": "rejected",
+            "requested_tool": "missing_grid_tool"
+          },
+          "payload_sha256": "sha256:44292b5e4bba570e3ccab9f87cc300e02530460e9aa197c19555e553821c1432",
+          "previous_hop_identity": "sha256:bc59953452ecaca708108e2a888cce1e55ee53e7f77138e0d1a82396d2338eb0",
+          "receipt_identity": "sha256:774623452d0320dba1fbbc4619d0a138906386300bd269d614590199a6dd2e9b",
+          "source_sha256": "sha256:c2228bcfe2c51a038874633ee6845d2471250c13efad717899e49289a188992e",
+          "timestamp": "2026-09-01T01:00:02Z"
+        },
+        "tool_response": {
+          "hop_identity": "sha256:88a3a340f9ce37c37fa3ea86555871350363253543999c5f92ed3c88f8281ea8",
+          "hop_kind": "tool_response",
+          "payload": {
+            "request_rejected": true,
+            "response": {
+              "error": "unknown tool 'missing_grid_tool'; available: ['run_engine_on_transitions', 'query_region', 'diff_grids', 'run_goal_on_states', 'find_objects', 'list_transitions']",
+              "ok": false
+            }
+          },
+          "payload_sha256": "sha256:36b97d4a5d4705866807b4bcf1b865e8beb8198f77855f61de41110fe802bdf1",
+          "previous_hop_identity": "sha256:35aabcb4bcb31ea87fff77705281c07ce44d19a8ff139f6245862201514f2bdf",
+          "receipt_identity": "sha256:774623452d0320dba1fbbc4619d0a138906386300bd269d614590199a6dd2e9b",
+          "source_sha256": "sha256:c2228bcfe2c51a038874633ee6845d2471250c13efad717899e49289a188992e",
+          "timestamp": "2026-09-01T01:00:03Z"
+        }
+      },
+      "join_complete": true,
+      "levels_after": 1,
+      "levels_before": 0,
+      "live_reachable": false,
+      "next_action_recorded": true,
+      "progress": 1,
+      "provenance_class": "fixture",
+      "quarantine_reason": null,
+      "receipt_identity": "sha256:774623452d0320dba1fbbc4619d0a138906386300bd269d614590199a6dd2e9b",
+      "request_rejected": true,
+      "requested_tool": "missing_grid_tool",
+      "response_transported": true,
+      "response_used": null,
+      "row_kind": "gap_chain",
+      "valid_headroom": false
+    },
+    {
+      "action_changed": null,
+      "agent_visible": false,
+      "attempt_identity": "fixture-attempt-6859",
+      "causal_eligible": false,
+      "decision_point_identity": "tool-error-hidden",
+      "exact_outcome": false,
+      "first_party": true,
+      "game_id": "fixture-game",
+      "gap_kind": "tool_error",
+      "hops": {
+        "gap_detection": {
+          "hop_identity": "sha256:4ceca701f4cc61f8ff1b80bc80c3a218bf509452ecfad2944b0414d735afe038",
+          "hop_kind": "gap_detection",
+          "payload": {
+            "gap_kind": "tool_error",
+            "requested_tool": "list_transitions"
+          },
+          "payload_sha256": "sha256:a2267e34f4491151d8361cdcf63c42db8d34c3b5e2197114141fcc2ba590fbd2",
+          "previous_hop_identity": null,
+          "receipt_identity": "sha256:96d2c917df583e8b682d4b7aba697e6f72a992a4246e0b9c51d6f118d8449122",
+          "source_sha256": "sha256:c2228bcfe2c51a038874633ee6845d2471250c13efad717899e49289a188992e",
+          "timestamp": "2026-09-01T01:00:05Z"
+        },
+        "request": {
+          "hop_identity": "sha256:d2339749552c53b2a0c72f04093e7914fea404948c031395737ea54f79553721",
+          "hop_kind": "request",
+          "payload": {
+            "arguments": "{}",
+            "decision_point_identity": "tool-error-hidden",
+            "requested_tool": "list_transitions"
+          },
+          "payload_sha256": "sha256:62dc2d432366123e8013e1104c269c3bb6ab8c052406247890deb4c6dc054374",
+          "previous_hop_identity": "sha256:4ceca701f4cc61f8ff1b80bc80c3a218bf509452ecfad2944b0414d735afe038",
+          "receipt_identity": "sha256:96d2c917df583e8b682d4b7aba697e6f72a992a4246e0b9c51d6f118d8449122",
+          "source_sha256": "sha256:c2228bcfe2c51a038874633ee6845d2471250c13efad717899e49289a188992e",
+          "timestamp": "2026-09-01T01:00:06Z"
+        },
+        "tool_response": {
+          "hop_identity": "sha256:39f810d73060ae7088b3f6f2f5f2fa5c6fe9fe35aca14f484d3cad2b368fe55f",
+          "hop_kind": "tool_response",
+          "payload": {
+            "request_rejected": false,
+            "response": {
+              "error": "tool list_transitions raised RuntimeError: fixture error",
+              "ok": false
+            }
+          },
+          "payload_sha256": "sha256:1a4b2fcd54dde10f4acc4326afa52961606ac6fdabdc70904099b7c2e48f1429",
+          "previous_hop_identity": "sha256:d2339749552c53b2a0c72f04093e7914fea404948c031395737ea54f79553721",
+          "receipt_identity": "sha256:96d2c917df583e8b682d4b7aba697e6f72a992a4246e0b9c51d6f118d8449122",
+          "source_sha256": "sha256:c2228bcfe2c51a038874633ee6845d2471250c13efad717899e49289a188992e",
+          "timestamp": "2026-09-01T01:00:07Z"
+        }
+      },
+      "join_complete": false,
+      "levels_after": null,
+      "levels_before": null,
+      "live_reachable": false,
+      "next_action_recorded": false,
+      "progress": null,
+      "provenance_class": "fixture",
+      "quarantine_reason": null,
+      "receipt_identity": "sha256:96d2c917df583e8b682d4b7aba697e6f72a992a4246e0b9c51d6f118d8449122",
+      "request_rejected": false,
+      "requested_tool": "list_transitions",
+      "response_transported": true,
+      "response_used": null,
+      "row_kind": "gap_chain",
+      "valid_headroom": false
+    },
+    {
+      "gap_chain_count": 2,
+      "hop_counts": {
+        "agent_delivery": 1,
+        "exact_outcome": 1,
+        "gap_detection": 2,
+        "next_action": 1,
+        "request": 2,
+        "tool_response": 2
+      },
+      "row_kind": "hop_metrics"
+    }
+  ],
+  "run_date": "20260901",
+  "schema": "carnot.experiment_6859.first_party_tool_gap_receipt_wiring.v1",
+  "solve_claim": false,
+  "solve_claimed": false,
+  "source_artifact_hashes": {
+    "canonical_agent": {
+      "exists": true,
+      "file_sha256": "sha256:f9cb99f8d3891559855012b1890e191b884740c1ead6832b42d639a3e850ea81",
+      "path": "python/carnot/agentic/arc_competition_agent.py"
+    },
+    "induction_loop": {
+      "exists": true,
+      "file_sha256": "sha256:42fec34b0a56094741d623ce90bab746fc0a9b6b5b186fd45cfb9359b8959d9d",
+      "path": "python/carnot/agentic/arc_induction_tool_loop.py"
+    },
+    "receipt_transport": {
+      "exists": true,
+      "file_sha256": "sha256:612a231cfccd058e999807bf6c47551e5d3dade117ed40065b7d4acabc71ae1a",
+      "path": "python/carnot/agentic/arc_tool_gap_receipt.py"
+    },
+    "router": {
+      "exists": true,
+      "file_sha256": "sha256:822121d5106b7a9f019dd3b092fec607643211f414e2dfecfa9bf98ca08f321f",
+      "path": "results/experiment_6857_dynamic_live_arc_receipt_router.json"
+    },
+    "spec": {
+      "exists": true,
+      "file_sha256": "sha256:ed6d074b146f0a3b796b5a0633a35a770b7c460c28630db84790db24d482ed86",
+      "path": "openspec/capabilities/arc-agi/spec.md"
+    }
+  },
+  "status": "complete",
+  "tool_gap_live_effect_claim_eligible_score": 0,
+  "tool_gap_receipt_contract_ready_score": 1,
+  "tool_response_rows": [
+    {
+      "hop_identity": "sha256:88a3a340f9ce37c37fa3ea86555871350363253543999c5f92ed3c88f8281ea8",
+      "hop_kind": "tool_response",
+      "payload": {
+        "request_rejected": true,
+        "response": {
+          "error": "unknown tool 'missing_grid_tool'; available: ['run_engine_on_transitions', 'query_region', 'diff_grids', 'run_goal_on_states', 'find_objects', 'list_transitions']",
+          "ok": false
+        }
+      },
+      "payload_sha256": "sha256:36b97d4a5d4705866807b4bcf1b865e8beb8198f77855f61de41110fe802bdf1",
+      "previous_hop_identity": "sha256:35aabcb4bcb31ea87fff77705281c07ce44d19a8ff139f6245862201514f2bdf",
+      "provenance_class": "fixture",
+      "receipt_identity": "sha256:774623452d0320dba1fbbc4619d0a138906386300bd269d614590199a6dd2e9b",
+      "source_sha256": "sha256:c2228bcfe2c51a038874633ee6845d2471250c13efad717899e49289a188992e",
+      "timestamp": "2026-09-01T01:00:03Z"
+    },
+    {
+      "hop_identity": "sha256:39f810d73060ae7088b3f6f2f5f2fa5c6fe9fe35aca14f484d3cad2b368fe55f",
+      "hop_kind": "tool_response",
+      "payload": {
+        "request_rejected": false,
+        "response": {
+          "error": "tool list_transitions raised RuntimeError: fixture error",
+          "ok": false
+        }
+      },
+      "payload_sha256": "sha256:1a4b2fcd54dde10f4acc4326afa52961606ac6fdabdc70904099b7c2e48f1429",
+      "previous_hop_identity": "sha256:d2339749552c53b2a0c72f04093e7914fea404948c031395737ea54f79553721",
+      "provenance_class": "fixture",
+      "receipt_identity": "sha256:96d2c917df583e8b682d4b7aba697e6f72a992a4246e0b9c51d6f118d8449122",
+      "source_sha256": "sha256:c2228bcfe2c51a038874633ee6845d2471250c13efad717899e49289a188992e",
+      "timestamp": "2026-09-01T01:00:07Z"
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}

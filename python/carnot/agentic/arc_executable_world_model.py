@@ -8227,6 +8227,11 @@ class LocalGGUFProposer:
                 int(cell),
                 previous_level_complete_grid=previous_level_complete_grid,
                 win_transition=win_transition,
+                receipt_transport=getattr(
+                    self,
+                    "_first_party_tool_gap_receipt_transport",
+                    None,
+                ),
             )
             if ok_tool:
                 return ok_tool, note_tool

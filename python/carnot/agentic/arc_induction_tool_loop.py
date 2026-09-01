@@ -330,6 +330,7 @@ def induce_with_tool_loop(
     hud_mask: Any = None,
     extra_user_instruction: str = "",
     tool_event_sink: Optional[list[dict[str, Any]]] = None,
+    receipt_transport: Any = None,
 ) -> tuple[bool, str]:
     """Run tool-assisted induction. Returns (True, note) after writing world_model.py,
     or (False, reason) -- in which case the caller runs the shipped single-shot path.
@@ -693,7 +694,25 @@ def induce_with_tool_loop(
                 fn = tc.get("function") or {}
                 name = str(fn.get("name") or "")
                 args = fn.get("arguments") or "{}"
-                result = dispatch_tool(session, name, args)
+                decision_point_identity = None
+                if receipt_transport is not None:
+                    from carnot.agentic.arc_tool_gap_receipt import canonical_sha256
+
+                    decision_point_identity = canonical_sha256(
+                        {
+                            "game": game,
+                            "cell": int(cell),
+                            "turn": int(turn),
+                            "call_index": len(turn_names),
+                        }
+                    )
+                result = dispatch_tool(
+                    session,
+                    name,
+                    args,
+                    receipt_transport=receipt_transport,
+                    decision_point_identity=decision_point_identity,
+                )
                 stats["tool_calls_total"] += 1
                 turn_names.append(name)
                 stats["tool_calls_by_name"][name] = stats["tool_calls_by_name"].get(name, 0) + 1
@@ -710,6 +729,7 @@ def induce_with_tool_loop(
                     bounded_response = (
                         "<tool_response>\n" + json.dumps(result) + "\n</tool_response>"
                     )
+                    visible_response = bounded_response
                     tool_response_parts.append(bounded_response)
                     if tool_event_sink is not None:
                         try:
@@ -727,13 +747,24 @@ def induce_with_tool_loop(
                             }
                         )
                 else:
+                    visible_response = json.dumps(result)
                     messages.append(
                         {
                             "role": "tool",
                             "tool_call_id": str(tc.get("id") or f"call_{turn}"),
-                            "content": json.dumps(result),
+                            "content": visible_response,
                         }
                     )
+                if receipt_transport is not None:
+                    receipt_identity = receipt_transport.last_receipt_identity
+                    if receipt_identity:
+                        receipt_row = receipt_transport.row(receipt_identity)
+                        if receipt_row.get("decision_point_identity") == decision_point_identity:
+                            receipt_transport.record_delivery(
+                                receipt_identity,
+                                visible_text=visible_response,
+                                source_path=__file__,
+                            )
                 if name == "run_engine_on_transitions" and result.get("ok"):
                     m = session.candidates[-1].visible_mismatches
                     if best_mismatches is None or m < best_mismatches:

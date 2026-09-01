@@ -1879,3 +1879,101 @@ first-party tool-gap readiness is counted separately.
 **Then** it records stable hashes and read-only process observations, sends no
 signal, waits for no process, claims no solve, and emits a terminal
 `complete_` verdict.
+
+## REQ-ARC-6859: First-Party Tool-Gap Receipt Wiring
+
+Experiment 6859 SHALL add a first-party receipt contract at the canonical live
+agent seam. The contract SHALL be default-off, SHALL NOT change the default
+agent policy, SHALL NOT enable a new tool action, SHALL NOT read game source,
+and SHALL NOT launch a live game. It SHALL require
+`arc_receipt_router_complete_score=1`, reachable canonical dispatch, delivery,
+and action/outcome seams, and the stable
+`carnot.arc.first_party_tool_gap_receipt.v1` schema. A failed precondition SHALL
+write `complete_blocked_first_party_tool_gap_receipt_wiring` and name the failed
+check and observed value in `gate_check_summary`.
+
+One immutable receipt identity SHALL bind attempt, decision point, gap,
+request, response, agent-visible delivery, next action, and exact later outcome.
+Every hop SHALL store a timestamp, source hash, payload hash, hop identity, and
+prior-hop identity. Persistence SHALL survive restart. Byte-identical duplicate
+hops SHALL deduplicate, while conflicting duplicate identities SHALL be
+quarantined and excluded from complete joins.
+
+The artifact SHALL keep receipt transport, agent visibility, response use,
+action change, progress, and causal eligibility as separate facts. Fixture,
+terminal replay, authentic-live, reconstructed, and development-proxy rows
+SHALL remain separately labelled. Reconstructed and development-proxy rows
+SHALL be quarantined from live utility claims. The contract-ready score SHALL
+depend only on schema stability and reachable transport completeness. The
+live-effect eligibility score SHALL require an authentic-live, first-party,
+agent-visible, response-used, exact later-outcome join with valid headroom;
+fixture transport SHALL NOT open it.
+
+The artifact SHALL write
+`results/experiment_6859_first_party_tool_gap_receipt_wiring.json`. It SHALL
+contain `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `reproducibility_checksum`, `rows`,
+`receipt_schema`, `canonical_seam_manifest`, `gap_detection_rows`,
+`request_rows`, `tool_response_rows`, `agent_delivery_rows`,
+`next_action_rows`, `exact_outcome_rows`, `join_completeness_rows`,
+`provenance_class_rows`, `restart_results`, `deduplication_results`,
+`default_off_verified`, `tool_gap_receipt_contract_ready_score`,
+`tool_gap_live_effect_claim_eligible_score`, `solve_claimed`,
+`game_level_solve_count`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`.
+
+`inference_substrate` SHALL equal
+`canonical_live_seam_default_off_fixture_and_terminal_replay`.
+`solve_claimed` SHALL be false, `game_level_solve_count` SHALL be zero, and
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`; `honest_verdict` SHALL start with `complete_`.
+
+### SCENARIO-ARC-6859-NO-GAP-AND-DEFAULT-OFF
+
+**Given** no detected gap or an unset receipt flag
+**When** the canonical policy selects an action
+**Then** no receipt row or file is created and the returned action identity is
+unchanged.
+
+### SCENARIO-ARC-6859-GAP-REJECTION-AND-TOOL-ERROR
+
+**Given** an unknown request, malformed arguments, or a tool exception
+**When** canonical dispatch returns its existing error response
+**Then** gap, request, and response hops share one immutable receipt identity
+without altering dispatch behavior.
+
+### SCENARIO-ARC-6859-VISIBILITY-USE-AND-NEXT-ACTION
+
+**Given** transported responses that may be hidden, delivered, used, or unused
+**When** the real induction loop and `E3AgentPolicy.next_move` seams run
+**Then** visibility, response use, action change, and next-action identity are
+recorded separately.
+
+### SCENARIO-ARC-6859-EXACT-OUTCOME-AND-CAUSAL-ELIGIBILITY
+
+**Given** a next action and its exact later observation
+**When** the receipt is completed
+**Then** progress is joined without equating it to causation, and effect
+eligibility requires authentic-live provenance, explicit use, and headroom.
+
+### SCENARIO-ARC-6859-PERSISTENCE-RESTART-AND-DEDUPLICATION
+
+**Given** complete and pending persisted chains
+**When** the transport restarts or sees a duplicate hop
+**Then** identities persist, identical bytes deduplicate, and conflicts fail
+closed.
+
+### SCENARIO-ARC-6859-FIXTURE-REPLAY-AND-PROVENANCE
+
+**Given** deterministic fixtures and provenance-qualified terminal receipts
+**When** Exp6859 runs them through the real seam and replays terminal rows
+**Then** fixture, replay, and authentic-live evidence stay separate and proxy
+or reconstructed evidence cannot support a live utility claim.
+
+### SCENARIO-ARC-6859-BLOCKED-GATE-AND-NO-SOLVE
+
+**Given** a failed gate or any completed receipt audit
+**When** Exp6859 writes its terminal artifact
+**Then** blocked gates name their failed check and observed value, no solve is
+claimed, the game-level solve count is zero, and the verdict is row-supported.

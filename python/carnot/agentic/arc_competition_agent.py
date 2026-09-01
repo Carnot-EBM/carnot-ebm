@@ -5461,6 +5461,20 @@ class E3AgentPolicy:
         from carnot.agentic.arc_action_provenance import maybe_make_recorder
 
         self._provenance = maybe_make_recorder(self.short, run_label=str(game_id))
+        # REQ-ARC-6859: construct the receipt transport only for an explicitly
+        # opted-in run. It observes existing dispatch/action/outcome decisions;
+        # it never selects a tool or changes an action.
+        from carnot.agentic.arc_tool_gap_receipt import (
+            maybe_make_first_party_tool_gap_receipt_transport,
+        )
+
+        self._first_party_tool_gap_receipt_transport = (
+            maybe_make_first_party_tool_gap_receipt_transport(
+                self.short,
+                run_label=str(game_id),
+            )
+        )
+        self._first_party_tool_gap_receipt_errors = 0
         self._prov_top: Optional[str] = None
         self._prov_prev_frame_key: Optional[str] = None
         self.phase = "explore"
@@ -6587,6 +6601,13 @@ class E3AgentPolicy:
                 port=int(os.environ.get("CARNOT_ARC_PROPOSER_PORT", "8919")),
                 n_gpu_layers=int(os.environ.get("CARNOT_ARC_NGL", "999")),
             )
+        receipt_transport = getattr(
+            self,
+            "_first_party_tool_gap_receipt_transport",
+            None,
+        )
+        if receipt_transport is not None:
+            self.proposer._first_party_tool_gap_receipt_transport = receipt_transport
         return self.proposer
 
     def _embed_playbook_query(self, text: str):
@@ -6766,6 +6787,7 @@ class E3AgentPolicy:
         which is the pre-instrument `next_move` with constant-string branch labels added at
         its return sites.
         """
+        self._record_first_party_tool_gap_outcome(latest)
         if self._provenance is None:
             move = self._next_move_routed(frames, latest)
         else:
@@ -6784,6 +6806,7 @@ class E3AgentPolicy:
             prospective_move=move if selected_move != move else None,
         )
         self._record_outcome_transport_proposal(move, selected_move, latest)
+        self._record_first_party_tool_gap_next_action(selected_move, latest)
         return selected_move
 
     def install_trace_automaton_supervisor(self, supervisor: Any) -> None:
@@ -6800,6 +6823,49 @@ class E3AgentPolicy:
         """Return the installed transport without constructing one implicitly."""
 
         return self._outcome_transport
+
+    def _record_first_party_tool_gap_outcome(self, latest: Any) -> None:
+        """Join the previous receipt action to the exact next observation."""
+
+        transport = getattr(self, "_first_party_tool_gap_receipt_transport", None)
+        if transport is None or latest is None:
+            return
+        from carnot.agentic.arc_tool_gap_receipt import canonical_sha256
+
+        try:
+            level_after = int(_level_of(latest))
+            target_levels = getattr(self, "target_levels", None)
+            valid_headroom = isinstance(target_levels, int) and level_after < target_levels
+            transport.record_exact_outcome(
+                level_after=level_after,
+                state_sha256=canonical_sha256(latest),
+                valid_headroom=valid_headroom,
+                source_path=__file__,
+            )
+        except Exception:
+            self._first_party_tool_gap_receipt_errors = (
+                getattr(self, "_first_party_tool_gap_receipt_errors", 0) + 1
+            )
+
+    def _record_first_party_tool_gap_next_action(self, move: Any, latest: Any) -> None:
+        """Record the canonical next action without inventing response use."""
+
+        transport = getattr(self, "_first_party_tool_gap_receipt_transport", None)
+        if transport is None:
+            return
+        try:
+            level_before = int(_level_of(latest)) if latest is not None else 0
+            transport.record_next_action(
+                action=move,
+                level_before=level_before,
+                response_used=None,
+                action_changed=None,
+                source_path=__file__,
+            )
+        except Exception:
+            self._first_party_tool_gap_receipt_errors = (
+                getattr(self, "_first_party_tool_gap_receipt_errors", 0) + 1
+            )
 
     def _record_outcome_transport_proposal(
         self, proposed_move: Any, selected_move: Any, latest: Any
@@ -8792,6 +8858,11 @@ class E3AgentPolicy:
                 previous_level_complete_grid=induce_kwargs.get("previous_level_complete_grid"),
                 win_transition=induce_kwargs.get("win_transition"),
                 seed_engine_code=old_code,
+                receipt_transport=getattr(
+                    self,
+                    "_first_party_tool_gap_receipt_transport",
+                    None,
+                ),
             )
             loop_stats = dict(getattr(prop, "last_tool_loop_stats", {}) or {})
             record["tool_loop"] = {

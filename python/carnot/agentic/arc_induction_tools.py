@@ -1015,26 +1015,49 @@ def render_tool_schemas_for_prompt(schemas: Optional[list[dict[str, Any]]] = Non
     return "\n".join(lines)
 
 
-def dispatch_tool(session: InductionToolSession, name: str, arguments: str) -> dict[str, Any]:
+def dispatch_tool(
+    session: InductionToolSession,
+    name: str,
+    arguments: str,
+    *,
+    receipt_transport: Any = None,
+    decision_point_identity: str | None = None,
+) -> dict[str, Any]:
     """Execute one named tool with JSON-encoded arguments. Never raises.
 
     Returns the tool's report dict, or {"ok": False, "error": ...} on a bad name or
     unparseable arguments -- the error text goes back to the model as the tool result,
     so a malformed call costs one turn, not the induction."""
     known = name in TOOL_NAMES or name in getattr(session, "enabled_candidates", ())
+
+    def _with_receipt(response: dict[str, Any]) -> dict[str, Any]:
+        # REQ-ARC-6859: copy the already-decided dispatch result into the
+        # optional receipt path. The default path neither constructs a receipt
+        # nor changes the response returned to the induction loop.
+        if receipt_transport is not None and decision_point_identity is not None:
+            receipt_transport.record_dispatch(
+                decision_point_identity=decision_point_identity,
+                requested_tool=name,
+                arguments=arguments,
+                active_tool_names=active_tool_names_for(session),
+                response=response,
+                source_path=__file__,
+            )
+        return response
+
     try:
         kwargs = json.loads(arguments) if arguments else {}
         if not isinstance(kwargs, dict):
             if not known:
                 _record_unknown_tool(session, name, None)
-            return {"ok": False, "error": "arguments must be a JSON object"}
+            return _with_receipt({"ok": False, "error": "arguments must be a JSON object"})
     except json.JSONDecodeError as exc:
         # The NAME needed no parsing: an unknown name with malformed JSON is
         # still tool demand, and improvising an unseen tool is exactly when a
         # model writes malformed arguments (adversarial review 2026-08-29, F3).
         if not known:
             _record_unknown_tool(session, name, None)
-        return {"ok": False, "error": f"unparseable JSON arguments: {exc}"}
+        return _with_receipt({"ok": False, "error": f"unparseable JSON arguments: {exc}"})
     fn = {
         "run_engine_on_transitions": session.run_engine_on_transitions,
         "query_region": session.query_region,
@@ -1055,21 +1078,25 @@ def dispatch_tool(session: InductionToolSession, name: str, arguments: str) -> d
         try:
             fn = CANDIDATE_TOOLS[name]["factory"](session)
         except Exception as exc:  # noqa: BLE001
-            return {
-                "ok": False,
-                "error": f"candidate tool {name} setup raised {type(exc).__name__}: {exc}",
-            }
+            return _with_receipt(
+                {
+                    "ok": False,
+                    "error": f"candidate tool {name} setup raised {type(exc).__name__}: {exc}",
+                }
+            )
     if fn is None:
         # THE tool-gap signal: the model wrote a call for a name the active set
         # does not serve. Keep its identity; the count alone cannot say what
         # tool was wanted (REQ-ARC-WMTE-6770).
         _record_unknown_tool(session, name, sorted(kwargs))
-        return {
-            "ok": False,
-            "error": f"unknown tool {name!r}; available: {list(active_tool_names_for(session))}",
-        }
+        return _with_receipt(
+            {
+                "ok": False,
+                "error": f"unknown tool {name!r}; available: {list(active_tool_names_for(session))}",
+            }
+        )
     try:
-        return fn(**kwargs)
+        return _with_receipt(fn(**kwargs))
     except TypeError as exc:
         # The model imagined a different signature for a real tool. Retained as
         # gap evidence; a TypeError raised INSIDE a tool body lands here too,
@@ -1078,9 +1105,11 @@ def dispatch_tool(session: InductionToolSession, name: str, arguments: str) -> d
             session,
             {"kind": "bad_arguments", "tool": name, "error": str(exc)[:200]},
         )
-        return {"ok": False, "error": f"bad arguments for {name}: {exc}"}
+        return _with_receipt({"ok": False, "error": f"bad arguments for {name}: {exc}"})
     except Exception as exc:  # noqa: BLE001 - a tool bug must cost a turn, not the induction
-        return {"ok": False, "error": f"tool {name} raised {type(exc).__name__}: {exc}"}
+        return _with_receipt(
+            {"ok": False, "error": f"tool {name} raised {type(exc).__name__}: {exc}"}
+        )
 
 
 def register_mcp_tools(session: InductionToolSession, server: Any = None) -> Any:
