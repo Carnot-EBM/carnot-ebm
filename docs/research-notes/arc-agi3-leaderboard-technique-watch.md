@@ -228,3 +228,17 @@ CHECK_TIMED_OUT
 
 CHECK_TIMED_OUT
 
+## 2026-09-01 13:39 UTC -- NEW
+
+- **New top-five entrant:** **Son Pham & Mark Barney** are now **#5 at 4.42**. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- **New public artifact; current-score linkage is not proven:** Son Pham published a complete Duck-derived agent bundle using **Qwen3.8-Flash-Next-NVFP4**—a ~180B multimodal MoE with 512 experts/layer and top-10 routing. Its single-GPU configuration uses PLE CPU offload, TP=1, a 32K runtime context, 22 admitted sequences, and 28 concurrent game clients. [Agent/model bundle](https://www.kaggle.com/datasets/sonphamorg/arc3-flashnext-serving-part-a-v1), [model card](https://huggingface.co/RadixArk/Qwen3.8-Flash-Next-NVFP4/blob/main/README.md)
+
+- **New cross-game mechanism:** A non-blocking 29th LLM thread continuously reads the 28 gameplay agents’ current world models. Once at least three games provide new evidence, it synthesizes an atomic replacement ledger of at most six falsifiable cross-game priors. The current ledger is injected into each action prompt but stripped before that prompt enters persistent history, preventing stale duplication and context growth. **Classification: (b) GENERAL-PURPOSE.** The scored branch consumes gateway observations/actions; no game-source imports or per-game policy branches were found. Public `environment_files` are used only during non-submission offline validation. [Source bundle](https://www.kaggle.com/datasets/sonphamorg/arc3-flashnext-serving-part-a-v1)
+
+  **POSSIBLE CARNOT LEVER:** Add an asynchronous curator that distills accepted per-game world models into a small, verifier-labeled prior ledger for later games—cross-game transfer without RL or blocking live search.
+
+- **New animation-evidence routing:** After a five-action warm-up, the agent detects unusually long animation tails using a rolling median/MAD threshold conditioned first on level/action family and then game-wide history. It tracks 8-connected changed regions across consecutive frames, discards one-transition HUD noise without assuming a border location, interrupts action batches only for novel tails, and supplies token-bounded storyboards or agent-selected crops from up to 12 retained native frames. **Classification: (b) GENERAL-PURPOSE; no source-reading or game-specific hardcoding.** [Experiment manifest and implementation bundle](https://www.kaggle.com/datasets/sonphamorg/arc3-flashnext-serving-part-a-v1)
+
+  **POSSIBLE CARNOT LEVER:** Trigger re-induction only on statistically novel, persistent animation tails, adding temporal evidence while keeping frame/token costs bounded.
+

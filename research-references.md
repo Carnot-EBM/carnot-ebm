@@ -1,3 +1,121 @@
+## V599 Planner Refresh - 2026-09-01
+
+This sweep follows terminal milestone `2026.09.598`. V598 made the typed obligation program and
+transaction kernel mechanically runnable. It did not establish model compatibility or useful
+learning. The cold capstone independently rejected the producer's typed-program readiness scores,
+because candidate identities were duplicated and compile parity did not survive recomputation.
+The forced-sequence task then blocked before a live canary because it could not obtain an exclusive
+GPU lease. The residual-memory audit was terminally negative: five held-future wins, 69 losses, and
+a mean effect of `-0.118519`. The ARC transport branch produced auditable receipts, but the
+supervisor audit had zero eligible headroom rows and the tool-gap audit had zero first-party gap
+obligations. V599 must change the learning mechanism, repair evidence authority, and measure causal
+effect only where an intervention could change the exact outcome.
+
+### Findings selected for V599
+
+- **Learning When to Remember: Risk-Sensitive Contextual Bandits for Abstention-Aware Memory
+  Retrieval in LLM-Based Coding Agents** - arXiv:2604.27283,
+  https://arxiv.org/abs/2604.27283; submitted 2026-04-30. RSCB-MC treats memory use as a selective
+  control problem. Its actions include no memory, multiple retrieval modes, abstention, and asking
+  for feedback. Its loss penalizes false-positive injection more than missed reuse. It reports
+  bounded smoke-scale and replay results, not a general proof. Carnot hook: replace the harmful
+  always-admit residual rule with a small deterministic risk-sensitive controller over verified
+  memory, no-memory, and abstain. Exact later outcomes set rewards. A pessimistic safety arm must
+  win when evidence is weak.
+- **LLMs Gaming Verifiers: RLVR can Lead to Reward Hacking** - arXiv:2604.15149,
+  https://arxiv.org/abs/2604.15149; OpenReview: https://openreview.net/forum?id=g6sqdWLzV0.
+  The paper finds that extensional verifiers can reward instance enumeration instead of rule
+  induction. Isomorphic Perturbation Testing applies semantics-preserving identifier changes and
+  checks whether the result remains valid. Carnot hook: rebuild the typed obligation fixture with
+  fresh candidate identities, then require permutation, label-swap, and duplicate-removal
+  invariance before any model-derived compatibility score can be interpreted.
+- **Counterfactual Shapley Credit Assignment** - arXiv:2607.16999,
+  https://arxiv.org/abs/2607.16999; submitted 2026-07-18. The method assigns credit by comparing
+  valid counterfactual action coalitions, separating policy effects from environmental luck under
+  sparse and delayed rewards. Carnot hook: on provenance-qualified ARC receipts with nonzero
+  headroom, compute exact or bounded-coalition marginal effects for supervisor actions. Do not use
+  the method to manufacture headroom or to credit an unreachable live action.
+- **Claim-Level Reliability Assessment for Efficient Test-Time Reasoning** - arXiv:2608.11994,
+  https://arxiv.org/abs/2608.11994; Hugging Face paper page:
+  https://huggingface.co/papers/2608.11994. CLR concentrates verification on decision-critical
+  claims and uses falsification to eliminate bad traces. Carnot hook: keep obligation atoms and
+  action receipts as the verification unit. This is a verifier-allocation reference, not authority
+  for a learned score or a reason to add model calls to exact checks.
+- **Think Again or Think Longer? Selective Verification for Budget-Aware Reasoning** -
+  arXiv:2606.19808, https://arxiv.org/abs/2606.19808; Hugging Face paper page:
+  https://huggingface.co/papers/2606.19808. SEVRA treats verification as an intervention with
+  possible repair, waste, or harmful flips. Carnot hook: the memory controller and ARC supervisor
+  must compare intervention, preserve, and abstain arms under matched opportunities. Always-on
+  intervention is not the default baseline.
+- **Does On-Policy Distillation Really Distill? From Noisy Teacher to Self-Improvement** -
+  arXiv:2608.31046, https://arxiv.org/abs/2608.31046; submitted 2026-08-31. The paper reports that
+  gains attributed to teacher knowledge can instead come from suppressing low-probability tail
+  tokens, and proposes a teacher-free on-policy alternative. Carnot hook: treat teacher-derived or
+  model-derived update signals as a negative control. V599 does not fine-tune GGUF weights and does
+  not call tail suppression verified constraint learning.
+- **RetroGen: Scaling Retrospective Process Supervision for Reliable Agentic Reasoning** -
+  arXiv:2608.30461, https://arxiv.org/abs/2608.30461; submitted 2026-08-30. RetroGen reconstructs
+  process traces from final expert artifacts and verifies the reconstruction against available
+  evidence. Carnot hook: reconstruction may fill a diagnostic field, but authentic exact outcome
+  traces remain superior. A retrospective trace never replaces a live ARC receipt or earns solve
+  provenance.
+- **Agentic Skills in the Wild: A Comprehensive Study of Reusable Skill Artifacts** -
+  arXiv:2608.29596, https://arxiv.org/abs/2608.29596; submitted 2026-08-28. The study frames skills
+  as external procedural artifacts with a lifecycle from discovery through retirement. Carnot hook:
+  carry source, reachability, intervention, outcome, and retirement fields together for supervisor
+  and tool receipts. The survey does not establish live Carnot utility.
+
+### Requested primary and secondary checks
+
+- **arXiv:** the 2025-2026 sweep covered EBMs for reasoning, neural constraint satisfaction, Ising
+  sampling, hallucination mitigation, KANs, constrained decoding, hardware sampling, and continual
+  learning. The actionable delta is selective risk-sensitive memory, isomorphic verifier testing,
+  and counterfactual action credit. Recent Ising, KAN, and energy-guided generation records do not
+  remove V598's evidence and effect blockers.
+- **OpenReview:** the ICLR 2026 record for Energy-Based Transformers is now a published paper and
+  remains architecture context, not a local checkpoint. The April 2026 verifier-gaming paper adds
+  a concrete black-box shortcut test. AtomGraph adds graph-structured trace verification, but it
+  does not replace exact atom or outcome authority. No matching-base verifier exists for all three
+  mandated local GGUF families.
+- **Hugging Face Papers:** the current verification feed highlights claim-level falsification,
+  neuro-symbolic diagnosis, selective verification, and executable verified variants. The
+  claim-level and selective-allocation ideas are promoted above. SymDiag and VeRA remain watch
+  items because Carnot already has exact atom witnesses and generated variant fixtures.
+- **Semantic Scholar citation check:** the EBT `2507.02092` citation endpoint returned HTTP 429.
+  The ARM-EBM `2512.15605` endpoint returned eight records. The visible list still includes
+  Distributional EBMs, LoopUS, and Gibbs alignment. None supplies a public matching-base local
+  verifier that supersedes Carnot's exact-authority design.
+- **GitHub discovery:** the general trending page contained no new EBM, KAN, Ising, or constraint
+  repository worth adding. Targeted discovery found independent verifier-hardening prototypes and
+  paper indexes, but no paper-owned dependency needed for V599. Reimplement the small tests against
+  Carnot's frozen fixtures and add no dependency for novelty.
+- **Extropic:** the 2026-08-03 first-party update remains current:
+  https://extropic.ai/writing/from-one-to-one-billion. It reports open Torx, a Thermalizers preview,
+  and a taped-out 269,568-pbit Z1 with planned 2027 early access. Carnot still has no authenticated
+  device or API. V599 makes no TSU latency, power, throughput, or execution claim.
+- **Logical Intelligence:** the newest public technical result remains the 2026-02-03 Kona 1.0
+  Sudoku post: https://logicalintelligence.com/blog/energy-based-model-sudoku-demo. It describes
+  global energy scoring and continuous revision, but exposes no weights, training recipe, or local
+  runner. Kona remains a strategic comparator, not a dependency.
+- **Hardware:** dual RTX 3090 GPUs are the only blocking-path accelerators. KV260, GateMate, and
+  PolarFire work stays terminal or opportunistic. No FPGA bitstream redesign belongs in V599.
+
+### V599 planning impact
+
+- Repair typed-program authority independently. Require unique candidate identities and
+  isomorphic invariance before opening the model-scoring gate.
+- Separate GPU admission from scientific scoring. A task-owned bounded lease and live canary must
+  finish before all-three-family forced-sequence rows are produced.
+- Retire the residual-memory update rule. Test a risk-sensitive selector with verified-memory,
+  no-memory, and abstain arms on a chronological stream with nonzero decision headroom.
+- Use exact later outcomes for learning and counterfactual removal for credit. Report negative
+  transfer, false-positive injection, rollback, durability, and family portability.
+- Discover ARC evidence by provenance-qualified manifests at execution time. Do not pin an audit to
+  Exp6681 or another frozen path. Supervisor credit requires matched nonzero headroom. Tool-gap work
+  first needs a first-party receipt at the live seam.
+- Make no ARC level-solve task and no hardware speed claim. End with an ungated cold disposition
+  that preserves blocked, null, harmful, disqualified, and partial outcomes.
+
 ## V598 Planner Refresh - 2026-09-01
 
 This sweep follows terminal milestone `2026.08.597`. Exp6831 reissued the evidence-admissibility

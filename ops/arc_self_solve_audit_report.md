@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (81 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (82 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,9 +16,11 @@ OK: all solver-like ARC modules are reachable from the live agent path (81 modul
 
 ## Hostile LLM review
 
-TL;DR: **NO RECENT SOLVES TO CREDIT OR REJECT.** Reachability passes, but zero artifacts means zero demonstrated self-discovery advances.
+**TL;DR: NO EVIDENCE OF ADVANCE — zero recent solve artifacts; reachability lint proves wiring, not autonomous hidden-game solving.**
 
-Per-artifact review: none — `RECENT ARC SOLVE ARTIFACTS (last 7d): 0`.
+Per-artifact review: none. No `SELF_DISCOVERY_ADVANCE`, `OUTER_LOOP_RE`, `OFF_PATH`, or `DUPLICATE` claims can be established.
 
-Pattern watch: No direct outer-loop drift is visible because there are no artifacts. However, module reachability alone proves only that code is callable—not that the live agent autonomously discovered hidden-game solutions. Require future solve artifacts to record live-entrypoint provenance, runtime observations, agent attempts, model updates, and the successful trajectory. Reject unsupported “solved” claims as `UNCLEAR` or `OUTER_LOOP_RE`.
+**Recommended action:** Produce a live-entrypoint artifact showing the agent’s attempts, observations, runtime-derived hypothesis/model updates, and successful solve—without source inspection, offline ground-truth search, or a hand-built game adapter.
+
+**Pattern watch:** Do not launder “82 reachable modules” into evidence of capability. Reachability is necessary but says nothing about whether the live agent independently discovers solutions. Zero artifacts means zero demonstrated progress.
 

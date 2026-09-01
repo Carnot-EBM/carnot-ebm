@@ -17006,3 +17006,5 @@ The l |
 | 2026-09-01 12:27 UTC | Typed obligation shadow monitor at the canonical A | OK | 151 passed, 1 warning in 30.36s |
 | 2026-09-01 13:02 UTC | V598 independent adversarial capstone and next-ste | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6847_v598_in |
 | 2026-09-01 13:12 UTC | V598 independent adversarial capstone and next-ste | OK | cache hit: 97 passed, 1 warning in 23.31s |
+| 2026-09-01 13:59 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 375086 (port 8919) reparented to init, no live process references its  |
+| 2026-09-01 14:30 UTC | STOP-AUTHORITY: ORPHAN_SERVER_REAPED | WARN | pid 375086: ppid=1, non-service cgroup, port 8919 referenced by no live process, |

@@ -12,7 +12,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 | CHECKABLE | 6 |
 | AGGREGATE_ONLY | 2 |
 
-## experiment_6824_selective_arbiter_cold_row_replay.json
+## experiment_6840_residual_memory_chronological_shard_a.json
 
 **CHECKABLE**
 
@@ -20,23 +20,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Cold per-unit replay supports the claim that `selective_priority` outperformed `flat_reject_retry` and passed the positive acceptance gate.
-
-## WHAT IS MISSING
-nothing; `"rows"` contains per-unit arm metrics and `"gate_check_summary"` records every check’s expected and observed values.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6825_selective_arbiter_authority_attacks.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Independent mutation results support the hard-authority boundary, while adoption was not evaluated.
+The chronological shard completed with a null result for residual memory, supported by rows and receipts.
 
 ## WHAT IS MISSING
 nothing
@@ -44,7 +28,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6826_selective_arbiter_sealed_adoption.json
+## experiment_6841_residual_memory_delayed_correction_shard_b.json
 
 **AGGREGATE_ONLY**
 
@@ -52,15 +36,15 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The sealed audits justify enabling the selective arbiter because it passes safety, preservation, certificate, and comparative utility criteria.
+The `"honest_verdict"` claims a complete null comparative result for residual memory on shard B.
 
 ## WHAT IS MISSING
-Per-pair `cold_replay_rows` containing each unit’s progress metric for both `flat_reject_retry` and `selective_priority`; the present `"rows"` are criterion-level summaries, while `"paired_progress_delta"` records only an aggregate estimate, interval, and pair count.
+Per-unit outcome rows containing each event/seed/arm’s residual-error or decision-accuracy metric are missing; `"held_future_results"`, `"delayed_correction_results"`, and `"residual_error_results"` are aggregate summaries, while `"memory_state_transitions"` records transition receipts rather than the compared outcome metrics.
 
 ## THE CHECK A READER CANNOT DO
-Did the 0.125 paired progress improvement occur broadly across the 144 pairs, or was it driven by a few outliers or units with no headroom?
+Did the null result hold broadly across events and seeds, or was it produced by outliers, degenerate controls, or the many no-headroom rows reported in `"headroom_summary"`?
 
-## experiment_6827_chronological_causal_edge_memory_stream.json
+## experiment_6842_sealed_memory_pathway_portability_audit.json
 
 **CHECKABLE**
 
@@ -68,7 +52,7 @@ Did the 0.125 paired progress improvement occur broadly across the 144 pairs, or
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The frozen chronological causal-edge memory stream is complete and ready, and no learning ran.
+Continuous self-learning is not ready (`continuous_self_learning_ready_score: 0.0`) because the calibrated-dose and held-future-benefit gates failed.
 
 ## WHAT IS MISSING
 nothing
@@ -76,7 +60,71 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6831_v597_evidence_admissibility_contract.json
+## experiment_6843_live_arc_evidence_stratum_freeze.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The artifact claims a complete read-only inventory of live ARC terminal evidence, with all inventory gates passing and no solve or mechanism-effect claim.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6844_supervisor_action_outcome_credit_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The supervisor outcome-credit audit was blocked because the `headroom_nonzero` gate observed `false` when `true` was required.
+
+## WHAT IS MISSING
+nothing; `gate_check_summary` records `failed_check`, `observed`, and `expected`, while `per_game_results` provides per-action outcome rows.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6845_tool_gap_causal_support_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The causal-support audit is blocked because the required tool-gap obligations were absent.
+
+## WHAT IS MISSING
+nothing; `"gate_check_summary"` identifies `"failed_check": "tool_gap_obligations"`, with `"expected": ">0"` and `"observed": 0`.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6846_typed_arc_shadow_monitor.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The typed ARC shadow monitor passed all readiness gates while remaining default-off, preserving action bytes, and matching external receipt facts on every recorded unit without making a solve claim.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6847_v598_independent_capstone.json
 
 **AGGREGATE_ONLY**
 
@@ -84,58 +132,10 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The selective-arbiter authority and causal-edge inputs are procedurally admissible, with all gates passed and a positive utility effect of `paired_progress_delta: 0.125`.
+Chronological residual-memory shards completed, but memory underperformed no-memory and failed the held-future benefit, dose, and family-portability gates.
 
 ## WHAT IS MISSING
-Per-pair or per-unit utility rows containing each arm’s progress metric and paired delta; the present `"rows"` provide only aggregate `"observed"` values such as `"pair_count": 144` and `"paired_progress_delta": 0.125`.
+Per-unit comparison rows containing each game, seed, cell, or condition’s memory and no-memory metrics, headroom, dose, effect, and family are missing; the present `"rows"` are acceptance-criterion summaries, while `"gate_check_summary.failed_checks"` records only aggregates such as 540 rows, 5 wins, 69 losses, and mean effect −0.118519.
 
 ## THE CHECK A READER CANNOT DO
-Was the reported positive utility delta broad across the 144 pairs, or driven by a small number of outliers or units with unequal headroom?
-
-## experiment_6832_operational_obligation_saturation_fixture.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6833_sota_operational_obligation_saturation_corpus.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing; the artifact contains only `"MODEL_SPECS"` configuration and provenance metadata, with no comparative result or blocked verdict.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6834_operational_saturation_identifiability_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-All listed robustness attacks passed, and the detailed `"collision_witnesses"` demonstrate missing cells whose alternative values produce identical observed signatures.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+Did the negative pooled effect occur broadly across eligible units, or was it driven by a few outliers or units with no headroom?

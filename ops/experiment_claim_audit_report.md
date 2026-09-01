@@ -11,81 +11,15 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 4 |
-| NO_CLAIM | 3 |
+| CLAIM_SUPPORTED | 3 |
+| NO_CLAIM | 4 |
 | SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_6824_selective_arbiter_cold_row_replay.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Cold row replay supports the positive verdict that selective priority outperforms flat reject/retry under matched budgets while satisfying the stated safety gates.
-
-## WHAT WOULD REFUTE IT
-A nonpositive paired progress lower bound, greater harmful-selection or hard-violation rates for selective priority, a false-intervention upper bound above the acceptance limit, or unmatched work budgets would refute the claim.
-
-## WAS THAT CHECKED
-Yes. The artifact recomputed all 576 source rows, compared 144 matched units per arm, checked paired progress, false interventions, harmful selections, hard violations, legal support, and budget equality, and included both development and held scenarios.
-
-## EVIDENCE
-`"direction": "selective_minus_flat"`, `"estimate": 0.125`, `"lower_bound": 0.0763888888888889`, `"pair_count": 144`, `"selective_priority"`, `"mean": 0.19444444444444445`, `"flat_reject_retry"`, `"mean": 0.06944444444444445`, `"numerator": 0`, `"upper_bound": 0.12064330476584559`, `"false_intervention_upper_limit": 0.2`, `"mismatched_pair_ids": []`, `"matched_fields"`, `"no_harmful_selection_increase": true`, `"zero_accepted_hard_violations": true`, `"all_producer_rows_recomputed": true`, `"expected_identity_count": 576`, `"observed_identity_count": 576`, `"fit_split": "development"`, `"held_count": 24`, `"verifier_is_oracle": false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6825_selective_arbiter_authority_attacks.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Independent mutations support the hard authority boundary; adoption was not evaluated.
-
-## WHAT WOULD REFUTE IT
-An applicable mutation producing a failed attack, an accepted hard violation, forbidden-feature influence, altered safe-action bytes, fail-open row-integrity behavior, or a non-identical fresh-process replay would falsify the bounded claim.
-
-## WAS THAT CHECKED
-Yes. The artifact reports applicable-case outcomes across priority, certificate, prohibited-feature, safe-action, and row-integrity attacks, plus fresh-process replay. Every reported attack has zero failures and passes; replay is byte-identical. Non-applicable rows are separated through the applicability field rather than counted as substantive successes.
-
-## EVIDENCE
-`"honest_verdict": "complete: independent mutations support the hard authority boundary; adoption was not evaluated"`; `"verifier_is_oracle": false`; `"inference_substrate": "deterministic_verifier_plus_replay (fresh-process deterministic CPU mutation audit, no LLM)"`; `"failed_count": 0`; `"passed": true`; `"accepted_hard_violation": false`; `"influence_detected": false`; `"byte_identity_enforced": true`; `"failed_closed": true`; `"byte_identical": true`; `"adoption_decision": "not_evaluated"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6826_selective_arbiter_sealed_adoption.json
+## experiment_6840_residual_memory_chronological_shard_a.json
 
 **SKIPPED_ALREADY_FLAGGED**
 
-## experiment_6827_chronological_causal_edge_memory_stream.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-The frozen chronological causal-edge memory stream is complete and ready; no learning ran.
-
-## WHAT WOULD REFUTE IT
-A required gate failing, expected and observed chronology or row counts differing, sealed fields appearing, or operation/read counts being zero would refute readiness.
-
-## WAS THAT CHECKED
-Yes, in `gate_check_summary`; the artifact checks chronology, canonical rows, sealed fields, family isolation, headroom, and operation outcomes. No learning-effect or comparative claim was made, so no rival arm was required.
-
-## EVIDENCE
-`honest_verdict` is `complete: frozen chronological causal-edge memory stream is ready; no learning ran`; `status` is `complete_chronological_causal_edge_memory_stream`; `verified_memory_stream_ready` is `true`; `failed_checks` is `[]`; `verifier_is_oracle` is `false`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6831_v597_evidence_admissibility_contract.json
+## experiment_6841_residual_memory_delayed_correction_shard_b.json
 
 **CLAIM_SUPPORTED**
 
@@ -93,21 +27,43 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The selective-arbiter authority and causal-edge inputs are procedurally admissible, with no learning performed.
+Shard B and its delayed-correction receipts are complete, while verified residual memory yields a null comparative result.
 
 ## WHAT WOULD REFUTE IT
-A failed admissibility gate, an incomplete or inadmissible source row, mutable or learned-on causal-edge inputs, or use of the flagged Exp6826 receipt as authority would refute the claim.
+Missing planned rows or receipts would refute completeness; a consistent held-future advantage for verified residual memory over the serious no-memory and read-only-memory baselines would refute the null result.
 
 ## WAS THAT CHECKED
-Yes. The gate summary permits failure, the stream validation checks immutability and whether learning ran, source rows carry admissibility/completeness flags, and the flagged receipt’s authority disposition is recorded.
+Yes. Completion was checked against planned row and event counts, while held-future accuracy, residual error, negative transfer, and correction latency were compared across all four arms. Verified residual memory improved residual error but lost on held-future decision accuracy and tied every arm on correction latency, so no unambiguous value advantage appeared.
 
 ## EVIDENCE
-`"failed_check": null`; `"passed": true`; `"csl_inputs_admissible": true`; `"selective_arbiter_receipt_admissible": true`; `"learning_ran": false`; `"weights_immutable": true`; `"row_count": 4320`; `"admissible": true`; `"complete": true`; `"authority_consumed": false`; `"disposition": "quarantined_comparator_only"`; `"verifier_is_oracle": false`
+`honest_verdict` `complete_null_residual_memory_shard_b_rows_and_delayed_correction_receipts_complete`; `verdict_class` `null`; `planned_row_count` `3672`; `total_rows` `3672`; `csl_shard_b_complete_score` `1.0`; `failed_checks` `[]`; `verified_residual_memory` `decision_accuracy` `0.083333`; `no_memory` `decision_accuracy` `0.226852`; `read_only_memory` `decision_accuracy` `0.101852`; `verified_residual_memory` `held_future_mean_residual_error` `0.405093`; `no_memory` `held_future_mean_residual_error` `0.476852`; `mean_correction_latency_events` `2.039216`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6832_operational_obligation_saturation_fixture.json
+## experiment_6842_sealed_memory_pathway_portability_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The sealed audit completed and found the memory pathway not ready for continuous self-learning, with readiness score zero.
+
+## WHAT WOULD REFUTE IT
+A nonzero readiness score with every conjunctive readiness gate passing, supported by positive held-future performance of verified residual memory over no memory.
+
+## WAS THAT CHECKED
+Yes. The artifact reports the conjunctive readiness score, dose-calibration and deletion gates, held-future comparisons, and family/order/seed breakdowns. Outcomes were capable of varying—the random arm recorded both wins and losses—while verified residual memory tied the serious no-memory baseline after deletion.
+
+## EVIDENCE
+`honest_verdict`: `complete_null_sealed_memory_audit_complete_ready_score_zero`; `continuous_self_learning_ready_score`: `0.0`; `calibrated_dose_gate_passed`: `false`; `mean_effect_vs_no_memory`: `-0.118519`; `readiness_gate_passed`: `false`; `verified_residual_memory`; `held_future_rows`: `540`; `wins`: `0`; `losses`: `0`; `ties`: `540`; `mean_effect_vs_no_memory`: `0.0`; `random_admission`; `wins`: `30`; `losses`: `42`; `verifier_is_oracle`: `false`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6843_live_arc_evidence_stratum_freeze.json
 
 **NO_CLAIM**
 
@@ -118,18 +74,40 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-The operational readiness receipt would fail if any readiness gate failed, checker mutations behaved unexpectedly, leakage appeared, or required legal-action headroom was absent; none would refute a model-value claim because no model-value claim is made.
+No falsifying outcome applies because the artifact asserts only inventory completeness, not solving or mechanism value.
 
 ## WAS THAT CHECKED
-Yes. The artifact reports readiness gates in `gate_check_summary`, mutation behavior in `checker_mutation_results`, leakage checks in `leakage_audit`, and headroom checks in `legal_action_headroom`.
+No comparative refutation was checked or required; only provenance, eligibility counts, source identity, and inventory gates were checked.
 
 ## EVIDENCE
-`honest_verdict`: `complete_operational_obligation_saturation_fixture: deterministic source-free fixture ready; no model ran`; `inference_substrate`: `deterministic CPU fixture generation, no LLM`; `verdict_class`: `null`; `operational_saturation_fixture_ready`: `true`; `failed_check`: `null`; `passed`: `true`; `all_expected`: `true`; `verifier_is_oracle`: `false`
+`solve_claim`: `false`; `verdict_class`: `"null"`; `inference_substrate`: `"read_only_live_artifact_inventory"`; `honest_verdict`: `"complete_live_arc_inventory_terminal_evidence_only_no_solve_claim"`; `mechanism_effect_claim`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6833_sota_operational_obligation_saturation_corpus.json
+## experiment_6844_supervisor_action_outcome_credit_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The causal audit is complete, but supervisor-effect inference is blocked because the matched outcomes have no nonzero headroom.
+
+## WHAT WOULD REFUTE IT
+At least one same-stratum redirect or control outcome score differing from the others, producing nonzero headroom and effect eligibility, would refute the claimed blockage.
+
+## WAS THAT CHECKED
+Yes. The headroom check compared 30 redirects with 30 matched controls across 60 exact later-outcome receipts; all observed scores were zero, and the eligibility gate failed specifically on nonzero headroom.
+
+## EVIDENCE
+`"honest_verdict": "complete_blocked_supervisor_outcome_credit_audit"`; `"failed_check": "headroom_nonzero"`; `"observed": false`; `"passed": false`; `"nonzero_headroom": false`; `"rule": "same-stratum redirect/control exact outcome scores are not all equal"`; `"redirect_count": 30`; `"matched_control_count": 30`; `"exact_later_outcome_count": 60`; `"effect_delta": 0.0`; `"effect_eligible": false`; `"supervisor_effect_eligible_score": 0`; `"solve_claim": false`; `"verifier_is_oracle": false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6845_tool_gap_causal_support_audit.json
 
 **NO_CLAIM**
 
@@ -140,35 +118,57 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative claim is asserted. For the corpus-readiness assertion, missing, duplicate, or invalid rows; failed budget parity; incomplete checkpoints; or unauthenticated inference would refute readiness.
+No comparative claim exists to falsify; the blocked conclusion would be contradicted by one or more valid tool-gap obligation rows passing the eligibility gates.
 
 ## WAS THAT CHECKED
-Yes, for readiness: the artifact checks row coverage, validation errors, budget parity, checkpoint completeness, and process authenticity. It explicitly reserves inference for a later experiment, so no superiority claim is tested here.
+Yes. The obligation ledger, request-receipt joins, precondition gates, and effect-eligibility score explicitly check this; all show zero eligible observations.
 
 ## EVIDENCE
-`descriptive_only_exp6834_owns_inference`; `A closed class prevents readiness from becoming an inferential claim.`; `operational_saturation_corpus_ready`: `true`; `passed`: `true`; `row_validation_errors`: `[]`; `rows`: `900`; `duplicates`: `[]`; `expected`: `900`; `observed_unique`: `900`
+`"solve_claim": false`; `"verdict_class": "blocked"`; `"failed_check": "tool_gap_obligations"`; `"observed": 0`; `"passed": false`; `"row_count": 0`; `"rows": []`; `"joined_count": 0`; `"tool_gap_effect_eligible_score": 0`; `"utility_results": []`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6834_operational_saturation_identifiability_audit.json
+## experiment_6846_typed_arc_shadow_monitor.json
 
-**CLAIM_SUPPORTED**
+**NO_CLAIM**
 
 ## VERDICT
-CLAIM_SUPPORTED
+NO_CLAIM
 
 ## THE HEADLINE CLAIM
-The observed support does not identify binary operational-field preservation across every finite fixture cell under unrestricted binary finite-field policies.
+no claim
 
 ## WHAT WOULD REFUTE IT
-Observed support that separates all compatible target policies—meaning no two policies agree on every observed cell while differing on any target cell—would refute the claim.
+As a readiness receipt, it would fail if the hook were unreachable, readiness gates failed, the default armed the monitor, or shadow execution changed returned actions; these would refute readiness and non-interference, but not an effectiveness claim because none is made.
 
 ## WAS THAT CHECKED
-Yes. The audit explicitly allowed either a separated or not-separated disposition, evaluated all missing binary coordinates, and produced constructive collision witnesses with identical observed signatures but different target values.
+Yes. Reachability, gate completion, default-off configuration, action identity, external-label agreement, latency, and row validity were checked across 20 rows.
 
 ## EVIDENCE
-`honest_verdict`: `complete_null_operational_field_preservation_not_identified`; `identifiability_disposition`: `["separated", "not_separated"]`; `disposition`: `not_separated`; `policy_class`: `unrestricted binary finite-field policies`; `observed_cell_count`: `395`; `target_cell_count`: `18900`; `missing_cell_count`: `18505`; `compatible_policy_count`: `2^18505`; `observed_signature_left`: `sha256:3f1c9c5701bc07ac92d62b93d6c791f96e9525760ee4a32487c847b57b3626f9`; `observed_signature_right`: `sha256:3f1c9c5701bc07ac92d62b93d6c791f96e9525760ee4a32487c847b57b3626f9`; `target_value_left`: `0`; `target_value_right`: `1`; `coverage_valid`: `true`; `verifier_is_oracle`: `false`
+`honest_verdict`: `complete_null_typed_arc_shadow_monitor_ready_default_off_no_solve_claim`; `verdict_class`: `null`; `solve_claim`: `false`; `reachable`: `true`; `default_enabled`: `false`; `monitor_constructed_by_default`: `false`; `all_identical`: `true`; `row_count`: `20`; `passed`: `true`; `invalid_row_hash_count`: `0`; `missing_fields`: `[]`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6847_v598_independent_capstone.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+For the artifact’s bookkeeping assertion, a source branch state, failed gate, missing artifact, or producer disagreement being omitted or recorded differently in the capstone would refute faithful preservation; there is no comparative method-value claim to falsify.
+
+## WAS THAT CHECKED
+Yes, for receipt integrity: source hashes, expected-versus-observed rows, failed checks, producer disagreements, and missing-artifact preservation were recorded. No comparative baseline was checked because no comparative claim was made.
+
+## EVIDENCE
+`aggregation_from_upstream_artifacts_no_llm`; `complete_null_v598_independent_capstone_all_branch_states_preserved`; `complete_terminal_null`; `null`; `passed`; `false`; `producer_disagreement_count`; `2`; `missing_artifacts_preserved`; `exp6838`; `Completeness measures branch coverage, not scientific or operational positivity.`
 
 ## RECOMMENDATION
 KEEP
