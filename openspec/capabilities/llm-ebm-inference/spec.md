@@ -2937,3 +2937,118 @@ released through the ownership API, and its VRAM recovery receipt has passed.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFER-SOTA-6782 and SCENARIO-INFER-SOTA-6782-* | Planned (`python/carnot/experiment_6782_sequential_sota_runtime_admission.py`) | Planned (`tests/python/test_experiment_6782_sequential_sota_runtime_admission.py`) |
+
+### REQ-INFERENCE-6850: Three-Family Scoring Admission Uses Owned Processes
+
+Exp6850 SHALL qualify execution readiness without running a scientific scoring
+matrix. It SHALL use exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL call `cached_sota_pair()` before it
+resolves all three exact local GGUF files. It SHALL bind each file and its
+native GGUF tokenizer metadata to SHA-256 receipts. It SHALL require CUDA token
+scoring, sufficient disk, free task-owned ports, and a bounded exclusive lease
+on one eligible GPU. It SHALL observe unrelated processes without signaling or
+interrupting them.
+
+Exp6850 SHALL start one model process at a time. Each process receipt SHALL
+record its command, PID, Linux process start ticks, model hash, tokenizer hash,
+GPU UUID, visible devices, port, free VRAM before and after, and an opaque
+ownership-token digest. Process ownership SHALL require the recorded PID, start
+ticks, command hash, process group, owner PID, and ownership-token digest to
+match. A stale PID, reused PID, occupied port, lost lease, or changed ownership
+identity SHALL fail closed. Cleanup SHALL signal only a matching owned process.
+An owned orphan from an interrupted Exp6850 run MAY be reclaimed only when its
+full stored identity still matches. An unrelated llama.cpp, ARC, or other
+process SHALL never be a cleanup target.
+
+Each model SHALL run one fixed prompt-plus-candidate forced-sequence canary.
+The canary SHALL store prompt and candidate token IDs, finite candidate token
+log-probabilities, first useful output, final output, and latency. The prompt
+tokens SHALL not enter the candidate score. The canary SHALL have no scientific
+label and SHALL not support a margin or model-quality claim. Missing tokenizer
+metadata, non-finite token log-probabilities, an empty useful output, a failed
+request, or lease loss SHALL fail that model's admission.
+
+Exp6850 SHALL checkpoint after each complete model. On restart, it SHALL verify
+the model hash, tokenizer hash, canary hash, process receipt, lease receipt, and
+teardown receipt before it skips a model. It SHALL rerun only incomplete or
+invalid canaries. After every model, it SHALL close only the owned process,
+confirm process exit, confirm port release, record VRAM after teardown, and
+release the owner-bound lease.
+
+The terminal artifact SHALL be
+`results/experiment_6850_three_family_scoring_admission_canary.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `model_specs`, `models_used`, `model_artifact_hashes`,
+`tokenizer_receipts`, `process_receipts`, `accelerator_samples`, `rows`,
+`canary_token_receipts`, `lease_receipts`, `checkpoint_manifest`,
+`teardown_receipts`, `admission_canary_complete_score`,
+`three_family_scoring_admission_ready_score`, `scientific_effect_claimed`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. The inference substrate SHALL be
+`live_local_llama_cpp_cuda_forced_sequence_canary`.
+`scientific_effect_claimed` and `verifier_is_oracle` SHALL both be false.
+`verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. The honest verdict SHALL start with
+`complete_`. A failed precondition SHALL emit
+`complete_blocked_three_family_scoring_admission_canary` and SHALL record the
+failed check and observed value in `gate_check_summary`.
+
+`admission_canary_complete_score` SHALL depend only on the three complete
+canary token receipts. `three_family_scoring_admission_ready_score`, which
+Exp6851 consumes, SHALL equal one only when all three artifact, process, lease,
+canary, checkpoint, and teardown receipts are complete. It SHALL not depend on
+candidate score direction, a compatibility effect, or model quality.
+
+#### SCENARIO-INFERENCE-6850-PROCESS-IDENTITY: Cleanup Refuses Stale Or Reused PIDs
+
+Given a stored process receipt with an absent PID, reused PID, changed start
+ticks, changed command hash, or changed process group,
+When Exp6850 checks ownership or teardown,
+Then it SHALL send no signal to the current process and SHALL record the exact
+identity failure.
+
+#### SCENARIO-INFERENCE-6850-PORT-AND-ORPHAN: Ports And Orphans Stay Owner-Scoped
+
+Given an occupied requested port or a stored orphan process receipt,
+When Exp6850 starts or recovers a server,
+Then it SHALL block on the occupied port unless the listener matches the full
+owned orphan identity, and it SHALL never terminate an unrelated listener.
+
+#### SCENARIO-INFERENCE-6850-LEASE-LOSS: Lease Loss Stops The Canary
+
+Given an acquired owner-bound GPU lease,
+When its heartbeat expires or its journal, token, model, device, PID, or start
+ticks no longer match,
+Then Exp6850 SHALL stop admission, tear down only its matching owned process,
+and record a blocked lease receipt.
+
+#### SCENARIO-INFERENCE-6850-CANARY: Native Tokens And Finite Scores Are Required
+
+Given one exact model, native tokenizer receipt, free owned port, and valid GPU
+lease,
+When Exp6850 runs the fixed forced-sequence canary,
+Then it SHALL record token IDs, finite candidate token log-probabilities, first
+useful output, final output, latency, model identity, and no scientific label.
+
+#### SCENARIO-INFERENCE-6850-RESTART: Only Complete Verified Canaries Are Skipped
+
+Given a checkpoint with one complete model and one incomplete or hash-drifted
+model,
+When Exp6850 restarts,
+Then it SHALL skip only the complete verified model and rerun every incomplete
+or invalid model.
+
+#### SCENARIO-INFERENCE-6850-TEARDOWN: Exit And Port Release Gate Readiness
+
+Given a completed model canary,
+When Exp6850 tears down the model process,
+Then it SHALL signal only the matching owned identity, confirm process exit,
+confirm port release, record post-teardown VRAM, and release the matching lease
+before the next model starts.
+
+## Implementation Status (REQ-INFERENCE-6850)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6850 and SCENARIO-INFERENCE-6850-* | Implemented (`python/carnot/inference/llama_cpp_process.py`; `python/carnot/experiment_6850_three_family_scoring_admission_canary.py`; `scripts/experiments/experiment_6850_three_family_scoring_admission_canary.py`) | 21 passing tests (`tests/python/test_llama_cpp_process.py`; `tests/python/test_experiment_6850_three_family_scoring_admission_canary.py`) |

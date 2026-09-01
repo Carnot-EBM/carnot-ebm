@@ -1,0 +1,907 @@
+{
+  "checkpoint_hash": "sha256:9deef4facd3e05f7262d410385194ff3daa43339c5e795f83ef918cc5b2ec4b1",
+  "complete_model_count": 3,
+  "completed": [
+    {
+      "accelerator_samples": [
+        {
+          "compute_apps": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "observed_only": true,
+              "pid": 754919,
+              "process_name": ".venv/bin/python",
+              "signals_sent": [],
+              "used_memory_mb": 256
+            }
+          ],
+          "free_vram_mb": 23859,
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "owned_cuda_residency": false,
+          "owned_pid": 0,
+          "owned_vram_mb": 0,
+          "phase": "before",
+          "total_vram_mb": 24576,
+          "visible_devices": "0"
+        },
+        {
+          "compute_apps": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "observed_only": true,
+              "pid": 754919,
+              "process_name": ".venv/bin/python",
+              "signals_sent": [],
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "observed_only": true,
+              "pid": 755210,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "signals_sent": [],
+              "used_memory_mb": 21040
+            }
+          ],
+          "free_vram_mb": 2813,
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "owned_cuda_residency": true,
+          "owned_pid": 755210,
+          "owned_vram_mb": 21040,
+          "phase": "resident",
+          "total_vram_mb": 24576,
+          "visible_devices": "0"
+        },
+        {
+          "compute_apps": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "observed_only": true,
+              "pid": 754919,
+              "process_name": ".venv/bin/python",
+              "signals_sent": [],
+              "used_memory_mb": 256
+            }
+          ],
+          "free_vram_mb": 23859,
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "owned_cuda_residency": false,
+          "owned_pid": 755210,
+          "owned_vram_mb": 0,
+          "phase": "after",
+          "total_vram_mb": 24576,
+          "visible_devices": "0"
+        }
+      ],
+      "entry_hash": "sha256:01197c1020fdcf3875819dddcf5d98e4e8fc70272867ff1959ea8610f1f6242c",
+      "lease_receipt": {
+        "error": null,
+        "lease_valid": true,
+        "owner": {
+          "acquired_monotonic_ns": 570667792374352,
+          "argv_digest": "sha256:b7a69ee6fc090150da10030e06b361ec4a91e8e9cc423e6942d9e740c67607ed",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "expires_monotonic_ns": 571567792374352,
+          "pid": 754919,
+          "pid_start_ticks": 57062051,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "exp6850-qwen3_6_35b_a3b",
+          "token_digest": "sha256:ad262676164454015676a096596cad95f73beed0406cf19564dd38cd3d8a41bf",
+          "token_length": 43,
+          "token_opaque": true
+        },
+        "phase_history": [
+          {
+            "details": {
+              "recovery_performed": false
+            },
+            "event_checksum": "sha256:9756143868cff4eb7df045fd351f4d7a4aadea9571be044621b4f3154dfce2e9",
+            "monotonic_ns": 570667792374352,
+            "owner_token_digest": "sha256:ad262676164454015676a096596cad95f73beed0406cf19564dd38cd3d8a41bf",
+            "phase": "preflight",
+            "previous_event_checksum": null,
+            "previous_phase": null
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:c8695d672ee2ccf81f9c3a902af6e54a21f995a044f1d7cfa0a1e6c6eba1008b",
+            "monotonic_ns": 570667792864722,
+            "owner_token_digest": "sha256:ad262676164454015676a096596cad95f73beed0406cf19564dd38cd3d8a41bf",
+            "phase": "admitted",
+            "previous_event_checksum": "sha256:9756143868cff4eb7df045fd351f4d7a4aadea9571be044621b4f3154dfce2e9",
+            "previous_phase": "preflight"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:68fa28cd384e08d805b477ab182a9678cd571ce5c45efc3020743e6409467882",
+            "monotonic_ns": 570667793199170,
+            "owner_token_digest": "sha256:ad262676164454015676a096596cad95f73beed0406cf19564dd38cd3d8a41bf",
+            "phase": "loading",
+            "previous_event_checksum": "sha256:c8695d672ee2ccf81f9c3a902af6e54a21f995a044f1d7cfa0a1e6c6eba1008b",
+            "previous_phase": "admitted"
+          },
+          {
+            "details": {
+              "vram_resident_mb": 21040
+            },
+            "event_checksum": "sha256:019a5b020ea163de1091bfe794070bde87ee264fd15816d29fbfd52cfbe3b8db",
+            "monotonic_ns": 570678982503904,
+            "owner_token_digest": "sha256:ad262676164454015676a096596cad95f73beed0406cf19564dd38cd3d8a41bf",
+            "phase": "resident",
+            "previous_event_checksum": "sha256:68fa28cd384e08d805b477ab182a9678cd571ce5c45efc3020743e6409467882",
+            "previous_phase": "loading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:a14058bc58baa56817dc919bcc657920214b0e3b1ec30499cbcf934f2a792cef",
+            "monotonic_ns": 570678983106314,
+            "owner_token_digest": "sha256:ad262676164454015676a096596cad95f73beed0406cf19564dd38cd3d8a41bf",
+            "phase": "inferencing",
+            "previous_event_checksum": "sha256:019a5b020ea163de1091bfe794070bde87ee264fd15816d29fbfd52cfbe3b8db",
+            "previous_phase": "resident"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:0995c47d0ecd325d1fcd0d1dc76ae1ff3678d3c63b6ae1bdb277ff9ef174aeae",
+            "monotonic_ns": 570679450228109,
+            "owner_token_digest": "sha256:ad262676164454015676a096596cad95f73beed0406cf19564dd38cd3d8a41bf",
+            "phase": "unloading",
+            "previous_event_checksum": "sha256:a14058bc58baa56817dc919bcc657920214b0e3b1ec30499cbcf934f2a792cef",
+            "previous_phase": "inferencing"
+          },
+          {
+            "details": {
+              "exit_code": 0,
+              "unload_observed": true,
+              "vram_after_mb": 0
+            },
+            "event_checksum": "sha256:fe567f70d4a775ca73cb518cb70dab0ff995e0df48f0e05db2ca5ea63e269752",
+            "monotonic_ns": 570679716582067,
+            "owner_token_digest": "sha256:ad262676164454015676a096596cad95f73beed0406cf19564dd38cd3d8a41bf",
+            "phase": "validating",
+            "previous_event_checksum": "sha256:0995c47d0ecd325d1fcd0d1dc76ae1ff3678d3c63b6ae1bdb277ff9ef174aeae",
+            "previous_phase": "unloading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:28caa3af1c0bf6008c7a4909f34064dba98ff47f9bc22e0a42bd45b49c5c6134",
+            "monotonic_ns": 570679717195508,
+            "owner_token_digest": "sha256:ad262676164454015676a096596cad95f73beed0406cf19564dd38cd3d8a41bf",
+            "phase": "terminal_complete",
+            "previous_event_checksum": "sha256:fe567f70d4a775ca73cb518cb70dab0ff995e0df48f0e05db2ca5ea63e269752",
+            "previous_phase": "validating"
+          }
+        ],
+        "release": {
+          "checksum": "sha256:531ae36306e554bf48c8042f43e6fead2a58ad586476c9113f2113efb2a72378",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "phase": "terminal_complete",
+          "pid": 754919,
+          "pid_start_ticks": 57062051,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "process_receipt": {
+        "comm": "python",
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6850_three_family_scoring_admission_canary",
+          "--score-worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "--port",
+          "39367"
+        ],
+        "command_hash": "sha256:3943b2da84a9bc8df13592d39f0772878bbfc4beb7e4204f480c8bfd13a26dd4",
+        "exists": true,
+        "free_vram_after_mb": 23859,
+        "free_vram_before_mb": 23859,
+        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "owner_pid": 754919,
+        "owner_start_time_ticks": 57062051,
+        "ownership_token_digest": "sha256:0c76d986cf3856dfeef3e9c8946e862513e32c4f5828adea1ae22b07e9866a5a",
+        "parent_identity": {
+          "pid": 754919,
+          "start_time_ticks": 57062051
+        },
+        "pid": 755210,
+        "port": 39367,
+        "ppid": 754919,
+        "process_group_id": 755210,
+        "session_id": 755210,
+        "start_time_ticks": 57066779,
+        "state": "R",
+        "tokenizer_hash": "sha256:4e95861a364e75660c7fcf9df129cf1d158b927e3ad5ac801ae53bd2681cf08b",
+        "uid": 1000,
+        "visible_devices": "0"
+      },
+      "row": {
+        "canary_hash": "sha256:d2edbc58358e26a2b1c46bb7ab99af14e25992873ccb1058f41dea9dd7196292",
+        "candidate_token_ids": [
+          10993,
+          59610,
+          369,
+          9770,
+          1973,
+          264,
+          11991,
+          2306,
+          13
+        ],
+        "conditional_log_likelihood": -61.83356761,
+        "final_output": " execution readiness is checked without a scientific label.",
+        "first_useful_output": " execution",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "latency_s": 0.465622,
+        "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "prompt_token_ids": [
+          55707,
+          19221,
+          628,
+          640,
+          13,
+          14569,
+          279,
+          8097,
+          1414,
+          6681,
+          25
+        ],
+        "scientific_label": null,
+        "supports_margin_claim": false,
+        "token_logprobs": [
+          -14.34298511,
+          -8.28929084,
+          -3.85584169,
+          -4.40836424,
+          -7.6493717,
+          -4.46019291,
+          -10.00674228,
+          -7.24435625,
+          -1.57642258
+        ],
+        "tokenizer_hash": "sha256:4e95861a364e75660c7fcf9df129cf1d158b927e3ad5ac801ae53bd2681cf08b"
+      },
+      "teardown_receipt": {
+        "action": "terminated",
+        "bounded": true,
+        "leak_free": true,
+        "ownership_errors": [],
+        "ownership_verified": true,
+        "port_release_confirmed": true,
+        "process_exit_confirmed": true,
+        "process_reaped": true,
+        "signals_sent": [
+          {
+            "signal": "SIGTERM",
+            "target": "process_group"
+          }
+        ],
+        "unrelated_process_kill_count_delta": 0,
+        "wait_status": "exited_zombie"
+      }
+    },
+    {
+      "accelerator_samples": [
+        {
+          "compute_apps": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "observed_only": true,
+              "pid": 754919,
+              "process_name": ".venv/bin/python",
+              "signals_sent": [],
+              "used_memory_mb": 256
+            }
+          ],
+          "free_vram_mb": 23859,
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "owned_cuda_residency": false,
+          "owned_pid": 0,
+          "owned_vram_mb": 0,
+          "phase": "before",
+          "total_vram_mb": 24576,
+          "visible_devices": "0"
+        },
+        {
+          "compute_apps": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "observed_only": true,
+              "pid": 754919,
+              "process_name": ".venv/bin/python",
+              "signals_sent": [],
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "observed_only": true,
+              "pid": 755261,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "signals_sent": [],
+              "used_memory_mb": 18310
+            }
+          ],
+          "free_vram_mb": 5543,
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "owned_cuda_residency": true,
+          "owned_pid": 755261,
+          "owned_vram_mb": 18310,
+          "phase": "resident",
+          "total_vram_mb": 24576,
+          "visible_devices": "0"
+        },
+        {
+          "compute_apps": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "observed_only": true,
+              "pid": 754919,
+              "process_name": ".venv/bin/python",
+              "signals_sent": [],
+              "used_memory_mb": 256
+            }
+          ],
+          "free_vram_mb": 23859,
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "owned_cuda_residency": false,
+          "owned_pid": 755261,
+          "owned_vram_mb": 0,
+          "phase": "after",
+          "total_vram_mb": 24576,
+          "visible_devices": "0"
+        }
+      ],
+      "entry_hash": "sha256:2072f2b60b7913d7934fd82bc003c3eae8b747744bf61f02e56d5a17fcff4aef",
+      "lease_receipt": {
+        "error": null,
+        "lease_valid": true,
+        "owner": {
+          "acquired_monotonic_ns": 570679780682759,
+          "argv_digest": "sha256:b7a69ee6fc090150da10030e06b361ec4a91e8e9cc423e6942d9e740c67607ed",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "unsloth/gemma-4-31B-it-GGUF",
+          "expires_monotonic_ns": 571579780682759,
+          "pid": 754919,
+          "pid_start_ticks": 57062051,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "exp6850-gemma4_31b_it",
+          "token_digest": "sha256:76a71696c94231e4beb640e38c3350efe17eee18402b423969e85ee0a3622432",
+          "token_length": 43,
+          "token_opaque": true
+        },
+        "phase_history": [
+          {
+            "details": {
+              "recovery_performed": false
+            },
+            "event_checksum": "sha256:2bc164d945fea22441c3c60bd873d3c53164710b8648bcb9f3f0f84fe1223fa7",
+            "monotonic_ns": 570679780682759,
+            "owner_token_digest": "sha256:76a71696c94231e4beb640e38c3350efe17eee18402b423969e85ee0a3622432",
+            "phase": "preflight",
+            "previous_event_checksum": null,
+            "previous_phase": null
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:e83eaf75705c033d78cf0685708d0e90675df94f164bf6bc99bddf81680a3081",
+            "monotonic_ns": 570679781170334,
+            "owner_token_digest": "sha256:76a71696c94231e4beb640e38c3350efe17eee18402b423969e85ee0a3622432",
+            "phase": "admitted",
+            "previous_event_checksum": "sha256:2bc164d945fea22441c3c60bd873d3c53164710b8648bcb9f3f0f84fe1223fa7",
+            "previous_phase": "preflight"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:7192236e69550708256258e5adcbe94c6f8e0c7d7412da190b4312cb41fcd430",
+            "monotonic_ns": 570679781491196,
+            "owner_token_digest": "sha256:76a71696c94231e4beb640e38c3350efe17eee18402b423969e85ee0a3622432",
+            "phase": "loading",
+            "previous_event_checksum": "sha256:e83eaf75705c033d78cf0685708d0e90675df94f164bf6bc99bddf81680a3081",
+            "previous_phase": "admitted"
+          },
+          {
+            "details": {
+              "vram_resident_mb": 18310
+            },
+            "event_checksum": "sha256:23b1ba3ec36eece9d66856d62e2e2b88fad9ad210293cfe65d1bc56e15ec417f",
+            "monotonic_ns": 570689946469722,
+            "owner_token_digest": "sha256:76a71696c94231e4beb640e38c3350efe17eee18402b423969e85ee0a3622432",
+            "phase": "resident",
+            "previous_event_checksum": "sha256:7192236e69550708256258e5adcbe94c6f8e0c7d7412da190b4312cb41fcd430",
+            "previous_phase": "loading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:4cf9fa386fb0e387de478473c37198f0d044be02b57711757ce744ab4a1dc2f7",
+            "monotonic_ns": 570689947335206,
+            "owner_token_digest": "sha256:76a71696c94231e4beb640e38c3350efe17eee18402b423969e85ee0a3622432",
+            "phase": "inferencing",
+            "previous_event_checksum": "sha256:23b1ba3ec36eece9d66856d62e2e2b88fad9ad210293cfe65d1bc56e15ec417f",
+            "previous_phase": "resident"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:b4e77ae26cd505509cc812b4eba356e80f56552d592dc71e9661f839040fad99",
+            "monotonic_ns": 570690407278316,
+            "owner_token_digest": "sha256:76a71696c94231e4beb640e38c3350efe17eee18402b423969e85ee0a3622432",
+            "phase": "unloading",
+            "previous_event_checksum": "sha256:4cf9fa386fb0e387de478473c37198f0d044be02b57711757ce744ab4a1dc2f7",
+            "previous_phase": "inferencing"
+          },
+          {
+            "details": {
+              "exit_code": 0,
+              "unload_observed": true,
+              "vram_after_mb": 0
+            },
+            "event_checksum": "sha256:b91bc5a1615f6bd63091e8619d5f340c63b9966d08506d1e81be6dabf91870f0",
+            "monotonic_ns": 570690674804483,
+            "owner_token_digest": "sha256:76a71696c94231e4beb640e38c3350efe17eee18402b423969e85ee0a3622432",
+            "phase": "validating",
+            "previous_event_checksum": "sha256:b4e77ae26cd505509cc812b4eba356e80f56552d592dc71e9661f839040fad99",
+            "previous_phase": "unloading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:edd26aeee672f8aacd86d52740348c4dbd30cc2d27c5ab268c51587f74612477",
+            "monotonic_ns": 570690675502474,
+            "owner_token_digest": "sha256:76a71696c94231e4beb640e38c3350efe17eee18402b423969e85ee0a3622432",
+            "phase": "terminal_complete",
+            "previous_event_checksum": "sha256:b91bc5a1615f6bd63091e8619d5f340c63b9966d08506d1e81be6dabf91870f0",
+            "previous_phase": "validating"
+          }
+        ],
+        "release": {
+          "checksum": "sha256:eb65e1540aa9e54ef17221ed087293a6f1dff4c54e4305bd0d3212419a2f55f4",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "phase": "terminal_complete",
+          "pid": 754919,
+          "pid_start_ticks": 57062051,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "process_receipt": {
+        "comm": "python",
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6850_three_family_scoring_admission_canary",
+          "--score-worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "--port",
+          "49345"
+        ],
+        "command_hash": "sha256:5f3926ce9ca93984cdc1eff2df82acc9f9166190c7a5b0cbb5b721cd6729e23b",
+        "exists": true,
+        "free_vram_after_mb": 23859,
+        "free_vram_before_mb": 23859,
+        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "model_hash": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "owner_pid": 754919,
+        "owner_start_time_ticks": 57062051,
+        "ownership_token_digest": "sha256:3d5e5edee45c908bae1f3b9788edfdf0651632624d16e44d9bf0c79d4e80b72a",
+        "parent_identity": {
+          "pid": 754919,
+          "start_time_ticks": 57062051
+        },
+        "pid": 755261,
+        "port": 49345,
+        "ppid": 754919,
+        "process_group_id": 755261,
+        "session_id": 755261,
+        "start_time_ticks": 57067978,
+        "state": "R",
+        "tokenizer_hash": "sha256:e7980b28235bd0712e48304be4d3c9b0a31e854c2f9aa2bb296f30c3f01beebd",
+        "uid": 1000,
+        "visible_devices": "0"
+      },
+      "row": {
+        "canary_hash": "sha256:ac38083fbe3705ae6ce3289f6d1c7986e69091ad9a65b05c2b45501daf4fc098",
+        "candidate_token_ids": [
+          14860,
+          58024,
+          563,
+          15593,
+          2180,
+          496,
+          11639,
+          5346,
+          236761
+        ],
+        "conditional_log_likelihood": -82.72453936,
+        "final_output": " execution readiness is checked without a scientific label.",
+        "first_useful_output": " execution",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "latency_s": 0.457521,
+        "model_hash": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "prompt_token_ids": [
+          2,
+          134395,
+          21649,
+          190878,
+          236761,
+          42940,
+          506,
+          6530,
+          1816,
+          7121,
+          236787
+        ],
+        "scientific_label": null,
+        "supports_margin_claim": false,
+        "token_logprobs": [
+          -16.56733615,
+          -13.48872563,
+          -6.94590452,
+          -4.52172005,
+          -13.45795325,
+          -2.31755721,
+          -15.15117912,
+          -10.21824216,
+          -0.05592128
+        ],
+        "tokenizer_hash": "sha256:e7980b28235bd0712e48304be4d3c9b0a31e854c2f9aa2bb296f30c3f01beebd"
+      },
+      "teardown_receipt": {
+        "action": "terminated",
+        "bounded": true,
+        "leak_free": true,
+        "ownership_errors": [],
+        "ownership_verified": true,
+        "port_release_confirmed": true,
+        "process_exit_confirmed": true,
+        "process_reaped": true,
+        "signals_sent": [
+          {
+            "signal": "SIGTERM",
+            "target": "process_group"
+          }
+        ],
+        "unrelated_process_kill_count_delta": 0,
+        "wait_status": "exited_zombie"
+      }
+    },
+    {
+      "accelerator_samples": [
+        {
+          "compute_apps": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "observed_only": true,
+              "pid": 754919,
+              "process_name": ".venv/bin/python",
+              "signals_sent": [],
+              "used_memory_mb": 256
+            }
+          ],
+          "free_vram_mb": 23859,
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "owned_cuda_residency": false,
+          "owned_pid": 0,
+          "owned_vram_mb": 0,
+          "phase": "before",
+          "total_vram_mb": 24576,
+          "visible_devices": "0"
+        },
+        {
+          "compute_apps": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "observed_only": true,
+              "pid": 754919,
+              "process_name": ".venv/bin/python",
+              "signals_sent": [],
+              "used_memory_mb": 256
+            },
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "observed_only": true,
+              "pid": 755323,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "signals_sent": [],
+              "used_memory_mb": 16654
+            }
+          ],
+          "free_vram_mb": 7199,
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "owned_cuda_residency": true,
+          "owned_pid": 755323,
+          "owned_vram_mb": 16654,
+          "phase": "resident",
+          "total_vram_mb": 24576,
+          "visible_devices": "0"
+        },
+        {
+          "compute_apps": [
+            {
+              "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+              "observed_only": true,
+              "pid": 754919,
+              "process_name": ".venv/bin/python",
+              "signals_sent": [],
+              "used_memory_mb": 256
+            }
+          ],
+          "free_vram_mb": 23859,
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "owned_cuda_residency": false,
+          "owned_pid": 755323,
+          "owned_vram_mb": 0,
+          "phase": "after",
+          "total_vram_mb": 24576,
+          "visible_devices": "0"
+        }
+      ],
+      "entry_hash": "sha256:0a22ffd6d8cd0d2c64dbf383cd68d92233e65ff0893ab7f330edfada01ae28e6",
+      "lease_receipt": {
+        "error": null,
+        "lease_valid": true,
+        "owner": {
+          "acquired_monotonic_ns": 570690730010850,
+          "argv_digest": "sha256:b7a69ee6fc090150da10030e06b361ec4a91e8e9cc423e6942d9e740c67607ed",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "expected_model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "expires_monotonic_ns": 571590730010850,
+          "pid": 754919,
+          "pid_start_ticks": 57062051,
+          "recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "signals_sent": [],
+          "task_id": "exp6850-gemma4_26b_a4b_it",
+          "token_digest": "sha256:663b264a6c094d1707afc0e159b19cb0d6e7efe58016921d214a36a2d85544d9",
+          "token_length": 43,
+          "token_opaque": true
+        },
+        "phase_history": [
+          {
+            "details": {
+              "recovery_performed": false
+            },
+            "event_checksum": "sha256:62c28756af8f43ca0e79c114ddda2377bba9f5f68427616513591fc6f6ffc9a4",
+            "monotonic_ns": 570690730010850,
+            "owner_token_digest": "sha256:663b264a6c094d1707afc0e159b19cb0d6e7efe58016921d214a36a2d85544d9",
+            "phase": "preflight",
+            "previous_event_checksum": null,
+            "previous_phase": null
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:5aacd129823075bd849f7a1175bb12b0b85e7c9bfdd0c2b63265e5e3150a6a52",
+            "monotonic_ns": 570690730495760,
+            "owner_token_digest": "sha256:663b264a6c094d1707afc0e159b19cb0d6e7efe58016921d214a36a2d85544d9",
+            "phase": "admitted",
+            "previous_event_checksum": "sha256:62c28756af8f43ca0e79c114ddda2377bba9f5f68427616513591fc6f6ffc9a4",
+            "previous_phase": "preflight"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:dc4e6e9b23faff1fa3ea132b1464cd332a9d2862e092791ece84e3db0de9718f",
+            "monotonic_ns": 570690730815380,
+            "owner_token_digest": "sha256:663b264a6c094d1707afc0e159b19cb0d6e7efe58016921d214a36a2d85544d9",
+            "phase": "loading",
+            "previous_event_checksum": "sha256:5aacd129823075bd849f7a1175bb12b0b85e7c9bfdd0c2b63265e5e3150a6a52",
+            "previous_phase": "admitted"
+          },
+          {
+            "details": {
+              "vram_resident_mb": 16654
+            },
+            "event_checksum": "sha256:126113d027bec04c9fc1635cfefc5ab1d3cb3b081582650725ee1c3cc8bb4b81",
+            "monotonic_ns": 570699898300156,
+            "owner_token_digest": "sha256:663b264a6c094d1707afc0e159b19cb0d6e7efe58016921d214a36a2d85544d9",
+            "phase": "resident",
+            "previous_event_checksum": "sha256:dc4e6e9b23faff1fa3ea132b1464cd332a9d2862e092791ece84e3db0de9718f",
+            "previous_phase": "loading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:a6a324495ddc6caa72c17ab27203e9d2edc9121ac2d00cba8da288960c59ed36",
+            "monotonic_ns": 570699898837174,
+            "owner_token_digest": "sha256:663b264a6c094d1707afc0e159b19cb0d6e7efe58016921d214a36a2d85544d9",
+            "phase": "inferencing",
+            "previous_event_checksum": "sha256:126113d027bec04c9fc1635cfefc5ab1d3cb3b081582650725ee1c3cc8bb4b81",
+            "previous_phase": "resident"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:4288f99a63486f36f795f1c920b425d33afd9395dc32496a472d5c85fbe6e9f4",
+            "monotonic_ns": 570700384672084,
+            "owner_token_digest": "sha256:663b264a6c094d1707afc0e159b19cb0d6e7efe58016921d214a36a2d85544d9",
+            "phase": "unloading",
+            "previous_event_checksum": "sha256:a6a324495ddc6caa72c17ab27203e9d2edc9121ac2d00cba8da288960c59ed36",
+            "previous_phase": "inferencing"
+          },
+          {
+            "details": {
+              "exit_code": 0,
+              "unload_observed": true,
+              "vram_after_mb": 0
+            },
+            "event_checksum": "sha256:f6e1cf11f873cb2f1e4d1e4cc7b323aa7dc71cc0767f3db2962c505c029f63ba",
+            "monotonic_ns": 570700704378247,
+            "owner_token_digest": "sha256:663b264a6c094d1707afc0e159b19cb0d6e7efe58016921d214a36a2d85544d9",
+            "phase": "validating",
+            "previous_event_checksum": "sha256:4288f99a63486f36f795f1c920b425d33afd9395dc32496a472d5c85fbe6e9f4",
+            "previous_phase": "unloading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:9ea3c23b795a063ad9031f174a8eb1484d7922bcffb3847e8df031b8f75bdd76",
+            "monotonic_ns": 570700705275832,
+            "owner_token_digest": "sha256:663b264a6c094d1707afc0e159b19cb0d6e7efe58016921d214a36a2d85544d9",
+            "phase": "terminal_complete",
+            "previous_event_checksum": "sha256:f6e1cf11f873cb2f1e4d1e4cc7b323aa7dc71cc0767f3db2962c505c029f63ba",
+            "previous_phase": "validating"
+          }
+        ],
+        "release": {
+          "checksum": "sha256:b0052d5be60e61a76ec3f7820dafd666933ba088748e2570babcbcf371afb46f",
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "phase": "terminal_complete",
+          "pid": 754919,
+          "pid_start_ticks": 57062051,
+          "released": true,
+          "signals_sent": []
+        }
+      },
+      "process_receipt": {
+        "comm": "python",
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6850_three_family_scoring_admission_canary",
+          "--score-worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "--port",
+          "54653"
+        ],
+        "command_hash": "sha256:fa2a49a3dd4504412136a8c835914b9ea7b1b3a79a661eb2c2dea63b2ee9a8b7",
+        "exists": true,
+        "free_vram_after_mb": 23859,
+        "free_vram_before_mb": 23859,
+        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "model_hash": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "owner_pid": 754919,
+        "owner_start_time_ticks": 57062051,
+        "ownership_token_digest": "sha256:cf6e8906142849402da9d17857d42a8a33660fc95c88e2a7d63d2060b02ccd36",
+        "parent_identity": {
+          "pid": 754919,
+          "start_time_ticks": 57062051
+        },
+        "pid": 755323,
+        "port": 54653,
+        "ppid": 754919,
+        "process_group_id": 755323,
+        "session_id": 755323,
+        "start_time_ticks": 57069073,
+        "state": "R",
+        "tokenizer_hash": "sha256:e7980b28235bd0712e48304be4d3c9b0a31e854c2f9aa2bb296f30c3f01beebd",
+        "uid": 1000,
+        "visible_devices": "0"
+      },
+      "row": {
+        "canary_hash": "sha256:0b386695be2d7a9a45703da03448b8076a99e7ce88809e50bf92cdc82589418c",
+        "candidate_token_ids": [
+          14860,
+          58024,
+          563,
+          15593,
+          2180,
+          496,
+          11639,
+          5346,
+          236761
+        ],
+        "conditional_log_likelihood": -85.12971942,
+        "final_output": " execution readiness is checked without a scientific label.",
+        "first_useful_output": " execution",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "latency_s": 0.480701,
+        "model_hash": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "prompt_token_ids": [
+          2,
+          134395,
+          21649,
+          190878,
+          236761,
+          42940,
+          506,
+          6530,
+          1816,
+          7121,
+          236787
+        ],
+        "scientific_label": null,
+        "supports_margin_claim": false,
+        "token_logprobs": [
+          -17.58556041,
+          -13.97702032,
+          -5.26062592,
+          -11.29559281,
+          -11.50499679,
+          -2.22989013,
+          -9.03592636,
+          -14.20577477,
+          -0.03433189
+        ],
+        "tokenizer_hash": "sha256:e7980b28235bd0712e48304be4d3c9b0a31e854c2f9aa2bb296f30c3f01beebd"
+      },
+      "teardown_receipt": {
+        "action": "terminated",
+        "bounded": true,
+        "leak_free": true,
+        "ownership_errors": [],
+        "ownership_verified": true,
+        "port_release_confirmed": true,
+        "process_exit_confirmed": true,
+        "process_reaped": true,
+        "signals_sent": [
+          {
+            "signal": "SIGTERM",
+            "target": "process_group"
+          }
+        ],
+        "unrelated_process_kill_count_delta": 0,
+        "wait_status": "exited_zombie"
+      }
+    }
+  ],
+  "completed_model_ids": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "model_order": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "rerun_model_count": 3,
+  "resumed_model_count": 0,
+  "schema": "carnot.experiment_6850.three_family_scoring_admission_canary.v1.checkpoint"
+}
