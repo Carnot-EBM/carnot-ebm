@@ -39,6 +39,13 @@ from carnot.experiment_6812_sota_operational_handoff_corpus_v2 import (
 )
 from carnot.inference.gguf_metadata import read_gguf_metadata
 from carnot.inference.sota_models import cached_sota_pair, resolve_cached_gguf
+from carnot.gpu_lease_phase_journal import (
+    GpuLease,
+    journal_path_for,
+    process_start_matches,
+    read_journal,
+    validate_journal_document,
+)
 
 
 JsonDict = dict[str, Any]
@@ -574,6 +581,165 @@ class RowCheckpoint:
             "checkpoint_sha256": self._persist(),
             "durable": True,
         }
+
+    def upsert_process_receipt(self, receipt_value: Mapping[str, Any]) -> JsonDict:
+        """Persist active evidence, but never let one process become another."""
+
+        receipt = deepcopy(dict(receipt_value))
+        session_id = str(receipt.get("session_id") or "")
+        if not session_id:
+            raise ValueError("checkpoint process receipt has no session")
+        identity_fields = (
+            "purpose",
+            "model_id",
+            "model_sha256",
+            "session_id",
+            "command",
+            "pid",
+            "process_start_time",
+            "pid_start_ticks",
+            "port",
+            "physical_gpu_uuid",
+            "visible_devices",
+        )
+        for index, current in enumerate(self.process_receipts):
+            if str(current.get("session_id")) != session_id:
+                continue
+            if current == receipt:
+                return {
+                    "session_id": session_id,
+                    "duplicate": True,
+                    "updated": False,
+                    "checkpoint_sha256": sha256_bytes(self.path.read_bytes()),
+                    "durable": True,
+                }
+            if any(current.get(field) != receipt.get(field) for field in identity_fields):
+                raise ValueError("checkpoint process identity changed")
+            if current.get("authentic") is True:
+                raise ValueError("checkpoint completed process receipt changed")
+            self.process_receipts[index] = receipt
+            return {
+                "session_id": session_id,
+                "duplicate": False,
+                "updated": True,
+                "checkpoint_sha256": self._persist(),
+                "durable": True,
+            }
+        self.process_receipts.append(receipt)
+        return {
+            "session_id": session_id,
+            "duplicate": False,
+            "updated": False,
+            "checkpoint_sha256": self._persist(),
+            "durable": True,
+        }
+
+
+def build_recovered_process_receipt(
+    *,
+    rows: Sequence[Mapping[str, Any]],
+    model: Mapping[str, Any],
+    server: Path,
+    journal: Mapping[str, Any],
+    server_log: bytes,
+    server_log_path: Path,
+    lease_release: Mapping[str, Any],
+    device_index: int,
+    process_start_time: str,
+    teardown_duration_s: float,
+    process_absent_after_exit: bool,
+    gpu_memory_recovered: bool,
+) -> JsonDict:
+    """Recover a stopped process receipt only from matching durable evidence."""
+
+    if not rows:
+        raise ValueError("recovery rows missing")
+    journal_errors = validate_journal_document(journal, check_freshness=False)
+    if journal_errors:
+        raise ValueError("lease journal invalid: " + ",".join(journal_errors))
+    first_process = rows[0].get("process_identity") or {}
+    session_id = str(first_process.get("session_id") or "")
+    row_processes = [row.get("process_identity") or {} for row in rows]
+    if any(process != first_process for process in row_processes):
+        raise ValueError("recovery row process identities differ")
+    if any(row.get("model_id") != model.get("hub_id") for row in rows):
+        raise ValueError("recovery row model mismatch")
+    family_id = str(model.get("family_id") or "")
+    expected_task = f"exp6833-corpus-{family_id}"
+    if (
+        journal.get("task_id") != expected_task
+        or journal.get("expected_model") != model.get("hub_id")
+        or journal.get("device_uuid") != first_process.get("physical_gpu_uuid")
+    ):
+        raise ValueError("lease journal identity mismatch")
+    port = int(first_process.get("port") or 0)
+    model_path = str(model.get("model_path") or "").encode()
+    log_identity = (
+        model_path in server_log
+        and b"CUDA0" in server_log
+        and f"127.0.0.1:{port}".encode() in server_log
+    )
+    offloaded_layers, total_layers = _offload_layers(server_log)
+    completed_requests = server_log.count(b"done request: POST /v1/chat/completions")
+    if not log_identity or offloaded_layers <= 0 or completed_requests < len(rows):
+        raise ValueError("server log identity mismatch")
+    raw_outputs: list[bytes] = []
+    try:
+        raw_outputs = [
+            base64.b64decode(str(row["raw_output_bytes_b64"]), validate=True) for row in rows
+        ]
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError("recovery row output invalid") from exc
+    if not raw_outputs[0] or not raw_outputs[-1]:
+        raise ValueError("recovery token evidence missing")
+    lease_released = lease_release.get("released") is True
+    authentic = bool(
+        session_id
+        and int(first_process.get("pid") or 0) > 1
+        and int(first_process.get("pid_start_ticks") or 0) > 0
+        and lease_released
+        and process_absent_after_exit
+        and gpu_memory_recovered
+    )
+    return {
+        "purpose": "corpus",
+        "model_id": model["hub_id"],
+        "model_sha256": model["model_sha256"],
+        "session_id": session_id,
+        "command": _server_command(server, model, port),
+        "pid": int(first_process["pid"]),
+        "process_start_time": process_start_time,
+        "pid_start_ticks": int(first_process["pid_start_ticks"]),
+        "port": port,
+        "physical_gpu_uuid": first_process["physical_gpu_uuid"],
+        "visible_devices": [int(device_index)],
+        "first_token_b64": base64.b64encode(raw_outputs[0][:1]).decode("ascii"),
+        "final_token_b64": base64.b64encode(raw_outputs[-1][-1:]).decode("ascii"),
+        "token_receipt_semantics": "first_and_final_retained_output_bytes",
+        "lease_owned": True,
+        "lease_released": lease_released,
+        "cuda_offload": True,
+        "offloaded_layers": offloaded_layers,
+        "total_layers": total_layers,
+        "process_exit_code": None,
+        "process_absent_after_exit": bool(process_absent_after_exit),
+        "teardown_complete": bool(process_absent_after_exit and gpu_memory_recovered),
+        "teardown_mode": "stale_lease_recovery",
+        "teardown_duration_s": round(float(teardown_duration_s), 6),
+        "duration_s": None,
+        "error": None,
+        "receipt_status": "recovered_complete",
+        "receipt_recovery": {
+            "journal_sha256": sha256_bytes(canonical_bytes(journal)),
+            "server_log_path": str(server_log_path),
+            "server_log_sha256": sha256_bytes(server_log),
+            "completed_request_count": completed_requests,
+            "retained_row_count": len(rows),
+            "lease_release": deepcopy(dict(lease_release)),
+            "process_exit_code_observed": False,
+        },
+        "authentic": authentic,
+    }
 
 
 def validate_cross_model_isolation(
@@ -1148,8 +1314,6 @@ def _stream_generation(
 
 
 def _probe_lease(device: Mapping[str, Any]) -> JsonDict:  # pragma: no cover - live lease boundary.
-    from carnot.gpu_lease_phase_journal import GpuLease
-
     try:
         lease = GpuLease.acquire(
             runtime_dir=Path("/tmp/carnot-gpu-leases"),
@@ -1165,6 +1329,143 @@ def _probe_lease(device: Mapping[str, Any]) -> JsonDict:  # pragma: no cover - l
         return {"available": True, "owner": owner, "release": release}
     except Exception as exc:
         return {"available": False, "error": f"{type(exc).__name__}: {exc}"}
+
+
+def _process_start_time_from_ticks(start_ticks: int) -> str:  # pragma: no cover
+    """Convert the kernel's boot-relative process time to an ISO timestamp."""
+
+    boot_seconds = next(
+        int(line.split()[1])
+        for line in Path("/proc/stat").read_text(encoding="utf-8").splitlines()
+        if line.startswith("btime ")
+    )
+    clock_ticks = int(os.sysconf("SC_CLK_TCK"))
+    timestamp = boot_seconds + int(start_ticks) / clock_ticks
+    return datetime.fromtimestamp(timestamp, UTC).isoformat().replace("+00:00", "Z")
+
+
+def _find_interrupted_server_log(
+    *, model: Mapping[str, Any], port: int, temp_root: Path
+) -> tuple[Path, bytes]:  # pragma: no cover
+    """Find one orphaned task log that names the exact model and port."""
+
+    model_path = str(model.get("model_path") or "").encode()
+    port_text = f"127.0.0.1:{int(port)}".encode()
+    matches: list[tuple[Path, bytes]] = []
+    for path in temp_root.glob("exp6833-llama-*/stderr.bin"):
+        try:
+            value = path.read_bytes()
+        except OSError:
+            continue
+        if model_path in value and port_text in value:
+            matches.append((path, value))
+    if len(matches) != 1:
+        raise ValueError(f"interrupted server log count: {len(matches)}")
+    return matches[0]
+
+
+def recover_checkpoint_process_receipts(  # pragma: no cover - live restart boundary.
+    *,
+    checkpoint: RowCheckpoint,
+    models: Sequence[Mapping[str, Any]],
+    server: Path,
+    runtime_dir: Path = Path("/tmp/carnot-gpu-leases"),
+    temp_root: Path | None = None,
+) -> list[JsonDict]:
+    """Complete interrupted receipts from task-owned journal and log evidence."""
+
+    models_by_id = {str(model["hub_id"]): model for model in models}
+    receipts_by_session = {
+        str(receipt.get("session_id")): receipt for receipt in checkpoint.process_receipts
+    }
+    row_sessions = {
+        str((row.get("process_identity") or {}).get("session_id") or "") for row in checkpoint.rows
+    }
+    incomplete_sessions = sorted(
+        session
+        for session in row_sessions
+        if session and receipts_by_session.get(session, {}).get("authentic") is not True
+    )
+    recovered_receipts: list[JsonDict] = []
+    inventory = _gpu_inventory()
+    devices_by_uuid = {str(device["uuid"]): device for device in inventory}
+    for session_id in incomplete_sessions:
+        rows = [
+            row
+            for row in checkpoint.rows
+            if str((row.get("process_identity") or {}).get("session_id") or "") == session_id
+        ]
+        model_ids = {str(row.get("model_id") or "") for row in rows}
+        if len(model_ids) != 1 or next(iter(model_ids)) not in models_by_id:
+            raise ValueError("interrupted receipt model identity mismatch")
+        model = models_by_id[next(iter(model_ids))]
+        process = rows[0]["process_identity"]
+        process_pid = int(process["pid"])
+        process_ticks = int(process["pid_start_ticks"])
+        if process_start_matches(process_pid, process_ticks):
+            raise ValueError("interrupted server process is still live")
+        device_uuid = str(process["physical_gpu_uuid"])
+        device = devices_by_uuid.get(device_uuid)
+        if device is None:
+            raise ValueError("interrupted receipt GPU is unavailable")
+        journal_path = journal_path_for(runtime_dir, device_uuid)
+        journal = read_journal(journal_path)
+        owner = journal["owner"]
+        if process_start_matches(int(owner["pid"]), int(owner["pid_start_ticks"])):
+            raise ValueError("interrupted lease owner is still live")
+        current_sample = _gpu_snapshot(int(device["index"]), process_pid)
+        memory_recovered = (
+            abs(
+                int(current_sample.get("memory_used_mb", 0) or 0)
+                - int((journal.get("vram_mb") or {}).get("before", 0) or 0)
+            )
+            <= VRAM_RECOVERY_TOLERANCE_MB
+        )
+        log_path, server_log = _find_interrupted_server_log(
+            model=model,
+            port=int(process["port"]),
+            temp_root=temp_root or Path(tempfile.gettempdir()),
+        )
+        recovery_started = time.monotonic()
+        lease = GpuLease.acquire(
+            runtime_dir=runtime_dir,
+            task_id=f"exp6833-recover-{model['family_id']}",
+            device_uuid=device_uuid,
+            expected_model=str(model["hub_id"]),
+            vram_before_mb=int(current_sample.get("memory_used_mb", 0) or 0),
+            ttl_s=60,
+        )
+        owner_receipt = lease.owner_receipt()
+        recovery = owner_receipt.get("recovery") or {}
+        if (
+            recovery.get("performed") is not True
+            or recovery.get("previous_checksum") != journal.get("checksum")
+        ):
+            lease.transition("terminal_blocked")
+            lease.release()
+            raise ValueError("stale lease recovery receipt mismatch")
+        lease.transition("terminal_blocked")
+        release = lease.release()
+        release["recovery"] = recovery
+        receipt = build_recovered_process_receipt(
+            rows=rows,
+            model=model,
+            server=server,
+            journal=journal,
+            server_log=server_log,
+            server_log_path=log_path,
+            lease_release=release,
+            device_index=int(device["index"]),
+            process_start_time=_process_start_time_from_ticks(process_ticks),
+            teardown_duration_s=time.monotonic() - recovery_started,
+            process_absent_after_exit=not Path(f"/proc/{process_pid}").exists(),
+            gpu_memory_recovered=memory_recovered,
+        )
+        if receipt["authentic"] is not True:
+            raise ValueError("recovered process receipt is incomplete")
+        checkpoint.upsert_process_receipt(receipt)
+        recovered_receipts.append(receipt)
+    return recovered_receipts
 
 
 def collect_preconditions(  # pragma: no cover - live host boundary.
@@ -1266,8 +1567,6 @@ def run_live_phase(  # pragma: no cover - required local CUDA E2E.
     checkpoint: RowCheckpoint | None,
     checker_sha256: str,
 ) -> tuple[list[JsonDict], JsonDict, list[JsonDict], list[JsonDict], JsonDict]:
-    from carnot.gpu_lease_phase_journal import GpuLease
-
     port = _free_port()
     command = _server_command(server, model, port)
     environment = os.environ.copy()
@@ -1295,6 +1594,9 @@ def run_live_phase(  # pragma: no cover - required local CUDA E2E.
     error = ""
     lease_owner: JsonDict | None = None
     lease_release: JsonDict | None = None
+    active_receipt: JsonDict | None = None
+    server_stderr_sha256 = ""
+    server_stdout_sha256 = ""
     with tempfile.TemporaryDirectory(prefix="exp6833-llama-") as temporary:
         stderr_path = Path(temporary) / "stderr.bin"
         stdout_path = Path(temporary) / "stdout.bin"
@@ -1341,6 +1643,37 @@ def run_live_phase(  # pragma: no cover - required local CUDA E2E.
             samples.append(deepcopy(resident))
             lease.transition("resident", vram_mb=int(resident.get("memory_used_mb", 0) or 0))
             lease.transition("inferencing")
+            active_receipt = {
+                "purpose": purpose,
+                "model_id": model["hub_id"],
+                "model_sha256": model["model_sha256"],
+                "session_id": f"exp6833-{purpose}-{model['family_id']}-{process_start_ticks}",
+                "command": command,
+                "pid": process.pid,
+                "process_start_time": process_started_at,
+                "pid_start_ticks": process_start_ticks,
+                "port": port,
+                "physical_gpu_uuid": device["uuid"],
+                "visible_devices": visible_devices,
+                "first_token_b64": "",
+                "final_token_b64": "",
+                "lease_owned": True,
+                "lease_released": False,
+                "cuda_offload": True,
+                "offloaded_layers": offloaded_layers,
+                "total_layers": total_layers,
+                "process_exit_code": None,
+                "process_absent_after_exit": False,
+                "teardown_complete": False,
+                "teardown_duration_s": 0.0,
+                "duration_s": 0.0,
+                "error": "active",
+                "receipt_status": "active",
+                "server_log_path": str(stderr_path),
+                "authentic": False,
+            }
+            if checkpoint is not None and purpose == "corpus":
+                checkpoint.upsert_process_receipt(active_receipt)
             pending_batch: list[JsonDict] = []
             for index, (scenario, arm) in enumerate(work):
                 batch_started = time.monotonic()
@@ -1380,6 +1713,16 @@ def run_live_phase(  # pragma: no cover - required local CUDA E2E.
                     if checkpoint is not None and (
                         len(pending_batch) >= BATCH_SIZE or index == len(work) - 1
                     ):
+                        if active_receipt is not None:
+                            active_receipt.update(
+                                {
+                                    "first_token_b64": first_token,
+                                    "final_token_b64": final_token,
+                                    "duration_s": round(time.monotonic() - phase_start, 6),
+                                    "last_checkpoint_row_id": row["row_id"],
+                                }
+                            )
+                            checkpoint.upsert_process_receipt(active_receipt)
                         receipt = checkpoint.append_batch(pending_batch)
                         receipt["model_id"] = model["hub_id"]
                         receipt["batch_index"] = len(checkpoint_receipts)
@@ -1404,7 +1747,6 @@ def run_live_phase(  # pragma: no cover - required local CUDA E2E.
                         lease.transition("unloading")
                 except Exception as exc:
                     error = error or f"{type(exc).__name__}: {exc}"
-            teardown_duration_s = time.monotonic() - teardown_started
             exit_code = terminate_owned_process(
                 process, timeout_s=float(DECODE_SETTINGS["teardown_timeout_s"])
             )
@@ -1448,6 +1790,11 @@ def run_live_phase(  # pragma: no cover - required local CUDA E2E.
                     lease_release = lease.release()
                 except Exception as exc:
                     error = error or f"{type(exc).__name__}: {exc}"
+            teardown_duration_s = time.monotonic() - teardown_started
+            if stderr_path.is_file():
+                server_stderr_sha256 = sha256_file(stderr_path)
+            if stdout_path.is_file():
+                server_stdout_sha256 = sha256_file(stdout_path)
     receipt: JsonDict = {
         "purpose": purpose,
         "model_id": model["hub_id"],
@@ -1474,6 +1821,10 @@ def run_live_phase(  # pragma: no cover - required local CUDA E2E.
         "teardown_duration_s": round(teardown_duration_s, 6),
         "duration_s": round(time.monotonic() - phase_start, 6),
         "error": error or None,
+        "phase_complete": not error,
+        "receipt_status": "complete" if not error else "interrupted_complete_evidence",
+        "server_stderr_sha256": server_stderr_sha256,
+        "server_stdout_sha256": server_stdout_sha256,
     }
     receipt["authentic"] = bool(
         receipt["pid"] > 1
@@ -1485,9 +1836,10 @@ def run_live_phase(  # pragma: no cover - required local CUDA E2E.
         and receipt["cuda_offload"]
         and receipt["process_absent_after_exit"]
         and receipt["teardown_complete"]
-        and not error
     )
-    if not receipt["authentic"]:
+    if checkpoint is not None and purpose == "corpus":
+        checkpoint.upsert_process_receipt(receipt)
+    if not receipt["authentic"] or error:
         raise LivePhaseError(
             f"{purpose}_phase:{model['hub_id']}", error or "incomplete receipt", receipt
         )
@@ -1535,7 +1887,79 @@ def run(run_date: str, root: Path = REPO_ROOT) -> JsonDict:  # pragma: no cover 
         )
         _write_json(root / OUTPUT_PATH, artifact)
         return artifact
+    manifest = build_manifest(fixture)
+    checkpoint_started = time.monotonic()
+    try:
+        checkpoint = RowCheckpoint(root / CHECKPOINT_PATH, manifest["manifest_sha256"])
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        observed = f"{type(exc).__name__}: {exc}"
+        clocks["checkpoint_load"] = round(time.monotonic() - checkpoint_started, 6)
+        artifact = build_blocked_artifact(
+            run_date=run_date,
+            failed_check="checkpoint_manifest_identity",
+            expected=manifest["manifest_sha256"],
+            observed=observed,
+            preconditions=[
+                {
+                    "check": "checkpoint_manifest_identity",
+                    "expected": manifest["manifest_sha256"],
+                    "observed": observed,
+                    "passed": False,
+                }
+            ],
+            models=models,
+            duration_s=time.monotonic() - started,
+            phase_clocks=clocks,
+        )
+        _write_json(root / OUTPUT_PATH, artifact)
+        return artifact
+    clocks["checkpoint_load"] = round(time.monotonic() - checkpoint_started, 6)
+    recovery_started = time.monotonic()
+    try:
+        recovered_receipts = recover_checkpoint_process_receipts(
+            checkpoint=checkpoint,
+            models=models,
+            server=_llama_server_path(),
+        )
+    except (OSError, ValueError, RuntimeError) as exc:
+        observed = f"{type(exc).__name__}: {exc}"
+        clocks["checkpoint_receipt_recovery"] = round(
+            time.monotonic() - recovery_started, 6
+        )
+        artifact = build_blocked_artifact(
+            run_date=run_date,
+            failed_check="checkpoint_process_receipt_recovery",
+            expected="checksummed task-owned lease and server-log evidence",
+            observed=observed,
+            preconditions=[
+                {
+                    "check": "checkpoint_process_receipt_recovery",
+                    "expected": "checksummed task-owned lease and server-log evidence",
+                    "observed": observed,
+                    "passed": False,
+                }
+            ],
+            models=models,
+            duration_s=time.monotonic() - started,
+            phase_clocks=clocks,
+        )
+        _write_json(root / OUTPUT_PATH, artifact)
+        return artifact
+    clocks["checkpoint_receipt_recovery"] = round(time.monotonic() - recovery_started, 6)
     checks, device, server = collect_preconditions(root, fixture, models)
+    checks.append(
+        {
+            "check": "checkpoint_process_receipt_recovery",
+            "expected": "all retained row sessions have authentic receipts",
+            "observed": {
+                "recovered_session_ids": [
+                    receipt["session_id"] for receipt in recovered_receipts
+                ],
+                "retained_row_count": len(checkpoint.rows),
+            },
+            "passed": True,
+        }
+    )
     clocks["preflight"] = round(time.monotonic() - preflight_started, 6)
     failed = _first_failed(checks)
     if failed is not None or device is None:
@@ -1608,24 +2032,6 @@ def run(run_date: str, root: Path = REPO_ROOT) -> JsonDict:  # pragma: no cover 
             )
             _write_json(root / OUTPUT_PATH, artifact)
             return artifact
-    manifest = build_manifest(fixture)
-    try:
-        checkpoint = RowCheckpoint(root / CHECKPOINT_PATH, manifest["manifest_sha256"])
-    except (OSError, ValueError, json.JSONDecodeError) as exc:
-        artifact = build_blocked_artifact(
-            run_date=run_date,
-            failed_check="checkpoint_manifest_identity",
-            expected=manifest["manifest_sha256"],
-            observed=f"{type(exc).__name__}: {exc}",
-            preconditions=checks,
-            models=models,
-            duration_s=time.monotonic() - started,
-            phase_clocks=clocks,
-            process_receipts=process_receipts,
-            accelerator_samples=accelerator_samples,
-        )
-        _write_json(root / OUTPUT_PATH, artifact)
-        return artifact
     all_rows = deepcopy(checkpoint.rows)
     checkpoint_receipts: list[JsonDict] = []
     completed = checkpoint.completed_ids

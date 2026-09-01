@@ -2678,6 +2678,11 @@ SHALL be equal and no repair or answer feedback SHALL occur.
 Given a durable checkpoint with valid completed row hashes,
 When a model phase restarts,
 Then it SHALL skip completed identities and generate only missing identities.
+The checkpoint SHALL also retain each process receipt before it publishes the
+first row. It SHALL update the receipt after each bounded batch. If the task
+stops between batches, restart SHALL recover only from checksummed task-owned
+lease and server-log evidence. It SHALL fail closed when that evidence is
+missing or does not match the retained row process identity.
 
 ### SCENARIO-CONSTRAINT-6833-RAW-BYTES: Evidence Is Byte Exact
 

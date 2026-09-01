@@ -13,6 +13,7 @@ import pytest
 
 from carnot import experiment_6833_sota_operational_obligation_saturation_corpus as exp
 from carnot import experiment_6832_operational_obligation_saturation_fixture as fixture_api
+from carnot import gpu_lease_phase_journal as lease_api
 
 
 @pytest.fixture(scope="module")
@@ -253,6 +254,198 @@ def test_scenario_6833_checkpoint_restart_skips_complete_rows(
     (tmp_path / "rows.json").write_text(json.dumps(changed), encoding="utf-8")
     with pytest.raises(ValueError, match="checkpoint row hash"):
         exp.RowCheckpoint(tmp_path / "rows.json", manifest["manifest_sha256"])
+
+
+def test_scenario_6833_checkpoint_persists_active_receipt_before_rows(
+    tmp_path: Path, fixture: dict
+) -> None:
+    """SCENARIO-CONSTRAINT-6833-CHECKPOINT keeps process evidence across a stop."""
+
+    manifest = exp.build_manifest(fixture)
+    store = exp.RowCheckpoint(tmp_path / "rows.json", manifest["manifest_sha256"])
+    model = _models()[2]
+    active = _receipt(model, 2)
+    active.update(
+        {
+            "first_token_b64": "",
+            "final_token_b64": "",
+            "teardown_complete": False,
+            "process_absent_after_exit": False,
+            "authentic": False,
+            "receipt_status": "active",
+        }
+    )
+    first = store.upsert_process_receipt(active)
+    assert first["updated"] is False
+    with pytest.raises(ValueError, match="no session"):
+        store.upsert_process_receipt({})
+    reopened = exp.RowCheckpoint(tmp_path / "rows.json", manifest["manifest_sha256"])
+    assert reopened.process_receipts == [active]
+
+    completed = deepcopy(active)
+    completed.update(
+        {
+            "first_token_b64": base64.b64encode(b"{").decode("ascii"),
+            "final_token_b64": base64.b64encode(b"}").decode("ascii"),
+            "teardown_complete": True,
+            "process_absent_after_exit": True,
+            "authentic": True,
+            "receipt_status": "complete",
+        }
+    )
+    update = reopened.upsert_process_receipt(completed)
+    assert update["updated"] is True
+    assert reopened.upsert_process_receipt(completed)["duplicate"] is True
+    assert exp.RowCheckpoint(tmp_path / "rows.json", manifest["manifest_sha256"]).process_receipts == [
+        completed
+    ]
+
+    changed = deepcopy(completed)
+    changed["pid"] += 1
+    with pytest.raises(ValueError, match="process identity changed"):
+        reopened.upsert_process_receipt(changed)
+    changed = deepcopy(completed)
+    changed["final_token_b64"] = "changed"
+    with pytest.raises(ValueError, match="completed process receipt changed"):
+        reopened.upsert_process_receipt(changed)
+    second = deepcopy(active)
+    second["session_id"] = "second-session"
+    assert reopened.upsert_process_receipt(second)["updated"] is False
+
+
+def test_scenario_6833_checkpoint_recovers_only_checksummed_owned_evidence(
+    fixture: dict, tmp_path: Path
+) -> None:
+    """SCENARIO-CONSTRAINT-6833-CHECKPOINT fails closed on recovery evidence drift."""
+
+    model = _models()[2]
+    scenario = fixture["scenarios"][0]
+    source_receipt = _receipt(model, 2)
+    row = _row(scenario, exp.ARMS[0], model, source_receipt)
+    token_digest = "sha256:" + "a" * 64
+    event = {
+        "phase": "preflight",
+        "previous_phase": None,
+        "previous_event_checksum": None,
+        "monotonic_ns": 10,
+        "owner_token_digest": token_digest,
+        "details": {"recovery_performed": False},
+    }
+    event["event_checksum"] = lease_api.event_checksum(event)
+    journal = {
+        "schema": lease_api.SCHEMA,
+        "task_id": "exp6833-corpus-gemma26",
+        "owner": {
+            "pid": 8000,
+            "pid_start_ticks": 80,
+            "executable": "/python",
+            "argv_digest": "sha256:" + "b" * 64,
+            "token_digest": token_digest,
+        },
+        "device_uuid": source_receipt["physical_gpu_uuid"],
+        "expected_model": model["hub_id"],
+        "acquired_monotonic_ns": 10,
+        "heartbeat_monotonic_ns": 10,
+        "expires_monotonic_ns": 110,
+        "ttl_ns": 100,
+        "phase": "preflight",
+        "phase_history": [event],
+        "vram_mb": {"before": 4, "resident": None, "after": None},
+        "exit_evidence": {"exit_code": None, "observed_monotonic_ns": None},
+        "unload_evidence": {"required": False, "observed": False, "observed_monotonic_ns": None},
+        "recovery": {"performed": False, "signals_sent": []},
+        "released": False,
+        "released_monotonic_ns": None,
+    }
+    journal["checksum"] = lease_api.journal_checksum(journal)
+    port = source_receipt["port"]
+    server_log = (
+        f"loading model '{model['model_path']}'\n"
+        "device CUDA0\n"
+        "offloaded 31/31 layers to GPU\n"
+        f"server is listening on http://127.0.0.1:{port}\n"
+        "done request: POST /v1/chat/completions 127.0.0.1 200\n"
+    ).encode()
+    log_path = tmp_path / "stderr.bin"
+    log_path.write_bytes(server_log)
+    recovered = exp.build_recovered_process_receipt(
+        rows=[row],
+        model=model,
+        server=Path("/llama-server"),
+        journal=journal,
+        server_log=server_log,
+        server_log_path=log_path,
+        lease_release={"released": True, "recovery_performed": True},
+        device_index=0,
+        process_start_time="2026-09-01T01:54:40Z",
+        teardown_duration_s=0.5,
+        process_absent_after_exit=True,
+        gpu_memory_recovered=True,
+    )
+    assert recovered["session_id"] == source_receipt["session_id"]
+    assert recovered["authentic"] is True
+    assert recovered["receipt_status"] == "recovered_complete"
+    assert recovered["receipt_recovery"]["journal_sha256"].startswith("sha256:")
+    assert recovered["receipt_recovery"]["server_log_sha256"].startswith("sha256:")
+    assert recovered["teardown_mode"] == "stale_lease_recovery"
+
+    common = {
+        "model": model,
+        "server": Path("/llama-server"),
+        "journal": journal,
+        "server_log": server_log,
+        "server_log_path": log_path,
+        "lease_release": {"released": True},
+        "device_index": 0,
+        "process_start_time": "2026-09-01T01:54:40Z",
+        "teardown_duration_s": 0.5,
+        "process_absent_after_exit": True,
+        "gpu_memory_recovered": True,
+    }
+    with pytest.raises(ValueError, match="rows missing"):
+        exp.build_recovered_process_receipt(rows=[], **common)
+    invalid_journal = deepcopy(journal)
+    invalid_journal["checksum"] = "wrong"
+    with pytest.raises(ValueError, match="journal invalid"):
+        exp.build_recovered_process_receipt(rows=[row], **{**common, "journal": invalid_journal})
+    other_process = deepcopy(row)
+    other_process["process_identity"]["session_id"] = "other"
+    with pytest.raises(ValueError, match="process identities differ"):
+        exp.build_recovered_process_receipt(rows=[row, other_process], **common)
+    wrong_model = deepcopy(row)
+    wrong_model["model_id"] = "wrong"
+    with pytest.raises(ValueError, match="row model mismatch"):
+        exp.build_recovered_process_receipt(rows=[wrong_model], **common)
+    wrong_journal = deepcopy(journal)
+    wrong_journal["task_id"] = "wrong"
+    wrong_journal["checksum"] = lease_api.journal_checksum(wrong_journal)
+    with pytest.raises(ValueError, match="journal identity mismatch"):
+        exp.build_recovered_process_receipt(rows=[row], **{**common, "journal": wrong_journal})
+    invalid_output = deepcopy(row)
+    invalid_output["raw_output_bytes_b64"] = "%%%"
+    with pytest.raises(ValueError, match="row output invalid"):
+        exp.build_recovered_process_receipt(rows=[invalid_output], **common)
+    empty_output = deepcopy(row)
+    empty_output["raw_output_bytes_b64"] = ""
+    with pytest.raises(ValueError, match="token evidence missing"):
+        exp.build_recovered_process_receipt(rows=[empty_output], **common)
+
+    changed_log = server_log.replace(str(port).encode(), b"9999")
+    with pytest.raises(ValueError, match="server log identity mismatch"):
+        exp.build_recovered_process_receipt(
+            rows=[row],
+            model=model,
+            server=Path("/llama-server"),
+            journal=journal,
+            server_log=changed_log,
+            server_log_path=log_path,
+            lease_release={"released": True},
+            device_index=0,
+            process_start_time="2026-09-01T01:54:40Z",
+            teardown_duration_s=0.5,
+            process_absent_after_exit=True,
+            gpu_memory_recovered=True,
+        )
 
 
 def test_scenario_6833_cross_model_isolation_and_teardown(fixture: dict) -> None:
