@@ -61,6 +61,47 @@ TRUNCATES long paths with a leading `...`, so the substring never appeared. Use
 `git show --name-only`. That is the fourth check this session that returned a clean-looking answer
 without actually looking.
 
+
+**REALIZED 2026-09-01 13:40Z — the orphaned stamp reached a milestone capstone, and it counted.**
+
+The chain predicted in this entry has now completed, with a victim:
+
+1. 09:23Z — exp6840 stamped `flagged_adversarial: true`, CRITICAL DURATION_TOO_SHORT.
+2. 10:15Z — a SIBLING task's commit added exp6840's substrate string to
+   `DETERMINISTIC_VERIFIER_SUBSTRATES`, alongside its own artifact.
+3. exp6840's live re-check goes clean; the stamp stays, with no `*_cleared_note`.
+4. 13:12Z — `experiment_6847_v598_independent_capstone` aggregates SEVEN criteria from exp6840
+   (`artifact_present`, `chronological_rows`, `csl_shard_a_complete_score`,
+   `held_future_arm_metrics`, two `source_hash` checks, and a roadmap gate). None appear in
+   `failed_checks`, so all seven counted as SATISFIED.
+
+CLAUDE.md's fabrication gate is explicit: a capstone, evidence table, or headline aggregation
+MUST skip an artifact carrying `flagged_adversarial: true`. This one did not, and the artifact
+still carries the stamp right now.
+
+**But the gate is NOT generally broken, and the measurement matters.** Of 134 capstone modules
+under `python/carnot/`, **101 reference `flagged_adversarial`**. `experiment_6847` is one of the
+**33 that do not** — it contains the string zero times. So this is a per-capstone omission at
+roughly a quarter of them, not an absent discipline. Reporting it as "capstones ignore the
+fabrication gate" would be wrong.
+
+**Two independent defects, and fixing either would have prevented this.** The stamp should have
+been retracted through the sanctioned cleared-note route rather than orphaned by a recogniser
+edit; and this capstone should have carried the skip check its 101 siblings carry. Neither is
+fixed here.
+
+**The check the Error Lifecycle asks for.** A lint over `python/carnot/*capstone*.py` requiring a
+`flagged_adversarial` reference would have caught exp6847 before it ran, and is cheap. It would
+currently fire on 33 existing modules, so it needs a decision about whether those are grandfathered
+or fixed — which is why it is filed rather than built. The alternative, teaching the fabrication
+gate to refuse aggregation of a stamped artifact centrally rather than per-capstone, is stronger
+but larger.
+
+**Not claimed: that exp6840's numbers are wrong.** It looks honest on its merits, as recorded
+above. The objection is that nothing decided it was eligible — a guard edit made it so, and a
+capstone without the check consumed it.
+
+
 ### NEW 2026-09-01: an honest artifact was quarantined today because model names are its DATA
 
 `results/experiment_6840_residual_memory_chronological_shard_a.json` carries
