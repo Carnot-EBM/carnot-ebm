@@ -17021,3 +17021,4 @@ The l |
 | 2026-09-01 19:29 UTC | Counterfactual memory-write credit and negative-tr | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6855_counter |
 | 2026-09-01 19:51 UTC | Counterfactual memory-write credit and negative-tr | OK | 110 passed, 2 warnings in 37.17s |
 | 2026-09-01 20:22 UTC | Sealed risk-sensitive self-learning durability and | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-09-01 20:54 UTC | Dynamic provenance-qualified live ARC receipt rout | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |

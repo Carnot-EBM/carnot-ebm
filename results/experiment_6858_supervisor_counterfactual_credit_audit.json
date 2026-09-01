@@ -1,0 +1,51 @@
+{
+  "experiment": 6858,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-01",
+  "started_at": "2026-09-01T20:56:22.589558+00:00",
+  "finished_at": "2026-09-01T20:56:22.589558+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Supervisor counterfactual credit audit gated on Exp6857 headroom",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp6857-dynamic-live-arc-receipt-router",
+  "failed_field": "supervisor_headroom_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6857_dynamic_live_arc_receipt_router.json",
+  "failed_evidence_sha256": "sha256:822121d5106b7a9f019dd3b092fec607643211f414e2dfecfa9bf98ca08f321f",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp6857-dynamic-live-arc-receipt-router",
+    "failed_field": "supervisor_headroom_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6857_dynamic_live_arc_receipt_router.json",
+    "failed_evidence_sha256": "sha256:822121d5106b7a9f019dd3b092fec607643211f414e2dfecfa9bf98ca08f321f"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6857-dynamic-live-arc-receipt-router.supervisor_headroom_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6857-dynamic-live-arc-receipt-router",
+      "artifact_field": "supervisor_headroom_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6857_dynamic_live_arc_receipt_router.json",
+      "artifact_sha256": "sha256:822121d5106b7a9f019dd3b092fec607643211f414e2dfecfa9bf98ca08f321f"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
