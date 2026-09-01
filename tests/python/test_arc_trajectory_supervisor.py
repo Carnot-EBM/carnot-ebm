@@ -75,6 +75,53 @@ def test_scenario_6600_1_shadow_observe_path_applies_nothing(monkeypatch):
     assert policy.trajectory_supervisor_diagnostics()["actions_observed"] == 1
 
 
+def test_scenario_6846_policy_typed_shadow_monitor_default_off(monkeypatch):
+    """SCENARIO-ARC-6846-DEFAULT-OFF-NO-ACTION-MUTATION: unset flag is inert."""
+
+    monkeypatch.delenv("CARNOT_ARC_TYPED_OBLIGATION_SHADOW_MONITOR", raising=False)
+    policy = E3AgentPolicy("lp85", proposer=object(), target_levels=2, value_head=None)
+    move = (6, {"x": 1, "y": 2})
+
+    assert policy._typed_arc_shadow_monitor is None
+    assert (
+        policy.record_typed_obligation_shadow_monitor(
+            move,
+            seam="tool_gap_action",
+            latest_level=0,
+            prospective_move=move,
+        )
+        is move
+    )
+    receipt = policy.typed_arc_shadow_monitor_diagnostics()
+    assert receipt["enabled"] is False
+    assert receipt["mode"] == "default_off"
+
+
+def test_scenario_6846_policy_typed_shadow_monitor_enabled_preserves_action(monkeypatch):
+    """SCENARIO-ARC-6846-CANONICAL-REACHABILITY: enabled hook observes only."""
+
+    monkeypatch.setenv("CARNOT_ARC_TYPED_OBLIGATION_SHADOW_MONITOR", "1")
+    policy = E3AgentPolicy("lp85", proposer=object(), target_levels=2, value_head=None)
+    policy.induction_attempts.append({"tool_gap": {"tool_gap_events": []}})
+    move = (6, {"x": 3, "y": 4})
+
+    assert policy._typed_arc_action_seam() == "tool_gap_action"
+    returned = policy.record_typed_obligation_shadow_monitor(
+        move,
+        seam=policy._typed_arc_action_seam(),
+        latest_level=0,
+        prospective_move=move,
+    )
+
+    assert returned is move
+    receipt = policy.typed_arc_shadow_monitor_diagnostics()
+    assert receipt["enabled"] is True
+    assert receipt["mode"] == "shadow"
+    assert receipt["row_count"] == 1
+    assert receipt["rows"][0]["seam"] == "tool_gap_action"
+    assert receipt["rows"][0]["action_byte_identity"] is True
+
+
 # --- SCENARIO-ARC-WMTE-6600-2 (window, progress resets) ---
 
 

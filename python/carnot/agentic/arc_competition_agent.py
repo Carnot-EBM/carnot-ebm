@@ -108,6 +108,9 @@ from carnot.agentic.arc_active_reward_machine_frontier import (
     RewardMachineFrontier,
     reward_machine_frontier_from_transitions,
 )
+from carnot.agentic.arc_typed_obligation_shadow_monitor import (
+    maybe_make_typed_arc_shadow_monitor,
+)
 from carnot.agentic.arc_value_learner import coerce_object_centric_proposal_policy
 from carnot.agentic.arc_value_net import load_live_spatial_value_head
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
@@ -147,6 +150,7 @@ CLAIMED = {
     "sk48": 1,
 }
 MAX_ACTIONS = 200
+SUBMITTED_TYPED_OBLIGATION_SHADOW_MONITOR_ENABLED = False
 # REQ-LEARN-4652: value_weight is raised off the 0.0 floor only after the component-labeling cost fix.
 # The live route uses the cheap v2+frame-delta subset plus frame-hash caching, not full v3 per node.
 SUBMITTED_VALUE_WEIGHT = 1e-12
@@ -5479,6 +5483,14 @@ class E3AgentPolicy:
             _make_trajectory_supervisor()
         )
         self._trajectory_supervisor_errors = 0
+        # REQ-ARC-6846: default-off typed obligation shadow monitor. The live
+        # seam is reachable, but the submitted default constructs no monitor
+        # and never changes a returned action.
+        self._typed_arc_shadow_monitor = maybe_make_typed_arc_shadow_monitor(
+            game_id=self.short,
+            run_label=str(game_id),
+        )
+        self._typed_arc_shadow_monitor_errors = 0
         # REQ-ARC-WMTE-6656: default-inert action supervision. An experiment
         # installs one frozen, game-blind automaton before a run starts.
         self._trace_automaton_supervisor = None
@@ -5932,6 +5944,12 @@ class E3AgentPolicy:
             redirect = supervisor.observe(snapshot)
             if redirect is not None and self._trajectory_supervisor_applies:
                 self._apply_trajectory_redirect(redirect)
+            self.record_typed_obligation_shadow_monitor(
+                ("trajectory_supervisor_observe", {"level": level}),
+                seam="trajectory_supervisor_observe",
+                latest_level=level,
+                prospective_move=None,
+            )
         except Exception:
             self._trajectory_supervisor_errors += 1
 
@@ -5984,6 +6002,57 @@ class E3AgentPolicy:
         receipt["would_have_arm_outcomes"] = receipt.pop("arm_outcomes")
         receipt["enabled"] = False
         receipt["mode"] = "shadow"
+        return receipt
+
+    def _typed_arc_action_seam(self) -> str:
+        """Name the typed-shadow seam from state already held by the policy."""
+
+        attempts = getattr(self, "induction_attempts", []) or []
+        for attempt in reversed(attempts):
+            if isinstance(attempt, Mapping) and isinstance(attempt.get("tool_gap"), Mapping):
+                return "tool_gap_action"
+        return "trajectory_supervisor_action"
+
+    def record_typed_obligation_shadow_monitor(
+        self,
+        move: Any,
+        *,
+        seam: str,
+        latest_level: int | None = None,
+        prospective_move: Any | None = None,
+    ) -> Any:
+        """Record the typed shadow row and return the original move."""
+
+        monitor = self._typed_arc_shadow_monitor
+        if monitor is None:
+            return move
+        try:
+            return monitor.observe(
+                move,
+                seam=seam,
+                context={
+                    "latest_level": latest_level,
+                    "prospective_move_differs": prospective_move is not None,
+                },
+            )
+        except Exception:
+            self._typed_arc_shadow_monitor_errors += 1
+            return move
+
+    def typed_arc_shadow_monitor_diagnostics(self) -> dict[str, Any]:
+        """Return the default-off typed shadow receipt."""
+
+        monitor = self._typed_arc_shadow_monitor
+        if monitor is None:
+            return {
+                "enabled": False,
+                "mode": "default_off",
+                "errors": self._typed_arc_shadow_monitor_errors,
+                "rows": [],
+            }
+        receipt = dict(monitor.receipt())
+        receipt["errors"] = [*receipt.get("errors", []), *([])]
+        receipt["policy_error_count"] = self._typed_arc_shadow_monitor_errors
         return receipt
 
     def _should_enter_induction(self, *, stalled: bool, won: bool) -> tuple[bool, Optional[str]]:
@@ -6702,10 +6771,17 @@ class E3AgentPolicy:
         else:
             move = self._next_move_recorded(frames, latest)
         supervised_move = self._maybe_apply_trace_automaton_action(move, latest)
+        latest_level = _level_of(latest) if latest is not None else None
         selected_move = self.record_target_licensed_route_shadow(
             supervised_move,
-            latest_level=_level_of(latest) if latest is not None else None,
+            latest_level=latest_level,
             prospective_move=move if supervised_move != move else None,
+        )
+        selected_move = self.record_typed_obligation_shadow_monitor(
+            selected_move,
+            seam=self._typed_arc_action_seam(),
+            latest_level=latest_level,
+            prospective_move=move if selected_move != move else None,
         )
         self._record_outcome_transport_proposal(move, selected_move, latest)
         return selected_move
@@ -9077,6 +9153,8 @@ SUBMITTED_AGENT_CONFIG = {
     # risk every other flag entry here is a mirror to avoid.
     "budget_aware_search_enabled": BUDGET_AWARE_SEARCH_ENABLED,
     "budget_aware_search_wired": True,
+    "typed_obligation_shadow_monitor_enabled": SUBMITTED_TYPED_OBLIGATION_SHADOW_MONITOR_ENABLED,
+    "typed_obligation_shadow_monitor_wired": True,
     "amortized_first_contact_prior_enabled": SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED,
     "amortized_first_contact_prior_mode": SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_MODE,
     "go_explore_archive_enabled": SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED,

@@ -29,6 +29,7 @@ READ_ONLY_LIVE_ARTIFACT_INVENTORY_SUBSTRATE = "read_only_live_artifact_inventory
 DETERMINISTIC_CPU_LIVE_RECEIPT_AUDIT_NO_LLM_SUBSTRATE = (
     "deterministic_cpu_live_receipt_audit_no_llm"
 )
+ARC_TYPED_OBLIGATION_SHADOW_REPLAY_SUBSTRATE = "deterministic CPU canonical-path shadow replay"
 LIVE_LLM_SUBSTRATE = "live_llm_inference"
 
 SUBSTRATE_DURATION_FLOORS = {
@@ -42,6 +43,7 @@ SUBSTRATE_DURATION_FLOORS = {
     ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE: 0.01,
     READ_ONLY_LIVE_ARTIFACT_INVENTORY_SUBSTRATE: 0.0001,
     DETERMINISTIC_CPU_LIVE_RECEIPT_AUDIT_NO_LLM_SUBSTRATE: 0.0001,
+    ARC_TYPED_OBLIGATION_SHADOW_REPLAY_SUBSTRATE: 0.0001,
     LIVE_LLM_SUBSTRATE: 60.0,
 }
 
@@ -96,6 +98,8 @@ FIELD_PRINCIPLES = {
         "read_only_live_artifact_inventory"
         "; deterministic CPU live-receipt audits use "
         "deterministic_cpu_live_receipt_audit_no_llm"
+        "; typed ARC shadow monitor replay uses "
+        "deterministic CPU canonical-path shadow replay"
     ),
     "duration_s": "bare float; must meet the selected substrate floor",
     "template_shipped": "bare bool: the helper + lint + tests landed green",
@@ -260,6 +264,7 @@ __all__ = [
     "ARC_LIVE_AGENT_NO_LLM_SUBSTRATE",
     "ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE",
     "ARC_SUPERVISOR_RECEIPT_REPLAY_SUBSTRATE",
+    "ARC_TYPED_OBLIGATION_SHADOW_REPLAY_SUBSTRATE",
     "ArtifactDisciplineIssue",
     "DETERMINISTIC_CPU_LIVE_RECEIPT_AUDIT_NO_LLM_SUBSTRATE",
     "FIELD_PRINCIPLES",

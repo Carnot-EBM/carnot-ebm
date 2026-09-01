@@ -1660,3 +1660,107 @@ state, supervisor state, and requested tool.
 **Then** source hashes, raw transcript hashes, row hashes, and the
 reproducibility checksum are stable; `solve_claim=false`;
 `verifier_is_oracle=false`; and `honest_verdict` starts with `complete_`.
+
+## REQ-ARC-6846: Typed ARC Shadow Monitor
+
+Experiment 6846 SHALL wire the Exp6836 typed obligation program into the
+canonical ARC supervisor and tool-gap action seam as a default-off shadow
+monitor. The monitor SHALL be reachable from
+`make_carnot_agent -> E3AgentPolicy`, SHALL use one shared generic atom mapping
+to the Exp6836 typed program, and SHALL never add a per-game adapter, game
+recipe, source-derived model, offline search path, live run, or game-level solve
+claim.
+
+The producer SHALL require `typed_obligation_program_ready_score=1`,
+`arc_inventory_complete_score=1`, canonical source identity, terminal replay
+rows, exact external labels, and default-off configuration before readiness can
+be 1. If any gate fails, it SHALL still write terminal
+`complete_blocked_typed_arc_shadow_monitor` output with `gate_check_summary`
+naming the failed check, expected value, and observed value.
+
+The replay SHALL read only frozen Exp6836 and Exp6843 evidence. For every frozen
+terminal row it SHALL emit the shadow guard decision, typed-program energy,
+per-atom diagnostic, exact external label, false intervention, missed violation,
+agreement, error type, latency, and byte-identity result for the unmutated
+action. Disabled mode SHALL preserve byte-identical action output.
+
+The artifact SHALL write
+`results/experiment_6846_typed_arc_shadow_monitor.json` with these top-level
+fields: `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `reproducibility_checksum`,
+`default_off_receipt`, `canonical_reachability_receipt`,
+`atom_mapping_manifest`, `per_game_results`, `exact_agreement_results`,
+`false_intervention_results`, `missed_violation_results`, `latency_results`,
+`action_byte_identity_results`, `typed_arc_shadow_monitor_ready_score`,
+`solve_claim`, `gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`.
+
+`inference_substrate` SHALL be `deterministic CPU canonical-path shadow replay`.
+`typed_arc_shadow_monitor_ready_score` SHALL be derived from canonical
+reachability, default-off safety, replay determinism, complete diagnostics, and
+bounded latency. `solve_claim` SHALL be false. `verifier_is_oracle` SHALL be
+false because external trajectory facts define truth. A terminal artifact SHALL
+use a closed `verdict_class` and an `honest_verdict` that starts with
+`complete_`.
+
+### SCENARIO-ARC-6846-DEFAULT-OFF-NO-ACTION-MUTATION
+
+**Given** the submitted ARC policy with
+`CARNOT_ARC_TYPED_OBLIGATION_SHADOW_MONITOR` unset
+**When** an action exits the canonical decision seam
+**Then** no monitor is constructed by default and the returned action bytes are
+identical to the proposed action bytes.
+
+### SCENARIO-ARC-6846-CANONICAL-REACHABILITY
+
+**Given** the normal live entrypoint
+`make_carnot_agent -> E3AgentPolicy`
+**When** Exp6846 inspects the canonical agent source
+**Then** it proves the shadow monitor hook is reachable at the trajectory
+supervisor observation seam and the tool-gap-aware action seam.
+
+### SCENARIO-ARC-6846-ATOM-MAPPING
+
+**Given** Exp6836 typed obligation atoms and Exp6843 frozen ARC rows
+**When** the shadow replay maps live row facts to obligations
+**Then** the manifest maps generic live atoms to shared Exp6836 typed-program
+atom fields without a per-game adapter, game recipe, source-derived model, or
+offline search path.
+
+### SCENARIO-ARC-6846-FAIL-CLOSED-DIAGNOSTICS
+
+**Given** a missing ready score, stale source identity, absent terminal row,
+missing exact label, or non-default configuration
+**When** Exp6846 evaluates gates
+**Then** it writes `complete_blocked_typed_arc_shadow_monitor`, sets
+`typed_arc_shadow_monitor_ready_score=0`, and records the failed check and
+observed value in `gate_check_summary`.
+
+### SCENARIO-ARC-6846-REPLAY-DETERMINISM
+
+**Given** the same frozen Exp6836 and Exp6843 inputs
+**When** Exp6846 rebuilds the replay artifact
+**Then** row hashes, action identity hashes, source hashes, and the
+reproducibility checksum are stable except for wall-clock duration.
+
+### SCENARIO-ARC-6846-LATENCY
+
+**Given** every frozen terminal row
+**When** the shadow monitor evaluates its typed guard
+**Then** each row records a nonnegative bounded latency and readiness is 1 only
+if the latency bound passes.
+
+### SCENARIO-ARC-6846-MISSING-FIELDS
+
+**Given** a replay row with missing required receipt fields
+**When** Exp6846 validates the inventory
+**Then** the artifact fails closed before readiness and reports the missing
+field names in the gate summary.
+
+### SCENARIO-ARC-6846-ARTIFACT-NO-SOLVE
+
+**Given** the same frozen source artifacts
+**When** Exp6846 writes its artifact
+**Then** it reports no policy benefit, `solve_claim=false`,
+`verifier_is_oracle=false`, `verdict_class` in the closed set, and an
+`honest_verdict` that starts with `complete_`.
