@@ -16980,3 +16980,4 @@ The l |
 | 2026-09-01 00:06 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_sign_anomaly age-week 0: OPEN 1 days: SILENT_NON_FI |
 | 2026-09-01 00:06 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_compute_bound_marker age-week 0: OPEN 1 days: SILENT |
 | 2026-09-01 00:06 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_inference_substrate_text age-week 0: OPEN 1 days: SILENT |
+| 2026-09-01 00:07 UTC | V597 evidence-admissibility and execution contract | OK | 124 passed, 1 warning in 13.86s |
