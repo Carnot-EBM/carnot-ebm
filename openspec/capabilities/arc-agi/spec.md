@@ -1764,3 +1764,118 @@ field names in the gate summary.
 **Then** it reports no policy benefit, `solve_claim=false`,
 `verifier_is_oracle=false`, `verdict_class` in the closed set, and an
 `honest_verdict` that starts with `complete_`.
+
+## REQ-ARC-6857: Dynamic Live ARC Receipt Router
+
+Experiment 6857 SHALL discover terminal ARC receipts at execution time. It
+SHALL not launch a game. It SHALL not wait for or interrupt a live process.
+It SHALL not use game source code. It SHALL not select evidence from one
+hard-coded experiment path or from file modification time alone.
+
+The router SHALL require `v599_evidence_contract_ready_score=1`. It SHALL
+require readable `ops/arc_solve_registry.yaml` and `ops/arc_flag_ledger.yaml`.
+It SHALL require an empty solve scope. A failed precondition SHALL produce
+`complete_blocked_dynamic_live_arc_receipt_router`. The blocked artifact SHALL
+name the failed check and its observed value in `gate_check_summary`.
+
+The router SHALL define explicit schemas for supervisor, lever-harness,
+tool-loop, shadow, and canonical-agent receipts. It SHALL discover candidates
+under declared repository-relative roots. It SHALL validate terminal status,
+artifact completeness, stored hashes, experiment identity, generator
+provenance, live reachability, exact row identity, and exact later outcomes.
+It SHALL ignore stale stored paths. It SHALL quarantine ambiguous newest
+candidates, changed generators, mixed policies, partial artifacts, stale
+hashes, missing exact outcomes, missing agent-visible tool receipts,
+development proxies, outer-loop reverse engineering, source-reading rows,
+pooled policy changes, flagged verification failures, and duplicate row
+identities.
+
+Each normalized row SHALL record its source path and hash. It SHALL also
+record experiment ID, terminal status, game, model, generator provenance,
+policy hash, budget, supervisor mode, tool mode, attempt identity, live seam,
+row kind, row identity, and exact outcome when present. Supervisor action and
+tool event rows SHALL join only to the exact next action, transition, and later
+level outcome from the same attempt. An unmatched row SHALL remain in
+`unmatched_receipt_rows`.
+
+The router SHALL keep changed configurations in separate strata. It SHALL
+compute supervisor headroom only for provenance-qualified matched
+opportunities. `supervisor_headroom_ready_score` SHALL be 1 only when at least
+one such opportunity has nonzero exact outcome headroom. It SHALL count
+first-party tool-gap chains separately. Effect eligibility SHALL require both
+live-agent reachability and generator provenance.
+
+The artifact SHALL write
+`results/experiment_6857_dynamic_live_arc_receipt_router.json`. It SHALL have
+these top-level fields: `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`discovery_roots`, `accepted_schema_manifest`, `rejected_source_manifest`,
+`rows`, `provenance_qualified_manifest`, `generator_provenance_rows`,
+`live_reachability_rows`, `configuration_strata`,
+`supervisor_headroom_rows`, `first_party_tool_gap_rows`,
+`unmatched_receipt_rows`, `arc_receipt_router_complete_score`,
+`supervisor_headroom_ready_score`,
+`tool_gap_first_party_receipts_ready_score`, `solve_claim`,
+`game_level_solve_count`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`.
+
+`inference_substrate` SHALL equal
+`read_only_terminal_live_artifact_discovery`. `solve_claim` SHALL be false.
+`game_level_solve_count` SHALL be zero. `verifier_is_oracle` SHALL be false.
+`verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL start with
+`complete_`.
+
+### SCENARIO-ARC-6857-STALE-PATH-AND-AMBIGUITY
+
+**Given** a stale stored path or two terminal candidates with the same exact
+attempt identity and conflicting hashes
+**When** Exp6857 discovers evidence
+**Then** it ignores the stale path, does not use modification time as a tie
+breaker, and quarantines the ambiguous candidates.
+
+### SCENARIO-ARC-6857-PARTIAL-HASH-AND-GENERATOR
+
+**Given** a partial artifact, a stale declared hash, or changed generator
+provenance
+**When** Exp6857 validates the candidate
+**Then** the candidate is ineligible and its exact reason appears in
+`rejected_source_manifest`.
+
+### SCENARIO-ARC-6857-EXACT-JOINS
+
+**Given** supervisor or tool rows with exact attempt and event identities
+**When** Exp6857 joins receipts
+**Then** it links only the exact next action, transition, and later level
+outcome; missing exact outcomes or missing agent-visible tool receipts remain
+unmatched and cannot become effect eligible.
+
+### SCENARIO-ARC-6857-CONFIGURATION-SEPARATION
+
+**Given** rows with different policy hashes, budgets, supervisor modes, tool
+modes, models, or games
+**When** Exp6857 builds strata
+**Then** it keeps the rows separate and quarantines any pooled policy change.
+
+### SCENARIO-ARC-6857-DUPLICATE-ROW-IDENTITY
+
+**Given** two rows with the same exact row identity
+**When** Exp6857 freezes the manifest
+**Then** both rows are ineligible, readiness fails closed, and the duplicate
+identity appears in `gate_check_summary`.
+
+### SCENARIO-ARC-6857-HEADROOM-AND-TOOL-CHAIN
+
+**Given** provenance-qualified exact supervisor joins and first-party tool-gap
+chains
+**When** Exp6857 computes readiness
+**Then** supervisor readiness requires nonzero exact outcome headroom, while
+first-party tool-gap readiness is counted separately.
+
+### SCENARIO-ARC-6857-NO-SOLVE-AND-PROCESS-OBSERVATION
+
+**Given** terminal artifacts and any currently live ARC process
+**When** Exp6857 writes the frozen manifest
+**Then** it records stable hashes and read-only process observations, sends no
+signal, waits for no process, claims no solve, and emits a terminal
+`complete_` verdict.
