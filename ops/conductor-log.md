@@ -17022,3 +17022,4 @@ The l |
 | 2026-09-01 19:51 UTC | Counterfactual memory-write credit and negative-tr | OK | 110 passed, 2 warnings in 37.17s |
 | 2026-09-01 20:22 UTC | Sealed risk-sensitive self-learning durability and | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-01 20:54 UTC | Dynamic provenance-qualified live ARC receipt rout | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-09-01 20:56 UTC | Supervisor counterfactual credit audit gated on Ex | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6857-dynamic-live-ar |
