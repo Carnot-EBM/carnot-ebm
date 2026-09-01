@@ -9131,3 +9131,54 @@ and SHALL not claim that training or weight updates occurred.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-6831 and SCENARIO-CL-6831-* | Implemented: immutable stream validator within Exp6831. | Implemented: focused row, order, split, transaction, seal, headroom, and no-learning mutation tests pass. |
+
+## REQ-CL-6836: Typed Obligation Memory Admission Guard
+
+The system SHALL expose the Exp6836 typed obligation program as a deterministic
+external-memory admission guard. The guard SHALL compile from the same
+immutable operational-obligation atoms as the constraint energy and predicate.
+It SHALL not call an LLM and SHALL not read or update GGUF model weights.
+
+The memory admission guard SHALL accept only candidates with zero exact atom
+energy, complete satisfaction, and no diagnostic failures. It SHALL reject
+parse failures, omitted atoms, contradictions, impossible sets, unknown
+actions, and any candidate whose atom identities do not match the compiled
+program. Rejection SHALL be fail closed. The guard SHALL return explicit
+per-atom diagnostics so a later learner can store a cause without storing a
+model score.
+
+The guard SHALL share candidate identity, label-swap, token-length,
+prompt-length, row-order, and surface-form controls with the Exp6836
+candidate-pair fixture. These controls SHALL make later continuous-learning
+measurements distinguish exact admission from shortcut features. The guard
+SHALL remain a verifier input. It SHALL not be an oracle and SHALL not convert
+readiness into a positive learning result.
+
+### SCENARIO-CL-6836-MEMORY-GUARD: Admission Uses Exact Atom Energy
+
+Given a compatible fixed-sequence candidate and a one-atom-violating candidate,
+When the typed program evaluates memory admission,
+Then the compatible candidate SHALL be admitted, the violation SHALL be
+rejected, and both outcomes SHALL share the same atom identities as the
+constraint predicate.
+
+### SCENARIO-CL-6836-FAIL-CLOSED: Unsafe Or Drifted Candidates Do Not Commit
+
+Given parse failure, omitted atom, contradiction, impossible set, unknown
+action, or atom-identity drift,
+When a later learner asks the guard for admission,
+Then the guard SHALL reject the candidate and return a diagnostic cause without
+producing or consuming a model score.
+
+### SCENARIO-CL-6836-CONTROLS: Learning Inputs Keep Shortcut Controls
+
+Given Exp6836 candidate rows,
+When the memory surface prepares later scoring inputs,
+Then candidate id, label swap, row order, token length, prompt length, and
+surface form SHALL remain explicit and hash-bound.
+
+## Implementation Status (REQ-CL-6836)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-6836 and SCENARIO-CL-6836-* | Planned: deterministic guard compiled from the Exp6836 typed obligation program. | Planned: focused guard, failure, and control tests. |

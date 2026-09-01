@@ -2935,3 +2935,104 @@ integrity field, and SHALL NOT convert readiness into a positive verdict.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6835 and SCENARIO-CONSTRAINT-6835-* | Implemented: deterministic CPU evidence freeze with a fresh parser and atom taxonomy. | Implemented: focused tests, scoped 100% coverage, artifact verification, and lint checks. |
+
+
+## REQ-CONSTRAINT-6836: Typed Obligation Program Fixture
+
+The system SHALL build Exp6836 as a deterministic CPU typed obligation program
+fixture for V598. It SHALL read Exp6811, Exp6832, and Exp6835 before
+generation. Before compiling rows, it SHALL require
+`v598_evidence_root_ready_score=1`, the Exp6811 schema, the Exp6832 fixture
+schema and readiness field, stable source hashes, and no generated answer in
+the new candidate fixture. A failed check SHALL write
+`complete_blocked_typed_obligation_program_fixture`. The blocked artifact SHALL
+name the failed check, expected value, and observed value in
+`gate_check_summary`.
+
+The typed program SHALL compile each immutable obligation atom ledger into one
+shared program. The compiled views SHALL include an exact scalar energy,
+satisfaction predicate, memory admission guard, ARC shadow action guard, and
+per-atom diagnostic. The views SHALL share atom identities and exact semantics.
+The implementation SHALL not maintain five independent hand-written policies.
+Atom omission, contradiction, impossible sets, parse failure, and unknown
+actions SHALL fail closed.
+
+The fixture SHALL freeze compatible and one-atom-violating fixed-sequence
+candidate pairs. It SHALL include joint violations and impossible cases. Within
+each evaluated tokenizer, candidates in a pair SHALL have equal token counts.
+Rows SHALL include candidate identifier, row order, label-swap, token length,
+prompt length, and surface-form controls. Rows SHALL store raw text and
+expected tokenization inputs. Rows SHALL store no model scores.
+
+The exact checker SHALL validate every candidate. Readiness fields
+`typed_obligation_program_ready_score` and
+`obligation_pair_fixture_ready_score` SHALL depend only on compile parity and
+fixture integrity. They SHALL not depend on any learned or model-derived
+margin. The terminal artifact SHALL be
+`results/experiment_6836_typed_obligation_program_fixture.json`. It SHALL
+include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`random_seed`, `reproducibility_checksum`, `typed_program_schema`,
+`compiled_view_manifest`, `atom_identity_manifest`,
+`compile_parity_results`, `rows`, `candidate_pair_manifest`,
+`exact_candidate_labels`, `shortcut_control_manifest`,
+`checker_mutation_results`, `typed_obligation_program_ready_score`,
+`obligation_pair_fixture_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. One principle
+SHALL exist for every top-level field. The inference substrate SHALL declare
+deterministic CPU compilation. `verifier_is_oracle` SHALL be false.
+`verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL be terminal
+and start with `complete_`.
+
+### SCENARIO-CONSTRAINT-6836-PRECONDITIONS: Invalid Sources Stop Compilation
+
+Given a missing V598 evidence-root gate, schema drift, fixture readiness drift,
+source-hash drift, or generated-answer field,
+When Exp6836 evaluates source gates,
+Then it SHALL emit the complete blocked artifact with the exact failed check
+and SHALL emit no candidate rows.
+
+### SCENARIO-CONSTRAINT-6836-COMPILE-PARITY: Views Share One Atom Ledger
+
+Given an immutable obligation atom ledger,
+When the typed program compiles its five views,
+Then energy, satisfaction, memory guard, ARC shadow guard, and diagnostics
+SHALL agree on every atom identity and exact pass or fail decision.
+
+### SCENARIO-CONSTRAINT-6836-ATOM-FAILURES: Unsafe Candidates Fail Closed
+
+Given omitted atoms, contradictory actions, impossible source sets, parse
+failures, and unknown actions,
+When the exact checker evaluates candidates,
+Then every unsafe candidate SHALL fail closed with a positive energy and a
+diagnostic that names the atom or parser failure.
+
+### SCENARIO-CONSTRAINT-6836-CANDIDATE-PAIRS: Matched Fixed Sequences Are Frozen
+
+Given compatible and one-atom-violating candidates,
+When Exp6836 freezes pair rows,
+Then each pair SHALL include raw fixed-sequence text, candidate identifiers,
+exact labels, joint or impossible case coverage, and equal token counts within
+each evaluated tokenizer.
+
+### SCENARIO-CONSTRAINT-6836-CONTROLS: Shortcut Controls Are Explicit
+
+Given identifier, row-order, label-swap, token-length, prompt-length, and
+surface-form controls,
+When Exp6836 validates fixture integrity,
+Then each control SHALL be present, hash-bound, and independent of model
+scores.
+
+### SCENARIO-CONSTRAINT-6836-SERIALIZATION: Canonical Bytes Are Stable
+
+Given the same program, rows, and source receipts,
+When Exp6836 serializes the artifact twice or permutes input atom order,
+Then hashes, labels, diagnostics, and readiness fields SHALL stay stable except
+for measured duration.
+
+## Implementation Status (REQ-CONSTRAINT-6836)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6836 and SCENARIO-CONSTRAINT-6836-* | Planned: deterministic typed obligation program and fixed-sequence candidate fixture. | Planned: focused tests, scoped 100% coverage, artifact verification, and lint checks. |
