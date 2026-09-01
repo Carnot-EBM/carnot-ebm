@@ -50,6 +50,26 @@ the card and fall back to the iGPU at ~2 tok/s. No second server was spawned —
 exists (pid 375086) and it is serving at ~27 tok/s — so wa30 is running on the existing server.
 The warning describes what WOULD have happened to a new generator, not what happened.
 
+
+**UPDATE 2026-09-01 11:40Z — the supervisor blocker moved, and the queued run was retargeted.**
+Two conductor artifacts this hour settle what the next run should aim at. exp6681 proved
+TRANSPORT: 30 applied redirects each carry one exact live next-outcome row, `missing_receipt_count`
+zero, explicitly with no solve claim. exp6844 then audited outcome CREDIT and returned
+`complete_blocked_supervisor_outcome_credit_audit`, its gate failing `headroom_nonzero` with
+`supervisor_effect_eligible_score: 0`.
+
+So firings and plumbing are NOT the constraint. A redirect can only be credited by a level-up,
+and runs on zero-level games produce none. The queued run was first aimed at m0r0 and sk48 on the
+older reasoning that stagnation buys firings most cheaply — correct when the shortage was firings,
+wrong now, because it would add uncredited firings and reproduce the blocked state exactly. It is
+retargeted to cd82 and r11l, the two games with demonstrated adapter-free level-ups (2 each in
+prior e3 runs), which is what lets an arm's `helped` count move at all.
+
+Queued, not running: launcher pid 652637 waits for pid 374980 to exit, then waits for GPU 1 to
+release at least 21.5 GB before starting `scripts/arc_scored_path_lever_harness.py` applied. It
+refuses to launch rather than fall back to the iGPU path, which times out. It uses the lever
+harness because that one records the receipt; the eval does not.
+
 **Proposed, not built:** move the artifact write inside the per-game loop so each
 game banks independently. Small and safe, but it cannot help a run already in
 flight (the module is imported once at start), so it should be done between runs.
