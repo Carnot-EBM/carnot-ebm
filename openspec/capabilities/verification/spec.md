@@ -38,6 +38,9 @@ The Exp6791 declaration
 `CPU prospective Tier-2 constraint-memory controller, no LLM` SHALL use the
 deterministic-verifier floor and SHALL NOT emit an unrecognized-substrate
 warning.
+The Exp6852 declaration `deterministic CPU independent reduction` SHALL also
+use the deterministic-verifier floor; model identifiers quoted from its
+upstream receipts SHALL NOT reclassify that CPU reduction as live inference.
 
 For an allowlisted aggregation artifact, the verifier SHALL NOT emit
 live-model `DURATION_TOO_SHORT` or `METHODOLOGY_MISSING` flags merely because
@@ -106,7 +109,7 @@ corpus live controls.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-VERIFY-5933 | Implemented (`scripts/adversarial_verify.py`, `results/experiment_5933_aggregation_substrate_qa_repair.json`) | Implemented (`tests/python/test_adversarial_verify_substrate_classification_5933.py`, `tests/python/test_adversarial_verify_constraint_routing_stream_substrate.py`, `tests/python/test_experiment_6827_chronological_causal_edge_memory_stream.py`) |
+| REQ-VERIFY-5933 | Implemented (`scripts/adversarial_verify.py`, `results/experiment_5933_aggregation_substrate_qa_repair.json`) | Implemented (`tests/python/test_adversarial_verify_substrate_classification_5933.py`, `tests/python/test_adversarial_verify_constraint_routing_stream_substrate.py`, `tests/python/test_experiment_6827_chronological_causal_edge_memory_stream.py`, `tests/python/test_experiment_6852_compatibility_shortcut_authority_audit.py`) |
 
 ### REQ-VERIFY-6593: No-LLM Substrate Recognition SHALL State The Concept, Not Enumerate It
 

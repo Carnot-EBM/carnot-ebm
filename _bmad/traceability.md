@@ -1,6 +1,22 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-08-31
+**Last Updated:** 2026-09-01
+
+**Operational Note:** 2026-09-01 Exp6852 substrate-classification repair
+reconciled `REQ-VERIFY-5933` and `REQ-CONSTRAINT-6852`. The exact required
+`deterministic CPU independent reduction` declaration now receives the
+deterministic-verifier duration floor, so quoted upstream model identifiers do
+not imply fresh live inference. The original conductor-equivalent shard passes
+(`107 passed`, one existing warning), the focused verifier regression set
+passes (`64 passed`), and Exp6852 scoped statement coverage is 100%
+(`380/380`). The task-owned runner, artifact validator, adversarial verifier,
+row-consistency lint, focused spec coverage, Ruff, format, mypy, and
+root-clutter checks pass. The whole-repository spec audit remains blocked by
+1,178 pre-existing unreferenced tests. A broader adversarial-verifier sweep
+completed all 438 assertions but retained the known RSS-watchdog error while
+the corpus-impact test parsed the 542 MB Exp6797 artifact. No test was skipped,
+weakened, deleted, or reverted, and `scripts/research_conductor.py` was not
+modified.
 
 **Operational Note:** 2026-08-31 Exp6827 regression repair reconciled
 `REQ-VERIFY-5933` and `REQ-CL-6827`. The exact required CPU-only frozen-output

@@ -1,5 +1,20 @@
 # Carnot — Changelog
 
+## 2026-09-01 — Exp6852 deterministic substrate classification
+
+- Registered `deterministic CPU independent reduction` as deterministic-verifier
+  work in the shared artifact verifier, preventing referenced upstream GGUF IDs
+  from imposing live-model duration and methodology requirements.
+- Reconciled `REQ-VERIFY-5933` and `REQ-CONSTRAINT-6852` without skipping,
+  deleting, or weakening tests; `scripts/research_conductor.py` was untouched.
+- Verification: conductor-equivalent shard `107 passed, 1 warning`; focused
+  verifier set `64 passed`; Exp6852 coverage `380/380` statements; task-owned E2E
+  artifact validation, adversarial classification, row consistency, focused
+  spec coverage, Ruff, format, mypy, diff, and root-clutter checks pass. The
+  whole-repository spec audit retains its pre-existing 1,178-test backlog; a
+  broader verifier sweep completed 438 assertions and retained the known
+  Exp6797 corpus-scan RSS-watchdog teardown error.
+
 ## 2026-08-30 — Exp6791 deterministic substrate floor repair (REQ-VERIFY-5933)
 
 - Registered the exact Exp6791 prospective CPU constraint-memory substrate as

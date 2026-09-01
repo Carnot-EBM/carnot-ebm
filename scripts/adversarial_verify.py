@@ -287,6 +287,7 @@ DETERMINISTIC_VERIFIER_SUBSTRATES = (
     "CPU prospective Tier-2 constraint-memory controller, no LLM",
     "deterministic CPU chronological comparison",
     "deterministic CPU sealed audit",
+    "deterministic CPU independent reduction",
     "CPU transformation of frozen authentic outputs, no LLM",
     "fresh_process_no_llm_transaction_audit",
     "read_only_live_artifact_inventory",

@@ -3449,3 +3449,141 @@ separately.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6851 and SCENARIO-CONSTRAINT-6851-* | Implemented: owned three-family CUDA forced-sequence scoring over frozen base and isomorphic surfaces. | Implemented: focused tests and scoped 100% coverage verify gates, masking, token alignment, semantic pairing, label position, restart hashes, ownership, and receipt-only completeness. |
+
+
+## REQ-CONSTRAINT-6852: Compatibility Shortcut and Authority Audit
+
+The system SHALL build Exp6852 as an ungated, deterministic CPU audit of all
+available Exp6849 authority evidence, Exp6850 admission evidence, and Exp6851
+scientific score evidence. It SHALL invoke no LLM. It SHALL use a fresh reducer
+that does not import Exp6849, Exp6850, or Exp6851 aggregation code.
+
+Before reduction, Exp6852 SHALL inventory the state, path, current SHA-256 hash,
+recorded source hash, and conductor records for each upstream task. It SHALL
+preserve every matching skip, failure, blocked, and completion record. A missing
+producer or zero scientific rows SHALL produce a complete blocked artifact. It
+SHALL not cause Exp6852 to omit its artifact.
+
+Exp6852 SHALL recompute summed and mean-token sequence margins from the raw
+candidate token log-probabilities. It SHALL reject non-finite or null scores,
+token and score length mismatches, different paired prompt tokens, duplicate
+row or receipt identities, missing candidate receipts, and labels that disagree
+with the sanitized Exp6849 semantic identity manifest. It SHALL match base and
+isomorphic rows through the manifest semantic pair identity. It SHALL not match
+rows through candidate text, identifier, length, token count, label position,
+or row position.
+
+For every available model and semantic pair, Exp6852 SHALL run identifier-only,
+prompt-length, candidate-length, token-count, label-position, row-order,
+normalization, surface-form, and model-family shortcut attacks. Each attack
+SHALL produce one explicit row for each audited unit. A missing observation
+SHALL remain null and SHALL never enter an average as zero.
+
+Exp6852 SHALL test whether each base effect direction survives every available
+isomorphic transform. It SHALL report whether each shortcut control explains
+the same absolute margin or a greater absolute margin. Models SHALL remain
+separate. Model scale and model family SHALL be controls, not exchangeable
+replicates.
+
+The terminal artifact SHALL be
+`results/experiment_6852_compatibility_shortcut_authority_audit.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `upstream_state_manifest`,
+`conductor_skip_manifest`, `random_seed`, `reproducibility_checksum`, `rows`,
+`recomputed_margin_rows`, `isomorphic_invariance_results`,
+`shortcut_attack_results`, `missing_model_manifest`,
+`control_explanation_results`, `authority_failure_witnesses`,
+`compatibility_audit_complete_score`, `compatibility_claim_eligible_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. One principle SHALL exist for every top-level field. The
+inference substrate SHALL be `deterministic CPU independent reduction`.
+`verifier_is_oracle` SHALL be false.
+Repository adversarial verification SHALL classify this substrate as a
+deterministic verifier. Referenced upstream model names SHALL not imply a new
+model invocation by Exp6852.
+
+`compatibility_audit_complete_score` SHALL equal one when Exp6852 inventories
+all upstream inputs and honestly reduces all evidence that exists. This score
+MAY equal one for a blocked or partial scientific result.
+`compatibility_claim_eligible_score` SHALL equal one only when every authority,
+artifact-hash, model-completeness, receipt-completeness, shortcut, and
+isomorphic-invariance gate passes. Otherwise it SHALL equal zero. A failed gate
+SHALL name the check and its expected and observed values in
+`gate_check_summary`.
+
+`verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. Missing scientific rows SHALL produce
+`blocked`. Some but not all required model rows SHALL produce `partial` unless
+an authority failure requires `disqualified`. Complete rows with an authority
+or stale-hash failure SHALL produce `disqualified`. Complete authoritative rows
+that fail shortcut or invariance gates SHALL produce `null`. A positive verdict
+SHALL require an eligible model-level compatibility claim. `honest_verdict`
+SHALL be terminal and supported by the emitted rows.
+
+### SCENARIO-CONSTRAINT-6852-MISSING-PRODUCER: Missing Rows Stay Blocked
+
+Given no readable Exp6851 artifact or no scientific rows,
+When Exp6852 inventories and reduces the upstream evidence,
+Then it SHALL emit the complete artifact, preserve the missing input as a row,
+set claim eligibility to zero, and use the blocked verdict class.
+
+### SCENARIO-CONSTRAINT-6852-PARTIAL-MODELS: Missing Models Are Not Zero
+
+Given valid score rows for some but not all required models,
+When Exp6852 reduces model effects,
+Then it SHALL list each absent model in `missing_model_manifest`, keep its
+margin null, exclude it from averages, and use the partial verdict class.
+
+### SCENARIO-CONSTRAINT-6852-NULL-SCORES: Null Token Scores Fail Closed
+
+Given a candidate receipt whose token log-probabilities are all null,
+When Exp6852 recomputes its row margin,
+Then it SHALL emit an authority failure witness and SHALL not convert a null
+score to zero.
+
+### SCENARIO-CONSTRAINT-6852-DUPLICATE-IDENTITY: Duplicate Rows Fail Closed
+
+Given two producer rows with the same row identity or semantic scoring unit,
+When Exp6852 validates identities,
+Then it SHALL reject the duplicate and record both conflicting identities.
+
+### SCENARIO-CONSTRAINT-6852-LABEL-INVERSION: Manifest Labels Are Authority
+
+Given a producer row whose candidate labels invert the sanitized manifest,
+When Exp6852 joins the producer row to semantic authority,
+Then it SHALL reject the row and record the expected and observed labels.
+
+### SCENARIO-CONSTRAINT-6852-ROW-REORDER: Input Order Cannot Change Results
+
+Given the same valid producer rows in a different list order,
+When Exp6852 independently reduces both inputs,
+Then its scientific rows and gates SHALL be identical after canonical sorting.
+
+### SCENARIO-CONSTRAINT-6852-STALE-HASH: Changed Inputs Are Disqualified
+
+Given a recorded upstream source hash that differs from the current artifact
+hash,
+When Exp6852 checks evidence authority,
+Then it SHALL record the stale hash, set claim eligibility to zero, and use the
+disqualified verdict class when scientific rows exist.
+
+### SCENARIO-CONSTRAINT-6852-SHORTCUTS: Controls Must Not Explain the Effect
+
+Given authoritative complete model rows,
+When an identifier, length, token-count, label-position, row-order,
+normalization, surface-form, model-scale, or model-family control explains the
+same absolute margin or a greater absolute margin,
+Then Exp6852 SHALL fail the shortcut gate and set claim eligibility to zero.
+
+### SCENARIO-CONSTRAINT-6852-ISOMORPHIC: Direction Must Survive Transforms
+
+Given one semantic pair with a base row and available qualified transforms,
+When any transform reverses or removes the base margin direction,
+Then Exp6852 SHALL report the failed unit, fail the isomorphic gate, and set
+claim eligibility to zero.
+
+## Implementation Status (REQ-CONSTRAINT-6852)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6852 and SCENARIO-CONSTRAINT-6852-* | Implemented: fresh deterministic CPU reduction of semantic authority and raw token receipts; the exact substrate is registered with repository adversarial verification as deterministic-verifier work. | Implemented: focused tests cover missing, partial, malformed, reordered, stale, shortcut, invariance, and upstream-model-marker isolation with scoped 100% coverage. |

@@ -1,5 +1,23 @@
 # Carnot — Operational Status
 
+## 2026-09-01 — Exp6852 verifier-substrate regression repaired
+
+The Exp6852 independent CPU reducer is now registered under its exact declared
+substrate in the shared adversarial verifier. Upstream GGUF model IDs remain
+quoted evidence and no longer cause the reducer artifact to inherit live-model
+duration or methodology rules.
+
+The failing conductor shard is green at 107 tests with one existing warning;
+the focused verifier regression set passes 64 tests, and Exp6852 has 380/380
+statement coverage. The applicable end-to-end reducer run, artifact validation,
+adversarial classification, row-consistency lint, focused spec coverage, Ruff,
+format, mypy, diff, and root-clutter checks pass. The repository-wide spec audit
+still reports the existing 1,178-test traceability backlog. The broader
+adversarial sweep completed 438 assertions but hit the existing RSS watchdog in
+the corpus-impact test while parsing the 542 MB Exp6797 artifact. No test was
+skipped, weakened, deleted, or reverted; `scripts/research_conductor.py` remains
+unchanged.
+
 **In flight (2026-09-01 02:20Z):** supervised live run, pid 374980, started
 2026-08-31 20:01Z, games `ls20,wa30`, policy e3, budget 2500, adapter-free.
 Purpose: accrue APPLIED trajectory-supervisor receipts toward the refinement
