@@ -16997,3 +16997,4 @@ The l |
 | 2026-09-01 08:39 UTC | Independent obligation compatibility shortcut and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6837-three-family-output-free-compatibili |
 | 2026-09-01 09:01 UTC | Bounded exact-outcome residual-memory kernel canar | OK | 96 passed, 1 warning in 20.92s |
 | 2026-09-01 09:23 UTC | Residual-memory chronological comparison shard A | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-09-01 09:47 UTC | Residual-memory delayed-correction comparison shar | OK | 96 passed, 1 warning in 34.33s |
