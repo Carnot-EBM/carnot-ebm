@@ -54,7 +54,9 @@ class FakeForcedSequenceScorer:
             "final_score": None,
         }
 
-    def score(self, prompt_text: str, candidate_text: str, row_identity: Mapping[str, Any]) -> dict[str, Any]:
+    def score(
+        self, prompt_text: str, candidate_text: str, row_identity: Mapping[str, Any]
+    ) -> dict[str, Any]:
         del prompt_text
         self.score_calls.append(str(row_identity["row_identity"]))
         token_ids = [len(piece) + index for index, piece in enumerate(candidate_text.split("|"))]
@@ -95,7 +97,9 @@ class CountingScorer(FakeForcedSequenceScorer):
 
     calls_by_model: dict[str, list[str]] = {}
 
-    def score(self, prompt_text: str, candidate_text: str, row_identity: Mapping[str, Any]) -> dict[str, Any]:
+    def score(
+        self, prompt_text: str, candidate_text: str, row_identity: Mapping[str, Any]
+    ) -> dict[str, Any]:
         identities = CountingScorer.calls_by_model.setdefault(str(self.model_spec["hf_id"]), [])
         identity = str(row_identity["row_identity"])
         if identity not in identities:
@@ -106,7 +110,9 @@ class CountingScorer(FakeForcedSequenceScorer):
 class MisalignedScorer(FakeForcedSequenceScorer):
     """Scorer variant that violates token/logprob alignment."""
 
-    def score(self, prompt_text: str, candidate_text: str, row_identity: Mapping[str, Any]) -> dict[str, Any]:
+    def score(
+        self, prompt_text: str, candidate_text: str, row_identity: Mapping[str, Any]
+    ) -> dict[str, Any]:
         del prompt_text, candidate_text, row_identity
         return {
             "prompt_token_ids": [1],
@@ -265,9 +271,10 @@ def test_scenario_6837_forced_scoring_masks_prompt_and_records_raw_receipts(
     assert row["compatible"]["prompt_token_ids"] == [101, 102, 103]
     assert len(row["compatible"]["token_logprobs"]) == row["candidate_length"]
     assert len(row["violation"]["token_logprobs"]) == row["candidate_length"]
-    assert row["compatible"]["conditional_log_likelihood"] > row["violation"][
-        "conditional_log_likelihood"
-    ]
+    assert (
+        row["compatible"]["conditional_log_likelihood"]
+        > row["violation"]["conditional_log_likelihood"]
+    )
     assert row["log_likelihood_margin"] > 0
     assert row["compatible"]["raw_receipt"]["prompt_token_count"] == 3
     assert "prompt_token_logprobs" not in row["compatible"]
@@ -341,9 +348,7 @@ def test_scenario_6837_process_ownership_model_isolation_and_teardown(
         write=True,
     )
 
-    assert [row["hf_id"] for row in artifact["process_receipts"]] == list(
-        exp.MANDATED_MODEL_HF_IDS
-    )
+    assert [row["hf_id"] for row in artifact["process_receipts"]] == list(exp.MANDATED_MODEL_HF_IDS)
     assert len({row["pid"] for row in artifact["process_receipts"]}) == 3
     assert all(row["owned_by_task"] is True for row in artifact["process_receipts"])
     assert all(row["teardown"]["leak_free"] is True for row in artifact["process_receipts"])
@@ -420,7 +425,9 @@ def test_scenario_6837_guard_failures_are_explicit(tmp_path: Path) -> None:
 
     missing_specs = exp.normalize_model_specs([])
     assert all(row["local_model_present"] is False for row in missing_specs)
-    assert all(row["tokenizer_receipt"]["receipt_hash"].startswith("sha256:") for row in missing_specs)
+    assert all(
+        row["tokenizer_receipt"]["receipt_hash"].startswith("sha256:") for row in missing_specs
+    )
 
     empty_root = tmp_path / "empty-root"
     exp.write_json_atomic(empty_root / exp.EXP6836_RELATIVE_PATH, {"rows": []})

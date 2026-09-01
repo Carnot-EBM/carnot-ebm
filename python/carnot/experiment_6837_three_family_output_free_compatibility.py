@@ -43,8 +43,12 @@ JsonDict = dict[str, Any]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/constraint-verification/spec.md")
-MODULE_RELATIVE_PATH = Path("python/carnot/experiment_6837_three_family_output_free_compatibility.py")
-WRAPPER_RELATIVE_PATH = Path("scripts/experiments/experiment_6837_three_family_output_free_compatibility.py")
+MODULE_RELATIVE_PATH = Path(
+    "python/carnot/experiment_6837_three_family_output_free_compatibility.py"
+)
+WRAPPER_RELATIVE_PATH = Path(
+    "scripts/experiments/experiment_6837_three_family_output_free_compatibility.py"
+)
 RESULT_RELATIVE_PATH = Path("results/experiment_6837_three_family_output_free_compatibility.json")
 CHECKPOINT_RELATIVE_PATH = Path(
     "results/checkpoints/experiment_6837_three_family_output_free_compatibility.checkpoint.json"
@@ -247,9 +251,13 @@ def _tokenizer_receipt(source: Mapping[str, Any], model_path: str) -> JsonDict:
         receipt.setdefault("source", "provided")
         receipt.setdefault("loadable", False)
         receipt.setdefault("detail", "")
-        receipt["receipt_hash"] = str(receipt.get("receipt_hash") or sha256_text(canonical_json(receipt)))
+        receipt["receipt_hash"] = str(
+            receipt.get("receipt_hash") or sha256_text(canonical_json(receipt))
+        )
         return receipt
-    ok, detail = gguf_tokenizer_loadable(model_path) if model_path else (False, "missing model_path")
+    ok, detail = (
+        gguf_tokenizer_loadable(model_path) if model_path else (False, "missing model_path")
+    )
     receipt = {
         "source": "embedded_gguf_llama_cpp_vocab_only",
         "loadable": bool(ok),
@@ -272,12 +280,16 @@ def normalize_model_specs(model_specs: Sequence[Mapping[str, Any]]) -> list[Json
         model_path = str(source.get("model_path") or source.get("cache_path") or "")
         path = Path(model_path).expanduser() if model_path else Path()
         present = bool(model_path and path.is_file())
-        tokenizer = _tokenizer_receipt(source, model_path) if present else {
-            "source": "missing_model_path",
-            "loadable": False,
-            "detail": f"model_path missing or not on disk: {model_path!r}",
-            "receipt_hash": "",
-        }
+        tokenizer = (
+            _tokenizer_receipt(source, model_path)
+            if present
+            else {
+                "source": "missing_model_path",
+                "loadable": False,
+                "detail": f"model_path missing or not on disk: {model_path!r}",
+                "receipt_hash": "",
+            }
+        )
         if not tokenizer.get("receipt_hash"):
             tokenizer["receipt_hash"] = sha256_text(canonical_json(tokenizer))
         normalized.append(
@@ -290,10 +302,14 @@ def normalize_model_specs(model_specs: Sequence[Mapping[str, Any]]) -> list[Json
                 "model_path": model_path,
                 "cache_path": model_path,
                 "local_model_present": present,
-                "model_sha256": str(source.get("model_sha256") or (sha256_file(path) if present else "")),
+                "model_sha256": str(
+                    source.get("model_sha256") or (sha256_file(path) if present else "")
+                ),
                 "tokenizer_receipt": tokenizer,
                 "headline_eligible": source.get("headline_eligible") is not False,
-                "quantization": str(source.get("quantization") or reg.get("quantization") or "Q4_K_M"),
+                "quantization": str(
+                    source.get("quantization") or reg.get("quantization") or "Q4_K_M"
+                ),
                 "context_length": int(source.get("context_length", DEFAULT_CONTEXT_LENGTH)),
                 "cached_sota_pair_called": bool(source.get("cached_sota_pair_called", False)),
                 "cached_sota_pair_hf_ids": list(source.get("cached_sota_pair_hf_ids") or []),
@@ -372,7 +388,9 @@ def _select_candidate_pair(fixture_row: Mapping[str, Any]) -> tuple[JsonDict, Js
     compatible = [row for row in candidates if _candidate_label(row) == "compatible"]
     violations = [row for row in candidates if _candidate_label(row) == "violation"]
     if len(compatible) != 1 or len(violations) != 1:
-        raise SequenceScoringError(f"one_compatible_one_violation_required:{fixture_row.get('row_id')}")
+        raise SequenceScoringError(
+            f"one_compatible_one_violation_required:{fixture_row.get('row_id')}"
+        )
     return compatible[0], violations[0], candidates.index(compatible[0])
 
 
@@ -398,8 +416,12 @@ def _score_candidate(
     token_ids = [int(token) for token in receipt.get("candidate_token_ids", [])]
     token_logprobs = [float(value) for value in receipt.get("token_logprobs", [])]
     if len(token_ids) != len(token_logprobs):
-        raise SequenceScoringError(f"token_logprob_alignment_failed:{candidate.get('candidate_id')}")
-    conditional = round(float(receipt.get("conditional_log_likelihood", sum(token_logprobs))), ROUND_DIGITS)
+        raise SequenceScoringError(
+            f"token_logprob_alignment_failed:{candidate.get('candidate_id')}"
+        )
+    conditional = round(
+        float(receipt.get("conditional_log_likelihood", sum(token_logprobs))), ROUND_DIGITS
+    )
     return {
         "candidate_id": candidate.get("candidate_id"),
         "label": label,
@@ -415,7 +437,13 @@ def _score_candidate(
 
 def _obligation_count(candidate: Mapping[str, Any]) -> int:
     diagnostics = list(dict(candidate.get("exact_check") or {}).get("diagnostics") or [])
-    return len({str(row.get("obligation_id")) for row in diagnostics if row.get("obligation_id") != "__joint__"})
+    return len(
+        {
+            str(row.get("obligation_id"))
+            for row in diagnostics
+            if row.get("obligation_id") != "__joint__"
+        }
+    )
 
 
 def score_fixture_row(
@@ -426,7 +454,9 @@ def score_fixture_row(
 ) -> JsonDict:
     """Score one Exp6836 row and compute a prompt-masked sequence margin."""
 
-    compatible_candidate, violation_candidate, compatible_position = _select_candidate_pair(fixture_row)
+    compatible_candidate, violation_candidate, compatible_position = _select_candidate_pair(
+        fixture_row
+    )
     prompt_text = str(fixture_row.get("prompt_text") or "")
     identity = _row_identity(model_spec, fixture_row)
     compatible = _score_candidate(
@@ -487,7 +517,9 @@ def score_fixture_row(
         "violation_candidate_id": violation_candidate.get("candidate_id"),
         "violated_atom_ids": violated_atoms,
         "log_likelihood_margin": round(comp_score - viol_score, ROUND_DIGITS),
-        "energy_margin": round(float(compatible["sequence_energy"]) - float(violation["sequence_energy"]), ROUND_DIGITS),
+        "energy_margin": round(
+            float(compatible["sequence_energy"]) - float(violation["sequence_energy"]), ROUND_DIGITS
+        ),
         "lower_compatible_energy": compatible["sequence_energy"] < violation["sequence_energy"],
         "no_generation": True,
         "prompt_masked": True,
@@ -505,7 +537,9 @@ def row_hash(row: Mapping[str, Any]) -> str:
     return sha256_text(canonical_json(payload))
 
 
-def build_checkpoint_manifest(rows: Sequence[Mapping[str, Any]], *, expected_row_count: int) -> JsonDict:
+def build_checkpoint_manifest(
+    rows: Sequence[Mapping[str, Any]], *, expected_row_count: int
+) -> JsonDict:
     """Build the restart manifest that stores immutable completed rows."""
 
     stored_rows = [dict(row) for row in rows]
@@ -518,7 +552,9 @@ def build_checkpoint_manifest(rows: Sequence[Mapping[str, Any]], *, expected_row
         "rows": stored_rows,
         "resumed_row_count": 0,
         "missing_row_count": max(0, int(expected_row_count) - len(stored_rows)),
-        "checkpoint_hash": sha256_text(canonical_json({"expected": expected_row_count, "hashes": hashes})),
+        "checkpoint_hash": sha256_text(
+            canonical_json({"expected": expected_row_count, "hashes": hashes})
+        ),
     }
 
 
@@ -587,11 +623,11 @@ def run_model_phase(
     checkpoint = Path(checkpoint_path)
     existing = _verified_checkpoint_rows(checkpoint)
     expected_identities = [_row_identity(model_spec, row) for row in fixture_rows]
-    model_existing = {identity: existing[identity] for identity in expected_identities if identity in existing}
+    model_existing = {
+        identity: existing[identity] for identity in expected_identities if identity in existing
+    }
     missing_rows = [
-        dict(row)
-        for row in fixture_rows
-        if _row_identity(model_spec, row) not in model_existing
+        dict(row) for row in fixture_rows if _row_identity(model_spec, row) not in model_existing
     ]
     scorer = scorer_factory(model_spec, forced_sequence_config(scorer_config))
     process_receipt = scorer.start()
@@ -608,7 +644,11 @@ def run_model_phase(
     finally:
         teardown = scorer.close()
     merged_by_identity = {**model_existing, **{str(row["row_identity"]): row for row in new_rows}}
-    model_rows = [merged_by_identity[identity] for identity in expected_identities if identity in merged_by_identity]
+    model_rows = [
+        merged_by_identity[identity]
+        for identity in expected_identities
+        if identity in merged_by_identity
+    ]
     all_rows_by_identity = {**existing, **merged_by_identity}
     expected_count = int(expected_total_row_count or len(fixture_rows))
     manifest = build_checkpoint_manifest(
@@ -694,11 +734,15 @@ def _margin_summary(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
         "mean_log_likelihood_margin": _mean(margins),
         "min_log_likelihood_margin": round(min(margins), ROUND_DIGITS) if margins else None,
         "max_log_likelihood_margin": round(max(margins), ROUND_DIGITS) if margins else None,
-        "lower_compatible_energy_count": sum(1 for row in rows if row.get("lower_compatible_energy") is True),
+        "lower_compatible_energy_count": sum(
+            1 for row in rows if row.get("lower_compatible_energy") is True
+        ),
     }
 
 
-def _grouped_results(rows: Sequence[Mapping[str, Any]], key_fields: Sequence[str]) -> list[JsonDict]:
+def _grouped_results(
+    rows: Sequence[Mapping[str, Any]], key_fields: Sequence[str]
+) -> list[JsonDict]:
     grouped: dict[tuple[Any, ...], list[Mapping[str, Any]]] = defaultdict(list)
     for row in rows:
         grouped[tuple(row.get(field) for field in key_fields)].append(row)
@@ -714,13 +758,21 @@ def _per_model_results(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
 
 
 def _per_atom_results(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
-    atom_rows = [row for row in rows if row.get("case_kind") in {"atom_contradiction", "atom_omission"}]
-    return _grouped_results(atom_rows, ("model_hf_id", "model_family", "atom_family", "obligation_count"))
+    atom_rows = [
+        row for row in rows if row.get("case_kind") in {"atom_contradiction", "atom_omission"}
+    ]
+    return _grouped_results(
+        atom_rows, ("model_hf_id", "model_family", "atom_family", "obligation_count")
+    )
 
 
 def _joint_results(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
-    joint_rows = [row for row in rows if row.get("case_kind") in {"joint_violation", "impossible_set"}]
-    return _grouped_results(joint_rows, ("model_hf_id", "model_family", "case_kind", "obligation_count"))
+    joint_rows = [
+        row for row in rows if row.get("case_kind") in {"joint_violation", "impossible_set"}
+    ]
+    return _grouped_results(
+        joint_rows, ("model_hf_id", "model_family", "case_kind", "obligation_count")
+    )
 
 
 def _shortcut_control_cells(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
@@ -750,7 +802,9 @@ def _readiness_checks(
     families = {model_family(hf_id) for hf_id in MANDATED_MODEL_HF_IDS}
     return [
         gate_check("row_count_complete", expected_row_count, len(rows)),
-        gate_check("row_identities_unique", len(rows), len({row.get("row_identity") for row in rows})),
+        gate_check(
+            "row_identities_unique", len(rows), len({row.get("row_identity") for row in rows})
+        ),
         gate_check(
             "all_required_models_used",
             list(MANDATED_MODEL_HF_IDS),
@@ -769,7 +823,9 @@ def _readiness_checks(
         gate_check(
             "process_teardown_clean",
             True,
-            all(dict(row.get("teardown") or {}).get("leak_free") is True for row in process_receipts),
+            all(
+                dict(row.get("teardown") or {}).get("leak_free") is True for row in process_receipts
+            ),
         ),
         gate_check(
             "checkpoint_complete",
@@ -963,12 +1019,16 @@ def run(
     started = time.perf_counter()
     root = Path(root)
     result = Path(result_path) if result_path is not None else root / RESULT_RELATIVE_PATH
-    checkpoint = Path(checkpoint_path) if checkpoint_path is not None else root / CHECKPOINT_RELATIVE_PATH
+    checkpoint = (
+        Path(checkpoint_path) if checkpoint_path is not None else root / CHECKPOINT_RELATIVE_PATH
+    )
     specs = normalize_model_specs(model_specs) if model_specs is not None else resolve_model_specs()
     preconditions = (
         dict(preconditions_checked)
         if preconditions_checked is not None
-        else collect_preconditions(root=root, model_specs=specs, result_path=result, checkpoint_path=checkpoint)
+        else collect_preconditions(
+            root=root, model_specs=specs, result_path=result, checkpoint_path=checkpoint
+        )
     )
     source_hashes = _source_artifact_hashes(root)
     blockers = _precondition_blockers(preconditions)
@@ -1083,7 +1143,9 @@ def _cuda_available() -> JsonDict:  # pragma: no cover - host dependent.
         torch_detail = f"torch_device_count={torch.cuda.device_count()}"
     except Exception as exc:
         torch_detail = f"{type(exc).__name__}: {exc}"
-    smi = _run_command(["nvidia-smi", "--query-gpu=index,uuid,name", "--format=csv,noheader"], timeout_s=10)
+    smi = _run_command(
+        ["nvidia-smi", "--query-gpu=index,uuid,name", "--format=csv,noheader"], timeout_s=10
+    )
     return {
         "ok": torch_ok or smi.get("ok") is True,
         "torch_cuda_available": torch_ok,
@@ -1138,7 +1200,11 @@ def _compute_apps() -> list[JsonDict]:  # pragma: no cover - host dependent.
 def _disk_ok(root: Path) -> JsonDict:  # pragma: no cover - host dependent.
     usage = shutil.disk_usage(root)
     available_mb = int(usage.free / (1024 * 1024))
-    return {"available_mb": available_mb, "required_mb": DISK_FLOOR_MB, "ok": available_mb >= DISK_FLOOR_MB}
+    return {
+        "available_mb": available_mb,
+        "required_mb": DISK_FLOOR_MB,
+        "ok": available_mb >= DISK_FLOOR_MB,
+    }
 
 
 def _token_logprob_support() -> JsonDict:  # pragma: no cover - environment dependent.
@@ -1163,9 +1229,13 @@ def _run_live_canaries(
         process = scorer.start()
         try:
             row = score_fixture_row(fixture_row=first_row, model_spec=spec, scorer=scorer)
-            receipts.append({"hf_id": spec["hf_id"], "ok": True, "margin": row["log_likelihood_margin"]})
+            receipts.append(
+                {"hf_id": spec["hf_id"], "ok": True, "margin": row["log_likelihood_margin"]}
+            )
         except Exception as exc:
-            receipts.append({"hf_id": spec["hf_id"], "ok": False, "error": f"{type(exc).__name__}: {exc}"})
+            receipts.append(
+                {"hf_id": spec["hf_id"], "ok": False, "error": f"{type(exc).__name__}: {exc}"}
+            )
         finally:
             process["teardown"] = scorer.close()
     return {"ok": all(row.get("ok") is True for row in receipts), "receipts": receipts}
@@ -1190,25 +1260,44 @@ def collect_preconditions(
     result_path.parent.mkdir(parents=True, exist_ok=True)
     checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
     checks = [
-        gate_check("cached_sota_pair_called", True, all(row.get("cached_sota_pair_called") is True for row in model_specs)),
+        gate_check(
+            "cached_sota_pair_called",
+            True,
+            all(row.get("cached_sota_pair_called") is True for row in model_specs),
+        ),
         gate_check(
             "all_three_exact_gguf_files",
             list(MANDATED_MODEL_HF_IDS),
             [row.get("hf_id") for row in model_specs if row.get("local_model_present") is True],
         ),
-        gate_check("model_hashes_present", True, all(str(row.get("model_sha256", "")).startswith("sha256:") for row in model_specs)),
+        gate_check(
+            "model_hashes_present",
+            True,
+            all(str(row.get("model_sha256", "")).startswith("sha256:") for row in model_specs),
+        ),
         gate_check(
             "native_tokenizer_metadata",
             True,
-            all(dict(row.get("tokenizer_receipt") or {}).get("loadable") is True for row in model_specs),
+            all(
+                dict(row.get("tokenizer_receipt") or {}).get("loadable") is True
+                for row in model_specs
+            ),
         ),
         gate_check("token_log_probability_support", True, token_logprobs["ok"]),
         gate_check("cuda_available", True, cuda["ok"]),
         gate_check("exclusive_gpu_leases", True, not apps),
         gate_check("free_ports", True, port_status),
         gate_check("sufficient_disk", True, disk["ok"]),
-        gate_check("exp6836_typed_obligation_program_ready_score", 1, exp6836.get("typed_obligation_program_ready_score")),
-        gate_check("exp6836_obligation_pair_fixture_ready_score", 1, exp6836.get("obligation_pair_fixture_ready_score")),
+        gate_check(
+            "exp6836_typed_obligation_program_ready_score",
+            1,
+            exp6836.get("typed_obligation_program_ready_score"),
+        ),
+        gate_check(
+            "exp6836_obligation_pair_fixture_ready_score",
+            1,
+            exp6836.get("obligation_pair_fixture_ready_score"),
+        ),
     ]
     canary_allowed = all(row["passed"] for row in checks)
     canary = (
@@ -1266,7 +1355,9 @@ class _WorkerEngine:  # pragma: no cover - live model dependent.
         denom = sum(math.exp(value - max_logit) for value in values)
         return values[token_id] - max_logit - math.log(denom)
 
-    def score(self, prompt_text: str, candidate_text: str, row_identity: Mapping[str, Any]) -> JsonDict:
+    def score(
+        self, prompt_text: str, candidate_text: str, row_identity: Mapping[str, Any]
+    ) -> JsonDict:
         prompt_tokens = self._tokenize(prompt_text, add_bos=True)
         candidate_tokens = self._tokenize(candidate_text, add_bos=False)
         all_tokens = prompt_tokens + candidate_tokens
@@ -1274,7 +1365,9 @@ class _WorkerEngine:  # pragma: no cover - live model dependent.
         self.llm.eval(all_tokens)
         scores = self.llm.scores
         token_logprobs = []
-        for absolute_index, token_id in enumerate(all_tokens[len(prompt_tokens) :], start=len(prompt_tokens)):
+        for absolute_index, token_id in enumerate(
+            all_tokens[len(prompt_tokens) :], start=len(prompt_tokens)
+        ):
             token_logprobs.append(self._logprob(scores[absolute_index - 1], int(token_id)))
         return {
             "prompt_token_ids": prompt_tokens,
@@ -1343,12 +1436,16 @@ class SubprocessForcedSequenceScorer:  # pragma: no cover - live model dependent
             "gpu_uuid": self.model_spec.get("gpu_uuid"),
             "visible_devices": [self.model_spec.get("gpu")],
             "model_hash": self.model_spec.get("model_sha256"),
-            "tokenizer_hash": dict(self.model_spec.get("tokenizer_receipt") or {}).get("receipt_hash"),
+            "tokenizer_hash": dict(self.model_spec.get("tokenizer_receipt") or {}).get(
+                "receipt_hash"
+            ),
             "owned_by_task": True,
             "token_logprob_support": True,
         }
 
-    def score(self, prompt_text: str, candidate_text: str, row_identity: Mapping[str, Any]) -> JsonDict:
+    def score(
+        self, prompt_text: str, candidate_text: str, row_identity: Mapping[str, Any]
+    ) -> JsonDict:
         body = json.dumps(
             {
                 "prompt_text": prompt_text,
@@ -1456,7 +1553,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         checkpoint_path=Path(args.checkpoint_path),
         write=True,
     )
-    print(json.dumps({"result_path": args.result_path, "honest_verdict": artifact["honest_verdict"]}))
+    print(
+        json.dumps({"result_path": args.result_path, "honest_verdict": artifact["honest_verdict"]})
+    )
     return 0
 
 
