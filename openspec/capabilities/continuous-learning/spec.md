@@ -10055,3 +10055,131 @@ And `causal_memory_credit_eligible_score` SHALL equal zero.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-6855 and SCENARIO-CL-6855-* | Planned: `python/carnot/experiment_6855_counterfactual_memory_credit_audit.py`; `scripts/experiments/experiment_6855_counterfactual_memory_credit_audit.py`; `results/experiment_6855_counterfactual_memory_credit_audit.json`. | Planned: focused counterfactual replay, new-code coverage, full Python tests, Ruff, OpenSpec coverage, adversarial verification, artifact convention, verdict-row consistency, counterfactual validity, and root-clutter checks. |
+
+## REQ-CL-6856: Sealed Risk-Sensitive Learning Audit
+
+The system SHALL run a fresh deterministic reduction over the chronological
+controller rows from Exp6854 and the per-write credit rows from Exp6855. The
+reducer SHALL NOT import producer code or producer aggregate calculators. It
+SHALL recompute each headline from decision rows and per-write metric rows.
+
+Before reduction, Exp6856 SHALL require both structured completion scores to
+equal one. It SHALL also require stable sealed row digests, a declared
+chronological train and held-future split, complete comparison arms, and no
+reducer-source overlap. A failed check SHALL write
+`complete_blocked_sealed_risk_sensitive_learning_audit`. The artifact SHALL
+name each failed check and observed value in `gate_check_summary`.
+
+The audit SHALL compare the controller with `no_memory`, `always_memory`,
+`abstain_only`, `random_admission`, and `read_only_fixed`. Each arm SHALL use
+the same decision identities. The audit SHALL report wins, losses, ties, and
+no-headroom decisions separately. It SHALL not map missing headroom to zero
+effect.
+
+The audit SHALL test false-positive injection, abstention calibration,
+byte-identical restart, bounded state, rollback after poison, delayed
+correction, poison rejection, capacity eviction, and tombstone behavior. It
+SHALL run leave-one-family-out and leave-one-order-out reductions. Each
+held-out family and order SHALL have its own row.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `random_seed`,
+`reproducibility_checksum`, `rows`, `fresh_reducer_manifest`,
+`per_arm_summary`, `held_future_effect`, `win_loss_tie_counts`,
+`no_headroom_count`, `false_positive_injection_rate`,
+`abstention_calibration`, `durability_results`, `restart_results`,
+`rollback_results`, `delayed_correction_results`, `poison_results`,
+`capacity_results`, `leave_one_family_out_rows`,
+`leave_one_order_out_rows`, `leakage_results`,
+`counterfactual_support_results`, `continuous_self_learning_ready_score`,
+`retirement_recommendation`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`.
+
+`inference_substrate` SHALL equal
+`deterministic CPU sealed independent reduction`. `verifier_is_oracle` SHALL
+be false. `verdict_class` SHALL use only `positive`, `circular_positive`,
+`null`, `blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL start
+with `complete_` and SHALL be supported by terminal rows.
+
+Readiness SHALL require nonzero held-future benefit, bounded false-positive
+injection, calibrated nondegenerate abstention, durability, valid
+counterfactual support, no leakage, and portable nonnegative held-out effects.
+Persistence SHALL not substitute for benefit. A complete audit SHALL preserve
+an exact negative, null, or partial disposition when a benefit gate fails.
+
+### SCENARIO-CL-6856-PRECONDITIONS: Invalid Evidence Blocks Reduction
+
+Given a completion score is not one, a sealed row digest changes, a split
+changes, an arm is missing, or producer code overlaps the reducer,
+When Exp6856 validates its sources,
+Then it SHALL emit the blocked terminal artifact
+And `gate_check_summary` SHALL include the failed check and observed value.
+
+### SCENARIO-CL-6856-ALL-NULL: Null Rows Cannot Support A Claim
+
+Given every measured metric in a decision row is null,
+When the fresh reducer validates the row,
+Then the audit SHALL fail closed
+And it SHALL not claim positive or continuous-learning readiness.
+
+### SCENARIO-CL-6856-AGGREGATE-CONTRADICTION: Rows Override Aggregates
+
+Given a producer aggregate contradicts the fresh row reduction,
+When Exp6856 computes a headline,
+Then the fresh row value SHALL control the artifact disposition
+And the contradiction SHALL be reported as leakage or integrity failure.
+
+### SCENARIO-CL-6856-POISON: Poison Cannot Become Durable Evidence
+
+Given one nonfinite or over-bound credit update,
+When the reducer applies the update,
+Then it SHALL reject the update or clamp it within the declared bound
+And rollback SHALL restore the byte-identical parent state.
+
+### SCENARIO-CL-6856-STALE-CORRECTION: Delayed Corrections Need Live Support
+
+Given a correction arrives after its support expires or after a tombstone,
+When the reducer processes the correction,
+Then it SHALL reject the correction as stale
+And it SHALL not restore the removed credit.
+
+### SCENARIO-CL-6856-ROLLBACK: Rollback Restores Exact Parent Bytes
+
+Given a supported update is followed by a poison update,
+When the reducer rolls back the poison branch,
+Then the serialized state SHALL equal the parent bytes.
+
+### SCENARIO-CL-6856-CAPACITY: Eviction Leaves A Tombstone
+
+Given supported writes exceed the fixed state capacity,
+When Exp6856 admits the next write,
+Then it SHALL evict the oldest active write
+And it SHALL retain a bounded tombstone that blocks stale correction.
+
+### SCENARIO-CL-6856-FAMILY-REMOVAL: Portability Is Reported Per Family
+
+Given one family is removed from the training partition,
+When the reducer evaluates its held-out decisions,
+Then it SHALL emit one row for that held-out family
+And missing headroom SHALL remain null rather than become zero effect.
+
+### SCENARIO-CL-6856-ORDER-REMOVAL: Portability Is Reported Per Order
+
+Given one chronological order is removed from the training partition,
+When the reducer evaluates its held-out decisions,
+Then it SHALL emit one row for that held-out order
+And it SHALL not pool the row with another order.
+
+### SCENARIO-CL-6856-GATES: Readiness Is Fully Conjunctive
+
+Given the sealed reduction completes but any benefit, calibration, durability,
+support, leakage, or portability gate fails,
+When Exp6856 computes its terminal disposition,
+Then `continuous_self_learning_ready_score` SHALL equal zero
+And persistence or restart success SHALL not change that result.
+
+## Implementation Status (REQ-CL-6856)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-6856 and SCENARIO-CL-6856-* | Planned: `python/carnot/experiment_6856_sealed_risk_sensitive_learning_audit.py`; `scripts/experiments/experiment_6856_sealed_risk_sensitive_learning_audit.py`; `results/experiment_6856_sealed_risk_sensitive_learning_audit.json`. | Planned: focused sealed reducer tests, new-code coverage, full Python tests, Ruff, OpenSpec coverage, adversarial verification, artifact convention, verdict-row consistency, leakage, and root-clutter checks. |
