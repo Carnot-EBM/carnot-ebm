@@ -188,6 +188,38 @@ by the fabrication gate all three must be skipped by capstones and headline aggr
 was already shown to have been aggregated anyway by a capstone lacking the skip check, so the
 quarantine is both wrongly applied AND unevenly enforced.
 
+
+**FOURTH INSTANCE 2026-09-01 20:54Z — prediction confirmed, scope WIDER than a lineage, and it now
+BLOCKS DEPENDENT WORK.**
+
+The 20:37Z prediction was that the next per-family CPU artifact in this lineage would be flagged.
+It was, but the fourth case shows the "lineage" framing was too narrow.
+`results/experiment_6857_dynamic_live_arc_receipt_router.json` is a READ-ONLY ARTIFACT DISCOVERY
+task, substrate `read_only_terminal_live_artifact_discovery`, `duration_s` 1.048597. It is not
+per-family analysis at all. It was flagged because a model PATH it discovered while reading other
+artifacts contains the marker `models--unsloth--Qwen3.8-27B-GGUF` in a `snapshots/` path.
+
+**So the correct statement is broader:** the scan cannot distinguish an artifact that RAN a model
+from one that TALKS ABOUT models — including one that merely quotes a filesystem path. Any
+meta-analysis, router, inventory, or discovery task over a model-bearing corpus trips it.
+Per-family analysis is one instance of that class, not the class itself. Correcting the earlier
+framing rather than leaving it to be re-derived.
+
+**New and worse cost class: a cascade GATE_BLOCK.** Until now the damage was exclusion from
+aggregation. This time a dependent task was refused outright:
+
+1. exp6857 quotes a GGUF path while doing read-only discovery.
+2. The whole-blob scan sees `GGUF` and applies the 60s `live_model` floor.
+3. 1.05s < 60s, CRITICAL, `flagged_adversarial: true`.
+4. exp6858's gate requires exp6857 terminal-clean, and fails.
+5. exp6858 is GATE_BLOCKed with `blocked_gate_check_failed`.
+
+exp6858 is the **Supervisor counterfactual credit audit**. The false quarantine is now blocking the
+supervisor-credit program that exp6844 and exp6845 already reported as evidence-starved. The defect
+no longer only mislabels honest work; it prevents the work that would resolve the open question.
+
+Confirmed count: 4 (exp6840, exp6853, exp6856, exp6857). Blocked downstream: 1 (exp6858).
+
 **Interaction with the substrate-string gap filed at 05:38Z.** Same root cause, opposite
 direction. There, an unrecognised substrate (`gpu`) got NO floor and a 3.5ms compute claim passed.
 Here, an unrecognised substrate (`deterministic CPU chronological comparison`) plus a data-borne
