@@ -142,6 +142,26 @@ several in the list are honestly-blocked runs (`deferred_to_gpu`, `gpu_required`
 222 as the population where this mechanism COULD misfire. Only exp6840 is confirmed, by tracing
 the matched strings to their positions in the data.
 
+
+**RECURRENCE 2026-09-01 18:29Z — a second honest artifact quarantined the same way.**
+`results/experiment_6853_risk_sensitive_memory_opportunity_fixture.json`: verdict
+`complete_null_risk_sensitive_memory_opportunity_fixture_ready`, substrate `deterministic CPU
+chronological fixture construction`, `duration_s` 0.378723, CRITICAL DURATION_TOO_SHORT under the
+60s `live_model` floor. Same mechanism, verified the same way: the four markers (`unsloth/`,
+`Qwen3.6-`, `gemma-4-`, `GGUF`) appear as ROW LABELS inside
+`chronological_split_manifest.by_family`, and NONE appears in any declaration field.
+
+So this is no longer a single incident. Two confirmed cases about nine hours apart, both from the
+same experiment family — one whose subject matter IS model families, which is exactly the corpus
+where a whole-blob marker scan misfires. The 222-artifact population figure above remains an upper
+bound and unvalidated; what has changed is that the confirmed count is 2, not 1, and the rate is
+roughly one per milestone-day in this family.
+
+This one has NOT been un-flagged by a substrate-list edit, unlike exp6840. Its substrate string
+`deterministic CPU chronological fixture construction` is absent from
+`DETERMINISTIC_VERIFIER_SUBSTRATES` as of this writing, so the stamp and the live re-check agree.
+That is the honest state, and it should stay that way until someone decides on the merits.
+
 **Interaction with the substrate-string gap filed at 05:38Z.** Same root cause, opposite
 direction. There, an unrecognised substrate (`gpu`) got NO floor and a 3.5ms compute claim passed.
 Here, an unrecognised substrate (`deterministic CPU chronological comparison`) plus a data-borne
