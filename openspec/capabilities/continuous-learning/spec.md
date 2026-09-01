@@ -9959,6 +9959,12 @@ remain separate. A positive aggregate SHALL not remove a harmful write. Causal
 credit eligibility SHALL depend on replay and support. Benefit eligibility and
 benefit values SHALL remain separate from causal eligibility.
 
+A complete audit with any supported harmful-write evidence SHALL use the
+terminal `null` verdict class and SHALL name the harmful evidence in
+`honest_verdict`. It SHALL NOT use `partial`, because replay completeness is
+already established. It SHALL NOT use `positive`, because an aggregate gain
+cannot override per-write harm.
+
 ### SCENARIO-CL-6855-PRECONDITIONS: Invalid Evidence Blocks The Audit
 
 Given the controller score, a decision hash, a state hash, an exact outcome,

@@ -9,6 +9,8 @@ from copy import deepcopy
 import json
 import math
 from pathlib import Path
+import runpy
+import sys
 
 import pytest
 
@@ -108,9 +110,9 @@ def test_scenario_cl_6855_preconditions_and_duplicates_fail_closed(
     elif failure == "contract":
         contract["declared_valid"] = False
     else:
-        controller["update_rows"][1]["update_receipt_sha256"] = controller[
-            "update_rows"
-        ][0]["update_receipt_sha256"]
+        controller["update_rows"][1]["update_receipt_sha256"] = controller["update_rows"][0][
+            "update_receipt_sha256"
+        ]
 
     artifact = exp.build_artifact(
         REPO,
@@ -229,9 +231,7 @@ def test_scenario_cl_6855_placebo_changes_only_declared_feature(
 
     source_rows = fixture_source["rows"][:12]
     placebo = exp.permute_placebo_contexts(source_rows, feature="age", seed=6855001)
-    assert [row["decision_id"] for row in placebo] == [
-        row["decision_id"] for row in source_rows
-    ]
+    assert [row["decision_id"] for row in placebo] == [row["decision_id"] for row in source_rows]
     assert [row["available_actions"] for row in placebo] == [
         row["available_actions"] for row in source_rows
     ]
@@ -241,9 +241,7 @@ def test_scenario_cl_6855_placebo_changes_only_declared_feature(
         source_context.pop("age")
         changed_context.pop("age")
         assert changed_context == source_context
-    assert placebo == exp.permute_placebo_contexts(
-        source_rows, feature="age", seed=6855001
-    )
+    assert placebo == exp.permute_placebo_contexts(source_rows, feature="age", seed=6855001)
 
 
 def test_scenario_cl_6855_zero_headroom_separates_causal_and_benefit_fields() -> None:
@@ -306,11 +304,7 @@ def test_scenario_cl_6855_controls_are_matched_and_chronological(
     }
     assert set(current_artifact["policy_control_summary"]) == required_arms
     for arm in required_arms:
-        rows = [
-            row
-            for row in current_artifact["policy_control_rows"]
-            if row["arm"] == arm
-        ]
+        rows = [row for row in current_artifact["policy_control_rows"] if row["arm"] == arm]
         assert [row["decision_id"] for row in rows] == expected_ids
         assert all(row["action_available"] is True for row in rows)
     assert current_artifact["selection_skill_effect"]["comparison"] == (
@@ -340,6 +334,11 @@ def test_req_cl_6855_per_write_summary_preserves_harmful_and_unsupported_evidenc
         "exact_enumeration",
         "seeded_permutation_approximation",
     }
+    if current_artifact["harmful_write_count"]:
+        assert current_artifact["verdict_class"] == "null"
+        assert current_artifact["honest_verdict"] == (
+            "complete_null_counterfactual_memory_credit_harmful_writes_present"
+        )
 
 
 def test_scenario_cl_6855_gate_completeness_and_credit_are_separate() -> None:
@@ -364,9 +363,7 @@ def test_req_cl_6855_artifact_matches_deterministic_replay(
     stored = exp.load_source(REPO / exp.RESULT_RELATIVE_PATH)
     assert stored["reproducibility_checksum"] == exp.reproducibility_checksum(stored)
     assert stored["rows"] == current_artifact["rows"]
-    assert stored["per_write_credit_summary"] == current_artifact[
-        "per_write_credit_summary"
-    ]
+    assert stored["per_write_credit_summary"] == current_artifact["per_write_credit_summary"]
     assert stored["source_artifact_hashes"] == exp.source_artifact_hashes(REPO)
 
 
@@ -410,8 +407,248 @@ def test_req_cl_6855_source_loader_reports_unreadable_inputs(tmp_path: Path) -> 
     invalid.write_text("{invalid", encoding="utf-8")
     array = tmp_path / "array.json"
     array.write_text("[]", encoding="utf-8")
-    assert exp.load_source(tmp_path / "missing.json") == {
-        "_load_error": "FileNotFoundError"
-    }
+    assert exp.load_source(tmp_path / "missing.json") == {"_load_error": "FileNotFoundError"}
     assert exp.load_source(invalid) == {"_load_error": "JSONDecodeError"}
     assert exp.load_source(array) == {"_load_error": "not_object"}
+
+
+def test_scenario_cl_6855_invalid_transition_inputs_fail_closed(tmp_path: Path) -> None:
+    """SCENARIO-CL-6855-STATE-PATH-DIVERGENCE: reject malformed state inputs."""
+
+    assert exp.sha256_file(tmp_path / "missing.json") is None
+    with pytest.raises(exp.CounterfactualValidityError, match="capacity"):
+        exp.context_features({"capacity": []})
+    with pytest.raises(exp.CounterfactualValidityError, match="category"):
+        exp.context_features({"capacity": {}, "family": "unknown"})
+    invalid_context = {
+        "capacity": {"budget": 2},
+        "family": exp.FAMILIES[0],
+        "correction_status": exp.CORRECTION_STATUSES[0],
+        "relevance": True,
+        "uncertainty": 0.2,
+        "age": 1,
+        "false_positive_risk": 0.3,
+    }
+    with pytest.raises(exp.CounterfactualValidityError, match="number"):
+        exp.context_features(invalid_context)
+
+    reducer = exp.FreshReducer()
+    with pytest.raises(exp.CounterfactualValidityError, match="action"):
+        reducer.apply(_write("bad-action", sequence=1, action="unknown"))
+    with pytest.raises(exp.CounterfactualValidityError, match="feature length"):
+        reducer.apply(_write("bad-features", sequence=1, features=(1.0,)))
+    with pytest.raises(exp.CounterfactualValidityError, match="loss exceeds"):
+        reducer.apply(_write("bad-loss", sequence=1, loss=4.0))
+    with pytest.raises(exp.CounterfactualValidityError, match="target feature"):
+        reducer.scores((1.0,))
+    duplicate = _write("duplicate", sequence=1)
+    with pytest.raises(exp.CounterfactualValidityError, match="duplicate write"):
+        reducer.replay([duplicate, duplicate], target_boundary=2)
+
+
+def test_req_cl_6855_support_validation_covers_rejected_evidence(
+    controller_source: dict,
+    fixture_source: dict,
+) -> None:
+    """REQ-CL-6855: source and donor validation retain each rejected reason."""
+
+    incomplete = deepcopy(controller_source)
+    incomplete["rows"].pop()
+    replay = exp.replay_source_hashes(incomplete, fixture_source)
+    assert replay["decision_hash_mismatch_count"] > 0
+    malformed_replay = exp.replay_source_hashes({}, {})
+    assert malformed_replay["error"] == "KeyError"
+
+    duplicate = deepcopy(controller_source)
+    duplicate["update_rows"][1]["update_receipt_sha256"] = duplicate["update_rows"][0][
+        "update_receipt_sha256"
+    ]
+    with pytest.raises(exp.CounterfactualValidityError, match="duplicate write"):
+        exp.build_write_ledger(duplicate, fixture_source)
+
+    target = _write("target", sequence=1)
+    unsupported_donor = exp.WriteRecord(
+        write_id="donor",
+        decision_id="decision-donor",
+        update_sequence_index=2,
+        action=target.action,
+        features=target.features,
+        bounded_loss=target.bounded_loss,
+        support_sha256="missing",
+    )
+    assert exp.substitution_support(target, unsupported_donor) == (
+        False,
+        "missing_exact_support",
+    )
+    with pytest.raises(ValueError, match="at least two"):
+        exp.coalition_credit(
+            [f"w{index}" for index in range(9)],
+            lambda coalition: float(len(coalition)),
+            random_seed=1,
+            permutation_count=1,
+        )
+    unsupported = exp.classify_credit(
+        deletion_effect=0.0,
+        coalition_credit=0.0,
+        zero_headroom=False,
+        supported=False,
+    )
+    helpful = exp.classify_credit(
+        deletion_effect=1.0,
+        coalition_credit=1.0,
+        zero_headroom=False,
+        supported=True,
+    )
+    assert unsupported["credit_class"] == "unsupported"
+    assert helpful["credit_class"] == "helpful"
+    with pytest.raises(exp.CounterfactualValidityError, match="unavailable"):
+        exp.permute_placebo_contexts([], feature="age", seed=1)
+
+
+def test_scenario_cl_6855_per_write_reducer_preserves_helpful_class() -> None:
+    """SCENARIO-CL-6855-INTERACTION: reduction keeps a helpful-only write helpful."""
+
+    write = _write("helpful", sequence=1)
+    rows = [
+        {
+            "write_id": write.write_id,
+            "benefit_eligible": True,
+            "deletion_effect": 1.0,
+            "marginal_value": 1.0,
+            "credit_class": "helpful",
+            "harmful_evidence": False,
+            "helpful_evidence": True,
+        }
+    ]
+    summary, witnesses = exp._per_write_summary([write], rows)
+    assert summary[0]["credit_class"] == "helpful"
+    assert summary[0]["helpful_evidence"] is True
+    assert witnesses == []
+
+
+@pytest.mark.parametrize(
+    ("causal_score", "expected_class", "expected_verdict"),
+    [
+        (
+            1,
+            "positive",
+            "complete_positive_counterfactual_memory_credit_supported",
+        ),
+        (
+            0,
+            "null",
+            "complete_null_counterfactual_memory_credit_no_eligible_effect",
+        ),
+    ],
+)
+def test_req_cl_6855_terminal_verdict_branches_are_row_supported(
+    monkeypatch: pytest.MonkeyPatch,
+    causal_score: int,
+    expected_class: str,
+    expected_verdict: str,
+) -> None:
+    """REQ-CL-6855: positive and null verdicts follow the computed causal gate."""
+
+    write = _write("supported", sequence=1)
+    checks = [exp._check("synthetic_source", True, True, True)]
+    counterfactuals = {
+        "deletion_rows": [
+            {
+                "decision_id": "decision-supported",
+                "write_id": write.write_id,
+                "deletion_effect": float(causal_score),
+                "method": "exact_transition_replay",
+            }
+        ],
+        "substitution_rows": [],
+        "order_rows": [],
+        "coalition_rows": [],
+        "approximation_receipts": [],
+        "unsupported_counterfactual_rows": [],
+    }
+    summary = [
+        {
+            "write_id": write.write_id,
+            "credit_class": "helpful" if causal_score else "redundant",
+            "harmful_evidence": False,
+        }
+    ]
+    policy_rows = [
+        {
+            "decision_id": "decision-supported",
+            "arm": "learned_selection",
+            "reward": 0.0,
+        }
+    ]
+    monkeypatch.setattr(
+        exp,
+        "validate_preconditions",
+        lambda controller, fixture, contract: (checks, {"passed": True}),
+    )
+    monkeypatch.setattr(exp, "build_write_ledger", lambda controller, fixture: [write])
+    monkeypatch.setattr(exp, "_counterfactual_rows", lambda fixture, ledger: counterfactuals)
+    monkeypatch.setattr(exp, "_per_write_summary", lambda ledger, rows: (summary, []))
+    monkeypatch.setattr(
+        exp,
+        "_policy_controls",
+        lambda controller, fixture, ledger: (policy_rows, {}, [], {}, {}),
+    )
+    monkeypatch.setattr(
+        exp,
+        "compute_terminal_gates",
+        lambda **kwargs: {
+            "counterfactual_memory_audit_complete_score": 1,
+            "causal_memory_credit_eligible_score": causal_score,
+        },
+    )
+
+    artifact = exp.build_artifact(
+        REPO,
+        run_date="20260901",
+        duration_s=0.1,
+        controller={},
+        fixture={"rows": [{"decision_id": "decision-supported"}]},
+    )
+    assert artifact["verdict_class"] == expected_class
+    assert artifact["honest_verdict"] == expected_verdict
+
+
+def test_req_cl_6855_artifact_validation_rejects_terminal_contradictions(
+    current_artifact: dict,
+) -> None:
+    """REQ-CL-6855: complete artifacts cannot carry invalid classes or failed gates."""
+
+    malformed = dict(current_artifact)
+    malformed["verdict_class"] = "unknown"
+    malformed["gate_check_summary"] = {"passed": False}
+    malformed["reproducibility_checksum"] = exp.reproducibility_checksum(malformed)
+    errors = exp.validate_artifact(malformed)
+    assert "invalid verdict_class" in errors
+    assert "complete score contradicts failed preconditions" in errors
+
+
+def test_req_cl_6855_package_entrypoint_writes_isolated_artifact(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """REQ-CL-6855: the package entry point exits after an isolated full replay."""
+
+    output = tmp_path / "module-entrypoint.json"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "experiment_6855_counterfactual_memory_credit_audit.py",
+            "--date",
+            "20260901",
+            "--output",
+            str(output),
+        ],
+    )
+    with pytest.raises(SystemExit) as exit_info:
+        runpy.run_module(exp.__name__, run_name="__main__")
+    assert exit_info.value.code == 0
+    assert (
+        json.loads(output.read_text(encoding="utf-8"))["counterfactual_memory_audit_complete_score"]
+        == 1
+    )

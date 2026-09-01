@@ -30,9 +30,7 @@ CONTROLLER_RELATIVE_PATH = Path(
 FIXTURE_RELATIVE_PATH = Path(
     "results/experiment_6853_risk_sensitive_memory_opportunity_fixture.json"
 )
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_6855_counterfactual_memory_credit_audit.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_6855_counterfactual_memory_credit_audit.json")
 SCHEMA = "carnot.experiment_6855.counterfactual_memory_credit_audit.v1"
 EXPERIMENT_ID = "exp6855-counterfactual-memory-credit-audit"
 INFERENCE_SUBSTRATE = "deterministic CPU counterfactual replay"
@@ -95,9 +93,7 @@ VALID_COUNTERFACTUAL_CONTRACT: JsonDict = {
     "substitution_support": (
         "Use one different observed donor with the same action and feature vector."
     ),
-    "order_support": (
-        "Swap only observed writes with one shared feedback reveal boundary."
-    ),
+    "order_support": ("Swap only observed writes with one shared feedback reveal boundary."),
     "coalition_support": (
         "Use each eligible prior write at most once inside the bounded target window."
     ),
@@ -191,8 +187,7 @@ def canonical_json_bytes(value: Any) -> bytes:
     """Use stable bytes so hashes do not depend on JSON formatting."""
 
     return (
-        json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
-        + "\n"
+        json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True) + "\n"
     ).encode("utf-8")
 
 
@@ -329,17 +324,14 @@ class FreshReducer:
 
         row = self.stats[write.action]
         if row["updates"] >= CONFIG["max_updates_per_action"]:
-            decay = (CONFIG["max_updates_per_action"] - 1) / CONFIG[
-                "max_updates_per_action"
-            ]
+            decay = (CONFIG["max_updates_per_action"] - 1) / CONFIG["max_updates_per_action"]
             prior = PRIORS[write.action]
             row["precision"] = [
                 CONFIG["ridge"] + (float(value) - CONFIG["ridge"]) * decay
                 for value in row["precision"]
             ]
             row["loss_sum"] = [
-                CONFIG["ridge"] * prior
-                + (float(value) - CONFIG["ridge"] * prior) * decay
+                CONFIG["ridge"] * prior + (float(value) - CONFIG["ridge"] * prior) * decay
                 for value in row["loss_sum"]
             ]
         row["precision"] = [
@@ -350,9 +342,7 @@ class FreshReducer:
             float(value) + feature * feature * write.bounded_loss
             for value, feature in zip(row["loss_sum"], write.features, strict=True)
         ]
-        row["updates"] = min(
-            CONFIG["max_updates_per_action"], int(row["updates"]) + 1
-        )
+        row["updates"] = min(CONFIG["max_updates_per_action"], int(row["updates"]) + 1)
 
     def scores(self, features: Sequence[float]) -> dict[str, float]:
         """Compute the declared pessimistic loss from reconstructed statistics."""
@@ -366,32 +356,21 @@ class FreshReducer:
             row = self.stats[action]
             estimates = [
                 float(total) / float(precision)
-                for total, precision in zip(
-                    row["loss_sum"], row["precision"], strict=True
-                )
+                for total, precision in zip(row["loss_sum"], row["precision"], strict=True)
             ]
             mean = (
-                sum(
-                    weight * estimate
-                    for weight, estimate in zip(weights, estimates, strict=True)
-                )
+                sum(weight * estimate for weight, estimate in zip(weights, estimates, strict=True))
                 / denominator
             )
             uncertainty = (
                 sum(
                     weight / math.sqrt(float(precision))
-                    for weight, precision in zip(
-                        weights, row["precision"], strict=True
-                    )
+                    for weight, precision in zip(weights, row["precision"], strict=True)
                 )
                 / denominator
             )
-            scale = {"verified_memory": 3.0, "no_memory": 1.0, "abstain": 0.6}[
-                action
-            ]
-            output[action] = round(
-                mean + CONFIG["confidence_scale"] * uncertainty * scale, 12
-            )
+            scale = {"verified_memory": 3.0, "no_memory": 1.0, "abstain": 0.6}[action]
+            output[action] = round(mean + CONFIG["confidence_scale"] * uncertainty * scale, 12)
         return output
 
     def select(self, features: Sequence[float]) -> tuple[str, dict[str, float]]:
@@ -418,9 +397,7 @@ class FreshReducer:
             raise CounterfactualValidityError("duplicate write in replay path")
         if any(write.update_sequence_index >= target_boundary for write in writes):
             raise CounterfactualValidityError("write does not precede target boundary")
-        for write in sorted(
-            writes, key=lambda item: (item.update_sequence_index, item.write_id)
-        ):
+        for write in sorted(writes, key=lambda item: (item.update_sequence_index, item.write_id)):
             self.apply(write)
         features = target_features or ((1.0,) + (0.0,) * 14)
         action, scores = self.select(features)
@@ -466,34 +443,21 @@ def _source_replay(controller: Mapping[str, Any], fixture: Mapping[str, Any]) ->
     }
     try:
         fixture_rows = list(fixture["rows"])
-        controller_rows = {
-            str(row["decision_id"]): row for row in controller["rows"]
-        }
+        controller_rows = {str(row["decision_id"]): row for row in controller["rows"]}
         action_sources = {
-            str(row["decision_id"]): row
-            for row in controller["pre_outcome_action_receipts"]
+            str(row["decision_id"]): row for row in controller["pre_outcome_action_receipts"]
         }
         feedback_sources = {
-            str(row["decision_id"]): row
-            for row in controller["exact_feedback_receipts"]
+            str(row["decision_id"]): row for row in controller["exact_feedback_receipts"]
         }
-        update_sources = {
-            str(row["decision_id"]): row for row in controller["update_rows"]
-        }
-        outcomes = {
-            str(row["decision_id"]): row["exact_later_outcome"]
-            for row in fixture_rows
-        }
-        contexts = {
-            str(row["decision_id"]): row["decision_context"] for row in fixture_rows
-        }
+        update_sources = {str(row["decision_id"]): row for row in controller["update_rows"]}
+        outcomes = {str(row["decision_id"]): row["exact_later_outcome"] for row in fixture_rows}
+        contexts = {str(row["decision_id"]): row["decision_context"] for row in fixture_rows}
         delayed = {
-            str(row["decision_id"]): bool(row.get("delayed_correction"))
-            for row in fixture_rows
+            str(row["decision_id"]): bool(row.get("delayed_correction")) for row in fixture_rows
         }
         sequence = {
-            str(row["decision_id"]): int(row["decision_sequence_index"])
-            for row in fixture_rows
+            str(row["decision_id"]): int(row["decision_sequence_index"]) for row in fixture_rows
         }
         reducer = FreshReducer()
         pending: JsonDict = {}
@@ -536,9 +500,7 @@ def _source_replay(controller: Mapping[str, Any], fixture: Mapping[str, Any]) ->
 
                 pending_row = pending[decision_id]
                 state_before = _source_state_hash(reducer.stats, pending)
-                raw_loss = _loss(
-                    str(pending_row["action"]), int(outcome["signed_direction"])
-                )
+                raw_loss = _loss(str(pending_row["action"]), int(outcome["signed_direction"]))
                 write = WriteRecord(
                     write_id="pending-write",
                     decision_id=decision_id,
@@ -553,20 +515,14 @@ def _source_replay(controller: Mapping[str, Any], fixture: Mapping[str, Any]) ->
                 update: JsonDict = {
                     "decision_id": decision_id,
                     "action": write.action,
-                    "action_receipt_sha256": pending_row[
-                        "action_receipt_sha256"
-                    ],
-                    "feedback_receipt_sha256": feedback[
-                        "feedback_receipt_sha256"
-                    ],
+                    "action_receipt_sha256": pending_row["action_receipt_sha256"],
+                    "feedback_receipt_sha256": feedback["feedback_receipt_sha256"],
                     "raw_loss": raw_loss,
                     "bounded_loss": raw_loss,
                     "loss_was_clamped": False,
                     "update_sequence_index": reveal_index,
                     "policy_state_sha256_before": state_before,
-                    "policy_state_sha256_after": _source_state_hash(
-                        reducer.stats, pending
-                    ),
+                    "policy_state_sha256_after": _source_state_hash(reducer.stats, pending),
                 }
                 update["update_receipt_sha256"] = sha256_json(update)
                 source_update = update_sources.get(decision_id, {})
@@ -574,11 +530,10 @@ def _source_replay(controller: Mapping[str, Any], fixture: Mapping[str, Any]) ->
                     "update_receipt_sha256"
                 ):
                     counters["update_hash_mismatch_count"] += 1
-                if (
-                    update.get("policy_state_sha256_before")
-                    != source_update.get("policy_state_sha256_before")
-                    or update.get("policy_state_sha256_after")
-                    != source_update.get("policy_state_sha256_after")
+                if update.get("policy_state_sha256_before") != source_update.get(
+                    "policy_state_sha256_before"
+                ) or update.get("policy_state_sha256_after") != source_update.get(
+                    "policy_state_sha256_after"
                 ):
                     counters["state_hash_mismatch_count"] += 1
 
@@ -645,17 +600,13 @@ def _source_replay(controller: Mapping[str, Any], fixture: Mapping[str, Any]) ->
         counters["decision_hash_mismatch_count"] += 1
         counters["error"] = type(error).__name__
     counters["passed"] = not any(
-        value
-        for key, value in counters.items()
-        if key.endswith("_mismatch_count")
+        value for key, value in counters.items() if key.endswith("_mismatch_count")
     )
     counters["imported_exp6854_aggregate_calculator"] = False
     return counters
 
 
-def replay_source_hashes(
-    controller: Mapping[str, Any], fixture: Mapping[str, Any]
-) -> JsonDict:
+def replay_source_hashes(controller: Mapping[str, Any], fixture: Mapping[str, Any]) -> JsonDict:
     """Expose the independent receipt replay used by the precondition gate."""
 
     return _source_replay(controller, fixture)
@@ -695,9 +646,7 @@ def validate_preconditions(
     replay = replay_source_hashes(controller, fixture)
     updates = controller.get("update_rows", [])
     write_ids = [
-        str(row.get("update_receipt_sha256", ""))
-        for row in updates
-        if isinstance(row, Mapping)
+        str(row.get("update_receipt_sha256", "")) for row in updates if isinstance(row, Mapping)
     ]
     duplicate_count = len(write_ids) - len(set(write_ids))
     outcomes = [
@@ -781,9 +730,7 @@ def build_write_ledger(
 ) -> list[WriteRecord]:
     """Join each exact update receipt to its pre-outcome feature vector."""
 
-    contexts = {
-        str(row["decision_id"]): row["decision_context"] for row in fixture["rows"]
-    }
+    contexts = {str(row["decision_id"]): row["decision_context"] for row in fixture["rows"]}
     ledger: list[WriteRecord] = []
     seen: set[str] = set()
     for row in controller["update_rows"]:
@@ -803,14 +750,10 @@ def build_write_ledger(
                 support_sha256=str(row["feedback_receipt_sha256"]),
             )
         )
-    return sorted(
-        ledger, key=lambda item: (item.update_sequence_index, item.write_id)
-    )
+    return sorted(ledger, key=lambda item: (item.update_sequence_index, item.write_id))
 
 
-def validate_coalition(
-    coalition: Sequence[str], eligible_write_ids: set[str]
-) -> tuple[str, ...]:
+def validate_coalition(coalition: Sequence[str], eligible_write_ids: set[str]) -> tuple[str, ...]:
     """Reject duplicate or ineligible writes before coalition replay."""
 
     if len(coalition) != len(set(coalition)):
@@ -862,16 +805,10 @@ def coalition_credit(
             others = [item for item in ordered_ids if item != write_id]
             marginal = 0.0
             for size in range(len(others) + 1):
-                weight = (
-                    math.factorial(size)
-                    * math.factorial(count - size - 1)
-                    / denominator
-                )
+                weight = math.factorial(size) * math.factorial(count - size - 1) / denominator
                 for subset in itertools.combinations(others, size):
                     coalition = frozenset(subset)
-                    marginal += weight * (
-                        value(coalition | {write_id}) - value(coalition)
-                    )
+                    marginal += weight * (value(coalition | {write_id}) - value(coalition))
             rows.append(
                 {
                     "write_id": write_id,
@@ -976,12 +913,8 @@ def classify_credit(
         "causal_credit_eligible": True,
         "benefit_eligible": True,
         "benefit": round(benefit, 12),
-        "harmful_evidence": (
-            deletion_effect < -tolerance or coalition_credit < -tolerance
-        ),
-        "helpful_evidence": (
-            deletion_effect > tolerance or coalition_credit > tolerance
-        ),
+        "harmful_evidence": (deletion_effect < -tolerance or coalition_credit < -tolerance),
+        "helpful_evidence": (deletion_effect > tolerance or coalition_credit > tolerance),
         "interaction_witness_required": credit_class == "interaction_only",
     }
 
@@ -1031,12 +964,8 @@ def _policy_controls(
     """Replay matched fixed and placebo policies without changing chronology."""
 
     fixture_rows = list(fixture["rows"])
-    controller_rows = {
-        str(row["decision_id"]): row for row in controller["rows"]
-    }
-    placebo_rows = permute_placebo_contexts(
-        fixture_rows, feature="age", seed=RANDOM_SEED
-    )
+    controller_rows = {str(row["decision_id"]): row for row in controller["rows"]}
+    placebo_rows = permute_placebo_contexts(fixture_rows, feature="age", seed=RANDOM_SEED)
     reducer = FreshReducer()
     ledger_index = 0
     control_rows: list[JsonDict] = []
@@ -1050,17 +979,13 @@ def _policy_controls(
         ):
             reducer.apply(ledger[ledger_index])
             ledger_index += 1
-        placebo_action, _ = reducer.select(
-            context_features(placebo_row["decision_context"])
-        )
+        placebo_action, _ = reducer.select(context_features(placebo_row["decision_context"]))
         learned_action = str(controller_rows[decision_id]["chosen_action"])
         actions = {
             "learned_selection": learned_action,
             "no_memory": "no_memory",
             "always_memory": "verified_memory",
-            "random_admission": str(
-                source_row["baseline_actions"]["random_admission"]
-            ),
+            "random_admission": str(source_row["baseline_actions"]["random_admission"]),
             "abstain": "abstain",
             "placebo_context": placebo_action,
         }
@@ -1091,8 +1016,7 @@ def _policy_controls(
                 ),
                 "action_availability_preserved": source_row["available_actions"]
                 == placebo_row["available_actions"],
-                "chronology_preserved": source_row["decision_id"]
-                == placebo_row["decision_id"],
+                "chronology_preserved": source_row["decision_id"] == placebo_row["decision_id"],
                 "causal_credit_eligible": False,
             }
         )
@@ -1109,16 +1033,11 @@ def _policy_controls(
         summary[arm] = {
             "decision_count": len(rows),
             "mean_loss": round(statistics.fmean(row["loss"] for row in rows), 12),
-            "mean_reward": round(
-                statistics.fmean(row["reward"] for row in rows), 12
-            ),
+            "mean_reward": round(statistics.fmean(row["reward"] for row in rows), 12),
             "action_counts": {
-                action: sum(row["action"] == action for row in rows)
-                for action in ACTIONS
+                action: sum(row["action"] == action for row in rows) for action in ACTIONS
             },
-            "action_availability_preserved": all(
-                row["action_available"] for row in rows
-            ),
+            "action_availability_preserved": all(row["action_available"] for row in rows),
         }
     learned_reward = summary["learned_selection"]["mean_reward"]
     placebo_reward = summary["placebo_context"]["mean_reward"]
@@ -1132,10 +1051,7 @@ def _policy_controls(
             "no-memory contrast can include policy-arm and stream effects."
         ),
     }
-    directions = [
-        int(row["exact_later_outcome"]["signed_direction"])
-        for row in fixture_rows
-    ]
+    directions = [int(row["exact_later_outcome"]["signed_direction"]) for row in fixture_rows]
     stream_luck = {
         "baseline_arm": "no_memory",
         "baseline_mean_reward": no_memory_reward,
@@ -1149,9 +1065,7 @@ def _policy_controls(
     return control_rows, summary, placebo_controls, selection_skill, stream_luck
 
 
-def _counterfactual_rows(
-    fixture: Mapping[str, Any], ledger: Sequence[WriteRecord]
-) -> JsonDict:
+def _counterfactual_rows(fixture: Mapping[str, Any], ledger: Sequence[WriteRecord]) -> JsonDict:
     """Run deletion, supported substitution, order, and bounded coalition audits."""
 
     deletion_rows: list[JsonDict] = []
@@ -1165,7 +1079,10 @@ def _counterfactual_rows(
 
     for target in fixture_rows:
         target_index = int(target["decision_sequence_index"])
-        while len(history) < len(ledger) and ledger[len(history)].update_sequence_index <= target_index:
+        while (
+            len(history) < len(ledger)
+            and ledger[len(history)].update_sequence_index <= target_index
+        ):
             history.append(ledger[len(history)])
         if not history:
             unsupported_rows.append(
@@ -1255,8 +1172,7 @@ def _counterfactual_rows(
                 )
                 reducer = base.copy()
                 substituted = [
-                    substitute if item.write_id == write.write_id else item
-                    for item in window
+                    substitute if item.write_id == write.write_id else item for item in window
                 ]
                 selection = reducer.replay(
                     substituted,
@@ -1281,9 +1197,7 @@ def _counterfactual_rows(
                         "causal_credit_eligible": True,
                         "benefit_eligible": not zero_headroom,
                         "benefit": (
-                            round(factual_reward - reward, 12)
-                            if not zero_headroom
-                            else None
+                            round(factual_reward - reward, 12) if not zero_headroom else None
                         ),
                     }
                 )
@@ -1333,11 +1247,7 @@ def _counterfactual_rows(
                     "state_reconstructed": True,
                     "causal_credit_eligible": True,
                     "benefit_eligible": not zero_headroom,
-                    "benefit": (
-                        round(factual_reward - reward, 12)
-                        if not zero_headroom
-                        else None
-                    ),
+                    "benefit": (round(factual_reward - reward, 12) if not zero_headroom else None),
                 }
             )
 
@@ -1411,12 +1321,8 @@ def _per_write_summary(
             )
             continue
         eligible_rows = [row for row in rows if row["benefit_eligible"]]
-        deletion_effect = round(
-            sum(float(row["deletion_effect"]) for row in eligible_rows), 12
-        )
-        shapley = round(
-            sum(float(row["marginal_value"]) for row in eligible_rows), 12
-        )
+        deletion_effect = round(sum(float(row["deletion_effect"]) for row in eligible_rows), 12)
+        shapley = round(sum(float(row["marginal_value"]) for row in eligible_rows), 12)
         classification = classify_credit(
             deletion_effect=deletion_effect,
             coalition_credit=shapley,
@@ -1441,12 +1347,8 @@ def _per_write_summary(
             result["credit_class"] = "helpful"
         else:
             result["credit_class"] = "redundant"
-        result["harmful_evidence"] = any(
-            bool(row["harmful_evidence"]) for row in eligible_rows
-        )
-        result["helpful_evidence"] = any(
-            bool(row["helpful_evidence"]) for row in eligible_rows
-        )
+        result["harmful_evidence"] = any(bool(row["harmful_evidence"]) for row in eligible_rows)
+        result["helpful_evidence"] = any(bool(row["helpful_evidence"]) for row in eligible_rows)
         summary.append(result)
         interaction_rows = [
             row for row in eligible_rows if row["credit_class"] == "interaction_only"
@@ -1482,9 +1384,7 @@ def compute_terminal_gates(
     )
     return {
         "counterfactual_memory_audit_complete_score": complete,
-        "causal_memory_credit_eligible_score": int(
-            complete == 1 and causal_benefit_count > 0
-        ),
+        "causal_memory_credit_eligible_score": int(complete == 1 and causal_benefit_count > 0),
     }
 
 
@@ -1645,9 +1545,7 @@ def build_artifact(
         else load_source(repo_root / CONTROLLER_RELATIVE_PATH)
     )
     fixture_source = (
-        dict(fixture)
-        if fixture is not None
-        else load_source(repo_root / FIXTURE_RELATIVE_PATH)
+        dict(fixture) if fixture is not None else load_source(repo_root / FIXTURE_RELATIVE_PATH)
     )
     active_contract = dict(contract or VALID_COUNTERFACTUAL_CONTRACT)
     checks, source_replay = validate_preconditions(
@@ -1667,11 +1565,9 @@ def build_artifact(
 
     ledger = build_write_ledger(controller_source, fixture_source)
     counterfactuals = _counterfactual_rows(fixture_source, ledger)
-    summary, interactions = _per_write_summary(
-        ledger, counterfactuals["coalition_rows"]
-    )
-    policy_rows, policy_summary, placebo_rows, selection_skill, stream_luck = (
-        _policy_controls(controller_source, fixture_source, ledger)
+    summary, interactions = _per_write_summary(ledger, counterfactuals["coalition_rows"])
+    policy_rows, policy_summary, placebo_rows, selection_skill, stream_luck = _policy_controls(
+        controller_source, fixture_source, ledger
     )
     gates = compute_terminal_gates(
         planned_decisions=len(fixture_source["rows"]),
@@ -1694,12 +1590,8 @@ def build_artifact(
             "policy_control_summary": policy_summary,
             "placebo_control_rows": placebo_rows,
             "per_write_credit_summary": summary,
-            "harmful_write_count": sum(
-                bool(row.get("harmful_evidence")) for row in summary
-            ),
-            "redundant_write_count": sum(
-                row["credit_class"] == "redundant" for row in summary
-            ),
+            "harmful_write_count": sum(bool(row.get("harmful_evidence")) for row in summary),
+            "redundant_write_count": sum(row["credit_class"] == "redundant" for row in summary),
             "interaction_witnesses": interactions,
             "selection_skill_effect": selection_skill,
             "stream_luck_effect": stream_luck,
@@ -1709,20 +1601,16 @@ def build_artifact(
     causal_score = artifact["causal_memory_credit_eligible_score"]
     harmful_count = artifact["harmful_write_count"]
     if harmful_count:
-        artifact["verdict_class"] = "partial"
+        artifact["verdict_class"] = "null"
         artifact["honest_verdict"] = (
-            "complete_partial_counterfactual_memory_credit_harmful_writes_present"
+            "complete_null_counterfactual_memory_credit_harmful_writes_present"
         )
     elif causal_score:
         artifact["verdict_class"] = "positive"
-        artifact["honest_verdict"] = (
-            "complete_positive_counterfactual_memory_credit_supported"
-        )
+        artifact["honest_verdict"] = "complete_positive_counterfactual_memory_credit_supported"
     else:
         artifact["verdict_class"] = "null"
-        artifact["honest_verdict"] = (
-            "complete_null_counterfactual_memory_credit_no_eligible_effect"
-        )
+        artifact["honest_verdict"] = "complete_null_counterfactual_memory_credit_no_eligible_effect"
     artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
     return artifact
 
