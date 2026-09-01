@@ -16,6 +16,40 @@ in between; a death at hour 10 loses both games' receipts, and the death receipt
 records stage and game names only, not arm outcomes. Judge liveness from the
 worker process, never from log content or receipt presence.
 
+**CORRECTION 2026-09-01 11:00Z — the run above CANNOT produce supervisor receipts, and I said
+repeatedly that it could.** `scripts/arc_leaderboard_eval.py` never calls
+`trajectory_supervisor_diagnostics()`. Its per-game rows carry no supervisor field. The only
+occurrence of the word "supervisor" in that file is a comment added earlier tonight, by me, in
+the per-game-write change — a comment describing receipts the script does not collect.
+
+Setting `CARNOT_ARC_TRAJECTORY_SUPERVISOR=1` does make the supervisor APPLY its redirects, so the
+agent's behaviour is affected. Nothing serialises the firing counts, so the refinement ledger
+gains nothing from this run. The stated purpose above — accrue applied receipts toward the floor
+of 10 firings per arm — is not achievable by this harness, and was not achievable when the run
+started.
+
+Where the false claim was repeated, so a reader can discount all of it: this block; the
+REQ-ARC-WMTE-6850 rationale; `project_arc_eval_is_unobservable_until_it_ends` in the memory
+directory; and the commit messages of dac8043123, ae229ac429 and b83c0f2402, each asserting that a
+death would lose "every trajectory-supervisor receipt they had accrued". There are none to lose.
+
+What the run IS producing is still real and worth finishing: adapter-free per-game level results.
+ls20 completed with `live=L0 (+0)`, 2443 actions, efficiency 0.0000, in 26,340s — a genuine null
+for the frame-only path on that game. wa30 has been running since 07:20Z.
+
+**The harness that DOES collect receipts is `scripts/arc_scored_path_lever_harness.py`.** It calls
+`trajectory_supervisor_diagnostics()` and emits the field on every row on both paths, turning a
+raising call into an error marker rather than dropping the field — its own comment records that an
+absent field reading as zero cost a full day of wrong A/B reporting on 2026-08-21. Any future run
+whose purpose is supervisor evidence must use that harness, or the eval must be taught to collect
+the receipt.
+
+**The generator could not fit a second time.** When wa30 started at 07:20Z the guard found 963 MiB
+free on GPU 1, because the ls20 llama-server still holds 18,416 MiB, and warned it would decline
+the card and fall back to the iGPU at ~2 tok/s. No second server was spawned — one llama-server
+exists (pid 375086) and it is serving at ~27 tok/s — so wa30 is running on the existing server.
+The warning describes what WOULD have happened to a new generator, not what happened.
+
 **Proposed, not built:** move the artifact write inside the per-game loop so each
 game banks independently. Small and safe, but it cannot help a run already in
 flight (the module is imported once at start), so it should be done between runs.
