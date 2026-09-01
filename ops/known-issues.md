@@ -4,6 +4,48 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-09-01: a one-word substrate string evades the duration floor, and 463 distinct strings are in use
+
+Found while validating exp6836, whose live re-check warned
+`SUBSTRATE_HAS_NO_DURATION_FLOOR: inference_substrate='deterministic CPU compilation' matches no
+duration-floor recognizer`. The warn is the system reporting its own blind spot, which is the
+honest behaviour. The question it raises is what happens when the unrecognised string is a
+COMPUTE claim rather than a CPU one.
+
+**The concrete case.** `results/experiment_3399_logicvault_long_context.json` declares
+`inference_substrate: "gpu"`, `duration_s: 0.0035`, verdict `complete: LogicVault checked long
+context facts`, and no acceptance gate. Because the bare string `gpu` matches no recognizer, no
+floor applies, so DURATION_TOO_SHORT cannot fire. Had the same artifact written the canonical
+`live_llm_inference`, the 60s floor would have caught a 3.5-millisecond GPU claim. The mechanism
+emits a WARN, not a CRITICAL, so nothing is quarantined.
+
+**The measurement, and what it does NOT show.** Across all `results/**/*.json`: 3,255 artifacts
+declare a substrate, 2,317 match a duration-floor recognizer, and 938 match none, spread over 463
+distinct strings. **938 is an upper bound on the gap, not the gap.** Much of it is exempt by
+design or by honest verdict:
+
+- `hardware_smoke` (201) has a deliberately per-board floor, per CLAUDE.md's substrate table.
+- `blocked_*` artifacts are correctly exempt. `experiment_3787_p1_discrete_search_adjudication`
+  declares `live_llm_inference` at 0.0s and is clean because its verdict is `blocked_no_free_gpu`
+  — nothing ran, and flagging it would punish the honesty.
+
+A first pass filtering for compute-sounding strings under 60s returned 73, but most were the
+filter's own negation-blindness: `no_live_inference`, `no_new_inference`,
+`cached_..._aggregation_only_no_live` all contain "live" or "inference" while explicitly denying
+compute. That is the same negation bug class the QA-Layer discipline names, committed here in the
+measuring tool. Treat 73 as unvalidated.
+
+**The question for the operator, NOT actioned.** Should an unrecognised substrate that looks like
+a compute claim escalate from WARN to CRITICAL? Adding `gpu` and friends to the recogniser list is
+explicitly the wrong reflex — CLAUDE.md forbids growing that list to make things pass, and a fixed
+list cannot cover 463 free-text strings anyway. The structural options are (a) escalate the
+existing warn when the artifact also carries a terminal verdict and a short duration, or (b)
+require the declaration to be one of the canonical values and fail closed otherwise. Both change
+what gets quarantined corpus-wide and need their own measurement before anyone touches them.
+
+Not investigated further: whether exp3399's claim is actually false. It is old, carries no gate,
+and one artifact does not justify a corpus sweep at 05:40.
+
 ### NEW 2026-09-01: the nested incident the determination lint's scope limit anticipated — 78 acknowledgements destroyed and restored
 
 `scripts/determination_preservation_lint.py` states its scope limit plainly: Rule 3 checks
