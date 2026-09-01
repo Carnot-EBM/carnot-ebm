@@ -229,3 +229,11 @@ CHECK_TIMED_OUT
 
 CHECK_TIMED_OUT
 
+## 2026-09-01 13:15 UTC -- NEW
+
+- Leaderboard shakeup: Tong Hui Kang improved to 4.45 (#4); Son Pham & Mark Barney entered #5 at 4.42; Daniel Franzen rose to #6 at 4.05; Nithin Kumar R C and Ebi entered #7–8 at 3.87/3.85; Youssef Nader improved to 3.67 but moved to #9; Jonathan Wang2022 entered #10 at 3.39. sawada, Tony G, and Liao Zixu are now #12, #15, and #17. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- On August 14, Kaggle staff acknowledged possible RTX 6000 pool capacity constraints and said they were working to free additional resources. [Official Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/735147)
+
+- On August 3, the official Agents toolkit replaced `three.arcprize.org` references with `arcprize.org` and corrected the API-key URL to `arcprize.org/platform`. [Official repository change](https://github.com/arcprize/ARC-AGI-3-Agents/pull/74)
+
