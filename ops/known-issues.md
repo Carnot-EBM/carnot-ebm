@@ -4,6 +4,40 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-09-01: the conductor's checkpoint commit ignores scope claims and skips every hook
+
+Observed live. An outer-loop session declared `scripts/adversarial_verify.py` at 01:38 UTC,
+edited it, and at 02:00 UTC the conductor committed that edit as
+`255035dfdb [conductor] Checkpoint: preserve uncommitted work from interrupted run`.
+
+Two separate facts, both worth knowing before trusting a declaration.
+
+**The claim was not overruled. It was never consulted.** `claimed_by_other_sessions` runs in
+`git_commit_and_push`. The checkpoint path at `scripts/research_conductor.py:6333` builds its
+file list straight from `git diff --name-only` plus `git ls-files --others` and stages each one
+with `git add --`. No claim check exists on that path. So a declared scope constrains the normal
+conductor commit and does nothing on the checkpoint commit.
+
+**That is defensible, and should stay.** The checkpoint exists to stop work being lost when a run
+is interrupted. Unstaging a claimed path there would leave that path uncommitted at the exact
+moment the tree is least safe, which is the failure the path was written to prevent. The cost is
+attribution, not data. The work above survived intact and byte-identical.
+
+**The real gap is the hooks.** The checkpoint commits with verification disabled, for a stated
+and sound reason: pre-commit stashes unstaged changes and has destroyed them when a hook failed
+and the patch would not re-apply. But the effect is that anything swept by a checkpoint lands
+with ruff, mypy, spec-coverage, the canonical-URL lint, the scope lint and the ARC lints never
+having run. `_restore_dropped_determinations()` is called explicitly first, so the
+highest-value guard is covered; the rest are not.
+
+Concrete proposal, NOT implemented, because it is conductor surgery and deserves its own
+measurement: after a checkpoint commit succeeds, run the hooks over exactly the files it staged
+and report failures as a follow-up task. Report, never refuse and never revert. Refusing would
+restore the data-loss that disabling verification was added to prevent.
+
+Working rule until then: after a checkpoint commit sweeps your work, run
+`pre-commit run --files <the files>` by hand. The edit above was checked this way and is clean.
+
 ### NEW 2026-08-25: 52 deterministic-replay tests are RED, for two causes that are both built in — OPERATOR DECISION NEEDED
 
 **The finding.** 52 tests assert `result == replay` against a checked-in
