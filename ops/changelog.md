@@ -18474,3 +18474,15 @@ and runner receipts. Estimated savings is 0% until a timed alternative exists.
 - 2026-09-01: Dynamic provenance-qualified live ARC receipt router (⚠️ Research Finding) — honest_verdict=complete_dynamic_live_arc_receipt_router; results/experiment_6857_dynamic_live_arc_receipt_router.json
 - 2026-09-01: First-party tool-gap receipt wiring at the canonical live seam (⚠️ Research Finding) — honest_verdict=complete_first_party_tool_gap_receipt_contract_ready_no_live_effect_claim; results/experiment_6859_first_party_tool_gap_receipt_wiring.json
 - 2026-09-01: V599 independent adversarial capstone and retirement disposition (✅ Complete) — honest_verdict=complete_partial_v599_dispositions_preserved_no_scientific_branch_advance; results/experiment_6860_v599_independent_capstone.json
+
+## 2026-09-01 — Milestone 2026.09.599 operational retrospective
+
+The milestone finished 13 experiments in 9.6 reconstructed minutes, with 3
+compute-bound entries. Three-family isomorphic fixed-sequence compatibility
+stream took 8.15 minutes, and Three-family forced-sequence scoring admission
+canary took 1.25 minutes. No data available this milestone explains their
+phase costs. The compute-task GPU-idle field is false. GPU 1 was active at 75%,
+but no data available this milestone shows 2 or more models in parallel or a
+missed DualGPURunner dispatch. Add configurable batches of 8-16 questions and
+task-owned launch telemetry. The savings estimate is 0% because no timed
+alternative is available.

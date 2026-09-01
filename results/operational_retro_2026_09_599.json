@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.599",
+  "generated_at": "2026-09-01T22:37:38Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 9.6,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Three-family isomorphic fixed-sequence compatibility stream",
+      "duration_minutes": 8.15,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Three-family forced-sequence scoring admission canary",
+      "duration_minutes": 1.25,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Counterfactual memory-write credit and negative-transfer audit",
+      "duration_minutes": 0.12,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V599 method-change and evidence contract",
+      "duration_minutes": 0.02,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Dynamic provenance-qualified live ARC receipt router",
+      "duration_minutes": 0.02,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.599 completed 13 experiments in 9.6 minutes, including 3 compute-bound experiments. The 8.15-minute Three-family isomorphic fixed-sequence compatibility stream dominated elapsed time, while the locked compute-task GPU-idle indicator remained false.",
+  "bottlenecks_identified": [
+    "Three-family isomorphic fixed-sequence compatibility stream was the main elapsed-time bottleneck at 8.15 minutes; no data available this milestone identifies the costly phase.",
+    "Three-family forced-sequence scoring admission canary was the next-longest listed compute-bound experiment at 1.25 minutes; no data available this milestone explains its duration.",
+    "Disk-mtime reconstruction ranks experiment durations but does not expose phase costs or bind accelerator samples to each compute task.",
+    "The GPU monitor identifies batching multiple questions per forward pass as a throughput opportunity for the single Python inference process."
+  ],
+  "improvements_suggested": [
+    "Add configurable batches of 8-16 questions per forward pass for eligible single-model inference work.",
+    "Record task-owned phase timings and task-window GPU samples for every compute-bound launch.",
+    "Emit loaded-model count and runner identity in each launch receipt; use both GPUs only when 2 or more model workloads are ready in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement configurable 8-16 question batching on the single-model inference path.",
+    "Instrument the fixed-sequence compatibility stream with phase clocks and task-scoped accelerator telemetry.",
+    "Add launch receipts that record model concurrency, device placement, and runner selection."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence can rank elapsed time but cannot diagnose the longest run because phase timing is not tied to task-window GPU samples. Future records should capture loaded-model count and runner selection so correct single-model placement can be distinguished from unused parallel capacity."
+}
