@@ -4,6 +4,53 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-09-01: a test re-runs yosys and overwrites a tracked artifact on every full-suite run
+
+Caught live at 07:35Z while a conductor codex child was running the full suite. `git status`
+showed `results/experiment_1822_rtl_synth.log` modified. This is the Test-Run Record Integrity
+Discipline's rule 2 ("a test must never write tracked state"), with a named culprit.
+
+**The chain, end to end.** `tests/python/test_experiment_1822_rtl_synth.py::
+test_req_hw_056_synth_constraints` runs `subprocess.run(["make", "synth-constraints"])`. The
+Makefile recipe at line 50 is:
+
+    synth-constraints:
+    	mkdir -p results
+    	yosys -p "synth_xilinx -top potts_machine_v2 -flatten" rtl/potts_machine_v2.v > results/experiment_1822_rtl_synth.log
+
+The output path is hardcoded into the recipe, so the test cannot redirect it. Every full-suite run
+re-runs synthesis and overwrites the historical log.
+
+**Damage this time: none, and that is luck rather than design.** The diff is 2 lines. The
+logfile hash is IDENTICAL (`1855ef30ab`), so the synthesis RESULT did not change; only wall-clock
+timings and peak memory moved (3.60s -> 3.12s, 114.05 MB -> 116.44 MB) — run-to-run noise. A
+future toolchain change would rewrite the substance the same silent way.
+
+**The fix, small and unstarted.** Parameterise the recipe's output directory and have the test
+pass a temporary one:
+
+    OUT ?= results
+    synth-constraints:
+    	mkdir -p $(OUT)
+    	yosys -p "..." rtl/potts_machine_v2.v > $(OUT)/experiment_1822_rtl_synth.log
+
+then `subprocess.run(["make", "synth-constraints", f"OUT={tmp_path}"])` and assert against
+`tmp_path`. The test's real assertion is on `results/experiment_1822_rtl_synth.json`, which the
+recipe does not write at all — so that assertion is passing on a checked-in file the test never
+produced, and pointing the test at `tmp_path` will expose it. Fix both together or the test turns
+red for a second, unrelated reason.
+
+NOT DONE HERE: the full suite was actively running through this Makefile target at the time.
+Editing a recipe mid-run risks a confusing failure and would land in the conductor's own FAIL
+count. Do it between runs.
+
+**Also observed in the same window, both benign after checking:**
+- `ExpandedGPUReaper: SKIP protected server pid=375086` — the reaper correctly protected the live
+  llama-server. The protection works.
+- Two `Push failed: ssh://gitea.noblehunt.org` lines. Base rate checked: exactly 2 in 2 days,
+  both inside one 21-second window. Transient retry, NOT a mirror outage. All five outer-loop
+  commits are present on the canonical remote.
+
 ### NEW 2026-09-01: a one-word substrate string evades the duration floor, and 463 distinct strings are in use
 
 Found while validating exp6836, whose live re-check warned
