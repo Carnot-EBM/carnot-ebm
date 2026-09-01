@@ -1998,6 +1998,19 @@ def _legitimate_pair(k1: str, k2: str) -> bool:
     return False
 
 
+def _unwrapped_scalar(v: Any) -> Any:
+    """The scalar inside a principle-annotated field, or the value unchanged.
+
+    Any artifact field may be written `{"principle": "...", "value": X}`. A guard that does
+    arithmetic on the raw field then raises instead of deciding, which removes the guard rather
+    than failing it closed -- the worst of the three outcomes.
+    """
+
+    if isinstance(v, dict) and "value" in v:
+        return v.get("value")
+    return v
+
+
 def _is_declared_honest_zero_delta(k: str, d: dict[str, Any]) -> bool:
     """True for explicit zero deltas documented as measured honest nulls."""
     kl = k.lower()
@@ -2005,7 +2018,13 @@ def _is_declared_honest_zero_delta(k: str, d: dict[str, Any]) -> bool:
         return (
             d.get("solve_claimed") is False
             and d.get("offline_reproduced") is False
-            and int(d.get("level_credit_delta") or 0) == 0
+            # UNWRAP BEFORE int(). Any field may be principle-annotated as
+            # {"principle": ..., "value": ...} (CLAUDE.md "Principle-Annotated Artifact Fields"),
+            # and `int({...})` RAISES TypeError rather than returning False -- so a wrapped
+            # level_credit_delta took this guard out entirely instead of failing it closed. The
+            # July origin incident was this same class in a sibling function; the fix was applied
+            # there and not here (QA-layer audit 2026-08-31).
+            and int(_unwrapped_scalar(d.get("level_credit_delta")) or 0) == 0
             and "level_credit_delta" in dict(d.get("field_provenance") or {})
         )
     if "delta" not in kl:
@@ -2039,6 +2058,11 @@ def check_implausible_perfect(d: dict[str, Any], flags: list[Flag]) -> None:
         "tpr",
         "accuracy",
         "auroc",
+        # `roc_auc` does NOT contain "auroc" as a substring, so the most common sklearn spelling
+        # of the project's headline metric was invisible to this check. {"roc_auc": 1.0,
+        # "n_samples": 400} drew no flag at all (QA-layer audit 2026-08-31).
+        "roc_auc",
+        "auc",
         "f1",
         "precision",
         "recall",
@@ -2109,8 +2133,26 @@ def check_sign_anomaly(d: dict[str, Any], flags: list[Flag]) -> None:
             m in metric_name.lower() for m in ("energy", "loss", "error", "violation", "regret")
         )
         # Accuracy / reward / score should INCREASE.
+        # The concept is "metrics that should go UP", and the list was narrower than it: a pass
+        # rate falling 0.80 -> 0.60 is a real regression and drew nothing (QA-layer audit
+        # 2026-08-31). Rates and hit-style metrics belong here for the same reason accuracy does.
         increase_expected = any(
-            m in metric_name.lower() for m in ("accuracy", "reward", "score", "lift")
+            m in metric_name.lower()
+            for m in (
+                "accuracy",
+                "reward",
+                "score",
+                "lift",
+                "pass_rate",
+                "success_rate",
+                "solve_rate",
+                "win_rate",
+                "recall",
+                "precision",
+                "f1",
+                "auroc",
+                "auc",
+            )
         )
 
         if decrease_expected and fv > iv:

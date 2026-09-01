@@ -10080,3 +10080,30 @@ the artifact hash is verified.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-INFRA-6785 and SCENARIO-INFRA-6785-* | Implemented (`python/carnot/durable_row_checkpoint.py`; `python/carnot/experiment_6785_durable_row_checkpoint_contract.py`) | Implemented (`tests/python/test_experiment_6785_durable_row_checkpoint_contract.py`; 15 focused tests, 100% new-module statement coverage) |
+
+### REQ-VERIFY-6802: Fabrication-gate patterns must cover the concepts they name
+
+A gate check SHALL recognise the common spellings and field families of the concept it claims to
+police, and SHALL decide rather than raise when a field is principle-annotated.
+
+#### SCENARIO-VERIFY-6802-A: the sklearn spelling is not invisible
+- GIVEN an artifact reporting `{"roc_auc": 1.0, "n_samples": 400}`
+- THEN IMPLAUSIBLE_PERFECT fires, as it does for the `auroc` spelling
+
+#### SCENARIO-VERIFY-6802-B: a falling rate is a sign anomaly
+- GIVEN `initial_pass_rate` 0.80 and `final_pass_rate` 0.60
+- THEN SIGN_ANOMALY fires; a RISING pass rate does not
+
+#### SCENARIO-VERIFY-6802-C: a principle-wrapped delta decides instead of raising
+- GIVEN `level_credit_delta` written as `{"principle": ..., "value": 0}`
+- THEN the guard returns a verdict rather than raising TypeError, which would remove the guard
+  rather than failing it closed
+
+Rationale: QA-layer audit 2026-08-31. `roc_auc` does not contain "auroc" as a substring, the
+increase-expected list omitted rates entirely, and `int()` on a wrapped field raised. Two further
+findings in the same report were REFUTED by running their inputs against the live guards, so
+findings are tested rather than believed.
+
+Implementation status: implemented 2026-09-01 (`scripts/adversarial_verify.py`;
+`tests/python/test_qa_layer_widenings_20260901.py`, 7 tests, 3/3 mutations RED; A/B over 1,500
+artifacts shows ZERO newly flagged).
