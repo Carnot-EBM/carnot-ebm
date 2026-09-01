@@ -3292,3 +3292,160 @@ equality SHALL remain unclaimed without tokenizer receipts.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6849 and SCENARIO-CONSTRAINT-6849-* | Implemented: fresh deterministic reducer and sanitized isomorphic fixture. | Implemented: focused tests, scoped 100% coverage, artifact verification, mutation checks, and repository audits. |
+
+
+## REQ-CONSTRAINT-6851: Three-Family Isomorphic Compatibility Stream
+
+The system SHALL score the sanitized Exp6849 candidate pairs and every
+qualified isomorphic transform with local llama.cpp CUDA forced-sequence
+scoring. It SHALL use exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL use two deterministic repeats for
+each model, semantic pair, and transform. It SHALL fit no probe, generate no
+answer, use no grammar, repair no output, use no answer feedback, and use no
+LLM judge.
+
+Before scoring, the producer SHALL require the Exp6849
+`typed_program_authority_ready_score` and `isomorphic_fixture_ready_score` to
+equal one. It SHALL also require the Exp6850
+`three_family_scoring_admission_ready_score` to equal one. It SHALL verify the
+frozen Exp6849 and Exp6850 artifact hashes, the Exp6849 fixture and transform
+implementation hash, every model hash, and every embedded tokenizer hash. It
+SHALL require CUDA token scoring, free task-owned ports, a task-owned exclusive
+GPU lease, and a fresh one-row canary for each model. A failed gate SHALL emit
+`complete_blocked_three_family_isomorphic_compatibility_stream`. The blocked
+artifact SHALL name the failed check, expected value, and observed value in
+`gate_check_summary`.
+
+The producer SHALL run one owned model process at a time. Before each bounded
+batch, it SHALL revalidate the lease and run a fresh unlabeled forced-score
+canary. It SHALL checkpoint after each bounded batch. It SHALL stop only a
+process whose ownership token, PID, start time, parent identity, command hash,
+process group, and port match the recorded receipt. It SHALL record clean port
+release and SHALL never stop an unrelated process.
+
+The producer SHALL reconstruct transformed surface sequences with the exact
+Exp6849 transform implementation whose hash Exp6849 recorded. Base and
+transformed rows SHALL join through the Exp6849 semantic pair identity. They
+SHALL not join through candidate text, identifiers, token counts, or another
+surface identity. Identifier permutation, atom rename, label swap, row
+reordering, surface paraphrase, and duplicate removal SHALL remain separate
+transform cells.
+
+Each row SHALL identify one model, semantic pair, transform, compatible-label
+position, and repeat. It SHALL store both exact candidate labels and one raw
+token-score receipt per candidate. Each receipt SHALL contain every prompt
+token id, candidate token id, and candidate token log-probability used in the
+margin. Prompt token ids SHALL be identical across the paired candidates and
+SHALL be excluded from the candidate score. Candidate token ids and token
+log-probabilities SHALL align one-to-one within each sequence. Cross-candidate
+token counts need not be equal. The row SHALL report both summed conditional
+log-likelihood margin and mean-token conditional log-likelihood margin. The
+mean-token margin SHALL be the primary scalar compatibility margin, while the
+two candidate lengths and their difference remain explicit controls.
+
+On restart, the producer SHALL verify the checkpoint input checksum, row
+hashes, and row identities. It SHALL skip only complete verified identities.
+It SHALL reject duplicate, malformed, or tampered rows and SHALL run only
+missing identities.
+
+The terminal artifact SHALL be
+`results/experiment_6851_three_family_isomorphic_compatibility_stream.json`.
+It SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `model_specs`, `models_used`,
+`model_artifact_hashes`, `tokenizer_receipts`, `process_receipts`,
+`accelerator_samples`, `random_seed`, `reproducibility_checksum`, `rows`,
+`token_score_receipts`, `base_isomorphic_join_manifest`,
+`per_model_margin_summary`, `per_atom_margin_summary`,
+`per_transform_margin_summary`, `control_margin_summary`,
+`checkpoint_manifest`, `teardown_receipts`,
+`compatibility_stream_complete_score`, `positive_margin_models`,
+`isomorphic_consistency_rate`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. It MAY add a separate joint-margin
+summary and source-hash manifest. One principle SHALL exist for every
+top-level field.
+
+The inference substrate SHALL be
+`live_local_llama_cpp_cuda_forced_sequence_scoring`.
+`compatibility_stream_complete_score` SHALL depend only on complete rows,
+token receipts, model receipts, batch canaries, lease receipts, checkpoints,
+and clean teardown. Margin direction SHALL not affect this score.
+`positive_margin_models` and `isomorphic_consistency_rate` SHALL remain effect
+fields. Models SHALL stay separate in every summary and SHALL not be treated as
+exchangeable samples. A terminal all-three effect SHALL be `positive` only
+when all three per-model mean margins are positive; otherwise its effect class
+SHALL be `null`, while `positive_margin_models` retains any mixed direction.
+A lower compatible-sequence energy SHALL not be reported as exact truth.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+`honest_verdict` SHALL be row-supported, terminal, and start with `complete_`.
+
+### SCENARIO-CONSTRAINT-6851-PRECONDITIONS: Structured Gates Fail Closed
+
+Given any gate score other than one, changed fixture or admission bytes,
+changed model or tokenizer bytes, unavailable CUDA scoring, unavailable lease,
+occupied task port, or failed fresh canary,
+When Exp6851 evaluates the gate,
+Then it SHALL emit the complete blocked artifact with the exact failed check
+and SHALL set `compatibility_stream_complete_score` to zero.
+
+### SCENARIO-CONSTRAINT-6851-FORCED-SCORING: Only Candidate Tokens Form Margins
+
+Given one exact-compatible and one matched violating fixed sequence,
+When Exp6851 scores the pair,
+Then it SHALL exclude prompt-token likelihoods, store both candidate token
+streams and log-probabilities, and compute summed and mean-token margins
+without sampling or generation.
+
+### SCENARIO-CONSTRAINT-6851-TOKEN-ALIGNMENT: Raw Receipts Are One-To-One
+
+Given a candidate receipt with a missing token log-probability, a non-finite
+value, or prompt tokens that differ from its matched candidate,
+When Exp6851 validates the receipt,
+Then it SHALL reject the row before computing a margin. Unequal token counts
+between the two complete candidates SHALL remain an explicit control and SHALL
+not be silently truncated or padded.
+
+### SCENARIO-CONSTRAINT-6851-ISOMORPHIC-PAIRING: Semantic Identity Joins Surfaces
+
+Given one Exp6849 semantic pair and its six qualified transforms,
+When Exp6851 creates score inputs,
+Then the base and transformed surfaces SHALL share the semantic pair identity,
+retain exact labels, and have distinct transform identities and surface hashes.
+
+### SCENARIO-CONSTRAINT-6851-LABEL-POSITION: Label Swaps Stay Visible
+
+Given the base and label-swap cells for one semantic pair,
+When Exp6851 records their row identities,
+Then the compatible-label position SHALL change while the semantic pair
+identity and exact candidate labels remain unchanged.
+
+### SCENARIO-CONSTRAINT-6851-CHECKPOINT-RESTART: Verified Rows Are Immutable
+
+Given a checkpoint with complete row hashes and a matching input checksum,
+When Exp6851 restarts,
+Then it SHALL skip those row identities and score only missing rows. A changed
+checksum, duplicate identity, or changed row hash SHALL fail closed.
+
+### SCENARIO-CONSTRAINT-6851-PROCESS-OWNERSHIP: Cleanup Is Owner Scoped
+
+Given sequential model phases and unrelated local processes,
+When Exp6851 completes or fails,
+Then each phase SHALL have a distinct owned process receipt and task lease,
+and cleanup SHALL confirm process exit and port release without unrelated
+signals.
+
+### SCENARIO-CONSTRAINT-6851-RAW-RECEIPTS: Completeness Is Not Effect Direction
+
+Given every expected row, token receipt, batch canary, lease receipt,
+checkpoint hash, and clean teardown,
+When Exp6851 builds the artifact,
+Then `compatibility_stream_complete_score` SHALL equal one even when any or all
+model margins are zero or negative. Effect fields SHALL report those outcomes
+separately.
+
+## Implementation Status (REQ-CONSTRAINT-6851)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6851 and SCENARIO-CONSTRAINT-6851-* | Implemented: owned three-family CUDA forced-sequence scoring over frozen base and isomorphic surfaces. | Implemented: focused tests and scoped 100% coverage verify gates, masking, token alignment, semantic pairing, label position, restart hashes, ownership, and receipt-only completeness. |
