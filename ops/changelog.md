@@ -18420,3 +18420,4 @@ DualGPURunner selection. Prioritize task-phase telemetry, launch receipts, and
 8-16 question batching; estimated milestone-wide savings remains 0% because no
 timed alternative is attributable to this execution window.
 - 2026-09-01: V598 terminal evidence freeze and omission decomposition (⚠️ Research Finding) — honest_verdict=complete_null_v598_terminal_evidence_freeze_source_null_preserved; results/experiment_6835_v598_terminal_evidence_freeze.json
+- 2026-09-01: Typed obligation program and matched candidate fixture (⚠️ Research Finding) — honest_verdict=complete_null_typed_obligation_program_fixture_ready_no_model_scores; results/experiment_6836_typed_obligation_program_fixture.json
