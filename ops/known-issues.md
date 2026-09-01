@@ -162,6 +162,32 @@ This one has NOT been un-flagged by a substrate-list edit, unlike exp6840. Its s
 `DETERMINISTIC_VERIFIER_SUBSTRATES` as of this writing, so the stamp and the live re-check agree.
 That is the honest state, and it should stay that way until someone decides on the merits.
 
+
+**THIRD INSTANCE, AND IT IS A WHOLE LINEAGE BY CONSTRUCTION (2026-09-01 20:22Z).**
+`results/experiment_6856_sealed_risk_sensitive_learning_audit.json`, substrate `deterministic CPU
+sealed independent reduction`, `duration_s` 0.314069, CRITICAL DURATION_TOO_SHORT. Same check as
+the other two: four markers, all as data keys, none in a declaration field. The context is
+`"check": "leave_one_family_out_portability" ... "observed": {"unsloth/Qwen3.6-35B-A3B-GGUF": true`.
+
+Three confirmed today: exp6840 at 09:23Z, exp6853 at 18:29Z, exp6856 at 20:22Z.
+
+**The sharper characterisation.** These are not three unlucky artifacts. All three belong to the
+residual-memory / risk-sensitive-learning lineage, whose analysis is PER MODEL FAMILY —
+leave-one-family-out portability, per-family means, family-keyed split manifests. An experiment
+whose independent variable is the model family necessarily carries model names as data keys, so
+every artifact this lineage produces will trip a whole-blob marker scan. The mis-flagging is
+structural to the lineage, not incidental.
+
+**Falsifiable prediction, recorded so it can be checked rather than assumed:** the next artifact
+in this lineage that reports per-family results and runs on CPU will also be flagged
+DURATION_TOO_SHORT, without any change in its honesty. If a later one is NOT flagged, either the
+scan was fixed or that artifact stopped reporting per-family keys — both worth knowing.
+
+**Cost so far.** Two of the three (exp6840, exp6856) are stamped and the third (exp6853) too, so
+by the fabrication gate all three must be skipped by capstones and headline aggregation. exp6840
+was already shown to have been aggregated anyway by a capstone lacking the skip check, so the
+quarantine is both wrongly applied AND unevenly enforced.
+
 **Interaction with the substrate-string gap filed at 05:38Z.** Same root cause, opposite
 direction. There, an unrecognised substrate (`gpu`) got NO floor and a 3.5ms compute claim passed.
 Here, an unrecognised substrate (`deterministic CPU chronological comparison`) plus a data-borne
