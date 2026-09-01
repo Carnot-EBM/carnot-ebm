@@ -16986,3 +16986,4 @@ The l |
 | 2026-09-01 01:58 UTC | Three-family operational-obligation saturation cor | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: odels)]
 +    p |
 | 2026-09-01 02:36 UTC | Three-family operational-obligation saturation cor | OK | 98 passed, 1 warning in 13.20s |
+| 2026-09-01 03:14 UTC | Cold operational-saturation identifiability audit | OK | 95 passed, 1 warning in 29.65s |
