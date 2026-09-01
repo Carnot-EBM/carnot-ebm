@@ -17002,3 +17002,4 @@ The l |
 | 2026-09-01 10:45 UTC | Live ARC evidence inventory and immutable stratum  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6843_live_ar |
 | 2026-09-01 11:01 UTC | Live ARC evidence inventory and immutable stratum  | OK | 112 passed, 1 warning in 11.10s |
 | 2026-09-01 11:28 UTC | ARC supervisor executable-action outcome-credit au | OK | 112 passed, 1 warning in 14.41s |
+| 2026-09-01 11:54 UTC | ARC tool-gap transport and causal-support audit | OK | 96 passed, 1 warning in 10.73s |
