@@ -16992,3 +16992,4 @@ The l |
 | 2026-09-01 05:05 UTC | V598 terminal evidence freeze and omission decompo | OK | 88 passed, 1 warning in 34.24s |
 | 2026-09-01 05:30 UTC | Typed obligation program and matched candidate fix | OK | 103 passed, 1 warning in 16.93s |
 | 2026-09-01 06:53 UTC | Three-family output-free obligation compatibility  | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: esult-path", s |
+| 2026-09-01 07:15 UTC | Three-family output-free obligation compatibility  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6837_three_f |
