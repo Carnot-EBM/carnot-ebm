@@ -78,3 +78,4 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::check_sign_anomaly | SILENT_NON_FIRING | OPEN | |
 | 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_has_compute_bound_marker | SILENT_NON_FIRING | OPEN | |
 | 2026-08-31 | qa_layer_authenticity_audit | adversarial_verify.py::_inference_substrate_text | SILENT_NON_FIRING | OPEN | |
+| 2026-09-01 | experiment_claim_audit | experiment_6854_risk_sensitive_abstention_memory_controller.json | CLAIM_REFUTED_BY_OWN_DATA | OPEN | |

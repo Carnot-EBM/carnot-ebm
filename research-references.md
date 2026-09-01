@@ -1,3 +1,105 @@
+## V600 Planner Refresh - 2026-09-01
+
+This sweep follows terminal milestone `2026.09.599`. V599 repaired the typed-program authority
+and completed local scoring on all three mandated GGUF families. The resulting fixed-sequence
+compatibility claim was still not identifiable. Model family, model scale, normalization, row
+order, and label position explained margins as large as the semantic effect. The continuous
+self-learning controller showed a positive held-future aggregate effect, but the sealed audit
+disqualified it because the policy abstained on every opportunity and 13 harmful writes remained.
+The live ARC router found zero supervisor headroom. The first-party tool-gap receipt contract is
+ready, but it has zero authentic live chains and therefore no effect claim. V600 must use a
+pre-registered nuisance-matched semantic contrast, enforce decision-time observability in memory,
+and acquire authentic live tool-gap evidence. It must not rerun the retired supervisor branch.
+
+### Findings selected for V600
+
+- **Learning What to Remember: Observability-Safe Memory Retention via Constrained Optimization
+  for Long-Horizon Language Agents** - arXiv:2606.10616,
+  https://arxiv.org/abs/2606.10616; submitted 2026-06-09. OSL-MR separates features that exist at
+  the online retention decision from supervision that exists only after the outcome. It optimizes
+  evidence value under a memory budget and models stale, missed, and reacquisition costs. Carnot
+  hook: rebuild the V599 opportunity stream from primary transaction receipts, label every field
+  as decision-time observable or offline-only, and fail closed if the policy reads an offline
+  field. Later exact outcomes may update the bounded controller, but they may not choose the action
+  they label.
+- **Opt-Verifier: Unleashing the Power of LLMs for Optimization Modeling via Dual-Side
+  Verification** - arXiv:2605.29556, https://arxiv.org/abs/2605.29556; ICLR 2026 OpenReview record:
+  https://openreview.net/forum?id=w696Vhv5B2. The method checks both whether the variables and
+  constraints represent the problem and whether candidate solutions satisfy the resulting model.
+  Carnot hook: apply a structure-side exact checker to each typed semantic contrast and a
+  solution-side exact checker to its candidate outcome. Both must agree before a row enters model
+  scoring. This is an authority design, not support for model self-verification.
+- **From Reasoning to Agentic: Credit Assignment in Reinforcement Learning for Large Language
+  Models** - arXiv:2604.09459, https://arxiv.org/abs/2604.09459; submitted 2026-04-10. The survey
+  covers 47 methods and separates token or reasoning-step credit from partially observed,
+  multi-turn agent credit. Its agentic recommendations emphasize turn-level units, hindsight
+  counterfactuals, and controlled bifurcations. Carnot hook: freeze credit at the memory decision
+  or live tool-gap receipt, require a valid pre-action alternative, and use exact later outcomes.
+  Do not distribute episode reward over actions that had no intervention headroom.
+- **Harness the Memory: A Holistic Evaluation of Memory Substrates in Memory Agents** -
+  arXiv:2608.15008, https://arxiv.org/abs/2608.15008; Hugging Face paper page:
+  https://huggingface.co/papers/2608.15008. Across multiple memory substrates and regimes, the
+  study reports that no substrate dominates and that broad retrieval can harm sequential action
+  decisions. Carnot hook: compare verified-memory, read-only memory, no-memory, and abstain under
+  the same chronological opportunities. Route by decision-time evidence instead of assuming that
+  a write or retrieval is always useful.
+- **HSRM: Hidden-State Reward Models for Test-Time Verification** - arXiv:2608.30841,
+  https://arxiv.org/abs/2608.30841. The paper remains a useful output-free verification reference,
+  but V599 did not expose its intermediate step-boundary states. Carnot's final-token and raw
+  fixed-sequence margins failed nuisance controls. V600 therefore does not claim HSRM parity and
+  does not reopen a hidden-state probe. It first tests the cheaper changed mechanism that the V599
+  capstone prescribed: exact, token-aware, nuisance-matched semantic contrasts.
+
+### Requested primary and secondary checks
+
+- **arXiv:** the 2025-2026 sweep covered verification EBMs, neural constraint satisfaction, Ising
+  methods, hallucination detection, KANs, energy-guided decoding, thermodynamic or FPGA sampling,
+  and continual learning. OSL-MR and Opt-Verifier supply the clearest new mechanisms. The recent
+  KAN, Ising, and constrained-generation records do not remove V599's identifiability,
+  observability, or authentic-live-evidence blockers.
+- **OpenReview:** OptiVer supplies a concrete structure-side plus solution-side verification
+  pattern. Existing EBT, verifier-gaming, and constrained-infilling records remain relevant but do
+  not provide a matching local checkpoint or a substitute for exact authority.
+- **Hugging Face Papers:** the recent agent-memory feed promotes regime-aware substrate routing.
+  `Harness the Memory` is the actionable addition. It supports matched memory arms and selective
+  use, not unconditional retrieval or self-authored truth.
+- **Semantic Scholar citation check:** the EBT `2507.02092` endpoint returned 35 visible citation
+  records and the ARM-EBM `2512.15605` endpoint returned eight. The visible ARM-EBM set still
+  contains the known distributional EBM, LoopUS, LoRA-EBM, and Gibbs-alignment records. No citation
+  supplies a public verifier for all three required GGUF bases or invalidates V599's nuisance
+  controls.
+- **GitHub discovery:** targeted current searches found EBM application repositories and local
+  verification prototypes, but no paper-owned dependency with a better evidence contract than the
+  existing Carnot stack. V600 adds no dependency for novelty.
+- **Extropic:** the 2026-08-03 first-party update remains current:
+  https://extropic.ai/writing/from-one-to-one-billion. It reports open Torx, a Thermalizers
+  preview, and a taped-out 269,568-pbit Z1 with planned 2027 early access. Carnot has no
+  authenticated device or API, so V600 schedules no TSU execution or performance claim.
+- **Logical Intelligence:** the current Kona 1.0 page,
+  https://logicalintelligence.com/kona-ebms-energy-based-models, still describes a separate
+  constraint-enforcement layer beneath language interfaces. The newest public benchmark remains
+  the 2026-02-03 Sudoku post. There are no public weights, training artifacts, or local runner.
+- **Hardware:** dual RTX 3090 GPUs remain the only needed accelerators. KV260, GateMate, and
+  PolarFire have graduated their mandatory terminal-state gates. Their present continuity limits
+  do not justify a V600 hardware experiment or a speed claim.
+
+### V600 planning impact
+
+- Retire raw fixed-sequence margins as a claim mechanism. Build structure-side and solution-side
+  exact semantic contrasts that match identifier, label position, row order, length, and tokenizer
+  count before scoring.
+- Run all three mandated GGUF families on the frozen contrasts. Calibrate a deterministic paired
+  contrast on a disclosed split, then let an independent reducer open the sealed split and attack
+  the result. No learned text scorer, generated answer, or model self-judgment is allowed.
+- Rebuild self-learning evidence from primary receipts. Enforce an observability firewall, bounded
+  constrained exploration, and a harmful-write quarantine before another prospective sealed
+  audit.
+- Add durable per-action checkpoints to the live ARC harness. Acquire an authentic first-party
+  tool-gap chain on the adapter-disabled live path, then test delivery versus withholding only when
+  the same pre-action opportunity can be replayed. Make no game-level solve claim.
+- Keep two infrastructure slots, the one-task ARC generalization floor, and an ungated capstone.
+  All three attached FPGA boards have graduated, so no hardware-continuity slot is mandatory.
+
 ## V599 Planner Refresh - 2026-09-01
 
 This sweep follows terminal milestone `2026.09.598`. V598 made the typed obligation program and

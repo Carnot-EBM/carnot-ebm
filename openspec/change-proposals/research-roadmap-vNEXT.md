@@ -1,257 +1,404 @@
-# Research Roadmap V599: Evidence-Qualified Compatibility, Selective Self-Learning, and Live Credit
+# Research Roadmap V600: Nuisance-Controlled Semantic Energy, Observability-Safe Learning, and Authentic Live Tool Credit
 
-**Milestone:** 2026.09.599
+**Milestone:** 2026.09.600
 **Planned:** 2026-09-01
-**Experiments:** Exp6848-Exp6860
+**Experiments:** Exp6861-Exp6873
 **North star:** A live agent learns useful constraints from its own outcomes. Exact external checks remain truth authority. Learned energy selects, routes, and abstains without becoming its own oracle.
 
 ## Executive Summary
 
-V598 completed all planned work and returned a useful null. The typed obligation program and the continuous-learning transaction kernel both ran. Neither branch earned a scientific claim. The independent capstone found that the typed fixture's producer readiness scores did not survive fresh reduction. The three-family compatibility run then blocked before a live canary because it could not obtain an exclusive GPU lease. The residual-memory rule was harmful on held-future rows. The ARC evidence path transported supervisor receipts, but no matched row had intervention headroom. The tool-gap branch found no first-party gap obligation.
+V599 completed every task and closed all four scientific branches without a new headline result.
+The typed-program authority and the three-family local scoring path now work. The model signal did
+not survive nuisance and isomorphic controls. The self-learning controller had a positive pooled
+held-future effect, but its sealed audit found a degenerate 100% abstention rate and 13 harmful
+writes. The dynamic ARC router found no supervisor headroom, so that unchanged supervisor branch
+is retired. The first-party tool-gap receipt contract works on fixtures, but no authentic live
+receipt chain exists.
 
-V599 changes each failed mechanism. It rebuilds typed-program authority with unique identities and isomorphic perturbation tests. It separates GPU admission from scientific scoring. Only then does it measure fixed-sequence compatibility on all three mandated local GGUF families.
+V600 changes the scientific mechanisms. Its Phase-D majority replaces raw sequence likelihood
+with an exact, dual-side, nuisance-matched semantic contrast. Structure and solution checkers must
+agree before a row can enter scoring. All three mandated GGUF families then score frozen sequences.
+A deterministic paired contrast is calibrated on one split and audited on a sealed split.
 
-The self-learning phase retires the nonselective residual rule. It implements a risk-sensitive contextual controller with verified-memory, no-memory, and abstain actions. Exact later outcomes supply reward. False-positive memory injection costs more than missed reuse. A counterfactual audit measures whether any write caused later benefit or harm.
+The self-learning phase implements an observability firewall. Decision-time features are separated
+from outcome-only supervision. A bounded controller gets explicit exploration, no-memory,
+read-only, verified-write, and abstain actions. It must reduce harmful writes without collapsing to
+always abstain.
 
-The ARC phase discovers evidence by provenance-qualified manifests at execution time. It does not pin an audit to Exp6681. Supervisor credit runs only if matched nonzero-headroom receipts exist. Tool-gap work moves one layer earlier and wires a first-party receipt contract at the canonical live seam. No task claims a game solve.
+The ARC phase improves the live evidence path. It adds durable per-action checkpoints, uses the
+adapter-disabled scored agent for the standing generalization floor, and seeks an authentic
+first-party tool-gap chain. A matched delivery-versus-withholding effect audit runs only when a
+replayable pre-action opportunity exists. No task claims a game-level solve.
 
-## What V598 Proved
+## What V599 Proved
 
-1. **The typed program is mechanically implementable, but its authority is disputed.** Exp6836 compiled energy, predicate, memory guard, ARC guard, and diagnostics. Its producer marked compile parity ready. Exp6847 independently found duplicated candidate identities and recomputed compile parity as false. A new scoring task cannot trust the producer readiness bit.
+1. **Typed exact authority is usable.** Exp6849 rebuilt the typed program with unique identities,
+   exact compile parity, and isomorphic transforms. Both authority readiness fields were `1`.
+   This closes the producer-auditor dispute from V598.
 
-2. **The local model path is available, but resource admission was not.** Exp6837 resolved all three mandated GGUF model files and found CUDA support. It never reached a live forced-sequence row because exclusive GPU leases and canaries failed. This is a scheduling and ownership result, not a model result.
+2. **All three mandated GGUF families can run locally.** Exp6850 passed task-owned resource
+   admission. Exp6851 produced 168 fixed-sequence rows across Qwen3.6-35B-A3B, Gemma-4-31B, and
+   Gemma-4-26B-A4B. Resource access is not the current scientific blocker.
 
-3. **The transaction kernel works.** Exp6839 exercised propose, commit, persist, restart, and rollback. Exp6840 and Exp6841 produced their chronological shards. V598 therefore closed the execution question for bounded external memory.
+3. **Raw fixed-sequence compatibility is not identifiable.** Exp6852 found that model family,
+   model scale, normalization, row order, label position, and other controls could equal or exceed
+   the semantic margin. Its `compatibility_claim_eligible_score` was `0`. The V599 capstone
+   prescribed a pre-registered nuisance-controlled semantic contrast.
 
-4. **The residual-memory learning rule is harmful.** Exp6842 found five held-future wins and 69 losses, with mean effect `-0.118519`. Durability passed, but calibrated dose and family portability failed. The same residual-dose mechanism should retire.
+4. **The memory mechanics work, but the policy is unsafe and degenerate.** Exp6854 reported a
+   held-future effect of `+0.054901960784` with bounded persistence. Exp6856 then found an overall
+   abstention rate of `1.0` and 13 supported harmful writes. The capstone disqualified the
+   self-learning claim and prescribed constrained exploration plus a harmful-write admission block.
 
-5. **Live ARC transport is no longer the main blocker.** Exp6843 found terminal live evidence. Exp6844 reported zero eligible supervisor-effect rows because the frozen source had no nonzero headroom. Exp6845 found zero first-party tool-gap obligations. Exp6846 shipped a default-off shadow monitor but made no solve or utility claim.
+5. **The supervisor branch has no eligible causal row.** Exp6857 found
+   `supervisor_headroom_ready_score=0`. Exp6858 correctly stopped at its structured gate. Exp6860
+   retired an unchanged supervisor rerun. V600 does not reopen it.
 
-6. **Static source paths are too brittle.** The capstone found source-hash drift and noted that a new headroom-bearing receipt would not help an audit hard-coded to an older artifact. Future audits need a frozen contract plus execution-time provenance discovery.
+6. **The first-party tool-gap schema is ready but has no live effect evidence.** Exp6859 linked gap
+   detection, request, tool response, agent delivery, next action, and exact outcome under one
+   immutable identity. It launched no live rollout and had no authentic live chain. Transport
+   readiness is not utility.
+
+7. **The milestone disposition was procedural, not scientific.** Exp6860 preserved every null,
+   blocked, partial, and disqualified state. Its positive class referred to disposition
+   completeness. It reported no scientific branch advance.
 
 ## Three Biggest Gaps to the PRD Vision
 
-### Gap 1: Model compatibility lacks independent authority and live rows
+### Gap 1: Carnot lacks an identifiable model-derived semantic energy
 
-FR12 requires a verifier that maps rules to checkable structure. Carnot has exact atoms and fixed candidates, but the fixture authority is not clean and the local scoring path has no completed three-family row. A model score cannot be interpreted until unique identities, compile parity, and isomorphic invariance pass under an independent reducer.
+FR12 needs constraint reasoning that maps rules to checkable structures. Exact typed authority now
+exists, and local model scoring now executes. The remaining gap is identification. A raw
+likelihood difference can reflect syntax, tokenization, order, normalization, model family, or
+scale instead of semantics.
 
-V599 first repairs authority. It then qualifies resource admission in its own task. Scientific scoring opens only after both conditions pass.
+V600 builds matched semantic contrast groups. A structure-side checker proves that the typed
+obligation changed in the intended way. A solution-side checker proves the exact validity label.
+Identifier, length, token count, label position, row order, and surface-form controls are frozen
+before scoring. Only a sealed within-group effect can support a compatibility claim.
 
-### Gap 2: Continuous self-learning is operational but unsafe
+### Gap 2: Continuous self-learning is not safely actionable
 
-FR11 requires online learning with bounded updates, persistence, validation, and rollback. V598 proved the mechanics and disproved the current policy. The next gap is selection: the system must learn when memory is safe, when no memory is better, and when it should abstain.
+FR11 requires bounded online updates, persistence, validation, and rollback. Carnot has those
+mechanics. It does not yet have a policy that acts often enough to learn while avoiding harmful
+writes. V599 also mixed decision-time fields with facts that were known only after an outcome.
 
-V599 uses a risk-sensitive contextual bandit over a chronological exact-outcome stream. It keeps weights frozen. It penalizes false-positive memory injection more than missed reuse. Counterfactual removal and sealed portability tests decide whether any learning claim survives.
+V600 separates online-observable features from offline supervision. It adds constrained
+exploration and a harmful-write quarantine. The final audit is chronological and prospective. A
+positive class requires nondegenerate action use, held-future benefit, bounded false-positive
+injection, durability, rollback, delayed correction, and no leakage.
 
-### Gap 3: Live ARC mechanisms still lack causal, reachable effect evidence
+### Gap 3: Live ARC mechanisms lack authentic causal effect evidence
 
-The live agent has supervisor, tool, and shadow mechanisms. Current evidence shows transport and reachability, not useful action effect. The supervisor branch lacks matched headroom. The tool-gap branch lacks a first-party obligation at the live seam. Static audit paths also miss newer terminal receipts.
+The live agent can carry supervisor and tool-gap receipts. The current supervisor evidence has no
+headroom, and the tool-gap evidence is fixture-only. Long live runs also lack durable per-action
+artifacts before completion.
 
-V599 adds dynamic provenance routing, gates supervisor credit on real headroom, and wires a first-party tool-gap receipt contract. It improves the live evidence path rather than solving a game for the agent.
+V600 first makes the canonical scored harness resumable and receipt-complete. It then runs the
+adapter-disabled live path with a mandated SOTA local model. If an authentic first-party tool gap
+appears, a matched replay tests delivery versus withholding from the same pre-action state. Exact
+later outcomes determine direction. No offline solver, source read, hand adapter, or registry
+trajectory can enter the live decision.
 
 ## Research Findings That Change the Design
 
-The full source notes are in `research-references.md`, section **V599 Planner Refresh - 2026-09-01**.
+The full source notes are in `research-references.md`, section **V600 Planner Refresh -
+2026-09-01**.
 
-- [Learning When to Remember](https://arxiv.org/abs/2604.27283) treats memory retrieval as a risk-sensitive action choice with no-memory and abstention arms. This directly changes the continuous-learning mechanism.
-- [LLMs Gaming Verifiers](https://arxiv.org/abs/2604.15149) introduces Isomorphic Perturbation Testing. V599 uses it to reject extensional shortcuts and duplicated candidate identities before scoring.
-- [Counterfactual Shapley Credit Assignment](https://arxiv.org/abs/2607.16999) separates policy contribution from environmental luck. V599 uses bounded counterfactual coalitions only on exact-outcome rows with real headroom.
-- [Claim-Level Reliability Assessment](https://arxiv.org/abs/2608.11994) supports verification at decision-critical units. V599 keeps typed atoms and executable actions as the unit of evidence.
-- [Selective Verification for Budget-Aware Reasoning](https://arxiv.org/abs/2606.19808) shows that always-on intervention can waste compute or cause harmful flips. V599 includes preserve and abstain controls in learning and ARC audits.
-- [On-Policy Self-Improvement](https://arxiv.org/abs/2608.31046) warns that a teacher-derived gain may instead be tail suppression. V599 keeps GGUF weights frozen and treats model-derived update signals as controls, not truth.
+- [Learning What to Remember](https://arxiv.org/abs/2606.10616) separates online-observable
+  retention features from offline supervision. V600 turns that separation into a fail-closed
+  observability firewall for every memory decision.
+- [Opt-Verifier](https://arxiv.org/abs/2605.29556) checks both the optimization structure and its
+  candidate solution. V600 applies the pattern to typed semantic contrasts before any model score
+  is interpreted.
+- [From Reasoning to Agentic Credit Assignment](https://arxiv.org/abs/2604.09459) distinguishes
+  token credit from partially observed turn-level credit. V600 freezes memory and tool-gap credit
+  at the action receipt and requires valid pre-action alternatives.
+- [Harness the Memory](https://arxiv.org/abs/2608.15008) finds that no memory substrate dominates
+  and that broad retrieval can hurt sequential decisions. V600 compares verified-write,
+  read-only, no-memory, and abstain arms on the same chronological opportunities.
+- HSRM remains relevant, but the local GGUF path does not expose its intermediate step-boundary
+  states. V600 does not reopen a hidden-state probe. It tests the cheaper changed mechanism named
+  by the V599 capstone.
 
-The secondary sweep found no execution-ready hardware or model dependency. Semantic Scholar returned eight visible ARM-EBM citations and throttled the EBT endpoint. OpenReview supplied the isomorphic verifier test. Hugging Face supplied claim-level and selective-verification leads. GitHub trending supplied no dependency worth adding. Extropic's Z1 path still targets 2027 access. Logical Intelligence still exposes no Kona weights or local runner.
+The secondary sweep found no execution-ready dependency. Semantic Scholar exposed 35 visible EBT
+citations and eight ARM-EBM citations, but no matching-base verifier checkpoint. OpenReview added
+dual-side verification. Hugging Face added a controlled memory-substrate study. GitHub supplied no
+dependency worth adopting. Extropic still targets 2027 Z1 access. Logical Intelligence still
+publishes no Kona weights or local runner.
 
 ## Target Architecture
 
 ```mermaid
 flowchart LR
-    A[V598 terminal artifacts] --> B[V599 method-change evidence contract]
+    A[V599 terminal artifacts] --> B[V600 evidence and retirement contract]
 
-    B --> C[Independent typed-program authority]
-    C --> D[Isomorphic fixture]
-    B --> E[Task-owned GPU admission]
-    D --> F[Three-family fixed-sequence scoring]
-    E --> F
-    F --> G[Independent shortcut and claim audit]
+    B --> C[Dual-side exact semantic contrast bank]
+    C --> D[Tokenizer-aware nuisance preregistration]
+    D --> E[Three-family fixed-sequence scoring]
+    E --> F[Calibration-only paired contrast rule]
+    F --> G[Sealed independent compatibility audit]
 
-    B --> H[Chronological opportunity fixture]
-    H --> I[Risk-sensitive memory controller]
+    B --> H[Observability-safe opportunity stream]
+    H --> I[Constrained exploration and write quarantine]
     J[Exact later outcomes] --> I
-    I --> K[Counterfactual write credit]
-    K --> L[Sealed durability and portability audit]
+    I --> K[Prospective sealed self-learning audit]
 
-    B --> M[Dynamic live ARC receipt router]
-    M --> N{Matched supervisor headroom?}
-    N -->|yes| O[Counterfactual supervisor credit]
+    B --> L[Resumable live receipt harness]
+    L --> M[Adapter-disabled authentic tool-gap accrual]
+    M --> N{Replayable authentic gap?}
+    N -->|yes| O[Matched delivery versus withholding]
     N -->|no| P[Structured conductor skip]
-    M --> Q[First-party tool-gap receipt wiring]
 
-    G --> R[V599 independent disposition]
-    L --> R
-    O --> R
-    P --> R
-    Q --> R
+    G --> Q[V600 independent disposition]
+    K --> Q
+    O --> Q
+    P --> Q
 ```
 
-Exact checkers and exact later outcomes remain outside the learned mechanisms. They label results and authorize commits. Model margins, contextual policies, and Shapley values are tested signals. None can validate itself.
+Exact structure checks, exact solution checks, exact memory outcomes, and exact ARC transitions
+remain outside learned or model-derived mechanisms. They supply labels and release authority.
+Model margins and online policies are tested signals. They cannot validate themselves.
 
 ## Model Contract
 
-Exp6850 and Exp6851 need local LLM inference. Both declare all three mandated models:
+Exp6863 and Exp6864 declare all three mandated local models:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF`
 - `unsloth/gemma-4-31B-it-GGUF`
 - `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-They use `cached_sota_pair()` and the local `llama.cpp` CUDA path. They run one model process at a time, record model and tokenizer hashes, and tear down only task-owned processes. Legacy small models may run CPU smoke tests only. They cannot support a headline claim.
+Exp6871 and Exp6872 declare `unsloth/Qwen3.6-35B-A3B-GGUF` for the live agent. Every LLM task uses
+the `cached_sota_pair()` pattern and records exact model, tokenizer, quantization, process, and GPU
+receipts. Legacy small models may run CPU smoke tests only. They cannot support a headline result.
 
-## Phase 1: Evidence-Qualified Typed Compatibility
+The three-family scoring task runs one model process at a time and tears down only its owned
+processes. The live ARC tasks do not overlap the three-family task. A missing required model cell
+produces an honest blocked artifact. It never triggers substitution with a legacy model.
 
-### Exp6848: V599 method-change and evidence contract
+## Phase 1: Evidence and Semantic-Contrast Preregistration
 
-Freeze the terminal V598 artifacts and conductor skips. Recompute the disputed readiness fields. Declare which mechanisms retire, which fields are dynamic, and which sources can support V599 claims. Validate the new literature links and method differences without adding a novelty dependency.
+### Exp6861: V600 branch retirement and evidence contract
 
-### Exp6849: Independent typed-program isomorphic authority audit
+Freeze the V599 terminal artifacts and conductor gate records. Recompute the branch dispositions.
+Retire raw fixed-sequence margins, the unchanged supervisor rerun, and the degenerate V599 memory
+policy as claim mechanisms. Preserve the typed authority, three-family inference, memory
+transaction, and tool-gap receipt infrastructure. Define exact source hashes, split boundaries,
+gate fields, and changed-mechanism tests for V600.
 
-Build a fresh reducer and a sanitized fixture with unique candidate identities. Recompile all typed views. Run permutation, label-swap, duplicate-removal, atom-renaming, and surface-form attacks. Emit readiness only if exact semantics and isomorphic invariance agree.
+### Exp6862: Dual-side exact semantic contrast bank
 
-### Exp6850: Three-family scoring admission canary
+Build at least 96 semantic contrast groups from the typed obligation program. Each group has a
+valid and invalid candidate plus semantics-preserving control transforms. A fresh structure-side
+checker validates variables, obligations, and intended mutations. A separate solution-side checker
+validates the exact outcome. Reject any group with identity collisions, ambiguous semantics, or
+checker disagreement. Do not invoke an LLM.
 
-Qualify cached artifacts, CUDA support, task-owned GPU leases, free ports, one forced-sequence canary per model, checkpoints, and clean teardown. This task emits no scientific margin claim. It separates resource readiness from Exp6851.
+### Exp6863: Tokenizer-aware nuisance and split preregistration
 
-### Exp6851: Three-family isomorphic compatibility stream
+Tokenize every frozen sequence with all three required GGUF tokenizers without running inference.
+Keep only model-specific contrast cells with matched candidate token counts and declared prompt
+counts. Freeze label position, identifier, order, normalization, and surface controls. Create
+disjoint calibration and sealed held groups before any token score exists. Require at least 20
+calibration and 20 held contrast groups per model or stop with an honest null.
 
-After both authority and admission pass, score the sanitized fixed sequences on all three mandated GGUF families. Store every token score and one row per candidate pair, model, and isomorphic transform. Do not generate answers or fit a learned probe.
+## Phase 2: Nuisance-Controlled Semantic Energy
 
-### Exp6852: Independent compatibility shortcut and claim audit
+### Exp6864: Three-family semantic contrast scoring stream
 
-Run even when Exp6851 is blocked. Recompute every available row with fresh code. Test identity, length, order, normalization, label, and isomorphic controls. State whether a compatibility claim is positive, null, blocked, partial, or disqualified.
+Run forced-sequence token scoring on every eligible frozen cell for all three mandated GGUF
+families. Store raw token receipts and group identities. Generate no answers, labels, repairs, or
+self-judgments. Scientific labels remain sealed from the model process. The task reports stream
+completeness, not a semantic compatibility claim.
 
-## Phase 2: Risk-Sensitive Continuous Self-Learning
+### Exp6865: Calibration-only paired semantic contrast rule
 
-### Exp6853: Risk-sensitive memory opportunity fixture
+Use only the calibration split. Apply the pre-registered within-group paired contrast and
+difference-in-differences controls. Freeze orientation, normalization, missing-cell handling,
+family aggregation, confidence intervals, and failure thresholds. Fit no text scorer and inspect no
+held label. Emit a rule-ready field only when the calibration effect exceeds every matched nuisance
+control without relying on model identity.
 
-Build a chronological fixture with verified-memory, no-memory, and abstain actions. Include only decisions with exact later outcomes. Measure decision headroom before learning. The fixture must contain both useful and harmful memory opportunities.
+### Exp6866: Sealed independent semantic compatibility audit
 
-### Exp6854: Abstention-aware online memory controller
+Use a fresh reducer. Verify the frozen rule and split hashes, then open the held labels once. Test
+each model, model family, typed obligation family, transform, and nuisance attack. A positive class
+requires a held paired effect in the pre-registered direction, a confidence interval above zero,
+agreement across both model families, and no matched nuisance effect of equal or greater size. A
+null retires this semantic-contrast construction.
 
-Run a small contextual bandit prospectively over the frozen stream. Freeze each action before revealing its later exact outcome. Use asymmetric loss for false-positive injection. Bound state, updates, latency, and storage. Persist and restore controller state.
+## Phase 3: Observability-Safe Continuous Self-Learning
 
-### Exp6855: Counterfactual memory-write credit audit
+### Exp6867: Decision-time observability firewall and opportunity stream
 
-Recompute outcomes after valid write deletion, substitution, and bounded coalitions. Separate selection skill from stream luck. Test placebo context, random admission, always-memory, no-memory, and abstain controls. Credit no row whose counterfactual is invalid or lacks headroom.
+Rebuild the memory opportunity stream from primary transaction and exact-outcome receipts. Do not
+trust the flagged V599 aggregate artifacts. Mark every feature as online-observable or
+outcome-only. Fail closed if a policy input depends on future reward, counterfactual effect, held
+family, outcome label, row identity, or another post-decision field. Freeze chronological
+calibration and held-future partitions with helpful, harmful, and no-headroom opportunities.
 
-### Exp6856: Sealed self-learning durability and portability audit
+### Exp6868: Constrained exploration and harmful-write quarantine controller
 
-Use a fresh reducer. Test restart, rollback, delayed correction, poison, capacity pressure, leave-one-family-out transfer, and held-future benefit. A positive class requires nonzero benefit, bounded false-positive injection, durability, and no leakage.
+Implement a bounded controller over verified-write, read-only, no-memory, and abstain. Force a
+small pre-registered exploration floor so the policy cannot pass by always abstaining. Use only
+decision-time observable features. Later exact outcomes update bounded statistics. Quarantine
+writes whose pessimistic benefit bound does not clear the harm cost. Compare the controller with
+always-memory, read-only, no-memory, and always-abstain controls on the calibration stream.
 
-This phase directly implements the research program's **Continuous Self-Learning** priority. It changes the policy, not merely the experiment wrapper.
+### Exp6869: Prospective sealed self-learning durability and portability audit
 
-## Phase 3: Live ARC Evidence and Causal Credit
+Freeze the controller before opening the held-future stream. Run actions prospectively and reveal
+each exact later outcome only after commitment. Test restart, rollback, capacity, delayed
+correction, stale tombstones, poison, placebo context, leave-one-family-out, and
+leave-one-order-out portability. A positive class requires nondegenerate action use, positive
+held-future effect, bounded false-positive injection, fewer harmful writes than always-memory,
+durability, and zero leakage.
 
-### Exp6857: Dynamic live ARC receipt router
+This phase directly targets the research program's **Continuous Self-Learning** priority. It learns
+from exact later outcomes while keeping GGUF weights frozen and exact authority external.
 
-Discover terminal ARC artifacts through a provenance-qualified manifest at execution time. Do not hard-code Exp6681. Keep game, model, generator, budget, supervisor, tool-loop, and policy strata separate. Report whether matched supervisor headroom and first-party tool-gap receipts exist. Make no solve claim.
+## Phase 4: Live ARC Generalization and Independent Disposition
 
-### Exp6858: Supervisor counterfactual credit, gated on Exp6857 headroom
+### Exp6870: Resumable live ARC receipt checkpoint harness
 
-Run only when `supervisor_headroom_ready_score == 1`. Compare valid action coalitions or matched removal cells. Exact later transition and level outcomes supply direction. Report action credit separately from trajectory luck. Do not pool games or changed policies.
+Add atomic per-action and per-game checkpoints to the canonical adapter-disabled scored path.
+Preserve first-party tool-gap hops and exact transition outcomes across interruption and restart.
+Test receipt joins, duplicate suppression, source hashes, process ownership, and partial-run
+recovery on fixtures. Keep the feature default-off. This infrastructure task also prepares the
+standing ARC generalization floor without claiming a level solve.
 
-### Exp6859: First-party tool-gap receipt wiring
+### Exp6871: Authentic adapter-disabled tool-gap opportunity accrual
 
-Add a default-off receipt contract at the canonical live tool-gap seam. Record gap detection, request, tool response, agent-visible delivery, next action, and later exact outcome under one identity. Replay fixtures and terminal receipts. Do not launch a new game run or claim utility from transport.
+Run bounded adapter-disabled live generalization cells with Qwen3.6-35B-A3B. Use the canonical
+`make_carnot_agent` or `E3AgentPolicy` path. Do not read game source, prior-game trajectories,
+registry solutions, hidden state, offline BFS, or hand adapters. Preserve every live receipt even
+when no tool gap appears. Report authentic chain count and replay eligibility. Make no solve or
+utility claim.
 
-## Phase 4: Ungated Independent Disposition
+### Exp6872: Matched live tool delivery versus withholding audit
 
-### Exp6860: V599 adversarial capstone
+Run only if Exp6871 has at least one replayable authentic gap chain. Reproduce the exact pre-gap
+prefix and require the same state hash before bifurcation. Compare first-party tool delivery with a
+matched withheld control under the same model, prompt, budget, and seed. Exact next transition and
+bounded later outcomes determine direction. Reject nondeterministic or unmatched replays. Do not
+pool games or claim a level solve.
 
-Read every terminal artifact and conductor skip that exists. Recompute branch dispositions. Preserve blocked, null, harmful, partial, and disqualified outcomes. Retire unchanged failures and name one mechanism-changing next action per open branch.
+### Exp6873: V600 independent adversarial capstone
+
+Read every terminal artifact and conductor skip that exists. Recompute Phase-D, self-learning, and
+ARC dispositions with fresh code. Preserve blocked, null, disqualified, partial, and circular
+states. Distinguish infrastructure readiness from scientific effect. Retire any changed mechanism
+that repeats its prior terminal verdict under the registered retirement rule.
 
 ## Conductor Execution Order
 
-| Order | Experiment | Phase | GPU | Headline question |
-|---:|---|---:|:---:|---|
-| 1 | Exp6848 | 1 | No | Which V598 evidence and mechanisms are admissible? |
-| 2 | Exp6849 | 1 | No | Does typed-program authority survive isomorphic attacks? |
-| 3 | Exp6850 | 1 | Yes | Can all three local models complete a task-owned scoring canary? |
-| 4 | Exp6851 | 1 | Yes | Do the models prefer exact-compatible fixed sequences? |
-| 5 | Exp6852 | 1 | No | Is any margin shortcut-resistant and identifiable? |
-| 6 | Exp6853 | 2 | No | Does the stream contain safe memory-selection headroom? |
-| 7 | Exp6854 | 2 | No | Can an online controller learn when to remember or abstain? |
-| 8 | Exp6855 | 2 | No | Did a memory action cause benefit or harm? |
-| 9 | Exp6856 | 2 | No | Is learning durable, safe, and portable? |
-| 10 | Exp6857 | 3 | No | Which live ARC rows are provenance-qualified and comparable? |
-| 11 | Exp6858 | 3 | No | Do supervisor actions cause exact later progress? |
-| 12 | Exp6859 | 3 | No | Can the live seam emit a complete first-party tool-gap chain? |
-| 13 | Exp6860 | 4 | No | Which V599 branches advance or retire? |
+1. Exp6861 - freeze evidence and retirement rules.
+2. Exp6862 - build the exact semantic contrast bank.
+3. Exp6863 - freeze tokenizer-aware nuisances and splits.
+4. Exp6864 - run the three-family scoring stream.
+5. Exp6865 - freeze the calibration-only contrast rule.
+6. Exp6866 - run the sealed compatibility audit.
+7. Exp6867 - build the observability-safe opportunity stream.
+8. Exp6868 - implement and calibrate the constrained controller.
+9. Exp6869 - run the prospective sealed learning audit.
+10. Exp6870 - ship resumable live receipt checkpoints.
+11. Exp6871 - acquire authentic adapter-disabled tool-gap chains.
+12. Exp6872 - audit matched live tool effect if the authentic-chain gate passes.
+13. Exp6873 - reconcile all terminal states without a gate.
+
+This order gives Phase D the largest scientific allocation, reserves Exp6861 and Exp6870 as the two
+infrastructure slots, and satisfies the one-task ARC generalization floor. This milestone continues
+existing research tracks, so the planning-time V600 literature refresh fulfills the optional SOTA
+ingestion role. It does not add a redundant autonomous ingestion task.
 
 ## Dependency Graph
 
-```text
-Exp6848 -> Exp6849 ---------+
-    |                       +-> Exp6851 -> Exp6852
-    +------> Exp6850 -------+
-    |
-    +------> Exp6853 -> Exp6854 -> Exp6855 -> Exp6856
-    |
-    +------> Exp6857 -> Exp6858  [effect-gated on supervisor headroom]
-                       \-> Exp6859
+```mermaid
+graph TD
+    E61[6861 evidence contract]
 
-Exp6848..Exp6859 -------------------------------> Exp6860
+    E61 --> E62[6862 exact contrast bank]
+    E62 --> E63[6863 nuisance preregistration]
+    E63 --> E64[6864 three-family scoring]
+    E64 --> E65[6865 calibration rule]
+    E64 --> E66[6866 sealed audit]
+    E65 --> E66
+
+    E61 --> E67[6867 observability firewall]
+    E67 --> E68[6868 constrained controller]
+    E68 --> E69[6869 sealed learning audit]
+
+    E61 --> E70[6870 resumable live harness]
+    E70 --> E71[6871 authentic tool-gap accrual]
+    E71 -->|authentic_live_tool_gap_chain_count >= 1| E72[6872 matched effect audit]
+
+    E66 --> E73[6873 capstone]
+    E69 --> E73
+    E71 --> E73
+    E72 --> E73
 ```
 
-Exp6852 and Exp6860 are deliberately ungated. They must preserve blocked or missing upstream evidence. Exp6851 gates only on authority and resource readiness. Exp6854 through Exp6856 gate on stream or reducer completeness, not on a positive scientific effect. Exp6858 is the only effect-gated task because counterfactual supervisor credit is undefined without nonzero headroom.
+Only Exp6872 has a scientific fail-fast gate that may legitimately skip the task call. Exp6873 is
+ungated and reads the conductor skip record when that happens. Other gates enforce prerequisite
+artifact contracts, not positive-result selection.
 
 ## Hardware Requirements
 
 ### Required
 
-- CPU, RAM, and local storage for fixtures, chronological replay, audits, and tests.
-- Cached GGUF files for all three mandated model families.
-- Local `llama.cpp` with CUDA and forced-sequence token scoring.
-- One available RTX 3090 at a time for Exp6850 and Exp6851. The second RTX 3090 provides scheduling flexibility, not a required tensor-parallel claim.
+- **Two RTX 3090 GPUs:** Exp6864 uses task-owned CUDA scoring. Exp6871 and Exp6872 use local live
+  inference. Schedule these tasks sequentially. Record GPU UUID, free VRAM, offload layers, process
+  ownership, and teardown.
+- **Cached GGUF artifacts:** all three mandated repositories for Exp6863-Exp6864 and the Qwen3.6
+  repository for Exp6871-Exp6872. Preserve embedded-tokenizer and file-hash receipts.
+- **Host CPU, RAM, and disk:** exact checkers, tokenizer passes, chronological reducers,
+  checkpoints, raw token sidecars, and live receipt logs. Write checkpoints atomically.
 
-### Scheduling and Ownership
+### Not required
 
-- Exp6850 inspects GPU UUIDs, active processes, free VRAM, ports, model hashes, and orphan task-owned servers.
-- It never interrupts unrelated work. A failed lease produces a terminal blocked artifact with the failed check and observed value.
-- Exp6851 starts only after admission succeeds. It checkpoints bounded batches and verifies row hashes on restart.
-- Every GPU task records process start, PID, device, port, first useful output, final output, and owned teardown.
-- CPU tasks do not acquire a GPU lease.
+- **KV260, GateMate, and PolarFire:** all three boards have graduated their mandatory terminal-state
+  gates. Current continuity limitations remain opportunistic. V600 makes no FPGA latency,
+  throughput, energy, or speedup claim.
+- **Extropic TSU:** there is no authenticated device or API. Torx and Thermalizers remain planning
+  references only.
+- **Cloud model APIs:** every model-dependent task uses the mandated local GGUF path.
 
-### Explicitly Outside the Blocking Path
+## Evidence and Claim Rules
 
-- No FPGA bitstream or board bring-up is planned. KV260, GateMate, and PolarFire remain terminal or opportunistic.
-- No Extropic execution is claimed. Z1 access remains a future path.
-- No Kona weights or runner are assumed.
-- No dual-GPU speedup or hardware-energy claim is planned.
-- No task launches a new live ARC game run.
+1. Every artifact declares `verdict_class` as one of `positive`, `circular_positive`, `null`,
+   `blocked`, `disqualified`, or `partial` next to a free-text `honest_verdict`.
+2. Every comparative task emits one `rows` or `per_game_results` record per contrast group,
+   decision, seed, game, arm, and condition needed to reproduce its aggregate.
+3. Every blocked verdict emits `gate_check_summary` with the exact failed check and observed value.
+4. Every structured gate field appears verbatim in the upstream task's required artifact fields.
+5. The exact structure checker, exact solution checker, exact later memory outcome, and exact ARC
+   transition remain authority. Model scores and learned policies set `verifier_is_oracle=false`.
+6. Calibration and held splits are frozen before scoring. No held label can enter calibration,
+   model prompts, tokenizer filtering, controller fitting, or routing.
+7. Raw fixed-sequence likelihood, unchanged V599 risk-sensitive policy, and supervisor credit
+   without headroom are retired mechanisms. Their changed attempts carry complete
+   `prior_failures` entries.
+8. ARC tasks make `solve_claimed=false` and `game_level_solve_count=0`. They do not update the solve
+   registry and do not use game source, offline BFS, per-game adapters, hidden state, or prior-game
+   solution traces.
+9. Legacy small models may run smoke tests only. A missing mandated model cell blocks the headline
+   branch.
+10. Flagged or duration-implausible artifacts cannot support a claim. Exp6867 rebuilds from primary
+    receipts instead of trusting V599's flagged aggregate artifacts.
 
-## Evidence and Safety Rules
+## Completion Contract
 
-1. Every artifact declares `verdict_class` from the closed enum.
-2. Every comparative task emits per-unit rows with the metric for each arm, model, seed, or condition.
-3. Every blocked verdict names the failed check and observed value in `gate_check_summary`.
-4. Every gate field is declared verbatim in its upstream task's required artifact fields.
-5. Exact checkers and exact later outcomes define truth. A tested verifier is never its own oracle.
-6. Isomorphic invariance is required before an extensional compatibility claim.
-7. Continuous-learning decisions are chronological. Later outcomes cannot affect earlier actions.
-8. Memory actions include no-memory and abstain. Writes are bounded, attributed, persistent, and reversible.
-9. ARC evidence remains separated by game, model, generator, budget, policy, supervisor, and tool configuration.
-10. No task reads game source, runs offline ground-truth BFS, builds a per-game adapter, or claims a level solve.
-11. Existing processes are observed but never interrupted.
-12. Every task runs focused tests, lint, OpenSpec coverage, adversarial verification, artifact audits, verdict-row consistency checks, and root-clutter checks.
+V600 is complete when all 13 tasks have either a terminal artifact or a structured conductor skip,
+and Exp6873 has independently reconciled them. Completion does not require a positive result.
 
-## Milestone Completion Contract
+A scientific advance requires at least one of:
 
-V599 is complete when all 13 tasks have terminal artifacts or explicit conductor skip records and Exp6860 has issued an evidence-preserving disposition.
+- a sealed nuisance-controlled semantic compatibility effect that passes both exact authority
+  sides and every pre-registered nuisance attack;
+- a prospective observability-safe memory policy with nondegenerate actions, positive held-future
+  effect, bounded harm, durability, and portability; or
+- a replayable authentic live tool-gap effect whose exact outcome improves under delivery versus
+  withholding.
 
-A positive milestone does not require every branch to win. The strongest valid outcomes are:
-
-- a shortcut-resistant three-family compatibility result after independent authority and live admission;
-- a held-future risk-sensitive memory benefit with low false-positive injection and sealed portability;
-- a matched supervisor action effect with exact later outcome support; or
-- a complete first-party tool-gap receipt contract at the reachable live seam.
-
-A null or blocked result is complete when it names the failed precondition, preserves per-unit evidence, and retires an unchanged mechanism. The milestone must not convert resource readiness, transport, correlation, circular verification, reconstructed traces, or development-proxy evidence into a causal or solve claim.
+If none occurs, the milestone still succeeds operationally by retiring failed constructions,
+preserving clean infrastructure, and naming one genuinely changed next mechanism per open PRD gap.
