@@ -61,7 +61,6 @@ TRUNCATES long paths with a leading `...`, so the substring never appeared. Use
 `git show --name-only`. That is the fourth check this session that returned a clean-looking answer
 without actually looking.
 
-
 **REALIZED 2026-09-01 13:40Z — the orphaned stamp reached a milestone capstone, and it counted.**
 
 The chain predicted in this entry has now completed, with a victim:
