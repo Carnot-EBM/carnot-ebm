@@ -60161,3 +60161,113 @@ fourteen. `solve_claim` and `verifier_is_oracle` SHALL be false.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6823 and SCENARIO-REPORT-6823-* | Implemented (`python/carnot/experiment_6823_v595_branch_disposition.py`, `scripts/experiments/experiment_6823_v595_branch_disposition.py`, `results/experiment_6823_v595_branch_disposition.json`) | Implemented (`tests/python/test_experiment_6823_v595_branch_disposition.py`; 100% scoped statement coverage) |
+### REQ-REPORT-6860: V599 Independent Capstone SHALL Preserve Every Terminal State
+
+Exp6860 SHALL use a fresh deterministic CPU reducer. It SHALL read each planned
+V599 task, terminal artifact, conductor gate skip, retry, flag, and missing
+state. It SHALL write a terminal artifact even when one or more upstream tasks
+are incomplete. It SHALL not import a producer aggregate function or invoke an
+LLM.
+
+The reducer SHALL recompute typed authority, resource admission, compatibility
+margins, isomorphic controls, and compatibility claim eligibility from raw
+rows. It SHALL keep resource readiness separate from scientific evidence. It
+SHALL recompute held-future memory effect, false-positive injection,
+abstention, per-write credit, durability, and family and order portability.
+Persistence alone SHALL not establish continuous self-learning readiness.
+
+The reducer SHALL recompute ARC source eligibility, supervisor headroom,
+action credit, and tool-gap receipt completeness. Fixture and development-proxy
+rows SHALL remain quarantined from live effect claims. Invalid or missing live
+provenance SHALL disqualify the affected effect claim. No result SHALL claim an
+ARC solve or hardware speedup.
+
+Each planned task and each branch SHALL receive one terminal disposition. A
+missing measurement SHALL remain null and SHALL not become numeric zero. A
+blocked result SHALL name the failed check and observed value. Duplicate task
+identifiers, stale source hashes, aggregate-to-row contradictions, circular
+verification, and unsupported positive verdicts SHALL fail closed. An unchanged
+mechanism with a matching `prior_failures` verdict SHALL retire when
+`retire_if_same_verdict` is true.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`task_state_manifest`, `conductor_skip_manifest`, `retry_manifest`,
+`flag_manifest`, `rows`, `fresh_reducer_manifest`,
+`aggregate_row_consistency_results`, `typed_compatibility_disposition`,
+`continuous_self_learning_disposition`, `arc_supervisor_disposition`,
+`tool_gap_receipt_disposition`, `circularity_results`,
+`retirement_decisions`, `next_action_by_branch`, `positive_claims`,
+`null_claims`, `blocked_claims`, `partial_claims`, `disqualified_claims`,
+`v599_milestone_disposition_complete_score`, `solve_claimed`,
+`game_level_solve_count`, `hardware_speedup_claimed`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`deterministic CPU independent capstone reduction`. `verifier_is_oracle`,
+`solve_claimed`, and `hardware_speedup_claimed` SHALL be false.
+`game_level_solve_count` SHALL be zero. The verdict class SHALL use the closed
+enum `positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. The honest verdict SHALL be row-supported and start with
+`complete_`.
+
+#### SCENARIO-REPORT-6860-INVENTORY: Missing Artifacts And Gate Skips Stay Distinct
+
+**Given** a planned task has no terminal artifact or has a structured conductor
+gate skip
+**When** Exp6860 builds the task manifest
+**Then** the missing task stays null and the gate-skipped task stays blocked,
+with no missing measurement replaced by zero.
+
+**Spec traces:** REQ-REPORT-6860
+
+#### SCENARIO-REPORT-6860-IDENTITY-HASH: Identity And Hash Drift Fail Closed
+
+**Given** the roadmap repeats a task identifier or a producer source hash does
+not match current bytes
+**When** Exp6860 checks preconditions
+**Then** it records the exact duplicate or hash mismatch and does not advance
+the affected claim.
+
+**Spec traces:** REQ-REPORT-6860
+
+#### SCENARIO-REPORT-6860-ROW-AUTHORITY: Raw Rows Control Aggregates
+
+**Given** a producer aggregate or positive verdict contradicts raw per-unit rows
+**When** Exp6860 performs its independent reduction
+**Then** it records the contradiction and downgrades the unsupported class.
+
+**Spec traces:** REQ-REPORT-6860
+
+#### SCENARIO-REPORT-6860-CIRCULARITY: A Verifier Cannot Authorize Itself
+
+**Given** a tested verifier supplies both the score and its own truth label
+**When** Exp6860 checks claim authority
+**Then** the claim becomes circular-positive or disqualified and cannot become
+an ordinary positive claim.
+
+**Spec traces:** REQ-REPORT-6860
+
+#### SCENARIO-REPORT-6860-ARC-PROVENANCE: Non-Live Rows Stay Quarantined
+
+**Given** an ARC row has fixture, development-proxy, missing, or contradictory
+provenance
+**When** Exp6860 recomputes live effect eligibility
+**Then** the row cannot support supervisor action credit or a live tool-gap
+effect claim.
+
+**Spec traces:** REQ-REPORT-6860
+
+#### SCENARIO-REPORT-6860-RETIREMENT: Unchanged Failures Retire
+
+**Given** a task repeats a prior failure with no new technique or prerequisite
+and `retire_if_same_verdict` is true
+**When** Exp6860 closes the branch
+**Then** it retires the unchanged mechanism and recommends no rerun.
+
+**Spec traces:** REQ-REPORT-6860
+
+## Implementation Status (REQ-REPORT-6860)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6860 and SCENARIO-REPORT-6860-* | Implemented (`python/carnot/experiment_6860_v599_independent_capstone.py`, `scripts/experiments/experiment_6860_v599_independent_capstone.py`, `results/experiment_6860_v599_independent_capstone.json`) | Implemented (`tests/python/test_experiment_6860_v599_independent_capstone.py`; 15 focused tests; 100% scoped statement coverage) |
