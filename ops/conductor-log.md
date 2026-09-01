@@ -17003,3 +17003,4 @@ The l |
 | 2026-09-01 11:01 UTC | Live ARC evidence inventory and immutable stratum  | OK | 112 passed, 1 warning in 11.10s |
 | 2026-09-01 11:28 UTC | ARC supervisor executable-action outcome-credit au | OK | 112 passed, 1 warning in 14.41s |
 | 2026-09-01 11:54 UTC | ARC tool-gap transport and causal-support audit | OK | 96 passed, 1 warning in 10.73s |
+| 2026-09-01 12:27 UTC | Typed obligation shadow monitor at the canonical A | OK | 151 passed, 1 warning in 30.36s |
