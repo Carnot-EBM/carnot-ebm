@@ -18,7 +18,7 @@
       "unsloth/Qwen3.8-27B-GGUF|e3|2500|wa30|off_or_unobserved|unobserved"
     ]
   },
-  "duration_s": 0.016385155031457543,
+  "duration_s": 0.013125644996762276,
   "experiment_id": "exp6843-live-arc-evidence-stratum-freeze",
   "field_principles": {
     "arc_inventory_complete_score": "A complete score means provenance is inventoried, not that ARC was solved.",
@@ -131,7 +131,7 @@
   "process_observations": [
     {
       "command": ".venv/bin/python /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/ad0c053d-41df-446e-99d6-d71368a47030/scratchpad/supervised_run.py /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/ad0c053d-41df-446e-99d6-d71368a47030/scratchpad/supervised_receipt.json",
-      "elapsed": "10:40:44",
+      "elapsed": "10:56:29",
       "observation_role": "in_flight_process",
       "observed_configuration": {
         "budget": null,
@@ -152,7 +152,7 @@
     },
     {
       "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_leaderboard_eval.py --policy e3 --only ls20,wa30 --budget 2500",
-      "elapsed": "10:40:44",
+      "elapsed": "10:56:28",
       "observation_role": "in_flight_process",
       "observed_configuration": {
         "budget": 2500,
@@ -177,11 +177,11 @@
         "ps -eo pid,ppid,lstart,stat,etime,args --sort=pid"
       ],
       "start_time": "Mon Aug 31 20:01:12 2026",
-      "state": "SNl"
+      "state": "RNl"
     },
     {
       "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server -m /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf -ngl 999 -c 49152 --port 8919 --host 127.0.0.1 --cache-type-k q8_0 --cache-type-v q8_0 -ot blk\\.(0)\\.ffn_(gate|up|down)\\.weight=CPU",
-      "elapsed": "10:40:30",
+      "elapsed": "10:56:15",
       "observation_role": "in_flight_process",
       "observed_configuration": {
         "budget": null,
@@ -203,10 +203,10 @@
         "ps -eo pid,ppid,lstart,stat,etime,args --sort=pid"
       ],
       "start_time": "Mon Aug 31 20:01:25 2026",
-      "state": "RNl"
+      "state": "SNl"
     }
   ],
-  "reproducibility_checksum": "sha256:09aa0158ca0b3e603ec2f65a5b16a7b0835d14a11e64ff39add65eef1b4eb921",
+  "reproducibility_checksum": "sha256:5ebefcdac70451d577b594696373bcff0aa2e60a77e2691061fd1ef26c6cec95",
   "rows": [
     {
       "artifact_family": "leaderboard_trajectory",
@@ -1013,7 +1013,7 @@
     "experiment_6843_module_source": {
       "artifact_family": "precondition_source",
       "exists": true,
-      "file_sha256": "sha256:b1155358f0e348b7e9dd0196cbedefc2d502b81cf560a29d848e7f9a3db62daa",
+      "file_sha256": "sha256:6bd91f4fba06141fe95afd1bbbb5f7c429cd1f55081759a98f6efb99b9f6ccdb",
       "name": "experiment_6843_module_source",
       "path": "python/carnot/experiment_6843_live_arc_evidence_stratum_freeze.py",
       "producer_configuration": {
@@ -1022,7 +1022,7 @@
         "verdict_class": null
       },
       "read_error": null,
-      "size_bytes": 39915,
+      "size_bytes": 39909,
       "terminal_class": "incomplete_artifact"
     },
     "experiment_6843_wrapper_source": {
@@ -2074,6 +2074,6 @@
       "stratum_identity": null
     }
   ],
-  "verdict_class": "partial",
+  "verdict_class": "null",
   "verifier_is_oracle": false
 }

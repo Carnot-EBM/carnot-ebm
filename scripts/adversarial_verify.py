@@ -289,6 +289,7 @@ DETERMINISTIC_VERIFIER_SUBSTRATES = (
     "deterministic CPU sealed audit",
     "CPU transformation of frozen authentic outputs, no LLM",
     "fresh_process_no_llm_transaction_audit",
+    "read_only_live_artifact_inventory",
 )
 DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
 NO_LLM_DECLARED_MIN_DURATION_S = 0.0001
@@ -321,6 +322,7 @@ ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE = (
     "canonical_live_e3_environment_outcome_transport_no_new_llm"
 )
 ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE = "canonical_live_e3_supervisor_ab_no_new_llm"
+READ_ONLY_LIVE_ARTIFACT_INVENTORY_SUBSTRATE = "read_only_live_artifact_inventory"
 ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S = (
     0.01  # 10ms/action-scale floor; still nonzero-fabrication-proof
 )

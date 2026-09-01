@@ -9,7 +9,10 @@ from typing import Any
 
 import pytest
 
+from carnot.agentic import arc_solve_artifact_discipline as discipline
 from carnot import experiment_6843_live_arc_evidence_stratum_freeze as exp
+from scripts import adversarial_verify as av
+from scripts import arc_artifact_lint as arc_lint
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -400,7 +403,7 @@ def test_scenario_6843_hashes_and_no_solve_claim(tmp_path: Path) -> None:
 
     assert artifact["solve_claim"] is False
     assert artifact["verifier_is_oracle"] is False
-    assert artifact["verdict_class"] == "partial"
+    assert artifact["verdict_class"] == "null"
     assert artifact["honest_verdict"].startswith("complete_")
     assert artifact["rows"][0]["row_sha256"].startswith("sha256:")
     assert artifact["source_artifact_hashes"]["leaderboard"]["file_sha256"].startswith("sha256:")
@@ -614,7 +617,7 @@ def test_req_6843_defensive_branches_and_live_sampler(
     )
     duplicate = deepcopy(artifact["rows"][0])
     assert "duplicate row identities present" in errors_with(rows=[duplicate, duplicate])
-    assert "complete inventory verdict_class mismatch" in errors_with(verdict_class="null")
+    assert "complete inventory verdict_class mismatch" in errors_with(verdict_class="partial")
     assert "inventory complete score mismatch" in errors_with(arc_inventory_complete_score=0)
     assert "complete inventory lacks rows" in errors_with(rows=[])
     assert "status mismatch" in errors_with(status="weird")
@@ -636,3 +639,59 @@ def test_req_6843_defensive_branches_and_live_sampler(
     assert "blocked artifact emitted rows" in blocked_errors_with(rows=[duplicate])
     assert "blocked artifact marked complete" in blocked_errors_with(arc_inventory_complete_score=1)
     assert "blocked artifact lacks failed check" in blocked_errors_with(gate_check_summary={})
+
+
+def test_req_6843_inventory_substrate_is_no_llm_audit_for_lints(tmp_path: Path) -> None:
+    """REQ-ARC-6843: inventory substrate quotes model strings without invoking them."""
+
+    paths = _base_paths(tmp_path)
+    paths["leaderboard"] = _write_json(
+        tmp_path / "results/arc_leaderboard_eval_runs/sp80.json",
+        _leaderboard_payload(complete=True),
+    )
+    artifact = exp.build_artifact(
+        run_date="20260901",
+        duration_s=0.01,
+        source_paths=paths,
+        process_observations=[
+            {
+                "pid": 375005,
+                "ppid": 374980,
+                "start_time": "Mon Aug 31 20:01:12 2026",
+                "state": "SNl",
+                "elapsed": "10:20:13",
+                "command": "llama-server -m /models/unsloth/Qwen3.6-35B-A3B-GGUF/model.gguf",
+                "observed_configuration": {
+                    "budget": None,
+                    "games": [],
+                    "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+                    "policy": None,
+                    "supervisor_state": "unobserved",
+                    "tool_loop_state": "off_or_unobserved",
+                },
+                "read_only_commands": exp.READ_ONLY_PROCESS_COMMANDS,
+                "observation_role": "in_flight_process",
+            }
+        ],
+    )
+
+    assert discipline.READ_ONLY_LIVE_ARTIFACT_INVENTORY_SUBSTRATE == exp.INFERENCE_SUBSTRATE
+    assert (
+        arc_lint.lint_artifact(
+            tmp_path / "results/experiment_6843_live_arc_evidence_stratum_freeze.json",
+            artifact,
+        )
+        == []
+    )
+    artifact_path = _write_json(
+        tmp_path / "results/experiment_6843_live_arc_evidence_stratum_freeze.json",
+        artifact,
+    )
+    report = av.verify_artifact(artifact_path)
+    assert {flag["kind"] for flag in report["flags"]}.isdisjoint(
+        {
+            "DURATION_TOO_SHORT",
+            "METHODOLOGY_MISSING",
+            "VERDICT_PREFIX_CLASS_CONTRADICTION",
+        }
+    )

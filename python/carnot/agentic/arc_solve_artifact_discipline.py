@@ -25,6 +25,7 @@ ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE = (
     "canonical_live_e3_environment_outcome_transport_no_new_llm"
 )
 ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE = "canonical_live_e3_supervisor_ab_no_new_llm"
+READ_ONLY_LIVE_ARTIFACT_INVENTORY_SUBSTRATE = "read_only_live_artifact_inventory"
 LIVE_LLM_SUBSTRATE = "live_llm_inference"
 
 SUBSTRATE_DURATION_FLOORS = {
@@ -36,6 +37,7 @@ SUBSTRATE_DURATION_FLOORS = {
     ARC_LIVE_E3_ARCHIVE_PROJECTION_SUBSTRATE: 0.01,
     ARC_CANONICAL_OUTCOME_TRANSPORT_NO_LLM_SUBSTRATE: 0.01,
     ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE: 0.01,
+    READ_ONLY_LIVE_ARTIFACT_INVENTORY_SUBSTRATE: 0.0001,
     LIVE_LLM_SUBSTRATE: 60.0,
 }
 
@@ -86,6 +88,8 @@ FIELD_PRINCIPLES = {
         "canonical_live_e3_environment_outcome_transport_no_new_llm"
         "; canonical live E3 held-family supervisor A/B uses "
         "canonical_live_e3_supervisor_ab_no_new_llm"
+        "; read-only live ARC evidence inventory uses "
+        "read_only_live_artifact_inventory"
     ),
     "duration_s": "bare float; must meet the selected substrate floor",
     "template_shipped": "bare bool: the helper + lint + tests landed green",
@@ -253,6 +257,7 @@ __all__ = [
     "ArtifactDisciplineIssue",
     "FIELD_PRINCIPLES",
     "LIVE_LLM_SUBSTRATE",
+    "READ_ONLY_LIVE_ARTIFACT_INVENTORY_SUBSTRATE",
     "SPEC_REFS",
     "SUBSTRATE_DURATION_FLOORS",
     "TERMINAL_VERDICT_PREFIXES",

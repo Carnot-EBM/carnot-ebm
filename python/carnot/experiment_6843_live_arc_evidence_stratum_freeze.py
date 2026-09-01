@@ -705,7 +705,7 @@ def _artifact_shell(
         "solve_claim": False,
         "gate_check_summary": {},
         "verifier_is_oracle": False,
-        "verdict_class": "partial",
+        "verdict_class": "null",
         "honest_verdict": "complete_live_arc_inventory_terminal_evidence_only_no_solve_claim",
     }
 
@@ -934,7 +934,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
         if not artifact.get("gate_check_summary", {}).get("failed_check"):
             errors.append("blocked artifact lacks failed check")
     elif artifact.get("status") == "complete_live_arc_inventory":
-        if artifact.get("verdict_class") != "partial":
+        if artifact.get("verdict_class") != "null":
             errors.append("complete inventory verdict_class mismatch")
         if artifact.get("arc_inventory_complete_score") != 1:
             errors.append("inventory complete score mismatch")

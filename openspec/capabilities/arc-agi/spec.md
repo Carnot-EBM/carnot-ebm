@@ -1423,6 +1423,12 @@ configuration. It SHALL not import producer claims as ground truth. It SHALL
 reject incomplete artifacts from eligible rows and list them in
 `incomplete_artifact_manifest`.
 
+The producer SHALL declare `inference_substrate=read_only_live_artifact_inventory`.
+That substrate is a no-new-LLM provenance audit over existing files and process
+metadata. GGUF, CUDA, model, and live-run strings quoted from source artifacts
+or observed process commands SHALL NOT be interpreted as model invocation by the
+inventory itself.
+
 The artifact SHALL write
 `results/experiment_6843_live_arc_evidence_stratum_freeze.json` with these
 top-level fields: `field_principles`, `preconditions_checked`,
@@ -1441,7 +1447,9 @@ all row hashes are present, and all unmatched cells are explicitly explained.
 `supervisor_cells_ready_score` and `tool_gap_cells_ready_score` SHALL be derived
 from exact eligible cell counts. These readiness fields SHALL not claim an ARC
 solve or mechanism effect. `solve_claim` SHALL be false and
-`verifier_is_oracle` SHALL be false.
+`verifier_is_oracle` SHALL be false. A complete inventory with no solve or
+mechanism-effect claim SHALL use `verdict_class=null`; gate failures SHALL use
+`verdict_class=blocked`.
 
 ### SCENARIO-ARC-6843-TERMINAL-DETECTION
 
@@ -1479,5 +1487,5 @@ completion.
 **Given** terminal leaderboard rows and supervisor/tool-gap receipts
 **When** Exp6843 emits readiness scores
 **Then** `solve_claim=false`, `verdict_class` is drawn from the closed verdict
-set, and `honest_verdict` starts with `complete_` while making no game-level
-solve claim.
+set, complete no-effect inventories use `verdict_class=null`, and
+`honest_verdict` starts with `complete_` while making no game-level solve claim.
