@@ -3877,3 +3877,134 @@ Then it SHALL use the disqualified verdict class and set readiness to zero.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6869 and SCENARIO-VERIFY-6869-* | Planned (`python/carnot/experiment_6869_calibration_only_paired_semantic_rule.py`; `scripts/experiments/experiment_6869_calibration_only_paired_semantic_rule.py`) | Planned (`tests/python/test_experiment_6869_calibration_only_paired_semantic_rule.py`) |
+
+### REQ-CONSTRAINT-6886: Pinned Enoki Assets And Exact Anchored Relations
+
+Carnot SHALL provide Exp6886 as an independent science root. It SHALL NOT
+inherit the failed Exp6875 manifest gate. The experiment SHALL require the
+qualified Exp6274 compiler, clingo as an independent solver, sufficient local
+disk space, compatible cache identities, and immutable Enoki asset revisions.
+A failed precondition SHALL produce a complete blocked artifact with the failed
+check, expected value, and observed value. It SHALL NOT fabricate asset or
+solver evidence.
+
+The experiment SHALL pin `s-nlp/enoki-openie-encoder` and a bounded source-only
+shard from `s-nlp/EnokiQA`. It SHALL record repository URLs, immutable revision
+IDs, declared licenses or an explicit missing-license declaration, local cache
+paths, source file hashes, projected shard row hashes, and a deterministic shard
+hash. Model or dataset bytes SHALL remain outside the repository. The experiment
+SHALL NOT load the encoder, run a GGUF model, claim Enoki accuracy, or treat the
+unannotated EnokiQA train split as labeled evidence.
+
+Each accepted relation SHALL use schema `anchored_relation_v1`. A record SHALL
+contain a record ID, source text hash, source span, evidence span, subject,
+predicate, object, polarity, normalized tuple, ASP atom, and provenance hash.
+All offsets SHALL be UTF-8 byte offsets. Subject and object text SHALL match the
+exact source bytes inside the evidence span. The relation mapper SHALL use a
+closed, family-typed vocabulary derived from the Exp6274 propositional subset.
+It SHALL reject unknown entities, unsupported predicates, invalid polarity,
+duplicate records, duplicate tuples, malformed spans, provenance drift, and
+non-injective tuple-to-atom maps before compilation.
+
+Exp6886 SHALL build at least 150 deterministic fixtures. Each of graph coloring,
+scheduling, non-monotonic defaults, contradictions, and cardinality constraints
+SHALL contain at least 30 fixtures. Valid, omitted, contradictory, malformed,
+and abstain cases SHALL be balanced within every family. Calibration and held
+groups SHALL be frozen and group-disjoint. Held labels, ASP programs, answer
+sets, solver receipts, and sidecar paths SHALL remain outside every future
+prompt view.
+
+Each accepted relation set SHALL compile through the qualified Exp6274 energy
+compiler. The zero-energy state set SHALL equal the clingo answer-set list by
+exact set equality. Each fixture SHALL retain local rule-violation receipts.
+Solver timeouts and solver disagreements SHALL fail closed.
+
+The terminal artifact SHALL be
+`results/experiment_6886_enoki_exact_relation_fixture.json`. It SHALL include
+`field_principles`, `preconditions_checked`, `inference_substrate`, `duration_s`,
+`source_artifact_hashes`, `enoki_asset_receipts`, `asset_revision_rows`,
+`asset_license_rows`, `relation_schema_version`, `closed_vocabulary_manifest`,
+`rows`, `fixture_family_counts`, `calibration_group_manifest`,
+`sealed_held_group_manifest`, `split_overlap_count`, `relation_to_atom_rows`,
+`atom_collision_rows`, `unsupported_rows`, `solver_parity_rows`,
+`rule_violation_receipts`, `prompt_nonexposure_results`,
+`independent_solver_receipts`, `random_seed`, `reproducibility_checksum`,
+`relation_fixture_ready_score`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. Each required field SHALL have one entry
+in `field_principles`. `inference_substrate` SHALL equal
+`deterministic_enoki_asset_and_exact_asp_fixture_no_llm`.
+`verifier_is_oracle` SHALL be true. `verdict_class` SHALL be one of
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`; it SHALL
+never be `positive`. `honest_verdict` SHALL start with `complete_`.
+
+`relation_fixture_ready_score` SHALL be the bare integer `1` only when immutable
+asset hashes, relation schema checks, family floors, split isolation, prompt and
+sidecar sealing, injective mapping, solver availability, and exact solver parity
+all pass. Otherwise it SHALL be `0` and `gate_check_summary` SHALL name each
+failed check with its expected and observed values.
+
+### SCENARIO-CONSTRAINT-6886-ASSETS: Immutable Assets Stay Bounded
+
+Given the exact Enoki repository revisions and a compatible external cache,
+When Exp6886 prepares its assets,
+Then only the encoder files and the bounded source-only EnokiQA projection are
+cached, every local hash matches its pinned receipt, and revision or hash drift
+fails closed.
+
+### SCENARIO-CONSTRAINT-6886-ANCHORS: UTF-8 Evidence Is Exact
+
+Given records with ASCII and multibyte source text,
+When Exp6886 validates their spans,
+Then valid UTF-8 byte offsets reproduce the subject and object text exactly,
+and invalid, character-indexed, out-of-range, or non-boundary spans are rejected.
+
+### SCENARIO-CONSTRAINT-6886-CLOSED-MAP: Relation Mapping Is Injective
+
+Given positive and negative relations plus unknown entities, unsupported
+predicates, duplicate tuples, and colliding atoms,
+When Exp6886 maps the records,
+Then each supported normalized tuple has one distinct ASP atom and every unsafe
+or unsupported record fails before energy compilation.
+
+### SCENARIO-CONSTRAINT-6886-FIXTURES: Balanced Groups Stay Disjoint
+
+Given the frozen calibration and held manifests,
+When Exp6886 counts fixture families and cases,
+Then at least 150 fixtures meet all family and case floors and no group occurs
+in both splits.
+
+### SCENARIO-CONSTRAINT-6886-NONEXPOSURE: Formal Sidecars Stay Hidden
+
+Given sealed labels, ASP programs, answer sets, solver receipts, and their cache
+paths,
+When Exp6886 builds a future prompt view,
+Then no hidden field, hidden value, or sidecar path appears in that view.
+
+### SCENARIO-CONSTRAINT-6886-PARITY: Atoms And Energy Match Clingo
+
+Given accepted relation sets from every fixture family,
+When Exp6886 adds their atoms to the bounded ASP programs,
+Then the energy compiler zero states equal clingo answer sets exactly and each
+non-zero local term retains its rule and violation reason.
+
+### SCENARIO-CONSTRAINT-6886-FAIL-CLOSED: Timeouts And Disagreements Block Readiness
+
+Given an unavailable asset, incompatible cache, solver timeout, or changed
+independent answer set,
+When Exp6886 evaluates readiness,
+Then the ready score remains zero and the gate summary records the exact failed
+expectation and observation.
+
+### SCENARIO-CONSTRAINT-6886-ARTIFACT: Readiness Replays From Rows
+
+Given all asset, fixture, mapping, nonexposure, and parity rows,
+When the terminal artifact is validated,
+Then every required principle exists, the checksum reproduces, the score
+recomputes from row evidence, the oracle boundary is explicit, and no Enoki
+accuracy or LLM-inference claim appears.
+
+## Implementation Status (REQ-CONSTRAINT-6886)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6886 and SCENARIO-CONSTRAINT-6886-* | Planned (`python/carnot/experiment_6886_enoki_exact_relation_fixture.py`; `scripts/experiments/experiment_6886_enoki_exact_relation_fixture.py`) | Planned (`tests/python/test_experiment_6886_enoki_exact_relation_fixture.py`) |
