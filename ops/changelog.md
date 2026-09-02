@@ -18531,3 +18531,4 @@ model loading or a missed DualGPURunner dispatch. The next harness should write
 one receipt with stage clocks, task-owned accelerator samples, model
 concurrency, and runner choice. The savings forecast stays at 0% because the
 evidence has no measured counterfactual.
+- 2026-09-02: V603 executable manifest and branch isolation contract (⚠️ Blocked) — honest_verdict=complete_blocked_v603_executable_manifest_branch_contract; results/experiment_6885_v603_executable_manifest_branch_contract.json
