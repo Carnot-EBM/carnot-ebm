@@ -20,6 +20,7 @@ from carnot.experiment_6868_three_family_semantic_scoring_stream_v2 import (
     _checkpoint_input_checksum,
     _group_batches,
     _recover_checkpoint_lifecycle,
+    _worker_command,
     build_blocked_artifact,
     build_checkpoint,
     build_score_sidecars,
@@ -29,6 +30,7 @@ from carnot.experiment_6868_three_family_semantic_scoring_stream_v2 import (
     lease_revalidation_errors,
     load_checkpoint,
     make_failure_row,
+    orphan_worker_errors,
     pending_work_items,
     row_hash,
     score_response_row,
@@ -99,9 +101,7 @@ def _preregistration() -> dict:
         "tokenizer_receipts": [
             {
                 "hf_id": row["hf_id"],
-                "canonical_tokenizer_payload_sha256": row[
-                    "canonical_tokenizer_payload_hash"
-                ],
+                "canonical_tokenizer_payload_sha256": row["canonical_tokenizer_payload_hash"],
             }
             for row in models
         ],
@@ -149,9 +149,7 @@ class _ProcessOps:
 def test_req_inference_6868_spec_and_artifact_contract() -> None:
     """REQ-INFERENCE-6868 names every required terminal field."""
 
-    spec = Path("openspec/capabilities/llm-ebm-inference/spec.md").read_text(
-        encoding="utf-8"
-    )
+    spec = Path("openspec/capabilities/llm-ebm-inference/spec.md").read_text(encoding="utf-8")
     assert "REQ-INFERENCE-6868" in spec
     for scenario in (
         "LEASE-LOSS",
@@ -210,9 +208,7 @@ def test_scenario_6868_preconditions_fail_closed_on_hash_and_resource_drift() ->
         "free_task_ports",
         "bounded_task_gpu_lease",
     }.issubset(blocked["failed_checks"])
-    artifact = build_blocked_artifact(
-        run_date="20260902", duration_s=1.5, preconditions=blocked
-    )
+    artifact = build_blocked_artifact(run_date="20260902", duration_s=1.5, preconditions=blocked)
     assert artifact["honest_verdict"] == BLOCKED_VERDICT
     assert artifact["gate_check_summary"]["failed_check"] == "unchanged_exp6867_artifact"
     assert validate_artifact(artifact) == []
@@ -383,8 +379,12 @@ def test_scenario_6868_owned_teardown_is_narrow_and_complete() -> None:
     assert ops.signals == [(72, signal.SIGTERM, True)]
     assert teardown_receipt_errors(receipt) == []
     assert teardown_receipt_errors(
-        {"ownership_verified": False, "process_exit_confirmed": False,
-         "port_release_confirmed": False, "unrelated_process_kill_count_delta": 1}
+        {
+            "ownership_verified": False,
+            "process_exit_confirmed": False,
+            "port_release_confirmed": False,
+            "unrelated_process_kill_count_delta": 1,
+        }
     ) == ["ownership", "process_exit", "port_release", "unrelated_process_signal"]
 
 
@@ -420,34 +420,46 @@ def test_req_inference_6868_sidecars_are_split_and_completion_is_not_an_effect()
         "port_release_confirmed": True,
         "unrelated_process_kill_count_delta": 0,
     }
-    assert completion_score(
-        expected_identities=[item["cell_identity"] for item in items],
-        rows=rows,
-        failed_cells=[],
-        checkpoint_complete=True,
-        teardown_receipts=[clean_teardown] * 3,
-    ) == 1
-    assert completion_score(
-        expected_identities=[item["cell_identity"] for item in items],
-        rows=rows[:-1],
-        failed_cells=[],
-        checkpoint_complete=True,
-        teardown_receipts=[clean_teardown] * 3,
-    ) == 0
-    assert completion_score(
-        expected_identities=[item["cell_identity"] for item in items],
-        rows=rows,
-        failed_cells=[],
-        checkpoint_complete=False,
-        teardown_receipts=[clean_teardown] * 3,
-    ) == 0
-    assert completion_score(
-        expected_identities=[item["cell_identity"] for item in items],
-        rows=rows,
-        failed_cells=[],
-        checkpoint_complete=True,
-        teardown_receipts=[{**clean_teardown, "port_release_confirmed": False}],
-    ) == 0
+    assert (
+        completion_score(
+            expected_identities=[item["cell_identity"] for item in items],
+            rows=rows,
+            failed_cells=[],
+            checkpoint_complete=True,
+            teardown_receipts=[clean_teardown] * 3,
+        )
+        == 1
+    )
+    assert (
+        completion_score(
+            expected_identities=[item["cell_identity"] for item in items],
+            rows=rows[:-1],
+            failed_cells=[],
+            checkpoint_complete=True,
+            teardown_receipts=[clean_teardown] * 3,
+        )
+        == 0
+    )
+    assert (
+        completion_score(
+            expected_identities=[item["cell_identity"] for item in items],
+            rows=rows,
+            failed_cells=[],
+            checkpoint_complete=False,
+            teardown_receipts=[clean_teardown] * 3,
+        )
+        == 0
+    )
+    assert (
+        completion_score(
+            expected_identities=[item["cell_identity"] for item in items],
+            rows=rows,
+            failed_cells=[],
+            checkpoint_complete=True,
+            teardown_receipts=[{**clean_teardown, "port_release_confirmed": False}],
+        )
+        == 0
+    )
 
 
 def test_req_inference_6868_artifact_validation_rejects_semantic_claims() -> None:
@@ -630,9 +642,7 @@ def test_scenario_6868_restart_recovers_only_observed_dead_owned_lifecycle(
     """SCENARIO-INFERENCE-6868-CHECKPOINT-RESTART preserves stale-reap evidence."""
 
     checkpoint = {
-        "process_receipts": [
-            {"hf_id": MODEL_SPECS[0], "pid": 72, "port": 18088}
-        ],
+        "process_receipts": [{"hf_id": MODEL_SPECS[0], "pid": 72, "port": 18088}],
         "teardown_receipts": [
             {
                 "hf_id": MODEL_SPECS[0],
@@ -668,3 +678,76 @@ def test_scenario_6868_restart_recovers_only_observed_dead_owned_lifecycle(
     assert teardown["leak_free"] is True
     assert lease["original_lease_receipt"]["lease_valid"] is False
     assert lease["lease_valid"] is True
+
+
+def test_scenario_6868_restart_reuses_exact_reparented_worker_without_signal_authority() -> None:
+    """SCENARIO-INFERENCE-6868-CHECKPOINT-RESTART reuses only an exact orphan."""
+
+    recorded, current, token = _process_record()
+    command = [
+        "/venv/python",
+        "-m",
+        "carnot.experiment_6868_three_family_semantic_scoring_stream_v2",
+        "--score-worker",
+        "--model-path",
+        "/cache/model.gguf",
+        "--port",
+        "18088",
+    ]
+    recorded["command"] = command
+    current["parent_identity"] = {"pid": 1232, "start_time_ticks": 10}
+    state = {"receipt": recorded, "ownership_token": token}
+    app = {"pid": 72, "gpu_uuid": "GPU-exact", "used_memory_mb": 17000}
+
+    assert (
+        orphan_worker_errors(
+            state=state,
+            expected_command=command,
+            current_identity=current,
+            original_owner_alive=False,
+            compute_apps=[app],
+        )
+        == []
+    )
+
+    cleanup_ops = _ProcessOps()
+    cleanup = cleanup_owned_process(
+        recorded,
+        token=token,
+        current_identity=lambda pid: current,
+        process_ops=cleanup_ops,
+        port_probe=lambda port: False,
+        contract=process_contract(),
+    )
+    assert cleanup["action"] == "refused"
+    assert cleanup["ownership_errors"] == ["owner_pid", "owner_start_time_ticks"]
+    assert cleanup_ops.signals == []
+
+    cases = [
+        ({**state, "ownership_token": "wrong"}, command, current, False, [app], "token"),
+        ({"receipt": {}, "ownership_token": token}, command, {}, False, [], "owned_by_task"),
+        (state, command, {**current, "exists": False}, False, [app], "process_missing"),
+        (state, command, current, True, [app], "owner_still_live"),
+        (state, command, current, False, [], "compute_app"),
+        (state, [*command[:-1], "19000"], current, False, [app], "command"),
+        (
+            state,
+            command,
+            {**current, "start_time_ticks": 101},
+            False,
+            [app],
+            "start_time_ticks",
+        ),
+    ]
+    for candidate_state, expected, identity, owner_alive, apps, reason in cases:
+        assert reason in orphan_worker_errors(
+            state=candidate_state,
+            expected_command=expected,
+            current_identity=identity,
+            original_owner_alive=owner_alive,
+            compute_apps=apps,
+        )
+
+    built = _worker_command("/cache/model.gguf", 18088)
+    assert built[1:] == command[1:]
+    assert Path(built[0]).name.startswith("python")

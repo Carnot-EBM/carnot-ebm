@@ -35,7 +35,12 @@ from carnot.experiment_6850_three_family_scoring_admission_canary import (
     _gpu_inventory,
     _gpu_snapshot,
 )
-from carnot.inference.llama_cpp_process import OwnedLlamaCppProcess, port_is_free
+from carnot.inference.llama_cpp_process import (
+    OwnedLlamaCppProcess,
+    ownership_token_digest,
+    port_is_free,
+    read_owner_state,
+)
 from carnot.inference.llama_server_supervisor import read_process_identity
 from carnot.inference.sota_models import cached_sota_pair
 
@@ -57,26 +62,20 @@ PROCESS_MODULE_RELATIVE_PATH = Path("python/carnot/inference/llama_cpp_process.p
 EXP6867_RELATIVE_PATH = Path(
     "results/experiment_6867_tokenizer_aware_semantic_preregistration_v2.json"
 )
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_6868_three_family_semantic_scoring_stream_v2.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_6868_three_family_semantic_scoring_stream_v2.json")
 CHECKPOINT_RELATIVE_PATH = Path(
     "results/checkpoints/experiment_6868_three_family_semantic_scoring_stream_v2.checkpoint.json"
 )
 CALIBRATION_SIDECAR_RELATIVE_PATH = Path(
     "results/sidecars/experiment_6868_semantic_scoring_calibration.json"
 )
-HELD_SIDECAR_RELATIVE_PATH = Path(
-    "results/sidecars/experiment_6868_semantic_scoring_held.json"
-)
+HELD_SIDECAR_RELATIVE_PATH = Path("results/sidecars/experiment_6868_semantic_scoring_held.json")
 
 SCHEMA = "carnot.experiment_6868.three_family_semantic_scoring_stream_v2.v1"
 INFERENCE_SUBSTRATE = "live local llama.cpp CUDA forced-sequence scoring"
 RUN_DATE = "20260902"
 RANDOM_SEED = 6868
-EXPECTED_EXP6867_SHA256 = (
-    "sha256:31f445cf96627221d286db6859392c5a19eef211b703dc91dc663b3d3e0cc480"
-)
+EXPECTED_EXP6867_SHA256 = "sha256:31f445cf96627221d286db6859392c5a19eef211b703dc91dc663b3d3e0cc480"
 MODEL_SPECS = (
     "unsloth/Qwen3.6-35B-A3B-GGUF",
     "unsloth/gemma-4-31B-it-GGUF",
@@ -104,6 +103,7 @@ REQUEST_TIMEOUT_S = 300.0
 DISK_FLOOR_BYTES = 512 * 1024 * 1024
 ROUND_DIGITS = 10
 LEASE_RUNTIME_DIR = Path("/tmp/carnot-gpu-leases")
+ORPHAN_RUNTIME_ROOT = Path(tempfile.gettempdir())
 
 REQUIRED_ARTIFACT_FIELDS = (
     "field_principles",
@@ -281,9 +281,7 @@ def _observed_model_bindings(resolved_models: Sequence[Mapping[str, Any]]) -> Js
     return {
         str(row.get("hf_id")): {
             "model_sha256": row.get("model_sha256"),
-            "canonical_tokenizer_payload_hash": row.get(
-                "canonical_tokenizer_payload_hash"
-            ),
+            "canonical_tokenizer_payload_hash": row.get("canonical_tokenizer_payload_hash"),
         }
         for row in resolved_models
     }
@@ -334,7 +332,11 @@ def evaluate_preconditions(
 
 def _slot_tokens(mapping: Mapping[str, Any], slot: int, field: str) -> list[int]:
     values = mapping.get(f"slot_{slot}")
-    if not isinstance(values, list) or not values or not all(type(value) is int for value in values):
+    if (
+        not isinstance(values, list)
+        or not values
+        or not all(type(value) is int for value in values)
+    ):
         raise SemanticScoringError(f"{field}_missing:slot_{slot}")
     return [int(value) for value in values]
 
@@ -431,9 +433,54 @@ def validate_worker_payload(payload: Mapping[str, Any]) -> list[str]:
         errors.append("forbidden_worker_text")
     for key in allowed:
         values = payload.get(key)
-        if not isinstance(values, list) or not values or not all(type(value) is int for value in values):
+        if (
+            not isinstance(values, list)
+            or not values
+            or not all(type(value) is int for value in values)
+        ):
             errors.append(f"invalid_worker_tokens:{key}")
     return errors
+
+
+def orphan_worker_errors(
+    *,
+    state: Mapping[str, Any],
+    expected_command: Sequence[str],
+    current_identity: Mapping[str, Any],
+    original_owner_alive: bool,
+    compute_apps: Sequence[Mapping[str, Any]],
+) -> list[str]:
+    """Allow score reuse only when every non-parent worker identity still matches."""
+
+    receipt_value = state.get("receipt")
+    receipt = receipt_value if isinstance(receipt_value, Mapping) else {}
+    token = state.get("ownership_token")
+    errors: list[str] = []
+    if receipt.get("owned_by_task") is not True:
+        errors.append("owned_by_task")
+    if not isinstance(token, str) or ownership_token_digest(token) != receipt.get(
+        "ownership_token_digest"
+    ):
+        errors.append("token")
+    if list(receipt.get("command") or []) != [str(value) for value in expected_command]:
+        errors.append("command")
+    if current_identity.get("exists") is not True:
+        errors.append("process_missing")
+    for field in ("pid", "start_time_ticks", "uid", "command_hash", "process_group_id"):
+        if current_identity.get(field) != receipt.get(field):
+            errors.append(field)
+    if original_owner_alive:
+        errors.append("owner_still_live")
+    matching_apps = [
+        row
+        for row in compute_apps
+        if row.get("pid") == receipt.get("pid")
+        and str(row.get("gpu_uuid") or "").startswith("GPU-")
+        and int(row.get("used_memory_mb", 0) or 0) > 0
+    ]
+    if len(matching_apps) != 1:
+        errors.append("compute_app")
+    return list(dict.fromkeys(errors))
 
 
 def row_hash(row: Mapping[str, Any]) -> str:
@@ -471,9 +518,7 @@ def score_response_row(item: Mapping[str, Any], response: Mapping[str, Any]) -> 
         "model_hf_id": item.get("model_hf_id"),
         "model_family": item.get("model_family"),
         "model_hash": item.get("model_hash"),
-        "canonical_tokenizer_payload_hash": item.get(
-            "canonical_tokenizer_payload_hash"
-        ),
+        "canonical_tokenizer_payload_hash": item.get("canonical_tokenizer_payload_hash"),
         "semantic_group_identity": item.get("semantic_group_identity"),
         "semantic_family": item.get("semantic_family"),
         "split": item.get("split"),
@@ -865,6 +910,99 @@ def _probe_lease(gpu: Mapping[str, Any]) -> JsonDict:  # pragma: no cover - live
         return {"ok": False, "detail": f"{type(exc).__name__}: {exc}"}
 
 
+def _worker_command(model_path: str, port: int) -> list[str]:
+    return [
+        sys.executable,
+        "-m",
+        "carnot.experiment_6868_three_family_semantic_scoring_stream_v2",
+        "--score-worker",
+        "--model-path",
+        str(model_path),
+        "--port",
+        str(int(port)),
+    ]
+
+
+def _discover_adoptable_workers(
+    models: Sequence[Mapping[str, Any]], compute_apps: Sequence[Mapping[str, Any]]
+) -> JsonDict:  # pragma: no cover - live crash recovery.
+    """Find exact score workers whose original owner exited without signaling them."""
+
+    candidates: dict[str, list[JsonDict]] = {str(row["hf_id"]): [] for row in models}
+    observations: list[JsonDict] = []
+    for state_path in sorted(ORPHAN_RUNTIME_ROOT.glob("carnot-exp6868-*/*.owner.json")):
+        state = read_owner_state(state_path)
+        if not isinstance(state, Mapping):
+            observations.append({"state_path": str(state_path), "errors": ["state_unreadable"]})
+            continue
+        receipt_value = state.get("receipt")
+        receipt = dict(receipt_value) if isinstance(receipt_value, Mapping) else {}
+        pid = int(receipt.get("pid", -1))
+        port = int(receipt.get("port", -1))
+        current = read_process_identity(pid)
+        owner = read_process_identity(int(receipt.get("owner_pid", -1)))
+        owner_alive = bool(
+            owner.get("exists") is True
+            and owner.get("start_time_ticks") == receipt.get("owner_start_time_ticks")
+        )
+        matching_model = next(
+            (
+                dict(model)
+                for model in models
+                if list(receipt.get("command") or [])
+                == _worker_command(str(model.get("model_path")), port)
+            ),
+            None,
+        )
+        errors = (
+            ["unexpected_worker_command"]
+            if matching_model is None
+            else orphan_worker_errors(
+                state=state,
+                expected_command=_worker_command(str(matching_model["model_path"]), port),
+                current_identity=current,
+                original_owner_alive=owner_alive,
+                compute_apps=compute_apps,
+            )
+        )
+        if port_is_free(port):
+            errors.append("port_not_listening")
+        if state_path.stat().st_mode & 0o077:
+            errors.append("owner_state_not_private")
+        app = next((dict(row) for row in compute_apps if row.get("pid") == pid), {})
+        observation = {
+            "state_path": str(state_path),
+            "pid": pid,
+            "start_time_ticks": receipt.get("start_time_ticks"),
+            "port": port,
+            "ownership_token_digest": receipt.get("ownership_token_digest"),
+            "token_opaque": True,
+            "original_owner_alive": owner_alive,
+            "gpu_uuid": app.get("gpu_uuid"),
+            "used_memory_mb": app.get("used_memory_mb"),
+            "errors": list(dict.fromkeys(errors)),
+        }
+        observations.append(observation)
+        if not errors and matching_model is not None:
+            candidates[str(matching_model["hf_id"])].append(
+                {
+                    "state": dict(state),
+                    "state_path": str(state_path),
+                    "log_path": str(
+                        state_path.with_name(state_path.name.replace(".owner.json", ".log"))
+                    ),
+                    "gpu_uuid": app.get("gpu_uuid"),
+                    "used_memory_mb": app.get("used_memory_mb"),
+                    "observation": observation,
+                }
+            )
+    adopted = {model: rows[0] for model, rows in candidates.items() if len(rows) == 1}
+    for model, rows in candidates.items():
+        if len(rows) > 1:
+            observations.append({"hf_id": model, "errors": ["multiple_exact_orphans"]})
+    return {"workers": adopted, "observations": observations}
+
+
 def collect_live_preconditions(root: Path) -> JsonDict:  # pragma: no cover - live host.
     """Call the canonical cache resolver and collect every fail-closed gate."""
 
@@ -874,18 +1012,37 @@ def collect_live_preconditions(root: Path) -> JsonDict:  # pragma: no cover - li
     pair = cached_sota_pair() or []
     cached_ids = [str(row.get("hf_id")) for row in pair]
     models = _resolved_models(preregistration)
+    compute_apps = _compute_apps()
+    orphan_discovery = _discover_adoptable_workers(models, compute_apps)
+    orphan_workers = dict(orphan_discovery["workers"])
     ports = _choose_free_ports(len(MODEL_SPECS))
-    ports_free = len(ports) == len(MODEL_SPECS) and all(port_is_free(port) for port in ports)
+    for model_index, model in enumerate(models):
+        orphan = orphan_workers.get(str(model["hf_id"]))
+        if orphan:
+            ports[model_index] = int(dict(orphan["observation"])["port"])
+    owned_orphan_ports = {int(dict(row["observation"])["port"]) for row in orphan_workers.values()}
+    ports_free = len(ports) == len(MODEL_SPECS) and all(
+        port_is_free(port) or port in owned_orphan_ports for port in ports
+    )
     cuda = _cuda_token_scoring()
     inventory = _gpu_inventory()
-    largest_model_mb = max(
-        int(row.get("model_size_bytes") or 0) // (1024 * 1024) for row in models
-    )
+    largest_model_mb = max(int(row.get("model_size_bytes") or 0) // (1024 * 1024) for row in models)
     required_free_mb = largest_model_mb + 768
-    eligible = [
-        row for row in inventory if int(row.get("free_vram_mb", 0)) >= required_free_mb
+    eligible = [row for row in inventory if int(row.get("free_vram_mb", 0)) >= required_free_mb]
+    orphan_gpu_rows = [
+        row
+        for row in inventory
+        if any(
+            candidate.get("gpu_uuid") == row.get("gpu_uuid")
+            and int(row.get("free_vram_mb", 0)) + int(candidate.get("used_memory_mb", 0) or 0)
+            >= required_free_mb
+            for candidate in orphan_workers.values()
+        )
     ]
-    gpu = max(eligible, key=lambda row: int(row.get("free_vram_mb", 0))) if eligible else {}
+    if orphan_gpu_rows:
+        gpu = max(orphan_gpu_rows, key=lambda row: int(row.get("free_vram_mb", 0)))
+    else:
+        gpu = max(eligible, key=lambda row: int(row.get("free_vram_mb", 0))) if eligible else {}
     lease_probe = _probe_lease(gpu) if gpu else {"ok": False, "detail": "no_eligible_gpu"}
     disk = shutil.disk_usage(root)
     preconditions = evaluate_preconditions(
@@ -910,13 +1067,17 @@ def collect_live_preconditions(root: Path) -> JsonDict:  # pragma: no cover - li
             "eligible_gpu": gpu,
             "required_free_vram_mb": required_free_mb,
             "lease_probe": lease_probe,
-            "unrelated_process_observations": _compute_apps(),
+            "unrelated_process_observations": compute_apps,
+            "orphan_worker_observations": orphan_discovery["observations"],
+            "adoptable_orphan_models": sorted(orphan_workers),
         }
     )
     for model in models:
         model["gpu"] = gpu.get("index")
         model["gpu_uuid"] = gpu.get("gpu_uuid")
         model["visible_devices"] = gpu.get("visible_devices", gpu.get("index"))
+        if str(model["hf_id"]) in orphan_workers:
+            model["adopted_worker"] = orphan_workers[str(model["hf_id"])]
     return {
         "preregistration": preregistration,
         "preregistration_hash": preregistration_hash,
@@ -1040,31 +1201,32 @@ class _LiveScorer:  # pragma: no cover - live process.
         port: int,
         gpu: Mapping[str, Any],
         runtime_dir: Path,
+        adopted_worker: Mapping[str, Any] | None = None,
     ) -> None:
         self.model = dict(model)
-        command = [
-            sys.executable,
-            "-m",
-            "carnot.experiment_6868_three_family_semantic_scoring_stream_v2",
-            "--score-worker",
-            "--model-path",
-            str(model["model_path"]),
-            "--port",
-            str(port),
-        ]
+        self.adopted_worker = dict(adopted_worker or {})
+        command = _worker_command(str(model["model_path"]), port)
         env = dict(os.environ)
         env["CUDA_VISIBLE_DEVICES"] = str(gpu["index"])
         family = str(model["family"])
+        state_path = Path(
+            str(self.adopted_worker.get("state_path") or runtime_dir / f"{family}.owner.json")
+        )
+        log_path = Path(str(self.adopted_worker.get("log_path") or runtime_dir / f"{family}.log"))
         self.process = OwnedLlamaCppProcess(
             command=command,
             port=port,
             env=env,
-            log_path=runtime_dir / f"{family}.log",
-            state_path=runtime_dir / f"{family}.owner.json",
+            log_path=log_path,
+            state_path=state_path,
         )
+        if self.adopted_worker:
+            state = dict(self.adopted_worker["state"])
+            self.process.token = str(state["ownership_token"])
+            self.process.receipt = dict(state["receipt"])
 
     def start(self) -> JsonDict:
-        receipt = self.process.launch()
+        receipt = dict(self.process.receipt or {}) if self.adopted_worker else self.process.launch()
         health = self.process.wait_for_health(HEALTH_TIMEOUT_S)
         receipt.update(
             {
@@ -1076,6 +1238,7 @@ class _LiveScorer:  # pragma: no cover - live process.
                 "visible_devices": str(self.model["visible_devices"]),
                 "offload": {"n_gpu_layers": -1, "cuda_required": True},
                 "context_length": CONTEXT_LENGTH,
+                "adopted_after_owner_exit": bool(self.adopted_worker),
             }
         )
         if health.get("ok") is not True:
@@ -1121,7 +1284,9 @@ def _finish_lease(
         )
         phase = "validating"
     if phase in {"preflight", "admitted", "loading", "validating"}:
-        lease.transition("terminal_complete" if clean and phase == "validating" else "terminal_blocked")
+        lease.transition(
+            "terminal_complete" if clean and phase == "validating" else "terminal_blocked"
+        )
     return lease.release()
 
 
@@ -1162,7 +1327,13 @@ def _run_live_model_phase(
         ttl_s=LEASE_TTL_S,
     )
     owner = lease.owner_receipt()
-    scorer = _LiveScorer(model=model, port=port, gpu=gpu, runtime_dir=runtime_dir)
+    scorer = _LiveScorer(
+        model=model,
+        port=port,
+        gpu=gpu,
+        runtime_dir=runtime_dir,
+        adopted_worker=model.get("adopted_worker"),
+    )
     rows: list[JsonDict] = []
     failures: list[JsonDict] = []
     process_receipt: JsonDict = {}
@@ -1186,7 +1357,11 @@ def _run_live_model_phase(
             heartbeat.setdefault("released", False)
             lease_errors = lease_revalidation_errors(heartbeat)
             if lease_errors:
-                for item in [candidate for later in _group_batches(items)[batch_index:] for candidate in later]:
+                for item in [
+                    candidate
+                    for later in _group_batches(items)[batch_index:]
+                    for candidate in later
+                ]:
                     failures.append(
                         make_failure_row(
                             item,
@@ -1232,9 +1407,7 @@ def _run_live_model_phase(
         checkpoint_callback(rows, failures)
     finally:
         teardown = scorer.close()
-        after = _gpu_snapshot(
-            gpu, phase="after", owned_pid=int(process_receipt.get("pid", 0) or 0)
-        )
+        after = _gpu_snapshot(gpu, phase="after", owned_pid=int(process_receipt.get("pid", 0) or 0))
         if process_receipt:
             process_receipt.setdefault("vram_samples", [before, resident])
             process_receipt["vram_samples"].append(after)
@@ -1289,8 +1462,7 @@ def _source_hashes(root: Path) -> JsonDict:  # pragma: no cover - live files.
         "process_module": PROCESS_MODULE_RELATIVE_PATH,
     }
     return {
-        key: {"path": str(path), "sha256": sha256_file(root / path)}
-        for key, path in paths.items()
+        key: {"path": str(path), "sha256": sha256_file(root / path)} for key, path in paths.items()
     }
 
 
@@ -1391,9 +1563,7 @@ def run(
         artifact["tokenizer_receipts"] = [
             {
                 "hf_id": row["hf_id"],
-                "canonical_tokenizer_payload_sha256": row[
-                    "canonical_tokenizer_payload_hash"
-                ],
+                "canonical_tokenizer_payload_sha256": row["canonical_tokenizer_payload_hash"],
             }
             for row in live["models"]
         ]
@@ -1408,9 +1578,7 @@ def run(
     for item in work_items:
         verified = verified_models[str(item["model_hf_id"])]
         item["model_hash"] = verified["model_sha256"]
-        item["canonical_tokenizer_payload_hash"] = verified[
-            "canonical_tokenizer_payload_hash"
-        ]
+        item["canonical_tokenizer_payload_hash"] = verified["canonical_tokenizer_payload_hash"]
     expected_ids = [str(item["cell_identity"]) for item in work_items]
     input_checksum = _checkpoint_input_checksum(
         str(live["preregistration_hash"]), live["models"], work_items
@@ -1461,7 +1629,9 @@ def run(
         base_row_count = len(rows)
         base_failure_count = len(failures)
 
-        def batch_checkpoint(new_rows: Sequence[Mapping[str, Any]], new_failures: Sequence[Mapping[str, Any]]) -> None:
+        def batch_checkpoint(
+            new_rows: Sequence[Mapping[str, Any]], new_failures: Sequence[Mapping[str, Any]]
+        ) -> None:
             del rows[base_row_count:]
             rows.extend(deepcopy(dict(row)) for row in new_rows)
             del failures[base_failure_count:]
@@ -1501,9 +1671,7 @@ def run(
                     "ownership_verified": False,
                     "process_exit_confirmed": True,
                     "process_reaped": True,
-                    "port_release_confirmed": port_is_free(
-                        int(live["ports"][model_index])
-                    ),
+                    "port_release_confirmed": port_is_free(int(live["ports"][model_index])),
                     "unrelated_process_kill_count_delta": 0,
                 },
             }
@@ -1561,7 +1729,9 @@ def run(
         verdict = "complete_partial_three_family_semantic_scoring_stream_v2_raw_scores_only"
     gate_summary = _gate_summary(
         [
-            _gate_check("all_required_cells_terminal", len(expected_ids), len(rows) + len(failures)),
+            _gate_check(
+                "all_required_cells_terminal", len(expected_ids), len(rows) + len(failures)
+            ),
             _gate_check("checkpoint_complete", True, final_checkpoint.get("complete") is True),
             _gate_check("clean_owned_teardown", True, complete == 1),
         ]
@@ -1588,9 +1758,7 @@ def run(
                 {
                     "hf_id": row["hf_id"],
                     "source": "Exp6867 canonical tokenizer binding plus exact GGUF hash",
-                    "canonical_tokenizer_payload_sha256": row[
-                        "canonical_tokenizer_payload_hash"
-                    ],
+                    "canonical_tokenizer_payload_sha256": row["canonical_tokenizer_payload_hash"],
                 }
                 for row in live["models"]
             ],
@@ -1610,7 +1778,9 @@ def run(
             },
             "failed_cell_manifest": failures,
             "checkpoint_manifest": {
-                key: value for key, value in final_checkpoint.items() if key not in {"rows", "failed_cells"}
+                key: value
+                for key, value in final_checkpoint.items()
+                if key not in {"rows", "failed_cells"}
             },
             "teardown_receipts": teardown_receipts,
             "semantic_contrast_stream_v2_complete_score": complete,
