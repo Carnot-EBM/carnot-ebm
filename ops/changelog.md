@@ -18548,3 +18548,29 @@ telemetry. Also record model count and runner choice. Schedule eligible
 concurrent compute work across both GPUs. The savings estimate is 0% because no
 timed control is available.
 - 2026-09-02: V604 executable manifest and evidence admissibility contract (⚠️ Blocked) — honest_verdict=complete_blocked_v604_evidence_admissibility_contract; results/experiment_6898_v604_evidence_admissibility_contract.json
+
+## 2026-09-02 — Induce truncation root-caused and fixed end-to-end (outer loop, follow-up agent)
+
+Chain of three fixes, each measured before and after:
+
+1. **Diagnostic clip** (2c5d64ef25, REQ-ARC-WMTE-6860). Induce-failure notes were clipped at 150
+   chars, cutting the pool-truncation diagnostic before its numbers. One shared
+   `INDUCE_FAILURE_NOTE_CLIP=500` now bounds all five storage sites. Mutation-proven.
+2. **Pool geometry measured; `--parallel` knob** (b2cb725880, REQ-ARC-WMTE-6870). The pool is
+   UNIFIED (one fresh stream generated a full 15000-token budget at -c 49152); the live
+   truncations were the many-transition induce prompt (~30-46k tokens) filling the pool.
+   `CARNOT_ARC_LLAMA_SERVER_PARALLEL=1` guarantees a single-stream eval the whole pool;
+   `CARNOT_ARC_INDUCE_N_CTX=98304` is the sized fix (30k-prompt demo: 19142-token cut at 49152
+   -> full budget at 98304).
+3. **VRAM envelope refit** (c02678e33c, REQ-ARC-WMTE-6880). The gemma-4-31B envelope applied to
+   the Qwen3.8-27B pin over-predicted 98304 by ~4.4 GB, forcing an 11-layer FFN offload that cut
+   decode 28 -> 13.1 t/s and pushed think-mode induces past the 2400s timeout (measured: 19.2k
+   tokens per window, chars_final stuck at zero by TIMEOUT). Nine-point refit; auto-fit now picks 0 layers,
+   decode 38.7 t/s, and a complete think-mode draw (59.7k tokens, natural stop, valid engine)
+   landed for the first time on this local stack.
+
+Also: known-issues entries for the stale envelope (d6fb0e8d66) and the trajectory-supervisor
+crediting caveat (`resolved_by_levelup` credits transient live level_progress, not banked
+levels). The tool A/B (step 2 of the operator's tools directive) remains queued behind the
+re-run chars_final gate; the supervisor's new-arm question stays gated on the tool arm firing
+(all-arms-fired rule in `_new_arm_cells`).

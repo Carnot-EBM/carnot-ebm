@@ -9414,3 +9414,24 @@ NEXT (blocks the tool A/B, step 2):
   declaring a new arm. Also: `resolved_by_levelup`/`helped` credit on transient live
   level_progress (cd82: 0 banked levels, 3 redirects credited true), so they overcount success
   -- use banked levels / actions-to-progress, never these counters.
+
+## 2026-09-02 (later) — chars_final gate PASSED post-refit; tool A/B launched
+
+The VRAM envelope refit (c02678e33c) restored 0-offload launches at
+`CARNOT_ARC_INDUCE_N_CTX=98304`: decode 36-38 t/s (was 8-13). The chars_final gate then PASSED
+on the real production induce path: a 50,612-token natural-stop draw (`stop_type=eos`) in 25
+minutes, `chars_final=2466`, `reasoning_only=0` (was 24/24), first-attempt combined call,
+`wrote world_model.py`. Two consecutive successful draws (the first crashed only on a
+harness-local str-vs-Path bug after reaching the write step).
+
+The tools on/off A/B (step 2 of the tools directive) launched 19:07Z: arm OFF then arm ON,
+games cd82+r11l (r11l runs first, CLAIMED order), both arms at n_ctx=98304 with the trajectory
+supervisor on; the ON arm adds `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse` +
+`CARNOT_ARC_SUPERVISOR_TOOL_ARM=1`. Partials bank per game (REQ-ARC-WMTE-6850) into
+`results/arc_leaderboard_eval_runs/`. Compare on banked levels and actions-to-progress, never
+`helped` (it credits transient live level_progress — see the known-issues caveat).
+
+Diagnostics gap still open: a timed-out request leaves channel_totals all zero and
+`last_generated_tokens=-1` — the artifact cannot distinguish "timed out mid-generation" from
+"never called"; the server log carries the real numbers. Candidate widening: count timeouts as
+their own channel_totals key.
