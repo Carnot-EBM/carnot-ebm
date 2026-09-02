@@ -17044,3 +17044,5 @@ The l |
 | 2026-09-02 01:04 UTC | Dual-side exact semantic contrast bank | OK | 108 passed, 1 warning in 17.60s |
 | 2026-09-02 01:27 UTC | Tokenizer-aware nuisance and split preregistration | OK | 96 passed, 1 warning in 9.44s |
 | 2026-09-02 01:30 UTC | Three-family semantic contrast scoring stream | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6863-tokenizer-aware |
+| 2026-09-02 02:49 UTC | Plan milestone 2026.09.601 | OK | 9 tasks proposed |
+| 2026-09-02 02:53 UTC | Milestone 2026.09.601 activated | OK | 9 tasks queued |
