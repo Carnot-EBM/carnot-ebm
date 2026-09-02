@@ -17085,3 +17085,5 @@ The l |
 | 2026-09-02 19:17 UTC | Three-family live relation acquisition authenticit | OK | 101 passed, 1 warning in 9.76s |
 | 2026-09-02 20:10 UTC | Authentic three-family anchored relation proposal  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-09-02 20:41 UTC | Independent held qualification of model-produced r | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6901_indepen |
+| 2026-09-02 21:48 UTC | Independent held qualification of model-produced r | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6901_indepen |
+| 2026-09-02 21:50 UTC | Conductor re-exec: fresh committed source | OK | e372551c2942 -> d615af6127c7; argv preserved |
