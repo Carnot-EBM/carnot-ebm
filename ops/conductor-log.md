@@ -17047,3 +17047,4 @@ The l |
 | 2026-09-02 02:49 UTC | Plan milestone 2026.09.601 | OK | 9 tasks proposed |
 | 2026-09-02 02:53 UTC | Milestone 2026.09.601 activated | OK | 9 tasks queued |
 | 2026-09-02 03:36 UTC | V601 evidence and method-change contract | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-09-02 04:15 UTC | Canonical tokenizer binding requalification | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
