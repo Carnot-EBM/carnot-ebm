@@ -60507,3 +60507,152 @@ start with `complete_`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6865 and SCENARIO-REPORT-6865-* | Implemented (`python/carnot/experiment_6865_v601_evidence_method_change_contract.py`, `scripts/experiments/experiment_6865_v601_evidence_method_change_contract.py`, `results/experiment_6865_v601_evidence_method_change_contract.json`) | Implemented (`tests/python/test_experiment_6865_v601_evidence_method_change_contract.py`; 20 focused tests; 100% scoped statement coverage) |
+
+### REQ-REPORT-6874: V602 Evidence Contract SHALL Fail Closed From Primary Records
+
+Exp6874 SHALL perform an append-only deterministic CPU reduction. It SHALL not
+run model inference, token scoring, ARC rollouts, or a memory update. It SHALL
+not edit a V601 artifact. It SHALL require the nine activated V601 task
+deliverables, a terminal conductor row for each task, the activated V602
+roadmap, the V602 design, the exclusion manifest, the current adversarial
+verifier, and durable Git receipts for roadmap activation. A missing, stale, or
+malformed source SHALL produce a complete blocked artifact. Each failed check
+SHALL record its expected and observed values.
+
+The reducer SHALL reconstruct V601 task identifiers, deliverables, artifact
+hashes, terminal verdicts, verdict classes, gate results, stored adversarial
+flags, and fresh adversarial flags. It SHALL preserve stored and fresh states
+as separate values. It SHALL read explicit `{principle, value}` wrappers. It
+SHALL not unwrap an ordinary dictionary.
+
+The reducer SHALL inspect the producer module, roadmap command, model-call
+counts, GPU receipts, and source rows for each short artifact with a duration
+flag. It SHALL mark an artifact eligible for deterministic requalification only
+when those records mechanically prove that no new LLM inference occurred. A
+prose substrate alias alone SHALL not prove eligibility. The reducer SHALL not
+change any duration floor or V601 artifact.
+
+The reducer SHALL freeze Exp6869 as a null calibrated semantic result. It SHALL
+freeze Exp6870 as the correct gate block caused by Exp6869. It SHALL freeze
+Exp6873 as no demonstrated update benefit over read-only memory. These branches
+SHALL remain closed.
+
+The reducer SHALL compare the activated nine-task V601 YAML with its design. It
+SHALL record Exp6874 through Exp6877 from that design as document-only tasks.
+For each task, it SHALL prove that no YAML task, conductor run, or result
+artifact exists. It SHALL classify each task as never executed.
+
+The reducer SHALL parse the activated V602 YAML and the V602 design. It SHALL
+compare task order, task count, identifiers, deliverables, gate fields,
+upstream identifiers, prior-failure blocks, and the inclusive experiment range
+6874 through 6884. It SHALL record document-only and YAML-only tasks without
+pooling them. A gate-field spelling difference SHALL fail parity.
+
+The activation receipt SHALL prove that a committed
+`research-roadmap-next.yaml` blob became the activated
+`research-roadmap.yaml` blob before the staging path was deleted. It SHALL
+record commit identities, blob identities, ancestry checks, and copy equality.
+Missing Git evidence SHALL fail closed.
+
+Every `prior_failures` row SHALL contain `experiment_id`, the exact verdict from
+its primary result artifact, non-empty `addressed_by`, and
+`retire_if_same_verdict: true`. The reducer SHALL preserve any missing or
+incorrect subfield. No `gated_on.upstream` identifier MAY name a task retired
+by the exclusion manifest.
+
+The artifact SHALL set `v602_evidence_contract_ready_score` to one only when
+V601 evidence is source-complete, V602 document and YAML parity is exact, the
+activation copy receipt passes, every prior-failure row passes, and no retired
+dependency exists. The artifact SHALL include `schema`, `experiment_id`,
+`run_date`, `status`, `field_principles`,
+`preconditions_checked`, `inference_substrate`, `duration_s`,
+`source_artifact_hashes`, `rows`, `v601_terminal_task_rows`,
+`v601_stored_vs_fresh_adversarial_rows`,
+`deterministic_substrate_requalification_rows`,
+`fixed_sequence_semantic_branch_closed`, `reliability_update_branch_closed`,
+`v601_design_yaml_mismatch_rows`, `v601_unexecuted_design_task_rows`,
+`v602_document_yaml_parity_rows`, `v602_activation_copy_receipt`,
+`v602_gate_contract_rows`, `prior_failure_contract_rows`,
+`retired_dependency_rows`, `random_seed`, `reproducibility_checksum`,
+`v602_evidence_contract_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts_no_llm`. `verifier_is_oracle` SHALL be
+false. The verdict class SHALL use the closed project enum. The honest verdict
+SHALL start with `complete_`.
+
+#### SCENARIO-REPORT-6874-MISSING-V601: Missing Evidence Blocks Readiness
+
+**Given** a required V601 deliverable is missing
+**When** Exp6874 checks source completeness
+**Then** the task remains in the terminal inventory with a null hash
+**And** the gate summary names the missing path.
+
+#### SCENARIO-REPORT-6874-MISSING-CONDUCTOR: Missing Terminal Rows Stay Visible
+
+**Given** a V601 task has a result artifact but no terminal conductor row
+**When** Exp6874 reconstructs execution coverage
+**Then** the artifact and conductor states remain separate
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6874-WRAPPED-FIELD: Explicit Principle Wrappers Are Read
+
+**Given** a required scalar uses a `{principle, value}` wrapper
+**When** Exp6874 reads the source field
+**Then** it uses the wrapped value
+**And** it leaves ordinary dictionaries unchanged.
+
+#### SCENARIO-REPORT-6874-STALE-ARTIFACT: Old Terminal Files Cannot Satisfy V601
+
+**Given** a V601 deliverable has the wrong execution date or a nonterminal state
+**When** Exp6874 checks artifact freshness
+**Then** it records the exact stale condition
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6874-DOCUMENT-ONLY: Design-Only Tasks Are Never Executed
+
+**Given** a task exists only in the V601 or V602 design
+**When** Exp6874 compares the design with executable YAML and evidence
+**Then** it records the task as document-only
+**And** it does not invent a conductor run or artifact.
+
+#### SCENARIO-REPORT-6874-YAML-ONLY: Executable-Only Tasks Fail Parity
+
+**Given** a task exists only in the V602 YAML
+**When** Exp6874 compares task order and identity
+**Then** it records the task as YAML-only
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6874-GATE-TYPO: Gate Fields Match Exactly
+
+**Given** a design gate and YAML gate differ by one field-name character
+**When** Exp6874 builds the gate contract
+**Then** it records the exact expected and observed spellings
+**And** parity fails.
+
+#### SCENARIO-REPORT-6874-PRIOR-SUBFIELD: Prior Failures Are Complete And Exact
+
+**Given** a prior-failure entry lacks a required subfield or changes its verdict
+**When** Exp6874 validates the entry against primary evidence
+**Then** it records each missing or mismatched value
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6874-RETIRED-DEPENDENCY: Retired Upstreams Stay Closed
+
+**Given** a V602 gate names an experiment retired by the exclusion manifest
+**When** Exp6874 validates dependencies
+**Then** it records the retired dependency and manifest source
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6874-NO-LLM: Short Artifacts Need Mechanical Proof
+
+**Given** a short artifact carries a duration flag
+**When** its module, command, call counts, GPU receipts, and rows prove no LLM ran
+**Then** the reducer may mark it eligible for deterministic requalification
+**And** a prose alias without that proof remains ineligible.
+
+## Implementation Status (REQ-REPORT-6874)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6874 and SCENARIO-REPORT-6874-* | Implemented (`python/carnot/experiment_6874_v602_evidence_substrate_manifest_contract.py`, `scripts/experiments/experiment_6874_v602_evidence_substrate_manifest_contract.py`, `results/experiment_6874_v602_evidence_substrate_manifest_contract.json`) | Covered (`tests/python/test_experiment_6874_v602_evidence_substrate_manifest_contract.py`) |
