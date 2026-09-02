@@ -3532,3 +3532,139 @@ record zero unrelated process signals.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFERENCE-6868 and SCENARIO-INFERENCE-6868-* | Planned (`python/carnot/experiment_6868_three_family_semantic_scoring_stream_v2.py`; `scripts/experiments/experiment_6868_three_family_semantic_scoring_stream_v2.py`) | Planned (`tests/python/test_experiment_6868_three_family_semantic_scoring_stream_v2.py`) |
+
+### REQ-INFERENCE-6887: Three-Family Anchored Relation Proposal Corpus
+
+Exp6887 SHALL call `cached_sota_pair()` before acquisition. It SHALL also use
+`resolve_cached_gguf()` for the dense extension. It SHALL require the Exp6886
+`relation_fixture_ready_score` to equal one. It SHALL require the exact three
+model repositories, their local GGUF files, the pinned Enoki encoder files,
+native GGUF tokenizer receipts, llama.cpp CUDA offload, task-owned GPU leases,
+and zero access to held formal sidecars. A failed precondition SHALL write a
+terminal `complete_blocked_three_family_relation_corpus` artifact. Its gate
+summary SHALL name each failed check, expected value, and observed value.
+
+Exp6887 SHALL use at least 90 frozen Exp6886 public source records. Every one
+of the five fixture families SHALL contribute at least 18 records. The three
+GGUF arms, pinned Enoki encoder arm, and deterministic rule arm SHALL receive
+the same records in the same order. GGUF cells SHALL share one prompt template,
+seed matrix, output budget, and stop policy. The prompt SHALL expose only the
+public source text, source identity, allowed predicate names, and a plain-text
+relation-line protocol. It SHALL not expose held labels, ASP programs, answer
+sets, solver receipts, exact target relations, sidecar paths, or hidden case
+names.
+
+The GGUF protocol SHALL use unconstrained plain-text generation. Exp6887 SHALL
+not use a grammar, JSON schema, constrained decoding, repair prompt, model
+judge, or external text scorer. Each GGUF SHALL use its tokenizer embedded in
+the resolved GGUF. A GGUF repository ID SHALL never be passed to
+`AutoTokenizer.from_pretrained()`. CPU-only fallback, absent owned CUDA
+residency, and missing GPU offload SHALL fail the headline acquisition.
+
+Exp6887 SHALL preserve one terminal cell for each arm and source record. Each
+cell SHALL retain the prompt hash, raw output and hash, native prompt and output
+token counts, latency, stop reason, timeout and truncation state, arm identity,
+source identity, family, task identity, seed, output budget, and runtime
+receipt. Parsing SHALL inspect surface text only. It SHALL preserve every valid
+span and tuple plus malformed, unsupported, duplicate, abstention, empty,
+timeout, and truncation rows. It SHALL not impute or drop a denominator row.
+
+Each GGUF process receipt SHALL record its PID, model hash, tokenizer evidence,
+GPU UUID, visible device, offload layers, context and output limits, VRAM
+samples, lease ownership, and bounded teardown. Cleanup SHALL signal only a
+matching task-owned server. It SHALL confirm process exit, process reap, port
+release, lease release, and zero unrelated process signals. Partial checkpoints
+SHALL bind all frozen input hashes and preserve completed terminal cells. A
+resume SHALL rerun only absent cell identities.
+
+The terminal artifact SHALL be
+`results/experiment_6887_three_family_relation_proposal_corpus.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `relation_fixture_ready_score`,
+`model_specs`, `models_used`, `model_artifact_hashes`, `tokenizer_receipts`,
+`llama_cpp_receipts`, `gpu_lease_rows`, `enoki_asset_receipts`,
+`deterministic_rule_receipts`, `prompt_manifest`,
+`held_sidecar_access_count`, `rows`, `raw_output_manifest`,
+`parse_failure_rows`, `abstention_rows`, `truncation_rows`, `timeout_rows`,
+`per_arm_family_counts`, `server_lifecycle_rows`,
+`model_weight_mutation_count`, `external_text_scorer_call_count`,
+`constrained_schema_decode_count`, `random_seed`, `reproducibility_checksum`,
+`relation_corpus_complete_score`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. Every required field, the incoming gate,
+and the outgoing gate SHALL have one entry in `field_principles`.
+`inference_substrate` SHALL equal
+`live_local_sota_gguf_cuda_plus_pinned_enoki_encoder`.
+`held_sidecar_access_count`, `model_weight_mutation_count`,
+`external_text_scorer_call_count`, and `constrained_schema_decode_count` SHALL
+all equal zero. `verifier_is_oracle` SHALL be false. `honest_verdict` SHALL
+start with `complete_`. `verdict_class` SHALL be one of `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+
+`relation_corpus_complete_score` SHALL be the bare integer one only when all
+five arms have authentic terminal cells for every frozen source record, every
+arm-family count meets its floor, raw rows and hashes replay, held-sidecar
+access is zero, GPU and tokenizer evidence passes for all GGUF arms, the pinned
+Enoki identity passes, and server teardown is clean. It SHALL not depend on
+proposal quality, parser success, abstention rate, timeout count, or truncation
+count. Otherwise it SHALL be zero.
+
+#### SCENARIO-INFERENCE-6887-PRECONDITIONS: Missing Or Drifted Inputs Block
+
+Given a missing model cache, changed Exp6886 gate or hash, changed Enoki
+revision, substituted tokenizer, CPU-only runtime, absent GPU offload, or lease
+failure,
+When Exp6887 checks acquisition inputs,
+Then acquisition SHALL not start and the complete blocked artifact SHALL retain
+the exact failed expectations and observations.
+
+#### SCENARIO-INFERENCE-6887-PROMPT-SEAL: Formal Authority Never Reaches An Arm
+
+Given public source views and sealed held authority,
+When Exp6887 builds any prompt or encoder input,
+Then no held label, hidden case, ASP program, answer set, solver receipt, exact
+target relation, or sidecar path SHALL appear and held-sidecar access SHALL
+remain zero.
+
+#### SCENARIO-INFERENCE-6887-PROTOCOL: Surface Parsing Preserves Failures
+
+Given valid lines, malformed lines, invalid UTF-8 spans, unsupported
+predicates, duplicate tuples, abstentions, and empty output,
+When Exp6887 parses a raw proposal,
+Then it SHALL preserve each input line or empty cell with a typed status and
+SHALL accept only exact source byte spans and protocol fields.
+
+#### SCENARIO-INFERENCE-6887-TIMEOUT-AND-TRUNCATION: Terminal Cells Stay Visible
+
+Given a timed-out request or output-budget stop,
+When Exp6887 records the cell,
+Then it SHALL keep the raw output received, mark the timeout or truncation, and
+retain the cell in every applicable denominator.
+
+#### SCENARIO-INFERENCE-6887-RESUME: Only Absent Cells Run Again
+
+Given a partial checkpoint with unchanged frozen input hashes,
+When Exp6887 resumes,
+Then verified terminal cells SHALL remain byte-identical and only absent cell
+identities SHALL run. Input or checkpoint hash drift SHALL fail closed.
+
+#### SCENARIO-INFERENCE-6887-TEARDOWN: Owned Servers Exit Cleanly
+
+Given one matching task-owned llama.cpp server and unrelated processes,
+When Exp6887 ends a GGUF phase,
+Then it SHALL stop and reap only the owned server, release its port and lease,
+and record zero unrelated process signals.
+
+#### SCENARIO-INFERENCE-6887-COMPLETION: Readiness Measures Acquisition Only
+
+Given all five arm-family matrices and their terminal raw cells,
+When Exp6887 computes its outgoing gate,
+Then complete authentic acquisition SHALL score one even when proposal rows are
+malformed, unsupported, duplicate, abstained, empty, timed out, or truncated.
+Missing cells, bad provenance, label access, or unclean teardown SHALL score
+zero.
+
+## Implementation Status (REQ-INFERENCE-6887)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6887 and SCENARIO-INFERENCE-6887-* | Planned (`python/carnot/experiment_6887_three_family_relation_proposal_corpus.py`; `scripts/experiments/experiment_6887_three_family_relation_proposal_corpus.py`) | Planned (`tests/python/test_experiment_6887_three_family_relation_proposal_corpus.py`) |
