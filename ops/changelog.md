@@ -18576,3 +18576,4 @@ re-run chars_final gate; the supervisor's new-arm question stays gated on the to
 (all-arms-fired rule in `_new_arm_cells`).
 - 2026-09-02: Three-family live relation acquisition authenticity canary (✅ Complete) — honest_verdict=complete_positive_live_relation_acquisition_canary_ready; results/experiment_6899_live_relation_acquisition_canary.json
 - 2026-09-02: Authentic three-family anchored relation proposal corpus (✅ Complete) — honest_verdict=complete_positive_authentic_anchored_relation_corpus; results/experiment_6900_authentic_anchored_relation_corpus.json
+- 2026-09-02: Independent held qualification of model-produced relations (⚠️ Blocked) — honest_verdict=complete_blocked_independent_model_relation_qualification; results/experiment_6901_independent_model_relation_qualification.json
