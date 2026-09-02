@@ -17080,3 +17080,5 @@ The l |
 | 2026-09-02 16:40 UTC | Independent held anchored relation qualification | OK | 99 passed, 1 warning in 15.29s |
 | 2026-09-02 18:05 UTC | Plan milestone 2026.09.604 | OK | 7 tasks proposed |
 | 2026-09-02 18:08 UTC | Milestone 2026.09.604 activated | OK | 7 tasks queued |
+| 2026-09-02 18:36 UTC | V604 executable manifest and evidence admissibilit | OK | 119 passed, 1 warning in 12.82s |
+| 2026-09-02 18:38 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 1388015 (port 8931) reparented to init, no live process references its |
