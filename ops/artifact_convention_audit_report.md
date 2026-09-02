@@ -9,105 +9,41 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 3 |
-| AGGREGATE_ONLY | 3 |
+| CHECKABLE | 5 |
+| AGGREGATE_ONLY | 1 |
 | CANNOT_DETERMINE | 2 |
-
-## experiment_6868_three_family_semantic_scoring_stream_v2.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-The artifact is truncated mid-value after `"expected_identities"`; despite visible fields such as `"checkpoint_manifest.complete": true`, `"expected_cell_count": 880`, and `"calibration_score_manifest.row_count": 448`, the remaining top-level verdict, comparative metrics, per-unit rows, and any `"gate_check_summary"` cannot be inspected.
-
-## THE CHECK A READER CANNOT DO
-Does the omitted remainder make a comparative or blocked headline claim, and if so, does it include the necessary per-unit evidence or blocker diagnostic?
-
-## experiment_6869_calibration_only_paired_semantic_rule.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-The pooled comparison shows a positive effect of 0.10283877494589307 with a 95% bootstrap interval of 0.07928079080704799 to 0.12502085885913594.
-
-## WHAT IS MISSING
-Per-`semantic_group_identity` metric rows containing each arm’s score and paired effect; `"bootstrap_rows"` contains only aggregate estimates and intervals, while `"calibration_access_log"` records data access rather than unit-level outcomes.
-
-## THE CHECK A READER CANNOT DO
-Was the pooled improvement broad across semantic groups, or driven by a few outliers, degenerate controls, or units pinned at a floor or ceiling?
-
-## experiment_6870_sealed_independent_semantic_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because `semantic_contrast_rule_ready_score` was 0 when the gate required it to equal 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6871_observable_reliability_opportunity_stream.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-No headline claim is visible in the supplied, truncated artifact.
-
-## WHAT IS MISSING
-The complete artifact, including any headline/verdict and result rows; only `"action_manifest"`, `"bounded_update_contract"`, and part of `"chronological_order_manifest"` are present before the JSON cuts off.
-
-## THE CHECK A READER CANNOT DO
-Does the omitted portion make a comparative claim or report a blocked verdict, and if so, does it include per-unit metrics or a blocker diagnostic?
 
 ## experiment_6872_bounded_reliability_controller_quarantine.json
 
-**AGGREGATE_ONLY**
+**CANNOT_DETERMINE**
 
 ## VERDICT
-AGGREGATE_ONLY
+CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The arms differ in abstention rate and action distribution, including lower abstention for `exact_quarantine` than `bounded_update`.
+The artifact is truncated before any explicit headline claim or verdict can be identified.
 
 ## WHAT IS MISSING
-Complete per-unit action rows for every arm and condition; `"abstention_rate_by_arm"` and `"action_distribution_by_arm"` are aggregates, while `"admitted_update_rows"` includes only admitted writes and omits the abstained, read-only, and no-memory units needed to verify them.
+The JSON ends mid-value inside `"admitted_update_rows"`; the remainder—including any `"verdict"`, `"gate_check_summary"`, and complete per-unit rows supporting `"abstention_rate_by_arm"` and `"action_distribution_by_arm"`—cannot be found.
 
 ## THE CHECK A READER CANNOT DO
-Was `exact_quarantine`’s lower pooled abstention rate broad across models, seeds, and conditions, or driven by a small subset of units?
+Does the omitted portion contain complete per-unit evidence for the arm comparisons or a diagnostic for any blocked verdict?
 
 ## experiment_6873_prospective_sealed_self_learning_audit.json
 
-**AGGREGATE_ONLY**
+**CANNOT_DETERMINE**
 
 ## VERDICT
-AGGREGATE_ONLY
+CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The arms differ in behavior and useful learning, with `"v599_unsafe_reference"` recording 1,360 admitted useful updates versus 260 for each update arm and zero for the controls.
+The artifact is truncated before any explicit headline claim or verdict appears.
 
 ## WHAT IS MISSING
-Per-unit rows underlying `"admitted_useful_updates_by_arm"`, `"action_distribution_by_arm"`, and `"action_entropy_by_arm"` for every arm; `"delayed_correction_rows"` is present but contains correction checks rather than the comparative metrics and shows only `"frozen_no_memory"` rows.
+The remainder of the JSON, including any verdict or gate fields; visible fields include `"action_distribution_by_arm"`, `"action_entropy_by_arm"`, `"admitted_useful_updates_by_arm"`, and `"delayed_correction_rows"`.
 
 ## THE CHECK A READER CANNOT DO
-Is the apparent advantage in admitted useful updates broad across units, or driven by a small number of outliers or degenerate conditions?
+Did the complete artifact claim a comparative gate was met or that the task was blocked, and what evidence supported that verdict?
 
 ## experiment_6874_v602_evidence_substrate_manifest_contract.json
 
@@ -117,7 +53,7 @@ Is the apparent advantage in admitted useful updates broad across units, or driv
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V602 evidence-substrate manifest contract is blocked because document/YAML parity and related gate-contract readiness checks failed.
+The artifact claims Exp6874 completed but was blocked because V602 document/YAML parity, gate-contract validation, and evidence-contract readiness checks failed.
 
 ## WHAT IS MISSING
 nothing
@@ -133,10 +69,74 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because upstream field `v602_evidence_contract_ready_score` was observed as 0 but required to equal 1.
+The experiment was blocked because upstream field `v602_evidence_contract_ready_score` was 0 but had to equal 1.
 
 ## WHAT IS MISSING
 nothing
 
 ## THE CHECK A READER CANNOT DO
 none
+
+## experiment_6885_v603_executable_manifest_branch_contract.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V603 executable-manifest branch contract is blocked because the document declares 13 tasks while the executable YAML contains only 4, causing multiple contract checks to fail.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6886_enoki_exact_relation_fixture.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+no claim
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6887_three_family_relation_proposal_corpus.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+no claim
+
+## WHAT IS MISSING
+nothing; the present `"abstention_rows"` record per-cell `"status"` and `"reason"` diagnostics.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6888_independent_relation_qualification.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+`rule:anchored_lexical_v1` is the only eligible arm, passing every threshold while all four competing arms fail five thresholds.
+
+## WHAT IS MISSING
+Per-unit `rows`, `span_metric_rows`, `tuple_metric_rows`, `parse_coverage_rows`, and `perturbation_rows` underlying the aggregate `observed` values in `eligible_arm_rows`; only aggregates such as `family_rows` and `abstention_rows`, plus per-fixture `contradiction_rows` and `asp_compilation_rows`, are present.
+
+## THE CHECK A READER CANNOT DO
+Were the passing span F1, tuple precision/recall, coverage, and family-floor results broad across the 90 qualified relation events, or driven by a small subset of units, duplicates, or units with no headroom?

@@ -1,0 +1,679 @@
+milestone: 2026.09.604
+milestone_title: Authentic relations, prospective learning, and live ARC tool margins
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+- id: exp6898-v604-evidence-admissibility-contract
+  title: V604 executable manifest and evidence admissibility contract
+  track: infrastructure
+  priority: critical
+  agent_type: claude
+  model: opus
+  requires_gpu: false
+  max_turns: 100
+  estimated_wall_time_min: 120
+  per_unit_rows: true
+  milestone: 2026.09.604
+  deliverable: results/experiment_6898_v604_evidence_admissibility_contract.json
+  prompt: |
+    CONTEXT:
+    V602 and V603 each activated four tasks while their design documents promised 11 and 13 tasks.
+    V603 also produced a claimed live-GGUF corpus in 43.15 seconds. The adversarial verifier
+    quarantined that artifact, and the downstream reducer found zero parse coverage for every GGUF
+    and Enoki arm. V604 needs one exact manifest contract and an explicit admissibility ledger. This
+    task is advisory. No science task may gate on it.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md and {project_root}/_bmad/prd.md
+    - {project_root}/research-roadmap.yaml
+    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+    - {project_root}/ops/known-issues.md and {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/results/experiment_6885_v603_executable_manifest_branch_contract.json
+    - {project_root}/results/experiment_6887_three_family_relation_proposal_corpus.json
+    - {project_root}/results/experiment_6888_independent_relation_qualification.json
+    - {project_root}/scripts/roadmap_schema.py, {project_root}/scripts/validate_prior_failures.py,
+      {project_root}/scripts/audit_roadmap_gates.py, and {project_root}/scripts/adversarial_verify.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Build an append-only V604 manifest and evidence-admissibility receipt. Compare the active design
+    and roadmap from primary files. Require the exact 13-task sequence, unique deliverables, valid
+    structured gates, complete prior-failure blocks, and exact prompt endings. Re-run evidence
+    admission on V603 artifacts and quarantine every flagged source and every claim that depends on
+    it. Do not change either roadmap, the exclusion manifest, conductor code, or old artifacts.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require readable V604 design and active roadmap, V603 terminal artifacts, the
+       exclusion manifest, and current gate/schema/adversarial code. On failure, write
+       complete_blocked_v604_evidence_admissibility_contract with gate_check_summary.
+    1. Add REQ-REPORT-6898 and focused tests before implementation. Cover count, order, ID,
+       deliverable, milestone, prompt-ending, gate-field, missing-upstream, prior-failure, flagged
+       source, dependency-taint, and ungated-tail mismatches.
+    2. Parse the design and active roadmap. Require milestone `2026.09.604`, 13 tasks, IDs
+       Exp6898-Exp6910 in conductor order, and unique JSON deliverables.
+    3. Require CONTEXT, EXISTING CODE TO READ FIRST, TASK, CONCRETE STEPS, a Run command, and the
+       exact final sentence in every prompt.
+    4. Validate every `gated_on` operator, upstream ID, producer field, and value. Require all four
+       prior-failure subfields and `retire_if_same_verdict=true`.
+    5. Prove that Exp6899, Exp6905, and Exp6906 are independent science roots. Prove that no task
+       gates on Exp6898 and that Exp6910 is ungated.
+    6. Re-run adversarial verification for the V603 artifacts. Mark Exp6887 inadmissible when its
+       current critical flag remains. Mark Exp6888 non-headline because it consumes Exp6887 and
+       only its lexical rule arm qualifies.
+    7. Emit one row per task-contract check and one row per artifact-admission check. Preserve hard
+       failures, warnings, and transitive taint separately.
+    8. Set `v604_manifest_contract_ready_score=1` only when all document/YAML checks pass. This score
+       cannot approve science. Set `v603_admissible_science_source_count` only from unflagged,
+       independently traceable sources.
+    9. Run focused tests, Ruff, OpenSpec coverage, YAML parsing, roadmap schema validation,
+       prior-failure validation, gate audit, adversarial verification, artifact-convention audit,
+       verdict-row consistency lint, docs audit, and root-clutter checks.
+    10. REQUIRED ARTIFACT FIELDS: field_principles with one principle per required field and every
+       advisory score; preconditions_checked; inference_substrate
+       (deterministic_manifest_and_admissibility_audit_no_llm); duration_s; source_artifact_hashes;
+       rows; document_task_rows; yaml_task_rows; document_yaml_parity_rows; gate_contract_rows;
+       prior_failure_contract_rows; prompt_ending_rows; branch_root_rows; ungated_tail_rows;
+       adversarial_recheck_rows; artifact_admissibility_rows; dependency_taint_rows;
+       quarantined_artifact_ids; task_count; experiment_range; random_seed;
+       reproducibility_checksum; v604_manifest_contract_ready_score;
+       v603_admissible_science_source_count; gate_check_summary with failed check, expected value,
+       and observed value for any blocked verdict; verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial); honest_verdict
+       (terminal and prefixed complete_).
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6898_v604_evidence_admissibility_contract.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+    - experiment_id: exp6885-v603-executable-manifest-branch-contract
+      verdict: complete_blocked_v603_executable_manifest_branch_contract
+      addressed_by: 'V604 emits all 13 executable tasks before this audit runs, makes the check advisory, and adds transitive quarantine of flagged evidence.'
+      retire_if_same_verdict: true
+
+- id: exp6899-live-relation-acquisition-canary
+  title: Three-family live relation acquisition authenticity canary
+  track: verification
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: true
+  max_turns: 50
+  estimated_wall_time_min: 360
+  per_unit_rows: true
+  milestone: 2026.09.604
+  deliverable: results/experiment_6899_live_relation_acquisition_canary.json
+  prompt: |
+    CONTEXT:
+    Exp6887 claimed a complete three-family corpus, but its 43.15-second live-model duration was
+    quarantined. Exp6888 then showed zero parse coverage for every GGUF and Enoki arm. V604 must
+    prove that each required local model process loads the intended weights, produces nonempty raw
+    bytes, and reaches the relation parser before a larger corpus is allowed to run.
+
+    Work at {project_root}. The execution date is {date}.
+
+    MODEL_SPECS:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-references.md, V604 Planner Refresh
+    - {project_root}/ops/exclusion_manifest.yaml, finite-ID and Exp5923 retirement entries
+    - {project_root}/results/experiment_5786_sota_constraint_stream.json
+    - {project_root}/results/experiment_5923_sota_schema_supported_constraintir_ab.json
+    - {project_root}/results/experiment_6886_enoki_exact_relation_fixture.json
+    - {project_root}/results/experiment_6887_three_family_relation_proposal_corpus.json
+    - {project_root}/results/experiment_6888_independent_relation_qualification.json
+    - {project_root}/scripts/experiment_template.py, cached_sota_pair() pattern
+    - {project_root}/python/carnot/inference/sota_models.py
+    - {project_root}/python/carnot/inference/llama_cpp_process.py
+    - {project_root}/openspec/capabilities/llm-ebm-inference/spec.md
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+    TASK:
+    Run a small, fail-fast live acquisition canary on all three MODEL_SPECS. Use the frozen
+    `anchored_relation_v1` fixture from Exp6886 and one plain relation-line protocol. Prove model,
+    tokenizer, process, CUDA, output-byte, stop-reason, and parser authenticity per cell. The Enoki
+    and deterministic rule arms are controls only. Do not score held semantics, use a grammar or
+    schema decoder, repair a response, or accept an empty terminal cell.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: call cached_sota_pair(); require the exact Exp6886 artifact and fixture hashes,
+       all three GGUF paths, native tokenizer receipts, pinned Enoki assets, one task-owned GPU lease
+       per live process, at least 24 GiB free VRAM, and zero held-sidecar access. On failure, write
+       complete_blocked_live_relation_acquisition_canary with gate_check_summary.
+    1. Add REQ-INFERENCE-6899 and focused tests first. Cover cache drift, wrong model file, tokenizer
+       substitution, zero offload, empty bytes, zero generated tokens, parser bypass, canned rows,
+       timeout, truncation, PID reuse, stale receipts, and teardown failure.
+    2. Resolve every MODEL_SPEC through cached_sota_pair() and the dense extension. Use llama.cpp's
+       native tokenizer. Never pass a GGUF repository to AutoTokenizer.from_pretrained().
+    3. Freeze one source-only prompt and a plain line protocol with source spans and tuple fields.
+       Use no grammar, JSON schema, finite answer ID, repair prompt, model judge, or text scorer.
+    4. Run at least five source records per model, with all five fixture families represented. Use a
+       fresh authenticated server lifecycle for each model family and at least two seeds overall.
+    5. Preserve raw request and response bytes. Require nonzero response bytes, nonzero generated
+       tokens, an observed stop reason, and a parser attempt for every required GGUF cell.
+    6. Record model file hash, native prompt tokens, generated tokens, wall time, server PID, GPU
+       UUID, offload layers, VRAM before/after, stderr tail, and teardown outcome per cell.
+    7. Run Enoki and the lexical rule arm on identical records. Neither control may satisfy the live
+       GGUF readiness gate.
+    8. Set `relation_canary_ready_score=1` only if all three GGUF arms have authentic CUDA receipts,
+       zero empty cells, zero canned cells, at least 0.60 surface parse coverage per arm, clean
+       teardown, and total live duration of at least 60 seconds. Do not score tuple correctness.
+    9. Run focused tests, Ruff, OpenSpec coverage, E2E-006, cache/GPU authenticity checks,
+       adversarial verification, artifact-convention audit, verdict-row consistency lint, and
+       root-clutter checks.
+    10. REQUIRED ARTIFACT FIELDS: field_principles with one principle per required field and
+       `relation_canary_ready_score`; preconditions_checked; inference_substrate
+       (live_local_sota_gguf_cuda_authenticity_canary); duration_s; source_artifact_hashes;
+       model_specs (all three exact MODEL_SPECS); models_used; model_artifact_hashes;
+       tokenizer_receipts; llama_cpp_receipts; gpu_lease_rows; server_lifecycle_rows; prompt_manifest;
+       rows (one model, seed, and source cell per row); raw_request_manifest; raw_output_manifest;
+       output_byte_rows; generated_token_rows; stop_reason_rows; parse_attempt_rows;
+       parse_coverage_by_model; empty_cell_count; canned_cell_count; held_sidecar_access_count
+       (zero); enoki_control_rows; rule_control_rows; external_text_scorer_call_count (zero);
+       constrained_schema_decode_count (zero); model_weight_mutation_count (zero); random_seed;
+       reproducibility_checksum; relation_canary_ready_score; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict; verifier_is_oracle (false);
+       verdict_class (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict (terminal and prefixed complete_).
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6899_live_relation_acquisition_canary.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+    - experiment_id: exp6887-three-family-relation-proposal-corpus
+      verdict: complete_positive_three_family_relation_corpus
+      addressed_by: 'This attempt is a small authenticity canary that requires nonempty raw bytes, generated tokens, per-process CUDA receipts, parser attempts, clean teardown, and the live duration floor before completion.'
+      retire_if_same_verdict: true
+    - experiment_id: exp5786-sota-constraint-stream
+      verdict: 'complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold'
+      addressed_by: 'This attempt uses the frozen anchored_relation_v1 surface protocol and fails before corpus scale unless every required model reaches at least 0.60 parse coverage.'
+      retire_if_same_verdict: true
+    - experiment_id: exp5923-sota-schema-supported-constraintir-ab
+      verdict: 'retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates'
+      addressed_by: 'This attempt uses no schema-constrained decoding or repair reprompt and tests only authentic plain-text relation acquisition.'
+      retire_if_same_verdict: true
+
+- id: exp6900-authentic-anchored-relation-corpus
+  title: Authentic three-family anchored relation proposal corpus
+  track: verification
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: true
+  max_turns: 50
+  estimated_wall_time_min: 960
+  per_unit_rows: true
+  milestone: 2026.09.604
+  deliverable: results/experiment_6900_authentic_anchored_relation_corpus.json
+  gated_on:
+    - upstream: exp6899-live-relation-acquisition-canary
+      artifact_field: relation_canary_ready_score
+      op: '=='
+      value: 1
+  prompt: |
+    CONTEXT:
+    Exp6899 is a fail-fast authenticity and parser canary. This task scales only that frozen protocol
+    and exact model/runtime configuration. It compares three required GGUF proposal arms with the
+    pinned Enoki encoder and a lexical rule control. Acquisition completeness is independent of
+    held semantic quality. No arm may approve its own proposals.
+
+    Work at {project_root}. The execution date is {date}.
+
+    MODEL_SPECS:
+    - unsloth/Qwen3.6-35B-A3B-GGUF
+    - unsloth/gemma-4-31B-it-GGUF
+    - unsloth/gemma-4-26B-A4B-it-GGUF
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-references.md, V604 Planner Refresh
+    - {project_root}/results/experiment_6886_enoki_exact_relation_fixture.json
+    - {project_root}/results/experiment_6887_three_family_relation_proposal_corpus.json
+    - {project_root}/results/experiment_6888_independent_relation_qualification.json
+    - {project_root}/results/experiment_6899_live_relation_acquisition_canary.json
+    - {project_root}/scripts/experiments/experiment_6887_three_family_relation_proposal_corpus.py
+    - {project_root}/scripts/experiment_template.py, cached_sota_pair() pattern
+    - {project_root}/python/carnot/inference/sota_models.py
+    - {project_root}/python/carnot/inference/llama_cpp_process.py
+    - {project_root}/openspec/capabilities/llm-ebm-inference/spec.md
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+    TASK:
+    Acquire a balanced, authentic proposal corpus with all three MODEL_SPECS, Enoki, and the lexical
+    rule control. Reuse the exact canary prompt, parser, model files, tokenizer settings, and server
+    lifecycle. Preserve every raw response, relation, malformed line, abstention, empty output,
+    timeout, and truncation. Keep all held labels, ASP programs, answer sets, and solver receipts
+    sealed for Exp6901.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require `relation_canary_ready_score=1`, matching canary hashes, all three
+       authenticated GGUF paths, pinned Enoki assets, task-owned GPU leases, and zero held-sidecar
+       access. On failure, write complete_blocked_authentic_anchored_relation_corpus with
+       gate_check_summary.
+    1. Add REQ-INFERENCE-6900 and focused tests first. Cover gate mismatch, prompt/parser drift,
+       model or tokenizer drift, row duplication, empty-output masking, partial resume, stale PID,
+       timeout, truncation, server crash, and sidecar access.
+    2. Freeze at least 100 group-balanced source records per arm, with at least 20 records from each
+       of graph coloring, scheduling, non-monotonic defaults, contradictions, and cardinality.
+    3. Run all MODEL_SPECS with native llama.cpp tokenization and CUDA offload. Never use
+       AutoTokenizer on a GGUF repository. Match prompt, seed matrix, output budget, and stop policy.
+    4. Run Enoki and the lexical rule control on the same source IDs. Keep each arm's provenance and
+       resource cost separate.
+    5. Preserve raw bytes and hashes before parsing. Parse source spans and tuple fields only. Do not
+       use a grammar, schema-constrained decoder, repair prompt, model judge, text scorer, held label,
+       compiler result, or solver result during acquisition.
+    6. Emit terminal rows for malformed, unsupported, duplicate, abstain, empty, timeout, and
+       truncated cells. Never replace a failed cell with a fixture or control output.
+    7. Record model/process/tokenizer/GPU/VRAM/latency/stop/teardown receipts per GGUF cell and exact
+       revision receipts for Enoki and the rule arm.
+    8. Set `relation_corpus_complete_score=1` only from authentic acquisition, complete arm-family
+       denominators, raw-row integrity, clean lifecycle receipts, duration at least 60 seconds, and
+       zero held-sidecar access. Do not make this score depend on semantic correctness.
+    9. Run focused tests, Ruff, OpenSpec coverage, E2E-006, cache/GPU authenticity checks,
+       adversarial verification, artifact-convention audit, verdict-row consistency lint, and
+       root-clutter checks.
+    10. REQUIRED ARTIFACT FIELDS: field_principles with one principle per required field and the
+       incoming and outgoing gate fields; preconditions_checked; inference_substrate
+       (live_local_sota_gguf_cuda_plus_pinned_enoki_encoder); duration_s; source_artifact_hashes;
+       model_specs (all three exact MODEL_SPECS); models_used; model_artifact_hashes;
+       tokenizer_receipts; llama_cpp_receipts; gpu_lease_rows; server_lifecycle_rows;
+       enoki_asset_receipts; deterministic_rule_receipts; prompt_manifest; rows (one arm, seed,
+       source record, relation, or failed cell per row); raw_request_manifest; raw_output_manifest;
+       parse_failure_rows; abstention_rows; empty_rows; truncation_rows; timeout_rows;
+       per_arm_family_counts; held_sidecar_access_count (zero); model_weight_mutation_count (zero);
+       external_text_scorer_call_count (zero); constrained_schema_decode_count (zero); random_seed;
+       reproducibility_checksum; relation_corpus_complete_score; gate_check_summary with failed
+       check, expected value, and observed value for any blocked verdict; verifier_is_oracle (false);
+       verdict_class (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict (terminal and prefixed complete_).
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6900_authentic_anchored_relation_corpus.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+    - experiment_id: exp6887-three-family-relation-proposal-corpus
+      verdict: complete_positive_three_family_relation_corpus
+      addressed_by: 'Exp6900 can run only after Exp6899 proves authentic nonempty GGUF acquisition, preserves per-cell process receipts, and passes the live duration floor.'
+      retire_if_same_verdict: true
+    - experiment_id: exp5786-sota-constraint-stream
+      verdict: 'complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold'
+      addressed_by: 'The corpus reuses a canary-qualified anchored relation parser instead of scaling a free-form response stream.'
+      retire_if_same_verdict: true
+
+- id: exp6901-independent-model-relation-qualification
+  title: Independent held qualification of model-produced relations
+  track: verification
+  priority: critical
+  agent_type: claude
+  model: sonnet
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 240
+  per_unit_rows: true
+  milestone: 2026.09.604
+  deliverable: results/experiment_6901_independent_model_relation_qualification.json
+  gated_on:
+    - upstream: exp6900-authentic-anchored-relation-corpus
+      artifact_field: relation_corpus_complete_score
+      op: '=='
+      value: 1
+  prompt: |
+    CONTEXT:
+    Exp6900 owns acquisition only. V603's qualification score was satisfied by the lexical rule arm
+    even though all model-produced arms had zero parse coverage. V604 needs a separate field that
+    can be satisfied only by a GGUF or Enoki arm. Proposal coverage, tuple quality, exact ASP
+    validity, and verifier completeness are separate claims.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-references.md, V604 Planner Refresh
+    - {project_root}/results/experiment_5909_sota_constraint_synthesis_ab.json
+    - {project_root}/results/experiment_5923_sota_schema_supported_constraintir_ab.json
+    - {project_root}/results/experiment_6274_asp_energy_semantic_compiler.json
+    - {project_root}/results/experiment_6886_enoki_exact_relation_fixture.json
+    - {project_root}/results/experiment_6888_independent_relation_qualification.json
+    - {project_root}/results/experiment_6900_authentic_anchored_relation_corpus.json
+    - {project_root}/python/carnot/asp_energy_semantic_compiler.py
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+    TASK:
+    In a fresh process, re-run adversarial admission on Exp6900, open the sealed held sidecar once,
+    and independently score every proposal arm. Compute source grounding, tuple precision/recall,
+    parse coverage, abstention, family floors, perturbation robustness, ASP compilation, and exact
+    answer-set parity. The rule arm remains a diagnostic control and cannot satisfy model readiness.
+    Do not run new model inference or repair an output.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require `relation_corpus_complete_score=1`, an unflagged Exp6900 artifact,
+       exact source hashes, complete terminal rows, sealed held labels, the qualified compiler, and
+       an independent ASP solver. On failure, write complete_blocked_independent_model_relation_qualification
+       with gate_check_summary.
+    1. Add REQ-VERIFY-6901 and focused tests first. Cover source drift, flagged-source admission,
+       held leakage, missing cells, offset mismatch, duplicate credit, unsupported atoms, solver
+       timeout, rule-only readiness, pooling, and aggregate-versus-row disagreement.
+    2. Freeze thresholds from calibration only. Include minimum parse coverage, span F1, tuple
+       precision, tuple recall, exact validity, family floor, perturbation floor, and abstention cost.
+    3. Open the held sidecar once in a fresh reducer. Match rows by frozen record, arm, model, and
+       seed IDs. Refuse any input containing held labels, answer sets, or solver receipts.
+    4. Emit one row per arm, record, relation, family, perturbation, and exact check. Keep false
+       positives, false negatives, malformed output, abstention, timeout, and missing proposals.
+    5. Compile accepted tuples and compare zero-energy states with independent answer sets. Report
+       proposal coverage separately from exact admitted correctness and completeness blind spots.
+    6. Compute `qualified_model_relation_event_count` from GGUF and Enoki arms only. Set
+       `model_relation_qualification_ready_score=1` only when at least one model-produced arm passes
+       every frozen held threshold and contributes at least 90 exact-admitted events.
+    7. The lexical rule arm may be reported but cannot satisfy either outgoing field. Because the
+       exact verifier is oracle authority, use `circular_positive` for a passing verdict and never
+       use `positive`.
+    8. Run focused tests, Ruff, OpenSpec coverage, E2E-006, independent solver parity, adversarial
+       verification, artifact-convention audit, verdict-row consistency lint, and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one principle per required field and every
+       gate field; preconditions_checked; inference_substrate
+       (fresh_process_sealed_relation_reduction_no_llm); duration_s; source_artifact_hashes;
+       adversarial_admission_rows; sealed_sidecar_hashes; frozen_thresholds; rows (one arm, record,
+       relation, family, perturbation, and exact check per row); span_metric_rows; tuple_metric_rows;
+       parse_coverage_rows; abstention_rows; family_rows; perturbation_rows; asp_compilation_rows;
+       solver_parity_rows; completeness_blind_spot_rows; reported_vs_recomputed_metrics;
+       independent_solver_receipts; held_leakage_count (zero); model_eligible_arm_rows;
+       rule_control_rows; qualified_model_relation_event_count;
+       model_relation_qualification_ready_score; random_seed; reproducibility_checksum;
+       gate_check_summary with failed check, expected value, and observed value for any blocked
+       verdict; verifier_is_oracle (true); verdict_class (circular_positive | null | blocked |
+       disqualified | partial; never positive); honest_verdict (terminal and prefixed complete_).
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6901_independent_model_relation_qualification.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+    - experiment_id: exp5909-sota-constraint-synthesis-ab
+      verdict: 'complete_null: structured prompt arms did not improve exact synthesis'
+      addressed_by: 'This task scores source-grounded relation proposals from frozen raw outputs and separates proposal coverage from exact atom validity instead of testing answer synthesis prompts.'
+      retire_if_same_verdict: true
+    - experiment_id: exp5923-sota-schema-supported-constraintir-ab
+      verdict: 'retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates'
+      addressed_by: 'This task performs no generation or repair and admits a model arm only through fresh held spans and an independent exact solver.'
+      retire_if_same_verdict: true
+
+- id: exp6902-paraphrase-disjoint-prospective-relation-stream
+  title: Paraphrase-disjoint prospective relation learning stream
+  track: self-learning
+  priority: high
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 240
+  per_unit_rows: true
+  milestone: 2026.09.604
+  deliverable: results/experiment_6902_paraphrase_disjoint_prospective_relation_stream.json
+  gated_on:
+    - upstream: exp6901-independent-model-relation-qualification
+      artifact_field: model_relation_qualification_ready_score
+      op: '=='
+      value: 1
+    - upstream: exp6901-independent-model-relation-qualification
+      artifact_field: qualified_model_relation_event_count
+      op: '>='
+      value: 90
+  prompt: |
+    CONTEXT:
+    Continuous self-learning needs a clean chronological event stream, not a retrospectively sorted
+    benchmark. Exp5709 and Exp5773 blocked on unready parse streams. Exp6901 changes the prerequisite:
+    it supplies independently exact-admitted, model-produced anchored relations. This task builds a
+    source-group-disjoint future stream without new LLM inference.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md, Continuous Self-Learning
+    - {project_root}/research-references.md, V604 Planner Refresh
+    - {project_root}/ops/exclusion_manifest.yaml, Exp5709 and Exp5773 entries
+    - {project_root}/results/experiment_5709_fr11_prospective_shadow_stream.json
+    - {project_root}/results/experiment_5773_prospective_constraint_acquisition_ab.json
+    - {project_root}/results/experiment_6827_chronological_causal_edge_memory_stream.json
+    - {project_root}/results/experiment_6901_independent_model_relation_qualification.json
+    - {project_root}/scripts/experiments/experiment_6827_chronological_causal_edge_memory_stream.py
+    - {project_root}/openspec/capabilities/constraint-store/spec.md
+    - {project_root}/openspec/capabilities/continuous-self-learning/spec.md
+
+    TASK:
+    Construct a frozen prospective stream from exact-admitted model relation events. Use deterministic
+    entity renaming, syntax-preserving paraphrase templates, relation reversals, omissions, and
+    contradictions with exact expected effects. Split source groups before transformation. Reserve a
+    commissioning prefix and seal all later outcomes. Do not run a model, sort events by outcome, or
+    expose future labels to a memory arm.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require both structured gates, exact Exp6901 hashes, at least 90 qualified
+       model events, complete source groups, and sealed held outcomes. On failure, write
+       complete_blocked_paraphrase_disjoint_prospective_relation_stream with gate_check_summary.
+    1. Add REQ-CSL-6902 and focused tests first. Cover source-group overlap, label leakage, future
+       sorting, non-injective renaming, semantic-changing paraphrase, contradiction mismatch,
+       unsupported relation, duplicate event, and insufficient family support.
+    2. Freeze source groups before any transformation. Build at least 180 events across the five
+       constraint families, three shift types, and at least five chronological order seeds.
+    3. Use a commissioning prefix of no more than 20% of each order. Freeze retrieval thresholds,
+       update bounds, error costs, capacity, and tie rules on that prefix only.
+    4. Seal all later exact outcomes and sidecar metadata. Record mechanical nonexposure checks for
+       prompts, keys, memory state, logs, and checkpoints.
+    5. Include lexical-near, lexical-far/structure-preserving, contradiction, omission, and abstain
+       opportunities. Preserve available-headroom and answerability per event.
+    6. Create no-memory, read-only-memory, and bounded-update manifests with identical event order,
+       initial state, capacity, and decision budget. Do not execute those arms here.
+    7. Set `prospective_relation_stream_ready_score=1` only when event floors, source-group
+       disjointness, exact transform validity, sealed-future checks, five orders, and headroom pass.
+    8. Run focused tests, Ruff, OpenSpec coverage, exact transformation parity, adversarial
+       verification, artifact-convention audit, verdict-row consistency lint, and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one principle per required field and every
+       gate field; preconditions_checked; inference_substrate
+       (deterministic_exact_relation_stream_construction_no_llm); duration_s; source_artifact_hashes;
+       rows (one source group, transform, event, order, and sealing check per row); source_group_rows;
+       transform_rows; exact_transform_parity_rows; family_counts; shift_type_counts;
+       commissioning_prefix_manifest; sealed_future_manifest; held_nonexposure_results;
+       order_seed_rows; available_headroom_rows; arm_manifests; frozen_memory_hyperparameters;
+       split_overlap_count (zero); future_label_access_count (zero); random_seed;
+       reproducibility_checksum; prospective_relation_stream_ready_score; gate_check_summary with
+       failed check, expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (true); verdict_class (circular_positive | null | blocked | disqualified |
+       partial; never positive); honest_verdict (terminal and prefixed complete_).
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6902_paraphrase_disjoint_prospective_relation_stream.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+    - experiment_id: exp5709-fr11-prospective-shadow-stream
+      verdict: blocked_gate_check_failed
+      addressed_by: 'This stream starts from independently qualified model-produced relations and exact deterministic transforms instead of the parse-failed Exp5708 stream.'
+      retire_if_same_verdict: true
+    - experiment_id: exp5773-prospective-constraint-acquisition-ab
+      verdict: blocked_gate_check_failed
+      addressed_by: 'This attempt requires a clean model-qualified relation gate, source-group splits, and sealed future outcomes before any learning arm runs.'
+      retire_if_same_verdict: true
+
+- id: exp6903-bounded-relation-memory-self-learning
+  title: Prospective bounded relation-memory continuous self-learning A/B
+  track: self-learning
+  priority: critical
+  agent_type: claude
+  model: sonnet
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 360
+  per_unit_rows: true
+  milestone: 2026.09.604
+  deliverable: results/experiment_6903_bounded_relation_memory_self_learning.json
+  gated_on:
+    - upstream: exp6902-paraphrase-disjoint-prospective-relation-stream
+      artifact_field: prospective_relation_stream_ready_score
+      op: '=='
+      value: 1
+  prompt: |
+    CONTEXT:
+    Exp6873 showed safe lifecycle behavior but did not beat read-only memory in every order. It was
+    also quarantined by duration/methodology heuristics. V604 uses a different mechanism and a new
+    exact stream: a small typed relation memory updates only after later exact outcomes. The update
+    authority is external to the memory score. This is the milestone's required continuous
+    self-learning experiment under research-program.md Tier 2.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md, Continuous Self-Learning
+    - {project_root}/research-references.md, V604 Planner Refresh
+    - {project_root}/results/experiment_6748_transactional_constraint_memory_fixture.json
+    - {project_root}/results/experiment_6827_chronological_causal_edge_memory_stream.json
+    - {project_root}/results/experiment_6873_prospective_sealed_self_learning_audit.json
+    - {project_root}/results/experiment_6902_paraphrase_disjoint_prospective_relation_stream.json
+    - {project_root}/python/carnot/pipeline/case_memory.py
+    - {project_root}/python/carnot/pipeline/session_memory_pack.py
+    - {project_root}/openspec/capabilities/constraint-store/spec.md
+    - {project_root}/openspec/capabilities/continuous-self-learning/spec.md
+
+    TASK:
+    Implement and run a bounded typed relation-memory controller over every frozen prospective order.
+    Compare no memory, read-only memory, bounded update, and quarantine-update arms. Update only
+    between events after exact delayed feedback. Track asymmetric false-accept and false-reject costs,
+    lexical versus structural retrieval, capacity, retention, support, poison, restart, rollback, and
+    update cost. Do not run an LLM or mutate model weights.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require `prospective_relation_stream_ready_score=1`, exact stream hashes, five
+       complete orders, frozen hyperparameters, and sealed future outcomes. On failure, write
+       complete_blocked_bounded_relation_memory_self_learning with gate_check_summary.
+    1. Add REQ-CSL-6903 and focused tests first. Cover future leakage, same-event writes, key
+       collision, lexical shortcut, capacity overflow, asymmetric-cost inversion, poison, delayed
+       correction, tombstone, restart, rollback, retention, and aggregate-row disagreement.
+    2. Define a closed relation-memory record with source provenance, normalized tuple, structural
+       key, confidence interval, exact outcome count, asymmetric error costs, revision, and tombstone.
+    3. Run no-memory, read-only, bounded-update, and quarantine-update arms in identical order for at
+       least five frozen seeds. The read-only arm receives the same commissioning memory as update.
+    4. Decide each event from prior state only. Reveal the exact outcome after the decision, then
+       apply bounded admission, revision, quarantine, or tombstone logic before the next event.
+    5. Report error cost, exact decision accuracy, abstention, coverage, structural and lexical
+       retrieval, useful/harmful writes, support size, memory bytes, latency, and update energy proxy
+       per event and arm.
+    6. Re-run old-family retention anchors after each shift block. Test one poison block, fresh-process
+       restart, byte-exact rollback, and capacity pressure in every order.
+    7. Set `self_learning_run_complete_score=1` from protocol completeness only. Set
+       `self_learning_utility_score=1` only if bounded update beats read-only error cost in every
+       order, has positive available headroom, does not reduce held support or retention, and passes
+       every safety gate.
+    8. Keep `model_weight_mutation_count=0`. Report this as Tier-2 constraint memory, not online
+       weight learning. If the honest verdict repeats Exp6873's null, retire this exact typed-relation
+       controller through the declared prior-failure contract.
+    9. Run focused tests, Ruff, OpenSpec coverage, fresh-process replay, adversarial verification,
+       artifact-convention audit, verdict-row consistency lint, and root-clutter checks.
+    10. REQUIRED ARTIFACT FIELDS: field_principles with one principle per required field and every
+       gate field; preconditions_checked; inference_substrate
+       (deterministic_cpu_prospective_memory_replay_no_model_inference); duration_s;
+       source_artifact_hashes; memory_schema_version; frozen_hyperparameters; rows (one order, arm,
+       event, decision, feedback, and update per row); per_order_arm_rows; asymmetric_error_cost_rows;
+       retrieval_rows; lexical_vs_structural_rows; write_rows; useful_write_rows; harmful_write_rows;
+       support_rows; retention_rows; poison_rows; delayed_correction_rows; tombstone_rows;
+       capacity_rows; restart_rows; rollback_rows; latency_rows; update_cost_rows;
+       future_label_access_count (zero); same_event_write_count (zero); model_weight_mutation_count
+       (zero); random_seed; reproducibility_checksum; self_learning_run_complete_score;
+       self_learning_utility_score; gate_check_summary with failed check, expected value, and observed
+       value for any blocked verdict; verifier_is_oracle (false); verdict_class (positive |
+       circular_positive | null | blocked | disqualified | partial); honest_verdict (terminal and
+       prefixed complete_).
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6903_bounded_relation_memory_self_learning.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+    - experiment_id: exp6873-prospective-sealed-self-learning-audit
+      verdict: complete_null_prospective_sealed_self_learning_utility_not_demonstrated
+      addressed_by: 'This attempt uses independently qualified typed relation events, structural keys, asymmetric error costs, and a bounded update that is compared directly with the same commissioned read-only memory.'
+      retire_if_same_verdict: true
+
+- id: exp6904-sealed-self-learning-support-audit
+  title: Sealed independent self-learning utility and support audit
+  track: self-learning
+  priority: critical
+  agent_type: claude
+  model: sonnet
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 240
+  per_unit_rows: true
+  milestone: 2026.09.604
+  deliverable: results/experiment_6904_sealed_self_learning_support_audit.json
+  gated_on:
+    - upstream: exp6903-bounded-relation-memory-self-learning
+      artifact_field: self_learning_run_complete_score
+      op: '=='
+      value: 1
+  prompt: |
+    CONTEXT:
+    Exp6903 runs the controller and reports both protocol completion and utility. Cheap Verifiers,
+    Large Blind Spots and verifier-induced support reshaping show why an in-loop dashboard cannot
+    release its own update. This task replays all rows in a fresh process against sealed exact
+    outcomes. It audits utility even when Exp6903 reports null.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-references.md, V604 Planner Refresh
+    - {project_root}/results/experiment_6855_counterfactual_memory_credit_audit.json
+    - {project_root}/results/experiment_6873_prospective_sealed_self_learning_audit.json
+    - {project_root}/results/experiment_6902_paraphrase_disjoint_prospective_relation_stream.json
+    - {project_root}/results/experiment_6903_bounded_relation_memory_self_learning.json
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/openspec/capabilities/continuous-self-learning/spec.md
+
+    TASK:
+    In a fresh process, independently replay Exp6903 from its frozen inputs and sealed outcomes.
+    Recompute every arm/order metric, asymmetric cost, useful/harmful write, retention result, support
+    size, poison response, restart, and rollback. Measure whether current-task gains shrink the set of
+    future events with any correct supported decision. The controller's own score is never authority.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require `self_learning_run_complete_score=1`, exact source/code/config hashes,
+       complete per-event rows, sealed outcomes, and a fresh writable temporary state directory. On
+       failure, write complete_blocked_sealed_self_learning_support_audit with gate_check_summary.
+    1. Add REQ-CSL-6904 and focused tests first. Cover artifact drift, row omission, duplicate event,
+       future leakage, metric inversion, false-accept/false-reject swap, support shrinkage, poison,
+       restart divergence, rollback mismatch, and aggregate disagreement.
+    2. Hash all inputs before opening the held sidecar. Replay no-memory, read-only, bounded-update,
+       and quarantine-update arms from their declared initial state and order.
+    3. Recompute exact decision accuracy, asymmetric error cost, coverage, abstention, headroom,
+       update benefit, retention, harmful writes, support-at-k, and at-least-one-correct support.
+    4. Compare pass-at-one improvement with future support. A better current error rate cannot hide a
+       smaller set of events with any reachable correct decision.
+    5. Re-run poison, delayed correction, tombstone, capacity, restart, and byte-exact rollback tests
+       without importing Exp6903 aggregates.
+    6. Set `sealed_self_learning_audit_complete_score=1` only when all rows and aggregates replay.
+       Set `independent_self_learning_utility_score=1` only when the bounded-update arm beats
+       read-only in every order and passes all safety, retention, and support gates.
+    7. Because sealed exact outcomes are oracle authority, use `circular_positive` for a passing
+       verdict and never use `positive`. Preserve null and disqualified outcomes honestly.
+    8. Run focused tests, Ruff, OpenSpec coverage, adversarial verification, artifact-convention
+       audit, verdict-row consistency lint, docs audit, and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one principle per required field and every
+       gate field; preconditions_checked; inference_substrate
+       (fresh_process_sealed_memory_replay_no_llm); duration_s; source_artifact_hashes;
+       sealed_sidecar_hashes; rows (one order, arm, event, metric, and audit check per row);
+       recomputed_arm_order_rows; asymmetric_error_cost_rows; false_accept_rows; false_reject_rows;
+       useful_write_rows; harmful_write_rows; retention_rows; support_at_k_rows;
+       future_trainability_rows; poison_rows; delayed_correction_rows; tombstone_rows; capacity_rows;
+       restart_rows; rollback_rows; reported_vs_recomputed_metrics; held_leakage_count (zero);
+       random_seed; reproducibility_checksum; sealed_self_learning_audit_complete_score;
+       independent_self_learning_utility_score; gate_check_summary with failed check, expected value,
+       and observed value for any blocked verdict; verifier_is_oracle (true); verdict_class
+       (circular_positive | null | blocked | disqualified | partial; never positive); honest_verdict
+       (terminal and prefixed complete_).
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6904_sealed_self_learning_support_audit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+    - experiment_id: exp6873-prospective-sealed-self-learning-audit
+      verdict: complete_null_prospective_sealed_self_learning_utility_not_demonstrated
+      addressed_by: 'This audit replays a new model-qualified typed-relation controller, checks asymmetric costs and future support, and uses a fresh exact sidecar rather than the prior risk-controller stream.'
+      retire_if_same_verdict: true

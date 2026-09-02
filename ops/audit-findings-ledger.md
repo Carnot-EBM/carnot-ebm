@@ -83,3 +83,4 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-09-02 | qa_layer_authenticity_audit | adversarial_verify.py::_is_identifier_field | REAL_BUG | OPEN | |
 | 2026-09-02 | qa_layer_authenticity_audit | adversarial_verify.py::_delta_stem | SILENT_NON_FIRING | OPEN | |
 | 2026-09-02 | qa_layer_authenticity_audit | adversarial_verify.py::_is_small_shared_denominator_rate_pair | SILENT_NON_FIRING | OPEN | |
+| 2026-09-02 | experiment_claim_audit | experiment_6888_independent_relation_qualification.json | CLAIM_OVERSTATED | OPEN | |

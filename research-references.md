@@ -1,3 +1,101 @@
+## V604 Planner Refresh - 2026-09-02
+
+This sweep follows terminal milestone `2026.09.603`. V603 executed only four of the 13 tasks in its
+design document. Exp6885 therefore blocked on document/YAML parity. Exp6886 built the exact Enoki
+fixture. Exp6887 wrote all 450 terminal cells but was quarantined as `DURATION_TOO_SHORT` after
+43.15 seconds on a claimed live-GGUF substrate. Exp6888 then qualified only the deterministic
+lexical arm: every GGUF and Enoki arm had zero parse coverage. V604 must first prove authentic,
+nonempty proposal acquisition. No learning or ARC utility claim may inherit a quarantined source.
+
+### Findings selected for V604
+
+- **Online Learnability of Chain-of-Thought Verifiers: Soundness and Completeness Trade-offs** -
+  arXiv:2603.03538, https://arxiv.org/abs/2603.03538; revised 2026-08-10. The paper models online
+  verifier learning under generator-induced distribution shift. It treats missed bad steps and
+  rejected good steps as asymmetric costs and shows why interactive data can provide guarantees
+  unavailable from offline demonstrations. Carnot hook: the V604 structural-memory experiment must
+  record false-accept and false-reject costs separately, preserve a read-only arm, and use later
+  exact outcomes rather than the learner's own score for update and release authority.
+- **Grading the Graders: Verification Autonomy Levels (L0-L5) for LLM Reasoning** -
+  arXiv:2608.19009, https://arxiv.org/abs/2608.19009; revised 2026-08-20. Its useful distinction is
+  between candidate correctness and verifier completeness. Sampling or substitution can validate a
+  proposed candidate without proving that no candidate was missed. Carnot hook: report proposal
+  coverage and exact admitted correctness as separate fields. A rule or solver that helps construct
+  the evaluated object cannot yield a non-circular headline.
+- **Current Agents Fail to Leverage World Model as Tool for Foresight** - arXiv:2601.03905,
+  https://arxiv.org/abs/2601.03905. This EBT-citation-trail paper reports that agents can rarely call,
+  misuse, or be harmed by an available world-model tool. It locates the bottleneck in deciding when
+  to simulate and how to use the predicted state. Carnot hook: ARC tool evaluation must start from
+  replayable pre-action states and compare actual delivery with withholding. A tool-call receipt is
+  not utility.
+- **Fixed-Point Reasoners: Stable and Adaptive Deep Looped Transformers** - arXiv:2606.18206,
+  https://arxiv.org/abs/2606.18206. This EBT citation uses fixed-point convergence as an adaptive
+  halting rule and reports ARC-AGI among its evaluation domains. Carnot hook: preserve per-attempt
+  context occupancy and convergence/headroom telemetry. V604 does not retrofit a looped model; it
+  uses the source as a measurement lead for deciding when another induction cycle is safe.
+- **VFScale: Intrinsic Reasoning through Verifier-Free Test-time Scalable Diffusion Model** -
+  ICLR 2026, https://proceedings.iclr.cc/paper_files/paper/2026/hash/6188c02ccc16a7587716de2efd754033-Abstract-Conference.html
+  and arXiv:2502.01989, https://arxiv.org/abs/2502.01989. VFScale explicitly trains energy to rank
+  negative quality and uses hybrid search. Its own comparison shows that a high-correlation external
+  verifier can still select worse candidates. Carnot hook: keep dense proposal quality distinct from
+  exact validity and require independent selected-outcome rows. No VFScale implementation is
+  scheduled because the current blockers are acquisition authenticity and live ARC reachability.
+- **KAN_LUT: Kolmogorov-Arnold Network LUT FPGA Framework** -
+  https://github.com/philtomson/KAN_LUT; repository created 2026-06-09. The unaudited Julia project
+  exposes 8-bit LUT quantization, bit-accurate simulated inference, and sparse online coefficient
+  updates. Carnot hook: this is a useful future implementation comparator for KAN-on-FPGA and local
+  adaptation. It is not a V604 dependency: no paper-level independent reproduction or attached-board
+  bitstream receipt is available, and the live ARC/text front ends are more urgent.
+
+### Requested primary and secondary checks
+
+- **arXiv:** targeted 2025-2026 searches covered EBM reasoning and verification, neural constraint
+  satisfaction, Ising and thermodynamic sampling, hallucination detection, KANs, constrained
+  generation, accelerated sampling, and online learning. The V604-changing results are asymmetric
+  online-verifier accounting, verifier completeness labels, and world-model tool-use attribution.
+  Learned multiscale frustrated-spin sampling (`2608.31114`) remains a hardware watch item.
+- **OpenReview:** ICLR 2026 records for VFScale and NSVIF were rechecked. VFScale supports dense
+  energy-versus-exact-outcome separation. NSVIF (`2601.17789`) still supports hybrid symbolic and
+  neural constraint dispatch. Neither supplies a matching local checkpoint for Carnot's required
+  GGUF families.
+- **Hugging Face Papers:** the current verification feed highlights verifier-context leniency
+  (`2608.16003`) and verifier-induced support reshaping (`2608.00220`). Both strengthen V604's sealed,
+  independent audit and retention requirements. Enoki's public encoder remains the concrete
+  relation-extraction dependency, but V603 showed that asset availability alone does not prove a
+  functioning output path.
+- **Semantic Scholar:** the live EBT (`2507.02092`) record remains at 35 citations with two marked
+  influential. Its visible 2026 trail includes world-model tool foresight, Fixed-Point Reasoners,
+  LoopUS, Memoir, and Solver-Hard. The ARM-EBM (`2512.15605`) citation endpoint returned eight
+  visible rows, led by LoopUS, Distributional EBM, and ontology-constrained reasoning. Rate limiting
+  prevented a new ARM aggregate count, so the prior count of eight is retained.
+- **GitHub discovery:** targeted recent-repository searches surfaced `philtomson/KAN_LUT` as the
+  most direct new KAN/hardware/online-learning lead. `NVIDIA/Ising` is a quantum-calibration and
+  error-correction model family, not an Ising sampler for Carnot's constraint workload. No new repo
+  replaces the pinned llama.cpp, ASP, Z3, or ARC stack.
+- **Extropic:** the first-party 2026-07-29 update,
+  https://extropic.ai/writing/thermodynamic-computing-chips-in-america, describes a non-binding
+  funding letter and future Z1 cluster work. The 2026-08-03 stack update remains the latest technical
+  detail. There is still no authenticated local Z1 path, so V604 makes no TSU performance claim.
+- **Logical Intelligence:** Kona 1.0 still exposes a hosted Sudoku demonstration and describes a
+  proprietary non-autoregressive constraint layer:
+  https://logicalintelligence.com/kona-ebms-energy-based-models. No public weights, training recipe,
+  or reproducible local runner were found. Kona remains an architecture comparator.
+
+### V604 planning impact
+
+- Split relation work into a short authentic-acquisition canary, a bounded corpus, and a fresh exact
+  qualification. Require nonempty raw bytes, model-process receipts, per-cell latency, and the live
+  duration floor before the larger run starts.
+- Run continuous self-learning only after an independently qualified, model-produced event stream
+  exists. Compare no-memory, read-only, and bounded-update arms prospectively. Audit false accepts,
+  false rejects, retention, poison, restart, rollback, and future-trainability support.
+- Repair live ARC observability in a separate root. Refit the current model/context VRAM envelope,
+  preserve append-only induction events, prove final-channel headroom, then measure CoBRA-style
+  delivery-versus-withholding margins on replayable pre-action states.
+- Keep KAN/FPGA, Extropic, new Ising samplers, hidden-state scoring, and external text-scorer work
+  outside the blocking graph. Their ideas remain watch items, not substitutes for the three current
+  evidence gaps.
+
 ## V603 Planner Refresh - 2026-09-02
 
 This sweep follows terminal milestone `2026.09.602`. V602 did not run its planned science.
