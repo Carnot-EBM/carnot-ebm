@@ -3052,3 +3052,108 @@ before the next model starts.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFERENCE-6850 and SCENARIO-INFERENCE-6850-* | Implemented (`python/carnot/inference/llama_cpp_process.py`; `python/carnot/experiment_6850_three_family_scoring_admission_canary.py`; `scripts/experiments/experiment_6850_three_family_scoring_admission_canary.py`) | 21 passing tests (`tests/python/test_llama_cpp_process.py`; `tests/python/test_experiment_6850_three_family_scoring_admission_canary.py`) |
+
+### REQ-INFERENCE-6863: Tokenizer-Aware Semantic Contrast Preregistration
+
+Exp6863 SHALL call `cached_sota_pair()` before it resolves these exact local
+GGUF files: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL reject a substituted cache file.
+It SHALL require stable file hashes, embedded tokenizer metadata, Exp6862
+readiness, and no earlier score for a new model and semantic-group identity.
+
+Exp6863 SHALL use only the native llama.cpp GGUF tokenizer in vocabulary-only
+mode. It SHALL not run model evaluation, generation, or token likelihood. Each
+model and contrast cell SHALL record exact prompt and candidate token IDs,
+token counts, special-token settings, chat-template identity, tokenizer hash,
+character counts, presentation order, and frozen sequence hashes.
+
+A model cell SHALL be eligible only when both candidate sequences have equal
+token counts. Its paired controls SHALL also satisfy the frozen prompt-length
+and label-position contract. Exp6863 SHALL freeze identifier, order,
+normalization, label-position, token-count, character-length, and surface-form
+controls. It SHALL preserve each rejected cell and its reasons.
+
+Exp6863 SHALL split by Exp6862 semantic group identity. Calibration and held
+groups SHALL be disjoint. One semantic group SHALL never cross a split through
+another model or row. Held labels SHALL appear only as sealed commitments.
+The calibration loader SHALL reject held identities and SHALL record zero held
+label accesses.
+
+Before any score exists, Exp6863 SHALL freeze the paired contrast, nuisance
+difference-in-differences statistics, random seed, split hashes, confidence
+method, missing-cell rule, family-agreement rule, retirement threshold, and
+sample-size floor. Every model SHALL have at least 20 eligible calibration
+groups and 20 eligible held groups. Both the Qwen and Gemma families SHALL meet
+that floor. A lower count SHALL produce an honest null readiness result.
+
+The terminal artifact SHALL be
+`results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json`.
+It SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `model_specs`, `models_used`,
+`model_artifact_hashes`, `tokenizer_receipts`,
+`token_likelihood_call_count`, `rows`, `accepted_cell_manifest`,
+`rejected_cell_manifest`, `nuisance_match_manifest`,
+`calibration_group_manifest`, `sealed_held_group_manifest`,
+`split_overlap_count`, `held_label_access_count`,
+`preregistered_statistic_manifest`, `sample_size_power_rows`,
+`reproducibility_checksum`,
+`semantic_contrast_preregistration_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+
+`inference_substrate` SHALL be
+`native_gguf_tokenization_without_inference`.
+`token_likelihood_call_count`, `split_overlap_count`, and
+`held_label_access_count` SHALL be zero. `verifier_is_oracle` SHALL be false.
+`semantic_contrast_preregistration_ready_score` SHALL depend only on tokenizer
+receipts, nuisance matching, split isolation, sample floors, and label sealing.
+It SHALL not state a scientific result. A precondition failure SHALL emit
+`complete_blocked_tokenizer_aware_semantic_contrast_preregistration` and name
+the failed check and observed value in `gate_check_summary`.
+
+#### SCENARIO-INFERENCE-6863-NATIVE-TOKENIZER: Metadata And Exact Tokens Are Required
+
+Given one exact GGUF file and its native embedded tokenizer,
+When Exp6863 tokenizes a frozen prompt and both candidates,
+Then it SHALL record exact native token IDs and metadata hashes without a model
+evaluation or token-likelihood call.
+
+#### SCENARIO-INFERENCE-6863-CACHE-AND-HASH: Substitution And Drift Fail Closed
+
+Given a resolved path or file hash that differs from the frozen model receipt,
+When Exp6863 checks the cache,
+Then it SHALL reject that model and name the path or hash drift.
+
+#### SCENARIO-INFERENCE-6863-NUISANCE-MATCH: Unequal Token Counts Reject A Cell
+
+Given a model-specific contrast whose candidate token counts differ or whose
+paired prompt and label-position controls differ,
+When Exp6863 applies the nuisance contract,
+Then it SHALL preserve the cell in the rejected manifest with exact reasons.
+
+#### SCENARIO-INFERENCE-6863-GROUP-SPLIT: Groups Never Leak Across Splits
+
+Given several rows and models for one semantic group identity,
+When Exp6863 freezes calibration and held groups,
+Then all cells for that identity SHALL use one split and split overlap SHALL be
+zero.
+
+#### SCENARIO-INFERENCE-6863-HELD-SEAL: Calibration Cannot Read Held Labels
+
+Given the frozen held-group commitments,
+When the calibration label loader receives a held identity,
+Then it SHALL reject access and the successful preregistration path SHALL
+record zero held-label accesses.
+
+#### SCENARIO-INFERENCE-6863-SAMPLE-FLOOR: Small Splits Return Honest Null Readiness
+
+Given fewer than 20 accepted calibration groups or 20 accepted held groups for
+one required model or family,
+When Exp6863 computes readiness,
+Then readiness SHALL be zero and the terminal verdict SHALL be an honest null.
+
+## Implementation Status (REQ-INFERENCE-6863)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6863 and SCENARIO-INFERENCE-6863-* | Planned (`python/carnot/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py`; `scripts/experiments/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py`) | Planned (`tests/python/test_experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py`) |

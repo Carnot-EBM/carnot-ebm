@@ -1,0 +1,562 @@
+{
+  "accepted_cell_manifest": [],
+  "calibration_group_manifest": [],
+  "duration_s": 38.387381,
+  "experiment_id": 6863,
+  "field_principles": {
+    "accepted_cell_manifest": "The manifest names every eligible future score cell.",
+    "calibration_group_manifest": "The manifest exposes labels only for calibration.",
+    "duration_s": "Wall time records that tokenization ran.",
+    "experiment_id": "experiment_id preserves tokenizer preregistration evidence.",
+    "field_principles": "Each top-level field states why it exists.",
+    "gate_check_summary": "The summary names each failed check and observed value.",
+    "held_label_access_count": "Zero proves calibration did not load held labels.",
+    "honest_verdict": "The complete prefix gives one terminal disposition.",
+    "inference_substrate": "The value separates tokenization from model inference.",
+    "model_artifact_hashes": "File hashes freeze the model bytes.",
+    "model_specs": "The rows bind the three exact required GGUF files.",
+    "models_used": "The list prevents a hidden model-family substitution.",
+    "nuisance_match_manifest": "The contract freezes exact nuisance controls.",
+    "preconditions_checked": "The gate stops substitution and prior-score reuse.",
+    "preregistered_statistic_manifest": "The formulas and failure rules predate scores.",
+    "random_seed": "random_seed preserves tokenizer preregistration evidence.",
+    "rejected_cell_manifest": "The manifest preserves all excluded cells and reasons.",
+    "reproducibility_checksum": "The checksum seals all stable artifact content.",
+    "result_path": "result_path preserves tokenizer preregistration evidence.",
+    "rows": "Each row records one model and semantic contrast cell.",
+    "run_date": "run_date preserves tokenizer preregistration evidence.",
+    "sample_size_power_rows": "Rows enforce model and family sample floors.",
+    "schema": "schema preserves tokenizer preregistration evidence.",
+    "scientific_effect_claimed": "scientific_effect_claimed preserves tokenizer preregistration evidence.",
+    "sealed_held_group_manifest": "Commitments freeze held labels without exposing them.",
+    "semantic_contrast_preregistration_ready_score": "Readiness measures design only.",
+    "source_artifact_hashes": "source_artifact_hashes preserves tokenizer preregistration evidence.",
+    "spec_refs": "spec_refs preserves tokenizer preregistration evidence.",
+    "split_overlap_count": "Zero proves group-disjoint assignment.",
+    "status": "status preserves tokenizer preregistration evidence.",
+    "token_likelihood_call_count": "Zero proves that no score informed the split.",
+    "tokenizer_receipts": "Native metadata and probe tokens freeze each tokenizer.",
+    "verdict_class": "The closed class separates readiness from a scientific claim.",
+    "verifier_is_oracle": "False states that this tokenizer is not a truth oracle."
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "exp6862_readiness",
+        "expected": 1,
+        "observed": 1,
+        "passed": true
+      },
+      {
+        "check": "exp6862_model_scores_absent",
+        "expected": false,
+        "observed": false,
+        "passed": true
+      },
+      {
+        "check": "exp6862_semantic_groups",
+        "expected": ">=40",
+        "observed": 100,
+        "passed": true
+      },
+      {
+        "check": "preexisting_model_scores_for_new_identities",
+        "expected": [],
+        "observed": [],
+        "passed": true
+      },
+      {
+        "check": "model.unsloth/Qwen3.6-35B-A3B-GGUF.file_binding",
+        "expected": [],
+        "observed": [],
+        "passed": true
+      },
+      {
+        "check": "model.unsloth/gemma-4-31B-it-GGUF.file_binding",
+        "expected": [],
+        "observed": [],
+        "passed": true
+      },
+      {
+        "check": "model.unsloth/gemma-4-26B-A4B-it-GGUF.file_binding",
+        "expected": [],
+        "observed": [],
+        "passed": true
+      },
+      {
+        "check": "model.unsloth/gemma-4-31B-it-GGUF.binding",
+        "expected": [],
+        "observed": [
+          "tokenizer_hash_drift"
+        ],
+        "passed": false
+      },
+      {
+        "check": "model.unsloth/gemma-4-26B-A4B-it-GGUF.binding",
+        "expected": [],
+        "observed": [
+          "tokenizer_hash_drift"
+        ],
+        "passed": false
+      },
+      {
+        "check": "all_three_native_tokenizers",
+        "expected": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "observed": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "passed": false
+      }
+    ],
+    "expected": [],
+    "failed_check": "model.unsloth/gemma-4-31B-it-GGUF.binding",
+    "failed_checks": [
+      {
+        "check": "model.unsloth/gemma-4-31B-it-GGUF.binding",
+        "expected": [],
+        "observed": [
+          "tokenizer_hash_drift"
+        ],
+        "passed": false
+      },
+      {
+        "check": "model.unsloth/gemma-4-26B-A4B-it-GGUF.binding",
+        "expected": [],
+        "observed": [
+          "tokenizer_hash_drift"
+        ],
+        "passed": false
+      },
+      {
+        "check": "all_three_native_tokenizers",
+        "expected": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "observed": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "passed": false
+      }
+    ],
+    "observed": [
+      "tokenizer_hash_drift"
+    ],
+    "passed": false
+  },
+  "held_label_access_count": 0,
+  "honest_verdict": "complete_blocked_tokenizer_aware_semantic_contrast_preregistration",
+  "inference_substrate": "native_gguf_tokenization_without_inference",
+  "model_artifact_hashes": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "size_bytes": 22134528992
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "size_bytes": 16947539744
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456
+    }
+  },
+  "model_specs": [
+    {
+      "cached_sota_pair_called": true,
+      "cached_sota_pair_hf_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "family": "qwen",
+      "frozen_model_receipt": {
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "tokenizer_sha256": "sha256:4e95861a364e75660c7fcf9df129cf1d158b927e3ad5ac801ae53bd2681cf08b"
+      },
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "local_model_present": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_size_bytes": 22134528992,
+      "role": "moe",
+      "tokenizer_receipt": {
+        "chat_template_identity": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+        "chat_template_present": true,
+        "loadable": true,
+        "metadata_key_count": 7,
+        "metadata_present": true,
+        "probe_token_ids": [
+          10993,
+          59610,
+          369,
+          9770,
+          1973,
+          264,
+          11991,
+          2306,
+          13
+        ],
+        "source": "embedded_gguf_llama_cpp_vocab_only",
+        "special_tokens": {
+          "tokenizer.ggml.add_bos_token": "false",
+          "tokenizer.ggml.bos_token_id": "248044",
+          "tokenizer.ggml.eos_token_id": "248046",
+          "tokenizer.ggml.padding_token_id": "248055"
+        },
+        "tokenize_settings": {
+          "add_bos": false,
+          "special": false
+        },
+        "tokenizer_sha256": "sha256:4e95861a364e75660c7fcf9df129cf1d158b927e3ad5ac801ae53bd2681cf08b"
+      }
+    },
+    {
+      "cached_sota_pair_called": true,
+      "cached_sota_pair_hf_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "family": "gemma",
+      "frozen_model_receipt": {
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "tokenizer_sha256": "sha256:e7980b28235bd0712e48304be4d3c9b0a31e854c2f9aa2bb296f30c3f01beebd"
+      },
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "local_model_present": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_size_bytes": 18323731456,
+      "role": "dense",
+      "tokenizer_receipt": {
+        "chat_template_identity": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+        "chat_template_present": true,
+        "loadable": true,
+        "metadata_key_count": 9,
+        "metadata_present": true,
+        "probe_token_ids": [
+          14860,
+          58024,
+          563,
+          15593,
+          2180,
+          496,
+          11639,
+          5346,
+          236761
+        ],
+        "source": "embedded_gguf_llama_cpp_vocab_only",
+        "special_tokens": {
+          "tokenizer.ggml.add_bos_token": "true",
+          "tokenizer.ggml.bos_token_id": "2",
+          "tokenizer.ggml.eos_token_id": "106",
+          "tokenizer.ggml.mask_token_id": "4",
+          "tokenizer.ggml.padding_token_id": "0",
+          "tokenizer.ggml.unknown_token_id": "3"
+        },
+        "tokenize_settings": {
+          "add_bos": false,
+          "special": false
+        },
+        "tokenizer_sha256": "sha256:ac1932bd193236890065453361099ec41b8e7a7e0179e8b05505730336dbce9c"
+      }
+    },
+    {
+      "cached_sota_pair_called": true,
+      "cached_sota_pair_hf_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "family": "gemma",
+      "frozen_model_receipt": {
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "tokenizer_sha256": "sha256:e7980b28235bd0712e48304be4d3c9b0a31e854c2f9aa2bb296f30c3f01beebd"
+      },
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "local_model_present": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_size_bytes": 16947539744,
+      "role": "moe",
+      "tokenizer_receipt": {
+        "chat_template_identity": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+        "chat_template_present": true,
+        "loadable": true,
+        "metadata_key_count": 9,
+        "metadata_present": true,
+        "probe_token_ids": [
+          14860,
+          58024,
+          563,
+          15593,
+          2180,
+          496,
+          11639,
+          5346,
+          236761
+        ],
+        "source": "embedded_gguf_llama_cpp_vocab_only",
+        "special_tokens": {
+          "tokenizer.ggml.add_bos_token": "true",
+          "tokenizer.ggml.bos_token_id": "2",
+          "tokenizer.ggml.eos_token_id": "106",
+          "tokenizer.ggml.mask_token_id": "4",
+          "tokenizer.ggml.padding_token_id": "0",
+          "tokenizer.ggml.unknown_token_id": "3"
+        },
+        "tokenize_settings": {
+          "add_bos": false,
+          "special": false
+        },
+        "tokenizer_sha256": "sha256:ac1932bd193236890065453361099ec41b8e7a7e0179e8b05505730336dbce9c"
+      }
+    }
+  ],
+  "models_used": [],
+  "nuisance_match_manifest": {},
+  "preconditions_checked": {
+    "checks": [
+      {
+        "check": "exp6862_readiness",
+        "expected": 1,
+        "observed": 1,
+        "passed": true
+      },
+      {
+        "check": "exp6862_model_scores_absent",
+        "expected": false,
+        "observed": false,
+        "passed": true
+      },
+      {
+        "check": "exp6862_semantic_groups",
+        "expected": ">=40",
+        "observed": 100,
+        "passed": true
+      },
+      {
+        "check": "preexisting_model_scores_for_new_identities",
+        "expected": [],
+        "observed": [],
+        "passed": true
+      },
+      {
+        "check": "model.unsloth/Qwen3.6-35B-A3B-GGUF.file_binding",
+        "expected": [],
+        "observed": [],
+        "passed": true
+      },
+      {
+        "check": "model.unsloth/gemma-4-31B-it-GGUF.file_binding",
+        "expected": [],
+        "observed": [],
+        "passed": true
+      },
+      {
+        "check": "model.unsloth/gemma-4-26B-A4B-it-GGUF.file_binding",
+        "expected": [],
+        "observed": [],
+        "passed": true
+      },
+      {
+        "check": "model.unsloth/gemma-4-31B-it-GGUF.binding",
+        "expected": [],
+        "observed": [
+          "tokenizer_hash_drift"
+        ],
+        "passed": false
+      },
+      {
+        "check": "model.unsloth/gemma-4-26B-A4B-it-GGUF.binding",
+        "expected": [],
+        "observed": [
+          "tokenizer_hash_drift"
+        ],
+        "passed": false
+      },
+      {
+        "check": "all_three_native_tokenizers",
+        "expected": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "observed": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "passed": false
+      }
+    ],
+    "passed": false
+  },
+  "preregistered_statistic_manifest": {
+    "confidence_method": {
+      "cluster_unit": "semantic_group_identity",
+      "confidence_level": 0.95,
+      "name": "semantic_group_cluster_BCa_bootstrap",
+      "resamples": 10000,
+      "seed": 6863
+    },
+    "failure_rules": [
+      "Reject a scientific claim when any required model has fewer than 20 held groups.",
+      "Reject a scientific claim when any nuisance interval includes the primary effect magnitude.",
+      "Reject a scientific claim when the family-agreement rule fails.",
+      "Reject a scientific claim when a sealed hash or tokenizer hash drifts."
+    ],
+    "family_agreement_rule": "Qwen and both Gemma models must have the same primary-effect sign. The pooled Qwen and Gemma 95% intervals must also have the same sign.",
+    "frozen_before_token_likelihood": true,
+    "missing_cell_rule": "No imputation. Analyze a model on complete eligible held groups only. A model below 20 held groups fails readiness.",
+    "multiple_comparison_rule": "Holm correction across seven nuisance statistics per model",
+    "normalization_rule": "candidate mean log likelihood per token; equal token counts required",
+    "nuisance_difference_in_differences": {
+      "character_length": "primary_contrast - matched_character_length_control_contrast",
+      "identifier": "primary_contrast - matched_identifier_control_contrast",
+      "label_position": "primary_contrast - matched_label_position_control_contrast",
+      "normalization": "primary_contrast - matched_normalization_control_contrast",
+      "order": "primary_contrast - matched_order_control_contrast",
+      "surface_form": "primary_contrast - matched_surface_form_control_contrast",
+      "token_count": "primary_contrast - matched_token_count_control_contrast"
+    },
+    "primary_within_group_paired_contrast": "mean_candidate_log_likelihood_per_token(valid) - mean_candidate_log_likelihood_per_token(invalid)",
+    "retirement_threshold": "Retire the semantic-likelihood direction when the upper 95% primary interval is at or below zero for both Qwen and pooled Gemma, or when two preregistered reruns fail the family-agreement rule."
+  },
+  "random_seed": 6863,
+  "rejected_cell_manifest": [],
+  "reproducibility_checksum": "sha256:7b73a7e6c3a36d845bbed59e14318be067f0f76f0a0bceaa69d0d4aaa9e6cfd4",
+  "result_path": "results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json",
+  "rows": [],
+  "run_date": "20260902",
+  "sample_size_power_rows": [],
+  "schema": "carnot.experiment_6863.tokenizer_aware_semantic_contrast_preregistration.v1",
+  "scientific_effect_claimed": false,
+  "sealed_held_group_manifest": [],
+  "semantic_contrast_preregistration_ready_score": 0,
+  "source_artifact_hashes": {
+    "exp6850": "sha256:0093104ffb1d4f3f22e7ab9369d56561d8d01fa84406faa89d8f0117ced6977d",
+    "exp6852": "sha256:121dd2640dd50404e081e281953402b2f6e0d36c0aeeb805df049e1debbe07a9",
+    "exp6862": "sha256:dbc2d463153274432dd02bbd188e5e5477a650bcdf4f1fc101f2e6adc5778638"
+  },
+  "spec_refs": [
+    "REQ-INFERENCE-6863",
+    "SCENARIO-INFERENCE-6863-NATIVE-TOKENIZER",
+    "SCENARIO-INFERENCE-6863-CACHE-AND-HASH",
+    "SCENARIO-INFERENCE-6863-NUISANCE-MATCH",
+    "SCENARIO-INFERENCE-6863-GROUP-SPLIT",
+    "SCENARIO-INFERENCE-6863-HELD-SEAL",
+    "SCENARIO-INFERENCE-6863-SAMPLE-FLOOR"
+  ],
+  "split_overlap_count": 0,
+  "status": "complete",
+  "token_likelihood_call_count": 0,
+  "tokenizer_receipts": [
+    {
+      "chat_template_identity": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+      "chat_template_present": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loadable": true,
+      "metadata_key_count": 7,
+      "metadata_present": true,
+      "probe_token_ids": [
+        10993,
+        59610,
+        369,
+        9770,
+        1973,
+        264,
+        11991,
+        2306,
+        13
+      ],
+      "source": "embedded_gguf_llama_cpp_vocab_only",
+      "special_tokens": {
+        "tokenizer.ggml.add_bos_token": "false",
+        "tokenizer.ggml.bos_token_id": "248044",
+        "tokenizer.ggml.eos_token_id": "248046",
+        "tokenizer.ggml.padding_token_id": "248055"
+      },
+      "tokenize_settings": {
+        "add_bos": false,
+        "special": false
+      },
+      "tokenizer_sha256": "sha256:4e95861a364e75660c7fcf9df129cf1d158b927e3ad5ac801ae53bd2681cf08b"
+    },
+    {
+      "chat_template_identity": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "loadable": true,
+      "metadata_key_count": 9,
+      "metadata_present": true,
+      "probe_token_ids": [
+        14860,
+        58024,
+        563,
+        15593,
+        2180,
+        496,
+        11639,
+        5346,
+        236761
+      ],
+      "source": "embedded_gguf_llama_cpp_vocab_only",
+      "special_tokens": {
+        "tokenizer.ggml.add_bos_token": "true",
+        "tokenizer.ggml.bos_token_id": "2",
+        "tokenizer.ggml.eos_token_id": "106",
+        "tokenizer.ggml.mask_token_id": "4",
+        "tokenizer.ggml.padding_token_id": "0",
+        "tokenizer.ggml.unknown_token_id": "3"
+      },
+      "tokenize_settings": {
+        "add_bos": false,
+        "special": false
+      },
+      "tokenizer_sha256": "sha256:ac1932bd193236890065453361099ec41b8e7a7e0179e8b05505730336dbce9c"
+    },
+    {
+      "chat_template_identity": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loadable": true,
+      "metadata_key_count": 9,
+      "metadata_present": true,
+      "probe_token_ids": [
+        14860,
+        58024,
+        563,
+        15593,
+        2180,
+        496,
+        11639,
+        5346,
+        236761
+      ],
+      "source": "embedded_gguf_llama_cpp_vocab_only",
+      "special_tokens": {
+        "tokenizer.ggml.add_bos_token": "true",
+        "tokenizer.ggml.bos_token_id": "2",
+        "tokenizer.ggml.eos_token_id": "106",
+        "tokenizer.ggml.mask_token_id": "4",
+        "tokenizer.ggml.padding_token_id": "0",
+        "tokenizer.ggml.unknown_token_id": "3"
+      },
+      "tokenize_settings": {
+        "add_bos": false,
+        "special": false
+      },
+      "tokenizer_sha256": "sha256:ac1932bd193236890065453361099ec41b8e7a7e0179e8b05505730336dbce9c"
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}
