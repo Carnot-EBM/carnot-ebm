@@ -17054,3 +17054,4 @@ The l |
 | 2026-09-02 07:11 UTC | Three-family semantic contrast scoring stream v2 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-02 07:55 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 727762 (port 8919) reparented to init, no live process references its  |
 | 2026-09-02 07:57 UTC | Calibration-only paired semantic rule | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-09-02 08:00 UTC | Sealed independent semantic compatibility audit | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp6869-calibration-onl |
