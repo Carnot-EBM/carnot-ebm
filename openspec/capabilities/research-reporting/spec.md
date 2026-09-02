@@ -60767,3 +60767,135 @@ check passes.
 **When** Exp6885 validates the terminal tail
 **Then** the observed dependency remains explicit
 **And** readiness is zero.
+
+### REQ-REPORT-6898: V604 Manifest And Evidence Admission SHALL Fail Closed
+
+Exp6898 SHALL compare the active V604 design and roadmap from their primary
+files. It SHALL require milestone `2026.09.604` and exactly 13 tasks. The task
+numbers SHALL be Exp6898 through Exp6910 in conductor order. Each task SHALL
+have a unique JSON deliverable under `results/`. Document and YAML rows SHALL
+preserve count, order, identifier, deliverable, and milestone differences.
+
+Every executable prompt SHALL contain `CONTEXT`, `EXISTING CODE TO READ FIRST`,
+`TASK`, and `CONCRETE STEPS` sections. Its final two non-empty lines SHALL be
+its exact run command and `Do NOT push. Do NOT modify
+scripts/research_conductor.py.`
+
+Every `gated_on` row SHALL use an operator accepted by both the current roadmap
+schema and conductor gate evaluator. Its upstream SHALL exist earlier in the
+active roadmap. Its field SHALL appear in the upstream prompt's required
+artifact fields. Its value and full row SHALL match the design gate table.
+
+Every `prior_failures` row SHALL contain `experiment_id`, `verdict`,
+`addressed_by`, and `retire_if_same_verdict`. The declared verdict SHALL equal
+the primary artifact verdict. `addressed_by` SHALL be non-empty.
+`retire_if_same_verdict` SHALL be true.
+
+No document or YAML task SHALL gate on Exp6898. Exp6899, Exp6905, and Exp6906
+SHALL be present ungated science roots. Exp6910 SHALL be present and ungated.
+The V604 readiness score SHALL remain advisory and SHALL approve no scientific
+claim.
+
+The reducer SHALL rerun the current adversarial verifier on the required V603
+artifacts. A source with a current critical flag SHALL be inadmissible and
+quarantined. A claim that consumes an inadmissible source SHALL remain separate
+as transitive taint. Exp6887 SHALL remain inadmissible while its current
+critical flag exists. Exp6888 SHALL remain non-headline while it consumes
+Exp6887. Its lexical rule arm MAY remain described as locally qualified, but it
+SHALL NOT remove the source-level taint.
+
+The reducer SHALL emit one row per task-contract check and one row per
+artifact-admission check. It SHALL preserve hard failures, warnings, and
+transitive taint separately. `v604_manifest_contract_ready_score` SHALL equal
+one only when every document and YAML contract check passes.
+`v603_admissible_science_source_count` SHALL count only unflagged science
+sources with independent traceability.
+
+The reducer SHALL require a readable V604 design, the active roadmap, V603
+terminal artifacts, the exclusion manifest, and current schema, gate,
+prior-failure, gate-audit, and adversarial code. A failed precondition SHALL
+still produce a complete blocked artifact. Each failed check SHALL record its
+expected and observed values.
+
+The artifact SHALL include `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `rows`, `document_task_rows`,
+`yaml_task_rows`, `document_yaml_parity_rows`, `gate_contract_rows`,
+`prior_failure_contract_rows`, `prompt_ending_rows`, `branch_root_rows`,
+`ungated_tail_rows`, `adversarial_recheck_rows`, `artifact_admissibility_rows`,
+`dependency_taint_rows`, `quarantined_artifact_ids`, `task_count`,
+`experiment_range`, `random_seed`, `reproducibility_checksum`,
+`v604_manifest_contract_ready_score`, `v603_admissible_science_source_count`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL explain every required field and
+every advisory score.
+
+`inference_substrate` SHALL equal
+`deterministic_manifest_and_admissibility_audit_no_llm`.
+`verifier_is_oracle` SHALL be false. The verdict class SHALL use the closed
+project enum. The honest verdict SHALL start with `complete_`. A blocked
+artifact SHALL use
+`complete_blocked_v604_evidence_admissibility_contract`.
+
+#### SCENARIO-REPORT-6898-COUNT-ORDER: Count And Order Differences Fail Closed
+
+**Given** the design or active YAML has the wrong task count or conductor order
+**When** Exp6898 compares both primary files
+**Then** it preserves each document-only or YAML-only row
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6898-IDENTITY: IDs, Deliverables, And Milestones Match Exactly
+
+**Given** a task changes its identifier, deliverable, or milestone
+**When** Exp6898 compares the task contract
+**Then** it records the expected and observed values
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6898-PROMPT-END: Prompts End With Exact Commands
+
+**Given** a prompt lacks a required section or changes either final line
+**When** Exp6898 validates the executable prompt
+**Then** the prompt-ending row names the mismatch
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6898-GATE-FIELD: Gate Fields And Values Match Producers
+
+**Given** a gate changes its field, operator, or value
+**When** Exp6898 validates the design and producer contracts
+**Then** the gate row records the exact mismatch
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6898-MISSING-UPSTREAM: Missing Upstreams Fail Closed
+
+**Given** a gate names an absent or later upstream task
+**When** Exp6898 validates executable order
+**Then** the gate row preserves the missing producer
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6898-PRIOR-FAILURE: Prior-Failure Rows Stay Complete
+
+**Given** a prior-failure row omits or changes one required subfield
+**When** Exp6898 checks the primary prior artifact
+**Then** the row preserves every mismatch
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6898-FLAGGED-SOURCE: Critical Sources Are Quarantined
+
+**Given** the current adversarial verifier returns a critical flag for Exp6887
+**When** Exp6898 performs evidence admission
+**Then** Exp6887 is inadmissible and listed in `quarantined_artifact_ids`
+**And** it contributes zero to the admissible science source count.
+
+#### SCENARIO-REPORT-6898-DEPENDENCY-TAINT: Dependent Claims Stay Non-Headline
+
+**Given** Exp6888 consumes the quarantined Exp6887 artifact
+**When** Exp6898 follows declared source hashes
+**Then** it emits a separate transitive-taint row
+**And** Exp6888 remains non-headline even when its lexical rule arm qualifies.
+
+#### SCENARIO-REPORT-6898-UNGATED-TAIL: Independent Roots And Tail Stay Runnable
+
+**Given** Exp6899, Exp6905, Exp6906, or Exp6910 is absent or gated
+**When** Exp6898 validates branch isolation
+**Then** the observed dependency remains explicit
+**And** readiness is zero.
