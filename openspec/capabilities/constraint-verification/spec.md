@@ -4008,3 +4008,120 @@ accuracy or LLM-inference claim appears.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6886 and SCENARIO-CONSTRAINT-6886-* | Planned (`python/carnot/experiment_6886_enoki_exact_relation_fixture.py`; `scripts/experiments/experiment_6886_enoki_exact_relation_fixture.py`) | Planned (`tests/python/test_experiment_6886_enoki_exact_relation_fixture.py`) |
+
+### REQ-VERIFY-6888: Independent Held Relation Qualification
+
+Carnot SHALL provide Exp6888 as a fresh, deterministic reducer over the frozen
+Exp6887 proposal artifact. The reducer SHALL run no model inference. It SHALL
+require the exact Exp6886, Exp6887, Exp6274, compiler, and sealed-sidecar hashes.
+It SHALL also require the qualified compiler, an independent ASP solver, and the
+complete five-arm acquisition matrix. A failed precondition SHALL emit
+`complete_blocked_independent_relation_qualification`. Its gate summary SHALL
+name each failed check, expected value, and observed value.
+
+The reducer SHALL score calibration rows before it opens the held sidecar. It
+SHALL choose one calibration reference arm without held data. It SHALL freeze
+minimum span F1, tuple precision, tuple recall, parse coverage, family floor,
+perturbation floor, and exact semantic parity from that reference. It SHALL
+open the held sidecar exactly once after the thresholds are frozen. It SHALL
+match labels and proposals by the frozen fixture ID and exact arm ID.
+
+The reducer SHALL reject prompt or raw-artifact leakage of held formal labels,
+ASP programs, answer sets, or solver receipts. A proposal that independently
+matches a source relation is not leakage. The reducer SHALL recompute UTF-8 span
+grounding from source bytes. It SHALL de-duplicate proposal tuples before it
+assigns credit. Empty, explicit-abstain, malformed, timeout, false-positive,
+false-negative, unsupported-atom, and no-headroom cells SHALL stay explicit.
+Every cell SHALL remain in parse and abstention denominators.
+
+Each mapped proposal set SHALL compile through the qualified Exp6274 compiler.
+The reducer SHALL invoke clingo with a bounded timeout on the same program. It
+SHALL compare zero-energy states and answer sets by exact set equality. It SHALL
+report tuple quality separately from compiler and solver parity. It SHALL also
+report contradiction detection separately from ordinary tuple scoring.
+
+The terminal artifact SHALL be
+`results/experiment_6888_independent_relation_qualification.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `sealed_sidecar_hashes`,
+`frozen_thresholds`, `rows`, `span_metric_rows`, `tuple_metric_rows`,
+`parse_coverage_rows`, `abstention_rows`, `family_rows`, `perturbation_rows`,
+`asp_compilation_rows`, `solver_parity_rows`,
+`reported_vs_recomputed_metrics`, `independent_solver_receipts`,
+`held_leakage_count`, `eligible_arm_rows`, `qualified_relation_event_count`,
+`relation_qualification_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. Each top-level field and gate field SHALL
+have one principle. `inference_substrate` SHALL equal
+`sealed_reduction_of_frozen_relation_outputs_no_llm`.
+
+`relation_qualification_ready_score` SHALL equal the bare integer `1` only when
+at least one arm passes every frozen held threshold. Otherwise it SHALL equal
+`0`. `qualified_relation_event_count` SHALL count frozen events for passing
+arms. The count SHALL NOT impose the downstream floor of 90. Because clingo is
+oracle authority, a passing artifact SHALL use `verdict_class` equal to
+`circular_positive`. The artifact SHALL never use `positive`.
+`honest_verdict` SHALL start with `complete_`.
+
+#### SCENARIO-VERIFY-6888-PRECONDITIONS: Drift Or Missing Cells Block
+
+Given a changed artifact hash, changed sidecar hash, missing raw cell, changed
+arm identity, unqualified compiler, or unavailable solver,
+When Exp6888 checks its inputs,
+Then it emits a complete blocked artifact before it opens held labels.
+
+#### SCENARIO-VERIFY-6888-SEAL: Held Authority Opens Once Without Leakage
+
+Given frozen calibration thresholds and a sealed held sidecar,
+When the fresh reducer starts held scoring,
+Then it opens that sidecar once and rejects formal held content in prompts or
+raw artifact metadata.
+
+#### SCENARIO-VERIFY-6888-SPANS: UTF-8 Offsets Are Recomputed
+
+Given exact and shifted UTF-8 offsets,
+When source grounding is scored,
+Then only offsets that reproduce the source bytes receive span credit.
+
+#### SCENARIO-VERIFY-6888-TUPLES: Duplicate Rows Receive One Credit
+
+Given duplicate, unsupported, missing, and spurious tuples,
+When tuple precision and recall are scored,
+Then a unique supported tuple receives at most one true-positive credit and all
+other outcomes remain explicit.
+
+#### SCENARIO-VERIFY-6888-DENOMINATORS: Abstentions And Failures Stay Counted
+
+Given empty, explicit-abstain, malformed, timeout, and parsed cells,
+When coverage and abstention metrics are reduced,
+Then every frozen cell stays in the denominator and null precision is preserved.
+
+#### SCENARIO-VERIFY-6888-SOLVER: Unsupported Atoms And Timeouts Fail Closed
+
+Given a tuple outside the closed map or an independent solver timeout,
+When semantic validity is checked,
+Then the row records the exact failure and cannot satisfy semantic parity.
+
+#### SCENARIO-VERIFY-6888-POOLING: Families And Perturbations Cannot Hide
+
+Given one weak family or perturbation among stronger pooled rows,
+When held eligibility is computed,
+Then the minimum family and perturbation rows govern their floors.
+
+#### SCENARIO-VERIFY-6888-IDENTITY: Arm And Record IDs Are Exact
+
+Given a substituted arm ID, duplicate cell ID, or unmatched fixture ID,
+When acquisition rows are joined to labels,
+Then the reducer blocks instead of pooling the substituted rows.
+
+#### SCENARIO-VERIFY-6888-REPLAY: Aggregates Must Match Rows
+
+Given a terminal artifact whose reported aggregate differs from row evidence,
+When artifact validation replays the metrics,
+Then validation reports the disagreement and readiness cannot pass.
+
+## Implementation Status (REQ-VERIFY-6888)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6888 and SCENARIO-VERIFY-6888-* | Implemented (`python/carnot/experiment_6888_independent_relation_qualification.py`; `scripts/experiments/experiment_6888_independent_relation_qualification.py`) | Verified (`tests/python/test_experiment_6888_independent_relation_qualification.py`; `results/experiment_6888_independent_relation_qualification.json`) |
