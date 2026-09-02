@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.601",
+  "generated_at": "2026-09-02T09:47:29Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 5.0,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Tokenizer-aware semantic contrast preregistration v2",
+      "duration_minutes": 2.35,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Canonical tokenizer binding requalification",
+      "duration_minutes": 0.86,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Three-family semantic contrast scoring stream v2",
+      "duration_minutes": 0.86,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Prospective sealed continuous self-learning audit",
+      "duration_minutes": 0.76,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V601 evidence and method-change contract",
+      "duration_minutes": 0.11,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 9 experiments in 5.0 minutes, including 3 compute-bound experiments. The compute-bound leaders were Tokenizer-aware semantic contrast preregistration v2 at 2.35 minutes, followed by Canonical tokenizer binding requalification and Three-family semantic contrast scoring stream v2 at 0.86 minutes each. No data available this milestone explains their phase costs.",
+  "bottlenecks_identified": [
+    "Disk-mtime reconstruction replaced live commit timing, so task-phase attribution is unavailable.",
+    "No data available this milestone explains why Tokenizer-aware semantic contrast preregistration v2 was the longest compute-bound entry.",
+    "The GPU report is not tied to compute-task execution windows, and no data available this milestone records parallel model count or runner selection."
+  ],
+  "improvements_suggested": [
+    "Record monotonic start, end, and phase timestamps for every experiment instead of relying only on disk modification times.",
+    "Attach task-window GPU utilization samples and process identity to every compute-bound artifact.",
+    "Record model count and runner selection at launch, and select DualGPURunner only when two or more models are loaded in parallel.",
+    "Allow the scheduler to overlap independent synthesis-only work with compute-bound work when dependencies permit."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add task-scoped phase and GPU telemetry to the conductor artifact contract.",
+    "Add model-count and runner-selection receipts to each compute launch.",
+    "Overlap dependency-free synthesis-only work with active compute jobs."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The bounded record identifies the longest entries but does not expose their internal phases or task-window accelerator use. The next retrospective should use per-task telemetry instead of inferring execution behavior from modification times and a terminal GPU snapshot."
+}

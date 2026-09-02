@@ -6528,3 +6528,10 @@ The critical path for milestone .250:
 - theme: tokenizer-aware preregistration concentrated the reconstructed clock while phase evidence remained absent
 - key result: honest operational negative — the compute idle check stayed clear, but the records neither explain the critical path nor show concurrent model loading for a runner audit
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.601
+
+- exp_range: no data available this milestone
+- theme: mixed execution exposed missing task-level timing, accelerator, and runner evidence
+- key result: honest operational negative — the longest compute task is known, but its cause, task-window GPU efficiency, and any parallel-model runner miss are not established
+- acceptance: no data available this milestone

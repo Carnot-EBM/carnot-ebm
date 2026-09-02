@@ -18509,3 +18509,13 @@ timed control, the defensible savings forecast is 0%.
 - 2026-09-02: Observable reliability opportunity stream (✅ Complete) — honest_verdict=complete_positive_observable_reliability_opportunity_stream_ready; results/experiment_6871_observable_reliability_opportunity_stream.json
 - 2026-09-02: Bounded reliability controller and exact transition quarantine (✅ Complete) — honest_verdict=complete_positive_bounded_reliability_controller_ready_not_sealed_utility_verdict; results/experiment_6872_bounded_reliability_controller_quarantine.json
 - 2026-09-02: Prospective sealed continuous self-learning audit (⚠️ Research Finding) — honest_verdict=complete_null_prospective_sealed_self_learning_utility_not_demonstrated; results/experiment_6873_prospective_sealed_self_learning_audit.json
+
+## 2026-09-02 — Milestone 2026.09.601 operational retrospective
+
+The reconstructed milestone completed 9 experiments in 5 minutes. The 3
+compute-bound entries took 2 minutes, 1 minute, and 1 minute. The record does
+not explain those durations. It does not flag compute-task GPU idle, and it
+does not identify a parallel multi-model launch or a missed DualGPURunner
+dispatch. Add task-scoped phase, GPU, model-count, and runner receipts. Also
+overlap independent synthesis work with compute work. The savings estimate is
+0% because no timed alternative is available.
