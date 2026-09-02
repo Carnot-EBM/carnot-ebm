@@ -4,6 +4,51 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-09-02: the headline `levels` count is a final-frame delta, and it disagrees with the authoritative per-level record
+
+**The observation.** In `results/arc_leaderboard_eval_runs/cd82-r11l-727651.json`, cd82 reports
+`levels: 0`, `reached: 0`, `deepest_level_reached: 0` — while the SAME row carries
+`level_up_charged: [771]`, `per_level[0]: {"completed": true, "agent_actions": 741}` and
+`per_level[1]: {"agent_actions": 1481, "completed": false}`. The agent completed level 0 at action
+771 and then spent 1,481 actions inside level 1. The headline says it never left level 0.
+
+**The mechanism**, `scripts/arc_leaderboard_eval.py:757`:
+
+```python
+reached = _level_of(latest)          # level of the FINAL frame
+levels  = max(0, reached - (start or 0))
+```
+
+`levels` is a delta between the FIRST and LAST frame, not a count of completed levels. An agent
+that completes a level and is later reset back scores zero for it. cd82's `resets_before_levelups:
+[30]` and its 82 nav resets are consistent with ending the budget below its deepest point.
+
+**The supervisor receipt was right and I doubted it.** cd82's redirects carry
+`resolved_by_levelup: true` with `actions_to_levelup` 651/531/411 — three pending redirects
+credited by the single level-up at 771. That looked impossible against `levels: 0`, and it is not:
+`level_up_charged: [771]` confirms the event. The receipt agrees with the per-level record; the
+headline is the outlier.
+
+**What this affects.** The run printed `LEADERBOARD SCORE: 2 levels` (r11l 2 + cd82 0). By
+completed-levels it is 3. The outer-loop dashboard's generalization line moved 7 -> 5 on this
+metric, so a reset-after-completion now reads as regression. The prior cd82 run scored 2 levels on
+the same game, which is the comparison that makes the drop look like capability loss rather than a
+counting convention.
+
+**NOT resolved here, deliberately.** Two readings are defensible and this entry does not pick one:
+(a) `levels` should count completed levels, and the final-frame delta is a bug that undercounts
+resets; (b) `levels` deliberately measures level HELD at the end, and a reset genuinely forfeits
+credit. Which one is right depends on what the scored Kaggle metric does with a reset, and that was
+not checked. `deepest_level_reached: 0` is harder to defend under either reading, since the agent
+demonstrably reached level 1 — that field looks wrong independently.
+
+**Method note, recorded because it nearly produced two wrong findings.** Inside twenty minutes I
+claimed the two games' receipts were byte-identical (false — I compared only the summary counters;
+the redirect details differ per game, and the counters coincide because the supervisor fires at
+fixed action indices) and then that a `helped` credit with zero levels was impossible (false — the
+level-up is real and recorded in `level_up_charged`). Both were corrected by opening the underlying
+fields. The summary counters of this receipt are not a safe substitute for its `redirects` list.
+
 ### NEW 2026-09-02: the induction tier is truncation-bound, and any tool-use A/B before fixing it is uninterpretable
 
 Full write-up: `docs/research-notes/induce-shared-pool-truncation-2026-09-02.md`.
