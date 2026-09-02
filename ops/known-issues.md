@@ -4,6 +4,33 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-09-02: a document/YAML task-count divergence cost 3 of 4 tasks in milestone 602
+
+**What happened.** `experiment_6874_v602_evidence_substrate_manifest_contract` is CLEAN (not
+flagged) and its gate failed honestly on `v602_document_yaml_parity`: the milestone DOCUMENT
+describes 11 tasks (`experiment_range: [6874, 6884]`, `document_task_count: 11`) while the
+activated roadmap YAML holds 4 (`yaml_task_count: 4`). Two further checks failed with it,
+`v602_gate_contract` and `v602_evidence_contract_ready_score`.
+
+That failure then cascaded: exp6875 GATE_BLOCKed on exp6874, exp6876 on exp6875, exp6877 on
+exp6876 — three of the milestone's four tasks, all "Pre-emptive skip: upstream retired".
+
+**The guard is not the problem.** exp6874 detected a real inconsistency between two descriptions of
+the same milestone and refused to certify it. The cascade is the dependency machinery doing what it
+should once the root gate fails. The defect is the divergence itself.
+
+**Base rate, checked before generalising.** The milestone was replanned this morning after an
+exclusion-manifest BLOCK (11:10 refusal, quarantine, re-plan, 11:20 activation), which is the
+obvious suspect. It does not hold up: the log shows 5 such replans (2026.08.576, .583, .593, .597,
+2026.09.602) and only ONE artifact in `results/` has ever failed a `document_yaml_parity` check —
+today's. So a replan does not generally cause this, and something specific to 602 does.
+
+**Not diagnosed.** Both planner runs logged "4 tasks proposed", so the 11 in the document did not
+come from a larger plan being trimmed. `experiment_range: [6874, 6884]` is exactly 11 consecutive
+ids, which suggests the document reserves an ID RANGE rather than counting actual tasks — that is a
+hypothesis, not a finding; the document generator was not read. Recorded so the next occurrence has
+a reference point rather than starting from zero.
+
 ### NEW 2026-09-02: the operational retrospective never reports the quarantine rate
 
 **The observation.** `results/operational_retro_2026_09_601.json` summarises the milestone as "9
