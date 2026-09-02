@@ -1,0 +1,2233 @@
+{
+  "branch_root_rows": [
+    {
+      "document_consumers": [],
+      "expected_consumers": [],
+      "kind": "advisory_manifest_fanout",
+      "number": 6885,
+      "passed": true,
+      "yaml_consumers": []
+    },
+    {
+      "document_present_ungated": true,
+      "kind": "independent_science_root",
+      "number": 6886,
+      "observed_gates": [],
+      "passed": true,
+      "task_id": "exp6886-enoki-exact-relation-fixture",
+      "yaml_present_ungated": true
+    },
+    {
+      "document_present_ungated": true,
+      "kind": "independent_science_root",
+      "number": 6892,
+      "observed_gates": null,
+      "passed": false,
+      "task_id": null,
+      "yaml_present_ungated": false
+    }
+  ],
+  "document_task_rows": [
+    {
+      "deliverable": "results/experiment_6885_v603_executable_manifest_branch_contract.json",
+      "gates": [],
+      "milestone": "2026.09.603",
+      "number": 6885,
+      "order": 1,
+      "task_id": "exp6885-v603-executable-manifest-branch-contract",
+      "title": "V603 executable-manifest and branch-isolation contract"
+    },
+    {
+      "deliverable": "results/experiment_6886_enoki_exact_relation_fixture.json",
+      "gates": [],
+      "milestone": "2026.09.603",
+      "number": 6886,
+      "order": 2,
+      "task_id": "exp6886-enoki-exact-relation-fixture",
+      "title": "Enoki asset admission and exact relation fixture"
+    },
+    {
+      "deliverable": "results/experiment_6887_three_family_relation_proposal_corpus.json",
+      "gates": [
+        {
+          "artifact_field": "relation_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp6886-enoki-exact-relation-fixture",
+          "value": 1
+        }
+      ],
+      "milestone": "2026.09.603",
+      "number": 6887,
+      "order": 3,
+      "task_id": "exp6887-three-family-relation-proposal-corpus",
+      "title": "Three-family relation proposal corpus"
+    },
+    {
+      "deliverable": "results/experiment_6888_independent_relation_qualification.json",
+      "gates": [
+        {
+          "artifact_field": "relation_corpus_complete_score",
+          "op": "==",
+          "upstream": "exp6887-three-family-relation-proposal-corpus",
+          "value": 1
+        }
+      ],
+      "milestone": "2026.09.603",
+      "number": 6888,
+      "order": 4,
+      "task_id": "exp6888-independent-relation-qualification",
+      "title": "Independent held relation qualification"
+    },
+    {
+      "deliverable": "results/experiment_6889_paraphrase_disjoint_structural_stream.json",
+      "gates": [
+        {
+          "artifact_field": "relation_qualification_ready_score",
+          "op": "==",
+          "upstream": "exp6888-independent-relation-qualification",
+          "value": 1
+        },
+        {
+          "artifact_field": "qualified_relation_event_count",
+          "op": ">=",
+          "upstream": "exp6888-independent-relation-qualification",
+          "value": 90
+        }
+      ],
+      "milestone": "2026.09.603",
+      "number": 6889,
+      "order": 5,
+      "task_id": "exp6889-paraphrase-disjoint-structural-stream",
+      "title": "Paraphrase-disjoint structural opportunity stream"
+    },
+    {
+      "deliverable": "results/experiment_6890_prospective_structural_memory_ab.json",
+      "gates": [
+        {
+          "artifact_field": "structural_stream_ready_score",
+          "op": "==",
+          "upstream": "exp6889-paraphrase-disjoint-structural-stream",
+          "value": 1
+        }
+      ],
+      "milestone": "2026.09.603",
+      "number": 6890,
+      "order": 6,
+      "task_id": "exp6890-prospective-structural-memory-ab",
+      "title": "Prospective structural-memory A/B"
+    },
+    {
+      "deliverable": "results/experiment_6891_sealed_structural_learning_audit.json",
+      "gates": [
+        {
+          "artifact_field": "structural_csl_run_complete_score",
+          "op": "==",
+          "upstream": "exp6890-prospective-structural-memory-ab",
+          "value": 1
+        }
+      ],
+      "milestone": "2026.09.603",
+      "number": 6891,
+      "order": 7,
+      "task_id": "exp6891-sealed-structural-learning-audit",
+      "title": "Sealed independent structural-learning audit"
+    },
+    {
+      "deliverable": "results/experiment_6892_arc_append_only_context_trace_contract.json",
+      "gates": [],
+      "milestone": "2026.09.603",
+      "number": 6892,
+      "order": 8,
+      "task_id": "exp6892-arc-append-only-context-trace-contract",
+      "title": "Append-only ARC context and action trace contract"
+    },
+    {
+      "deliverable": "results/experiment_6893_live_arc_context_headroom_sweep.json",
+      "gates": [
+        {
+          "artifact_field": "arc_trace_contract_ready_score",
+          "op": "==",
+          "upstream": "exp6892-arc-append-only-context-trace-contract",
+          "value": 1
+        }
+      ],
+      "milestone": "2026.09.603",
+      "number": 6893,
+      "order": 9,
+      "task_id": "exp6893-live-arc-context-headroom-sweep",
+      "title": "Live shared-context headroom sweep"
+    },
+    {
+      "deliverable": "results/experiment_6894_cobra_replayable_tool_boundaries.json",
+      "gates": [
+        {
+          "artifact_field": "context_pool_headroom_ready_score",
+          "op": "==",
+          "upstream": "exp6893-live-arc-context-headroom-sweep",
+          "value": 1
+        }
+      ],
+      "milestone": "2026.09.603",
+      "number": 6894,
+      "order": 10,
+      "task_id": "exp6894-cobra-replayable-tool-boundaries",
+      "title": "CoBRA-style replayable tool-boundary accrual"
+    },
+    {
+      "deliverable": "results/experiment_6895_matched_tool_delivery_margin.json",
+      "gates": [
+        {
+          "artifact_field": "replayable_tool_boundary_row_count",
+          "op": ">=",
+          "upstream": "exp6894-cobra-replayable-tool-boundaries",
+          "value": 12
+        }
+      ],
+      "milestone": "2026.09.603",
+      "number": 6895,
+      "order": 11,
+      "task_id": "exp6895-matched-tool-delivery-margin",
+      "title": "Matched tool delivery-versus-withholding margin"
+    },
+    {
+      "deliverable": "results/experiment_6896_cross_branch_verifier_blind_spot_audit.json",
+      "gates": [],
+      "milestone": "2026.09.603",
+      "number": 6896,
+      "order": 12,
+      "task_id": "exp6896-cross-branch-verifier-blind-spot-audit",
+      "title": "Cross-branch verifier-blind-spot audit"
+    },
+    {
+      "deliverable": "results/experiment_6897_v603_independent_capstone.json",
+      "gates": [],
+      "milestone": "2026.09.603",
+      "number": 6897,
+      "order": 13,
+      "task_id": "exp6897-v603-independent-capstone",
+      "title": "Independent V603 capstone"
+    }
+  ],
+  "document_yaml_parity_rows": [
+    {
+      "comparisons": {
+        "conductor_order": true,
+        "deliverable": true,
+        "milestone": true,
+        "task_id": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6885_v603_executable_manifest_branch_contract.json",
+        "milestone": "2026.09.603",
+        "number": 6885,
+        "order": 1,
+        "task_id": "exp6885-v603-executable-manifest-branch-contract"
+      },
+      "order": 1,
+      "passed": true,
+      "presence": "both",
+      "yaml": {
+        "deliverable": "results/experiment_6885_v603_executable_manifest_branch_contract.json",
+        "milestone": "2026.09.603",
+        "number": 6885,
+        "order": 1,
+        "task_id": "exp6885-v603-executable-manifest-branch-contract"
+      }
+    },
+    {
+      "comparisons": {
+        "conductor_order": true,
+        "deliverable": true,
+        "milestone": true,
+        "task_id": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6886_enoki_exact_relation_fixture.json",
+        "milestone": "2026.09.603",
+        "number": 6886,
+        "order": 2,
+        "task_id": "exp6886-enoki-exact-relation-fixture"
+      },
+      "order": 2,
+      "passed": true,
+      "presence": "both",
+      "yaml": {
+        "deliverable": "results/experiment_6886_enoki_exact_relation_fixture.json",
+        "milestone": "2026.09.603",
+        "number": 6886,
+        "order": 2,
+        "task_id": "exp6886-enoki-exact-relation-fixture"
+      }
+    },
+    {
+      "comparisons": {
+        "conductor_order": true,
+        "deliverable": true,
+        "milestone": true,
+        "task_id": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6887_three_family_relation_proposal_corpus.json",
+        "milestone": "2026.09.603",
+        "number": 6887,
+        "order": 3,
+        "task_id": "exp6887-three-family-relation-proposal-corpus"
+      },
+      "order": 3,
+      "passed": true,
+      "presence": "both",
+      "yaml": {
+        "deliverable": "results/experiment_6887_three_family_relation_proposal_corpus.json",
+        "milestone": "2026.09.603",
+        "number": 6887,
+        "order": 3,
+        "task_id": "exp6887-three-family-relation-proposal-corpus"
+      }
+    },
+    {
+      "comparisons": {
+        "conductor_order": true,
+        "deliverable": true,
+        "milestone": true,
+        "task_id": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6888_independent_relation_qualification.json",
+        "milestone": "2026.09.603",
+        "number": 6888,
+        "order": 4,
+        "task_id": "exp6888-independent-relation-qualification"
+      },
+      "order": 4,
+      "passed": true,
+      "presence": "both",
+      "yaml": {
+        "deliverable": "results/experiment_6888_independent_relation_qualification.json",
+        "milestone": "2026.09.603",
+        "number": 6888,
+        "order": 4,
+        "task_id": "exp6888-independent-relation-qualification"
+      }
+    },
+    {
+      "comparisons": {
+        "conductor_order": false,
+        "deliverable": false,
+        "milestone": false,
+        "task_id": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6889_paraphrase_disjoint_structural_stream.json",
+        "milestone": "2026.09.603",
+        "number": 6889,
+        "order": 5,
+        "task_id": "exp6889-paraphrase-disjoint-structural-stream"
+      },
+      "order": 5,
+      "passed": false,
+      "presence": "document_only",
+      "yaml": null
+    },
+    {
+      "comparisons": {
+        "conductor_order": false,
+        "deliverable": false,
+        "milestone": false,
+        "task_id": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6890_prospective_structural_memory_ab.json",
+        "milestone": "2026.09.603",
+        "number": 6890,
+        "order": 6,
+        "task_id": "exp6890-prospective-structural-memory-ab"
+      },
+      "order": 6,
+      "passed": false,
+      "presence": "document_only",
+      "yaml": null
+    },
+    {
+      "comparisons": {
+        "conductor_order": false,
+        "deliverable": false,
+        "milestone": false,
+        "task_id": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6891_sealed_structural_learning_audit.json",
+        "milestone": "2026.09.603",
+        "number": 6891,
+        "order": 7,
+        "task_id": "exp6891-sealed-structural-learning-audit"
+      },
+      "order": 7,
+      "passed": false,
+      "presence": "document_only",
+      "yaml": null
+    },
+    {
+      "comparisons": {
+        "conductor_order": false,
+        "deliverable": false,
+        "milestone": false,
+        "task_id": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6892_arc_append_only_context_trace_contract.json",
+        "milestone": "2026.09.603",
+        "number": 6892,
+        "order": 8,
+        "task_id": "exp6892-arc-append-only-context-trace-contract"
+      },
+      "order": 8,
+      "passed": false,
+      "presence": "document_only",
+      "yaml": null
+    },
+    {
+      "comparisons": {
+        "conductor_order": false,
+        "deliverable": false,
+        "milestone": false,
+        "task_id": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6893_live_arc_context_headroom_sweep.json",
+        "milestone": "2026.09.603",
+        "number": 6893,
+        "order": 9,
+        "task_id": "exp6893-live-arc-context-headroom-sweep"
+      },
+      "order": 9,
+      "passed": false,
+      "presence": "document_only",
+      "yaml": null
+    },
+    {
+      "comparisons": {
+        "conductor_order": false,
+        "deliverable": false,
+        "milestone": false,
+        "task_id": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6894_cobra_replayable_tool_boundaries.json",
+        "milestone": "2026.09.603",
+        "number": 6894,
+        "order": 10,
+        "task_id": "exp6894-cobra-replayable-tool-boundaries"
+      },
+      "order": 10,
+      "passed": false,
+      "presence": "document_only",
+      "yaml": null
+    },
+    {
+      "comparisons": {
+        "conductor_order": false,
+        "deliverable": false,
+        "milestone": false,
+        "task_id": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6895_matched_tool_delivery_margin.json",
+        "milestone": "2026.09.603",
+        "number": 6895,
+        "order": 11,
+        "task_id": "exp6895-matched-tool-delivery-margin"
+      },
+      "order": 11,
+      "passed": false,
+      "presence": "document_only",
+      "yaml": null
+    },
+    {
+      "comparisons": {
+        "conductor_order": false,
+        "deliverable": false,
+        "milestone": false,
+        "task_id": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6896_cross_branch_verifier_blind_spot_audit.json",
+        "milestone": "2026.09.603",
+        "number": 6896,
+        "order": 12,
+        "task_id": "exp6896-cross-branch-verifier-blind-spot-audit"
+      },
+      "order": 12,
+      "passed": false,
+      "presence": "document_only",
+      "yaml": null
+    },
+    {
+      "comparisons": {
+        "conductor_order": false,
+        "deliverable": false,
+        "milestone": false,
+        "task_id": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6897_v603_independent_capstone.json",
+        "milestone": "2026.09.603",
+        "number": 6897,
+        "order": 13,
+        "task_id": "exp6897-v603-independent-capstone"
+      },
+      "order": 13,
+      "passed": false,
+      "presence": "document_only",
+      "yaml": null
+    }
+  ],
+  "duration_s": 0.053844,
+  "experiment_id": 6885,
+  "experiment_range": [
+    6885,
+    6897
+  ],
+  "field_principles": {
+    "arc_trace_contract_ready_score": "This exact producer field spelling controls one V603 branch gate.",
+    "branch_root_rows": "Root rows prove that advisory readiness cannot stop either science branch.",
+    "context_pool_headroom_ready_score": "This exact producer field spelling controls one V603 branch gate.",
+    "document_task_rows": "Document rows preserve the design independently from executable YAML.",
+    "document_yaml_parity_rows": "Per-position comparisons expose count, order, identity, and milestone drift.",
+    "duration_s": "Measured wall time exposes whether the deterministic reducer actually ran.",
+    "experiment_id": "The fixed identity binds this receipt to Exp6885.",
+    "experiment_range": "The inclusive range prevents hidden gaps or reused task numbers.",
+    "field_principles": "A reason per field keeps the contract understandable during later audits.",
+    "gate_check_summary": "Expected and observed values make every blocked verdict actionable.",
+    "gate_contract_rows": "Exact gate rows prevent a typo or dead edge from blocking a branch.",
+    "honest_verdict": "The terminal prefix lets the conductor classify the completed audit safely.",
+    "inference_substrate": "The no-LLM declaration prevents an infrastructure audit from becoming science.",
+    "preconditions_checked": "Explicit source checks make missing evidence diagnosable without a rerun.",
+    "prior_failure_contract_rows": "Primary verdict checks prevent unchanged failed methods from returning silently.",
+    "prompt_ending_rows": "Exact final commands prevent truncated or mutable execution instructions.",
+    "qualified_relation_event_count": "This exact producer field spelling controls one V603 branch gate.",
+    "random_seed": "A fixed identity records that the ordered reduction has no hidden randomness.",
+    "relation_corpus_complete_score": "This exact producer field spelling controls one V603 branch gate.",
+    "relation_fixture_ready_score": "This exact producer field spelling controls one V603 branch gate.",
+    "relation_qualification_ready_score": "This exact producer field spelling controls one V603 branch gate.",
+    "replayable_tool_boundary_row_count": "This exact producer field spelling controls one V603 branch gate.",
+    "reproducibility_checksum": "A content hash detects silent changes while ignoring elapsed time.",
+    "retired_id_rows": "Current-ID checks prevent reuse of an excluded experiment identity.",
+    "retired_upstream_rows": "Retired-edge checks prevent an executable dependency from becoming permanently dead.",
+    "rows": "Separate task and check rows prevent omissions from disappearing in totals.",
+    "run_date": "The date separates this execution from later roadmap states.",
+    "schema": "A versioned shape lets future reducers reject incompatible records.",
+    "source_artifact_hashes": "Hashes bind each conclusion to the exact primary bytes read.",
+    "status": "A terminal status proves the reducer finished its evidence inventory.",
+    "structural_csl_run_complete_score": "This exact producer field spelling controls one V603 branch gate.",
+    "structural_stream_ready_score": "This exact producer field spelling controls one V603 branch gate.",
+    "task_count": "The fixed count detects the V602 failure mode before science dispatch.",
+    "ungated_tail_rows": "Tail rows keep the independent audit and capstone runnable after branch blocks.",
+    "v603_manifest_contract_ready_score": "This advisory score is one only for a complete executable contract.",
+    "verdict_class": "The closed class states the evidence boundary without free-form promotion.",
+    "verifier_is_oracle": "False prevents this structural reducer from approving a scientific claim.",
+    "yaml_task_rows": "YAML rows preserve the exact executable queue seen by the conductor."
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "preconditions",
+        "expected": "all required sources readable",
+        "observed": "all required sources readable",
+        "passed": true
+      },
+      {
+        "check": "document_primary_contract",
+        "expected": {
+          "milestone": "2026.09.603",
+          "numbers": [
+            6885,
+            6886,
+            6887,
+            6888,
+            6889,
+            6890,
+            6891,
+            6892,
+            6893,
+            6894,
+            6895,
+            6896,
+            6897
+          ],
+          "task_count": 13
+        },
+        "observed": {
+          "milestone": "2026.09.603",
+          "numbers": [
+            6885,
+            6886,
+            6887,
+            6888,
+            6889,
+            6890,
+            6891,
+            6892,
+            6893,
+            6894,
+            6895,
+            6896,
+            6897
+          ],
+          "task_count": 13
+        },
+        "passed": true
+      },
+      {
+        "check": "document_yaml_task_contract",
+        "expected": {
+          "all_task_fields_equal": true,
+          "task_count": 13
+        },
+        "observed": {
+          "all_task_fields_equal": false,
+          "document_task_count": 13,
+          "yaml_task_count": 4
+        },
+        "passed": false
+      },
+      {
+        "check": "yaml_executable_contract",
+        "expected": {
+          "milestone": "2026.09.603",
+          "numbers": [
+            6885,
+            6886,
+            6887,
+            6888,
+            6889,
+            6890,
+            6891,
+            6892,
+            6893,
+            6894,
+            6895,
+            6896,
+            6897
+          ],
+          "task_count": 13
+        },
+        "observed": {
+          "milestone": "2026.09.603",
+          "numbers": [
+            6885,
+            6886,
+            6887,
+            6888
+          ],
+          "task_count": 4
+        },
+        "passed": false
+      },
+      {
+        "check": "prompt_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "gate_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "prior_failure_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "current_ids_not_retired",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "gate_upstreams_not_retired",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "branch_root_isolation",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "ungated_terminal_tail",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "v603_manifest_contract_ready_score",
+        "expected": 1,
+        "observed": 0,
+        "passed": false
+      }
+    ],
+    "expected": {
+      "all_task_fields_equal": true,
+      "task_count": 13
+    },
+    "failed_check": "document_yaml_task_contract",
+    "failed_checks": [
+      {
+        "check": "document_yaml_task_contract",
+        "expected": {
+          "all_task_fields_equal": true,
+          "task_count": 13
+        },
+        "observed": {
+          "all_task_fields_equal": false,
+          "document_task_count": 13,
+          "yaml_task_count": 4
+        },
+        "passed": false
+      },
+      {
+        "check": "yaml_executable_contract",
+        "expected": {
+          "milestone": "2026.09.603",
+          "numbers": [
+            6885,
+            6886,
+            6887,
+            6888,
+            6889,
+            6890,
+            6891,
+            6892,
+            6893,
+            6894,
+            6895,
+            6896,
+            6897
+          ],
+          "task_count": 13
+        },
+        "observed": {
+          "milestone": "2026.09.603",
+          "numbers": [
+            6885,
+            6886,
+            6887,
+            6888
+          ],
+          "task_count": 4
+        },
+        "passed": false
+      },
+      {
+        "check": "prompt_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "gate_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "branch_root_isolation",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "ungated_terminal_tail",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "v603_manifest_contract_ready_score",
+        "expected": 1,
+        "observed": 0,
+        "passed": false
+      }
+    ],
+    "observed": {
+      "all_task_fields_equal": false,
+      "document_task_count": 13,
+      "yaml_task_count": 4
+    },
+    "passed": false
+  },
+  "gate_contract_rows": [
+    {
+      "checks": {
+        "manifest_not_consumed": true,
+        "matches_document": true,
+        "operator_valid": true,
+        "producer_field_declared": true,
+        "upstream_earlier": true,
+        "upstream_not_retired": true,
+        "upstream_present": true
+      },
+      "downstream_number": 6887,
+      "downstream_task_id": "exp6887-three-family-relation-proposal-corpus",
+      "expected": {
+        "artifact_field": "relation_fixture_ready_score",
+        "op": "==",
+        "upstream": "exp6886-enoki-exact-relation-fixture",
+        "value": 1
+      },
+      "gate_index": 0,
+      "observed": {
+        "artifact_field": "relation_fixture_ready_score",
+        "op": "==",
+        "upstream": "exp6886-enoki-exact-relation-fixture",
+        "value": 1
+      },
+      "passed": true
+    },
+    {
+      "checks": {
+        "manifest_not_consumed": true,
+        "matches_document": true,
+        "operator_valid": true,
+        "producer_field_declared": true,
+        "upstream_earlier": true,
+        "upstream_not_retired": true,
+        "upstream_present": true
+      },
+      "downstream_number": 6888,
+      "downstream_task_id": "exp6888-independent-relation-qualification",
+      "expected": {
+        "artifact_field": "relation_corpus_complete_score",
+        "op": "==",
+        "upstream": "exp6887-three-family-relation-proposal-corpus",
+        "value": 1
+      },
+      "gate_index": 0,
+      "observed": {
+        "artifact_field": "relation_corpus_complete_score",
+        "op": "==",
+        "upstream": "exp6887-three-family-relation-proposal-corpus",
+        "value": 1
+      },
+      "passed": true
+    },
+    {
+      "checks": {
+        "manifest_not_consumed": true,
+        "matches_document": false,
+        "operator_valid": false,
+        "producer_field_declared": false,
+        "upstream_earlier": false,
+        "upstream_not_retired": true,
+        "upstream_present": false
+      },
+      "downstream_number": 6889,
+      "downstream_task_id": "exp6889-paraphrase-disjoint-structural-stream",
+      "expected": {
+        "artifact_field": "relation_qualification_ready_score",
+        "op": "==",
+        "upstream": "exp6888-independent-relation-qualification",
+        "value": 1
+      },
+      "gate_index": 0,
+      "observed": null,
+      "passed": false
+    },
+    {
+      "checks": {
+        "manifest_not_consumed": true,
+        "matches_document": false,
+        "operator_valid": false,
+        "producer_field_declared": false,
+        "upstream_earlier": false,
+        "upstream_not_retired": true,
+        "upstream_present": false
+      },
+      "downstream_number": 6889,
+      "downstream_task_id": "exp6889-paraphrase-disjoint-structural-stream",
+      "expected": {
+        "artifact_field": "qualified_relation_event_count",
+        "op": ">=",
+        "upstream": "exp6888-independent-relation-qualification",
+        "value": 90
+      },
+      "gate_index": 1,
+      "observed": null,
+      "passed": false
+    },
+    {
+      "checks": {
+        "manifest_not_consumed": true,
+        "matches_document": false,
+        "operator_valid": false,
+        "producer_field_declared": false,
+        "upstream_earlier": false,
+        "upstream_not_retired": true,
+        "upstream_present": false
+      },
+      "downstream_number": 6890,
+      "downstream_task_id": "exp6890-prospective-structural-memory-ab",
+      "expected": {
+        "artifact_field": "structural_stream_ready_score",
+        "op": "==",
+        "upstream": "exp6889-paraphrase-disjoint-structural-stream",
+        "value": 1
+      },
+      "gate_index": 0,
+      "observed": null,
+      "passed": false
+    },
+    {
+      "checks": {
+        "manifest_not_consumed": true,
+        "matches_document": false,
+        "operator_valid": false,
+        "producer_field_declared": false,
+        "upstream_earlier": false,
+        "upstream_not_retired": true,
+        "upstream_present": false
+      },
+      "downstream_number": 6891,
+      "downstream_task_id": "exp6891-sealed-structural-learning-audit",
+      "expected": {
+        "artifact_field": "structural_csl_run_complete_score",
+        "op": "==",
+        "upstream": "exp6890-prospective-structural-memory-ab",
+        "value": 1
+      },
+      "gate_index": 0,
+      "observed": null,
+      "passed": false
+    },
+    {
+      "checks": {
+        "manifest_not_consumed": true,
+        "matches_document": false,
+        "operator_valid": false,
+        "producer_field_declared": false,
+        "upstream_earlier": false,
+        "upstream_not_retired": true,
+        "upstream_present": false
+      },
+      "downstream_number": 6893,
+      "downstream_task_id": "exp6893-live-arc-context-headroom-sweep",
+      "expected": {
+        "artifact_field": "arc_trace_contract_ready_score",
+        "op": "==",
+        "upstream": "exp6892-arc-append-only-context-trace-contract",
+        "value": 1
+      },
+      "gate_index": 0,
+      "observed": null,
+      "passed": false
+    },
+    {
+      "checks": {
+        "manifest_not_consumed": true,
+        "matches_document": false,
+        "operator_valid": false,
+        "producer_field_declared": false,
+        "upstream_earlier": false,
+        "upstream_not_retired": true,
+        "upstream_present": false
+      },
+      "downstream_number": 6894,
+      "downstream_task_id": "exp6894-cobra-replayable-tool-boundaries",
+      "expected": {
+        "artifact_field": "context_pool_headroom_ready_score",
+        "op": "==",
+        "upstream": "exp6893-live-arc-context-headroom-sweep",
+        "value": 1
+      },
+      "gate_index": 0,
+      "observed": null,
+      "passed": false
+    },
+    {
+      "checks": {
+        "manifest_not_consumed": true,
+        "matches_document": false,
+        "operator_valid": false,
+        "producer_field_declared": false,
+        "upstream_earlier": false,
+        "upstream_not_retired": true,
+        "upstream_present": false
+      },
+      "downstream_number": 6895,
+      "downstream_task_id": "exp6895-matched-tool-delivery-margin",
+      "expected": {
+        "artifact_field": "replayable_tool_boundary_row_count",
+        "op": ">=",
+        "upstream": "exp6894-cobra-replayable-tool-boundaries",
+        "value": 12
+      },
+      "gate_index": 0,
+      "observed": null,
+      "passed": false
+    }
+  ],
+  "hard_failures": [
+    {
+      "expected": {
+        "all_task_fields_equal": true,
+        "task_count": 13
+      },
+      "hard_failure": "document_yaml_task_contract",
+      "observed": {
+        "all_task_fields_equal": false,
+        "document_task_count": 13,
+        "yaml_task_count": 4
+      }
+    },
+    {
+      "expected": {
+        "milestone": "2026.09.603",
+        "numbers": [
+          6885,
+          6886,
+          6887,
+          6888,
+          6889,
+          6890,
+          6891,
+          6892,
+          6893,
+          6894,
+          6895,
+          6896,
+          6897
+        ],
+        "task_count": 13
+      },
+      "hard_failure": "yaml_executable_contract",
+      "observed": {
+        "milestone": "2026.09.603",
+        "numbers": [
+          6885,
+          6886,
+          6887,
+          6888
+        ],
+        "task_count": 4
+      }
+    },
+    {
+      "expected": true,
+      "hard_failure": "prompt_contract",
+      "observed": false
+    },
+    {
+      "expected": true,
+      "hard_failure": "gate_contract",
+      "observed": false
+    },
+    {
+      "expected": true,
+      "hard_failure": "branch_root_isolation",
+      "observed": false
+    },
+    {
+      "expected": true,
+      "hard_failure": "ungated_terminal_tail",
+      "observed": false
+    },
+    {
+      "expected": 1,
+      "hard_failure": "v603_manifest_contract_ready_score",
+      "observed": 0
+    }
+  ],
+  "honest_verdict": "complete_blocked_v603_executable_manifest_branch_contract",
+  "inference_substrate": "deterministic_manifest_contract_no_llm",
+  "preconditions_checked": {
+    "checks": [
+      {
+        "check": "required_source_readability",
+        "expected": [],
+        "observed": [],
+        "passed": true
+      }
+    ],
+    "expected": "all checks pass",
+    "failed_check": null,
+    "failed_checks": [],
+    "observed": "all checks pass",
+    "passed": true
+  },
+  "prior_failure_contract_rows": [
+    {
+      "addressed_by": "The V603 document and executable file now declare the same 13 tasks, while this check is advisory and no science branch gates on its readiness field.",
+      "declared_verdict": "complete_blocked_v602_evidence_substrate_manifest_contract",
+      "experiment_id": "exp6874-v602-evidence-substrate-manifest-contract",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_artifact_present": true,
+      "primary_verdict": "complete_blocked_v602_evidence_substrate_manifest_contract",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6885-v603-executable-manifest-branch-contract"
+    },
+    {
+      "addressed_by": "Exp6886 is an ungated branch root, adds pinned public Enoki assets, and evaluates its own fixture and exact solver contract instead of inheriting the failed V602 manifest gate.",
+      "declared_verdict": "blocked_gate_check_failed",
+      "experiment_id": "exp6875-text-anchored-relation-asp-fixture",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_artifact_present": true,
+      "primary_verdict": "blocked_gate_check_failed",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6886-enoki-exact-relation-fixture"
+    },
+    {
+      "addressed_by": "This attempt uses a frozen source-anchored relation line protocol, closed predicates, exact span offsets, and a prequalified atom map instead of the free constraint-response parser.",
+      "declared_verdict": "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold",
+      "experiment_id": "exp5786-sota-constraint-stream",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_artifact_present": true,
+      "primary_verdict": "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6887-three-family-relation-proposal-corpus"
+    },
+    {
+      "addressed_by": "This attempt uses no schema-constrained decoding or repair reprompt; it preserves raw relation proposals and defers semantic authority to a sealed independent reducer.",
+      "declared_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+      "experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_artifact_present": true,
+      "primary_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+      "prior_index": 1,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6887-three-family-relation-proposal-corpus"
+    },
+    {
+      "addressed_by": "This task evaluates source-grounded relation extraction from raw frozen outputs with span evidence and exact atom compilation, not structured-prompt answer synthesis.",
+      "declared_verdict": "complete_null: structured prompt arms did not improve exact synthesis",
+      "experiment_id": "exp5909-sota-constraint-synthesis-ab",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_artifact_present": true,
+      "primary_verdict": "complete_null: structured prompt arms did not improve exact synthesis",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6888-independent-relation-qualification"
+    },
+    {
+      "addressed_by": "The reducer performs no schema-guided generation or repair and uses an independent held exact solver after acquisition has frozen.",
+      "declared_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+      "experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_artifact_present": true,
+      "primary_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+      "prior_index": 1,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6888-independent-relation-qualification"
+    }
+  ],
+  "prompt_ending_rows": [
+    {
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6885_v603_executable_manifest_branch_contract.py --date {date}",
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6885_v603_executable_manifest_branch_contract.py --date {date}",
+      "order": 1,
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6885-v603-executable-manifest-branch-contract"
+    },
+    {
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6886_enoki_exact_relation_fixture.py --date {date}",
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6886_enoki_exact_relation_fixture.py --date {date}",
+      "order": 2,
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6886-enoki-exact-relation-fixture"
+    },
+    {
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6887_three_family_relation_proposal_corpus.py --date {date}",
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6887_three_family_relation_proposal_corpus.py --date {date}",
+      "order": 3,
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6887-three-family-relation-proposal-corpus"
+    },
+    {
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6888_independent_relation_qualification.py --date {date}",
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6888_independent_relation_qualification.py --date {date}",
+      "order": 4,
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6888-independent-relation-qualification"
+    },
+    {
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6889_paraphrase_disjoint_structural_stream.py --date {date}",
+      "observed_final_sentence": null,
+      "observed_run_command": null,
+      "order": 5,
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6890_prospective_structural_memory_ab.py --date {date}",
+      "observed_final_sentence": null,
+      "observed_run_command": null,
+      "order": 6,
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6891_sealed_structural_learning_audit.py --date {date}",
+      "observed_final_sentence": null,
+      "observed_run_command": null,
+      "order": 7,
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6892_arc_append_only_context_trace_contract.py --date {date}",
+      "observed_final_sentence": null,
+      "observed_run_command": null,
+      "order": 8,
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6893_live_arc_context_headroom_sweep.py --date {date}",
+      "observed_final_sentence": null,
+      "observed_run_command": null,
+      "order": 9,
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6894_cobra_replayable_tool_boundaries.py --date {date}",
+      "observed_final_sentence": null,
+      "observed_run_command": null,
+      "order": 10,
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6895_matched_tool_delivery_margin.py --date {date}",
+      "observed_final_sentence": null,
+      "observed_run_command": null,
+      "order": 11,
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6896_cross_branch_verifier_blind_spot_audit.py --date {date}",
+      "observed_final_sentence": null,
+      "observed_run_command": null,
+      "order": 12,
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6897_v603_independent_capstone.py --date {date}",
+      "observed_final_sentence": null,
+      "observed_run_command": null,
+      "order": 13,
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    }
+  ],
+  "random_seed": 6885,
+  "reproducibility_checksum": "sha256:5eb609e03ee902e26a3f5a08b5a2b40cb7e4ab874362441cd6906c2f46cc493e",
+  "retired_id_rows": [
+    {
+      "number": 6885,
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "task_id": "exp6885-v603-executable-manifest-branch-contract"
+    },
+    {
+      "number": 6886,
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "task_id": "exp6886-enoki-exact-relation-fixture"
+    },
+    {
+      "number": 6887,
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "task_id": "exp6887-three-family-relation-proposal-corpus"
+    },
+    {
+      "number": 6888,
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "task_id": "exp6888-independent-relation-qualification"
+    },
+    {
+      "number": 6889,
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "task_id": "exp6889-paraphrase-disjoint-structural-stream"
+    },
+    {
+      "number": 6890,
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "task_id": "exp6890-prospective-structural-memory-ab"
+    },
+    {
+      "number": 6891,
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "task_id": "exp6891-sealed-structural-learning-audit"
+    },
+    {
+      "number": 6892,
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "task_id": "exp6892-arc-append-only-context-trace-contract"
+    },
+    {
+      "number": 6893,
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "task_id": "exp6893-live-arc-context-headroom-sweep"
+    },
+    {
+      "number": 6894,
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "task_id": "exp6894-cobra-replayable-tool-boundaries"
+    },
+    {
+      "number": 6895,
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "task_id": "exp6895-matched-tool-delivery-margin"
+    },
+    {
+      "number": 6896,
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "task_id": "exp6896-cross-branch-verifier-blind-spot-audit"
+    },
+    {
+      "number": 6897,
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "task_id": "exp6897-v603-independent-capstone"
+    },
+    {
+      "number": 6885,
+      "passed": true,
+      "retired": false,
+      "source": "yaml",
+      "task_id": "exp6885-v603-executable-manifest-branch-contract"
+    },
+    {
+      "number": 6886,
+      "passed": true,
+      "retired": false,
+      "source": "yaml",
+      "task_id": "exp6886-enoki-exact-relation-fixture"
+    },
+    {
+      "number": 6887,
+      "passed": true,
+      "retired": false,
+      "source": "yaml",
+      "task_id": "exp6887-three-family-relation-proposal-corpus"
+    },
+    {
+      "number": 6888,
+      "passed": true,
+      "retired": false,
+      "source": "yaml",
+      "task_id": "exp6888-independent-relation-qualification"
+    }
+  ],
+  "retired_upstream_rows": [
+    {
+      "downstream_task_id": "exp6887-three-family-relation-proposal-corpus",
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "upstream_number": 6886,
+      "upstream_task_id": "exp6886-enoki-exact-relation-fixture"
+    },
+    {
+      "downstream_task_id": "exp6888-independent-relation-qualification",
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "upstream_number": 6887,
+      "upstream_task_id": "exp6887-three-family-relation-proposal-corpus"
+    },
+    {
+      "downstream_task_id": "exp6889-paraphrase-disjoint-structural-stream",
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "upstream_number": 6888,
+      "upstream_task_id": "exp6888-independent-relation-qualification"
+    },
+    {
+      "downstream_task_id": "exp6889-paraphrase-disjoint-structural-stream",
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "upstream_number": 6888,
+      "upstream_task_id": "exp6888-independent-relation-qualification"
+    },
+    {
+      "downstream_task_id": "exp6890-prospective-structural-memory-ab",
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "upstream_number": 6889,
+      "upstream_task_id": "exp6889-paraphrase-disjoint-structural-stream"
+    },
+    {
+      "downstream_task_id": "exp6891-sealed-structural-learning-audit",
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "upstream_number": 6890,
+      "upstream_task_id": "exp6890-prospective-structural-memory-ab"
+    },
+    {
+      "downstream_task_id": "exp6893-live-arc-context-headroom-sweep",
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "upstream_number": 6892,
+      "upstream_task_id": "exp6892-arc-append-only-context-trace-contract"
+    },
+    {
+      "downstream_task_id": "exp6894-cobra-replayable-tool-boundaries",
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "upstream_number": 6893,
+      "upstream_task_id": "exp6893-live-arc-context-headroom-sweep"
+    },
+    {
+      "downstream_task_id": "exp6895-matched-tool-delivery-margin",
+      "passed": true,
+      "retired": false,
+      "source": "document",
+      "upstream_number": 6894,
+      "upstream_task_id": "exp6894-cobra-replayable-tool-boundaries"
+    },
+    {
+      "downstream_task_id": "exp6887-three-family-relation-proposal-corpus",
+      "passed": true,
+      "retired": false,
+      "source": "yaml",
+      "upstream_number": 6886,
+      "upstream_task_id": "exp6886-enoki-exact-relation-fixture"
+    },
+    {
+      "downstream_task_id": "exp6888-independent-relation-qualification",
+      "passed": true,
+      "retired": false,
+      "source": "yaml",
+      "upstream_number": 6887,
+      "upstream_task_id": "exp6887-three-family-relation-proposal-corpus"
+    }
+  ],
+  "rows": [
+    {
+      "order": 1,
+      "passed": true,
+      "row_type": "task",
+      "task_contract": {
+        "comparisons": {
+          "conductor_order": true,
+          "deliverable": true,
+          "milestone": true,
+          "task_id": true
+        },
+        "document": {
+          "deliverable": "results/experiment_6885_v603_executable_manifest_branch_contract.json",
+          "milestone": "2026.09.603",
+          "number": 6885,
+          "order": 1,
+          "task_id": "exp6885-v603-executable-manifest-branch-contract"
+        },
+        "order": 1,
+        "passed": true,
+        "presence": "both",
+        "yaml": {
+          "deliverable": "results/experiment_6885_v603_executable_manifest_branch_contract.json",
+          "milestone": "2026.09.603",
+          "number": 6885,
+          "order": 1,
+          "task_id": "exp6885-v603-executable-manifest-branch-contract"
+        }
+      }
+    },
+    {
+      "order": 2,
+      "passed": true,
+      "row_type": "task",
+      "task_contract": {
+        "comparisons": {
+          "conductor_order": true,
+          "deliverable": true,
+          "milestone": true,
+          "task_id": true
+        },
+        "document": {
+          "deliverable": "results/experiment_6886_enoki_exact_relation_fixture.json",
+          "milestone": "2026.09.603",
+          "number": 6886,
+          "order": 2,
+          "task_id": "exp6886-enoki-exact-relation-fixture"
+        },
+        "order": 2,
+        "passed": true,
+        "presence": "both",
+        "yaml": {
+          "deliverable": "results/experiment_6886_enoki_exact_relation_fixture.json",
+          "milestone": "2026.09.603",
+          "number": 6886,
+          "order": 2,
+          "task_id": "exp6886-enoki-exact-relation-fixture"
+        }
+      }
+    },
+    {
+      "order": 3,
+      "passed": true,
+      "row_type": "task",
+      "task_contract": {
+        "comparisons": {
+          "conductor_order": true,
+          "deliverable": true,
+          "milestone": true,
+          "task_id": true
+        },
+        "document": {
+          "deliverable": "results/experiment_6887_three_family_relation_proposal_corpus.json",
+          "milestone": "2026.09.603",
+          "number": 6887,
+          "order": 3,
+          "task_id": "exp6887-three-family-relation-proposal-corpus"
+        },
+        "order": 3,
+        "passed": true,
+        "presence": "both",
+        "yaml": {
+          "deliverable": "results/experiment_6887_three_family_relation_proposal_corpus.json",
+          "milestone": "2026.09.603",
+          "number": 6887,
+          "order": 3,
+          "task_id": "exp6887-three-family-relation-proposal-corpus"
+        }
+      }
+    },
+    {
+      "order": 4,
+      "passed": true,
+      "row_type": "task",
+      "task_contract": {
+        "comparisons": {
+          "conductor_order": true,
+          "deliverable": true,
+          "milestone": true,
+          "task_id": true
+        },
+        "document": {
+          "deliverable": "results/experiment_6888_independent_relation_qualification.json",
+          "milestone": "2026.09.603",
+          "number": 6888,
+          "order": 4,
+          "task_id": "exp6888-independent-relation-qualification"
+        },
+        "order": 4,
+        "passed": true,
+        "presence": "both",
+        "yaml": {
+          "deliverable": "results/experiment_6888_independent_relation_qualification.json",
+          "milestone": "2026.09.603",
+          "number": 6888,
+          "order": 4,
+          "task_id": "exp6888-independent-relation-qualification"
+        }
+      }
+    },
+    {
+      "order": 5,
+      "passed": false,
+      "row_type": "task",
+      "task_contract": {
+        "comparisons": {
+          "conductor_order": false,
+          "deliverable": false,
+          "milestone": false,
+          "task_id": false
+        },
+        "document": {
+          "deliverable": "results/experiment_6889_paraphrase_disjoint_structural_stream.json",
+          "milestone": "2026.09.603",
+          "number": 6889,
+          "order": 5,
+          "task_id": "exp6889-paraphrase-disjoint-structural-stream"
+        },
+        "order": 5,
+        "passed": false,
+        "presence": "document_only",
+        "yaml": null
+      }
+    },
+    {
+      "order": 6,
+      "passed": false,
+      "row_type": "task",
+      "task_contract": {
+        "comparisons": {
+          "conductor_order": false,
+          "deliverable": false,
+          "milestone": false,
+          "task_id": false
+        },
+        "document": {
+          "deliverable": "results/experiment_6890_prospective_structural_memory_ab.json",
+          "milestone": "2026.09.603",
+          "number": 6890,
+          "order": 6,
+          "task_id": "exp6890-prospective-structural-memory-ab"
+        },
+        "order": 6,
+        "passed": false,
+        "presence": "document_only",
+        "yaml": null
+      }
+    },
+    {
+      "order": 7,
+      "passed": false,
+      "row_type": "task",
+      "task_contract": {
+        "comparisons": {
+          "conductor_order": false,
+          "deliverable": false,
+          "milestone": false,
+          "task_id": false
+        },
+        "document": {
+          "deliverable": "results/experiment_6891_sealed_structural_learning_audit.json",
+          "milestone": "2026.09.603",
+          "number": 6891,
+          "order": 7,
+          "task_id": "exp6891-sealed-structural-learning-audit"
+        },
+        "order": 7,
+        "passed": false,
+        "presence": "document_only",
+        "yaml": null
+      }
+    },
+    {
+      "order": 8,
+      "passed": false,
+      "row_type": "task",
+      "task_contract": {
+        "comparisons": {
+          "conductor_order": false,
+          "deliverable": false,
+          "milestone": false,
+          "task_id": false
+        },
+        "document": {
+          "deliverable": "results/experiment_6892_arc_append_only_context_trace_contract.json",
+          "milestone": "2026.09.603",
+          "number": 6892,
+          "order": 8,
+          "task_id": "exp6892-arc-append-only-context-trace-contract"
+        },
+        "order": 8,
+        "passed": false,
+        "presence": "document_only",
+        "yaml": null
+      }
+    },
+    {
+      "order": 9,
+      "passed": false,
+      "row_type": "task",
+      "task_contract": {
+        "comparisons": {
+          "conductor_order": false,
+          "deliverable": false,
+          "milestone": false,
+          "task_id": false
+        },
+        "document": {
+          "deliverable": "results/experiment_6893_live_arc_context_headroom_sweep.json",
+          "milestone": "2026.09.603",
+          "number": 6893,
+          "order": 9,
+          "task_id": "exp6893-live-arc-context-headroom-sweep"
+        },
+        "order": 9,
+        "passed": false,
+        "presence": "document_only",
+        "yaml": null
+      }
+    },
+    {
+      "order": 10,
+      "passed": false,
+      "row_type": "task",
+      "task_contract": {
+        "comparisons": {
+          "conductor_order": false,
+          "deliverable": false,
+          "milestone": false,
+          "task_id": false
+        },
+        "document": {
+          "deliverable": "results/experiment_6894_cobra_replayable_tool_boundaries.json",
+          "milestone": "2026.09.603",
+          "number": 6894,
+          "order": 10,
+          "task_id": "exp6894-cobra-replayable-tool-boundaries"
+        },
+        "order": 10,
+        "passed": false,
+        "presence": "document_only",
+        "yaml": null
+      }
+    },
+    {
+      "order": 11,
+      "passed": false,
+      "row_type": "task",
+      "task_contract": {
+        "comparisons": {
+          "conductor_order": false,
+          "deliverable": false,
+          "milestone": false,
+          "task_id": false
+        },
+        "document": {
+          "deliverable": "results/experiment_6895_matched_tool_delivery_margin.json",
+          "milestone": "2026.09.603",
+          "number": 6895,
+          "order": 11,
+          "task_id": "exp6895-matched-tool-delivery-margin"
+        },
+        "order": 11,
+        "passed": false,
+        "presence": "document_only",
+        "yaml": null
+      }
+    },
+    {
+      "order": 12,
+      "passed": false,
+      "row_type": "task",
+      "task_contract": {
+        "comparisons": {
+          "conductor_order": false,
+          "deliverable": false,
+          "milestone": false,
+          "task_id": false
+        },
+        "document": {
+          "deliverable": "results/experiment_6896_cross_branch_verifier_blind_spot_audit.json",
+          "milestone": "2026.09.603",
+          "number": 6896,
+          "order": 12,
+          "task_id": "exp6896-cross-branch-verifier-blind-spot-audit"
+        },
+        "order": 12,
+        "passed": false,
+        "presence": "document_only",
+        "yaml": null
+      }
+    },
+    {
+      "order": 13,
+      "passed": false,
+      "row_type": "task",
+      "task_contract": {
+        "comparisons": {
+          "conductor_order": false,
+          "deliverable": false,
+          "milestone": false,
+          "task_id": false
+        },
+        "document": {
+          "deliverable": "results/experiment_6897_v603_independent_capstone.json",
+          "milestone": "2026.09.603",
+          "number": 6897,
+          "order": 13,
+          "task_id": "exp6897-v603-independent-capstone"
+        },
+        "order": 13,
+        "passed": false,
+        "presence": "document_only",
+        "yaml": null
+      }
+    },
+    {
+      "check": "preconditions",
+      "expected": "all required sources readable",
+      "observed": "all required sources readable",
+      "passed": true,
+      "row_type": "contract_check"
+    },
+    {
+      "check": "document_primary_contract",
+      "expected": {
+        "milestone": "2026.09.603",
+        "numbers": [
+          6885,
+          6886,
+          6887,
+          6888,
+          6889,
+          6890,
+          6891,
+          6892,
+          6893,
+          6894,
+          6895,
+          6896,
+          6897
+        ],
+        "task_count": 13
+      },
+      "observed": {
+        "milestone": "2026.09.603",
+        "numbers": [
+          6885,
+          6886,
+          6887,
+          6888,
+          6889,
+          6890,
+          6891,
+          6892,
+          6893,
+          6894,
+          6895,
+          6896,
+          6897
+        ],
+        "task_count": 13
+      },
+      "passed": true,
+      "row_type": "contract_check"
+    },
+    {
+      "check": "document_yaml_task_contract",
+      "expected": {
+        "all_task_fields_equal": true,
+        "task_count": 13
+      },
+      "observed": {
+        "all_task_fields_equal": false,
+        "document_task_count": 13,
+        "yaml_task_count": 4
+      },
+      "passed": false,
+      "row_type": "contract_check"
+    },
+    {
+      "check": "yaml_executable_contract",
+      "expected": {
+        "milestone": "2026.09.603",
+        "numbers": [
+          6885,
+          6886,
+          6887,
+          6888,
+          6889,
+          6890,
+          6891,
+          6892,
+          6893,
+          6894,
+          6895,
+          6896,
+          6897
+        ],
+        "task_count": 13
+      },
+      "observed": {
+        "milestone": "2026.09.603",
+        "numbers": [
+          6885,
+          6886,
+          6887,
+          6888
+        ],
+        "task_count": 4
+      },
+      "passed": false,
+      "row_type": "contract_check"
+    },
+    {
+      "check": "prompt_contract",
+      "expected": true,
+      "observed": false,
+      "passed": false,
+      "row_type": "contract_check"
+    },
+    {
+      "check": "gate_contract",
+      "expected": true,
+      "observed": false,
+      "passed": false,
+      "row_type": "contract_check"
+    },
+    {
+      "check": "prior_failure_contract",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "row_type": "contract_check"
+    },
+    {
+      "check": "current_ids_not_retired",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "row_type": "contract_check"
+    },
+    {
+      "check": "gate_upstreams_not_retired",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "row_type": "contract_check"
+    },
+    {
+      "check": "branch_root_isolation",
+      "expected": true,
+      "observed": false,
+      "passed": false,
+      "row_type": "contract_check"
+    },
+    {
+      "check": "ungated_terminal_tail",
+      "expected": true,
+      "observed": false,
+      "passed": false,
+      "row_type": "contract_check"
+    },
+    {
+      "check": "v603_manifest_contract_ready_score",
+      "expected": 1,
+      "observed": 0,
+      "passed": false,
+      "row_type": "contract_check"
+    }
+  ],
+  "run_date": "2026-09-02",
+  "schema": "carnot.experiment_6885.v603_executable_manifest_branch_contract.v1",
+  "source_artifact_hashes": {
+    "active_v603_roadmap": {
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:9c56a8918eacc434545544816e62959b73c80bceb24e3df4f533c7b7ce6588d4"
+    },
+    "conductor_gates": {
+      "path": "scripts/conductor_gates.py",
+      "sha256": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca"
+    },
+    "conductor_log": {
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:c54cea25a7884b8533a27047cc93c3cb6fc7ae043841b61e393adca3c86b460b"
+    },
+    "exclusion_manifest": {
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+    },
+    "focused_tests": {
+      "path": "tests/python/test_experiment_6885_v603_executable_manifest_branch_contract.py",
+      "sha256": "sha256:5965d3ca7c8cdb27349ac75d9d3c7297bc027860680aeb44218f384c8500baee"
+    },
+    "known_issues": {
+      "path": "ops/known-issues.md",
+      "sha256": "sha256:e412e8c65a70149ceb48dd25fc6d7130b37b5432fca1cdf6c48fd5e356d468e5"
+    },
+    "module": {
+      "path": "python/carnot/experiment_6885_v603_executable_manifest_branch_contract.py",
+      "sha256": "sha256:f6e569e72bfa672ed47c6908eec59fd105bee243492900db7f0fa5b934ebdad4"
+    },
+    "prior_0_exp6874-v602-evidence-substrate-manifest-contract": {
+      "error": null,
+      "path": "results/experiment_6874_v602_evidence_substrate_manifest_contract.json",
+      "sha256": "sha256:899b007ddb8f8f3e2a76db699ed96fbea1866d210f6fd1b7532c6b2bf134eed5"
+    },
+    "prior_1_exp6875-text-anchored-relation-asp-fixture": {
+      "error": null,
+      "path": "results/experiment_6875_text_anchored_relation_asp_fixture.json",
+      "sha256": "sha256:d65bf349f68bdb2871c9f86232c9dae9b6517faa63953457483ace7fd206b36f"
+    },
+    "prior_2_exp5786-sota-constraint-stream": {
+      "error": null,
+      "path": "results/experiment_5786_sota_constraint_stream.json",
+      "sha256": "sha256:260d065ca32ddc0a8a88c38ca8b9300d6be1bceb5b8ea2571ddcd481c03ef562"
+    },
+    "prior_3_exp5923-sota-schema-supported-constraintir-ab": {
+      "error": null,
+      "path": "results/experiment_5923_sota_schema_supported_constraintir_ab.json",
+      "sha256": "sha256:ebe0e6fdcce1fb4d1bed9b4be5b2ea89dba6239b33498bd903ff60f8d2044a6c"
+    },
+    "prior_4_exp5909-sota-constraint-synthesis-ab": {
+      "error": null,
+      "path": "results/experiment_5909_sota_constraint_synthesis_ab.json",
+      "sha256": "sha256:dc847cfeb22037c53870d0523401e0edfbbedd3d7393156ffb14f3e11e2b54d3"
+    },
+    "prior_5_exp5923-sota-schema-supported-constraintir-ab": {
+      "error": null,
+      "path": "results/experiment_5923_sota_schema_supported_constraintir_ab.json",
+      "sha256": "sha256:ebe0e6fdcce1fb4d1bed9b4be5b2ea89dba6239b33498bd903ff60f8d2044a6c"
+    },
+    "prior_failure_validator": {
+      "path": "scripts/validate_prior_failures.py",
+      "sha256": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519"
+    },
+    "roadmap_gate_audit": {
+      "path": "scripts/audit_roadmap_gates.py",
+      "sha256": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9"
+    },
+    "roadmap_schema": {
+      "path": "scripts/roadmap_schema.py",
+      "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7"
+    },
+    "spec": {
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:179bc9a253799e5b9f5b043eaed1f2fa3ec6cba9395f9cd22fa614baaafb55d8"
+    },
+    "v602_exp6874": {
+      "path": "results/experiment_6874_v602_evidence_substrate_manifest_contract.json",
+      "sha256": "sha256:899b007ddb8f8f3e2a76db699ed96fbea1866d210f6fd1b7532c6b2bf134eed5"
+    },
+    "v602_exp6875": {
+      "path": "results/experiment_6875_text_anchored_relation_asp_fixture.json",
+      "sha256": "sha256:d65bf349f68bdb2871c9f86232c9dae9b6517faa63953457483ace7fd206b36f"
+    },
+    "v603_design": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:6b76f9e39e2eb91f95d29d4ed64090518927f19b7fb3d1bd137a1694375e217a"
+    },
+    "wrapper": {
+      "path": "scripts/experiments/experiment_6885_v603_executable_manifest_branch_contract.py",
+      "sha256": "sha256:3da6a6ec40a38bf06d62569034320be2125468394e9d81c10f7b84a07cd0b923"
+    }
+  },
+  "status": "complete_blocked",
+  "task_count": 13,
+  "ungated_tail_rows": [
+    {
+      "document_present_ungated": true,
+      "number": 6896,
+      "observed_gates": null,
+      "passed": false,
+      "task_id": null,
+      "yaml_present_ungated": false
+    },
+    {
+      "document_present_ungated": true,
+      "number": 6897,
+      "observed_gates": null,
+      "passed": false,
+      "task_id": null,
+      "yaml_present_ungated": false
+    }
+  ],
+  "v603_manifest_contract_ready_score": 0,
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false,
+  "warnings": [
+    {
+      "prior_experiment_id": 5923,
+      "task_id": "exp6887-three-family-relation-proposal-corpus",
+      "warning": "retired_prior_failure_reference_allowed"
+    },
+    {
+      "prior_experiment_id": 5909,
+      "task_id": "exp6888-independent-relation-qualification",
+      "warning": "retired_prior_failure_reference_allowed"
+    },
+    {
+      "prior_experiment_id": 5923,
+      "task_id": "exp6888-independent-relation-qualification",
+      "warning": "retired_prior_failure_reference_allowed"
+    }
+  ],
+  "yaml_task_rows": [
+    {
+      "deliverable": "results/experiment_6885_v603_executable_manifest_branch_contract.json",
+      "gates": [],
+      "milestone": "2026.09.603",
+      "number": 6885,
+      "order": 1,
+      "prior_failure_count": 1,
+      "prompt_sha256": "sha256:8f301b246af22ac60656d6da1deeff92c0387162f0fe75c8db526462c72ccc9e",
+      "task_id": "exp6885-v603-executable-manifest-branch-contract",
+      "title": "V603 executable manifest and branch isolation contract"
+    },
+    {
+      "deliverable": "results/experiment_6886_enoki_exact_relation_fixture.json",
+      "gates": [],
+      "milestone": "2026.09.603",
+      "number": 6886,
+      "order": 2,
+      "prior_failure_count": 1,
+      "prompt_sha256": "sha256:aab207bd8d5539aac4275a41d35557bcbf8453032740f6d3545ce521545366f5",
+      "task_id": "exp6886-enoki-exact-relation-fixture",
+      "title": "Enoki asset admission and exact relation fixture"
+    },
+    {
+      "deliverable": "results/experiment_6887_three_family_relation_proposal_corpus.json",
+      "gates": [
+        {
+          "artifact_field": "relation_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp6886-enoki-exact-relation-fixture",
+          "value": 1
+        }
+      ],
+      "milestone": "2026.09.603",
+      "number": 6887,
+      "order": 3,
+      "prior_failure_count": 2,
+      "prompt_sha256": "sha256:bde9afb99e509573d2cc12367c65f446f5cd91201bbb5c27335f85ac98daa490",
+      "task_id": "exp6887-three-family-relation-proposal-corpus",
+      "title": "Three family anchored relation proposal corpus"
+    },
+    {
+      "deliverable": "results/experiment_6888_independent_relation_qualification.json",
+      "gates": [
+        {
+          "artifact_field": "relation_corpus_complete_score",
+          "op": "==",
+          "upstream": "exp6887-three-family-relation-proposal-corpus",
+          "value": 1
+        }
+      ],
+      "milestone": "2026.09.603",
+      "number": 6888,
+      "order": 4,
+      "prior_failure_count": 2,
+      "prompt_sha256": "sha256:da9cba0091bd3eecce302760ecaa506086fcedef02a97270043aedb7980c8fff",
+      "task_id": "exp6888-independent-relation-qualification",
+      "title": "Independent held anchored relation qualification"
+    }
+  ]
+}

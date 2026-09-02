@@ -242,3 +242,11 @@ CHECK_TIMED_OUT
 
   **POSSIBLE CARNOT LEVER:** Trigger re-induction only on statistically novel, persistent animation tails, adding temporal evidence while keeping frame/token costs bounded.
 
+## 2026-09-02 13:42 UTC -- NEW
+
+- **Newly discovered artifact for current #6 Matija Ludvig (4.17); submission linkage is unproven:** His EVE ARC paper describes a non-LLM neuro-symbolic pipeline combining frame-hash BFS/DFS, reusable mechanic-class solvers, and program transfer. Its “~41%” result is 78/182 levels on the 25 public games—not hidden-leaderboard RHAE; the transfer-only public RHAE was 1.78%. The implementation is available only upon request, preventing source-access auditing. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [paper](https://zenodo.org/records/19458465)
+
+- **New concrete routing mechanism:** EVE trains a 305,995-parameter `1024→256→128→64→32` task encoder from scratch on 100 solved internal tasks to predict broad strategy classes. It retrieves the nearest solved task by embedding cosine similarity and transfers its executable program. A coarse seven-class representation transferred better than a 36-class version (155 versus 120 ARC-AGI-1 tasks), suggesting that broad functional similarity beats fine mechanic classification. **Classification: (b) GENERAL-PURPOSE AS DESCRIBED**—training is non-ARC, retrieval does not use domain labels, and ARC-AGI-3 search is observation/frame-based; however, unavailable source code prevents independent confirmation. [EVE ARC paper](https://zenodo.org/records/19458465)
+
+  **POSSIBLE CARNOT LEVER:** Add a lightweight coarse-strategy embedding router that retrieves reusable executable programs before LLM induction, cheaply expanding the verifier’s candidate pool without RL.
+

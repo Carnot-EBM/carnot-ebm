@@ -60656,3 +60656,114 @@ SHALL start with `complete_`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6874 and SCENARIO-REPORT-6874-* | Implemented (`python/carnot/experiment_6874_v602_evidence_substrate_manifest_contract.py`, `scripts/experiments/experiment_6874_v602_evidence_substrate_manifest_contract.py`, `results/experiment_6874_v602_evidence_substrate_manifest_contract.json`) | Covered (`tests/python/test_experiment_6874_v602_evidence_substrate_manifest_contract.py`) |
+
+### REQ-REPORT-6885: V603 Executable Manifest SHALL Preserve Branch Isolation
+
+Exp6885 SHALL compare the active V603 design and roadmap from their primary
+files. It SHALL require milestone `2026.09.603` and exactly 13 tasks. The task
+numbers SHALL be Exp6885 through Exp6897 in conductor order. Each task SHALL
+have a unique JSON deliverable under `results/`. Document and YAML rows SHALL
+preserve count, order, identifier, deliverable, and milestone differences.
+
+Every executable prompt SHALL contain `CONTEXT`, `EXISTING CODE TO READ FIRST`,
+`TASK`, and `CONCRETE STEPS` sections. Its final two non-empty lines SHALL be
+its exact run command and `Do NOT push. Do NOT modify
+scripts/research_conductor.py.`
+
+Every `gated_on` row SHALL use an operator accepted by the current roadmap
+schema and conductor gate evaluator. Its upstream SHALL exist earlier in the
+active roadmap. Its field SHALL appear in the upstream prompt's required
+artifact fields. Its value and full row SHALL match the design gate table.
+
+Every `prior_failures` row SHALL contain `experiment_id`, `verdict`,
+`addressed_by`, and `retire_if_same_verdict`. The declared verdict SHALL equal
+the primary artifact verdict. `addressed_by` SHALL be non-empty.
+`retire_if_same_verdict` SHALL be true.
+
+The reducer SHALL compare current task IDs and gate upstreams with the current
+exclusion manifest. It SHALL honor append-only un-retirement entries. It SHALL
+preserve warnings separately from hard failures. A retired current task or
+retired gate upstream SHALL be a hard failure.
+
+No document or YAML task SHALL gate on Exp6885. Exp6886 and Exp6892 SHALL be
+present ungated science roots. Exp6896 and Exp6897 SHALL be present ungated
+terminal tasks. Exp6885 readiness SHALL remain advisory and SHALL approve no
+scientific claim.
+
+The reducer SHALL require readable V603 design and roadmap files, readable
+V602 terminal receipts, the exclusion manifest, and current gate and schema
+code. A failed precondition SHALL still produce a complete blocked artifact.
+Each failed check SHALL record its expected and observed values.
+
+The artifact SHALL include `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `rows`,
+`document_task_rows`, `yaml_task_rows`, `document_yaml_parity_rows`,
+`gate_contract_rows`, `prior_failure_contract_rows`, `prompt_ending_rows`,
+`retired_id_rows`, `retired_upstream_rows`, `branch_root_rows`,
+`ungated_tail_rows`, `task_count`, `experiment_range`, `random_seed`,
+`reproducibility_checksum`, `v603_manifest_contract_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL explain every required field.
+
+`inference_substrate` SHALL equal
+`deterministic_manifest_contract_no_llm`. `verifier_is_oracle` SHALL be false.
+The verdict class SHALL use the closed project enum. The honest verdict SHALL
+start with `complete_`. Readiness SHALL equal one only when every contract
+check passes.
+
+#### SCENARIO-REPORT-6885-DOCUMENT-YAML: Count And Order Differences Fail Closed
+
+**Given** the design and active YAML differ in task count or conductor order
+**When** Exp6885 compares both primary files
+**Then** it preserves each document-only or YAML-only row
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6885-IDENTITY: IDs, Deliverables, And Milestones Match Exactly
+
+**Given** a task changes its identifier, deliverable, or milestone
+**When** Exp6885 compares the task contract
+**Then** it records the expected and observed values
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6885-PROMPT-END: Prompts End With Their Exact Commands
+
+**Given** a prompt lacks a required section or changes either final line
+**When** Exp6885 validates the executable prompt
+**Then** the prompt-ending row names the mismatch
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6885-GATE: Gate Fields And Upstreams Stay Executable
+
+**Given** a gate changes its field, operator, value, or upstream
+**When** Exp6885 validates current schema and producer contracts
+**Then** missing or retired upstreams remain explicit
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6885-PRIOR: Prior-Failure Subfields Stay Complete
+
+**Given** a prior-failure row omits or changes one required subfield
+**When** Exp6885 checks the primary prior artifact
+**Then** the row preserves every mismatch
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6885-RETIRED-ID: Retired Current IDs Cannot Return
+
+**Given** a current task ID appears in the active exclusion set
+**When** Exp6885 checks the task inventory
+**Then** it records a hard failure separately from warnings
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6885-ROOT-FANOUT: Advisory Readiness Cannot Gate Science
+
+**Given** any task gates on Exp6885
+**When** Exp6885 checks branch isolation
+**Then** it records the dependent task and field
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6885-UNGATED-TAIL: Audit And Capstone Always Remain Runnable
+
+**Given** Exp6896 or Exp6897 is absent or gated
+**When** Exp6885 validates the terminal tail
+**Then** the observed dependency remains explicit
+**And** readiness is zero.
