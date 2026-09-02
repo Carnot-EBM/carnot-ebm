@@ -17027,3 +17027,16 @@ The l |
 | 2026-09-01 22:31 UTC | V599 independent adversarial capstone and retireme | OK | 96 passed, 1 warning in 15.34s |
 | 2026-09-01 23:58 UTC | Plan milestone 2026.09.600 | OK | 4 tasks proposed |
 | 2026-09-02 00:01 UTC | Milestone 2026.09.600 activated | OK | 4 tasks queued |
+| 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_count_integrity_lint.py age-week 1: OPEN 7 days: SILENT_NON_FIRING on arc_co |
+| 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_llm_on_liveness_lint.py age-week 1: OPEN 7 days: SILENT_NON_FIRING on arc_ll |
+| 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | verifier_authenticity_lint.py age-week 1: OPEN 7 days: SILENT_NON_FIRING on veri |
+| 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_orphan_solver_lint.py age-week 1: OPEN 7 days: SILENT_NON_FIRING on arc_orph |
+| 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | tracked_results_guard.py age-week 1: OPEN 7 days: SILENT_NON_FIRING on tracked_r |
+| 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | research_complete_ledger_lint.py age-week 1: OPEN 7 days: SILENT_NON_FIRING on r |
+| 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | mutation_marker_lint.py age-week 1: OPEN 7 days: SILENT_NON_FIRING on mutation_m |
+| 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | audit_findings_ledger.py age-week 1: OPEN 7 days: SILENT_NON_FIRING on audit_fin |
+| 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6633_gpu_lease_phase_journal.json age-week 1: OPEN 7 days: CLAIM_REFU |
+| 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | run_stop_authority.py age-week 1: OPEN 7 days: SILENT_NON_FIRING on run_stop_aut |
+| 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | in_process_doc_reconcile.py age-week 1: OPEN 7 days: SILENT_NON_FIRING on in_pro |
+| 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_terminal_artifact_readiness age-week 1: OPEN 7 days |
+| 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6854_risk_sensitive_abstention_memory_controller.json age-week 0: OPE |

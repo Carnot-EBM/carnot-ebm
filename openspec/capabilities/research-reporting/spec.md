@@ -60271,3 +60271,105 @@ and `retire_if_same_verdict` is true
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6860 and SCENARIO-REPORT-6860-* | Implemented (`python/carnot/experiment_6860_v599_independent_capstone.py`, `scripts/experiments/experiment_6860_v599_independent_capstone.py`, `results/experiment_6860_v599_independent_capstone.json`) | Implemented (`tests/python/test_experiment_6860_v599_independent_capstone.py`; 15 focused tests; 100% scoped statement coverage) |
+
+### REQ-REPORT-6861: V600 Evidence Root SHALL Retire Claims Without Discarding Infrastructure
+
+Exp6861 SHALL build an immutable V600 evidence root by deterministic CPU replay.
+It SHALL require one terminal artifact for each V599 task or an explicit
+conductor gate record. It SHALL record every missing artifact and every source
+hash mismatch. A failed precondition SHALL produce a complete blocked artifact
+with the failed check and observed value. The reducer SHALL not import Exp6860
+or invoke an LLM.
+
+The reducer SHALL recompute typed authority, local scoring, compatibility,
+self-learning, supervisor, and tool-gap dispositions from V599 source rows and
+receipts. It SHALL preserve null, blocked, disqualified, and partial states.
+Exp6860's procedural completion SHALL not promote any scientific branch.
+Flagged sources SHALL remain available for infrastructure facts, but they SHALL
+not authorize a scientific claim.
+
+The contract SHALL retire raw fixed-sequence margin claims, supervisor credit
+without nonzero headroom, and the degenerate V599 memory policy. It SHALL
+preserve exact typed authority, local scoring, memory transactions, rollback,
+and first-party receipt infrastructure. A downstream task SHALL not reuse a
+retired mechanism unless it names a changed mechanism and a falsifiable gate.
+
+The artifact SHALL define one provenance schema for local source hashes,
+calibration and held split hashes, model and tokenizer identities, process
+ownership, exact authorities, live receipt identities, and conductor skips.
+It SHALL name every downstream gate field exactly. Calibration and held groups
+SHALL be disjoint and content-addressed before model scoring or policy fitting.
+
+The artifact SHALL verify arXiv:2606.10616, arXiv:2605.29556,
+arXiv:2604.09459, and arXiv:2608.15008 against their primary arXiv pages.
+Each reference row SHALL record the method delta, Carnot hook, and access
+boundary. The record SHALL correct planner metadata when the current primary
+page differs from the planning note.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`reproducibility_checksum`, `rows`, `terminal_branch_manifest`,
+`conductor_skip_manifest`, `flagged_source_manifest`,
+`retired_mechanism_manifest`, `preserved_infrastructure_manifest`,
+`changed_mechanism_manifest`, `split_and_gate_contract`,
+`source_access_boundaries`, `reference_verification_rows`,
+`v600_evidence_contract_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`inference_substrate` SHALL equal `deterministic CPU evidence replay`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL use the closed enum
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. A terminal honest verdict SHALL start with `complete_` and SHALL be
+supported by an artifact row.
+
+#### SCENARIO-REPORT-6861-MISSING-SOURCE: Missing Evidence Blocks Readiness
+
+**Given** a V599 task has neither a readable terminal artifact nor an explicit
+conductor gate record
+**When** Exp6861 checks the terminal inventory
+**Then** the missing artifact appears in the complete inventory
+**And** `v600_evidence_contract_ready_score` is zero with an exact failed check.
+
+**Spec traces:** REQ-REPORT-6861
+
+#### SCENARIO-REPORT-6861-SOURCE-DRIFT: Frozen Hash Drift Fails Closed
+
+**Given** an immutable V599 source no longer matches its frozen SHA-256 value
+**When** Exp6861 checks source provenance
+**Then** the source appears in the drift manifest
+**And** no changed-mechanism branch becomes ready.
+
+**Spec traces:** REQ-REPORT-6861
+
+#### SCENARIO-REPORT-6861-FLAGGED-UPSTREAM: Flags Quarantine Claims, Not Receipts
+
+**Given** a V599 source carries a critical adversarial flag
+**When** Exp6861 recomputes branch dispositions
+**Then** the source cannot support a scientific positive claim
+**And** independently checkable transaction or receipt infrastructure remains reusable.
+
+**Spec traces:** REQ-REPORT-6861
+
+#### SCENARIO-REPORT-6861-PROCEDURAL-POSITIVE: Capstone Completion Does Not Promote Science
+
+**Given** Exp6860 has a positive procedural verdict and no scientific branch advanced
+**When** Exp6861 recomputes the five branch dispositions
+**Then** typed authority remains positive infrastructure
+**And** compatibility, self-learning, supervisor, and tool-gap effects retain their
+null, disqualified, blocked, or partial classes.
+
+**Spec traces:** REQ-REPORT-6861
+
+#### SCENARIO-REPORT-6861-FAILED-MECHANISM-REUSE: Unchanged Failed Mechanisms Stay Retired
+
+**Given** a proposed downstream branch reuses a retired V599 mechanism
+**When** its changed-mechanism record has no method delta or falsifiable gate
+**Then** Exp6861 marks the reuse invalid
+**And** `v600_evidence_contract_ready_score` is zero.
+
+**Spec traces:** REQ-REPORT-6861
+
+## Implementation Status (REQ-REPORT-6861)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6861 and SCENARIO-REPORT-6861-* | Implemented (`python/carnot/experiment_6861_v600_branch_retirement_evidence_contract.py`, `scripts/experiments/experiment_6861_v600_branch_retirement_evidence_contract.py`, `results/experiment_6861_v600_branch_retirement_evidence_contract.json`) | Implemented (`tests/python/test_experiment_6861_v600_branch_retirement_evidence_contract.py`; 15 focused tests; 100% scoped statement coverage) |
