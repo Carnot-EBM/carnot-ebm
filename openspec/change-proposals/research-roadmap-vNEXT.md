@@ -1,404 +1,357 @@
-# Research Roadmap V600: Nuisance-Controlled Semantic Energy, Observability-Safe Learning, and Authentic Live Tool Credit
+# Research Roadmap V601: Evidence-Bound Semantic Energy, Bounded Self-Learning, and Context-Safe Live Tool Credit
 
-**Milestone:** 2026.09.600
-**Planned:** 2026-09-01
-**Experiments:** Exp6861-Exp6873
-**North star:** A live agent learns useful constraints from its own outcomes. Exact external checks remain truth authority. Learned energy selects, routes, and abstains without becoming its own oracle.
+**Milestone:** 2026.09.601  
+**Planned:** 2026-09-02  
+**Experiments:** Exp6865-Exp6877  
+**North star:** A live agent learns useful constraints from its own outcomes. Exact external checks remain truth authority. Learned energy and memory may select, route, update, or abstain, but may not certify themselves.
 
 ## Executive Summary
 
-V599 completed every task and closed all four scientific branches without a new headline result.
-The typed-program authority and the three-family local scoring path now work. The model signal did
-not survive nuisance and isomorphic controls. The self-learning controller had a positive pooled
-held-future effect, but its sealed audit found a degenerate 100% abstention rate and 13 harmful
-writes. The dynamic ARC router found no supervisor headroom, so that unchanged supervisor branch
-is retired. The first-party tool-gap receipt contract works on fixtures, but no authentic live
-receipt chain exists.
+V600 completed its active task graph honestly. It preserved the V599 branch dispositions, built 100
+accepted dual-side semantic contrast groups, and then found a new provenance fault before model
+scoring. Qwen passed the tokenizer binding. Both Gemma models were blocked because Exp6863 compared
+a frozen tokenizer hash from Exp6850 with a new hash over a larger receipt schema. The GGUF files
+were byte-identical and both current Gemma tokenizers agreed with each other. Therefore the record
+does not yet distinguish a real tokenizer change from a receipt-schema change. Exp6864 correctly
+stopped at its structured gate.
 
-V600 changes the scientific mechanisms. Its Phase-D majority replaces raw sequence likelihood
-with an exact, dual-side, nuisance-matched semantic contrast. Structure and solution checkers must
-agree before a row can enter scoring. All three mandated GGUF families then score frozen sequences.
-A deterministic paired contrast is calibrated on one split and audited on a sealed split.
+V601 repairs this evidence contract before it resumes the semantic-energy line. One versioned
+canonical reducer will re-hash archived and live tokenizer payloads. A frozen adversarial probe
+matrix will compare token IDs, special-token behavior, chat-template identity, and tokenization
+settings. Only a semantic match can release a new tokenizer-aware split. The 100 accepted exact
+contrast groups remain frozen.
 
-The self-learning phase implements an observability firewall. Decision-time features are separated
-from outcome-only supervision. A bounded controller gets explicit exploration, no-memory,
-read-only, verified-write, and abstain actions. It must reduce harmful writes without collapsing to
-always abstain.
+The continuous self-learning branch changes mechanism. V599's controller reported a positive
+aggregate effect, but its sealed audit found 100% abstention and 13 harmful writes. V601 introduces a
+bounded reliability state, inspired by Sigma-Mem, and an exact memory-transition quarantine. It
+updates only between events from later exact outcomes. Prospective order replicates compare frozen,
+read-only, bounded-update, and quarantine arms.
 
-The ARC phase improves the live evidence path. It adds durable per-action checkpoints, uses the
-adapter-disabled scored agent for the standing generalization floor, and seeks an authentic
-first-party tool-gap chain. A matched delivery-versus-withholding effect audit runs only when a
-replayable pre-action opportunity exists. No task claims a game-level solve.
+The ARC branch also changes order. Current live induction is shared-context-truncation-bound, and
+its stored diagnostic clips the values needed to size the pool. Tool definitions consume the same
+scarce context. A tool-use A/B now would be uninterpretable. V601 first repairs diagnostic
+observability, measures prompt and generation occupancy, and proves final-answer headroom with a
+mandated local GGUF model. It then accrues authentic first-party tool-gap chains on the
+adapter-disabled live path. Delivery versus withholding remains gated on at least one replayable
+opportunity. No task claims a game-level solve.
 
-## What V599 Proved
+## What V600 Proved
 
-1. **Typed exact authority is usable.** Exp6849 rebuilt the typed program with unique identities,
-   exact compile parity, and isomorphic transforms. Both authority readiness fields were `1`.
-   This closes the producer-auditor dispute from V598.
+1. **The branch evidence contract is executable.** Exp6861 recomputed V599 dispositions and emitted
+   `v600_evidence_contract_ready_score=1`. The changed-mechanism boundaries are now machine-readable.
 
-2. **All three mandated GGUF families can run locally.** Exp6850 passed task-owned resource
-   admission. Exp6851 produced 168 fixed-sequence rows across Qwen3.6-35B-A3B, Gemma-4-31B, and
-   Gemma-4-26B-A4B. Resource access is not the current scientific blocker.
+2. **The dual-side exact contrast bank is ready.** Exp6862 accepted 100 groups across typed
+   obligation families. Structure-side and solution-side authorities agreed, negative controls
+   passed, and no model score entered fixture construction.
 
-3. **Raw fixed-sequence compatibility is not identifiable.** Exp6852 found that model family,
-   model scale, normalization, row order, label position, and other controls could equal or exceed
-   the semantic margin. Its `compatibility_claim_eligible_score` was `0`. The V599 capstone
-   prescribed a pre-registered nuisance-controlled semantic contrast.
+3. **The semantic-scoring blocker is tokenizer provenance, not model availability.** Exp6863 found
+   all three exact GGUF files present and loadable. Qwen passed. Both Gemma files retained their
+   frozen model hashes and produced the same current tokenizer hash, but that hash differed from
+   Exp6850's receipt hash.
 
-4. **The memory mechanics work, but the policy is unsafe and degenerate.** Exp6854 reported a
-   held-future effect of `+0.054901960784` with bounded persistence. Exp6856 then found an overall
-   abstention rate of `1.0` and 13 supported harmful writes. The capstone disqualified the
-   self-learning claim and prescribed constrained exploration plus a harmful-write admission block.
+4. **The current hash comparison is not semantically conclusive.** Exp6850 hashed a smaller
+   tokenizer receipt. Exp6863 added chat-template, special-token, and tokenization-setting fields
+   before hashing. Hashes over different schemas cannot establish drift or equivalence.
 
-5. **The supervisor branch has no eligible causal row.** Exp6857 found
-   `supervisor_headroom_ready_score=0`. Exp6858 correctly stopped at its structured gate. Exp6860
-   retired an unchanged supervisor rerun. V600 does not reopen it.
+5. **Structured downstream gates work.** Exp6864 did not perform scoring after Exp6863 emitted
+   readiness zero. Its blocked artifact names the failed upstream field.
 
-6. **The first-party tool-gap schema is ready but has no live effect evidence.** Exp6859 linked gap
-   detection, request, tool response, agent delivery, next action, and exact outcome under one
-   immutable identity. It launched no live rollout and had no authentic live chain. Transport
-   readiness is not utility.
-
-7. **The milestone disposition was procedural, not scientific.** Exp6860 preserved every null,
-   blocked, partial, and disqualified state. Its positive class referred to disposition
-   completeness. It reported no scientific branch advance.
+6. **The ARC tool question has a new measured confound.** Two live adapter-free runs produced
+   reasoning without the required final `engine` field. The local diagnostic identifies shared
+   context-pool truncation, but a 150-character storage clip removes the observed pool size and fix
+   guidance. The effect of tools cannot be separated from added prompt occupancy yet.
 
 ## Three Biggest Gaps to the PRD Vision
 
-### Gap 1: Carnot lacks an identifiable model-derived semantic energy
+### Gap 1: Model-derived semantic energy is still unidentifiable
 
-FR12 needs constraint reasoning that maps rules to checkable structures. Exact typed authority now
-exists, and local model scoring now executes. The remaining gap is identification. A raw
-likelihood difference can reflect syntax, tokenization, order, normalization, model family, or
-scale instead of semantics.
+FR12 requires constraint reasoning tied to checkable structures. Exact contrast groups and local
+model scoring machinery exist, but no held semantic effect is admissible while tokenizer identity
+is unresolved. V601 canonicalizes the binding, freezes a new split only after all three families
+pass, scores the fixed cells, calibrates one deterministic rule, and opens the held split once under
+independent reduction.
 
-V600 builds matched semantic contrast groups. A structure-side checker proves that the typed
-obligation changed in the intended way. A solution-side checker proves the exact validity label.
-Identifier, length, token count, label position, row order, and surface-form controls are frozen
-before scoring. Only a sealed within-group effect can support a compatibility claim.
+This branch is not a return to the retired external generated-text scorer lane. It trains no text
+scorer, generates no candidate answers, and does not compare a reward model with self-consistency.
+It measures fixed-sequence paired contrasts against exact, dual-side semantic labels and matched
+nuisance controls.
 
-### Gap 2: Continuous self-learning is not safely actionable
+### Gap 2: Continuous self-learning is not both useful and safe
 
-FR11 requires bounded online updates, persistence, validation, and rollback. Carnot has those
-mechanics. It does not yet have a policy that acts often enough to learn while avoiding harmful
-writes. V599 also mixed decision-time fields with facts that were known only after an outcome.
+FR11 requires bounded online updates, persistence, validation, non-forgetting, and rollback. Carnot
+has transaction mechanics, but the last policy either abstained or admitted harmful writes. V601
+separates decision-time evidence from later supervision, bounds each reliability-state update, and
+quarantines any transition that fails coverage, preservation, faithfulness, retention, or rollback.
 
-V600 separates online-observable features from offline supervision. It adds constrained
-exploration and a harmful-write quarantine. The final audit is chronological and prospective. A
-positive class requires nondegenerate action use, held-future benefit, bounded false-positive
-injection, durability, rollback, delayed correction, and no leakage.
+A positive result requires action diversity, a nonzero admitted-update count, lower harmful-write
+rate than the unsafe reference, held-future benefit over frozen and read-only controls, old-family
+retention, delayed-correction safety, restart durability, and byte-exact rollback.
 
-### Gap 3: Live ARC mechanisms lack authentic causal effect evidence
+### Gap 3: The live ARC path lacks context-safe causal tool evidence
 
-The live agent can carry supervisor and tool-gap receipts. The current supervisor evidence has no
-headroom, and the tool-gap evidence is fixture-only. Long live runs also lack durable per-action
-artifacts before completion.
+The first-party receipt transport is ready, but authentic live chains remain absent. The induction
+tier currently loses the final answer to a shared prompt-plus-generation pool. A tool arm lengthens
+the prompt and would be structurally disadvantaged.
 
-V600 first makes the canonical scored harness resumable and receipt-complete. It then runs the
-adapter-disabled live path with a mandated SOTA local model. If an authentic first-party tool gap
-appears, a matched replay tests delivery versus withholding from the same pre-action state. Exact
-later outcomes determine direction. No offline solver, source read, hand adapter, or registry
-trajectory can enter the live decision.
+V601 repairs the clipped diagnostic, records per-attempt pool arithmetic, refuses stale or
+undersized servers, and proves final-answer headroom before tool accrual. The ARC floor is an
+adapter-disabled live run with `unsloth/Qwen3.6-35B-A3B-GGUF`. It measures receipt reachability and
+effect opportunities, not registry depth or solve credit.
 
 ## Research Findings That Change the Design
 
-The full source notes are in `research-references.md`, section **V600 Planner Refresh -
-2026-09-01**.
+The complete refresh is in `research-references.md`, section **V601 Planner Refresh - 2026-09-02**.
 
-- [Learning What to Remember](https://arxiv.org/abs/2606.10616) separates online-observable
-  retention features from offline supervision. V600 turns that separation into a fail-closed
-  observability firewall for every memory decision.
-- [Opt-Verifier](https://arxiv.org/abs/2605.29556) checks both the optimization structure and its
-  candidate solution. V600 applies the pattern to typed semantic contrasts before any model score
-  is interpreted.
-- [From Reasoning to Agentic Credit Assignment](https://arxiv.org/abs/2604.09459) distinguishes
-  token credit from partially observed turn-level credit. V600 freezes memory and tool-gap credit
-  at the action receipt and requires valid pre-action alternatives.
-- [Harness the Memory](https://arxiv.org/abs/2608.15008) finds that no memory substrate dominates
-  and that broad retrieval can hurt sequential decisions. V600 compares verified-write,
-  read-only, no-memory, and abstain arms on the same chronological opportunities.
-- HSRM remains relevant, but the local GGUF path does not expose its intermediate step-boundary
-  states. V600 does not reopen a hidden-state probe. It tests the cheaper changed mechanism named
-  by the V599 capstone.
-
-The secondary sweep found no execution-ready dependency. Semantic Scholar exposed 35 visible EBT
-citations and eight ARM-EBM citations, but no matching-base verifier checkpoint. OpenReview added
-dual-side verification. Hugging Face added a controlled memory-substrate study. GitHub supplied no
-dependency worth adopting. Extropic still targets 2027 Z1 access. Logical Intelligence still
-publishes no Kona weights or local runner.
+- [The Coupling Tax](https://arxiv.org/abs/2605.07686) shows that shared budgets can let visible
+  reasoning crowd out the final answer. Carnot's pool is prompt-plus-generation rather than only
+  an output-token budget, so V601 adopts direct occupancy measurement instead of claiming method
+  parity.
+- [Sigma-Mem](https://arxiv.org/abs/2607.27958) supplies a bounded online reliability-state pattern.
+  V601 applies it to evidence sources and memory actions, with later exact outcomes as update data.
+- [TRUSTMEM](https://arxiv.org/abs/2606.25161) motivates coverage, preservation, and faithfulness
+  checks for memory transitions. Carnot implements these as exact admission gates rather than a
+  learned release authority.
+- [OptiVer](https://openreview.net/forum?id=w696Vhv5B2) remains the dual-side verification source for
+  the frozen semantic contrast bank.
+- The requested OpenReview, Hugging Face, Semantic Scholar, GitHub, Extropic, Logical Intelligence,
+  KAN, Ising, and hardware checks found no dependency or public checkpoint that removes a local
+  blocker. Z1 access remains future work. Kona remains a non-executable comparator.
 
 ## Target Architecture
 
 ```mermaid
 flowchart LR
-    A[V599 terminal artifacts] --> B[V600 evidence and retirement contract]
+    A[V600 terminal artifacts] --> B[V601 evidence contract]
 
-    B --> C[Dual-side exact semantic contrast bank]
-    C --> D[Tokenizer-aware nuisance preregistration]
-    D --> E[Three-family fixed-sequence scoring]
-    E --> F[Calibration-only paired contrast rule]
-    F --> G[Sealed independent compatibility audit]
+    B --> C[Canonical tokenizer receipt reducer]
+    C --> D[Three-family semantic token probes]
+    D --> E[Tokenizer-aware split preregistration v2]
+    E --> F[Three-family fixed-sequence scoring]
+    F --> G[Calibration-only paired rule]
+    G --> H[Sealed semantic audit]
 
-    B --> H[Observability-safe opportunity stream]
-    H --> I[Constrained exploration and write quarantine]
-    J[Exact later outcomes] --> I
-    I --> K[Prospective sealed self-learning audit]
+    B --> I[Observable memory opportunity stream]
+    I --> J[Bounded reliability state]
+    K[Later exact outcomes] --> J
+    J --> L[Exact transition quarantine]
+    L --> M[Prospective self-learning audit]
 
-    B --> L[Resumable live receipt harness]
-    L --> M[Adapter-disabled authentic tool-gap accrual]
-    M --> N{Replayable authentic gap?}
-    N -->|yes| O[Matched delivery versus withholding]
-    N -->|no| P[Structured conductor skip]
+    B --> N[Context diagnostic and pool accounting]
+    N --> O[Final-answer headroom proof]
+    O --> P[Adapter-disabled authentic gap accrual]
+    P --> Q{Replayable first-party gap?}
+    Q -->|yes| R[Matched delivery vs withholding]
+    Q -->|no| S[Structured gate skip]
 
-    G --> Q[V600 independent disposition]
-    K --> Q
-    O --> Q
-    P --> Q
+    H --> T[V601 independent capstone]
+    M --> T
+    R --> T
+    S --> T
 ```
 
-Exact structure checks, exact solution checks, exact memory outcomes, and exact ARC transitions
-remain outside learned or model-derived mechanisms. They supply labels and release authority.
-Model margins and online policies are tested signals. They cannot validate themselves.
+Exact structure checks, exact solution checks, exact memory outcomes, and exact ARC transitions stay
+outside learned mechanisms. They provide labels and release authority. Token likelihoods, bounded
+reliability states, and live policies are tested signals. They cannot validate themselves.
 
 ## Model Contract
 
-Exp6863 and Exp6864 declare all three mandated local models:
+Tokenizer and semantic-scoring tasks declare all three mandated local models:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF`
 - `unsloth/gemma-4-31B-it-GGUF`
 - `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-Exp6871 and Exp6872 declare `unsloth/Qwen3.6-35B-A3B-GGUF` for the live agent. Every LLM task uses
-the `cached_sota_pair()` pattern and records exact model, tokenizer, quantization, process, and GPU
-receipts. Legacy small models may run CPU smoke tests only. They cannot support a headline result.
+The ARC context, accrual, and replay tasks declare `unsloth/Qwen3.6-35B-A3B-GGUF`. Every LLM task
+uses the `cached_sota_pair()` pattern, resolves exact local paths, and records model, tokenizer,
+quantization, process, context, slot, and accelerator receipts. Legacy Qwen3.5-0.8B and
+Gemma-4-E4B may run CPU smoke tests only. They cannot fill a required cell or support a headline.
 
-The three-family scoring task runs one model process at a time and tears down only its owned
-processes. The live ARC tasks do not overlap the three-family task. A missing required model cell
-produces an honest blocked artifact. It never triggers substitution with a legacy model.
+Model processes run serially. The semantic scorer handles one GGUF at a time. ARC tasks do not
+overlap semantic scoring. A missing model, insufficient safe context, or unavailable eligible GPU
+produces a blocked artifact with `gate_check_summary`; it never triggers a legacy substitution.
 
-## Phase 1: Evidence and Semantic-Contrast Preregistration
+## Phase 1: Evidence and Tokenizer Provenance Repair
 
-### Exp6861: V600 branch retirement and evidence contract
+### Exp6865: V601 evidence and method-change contract
 
-Freeze the V599 terminal artifacts and conductor gate records. Recompute the branch dispositions.
-Retire raw fixed-sequence margins, the unchanged supervisor rerun, and the degenerate V599 memory
-policy as claim mechanisms. Preserve the typed authority, three-family inference, memory
-transaction, and tool-gap receipt infrastructure. Define exact source hashes, split boundaries,
-gate fields, and changed-mechanism tests for V600.
+Freeze V600 artifacts, the active roadmap, conductor gate record, exclusion manifest, current ARC
+truncation note, model receipts, and accepted contrast-bank hash. Recompute every terminal branch
+state. Define the canonical tokenizer payload, semantic probe contract, memory observability
+boundary, and ARC context-headroom contract. This is the first infrastructure slot.
 
-### Exp6862: Dual-side exact semantic contrast bank
+### Exp6866: Canonical tokenizer binding requalification
 
-Build at least 96 semantic contrast groups from the typed obligation program. Each group has a
-valid and invalid candidate plus semantics-preserving control transforms. A fresh structure-side
-checker validates variables, obligations, and intended mutations. A separate solution-side checker
-validates the exact outcome. Reject any group with identity collisions, ambiguous semantics, or
-checker disagreement. Do not invoke an LLM.
+Build a versioned reducer over semantic tokenizer fields. Recompute archived Exp6850 and live
+receipts through the same reducer. Compare vocabulary metadata, special-token behavior, chat
+template, add-BOS and special settings, and an adversarial Unicode, whitespace, control-token, and
+normalization probe matrix. Append a correction receipt; do not rewrite old artifacts. Readiness
+requires all three families to match semantically under identical settings.
 
-### Exp6863: Tokenizer-aware nuisance and split preregistration
+### Exp6867: Tokenizer-aware nuisance and split preregistration v2
 
-Tokenize every frozen sequence with all three required GGUF tokenizers without running inference.
-Keep only model-specific contrast cells with matched candidate token counts and declared prompt
-counts. Freeze label position, identifier, order, normalization, and surface controls. Create
-disjoint calibration and sealed held groups before any token score exists. Require at least 20
-calibration and 20 held contrast groups per model or stop with an honest null.
+Reuse the frozen 100-group bank. Tokenize every sequence with all three requalified tokenizers.
+Freeze model-specific nuisance-eligible cells, disjoint calibration and held groups, effect
+definitions, confidence intervals, failure rules, and sealed hashes before scoring. Require at
+least 20 calibration and 20 held groups per model.
 
 ## Phase 2: Nuisance-Controlled Semantic Energy
 
-### Exp6864: Three-family semantic contrast scoring stream
+### Exp6868: Three-family semantic contrast scoring stream v2
 
-Run forced-sequence token scoring on every eligible frozen cell for all three mandated GGUF
-families. Store raw token receipts and group identities. Generate no answers, labels, repairs, or
-self-judgments. Scientific labels remain sealed from the model process. The task reports stream
-completeness, not a semantic compatibility claim.
+Run forced-sequence scoring on every frozen eligible cell. Preserve token-level receipts, raw and
+normalized log likelihoods, prompt and candidate token IDs, sequence identities, model identity,
+and all missing or failed cells. Generate no answers and expose no exact labels to model processes.
+Report stream completeness only.
 
-### Exp6865: Calibration-only paired semantic contrast rule
+### Exp6869: Calibration-only paired semantic rule
 
-Use only the calibration split. Apply the pre-registered within-group paired contrast and
-difference-in-differences controls. Freeze orientation, normalization, missing-cell handling,
-family aggregation, confidence intervals, and failure thresholds. Fit no text scorer and inspect no
-held label. Emit a rule-ready field only when the calibration effect exceeds every matched nuisance
-control without relying on model identity.
+Open only the calibration split. Apply the preregistered paired contrast and
+difference-in-differences controls. Freeze orientation, family aggregation, missing-cell handling,
+confidence intervals, nuisance rejection, and cross-family replication. Do not inspect held labels.
 
-### Exp6866: Sealed independent semantic compatibility audit
+### Exp6870: Sealed independent semantic audit
 
-Use a fresh reducer. Verify the frozen rule and split hashes, then open the held labels once. Test
-each model, model family, typed obligation family, transform, and nuisance attack. A positive class
-requires a held paired effect in the pre-registered direction, a confidence interval above zero,
-agreement across both model families, and no matched nuisance effect of equal or greater size. A
-null retires this semantic-contrast construction.
+In a fresh process, verify source hashes, recompute exact labels, open the held split once, and
+recompute every model, family, and pooled effect from token rows. Attack identity, order, length,
+normalization, label-position, and token-count shortcuts. A positive class requires the held effect
+to beat every preregistered nuisance control and replicate across declared families. Model-derived
+scores never become exact authority.
 
-## Phase 3: Observability-Safe Continuous Self-Learning
+## Phase 3: Bounded Continuous Self-Learning
 
-### Exp6867: Decision-time observability firewall and opportunity stream
+### Exp6871: Observable reliability opportunity stream
 
-Rebuild the memory opportunity stream from primary transaction and exact-outcome receipts. Do not
-trust the flagged V599 aggregate artifacts. Mark every feature as online-observable or
-outcome-only. Fail closed if a policy input depends on future reward, counterfactual effect, held
-family, outcome label, row identity, or another post-decision field. Freeze chronological
-calibration and held-future partitions with helpful, harmful, and no-headroom opportunities.
+Rebuild chronological memory opportunities from primary transaction and exact-outcome receipts,
+not V599 aggregate rows. Label each field as decision-time observable or offline-only. Freeze
+source, action, later outcome, old-family anchor, delayed-correction, poison, restart, and rollback
+fixtures. Preserve counterfactual arms before any update.
 
-### Exp6868: Constrained exploration and harmful-write quarantine controller
+### Exp6872: Bounded reliability controller and exact transition quarantine
 
-Implement a bounded controller over verified-write, read-only, no-memory, and abstain. Force a
-small pre-registered exploration floor so the policy cannot pass by always abstaining. Use only
-decision-time observable features. Later exact outcomes update bounded statistics. Quarantine
-writes whose pessimistic benefit bound does not clear the harm cost. Compare the controller with
-always-memory, read-only, no-memory, and always-abstain controls on the calibration stream.
+Implement a small symmetric reliability state over evidence sources and memory actions. Bound each
+event update. Compare frozen/no-memory, read-only, bounded-update, quarantine, and unsafe-reference
+arms. Later exact outcomes update only the next event's state. Exact coverage, preservation,
+faithfulness, retention, and rollback checks control admission. This is a continuous self-learning
+experiment and must emit `continuous_self_learning_task=true`.
 
-### Exp6869: Prospective sealed self-learning durability and portability audit
+### Exp6873: Prospective sealed self-learning audit
 
-Freeze the controller before opening the held-future stream. Run actions prospectively and reveal
-each exact later outcome only after commitment. Test restart, rollback, capacity, delayed
-correction, stale tombstones, poison, placebo context, leave-one-family-out, and
-leave-one-order-out portability. A positive class requires nondegenerate action use, positive
-held-future effect, bounded false-positive injection, fewer harmful writes than always-memory,
-durability, and zero leakage.
+Run at least five preregistered chronological order replicates in fresh processes. Recompute action
+diversity, admitted updates, harmful writes, held-future utility, old-family retention, state
+spectral bounds, delayed corrections, restart durability, and rollback. A positive class is
+forbidden for an always-abstain policy, zero useful writes, a harmful-write regression, leakage, or
+self-certification.
 
-This phase directly targets the research program's **Continuous Self-Learning** priority. It learns
-from exact later outcomes while keeping GGUF weights frozen and exact authority external.
+## Phase 4: Context-Safe Live ARC Evidence
 
-## Phase 4: Live ARC Generalization and Independent Disposition
+### Exp6874: ARC shared-context observability and headroom qualification
 
-### Exp6870: Resumable live ARC receipt checkpoint harness
+Repair the clipped induction diagnostic and emit its structured values. Measure slot count, actual
+server `n_ctx`, prompt tokens, requested and generated tokens, reasoning and final-channel tokens,
+KV settings, VRAM, offload, and truncation reason. Refuse stale undersized servers. Run bounded
+adapter-disabled Qwen3.6 canaries at measured safe configurations. Readiness requires a final
+`engine` channel, no shared-pool truncation, and enough reserved headroom for both later arms. This
+is the second infrastructure slot.
 
-Add atomic per-action and per-game checkpoints to the canonical adapter-disabled scored path.
-Preserve first-party tool-gap hops and exact transition outcomes across interruption and restart.
-Test receipt joins, duplicate suppression, source hashes, process ownership, and partial-run
-recovery on fixtures. Keep the feature default-off. This infrastructure task also prepares the
-standing ARC generalization floor without claiming a level solve.
+### Exp6875: Authentic adapter-disabled tool-gap accrual
 
-### Exp6871: Authentic adapter-disabled tool-gap opportunity accrual
+Run the canonical live agent with tool delivery disabled but first-party gap transport enabled.
+Registry-precheck every selected game and make no solve claim. Accrue gap detection, request,
+response availability, delivery eligibility, next action, and exact outcome under immutable IDs.
+This is the standing ARC generalization-floor task. It succeeds as evidence collection even when no
+replayable chain appears.
 
-Run bounded adapter-disabled live generalization cells with Qwen3.6-35B-A3B. Use the canonical
-`make_carnot_agent` or `E3AgentPolicy` path. Do not read game source, prior-game trajectories,
-registry solutions, hidden state, offline BFS, or hand adapters. Preserve every live receipt even
-when no tool gap appears. Report authentic chain count and replay eligibility. Make no solve or
-utility claim.
+### Exp6876: Matched tool delivery versus withholding
 
-### Exp6872: Matched live tool delivery versus withholding audit
+Run only if Exp6875 provides at least one replayable authentic first-party chain. Replay the same
+pre-action state, model, prompt, context reserve, seed, action budget, and available response. The
+only changed factor is delivery versus withholding. Preserve every game and seed row. Exact later
+outcomes determine direction. No offline solver, source inspection, per-game adapter, registry
+trajectory, or post-outcome choice may influence the live action.
 
-Run only if Exp6871 has at least one replayable authentic gap chain. Reproduce the exact pre-gap
-prefix and require the same state hash before bifurcation. Compare first-party tool delivery with a
-matched withheld control under the same model, prompt, budget, and seed. Exact next transition and
-bounded later outcomes determine direction. Reject nondeterministic or unmatched replays. Do not
-pool games or claim a level solve.
+### Exp6877: Independent V601 capstone
 
-### Exp6873: V600 independent adversarial capstone
-
-Read every terminal artifact and conductor skip that exists. Recompute Phase-D, self-learning, and
-ARC dispositions with fresh code. Preserve blocked, null, disqualified, partial, and circular
-states. Distinguish infrastructure readiness from scientific effect. Retire any changed mechanism
-that repeats its prior terminal verdict under the registered retirement rule.
-
-## Conductor Execution Order
-
-1. Exp6861 - freeze evidence and retirement rules.
-2. Exp6862 - build the exact semantic contrast bank.
-3. Exp6863 - freeze tokenizer-aware nuisances and splits.
-4. Exp6864 - run the three-family scoring stream.
-5. Exp6865 - freeze the calibration-only contrast rule.
-6. Exp6866 - run the sealed compatibility audit.
-7. Exp6867 - build the observability-safe opportunity stream.
-8. Exp6868 - implement and calibrate the constrained controller.
-9. Exp6869 - run the prospective sealed learning audit.
-10. Exp6870 - ship resumable live receipt checkpoints.
-11. Exp6871 - acquire authentic adapter-disabled tool-gap chains.
-12. Exp6872 - audit matched live tool effect if the authentic-chain gate passes.
-13. Exp6873 - reconcile all terminal states without a gate.
-
-This order gives Phase D the largest scientific allocation, reserves Exp6861 and Exp6870 as the two
-infrastructure slots, and satisfies the one-task ARC generalization floor. This milestone continues
-existing research tracks, so the planning-time V600 literature refresh fulfills the optional SOTA
-ingestion role. It does not add a redundant autonomous ingestion task.
+Read the live roadmap and every expected artifact. Re-run current adversarial verification and
+row-consistency checks rather than trusting stored stamps. Distinguish absent, blocked, null,
+partial, disqualified, circular-positive, and positive branches. Report scientific advance only
+from an eligible branch. Do not synthesize a positive milestone verdict from infrastructure
+readiness or procedural completeness.
 
 ## Dependency Graph
 
-```mermaid
-graph TD
-    E61[6861 evidence contract]
+```text
+Exp6865 evidence contract
+├── Exp6866 tokenizer requalification
+│   └── Exp6867 split preregistration v2
+│       └── Exp6868 scoring stream v2
+│           └── Exp6869 calibration rule
+│               └── Exp6870 sealed semantic audit
+├── Exp6871 observable memory stream
+│   └── Exp6872 bounded controller + quarantine
+│       └── Exp6873 prospective self-learning audit
+└── Exp6874 ARC context headroom
+    └── Exp6875 authentic tool-gap accrual
+        └── Exp6876 matched delivery vs withholding
 
-    E61 --> E62[6862 exact contrast bank]
-    E62 --> E63[6863 nuisance preregistration]
-    E63 --> E64[6864 three-family scoring]
-    E64 --> E65[6865 calibration rule]
-    E64 --> E66[6866 sealed audit]
-    E65 --> E66
-
-    E61 --> E67[6867 observability firewall]
-    E67 --> E68[6868 constrained controller]
-    E68 --> E69[6869 sealed learning audit]
-
-    E61 --> E70[6870 resumable live harness]
-    E70 --> E71[6871 authentic tool-gap accrual]
-    E71 -->|authentic_live_tool_gap_chain_count >= 1| E72[6872 matched effect audit]
-
-    E66 --> E73[6873 capstone]
-    E69 --> E73
-    E71 --> E73
-    E72 --> E73
+Exp6865-Exp6876 ──> Exp6877 independent capstone
 ```
 
-Only Exp6872 has a scientific fail-fast gate that may legitimately skip the task call. Exp6873 is
-ungated and reads the conductor skip record when that happens. Other gates enforce prerequisite
-artifact contracts, not positive-result selection.
+Structured `gated_on` fields implement every dependency that can avoid an unnecessary synthesis
+call. Every upstream gate field is named in that task's required artifact fields with identical
+spelling. Exp6877 remains ungated so it can reconcile missing and blocked branches.
 
 ## Hardware Requirements
 
-### Required
+| Resource | Tasks | Contract |
+|---|---|---|
+| Dual RTX 3090, 24 GiB each | Exp6868, Exp6874-Exp6876 | Use one owned model process per task or phase. Record UUID, free and peak VRAM, process identity, lease, offload, and cleanup. Never kill unrelated processes. |
+| Local GGUF cache | Exp6866-Exp6868, Exp6874-Exp6876 | Require exact paths and SHA-256 receipts for the three mandated families. No network download is part of a scientific task. |
+| CPU and RAM | All tasks | Exact reducers, token probes, memory simulations, independent audits, and row lints run locally. Bound workers and record peak RSS. |
+| Local disk | All tasks | Preserve frozen fixtures, token rows, live checkpoints, and replay receipts. Check free space before long runs and checkpoint atomically. |
+| KV260, GateMate, PolarFire | None | All mandatory continuity gates have graduated. No changed receipt warrants a blocking slot. |
+| Extropic Z1 or other TSU | None | No authenticated local device exists. Make no hardware latency, power, or availability claim. |
 
-- **Two RTX 3090 GPUs:** Exp6864 uses task-owned CUDA scoring. Exp6871 and Exp6872 use local live
-  inference. Schedule these tasks sequentially. Record GPU UUID, free VRAM, offload layers, process
-  ownership, and teardown.
-- **Cached GGUF artifacts:** all three mandated repositories for Exp6863-Exp6864 and the Qwen3.6
-  repository for Exp6871-Exp6872. Preserve embedded-tokenizer and file-hash receipts.
-- **Host CPU, RAM, and disk:** exact checkers, tokenizer passes, chronological reducers,
-  checkpoints, raw token sidecars, and live receipt logs. Write checkpoints atomically.
+Exp6874 must derive context size from measured prompt occupancy, slot semantics, completion reserve,
+KV format, model footprint, and safety margin. Raising completion tokens alone is explicitly
+forbidden by the exclusion manifest. If a safe context cannot fit, the task blocks and records the
+required versus available envelope.
 
-### Not required
+## Experimental Validity and Claim Rules
 
-- **KV260, GateMate, and PolarFire:** all three boards have graduated their mandatory terminal-state
-  gates. Current continuity limitations remain opportunistic. V600 makes no FPGA latency,
-  throughput, energy, or speedup claim.
-- **Extropic TSU:** there is no authenticated device or API. Torx and Thermalizers remain planning
-  references only.
-- **Cloud model APIs:** every model-dependent task uses the mandated local GGUF path.
+- Every comparative task emits `rows` or `per_game_results` for every unit, including missing and
+  failed cells. Aggregates must recompute from those rows.
+- Every artifact emits the closed `verdict_class` enum: `positive`, `circular_positive`, `null`,
+  `blocked`, `disqualified`, or `partial`.
+- Every blocked verdict emits `gate_check_summary` with the failed check, expected value, and
+  observed value.
+- Every artifact field has an explicit field principle. Gate scores explain why the field exists,
+  what evidence sets it, and which downstream task consumes it.
+- All comparison thresholds, splits, missing-cell rules, confidence intervals, seeds, and stopping
+  rules are frozen before the relevant held evidence is opened.
+- Exact authorities remain external. Any self-oracle or same-path verifier result is
+  `circular_positive`, never `positive`.
+- The ARC tasks make no game-level solve claim and therefore claim no `solve_provenance`. If an
+  incidental level advance occurs, record it as uncredited live evidence and do not update the solve
+  registry in this milestone.
+- No task reopens retired max-token-only induction repair, finite-ID generated-answer transport,
+  external text-scorer ranking, inert-click pruning, or per-game offline solver scopes.
 
-## Evidence and Claim Rules
+## Milestone Exit Criteria
 
-1. Every artifact declares `verdict_class` as one of `positive`, `circular_positive`, `null`,
-   `blocked`, `disqualified`, or `partial` next to a free-text `honest_verdict`.
-2. Every comparative task emits one `rows` or `per_game_results` record per contrast group,
-   decision, seed, game, arm, and condition needed to reproduce its aggregate.
-3. Every blocked verdict emits `gate_check_summary` with the exact failed check and observed value.
-4. Every structured gate field appears verbatim in the upstream task's required artifact fields.
-5. The exact structure checker, exact solution checker, exact later memory outcome, and exact ARC
-   transition remain authority. Model scores and learned policies set `verifier_is_oracle=false`.
-6. Calibration and held splits are frozen before scoring. No held label can enter calibration,
-   model prompts, tokenizer filtering, controller fitting, or routing.
-7. Raw fixed-sequence likelihood, unchanged V599 risk-sensitive policy, and supervisor credit
-   without headroom are retired mechanisms. Their changed attempts carry complete
-   `prior_failures` entries.
-8. ARC tasks make `solve_claimed=false` and `game_level_solve_count=0`. They do not update the solve
-   registry and do not use game source, offline BFS, per-game adapters, hidden state, or prior-game
-   solution traces.
-9. Legacy small models may run smoke tests only. A missing mandated model cell blocks the headline
-   branch.
-10. Flagged or duration-implausible artifacts cannot support a claim. Exp6867 rebuilds from primary
-    receipts instead of trusting V599's flagged aggregate artifacts.
+V601 is complete when Exp6865-Exp6877 have terminal artifacts or structured conductor gate skips,
+all required artifact fields are present, all comparative claims have per-unit rows, and Exp6877 has
+recomputed the live branch states.
 
-## Completion Contract
+Scientific success is branch-specific:
 
-V600 is complete when all 13 tasks have either a terminal artifact or a structured conductor skip,
-and Exp6873 has independently reconciled them. Completion does not require a positive result.
+- **Semantic energy:** all three tokenizer bindings pass; the held paired effect beats every frozen
+  nuisance control and satisfies declared cross-family replication.
+- **Continuous self-learning:** bounded updates produce useful admitted writes, reduce harmful
+  writes, beat frozen and read-only controls prospectively, retain old families, and pass restart and
+  rollback checks.
+- **Live tool credit:** at least one authentic replayable first-party gap exists and matched delivery
+  improves an exact later outcome without a context, budget, or provenance confound.
 
-A scientific advance requires at least one of:
-
-- a sealed nuisance-controlled semantic compatibility effect that passes both exact authority
-  sides and every pre-registered nuisance attack;
-- a prospective observability-safe memory policy with nondegenerate actions, positive held-future
-  effect, bounded harm, durability, and portability; or
-- a replayable authentic live tool-gap effect whose exact outcome improves under delivery versus
-  withholding.
-
-If none occurs, the milestone still succeeds operationally by retiring failed constructions,
-preserving clean infrastructure, and naming one genuinely changed next mechanism per open PRD gap.
+A null, blocked, partial, circular, or disqualified branch remains a valid terminal result. The
+capstone must preserve that state and name the next causal blocker. Procedural completeness alone is
+not a scientific advance.

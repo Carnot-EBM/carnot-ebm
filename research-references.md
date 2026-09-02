@@ -1,3 +1,96 @@
+## V601 Planner Refresh - 2026-09-02
+
+This sweep follows terminal milestone `2026.09.600`. V600 built 100 accepted dual-side semantic
+contrast groups, but its tokenizer preregistration stopped before split construction or scoring.
+The Qwen binding passed. Both Gemma bindings compared a frozen tokenizer receipt hash from Exp6850
+with a new hash over a larger receipt schema and reported drift. The model files remained byte
+identical, both Gemma tokenizers remained loadable, and both produced the same current tokenizer
+hash. That evidence does not yet distinguish semantic tokenizer drift from receipt-schema drift.
+The downstream scoring task then stopped at its structured gate. Separately, the current ARC
+induction path records shared-context truncation while clipping the diagnostic values needed to size
+the context pool. A tool-use A/B before that repair would confound the tool prompt with context
+exhaustion. V601 must repair both evidence contracts before making scientific comparisons.
+
+### Findings selected for V601
+
+- **The Coupling Tax: How Shared Token Budgets Undermine Visible Chain-of-Thought Under Fixed
+  Output Limits** - arXiv:2605.07686, https://arxiv.org/abs/2605.07686; submitted 2026-05-08.
+  The paper shows that long visible reasoning can crowd a final answer out of a shared budget and
+  evaluates split-budget mitigation. Carnot's observed failure is not identical: the live ARC path
+  exhausts a shared prompt-plus-generation context pool. The actionable contract is still direct
+  budget accounting. Record prompt tokens, requested generation tokens, generated reasoning tokens,
+  final-channel tokens, context size, and truncation location for every attempt. Size `n_ctx` from
+  those receipts. Do not raise `max_tokens` as a substitute, and do not interpret a tool arm until
+  both arms have enough final-answer headroom.
+- **Sigma-Mem: An Online Reliability Memory for LLM-based Multi-Agent Systems** -
+  arXiv:2607.27958, https://arxiv.org/abs/2607.27958; Hugging Face page:
+  https://huggingface.co/papers/2607.27958. Sigma-Mem updates real symmetric reliability states from
+  post-decision correctness feedback and uses a spectral bound to limit each event's effect. Carnot
+  hook: replace the unsafe V599 controller's unconstrained write signal with a small bounded
+  reliability state over evidence sources and action types. Exact later outcomes may update that
+  state between events. The current decision may read only the previous state and decision-time
+  evidence. Compare frozen, read-only, bounded-update, and quarantine arms prospectively.
+- **TRUSTMEM: Learning Trustworthy Memory Consolidation for LLM Agents with Long-Term Memory** -
+  arXiv:2606.25161, https://arxiv.org/abs/2606.25161. This paper was already indexed, but V600's 13
+  harmful writes make its transition-verification contract newly relevant. Carnot should verify
+  coverage, preservation, and source faithfulness on every proposed write, then require exact
+  held-anchor retention and byte-exact rollback before admission. The learned verifier in the paper
+  is a design lead only; Carnot's exact receipts remain update and release authority.
+- **Local tokenizer-provenance finding** - Exp6850 and Exp6863 hash different receipt shapes. The
+  former stores loadability, source, metadata count, and probe tokens. The latter adds chat-template
+  identity, special-token settings, and tokenization settings before hashing. A mismatch between
+  hashes of non-identical schemas is not evidence that the embedded vocabulary or tokenization
+  changed. V601 must define a versioned canonical semantic payload, re-hash archived and live
+  receipts through the same reducer, and compare a frozen adversarial token-probe matrix. If token
+  IDs or special-token behavior differ under identical settings, block. If only wrapper fields
+  differ, append a provenance correction without rewriting the old artifacts.
+
+### Requested primary and secondary checks
+
+- **arXiv:** the 2025-2026 sweep covered verification and reasoning EBMs, neural constraint
+  satisfaction, Ising and thermodynamic sampling, hallucination detection, KANs, constrained
+  generation, hardware acceleration, and continual learning. The direct V601 additions are
+  shared-budget measurement and bounded reliability memory. Distributional EBM, OptiVer, KAN PWA
+  verification, recent Ising work, and hidden-state hallucination probes remain relevant context but
+  do not repair the current tokenizer or ARC evidence contracts.
+- **OpenReview:** OptiVer remains the useful dual-side authority pattern. Current ICLR 2026 EBM,
+  runtime-verification, and constraint records do not provide a matching-base public verifier or a
+  substitute for exact Carnot authority. Withdrawn and workshop records remain design leads only.
+- **Hugging Face Papers:** Sigma-Mem is the actionable new memory lead. GateMem and TrustMem
+  reinforce governance, transition integrity, and forgetting checks. They do not justify model
+  self-approval or pooled memory utility without per-event rows.
+- **Semantic Scholar:** direct citation-list calls exposed 35 EBT (`2507.02092`) rows and eight
+  ARM-EBM (`2512.15605`) rows. The visible reasoning records remain already indexed methods such as
+  Solver-Hard, Memoir, Fixed-Point Reasoners, LoopUS, Distributional EBM, and false-first-step
+  planning. No matching-base checkpoint or stronger local evidence contract appeared. Separate
+  paper-metadata calls were rate-limited, so these counts are discovery receipts, not trend claims.
+- **GitHub discovery:** current trending and targeted EBM, constraint, KAN, Ising, and memory
+  searches exposed research repositories but no dependency that supersedes Carnot's pinned local
+  stack. Do not add a package for novelty alone.
+- **Extropic:** the first-party writing index still leads with the August 2026 Torx, Thermalizers,
+  and Z1 update: https://extropic.ai/writing/from-one-to-one-billion. Z1 early access remains planned
+  for 2027. Carnot has no authenticated TSU runner, so V601 makes no TSU latency, power, or
+  availability claim.
+- **Logical Intelligence:** the public Kona material still describes a separate constraint layer
+  and complete-state energy scoring. No public weights, reproducible training recipe, or local
+  runner were found. Kona remains a product comparator.
+
+### V601 planning impact
+
+- Diagnose the Gemma hash discrepancy as a provenance question. Recompute archived and live
+  receipts with one canonical reducer and adversarial token probes before any tokenizer-aware split.
+- Resume the semantic-contrast line only after all three bindings pass the new evidence contract.
+  Preserve the 100 accepted exact groups. Do not regenerate them or inspect held scores early.
+- Implement continuous self-learning as bounded reliability-state updates plus exact transition
+  quarantine. Use prospective order replicates, frozen and read-only controls, delayed correction,
+  restart, rollback, and old-family retention.
+- Repair the live ARC shared-context diagnostic and measure final-answer headroom before a tool-use
+  comparison. Then accrue authentic adapter-disabled tool-gap receipts. A delivery-versus-withhold
+  replay remains gated on at least one replayable first-party opportunity.
+- Keep two infrastructure tasks, one adapter-disabled ARC generalization-floor task, and an ungated
+  independent capstone. Attached FPGA boards remain outside the blocking graph because no hardware
+  receipt changed.
+
 ## V600 Planner Refresh - 2026-09-01
 
 This sweep follows terminal milestone `2026.09.599`. V599 repaired the typed-program authority

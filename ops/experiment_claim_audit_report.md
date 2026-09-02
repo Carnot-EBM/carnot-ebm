@@ -11,62 +11,8 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 1 |
-| CLAIM_REFUTED_BY_OWN_DATA | 1 |
-| NO_CLAIM | 3 |
-| SKIPPED_ALREADY_FLAGGED | 3 |
-
-## experiment_6853_risk_sensitive_memory_opportunity_fixture.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_6854_risk_sensitive_abstention_memory_controller.json
-
-**CLAIM_REFUTED_BY_OWN_DATA**
-
-## VERDICT
-CLAIM_REFUTED_BY_OWN_DATA
-
-## THE HEADLINE CLAIM
-The risk-sensitive contextual-bandit controller provides positive held-future benefit while bounding false-positive memory injection.
-
-## WHAT WOULD REFUTE IT
-The controller tying a fixed always-abstain policy on held-future loss, overall loss, and every action—showing that the controller adds no value beyond unconditional abstention—would refute the claimed controller benefit.
-
-## WAS THAT CHECKED
-Yes. The `per_arm_summary` directly compares `contextual_bandit` with `abstain_only`, and they tie exactly; the controller also abstained on all 765 decisions.
-
-## EVIDENCE
-`honest_verdict`: `complete_positive_risk_sensitive_controller_benefit_gate_passed`; `contextual_bandit`; `abstain_only`; `abstention_count`: `765`; `decision_count`: `765`; `held_future_mean_loss`: `0.254901960784`; `mean_loss`: `0.277777777778`; `total_loss`: `212.5`; `abstention_rate`: `1.0`; `helpful_memory_selection_count`: `0`; `chosen_action`: `abstain`
-
-## RECOMMENDATION
-CORRECT_THE_RECORD
-
-## experiment_6855_counterfactual_memory_credit_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The completed counterfactual audit finds no learned selection advantage over placebo context, while identifying harmful memory writes.
-
-## WHAT WOULD REFUTE IT
-A nonzero learned-selection-minus-placebo reward effect would refute the null selection claim; zero supported negative per-write effects would refute the claim that harmful writes are present.
-
-## WAS THAT CHECKED
-Yes. The matched placebo comparison reports zero effect, while eligible per-write and coalition analyses include both positive and negative effects and count harmful writes. Unsupported counterfactuals are separately marked ineligible.
-
-## EVIDENCE
-`honest_verdict` `complete_null_counterfactual_memory_credit_harmful_writes_present` `comparison` `learned_selection_minus_placebo_context` `mean_reward_effect` `0.0` `learned_selection` `placebo_context` `mean_reward` `-0.277777777778` `harmful_write_count` `18` `aggregate_coalition_credit` `-0.283333333334` `benefit_eligible` `true` `causal_credit_eligible` `true` `credit_class` `interaction_only` `verifier_is_oracle` `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6856_sealed_risk_sensitive_learning_audit.json
-
-**SKIPPED_ALREADY_FLAGGED**
+| NO_CLAIM | 7 |
+| SKIPPED_ALREADY_FLAGGED | 1 |
 
 ## experiment_6857_dynamic_live_arc_receipt_router.json
 
@@ -83,13 +29,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative claim is made; a passed prerequisite gate or completed counterfactual audit would contradict only the reported blocked status.
+Not applicable; this is a blocked-gate receipt and makes no substantive comparative or value claim. The blocking assertion itself would be refuted by an observed gate value of 1.
 
 ## WAS THAT CHECKED
-No—the method was never evaluated; only the upstream prerequisite gate was checked.
+Yes, but only the prerequisite gate: `supervisor_headroom_ready_score` was checked against 1 and observed as 0. No counterfactual credit audit was run.
 
 ## EVIDENCE
-`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"actual": 0`, `"expected": 1`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
+`status` `blocked` `honest_verdict` `blocked_gate_check_failed` `failed_field` `supervisor_headroom_ready_score` `failed_expected` `1` `failed_observed` `0` `passed` `false` `blocked_at_layer` `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
@@ -105,13 +51,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No observation could refute a comparative or live-effect claim because the artifact explicitly makes none; such a claim would require authentic-live rows showing response use, valid headroom, and outcomes against a serious baseline.
+Not applicable: the artifact makes no comparative, solve, generalization, or live-effect claim; a live-effect refutation would require authentic-live, valid-headroom rows showing no benefit or harm.
 
 ## WAS THAT CHECKED
-No. This is a receipt-wiring artifact using fixtures, with zero live-effect-eligible rows and no comparator arm.
+No. Live effect was deliberately not tested; only receipt wiring and contract readiness were checked.
 
 ## EVIDENCE
-`honest_verdict`: `complete_first_party_tool_gap_receipt_contract_ready_no_live_effect_claim`; `solve_claim`: `false`; `solve_claimed`: `false`; `game_level_solve_count`: `0`; `tool_gap_live_effect_claim_eligible_score`: `0`; `provenance_class`: `authentic_live`; `row_count`: `0`; `verdict_class`: `null`
+`honest_verdict` `complete_first_party_tool_gap_receipt_contract_ready_no_live_effect_claim` `solve_claim` `false` `solve_claimed` `false` `verdict_class` `null` `game_level_solve_count` `0` `tool_gap_live_effect_claim_eligible_score` `0` `provenance_class` `fixture` `valid_headroom` `false`
 
 ## RECOMMENDATION
 KEEP
@@ -127,13 +73,101 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative or scientific value claim to falsify. Treating this as an administrative receipt, a declared/recomputed mismatch, source-hash mismatch, or advancement of a failed or disqualified branch would refute its disposition-preservation assertion.
+There is no scientific or comparative headline to falsify. The narrower administrative completeness statement would be refuted by a planned task lacking either a terminal disposition or an explicit skip, or by a declared disposition disagreeing with its independent recomputation.
 
 ## WAS THAT CHECKED
-Yes. The aggregate consistency and source-link hash checks could fail, and the gate checks genuinely did fail without being promoted into scientific success.
+Yes. The artifact checks task and skip manifests, source hashes, aggregate-row consistency, and branch gates; it also preserves blocked, null, partial, and disqualified outcomes rather than converting them into scientific success.
 
 ## EVIDENCE
-`honest_verdict` `complete_partial_v599_dispositions_preserved_no_scientific_branch_advance` `solve_claimed` `false` `hardware_speedup_claimed` `false` `game_level_solve_count` `0` `gate_check_summary` `passed` `false` `verifier_is_oracle` `false`
+`honest_verdict` = `complete_partial_v599_dispositions_preserved_no_scientific_branch_advance`; `solve_claimed` = `false`; `hardware_speedup_claimed` = `false`; `game_level_solve_count` = `0`; `verdict_class` = `Summarizes milestone evidence completeness, not an ARC solve or hardware result.`; `gate_check_summary` has `passed` = `false`; `typed_compatibility_disposition` has `scientific_result` = `not_identifiable`; `continuous_self_learning_disposition` has `verdict_class` = `disqualified`; `arc_supervisor_disposition` has `verdict_class` = `blocked`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6861_v600_branch_retirement_evidence_contract.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no scientific or comparative claim to falsify; the narrower procedural-readiness assertion would be refuted by a missing prerequisite, source-hash mismatch, invalid replacement mechanism, unverified reference, or unnamed downstream gate consumer.
+
+## WAS THAT CHECKED
+Yes, for procedural readiness: the artifact checks source preconditions, mechanism validity, reference verification, downstream consumers, and source hashes. It does not test the future mechanisms’ scientific effects, nor claim that it does.
+
+## EVIDENCE
+`honest_verdict`: `complete_positive_v600_branch_retirement_evidence_contract_ready`; `scope`: `procedural_only`; `scientific_branch_advance_count`: `0`; `scientific_claim_eligible`: `false`; `observed`: `all checks pass`; `failed_checks`: `[]`; `v600_evidence_contract_ready_score`: `1`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6862_dual_side_semantic_contrast_bank.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no model-performance or comparative claim to falsify; the limited readiness assertion would fail if accepted groups missed the 96-group floor, accepted rows showed authority disagreement, or single-atom mutations failed to change both labels.
+
+## WAS THAT CHECKED
+Yes. The artifact checks the group-count floor, dual-authority agreement, mutation label changes, nuisance-transform invariance, and rejection of checker disagreements; however, it contains no model scores or comparator evaluation.
+
+## EVIDENCE
+`honest_verdict` `complete_null_dual_side_semantic_contrast_bank_ready_no_model_scores` `verdict_class` `null` `model_scores_present` `false` `accepted_contrast_group_count` `100` `dual_side_semantic_contrast_bank_ready_score` `1` `both_authorities_passed` `true` `solution_label_changed` `true` `structure_label_changed` `true` `checker_disagreement` `rejected` `true` `verifier_is_oracle` `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable: the artifact makes no scientific-effect or comparative-value claim; it records a blocked preregistration gate.
+
+## WAS THAT CHECKED
+No scientific hypothesis was tested: there are no score rows, no likelihood calls, and no accepted cells.
+
+## EVIDENCE
+`scientific_effect_claimed` `false`; `verdict_class` `blocked`; `honest_verdict` `complete_blocked_tokenizer_aware_semantic_contrast_preregistration`; `rows` `[]`; `token_likelihood_call_count` `0`; `accepted_cell_manifest` `[]`; `models_used` `[]`; `semantic_contrast_preregistration_ready_score` `0`; `gate_check_summary` `passed` `false`; `tokenizer_hash_drift`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6864_three_family_semantic_contrast_scoring_stream.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable; this is a blocked-gate receipt and reports no semantic-scoring result or comparative claim to falsify.
+
+## WAS THAT CHECKED
+No; the experiment stopped at `conductor_pre_gate`, so no method outcomes or rival comparisons were produced.
+
+## EVIDENCE
+`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"failed_field": "semantic_contrast_preregistration_ready_score"`, `"failed_expected": 1`, `"failed_observed": 0`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
