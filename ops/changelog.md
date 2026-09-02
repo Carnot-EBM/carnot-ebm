@@ -18486,3 +18486,4 @@ but no data available this milestone shows 2 or more models in parallel or a
 missed DualGPURunner dispatch. Add configurable batches of 8-16 questions and
 task-owned launch telemetry. The savings estimate is 0% because no timed
 alternative is available.
+- 2026-09-02: V600 branch retirement and evidence contract (✅ Complete) — honest_verdict=complete_positive_v600_branch_retirement_evidence_contract_ready; results/experiment_6861_v600_branch_retirement_evidence_contract.json
