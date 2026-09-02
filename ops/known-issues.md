@@ -31,6 +31,27 @@ ids, which suggests the document reserves an ID RANGE rather than counting actua
 hypothesis, not a finding; the document generator was not read. Recorded so the next occurrence has
 a reference point rather than starting from zero.
 
+
+**EVIDENCE FOR THE ID-RANGE HYPOTHESIS, AND A TEST (2026-09-02 13:35Z).** The hypothesis above —
+that the document reserves an ID RANGE rather than counting tasks — is now supported by the id
+allocation, though still not confirmed in code.
+
+Milestone 602's YAML held 4 tasks (exp6874, 6875, 6876, 6877) while its document claimed
+`experiment_range: [6874, 6884]`, 11 ids. Milestone 603 activated with 4 tasks numbered **6885,
+6886, 6887, 6888** — starting immediately after 6884, the end of 602's RESERVED range, not after
+6877, the last id actually used. So the allocator advanced by the reserved width (11), not by the
+used count (4). That is consistent with a reservation the planner then underfilled.
+
+**Falsifiable test, checkable next milestone.** 603's first task, `exp6885-v603-executable-manifest-
+branch-contract`, is the structural analogue of exp6874 and will run the same parity check. If 603's
+document also claims a range wider than its 4 tasks, exp6885 fails `v603_document_yaml_parity` and
+cascade-blocks 6886/6887/6888 exactly as 602 did — a second occurrence, and the pattern is real. If
+exp6885 passes, then 602 was specific to that milestone and the id-range reading is wrong or
+incomplete.
+
+Stated so the next check is a yes/no rather than a re-investigation. Recorded against the earlier
+base rate: 1 parity failure across 5 replans, so a second occurrence would materially change that.
+
 ### NEW 2026-09-02: the operational retrospective never reports the quarantine rate
 
 **The observation.** `results/operational_retro_2026_09_601.json` summarises the milestone as "9
