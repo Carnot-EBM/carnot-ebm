@@ -17064,3 +17064,4 @@ The l |
 | 2026-09-02 11:10 UTC | Activation replan 1/2: 2026.09.602 | OK | refused roadmap quarantined to roadmap-2026.09.602-refusal1.yaml; replanning wit |
 | 2026-09-02 11:17 UTC | Plan milestone 2026.09.602 | OK | 4 tasks proposed |
 | 2026-09-02 11:20 UTC | Milestone 2026.09.602 activated | OK | 4 tasks queued |
+| 2026-09-02 12:00 UTC | V602 evidence, substrate, and executable-manifest  | OK | 101 passed, 1 warning in 21.32s |
