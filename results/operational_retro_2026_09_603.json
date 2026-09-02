@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.603",
+  "generated_at": "2026-09-02T16:52:36Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.8,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Three family anchored relation proposal corpus",
+      "duration_minutes": 0.72,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Enoki asset admission and exact relation fixture",
+      "duration_minutes": 0.04,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independent held anchored relation qualification",
+      "duration_minutes": 0.01,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V603 executable manifest and branch isolation contract",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 4 experiments in 0.8 minutes, and 3 were compute-bound. Three family anchored relation proposal corpus was the longest entry, but the timing record does not explain why.",
+  "bottlenecks_identified": [
+    "Three family anchored relation proposal corpus set the critical path. The timing record has no stage data that explains its duration.",
+    "Task-level GPU efficiency cannot be diagnosed from a single GPU snapshot that is not linked to an experiment window."
+  ],
+  "improvements_suggested": [
+    "Record stage timing and start-to-finish GPU samples for each compute-bound experiment.",
+    "Record model count and runner choice for every compute launch, so DualGPURunner eligibility is auditable.",
+    "Add workload-aware scheduling that uses both GPUs when two or more models or independent compute jobs can run concurrently."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add task-scoped stage timing and GPU telemetry.",
+    "Record model count, runner eligibility, and runner choice for each compute launch.",
+    "Schedule eligible concurrent model work across both GPUs."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The compute ranking is Three family anchored relation proposal corpus, Enoki asset admission and exact relation fixture, then Independent held anchored relation qualification. The timing record gives no cause for these durations, and the uncorrelated GPU snapshot cannot establish task-level GPU efficiency. The compute-task idle field is false; no data establishes a task with two or more parallel models or a missed DualGPURunner dispatch."
+}

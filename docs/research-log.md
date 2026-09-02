@@ -6542,3 +6542,10 @@ The critical path for milestone .250:
 - theme: artifact-time reconstruction hid the internal shape of a single compute launch
 - key result: honest negative — fallback timing identifies the compute critical path but cannot explain it or determine accelerator and parallel-runner efficiency
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.603
+
+- exp_range: no data available this milestone
+- theme: anchored relation execution exposed missing task-level timing and accelerator attribution
+- key result: honest operational negative — the critical path is known, but its cause, GPU efficiency, and multi-model runner eligibility are not established
+- acceptance: no data available this milestone

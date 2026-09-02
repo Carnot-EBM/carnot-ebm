@@ -18535,3 +18535,15 @@ evidence has no measured counterfactual.
 - 2026-09-02: Enoki asset admission and exact relation fixture (⚠️ Research Finding) — honest_verdict=complete_enoki_exact_relation_fixture_ready_no_accuracy_claim; results/experiment_6886_enoki_exact_relation_fixture.json
 - 2026-09-02: Three family anchored relation proposal corpus (✅ Complete) — honest_verdict=complete_positive_three_family_relation_corpus; results/experiment_6887_three_family_relation_proposal_corpus.json
 - 2026-09-02: Independent held anchored relation qualification (⚠️ Research Finding) — honest_verdict=complete_circular_positive_independent_relation_qualification; results/experiment_6888_independent_relation_qualification.json
+
+## 2026-09-02 — Milestone 2026.09.603 operational retrospective
+
+The milestone completed 4 experiments in 0.8 minutes. Three of these were
+compute-bound. Three family anchored relation proposal corpus set the critical
+path, but the timing record does not explain why. The compute-task idle field
+was false. The GPU report was a single snapshot, so it cannot prove task-level
+utilization efficiency. No record identifies parallel loading of two or more
+models or a missed DualGPURunner dispatch. Add task-scoped stage and GPU
+telemetry. Also record model count and runner choice. Schedule eligible
+concurrent compute work across both GPUs. The savings estimate is 0% because no
+timed control is available.
