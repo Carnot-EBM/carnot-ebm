@@ -18574,3 +18574,4 @@ crediting caveat (`resolved_by_levelup` credits transient live level_progress, n
 levels). The tool A/B (step 2 of the operator's tools directive) remains queued behind the
 re-run chars_final gate; the supervisor's new-arm question stays gated on the tool arm firing
 (all-arms-fired rule in `_new_arm_cells`).
+- 2026-09-02: Three-family live relation acquisition authenticity canary (✅ Complete) — honest_verdict=complete_positive_live_relation_acquisition_canary_ready; results/experiment_6899_live_relation_acquisition_canary.json
