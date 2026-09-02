@@ -179,6 +179,26 @@ and BEFORE .605 plans.
 Recorded because the failure mode is silent and self-flattering: forget the restart, watch .605
 skip the document, and conclude the regression was never mine.
 
+
+**PRECONDITION SATISFIED AUTOMATICALLY — no restart was needed (2026-09-02 22:40Z).** The
+conductor re-execs itself on fresh committed source (REQ-CONDUCTOR-FRESHEXEC-1,
+`scripts/research_conductor.py:2402`), and it did so at 21:50Z, logged as
+`Conductor re-exec: fresh committed source | e372551c2942 -> d615af6127c7`. The both-files-required
+fix was committed at 21:13Z, so it was in that source. Verified rather than assumed: the current
+file's sha256 prefix is `d615af6127c7`, matching the re-exec target hash exactly.
+
+So the .605 test is VALID as written, and the deferred restart above is moot. The re-exec is also
+guarded — it skips when HEAD does not compile or does not import, so a half-written edit cannot
+re-exec the conductor into broken code.
+
+**The trap this exposes, which cost me nothing only by luck.** A re-exec REPLACES the process image
+while KEEPING the PID, so `ps -o lstart=` still reports the ORIGINAL start time — 15:06Z here, hours
+before the source it is actually running. I spent three hourly checks reasoning from that start time
+about whether my fix was loaded, and concluded "still unloaded" each time. The start time cannot
+answer that question. To know which source a conductor is running, compare the file's hash against
+the last `Conductor re-exec` line in `ops/conductor-log.md`, or simply grep the running file for the
+change — never the process start time.
+
 ### NEW 2026-09-02: one of the four "shipped-but-unevaluated" flags cannot be evaluated at all
 
 `CARNOT_ARC_INDUCE_CANDIDATE_TOOLS` is INERT. `arc_induction_tools.register_candidate_tool` exists
