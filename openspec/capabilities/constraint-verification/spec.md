@@ -3729,3 +3729,151 @@ SHALL be false, and no template or row SHALL contain a model score.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6862 and SCENARIO-CONSTRAINT-6862-* | Implemented: fresh deterministic dual-side semantic contrast bank with 100 accepted groups. | Implemented: focused tests, scoped 100% coverage, artifact checks, mutation controls, and repository audits. |
+
+## REQ-VERIFY-6869: Calibration-Only Paired Semantic Rule
+
+The system SHALL reduce only the Exp6867 calibration labels and the Exp6868
+calibration token rows. It SHALL not parse the held score sidecar. It SHALL not
+read a held label or held aggregate. The reducer SHALL record every file and
+field access. `held_label_access_count` SHALL remain zero.
+
+Exp6869 SHALL require `semantic_contrast_stream_v2_complete_score=1`. It SHALL
+require the exact frozen Exp6867 and Exp6868 file hashes. It SHALL require a
+readable calibration label manifest and a sealed held manifest. It SHALL verify
+the calibration and held group sets are disjoint. It SHALL verify both score
+sidecar file hashes. It SHALL verify the calibration sidecar payload hash from
+its raw rows. It SHALL verify the held sidecar by file bytes only.
+
+A failed precondition SHALL write
+`complete_blocked_calibration_only_paired_semantic_rule`. The blocked artifact
+SHALL include all required fields. Its `gate_check_summary` SHALL record the
+first failed check, its expected value, and its observed value.
+
+The reducer SHALL recompute each candidate mean from `token_logprobs`. It SHALL
+not trust a producer aggregate. The frozen orientation SHALL be valid minus
+invalid. One semantic effect SHALL equal the mean of the base and label-swap
+valid-minus-invalid contrasts for one model and semantic group.
+
+The reducer SHALL emit one row for every calibration model, semantic group, and
+preregistered nuisance control. Each row SHALL preserve the base contrast, the
+label-swap contrast, the semantic effect, the matched nuisance effect, and the
+signed difference-in-differences value. It SHALL preserve zero-headroom,
+sign-opposed, failed, duplicate, and missing cells as evidence. It SHALL not
+impute a score.
+
+The order nuisance SHALL be the mean base-to-swap change over both candidates.
+The label-position nuisance SHALL be one half of the difference between the
+base and label-swap semantic contrasts. Identifier, normalization, token-count,
+character-length, and surface-form nuisance effects SHALL equal zero only when
+their exact Exp6867 matching receipts pass. A failed receipt SHALL create a
+missing-cell row. For every control, the signed difference-in-differences value
+SHALL equal the semantic effect minus the matched nuisance effect. Nuisance
+rejection SHALL compare the absolute nuisance effect with the semantic effect.
+
+The interval SHALL be the preregistered 95 percent BCa cluster bootstrap. It
+SHALL use 10,000 resamples, seed 6867, and semantic group identity as the
+cluster. Model and pooled intervals SHALL resample within semantic family so
+that each family keeps equal weight. A changed method, confidence level,
+resample count, seed, cluster unit, or family weighting SHALL disqualify the
+rule.
+
+The missing-cell rule SHALL use complete nuisance-eligible cells only. It SHALL
+use no imputation. The frozen missingness ceiling SHALL be zero missing required
+calibration or held cells. Each required held model SHALL also retain the
+preregistered floor of 20 groups.
+
+Exp6869 SHALL report model, model-family, semantic-family, nuisance, and pooled
+estimates separately. The pooled estimate SHALL give equal weight to models,
+then semantic families, then semantic groups within a model-family cell. A
+pooled positive SHALL not replace a model or family failure. All five semantic
+families in every model SHALL have the same positive sign. All three model
+families SHALL share that sign.
+
+The held acceptance contract SHALL freeze these rules before any held label is
+opened: valid-minus-invalid orientation; token-mean normalization; the BCa
+interval above; a strict minimum effect of zero for every model lower bound;
+an absolute nuisance ceiling equal to the largest calibration nuisance upper
+bound; the family replication rule above; zero missing required cells; the
+20-group held floor; and source, split, sidecar, row, interval, missingness, and
+family disqualification rules. The reducer code and contract SHALL have one
+stable hash for Exp6870.
+
+`semantic_contrast_rule_ready_score` SHALL equal one only when all
+preconditions pass, every model lower bound is strictly above zero, every
+model semantic effect exceeds every absolute nuisance bound, all five families
+replicate in all three models, no sign reversal occurs, no required cell is
+missing, and the frozen reducer completes a calibration-only dry run without
+held access. This readiness score SHALL describe a frozen rule. It SHALL not
+state a held semantic result.
+
+The terminal artifact SHALL be
+`results/experiment_6869_calibration_only_paired_semantic_rule.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `calibration_access_log`,
+`held_label_access_count`, `rows`, `per_model_calibration_effects`,
+`per_family_calibration_effects`, `pooled_calibration_effect`,
+`nuisance_control_effects`, `missing_cell_rows`, `bootstrap_rows`,
+`family_replication_result`, `frozen_held_reducer_hash`,
+`held_acceptance_contract`, `random_seed`, `reproducibility_checksum`,
+`semantic_contrast_rule_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. The inference
+substrate SHALL be deterministic CPU calibration-only paired reduction.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL be terminal and SHALL start with `complete_`.
+
+### SCENARIO-VERIFY-6869-HELD-LABEL-ACCESS: Held Labels Stay Closed
+
+Given a held group identity or a held-label-shaped field,
+When the calibration reducer routes an access,
+Then it SHALL reject the access before loading the value, record the attempt,
+and keep `held_label_access_count` at zero.
+
+### SCENARIO-VERIFY-6869-SPLIT-COLLISION: Split Collisions Block Reduction
+
+Given one semantic group in both calibration and held manifests,
+When Exp6869 checks split authority,
+Then it SHALL stop before label reduction and name the collided group.
+
+### SCENARIO-VERIFY-6869-SIGN-REVERSAL: Opposed Transform Signs Fail
+
+Given base and label-swap semantic contrasts with opposite nonzero signs,
+When Exp6869 reduces the group,
+Then it SHALL preserve the row and forbid rule readiness.
+
+### SCENARIO-VERIFY-6869-NUISANCE-WIN: Nuisance Cannot Explain The Effect
+
+Given an absolute nuisance effect at or above the semantic effect,
+When Exp6869 applies nuisance rejection,
+Then the affected model SHALL fail and rule readiness SHALL be zero.
+
+### SCENARIO-VERIFY-6869-MISSING-CELL: Missing Cells Are Not Zero
+
+Given a missing, duplicate, nonfinite, hash-invalid, or unmatched score cell,
+When Exp6869 builds complete model-group cells,
+Then it SHALL preserve a typed missing-cell row and SHALL not impute a score.
+
+### SCENARIO-VERIFY-6869-FAMILY-ONLY-WIN: One Family Cannot Carry A Model
+
+Given a positive pooled or model effect with one nonpositive semantic family,
+When Exp6869 checks family replication,
+Then the family failure SHALL remain visible and readiness SHALL be zero.
+
+### SCENARIO-VERIFY-6869-POOLED-SIMPSON-REVERSAL: Pooled Wins Stay Disaggregated
+
+Given a positive pooled estimate and a nonpositive model or family estimate,
+When Exp6869 applies the held contract,
+Then the model or family failure SHALL override the pooled result.
+
+### SCENARIO-VERIFY-6869-BOOTSTRAP-DRIFT: Interval Drift Disqualifies
+
+Given a bootstrap method, seed, resample count, cluster unit, confidence level,
+or weighting rule that differs from Exp6867,
+When Exp6869 validates the interval contract,
+Then it SHALL use the disqualified verdict class and set readiness to zero.
+
+## Implementation Status (REQ-VERIFY-6869)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6869 and SCENARIO-VERIFY-6869-* | Planned (`python/carnot/experiment_6869_calibration_only_paired_semantic_rule.py`; `scripts/experiments/experiment_6869_calibration_only_paired_semantic_rule.py`) | Planned (`tests/python/test_experiment_6869_calibration_only_paired_semantic_rule.py`) |

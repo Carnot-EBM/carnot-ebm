@@ -17052,3 +17052,4 @@ The l |
 | 2026-09-02 06:06 UTC | Three-family semantic contrast scoring stream v2 | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: [_frozen_cell( |
 | 2026-09-02 06:52 UTC | Three-family semantic contrast scoring stream v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6868_three_f |
 | 2026-09-02 07:11 UTC | Three-family semantic contrast scoring stream v2 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-09-02 07:55 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 727762 (port 8919) reparented to init, no live process references its  |
