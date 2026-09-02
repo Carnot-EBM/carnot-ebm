@@ -3587,3 +3587,145 @@ claim eligibility to zero.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6852 and SCENARIO-CONSTRAINT-6852-* | Implemented: fresh deterministic CPU reduction of semantic authority and raw token receipts; the exact substrate is registered with repository adversarial verification as deterministic-verifier work. | Implemented: focused tests cover missing, partial, malformed, reordered, stale, shortcut, invariance, and upstream-model-marker isolation with scoped 100% coverage. |
+
+
+## REQ-CONSTRAINT-6862: Dual-Side Semantic Contrast Bank
+
+The system SHALL build Exp6862 as a deterministic CPU semantic contrast bank.
+It SHALL invoke no LLM and SHALL compute no model score. It SHALL require
+`v600_evidence_contract_ready_score=1`, readable Exp6849 typed source
+programs, and the Exp6852 shortcut and direction failure witnesses. A failed
+precondition SHALL write `complete_blocked_dual_side_semantic_contrast_bank`.
+The blocked artifact SHALL name the failed check and observed value in
+`gate_check_summary`.
+
+A fresh reducer SHALL build at least 96 accepted groups. The bank SHALL cover
+exact energy, satisfaction predicate, memory guard, ARC guard, and diagnostic
+obligation families. Each group SHALL contain one exact valid candidate and
+one minimally invalid candidate. The invalid candidate SHALL differ by one
+semantic atom. Every program, candidate, contrast, transform, group, and row
+identifier SHALL be derived from canonical content.
+
+A structure-side checker SHALL prove the selected variable, obligation set,
+atom ledger, and one-atom mutation map. A separate solution-side checker
+SHALL derive the legal action set and candidate label from the typed program.
+Neither checker SHALL call or import the other. A group SHALL enter the bank
+only when both authorities return the exact valid and invalid labels.
+
+The reducer SHALL apply identifier renames, label swaps, row reorders,
+normalization variants, surface paraphrases, and semantics-preserving atom
+order changes. Each nuisance transform SHALL preserve both exact labels. The
+reducer SHALL also apply one-atom semantic mutations. Each semantic mutation
+SHALL change the exact label.
+
+The reducer SHALL reject duplicate semantic identities, semantic aliases,
+ambiguous programs, identity collisions, omitted atoms, vacuous constraints,
+checker disagreements, and split mutations. A split mutation changes more
+than one semantic atom. The reducer SHALL preserve every rejection witness.
+Candidate names, label positions, and row order SHALL not determine a label.
+
+Exp6862 SHALL freeze raw prompt and candidate sequence templates for Exp6863.
+It SHALL not assign calibration or held groups. It SHALL not inspect a model
+tokenizer. The templates SHALL contain no model score.
+
+The terminal artifact SHALL be
+`results/experiment_6862_dual_side_semantic_contrast_bank.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `random_seed`,
+`reproducibility_checksum`, `rows`, `fresh_reducer_manifest`,
+`typed_family_manifest`, `semantic_contrast_group_manifest`,
+`structure_side_check_rows`, `solution_side_check_rows`,
+`authority_disagreement_witnesses`, `identity_collision_witnesses`,
+`rejected_group_manifest`, `nuisance_transform_manifest`,
+`semantic_mutation_rows`, `accepted_contrast_group_count`,
+`dual_side_semantic_contrast_bank_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. It SHALL also
+include the frozen template manifest. One principle SHALL exist for every
+top-level field.
+
+The inference substrate SHALL be
+`deterministic CPU dual-side exact checking`. `verifier_is_oracle` SHALL be
+false because two external exact checkers supply authority. `verdict_class`
+SHALL be one of `positive`, `circular_positive`, `null`, `blocked`,
+`disqualified`, or `partial`. `honest_verdict` SHALL be terminal and SHALL
+start with `complete_`.
+
+`dual_side_semantic_contrast_bank_ready_score` SHALL equal one only when at
+least 96 groups pass both authorities, all identity namespaces are unique,
+all nuisance labels stay stable, all semantic mutations change labels, and
+every negative control is rejected. It SHALL otherwise equal zero.
+
+### SCENARIO-CONSTRAINT-6862-PRECONDITIONS: Source Gates Fail Closed
+
+Given a V600 gate other than one, unreadable Exp6849 typed sources, or missing
+Exp6852 failure witnesses,
+When Exp6862 evaluates preconditions,
+Then it SHALL write the complete blocked artifact with no accepted groups and
+the exact failed check in `gate_check_summary`.
+
+### SCENARIO-CONSTRAINT-6862-IDENTITY-COLLISION: Identity Collisions Are Rejected
+
+Given two records that share one content identifier but have different
+canonical content,
+When the reducer audits the identity namespace,
+Then it SHALL reject both records and preserve the collision witness.
+
+### SCENARIO-CONSTRAINT-6862-SEMANTIC-ALIAS: Semantic Aliases Are Rejected
+
+Given two groups with different identifiers and the same semantic identity,
+When the reducer audits group semantics,
+Then it SHALL reject the alias and preserve both group identifiers.
+
+### SCENARIO-CONSTRAINT-6862-OMITTED-ATOM: Omitted Atoms Are Rejected
+
+Given a candidate that omits one required semantic atom,
+When both authorities evaluate the candidate,
+Then the group SHALL be rejected and the omitted atom SHALL appear in the
+rejection witness.
+
+### SCENARIO-CONSTRAINT-6862-VACUOUS-CONSTRAINT: Vacuous Programs Are Rejected
+
+Given a program with no effective prerequisite, authority, fallback,
+consequence, or priority atom,
+When the structure-side checker validates the program,
+Then the group SHALL be rejected before admission.
+
+### SCENARIO-CONSTRAINT-6862-CHECKER-DISAGREEMENT: Authorities Must Agree
+
+Given a candidate whose atom ledger passes structure checks but whose action
+set fails independent solution checks,
+When the reducer compares authority labels,
+Then it SHALL reject the group and preserve the disagreement witness.
+
+### SCENARIO-CONSTRAINT-6862-SPLIT-MUTATION: Invalid Candidates Change One Atom
+
+Given an invalid candidate that changes two or more semantic atoms,
+When the mutation map is checked,
+Then the group SHALL be rejected as a split mutation.
+
+### SCENARIO-CONSTRAINT-6862-NUISANCE-INVARIANCE: Surface Changes Preserve Labels
+
+Given an accepted group and each required nuisance transform,
+When both authorities recheck the transformed content,
+Then the valid label SHALL remain true and the invalid label SHALL remain
+false. Candidate names, display labels, and row positions SHALL not affect the
+result.
+
+### SCENARIO-CONSTRAINT-6862-SEMANTIC-MUTATION: One Atom Changes the Label
+
+Given an exact valid candidate and its declared one-atom mutation,
+When both authorities evaluate the pair,
+Then both SHALL change the label from true to false.
+
+### SCENARIO-CONSTRAINT-6862-FROZEN-TEMPLATES: Exp6863 Inputs Stay Unassigned
+
+Given a ready semantic contrast bank,
+When Exp6862 freezes the raw sequence templates,
+Then calibration and held assignments SHALL remain null, tokenizer inspection
+SHALL be false, and no template or row SHALL contain a model score.
+
+## Implementation Status (REQ-CONSTRAINT-6862)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6862 and SCENARIO-CONSTRAINT-6862-* | Implemented: fresh deterministic dual-side semantic contrast bank with 100 accepted groups. | Implemented: focused tests, scoped 100% coverage, artifact checks, mutation controls, and repository audits. |
