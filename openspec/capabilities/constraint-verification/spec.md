@@ -4125,3 +4125,137 @@ Then validation reports the disagreement and readiness cannot pass.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6888 and SCENARIO-VERIFY-6888-* | Implemented (`python/carnot/experiment_6888_independent_relation_qualification.py`; `scripts/experiments/experiment_6888_independent_relation_qualification.py`) | Verified (`tests/python/test_experiment_6888_independent_relation_qualification.py`; `results/experiment_6888_independent_relation_qualification.json`) |
+
+### REQ-VERIFY-6901: Independent Model Relation Qualification
+
+Carnot SHALL provide Exp6901 as a fresh reducer over the frozen Exp6900
+acquisition artifact. The reducer SHALL run no model inference and SHALL not
+repair an output. It SHALL re-run adversarial admission before it reads held
+labels. It SHALL require `relation_corpus_complete_score=1`, no source
+quarantine stamp, no live critical adversarial flag, exact source hashes,
+complete terminal cells, sealed formal sidecars, the qualified Exp6274
+compiler, and an available independent ASP solver. A failed precondition SHALL
+emit `complete_blocked_independent_model_relation_qualification`. Its gate
+summary SHALL name each failed check, expected value, and observed value. A
+blocked run SHALL not open the held sidecar.
+
+The reducer SHALL score calibration rows before it opens the held sidecar. It
+SHALL freeze minimum parse coverage, span F1, tuple precision, tuple recall,
+exact validity, family floor, perturbation floor, and maximum abstention cost
+from calibration evidence only. It SHALL open the held sidecar exactly once.
+It SHALL join each proposal by frozen record, arm, model, and seed identity.
+It SHALL reject held labels, ASP programs, answer sets, or solver receipts in
+proposal prompts or raw outputs.
+
+The reducer SHALL recompute UTF-8 grounding from source bytes. It SHALL assign
+at most one true-positive credit to each unique tuple. It SHALL retain false
+positives, false negatives, malformed output, abstention, timeout, unsupported
+atoms, and missing proposals. Every frozen cell SHALL remain in parse and
+abstention denominators. Family and perturbation floors SHALL use the weakest
+slice instead of a pooled mean.
+
+Each supported proposal set SHALL compile with the qualified compiler. The
+reducer SHALL invoke an independent solver with a bounded timeout. It SHALL
+report compiler-versus-solver parity and proposal-versus-held exact answer-set
+validity separately. It SHALL report proposal coverage separately from exact
+admitted correctness. It SHALL emit completeness blind-spot rows for missed
+held relations and SHALL not claim that exact verification proves proposal
+completeness.
+
+The terminal artifact SHALL be
+`results/experiment_6901_independent_model_relation_qualification.json`. It
+SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`adversarial_admission_rows`, `sealed_sidecar_hashes`, `frozen_thresholds`,
+`rows`, `span_metric_rows`, `tuple_metric_rows`, `parse_coverage_rows`,
+`abstention_rows`, `family_rows`, `perturbation_rows`,
+`asp_compilation_rows`, `solver_parity_rows`,
+`completeness_blind_spot_rows`, `reported_vs_recomputed_metrics`,
+`independent_solver_receipts`, `held_leakage_count`,
+`model_eligible_arm_rows`, `rule_control_rows`,
+`qualified_model_relation_event_count`,
+`model_relation_qualification_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. Each artifact and gate field SHALL have
+one principle. `inference_substrate` SHALL equal
+`fresh_process_sealed_relation_reduction_no_llm`.
+
+Only GGUF and Enoki arms SHALL be model eligible. The lexical rule arm MAY be
+reported as a diagnostic control, but it SHALL NOT contribute to
+`qualified_model_relation_event_count` or satisfy model readiness.
+`model_relation_qualification_ready_score` SHALL equal the bare integer `1`
+only when at least one model-produced arm passes every frozen held threshold
+and contributes at least 90 exact-admitted relation events. Otherwise it SHALL
+equal `0`. Because the exact verifier is oracle authority, a passing artifact
+SHALL use `verdict_class=circular_positive`. The artifact SHALL never use
+`positive`. `honest_verdict` SHALL start with `complete_`.
+
+#### SCENARIO-VERIFY-6901-ADMISSION: Drift Or A Flagged Source Blocks
+
+Given source hash drift, a quarantine stamp, a live critical adversarial flag,
+an incomplete corpus, or a missing terminal cell,
+When Exp6901 checks admission,
+Then it emits a complete blocked artifact before held labels open.
+
+#### SCENARIO-VERIFY-6901-SEAL: Held Authority Opens Once Without Leakage
+
+Given frozen calibration thresholds and a sealed held sidecar,
+When the reducer starts held scoring,
+Then it opens that sidecar once and rejects formal held content in proposal
+prompts or raw outputs.
+
+#### SCENARIO-VERIFY-6901-IDENTITY: Record Arm Model And Seed IDs Are Exact
+
+Given a substituted model, seed, arm, cell, or record identity,
+When acquisition cells are joined to frozen sources,
+Then the reducer blocks instead of pooling the substituted cell.
+
+#### SCENARIO-VERIFY-6901-SPANS: UTF-8 Offsets Are Recomputed
+
+Given exact and shifted UTF-8 offsets,
+When source grounding is scored,
+Then only offsets that reproduce the source bytes receive span credit.
+
+#### SCENARIO-VERIFY-6901-TUPLES: Duplicate Rows Receive One Credit
+
+Given duplicate, unsupported, missing, and spurious tuples,
+When tuple quality is scored,
+Then a unique supported tuple receives at most one true-positive credit and
+all other outcomes remain explicit.
+
+#### SCENARIO-VERIFY-6901-DENOMINATORS: Abstention And Failure Stay Counted
+
+Given empty, explicit-abstain, malformed, timeout, and parsed cells,
+When coverage and abstention metrics are reduced,
+Then every frozen cell stays in the denominator and abstention cost remains
+separate from tuple precision.
+
+#### SCENARIO-VERIFY-6901-SOLVER: Unsupported Atoms And Timeouts Fail Closed
+
+Given an atom outside the closed map or an independent solver timeout,
+When exact validity is checked,
+Then the exact row records the failure and cannot satisfy exact parity.
+
+#### SCENARIO-VERIFY-6901-POOLING: Weak Slices Cannot Hide
+
+Given one weak family or perturbation among stronger pooled rows,
+When held eligibility is computed,
+Then the minimum family and perturbation rows govern their floors.
+
+#### SCENARIO-VERIFY-6901-MODEL-ONLY: A Rule-Only Pass Is Not Ready
+
+Given a passing lexical rule arm and no passing GGUF or Enoki arm,
+When readiness and qualified events are computed,
+Then both outgoing model fields remain zero.
+
+#### SCENARIO-VERIFY-6901-REPLAY: Aggregates Must Match Rows
+
+Given a terminal artifact whose reported aggregate differs from row evidence,
+When artifact validation replays the metrics,
+Then validation reports the disagreement and readiness cannot pass.
+
+## Implementation Status (REQ-VERIFY-6901)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6901 and SCENARIO-VERIFY-6901-* | Implemented (`python/carnot/experiment_6901_independent_model_relation_qualification.py`; `scripts/experiments/experiment_6901_independent_model_relation_qualification.py`) | Verified (`tests/python/test_experiment_6901_independent_model_relation_qualification.py`; `results/experiment_6901_independent_model_relation_qualification.json`) |
