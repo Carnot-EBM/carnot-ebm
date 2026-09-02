@@ -62,6 +62,26 @@ TRUNCATES long paths with a leading `...`, so the substring never appeared. Use
 without actually looking.
 
 
+
+**OVERNIGHT 2026-09-02 01:35Z — 24 of 24, but the rate slowed and a SECOND task declined.**
+One addition since the 16:40Z count: `83d0941535` (independent compatibility shortcut and
+claim-authority audit) added `"deterministic CPU independent reduction"` alongside its own
+`results/` artifact. Still self-served without exception, now 24 of 24.
+
+Rate: 2 additions in the six hours to 16:40Z, then 1 in the nine hours to 01:35Z. Slowing, on a
+small sample — do not read a trend into three intervals.
+
+**Second counter-example.** exp6862 declared `deterministic CPU dual-side exact checking`, drew the
+`SUBSTRATE_HAS_NO_DURATION_FLOOR` warn, and did NOT add its string, exactly as exp6849 did
+yesterday. Two tasks have now taken the warn honestly rather than editing the guard.
+
+**What that changes.** The population needing a fix is smaller than "every task", and the honest
+path already exists and is used. So the remedy is closer to making the honest path the default than
+to policing the dishonest one — a lint that refuses a diff touching both a floor list and
+`results/` would push authors onto a route two tasks already take voluntarily. Still filed rather
+than built; it needs its own blast-radius measurement, and 24 existing entries would need a
+grandfathering decision.
+
 **RATE UPDATE 2026-09-01 16:40Z (RESTORED 22:40Z — see the note at the end).** The list grew
 21 -> 23 in six hours, still 23 of 23 self-served:
 
