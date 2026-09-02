@@ -384,6 +384,42 @@ rather than with generation length.
 Three observations is a small sample and this entry does not claim more than that. It is enough to
 say the threshold is inside the distribution, not enough to pick a replacement number.
 
+
+**IT IS A CATEGORY, NOT ONE SUBSTRATE (2026-09-02 07:11Z).**
+`experiment_6868_three_family_semantic_scoring_stream_v2`, substrate `live local llama.cpp CUDA
+forced-sequence scoring`, `duration_s` 51.355696, stamped. Unlike the five data-marker instances,
+its markers ARE in a declaration field (`completed_models`) — this artifact genuinely runs the
+model. What it runs is FORCED-SEQUENCE SCORING, which computes logprobs over sequences that
+already exist; no tokens are generated. Same shape as tokenization: real model use, far cheaper
+than generation, measured against a floor calibrated for generation.
+
+Two distinct substrates now straddle the 60s line while doing cheaper-than-generation work:
+
+| substrate | observations | outcome |
+|---|---|---|
+| `native_gguf_tokenization_without_inference` | 38.4s / 51.7s / 140.8s | clean (exempt) / FLAGGED / clean |
+| forced-sequence scoring | 51.4s (exp6868) / 75.1s (exp6850, `..._canary`) | FLAGGED / clean |
+
+Four observations across two substrates, all doing model work that is not generation, and the 60s
+threshold falls in the middle of both spreads. exp6850 and exp6868 are the same work class 24
+seconds apart on opposite sides of the line.
+
+**So the gap is categorical.** The taxonomy has one floor for "the model was loaded" and treats
+every use of a loaded model as if it generated tokens. Generation, forced-sequence scoring,
+embedding extraction and tokenization differ by more than an order of magnitude in cost, and only
+embedding extraction has ever been given its own floor (2.0s, 2026-07-03). Picking a new number
+for each substrate one incident at a time will keep producing this entry.
+
+**What that suggests, and what it does not.** It suggests the floor should key on WORK TYPE rather
+than on model-was-loaded — generation, scoring, embedding, tokenization — with a measured floor
+each. It does NOT establish those numbers: this is four observations across two substrates, and
+the cost of each work type at this model size has not been measured. Recording the shape so the
+next incident adds to a category rather than opening a sixth one-off.
+
+**Cost note.** exp6868 took three attempts to produce this artifact: a hard wall-clock kill at
+4802s (06:06Z), an `artifact_not_updated_past_bootstrap` FAIL (06:52Z), then the quarantine
+(07:11Z).
+
 **Interaction with the substrate-string gap filed at 05:38Z.** Same root cause, opposite
 direction. There, an unrecognised substrate (`gpu`) got NO floor and a 3.5ms compute claim passed.
 Here, an unrecognised substrate (`deterministic CPU chronological comparison`) plus a data-borne
