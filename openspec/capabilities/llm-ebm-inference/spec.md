@@ -3781,3 +3781,129 @@ arms for the live-model gate.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFERENCE-6899 and SCENARIO-INFERENCE-6899-* | Planned (`python/carnot/experiment_6899_live_relation_acquisition_canary.py`; `scripts/experiments/experiment_6899_live_relation_acquisition_canary.py`) | Planned (`tests/python/test_experiment_6899_live_relation_acquisition_canary.py`) |
+
+### REQ-INFERENCE-6900: Authentic Anchored Relation Corpus
+
+Exp6900 SHALL scale only the frozen Exp6899 acquisition protocol. It SHALL
+require `relation_canary_ready_score=1` and the exact Exp6899 artifact hash.
+It SHALL bind the same Exp6886 fixture hashes, three authenticated GGUF files,
+native tokenizer receipts, pinned Enoki assets, CUDA runtime, and task-owned GPU
+leases. It SHALL also require zero held-sidecar access. A failed precondition
+SHALL stop acquisition and write
+`complete_blocked_authentic_anchored_relation_corpus`. The gate summary SHALL
+name each failed check with its expected and observed values.
+
+The frozen source matrix SHALL contain exactly 100 public source views. It SHALL
+contain 20 views from each of graph coloring, scheduling, non-monotonic defaults,
+contradictions, and cardinality. Every proposal arm SHALL receive the same source
+IDs. The three GGUF arms SHALL use the four Exp6899 seeds. The Enoki and lexical
+arms SHALL remain deterministic controls with separate provenance and resource
+receipts.
+
+Every GGUF cell SHALL use the exact Exp6899 prompt builder, parser, model file,
+native llama.cpp tokenization, seed policy, output budget, stop policy, server
+arguments, and CUDA offload policy. Exp6900 SHALL detect prompt, parser, request,
+model, tokenizer, or runtime drift before acquisition. It SHALL never call a
+Hugging Face `AutoTokenizer` for a GGUF repository.
+
+Exp6900 SHALL preserve request and response bytes with hashes before parsing.
+It SHALL parse only source spans and the seven protocol tuple fields. It SHALL
+not use a grammar, schema decoder, repair prompt, model judge, text scorer, held
+label, compiler result, solver result, or answer set during acquisition. No arm
+may approve its own proposal.
+
+Each expected cell SHALL end in one or more terminal evidence rows. Accepted,
+malformed, unsupported, duplicate, abstain, empty, timeout, and truncated states
+SHALL remain visible. A process or encoder failure SHALL emit failed cells for
+all absent identities. The experiment SHALL never replace a failed cell with a
+fixture, control, or prior model output.
+
+Exp6900 SHALL support a content-bound partial checkpoint. A resume SHALL keep
+verified completed cells byte-identical and run only absent cell identities.
+Checkpoint input drift, duplicate cell identities, stale process receipts, PID
+reuse, server crashes, unclean teardown, or held-sidecar access SHALL fail closed.
+
+The terminal artifact SHALL be
+`results/experiment_6900_authentic_anchored_relation_corpus.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `model_specs`, `models_used`,
+`model_artifact_hashes`, `tokenizer_receipts`, `llama_cpp_receipts`,
+`gpu_lease_rows`, `server_lifecycle_rows`, `enoki_asset_receipts`,
+`deterministic_rule_receipts`, `prompt_manifest`, `rows`,
+`raw_request_manifest`, `raw_output_manifest`, `parse_failure_rows`,
+`abstention_rows`, `empty_rows`, `truncation_rows`, `timeout_rows`,
+`per_arm_family_counts`, `held_sidecar_access_count`,
+`model_weight_mutation_count`, `external_text_scorer_call_count`,
+`constrained_schema_decode_count`, `random_seed`, `reproducibility_checksum`,
+`relation_corpus_complete_score`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. Each required field and the incoming and
+outgoing gate fields SHALL have one plain evidence principle. The inference
+substrate SHALL equal
+`live_local_sota_gguf_cuda_plus_pinned_enoki_encoder`.
+
+`relation_corpus_complete_score` SHALL equal the bare integer one only when the
+preconditions pass, all arm and family denominators are complete, all raw rows
+replay, all runtime identities are authentic, all lifecycles are clean, total
+duration is at least 60 seconds, and held-sidecar access is zero. Proposal
+correctness, parse success, abstention, empty output, timeout, and truncation
+SHALL NOT change this acquisition score. `verifier_is_oracle` SHALL be false.
+`verdict_class` SHALL use the closed experiment vocabulary. `honest_verdict`
+SHALL be terminal and start with `complete_`.
+
+#### SCENARIO-INFERENCE-6900-PRECONDITIONS: Canary Or Asset Drift Blocks
+
+Given a failed canary gate, changed canary hash, fixture drift, missing model,
+changed tokenizer, Enoki drift, absent CUDA offload, failed lease, or sidecar
+access,
+When Exp6900 checks inputs,
+Then it SHALL perform no acquisition and SHALL write the complete blocked
+artifact with exact expected and observed values.
+
+#### SCENARIO-INFERENCE-6900-PROTOCOL-DRIFT: Frozen Canary Code Stays Exact
+
+Given changed prompt, parser, request, seed, output, stop, or server policy,
+When Exp6900 compares the live code with its frozen canary receipts,
+Then acquisition SHALL stop before any proposal arm runs.
+
+#### SCENARIO-INFERENCE-6900-BALANCE: Each Arm Receives The Same Balanced IDs
+
+Given the frozen public source views,
+When Exp6900 builds its matrix,
+Then every arm SHALL receive 100 distinct source IDs with 20 from each family.
+
+#### SCENARIO-INFERENCE-6900-RAW-ROWS: Empty And Invalid Data Stay Visible
+
+Given empty bytes, malformed lines, unsupported tuples, duplicates, abstentions,
+timeouts, or truncations,
+When Exp6900 records and parses a cell,
+Then raw bytes SHALL remain unchanged and each condition SHALL have a terminal
+row without fixture or control substitution.
+
+#### SCENARIO-INFERENCE-6900-RESUME: Only Missing Cells Run Again
+
+Given a valid partial checkpoint with unchanged input hashes,
+When Exp6900 resumes,
+Then verified terminal cells SHALL stay byte-identical and only absent cell
+identities SHALL run. Duplicate rows or checkpoint drift SHALL fail closed.
+
+#### SCENARIO-INFERENCE-6900-PROCESS: Stale Or Crashed Servers Fail Closed
+
+Given PID reuse, stale identity evidence, a timeout, truncation, or server crash,
+When Exp6900 closes the model phase,
+Then it SHALL preserve all observed bytes, emit remaining failed cells, clean up
+only the owned process, and record whether teardown was clean.
+
+#### SCENARIO-INFERENCE-6900-COMPLETION: Acquisition Is Not Semantic Approval
+
+Given complete authentic denominators that include parser and transport failure
+states,
+When Exp6900 computes the outgoing gate,
+Then acquisition SHALL score one without reading held labels or solver evidence.
+Missing cells, duplicate identities, forged provenance, unclean lifecycle, short
+duration, or sidecar access SHALL score zero.
+
+## Implementation Status (REQ-INFERENCE-6900)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6900 and SCENARIO-INFERENCE-6900-* | Planned (`python/carnot/experiment_6900_authentic_anchored_relation_corpus.py`; `scripts/experiments/experiment_6900_authentic_anchored_relation_corpus.py`) | Planned (`tests/python/test_experiment_6900_authentic_anchored_relation_corpus.py`) |
