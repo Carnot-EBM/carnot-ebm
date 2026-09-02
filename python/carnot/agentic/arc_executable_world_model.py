@@ -5177,6 +5177,24 @@ def _note_generator_selection(msg: str) -> None:
         pass
 
 
+# ---------------------------------------------------------------------------------------------
+# THE MEASURED VRAM ENVELOPE FOR THE CURRENT GENERATOR: Qwen3.8-27B Q4_K_M, q8_0 KV, mtp off
+# (REQ-ARC-WMTE-6880). Nine per-PID residencies measured 2026-09-02 on an RTX 3090 (nvidia-smi
+# --query-compute-apps joined by PID, never the env var), spanning 1/4 slots, 0/1/11 CPU-FFN
+# layers, and n_ctx 49152..106496. The fit is deliberately CONSERVATIVE: intercept through the
+# worst 4-slot residual, so every 4-slot point (the guard's launch shape) is over-predicted
+# (by at most 223 MiB) and no point anywhere is under-predicted by more than 377 MiB -- well
+# inside the 1500 MiB guard margin. The gemma-4-31B constants above are KEPT as the historical
+# record; using them for this pin over-predicted -c 98304 by ~4.4 GB, which forced an 11-layer
+# FFN offload (decode 28 -> 13.1 tok/s) and pushed think-mode induces past the 2400s timeout.
+_VRAM_QWEN38_INTERCEPT_MIB = 15768.0  # 20352 - 0.0403*98304 - 206.83*4, worst-residual anchor
+_VRAM_QWEN38_PER_CTX_MIB = 0.0403  # 4-slot same-layer segment (19416-18426)/24576; q8 KV
+# Launch-to-launch scatter (~±150 MiB) SWAMPS this model's per-layer credit -- a 0-layer launch
+# measured 153 MiB BELOW a 1-layer one. 150 is a bounded estimate, not a fit; with the corrected
+# intercept/slope the auto-fit needs 0 layers on a free card, so this constant is nearly inert.
+_VRAM_QWEN38_PER_CPU_FFN_LAYER_MIB = 150.0
+
+
 def _predicted_generator_vram_mib(
     n_ctx: int, ffn_cpu_layers: int, mtp: Optional[bool] = None
 ) -> float:
@@ -5191,12 +5209,14 @@ def _predicted_generator_vram_mib(
     """
     on = _mtp_default_on() if mtp is None else bool(mtp)
     head = (_VRAM_MTP_HEAD_INTERCEPT_MIB + _VRAM_MTP_HEAD_PER_CTX_MIB * float(n_ctx)) if on else 0.0
+    # Qwen3.8-27B constants (REQ-ARC-WMTE-6880) -- the CURRENT pin's measured envelope, not the
+    # gemma one that over-predicted 98304 by ~4.4 GB and taxed decode 2.1x via a forced offload.
     return (
-        _VRAM_GEMMA31B_INTERCEPT_MIB
-        + _VRAM_GEMMA31B_PER_CTX_MIB * float(n_ctx)
+        _VRAM_QWEN38_INTERCEPT_MIB
+        + _VRAM_QWEN38_PER_CTX_MIB * float(n_ctx)
         + _VRAM_PER_SLOT_MIB * float(_llama_server_slots())
         + head
-        - _VRAM_PER_CPU_FFN_LAYER_MIB * float(max(0, ffn_cpu_layers))
+        - _VRAM_QWEN38_PER_CPU_FFN_LAYER_MIB * float(max(0, ffn_cpu_layers))
     )
 
 

@@ -261,15 +261,20 @@ def test_the_env_knob_alone_is_enough_to_get_the_flag_onto_the_argv(wm, monkeypa
 
 
 def test_vram_guard_credits_the_offloaded_layers(wm, monkeypatch) -> None:
-    """~195 MiB per layer, measured. A guard blind to the knob is a guard that refuses the fix."""
+    """A guard blind to the knob is a guard that refuses the fix.
+
+    RE-ANCHORED 2026-09-02 (REQ-ARC-WMTE-6880): the envelope is now the Qwen3.8-27B fit, whose
+    per-layer credit is a BOUNDED ESTIMATE of 150 MiB (launch scatter ~±150 MiB swamps the real
+    credit -- a 0-layer launch measured below a 1-layer one). The old 195.3 was gemma's measured
+    credit; asserting it against the Qwen envelope pinned the wrong model's number."""
     monkeypatch.delenv("CARNOT_ARC_FFN_CPU_LAYERS", raising=False)
     base = wm._generator_cuda_min_free_mb()
     monkeypatch.setenv("CARNOT_ARC_FFN_CPU_LAYERS", "12")
     with_offload = wm._generator_cuda_min_free_mb()
     assert with_offload < base
     freed = base - with_offload
-    # 12 * 195.3 = 2343.6; measured freed VRAM at 12 layers was exactly 2344 MiB.
-    assert 2300 <= freed <= 2400, freed
+    # 12 * _VRAM_QWEN38_PER_CPU_FFN_LAYER_MIB (150) = 1800.
+    assert 1750 <= freed <= 1850, freed
 
 
 def test_guard_at_defaults_exceeds_a_3090_which_is_the_honest_answer(wm, monkeypatch) -> None:
@@ -315,19 +320,22 @@ def test_guard_at_defaults_exceeds_a_3090_which_is_the_honest_answer(wm, monkeyp
     means: not at ANY n_ctx unconditionally, but reachable via the lever the module's own
     docstring already names for exactly this box class.
     """
+    # RETARGETED A THIRD TIME 2026-09-02 (REQ-ARC-WMTE-6880). Every earlier retarget rested on
+    # the gemma-4-31B envelope; the generator has been the Qwen3.8-27B pin since 2026-08-16, and
+    # its DIRECTLY MEASURED default-shape footprint (-c 106496, 4 slots, 0 layers) is 20664 MiB
+    # -- it FITS an idle 3090 outright. So the 2026-08-08 "the default genuinely refuses this
+    # card" premise was an artifact of the stale envelope (which also forced an 11-layer offload
+    # at 98304 and halved decode). The original contract -- "must end up somewhere usable at the
+    # shipped defaults" -- is now satisfied DIRECTLY, with zero offload, which is what this test
+    # now asserts. The offload lever still matters on a PARTIALLY OCCUPIED card, asserted below.
     monkeypatch.delenv("CARNOT_ARC_FFN_CPU_LAYERS", raising=False)
-    # Component fact (unchanged, still measured): with zero offload the requirement exceeds a 3090.
-    assert wm._generator_cuda_min_free_mb(0) > 24576
-    # ...and the documented escape hatch actually escapes: 12 offloaded layers brings the
-    # requirement under an idle 3090's free memory -- AT THE OLD n_ctx (81920) this constant's
-    # own historical basis. The default n_ctx no longer satisfies this at all (see below), which
-    # is exactly the regression this component assertion exists to catch if reintroduced silently.
-    with monkeypatch.context() as m:
-        m.setenv("CARNOT_ARC_INDUCE_N_CTX", "81920")
-        assert wm._generator_cuda_min_free_mb(12) < 24576
+    # Component fact: with zero offload the requirement now FITS an idle 3090's free memory.
+    # (Historical: the gemma envelope put this above the card's 24576 TOTAL; preserved in this
+    # test's docstring rather than asserted, per never-prune.)
+    assert wm._generator_cuda_min_free_mb(0) <= 24123
 
-    # THE SHIPPED-DEFAULT CONTRACT (2026-08-08: the corrected worst case genuinely refuses this
-    # card, and that refusal must be loud, not silent).
+    # THE SHIPPED-DEFAULT CONTRACT: on a realistic-idle 3090 the auto-fit selects ZERO layers
+    # because none are needed -- no refusal, no silent under-offload, no decode tax.
     monkeypatch.setenv("CARNOT_ARC_GENERATOR_CUDA_GPU", "0")
     monkeypatch.setattr(wm, "_cuda_gpu_free_mb", lambda _idx: 24123)
     monkeypatch.setattr(wm, "_cuda_gpu_total_mb", lambda _idx: 24576)
@@ -335,33 +343,32 @@ def test_guard_at_defaults_exceeds_a_3090_which_is_the_honest_answer(wm, monkeyp
     wm._GENERATOR_SELECTION_SEEN.clear()
     layers = wm._default_ffn_cpu_layers()
     assert layers == 0, (
-        "the shipped default must REFUSE (not silently under-offload) on a realistic-idle 3090 "
-        f"at the corrected worst-case n_ctx; got {layers} nonzero layers -- if this now fits, "
-        "either the worst-case prompt constant shrank again or the autofit cap moved, and this "
-        "test's numbers need a fresh re-derivation"
+        f"a free 3090 fits the default launch with no offload; got {layers} layers -- the "
+        "envelope over-prediction (the 2.1x decode tax) is back"
     )
     joined = "\n".join(wm.GENERATOR_SELECTION_LOG)
-    assert "cannot fit the generator" in joined, f"the refusal must be logged; got:\n{joined}"
-
-    # THE ESCAPE HATCH CONTRACT: a local developer who explicitly accepts a smaller worst-case
-    # safety margin (CARNOT_ARC_INDUCE_N_CTX=81920, this constant's own historical value) DOES get
-    # a usable card -- "must end up somewhere usable" still holds, reachable via the documented
-    # lever, which is the property this test was originally written to protect.
-    monkeypatch.setenv("CARNOT_ARC_INDUCE_N_CTX", "81920")
-    layers = wm._default_ffn_cpu_layers()
-    assert 0 < layers <= wm._FFN_CPU_AUTOFIT_MAX_LAYERS, (
-        "the documented CARNOT_ARC_INDUCE_N_CTX escape hatch must restore a usable local card; "
-        f"got {layers} layers at n_ctx=81920"
-    )
-    assert wm._generator_cuda_min_free_mb(layers) <= 24123, (
-        "auto-fit picked a layer count that still does not satisfy the guard it was fitted "
-        "against -- the card would be declined and the iGPU outage would recur"
+    assert "cannot fit the generator" not in joined, (
+        f"the guard refused a card the measured footprint fits with 3.4 GiB to spare:\n{joined}"
     )
     # ...and the end-to-end placement decision agrees: we get the CUDA build, pinned to the card.
     server, env = wm._generator_server_and_env(layers)
     assert server.name == "llama-server"
     assert env is not None and env.get("CUDA_VISIBLE_DEVICES") == "0", (
         "guard passed but the CUDA build was not selected -- the two halves disagree"
+    )
+
+    # THE OFFLOAD LEVER'S REMAINING JOB: a PARTIALLY OCCUPIED card (another process holding
+    # ~3 GiB) engages the auto-fit, which picks a bounded layer count satisfying its own guard.
+    monkeypatch.setattr(wm, "_cuda_gpu_free_mb", lambda _idx: 21500)
+    wm.GENERATOR_SELECTION_LOG.clear()
+    wm._GENERATOR_SELECTION_SEEN.clear()
+    layers = wm._default_ffn_cpu_layers()
+    assert 0 < layers <= wm._FFN_CPU_AUTOFIT_MAX_LAYERS, (
+        f"auto-fit must engage on a partially occupied card; got {layers} layers at free=21500"
+    )
+    assert wm._generator_cuda_min_free_mb(layers) <= 21500, (
+        "auto-fit picked a layer count that still does not satisfy the guard it was fitted "
+        "against -- the card would be declined and the iGPU outage would recur"
     )
 
 

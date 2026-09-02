@@ -28870,3 +28870,40 @@ note `docs/research-notes/induce-shared-pool-truncation-2026-09-02.md` (2026-09-
 Implementation status: implemented 2026-09-02 (`arc_executable_world_model.py`
 `_llama_server_parallel_launch`, argv append in `_ensure_server`, `last_parallel_launch` field;
 `tests/python/test_arc_llama_server_parallel_20260902.py`, 11 tests, argv-append mutation proven).
+
+### REQ-ARC-WMTE-6880: The VRAM envelope matches the generator the guard actually launches
+
+`_predicted_generator_vram_mib` SHALL predict from constants measured for the CURRENT generator
+pin, not a previous pin's envelope. For the Qwen3.8-27B pin the constants are the 2026-09-02
+nine-point fit (`_VRAM_QWEN38_INTERCEPT_MIB`, `_VRAM_QWEN38_PER_CTX_MIB`,
+`_VRAM_QWEN38_PER_CPU_FFN_LAYER_MIB`); the gemma-4-31B constants stay in the module as the
+historical record and for their own regression tests. The fit SHALL over-predict every measured
+4-slot point (the guard's launch shape) and SHALL under-predict no measured point by more than
+the guard margin.
+
+#### SCENARIO-ARC-WMTE-6880-A: the envelope tracks the measured corpus
+- GIVEN the nine 2026-09-02 measured residencies (q8 KV, Qwen3.8-27B Q4_K_M, RTX 3090)
+- THEN the predictor over-predicts every 4-slot point by no more than 600 MiB
+- AND under-predicts no point by more than 600 MiB
+
+#### SCENARIO-ARC-WMTE-6880-B: the default shape admits a free 24 GB card without offload
+- GIVEN a free RTX 3090 (about 24.1 GiB free) and the default `_default_induce_n_ctx()`
+- THEN `_generator_cuda_min_free_mb(ffn_cpu_layers=0)` is at most that free amount
+- AND the measured footprint of that exact launch (20664 MiB at `-c 106496`, 4 slots, 0 layers)
+  sits at least 1000 MiB under the guard
+
+Rationale: 2026-09-02. The predictor still used the gemma-4-31B envelope
+(intercept 18940.7, slope 0.050293) for the Qwen3.8-27B pin. Measured over nine launches: the
+real 4-slot slope is ~0.0403 MiB/cell and the envelope over-predicted `-c 98304` by ~4.4 GB
+(26212 predicted incl. margin vs 20352 measured), forcing an 11-layer FFN offload that cut
+decode 28 -> 13.1 tok/s and made think-mode induces exceed the 2400s timeout — the direct
+blocker for the induce-truncation fix (`CARNOT_ARC_INDUCE_N_CTX=98304`, REQ-ARC-WMTE-6870
+context) and for the tool A/B. Measured points (MiB): 1-slot 1L 49152/73728/98304 =
+18183/18858/19794; 1-slot 0L 49152 = 18030; 4-slot 1L 49152/73728 = 18426/19416; 4-slot 11L
+98304 = 18700; 4-slot 0L 98304/106496 = 20352/20664. Launch-to-launch scatter is ~±150 MiB and
+swamps the per-layer credit (18030 vs 18183), so the credit constant is a bounded estimate
+(150), not a fit.
+
+Implementation status: implemented 2026-09-02 (`arc_executable_world_model.py` Qwen38 constants
++ `_predicted_generator_vram_mib` switch; `tests/python/test_arc_qwen38_vram_envelope_20260902.py`;
+`tests/python/test_arc_generator_vram_guard.py` re-anchored to the measured Qwen footprints).

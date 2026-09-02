@@ -88,6 +88,17 @@ MEASURED_FREED_PER_CPU_FFN_LAYER_MIB = 195.3
 # 25123.
 MEASURED_106496_GEMMA31B_MIB = 25123
 
+# CURRENT (Qwen3.8-27B Q4_K_M, the generator since the 2026-08-16 re-pin; REQ-ARC-WMTE-6880).
+# Unlike the gemma figure above, this one is a DIRECT per-PID measurement, not a reconstruction:
+# the Qwen launch at n_ctx=106496 (4 slots, 0 CPU-FFN layers, q8_0 KV, mtp off) actually FITS a
+# 24576 MiB 3090 and measured 20664 MiB resident on 2026-09-02. The gemma envelope predicted
+# ~25124 for this shape -- the ~4.4 GB over-prediction that forced an 11-layer offload and cut
+# decode 28 -> 13.1 tok/s before the envelope was refit to this pin.
+MEASURED_106496_QWEN38_MIB = 20664
+# The Qwen per-layer credit is a BOUNDED ESTIMATE (launch scatter ~±150 MiB swamps it; an
+# 0-layer launch measured 153 MiB below a 1-layer one), mirrored from the module constant.
+ESTIMATED_QWEN38_FREED_PER_CPU_FFN_LAYER_MIB = 150.0
+
 
 @pytest.fixture()
 def wm(monkeypatch):
@@ -142,9 +153,11 @@ def test_guard_exceeds_the_measured_footprint_at_the_shipped_n_ctx(wm) -> None:
         "do not just edit the constant"
     )
     guard = wm._generator_cuda_min_free_mb()
-    assert guard > MEASURED_106496_GEMMA31B_MIB, (
+    # Re-anchored 2026-09-02 (REQ-ARC-WMTE-6880): the launch this guard now guards is the
+    # Qwen3.8-27B pin, whose 106496 footprint is directly measured -- not the gemma one.
+    assert guard > MEASURED_106496_QWEN38_MIB, (
         f"free-VRAM guard {guard} MiB does not exceed the MEASURED "
-        f"{MEASURED_106496_GEMMA31B_MIB} MiB footprint of the launch it guards -- a card between "
+        f"{MEASURED_106496_QWEN38_MIB} MiB footprint of the launch it guards -- a card between "
         "the two passes the guard and then cudaMalloc-fails, silently returning the agent to "
         "LLM-off"
     )
@@ -160,10 +173,11 @@ def test_guard_carries_real_margin_over_the_measured_footprint(wm) -> None:
     measured for a DIFFERENT n_ctx would silently stop being apples-to-apples the moment the
     two diverged -- exactly the gap this file exists to close for the constant itself."""
     guard = wm._generator_cuda_min_free_mb()
-    margin = guard - MEASURED_106496_GEMMA31B_MIB
+    # Re-anchored 2026-09-02 (REQ-ARC-WMTE-6880) to the current pin's directly measured footprint.
+    margin = guard - MEASURED_106496_QWEN38_MIB
     assert margin >= 1000, (
         f"only {margin} MiB of margin between the guard ({guard}) and the measured footprint "
-        f"({MEASURED_106496_GEMMA31B_MIB}); binding a card this tightly is how the 2026-07-21 "
+        f"({MEASURED_106496_QWEN38_MIB}); binding a card this tightly is how the 2026-07-21 "
         "self-heal-onto-a-full-card incident happened"
     )
 
@@ -205,17 +219,14 @@ def test_the_autofit_guard_carries_real_margin_over_the_autofit_footprint(wm, mo
     `_cuda_gpu_free_mb`, so stubbing that one call exercises the whole decision on any machine,
     with or without a GPU.
     """
-    # A 3090 with a few hundred MiB of driver/desktop overhead already resident -- i.e. the
-    # realistic case where the no-offload guard (26623 MiB) does NOT fit but a small offload does.
+    # A 3090-class card too full for the no-offload guard but fittable with a small offload.
     #
-    # RAISED 24123 -> 24400 (2026-08-08, REQ-ARC-WMTE-6227). At the new n_ctx=106496, the max
-    # auto-fit offload (_FFN_CPU_AUTOFIT_MAX_LAYERS=12) frees 12*195.3=2343.6 MiB, landing the
-    # guard-inclusive footprint at 24280 MiB -- ABOVE the old 24123 free_mb, so at that value the
-    # auto-fit correctly refuses to engage at all (0 layers: even its maximum offload cannot
-    # satisfy the margin). 24400 is the smallest round free_mb, swept empirically against the real
-    # module functions, where 12 layers both engages and satisfies the guard -- still a realistic
-    # "few hundred MiB of overhead" reading on a 24576 MiB card.
-    free_mb = 24400
+    # MOVED 24400 -> 21500 (2026-09-02, REQ-ARC-WMTE-6880). The Qwen3.8 envelope's no-offload
+    # guard at n_ctx=106496 is ~22387 MiB, so a FREE 3090 (~24.1 GiB) now admits with ZERO
+    # layers -- the intended production outcome, but it means the auto-fit only engages on a
+    # PARTIALLY OCCUPIED card. 21500 sits inside the engage window (guard(12 layers)=~20587 <
+    # 21500 < guard(0)=~22387), the realistic "another process holds ~3 GiB" reading.
+    free_mb = 21500
     monkeypatch.setenv("CARNOT_ARC_GENERATOR_CUDA_GPU", "0")
     monkeypatch.setattr(wm, "_cuda_gpu_free_mb", lambda _idx: free_mb)
 
@@ -227,8 +238,12 @@ def test_the_autofit_guard_carries_real_margin_over_the_autofit_footprint(wm, mo
     assert layers <= wm._FFN_CPU_AUTOFIT_MAX_LAYERS
 
     guard = wm._generator_cuda_min_free_mb(layers)
+    # Re-anchored to the current pin's DIRECT measurement (REQ-ARC-WMTE-6880). The per-layer
+    # credit term cancels between guard and footprint (both use the module's bounded estimate),
+    # so this margin is effectively the 0-layer over-prediction plus the module margin -- still
+    # anchored to a measured number, not to the predictor's own output.
     expected_footprint = (
-        MEASURED_106496_GEMMA31B_MIB - layers * MEASURED_FREED_PER_CPU_FFN_LAYER_MIB
+        MEASURED_106496_QWEN38_MIB - layers * ESTIMATED_QWEN38_FREED_PER_CPU_FFN_LAYER_MIB
     )
 
     margin = guard - expected_footprint
@@ -254,15 +269,18 @@ def test_guard_tracks_the_env_override_rather_than_being_a_literal(wm, monkeypat
     would stay put while the footprint it guards moved -- in BOTH directions."""
     baseline = wm._generator_cuda_min_free_mb()
 
-    # 32768, not 16384: 32768 is a point we have DIRECTLY MEASURED for the current generator.
-    # 16384 was only ever measured for the retired 9B, and asserting against a footprint from a
-    # different model is how a guard stops guarding while its tests stay green.
-    monkeypatch.setenv("CARNOT_ARC_INDUCE_N_CTX", "32768")
+    # 49152, not 32768 (re-anchored 2026-09-02, REQ-ARC-WMTE-6880): 49152 is a point DIRECTLY
+    # MEASURED for the CURRENT generator (Qwen3.8-27B, 4 slots, 18426 MiB). 32768 was only ever
+    # measured for the retired gemma pin, and asserting against a footprint from a different
+    # model is how a guard stops guarding while its tests stay green -- the exact drift the
+    # gemma-envelope-on-a-Qwen-pin incident demonstrated.
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_N_CTX", "49152")
     lowered = wm._generator_cuda_min_free_mb()
     assert lowered < baseline, "guard did not fall when the operator lowered the context pool"
-    assert lowered > MEASURED_32768_GEMMA31B_MIB, (
-        f"guard {lowered} MiB does not clear the measured {MEASURED_32768_GEMMA31B_MIB} MiB "
-        "footprint of the 32768 configuration"
+    measured_49152_qwen38_mib = 18426  # 4-slot, 1 CPU-FFN layer, direct 2026-09-02 measurement
+    assert lowered > measured_49152_qwen38_mib, (
+        f"guard {lowered} MiB does not clear the measured {measured_49152_qwen38_mib} MiB "
+        "footprint of the 49152 configuration"
     )
 
     monkeypatch.setenv("CARNOT_ARC_INDUCE_N_CTX", "163840")
