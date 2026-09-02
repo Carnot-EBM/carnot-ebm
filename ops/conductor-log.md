@@ -17065,3 +17065,6 @@ The l |
 | 2026-09-02 11:17 UTC | Plan milestone 2026.09.602 | OK | 4 tasks proposed |
 | 2026-09-02 11:20 UTC | Milestone 2026.09.602 activated | OK | 4 tasks queued |
 | 2026-09-02 12:00 UTC | V602 evidence, substrate, and executable-manifest  | OK | 101 passed, 1 warning in 21.32s |
+| 2026-09-02 12:02 UTC | Text-anchored relation and bounded ASP atom fixtur | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6874-v602-evidence-s |
+| 2026-09-02 12:04 UTC | Three-family text-anchored relational-fact corpus | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6875-text-anchored-relation-asp-fixture) |
+| 2026-09-02 12:04 UTC | Independent held relational-fact qualification | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6876-three-family-relational-fact-corpus, |
