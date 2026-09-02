@@ -60373,3 +60373,137 @@ null, disqualified, blocked, or partial classes.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6861 and SCENARIO-REPORT-6861-* | Implemented (`python/carnot/experiment_6861_v600_branch_retirement_evidence_contract.py`, `scripts/experiments/experiment_6861_v600_branch_retirement_evidence_contract.py`, `results/experiment_6861_v600_branch_retirement_evidence_contract.json`) | Implemented (`tests/python/test_experiment_6861_v600_branch_retirement_evidence_contract.py`; 15 focused tests; 100% scoped statement coverage) |
+
+### REQ-REPORT-6865: V601 Evidence Contract SHALL Freeze Changed Methods From Primary Records
+
+Exp6865 SHALL perform deterministic, read-only CPU reduction. It SHALL not run
+model inference, token scoring, ARC rollouts, or memory-policy experiments. It
+SHALL require the V600 artifacts for Exp6861 through Exp6864. It SHALL also
+require the active V601 roadmap, the completed V600 roadmap ledger, the
+conductor record, the exclusion manifest, and the ARC truncation note. A failed
+precondition SHALL produce a complete blocked artifact. The gate summary SHALL
+name the failed check, expected value, and observed value.
+
+The reducer SHALL reconstruct all four V600 task identifiers and deliverables
+from the completed roadmap ledger. It SHALL read verdict strings and classes
+from the primary artifacts. It SHALL preserve the conductor result separately.
+It SHALL preserve the Exp6864 gate diagnostic as evidence. It SHALL recompute
+current adversarial status with the checked-in verifier. Stored and current
+adversarial states SHALL remain separate when they disagree.
+
+The reducer SHALL prove that Exp6850 and Exp6863 stored different tokenizer
+receipt field sets. It SHALL record both exact field sets and their set
+difference. It SHALL mark the old cross-schema hash comparison invalid. It
+SHALL not infer that either Gemma tokenizer is equal to or different from the
+other tokenizer.
+
+The artifact SHALL freeze `canonical_tokenizer_payload_schema` as version
+`v1`. The schema SHALL include semantic vocabulary metadata, special-token
+identifiers, add-BOS behavior, chat-template identity, tokenization settings,
+and frozen probe outputs. The schema SHALL exclude timestamps, paths, prose
+detail, nested receipt hashes, and wrapper-only fields. Canonical JSON SHALL
+use sorted keys and UTF-8. Future comparisons SHALL use the same schema version
+on both sides.
+
+The artifact SHALL freeze all 100 accepted Exp6862 group identities. It SHALL
+record the Exp6862 source SHA-256 and an ordered identity-manifest SHA-256.
+Downstream work MAY filter cells from this bank. It SHALL NOT regenerate,
+replace, or relabel the bank.
+
+The artifact SHALL separate decision-time memory fields from offline-only
+supervision fields. A decision SHALL use only the prior bounded reliability
+state and decision-time fields. A later exact outcome MAY update the state only
+after the action closes. The update contract SHALL require finite values,
+symmetry, a frozen entry bound, a frozen spectral bound, and a state checksum.
+The quarantine contract SHALL freeze exact coverage, preservation, source
+faithfulness, provenance, old-family retention, delayed invalidation,
+tombstone, replay, restart, and byte-exact rollback checks.
+
+The ARC context contract SHALL require prompt identity and token count, slot
+identity and capacity, actual `n_ctx`, requested completion tokens, generated
+reasoning tokens, final-channel output, truncation evidence, VRAM evidence, and
+measured headroom. It SHALL preserve the full shared-pool diagnostic. A repair
+that only raises the completion-token limit SHALL remain retired. The contract
+SHALL require pool and slot measurement before a context-size change.
+
+Each contract and changed-mechanism boundary SHALL carry its own source hashes
+and contract hash. Exp6865 SHALL set `v601_evidence_contract_ready_score` to one
+only when every required source is readable, V600 task reconstruction is
+complete, all contract hashes replay, and the proposed boundaries do not reopen
+an excluded scope.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`roadmap_task_rows`, `conductor_gate_rows`,
+`stored_vs_live_adversarial_rows`, `v600_branch_dispositions`,
+`tokenizer_receipt_schema_diff`, `canonical_tokenizer_payload_schema`,
+`frozen_semantic_probe_contract`, `frozen_contrast_bank_identity_manifest`,
+`memory_observability_contract`, `memory_transition_quarantine_contract`,
+`arc_context_headroom_contract`, `retired_scope_non_reopen_manifest`,
+`random_seed`, `reproducibility_checksum`,
+`v601_evidence_contract_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`deterministic CPU read-only evidence reduction`. `verifier_is_oracle` SHALL be
+false. `verdict_class` SHALL use the closed project enum. `honest_verdict` SHALL
+start with `complete_`.
+
+#### SCENARIO-REPORT-6865-MISSING-ARTIFACT: Missing Primary Evidence Blocks
+
+**Given** a required V600 artifact is missing or unreadable
+**When** Exp6865 checks its preconditions
+**Then** readiness is zero
+**And** the complete blocked artifact names the exact path and failure.
+
+**Spec traces:** REQ-REPORT-6865
+
+#### SCENARIO-REPORT-6865-SYNTHETIC-GATE: Gate Artifacts Are Terminal Evidence
+
+**Given** a conductor-created blocked artifact has no project verdict class
+**When** Exp6865 reads its typed gate diagnostic
+**Then** it derives class `blocked`
+**And** it preserves the upstream, field, operator, expected value, and observed value.
+
+**Spec traces:** REQ-REPORT-6865
+
+#### SCENARIO-REPORT-6865-WRAPPED-FIELD: Principle Wrappers Do Not Hide Values
+
+**Given** a required scalar or list uses a `{principle, value}` wrapper
+**When** Exp6865 reads that field
+**Then** it reads the wrapped value
+**And** it does not unwrap an ordinary dictionary that lacks both wrapper keys.
+
+**Spec traces:** REQ-REPORT-6865
+
+#### SCENARIO-REPORT-6865-STALE-ROADMAP: A Stale Active Roadmap Blocks
+
+**Given** the live roadmap does not identify milestone `2026.09.601`
+**When** Exp6865 checks its active task record
+**Then** readiness is zero
+**And** the gate summary records the expected and observed milestones.
+
+**Spec traces:** REQ-REPORT-6865
+
+#### SCENARIO-REPORT-6865-HASH-SCHEMA: Different Receipt Schemas Are Incomparable
+
+**Given** two tokenizer receipt hashes come from different field sets or schema versions
+**When** Exp6865 evaluates the comparison
+**Then** it records the exact field-set difference
+**And** it makes no tokenizer equality or change claim.
+
+**Spec traces:** REQ-REPORT-6865
+
+#### SCENARIO-REPORT-6865-RETIRED-MAX-TOKEN: Token-Budget-Only Repair Stays Retired
+
+**Given** a proposed ARC remedy only raises induce or refactor completion tokens
+**When** Exp6865 checks the exclusion manifest
+**Then** it marks the remedy as a retired-scope reopen
+**And** readiness remains zero until a different mechanism is specified.
+
+**Spec traces:** REQ-REPORT-6865
+
+## Implementation Status (REQ-REPORT-6865)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6865 and SCENARIO-REPORT-6865-* | Implemented (`python/carnot/experiment_6865_v601_evidence_method_change_contract.py`, `scripts/experiments/experiment_6865_v601_evidence_method_change_contract.py`, `results/experiment_6865_v601_evidence_method_change_contract.json`) | Implemented (`tests/python/test_experiment_6865_v601_evidence_method_change_contract.py`; 20 focused tests; 100% scoped statement coverage) |
