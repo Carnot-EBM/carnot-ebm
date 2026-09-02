@@ -4,6 +4,38 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-09-02: the operational retrospective never reports the quarantine rate
+
+**The observation.** `results/operational_retro_2026_09_601.json` summarises the milestone as "9
+experiments in 5.0 minutes, including 3 compute-bound experiments" and names three bottlenecks, all
+about telemetry and GPU reporting. Searched for the words `flagged`, `quarantin`, `adversarial` and
+`duration_too_short`: **zero occurrences**. Meanwhile the conductor logged **7 FLAGGED rows** in the
+same day's window, and 6 of 13 experiment artifacts written today carry
+`flagged_adversarial: true`.
+
+So the mechanism that exists to answer "how did this milestone go" reads as a healthy milestone
+while roughly half its output was quarantined by the fabrication gate.
+
+**The data was available and simply not consulted.** The FLAGGED rows are in `ops/conductor-log.md`,
+which the retro path already parses. `flagged_adversarial` does not appear anywhere in the
+retrospective code path.
+
+**This is independent of the false-positive defect.** Even if every one of those 7 flags were a TRUE
+positive, a retrospective that reports "9 experiments completed" without saying 7 were quarantined
+is describing a different milestone than the one that happened. The fix is not conditional on
+resolving whether the marker scan is wrong — the retro should report the flag count either way. If
+the flags are false the number is the tax; if they are true it is the finding. Silence is wrong in
+both directions.
+
+**The step-6 candidate.** The retro already reads the conductor log for timings; adding a count of
+FLAGGED / GATE_BLOCK / FAIL rows alongside `experiments_completed` is mechanical, needs no new data
+source, and would have surfaced today's 46% without anyone noticing by hand. Not built here: it
+changes the retro artifact's schema, so it needs a check that existing consumers of that schema
+tolerate the new fields.
+
+**Limits.** One milestone, one retro artifact. The claim is that this retro omitted it and that the
+code path has no reference to flag state — not that every past retro did, which was not checked.
+
 ### NEW 2026-09-02: the headline `levels` count is a final-frame delta, and it disagrees with the authoritative per-level record
 
 **The observation.** In `results/arc_leaderboard_eval_runs/cd82-r11l-727651.json`, cd82 reports
