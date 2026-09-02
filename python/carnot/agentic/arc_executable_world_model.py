@@ -5183,8 +5183,17 @@ def _note_generator_selection(msg: str) -> None:
 # --query-compute-apps joined by PID, never the env var), spanning 1/4 slots, 0/1/11 CPU-FFN
 # layers, and n_ctx 49152..106496. The fit is deliberately CONSERVATIVE: intercept through the
 # worst 4-slot residual, so every 4-slot point (the guard's launch shape) is over-predicted
-# (by at most 223 MiB) and no point anywhere is under-predicted by more than 377 MiB -- well
-# inside the 1500 MiB guard margin. The gemma-4-31B constants above are KEPT as the historical
+# (by at most 223 MiB) and no point anywhere is under-predicted by more than 377 MiB.
+#
+# WHY A -377 RESIDUAL IS ACCEPTABLE -- read this before "fixing" it. Admission requires
+# predicted + 1500 (the guard margin) <= free, so on the worst measured shape an admitted
+# launch still has 1500 - 377 = 1123 MiB of genuine slack: the margin covers the residual
+# roughly threefold, and no admitted launch can OOM on any measured point. That worst shape is
+# also 1-slot, which the guard arithmetic never uses unless CARNOT_ARC_LLAMA_SERVER_SLOTS=1 is
+# exported. Raising the intercept to zero the residual would buy NO safety and would cost ~2
+# FFN offload layers on partially-full cards -- offload is the decode tax this refit removed.
+#
+# The gemma-4-31B constants above are KEPT as the historical
 # record; using them for this pin over-predicted -c 98304 by ~4.4 GB, which forced an 11-layer
 # FFN offload (decode 28 -> 13.1 tok/s) and pushed think-mode induces past the 2400s timeout.
 _VRAM_QWEN38_INTERCEPT_MIB = 15768.0  # 20352 - 0.0403*98304 - 206.83*4, worst-residual anchor
