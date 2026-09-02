@@ -17049,3 +17049,4 @@ The l |
 | 2026-09-02 03:36 UTC | V601 evidence and method-change contract | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-02 04:15 UTC | Canonical tokenizer binding requalification | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-02 04:43 UTC | Tokenizer-aware semantic contrast preregistration  | OK | 102 passed, 1 warning in 10.71s |
+| 2026-09-02 06:06 UTC | Three-family semantic contrast scoring stream v2 | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: [_frozen_cell( |

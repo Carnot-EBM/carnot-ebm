@@ -3402,3 +3402,133 @@ Then it SHALL stop before tokenization and record the scored identity.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFERENCE-6867 and SCENARIO-INFERENCE-6867-* | Implemented (`python/carnot/experiment_6867_tokenizer_aware_semantic_preregistration_v2.py`; `scripts/experiments/experiment_6867_tokenizer_aware_semantic_preregistration_v2.py`) | Implemented with focused tests, 100% new-module coverage, and the dated end-to-end artifact (`tests/python/test_experiment_6867_tokenizer_aware_semantic_preregistration_v2.py`) |
+
+### REQ-INFERENCE-6868: Three-Family Semantic Scoring Stream V2
+
+Exp6868 SHALL call `cached_sota_pair()` before scoring. It SHALL require the
+Exp6867 `semantic_contrast_preregistration_v2_ready_score` to equal one. It
+SHALL bind all model and native tokenizer hashes to the exact Exp6867 values.
+It SHALL require live local llama.cpp CUDA token scoring, sufficient disk,
+task-owned ports, and one bounded task-owned GPU lease. A failed precondition
+SHALL write `complete_blocked_three_family_semantic_scoring_stream_v2`. Its
+`gate_check_summary` SHALL name the failed check, expected value, and observed
+value.
+
+Exp6868 SHALL score every frozen eligible calibration and held cell for these
+exact repositories: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL run one model worker at a time. It
+SHALL preserve one raw row for each model, semantic group, sequence, candidate
+slot, and nuisance transform. Each row SHALL include token IDs, token log
+probabilities, finite checks, raw log-probability sum, per-token normalization,
+latency, sequence hash, group identity, split, and nuisance-transform identity.
+
+The worker input SHALL contain only frozen prompt and candidate text or their
+token IDs. It SHALL not contain exact labels, commitments, semantic judgments,
+or score interpretation. Exp6868 SHALL generate no answers, repairs, labels, or
+judgments. It SHALL record `generated_answer_count` and
+`held_label_access_count` as zero. It SHALL set `scientific_effect_claimed` to
+false. It SHALL not train or invoke an external generated-text scorer.
+
+Each process receipt SHALL include its command, PID, Linux start ticks,
+ownership-token digest, model and tokenizer hashes, GPU UUID, visible devices,
+offload setting, port, context length, and VRAM samples. The task SHALL observe
+unrelated processes without signaling them. Teardown SHALL signal only a worker
+whose full ownership identity still matches. It SHALL record process exit and
+port release.
+
+Calibration and held raw score sidecars SHALL remain separate and SHALL have
+independent hashes. Exp6868 SHALL not reduce held effects. It SHALL preserve
+failed and timeout cells without imputation. It SHALL write an atomic
+checkpoint after each bounded group batch and completed model. Resume SHALL
+first verify every frozen input hash. It SHALL rerun only incomplete cells.
+
+The terminal artifact SHALL be
+`results/experiment_6868_three_family_semantic_scoring_stream_v2.json`. It
+SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `model_specs`, `models_used`,
+`missing_model_manifest`, `model_artifact_hashes`, `tokenizer_receipts`,
+`process_receipts`, `accelerator_samples`, `lease_receipts`, `rows`,
+`raw_token_sidecars`, `calibration_score_manifest`,
+`sealed_held_score_manifest`, `failed_cell_manifest`, `checkpoint_manifest`,
+`teardown_receipts`, `generated_answer_count`, `held_label_access_count`,
+`scientific_effect_claimed`, `random_seed`, `reproducibility_checksum`,
+`semantic_contrast_stream_v2_complete_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+
+`semantic_contrast_stream_v2_complete_score` SHALL equal one only when every
+required model cell has a verified raw receipt or an explicit failure row, all
+checkpoints are complete, and teardown is clean. Stream completion SHALL not
+state a scientific positive. `verifier_is_oracle` SHALL be false.
+`honest_verdict` SHALL start with `complete_`. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`.
+
+#### SCENARIO-INFERENCE-6868-LEASE-LOSS: Lease Loss Stops New Scoring
+
+Given a worker whose task-owned GPU lease expires or changes owner,
+When Exp6868 checks the lease before a cell or bounded batch,
+Then it SHALL stop new scoring, preserve completed rows, checkpoint the partial
+state, and record explicit incomplete or failed cells without imputation.
+
+#### SCENARIO-INFERENCE-6868-PROCESS-IDENTITY: Stale PIDs Never Gain Authority
+
+Given a recorded PID whose Linux start ticks or command identity changed,
+When teardown checks ownership,
+Then it SHALL refuse to signal the process and SHALL record the identity
+mismatch and unclean teardown.
+
+#### SCENARIO-INFERENCE-6868-PORT-OWNERSHIP: Occupied Ports Fail Closed
+
+Given an occupied task port without a matching private owner receipt,
+When Exp6868 prepares the worker,
+Then it SHALL not interrupt the listener and SHALL write a blocked or partial
+artifact with the occupied port observation.
+
+#### SCENARIO-INFERENCE-6868-HASH-DRIFT: Frozen Inputs Bind Resume
+
+Given model, tokenizer, preregistration, row, or checkpoint input hash drift,
+When Exp6868 starts or resumes,
+Then it SHALL stop before scoring the affected cells and name the expected and
+observed hashes.
+
+#### SCENARIO-INFERENCE-6868-LABEL-SEAL: Labels Never Reach Workers
+
+Given calibration rows with plaintext labels and held rows with commitments,
+When Exp6868 constructs a worker request,
+Then the request SHALL contain neither value. A label-shaped request key or
+semantic judgment text SHALL fail before network I/O.
+
+#### SCENARIO-INFERENCE-6868-NONFINITE: Nonfinite Scores Stay Failed
+
+Given a missing, NaN, or infinite token log probability,
+When Exp6868 validates the worker response,
+Then it SHALL preserve an explicit failed cell and SHALL not emit or impute a
+raw score row.
+
+#### SCENARIO-INFERENCE-6868-TIMEOUT: Timeout Rows Are Evidence
+
+Given a health or scoring timeout,
+When the bounded deadline expires,
+Then Exp6868 SHALL preserve a timeout cell, checkpoint completed work, and
+continue only when process ownership and lease state remain valid.
+
+#### SCENARIO-INFERENCE-6868-CHECKPOINT-RESTART: Only Missing Cells Rerun
+
+Given a valid partial atomic checkpoint,
+When Exp6868 restarts with unchanged input hashes,
+Then it SHALL preserve complete cell receipts and rerun only identities that
+have neither a verified score row nor an explicit failure row.
+
+#### SCENARIO-INFERENCE-6868-OWNED-TEARDOWN: Cleanup Is Narrow And Bounded
+
+Given one matching task-owned worker and any unrelated processes,
+When Exp6868 tears down,
+Then it SHALL stop and reap only the matching worker, confirm port release, and
+record zero unrelated process signals.
+
+## Implementation Status (REQ-INFERENCE-6868)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6868 and SCENARIO-INFERENCE-6868-* | Planned (`python/carnot/experiment_6868_three_family_semantic_scoring_stream_v2.py`; `scripts/experiments/experiment_6868_three_family_semantic_scoring_stream_v2.py`) | Planned (`tests/python/test_experiment_6868_three_family_semantic_scoring_stream_v2.py`) |
